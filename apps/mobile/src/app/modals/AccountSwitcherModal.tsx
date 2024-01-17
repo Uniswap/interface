@@ -94,7 +94,9 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   }
 
   const onManageWallet = (): void => {
-    if (!activeAccountAddress) return
+    if (!activeAccountAddress) {
+      return
+    }
 
     dispatch(closeModal({ name: ModalName.AccountSwitcher }))
     navigate(Screens.SettingsStack, {

@@ -235,6 +235,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
           }
         >
           <Text
+            adjustsFontSizeToFit={true}
             allowFontScaling={true}
             maxFontSizeMultiplier={1.4}
             numberOfLines={1}
@@ -466,7 +467,13 @@ exports[`AccountSwitcher renders correctly 1`] = `
     <RCTScrollView
       CellRendererComponent={[Function]}
       ListHeaderComponent={<React.Fragment />}
+      animatedStyle={
+        {
+          "value": {},
+        }
+      }
       bounces={false}
+      collapsable={false}
       data={[]}
       getItem={[Function]}
       getItemCount={[Function]}

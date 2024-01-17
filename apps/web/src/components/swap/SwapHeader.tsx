@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { ChainId } from '@uniswap/sdk-core'
 import { useLimitsEnabled } from 'featureFlags/flags/limits'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/SwapContext'
 import styled from 'styled-components'
@@ -38,14 +39,31 @@ export default function SwapHeader() {
     derivedSwapInfo: { trade, autoSlippage },
   } = useSwapContext()
 
+  // Limits is only available on mainnet for now
+  if (chainId !== ChainId.MAINNET && currentTab === SwapTab.Limit) {
+    setCurrentTab(SwapTab.Swap)
+  }
+
   return (
     <StyledSwapHeader>
       <HeaderButtonContainer>
-        <StyledTextButton $isActive={currentTab === SwapTab.Swap} onClick={() => setCurrentTab(SwapTab.Swap)}>
+        <StyledTextButton
+          as="h1"
+          role="button"
+          tabIndex={0}
+          $isActive={currentTab === SwapTab.Swap}
+          onClick={() => setCurrentTab(SwapTab.Swap)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === 'Space') {
+              e.preventDefault()
+              setCurrentTab(SwapTab.Swap)
+            }
+          }}
+        >
           <Trans>Swap</Trans>
         </StyledTextButton>
         <SwapBuyFiatButton />
-        {limitsEnabled && (
+        {limitsEnabled && chainId === ChainId.MAINNET && (
           <StyledTextButton $isActive={currentTab === SwapTab.Limit} onClick={() => setCurrentTab(SwapTab.Limit)}>
             <Trans>Limit</Trans>
           </StyledTextButton>

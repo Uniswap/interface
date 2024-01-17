@@ -13,6 +13,7 @@ import {
   SectionName,
   ShareableEntity,
 } from 'src/features/telemetry/constants'
+import { useCopyTokenAddressCallback } from 'src/features/tokens/hooks'
 import { getTokenUrl } from 'src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -47,9 +48,17 @@ export function useExploreTokenContextMenu({
   const isFavorited = useSelectHasTokenFavorited(currencyId)
   const dispatch = useAppDispatch()
 
+  // `address` is undefined for native currencies, so we want to extract it from
+  // currencyId, where we have hardcoded addresses for native currencies
+  const currencyAddress = currencyIdToAddress(currencyId)
+
+  const onPressCopyContractAddress = useCopyTokenAddressCallback(currencyAddress)
+
   const onPressShare = useCallback(async () => {
     const tokenUrl = getTokenUrl(currencyId)
-    if (!tokenUrl) return
+    if (!tokenUrl) {
+      return
+    }
     try {
       await Share.share({
         message: tokenUrl,
@@ -72,9 +81,7 @@ export function useExploreTokenContextMenu({
       [CurrencyField.INPUT]: null,
       [CurrencyField.OUTPUT]: {
         chainId,
-        // `address` is undefined for native currencies, so we want to extract it from
-        // currencyId, where we have hardcoded addresses for native currencies
-        address: currencyIdToAddress(currencyId),
+        address: currencyAddress,
         type: AssetType.Currency,
       },
     }
@@ -83,7 +90,7 @@ export function useExploreTokenContextMenu({
       element: ElementName.Swap,
       section: analyticsSection,
     })
-  }, [analyticsSection, chainId, currencyId, dispatch])
+  }, [analyticsSection, chainId, currencyAddress, dispatch])
 
   const onPressToggleFavorite = useCallback(() => {
     toggleFavoriteToken()
@@ -106,6 +113,11 @@ export function useExploreTokenContextMenu({
           ]
         : []),
       { title: t('Swap'), systemIcon: 'arrow.2.squarepath', onPress: onPressSwap },
+      {
+        title: t('Copy contract address'),
+        systemIcon: 'doc.on.doc',
+        onPress: onPressCopyContractAddress,
+      },
       ...(!onEditFavorites
         ? [
             {
@@ -116,7 +128,15 @@ export function useExploreTokenContextMenu({
           ]
         : []),
     ],
-    [onEditFavorites, isFavorited, onPressShare, onPressSwap, onPressToggleFavorite, t]
+    [
+      isFavorited,
+      t,
+      onPressToggleFavorite,
+      onEditFavorites,
+      onPressSwap,
+      onPressCopyContractAddress,
+      onPressShare,
+    ]
   )
 
   const onContextMenuPress = useCallback(

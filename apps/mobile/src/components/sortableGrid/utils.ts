@@ -8,11 +8,17 @@ const hasProp = <O extends object, P extends string>(
 }
 
 export const defaultKeyExtractor = <I>(item: I, index: number): string => {
-  if (typeof item === 'string') return item
+  if (typeof item === 'string') {
+    return item
+  }
 
   if (typeof item === 'object' && item !== null) {
-    if (hasProp(item, 'id')) return String(item.id)
-    if (hasProp(item, 'key')) return String(item.key)
+    if (hasProp(item, 'id')) {
+      return String(item.id)
+    }
+    if (hasProp(item, 'key')) {
+      return String(item.key)
+    }
   }
 
   return String(index)

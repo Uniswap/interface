@@ -9,12 +9,14 @@ export type NetworkLogosProps = {
   chains: ChainId[]
   showFirstChainLabel?: boolean
   negativeGap?: boolean
+  size?: number
 } & FlexProps
 
 export function NetworkLogos({
   negativeGap,
   chains,
   showFirstChainLabel,
+  size = iconSizes.icon20,
   ...rest
 }: NetworkLogosProps): JSX.Element {
   const firstChain = chains[0]
@@ -27,13 +29,13 @@ export function NetworkLogos({
           <Text color="$neutral2" numberOfLines={1} variant="buttonLabel3">
             {CHAIN_INFO[firstChain].label}
           </Text>
-          <Flex width={iconSizes.icon20} />
+          <Flex width={size} />
         </Flex>
       ) : (
         <Flex centered row gap={negativeGap ? -spacing.spacing8 : '$spacing4'}>
           {chains.map((chainId) => (
             <Flex bg="$surface2" borderRadius="$rounded8" p={negativeGap ? '$spacing2' : '$none'}>
-              <NetworkLogo key={chainId} chainId={chainId} size={iconSizes.icon20} />
+              <NetworkLogo key={chainId} chainId={chainId} size={size} />
             </Flex>
           ))}
         </Flex>

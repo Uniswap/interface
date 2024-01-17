@@ -28,10 +28,7 @@ import { useFormattedTransactionDataForActivity } from 'wallet/src/features/acti
 import { SwapSummaryCallbacks } from 'wallet/src/features/transactions/SummaryCards/types'
 import { generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
-import {
-  useActiveAccountWithThrow,
-  useSelectAccountHideSpamTokens,
-} from 'wallet/src/features/wallet/hooks'
+import { useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
 import { isAndroid } from 'wallet/src/utils/platform'
 
 export const ACTIVITY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]
@@ -70,8 +67,7 @@ export const ActivityTab = memo(
     )
 
     // Hide all spam transactions if active wallet has enabled setting.
-    const activeAccount = useActiveAccountWithThrow()
-    const hideSpamTokens = useSelectAccountHideSpamTokens(activeAccount.address)
+    const hideSpamTokens = useHideSpamTokensSetting()
 
     const swapCallbacks: SwapSummaryCallbacks = useMemo(() => {
       return {

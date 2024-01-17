@@ -12,7 +12,7 @@ import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
-import { useTheme } from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { BackArrowLink, StyledInternalLink, ThemedText } from 'theme/components'
 
 import { LightCard } from '../../components/Card'
@@ -23,6 +23,10 @@ import { Dots } from '../../components/swap/styled'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/connection/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from '../../state/user/hooks'
 import { BodyWrapper } from '../AppBody'
+
+export const MigrateHeader = styled(ThemedText.H1Small)`
+  font-weight: 535;
+`
 
 function EmptyState({ message }: { message: ReactNode }) {
   return (
@@ -121,9 +125,9 @@ export default function MigrateV2() {
         <AutoColumn gap="16px">
           <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
             <BackArrowLink to="/pools" />
-            <ThemedText.DeprecatedMediumHeader>
+            <MigrateHeader>
               <Trans>Migrate V2 liquidity</Trans>
-            </ThemedText.DeprecatedMediumHeader>
+            </MigrateHeader>
             <div>
               <QuestionHelper text={<Trans>Migrate your liquidity tokens from Uniswap V2 to Uniswap V3.</Trans>} />
             </div>

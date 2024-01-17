@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import { Extras, ScopeContext } from '@sentry/types'
-import { errorToString } from 'utilities/src/errors'
 import { Sentry } from './Sentry'
 
 const SENTRY_CHAR_LIMIT = 8192
@@ -53,14 +52,10 @@ function logMessage(
 }
 
 function logException(error: unknown, captureContext: LoggerErrorContext): void {
-  const errorMessage = errorToString(error)
-  const fileName = captureContext?.tags.file ?? ''
-  const functionName = captureContext?.tags.function ?? ''
-
   const updatedContext = addErrorExtras(error, captureContext)
 
   if (__DEV__) {
-    console.error(formatMessage(fileName, functionName, errorMessage), updatedContext)
+    console.error(error)
     return
   }
 

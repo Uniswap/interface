@@ -18,7 +18,9 @@ export function unnestObject(ob: Record<string, any>): Record<string, string> {
 
   for (const i in ob) {
     // `in` is safe because keys are extracted from object properties
-    if (!Object.prototype.hasOwnProperty.call(ob, i)) continue
+    if (!Object.prototype.hasOwnProperty.call(ob, i)) {
+      continue
+    }
 
     if (typeof ob[i] !== 'object' || ob[i] === null) {
       toReturn[i] = ob[i]
@@ -27,9 +29,13 @@ export function unnestObject(ob: Record<string, any>): Record<string, string> {
 
     const flatObject = unnestObject(ob[i])
     for (const x in flatObject) {
-      if (!Object.prototype.hasOwnProperty.call(flatObject, x)) continue
+      if (!Object.prototype.hasOwnProperty.call(flatObject, x)) {
+        continue
+      }
       const property = flatObject[x]
-      if (property === undefined) continue
+      if (property === undefined) {
+        continue
+      }
       toReturn[i + '.' + x] = property
     }
   }

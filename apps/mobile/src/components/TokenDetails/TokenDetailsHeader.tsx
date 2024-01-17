@@ -24,6 +24,7 @@ export function TokenDetailsHeader({
     <Flex gap="$spacing12" mx="$spacing16">
       <TokenLogo
         chainId={fromGraphQLChain(token?.chain) ?? undefined}
+        name={token?.project?.name ?? undefined}
         symbol={token?.symbol ?? undefined}
         url={tokenProject?.logoUrl ?? undefined}
       />

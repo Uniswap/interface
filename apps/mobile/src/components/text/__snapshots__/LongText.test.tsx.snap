@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders a LongText 1`] = `
+exports[`LongText renders without error 1`] = `
 <View
   style={
     {

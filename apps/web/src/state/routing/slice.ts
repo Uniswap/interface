@@ -9,6 +9,7 @@ import { trace } from 'tracing/trace'
 import {
   GetQuoteArgs,
   INTERNAL_ROUTER_PREFERENCE_PRICE,
+  QuoteIntent,
   QuoteMethod,
   QuoteState,
   RouterPreference,
@@ -129,7 +130,8 @@ export const routingApi = createApi({
             amount,
             sendPortionEnabled,
             type: isExactInput(tradeType) ? 'EXACT_INPUT' : 'EXACT_OUTPUT',
-            intent: args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? 'pricing' : undefined,
+            intent:
+              args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? QuoteIntent.Pricing : QuoteIntent.Quote,
             configs: getRoutingAPIConfig(args),
           }
 

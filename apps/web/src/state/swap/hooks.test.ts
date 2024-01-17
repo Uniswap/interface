@@ -1,6 +1,5 @@
 import { Field } from 'components/swap/constants'
 import { parse } from 'qs'
-import { TEST_RECIPIENT_ADDRESS } from 'test-utils/constants'
 
 import { queryParametersToCurrencyState, queryParametersToSwapState } from './hooks'
 
@@ -52,49 +51,6 @@ describe('hooks', () => {
       ).toEqual({
         typedValue: '20.5',
         independentField: Field.OUTPUT,
-        recipient: null,
-      })
-    })
-
-    test('invalid recipient', () => {
-      expect(
-        queryParametersToSwapState(
-          parse('?outputCurrency=eth&exactAmount=20.5&recipient=abc', { parseArrays: false, ignoreQueryPrefix: true })
-        )
-      ).toEqual({
-        typedValue: '20.5',
-        independentField: Field.INPUT,
-        recipient: null,
-      })
-    })
-
-    test('valid recipient', () => {
-      expect(
-        queryParametersToSwapState(
-          parse(`?outputCurrency=eth&exactAmount=20.5&recipient=${TEST_RECIPIENT_ADDRESS}`, {
-            parseArrays: false,
-            ignoreQueryPrefix: true,
-          })
-        )
-      ).toEqual({
-        typedValue: '20.5',
-        independentField: Field.INPUT,
-        recipient: TEST_RECIPIENT_ADDRESS,
-      })
-    })
-
-    test('accepts any recipient', () => {
-      expect(
-        queryParametersToSwapState(
-          parse('?outputCurrency=eth&exactAmount=20.5&recipient=bob.argent.xyz', {
-            parseArrays: false,
-            ignoreQueryPrefix: true,
-          })
-        )
-      ).toEqual({
-        typedValue: '20.5',
-        independentField: Field.INPUT,
-        recipient: 'bob.argent.xyz',
       })
     })
   })

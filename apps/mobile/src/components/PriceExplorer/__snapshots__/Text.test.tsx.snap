@@ -5,27 +5,24 @@ exports[`DatetimeText renders loading state 1`] = `null`;
 exports[`DatetimeText renders without error 1`] = `
 <TextInput
   allowFontScaling={true}
-  animatedProps={
+  animatedStyle={
     {
-      "text": "Thursday, November 1st, 2023",
+      "value": {},
     }
   }
+  collapsable={false}
   editable={false}
   maxFontSizeMultiplier={1.4}
   style={
-    [
-      {
-        "padding": 0,
-      },
-      {
-        "color": "#7D7D7D",
-        "fontFamily": "Basel-Book",
-        "fontSize": 19,
-        "lineHeight": 24,
-      },
-      undefined,
-    ]
+    {
+      "color": "#7D7D7D",
+      "fontFamily": "Basel-Book",
+      "fontSize": 19,
+      "lineHeight": 24,
+      "padding": 0,
+    }
   }
+  text="Thursday, November 1st, 2023"
   underlineColorAndroid="transparent"
   value="Thursday, November 1st, 2023"
 />
@@ -43,34 +40,27 @@ exports[`PriceText renders loading state 1`] = `
 >
   <TextInput
     allowFontScaling={true}
-    animatedProps={
+    animatedStyle={
       {
-        "text": "-",
+        "value": {
+          "fontSize": 106,
+        },
       }
     }
+    collapsable={false}
     editable={false}
     maxFontSizeMultiplier={1.2}
     style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel-Book",
-          "fontSize": 53,
-          "lineHeight": 60,
-        },
-        [
-          {
-            "color": "#222222",
-          },
-          {
-            "fontSize": 106,
-          },
-        ],
-      ]
+      {
+        "color": "#222222",
+        "fontFamily": "Basel-Book",
+        "fontSize": 106,
+        "lineHeight": 60,
+        "padding": 0,
+      }
     }
     testID="wholePart"
+    text="-"
     underlineColorAndroid="transparent"
     value="-"
   />
@@ -89,67 +79,54 @@ exports[`PriceText renders without error 1`] = `
 >
   <TextInput
     allowFontScaling={true}
-    animatedProps={
+    animatedStyle={
       {
-        "text": "$55",
+        "value": {
+          "fontSize": 106,
+        },
       }
     }
+    collapsable={false}
     editable={false}
     maxFontSizeMultiplier={1.2}
     style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel-Book",
-          "fontSize": 53,
-          "lineHeight": 60,
-        },
-        [
-          {
-            "color": "#222222",
-          },
-          {
-            "fontSize": 106,
-          },
-        ],
-      ]
+      {
+        "color": "#222222",
+        "fontFamily": "Basel-Book",
+        "fontSize": 106,
+        "lineHeight": 60,
+        "padding": 0,
+      }
     }
     testID="wholePart"
+    text="$55"
     underlineColorAndroid="transparent"
     value="$55"
   />
   <TextInput
     allowFontScaling={true}
-    animatedProps={
+    animatedStyle={
       {
-        "text": ".00",
+        "value": {
+          "color": "#CECECE",
+          "fontSize": 106,
+        },
       }
     }
+    collapsable={false}
     editable={false}
     maxFontSizeMultiplier={1.2}
     style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel-Book",
-          "fontSize": 53,
-          "lineHeight": 60,
-        },
-        [
-          {
-            "color": "#CECECE",
-          },
-          {
-            "fontSize": 106,
-          },
-        ],
-      ]
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 106,
+        "lineHeight": 60,
+        "padding": 0,
+      }
     }
     testID="decimalPart"
+    text=".00"
     underlineColorAndroid="transparent"
     value=".00"
   />
@@ -168,67 +145,54 @@ exports[`PriceText renders without error less than a dollar 1`] = `
 >
   <TextInput
     allowFontScaling={true}
-    animatedProps={
+    animatedStyle={
       {
-        "text": "$0",
+        "value": {
+          "fontSize": 106,
+        },
       }
     }
+    collapsable={false}
     editable={false}
     maxFontSizeMultiplier={1.2}
     style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel-Book",
-          "fontSize": 53,
-          "lineHeight": 60,
-        },
-        [
-          {
-            "color": "#222222",
-          },
-          {
-            "fontSize": 106,
-          },
-        ],
-      ]
+      {
+        "color": "#222222",
+        "fontFamily": "Basel-Book",
+        "fontSize": 106,
+        "lineHeight": 60,
+        "padding": 0,
+      }
     }
     testID="wholePart"
+    text="$0"
     underlineColorAndroid="transparent"
     value="$0"
   />
   <TextInput
     allowFontScaling={true}
-    animatedProps={
+    animatedStyle={
       {
-        "text": ".0500",
+        "value": {
+          "color": "#222222",
+          "fontSize": 106,
+        },
       }
     }
+    collapsable={false}
     editable={false}
     maxFontSizeMultiplier={1.2}
     style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel-Book",
-          "fontSize": 53,
-          "lineHeight": 60,
-        },
-        [
-          {
-            "color": "#222222",
-          },
-          {
-            "fontSize": 106,
-          },
-        ],
-      ]
+      {
+        "color": "#222222",
+        "fontFamily": "Basel-Book",
+        "fontSize": 106,
+        "lineHeight": 60,
+        "padding": 0,
+      }
     }
     testID="decimalPart"
+    text=".0500"
     underlineColorAndroid="transparent"
     value=".0500"
   />
@@ -254,6 +218,7 @@ exports[`RelativeChangeText renders loading state 1`] = `
         "opacity": 0,
       }
     }
+    testID="shimmer-placeholder"
   >
     <View
       style={
@@ -262,6 +227,7 @@ exports[`RelativeChangeText renders loading state 1`] = `
           "flexDirection": "row",
         }
       }
+      testID="text-placeholder"
     >
       <View
         style={
@@ -286,49 +252,43 @@ exports[`RelativeChangeText renders loading state 1`] = `
           >
             <TextInput
               allowFontScaling={true}
+              animatedStyle={
+                {
+                  "value": {},
+                }
+              }
+              collapsable={false}
               editable={false}
               maxFontSizeMultiplier={1.4}
               style={
-                [
-                  [
-                    {
-                      "padding": 0,
-                    },
-                    {
-                      "fontFamily": "Basel-Book",
-                      "fontSize": 19,
-                      "lineHeight": 24,
-                    },
-                    undefined,
-                  ],
-                  {
-                    "marginHorizontal": 0,
-                    "opacity": 0,
-                    "paddingHorizontal": 0,
-                    "width": 0,
-                  },
-                ]
+                {
+                  "fontFamily": "Basel-Book",
+                  "fontSize": 19,
+                  "lineHeight": 24,
+                  "marginHorizontal": 0,
+                  "opacity": 0,
+                  "padding": 0,
+                  "paddingHorizontal": 0,
+                  "width": 0,
+                }
               }
               underlineColorAndroid="transparent"
             />
             <Text
+              animatedStyle={
+                {
+                  "value": {},
+                }
+              }
+              collapsable={false}
               style={
-                [
-                  [
-                    {
-                      "padding": 0,
-                    },
-                    {
-                      "fontFamily": "Basel-Book",
-                      "fontSize": 19,
-                      "lineHeight": 24,
-                    },
-                    undefined,
-                  ],
-                  {
-                    "opacity": 0,
-                  },
-                ]
+                {
+                  "fontFamily": "Basel-Book",
+                  "fontSize": 19,
+                  "lineHeight": 24,
+                  "opacity": 0,
+                  "padding": 0,
+                }
               }
             >
               00.00%
@@ -372,8 +332,21 @@ exports[`RelativeChangeText renders without error 1`] = `
 >
   <RNSVGSvgView
     align="xMidYMid"
+    animatedStyle={
+      {
+        "value": {
+          "color": "#FF5F52",
+          "transform": [
+            {
+              "rotate": "0deg",
+            },
+          ],
+        },
+      }
+    }
     bbHeight="16"
     bbWidth="16"
+    collapsable={false}
     fill="none"
     focusable={false}
     meetOrSlice={0}
@@ -387,14 +360,14 @@ exports[`RelativeChangeText renders without error 1`] = `
           "borderWidth": 0,
         },
         {
-          "color": "#40B66B",
+          "color": "#FF5F52",
           "height": 16,
           "transform": [
             {
-              "rotate": "180deg",
+              "rotate": "0deg",
             },
           ],
-          "translateY": -1,
+          "translateY": 1,
           "width": 16,
         },
         {
@@ -404,7 +377,7 @@ exports[`RelativeChangeText renders without error 1`] = `
         },
       ]
     }
-    tintColor="#40B66B"
+    tintColor="#FF5F52"
     vbHeight={24}
     vbWidth={24}
   >
@@ -417,7 +390,7 @@ exports[`RelativeChangeText renders without error 1`] = `
           -0,
           1,
           0,
-          -1,
+          1,
         ]
       }
       propList={
@@ -445,31 +418,29 @@ exports[`RelativeChangeText renders without error 1`] = `
   </RNSVGSvgView>
   <TextInput
     allowFontScaling={true}
-    animatedProps={
+    animatedStyle={
       {
-        "text": "55.00%",
+        "value": {
+          "color": "#FF5F52",
+        },
       }
     }
+    collapsable={false}
     editable={false}
     maxFontSizeMultiplier={1.4}
     style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel-Book",
-          "fontSize": 19,
-          "lineHeight": 24,
-        },
-        {
-          "color": "#40B66B",
-        },
-      ]
+      {
+        "color": "#FF5F52",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+        "padding": 0,
+      }
     }
     testID="relative-change-text"
+    text="10.00%"
     underlineColorAndroid="transparent"
-    value="55.00%"
+    value="10.00%"
   />
 </View>
 `;

@@ -67,23 +67,35 @@ export function filter(
   chainFilter: ChainId | null,
   searchFilter?: string
 ): TokenOption[] {
-  if (!tokenOptions || !tokenOptions.length) return []
-  if (!chainFilter && !searchFilter) return tokenOptions
+  if (!tokenOptions || !tokenOptions.length) {
+    return []
+  }
+  if (!chainFilter && !searchFilter) {
+    return tokenOptions
+  }
 
   const andPatterns: Fuse.Expression[] = []
   const orPatterns: Fuse.Expression[] = []
 
   const chainSearchPattern = getChainSearchPattern(chainFilter)
-  if (chainSearchPattern) andPatterns.push(chainSearchPattern)
+  if (chainSearchPattern) {
+    andPatterns.push(chainSearchPattern)
+  }
 
   const addressSearchPattern = getAddressSearchPattern(searchFilter)
-  if (addressSearchPattern) orPatterns.push(addressSearchPattern)
+  if (addressSearchPattern) {
+    orPatterns.push(addressSearchPattern)
+  }
 
   const symbolSearchPattern = getSymbolSearchPattern(searchFilter)
-  if (symbolSearchPattern) orPatterns.push(symbolSearchPattern)
+  if (symbolSearchPattern) {
+    orPatterns.push(symbolSearchPattern)
+  }
 
   const nameSearchPattern = getNameSearchPattern(searchFilter)
-  if (nameSearchPattern) orPatterns.push(nameSearchPattern)
+  if (nameSearchPattern) {
+    orPatterns.push(nameSearchPattern)
+  }
 
   const searchPattern: Fuse.Expression = {
     $and: [

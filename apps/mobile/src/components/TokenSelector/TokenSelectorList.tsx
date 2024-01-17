@@ -216,7 +216,9 @@ export function SectionHeader({ title, rightElement }: SectionHeaderProps): JSX.
 }
 
 function key(item: TokenOption | TokenOption[]): CurrencyId {
-  if (isSuggestedTokenItem(item)) return suggestedTokensKeyExtractor(item)
+  if (isSuggestedTokenItem(item)) {
+    return suggestedTokensKeyExtractor(item)
+  }
 
   return item.currencyInfo.currencyId
 }

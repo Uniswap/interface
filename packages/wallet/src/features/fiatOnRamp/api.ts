@@ -250,7 +250,9 @@ export const fiatOnRampAggregatorApi = createApi({
         // get all crypto currencies from all service providers that support the given fiat currency in the given country
         Object.values(
           response.reduce((acc: Record<string, MeldCryptoCurrency>, serviceProvider) => {
-            if (!serviceProvider.crypto?.onRamp) return acc
+            if (!serviceProvider.crypto?.onRamp) {
+              return acc
+            }
             const { countries, cryptoCurrencies } = serviceProvider.crypto.onRamp
             if (countries.find((c) => c.countryCode === countryCode)) {
               cryptoCurrencies.forEach((cryptoCurrency) => {

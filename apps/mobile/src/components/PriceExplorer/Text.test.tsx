@@ -1,8 +1,8 @@
 import React from 'react'
 import * as charts from 'react-native-wagmi-charts'
 import { DatetimeText, PriceText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
-import { Amounts } from 'src/test/gqlFixtures'
 import { render, within } from 'src/test/test-utils'
+import { Amounts } from 'wallet/src/test/gqlFixtures'
 
 jest.mock('react-native-wagmi-charts')
 const mockedUseLineChartPrice = charts.useLineChartPrice as jest.Mock
@@ -47,8 +47,9 @@ describe(PriceText, () => {
     const animatedText = await tree.findByTestId('price-text')
     const wholePart = await within(animatedText).findByTestId('wholePart')
     const decimalPart = await within(animatedText).findByTestId('decimalPart')
-    expect(wholePart.props.animatedProps.text).toBe(`$${Amounts.sm.value}`)
-    expect(decimalPart.props.animatedProps.text).toBe(`.00`)
+
+    expect(wholePart.props.text).toBe(`$${Amounts.sm.value}`)
+    expect(decimalPart.props.text).toBe(`.00`)
   })
 })
 
@@ -56,11 +57,11 @@ describe(RelativeChangeText, () => {
   it('renders without error', () => {
     mockedUseLineChart.mockReturnValue({
       isActive: { value: false },
+      data: [{ value: 10 }, { value: 9 }],
+      currentIndex: { value: 1 },
     })
 
-    const tree = render(
-      <RelativeChangeText loading={false} spotRelativeChange={{ value: Amounts.md.value }} />
-    )
+    const tree = render(<RelativeChangeText loading={false} />)
 
     expect(tree).toMatchSnapshot()
   })
@@ -68,11 +69,11 @@ describe(RelativeChangeText, () => {
   it('renders loading state', () => {
     mockedUseLineChart.mockReturnValue({
       isActive: { value: false },
+      data: [{ value: 10 }, { value: 9 }],
+      currentIndex: { value: 1 },
     })
 
-    const tree = render(
-      <RelativeChangeText loading={true} spotRelativeChange={{ value: Amounts.md.value }} />
-    )
+    const tree = render(<RelativeChangeText loading={true} />)
 
     expect(tree).toMatchSnapshot()
   })

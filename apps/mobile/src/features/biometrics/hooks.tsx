@@ -50,12 +50,6 @@ export function biometricAuthenticationRejected(status: BiometricAuthenticationS
   return status === BiometricAuthenticationStatus.Rejected
 }
 
-export function biometricAuthenticationCanceledByUser(
-  status: BiometricAuthenticationStatus
-): boolean {
-  return status === BiometricAuthenticationStatus.UserCancel
-}
-
 export function biometricAuthenticationDisabledByOS(
   status: BiometricAuthenticationStatus
 ): boolean {

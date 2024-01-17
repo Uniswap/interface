@@ -17,11 +17,18 @@ export function useContract<T extends Contract = Contract>(
   const contractsManager = useContractManager()
 
   return useMemo(() => {
-    if (!addressOrAddressMap || !ABI || !provider || !chainId) return null
+    if (!addressOrAddressMap || !ABI || !provider || !chainId) {
+      return null
+    }
     let address: Address | undefined
-    if (typeof addressOrAddressMap === 'string') address = addressOrAddressMap
-    else address = addressOrAddressMap[chainId]
-    if (!address) return null
+    if (typeof addressOrAddressMap === 'string') {
+      address = addressOrAddressMap
+    } else {
+      address = addressOrAddressMap[chainId]
+    }
+    if (!address) {
+      return null
+    }
     try {
       return contractsManager.getOrCreateContract(chainId, address, provider, ABI)
     } catch (error) {

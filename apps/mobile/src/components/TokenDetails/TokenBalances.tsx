@@ -48,7 +48,9 @@ export function TokenBalances({
     [navigateWithPop, preload]
   )
 
-  if (!hasCurrentChainBalances && !hasOtherChainBalances) return null
+  if (!hasCurrentChainBalances && !hasOtherChainBalances) {
+    return null
+  }
 
   return (
     <Flex borderRadius="$rounded8" gap="$spacing24">
@@ -139,6 +141,7 @@ function OtherChainBalance({
           <Flex row alignItems="center" gap="$spacing4">
             <TokenLogo
               chainId={balance.currencyInfo.currency.chainId}
+              name={balance.currencyInfo.currency.name}
               size={iconSizes.icon36}
               symbol={balance.currencyInfo.currency.symbol}
               url={balance.currencyInfo.logoUrl ?? undefined}

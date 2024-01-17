@@ -48,7 +48,9 @@ export function tokenProjectToCurrencyInfos(
         const { chain, address, decimals, symbol } = token ?? {}
         const chainId = fromGraphQLChain(chain)
 
-        if (chainFilter && chainFilter !== chainId) return null
+        if (chainFilter && chainFilter !== chainId) {
+          return null
+        }
 
         const currency = buildCurrency({
           chainId,
@@ -58,7 +60,9 @@ export function tokenProjectToCurrencyInfos(
           name,
         })
 
-        if (!currency) return null
+        if (!currency) {
+          return null
+        }
 
         const currencyInfo: CurrencyInfo = {
           currency,
@@ -98,7 +102,9 @@ export function buildCurrency({
   name,
   bypassChecksum = true,
 }: BuildCurrencyParams): Token | NativeCurrency | undefined {
-  if (!chainId || decimals === undefined || decimals === null) return undefined
+  if (!chainId || decimals === undefined || decimals === null) {
+    return undefined
+  }
 
   return isNonNativeAddress(chainId, address)
     ? new Token(chainId, address, decimals, symbol ?? undefined, name ?? undefined, bypassChecksum)
@@ -119,7 +125,9 @@ export function gqlTokenToCurrencyInfo(
     name: project?.name,
   })
 
-  if (!currency) return null
+  if (!currency) {
+    return null
+  }
 
   const currencyInfo: CurrencyInfo = {
     currency,

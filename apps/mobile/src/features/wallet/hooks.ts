@@ -27,7 +27,9 @@ export function useWalletRestore(params?: { openModalImmediately?: boolean }): {
   }, [dispatch])
 
   useEffect(() => {
-    if (!hasImportedSeedPhrase || !isRestoreWalletEnabled) return
+    if (!hasImportedSeedPhrase || !isRestoreWalletEnabled) {
+      return
+    }
 
     const openRestoreWalletModalIfNeeded = async (): Promise<void> => {
       const addresses = await Keyring.getAddressesForStoredPrivateKeys()

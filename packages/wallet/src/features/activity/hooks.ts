@@ -57,7 +57,9 @@ export function useFormattedTransactionDataForFeed(
   }, [])
 
   const transactions = useMemo(() => {
-    if (!data) return
+    if (!data) {
+      return
+    }
 
     return parseDataResponseToFeedTransactionDetails(data, hideSpamTokens)
   }, [data, hideSpamTokens])
@@ -80,9 +82,13 @@ export function useFormattedTransactionDataForFeed(
     (!hasData && isLoading) || (Boolean(isError) && networkStatus === NetworkStatus.refetch)
 
   const sectionData = useMemo(() => {
-    if (showLoading) return LOADING_DATA
+    if (showLoading) {
+      return LOADING_DATA
+    }
 
-    if (!hasTransactions) return
+    if (!hasTransactions) {
+      return
+    }
 
     return [
       ...pending,
@@ -155,7 +161,9 @@ export function useFormattedTransactionDataForActivity(
   )
 
   const formattedTransactions = useMemo(() => {
-    if (!data) return
+    if (!data) {
+      return
+    }
 
     return parseDataResponseToTransactionDetails(data, hideSpamTokens)
   }, [data, hideSpamTokens])
@@ -180,9 +188,13 @@ export function useFormattedTransactionDataForActivity(
     (!hasData && isLoading) || (Boolean(isError) && networkStatus === NetworkStatus.refetch)
 
   const sectionData = useMemo(() => {
-    if (showLoading) return LOADING_DATA
+    if (showLoading) {
+      return LOADING_DATA
+    }
 
-    if (!hasTransactions) return
+    if (!hasTransactions) {
+      return
+    }
 
     return [
       ...pending,

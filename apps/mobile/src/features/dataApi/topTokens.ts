@@ -22,11 +22,15 @@ export function usePopularTokens(chainFilter: ChainId): GqlResult<CurrencyInfo[]
   const persistedError = usePersistedError(loading, error)
 
   const formattedData = useMemo(() => {
-    if (!data || !data.topTokens) return
+    if (!data || !data.topTokens) {
+      return
+    }
 
     return data.topTokens
       .map((token) => {
-        if (!token) return null
+        if (!token) {
+          return null
+        }
 
         return gqlTokenToCurrencyInfo(token)
       })

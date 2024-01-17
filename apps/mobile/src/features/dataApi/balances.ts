@@ -13,7 +13,9 @@ export function useBalances(currencies: CurrencyId[] | undefined): PortfolioBala
   })
 
   return useMemo(() => {
-    if (!currencies || !currencies.length || !balances) return null
+    if (!currencies || !currencies.length || !balances) {
+      return null
+    }
 
     return currencies
       .map((id: CurrencyId) => balances[id] ?? null)

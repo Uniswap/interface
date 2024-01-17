@@ -24,7 +24,9 @@ function SafeAreaWithInsets({ children, edges, noInsets, ...rest }: ScreenProps)
   const safeAreaStyles = useMemo(() => {
     const style: { [key: string]: number } = {}
 
-    if (noInsets) return style
+    if (noInsets) {
+      return style
+    }
 
     if (!edges) {
       return {

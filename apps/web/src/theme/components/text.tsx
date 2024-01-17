@@ -11,6 +11,16 @@ const TextWrapper = styled(Text).withConfig({
   color: ${({ color, theme }) => (theme as any)[color]};
 `
 
+const HeadingWrapper = styled.h1.withConfig({
+  shouldForwardProp: (prop) => prop !== 'color',
+})<{ color: keyof string; fontSize: string; margin: string }>`
+  color: ${({ color, theme }) => (theme as any)[color]};
+  font-family: inherit;
+  font-weight: 485;
+  font-size: ${({ fontSize }) => fontSize};
+  margin: ${({ margin }) => margin ?? 0};
+`
+
 type TextProps = Omit<TextPropsOriginal, 'css'>
 
 // todo: export each component individually
@@ -66,6 +76,15 @@ export const ThemedText = {
   },
   UtilityBadge(props: TextProps) {
     return <TextWrapper fontWeight={485} fontSize="8px" lineHeight="12px" {...props} />
+  },
+  H1Small(props: TextProps) {
+    return <HeadingWrapper fontSize="20px" color="neutral1" {...props} />
+  },
+  H1Medium(props: TextProps) {
+    return <HeadingWrapper fontSize="24px" color="neutral1" {...props} />
+  },
+  H1Large(props: TextProps) {
+    return <HeadingWrapper fontSize="36px" color="neutral1" {...props} />
   },
   DeprecatedMain(props: TextProps) {
     return <TextWrapper fontWeight={485} color="neutral2" {...props} />

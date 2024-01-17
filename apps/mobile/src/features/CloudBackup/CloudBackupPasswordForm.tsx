@@ -1,11 +1,10 @@
 import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, TextInput } from 'react-native'
-import { CheckBox } from 'src/components/buttons/CheckBox'
 import { PasswordInput } from 'src/components/input/PasswordInput'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Button, Flex } from 'ui/src'
+import { Button, CheckBox, Flex } from 'ui/src'
 import { validatePassword } from 'wallet/src/utils/password'
 
 export enum PasswordErrors {

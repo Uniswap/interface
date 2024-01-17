@@ -35,8 +35,14 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
     }
   >
     <View
-      entering={BaseAnimationMock {}}
-      exiting={BaseAnimationMock {}}
+      animatedStyle={
+        {
+          "value": {},
+        }
+      }
+      collapsable={false}
+      entering={[Function]}
+      exiting={[Function]}
       style={
         {
           "alignItems": "stretch",

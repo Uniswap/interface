@@ -180,12 +180,16 @@ const KeyButton = memo(function KeyButton({
   const { decimalSeparator } = useAppFiatCurrencyInfo()
 
   const handlePress = (): void => {
-    if (disabled) return
+    if (disabled) {
+      return
+    }
     onPress?.(label, action)
   }
 
   const handleLongPress = (): void => {
-    if (disabled) return
+    if (disabled) {
+      return
+    }
     onLongPress?.(label, action)
   }
 

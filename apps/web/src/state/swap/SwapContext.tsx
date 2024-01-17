@@ -31,8 +31,6 @@ export interface CurrencyState {
 export interface SwapState {
   readonly independentField: Field
   readonly typedValue: string
-  // the typed recipient address or ENS name, or null if swap should go to sender
-  readonly recipient: string | null
 }
 
 const initialSwapState: SwapState = queryParametersToSwapState(parsedQueryString())
@@ -129,12 +127,16 @@ export function SwapAndLimitContextProvider({
   useEffect(() => {
     const combinedCurrencyState = { ...currencyState, ...prefilledState }
     const chainChanged = previousConnectedChainId && previousConnectedChainId !== connectedChainId
-    const prefilledInputChanged =
-      previousPrefilledState?.inputCurrency &&
-      !prefilledState.inputCurrency?.equals(previousPrefilledState.inputCurrency)
-    const prefilledOutputChanged =
-      previousPrefilledState?.outputCurrency &&
-      !prefilledState?.outputCurrency?.equals(previousPrefilledState.outputCurrency)
+    const prefilledInputChanged = Boolean(
+      previousPrefilledState?.inputCurrency
+        ? !prefilledState.inputCurrency?.equals(previousPrefilledState.inputCurrency)
+        : prefilledState.inputCurrency
+    )
+    const prefilledOutputChanged = Boolean(
+      previousPrefilledState?.outputCurrency
+        ? !prefilledState?.outputCurrency?.equals(previousPrefilledState.outputCurrency)
+        : prefilledState.outputCurrency
+    )
 
     if (chainChanged || prefilledInputChanged || prefilledOutputChanged) {
       setCurrencyState({

@@ -111,7 +111,9 @@ export function RestoreCloudBackupPasswordScreen({
   useAddBackButton(navigation)
 
   const onPasswordSubmit = async (): Promise<void> => {
-    if (isLockedOut || enteredPassword.length === 0) return
+    if (isLockedOut || enteredPassword.length === 0) {
+      return
+    }
 
     // Attempt to restore backup with encrypted mnemonic using password
     async function checkCorrectPassword(): Promise<void> {

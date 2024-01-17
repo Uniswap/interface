@@ -19,7 +19,7 @@ const DEFAULT_HIDE_DELAY = 5000 // 5 seconds
 const HIDE_OFFSET_Y = -150
 const SPRING_ANIMATION = { damping: 30, stiffness: 150 }
 
-const TOAST_BORDER_WIDTH = spacing.spacing2
+const TOAST_BORDER_WIDTH = spacing.spacing1
 const LARGE_TOAST_RADIUS = borderRadii.rounded24
 const SMALL_TOAST_RADIUS = borderRadii.roundedFull
 
@@ -157,8 +157,7 @@ export function NotificationContent({
       flex={1}
       flexDirection="row"
       minHeight={NOTIFICATION_HEIGHT}
-      px="$spacing16"
-      py="$spacing16"
+      p="$spacing16"
       onPress={onPress}
       onPressIn={onPressIn}>
       <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between" width="100%">
@@ -208,7 +207,7 @@ export function NotificationContentSmall({
         onPressIn={onPressIn}>
         <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" pr="$spacing4">
           <Flex>{icon}</Flex>
-          <Text adjustsFontSizeToFit numberOfLines={1} variant="body1">
+          <Text adjustsFontSizeToFit numberOfLines={1} variant="body2">
             {title}
           </Text>
         </Flex>

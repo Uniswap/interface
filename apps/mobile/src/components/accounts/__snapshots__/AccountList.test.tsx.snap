@@ -27,7 +27,13 @@ exports[`AccountList renders without error 1`] = `
         </React.Fragment>
       </React.Fragment>
     }
+    animatedStyle={
+      {
+        "value": {},
+      }
+    }
     bounces={false}
+    collapsable={false}
     data={[]}
     getItem={[Function]}
     getItemCount={[Function]}
@@ -391,6 +397,7 @@ exports[`AccountList renders without error 1`] = `
                       }
                     >
                       <Text
+                        adjustsFontSizeToFit={true}
                         allowFontScaling={true}
                         maxFontSizeMultiplier={1.4}
                         numberOfLines={1}

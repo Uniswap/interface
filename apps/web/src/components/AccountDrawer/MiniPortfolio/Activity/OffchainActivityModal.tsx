@@ -1,30 +1,37 @@
-import { t, Trans } from '@lingui/macro'
-import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { ReactComponent as ErrorContent } from 'assets/svg/uniswapx_error.svg'
+import { Trans } from '@lingui/macro'
+import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import Column, { AutoColumn } from 'components/Column'
 import { OpacityHoverState } from 'components/Common'
-import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import Modal from 'components/Modal'
-import { AnimatedEntranceConfirmationIcon } from 'components/swap/PendingModalContent/Logos'
-import { TradeSummary } from 'components/swap/PendingModalContent/TradeSummary'
+import Row from 'components/Row'
+import { Field } from 'components/swap/constants'
+import { SwapModalHeaderAmount } from 'components/swap/SwapModalHeaderAmount'
 import { useCurrency } from 'hooks/Tokens'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
-import { useCallback, useMemo } from 'react'
-import { X } from 'react-feather'
-import { InterfaceTrade } from 'state/routing/types'
+import { ReactNode, useCallback, useMemo } from 'react'
+import { ArrowDown, X } from 'react-feather'
 import { useOrder } from 'state/signatures/hooks'
-import styled from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme/components'
-import { FadePresence } from 'theme/components/FadePresence'
+import styled, { useTheme } from 'styled-components'
+import { Divider, ThemedText } from 'theme/components'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
+import { PortfolioLogo } from '../PortfolioLogo'
+import { OffchainOrderLineItem, OffchainOrderLineItemProps, OffchainOrderLineItemType } from './OffchainOrderLineItem'
 import { OffchainOrderDetails } from './types'
+
+type Logos = {
+  inputLogo?: string
+  outputLogo?: string
+}
 
 type SelectedOrderInfo = {
   modalOpen?: boolean
   order?: OffchainOrderDetails
+  logos?: Logos
 }
 
 const selectedOrderAtom = atom<SelectedOrderInfo | undefined>(undefined)
@@ -32,15 +39,15 @@ const selectedOrderAtom = atom<SelectedOrderInfo | undefined>(undefined)
 export function useOpenOffchainActivityModal() {
   const setSelectedOrder = useUpdateAtom(selectedOrderAtom)
 
-  return useCallback((order: OffchainOrderDetails) => setSelectedOrder({ order, modalOpen: true }), [setSelectedOrder])
+  return useCallback(
+    (order: OffchainOrderDetails, logos?: Logos) => setSelectedOrder({ order, logos, modalOpen: true }),
+    [setSelectedOrder]
+  )
 }
 
 const Wrapper = styled(AutoColumn).attrs({ gap: 'md', grow: true })`
-  padding: 16px;
-`
-
-const ContentContainer = styled(AutoColumn).attrs({ justify: 'center', gap: 'md' })`
-  padding: 28px 44px 24px 44px;
+  padding: 12px 20px;
+  width: 100%;
 `
 
 const StyledXButton = styled(X)`
@@ -51,43 +58,16 @@ const StyledXButton = styled(X)`
   ${OpacityHoverState};
 `
 
-const LoadingWrapper = styled.div`
-  width: 52px;
-  height: 52px;
-  position: relative;
-  margin-bottom: 8px;
-`
-const LoadingIndicator = styled(LoaderV3)`
-  width: 100%;
-  height: 100%;
-  position: absolute;
+const OffchainModalDivider = styled(Divider)`
+  margin: 28px 0;
 `
 
-function Loader() {
-  return (
-    <LoadingWrapper>
-      <FadePresence>
-        <LoadingIndicator />
-      </FadePresence>
-    </LoadingWrapper>
-  )
-}
-
-const Success = styled(AnimatedEntranceConfirmationIcon)`
-  position: relative;
-  margin-bottom: 10px;
-`
-
-const LearnMoreLink = styled(ExternalLink)`
-  font-weight: 535;
-`
-const DescriptionText = styled(ThemedText.LabelMicro)`
-  text-align: center;
-`
-
-function useOrderAmounts(
-  order?: OffchainOrderDetails
-): Pick<InterfaceTrade, 'inputAmount' | 'outputAmount'> | undefined {
+function useOrderAmounts(order?: OffchainOrderDetails):
+  | {
+      inputAmount: CurrencyAmount<Currency>
+      outputAmount: CurrencyAmount<Currency>
+    }
+  | undefined {
   const inputCurrency = useCurrency(order?.swapInfo?.inputCurrencyId, order?.chainId)
   const outputCurrency = useCurrency(order?.swapInfo?.outputCurrencyId, order?.chainId)
 
@@ -116,108 +96,110 @@ function useOrderAmounts(
   }
 }
 
-export function OrderContent({ order }: { order: OffchainOrderDetails }) {
+function getOrderTitle(status: UniswapXOrderStatus): ReactNode {
+  switch (status) {
+    case UniswapXOrderStatus.OPEN:
+      return <Trans>Order pending</Trans>
+    case UniswapXOrderStatus.EXPIRED:
+      return <Trans>Order expired</Trans>
+    case UniswapXOrderStatus.CANCELLED:
+      return <Trans>Order cancelled</Trans>
+    case UniswapXOrderStatus.FILLED:
+      return <Trans>Order executed</Trans>
+    default:
+      return <Trans>Order open</Trans>
+  }
+}
+
+export function OrderContent({ order, logos }: { order: OffchainOrderDetails; logos?: Logos }) {
   const amounts = useOrderAmounts(order)
+  const amountsDefined = !!amounts?.inputAmount?.currency && !!amounts?.outputAmount?.currency
+  const fiatValueInput = useUSDPrice(amounts?.inputAmount)
+  const fiatValueOutput = useUSDPrice(amounts?.outputAmount)
+  const theme = useTheme()
 
   const explorerLink = order?.txHash
     ? getExplorerLink(order.chainId, order.txHash, ExplorerDataType.TRANSACTION)
     : undefined
 
-  switch (order.status) {
-    case UniswapXOrderStatus.OPEN: {
-      return (
-        <ContentContainer>
-          <Loader />
-          <ThemedText.SubHeaderLarge>
-            <Trans>Swapping</Trans>
-          </ThemedText.SubHeaderLarge>
-          <Column>
-            {amounts && <TradeSummary trade={amounts} />}
-            <ThemedText.BodySmall paddingTop="48px" textAlign="center">
-              <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/17515415311501">
-                <Trans>Learn more about swapping with UniswapX</Trans>
-              </ExternalLink>
-            </ThemedText.BodySmall>
-          </Column>
-        </ContentContainer>
-      )
+  const createdAt = formatTimestamp(order.addedTime)
+
+  const details: Array<OffchainOrderLineItemProps> = useMemo(() => {
+    const details = []
+    if (amountsDefined) {
+      details.push({ type: OffchainOrderLineItemType.EXCHANGE_RATE, amounts } as OffchainOrderLineItemProps)
     }
-    case UniswapXOrderStatus.FILLED:
-      return (
-        <ContentContainer>
-          <Success />
-          <ThemedText.SubHeaderLarge>
-            <Trans>Swapped</Trans>
-          </ThemedText.SubHeaderLarge>
-          <Column>
-            {amounts && <TradeSummary trade={amounts} />}
-            <ThemedText.BodySmall paddingTop="48px" textAlign="center">
-              {explorerLink && (
-                <ExternalLink href={explorerLink}>
-                  <Trans>View on Explorer</Trans>
-                </ExternalLink>
-              )}
-            </ThemedText.BodySmall>
-          </Column>
-        </ContentContainer>
-      )
-    case UniswapXOrderStatus.CANCELLED:
-      return (
-        <ContentContainer>
-          <ErrorContent />
-          <ThemedText.SubHeaderLarge>
-            <Trans>Cancelled</Trans>
-          </ThemedText.SubHeaderLarge>
-          <ThemedText.LabelSmall textAlign="center">
-            <Trans>This order was cancelled</Trans>
-          </ThemedText.LabelSmall>
-        </ContentContainer>
-      )
-    case UniswapXOrderStatus.EXPIRED:
-      return (
-        <ContentContainer>
-          <ErrorContent />
-          <ThemedText.SubHeaderLarge>
-            <Trans>Swap expired</Trans>
-          </ThemedText.SubHeaderLarge>
-          <DescriptionText>
-            {/* TODO: Improve translation grammar by not having to break up the string */}
-            <Trans>Your swap expired before it could be filled. Try again or</Trans>{' '}
-            <LearnMoreLink href="https://support.uniswap.org/hc/en-us/articles/17515426867213">
-              <Trans>learn more.</Trans>
-            </LearnMoreLink>
-          </DescriptionText>
-        </ContentContainer>
-      )
-    case UniswapXOrderStatus.ERROR:
-      return (
-        <ContentContainer>
-          <ErrorContent />
-          <ThemedText.SubHeaderLarge>
-            <Trans>Error</Trans>
-          </ThemedText.SubHeaderLarge>
-          <ThemedText.LabelSmall textAlign="center">
-            {/* TODO: Improve translation grammar by not having to break up the string */}
-            <Trans>Your swap couldn&apos;t be filled at this time. Try again or </Trans>{' '}
-            <LearnMoreLink href="https://support.uniswap.org/hc/en-us/articles/17515489874189">
-              <Trans>learn more.</Trans>
-            </LearnMoreLink>
-          </ThemedText.LabelSmall>
-        </ContentContainer>
-      )
-    case UniswapXOrderStatus.INSUFFICIENT_FUNDS:
-      return (
-        <ContentContainer>
-          <ErrorContent />
-          <ThemedText.SubHeaderLarge>
-            <Trans>Insufficient funds for swap</Trans>
-          </ThemedText.SubHeaderLarge>
-          <ThemedText.LabelSmall textAlign="center">{t`You didn't have enough ${
-            amounts?.inputAmount.currency.symbol ?? amounts?.inputAmount.currency.name ?? t`of the input token`
-          } to complete this swap.`}</ThemedText.LabelSmall>
-        </ContentContainer>
-      )
+    if (order.status === UniswapXOrderStatus.OPEN) {
+      details.push({
+        type: OffchainOrderLineItemType.EXPIRY,
+        order,
+      } as OffchainOrderLineItemProps)
+    }
+    details.push({
+      type: OffchainOrderLineItemType.NETWORK_COST,
+    } as OffchainOrderLineItemProps)
+    if (explorerLink) {
+      details.push({
+        type: OffchainOrderLineItemType.TRANSACTION_ID,
+        explorerLink,
+        order,
+      } as OffchainOrderLineItemProps)
+    }
+    return details
+  }, [amounts, amountsDefined, explorerLink, order])
+
+  const currencies = useMemo(
+    () => [amounts?.inputAmount.currency, amounts?.outputAmount.currency],
+    [amounts?.inputAmount.currency, amounts?.outputAmount.currency]
+  )
+
+  if (!amounts?.inputAmount || !amounts?.outputAmount) {
+    return null
   }
+  return (
+    <Column>
+      <Row gap="md">
+        <PortfolioLogo
+          chainId={amounts?.inputAmount.currency.chainId ?? ChainId.MAINNET}
+          currencies={currencies}
+          images={[logos?.inputLogo, logos?.outputLogo]}
+        />
+        <Column>
+          <ThemedText.SubHeader fontWeight={500}>{getOrderTitle(order.status)}</ThemedText.SubHeader>
+          <ThemedText.BodySmall color="neutral2" fontWeight={500}>
+            {createdAt}
+          </ThemedText.BodySmall>
+        </Column>
+      </Row>
+      <OffchainModalDivider />
+      <Column gap="md">
+        <SwapModalHeaderAmount
+          field={Field.INPUT}
+          label={undefined}
+          amount={amounts.inputAmount}
+          currency={amounts.inputAmount.currency}
+          usdAmount={fiatValueInput.data}
+          isLoading={false}
+        />
+        <ArrowDown color={theme.neutral3} />
+        <SwapModalHeaderAmount
+          field={Field.OUTPUT}
+          label={undefined}
+          amount={amounts.outputAmount}
+          currency={amounts.outputAmount.currency}
+          usdAmount={fiatValueOutput.data}
+          isLoading={false}
+        />
+      </Column>
+      <OffchainModalDivider />
+      <Column gap="sm">
+        {details.map((detail) => (
+          <OffchainOrderLineItem key={detail.type} {...detail} />
+        ))}
+      </Column>
+      {/* todo: add cancel button */}
+    </Column>
+  )
 }
 
 /* Returns the order currently selected in the UI synced with updates from order status polling */
@@ -257,10 +239,15 @@ export function OffchainActivityModal() {
   }, [setSelectedOrder])
 
   return (
-    <Modal isOpen={!!selectedOrderAtomValue?.modalOpen} onDismiss={reset}>
+    <Modal maxWidth={375} isOpen={!!selectedOrderAtomValue?.modalOpen} onDismiss={reset}>
       <Wrapper data-testid="offchain-activity-modal">
-        <StyledXButton onClick={reset} />
-        {syncedSelectedOrder && <OrderContent order={syncedSelectedOrder} />}
+        <Row justify="space-between">
+          <ThemedText.SubHeader fontWeight={500}>
+            <Trans>Transaction details</Trans>
+          </ThemedText.SubHeader>
+          <StyledXButton onClick={reset} />
+        </Row>
+        {syncedSelectedOrder && <OrderContent order={syncedSelectedOrder} logos={selectedOrderAtomValue?.logos} />}
       </Wrapper>
     </Modal>
   )

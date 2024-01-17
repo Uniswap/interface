@@ -18,8 +18,12 @@ export interface WalletState {
   // Persisted UI configs set by the user through interaction with filters and settings
   settings: {
     nftViewType?: NFTViewType
+
     // Settings used in the top tokens list
+    hideSmallBalances: boolean
+    hideSpamTokens: boolean
     tokensOrderBy?: TokensOrderBy
+
     swapProtection: SwapProtectionSetting
   }
 
@@ -35,6 +39,8 @@ export const initialWalletState: WalletState = {
   isUnlocked: false,
   settings: {
     swapProtection: SwapProtectionSetting.On,
+    hideSmallBalances: true,
+    hideSpamTokens: true,
   },
 }
 
@@ -45,22 +51,30 @@ const slice = createSlice({
     addAccount: (state, action: PayloadAction<Account>) => {
       const { address } = action.payload
       const id = getValidAddress(address, true)
-      if (!id) throw new Error(`Cannot add an account with an invalid address ${address}`)
+      if (!id) {
+        throw new Error(`Cannot add an account with an invalid address ${address}`)
+      }
       state.accounts[id] = action.payload
     },
     addAccounts: (state, action: PayloadAction<Account[]>) => {
       const accounts = action.payload
       accounts.forEach((account) => {
         const id = getValidAddress(account.address, true)
-        if (!id) throw new Error(`Cannot add an account with an invalid address ${account.address}`)
+        if (!id) {
+          throw new Error(`Cannot add an account with an invalid address ${account.address}`)
+        }
         state.accounts[id] = account
       })
     },
     removeAccount: (state, action: PayloadAction<Address>) => {
       const address = action.payload
       const id = getValidAddress(address, true)
-      if (!id) throw new Error('Cannot remove an account with an invalid address')
-      if (!state.accounts[id]) throw new Error(`Cannot remove missing account ${id}`)
+      if (!id) {
+        throw new Error('Cannot remove an account with an invalid address')
+      }
+      if (!state.accounts[id]) {
+        throw new Error(`Cannot remove missing account ${id}`)
+      }
       delete state.accounts[id]
       // If removed account was active, reset active account to first account if it exists
       if (state.activeAccountAddress && areAddressesEqual(state.activeAccountAddress, address)) {
@@ -72,8 +86,12 @@ const slice = createSlice({
       const addresses = action.payload
       addresses.forEach((address) => {
         const id = getValidAddress(address, true)
-        if (!id) throw new Error('Cannot remove an account with an invalid address')
-        if (!state.accounts[id]) throw new Error(`Cannot remove missing account ${id}`)
+        if (!id) {
+          throw new Error('Cannot remove an account with an invalid address')
+        }
+        if (!state.accounts[id]) {
+          throw new Error(`Cannot remove missing account ${id}`)
+        }
         delete state.accounts[id]
       })
       // Reset active account to first account if it exists
@@ -84,24 +102,36 @@ const slice = createSlice({
       const addresses = action.payload
       addresses.forEach((address) => {
         const id = getValidAddress(address, true)
-        if (!id) throw new Error('Cannot operate on an invalid address')
+        if (!id) {
+          throw new Error('Cannot operate on an invalid address')
+        }
         const account = state.accounts[id]
-        if (!account) throw new Error(`Cannot enable missing account ${id}`)
+        if (!account) {
+          throw new Error(`Cannot enable missing account ${id}`)
+        }
         account.pending = false
       })
     },
     editAccount: (state, action: PayloadAction<{ address: Address; updatedAccount: Account }>) => {
       const { address, updatedAccount } = action.payload
       const id = getValidAddress(address, true)
-      if (!id) throw new Error('Cannot edit an account with an invalid address')
-      if (!state.accounts[id]) throw new Error(`Cannot edit missing account ${id}`)
+      if (!id) {
+        throw new Error('Cannot edit an account with an invalid address')
+      }
+      if (!state.accounts[id]) {
+        throw new Error(`Cannot edit missing account ${id}`)
+      }
       state.accounts[id] = updatedAccount
     },
     setAccountAsActive: (state, action: PayloadAction<Address>) => {
       const address = action.payload
       const id = getValidAddress(address, true)
-      if (!id) throw new Error('Cannot activate an account with an invalid address')
-      if (!state.accounts[id]) throw new Error(`Cannot activate missing account ${id}`)
+      if (!id) {
+        throw new Error('Cannot activate an account with an invalid address')
+      }
+      if (!state.accounts[id]) {
+        throw new Error(`Cannot activate missing account ${id}`)
+      }
       state.activeAccountAddress = id
     },
     unlockWallet: (state) => {
@@ -133,6 +163,12 @@ const slice = createSlice({
     ) => {
       state.settings.swapProtection = newSwapProtectionSetting
     },
+    setHideSmallBalances: (state, { payload }: PayloadAction<boolean>) => {
+      state.settings.hideSmallBalances = payload
+    },
+    setHideSpamTokens: (state, { payload }: PayloadAction<boolean>) => {
+      state.settings.hideSpamTokens = payload
+    },
     setAppRating: (
       state,
       {
@@ -141,8 +177,12 @@ const slice = createSlice({
     ) => {
       state.appRatingPromptedMs = Date.now()
 
-      if (ratingProvided) state.appRatingProvidedMs = Date.now()
-      if (feedbackProvided) state.appRatingFeedbackProvidedMs = Date.now()
+      if (ratingProvided) {
+        state.appRatingProvidedMs = Date.now()
+      }
+      if (feedbackProvided) {
+        state.appRatingFeedbackProvidedMs = Date.now()
+      }
     },
     resetWallet: () => initialWalletState,
     restoreMnemonicComplete: (state) => state,
@@ -165,6 +205,8 @@ export const {
   setTokensOrderBy,
   restoreMnemonicComplete,
   setSwapProtectionSetting,
+  setHideSmallBalances,
+  setHideSpamTokens,
   setAppRating,
 } = slice.actions
 

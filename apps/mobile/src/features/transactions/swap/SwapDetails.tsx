@@ -27,7 +27,9 @@ const getFeeAmountUsd = (
   trade: Trade<Currency, Currency, TradeType>,
   outputCurrencyPricePerUnitExact?: string
 ): number | undefined => {
-  if (!trade.swapFee || !outputCurrencyPricePerUnitExact) return
+  if (!trade.swapFee || !outputCurrencyPricePerUnitExact) {
+    return
+  }
 
   const currencyAmount = getCurrencyAmount({
     value: trade.swapFee.amount,
@@ -35,7 +37,9 @@ const getFeeAmountUsd = (
     currency: trade.outputAmount.currency,
   })
 
-  if (!currencyAmount) return
+  if (!currencyAmount) {
+    return
+  }
 
   const feeUSD = parseFloat(outputCurrencyPricePerUnitExact) * parseFloat(currencyAmount.toExact())
   return feeUSD

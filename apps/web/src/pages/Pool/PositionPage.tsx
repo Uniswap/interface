@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { InterfacePageName, LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
@@ -29,6 +29,7 @@ import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react'
+import { Helmet } from 'react-helmet'
 import { Link, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
@@ -164,6 +165,10 @@ const NFTImage = styled.img`
   height: 400px;
   /* Ensures SVG appears on top of canvas. */
   z-index: 1;
+`
+
+const PairHeader = styled(ThemedText.H1Medium)`
+  margin-right: 10px;
 `
 
 function CurrentPriceCard({
@@ -662,6 +667,9 @@ function PositionPageContent() {
   ) : (
     <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
       <>
+        <Helmet>
+          <title>{t`Manage ${currencyQuote?.symbol}/${currencyBase?.symbol} pool liquidity on Uniswap`}</title>
+        </Helmet>
         <PageWrapper>
           <TransactionConfirmationModal
             isOpen={showConfirm}
@@ -691,9 +699,9 @@ function PositionPageContent() {
               <ResponsiveRow>
                 <PositionLabelRow>
                   <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={24} margin={true} />
-                  <ThemedText.DeprecatedLabel fontSize="24px" mr="10px">
+                  <PairHeader>
                     &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
-                  </ThemedText.DeprecatedLabel>
+                  </PairHeader>
                   <Badge style={{ marginRight: '8px' }}>
                     <BadgeText>
                       <Trans>{formatDelta(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant()))}</Trans>

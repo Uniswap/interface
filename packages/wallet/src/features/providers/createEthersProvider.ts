@@ -12,13 +12,17 @@ export function createEthersProvider(
   try {
     if (rpcType === RPCType.Private) {
       const privateRPCUrl = CHAIN_INFO[chainId].rpcUrls?.[RPCType.Private]
-      if (!privateRPCUrl) throw new Error(`No private RPC available for chain ${chainId}`)
+      if (!privateRPCUrl) {
+        throw new Error(`No private RPC available for chain ${chainId}`)
+      }
       return new ethersProviders.JsonRpcProvider(privateRPCUrl)
     }
 
     try {
       const publicRPCUrl = CHAIN_INFO[chainId].rpcUrls?.[RPCType.Public]
-      if (publicRPCUrl) return new ethersProviders.JsonRpcProvider(publicRPCUrl)
+      if (publicRPCUrl) {
+        return new ethersProviders.JsonRpcProvider(publicRPCUrl)
+      }
 
       return new ethersProviders.InfuraProvider(getInfuraChainName(chainId), config.infuraProjectId)
     } catch (error) {

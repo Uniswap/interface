@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { TraceEvent } from 'analytics'
 import { Trace } from 'analytics'
+import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { AutoRow } from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
@@ -12,6 +13,7 @@ import TokenTable from 'components/Tokens/TokenTable/TokenTable'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useResetAtom } from 'jotai/utils'
+import { ExploreChartsSection } from 'pages/Explore/charts/ExploreChartsSection'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled, { css } from 'styled-components'
@@ -20,18 +22,31 @@ import { ThemedText } from 'theme/components'
 import { useExploreParams } from './redirects'
 import RecentTransactions from './tables/RecentTransactions'
 
-const ExploreContainer = styled.div`
+const ExploreContainer = styled.div<{ isInfoExplorePageEnabled?: boolean }>`
   width: 100%;
   min-width: 320px;
-  padding: 68px 12px 0px;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    padding-top: 48px;
-  }
+  ${({ isInfoExplorePageEnabled }) =>
+    isInfoExplorePageEnabled
+      ? css`
+          padding: 48px 40px 0px;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding-top: 20px;
-  }
+          @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+            padding: 16px;
+            padding-bottom: 0px;
+          }
+        `
+      : css`
+          padding: 68px 12px 0px;
+
+          @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+            padding-top: 48px;
+          }
+
+          @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+            padding-top: 20px;
+          }
+        `}
 `
 const TitleContainer = styled.div`
   margin-bottom: 32px;
@@ -135,7 +150,7 @@ const Pages: Array<Page> = [
   {
     title: <Trans>Pools</Trans>,
     key: ExploreTab.Pools,
-    component: TokenTable,
+    component: TopPoolTable,
     loggingElementName: InterfaceElementName.EXPLORE_POOLS_TAB,
   },
   {
@@ -179,17 +194,18 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
       page={isInfoExplorePageEnabled ? InterfacePageName.EXPLORE_PAGE : InterfacePageName.TOKENS_PAGE}
       shouldLogImpression
     >
-      <ExploreContainer>
-        {/* TODO(WEB-2749 & WEB-2750): add graphs to explore page */}
-        {!isInfoExplorePageEnabled && (
+      <ExploreContainer isInfoExplorePageEnabled={isInfoExplorePageEnabled}>
+        {isInfoExplorePageEnabled ? (
+          <ExploreChartsSection />
+        ) : (
           <TitleContainer>
             <MouseoverTooltip
               text={<Trans>This table contains the top tokens by Uniswap volume, sorted based on your input.</Trans>}
               placement="bottom"
             >
-              <ThemedText.LargeHeader>
+              <ThemedText.H1Large>
                 <Trans>Top tokens on Uniswap</Trans>
-              </ThemedText.LargeHeader>
+              </ThemedText.H1Large>
             </MouseoverTooltip>
           </TitleContainer>
         )}

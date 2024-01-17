@@ -6,7 +6,10 @@ import { UniswapXOrderDetails } from 'state/signatures/types'
  * TODO: refactor parsing / Activity so that all Activity Types can have a detail sheet.
  */
 
-export type OffchainOrderDetails = Pick<UniswapXOrderDetails, 'txHash' | 'chainId' | 'type' | 'status' | 'swapInfo'>
+export type OffchainOrderDetails = Pick<
+  UniswapXOrderDetails,
+  'txHash' | 'chainId' | 'type' | 'status' | 'swapInfo' | 'addedTime' | 'expiry'
+>
 
 export type Activity = {
   hash: string

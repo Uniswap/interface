@@ -69,7 +69,9 @@ export function getCurrencyAddressForAnalytics(currency: Currency): string {
 }
 
 export const isNativeCurrencyAddress = (chainId: ChainId, address: Maybe<Address>): boolean => {
-  if (!address) return true
+  if (!address) {
+    return true
+  }
 
   return areAddressesEqual(address, getNativeAddress(chainId))
 }
@@ -77,7 +79,9 @@ export const isNativeCurrencyAddress = (chainId: ChainId, address: Maybe<Address
 // Currency ids are formatted as `chainId-tokenaddress`
 export function currencyIdToAddress(_currencyId: string): Address {
   const currencyIdParts = _currencyId.split('-')
-  if (!currencyIdParts[1]) throw new Error(`Invalid currencyId format: ${_currencyId}`)
+  if (!currencyIdParts[1]) {
+    throw new Error(`Invalid currencyId format: ${_currencyId}`)
+  }
   return currencyIdParts[1]
 }
 
@@ -87,12 +91,16 @@ function isPolygonChain(chainId: number): chainId is ChainId.Polygon | ChainId.P
 
 // Similar to `currencyIdToAddress`, except native addresses are `null`.
 export function currencyIdToGraphQLAddress(_currencyId?: string): Address | null {
-  if (!_currencyId) return null
+  if (!_currencyId) {
+    return null
+  }
 
   const address = currencyIdToAddress(_currencyId)
   const chainId = currencyIdToChain(_currencyId)
 
-  if (!chainId) return null
+  if (!chainId) {
+    return null
+  }
 
   // backend only expects `null` for the native asset, except Polygon
   if (isNativeCurrencyAddress(chainId, address) && !isPolygonChain(chainId)) {

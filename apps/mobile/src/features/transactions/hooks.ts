@@ -40,7 +40,9 @@ export function usePendingTransactions(
 ): TransactionDetails[] | undefined {
   const transactions = useSelectAddressTransactions(address)
   return useMemo(() => {
-    if (!transactions) return
+    if (!transactions) {
+      return
+    }
     return transactions.filter(
       (tx: { status: TransactionStatus; typeInfo: { type: TransactionType } }) =>
         tx.status === TransactionStatus.Pending &&
@@ -55,7 +57,9 @@ export function useSortedPendingTransactions(
 ): TransactionDetails[] | undefined {
   const transactions = usePendingTransactions(address)
   return useMemo(() => {
-    if (!transactions) return
+    if (!transactions) {
+      return
+    }
     return transactions.sort(
       (a: TransactionDetails, b: TransactionDetails) => a.addedTime - b.addedTime
     )
@@ -267,8 +271,12 @@ export function useMergeLocalAndRemoteTransactions(
 
   // Merge local and remote txs into one array and reconcile data discrepancies
   return useMemo((): TransactionDetails[] | undefined => {
-    if (!remoteTransactions?.length) return localTransactions
-    if (!localTransactions?.length) return remoteTransactions
+    if (!remoteTransactions?.length) {
+      return localTransactions
+    }
+    if (!localTransactions?.length) {
+      return remoteTransactions
+    }
 
     const txHashes = new Set<string>()
     const fiatOnRampTxs: TransactionDetails[] = []
@@ -302,7 +310,9 @@ export function useMergeLocalAndRemoteTransactions(
       const localTx = localTxMap.get(txHash)
 
       if (!localTx) {
-        if (!remoteTx) throw new Error('No local or remote tx, which is not possible')
+        if (!remoteTx) {
+          throw new Error('No local or remote tx, which is not possible')
+        }
         deDupedTxs.push(remoteTx)
         continue
       }
@@ -317,7 +327,9 @@ export function useMergeLocalAndRemoteTransactions(
       // TODO(MOB-1573): This should be done further upstream when parsing data not in a display hook
       if (!isFinalizedTx(localTx)) {
         const mergedTx = { ...localTx, status: remoteTx.status }
-        if (isFinalizedTx(mergedTx)) dispatch(finalizeTransaction(mergedTx))
+        if (isFinalizedTx(mergedTx)) {
+          dispatch(finalizeTransaction(mergedTx))
+        }
       }
 
       // If the tx isn't successful, then prefer local data
@@ -347,7 +359,9 @@ export function useMergeLocalAndRemoteTransactions(
         ) {
           const aCurrencyId = buildCurrencyId(a.chainId, a.typeInfo.tokenAddress)
           const bCurrencyId = b.typeInfo.inputCurrencyId
-          if (areCurrencyIdsEqual(aCurrencyId, bCurrencyId)) return 1
+          if (areCurrencyIdsEqual(aCurrencyId, bCurrencyId)) {
+            return 1
+          }
         }
 
         if (
@@ -356,7 +370,9 @@ export function useMergeLocalAndRemoteTransactions(
         ) {
           const aCurrencyId = a.typeInfo.inputCurrencyId
           const bCurrencyId = buildCurrencyId(b.chainId, b.typeInfo.tokenAddress)
-          if (areCurrencyIdsEqual(aCurrencyId, bCurrencyId)) return -1
+          if (areCurrencyIdsEqual(aCurrencyId, bCurrencyId)) {
+            return -1
+          }
         }
       }
 
@@ -371,7 +387,9 @@ export function useLowestPendingNonce(): BigNumberish | undefined {
 
   return useMemo(() => {
     let min: BigNumberish | undefined
-    if (!pending) return
+    if (!pending) {
+      return
+    }
     pending.map((txn: TransactionDetails) => {
       const currentNonce = txn.options?.request?.nonce
       min = min ? (currentNonce ? (min < currentNonce ? min : currentNonce) : min) : currentNonce
@@ -391,7 +409,9 @@ export function useAllTransactionsBetweenAddresses(
 ): TransactionDetails[] | undefined {
   const txnsToSearch = useSelectAddressTransactions(sender)
   return useMemo(() => {
-    if (!sender || !recipient || !txnsToSearch) return
+    if (!sender || !recipient || !txnsToSearch) {
+      return
+    }
 
     return txnsToSearch.filter(
       (tx: TransactionDetails) =>

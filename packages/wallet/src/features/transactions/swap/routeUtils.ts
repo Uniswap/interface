@@ -12,7 +12,7 @@ import {
   V3PoolInRoute,
 } from 'wallet/src/features/routing/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
+import { QuoteType, Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export function transformQuoteToTrade(
@@ -39,7 +39,7 @@ export function transformQuoteToTrade(
       : undefined
 
   return new Trade({
-    quote: quoteResult,
+    quoteData: { quote: quoteResult, quoteType: QuoteType.RoutingApi },
     deadline,
     slippageTolerance: slippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE,
     v2Routes:
@@ -94,14 +94,20 @@ export function computeRoutes(
       outputAmount: CurrencyAmount<Currency>
     }[]
   | undefined {
-  if (!quoteResult || !quoteResult.route) return
+  if (!quoteResult || !quoteResult.route) {
+    return
+  }
 
-  if (quoteResult.route.length === 0) return
+  if (quoteResult.route.length === 0) {
+    return
+  }
 
   const tokenIn = quoteResult.route[0]?.[0]?.tokenIn
   const tokenOut = quoteResult.route[0]?.[quoteResult.route[0]?.length - 1]?.tokenOut
 
-  if (!tokenIn || !tokenOut) throw new Error('Expected both tokenIn and tokenOut to be present')
+  if (!tokenIn || !tokenOut) {
+    throw new Error('Expected both tokenIn and tokenOut to be present')
+  }
 
   const parsedCurrencyIn = tokenInIsNative
     ? NativeCurrency.onChain(tokenIn.chainId)

@@ -38,7 +38,9 @@ export function CancelConfirmationView({
   const gasFee = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
 
   const onCancelConfirm = useCallback(() => {
-    if (!cancelationGasFeeInfo?.cancelRequest) return
+    if (!cancelationGasFeeInfo?.cancelRequest) {
+      return
+    }
 
     onCancel(cancelationGasFeeInfo.cancelRequest)
   }, [cancelationGasFeeInfo, onCancel])

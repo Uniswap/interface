@@ -117,7 +117,9 @@ const selectAddressTransactions = makeSelectAddressTransactions()
 
 function* getPendingPrivateTxCount(address: Address, chainId: number) {
   const pendingTransactions = yield* select(selectAddressTransactions, address)
-  if (!pendingTransactions) return 0
+  if (!pendingTransactions) {
+    return 0
+  }
 
   return pendingTransactions.filter(
     (tx) =>

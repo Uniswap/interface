@@ -222,6 +222,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
               flex={1}
               fontFamily="$heading"
               fontSize={fontSize}
+              maxDecimals={currencyInfo.currency.decimals}
               maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
               // This is a hacky workaround for Android to prevent text from being cut off
               // (the text input height is greater than the font size and the input is

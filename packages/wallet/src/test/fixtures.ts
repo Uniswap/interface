@@ -9,6 +9,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { BigNumber, providers } from 'ethers'
+import { SectionListData } from 'react-native'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20, Weth } from 'wallet/src/abis/types'
 import WETH_ABI from 'wallet/src/abis/weth.json'
@@ -16,8 +17,9 @@ import { config } from 'wallet/src/config'
 import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI, DAI_ARBITRUM_ONE, UNI, WBTC } from 'wallet/src/constants/tokens'
-import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
+import { HistoryDuration, SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { AssetType } from 'wallet/src/entities/assets'
+import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -26,6 +28,7 @@ import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
 import {
   ApproveTransactionInfo,
   FiatPurchaseTransactionInfo,
+  SendTokenTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
@@ -62,6 +65,8 @@ export const SAMPLE_SEED = [
 ].join(' ')
 export const SAMPLE_SEED_ADDRESS_1 = '0x82D56A352367453f74FC0dC7B071b311da373Fa6'
 export const SAMPLE_SEED_ADDRESS_2 = '0x55f4B664C68F398f9e81EFf63ef4444A1A184F98'
+export const SAMPLE_CURRENCY_ID_1 = '1-0x6B175474E89094C44Da98b954EedeAC495271d0F'
+export const SAMPLE_CURRENCY_ID_2 = '1-0x4d224452801ACEd8B2F0aebE155379bb5D594381'
 
 export const MainnetEth = NativeCurrency.onChain(ChainId.Mainnet)
 export const PolygonMatic = NativeCurrency.onChain(ChainId.Polygon)
@@ -179,6 +184,13 @@ export const txTypeInfo: ApproveTransactionInfo = {
   spender: UNIVERSAL_ROUTER_ADDRESS(ChainId.Goerli),
 }
 
+export const sendTxTypeInfo: SendTokenTransactionInfo = {
+  type: TransactionType.Send,
+  tokenAddress: tokenContract.address,
+  recipient: '0x123',
+  assetType: AssetType.Currency,
+}
+
 export const txDetailsPending = {
   chainId: ChainId.Mainnet,
   id: '0',
@@ -242,6 +254,50 @@ export const fiatOnRampTxDetailsFailed: TransactionDetails & {
 export const finalizedTxAction: ReturnType<typeof finalizeTransaction> = {
   payload: { ...txDetailsConfirmed, status: TransactionStatus.Success },
   type: 'transactions/finalizeTransaction',
+}
+
+export const sendTxDetailsPending: TransactionDetails = {
+  chainId: ChainId.Mainnet,
+  id: '0',
+  from: account.address,
+  options: {
+    request: txRequest,
+  },
+  typeInfo: {
+    ...sendTxTypeInfo,
+    recipient: faker.finance.ethereumAddress(),
+  },
+  status: TransactionStatus.Pending,
+  addedTime: 1487076708000,
+}
+
+export const sendTxDetailsConfirmed: TransactionDetails = {
+  ...sendTxDetailsPending,
+  typeInfo: {
+    ...sendTxTypeInfo,
+    recipient: faker.finance.ethereumAddress(),
+  },
+  status: TransactionStatus.Success,
+  receipt: {
+    blockHash: txReceipt.blockHash,
+    blockNumber: txReceipt.blockNumber,
+    transactionIndex: txReceipt.transactionIndex,
+    confirmations: txReceipt.confirmations,
+    confirmedTime: txReceipt.confirmedTime,
+    gasUsed: txReceipt.gasUsed.toNumber(),
+    effectiveGasPrice: txReceipt.effectiveGasPrice.toNumber(),
+  },
+  addedTime: 1487076709000,
+}
+
+export const sendTxDetailsFailed: TransactionDetails = {
+  ...sendTxDetailsPending,
+  typeInfo: {
+    ...sendTxTypeInfo,
+    recipient: faker.finance.ethereumAddress(),
+  },
+  status: TransactionStatus.Failed,
+  addedTime: 1487076710000,
 }
 
 export const swapNotification = {
@@ -386,3 +442,53 @@ export const mockPool = new Pool(
   '10272714736694327408',
   -69633
 )
+
+export const SearchableRecipients: [SearchableRecipient, SearchableRecipient] = [
+  {
+    address: SAMPLE_SEED_ADDRESS_1,
+    name: 'Recipient 1 name',
+  },
+  {
+    address: SAMPLE_SEED_ADDRESS_2,
+    name: 'Recipient 2 name',
+  },
+]
+
+export const RecipientSections: [
+  SectionListData<SearchableRecipient>,
+  SectionListData<SearchableRecipient>,
+  SectionListData<SearchableRecipient>,
+  SectionListData<SearchableRecipient>
+] = [
+  {
+    title: 'Section 1',
+    data: SearchableRecipients,
+  },
+  {
+    title: 'Section 2',
+    data: [SearchableRecipients[0]],
+  },
+  {
+    title: 'Section3',
+    data: [],
+  },
+  {
+    title: 'Section 4',
+    data: [SearchableRecipients[1]],
+  },
+]
+
+export const hourMs = 60 * 60 * 1000
+export const dayMs = 24 * hourMs
+export const weekMs = 7 * dayMs
+export const monthMs = 30 * dayMs
+export const yearMs = 365 * dayMs
+
+export const historyDurationMs: Record<HistoryDuration, number> = {
+  [HistoryDuration.Hour]: hourMs,
+  [HistoryDuration.Day]: dayMs,
+  [HistoryDuration.Week]: weekMs,
+  [HistoryDuration.Month]: monthMs,
+  [HistoryDuration.Year]: yearMs,
+  [HistoryDuration.Max]: 5 * yearMs,
+}

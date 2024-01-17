@@ -147,15 +147,25 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const isBlockedLoading = isSenderBlockedLoading || isRecipientBlockedLoading
 
   const checkConfirmEnabled = (): boolean => {
-    if (!netInfo.isInternetReachable) return false
+    if (!netInfo.isInternetReachable) {
+      return false
+    }
 
-    if (!signerAccount) return false
+    if (!signerAccount) {
+      return false
+    }
 
-    if (isBlocked || isBlockedLoading) return false
+    if (isBlocked || isBlockedLoading) {
+      return false
+    }
 
-    if (methodCostsGas(request)) return !!(tx && hasSufficientFunds && gasFee.value)
+    if (methodCostsGas(request)) {
+      return !!(tx && hasSufficientFunds && gasFee.value)
+    }
 
-    if (isTransactionRequest(request)) return !!tx
+    if (isTransactionRequest(request)) {
+      return !!tx
+    }
 
     return true
   }
@@ -171,14 +181,16 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const rejectOnCloseRef = useRef(true)
 
   const onReject = async (): Promise<void> => {
-    await wcWeb3Wallet.respondSessionRequest({
-      topic: request.sessionId,
-      response: {
-        id: Number(request.internalId),
-        jsonrpc: '2.0',
-        error: getSdkError('USER_REJECTED'),
-      },
-    })
+    if (request.dapp.source === 'walletconnect') {
+      await wcWeb3Wallet.respondSessionRequest({
+        topic: request.sessionId,
+        response: {
+          id: Number(request.internalId),
+          jsonrpc: '2.0',
+          error: getSdkError('USER_REJECTED'),
+        },
+      })
+    }
 
     rejectOnCloseRef.current = false
 
@@ -201,9 +213,13 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   }
 
   const onConfirm = async (): Promise<void> => {
-    if (!confirmEnabled || !signerAccount) return
+    if (!confirmEnabled || !signerAccount) {
+      return
+    }
     if (request.type === EthMethod.EthSendTransaction) {
-      if (!gasFee.params) return // appeasing typescript
+      if (!gasFee.params) {
+        return
+      } // appeasing typescript
       dispatch(
         signWcRequestActions.trigger({
           sessionId: request.sessionId,
@@ -386,7 +402,9 @@ function WarningSection({
   const colors = useSporeColors()
   const { t } = useTranslation()
 
-  if (!showUnsafeWarning && !isBlockedAddress) return null
+  if (!showUnsafeWarning && !isBlockedAddress) {
+    return null
+  }
 
   if (isBlockedAddress) {
     return <BlockedAddressWarning centered row alignSelf="center" />

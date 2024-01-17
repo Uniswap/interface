@@ -3,12 +3,13 @@ import { UserPropertyValue } from './analytics'
 
 interface ErrorLoggers {
   init(err: unknown): void
+  setAllowAnalytics(allow: boolean): void
   sendEvent(eventName: string, eventProperties?: Record<string, unknown>): void
   flushEvents(): void
   setUserProperty(property: string, value: UserPropertyValue): void
 }
 
-export function generateErrorLoggers(fileName: string): ErrorLoggers {
+export function generateAnalyticsLoggers(fileName: string): ErrorLoggers {
   return {
     init(error: unknown): void {
       logger.error(error, { tags: { file: fileName, function: 'init' } })
@@ -20,6 +21,11 @@ export function generateErrorLoggers(fileName: string): ErrorLoggers {
           'sendEvent',
           `[analytics(${eventName})]: ${JSON.stringify(eventProperties ?? {})}`
         )
+      }
+    },
+    setAllowAnalytics(allow: boolean): void {
+      if (__DEV__) {
+        logger.info('analytics', 'setAnonymous', `user allows analytics: ${allow}`)
       }
     },
     flushEvents(): void {

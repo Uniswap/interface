@@ -16,7 +16,9 @@ export function ImageUri({
 
   useEffect(() => {
     // If we know dimension, skip this effect
-    if (!uri || Boolean(imageDimensions)) return
+    if (!uri || Boolean(imageDimensions)) {
+      return
+    }
     Image.getSize(
       uri,
       (calculatedWidth: number, calculatedHeight: number) => {

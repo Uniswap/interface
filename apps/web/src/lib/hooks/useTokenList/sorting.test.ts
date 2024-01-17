@@ -2,9 +2,8 @@ import { ChainId } from '@uniswap/sdk-core'
 import { Token as InterfaceToken } from '@uniswap/sdk-core'
 import { DAI, nativeOnChain, USDC_MAINNET, USDT, WBTC } from 'constants/tokens'
 import { Chain, Currency, Token, TokenBalance, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
-import { renderHook } from 'test-utils/render'
 
-import { getSortedPortfolioTokens, useSortTokensByQuery } from './sorting'
+import { getSortedPortfolioTokens, tokenQuerySortComparator } from './sorting'
 
 const nativeToken: Token = {
   id: 'native-token',
@@ -149,34 +148,31 @@ describe('sorting', () => {
       expect(result).toEqual([nativeOnChain(ChainId.MAINNET), USDT, WBTC])
     })
   })
-  describe('useSortTokensByQuery', () => {
-    it('should return an empty array if tokens is undefined', () => {
-      const { result } = renderHook(() => useSortTokensByQuery('', undefined))
-      expect(result.current).toEqual([])
-    })
-    it('should return the input array if query is undefined', () => {
-      const { result } = renderHook(() => useSortTokensByQuery('', [DAI, USDC_MAINNET, USDT]))
-      expect(result.current).toEqual([DAI, USDC_MAINNET, USDT])
-    })
-    it('should return tokens that start with "us" first', () => {
-      const { result } = renderHook(() => useSortTokensByQuery('us', [DAI, USDC_MAINNET, USDT]))
-      expect(result.current).toEqual([USDC_MAINNET, USDT, DAI])
-    })
-    it('should return tokens that start with "us" first, regardless of case', () => {
-      const { result } = renderHook(() => useSortTokensByQuery('US', [DAI, USDC_MAINNET, USDT]))
-      expect(result.current).toEqual([USDC_MAINNET, USDT, DAI])
-    })
-    it('should return tokens that start with "da" first', () => {
-      const { result } = renderHook(() => useSortTokensByQuery('da', [DAI, USDC_MAINNET, USDT]))
-      expect(result.current).toEqual([DAI, USDC_MAINNET, USDT])
-    })
-    it('should return an exact match for DAI', () => {
-      const { result } = renderHook(() => useSortTokensByQuery('dai', [DAI, USDC_MAINNET, USDT]))
-      expect(result.current).toEqual([DAI, USDC_MAINNET, USDT])
-    })
-    it('should return an exact match for USDC and otherwise leave the order unchanged', () => {
-      const { result } = renderHook(() => useSortTokensByQuery('usdc', [DAI, USDC_MAINNET, USDT]))
-      expect(result.current).toEqual([USDC_MAINNET, DAI, USDT])
-    })
+})
+
+describe('tokenQuerySortComparator', () => {
+  it('should return the input array if query is undefined', () => {
+    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator(''))
+    expect(result).toEqual([DAI, USDC_MAINNET, USDT])
+  })
+  it('should return tokens that start with "us" first', () => {
+    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator('us'))
+    expect(result).toEqual([USDC_MAINNET, USDT, DAI])
+  })
+  it('should return tokens that start with "us" first, regardless of case', () => {
+    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator('US'))
+    expect(result).toEqual([USDC_MAINNET, USDT, DAI])
+  })
+  it('should return tokens that start with "da" first', () => {
+    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator('da'))
+    expect(result).toEqual([DAI, USDC_MAINNET, USDT])
+  })
+  it('should return an exact match for DAI', () => {
+    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator('dai'))
+    expect(result).toEqual([DAI, USDC_MAINNET, USDT])
+  })
+  it('should return an exact match for USDC and otherwise leave the order unchanged', () => {
+    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator('usdc'))
+    expect(result).toEqual([USDC_MAINNET, DAI, USDT])
   })
 })

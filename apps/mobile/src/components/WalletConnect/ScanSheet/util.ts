@@ -1,9 +1,11 @@
 import { parseUri } from '@walletconnect/utils'
+import { parseEther } from 'ethers/lib/utils'
 import {
   UNISWAP_URL_SCHEME,
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/handleDeepLinkSaga'
+import { UwULinkRequest } from 'wallet/src/features/walletConnect/types'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 
 export enum URIType {
@@ -11,6 +13,7 @@ export enum URIType {
   WalletConnectV2URL = 'walletconnect-v2',
   Address = 'address',
   EasterEgg = 'easter-egg',
+  UwULink = 'uwu-link',
 }
 
 export type URIFormat = {
@@ -18,8 +21,13 @@ export type URIFormat = {
   value: string
 }
 
+const UNISNAP_CONTRACT_ADDRESS = '0xFd2308677A0eb48e2d0c4038c12AA7DCb703e8DC'
+const UWULINK_CONTRACT_ALLOWLIST = [UNISNAP_CONTRACT_ADDRESS]
+const UWULINK_MAX_TXN_VALUE = '0.001'
+
 const EASTER_EGG_QR_CODE = 'DO_NOT_SCAN_OR_ELSE_YOU_WILL_GO_TO_MOBILE_TEAM_JAIL'
 export const CUSTOM_UNI_QR_CODE_PREFIX = 'hello_uniwallet:'
+export const UWULINK_PREFIX = 'uwulink'
 const MAX_DAPP_NAME_LENGTH = 60
 
 export function truncateDappName(name: string): string {
@@ -28,7 +36,10 @@ export function truncateDappName(name: string): string {
     : name
 }
 
-export async function getSupportedURI(uri: string): Promise<URIFormat | undefined> {
+export async function getSupportedURI(
+  uri: string,
+  isUwULinkEnabled?: boolean
+): Promise<URIFormat | undefined> {
   if (!uri) {
     return undefined
   }
@@ -67,6 +78,10 @@ export async function getSupportedURI(uri: string): Promise<URIFormat | undefine
   if (uri === EASTER_EGG_QR_CODE) {
     return { type: URIType.EasterEgg, value: uri }
   }
+
+  if (isUwULinkEnabled && isUwULink(uri)) {
+    return { type: URIType.UwULink, value: uri.slice(UWULINK_PREFIX.length) }
+  }
 }
 
 async function getWcUriWithCustomPrefix(
@@ -84,6 +99,35 @@ async function getWcUriWithCustomPrefix(
   }
 
   return null
+}
+
+function isUwULink(uri: string): boolean {
+  // Note the trailing `{` char is required for UwULink. See spec:
+  // https://github.com/ethereum/EIPs/pull/7253/files#diff-ec1218463dc29af4f2826e540d30abe987ab4c5b7152e1f6c567a0f71938a293R30
+  return uri.startsWith(`${UWULINK_PREFIX}{`)
+}
+
+/**
+ * Util function to check if a UwULinkRequest is valid.
+ *
+ * Current testing conditions requires:
+ * 1. The to address is in the UWULINK_CONTRACT_ALLOWLIST
+ * 2. The value is less than or equal to UWULINK_MAX_TXN_VALUE
+ *
+ * @param request parsed UwULinkRequest
+ * @returns boolean for whether the UwULinkRequest is allowed
+ */
+export function isAllowedUwULinkRequest(request: UwULinkRequest): boolean {
+  const { to, value } = request.value
+  const belowMaximumValue =
+    value && parseFloat(value) <= parseEther(UWULINK_MAX_TXN_VALUE).toNumber()
+  const isAllowedContractAddress = to && UWULINK_CONTRACT_ALLOWLIST.includes(to)
+
+  if (!belowMaximumValue || !isAllowedContractAddress) {
+    return false
+  }
+
+  return true
 }
 
 // metamask QR code values have the format "ethereum:<address>"

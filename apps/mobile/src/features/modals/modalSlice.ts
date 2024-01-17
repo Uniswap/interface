@@ -48,6 +48,8 @@ type SendModalParams = { name: ModalName.Send; initialState?: TransactionState }
 
 type UnitagsIntroParams = { name: ModalName.UnitagsIntro; initialState?: undefined }
 
+type ViewOnlyExplainerParams = { name: ModalName.ViewOnlyExplainer; initialState?: undefined }
+
 export type OpenModalParams =
   | AccountSwitcherModalParams
   | ExperimentsModalParams
@@ -62,6 +64,7 @@ export type OpenModalParams =
   | WalletConnectModalParams
   | RestoreWalletModalParams
   | UnitagsIntroParams
+  | ViewOnlyExplainerParams
 
 export type CloseModalParams = { name: keyof ModalsState }
 
@@ -115,6 +118,10 @@ export const initialModalState: ModalsState = {
     initialState: undefined,
   },
   [ModalName.UnitagsIntro]: {
+    isOpen: false,
+    initialState: undefined,
+  },
+  [ModalName.ViewOnlyExplainer]: {
     isOpen: false,
     initialState: undefined,
   },

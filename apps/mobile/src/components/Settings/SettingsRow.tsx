@@ -7,6 +7,7 @@ import {
   SettingsStackNavigationProp,
   SettingsStackParamList,
 } from 'src/app/navigation/types'
+import { Switch } from 'src/components/buttons/Switch'
 import { Arrow } from 'src/components/icons/Arrow'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
@@ -38,6 +39,8 @@ export interface SettingsSectionItem {
   icon: JSX.Element
   isHidden?: boolean
   currentSetting?: string
+  onToggle?: () => void
+  isToggleEnabled?: boolean
 }
 
 interface SettingsRowProps {
@@ -46,14 +49,28 @@ interface SettingsRowProps {
 }
 
 export function SettingsRow({
-  page: { screen, modal, screenProps, externalLink, action, icon, text, subText, currentSetting },
+  page: {
+    screen,
+    modal,
+    screenProps,
+    externalLink,
+    action,
+    icon,
+    text,
+    subText,
+    currentSetting,
+    onToggle,
+    isToggleEnabled,
+  },
   navigation,
 }: SettingsRowProps): JSX.Element {
   const colors = useSporeColors()
   const dispatch = useAppDispatch()
 
   const handleRow = async (): Promise<void> => {
-    if (screen) {
+    if (onToggle) {
+      return
+    } else if (screen) {
       navigation.navigate(screen, screenProps)
     } else if (modal) {
       dispatch(openModal({ name: modal }))
@@ -61,6 +78,11 @@ export function SettingsRow({
       await openUri(externalLink)
     }
   }
+
+  if (onToggle && isToggleEnabled === undefined) {
+    throw new Error('Should pass valid isToggleEnabled prop when onToggle is passed')
+  }
+
   return (
     <TouchableArea disabled={Boolean(action)} onPress={handleRow}>
       <Flex grow row alignItems="center" gap="$spacing16" minHeight={40}>
@@ -84,7 +106,9 @@ export function SettingsRow({
             )}
           </Flex>
         </Flex>
-        {screen || modal ? (
+        {onToggle && typeof isToggleEnabled === 'boolean' ? (
+          <Switch value={isToggleEnabled} onValueChange={onToggle} />
+        ) : screen || modal ? (
           <Flex centered row>
             {currentSetting ? (
               <Flex row shrink alignItems="flex-end" flexBasis="30%" justifyContent="flex-end">

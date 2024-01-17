@@ -25,10 +25,11 @@ const PercentChange = styled.div<{ isNegative: boolean }>`
   justify-content: center;
 `
 
-const CollectionNameText = styled.div<{ isVerified: boolean }>`
+const CollectionNameText = styled.h1<{ isVerified: boolean }>`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin: 0;
   margin-right: ${({ isVerified }) => (isVerified ? '6px' : '0px')};
 `
 

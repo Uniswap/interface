@@ -86,9 +86,10 @@ const RollNumber = ({
     }
   })
 
-  const numbers = NUMBER_ARRAY.map((char) => {
+  const numbers = NUMBER_ARRAY.map((char, idx) => {
     return (
       <Animated.Text
+        key={idx}
         allowFontScaling={false}
         style={[animatedFontStyle, AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT }]}>
         {char}
@@ -342,6 +343,7 @@ export const AnimatedFontStyles = StyleSheet.create({
   fontStyle: {
     fontFamily: fonts.heading2.family,
     fontSize: fonts.heading2.fontSize,
+    // special case for the home screen balance, instead of using the heading2 font weight
     fontWeight: '500',
     lineHeight: fonts.heading2.lineHeight,
     top: 1,

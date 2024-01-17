@@ -130,7 +130,9 @@ function TransactionDetails({
   useEffect(() => {
     const parseResult = async (): Promise<TransactionDescription | undefined> => {
       // no-yolo-parser library expects these fields to be defined
-      if (!from || !to || !value || !data) return
+      if (!from || !to || !value || !data) {
+        return
+      }
       return parser.parseAsResult(transaction as Transaction).then((result) => {
         if (!result.transactionDescription.ok) {
           throw result.transactionDescription.error

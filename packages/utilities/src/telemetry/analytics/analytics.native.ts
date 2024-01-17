@@ -6,6 +6,8 @@ import {
   setDeviceId,
   track,
 } from '@amplitude/analytics-react-native'
+import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
+import { SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 import { getUniqueId } from 'react-native-device-info'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 import { Analytics, UserPropertyValue } from './analytics'
@@ -14,13 +16,21 @@ import {
   AMPLITUDE_SHARED_TRACKING_OPTIONS,
   DUMMY_KEY,
 } from './constants'
-import { generateErrorLoggers } from './logging'
+import { generateAnalyticsLoggers } from './logging'
 
-const errorLoggers = generateErrorLoggers('telemetry/analytics.native')
+const loggers = generateAnalyticsLoggers('telemetry/analytics.native')
+
+let allowAnalytics: Maybe<boolean>
+
+const ANONYMOUS_EVENT_NAMES: string[] = [
+  SharedEventName.HEARTBEAT.valueOf(),
+  SwapEventName.SWAP_TRANSACTION_COMPLETED.valueOf(),
+]
 
 export const analytics: Analytics = {
-  async init(transportProvider: ApplicationTransport): Promise<void> {
+  async init(transportProvider: ApplicationTransport, allowed: boolean): Promise<void> {
     try {
+      allowAnalytics = allowed
       init(
         DUMMY_KEY, // Amplitude custom reverse proxy takes care of API key
         undefined, // User ID should be undefined to let Amplitude default to Device ID
@@ -33,21 +43,38 @@ export const analytics: Analytics = {
           },
         }
       )
-      setDeviceId(await getUniqueId()) // Ensure we're using the same deviceId across Amplitude and Statsig
+      // Ensure we're using the same deviceId across Amplitude and Statsig
+      setDeviceId(allowed ? await getUniqueId() : ANONYMOUS_DEVICE_ID)
     } catch (error) {
-      errorLoggers.init(error)
+      loggers.init(error)
+    }
+  },
+  async setAllowAnalytics(allowed: boolean): Promise<void> {
+    allowAnalytics = allowed
+    if (allowed) {
+      setDeviceId(await getUniqueId())
+    } else {
+      loggers.setAllowAnalytics(allowed)
+      identify(new Identify().clearAll()) // Clear all custom user properties
+      setDeviceId(ANONYMOUS_DEVICE_ID)
     }
   },
   sendEvent(eventName: string, eventProperties?: Record<string, unknown>): void {
-    errorLoggers.sendEvent(eventName, eventProperties)
+    if (!allowAnalytics && !ANONYMOUS_EVENT_NAMES.includes(eventName)) {
+      return
+    }
+    loggers.sendEvent(eventName, eventProperties)
     track(eventName, eventProperties)
   },
   flushEvents(): void {
-    errorLoggers.flushEvents()
+    loggers.flushEvents()
     flush()
   },
   setUserProperty(property: string, value: UserPropertyValue): void {
-    errorLoggers.setUserProperty(property, value)
+    if (!allowAnalytics) {
+      return
+    }
+    loggers.setUserProperty(property, value)
     identify(new Identify().set(property, value))
   },
 }

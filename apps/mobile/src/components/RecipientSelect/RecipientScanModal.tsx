@@ -33,7 +33,9 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
 
   const onScanCode = async (uri: string): Promise<void> => {
     // don't scan any QR codes if camera is frozen
-    if (shouldFreezeCamera) return
+    if (shouldFreezeCamera) {
+      return
+    }
 
     await selectionAsync()
     setShouldFreezeCamera(true)

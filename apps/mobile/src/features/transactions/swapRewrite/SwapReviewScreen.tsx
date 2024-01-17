@@ -27,20 +27,21 @@ import { SlippageInfoModal } from 'src/features/transactions/swap/modals/Slippag
 import { SwapFeeInfoModal } from 'src/features/transactions/swap/modals/SwapFeeInfoModal'
 import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
 import { getActionName, isWrapAction } from 'src/features/transactions/swap/utils'
-import { useSwapBottomSheetModalContext } from 'src/features/transactions/swapRewrite/contexts/SwapBottomSheetModalContext'
 import { useSwapFormContext } from 'src/features/transactions/swapRewrite/contexts/SwapFormContext'
 import {
   SwapScreen,
   useSwapScreenContext,
 } from 'src/features/transactions/swapRewrite/contexts/SwapScreenContext'
 import { useSwapTxContext } from 'src/features/transactions/swapRewrite/contexts/SwapTxContext'
+import { useTransactionModalContext } from 'src/features/transactions/swapRewrite/contexts/TransactionModalContext'
 import { GasAndWarningRows } from 'src/features/transactions/swapRewrite/GasAndWarningRows'
 import { HOLD_TO_SWAP_TIMEOUT } from 'src/features/transactions/swapRewrite/HoldToSwapProgressCircle'
 import { useParsedSwapWarnings } from 'src/features/transactions/swapRewrite/hooks/useParsedSwapWarnings'
 import {
-  SwapBottomSheetModalFooterContainer,
-  SwapBottomSheetModalInnerContainer,
-} from 'src/features/transactions/swapRewrite/SwapBottomSheetModal'
+  TransactionModalFooterContainer,
+  TransactionModalInnerContainer,
+} from 'src/features/transactions/swapRewrite/TransactionModal'
+
 import { TransactionAmountsReview } from 'src/features/transactions/swapRewrite/TransactionAmountsReview'
 import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
 import { AnimatedFlex, Button, Flex, Separator, useSporeColors } from 'ui/src'
@@ -67,11 +68,11 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
 
-  const { handleContentLayout, bottomSheetViewStyles } = useSwapBottomSheetModalContext()
+  const { handleContentLayout, bottomSheetViewStyles } = useTransactionModalContext()
 
   const { screen, screenRef, setScreen } = useSwapScreenContext()
 
-  const { approveTxRequest, gasFee, txRequest } = useSwapTxContext()
+  const { approveTxRequest, approvalError, gasFee, txRequest } = useSwapTxContext()
 
   const {
     derivedSwapInfo,
@@ -201,6 +202,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   }, [requiresBiometrics, submitTransaction, submitWithBiometrix, updateSwapForm])
 
   const submitButtonDisabled =
+    approvalError ||
     noValidSwap ||
     !!blockingWarning ||
     newTradeRequiresAcceptance ||
@@ -323,7 +325,9 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   // Flag review screen user behavior, used to show hold to swap tip
   const hasViewedReviewScreen = useAppSelector(selectHasViewedReviewScreen)
   useEffect(() => {
-    if (!hasViewedReviewScreen) dispatch(setHasViewedReviewScreen(true))
+    if (!hasViewedReviewScreen) {
+      dispatch(setHasViewedReviewScreen(true))
+    }
   }, [dispatch, hasViewedReviewScreen])
 
   if (hideContent || !acceptedDerivedSwapInfo || (!isWrap && (!acceptedTrade || !trade))) {
@@ -360,7 +364,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
 
   return (
     <>
-      <SwapBottomSheetModalInnerContainer
+      <TransactionModalInnerContainer
         bottomSheetViewStyles={bottomSheetViewStyles}
         fullscreen={false}
         onLayout={handleContentLayout}>
@@ -448,10 +452,10 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
             </AnimatedFlex>
           </>
         )}
-      </SwapBottomSheetModalInnerContainer>
+      </TransactionModalInnerContainer>
 
       {screen !== SwapScreen.SwapReviewHoldingToSwap && (
-        <SwapBottomSheetModalFooterContainer>
+        <TransactionModalFooterContainer>
           <Flex row gap="$spacing8">
             <Button
               icon={<Arrow color={colors.neutral1.val} direction="w" size={iconSizes.icon24} />}
@@ -470,7 +474,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
               {actionText}
             </Button>
           </Flex>
-        </SwapBottomSheetModalFooterContainer>
+        </TransactionModalFooterContainer>
       )}
     </>
   )

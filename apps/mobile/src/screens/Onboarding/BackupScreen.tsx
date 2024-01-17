@@ -22,6 +22,7 @@ import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src
 import PaperIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { iconSizes } from 'ui/src/theme'
 import { useAsyncData } from 'utilities/src/react/hooks'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { ImportType } from 'wallet/src/features/onboarding/types'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
@@ -35,6 +36,7 @@ type Props = CompositeScreenProps<
 export function BackupScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const isDarkMode = useIsDarkMode()
   const { navigate } = useOnboardingStackNavigation()
 
   const { data: cloudStorageAvailable } = useAsyncData(isCloudStorageAvailable)
@@ -100,7 +102,9 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
       )
       return
     }
-    if (!activeAccount?.address) return
+    if (!activeAccount?.address) {
+      return
+    }
     navigate({
       name: OnboardingScreens.BackupCloudPasswordCreate,
       params: { ...params, address: activeAccount.address },
@@ -120,12 +124,11 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const hasManualBackup = activeAccountBackups?.some((backup) => backup === BackupType.Manual)
 
   const isCreatingNew = params?.importType === ImportType.CreateNew
-  const screenTitle = isCreatingNew
-    ? t('Choose a backup for your wallet')
-    : t('Back up your wallet')
+  const screenTitle = isCreatingNew ? t('Choose a backup method') : t('Back up your wallet')
   const options = []
   options.push(
     <OptionCard
+      key={ElementName.AddCloudBackup}
       blurb={t('Encrypt your recovery phrase with a secure password')}
       disabled={hasCloudBackup}
       elementName={ElementName.AddCloudBackup}
@@ -137,7 +140,8 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   if (isCreatingNew) {
     options.push(
       <OptionCard
-        blurb={t('Save your recovery phrase in a safe location')}
+        key={ElementName.AddManualBackup}
+        blurb={t('Write your recovery phrase down and store it in a safe location')}
         disabled={hasManualBackup}
         elementName={ElementName.AddManualBackup}
         icon={<PaperIcon color={colors.accent1.get()} height={iconSizes.icon16} />}
@@ -152,22 +156,53 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
       subtitle={t('Backups let you restore your wallet if you delete the app or lose your device')}
       title={screenTitle}>
       <Flex grow justifyContent="space-between">
-        <Flex gap="$spacing12">{options}</Flex>
+        <Flex gap="$spacing24">
+          <Flex
+            gap="$spacing12"
+            shadowColor="$surface3"
+            shadowRadius={!isDarkMode ? '$spacing8' : undefined}>
+            {options}
+          </Flex>
+          {!isCreatingNew && (
+            <RecoveryPhraseTooltip onPressEducationButton={onPressEducationButton} />
+          )}
+        </Flex>
+
         <Flex gap="$spacing12" justifyContent="flex-end">
-          <TouchableArea alignSelf="center" py="$spacing8" onPress={onPressEducationButton}>
-            <Text color="$neutral2" variant="buttonLabel3">
-              {t('Learn more')}
-            </Text>
-          </TouchableArea>
+          {isCreatingNew && (
+            <RecoveryPhraseTooltip onPressEducationButton={onPressEducationButton} />
+          )}
           {showSkipOption && (
             <Trace logPress element={ElementName.Next}>
               <Button theme="tertiary" onPress={onPressNext}>
-                {t('Skip for now')}
+                {t('Maybe later')}
               </Button>
             </Trace>
           )}
         </Flex>
       </Flex>
     </OnboardingScreen>
+  )
+}
+
+function RecoveryPhraseTooltip({
+  onPressEducationButton,
+}: {
+  onPressEducationButton: () => void
+}): JSX.Element {
+  const { t } = useTranslation()
+  return (
+    <TouchableArea
+      alignItems="center"
+      alignSelf="center"
+      flexDirection="row"
+      gap="$spacing8"
+      py="$spacing8"
+      onPress={onPressEducationButton}>
+      <Icons.QuestionInCircleFilled color="$surface1" size="$icon.20" />
+      <Text color="$neutral3" variant="body2">
+        {t('What is a recovery phrase?')}
+      </Text>
+    </TouchableArea>
   )
 }

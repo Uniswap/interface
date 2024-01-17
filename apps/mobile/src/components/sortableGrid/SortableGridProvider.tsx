@@ -131,7 +131,9 @@ export default function SortableGridProvider<I>({
 
   const handleOrderChange = useStableCallback((fromIndex: number) => {
     const toIndex = renderIndexToDisplayIndex.value[fromIndex]
-    if (toIndex === undefined || toIndex === fromIndex) return
+    if (toIndex === undefined || toIndex === fromIndex) {
+      return
+    }
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const newData = displayToRenderIndex.value.map((displayIndex) => data[displayIndex]!)
     onChange({ data: newData, fromIndex, toIndex })

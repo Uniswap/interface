@@ -10,7 +10,7 @@ export type RootNavigationArgs<RouteName extends keyof RootParamList> =
 
 function isNavigationRefReady(): boolean {
   if (!navigationRef.isReady()) {
-    logger.error('Navigator was called before it was initialized', {
+    logger.error(new Error('Navigator was called before it was initialized'), {
       tags: { file: 'rootNavigation', function: 'navigate' },
     })
     return false
@@ -36,7 +36,9 @@ export function goBack(): void {
     return
   }
 
-  if (navigationRef.canGoBack()) navigationRef.goBack()
+  if (navigationRef.canGoBack()) {
+    navigationRef.goBack()
+  }
 }
 
 export function dispatchNavigationAction(

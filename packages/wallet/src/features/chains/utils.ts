@@ -28,7 +28,9 @@ export const isL2Chain = (chainId?: ChainId): boolean =>
   Boolean(chainId && L2_CHAIN_IDS.includes(chainId as L2ChainId))
 
 export function isTestnet(chainId?: ChainId): boolean {
-  if (!chainId) return false
+  if (!chainId) {
+    return false
+  }
 
   return TESTNET_CHAIN_IDS.includes(chainId)
 }

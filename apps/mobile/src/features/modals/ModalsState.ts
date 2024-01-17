@@ -21,6 +21,7 @@ export interface ModalsState {
   [ModalName.RestoreWallet]: AppModalState<undefined>
   [ModalName.Send]: AppModalState<TransactionState>
   [ModalName.Swap]: AppModalState<TransactionState>
-  [ModalName.WalletConnectScan]: AppModalState<ScannerModalState>
   [ModalName.UnitagsIntro]: AppModalState<undefined>
+  [ModalName.ViewOnlyExplainer]: AppModalState<undefined>
+  [ModalName.WalletConnectScan]: AppModalState<ScannerModalState>
 }

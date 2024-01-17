@@ -80,6 +80,7 @@ export default function WarningModal({
             borderRadius="$rounded12"
             height={WARNING_MODAL_BG_SIZE}
             mb="$spacing8"
+            minWidth={WARNING_MODAL_BG_SIZE}
             style={{
               backgroundColor:
                 backgroundIconColor ??
@@ -88,8 +89,7 @@ export default function WarningModal({
                   // TODO(MOB-1420): clean up types
                   colors[alertColorValue as ThemeKeys].val
                 ),
-            }}
-            width={WARNING_MODAL_BG_SIZE}>
+            }}>
             {icon ?? <Icons.AlertTriangle color={alertColor.text} size="$icon.24" />}
           </Flex>
         )}

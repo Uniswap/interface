@@ -54,7 +54,9 @@ export function useUSDCPrice(
   })
 
   return useMemo(() => {
-    if (!stablecoin) return
+    if (!stablecoin) {
+      return
+    }
 
     if (currencyIsStablecoin) {
       // handle stablecoin
@@ -76,7 +78,9 @@ export function useUSDCValue(
   const price = useUSDCPrice(currencyAmount?.currency)
 
   return useMemo(() => {
-    if (!price || !currencyAmount) return null
+    if (!price || !currencyAmount) {
+      return null
+    }
     try {
       return price.quote(currencyAmount)
     } catch (error) {

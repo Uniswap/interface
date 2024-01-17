@@ -184,7 +184,9 @@ function KeyButton({
   }
 
   const onPress = (): void => {
-    if (isDisabled) return
+    if (isDisabled) {
+      return
+    }
 
     if (action === KeyAction.Insert) {
       handleInsert()
@@ -194,7 +196,9 @@ function KeyButton({
   }
 
   const onLongPress = (): void => {
-    if (action !== KeyAction.Delete) return
+    if (action !== KeyAction.Delete) {
+      return
+    }
 
     setValue('')
     resetSelection?.(0, 0)

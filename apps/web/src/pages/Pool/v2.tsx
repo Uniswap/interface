@@ -87,6 +87,12 @@ const EmptyProposals = styled.div`
   align-items: center;
 `
 
+const Header = styled(ThemedText.H1Small)`
+  margin-top: 8px;
+  justify-self: flex-start;
+  font-weight: 535;
+`
+
 export default function Pool() {
   const theme = useTheme()
   const { account } = useWeb3React()
@@ -183,9 +189,9 @@ export default function Pool() {
               <AutoColumn gap="md" style={{ width: '100%' }}>
                 <TitleRow style={{ marginTop: '1rem' }} padding="0">
                   <HideSmall>
-                    <ThemedText.DeprecatedMediumHeader style={{ marginTop: '0.5rem', justifySelf: 'flex-start' }}>
+                    <Header>
                       <Trans>Your V2 liquidity</Trans>
-                    </ThemedText.DeprecatedMediumHeader>
+                    </Header>
                   </HideSmall>
                   <ButtonRow>
                     <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/add/v2/ETH">

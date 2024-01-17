@@ -11,14 +11,12 @@ import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
-import { useToggleAccountDrawer } from 'components/AccountDrawer'
-import AddressInputPanel from 'components/AddressInputPanel'
+import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GrayCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import ConfirmSwapModalV2 from 'components/ConfirmSwapModalV2'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import { AutoRow } from 'components/Row'
 import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
 import ConfirmSwapModal from 'components/swap/ConfirmSwapModal'
 import { Field } from 'components/swap/constants'
@@ -54,10 +52,11 @@ import { isClassicTrade } from 'state/routing/utils'
 import { queryParametersToCurrencyState, useSwapActionHandlers } from 'state/swap/hooks'
 import { CurrencyState, useSwapAndLimitContext, useSwapContext } from 'state/swap/SwapContext'
 import { useTheme } from 'styled-components'
-import { LinkStyledButton, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { isEmptyObject } from 'utils/isEmpty'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { largerPercentValue } from 'utils/percent'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
@@ -78,7 +77,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
 
   const { chainId, prefilledState, currencyState } = useSwapAndLimitContext()
   const { swapState, setSwapState, derivedSwapInfo } = useSwapContext()
-  const { typedValue, recipient, independentField } = swapState
+  const { typedValue, independentField } = swapState
 
   // token warning stuff
   const parsedQs = useParsedQueryString()
@@ -109,22 +108,23 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
 
   // dismiss warning if all imported tokens are in active lists
   const defaultTokens = useDefaultActiveTokens(chainId)
-  const importTokensNotInDefault = useMemo(
+  const urlTokensNotInDefault = useMemo(
     () =>
-      urlLoadedTokens &&
-      urlLoadedTokens
-        .filter((token: Token) => {
-          return !(token.address in defaultTokens)
-        })
-        .filter((token: Token) => {
-          // Any token addresses that are loaded from the shorthands map do not need to show the import URL
-          const supported = asSupportedChain(chainId)
-          if (!supported) return true
-          return !Object.keys(TOKEN_SHORTHANDS).some((shorthand) => {
-            const shorthandTokenAddress = TOKEN_SHORTHANDS[shorthand][supported]
-            return shorthandTokenAddress && shorthandTokenAddress === token.address
-          })
-        }),
+      urlLoadedTokens && !isEmptyObject(defaultTokens)
+        ? urlLoadedTokens
+            .filter((token: Token) => {
+              return !(token.address in defaultTokens)
+            })
+            .filter((token: Token) => {
+              // Any token addresses that are loaded from the shorthands map do not need to show the import URL
+              const supported = asSupportedChain(chainId)
+              if (!supported) return true
+              return !Object.keys(TOKEN_SHORTHANDS).some((shorthand) => {
+                const shorthandTokenAddress = TOKEN_SHORTHANDS[shorthand][supported]
+                return shorthandTokenAddress && shorthandTokenAddress === token.address
+              })
+            })
+        : [],
     [chainId, defaultTokens, urlLoadedTokens]
   )
 
@@ -221,7 +221,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
     [fiatValueTradeInput, fiatValueTradeOutput, preTaxFiatValueTradeOutput, routeIsSyncing, trade, showWrap]
   )
 
-  const { onSwitchTokens, onCurrencySelection, onUserInput, onChangeRecipient } = useSwapActionHandlers()
+  const { onSwitchTokens, onCurrencySelection, onUserInput } = useSwapActionHandlers()
   const dependentField: Field = independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT
 
   const handleTypeInput = useCallback(
@@ -475,9 +475,9 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   return (
     <>
       <TokenSafetyModal
-        isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
-        tokenAddress={importTokensNotInDefault[0]?.address}
-        secondTokenAddress={importTokensNotInDefault[1]?.address}
+        isOpen={urlTokensNotInDefault.length > 0 && !dismissTokenWarning}
+        tokenAddress={urlTokensNotInDefault[0]?.address}
+        secondTokenAddress={urlTokensNotInDefault[1]?.address}
         onContinue={handleConfirmTokenWarning}
         onCancel={handleDismissTokenWarning}
         showCancel={true}
@@ -601,19 +601,6 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 }}
               />
             </Trace>
-            {recipient !== null && !showWrap ? (
-              <>
-                <AutoRow justify="space-between" style={{ padding: '0 1rem' }}>
-                  <ArrowWrapper clickable={false}>
-                    <ArrowDown size="16" color={theme.neutral2} />
-                  </ArrowWrapper>
-                  <LinkStyledButton id="remove-recipient-button" onClick={() => onChangeRecipient(null)}>
-                    <Trans>- Remove recipient</Trans>
-                  </LinkStyledButton>
-                </AutoRow>
-                <AddressInputPanel id="recipient" value={recipient} onChange={onChangeRecipient} />
-              </>
-            ) : null}
           </OutputSwapSection>
         </div>
         {showDetailsDropdown && (

@@ -30,7 +30,9 @@ function searchResultToCurrencyInfo({
     name,
   })
 
-  if (!currency) return null
+  if (!currency) {
+    return null
+  }
 
   const currencyInfo: CurrencyInfo = {
     currency,

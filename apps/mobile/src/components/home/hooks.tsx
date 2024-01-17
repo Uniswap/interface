@@ -22,7 +22,9 @@ export function useAdaptiveFooter(contentContainerStyle?: StyleProp<ViewStyle>):
 
   const onContentSizeChange = useCallback(
     (_: number, contentHeight: number) => {
-      if (!contentContainerStyle) return
+      if (!contentContainerStyle) {
+        return
+      }
       // The height of the footer added to the list can be calculated from
       // the following equation (for collapsed tab bar):
       // maxContentHeight = TAB_BAR_HEIGHT + <real content height> + footerHeight + paddingBottom

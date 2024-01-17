@@ -7,8 +7,10 @@ import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
-import { useAccountDrawer } from 'components/AccountDrawer'
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { BaseButton } from 'components/Button'
+import { getRecentConnectionMeta } from 'connection/meta'
+import { useNewLandingPage } from 'featureFlags/flags/landingPageV2'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
@@ -22,18 +24,16 @@ import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { getDownloadAppLinkProps } from 'utils/openDownloadApp'
 
+import LandingV2 from './LandingV2'
+
 const PageContainer = styled.div`
-  position: absolute;
-  top: 0;
   padding: ${({ theme }) => theme.navHeight}px 0px 0px 0px;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  scroll-behavior: smooth;
   overflow-x: hidden;
 `
-
 const Gradient = styled.div<{ isDarkMode: boolean }>`
   position: absolute;
   display: flex;
@@ -58,7 +58,6 @@ const Gradient = styled.div<{ isDarkMode: boolean }>`
     height: 100vh;
   }
 `
-
 const GlowContainer = styled.div`
   position: absolute;
   display: flex;
@@ -73,7 +72,6 @@ const GlowContainer = styled.div`
     height: 100vh;
   }
 `
-
 const Glow = styled.div`
   position: absolute;
   top: 68px;
@@ -85,7 +83,6 @@ const Glow = styled.div`
   width: 100%;
   height: 100%;
 `
-
 const ContentContainer = styled.div<{ isDarkMode: boolean }>`
   position: absolute;
   display: flex;
@@ -104,7 +101,6 @@ const ContentContainer = styled.div<{ isDarkMode: boolean }>`
     pointer-events: auto;
   }
 `
-
 const DownloadWalletLink = styled.a`
   display: inline-flex;
   gap: 8px;
@@ -121,7 +117,6 @@ const DownloadWalletLink = styled.a`
     color: ${({ theme }) => theme.neutral3};
   }
 `
-
 const TitleText = styled.h1<{ isDarkMode: boolean }>`
   color: transparent;
   font-size: 36px;
@@ -150,7 +145,6 @@ const TitleText = styled.h1<{ isDarkMode: boolean }>`
     line-height: 72px;
   }
 `
-
 const SubText = styled.div`
   color: ${({ theme }) => theme.neutral2};
   font-size: 16px;
@@ -165,17 +159,14 @@ const SubText = styled.div`
     line-height: 28px;
   }
 `
-
 const SubTextContainer = styled.div`
   display: flex;
   justify-content: center;
 `
-
 const LandingButton = styled(BaseButton)`
   padding: 16px 0px;
   border-radius: 24px;
 `
-
 const ButtonCTA = styled(LandingButton)`
   background: linear-gradient(93.06deg, #ff00c7 2.66%, #ff9ffb 98.99%);
   border: none;
@@ -186,7 +177,6 @@ const ButtonCTA = styled(LandingButton)`
     box-shadow: 0px 0px 16px 0px #ff00c7;
   }
 `
-
 const ButtonCTAText = styled.p`
   margin: 0px;
   font-size: 16px;
@@ -197,13 +187,11 @@ const ButtonCTAText = styled.p`
     font-size: 20px;
   }
 `
-
 const ActionsContainer = styled.span`
   max-width: 300px;
   width: 100%;
   pointer-events: auto;
 `
-
 const LearnMoreContainer = styled.div`
   align-items: center;
   color: ${({ theme }) => theme.neutral3};
@@ -224,7 +212,6 @@ const LearnMoreContainer = styled.div`
     opacity: 0.6;
   }
 `
-
 const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
   display: flex;
   flex-direction: column;
@@ -243,7 +230,6 @@ const AboutContentContainer = styled.div<{ isDarkMode: boolean }>`
     padding: 0 96px 5rem;
   }
 `
-
 const CardGrid = styled.div<{ cols: number }>`
   display: grid;
   gap: 12px;
@@ -271,7 +257,6 @@ const CardGrid = styled.div<{ cols: number }>`
     gap: 32px;
   }
 `
-
 const LandingSwapContainer = styled.div`
   height: ${({ theme }) => `calc(100vh - ${theme.mobileBottomBarHeight}px)`};
   width: 100%;
@@ -280,7 +265,6 @@ const LandingSwapContainer = styled.div`
   align-items: center;
   z-index: 1;
 `
-
 const SwapCss = css`
   * {
     pointer-events: none;
@@ -291,28 +275,25 @@ const SwapCss = css`
     transition: ${({ theme }) => `transform ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
   }
 `
-
 const LinkCss = css`
   text-decoration: none;
   max-width: 480px;
   width: 100%;
 `
-
 const LandingSwap = styled(Swap)`
   ${SwapCss}
   &:hover {
     border: 1px solid ${({ theme }) => theme.accent1};
   }
 `
-
 const Link = styled(NativeLink)`
   ${LinkCss}
 `
-
 export default function Landing() {
   const isDarkMode = useIsDarkMode()
   const cardsRef = useRef<HTMLDivElement>(null)
   const { account } = useWeb3React()
+  const recentConnectionMeta = getRecentConnectionMeta()
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const cards = useMemo(
@@ -323,18 +304,27 @@ export default function Landing() {
   const [accountDrawerOpen] = useAccountDrawer()
   const navigate = useNavigate()
   useEffect(() => {
-    if (accountDrawerOpen) {
-      setTimeout(() => {
+    const timeoutId = setTimeout(() => {
+      if (accountDrawerOpen) {
         navigate('/swap')
-      }, TRANSITION_DURATIONS.fast)
-    }
+      }
+    }, TRANSITION_DURATIONS.fast)
+    return () => clearTimeout(timeoutId)
   }, [accountDrawerOpen, navigate])
 
   const location = useLocation()
   const queryParams = parse(location.search, { ignoreQueryPrefix: true })
 
-  if (account && !queryParams.intro) {
+  const isNewLandingPageEnabled = useNewLandingPage()
+
+  // Redirect to swap page if user is connected or has been recently
+  // The intro query parameter can be used to override this
+  if ((account || recentConnectionMeta) && !queryParams.intro) {
     return <Navigate to={{ ...location, pathname: '/swap' }} replace />
+  }
+
+  if (isNewLandingPageEnabled) {
+    return <LandingV2 />
   }
 
   return (

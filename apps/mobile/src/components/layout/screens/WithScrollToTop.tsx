@@ -6,7 +6,9 @@ import { Pressable } from 'react-native'
 export const WithScrollToTop = forwardRef<any, PropsWithChildren<unknown>>(
   function _WithScrollToTop({ children }: PropsWithChildren<unknown>, ref) {
     const onPress = (): void => {
-      if (!ref || typeof ref === 'function') return
+      if (!ref || typeof ref === 'function') {
+        return
+      }
       ref.current.scrollToOffset({ animated: true, offset: 0 })
     }
 

@@ -118,6 +118,13 @@ const StyledExternalLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.neutral1};
 `
 
+const Header = styled(ThemedText.H1Small)`
+  color: white;
+  font-weight: 535;
+  font-size: inherit;
+  line-height: inherit;
+`
+
 export default function Landing() {
   const theme = useTheme()
   const { account, chainId } = useWeb3React()
@@ -159,9 +166,9 @@ export default function Landing() {
               <CardSection>
                 <AutoColumn gap="md">
                   <RowBetween>
-                    <ThemedText.DeprecatedWhite fontWeight={535}>
+                    <Header>
                       <Trans>Uniswap governance</Trans>
-                    </ThemedText.DeprecatedWhite>
+                    </Header>
                   </RowBetween>
                   <RowBetween>
                     <ThemedText.DeprecatedWhite fontSize={14}>

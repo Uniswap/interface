@@ -8,7 +8,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   min-width: 0;
 }
 
-.c11 {
+.c13 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -17,7 +17,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   width: max-content;
 }
 
-.c52 {
+.c81 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -44,7 +44,24 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   justify-content: flex-start;
 }
 
-.c10 {
+.c11 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c12 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -62,7 +79,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   gap: 18px;
 }
 
-.c12 {
+.c14 {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
@@ -82,7 +99,25 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   gap: 8px;
 }
 
-.c53 {
+.c43 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.c82 {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
@@ -102,7 +137,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   padding: 4px 0px;
 }
 
-.c58 {
+.c87 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -119,7 +154,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   justify-content: flex-start;
 }
 
-.c73 {
+.c101 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -137,15 +172,15 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   gap: 4px;
 }
 
-.c8 {
-  color: #7D7D7D;
-}
-
-.c9 {
+.c18 {
   color: #222222;
 }
 
-.c67 {
+.c19 {
+  color: #7D7D7D;
+}
+
+.c96 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -156,11 +191,11 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   font-weight: 500;
 }
 
-.c67:hover {
+.c96:hover {
   opacity: 0.6;
 }
 
-.c67:active {
+.c96:active {
   opacity: 0.4;
 }
 
@@ -190,10 +225,165 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  gap: 8px;
+  gap: 24px;
 }
 
-.c19 {
+.c38 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+.c39 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  margin-top: 4px;
+  gap: 4px;
+  border-radius: 16px;
+  height: 40px;
+  padding: 4px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.c40 {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  background-color: transparent;
+  font-weight: 535;
+  font-size: 16px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  line-height: 20px;
+  border: none;
+  cursor: pointer;
+  color: #7D7D7D;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c40:hover {
+  opacity: 0.6;
+}
+
+.c41 {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  background-color: #22222212;
+  font-weight: 535;
+  font-size: 16px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  line-height: 20px;
+  border: none;
+  cursor: pointer;
+  color: #222222;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c83 {
+  color: #FF5F52;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  color: #222222;
+  font-size: 16px;
+  line-height: 24px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #7D7D7D;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c7:hover {
+  color: #CECECE;
+}
+
+.c8 {
+  gap: 6px;
+}
+
+.c9 {
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  white-space: nowrap;
+  margin: 0;
+}
+
+.c10 {
+  cursor: pointer;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.c30 {
   border-radius: 12px;
   border-radius: 12px;
   height: 24px;
@@ -208,134 +398,16 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   background-size: 400%;
 }
 
-.c33 {
+.c76 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
+  width: 16px;
   height: 16px;
-  width: 80px;
-}
-
-.c36 {
-  height: 20px;
-  width: 20px;
-  border-radius: 100px;
-}
-
-.c6 {
-  gap: 36px;
-}
-
-.c7 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c7:hover {
-  opacity: 0.6;
-}
-
-.c7:active {
-  opacity: 0.4;
-}
-
-.c16 {
-  background: #F9F9F9;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-.c17 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c17:hover {
-  opacity: 0.6;
-}
-
-.c17:active {
-  opacity: 0.4;
-}
-
-.c13 {
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c14 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c14 img {
-  width: 16px;
-  height: 32px;
-  object-fit: cover;
-}
-
-.c14 img:first-child {
-  border-radius: 16px 0 0 16px;
-  object-position: 0 0;
-}
-
-.c14 img:last-child {
-  border-radius: 0 16px 16px 0;
-  object-position: 100% 0;
-}
-
-.c60 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c60 img {
-  width: 10px;
-  height: 20px;
-  object-fit: cover;
-}
-
-.c60 img:first-child {
-  border-radius: 10px 0 0 10px;
-  object-position: 0 0;
-}
-
-.c60 img:last-child {
-  border-radius: 0 10px 10px 0;
-  object-position: 100% 0;
-}
-
-.c15 {
-  width: 16px;
-  height: 32px;
   border-radius: 50%;
 }
 
-.c61 {
-  width: 10px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c72 {
+.c100 {
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
@@ -344,7 +416,29 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   border-radius: 50%;
 }
 
-.c71 {
+.c75 {
+  width: 16px;
+  height: 16px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c99 {
   width: 20px;
   height: 20px;
   background: #22222212;
@@ -352,9 +446,21 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   transition: background-color 250ms ease-in;
   box-shadow: 0 0 1px white;
   border-radius: 50%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
-.c70 {
+.c74 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -362,19 +468,202 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   display: flex;
 }
 
-.c62 {
+.c35 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  height: 100%;
+  padding-bottom: 66px;
+  overflow: hidden;
+  margin-bottom: 44px;
+}
+
+.c31 {
+  height: 16px;
+  width: 180px;
+}
+
+.c32 {
+  height: 32px;
+  border-radius: 8px;
+}
+
+.c33 {
+  margin-top: 4px;
+  height: 40px;
+}
+
+.c36 {
+  -webkit-animation: wave 8s cubic-bezier(0.36,0.45,0.63,0.53) infinite;
+  animation: wave 8s cubic-bezier(0.36,0.45,0.63,0.53) infinite;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  overflow: hidden;
+  margin-top: 90px;
+}
+
+.c34 {
+  height: 6px;
+}
+
+.c28 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  position: relative;
+}
+
+.c29 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  height: 436px;
+  margin-bottom: :24px;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  position: relative;
+}
+
+.c37 {
+  position: absolute;
+  top: 4px;
+  right: 72px;
+  z-index: 3;
+}
+
+.c20 {
+  background: #F9F9F9;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.c21 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c21:hover {
+  opacity: 0.6;
+}
+
+.c21:active {
+  opacity: 0.4;
+}
+
+.c15 {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c16 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c16 img {
+  width: 16px;
+  height: 32px;
+  object-fit: cover;
+}
+
+.c16 img:first-child {
+  border-radius: 16px 0 0 16px;
+  object-position: 0 0;
+}
+
+.c16 img:last-child {
+  border-radius: 0 16px 16px 0;
+  object-position: 100% 0;
+}
+
+.c89 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c89 img {
+  width: 10px;
+  height: 20px;
+  object-fit: cover;
+}
+
+.c89 img:first-child {
+  border-radius: 10px 0 0 10px;
+  object-position: 0 0;
+}
+
+.c89 img:last-child {
+  border-radius: 0 10px 10px 0;
+  object-position: 100% 0;
+}
+
+.c17 {
+  width: 16px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.c90 {
+  width: 10px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c91 {
   display: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.c59 {
+.c88 {
   gap: 8px;
   margin-right: 12px;
 }
 
-.c69 {
+.c98 {
   gap: 8px;
   margin-right: 12px;
   -webkit-text-decoration: none;
@@ -384,15 +673,15 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   transition-duration: 125ms;
 }
 
-.c69:hover {
+.c98:hover {
   opacity: 0.6;
 }
 
-.c69:active {
+.c98:active {
   opacity: 0.4;
 }
 
-.c63 {
+.c92 {
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
@@ -401,7 +690,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   text-overflow: ellipsis;
 }
 
-.c65 {
+.c94 {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
@@ -422,15 +711,15 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   transition-duration: 125ms;
 }
 
-.c65:hover {
+.c94:hover {
   opacity: 0.6;
 }
 
-.c65:active {
+.c94:active {
   opacity: 0.4;
 }
 
-.c66 {
+.c95 {
   width: 16px;
   height: 16px;
   color: #7D7D7D;
@@ -439,7 +728,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   flex-shrink: 0;
 }
 
-.c68 {
+.c97 {
   padding: 8px;
   border-radius: 20px;
   background-color: #22222212;
@@ -454,15 +743,15 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   transition-duration: 125ms;
 }
 
-.c68:hover {
+.c97:hover {
   opacity: 0.6;
 }
 
-.c68:active {
+.c97:active {
   opacity: 0.4;
 }
 
-.c64 {
+.c93 {
   gap: 8px;
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
@@ -472,17 +761,13 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   width: max-content;
 }
 
-.c54 {
-  color: #FF5F52;
-}
-
-.c44 {
+.c69 {
   font-weight: 485;
   font-size: 24px;
   line-height: 36px;
 }
 
-.c43 {
+.c68 {
   gap: 24px;
   padding: 20px;
   border-radius: 20px;
@@ -490,7 +775,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   width: 100%;
 }
 
-.c45 {
+.c70 {
   gap: 8px;
   -webkit-flex: 1;
   -ms-flex: 1;
@@ -498,23 +783,48 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   min-width: 180px;
 }
 
-.c46 {
+.c71 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
 }
 
-.c47 {
+.c72 {
   font-weight: 485;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 24px;
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
 }
 
-.c48 {
+.c73 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c73:hover {
+  opacity: 0.6;
+}
+
+.c73:active {
+  opacity: 0.4;
+}
+
+.c77 {
   height: 8px;
   width: 40.698463777008904%;
   background: #FC72FF;
@@ -523,7 +833,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   border-right: 1px solid #F9F9F9;
 }
 
-.c49 {
+.c78 {
   height: 8px;
   width: 59.3015362229911%;
   background: #4C82FB;
@@ -532,7 +842,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   border-left: 1px solid #F9F9F9;
 }
 
-.c50 {
+.c79 {
   gap: 4px;
   width: 100%;
   -webkit-align-items: flex-end;
@@ -541,14 +851,14 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   align-items: flex-end;
 }
 
-.c51 {
+.c80 {
   color: #222222;
   font-size: 36px;
   font-weight: 485;
   line-height: 44px;
 }
 
-.c42 {
+.c67 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -562,7 +872,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   width: 100%;
 }
 
-.c39 {
+.c64 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -597,160 +907,86 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   user-select: none;
 }
 
-.c39:active .c41 {
+.c64:active .c66 {
   background-color: #B8C0DC3d;
 }
 
-.c39:focus .c41 {
+.c64:focus .c66 {
   background-color: #B8C0DC3d;
 }
 
-.c39:hover .c41 {
+.c64:hover .c66 {
   background-color: #98A1C014;
 }
 
-.c39:disabled {
+.c64:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c39:disabled:active .c41,
-.c39:disabled:focus .c41,
-.c39:disabled:hover .c41 {
+.c64:disabled:active .c66,
+.c64:disabled:focus .c66,
+.c64:disabled:hover .c66 {
   background-color: transparent;
 }
 
-.c38 {
+.c63 {
   gap: 12px;
 }
 
-.c40 {
+.c65 {
   padding: 12px 16px 12px 12px;
   border-radius: 900px;
   width: 50%;
 }
 
-.c28 {
-  gap: 24px;
-  border-radius: 20px;
-  border: 1px solid #22222212;
-  padding-bottom: 12px;
-  overflow-y: hidden;
-  -webkit-scrollbar-width: thin;
-  -moz-scrollbar-width: thin;
-  -ms-scrollbar-width: thin;
-  scrollbar-width: thin;
-  -webkit-scrollbar-color: #22222212 transparent;
-  -moz-scrollbar-color: #22222212 transparent;
-  -ms-scrollbar-color: #22222212 transparent;
-  scrollbar-color: #22222212 transparent;
-  height: 100%;
+.c60 {
+  height: 16px;
+  width: 16px;
 }
 
-.c28::-webkit-scrollbar {
-  background: transparent;
-  height: 4px;
-  overflow-x: scroll;
+.c60 path {
+  stroke: #FC72FF;
+  background: #7D7D7D;
+  fill: none;
 }
 
-.c28::-webkit-scrollbar-thumb {
-  background: #22222212;
-  border-radius: 8px;
+.c61 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
 }
 
-.c29 {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  border-bottom: 1px solid #22222212;
-  padding: 12px;
-  min-width: -webkit-max-content;
-  min-width: -moz-max-content;
-  min-width: max-content;
+.c23 {
+  -webkit-transition: display 125ms ease-in-out, -webkit-transform 125ms ease-in-out;
+  -webkit-transition: display 125ms ease-in-out, transform 125ms ease-in-out;
+  transition: display 125ms ease-in-out, transform 125ms ease-in-out;
+  -webkit-animation: iCPeaJ 125ms ease-in-out;
+  animation: iCPeaJ 125ms ease-in-out;
 }
 
-.c35 {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  border-bottom: none;
-  padding: 12px;
-  min-width: -webkit-max-content;
-  min-width: -moz-max-content;
-  min-width: max-content;
+.c23.exiting {
+  -webkit-animation: bbnGid 125ms ease-in-out;
+  animation: bbnGid 125ms ease-in-out;
 }
 
-.c30 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0px 8px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  width: auto;
-  min-width: 136px !important;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
+.c45 {
+  max-width: 1200px;
+  max-height: 600px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin: 0px auto 24px auto;
 }
 
-.c31 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0px 8px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  width: auto;
-  min-width: 121px !important;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c32 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0px 8px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  width: auto;
-  min-width: 121px !important;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-}
-
-.c34 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0px 8px;
-  -webkit-flex: unset;
-  -ms-flex: unset;
-  flex: unset;
-  width: 44px;
-  min-width: unset !important;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-}
-
-.c18 {
+.c46 {
+  width: 100%;
+  height: 72px;
+  position: relative;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -758,13 +994,245 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
-  height: 436px;
-  margin-bottom: 24px;
-  -webkit-align-items: flex-start;
-  -webkit-box-align: flex-start;
-  -ms-flex-align: flex-start;
-  align-items: flex-start;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  background: #FFFFFF;
+}
+
+.c56 {
   width: 100%;
+  position: relative;
+  overflow-x: auto;
+  overscroll-behavior-x: none;
+  border-right: 1px solid #22222212;
+  border-bottom: 1px solid #22222212;
+  border-left: 1px solid #22222212;
+  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  -ms-overflow-style: none;
+  -webkit-scrollbar-width: none;
+  -moz-scrollbar-width: none;
+  -ms-scrollbar-width: none;
+  scrollbar-width: none;
+}
+
+.c56::-webkit-scrollbar {
+  display: none;
+}
+
+.c58 {
+  position: -webkit-sticky;
+  position: sticky;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  margin-top: -48px;
+  visibility: hidden;
+}
+
+.c59 {
+  background: #FFEFFF;
+  border-radius: 8px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 8px;
+  color: #FC72FF;
+  font-size: 16px;
+  font-weight: 535;
+  gap: 8px;
+  height: 34px;
+  z-index: 990;
+}
+
+.c47 {
+  padding: 0px 20px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  min-width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  min-height: 64px;
+}
+
+.c57:hover {
+  background: #22222212;
+}
+
+.c48 {
+  border: 1px solid #22222212;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  overflow: auto;
+  width: unset;
+  min-height: 52px;
+  background: #F9F9F9;
+  -ms-overflow-style: none;
+  -webkit-scrollbar-width: none;
+  -moz-scrollbar-width: none;
+  -ms-scrollbar-width: none;
+  scrollbar-width: none;
+  overscroll-behavior: none;
+}
+
+.c48::-webkit-scrollbar {
+  display: none;
+}
+
+.c49 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.c49:last-child {
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+.c50 {
+  width: undefinedpx;
+  min-width: 150px;
+  min-width: undefinedpx;
+  -webkit-flex: 0;
+  -ms-flex: 0;
+  flex: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c51 {
+  width: undefinedpx;
+  min-width: 100px;
+  min-width: undefinedpx;
+  -webkit-flex: 0;
+  -ms-flex: 0;
+  flex: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c52 {
+  width: undefinedpx;
+  min-width: 125px;
+  min-width: undefinedpx;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c54 {
+  width: undefinedpx;
+  min-width: 100px;
+  min-width: undefinedpx;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c55 {
+  width: undefinedpx;
+  min-width: 32px;
+  min-width: undefinedpx;
+  -webkit-flex: 0;
+  -ms-flex: 0;
+  flex: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c53 {
+  width: 75%;
+  height: 16px;
+}
+
+.c44 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .c24 {
@@ -772,47 +1240,90 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-align-items: flex-end;
-  -webkit-box-align: flex-end;
-  -ms-flex-align: flex-end;
-  align-items: flex-end;
-  height: 100%;
-  margin-bottom: 44px;
-  padding-bottom: 66px;
-  overflow: hidden;
-}
-
-.c20 {
-  height: 16px;
-  width: 180px;
-}
-
-.c21 {
-  height: 32px;
-  border-radius: 8px;
-}
-
-.c22 {
-  margin-top: 4px;
+  position: relative;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  gap: 12px;
+  border: 1px solid #22222212;
+  border-radius: 20px;
   height: 40px;
+  padding: 4px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 .c25 {
-  -webkit-animation: wave 8s cubic-bezier(0.36,0.45,0.63,0.53) infinite;
-  animation: wave 8s cubic-bezier(0.36,0.45,0.63,0.53) infinite;
+  position: absolute;
+  height: 30px;
+  background-color: #22222212;
+  border-radius: 15px;
+  -webkit-transition: left 0.3s ease,width 0.3s ease;
+  transition: left 0.3s ease,width 0.3s ease;
+}
+
+.c26 {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  overflow: hidden;
-  margin-top: 90px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  background-color: transparent;
+  font-weight: 535;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 15px;
+  line-height: 20px;
+  border: none;
+  cursor: pointer;
+  color: #222222;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
 }
 
-.c23 {
-  height: 6px;
+.c27 {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  background-color: transparent;
+  font-weight: 535;
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 15px;
+  line-height: 20px;
+  border: none;
+  cursor: pointer;
+  color: #7D7D7D;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c27:hover {
+  opacity: 0.6;
 }
 
 .c2 {
@@ -835,61 +1346,92 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
   justify-content: flex-start;
 }
 
-.c26 {
+.c22 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c42 {
   border: 0.5px solid #22222212;
   margin: 16px 0px;
   width: 100%;
 }
 
-.c27 {
-  width: 180px;
-  height: 32px;
-}
-
-.c37 {
+.c62 {
   gap: 24px;
   margin: 0 48px 0 auto;
   width: 22vw;
   min-width: 360px;
 }
 
-.c55 {
+.c84 {
   gap: 24px;
   padding: 20px;
 }
 
-.c56 {
+.c85 {
   width: 100%;
   font-size: 24px;
   font-weight: 485;
   line-height: 32px;
 }
 
-.c57 {
+.c86 {
   gap: 16px;
   width: 100%;
 }
 
+@media only screen and (max-width:720px) {
+  .c39 {
+    width: 100%;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    border: none;
+  }
+}
+
+@media only screen and (max-width:1024px) {
+  .c37 {
+    position: static;
+    margin-top: 4px;
+  }
+}
+
+@media only screen and (max-width:396px) {
+  .c37 {
+    width: 100%;
+  }
+}
+
 @media (max-width:1023px) and (min-width:395px) {
-  .c62 {
+  .c91 {
     display: block;
   }
 }
 
 @media (max-width:1023px) and (min-width:395px) {
-  .c63 {
+  .c92 {
     color: #7D7D7D;
   }
 }
 
 @media (max-width:1023px) {
-  .c44 {
+  .c69 {
     width: 100%;
   }
 }
 
 @media (max-width:1023px) {
-  .c43 {
+  .c68 {
     -webkit-flex-direction: row;
     -ms-flex-direction: row;
     flex-direction: row;
@@ -906,13 +1448,13 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 @media (max-width:640px) {
-  .c45 {
+  .c70 {
     min-width: 150px;
   }
 }
 
 @media (max-width:1023px) {
-  .c46 {
+  .c71 {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
@@ -920,7 +1462,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 @media (max-width:1023px) {
-  .c47 {
+  .c72 {
     font-size: 20px;
     line-height: 28px;
     width: 100%;
@@ -928,7 +1470,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 @media (max-width:1023px) {
-  .c50 {
+  .c79 {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
@@ -941,14 +1483,14 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 @media (max-width:1023px) {
-  .c51 {
+  .c80 {
     font-size: 20px;
     line-height: 28px;
   }
 }
 
 @media (max-width:1023px) {
-  .c38 {
+  .c63 {
     display: none;
   }
 }
@@ -975,7 +1517,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 @media (max-width:1023px) {
-  .c37 {
+  .c62 {
     margin: 44px 0px;
     width: 100%;
     min-width: unset;
@@ -983,7 +1525,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 @media (max-width:1023px) and (min-width:640px) {
-  .c55 {
+  .c84 {
     -webkit-flex-direction: row;
     -ms-flex-direction: row;
     flex-direction: row;
@@ -995,7 +1537,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
 }
 
 @media (max-width:639px) {
-  .c55 {
+  .c84 {
     padding: unset;
   }
 }
@@ -1009,84 +1551,113 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
       <div
         class="c5"
       >
-        <div
-          class="c3 c6"
+        <nav
+          aria-label="breadcrumb-nav"
+          class="c6"
         >
-          <div
-            class="c0 c1"
+          <a
+            class="c7"
+            href="/explore/ethereum"
           >
-            <a
-              class="c7"
-              href="/tokens/ETHEREUM"
+            Explore 
+            <svg
+              fill="none"
+              height="14"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <div
-                class="c8 css-1urox24"
-              >
-                Explore
-              </div>
-            </a>
+              <polyline
+                points="9 18 15 12 9 6"
+              />
+            </svg>
+          </a>
+          <a
+            class="c7"
+            href="/explore/pools/ethereum"
+          >
+            Pools 
+            <svg
+              fill="none"
+              height="14"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <polyline
+                points="9 18 15 12 9 6"
+              />
+            </svg>
+          </a>
+          <div
+            aria-current="page"
+            class="c0 c1 c8"
+            data-testid="current-breadcrumb"
+          >
+            <h1
+              class="c9"
+            >
+              USDC / WETH
+            </h1>
+             
             <div
-              class="c8 css-1urox24"
+              class="c0 c1 c10"
+              data-testid="breadcrumb-token-address"
             >
-               &gt; 
-            </div>
-            <a
-              class="c7"
-              href="/tokens/ETHEREUM"
-            >
-              <div
-                class="c8 css-1urox24"
-              >
-                Pool
-              </div>
-            </a>
-            <div
-              class="c8 css-1urox24"
-            >
-               &gt; 
-            </div>
-            <div
-              class="c9 css-1urox24"
-            >
-              USDC / WETH (0x88e6...5640)
+              ( 0x88e6...5640 )
             </div>
           </div>
+        </nav>
+        <div
+          class="c0 c11"
+        >
           <div
-            class="c0 c10"
+            class="c0 c12"
           >
             <div
-              class="c11 c12"
+              class="c13 c14"
               width="max-content"
             >
               <div
-                class="c13"
+                class="c15"
               >
                 <div
-                  class="c14"
+                  class="c16"
+                  size="32"
                 >
                   <img
-                    class="c15"
+                    class="c17"
+                    size="32"
                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                   />
                   <img
-                    class="c15"
+                    class="c17"
+                    size="32"
                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
                   />
                 </div>
               </div>
               <div
-                class="c9 css-1jyz67g"
+                class="c18 css-1jyz67g"
               >
                 USDC / WETH
               </div>
             </div>
             <div
-              class="c8 c16 css-1m65e73"
+              class="c19 c20 css-1m65e73"
             >
               0.05%
             </div>
             <svg
-              class="c17"
+              class="c21"
               data-testid="toggle-tokens-reverse-arrows"
               fill="none"
               height="20"
@@ -1100,756 +1671,2636 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
               />
             </svg>
           </div>
-        </div>
-        <div
-          class="c18"
-        >
           <div
-            class="c9 css-15popx1"
+            class="c22"
           >
             <div
-              class="c19 c20 c21 c22"
-            />
-          </div>
-          <div
-            class="c23"
-          />
-          <div
-            class="c24"
-          >
-            <div>
+              class="c23"
+            >
+              <div
+                class="c24"
+              >
+                <div
+                  class="c25"
+                  style="width: 0px; left: 0px;"
+                />
+                <button
+                  class="c26"
+                >
+                  <svg>
+                    line-chart-icon.svg
+                  </svg>
+                </button>
+                <button
+                  class="c27"
+                >
+                  <svg>
+                    candlestick-chart-icon.svg
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div
+              class="c24"
+            >
               <div
                 class="c25"
+                style="width: 0px; left: 0px;"
+              />
+              <button
+                class="c26"
               >
-                <svg
-                  height="160"
-                  width="416"
-                  xmlns="http://www.w3.org/2000/svg"
+                Price
+              </button>
+              <button
+                class="c27"
+              >
+                Volume
+              </button>
+              <button
+                class="c27"
+              >
+                Liquidity
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="c28"
+          data-testid="pdp-chart-container"
+        >
+          <div
+            class="c29"
+          >
+            <div
+              class="c18 css-15popx1"
+            >
+              <div
+                class="c30 c31 c32 c33"
+              />
+            </div>
+            <div
+              class="c34"
+            />
+            <div
+              class="c35"
+            >
+              <div>
+                <div
+                  class="c36"
                 >
-                  <path
-                    d="M 0 80 Q 104 10, 208 80 T 416 80"
-                    fill="transparent"
-                    stroke="#22222212"
-                    stroke-width="2"
-                  />
-                </svg>
-                <svg
-                  height="160"
-                  width="416"
-                  xmlns="http://www.w3.org/2000/svg"
+                  <svg
+                    height="160"
+                    width="416"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 0 80 Q 104 10, 208 80 T 416 80"
+                      fill="transparent"
+                      stroke="#22222212"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <svg
+                    height="160"
+                    width="416"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 0 80 Q 104 10, 208 80 T 416 80"
+                      fill="transparent"
+                      stroke="#22222212"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <svg
+                    height="160"
+                    width="416"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 0 80 Q 104 10, 208 80 T 416 80"
+                      fill="transparent"
+                      stroke="#22222212"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <svg
+                    height="160"
+                    width="416"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 0 80 Q 104 10, 208 80 T 416 80"
+                      fill="transparent"
+                      stroke="#22222212"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <svg
+                    height="160"
+                    width="416"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 0 80 Q 104 10, 208 80 T 416 80"
+                      fill="transparent"
+                      stroke="#22222212"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c37"
+          >
+            <div
+              class="c38"
+            >
+              <div
+                class="c39"
+              >
+                <button
+                  class="c40"
                 >
-                  <path
-                    d="M 0 80 Q 104 10, 208 80 T 416 80"
-                    fill="transparent"
-                    stroke="#22222212"
-                    stroke-width="2"
-                  />
-                </svg>
-                <svg
-                  height="160"
-                  width="416"
-                  xmlns="http://www.w3.org/2000/svg"
+                  1H
+                </button>
+                <button
+                  class="c41"
                 >
-                  <path
-                    d="M 0 80 Q 104 10, 208 80 T 416 80"
-                    fill="transparent"
-                    stroke="#22222212"
-                    stroke-width="2"
-                  />
-                </svg>
-                <svg
-                  height="160"
-                  width="416"
-                  xmlns="http://www.w3.org/2000/svg"
+                  1D
+                </button>
+                <button
+                  class="c40"
                 >
-                  <path
-                    d="M 0 80 Q 104 10, 208 80 T 416 80"
-                    fill="transparent"
-                    stroke="#22222212"
-                    stroke-width="2"
-                  />
-                </svg>
-                <svg
-                  height="160"
-                  width="416"
-                  xmlns="http://www.w3.org/2000/svg"
+                  1W
+                </button>
+                <button
+                  class="c40"
                 >
-                  <path
-                    d="M 0 80 Q 104 10, 208 80 T 416 80"
-                    fill="transparent"
-                    stroke="#22222212"
-                    stroke-width="2"
-                  />
-                </svg>
+                  1M
+                </button>
+                <button
+                  class="c40"
+                >
+                  1Y
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
       <hr
-        class="c26"
+        class="c42"
       />
       <div
-        class="c19 c27"
-      />
-      <div
-        class="c3 c28"
+        class="c5"
       >
         <div
-          class="c0 c1 c29"
+          class="c0 c43"
         >
           <div
-            class="c8 c30 css-1urox24"
+            class="c18 c44 css-4kpdx7"
+            disabled=""
           >
+            Transactions
+          </div>
+        </div>
+        <div
+          data-testid="pool-details-transactions-table"
+        >
+          <div>
             <div
-              class="c0 c1"
+              class="c3 c45"
             >
-              <svg
-                fill="none"
-                height="16"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
+              <div
+                class="c46"
               >
-                <line
-                  x1="12"
-                  x2="12"
-                  y1="5"
-                  y2="19"
-                />
-                <polyline
-                  points="19 12 12 19 5 12"
-                />
-              </svg>
-              Time
+                <div
+                  class="c0 c1 c47 c48"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c19 css-1urox24"
+                      >
+                        Time
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c19 css-1urox24"
+                      >
+                        Type
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c19 css-1urox24"
+                      >
+                        USD
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c19 css-1urox24"
+                      >
+                        Wallet
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c19 css-1urox24"
+                      >
+                        Tx
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c3 c56"
+              >
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c0 c1 c47 c57"
+                >
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c50"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c51"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c52"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c54"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c49"
+                  >
+                    <div
+                      class="c55"
+                    >
+                      <div
+                        class="c30 c53"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c0 c1 c58"
+              >
+                <div
+                  class="c0 c1 c59"
+                >
+                  <svg
+                    class="c60 c61"
+                    fill="none"
+                    stroke="#FC72FF"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2.5"
+                    />
+                  </svg>
+                  Loading
+                </div>
+              </div>
             </div>
-          </div>
-          <div
-            class="c8 c31 css-1urox24"
-          >
-            Type
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            USD
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            Maker
-          </div>
-          <div
-            class="c8 c34 css-1urox24"
-          >
-            Txn
-          </div>
-        </div>
-        <div
-          class="c0 c1 c35"
-        >
-          <div
-            class="c8 c30 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c31 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c34 css-1urox24"
-          >
-            <div
-              class="c19 c36"
-            />
-          </div>
-        </div>
-        <div
-          class="c0 c1 c35"
-        >
-          <div
-            class="c8 c30 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c31 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c34 css-1urox24"
-          >
-            <div
-              class="c19 c36"
-            />
-          </div>
-        </div>
-        <div
-          class="c0 c1 c35"
-        >
-          <div
-            class="c8 c30 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c31 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c34 css-1urox24"
-          >
-            <div
-              class="c19 c36"
-            />
-          </div>
-        </div>
-        <div
-          class="c0 c1 c35"
-        >
-          <div
-            class="c8 c30 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c31 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c34 css-1urox24"
-          >
-            <div
-              class="c19 c36"
-            />
-          </div>
-        </div>
-        <div
-          class="c0 c1 c35"
-        >
-          <div
-            class="c8 c30 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c31 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c34 css-1urox24"
-          >
-            <div
-              class="c19 c36"
-            />
-          </div>
-        </div>
-        <div
-          class="c0 c1 c35"
-        >
-          <div
-            class="c8 c30 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c31 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c34 css-1urox24"
-          >
-            <div
-              class="c19 c36"
-            />
-          </div>
-        </div>
-        <div
-          class="c0 c1 c35"
-        >
-          <div
-            class="c8 c30 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c31 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c34 css-1urox24"
-          >
-            <div
-              class="c19 c36"
-            />
-          </div>
-        </div>
-        <div
-          class="c0 c1 c35"
-        >
-          <div
-            class="c8 c30 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c31 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c34 css-1urox24"
-          >
-            <div
-              class="c19 c36"
-            />
-          </div>
-        </div>
-        <div
-          class="c0 c1 c35"
-        >
-          <div
-            class="c8 c30 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c31 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c34 css-1urox24"
-          >
-            <div
-              class="c19 c36"
-            />
-          </div>
-        </div>
-        <div
-          class="c0 c1 c35"
-        >
-          <div
-            class="c8 c30 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c31 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c32 css-1urox24"
-          >
-            <div
-              class="c19 c33"
-            />
-          </div>
-          <div
-            class="c8 c34 css-1urox24"
-          >
-            <div
-              class="c19 c36"
-            />
           </div>
         </div>
       </div>
     </div>
     <div
-      class="c3 c37"
+      class="c3 c62"
     >
       <div
-        class="c0 c1 c38"
+        class="c0 c1 c63"
       >
         <button
-          class="c39 c40"
+          class="c64 c65"
           data-testid="pool-details-add-liquidity-button"
           size="1"
         >
           <div
-            class="c41 c42"
+            class="c66 c67"
           />
           Add liquidity
         </button>
         <button
-          class="c39 c40"
+          class="c64 c65"
           data-testid="pool-details-swap-button"
           size="1"
         >
           <div
-            class="c41 c42"
+            class="c66 c67"
           />
           Swap
         </button>
       </div>
       <div
-        class="c3 c43"
+        class="c3 c68"
       >
         <div
-          class="c44 css-vurnku"
+          class="c69 css-vurnku"
         >
           Stats
         </div>
         <div
-          class="c3 c45"
+          class="c3 c70"
         >
           <div
-            class="c8 css-1urox24"
+            class="c19 css-1urox24"
           >
             Pool balances
           </div>
           <div
-            class="c0 c1 c46"
+            class="c0 c1 c71"
           >
             <div
-              class="c0 c1 c47"
+              class="c0 c1 c72"
             >
-              90.93M USDC
+              90.9M 
+              <a
+                class="c73"
+                href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+              >
+                <div
+                  class="c74"
+                  style="height: 16px; width: 16px; margin-right: 4px; margin-left: 4px;"
+                >
+                  <div
+                    class="c75"
+                  >
+                    <img
+                      alt="USDC logo"
+                      class="c76"
+                      loading="lazy"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                    />
+                  </div>
+                </div>
+                USDC
+              </a>
             </div>
             <div
-              class="c0 c1 c47"
+              class="c0 c1 c72"
             >
-              82,526.49 WETH
+              82.5K 
+              <a
+                class="c73"
+                href="/explore/tokens/ethereum/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+              >
+                <div
+                  class="c74"
+                  style="height: 16px; width: 16px; margin-right: 4px; margin-left: 4px;"
+                >
+                  <div
+                    class="c75"
+                  >
+                    <img
+                      alt="WETH logo"
+                      class="c76"
+                      loading="lazy"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                    />
+                  </div>
+                </div>
+                WETH
+              </a>
             </div>
           </div>
           <div
@@ -1857,36 +4308,36 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
             data-testid="pool-balance-chart"
           >
             <div
-              class="c48"
+              class="c77"
             />
             <div
-              class="c49"
+              class="c78"
             />
           </div>
         </div>
         <div
-          class="c3 c45"
+          class="c3 c70"
         >
           <div
-            class="c8 css-1urox24"
+            class="c19 css-1urox24"
           >
             TVL
           </div>
           <div
-            class="c0 c1 c50"
+            class="c0 c1 c79"
           >
             <div
-              class="c51 css-vurnku"
+              class="c80 css-vurnku"
             >
               $223.2M
             </div>
             <div
-              class="c52 c53"
+              class="c81 c82"
               width="max-content"
             >
               <svg
                 aria-label="down"
-                class="c54"
+                class="c83"
                 fill="none"
                 height="16"
                 viewBox="0 0 24 24"
@@ -1899,7 +4350,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
                 />
               </svg>
               <div
-                class="c8 css-1urox24"
+                class="c19 css-1urox24"
               >
                 0.37%
               </div>
@@ -1907,28 +4358,28 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
           </div>
         </div>
         <div
-          class="c3 c45"
+          class="c3 c70"
         >
           <div
-            class="c8 css-1urox24"
+            class="c19 css-1urox24"
           >
             24H volume
           </div>
           <div
-            class="c0 c1 c50"
+            class="c0 c1 c79"
           >
             <div
-              class="c51 css-vurnku"
+              class="c80 css-vurnku"
             >
               $233.4M
             </div>
             <div
-              class="c52 c53"
+              class="c81 c82"
               width="max-content"
             >
               <svg
                 aria-label="down"
-                class="c54"
+                class="c83"
                 fill="none"
                 height="16"
                 viewBox="0 0 24 24"
@@ -1941,7 +4392,7 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
                 />
               </svg>
               <div
-                class="c8 css-1urox24"
+                class="c19 css-1urox24"
               >
                 17.75%
               </div>
@@ -1949,18 +4400,18 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
           </div>
         </div>
         <div
-          class="c3 c45"
+          class="c3 c70"
         >
           <div
-            class="c8 css-1urox24"
+            class="c19 css-1urox24"
           >
             24H fees
           </div>
           <div
-            class="c0 c1 c50"
+            class="c0 c1 c79"
           >
             <div
-              class="c51 css-vurnku"
+              class="c80 css-vurnku"
             >
               $116.7K
             </div>
@@ -1968,56 +4419,63 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
         </div>
       </div>
       <div
-        class="c3 c55"
+        class="c3 c84"
       >
         <div
-          class="c56 css-vurnku"
+          class="c85 css-vurnku"
         >
           Links
         </div>
         <div
-          class="c3 c57"
+          class="c3 c86"
         >
           <div
-            class="c0 c58"
+            class="c0 c87"
           >
             <div
-              class="c0 c1 c59"
+              class="c0 c1 c88"
               data-testid="pdp-pool-logo-USDC-WETH"
             >
               <div
-                class="c60"
+                class="c15"
               >
-                <img
-                  class="c61"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                />
-                <img
-                  class="c61"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                />
+                <div
+                  class="c89"
+                  size="20"
+                >
+                  <img
+                    class="c90"
+                    size="20"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                  />
+                  <img
+                    class="c90"
+                    size="20"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                  />
+                </div>
               </div>
               <div
-                class="c9 c62 css-1urox24"
+                class="c18 c91 css-1urox24"
               >
                 Pool
               </div>
               <div
-                class="c9 c63 css-1urox24"
+                class="c18 c92 css-1urox24"
               >
                 USDC / WETH
               </div>
             </div>
             <div
-              class="c0 c1 c64"
+              class="c0 c1 c93"
             >
               <div
-                class="c0 c1 c65"
+                class="c0 c1 c94"
                 data-testid="copy-address-0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
               >
                 0x88e6...5640
                 <svg
-                  class="c66"
+                  class="c95"
                   fill="none"
                   height="24"
                   stroke="currentColor"
@@ -2042,14 +4500,14 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
                 </svg>
               </div>
               <a
-                class="c67"
+                class="c96"
                 data-testid="explorer-url-https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
                 href="https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
                 rel="noopener noreferrer"
                 target="_blank"
               >
                 <div
-                  class="c68"
+                  class="c97"
                 >
                   <svg
                     fill="#7D7D7D"
@@ -2073,37 +4531,37 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
             </div>
           </div>
           <div
-            class="c0 c58"
+            class="c0 c87"
           >
             <div
-              class="c0 c1 c69"
+              class="c0 c1 c98"
               data-testid="pdp-token-logo-USDC"
             >
               <div
-                class="c70"
+                class="c74"
                 style="height: 20px; width: 20px;"
               >
                 <div
-                  class="c71"
+                  class="c99"
                 >
                   <img
                     alt="USDC logo"
-                    class="c72"
+                    class="c100"
                     loading="lazy"
                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                   />
                 </div>
               </div>
               <div
-                class="c9 c62 css-1urox24"
+                class="c18 c91 css-1urox24"
               >
                 USD Coin
               </div>
               <div
-                class="c9 c63 css-1urox24"
+                class="c18 c92 css-1urox24"
               >
                 <div
-                  class="c0 c73"
+                  class="c0 c101"
                 >
                   USDC 
                   <svg
@@ -2125,15 +4583,15 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
               </div>
             </div>
             <div
-              class="c0 c1 c64"
+              class="c0 c1 c93"
             >
               <div
-                class="c0 c1 c65"
+                class="c0 c1 c94"
                 data-testid="copy-address-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
               >
                 0xA0b8...eB48
                 <svg
-                  class="c66"
+                  class="c95"
                   fill="none"
                   height="24"
                   stroke="currentColor"
@@ -2158,14 +4616,14 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
                 </svg>
               </div>
               <a
-                class="c67"
+                class="c96"
                 data-testid="explorer-url-https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
                 href="https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
                 rel="noopener noreferrer"
                 target="_blank"
               >
                 <div
-                  class="c68"
+                  class="c97"
                 >
                   <svg
                     fill="#7D7D7D"
@@ -2189,37 +4647,37 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
             </div>
           </div>
           <div
-            class="c0 c58"
+            class="c0 c87"
           >
             <div
-              class="c0 c1 c69"
+              class="c0 c1 c98"
               data-testid="pdp-token-logo-WETH"
             >
               <div
-                class="c70"
+                class="c74"
                 style="height: 20px; width: 20px;"
               >
                 <div
-                  class="c71"
+                  class="c99"
                 >
                   <img
                     alt="WETH logo"
-                    class="c72"
+                    class="c100"
                     loading="lazy"
                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
                   />
                 </div>
               </div>
               <div
-                class="c9 c62 css-1urox24"
+                class="c18 c91 css-1urox24"
               >
                 Wrapped Ether
               </div>
               <div
-                class="c9 c63 css-1urox24"
+                class="c18 c92 css-1urox24"
               >
                 <div
-                  class="c0 c73"
+                  class="c0 c101"
                 >
                   WETH 
                   <svg
@@ -2241,15 +4699,15 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
               </div>
             </div>
             <div
-              class="c0 c1 c64"
+              class="c0 c1 c93"
             >
               <div
-                class="c0 c1 c65"
+                class="c0 c1 c94"
                 data-testid="copy-address-0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
               >
                 0xC02a...6Cc2
                 <svg
-                  class="c66"
+                  class="c95"
                   fill="none"
                   height="24"
                   stroke="currentColor"
@@ -2274,14 +4732,14 @@ exports[`PoolDetailsPage pool header is displayed when data is received from the
                 </svg>
               </div>
               <a
-                class="c67"
+                class="c96"
                 data-testid="explorer-url-https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
                 href="https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
                 rel="noopener noreferrer"
                 target="_blank"
               >
                 <div
-                  class="c68"
+                  class="c97"
                 >
                   <svg
                     fill="#7D7D7D"

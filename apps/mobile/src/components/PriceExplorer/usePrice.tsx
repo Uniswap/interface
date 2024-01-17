@@ -13,17 +13,20 @@ import { numberToLocaleStringWorklet, numberToPercentWorklet } from 'src/utils/r
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useCurrentLocale } from 'wallet/src/features/language/hooks'
 
-export type ValueAndFormatted<U = number, V = string, B = boolean> = {
-  value: Readonly<SharedValue<U>>
-  formatted: Readonly<SharedValue<V>>
-  shouldAnimate: Readonly<SharedValue<B>>
+export type ValueAndFormatted = {
+  value: Readonly<SharedValue<number>>
+  formatted: Readonly<SharedValue<string>>
+}
+
+export type ValueAndFormattedWithAnimation = ValueAndFormatted & {
+  shouldAnimate: Readonly<SharedValue<boolean>>
 }
 
 /**
  * Wrapper around react-native-wagmi-chart#useLineChartPrice
  * @returns latest price when not scrubbing and active price when scrubbing
  */
-export function useLineChartPrice(currentSpot?: number): ValueAndFormatted {
+export function useLineChartPrice(currentSpot?: number): ValueAndFormattedWithAnimation {
   const { value: activeCursorPrice } = useRNWagmiChartLineChartPrice({
     // do not round
     precision: 18,
@@ -55,14 +58,15 @@ export function useLineChartPrice(currentSpot?: number): ValueAndFormatted {
     return currentSpot ?? data[data.length - 1]?.value ?? 0
   })
   const priceFormatted = useDerivedValue(() => {
+    const { symbol, code } = currencyInfo
     return numberToLocaleStringWorklet(
       price.value,
       locale,
       {
         style: 'currency',
-        currency: currencyInfo.code,
+        currency: code,
       },
-      currencyInfo.symbol
+      symbol
     )
   })
 
@@ -80,24 +84,10 @@ export function useLineChartPrice(currentSpot?: number): ValueAndFormatted {
  * @returns % change for the active history duration when not scrubbing and %
  *          change between active index and period start when scrubbing
  */
-export function useLineChartRelativeChange({
-  spotRelativeChange,
-}: {
-  spotRelativeChange?: SharedValue<number>
-}): ValueAndFormatted {
+export function useLineChartRelativeChange(): ValueAndFormatted {
   const { currentIndex, data, isActive } = useLineChart()
-  const shouldAnimate = useSharedValue(false)
 
   const relativeChange = useDerivedValue(() => {
-    if (!isActive.value && Boolean(spotRelativeChange)) {
-      // break early when chart is not active (scrubbing) and spot relative
-      // change is available
-      // this should only happen for the daily HistoryDuration where calculating
-      // relative change from historical data leads to data inconsistencies in
-      // the ui
-      return spotRelativeChange?.value ?? 0
-    }
-
     // when scrubbing, compute relative change from open price
     const openPrice = data[0]?.value
 
@@ -116,9 +106,9 @@ export function useLineChartRelativeChange({
     return change
   })
 
-  const relativeChangeFormattted = useDerivedValue(() => {
+  const relativeChangeFormatted = useDerivedValue(() => {
     return numberToPercentWorklet(relativeChange.value, { precision: 2, absolute: true })
   })
 
-  return { value: relativeChange, formatted: relativeChangeFormattted, shouldAnimate }
+  return { value: relativeChange, formatted: relativeChangeFormatted }
 }

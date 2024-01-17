@@ -162,7 +162,8 @@ export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: s
 
   if (!activity) return null
 
-  const onClick = () => openOffchainActivityModal(order)
+  const onClick = () =>
+    openOffchainActivityModal(order, { inputLogo: activity?.logos?.[0], outputLogo: activity?.logos?.[1] })
 
   return <ActivityPopupContent activity={activity} onClose={onClose} onClick={onClick} />
 }

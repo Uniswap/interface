@@ -11,6 +11,7 @@ const numericInputRegex = RegExp('^\\d*(\\.\\d*)?$') // Matches only numeric val
 type Props = {
   showCurrencySign: boolean
   dimTextColor?: boolean
+  maxDecimals?: number
 } & TextInputProps
 
 export function replaceSeparators({
@@ -36,11 +37,70 @@ export function replaceSeparators({
   return outputParts.join(decimalOverride)
 }
 
+export function parseValue({
+  value,
+  decimalSeparator,
+  groupingSeparator,
+  showCurrencySign,
+  showSoftInputOnFocus,
+  nativeKeyboardDecimalSeparator,
+  maxDecimals,
+}: {
+  value?: string
+  decimalSeparator: string
+  groupingSeparator: string
+  showCurrencySign: boolean
+  showSoftInputOnFocus?: boolean
+  nativeKeyboardDecimalSeparator: string
+  maxDecimals?: number
+}): string {
+  let parsedValue = value?.trim() ?? ''
+  parsedValue = showCurrencySign ? parsedValue.substring(1) : parsedValue
+
+  // Replace all non-numeric characters, leaving the decimal and thousand separators.
+  parsedValue = parsedValue.replace(/[^0-9.,]/g, '')
+
+  // TODO(MOB-2385): replace this temporary solution for native keyboard.
+  if (showSoftInputOnFocus && nativeKeyboardDecimalSeparator !== decimalSeparator) {
+    parsedValue = replaceSeparators({
+      value: parsedValue,
+      decimalSeparator: nativeKeyboardDecimalSeparator,
+      decimalOverride: decimalSeparator,
+    })
+  }
+
+  parsedValue = replaceSeparators({
+    value: parsedValue,
+    groupingSeparator,
+    decimalSeparator,
+    groupingOverride: '',
+    decimalOverride: '.',
+  })
+
+  const [beforeDecimalSeparator, afterDecimalSeparator] = parsedValue.split('.')
+
+  if (maxDecimals === undefined || afterDecimalSeparator === undefined) {
+    return parsedValue
+  }
+
+  return `${beforeDecimalSeparator}.${afterDecimalSeparator.substring(0, maxDecimals)}`
+}
+
 export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountInput(
-  { onChangeText, value, showCurrencySign, dimTextColor, showSoftInputOnFocus, ...rest },
+  {
+    onChangeText,
+    value,
+    showCurrencySign,
+    dimTextColor,
+    showSoftInputOnFocus,
+    maxDecimals,
+    ...rest
+  },
   ref
 ) {
   const { groupingSeparator, decimalSeparator } = useAppFiatCurrencyInfo()
+  const { decimalSeparator: nativeKeyboardDecimalSeparator } = getNumberFormatSettings()
+
   const invalidInput = value && !numericInputRegex.test(value)
 
   useEffect(() => {
@@ -51,31 +111,28 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
   }, [invalidInput, onChangeText, value])
 
   const handleChange = useCallback(
-    (text: string) => {
-      let parsedText = showCurrencySign ? text.substring(1) : text
-      const { decimalSeparator: keyboardDecimalSeparator } = getNumberFormatSettings()
-
-      // TODO MOB-2385 replace this temporary solution for native keyboard
-      // Assuming showSoftInputOnFocus means that the native keyboard is used
-      if (showSoftInputOnFocus && keyboardDecimalSeparator !== decimalSeparator) {
-        parsedText = replaceSeparators({
-          value: parsedText,
-          decimalSeparator: keyboardDecimalSeparator,
-          decimalOverride: decimalSeparator,
+    (val: string) => {
+      onChangeText?.(
+        parseValue({
+          value: val,
+          decimalSeparator,
+          groupingSeparator,
+          showCurrencySign,
+          showSoftInputOnFocus,
+          nativeKeyboardDecimalSeparator,
+          maxDecimals,
         })
-      }
-
-      parsedText = replaceSeparators({
-        value: parsedText,
-        groupingSeparator,
-        decimalSeparator,
-        groupingOverride: '',
-        decimalOverride: '.',
-      })
-
-      onChangeText?.(parsedText)
+      )
     },
-    [decimalSeparator, groupingSeparator, onChangeText, showCurrencySign, showSoftInputOnFocus]
+    [
+      decimalSeparator,
+      groupingSeparator,
+      maxDecimals,
+      nativeKeyboardDecimalSeparator,
+      onChangeText,
+      showCurrencySign,
+      showSoftInputOnFocus,
+    ]
   )
 
   const { moonpaySupportedFiatCurrency: currency } = useMoonpayFiatCurrencySupportInfo()
@@ -101,22 +158,18 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
       ref,
       color: !value || dimTextColor ? '$neutral3' : '$neutral1',
       keyboardType: 'numeric' as KeyboardTypeOptions,
-
-      // Use defaultValue here to make TextInput technically an uncontrolled element
-      // Since RN v0.54 TextInputs with 'value' has severely degraded performance
-      // and a workaround to fix performance is to "fake" it being uncontrolled
-      // https://github.com/facebook/react-native/issues/20119#issuecomment-714545951
-      defaultValue: formattedValue,
+      value: formattedValue,
       onChangeText: handleChange,
-
       ...rest,
     }),
-    [dimTextColor, formattedValue, handleChange, rest, value, ref]
+    [ref, value, dimTextColor, formattedValue, handleChange, rest]
   )
 
   useEffect(() => {
     const subscription = AppState.addEventListener('change', (nextAppState) => {
-      if (showSoftInputOnFocus || nextAppState !== 'active') return
+      if (showSoftInputOnFocus || nextAppState !== 'active') {
+        return
+      }
       // Dismiss keyboard when app is foregrounded (showSoftInputOnFocus doesn't
       // wotk when the app activates from the background)
       Keyboard.dismiss()

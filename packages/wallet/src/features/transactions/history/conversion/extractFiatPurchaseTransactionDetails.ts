@@ -22,11 +22,18 @@ function parseFiatPurchaseTransaction(
     quoteCurrencyAmount: outputCurrencyAmount,
   } = transaction
 
-  if (!outputCurrency) throw new Error('Expected output currency to be defined.')
-  if (!inputCurrency) throw new Error('Expected input currency to be defined.')
-  if (!inputCurrencyAmount) throw new Error('Expected inputCurrencyAmount to be defined')
-  if (outputCurrency.type !== 'crypto')
+  if (!outputCurrency) {
+    throw new Error('Expected output currency to be defined.')
+  }
+  if (!inputCurrency) {
+    throw new Error('Expected input currency to be defined.')
+  }
+  if (!inputCurrencyAmount) {
+    throw new Error('Expected inputCurrencyAmount to be defined')
+  }
+  if (outputCurrency.type !== 'crypto') {
     throw new Error('Expected output currency to be crypto but received ' + outputCurrency.type)
+  }
 
   const moonpayChainId = outputCurrency.metadata?.chainId
   const chainId = toSupportedChainId(moonpayChainId ?? undefined)
@@ -38,7 +45,9 @@ function parseFiatPurchaseTransaction(
     outputCurrency.metadata?.contractAddress === MOONPAY_ETH_CONTRACT_ADDRESS
       ? getNativeAddress(chainId)
       : outputCurrency.metadata?.contractAddress
-  if (!outputTokenAddress) throw new Error('Expected output currency address to be defined')
+  if (!outputTokenAddress) {
+    throw new Error('Expected output currency address to be defined')
+  }
 
   return {
     type: TransactionType.FiatPurchase,
@@ -81,7 +90,9 @@ function formatReturnUrl(
   providedReturnUrl: string | undefined,
   id: string | undefined
 ): string | undefined {
-  if (!providedReturnUrl || !id) return
+  if (!providedReturnUrl || !id) {
+    return
+  }
 
   if (providedReturnUrl.includes('?transactionId=')) {
     return providedReturnUrl
@@ -94,7 +105,9 @@ function formatReturnUrl(
 export function extractFiatOnRampTransactionDetails(
   transaction?: MoonpayTransactionsResponse[0]
 ): TransactionDetails | undefined {
-  if (!transaction) return
+  if (!transaction) {
+    return
+  }
 
   // given that the `transaction` object is the raw Moonpay response,
   // we wrap the extract block in a try-catch and log to Sentry

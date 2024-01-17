@@ -9,7 +9,9 @@ const BETA_ADDRESS_DATA_COLLECTION = 'beta_address_data'
 
 export const getFirebaseUidOrError = (firebaseApp: ReactNativeFirebase.FirebaseApp): string => {
   const uid = firebaseApp.auth().currentUser?.uid
-  if (!uid) throw new Error('User must be signed in to Firebase before accessing Firestore')
+  if (!uid) {
+    throw new Error('User must be signed in to Firebase before accessing Firestore')
+  }
   return uid
 }
 

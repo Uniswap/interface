@@ -8,8 +8,9 @@ import { GetQuickQuoteArgs, PreviewTradeResult, QuickRouteResponse, QuoteState, 
 import { isExactInput, transformQuickRouteToTrade } from './utils'
 
 const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
-if (UNISWAP_API_URL === undefined) {
-  throw new Error(`UNISWAP_API_URL must be a defined environment variable`)
+const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
+if (UNISWAP_API_URL === undefined || UNISWAP_GATEWAY_DNS_URL === undefined) {
+  throw new Error(`UNISWAP_API_URL and UNISWAP_GATEWAY_DNS_URL must be a defined environment variable`)
 }
 
 function getQuoteLatencyMeasure(mark: PerformanceMark): PerformanceMeasure {
@@ -19,9 +20,7 @@ function getQuoteLatencyMeasure(mark: PerformanceMark): PerformanceMeasure {
 
 export const quickRouteApi = createApi({
   reducerPath: 'quickRouteApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: UNISWAP_API_URL,
-  }),
+  baseQuery: fetchBaseQuery(),
   endpoints: (build) => ({
     getQuickRoute: build.query<PreviewTradeResult, GetQuickQuoteArgs>({
       async onQueryStarted(args: GetQuickQuoteArgs, { queryFulfilled }) {
@@ -52,7 +51,15 @@ export const quickRouteApi = createApi({
       async queryFn(args, _api, _extraOptions, fetch) {
         logSwapQuoteRequest(args.tokenInChainId, RouterPreference.API, true)
         const quoteStartMark = performance.mark(`quickroute-fetch-start-${Date.now()}`)
-        const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
+        const {
+          tokenInAddress,
+          tokenInChainId,
+          tokenOutAddress,
+          tokenOutChainId,
+          amount,
+          tradeType,
+          gatewayDNSUpdateAllEnabled,
+        } = args
         const type = isExactInput(tradeType) ? 'EXACT_IN' : 'EXACT_OUT'
 
         const requestBody = {
@@ -64,9 +71,10 @@ export const quickRouteApi = createApi({
           tradeType: type,
         }
 
+        const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
         const response = await fetch({
           method: 'GET',
-          url: '/quickroute',
+          url: `${baseURL}/quickroute`,
           params: requestBody,
         })
 

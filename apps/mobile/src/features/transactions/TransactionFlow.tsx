@@ -187,7 +187,7 @@ function InnerContentRouter(props: InnerContentProps): JSX.Element {
   const onRetrySubmit = useCallback(() => setStep(TransactionStep.FORM), [setStep])
 
   const isSwap = isSwapInfo(derivedInfo)
-  if (isSwap)
+  if (isSwap) {
     return (
       <SwapInnerContent
         derivedSwapInfo={derivedInfo}
@@ -198,6 +198,7 @@ function InnerContentRouter(props: InnerContentProps): JSX.Element {
         {...props}
       />
     )
+  }
   return (
     <TransferInnerContent
       derivedTransferInfo={derivedInfo}

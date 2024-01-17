@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { LongText } from 'src/components/text/LongText'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
-import StatsIcon from 'ui/src/assets/icons/chart-bar.svg'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -14,21 +13,16 @@ import { useLocalizationContext } from 'wallet/src/features/language/Localizatio
 function StatsRow({
   label,
   children,
-  tokenColor,
+  statsIcon,
 }: {
   label: string
   children: JSX.Element
-  tokenColor?: Nullable<string>
+  statsIcon: JSX.Element
 }): JSX.Element {
-  const colors = useSporeColors()
   return (
     <Flex row justifyContent="space-between" pl="$spacing2">
       <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start">
-        <StatsIcon
-          color={tokenColor ?? colors.neutral3.get()}
-          height={iconSizes.icon12}
-          width={iconSizes.icon12}
-        />
+        {statsIcon}
         <Text color="$neutral1" variant="body2">
           {label}
         </Text>
@@ -39,6 +33,7 @@ function StatsRow({
 }
 
 export function TokenDetailsMarketData({
+  fullyDilutedValuation,
   marketCap,
   volume,
   priceLow52W,
@@ -46,6 +41,7 @@ export function TokenDetailsMarketData({
   isLoading = false,
   tokenColor,
 }: {
+  fullyDilutedValuation?: number
   marketCap?: number
   volume?: number
   priceLow52W?: number
@@ -54,26 +50,53 @@ export function TokenDetailsMarketData({
   tokenColor?: Nullable<string>
 }): JSX.Element {
   const { t } = useTranslation()
+  const colors = useSporeColors()
+  const defaultTokenColor = colors.neutral3.get()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   return (
     <Flex gap="$spacing8">
-      <StatsRow label={t('24h Uniswap volume')} tokenColor={tokenColor}>
-        <Text loading={isLoading} variant="body2">
-          {convertFiatAmountFormatted(volume, NumberType.FiatTokenStats)}
-        </Text>
-      </StatsRow>
-      <StatsRow label={t('Market cap')} tokenColor={tokenColor}>
+      <StatsRow
+        label={t('Market Cap')}
+        statsIcon={
+          <Icons.ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />
+        }>
         <Text loading={isLoading} variant="body2">
           {convertFiatAmountFormatted(marketCap, NumberType.FiatTokenStats)}
         </Text>
       </StatsRow>
-      <StatsRow label={t('52W high')} tokenColor={tokenColor}>
+      <StatsRow
+        label={t('Fully Diluted Valuation')}
+        statsIcon={
+          <Icons.ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />
+        }>
+        <Text loading={isLoading} variant="body2">
+          {convertFiatAmountFormatted(fullyDilutedValuation, NumberType.FiatTokenStats)}
+        </Text>
+      </StatsRow>
+      <StatsRow
+        label={t('24h Volume')}
+        statsIcon={
+          <Icons.ChartBar color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />
+        }>
+        <Text loading={isLoading} variant="body2">
+          {convertFiatAmountFormatted(volume, NumberType.FiatTokenStats)}
+        </Text>
+      </StatsRow>
+      <StatsRow
+        label={t('52W High')}
+        statsIcon={
+          <Icons.TrendUp color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />
+        }>
         <Text loading={isLoading} variant="body2">
           {convertFiatAmountFormatted(priceHight52W, NumberType.FiatTokenDetails)}
         </Text>
       </StatsRow>
-      <StatsRow label={t('52W low')} tokenColor={tokenColor}>
+      <StatsRow
+        label={t('52W Low')}
+        statsIcon={
+          <Icons.TrendDown color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />
+        }>
         <Text loading={isLoading} variant="body2">
           {convertFiatAmountFormatted(priceLow52W, NumberType.FiatTokenDetails)}
         </Text>
@@ -114,6 +137,7 @@ export function TokenDetailsStats({
     offChainData?.markets?.[0]?.priceHigh52W?.value ?? onChainData?.market?.priceHigh52W?.value
   const priceLow52W =
     offChainData?.markets?.[0]?.priceLow52W?.value ?? onChainData?.market?.priceLow52W?.value
+  const fullyDilutedValuation = offChainData?.markets?.[0]?.fullyDilutedValuation?.value
   const currentDescription =
     showTranslation && translatedDescription ? translatedDescription : description
 
@@ -145,7 +169,7 @@ export function TokenDetailsStats({
                     <Flex fill row alignItems="center" gap="$spacing12">
                       <Icons.Language color="$neutral2" size="$icon.20" />
                       <Text color="$neutral2" variant="body3">
-                        {currentLanguageInfo.name}
+                        {currentLanguageInfo.displayName}
                       </Text>
                     </Flex>
                     <Text color="$blue400" variant="buttonLabel4">
@@ -157,7 +181,9 @@ export function TokenDetailsStats({
                     <Flex row alignItems="center" gap="$spacing12">
                       <Icons.Language color="$neutral2" size="$icon.20" />
                       <Text color="$neutral2" variant="body3">
-                        {t('Translate to {{ language }}', { language: currentLanguageInfo.name })}
+                        {t('Translate to {{ language }}', {
+                          language: currentLanguageInfo.displayName,
+                        })}
                       </Text>
                     </Flex>
                   </Animated.View>
@@ -172,6 +198,7 @@ export function TokenDetailsStats({
           {t('Stats')}
         </Text>
         <TokenDetailsMarketData
+          fullyDilutedValuation={fullyDilutedValuation}
           marketCap={marketCap}
           priceHight52W={priceHight52W}
           priceLow52W={priceLow52W}

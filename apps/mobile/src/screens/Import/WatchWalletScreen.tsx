@@ -13,7 +13,7 @@ import { ElementName } from 'src/features/telemetry/constants'
 import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Button, Flex } from 'ui/src'
+import { Button, Flex, Icons, Text } from 'ui/src'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { ChainId } from 'wallet/src/constants/chains'
 import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
@@ -66,7 +66,7 @@ const getErrorText = ({
   } else if (isSmartContractAddress) {
     return t('Address is a smart contract')
   } else if (!loading) {
-    return t('Address does not exist')
+    return t('Address not found')
   }
   return undefined
 }
@@ -165,25 +165,38 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   }, [value])
 
   return (
-    <SafeKeyboardOnboardingScreen
-      subtitle={t(
-        'Enter an Ethereum wallet address (starting with 0x) or ENS name (ending in .eth).'
-      )}
-      title={t('Enter a wallet address')}>
-      <Flex $short={{ gap: '$none' }} gap="$spacing8">
+    <SafeKeyboardOnboardingScreen title={t('Enter a wallet address')}>
+      <Flex $short={{ gap: '$none' }} gap="$spacing12">
         <GenericImportForm
           blurOnSubmit
           errorMessage={errorText}
+          inputAlignment="flex-start"
           inputSuffix={isAddress || hasSuffixIncluded ? undefined : '.eth'}
           liveCheck={showLiveCheck}
-          placeholderLabel={t('Enter address or ENS')}
-          showSuccess={Boolean(isValid)}
+          placeholderLabel={t('ENS or address')}
+          shouldUseMinHeight={false}
+          textAlign="left"
           value={value}
           onChange={onChange}
           onSubmit={(): void => {
             isValid && Keyboard.dismiss()
           }}
         />
+        <Flex
+          grow
+          row
+          alignItems="center"
+          backgroundColor="$surface2"
+          borderRadius="$rounded16"
+          gap="$spacing16"
+          p="$spacing16">
+          <Icons.GraduationCap color="$neutral2" size="$icon.20" />
+          <Text color="$neutral2" flexShrink={1} variant="body3">
+            {t(
+              'Adding a view-only wallet allows you to try out the app or track a wallet. You will not be able to swap or send funds.'
+            )}
+          </Text>
+        </Flex>
       </Flex>
       <Button disabled={!isValid} testID={ElementName.Next} onPress={onSubmit}>
         {t('Continue')}

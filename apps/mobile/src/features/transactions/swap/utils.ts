@@ -14,7 +14,7 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
-import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
+import { QuoteType, Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import {
   CurrencyField,
   TransactionState,
@@ -69,8 +69,14 @@ export function tradeToTransactionInfo(
   trade: Trade
 ): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
   const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
-  const { quote, slippageTolerance } = trade
-  const { gasUseEstimate, quoteId, routeString } = quote || {}
+  const { quoteData, slippageTolerance } = trade
+
+  // TODO: add additional fields when trading api adds them
+  // https://linear.app/uniswap/issue/MOB-2453/add-additional-properties-to-trading-api
+  const routingApiQuote =
+    quoteData?.quoteType === QuoteType.RoutingApi ? quoteData.quote : undefined
+
+  const { quoteId, gasUseEstimate, routeString } = routingApiQuote || {}
 
   const baseTransactionInfo = {
     inputCurrencyId: currencyId(trade.inputAmount.currency),
@@ -108,7 +114,9 @@ export function tradeToTransactionInfo(
 // any price movement below ACCEPT_NEW_TRADE_THRESHOLD is auto-accepted for the user
 const ACCEPT_NEW_TRADE_THRESHOLD = new Percent(1, 100)
 export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Trade>): boolean {
-  if (!oldTrade || !newTrade) return false
+  if (!oldTrade || !newTrade) {
+    return false
+  }
 
   return (
     oldTrade.tradeType !== newTrade.tradeType ||
@@ -158,7 +166,9 @@ export const getActionElementName = (wrapType: WrapType): ElementName => {
 }
 
 export function sumGasFees(gasFee1?: string | undefined, gasFee2?: string): string | undefined {
-  if (!gasFee1 || !gasFee2) return gasFee1 || gasFee2
+  if (!gasFee1 || !gasFee2) {
+    return gasFee1 || gasFee2
+  }
 
   return BigNumber.from(gasFee1).add(gasFee2).toString()
 }
@@ -224,7 +234,11 @@ export const getSwapMethodParameters = ({
 }
 
 export function getProtocolVersionFromTrade(trade: Trade): Protocol {
-  if (trade.routes.every((r) => r.protocol === Protocol.V2)) return Protocol.V2
-  if (trade.routes.every((r) => r.protocol === Protocol.V3)) return Protocol.V3
+  if (trade.routes.every((r) => r.protocol === Protocol.V2)) {
+    return Protocol.V2
+  }
+  if (trade.routes.every((r) => r.protocol === Protocol.V3)) {
+    return Protocol.V3
+  }
   return Protocol.MIXED
 }

@@ -17,7 +17,9 @@ export function tokenOptionDifference(
   currencies: TokenOption[] | undefined,
   without: TokenOption[] | undefined
 ): TokenOption[] | undefined {
-  if (!currencies) return undefined
+  if (!currencies) {
+    return undefined
+  }
   return differenceWith(currencies, without ?? [], tokenOptionComparator)
 }
 

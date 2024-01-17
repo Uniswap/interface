@@ -35,10 +35,14 @@ export default function parseTradeTransaction(
   transaction: NonNullable<TransactionListQueryResponse>
 ): ConfirmedSwapTransactionInfo | NFTTradeTransactionInfo | WrapTransactionInfo | undefined {
   // ignore UniswapX transactions for now
-  if (transaction?.details?.__typename !== 'TransactionDetails') return undefined
+  if (transaction?.details?.__typename !== 'TransactionDetails') {
+    return undefined
+  }
 
   const chainId = fromGraphQLChain(transaction.chain)
-  if (!chainId) return
+  if (!chainId) {
+    return
+  }
 
   const txAssetChanges =
     transaction.details.assetChanges?.filter(
@@ -57,7 +61,9 @@ export default function parseTradeTransaction(
     received?: TransferAssetChange
   }>(
     (acc, t) => {
-      if (t.direction !== TransactionDirection.In) return acc
+      if (t.direction !== TransactionDirection.In) {
+        return acc
+      }
 
       const isRefundInternalTx =
         t?.__typename === 'TokenTransfer' &&
@@ -79,7 +85,9 @@ export default function parseTradeTransaction(
   )
 
   // Invalid input/output info
-  if (!sent || !received) return
+  if (!sent || !received) {
+    return
+  }
 
   const onlyERC20Tokens =
     sent.__typename === 'TokenTransfer' && received.__typename === 'TokenTransfer'
@@ -150,7 +158,9 @@ export default function parseTradeTransaction(
       }
     }
 
-    if (!inputCurrencyId || !outputCurrencyId) return
+    if (!inputCurrencyId || !outputCurrencyId) {
+      return
+    }
 
     return {
       type: TransactionType.Swap,

@@ -12,3 +12,13 @@ export function useOnCloseSwapModal(): () => void {
 
   return onClose
 }
+
+export function useOnCloseSendModal(): () => void {
+  const appDispatch = useAppDispatch()
+
+  const onClose = useCallback((): void => {
+    appDispatch(closeModal({ name: ModalName.Send }))
+  }, [appDispatch])
+
+  return onClose
+}

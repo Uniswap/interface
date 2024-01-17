@@ -16,7 +16,7 @@ import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { useSwapAnalytics } from 'src/features/transactions/swap/analytics'
 import { useShowSwapNetworkNotification } from 'src/features/transactions/swap/hooks'
 import { isWrapAction } from 'src/features/transactions/swap/utils'
-import { useSwapBottomSheetModalContext } from 'src/features/transactions/swapRewrite/contexts/SwapBottomSheetModalContext'
+import { useTransactionModalContext } from 'src/features/transactions/swapRewrite/contexts/TransactionModalContext'
 import { CurrencyInputPanel } from 'src/features/transactions/swapRewrite/CurrencyInputPanel'
 import {
   DecimalPadInput,
@@ -25,7 +25,7 @@ import {
 import { GasAndWarningRows } from 'src/features/transactions/swapRewrite/GasAndWarningRows'
 import { useSyncFiatAndTokenAmountUpdater } from 'src/features/transactions/swapRewrite/hooks/useSyncFiatAndTokenAmountUpdater'
 import { SwapArrowButton } from 'src/features/transactions/swapRewrite/SwapArrowButton'
-import { SwapBottomSheetModalInnerContainer } from 'src/features/transactions/swapRewrite/SwapBottomSheetModal'
+import { TransactionModalInnerContainer } from 'src/features/transactions/swapRewrite/TransactionModal'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -44,11 +44,11 @@ const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
 const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
 
 export function SwapFormScreen({ hideContent }: { hideContent: boolean }): JSX.Element {
-  const { handleContentLayout, bottomSheetViewStyles } = useSwapBottomSheetModalContext()
+  const { handleContentLayout, bottomSheetViewStyles } = useTransactionModalContext()
   const { selectingCurrencyField } = useSwapFormContext()
 
   return (
-    <SwapBottomSheetModalInnerContainer
+    <TransactionModalInnerContainer
       fullscreen
       bottomSheetViewStyles={bottomSheetViewStyles}
       onLayout={handleContentLayout}>
@@ -57,7 +57,7 @@ export function SwapFormScreen({ hideContent }: { hideContent: boolean }): JSX.E
       {!hideContent && <SwapFormContent />}
 
       {!hideContent && !!selectingCurrencyField && <TokenSelector />}
-    </SwapBottomSheetModalInnerContainer>
+    </TransactionModalInnerContainer>
   )
 }
 
@@ -306,16 +306,19 @@ function SwapFormContent(): JSX.Element {
   )
 
   // Reset selection based the new input value (token, or fiat), and toggle fiat mode
-  const onToggleIsFiatMode = useCallback(() => {
-    const newIsFiatMode = !isFiatMode
+  const onToggleIsFiatMode = useCallback(
+    (currencyField: CurrencyField) => {
+      const newIsFiatMode = !isFiatMode
+      updateSwapForm({
+        isFiatMode: newIsFiatMode,
+        exactCurrencyField: currencyField,
+      })
 
-    updateSwapForm({
-      isFiatMode: newIsFiatMode,
-    })
-
-    // We want this update to happen on the next tick, after the input value is updated.
-    setTimeout(() => moveCursorToEnd({ overrideIsFiatMode: newIsFiatMode }), 0)
-  }, [isFiatMode, moveCursorToEnd, updateSwapForm])
+      // We want this update to happen on the next tick, after the input value is updated.
+      setTimeout(() => moveCursorToEnd({ overrideIsFiatMode: newIsFiatMode }), 0)
+    },
+    [isFiatMode, moveCursorToEnd, updateSwapForm]
+  )
 
   const onSwitchCurrencies = useCallback(() => {
     const newExactCurrencyField = exactFieldIsInput ? CurrencyField.OUTPUT : CurrencyField.INPUT

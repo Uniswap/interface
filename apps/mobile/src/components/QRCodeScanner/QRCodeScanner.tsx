@@ -3,6 +3,7 @@ import { PermissionStatus } from 'expo-modules-core'
 import React, { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet } from 'react-native'
+import { launchImageLibrary } from 'react-native-image-picker'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
 import PasteButton from 'src/components/buttons/PasteButton'
@@ -52,15 +53,54 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   const [permissionResponse, requestPermissionResponse] = BarCodeScanner.usePermissions()
   const permissionStatus = permissionResponse?.status
 
+  const [isReadingImageFile, setIsReadingImageFile] = useState(false)
   const [overlayLayout, setOverlayLayout] = useState<LayoutRectangle | null>()
   const [infoLayout, setInfoLayout] = useState<LayoutRectangle | null>()
-  const [connectionLayout, setConnectionLayout] = useState<LayoutRectangle | null>()
+  const [bottomLayout, setBottomLayout] = useState<LayoutRectangle | null>()
 
-  const handleBarCodeScanned = (result: BarCodeScannerResult): void => {
-    if (shouldFreezeCamera) return
-    const data = result?.data
-    onScanCode(data)
-  }
+  const handleBarCodeScanned = useCallback(
+    (result: BarCodeScannerResult): void => {
+      if (shouldFreezeCamera) {
+        return
+      }
+      const data = result?.data
+      onScanCode(data)
+      setIsReadingImageFile(false)
+    },
+    [onScanCode, shouldFreezeCamera]
+  )
+
+  const onPickImageFilePress = useCallback(async (): Promise<void> => {
+    if (isReadingImageFile) {
+      return
+    }
+
+    setIsReadingImageFile(true)
+
+    const response = await launchImageLibrary({
+      mediaType: 'photo',
+      selectionLimit: 1,
+    })
+
+    const uri = response.assets?.[0]?.uri
+
+    if (!uri) {
+      setIsReadingImageFile(false)
+      return
+    }
+
+    const result = (
+      await BarCodeScanner.scanFromURLAsync(uri, [BarCodeScanner.Constants.BarCodeType.qr])
+    )[0]
+
+    if (!result) {
+      Alert.alert(t('No QR code found'))
+      setIsReadingImageFile(false)
+      return
+    }
+
+    handleBarCodeScanned(result)
+  }, [handleBarCodeScanned, isReadingImageFile, t])
 
   // Check for camera permissions, handle cases where not granted or undetermined
   const getPermissionStatuses = useCallback(async (): Promise<void> => {
@@ -99,7 +139,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           height={Math.max(dimensions.fullHeight, CAMERA_ASPECT_RATIO * dimensions.fullWidth)}
           overflow="hidden"
           width={dimensions.fullWidth}>
-          {permissionStatus === PermissionStatus.GRANTED && (
+          {permissionStatus === PermissionStatus.GRANTED && !isReadingImageFile && (
             <BarCodeScanner
               barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
               style={StyleSheet.absoluteFillObject}
@@ -193,20 +233,36 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
               </Flex>
             ) : null}
           </DevelopmentOnly>
-          {isWalletConnectModal && props.numConnections > 0 && (
+
+          <Flex
+            alignItems="center"
+            bottom={0}
+            gap="$spacing24"
+            position="absolute"
+            style={{
+              transform: [
+                {
+                  translateY: bottomLayout ? bottomLayout.height + spacing.spacing24 : 0,
+                },
+              ],
+            }}
+            onLayout={(event: LayoutChangeEvent): void =>
+              setBottomLayout(event.nativeEvent.layout)
+            }>
             <Flex
-              bottom={0}
-              position="absolute"
-              style={{
-                transform: [
-                  {
-                    translateY: connectionLayout ? connectionLayout.height + spacing.spacing24 : 0,
-                  },
-                ],
-              }}
-              onLayout={(event: LayoutChangeEvent): void =>
-                setConnectionLayout(event.nativeEvent.layout)
-              }>
+              centered
+              backgroundColor={colors.surface1.val}
+              borderRadius="$roundedFull"
+              p="$spacing12"
+              onPress={onPickImageFilePress}>
+              {isReadingImageFile ? (
+                <SpinningLoader size={iconSizes.icon28} />
+              ) : (
+                <Icons.Photo color="$neutral1" size={iconSizes.icon28} />
+              )}
+            </Flex>
+
+            {isWalletConnectModal && props.numConnections > 0 && (
               <Button
                 fontFamily="$body"
                 icon={<Icons.Global color="$neutral2" />}
@@ -218,8 +274,8 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                       numConnections: props.numConnections,
                     })}
               </Button>
-            </Flex>
-          )}
+            )}
+          </Flex>
         </Flex>
       </Flex>
     </AnimatedFlex>
@@ -242,7 +298,9 @@ const GradientOverlay = memo(function GradientOverlay({
   const [size, setSize] = useState<{ width: number; height: number } | null>(null)
 
   const pathWithHole = useMemo(() => {
-    if (!size) return ''
+    if (!size) {
+      return ''
+    }
     const { width: W, height: H } = size
     const iconMaskOffset = SCAN_ICON_MASK_OFFSET_RATIO * scannerSize
     const paddingX = Math.max(0, (W - scannerSize) / 2) + iconMaskOffset

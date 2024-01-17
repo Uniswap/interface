@@ -23,7 +23,7 @@ import {
 } from 'state/swap/SwapContext'
 
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'
-import { LimitForm } from './Limit/LimitForm'
+import { LimitFormWrapper } from './Limit/LimitForm'
 import { SwapForm } from './SwapForm'
 
 export function getIsReviewableQuote(
@@ -109,7 +109,7 @@ export function Swap({
               {currentTab === SwapTab.Swap && (
                 <SwapForm onCurrencyChange={onCurrencyChange} disableTokenInputs={disableTokenInputs} />
               )}
-              {currentTab === SwapTab.Limit && <LimitForm />}
+              {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
             </SwapWrapper>
           </SwapContextProvider>
         )}

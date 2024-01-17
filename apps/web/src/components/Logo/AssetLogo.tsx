@@ -34,6 +34,9 @@ const LogoImageWrapper = styled.div<{ size: string; imgLoaded?: boolean }>`
   transition: background-color ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.in}`};
   box-shadow: 0 0 1px white;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 export type AssetLogoBaseProps = {

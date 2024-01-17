@@ -324,7 +324,7 @@ export const mockTokenTransferInPartsFragment: TokenTransferPartsFragment = {
   __typename: 'TokenTransfer',
   id: 'tokenTransferId',
   tokenStandard: TokenStandard.Erc20,
-  quantity: '1',
+  quantity: '100',
   sender: MockSenderAddress,
   recipient: MockRecipientAddress,
   direction: TransactionDirection.In,

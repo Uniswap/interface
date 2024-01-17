@@ -2,6 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { hasStringAsync } from 'expo-clipboard'
 import React, { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Keyboard } from 'react-native'
 import PasteButton from 'src/components/buttons/PasteButton'
 import { SearchContext } from 'src/components/explore/search/SearchContext'
 import { SearchTextInput } from 'src/components/input/SearchTextInput'
@@ -179,6 +180,11 @@ function TokenSelectorContent({
 
 function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
   const colors = useSporeColors()
+
+  useEffect(() => {
+    // Dismiss native keyboard when opening modal in case it was opened by the current screen.
+    Keyboard.dismiss()
+  }, [])
 
   return (
     <BottomSheetModal

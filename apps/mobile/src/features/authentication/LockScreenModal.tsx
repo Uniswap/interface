@@ -17,7 +17,9 @@ export function LockScreenModal(): JSX.Element | null {
   const dimensions = useDeviceDimensions()
   const isDarkMode = useIsDarkMode()
 
-  if (!isLockScreenVisible) return null
+  if (!isLockScreenVisible) {
+    return null
+  }
 
   return (
     <Modal

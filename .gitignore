@@ -46,6 +46,8 @@ packages/wallet/src/i18n/locales/*_old.json
 # ci
 .ci-cache/
 
-
 # JetBrains
 .idea/
+
+# Vercel
+.vercel

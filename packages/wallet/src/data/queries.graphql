@@ -507,6 +507,9 @@ query TokenDetailsScreen(
         marketCap {
           value
         }
+        fullyDilutedValuation {
+          value
+        }
         priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
           value
         }
@@ -553,6 +556,7 @@ query TransactionList($address: String!) {
       chain
       details {
         ... on TransactionDetails {
+          id
           to
           type
           hash
@@ -648,6 +652,7 @@ query FeedTransactionList($addresses: [String!]!) {
       chain
       details {
         ... on TransactionDetails {
+          id
           to
           type
           hash

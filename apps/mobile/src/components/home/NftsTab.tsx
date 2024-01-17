@@ -95,6 +95,7 @@ export const NftsTab = memo(
           renderNFTItem={renderNFTItem}
           renderedInModal={renderedInModal}
           onContentSizeChange={onContentSizeChange}
+          onPressEmptyState={onPressScan}
           onRefresh={onRefresh}
           onScroll={scrollHandler}
           {...containerProps}

@@ -58,6 +58,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       <Flex row shrink alignItems="center" gap="$spacing12" overflow="hidden">
         <TokenLogo
           chainId={currency.chainId}
+          name={currency.name}
           symbol={currency.symbol}
           url={currencyInfo.logoUrl ?? undefined}
         />

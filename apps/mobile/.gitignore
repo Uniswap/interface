@@ -94,9 +94,8 @@ storybook-static/*
 # Private keys
 .env.local
 
-# Snyk
-.dccache
-
+# Built Items
+ios/assets/
 ./lib/
 
 # Jest

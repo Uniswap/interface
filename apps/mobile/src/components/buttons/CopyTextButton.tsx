@@ -26,7 +26,9 @@ export function CopyTextButton({ copyText }: Props): JSX.Element {
   )
 
   const onPress = async (): Promise<void> => {
-    if (copyText) await setClipboard(copyText)
+    if (copyText) {
+      await setClipboard(copyText)
+    }
     setIsCopied(true)
   }
 

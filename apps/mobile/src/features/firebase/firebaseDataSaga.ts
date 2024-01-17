@@ -128,7 +128,9 @@ function* addAccountToFirebase(account: Account) {
 
 export function* removeAccountFromFirebase(address: Address, notificationsEnabled: boolean) {
   try {
-    if (!notificationsEnabled) return
+    if (!notificationsEnabled) {
+      return
+    }
     yield* call(deleteFirebaseMetadata, address)
     yield* call(disassociateFirebaseUidFromAddresses, [address])
   } catch (error) {
@@ -155,7 +157,9 @@ export function* toggleFirebaseNotificationSettings({
   try {
     const accounts = yield* appSelect(selectAccounts)
     const account = accounts[address]
-    if (!account) throw new Error(`Account not found for address ${address}`)
+    if (!account) {
+      throw new Error(`Account not found for address ${address}`)
+    }
 
     if (enabled) {
       yield* call(addAccountToFirebase, account)
@@ -223,7 +227,9 @@ async function updateFirebaseMetadata(address: Address, metadata: AccountMetadat
     const metadataWithDefinedPropsOnly = getKeys(metadata).reduce(
       (obj: Record<string, unknown>, prop) => {
         const value = metadata[prop]
-        if (value !== undefined) obj[prop] = value
+        if (value !== undefined) {
+          obj[prop] = value
+        }
         return obj
       },
       {}

@@ -27,7 +27,9 @@ export function createSwapFormFromTxDetails({
   const txHash = transactionDetails?.hash
   const chainId = transactionDetails?.chainId
 
-  if (!chainId || !txHash) return undefined
+  if (!chainId || !txHash) {
+    return undefined
+  }
 
   try {
     const { typeInfo } = transactionDetails
@@ -90,7 +92,9 @@ export function createWrapFormFromTxDetails({
   const txHash = transactionDetails?.hash
   const chainId = transactionDetails?.chainId
 
-  if (!chainId || !txHash || !inputCurrency || !outputCurrency) return undefined
+  if (!chainId || !txHash || !inputCurrency || !outputCurrency) {
+    return undefined
+  }
 
   try {
     const { typeInfo } = transactionDetails

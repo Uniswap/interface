@@ -168,7 +168,9 @@ export function TransferTokenForm({
     // only run this useEffect if isFiatInput has changed
     // if inputSelection is undefined, then that means no text selection or cursor
     // movement has happened yet, so let iOS do its default thang
-    if (isFiatInput === previsFiatInput || !inputSelection) return
+    if (isFiatInput === previsFiatInput || !inputSelection) {
+      return
+    }
 
     if (inputSelection.start !== inputSelection.end) {
       setInputSelection(undefined)
@@ -394,7 +396,9 @@ export function TransferTokenForm({
               resetSelection={resetSelection}
               selection={inputSelection}
               setValue={(newValue): void => {
-                if (!currencyFieldFocused) return
+                if (!currencyFieldFocused) {
+                  return
+                }
                 onSetExactAmount(CurrencyField.INPUT, newValue, isFiatInput)
               }}
               value={isFiatInput ? exactAmountFiat : exactAmountToken}

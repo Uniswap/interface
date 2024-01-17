@@ -179,7 +179,9 @@ function _SwapForm({
 
   const setValue = useCallback(
     (value: string): void => {
-      if (!focusOnCurrencyField) return
+      if (!focusOnCurrencyField) {
+        return
+      }
       onSetExactAmount(focusOnCurrencyField, value)
     },
 
@@ -351,7 +353,11 @@ function _SwapForm({
                   </TouchableArea>
                 )}
               </Flex>
-              {swapWarning && !isBlocked ? (
+
+              {/* Render an empty flex when nothing else is shown in order to properly calculate the space available for the DecimalPad */}
+              {!swapWarning && !isBlocked && !showRate && <Flex height={44} opacity={0} />}
+
+              {swapWarning && !isBlocked && (
                 <TouchableArea mt="$spacing1" onPress={onSwapWarningClick}>
                   <Flex
                     grow
@@ -384,7 +390,8 @@ function _SwapForm({
                     </Flex>
                   </Flex>
                 </TouchableArea>
-              ) : null}
+              )}
+
               {isBlocked && (
                 <BlockedAddressWarning
                   grow
@@ -399,7 +406,8 @@ function _SwapForm({
                   py="$spacing12"
                 />
               )}
-              {showRate && !isBlocked ? (
+
+              {showRate && !isBlocked && (
                 <TouchableArea onPress={(): void => setShowInverseRate(!showInverseRate)}>
                   <Flex
                     grow
@@ -439,7 +447,7 @@ function _SwapForm({
                     </Flex>
                   </Flex>
                 </TouchableArea>
-              ) : null}
+              )}
             </Flex>
           </Trace>
         </AnimatedFlex>

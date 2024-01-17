@@ -77,6 +77,7 @@ function _TokenOptionItem({
           <Flex row shrink alignItems="center" gap="$spacing12">
             <TokenLogo
               chainId={currency.chainId}
+              name={currency.name}
               symbol={currency.symbol}
               url={currencyInfo.logoUrl ?? undefined}
             />

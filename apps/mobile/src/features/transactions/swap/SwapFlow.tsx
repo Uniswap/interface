@@ -7,7 +7,7 @@ import {
 } from 'src/components/TokenSelector/TokenSelector'
 import { TokenSelectorFlow } from 'src/components/TokenSelector/types'
 import { useTokenSelectorActionHandlers } from 'src/features/transactions/hooks'
-import { useDerivedSwapInfo, useSwapTxAndGasInfo } from 'src/features/transactions/swap/hooks'
+import { useDerivedSwapInfo, useSwapTxAndGasInfoLegacy } from 'src/features/transactions/swap/hooks'
 import { useSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
 import { TransactionFlow } from 'src/features/transactions/TransactionFlow'
 import {
@@ -42,12 +42,15 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Elemen
   const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
 
   const warnings = useSwapWarnings(t, derivedSwapInfo)
-  const { txRequest, approveTxRequest, gasFee } = useSwapTxAndGasInfo({
+
+  // Force this legacy swap flow to use the old routing api  logic, as we're planning to remove this, and splitting the code is complex.
+  const { txRequest, approveTxRequest, gasFee } = useSwapTxAndGasInfoLegacy({
     derivedSwapInfo,
     skipGasFeeQuery:
       step === TransactionStep.SUBMITTED ||
       warnings.some((warning) => warning.action === WarningAction.DisableReview),
   })
+
   const gasWarning = useTransactionGasWarning({
     derivedInfo: derivedSwapInfo,
     gasFee: gasFee.value,

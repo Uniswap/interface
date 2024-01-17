@@ -4,7 +4,69 @@ This package holds a component library and themes that can be used across both m
 
 ## Library Usage
 
-### Accessing colors
+### Core components
+
+Many base components are available in the UI library. Below key use cases are detailed, but many more are available. 
+
+While some are customized `tamagui` elements or even fully custom elements, many are simple or direct exposure of `tamagui` elements. If you would like to use any `tamagui` elements, please add them through this library to ensure a layer of abstraction between tamagui and our usage when possible.
+
+#### Flex
+
+The `Flex` component is the core organizational element of the UI library, acting as a base of a flexbox styling approach. Shortcuts are available for `row`, `grow`, `shrink`, `fill`, and `centered`. All other styling props can be added directly as needed.
+
+#### Text
+
+The `Text` element is the core element for displaying text through the app. The `variant` prop takes in the text variant from our design system (e.g `heading1`, `body2`, etc.) that is desired. All other text styling props can be added directly as needed.
+
+#### Button
+
+The `Button` element is used consistently to ensure action buttons maintain similar action and style, utilizing `size` and `theme` properties to enforce consistent usage. Even when not using either, this component ensures consistent haptics and other implementation details.
+
+#### Icons and Logos
+
+Icons and Logos are made available off a single import as `Icons.*` and `Logos.*`. These files are generated from placing the file in `packages/ui/src/assets/icons` or `packages/ui/src/assets/logos/svg` and running the generate command:
+
+`yarn ui:build:icons`
+
+When adding an SVG, please ensure you replace color references as needed with `currentColor` to ensure the asset respects the color property when used.
+
+Custom icons that take props can be added by adding the file in `packages/ui/src/components/icons/allIcons.tsx`.
+
+### Theming
+
+Theming is applied through two primary methods:
+
+1. Any components that take in design systems values (e.g `heading1`, `body2`, etc.) will automatically respect the theme.
+2. In all other cases, `useSporeColors` will return the current theme colors to be used in any component.
+
+To force a specific theme usage, the `Theme` wrapper will ensure other theme elements pick up the specific theme.
+
+```javascript
+<Theme name="dark">
+  ...
+</Theme>
+```
+
+### Screen Size Differences
+
+All breakpoints for both vertical and horizontal sizing have been defined in `packages/ui/src/theme/breakpoints.ts`.
+
+To account for screen size references, components take in props to adapt custom style per breakpoint, like so:
+
+```javascript
+<Flex
+  margin="20"
+  $short={{ margin: 10 }}
+>
+  ...
+</Flex>
+```
+
+When components cannot take in these props or a value needs to be resued multiple times, the `useMedia` hook allows these same breakpoint values to be defined programmatically.
+
+### Other notable usage
+
+#### Accessing colors
 
 We've made a hook `useSporeColors()` which gives you access to the current theme, and you can access the values off it as follows:
 
@@ -19,7 +81,7 @@ function MyComponent() {
 }
 ```
 
-#### When to use `.get()` vs `.val`
+##### When to use `.get()` vs `.val`
 
 After some discussion we've come to prefer `.val` by default. This will always return the raw string color (in our case hex color) on all platforms, whereas `.get()` returns either an Object (iOS) or a string, which can cause issues when used with things like animations, or external components.
 
@@ -36,7 +98,7 @@ In summary:
   - On the web, it returns a CSS variable string, `var(--colorName)`
   - You can call `.get('web')` to only optimize for web, or `.get('ios')` to only optimize for ios.
 
-### When should you use `styled()` vs inline props
+#### When should you use `styled()` vs inline props
 
 When possible, usage of `styled` should be limited to use within the `ui` package or direct styling only repetition of . In general try to use the following rules:
 

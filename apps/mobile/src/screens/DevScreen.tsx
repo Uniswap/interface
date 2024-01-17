@@ -55,7 +55,9 @@ export function DevScreen(): JSX.Element {
   }
 
   const onPressResetOnboarding = (): void => {
-    if (!activeAccount) return
+    if (!activeAccount) {
+      return
+    }
 
     dispatch(resetWallet())
   }

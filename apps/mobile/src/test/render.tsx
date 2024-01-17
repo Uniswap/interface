@@ -1,25 +1,28 @@
-import { ApolloLink } from '@apollo/client'
-import { MockedProvider, MockedResponse, MockLink } from '@apollo/client/testing'
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NavigationContainer } from '@react-navigation/native'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import {
   render as RNRender,
   renderHook as RNRenderHook,
+  RenderHookOptions,
+  RenderHookResult,
   RenderOptions,
+  RenderResult,
 } from '@testing-library/react-native'
 import React, { PropsWithChildren } from 'react'
+import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import type { MobileState } from 'src/app/reducer'
 import type { AppStore } from 'src/app/store'
 import { persistedReducer } from 'src/app/store'
-import { setupCache } from 'wallet/src/data/cache'
-import { getErrorLink } from 'wallet/src/data/links'
+import { Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
 import { SharedProvider } from 'wallet/src/provider'
+import { AutoMockedApolloProvider } from 'wallet/src/test/mocks/provider'
 
-// This type interface extends the default options for render from RTL, as well
+// This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
-interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
-  mocks?: ReadonlyArray<MockedResponse>
+type ExtendedRenderOptions = RenderOptions & {
+  resolvers?: Resolvers
   preloadedState?: PreloadedState<MobileState>
   store?: AppStore
 }
@@ -27,41 +30,33 @@ interface ExtendedRenderOptions extends Omit<RenderOptions, 'queries'> {
 /**
  *
  * @param ui Component to render
- * @param mocks Mocks to pass to Apollo MockedProvider
+ * @param resolvers Custom resolvers that override the default ones
  * @param preloadedState and store
  * @returns `ui` wrapped with providers
  */
 export function renderWithProviders(
   ui: React.ReactElement,
   {
-    mocks = [],
+    resolvers,
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
     store = configureStore({
       reducer: persistedReducer,
       preloadedState,
-      middleware: (getDefaultMiddleware) =>
-        // TODO: fix typing
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
-        getDefaultMiddleware() as any,
+      middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     }),
     ...renderOptions
   }: ExtendedRenderOptions = {}
-): // TODO (MOB-645): add more specific types
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-Record<string, any> & {
+): RenderResult & {
   store: EnhancedStore
 } {
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
-    // Helps expose errors in MockedProvider
-    const link = ApolloLink.from([getErrorLink(1, 1), new MockLink(mocks)])
-
     return (
-      <MockedProvider addTypename={false} cache={setupCache()} link={link} mocks={mocks}>
+      <AutoMockedApolloProvider resolvers={resolvers}>
         <SharedProvider reduxStore={store}>
-          <NavigationContainer>{children}</NavigationContainer>
+          <NavigationContainer ref={navigationRef}>{children}</NavigationContainer>
         </SharedProvider>
-      </MockedProvider>
+      </AutoMockedApolloProvider>
     )
   }
 
@@ -69,47 +64,78 @@ Record<string, any> & {
   return { store, ...RNRender(ui, { wrapper: Wrapper, ...renderOptions }) }
 }
 
+// This type extends the default options for render from RTL, as well
+// as allows the user to specify other things such as initialState, store.
+type ExtendedRenderHookOptions<P> = RenderHookOptions<P> & {
+  resolvers?: Resolvers
+  preloadedState?: PreloadedState<MobileState>
+  store?: AppStore
+}
+
+type RenderHookWithProvidersResult<R, P extends any[] | undefined = undefined> = Omit<
+  RenderHookResult<R, P>,
+  'rerender'
+> & {
+  store: EnhancedStore
+  rerender: P extends any[] ? (args: P) => void : () => void
+}
+
+// Don't require hookOptions if hook doesn't take any arguments
+export function renderHookWithProviders<R>(
+  hook: () => R,
+  hookOptions?: ExtendedRenderHookOptions<undefined>
+): RenderHookWithProvidersResult<R>
+
+// Require hookOptions if hook takes arguments
+export function renderHookWithProviders<R, P extends any[]>(
+  hook: (...args: P) => R,
+  hookOptions: ExtendedRenderHookOptions<P>
+): RenderHookWithProvidersResult<R, P>
+
 /**
  *
  * @param hook Hook to render
- * @param mocks Mocks to pass to Apollo MockedProvider
+ * @param resolvers Custom resolvers that override the default ones
  * @param preloadedState and store
  * @returns `hook` wrapped with providers
  */
-export function renderHookWithProviders(
-  // figure out a way to pass proper hook type
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  hook: (...args: any) => any,
-  {
-    mocks = [],
+export function renderHookWithProviders<P extends any[], R>(
+  hook: (...args: P) => R,
+  hookOptions?: ExtendedRenderHookOptions<P>
+): RenderHookWithProvidersResult<R, P> {
+  const {
+    resolvers,
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
-    store = configureStore({ reducer: persistedReducer, preloadedState }),
+    store = configureStore({
+      reducer: persistedReducer,
+      preloadedState,
+      middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+    }),
     ...renderOptions
-  }: ExtendedRenderOptions = {}
-): // TODO (MOB-645): add more specific types
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-Record<string, any> & {
-  store: EnhancedStore
-} {
-  function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
-    // Helps expose errors in MockedProvider
-    const link = ApolloLink.from([getErrorLink(1, 1), new MockLink(mocks)])
+  } = (hookOptions ?? {}) as ExtendedRenderHookOptions<P>
 
+  function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
-      <MockedProvider addTypename={false} cache={setupCache()} link={link} mocks={mocks}>
-        <SharedProvider reduxStore={store}>{children}</SharedProvider>
-      </MockedProvider>
+      <AutoMockedApolloProvider resolvers={resolvers}>
+        <NavigationContainer ref={navigationRef}>
+          <SharedProvider reduxStore={store}>{children}</SharedProvider>
+        </NavigationContainer>
+      </AutoMockedApolloProvider>
     )
   }
+
+  const options: RenderHookOptions<P> = {
+    wrapper: Wrapper,
+    ...(renderOptions as RenderHookOptions<P>),
+  }
+
+  const { rerender, ...rest } = RNRenderHook<R, P>((args: P) => hook(...(args ?? [])), options)
 
   // Return an object with the store and all of RTL's query functions
   return {
     store,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ...RNRenderHook<any, any>(hook, {
-      wrapper: Wrapper,
-      ...renderOptions,
-    }),
+    rerender: rerender as P extends any[] ? (args: P) => void : () => void,
+    ...rest,
   }
 }

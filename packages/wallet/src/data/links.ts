@@ -4,8 +4,13 @@ import { RestLink } from 'apollo-link-rest'
 import { logger } from 'utilities/src/logger/logger'
 import { config } from 'wallet/src/config'
 import { uniswapUrls } from 'wallet/src/constants/urls'
-import { getOnChainEnsFetch, STUB_ONCHAIN_ENS_ENDPOINT } from 'wallet/src/features/ens/api'
 import {
+  EnsLookupParams,
+  getOnChainEnsFetch,
+  STUB_ONCHAIN_ENS_ENDPOINT,
+} from 'wallet/src/features/ens/api'
+import {
+  BalanceLookupParams,
   getOnChainBalancesFetch,
   STUB_ONCHAIN_BALANCES_ENDPOINT,
 } from 'wallet/src/features/portfolio/api'
@@ -16,9 +21,13 @@ const REST_API_URL = uniswapUrls.apiBaseUrl
 const requestSource = isIOS ? 'uniswap-ios' : isAndroid ? 'uniswap-android' : 'uniswap-web'
 
 // mapping from endpoint to custom fetcher, when needed
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-
-function getCustomFetcherMap(restUri: string): Record<string, (body: any) => Promise<Response>> {
+function getCustomFetcherMap(
+  restUri: string
+): Record<
+  string,
+  | ((body: BalanceLookupParams) => Promise<Response>)
+  | ((body: EnsLookupParams) => Promise<Response>)
+> {
   return {
     [restUri + STUB_ONCHAIN_BALANCES_ENDPOINT]: getOnChainBalancesFetch,
     [restUri + STUB_ONCHAIN_ENS_ENDPOINT]: getOnChainEnsFetch,

@@ -19,7 +19,7 @@ export enum StringKey {
   InputPlaceholder = 'inputPlaceholder',
   PasteButton = 'pasteButton',
   ErrorInvalidWord = 'errorInvalidWord',
-  ErrorPhraseLength = 'errorPhaseLength',
+  ErrorPhraseLength = 'errorPhraseLength',
   ErrorWrongPhrase = 'errorWrongPhrase',
   ErrorInvalidPhrase = 'errorInvalidPhrase',
 }

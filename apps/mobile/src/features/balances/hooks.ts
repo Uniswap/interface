@@ -7,6 +7,7 @@ import { useNavigateToSend } from 'src/features/send/hooks'
 import { useNavigateToSwap } from 'src/features/swap/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
+import { useCopyTokenAddressCallback } from 'src/features/tokens/hooks'
 import { getTokenUrl } from 'src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -53,6 +54,8 @@ export function useTokenContextMenu({
   const currencyAddress = currencyIdToAddress(currencyId)
   const currencyChainId = currencyIdToChain(currencyId) ?? ChainId.Mainnet
 
+  const onPressCopyContractAddress = useCopyTokenAddressCallback(currencyAddress)
+
   const onPressSwap = useCallback(
     (currencyField: CurrencyField) => {
       // Do not show warning modal speedbump if user is trying to swap tokens they own
@@ -68,7 +71,9 @@ export function useTokenContextMenu({
 
   const onPressShare = useCallback(async () => {
     const tokenUrl = getTokenUrl(currencyId)
-    if (!tokenUrl) return
+    if (!tokenUrl) {
+      return
+    }
     try {
       await Share.share({
         message: tokenUrl,
@@ -142,6 +147,11 @@ export function useTokenContextMenu({
         systemIcon: 'square.and.arrow.up',
         onPress: onPressShare,
       },
+      {
+        title: t('Copy contract address'),
+        systemIcon: 'doc.on.doc',
+        onPress: onPressCopyContractAddress,
+      },
       ...(activeAccountHoldsToken
         ? [
             {
@@ -156,6 +166,7 @@ export function useTokenContextMenu({
     [
       t,
       onPressSend,
+      onPressCopyContractAddress,
       onPressShare,
       activeAccountHoldsToken,
       isHidden,

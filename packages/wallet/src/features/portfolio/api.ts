@@ -29,7 +29,9 @@ export const getOnChainBalancesFetch = async (params: BalanceLookupParams): Prom
   }
 
   const provider = createEthersProvider(chainId)
-  if (!provider) return new Response(JSON.stringify({ balance: undefined }))
+  if (!provider) {
+    return new Response(JSON.stringify({ balance: undefined }))
+  }
 
   // native amount lookup
   if (currencyIsNative) {

@@ -32,8 +32,12 @@ export function useCrossChainBalances(
       bridgeInfo
         ?.map(({ chain, address }) => {
           const chainId = fromGraphQLChain(chain)
-          if (!chainId || chainId === currentChainId) return null
-          if (!address) return buildNativeCurrencyId(chainId)
+          if (!chainId || chainId === currentChainId) {
+            return null
+          }
+          if (!address) {
+            return buildNativeCurrencyId(chainId)
+          }
           return buildCurrencyId(chainId, address)
         })
         .filter((b): b is string => !!b),

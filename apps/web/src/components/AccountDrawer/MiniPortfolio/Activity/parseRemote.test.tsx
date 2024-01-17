@@ -162,10 +162,12 @@ describe('parseRemote', () => {
     it('should correctly parse amounts when both sent and received tokens are present', () => {
       const result = parseSwapAmounts(swapOrderTokenChanges, jest.fn().mockReturnValue('100'))
       expect(result).toEqual({
-        inputCurrencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
         inputAmount: '100',
-        outputCurrencyId: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+        inputAmountRaw: '100000000000000000000',
+        inputCurrencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
         outputAmount: '100',
+        outputAmountRaw: '100000000000000000000',
+        outputCurrencyId: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
         sent: mockTokenTransferOutPartsFragment,
         received: mockTokenTransferInPartsFragment,
       })
@@ -206,18 +208,19 @@ describe('parseRemote', () => {
         chainId: 1,
         status: 'filled',
         swapInfo: {
-          expectedOutputCurrencyAmountRaw: '100',
-          inputCurrencyAmountRaw: '100',
+          expectedOutputCurrencyAmountRaw: '100000000000000000000',
+          inputCurrencyAmountRaw: '100000000000000000000',
           inputCurrencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
           isUniswapXOrder: true,
-          minimumOutputCurrencyAmountRaw: '100',
+          minimumOutputCurrencyAmountRaw: '100000000000000000000',
           outputCurrencyId: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-          settledOutputCurrencyAmountRaw: '100',
+          settledOutputCurrencyAmountRaw: '100000000000000000000',
           tradeType: 0,
           type: 1,
         },
         txHash: '0xHashValue',
         type: 'signUniswapXOrder',
+        addedTime: 10000,
       })
     })
   })

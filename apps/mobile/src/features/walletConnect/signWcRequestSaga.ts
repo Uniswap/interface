@@ -66,23 +66,41 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
       signature = transactionResponse.hash
     }
 
-    yield* call(wcWeb3Wallet.respondSessionRequest, {
-      topic: sessionId,
-      response: {
-        id: Number(requestInternalId),
-        jsonrpc: '2.0',
-        result: signature,
-      },
-    })
+    if (params.dapp.source === 'walletconnect') {
+      yield* call(wcWeb3Wallet.respondSessionRequest, {
+        topic: sessionId,
+        response: {
+          id: Number(requestInternalId),
+          jsonrpc: '2.0',
+          result: signature,
+        },
+      })
+    } else if (params.dapp.source === 'uwulink' && params.dapp.webhook) {
+      fetch(params.dapp.webhook, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ method: 'eth_sendTransaction', response: signature }),
+        // TODO: consider adding analytics to track UwuLink usage
+      }).catch((error) =>
+        logger.error(error, {
+          tags: { file: 'walletConnect/saga', function: 'signWcRequest/uwulink' },
+        })
+      )
+    }
   } catch (error) {
-    yield* call(wcWeb3Wallet.respondSessionRequest, {
-      topic: sessionId,
-      response: {
-        id: Number(requestInternalId),
-        jsonrpc: '2.0',
-        error: { code: 5000, message: `Signing error: ${error}` },
-      },
-    })
+    if (params.dapp.source === 'walletconnect') {
+      yield* call(wcWeb3Wallet.respondSessionRequest, {
+        topic: sessionId,
+        response: {
+          id: Number(requestInternalId),
+          jsonrpc: '2.0',
+          error: { code: 5000, message: `Signing error: ${error}` },
+        },
+      })
+    }
 
     yield* put(
       pushNotification({

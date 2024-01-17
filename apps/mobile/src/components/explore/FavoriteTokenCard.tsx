@@ -97,7 +97,9 @@ function FavoriteTokenCard({
   })
 
   const onPress = (): void => {
-    if (isEditing || !currencyId) return
+    if (isEditing || !currencyId) {
+      return
+    }
     tokenDetailsNavigation.preload(currencyId)
     tokenDetailsNavigation.navigate(currencyId)
   }
@@ -165,6 +167,7 @@ function FavoriteTokenCard({
                 <Flex grow row alignItems="center" gap="$spacing8">
                   <TokenLogo
                     chainId={chainId ?? undefined}
+                    name={token?.project?.name ?? undefined}
                     size={imageSizes.image20}
                     symbol={token?.symbol ?? undefined}
                     url={token?.project?.logoUrl ?? undefined}

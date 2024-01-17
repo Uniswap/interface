@@ -44,7 +44,7 @@ class SeedPhraseInputViewModel: ObservableObject {
         inputPlaceholder: rawRNStrings["inputPlaceholder"] ?? "",
         pasteButton: rawRNStrings["pasteButton"] ?? "", 
         errorInvalidWord: rawRNStrings["errorInvalidWord"] ?? "",
-        errorPhraseLength: rawRNStrings["errorPhaseLength"] ?? "",
+        errorPhraseLength: rawRNStrings["errorPhraseLength"] ?? "",
         errorWrongPhrase: rawRNStrings["errorWrongPhrase"] ?? "",
         errorInvalidPhrase: rawRNStrings["errorInvalidPhrase"] ?? ""
       )

@@ -170,10 +170,14 @@ function UniconSvg({
 
   const attributeData = useMemo(() => getUniconAttributeData(attributeIndices), [attributeIndices])
 
-  if (!attributeIndices || !attributeData) return null
+  if (!attributeIndices || !attributeData) {
+    return null
+  }
 
   const blurColor = blurs[attributeIndices[UniconAttributes.GradientStart]]
-  if (!blurColor) return null
+  if (!blurColor) {
+    return null
+  }
 
   return (
     <Canvas style={flexStyles.fill}>
@@ -213,10 +217,14 @@ function UniconBG({
 }): JSX.Element | null {
   const attributeData = useMemo(() => getUniconAttributeData(attributeIndices), [attributeIndices])
 
-  if (!attributeIndices || !attributeData) return null
+  if (!attributeIndices || !attributeData) {
+    return null
+  }
 
   const blurColor = blurs[attributeIndices[UniconAttributes.GradientStart]]
-  if (!blurColor) return null
+  if (!blurColor) {
+    return null
+  }
 
   return (
     <Canvas style={flexStyles.fill}>
@@ -255,7 +263,9 @@ export function _Unicon({
     [address, randomSeed]
   )
 
-  if (!address || !isEthAddress(address) || !attributeIndices) return null
+  if (!address || !isEthAddress(address) || !attributeIndices) {
+    return null
+  }
 
   return (
     <Flex height={size} width={size}>

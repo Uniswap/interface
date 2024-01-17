@@ -7,6 +7,7 @@ import { SvgUri } from 'react-native-svg'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
 import { store } from 'src/app/store'
+import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
@@ -23,7 +24,6 @@ import {
 import { ModalName } from 'src/features/telemetry/constants'
 import { useCreateSwapFormState, useCreateWrapFormState } from 'src/features/transactions/hooks'
 import { Flex, useSporeColors } from 'ui/src'
-import CheckCircle from 'ui/src/assets/icons/check-circle.svg'
 import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -84,12 +84,16 @@ const useNavigateToProfileTab = (
   const { preload, navigate } = useEagerActivityNavigation()
 
   const onPressIn = async (): Promise<void> => {
-    if (!address) return
+    if (!address) {
+      return
+    }
     await preload(address)
   }
 
   const onPress = (): void => {
-    if (!address) return
+    if (!address) {
+      return
+    }
     navigate()
     store.dispatch(closeAllModals())
   }
@@ -485,11 +489,11 @@ export function SuccessNotification({
       smallToast
       hideDelay={hideDelay}
       icon={
-        <CheckCircle
-          color={colors.statusSuccess.val}
-          height={iconSizes.icon24}
-          strokeWidth={1.5}
-          width={iconSizes.icon24}
+        <CheckmarkCircle
+          backgroundColor={colors.statusSuccess.val}
+          checkmarkStrokeWidth={2}
+          color={colors.sporeWhite.val}
+          size={iconSizes.icon16}
         />
       }
       title={title}

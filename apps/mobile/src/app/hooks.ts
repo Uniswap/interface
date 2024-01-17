@@ -18,7 +18,7 @@ export function* appSelect<T>(fn: (state: MobileState) => T): SagaGenerator<T> {
   return state
 }
 
-const MIN_INPUT_DECIMAL_PAD_GAP = spacing.spacing12
+const MIN_INPUT_DECIMAL_PAD_GAP = spacing.spacing8
 
 export function useShouldShowNativeKeyboard(): {
   onInputPanelLayout: (event: LayoutChangeEvent) => void
@@ -73,7 +73,9 @@ export function useDynamicFontSizing(
   const textInputElementWidthRef = useRef(0)
 
   const onLayout = useCallback((event: LayoutChangeEvent) => {
-    if (textInputElementWidthRef.current) return
+    if (textInputElementWidthRef.current) {
+      return
+    }
 
     const width = event.nativeEvent.layout.width
     textInputElementWidthRef.current = width

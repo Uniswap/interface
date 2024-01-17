@@ -35,8 +35,12 @@ export const MIN_BNB_FOR_GAS: JSBI = MIN_ARBITRUM_FOR_GAS
 export function maxAmountSpend(
   currencyAmount: Maybe<CurrencyAmount<Currency>>
 ): Maybe<CurrencyAmount<Currency>> {
-  if (!currencyAmount) return undefined
-  if (!currencyAmount.currency.isNative) return currencyAmount
+  if (!currencyAmount) {
+    return undefined
+  }
+  if (!currencyAmount.currency.isNative) {
+    return currencyAmount
+  }
 
   let minAmount
   switch (currencyAmount.currency.chainId) {

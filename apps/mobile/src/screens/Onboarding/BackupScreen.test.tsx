@@ -2,6 +2,7 @@ import { CompositeNavigationProp, RouteProp } from '@react-navigation/core'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import { StackNavigationProp } from '@react-navigation/stack'
 import React from 'react'
+import { act } from 'react-test-renderer'
 import { AppStackParamList, OnboardingStackParamList } from 'src/app/navigation/types'
 import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
@@ -25,6 +26,11 @@ const routeProp = {
 describe(BackupScreen, () => {
   it('renders backup options when none are completed', async () => {
     const tree = render(<BackupScreen navigation={navigationProp} route={routeProp} />)
+
+    await act(async () => {
+      // Wait for the screen to render
+    })
+
     expect(tree.toJSON()).toMatchSnapshot()
   })
 
@@ -37,6 +43,11 @@ describe(BackupScreen, () => {
         preloadedState: mockWalletPreloadedState,
       }
     )
+
+    await act(async () => {
+      // Wait for the screen to render
+    })
+
     expect(tree.toJSON()).toMatchSnapshot()
   })
 })

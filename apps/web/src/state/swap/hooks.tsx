@@ -15,7 +15,6 @@ import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routi
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
-import useENS from '../../hooks/useENS'
 import { isAddress } from '../../utils'
 import { useCurrencyBalances } from '../connection/hooks'
 import {
@@ -30,7 +29,6 @@ export function useSwapActionHandlers(): {
   onCurrencySelection: (field: Field, currency: Currency) => void
   onSwitchTokens: (newOutputHasTax: boolean, previouslyEstimatedOutput: string) => void
   onUserInput: (field: Field, typedValue: string) => void
-  onChangeRecipient: (recipient: string | null) => void
 } {
   const { swapState, setSwapState } = useSwapContext()
   const { currencyState, setCurrencyState } = useSwapAndLimitContext()
@@ -95,25 +93,11 @@ export function useSwapActionHandlers(): {
     [setSwapState]
   )
 
-  const onChangeRecipient = useCallback(
-    (recipient: string | null) => {
-      setSwapState((state) => ({ ...state, recipient }))
-    },
-    [setSwapState]
-  )
-
   return {
     onSwitchTokens,
     onCurrencySelection,
     onUserInput,
-    onChangeRecipient,
   }
-}
-
-const BAD_RECIPIENT_ADDRESSES: { [address: string]: true } = {
-  '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f': true, // v2 factory
-  '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a': true, // v2 router 01
-  '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D': true, // v2 router 02
 }
 
 export type SwapInfo = {
@@ -142,10 +126,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   const {
     currencyState: { inputCurrency, outputCurrency },
   } = useSwapAndLimitContext()
-  const { independentField, typedValue, recipient } = state
-
-  const recipientLookup = useENS(recipient ?? undefined)
-  const to: string | null = (recipient === null ? account : recipientLookup.address) ?? null
+  const { independentField, typedValue } = state
 
   const { inputTax, outputTax } = useSwapTaxes(
     inputCurrency?.isToken ? inputCurrency.address : undefined,
@@ -223,15 +204,6 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
       inputError = inputError ?? <Trans>Enter an amount</Trans>
     }
 
-    const formattedTo = isAddress(to)
-    if (!to || !formattedTo) {
-      inputError = inputError ?? <Trans>Enter a recipient</Trans>
-    } else {
-      if (BAD_RECIPIENT_ADDRESSES[formattedTo]) {
-        inputError = inputError ?? <Trans>Invalid recipient</Trans>
-      }
-    }
-
     // compare input balance to max input based on version
     const [balanceIn, maxAmountIn] = [currencyBalances[Field.INPUT], trade?.trade?.maximumAmountIn(allowedSlippage)]
 
@@ -240,7 +212,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     }
 
     return inputError
-  }, [account, currencies, parsedAmount, to, currencyBalances, trade?.trade, allowedSlippage, connectionReady])
+  }, [account, currencies, parsedAmount, currencyBalances, trade?.trade, allowedSlippage, connectionReady])
 
   return useMemo(
     () => ({
@@ -289,17 +261,6 @@ function parseIndependentFieldURLParameter(urlParam: any): Field {
   return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output' ? Field.OUTPUT : Field.INPUT
 }
 
-const ENS_NAME_REGEX = /^[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&/=]*)?$/
-const ADDRESS_REGEX = /^0x[a-fA-F0-9]{40}$/
-function validatedRecipient(recipient: any): string | null {
-  if (typeof recipient !== 'string') return null
-  const address = isAddress(recipient)
-  if (address) return address
-  if (ENS_NAME_REGEX.test(recipient)) return recipient
-  if (ADDRESS_REGEX.test(recipient)) return recipient
-  return null
-}
-
 export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCurrencyState {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
@@ -322,11 +283,9 @@ export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCu
 export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
   const typedValue = parseTokenAmountURLParameter(parsedQs.exactAmount)
   const independentField = parseIndependentFieldURLParameter(parsedQs.exactField)
-  const recipient = validatedRecipient(parsedQs.recipient)
 
   return {
     typedValue,
     independentField,
-    recipient,
   }
 }

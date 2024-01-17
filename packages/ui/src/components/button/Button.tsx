@@ -1,5 +1,5 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
-import { createContext, FunctionComponent, useContext } from 'react'
+import { createContext, Fragment, FunctionComponent, useContext } from 'react'
 import {
   ButtonText,
   GetProps,
@@ -240,7 +240,7 @@ function useButton<Props extends ButtonProps>(propsIn: Props) {
       propsActive.flexDirection === 'column' || propsActive.flexDirection === 'column-reverse'
         ? 'vertical'
         : 'horizontal',
-    children: [themedIcon, ...contents, themedIconAfter],
+    children: [<Fragment key="icon">{themedIcon}</Fragment>, ...contents, themedIconAfter],
   })
 
   // fixes SSR issue + DOM nesting issue of not allowing button in button

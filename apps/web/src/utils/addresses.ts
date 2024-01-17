@@ -42,6 +42,6 @@ function ellipseAddressAdd0x(targetAddress: string, charsStart = 4, charsEnd = 4
  * @param charsEnd amount of characters to shorten in the end
  * @returns formatted string
  */
-function ellipseMiddle(target: string, charsStart = 4, charsEnd = 4): string {
+export function ellipseMiddle(target: string, charsStart = 4, charsEnd = 4): string {
   return `${target.slice(0, charsStart)}...${target.slice(target.length - charsEnd)}`
 }

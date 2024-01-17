@@ -71,7 +71,9 @@ export function ActionSheetModal({
   name,
   ...rest
 }: ActionSheetModalProps): JSX.Element | null {
-  if (!isVisible) return null
+  if (!isVisible) {
+    return null
+  }
 
   return (
     <BottomSheetDetachedModal

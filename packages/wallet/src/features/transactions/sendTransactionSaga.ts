@@ -4,7 +4,7 @@ import { call, put } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId, CHAIN_INFO, RPCType } from 'wallet/src/constants/chains'
 import { transactionActions } from 'wallet/src/features/transactions/slice'
-import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
+import { QuoteType, Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import {
   TransactionDetails,
   TransactionOptions,
@@ -45,7 +45,9 @@ export function* sendTransaction(params: SendTransactionParams) {
 
   logger.debug('sendTransaction', '', `Sending tx on ${CHAIN_INFO[chainId].label} to ${request.to}`)
 
-  if (account.type === AccountType.Readonly) throw new Error('Account must support signing')
+  if (account.type === AccountType.Readonly) {
+    throw new Error('Account must support signing')
+  }
 
   // Sign and send the transaction
   const rpcType = options.submitViaPrivateRpc ? RPCType.Private : RPCType.Public
@@ -106,8 +108,13 @@ function* addTransaction(
   }
 
   if (transaction.typeInfo.type === TransactionType.Swap && trade) {
+    const feePortionAmount =
+      trade.quoteData?.quoteType === QuoteType.RoutingApi
+        ? trade.quoteData?.quote?.portionAmount
+        : trade.quoteData?.quote?.quote.portionAmount
+
     const feeCurrencyAmount = getCurrencyAmount({
-      value: trade.quote?.portionAmount,
+      value: feePortionAmount,
       valueType: ValueType.Raw,
       currency: trade.outputAmount.currency,
     })
@@ -127,7 +134,7 @@ function* addTransaction(
       token_out_symbol: trade.outputAmount.currency.symbol,
       token_out_address: getCurrencyAddressForAnalytics(trade.outputAmount.currency),
       trade_type: trade.tradeType,
-      fee_amount: trade.quote?.portionAmount,
+      fee_amount: feePortionAmount,
     })
   }
   yield* put(transactionActions.addTransaction(transaction))

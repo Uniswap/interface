@@ -15,7 +15,9 @@ export function useTransactionGasFee(
   const { data, error, loading } = useGasFeeQuery(tx, skip)
 
   return useMemo(() => {
-    if (!data) return { error, loading }
+    if (!data) {
+      return { error, loading }
+    }
 
     const params =
       data.type === FeeType.Eip1559

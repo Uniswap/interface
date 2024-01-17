@@ -6,7 +6,7 @@ import { AccountIcon, AccountIconProps } from 'src/components/AccountIcon'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { ElementName } from 'src/features/telemetry/constants'
 import { setClipboard } from 'src/utils/clipboard'
-import { ColorTokens, Flex, Icons, SpaceTokens, Text, TouchableArea } from 'ui/src'
+import { ColorTokens, Flex, Icons, SpaceTokens, Text, TextProps, TouchableArea } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -44,14 +44,24 @@ function CopyButtonWrapper({
   children,
   onPress,
 }: PropsWithChildren<CopyButtonWrapperProps>): JSX.Element {
-  if (onPress)
+  if (onPress) {
     return (
       <TouchableArea hapticFeedback hitSlop={16} testID={ElementName.Copy} onPress={onPress}>
         {children}
       </TouchableArea>
     )
+  }
 
   return <>{children}</>
+}
+
+// This seems to work for most font sizes and screens, but could probably be improved and abstracted
+// if we find more uses for it in other areas.
+function getLineHeightForAdjustedFontSize(nameLength: number): number {
+  // as name gets longer, number gets smaller down to 1, past 50 just 1
+  const lineHeightBase = 50 - Math.min(49, nameLength)
+  const scale = 1.2
+  return lineHeightBase * scale
 }
 
 /** Helper component to display identicon and formatted address */
@@ -83,7 +93,9 @@ export function AddressDisplay({
   const showAddressAsSubtitle = !hideAddressInSubtitle && displayName?.type !== 'address'
 
   const onPressCopyAddress = async (): Promise<void> => {
-    if (!address) return
+    if (!address) {
+      return
+    }
     await impactAsync()
     await setClipboard(address)
     dispatch(
@@ -112,6 +124,20 @@ export function AddressDisplay({
     )
   }, [address, avatar, showIconBackground, showViewOnlyBadge, size])
 
+  const name = displayName?.name || ''
+
+  // since adjustsFontSizeToFit doesnt really work adjusting line height properly
+  // manually adjust lineHeight things to keep vertical center
+  const dynamicSizedTextVerticalStyles: TextProps =
+    name.length > 20
+      ? {
+          adjustsFontSizeToFit: true,
+          lineHeight: getLineHeightForAdjustedFontSize(name.length),
+        }
+      : {
+          lineHeight: fonts[variant].lineHeight,
+        }
+
   return (
     <Flex alignItems={contentAlign} flexDirection={direction} gap={horizontalGap}>
       {showAccountIcon &&
@@ -125,13 +151,16 @@ export function AddressDisplay({
           onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
           <Flex centered row gap="$spacing12">
             <Text
+              adjustsFontSizeToFit
               allowFontScaling={allowFontScaling}
               color={textColor}
               ellipsizeMode="tail"
+              fontFamily="$heading"
+              fontSize={mainSize}
               numberOfLines={1}
               testID={`address-display/name/${displayName?.name}`}
-              variant={variant}>
-              {displayName?.name}
+              {...dynamicSizedTextVerticalStyles}>
+              {name}
             </Text>
             {showCopy && !showAddressAsSubtitle && (
               <Icons.CopySheets color="$neutral1" size={mainSize} />

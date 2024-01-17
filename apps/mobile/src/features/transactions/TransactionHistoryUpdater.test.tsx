@@ -1,5 +1,3 @@
-import { MockedResponse } from '@apollo/client/testing'
-import { faker } from '@faker-js/faker'
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
 import React from 'react'
@@ -7,19 +5,20 @@ import {
   getReceiveNotificationFromData,
   TransactionHistoryUpdater,
 } from 'src/features/transactions/TransactionHistoryUpdater'
-import { MAX_FIXTURE_TIMESTAMP, Portfolios, PortfoliosWithReceive } from 'src/test/gqlFixtures'
 import { render } from 'src/test/test-utils'
 import { ChainId } from 'wallet/src/constants/chains'
-import {
-  TransactionHistoryUpdaterDocument,
-  TransactionHistoryUpdaterQuery,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+import { AssetActivity, Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
 import { AssetType } from 'wallet/src/entities/assets'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { account, account2, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
+import { account, account2, faker, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
+import {
+  MAX_FIXTURE_TIMESTAMP,
+  Portfolios,
+  PortfoliosWithReceive,
+} from 'wallet/src/test/gqlFixtures'
 
 const mockedRefetchQueries = jest.fn()
 jest.mock('src/data/usePersistedApolloClient', () => ({
@@ -41,6 +40,8 @@ const walletSlice = {
   isUnlocked: false,
   settings: {
     swapProtection: SwapProtectionSetting.On,
+    hideSmallBalances: true,
+    hideSpamTokens: true,
   },
   replaceAccountOptions: {
     isReplacingAccount: false,
@@ -48,41 +49,31 @@ const walletSlice = {
   },
 }
 
-const dummyDetails = {
-  id: faker.datatype.uuid(),
-  hash: faker.datatype.uuid(),
-}
-
 const assetActivities = [
   {
     id: faker.datatype.uuid(),
     timestamp: past.unix(),
-    details: dummyDetails,
   },
   {
     id: faker.datatype.uuid(),
     timestamp: past.add(1, 'day').unix(),
-    details: dummyDetails,
   },
-]
+] as AssetActivity[]
 
 const assetActivities2 = [
   {
     id: faker.datatype.uuid(),
     timestamp: past.unix(),
-    details: dummyDetails,
   },
   {
     id: faker.datatype.uuid(),
     timestamp: past.add(1, 'day').unix(),
-    details: dummyDetails,
   },
   {
     id: faker.datatype.uuid(),
     timestamp: past.add(2, 'day').unix(),
-    details: dummyDetails,
   },
-]
+] as AssetActivity[]
 
 const portfolioData = [
   {
@@ -97,12 +88,10 @@ const portfolioData = [
   },
 ]
 
-const mock: MockedResponse<TransactionHistoryUpdaterQuery> = {
-  request: {
-    query: TransactionHistoryUpdaterDocument,
-    variables: { addresses: Object.keys(accounts) },
+const resolvers: Resolvers = {
+  Query: {
+    portfolios: () => portfolioData,
   },
-  result: { data: { portfolios: portfolioData } },
 }
 
 describe(TransactionHistoryUpdater, () => {
@@ -119,7 +108,6 @@ describe(TransactionHistoryUpdater, () => {
     }
 
     const tree = render(<TransactionHistoryUpdater />, {
-      mocks: [mock],
       preloadedState: reduxState,
     })
 
@@ -140,7 +128,7 @@ describe(TransactionHistoryUpdater, () => {
     }
 
     const tree = render(<TransactionHistoryUpdater />, {
-      mocks: [mock],
+      resolvers,
       preloadedState: reduxState,
     })
 
@@ -166,7 +154,7 @@ describe(TransactionHistoryUpdater, () => {
     }
 
     const tree = render(<TransactionHistoryUpdater />, {
-      mocks: [mock],
+      resolvers,
       preloadedState: reduxState,
     })
 
@@ -192,7 +180,7 @@ describe(TransactionHistoryUpdater, () => {
     }
 
     const tree = render(<TransactionHistoryUpdater />, {
-      mocks: [mock],
+      resolvers,
       preloadedState: reduxState,
     })
 

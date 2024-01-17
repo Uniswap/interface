@@ -12,6 +12,7 @@ import {
   MAX_AUTO_SLIPPAGE_TOLERANCE,
   MIN_AUTO_SLIPPAGE_TOLERANCE,
 } from 'wallet/src/constants/transactions'
+import { QuoteResponse } from 'wallet/src/data/tradingApi/__generated__/api'
 import { isL2Chain } from 'wallet/src/features/chains/utils'
 import { useRouterQuote } from 'wallet/src/features/routing/hooks'
 import { QuoteResult, SwapFee } from 'wallet/src/features/routing/types'
@@ -19,25 +20,35 @@ import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
 import { transformQuoteToTrade } from 'wallet/src/features/transactions/swap/routeUtils'
 import { clearStaleTrades } from 'wallet/src/features/transactions/swap/utils'
 
+export enum QuoteType {
+  RoutingApi = 'RoutingApi',
+  TradingApi = 'TradingApi',
+}
+
+// Response data from either legacy for trading api quote request
+export type QuoteData =
+  | { quote?: QuoteResult; quoteType: QuoteType.RoutingApi }
+  | { quote?: QuoteResponse; quoteType: QuoteType.TradingApi }
+
 // TODO: [MOB-238] use composition instead of inheritance
 export class Trade<
   TInput extends Currency = Currency,
   TOutput extends Currency = Currency,
   TTradeType extends TradeType = TradeType
 > extends RouterSDKTrade<TInput, TOutput, TTradeType> {
-  readonly quote?: QuoteResult
+  readonly quoteData?: QuoteData
   readonly deadline?: number
   readonly slippageTolerance: number
   readonly swapFee?: SwapFee
 
   constructor({
-    quote,
+    quoteData,
     deadline,
     slippageTolerance,
     swapFee,
     ...routes
   }: {
-    readonly quote?: QuoteResult
+    readonly quoteData?: QuoteData
     readonly swapFee?: SwapFee
     readonly deadline?: number
     readonly slippageTolerance: number
@@ -59,14 +70,14 @@ export class Trade<
     readonly tradeType: TTradeType
   }) {
     super(routes)
-    this.quote = quote
+    this.quoteData = quoteData
     this.deadline = deadline
     this.slippageTolerance = slippageTolerance
     this.swapFee = swapFee
   }
 }
 
-interface TradeWithStatus {
+export interface TradeWithStatus {
   loading: boolean
   error?: FetchBaseQueryError | SerializedError
   trade: null | Trade<Currency, Currency, TradeType>
@@ -81,6 +92,7 @@ export interface UseTradeArgs {
   customSlippageTolerance?: number
   isUSDQuote?: boolean
   sendPortionEnabled?: boolean
+  skip?: boolean
 }
 
 export function useTrade(args: UseTradeArgs): TradeWithStatus {
@@ -92,6 +104,7 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     customSlippageTolerance,
     isUSDQuote,
     sendPortionEnabled,
+    skip,
   } = args
   const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
 
@@ -115,10 +128,13 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     customSlippageTolerance,
     isUSDQuote,
     sendPortionEnabled,
+    skip,
   })
 
   return useMemo(() => {
-    if (!data?.trade) return { loading, error, trade: null }
+    if (!data?.trade) {
+      return { loading, error, trade: null }
+    }
 
     const [currencyIn, currencyOut] =
       tradeType === TradeType.EXACT_INPUT
@@ -152,14 +168,22 @@ export function useSetTradeSlippage(
 ): { trade: TradeWithStatus; autoSlippageTolerance: number } {
   // Always calculate and return autoSlippageTolerance so the UI can warn user when custom slippage is set higher than auto slippage
   const autoSlippageTolerance = useCalculateAutoSlippage(trade?.trade)
+
   return useMemo(() => {
     // If the user has set a custom slippage, use that in the trade instead of the auto-slippage
-    if (!trade.trade || userSetSlippage) return { trade, autoSlippageTolerance }
+    if (!trade.trade || userSetSlippage) {
+      return { trade, autoSlippageTolerance }
+    }
 
     const { loading, error, isFetching } = trade
-    const { tradeType, deadline, quote, inputAmount, outputAmount } = trade.trade
+    const { tradeType, deadline, quoteData, inputAmount, outputAmount } = trade.trade
     const tokenInIsNative = inputAmount.currency.isNative
     const tokenOutIsNative = outputAmount.currency.isNative
+
+    // TODO:api this util will only be used for routing api quotes, ignore other case and return early
+    if (quoteData?.quoteType === QuoteType.TradingApi) {
+      return { trade, autoSlippageTolerance }
+    }
 
     const newTrade = transformQuoteToTrade(
       tokenInIsNative,
@@ -167,7 +191,7 @@ export function useSetTradeSlippage(
       tradeType,
       deadline,
       autoSlippageTolerance,
-      quote
+      quoteData?.quote
     )
 
     return {
@@ -179,7 +203,7 @@ export function useSetTradeSlippage(
       },
       autoSlippageTolerance,
     }
-  }, [trade, autoSlippageTolerance, userSetSlippage])
+  }, [trade, userSetSlippage, autoSlippageTolerance])
 }
 
 /*
@@ -193,13 +217,19 @@ export function useSetTradeSlippage(
  */
 // TODO: move logic to `transformResponse` method of routingApi when endpoint returns output USD value
 function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
-  const chainId = trade?.quote?.route?.[0]?.[0]?.tokenIn.chainId
-  const gasCostUSD = trade?.quote?.gasUseEstimateUSD
+  // TODO:api this hook will only be used for routing api quotes, ignore other case
+  const maybeRoutingApiQuote =
+    trade?.quoteData?.quoteType === QuoteType.RoutingApi ? trade?.quoteData?.quote : undefined
+
+  const chainId = maybeRoutingApiQuote?.route?.[0]?.[0]?.tokenIn.chainId
+  const gasCostUSD = maybeRoutingApiQuote?.gasUseEstimateUSD
   const outputAmountUSD = useUSDCValue(trade?.outputAmount)?.toExact()
 
   return useMemo<number>(() => {
     const onL2 = isL2Chain(chainId)
-    if (onL2 || !gasCostUSD || !outputAmountUSD) return MIN_AUTO_SLIPPAGE_TOLERANCE
+    if (onL2 || !gasCostUSD || !outputAmountUSD) {
+      return MIN_AUTO_SLIPPAGE_TOLERANCE
+    }
 
     const suggestedSlippageTolerance = (Number(gasCostUSD) / Number(outputAmountUSD)) * 100
 

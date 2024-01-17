@@ -65,8 +65,12 @@ export function getClientTokensOrderByCompareFn(
 
   return (a: TokenItemData, b: TokenItemData) => {
     // undefined values sort to bottom
-    if (a[compareField] === undefined) return 1
-    if (b[compareField] === undefined) return -1
+    if (a[compareField] === undefined) {
+      return 1
+    }
+    if (b[compareField] === undefined) {
+      return -1
+    }
     return Number(a[compareField]) - Number(b[compareField]) > 0 ? direction : -1 * direction
   }
 }

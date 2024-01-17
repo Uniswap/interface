@@ -184,10 +184,7 @@ export const [${cname}, Animated${cname}] = createIcon({
 
       // if no width/height/color, add them
 
-      // Don't change colors of logos
-      if (!directoryPair.input.endsWith('logos/svg')) {
-        element = element.replace(/fill="(#[a-z0-9]+)"/gi, `fill={"currentColor" ?? '$1'}`)
-      }
+      element = element.replace(/fill="(#[a-z0-9]+)"/gi, `fill={"currentColor" ?? '$1'}`)
       element = element.replaceAll(`xmlns:xlink="http://www.w3.org/1999/xlink"`, '')
       element = element.replaceAll(`xlink:href`, 'xlinkHref')
 

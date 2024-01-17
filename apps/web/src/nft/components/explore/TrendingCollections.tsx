@@ -25,11 +25,12 @@ const ExploreContainer = styled.div`
   padding: 0 16px;
 `
 
-const StyledHeader = styled.div`
+const StyledHeader = styled.h1`
   color: ${({ theme }) => theme.neutral1};
   font-size: 36px;
   line-height: 44px;
   font-weight: 535;
+  margin: 0;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     font-size: 20px;

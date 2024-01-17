@@ -68,7 +68,9 @@ function TransactionSummaryLayout({
     Object.keys(transaction.options?.request).length > 0
 
   function handleCancel(txRequest: providers.TransactionRequest): void {
-    if (!transaction) return
+    if (!transaction) {
+      return
+    }
     dispatch(
       cancelTransaction({
         chainId: transaction.chainId,

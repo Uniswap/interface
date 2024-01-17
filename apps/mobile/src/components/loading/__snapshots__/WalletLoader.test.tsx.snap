@@ -73,6 +73,7 @@ exports[`renders wallet loader 1`] = `
             "opacity": 0,
           }
         }
+        testID="shimmer-placeholder"
       >
         <View
           style={
@@ -81,6 +82,7 @@ exports[`renders wallet loader 1`] = `
               "flexDirection": "row",
             }
           }
+          testID="text-placeholder"
         >
           <View
             style={
@@ -142,6 +144,7 @@ exports[`renders wallet loader 1`] = `
             "opacity": 0,
           }
         }
+        testID="shimmer-placeholder"
       >
         <View
           style={
@@ -150,6 +153,7 @@ exports[`renders wallet loader 1`] = `
               "flexDirection": "row",
             }
           }
+          testID="text-placeholder"
         >
           <View
             style={

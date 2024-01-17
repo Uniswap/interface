@@ -53,6 +53,7 @@ module.exports = {
     'no-extra-boolean-cast': 'error',
     'no-ex-assign': 'error',
     'no-console': 'warn',
+    'curly': 'error',
     'no-restricted-globals': ['error'].concat(restrictedGlobals),
     "no-relative-import-paths/no-relative-import-paths": [
       2,
@@ -65,7 +66,7 @@ module.exports = {
     'no-shadow': 'off',
     '@typescript-eslint/no-floating-promises': 'error',
     '@typescript-eslint/no-shadow': 'error',
-    // use throughtout the app when importing devtools, or in test files
+    // use throughout the app when importing devtools, or in test files
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-require-imports': 'off',
     '@typescript-eslint/no-unused-expressions': [
@@ -82,7 +83,7 @@ module.exports = {
         format: ['PascalCase'],
       },
     ],
-    // Required for e2e usecases
+    // Required for e2e use cases
     'jest/no-export': 'off',
     'jest/valid-describe-callback': 'off',
     'jest/valid-title': [
@@ -92,7 +93,7 @@ module.exports = {
         ignoreTypeOfDescribeName: true,
       },
     ],
-    // Required for e2e usecases
+    // Required for e2e use cases
     'jest/expect-expect': [0, { assertFunctionNames: ['expect', 'expectSaga'] }],
     // Required for exception catching tests
     'jest/no-conditional-expect': 'off',
@@ -124,7 +125,7 @@ module.exports = {
           },
          {
             name: '@tamagui/core',
-            message: "Please import from 'tamagui' direcly to prevent mismatches.",
+            message: "Please import from 'tamagui' directly to prevent mismatches.",
           },
           {
             name: 'utilities/src/format/localeBased',
@@ -333,6 +334,7 @@ module.exports = {
               'yourname',
               'yourusername',
               'Unitags',
+              'Uw'
             ],
           },
 

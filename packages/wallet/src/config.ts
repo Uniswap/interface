@@ -14,12 +14,14 @@ import {
   SIMPLEHASH_API_KEY,
   SIMPLEHASH_API_URL,
   STATSIG_PROXY_URL,
+  TRADING_API_KEY,
   UNISWAP_API_BASE_URL,
   UNISWAP_API_KEY,
   UNISWAP_APP_URL,
   UNITAGS_API_URL,
   WALLETCONNECT_PROJECT_ID,
 } from 'react-native-dotenv'
+import { isNonJestDev } from 'utilities/src/environment'
 
 export interface Config {
   appsflyerApiKey: string
@@ -42,6 +44,7 @@ export interface Config {
   walletConnectProjectId: string
   quicknodeBnbRpcUrl: string
   unitagsApiUrl: string
+  tradingApiKey: string
 }
 
 const _config: Config = {
@@ -65,11 +68,12 @@ const _config: Config = {
   walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID || WALLETCONNECT_PROJECT_ID,
   quicknodeBnbRpcUrl: process.env.QUICKNODE_BNB_RPC_URL || QUICKNODE_BNB_RPC_URL,
   unitagsApiUrl: process.env.UNITAGS_API_URL || UNITAGS_API_URL,
+  tradingApiKey: process.env.TRADING_API_KEY || TRADING_API_KEY,
 }
 
 export const config = Object.freeze(_config)
 
-if (process.env.NODE_ENV !== 'test' && __DEV__) {
+if (isNonJestDev) {
   // Cannot use logger here, causes error from circular dep
   // eslint-disable-next-line no-console
   console.debug('Using app config:', config)

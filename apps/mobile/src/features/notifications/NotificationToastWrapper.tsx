@@ -26,7 +26,9 @@ export function NotificationToastWrapper(): JSX.Element | null {
   const notifications = useAppSelector(selectActiveAccountNotifications)
   const notification = notifications?.[0]
 
-  if (!notification) return null
+  if (!notification) {
+    return null
+  }
 
   return <NotificationToastRouter notification={notification} />
 }

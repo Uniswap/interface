@@ -116,9 +116,12 @@ function* importMnemonicAccountsFromId(
     })
   )
 
-  if (!addresses[0]) throw new Error('Cannot import account with undefined address')
-  if (indexes[0] === undefined)
+  if (!addresses[0]) {
+    throw new Error('Cannot import account with undefined address')
+  }
+  if (indexes[0] === undefined) {
     throw new Error('Cannot import account with undefined derivation index')
+  }
 
   const isRestoringMnemonic = yield* select(selectSignerMnemonicAccountExists)
   // we do not need to add accounts as they are already exist

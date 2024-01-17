@@ -11,6 +11,7 @@ jest.mock('../../featureFlags/flags/limits', () => ({ useLimitsEnabled: () => tr
 interface WrapperProps {
   setCurrentTab?: Dispatch<SetStateAction<SwapTab>>
   setCurrencyState?: Dispatch<SetStateAction<CurrencyState>>
+  chainId?: ChainId
 }
 
 function Wrapper(props: PropsWithChildren<WrapperProps>) {
@@ -23,7 +24,7 @@ function Wrapper(props: PropsWithChildren<WrapperProps>) {
           inputCurrency: undefined,
           outputCurrency: undefined,
         },
-        chainId: ChainId.MAINNET,
+        chainId: props.chainId ?? ChainId.MAINNET,
         currentTab: SwapTab.Swap,
         setCurrentTab: props.setCurrentTab ?? jest.fn(),
       }}
@@ -35,7 +36,6 @@ function Wrapper(props: PropsWithChildren<WrapperProps>) {
           swapState: {
             independentField: Field.INPUT,
             typedValue: '',
-            recipient: '',
           },
         }}
       >
@@ -67,5 +67,15 @@ describe('SwapHeader.tsx', () => {
     )
     screen.getByText('Limit').click()
     expect(onClickTab).toHaveBeenCalledWith(SwapTab.Limit)
+  })
+
+  it('does not render when chain is not mainnet', () => {
+    const onClickTab = jest.fn()
+    render(
+      <Wrapper setCurrentTab={onClickTab} chainId={ChainId.ARBITRUM_GOERLI}>
+        <SwapHeader />
+      </Wrapper>
+    )
+    expect(screen.queryByText('Limit')).toBeNull()
   })
 })

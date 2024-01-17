@@ -28,7 +28,7 @@ import { TransactionStatus, TransactionType } from 'wallet/src/features/transact
 import {
   useAccounts,
   useActiveAccountAddress,
-  useSelectAccountHideSpamTokens,
+  useHideSpamTokensSetting,
 } from 'wallet/src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
@@ -72,7 +72,9 @@ export function TransactionHistoryUpdater(): JSX.Element | null {
   return (
     <>
       {combinedPortfoliosData.map((portfolio) => {
-        if (!portfolio?.ownerAddress || !portfolio?.assetActivities) return null
+        if (!portfolio?.ownerAddress || !portfolio?.assetActivities) {
+          return null
+        }
 
         return (
           <View
@@ -110,7 +112,7 @@ function AddressTransactionHistoryUpdater({
   const fetchAndDispatchReceiveNotification = useFetchAndDispatchReceiveNotification()
 
   // dont show notifications on spam tokens if setting enabled
-  const hideSpamTokens = useSelectAccountHideSpamTokens(address)
+  const hideSpamTokens = useHideSpamTokensSetting()
 
   const localTransactions = useSelectAddressTransactions(address)
 
@@ -120,7 +122,9 @@ function AddressTransactionHistoryUpdater({
 
       // Parse txns and address from portfolio.
       activities.map((activity) => {
-        if (!activity) return
+        if (!activity) {
+          return
+        }
 
         if (!lastTxNotificationUpdateTimestamp) {
           dispatch(setLastTxNotificationUpdate({ address, timestamp: dayjs().valueOf() })) // Note this is in ms
@@ -224,10 +228,14 @@ export function getReceiveNotificationFromData(
   lastTxNotificationUpdateTimestamp: number | undefined,
   hideSpamTokens = false
 ) {
-  if (!data || !lastTxNotificationUpdateTimestamp) return
+  if (!data || !lastTxNotificationUpdateTimestamp) {
+    return
+  }
 
   const parsedTxHistory = parseDataResponseToTransactionDetails(data, hideSpamTokens)
-  if (!parsedTxHistory) return
+  if (!parsedTxHistory) {
+    return
+  }
 
   const latestReceivedTx = parsedTxHistory
     .sort((a, b) => a.addedTime - b.addedTime)
@@ -239,7 +247,9 @@ export function getReceiveNotificationFromData(
         tx.status === TransactionStatus.Success
     )
 
-  if (!latestReceivedTx) return
+  if (!latestReceivedTx) {
+    return
+  }
 
   return buildReceiveNotification(latestReceivedTx, address)
 }

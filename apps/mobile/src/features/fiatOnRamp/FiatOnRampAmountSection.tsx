@@ -41,6 +41,7 @@ interface Props {
   showNativeKeyboard: boolean
   onInputPanelLayout: (event: LayoutChangeEvent) => void
   inputRef: React.RefObject<TextInput>
+  disabled: boolean
   showSoftInputOnFocus: boolean
   value: string
   setSelection: (selection: TextInputProps['selection']) => void
@@ -60,6 +61,7 @@ export function FiatOnRampAmountSection({
   showNativeKeyboard,
   onInputPanelLayout,
   inputRef,
+  disabled,
   showSoftInputOnFocus,
   value,
   setSelection,
@@ -115,6 +117,7 @@ export function FiatOnRampAmountSection({
           backgroundColor="$transparent"
           borderWidth={0}
           caretHidden={!showNativeKeyboard}
+          disabled={disabled}
           fontFamily="$heading"
           fontSize={fontSize}
           maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
@@ -209,7 +212,11 @@ function SelectTokenButton({
         {loading ? (
           <SpinningLoader />
         ) : (
-          <CurrencyLogo currencyInfo={selectedCurrencyInfo} size={iconSizes.icon24} />
+          <CurrencyLogo
+            currencyInfo={selectedCurrencyInfo}
+            networkLogoBorderWidth={spacing.spacing1}
+            size={iconSizes.icon24}
+          />
         )}
         <Text color={textColor} pl="$spacing4" variant="body1">
           {formattedAmount}

@@ -10,12 +10,27 @@ import { closeModal } from 'src/features/modals/modalSlice'
 import { ModalName } from 'src/features/telemetry/constants'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { setCustomEndpoint } from 'src/features/tweaks/slice'
-import { Statsig } from 'statsig-react'
-import { useExperimentWithExposureLoggingDisabled } from 'statsig-react-native'
-import { Accordion } from 'tamagui'
-import { Button, Flex, Icons, Text, useDeviceInsets } from 'ui/src'
+import {
+  ConfigResult,
+  Statsig,
+  useExperimentWithExposureLoggingDisabled,
+} from 'statsig-react-native'
+import {
+  Accordion,
+  Button,
+  Flex,
+  Icons,
+  Separator,
+  Text,
+  useDeviceInsets,
+  useSporeColors,
+} from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { EXPERIMENT_NAMES, FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import {
+  EXPERIMENT_NAMES,
+  EXPERIMENT_VALUES_BY_EXPERIMENT,
+  FEATURE_FLAGS,
+} from 'wallet/src/features/experiments/constants'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'wallet/src/features/experiments/hooks'
 
 export function ExperimentsModal(): JSX.Element {
@@ -127,7 +142,7 @@ export function ExperimentsModal(): JSX.Element {
                 Overridden experiments are reset when the app is restarted
               </Text>
 
-              <Flex gap="$spacing12" mt="$spacing12">
+              <Flex gap="$spacing24" mt="$spacing12">
                 {Object.values(EXPERIMENT_NAMES).map((experiment) => {
                   return <ExperimentRow key={experiment} name={experiment} />
                 })}
@@ -183,22 +198,64 @@ function ExperimentRow({ name }: { name: string }): JSX.Element {
       gap="$spacing16"
       justifyContent="space-between"
       paddingStart="$spacing16">
-      <Text variant="body1">{key}</Text>
-      {typeof value === 'boolean' && (
-        <Switch
-          value={value}
-          onValueChange={(newValue: boolean): void => {
-            Statsig.overrideConfig(name, { ...experiment.config.value, [key]: newValue })
-          }}
-        />
-      )}
+      <Text variant="body2">{key}</Text>
+      <ExperimentValueSwitch
+        configValueContent={value}
+        configValueName={key}
+        experiment={experiment}
+      />
     </Flex>
   ))
 
   return (
-    <Flex>
-      <Text variant="body1">{name}</Text>
-      <Flex gap="$spacing4">{params}</Flex>
-    </Flex>
+    <>
+      <Separator />
+      <Flex>
+        <Text variant="body1">{name}</Text>
+        <Flex gap="$spacing4">{params}</Flex>
+      </Flex>
+    </>
   )
+}
+
+function ExperimentValueSwitch({
+  experiment,
+  configValueContent,
+  configValueName,
+}: {
+  experiment: ConfigResult
+  configValueContent: unknown
+  configValueName: string
+}): JSX.Element {
+  const colors = useSporeColors()
+  const experimentName = experiment.config.getName()
+
+  const onValueChange = (newValue: boolean | string): void => {
+    Statsig.overrideConfig(experimentName, {
+      ...experiment.config.value,
+      [configValueName]: newValue,
+    })
+  }
+
+  if (typeof configValueContent === 'boolean') {
+    return <Switch value={configValueContent} onValueChange={onValueChange} />
+  }
+
+  const variants = EXPERIMENT_VALUES_BY_EXPERIMENT[experimentName]?.[configValueName]
+
+  if (variants && typeof configValueContent === 'string') {
+    return (
+      <Flex gap="$spacing8">
+        {Object.entries(variants).map(([_, value]) => (
+          <Flex key={value} gap="$spacing4" onPressOut={(): void => onValueChange(value)}>
+            <Text color={value === configValueContent ? colors.accent1.val : colors.neutral1.val}>
+              {value}
+            </Text>
+          </Flex>
+        ))}
+      </Flex>
+    )
+  }
+
+  return <Text variant="body3">Unknown Variants</Text>
 }

@@ -3,6 +3,7 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useNFTMenu } from 'src/features/nfts/hooks'
 import { Flex, TouchableArea } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
+import noop from 'utilities/src/react/noop'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import {
   ESTIMATED_NFT_LIST_ITEM_SIZE,
@@ -37,6 +38,8 @@ export function NftView({
           hapticFeedback
           activeOpacity={1}
           hapticStyle={ImpactFeedbackStyle.Light}
+          // Needed to fix long press issue with context menu on Android
+          onLongPress={noop}
           onPress={onPress}>
           <Flex
             alignItems="center"

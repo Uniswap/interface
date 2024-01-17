@@ -3,6 +3,7 @@ import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, U
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { nativeOnChain } from 'constants/tokens'
+import { parseUnits } from 'ethers/lib/utils'
 import {
   AssetActivityPartsFragment,
   Currency as GQLCurrency,
@@ -162,21 +163,23 @@ function getTransactedValue(transactedValue: TokenTransferPartsFragment['transac
   return price
 }
 
+type SwapAmounts = {
+  inputAmount: string
+  inputAmountRaw: string
+  inputCurrencyId: string
+  outputAmount: string
+  outputAmountRaw: string
+  outputCurrencyId: string
+  sent: TokenTransferPartsFragment
+  received: TokenTransferPartsFragment
+}
+
 // exported for testing
 // eslint-disable-next-line import/no-unused-modules
 export function parseSwapAmounts(
   changes: TransactionChanges,
   formatNumberOrString: FormatNumberOrStringFunctionType
-):
-  | {
-      inputAmount: string
-      inputCurrencyId: string
-      outputAmount: string
-      outputCurrencyId: string
-      sent: TokenTransferPartsFragment
-      received: TokenTransferPartsFragment
-    }
-  | undefined {
+): SwapAmounts | undefined {
   const sent = changes.TokenTransfer.find((t) => t.direction === 'OUT')
   // Any leftover native token is refunded on exact_out swaps where the input token is native
   const refund = changes.TokenTransfer.find(
@@ -184,12 +187,24 @@ export function parseSwapAmounts(
   )
   const received = changes.TokenTransfer.find((t) => t.direction === 'IN' && t !== refund)
   if (!sent || !received) return undefined
-  const inputCurrencyId = sent.asset.id
-  const outputCurrencyId = received.asset.id
+  const inputCurrencyId = sent.asset.standard === 'NATIVE' ? 'ETH' : sent.asset.address
+  const outputCurrencyId = received.asset.standard === 'NATIVE' ? 'ETH' : received.asset.address
+  if (!inputCurrencyId || !outputCurrencyId) return undefined
   const adjustedInput = parseFloat(sent.quantity) - parseFloat(refund?.quantity ?? '0')
+  const inputAmountRaw = parseUnits(adjustedInput.toString(), sent.asset.decimals).toString()
+  const outputAmountRaw = parseUnits(received.quantity, received.asset.decimals).toString()
   const inputAmount = formatNumberOrString({ input: adjustedInput, type: NumberType.TokenNonTx })
   const outputAmount = formatNumberOrString({ input: received.quantity, type: NumberType.TokenNonTx })
-  return { sent, received, inputAmount, outputAmount, inputCurrencyId, outputCurrencyId }
+  return {
+    sent,
+    received,
+    inputAmount,
+    outputAmount,
+    inputCurrencyId,
+    outputCurrencyId,
+    inputAmountRaw,
+    outputAmountRaw,
+  }
 }
 
 function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
@@ -237,14 +252,15 @@ function parseSwapOrder(
   formatNumberOrString: FormatNumberOrStringFunctionType,
   assetActivity: TransactionActivity
 ) {
+  const offchainOrderDetails = offchainOrderDetailsFromGraphQLTransactionActivity(
+    assetActivity,
+    changes,
+    formatNumberOrString
+  )
   return {
     ...parseSwap(changes, formatNumberOrString),
     prefixIconSrc: UniswapXBolt,
-    offchainOrderDetails: offchainOrderDetailsFromGraphQLTransactionActivity(
-      assetActivity,
-      changes,
-      formatNumberOrString
-    ),
+    offchainOrderDetails,
   }
 }
 
@@ -260,25 +276,27 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
   if (changes.TokenTransfer.length < 2) return undefined
 
   const swapAmounts = parseSwapAmounts(changes, formatNumberOrString)
+
   if (!swapAmounts) return undefined
 
-  const { inputCurrencyId, outputCurrencyId, inputAmount, outputAmount } = swapAmounts
+  const { inputCurrencyId, outputCurrencyId, inputAmountRaw, outputAmountRaw } = swapAmounts
 
   return {
     txHash: activity.details.hash,
     chainId,
     type: SignatureType.SIGN_UNISWAPX_ORDER,
     status: UniswapXOrderStatus.FILLED,
+    addedTime: activity.timestamp,
     swapInfo: {
       isUniswapXOrder: true,
       type: LocalTransactionType.SWAP,
       tradeType: TradeType.EXACT_INPUT,
       inputCurrencyId,
       outputCurrencyId,
-      inputCurrencyAmountRaw: inputAmount,
-      expectedOutputCurrencyAmountRaw: outputAmount,
-      minimumOutputCurrencyAmountRaw: outputAmount,
-      settledOutputCurrencyAmountRaw: outputAmount,
+      inputCurrencyAmountRaw: inputAmountRaw,
+      expectedOutputCurrencyAmountRaw: outputAmountRaw,
+      minimumOutputCurrencyAmountRaw: outputAmountRaw,
+      settledOutputCurrencyAmountRaw: outputAmountRaw,
     },
   }
 }
@@ -485,6 +503,7 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
       txHash: details.hash,
       chainId: supportedChain,
       status: uniswapXOrderStatus,
+      addedTime: timestamp,
       swapInfo: {
         isUniswapXOrder: true,
         type: LocalTransactionType.SWAP,

@@ -6,8 +6,8 @@ import { useTheme } from 'styled-components'
 import { FadePresence } from 'theme/components/FadePresence'
 
 const ADVANCED_PRICE_CHART_OPTIONS = [
-  { value: PriceChartType.LINE, display: <CandlestickChartIcon /> },
-  { value: PriceChartType.CANDLESTICK, display: <LineChartIcon /> },
+  { value: PriceChartType.LINE, display: <LineChartIcon /> },
+  { value: PriceChartType.CANDLESTICK, display: <CandlestickChartIcon /> },
 ]
 
 export const AdvancedPriceChartToggle = ({

@@ -56,7 +56,9 @@ function useTokenSectionsForSwapOutput(
   }, [refetchCommonTokenOptions, refetchFavoriteTokenOptions, refetchPopularTokenOptions])
 
   const sections = useMemo<TokenSelectorListSections>(() => {
-    if (loading) return []
+    if (loading) {
+      return []
+    }
 
     return [
       // we draw the pills as a single item of a section list, so `data` is an array of Token[]

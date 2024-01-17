@@ -8,7 +8,9 @@ export class NotImplementedError extends Error {
 }
 
 export function assert(predicate: unknown, errorMessage: string): void {
-  if (!predicate) throw new Error(errorMessage)
+  if (!predicate) {
+    throw new Error(errorMessage)
+  }
 }
 
 export function errorToString(error: unknown, maxLength = 240): string {

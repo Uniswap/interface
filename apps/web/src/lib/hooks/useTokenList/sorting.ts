@@ -3,8 +3,7 @@ import { TokenInfo } from '@uniswap/token-lists'
 import { nativeOnChain } from 'constants/tokens'
 import { PortfolioTokenBalancePartsFragment } from 'graphql/data/__generated__/types-and-hooks'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
-import { useMemo } from 'react'
-import { splitHiddenTokens } from 'utils/splitHiddenTokens'
+import { splitHiddenTokens, SplitOptions } from 'utils/splitHiddenTokens'
 
 /** Sorts currency amounts (descending). */
 function balanceComparator(a?: number, b?: number) {
@@ -40,9 +39,10 @@ function tokenComparator(balances: TokenBalances, a: Token, b: Token) {
 export function getSortedPortfolioTokens(
   portfolioTokenBalances: readonly PortfolioTokenBalancePartsFragment[] | undefined,
   balances: TokenBalances,
-  chainId: ChainId | undefined
+  chainId: ChainId | undefined,
+  splitOptions?: SplitOptions
 ): Token[] {
-  const validVisiblePortfolioTokens = splitHiddenTokens(portfolioTokenBalances ?? [])
+  const validVisiblePortfolioTokens = splitHiddenTokens(portfolioTokenBalances ?? [], splitOptions)
     .visibleTokens.map((tokenBalance) => {
       const address = tokenBalance.token?.standard === 'ERC20' ? tokenBalance.token?.address?.toLowerCase() : 'ETH'
       if (!tokenBalance?.token?.chain || !tokenBalance.token?.decimals || !address) {
@@ -72,39 +72,30 @@ export function getSortedPortfolioTokens(
   return validVisiblePortfolioTokens.sort(tokenComparator.bind(null, balances))
 }
 
-/** Sorts tokens by query, giving precedence to exact matches and partial matches. */
-export function useSortTokensByQuery<T extends Token | TokenInfo>(query: string, tokens?: T[]): T[] {
-  return useMemo(() => {
-    if (!tokens) {
-      return []
+export function tokenQuerySortComparator<T extends Token | TokenInfo>(query: string): (a: T, b: T) => number {
+  const trimmedQuery = query.toLowerCase().trim()
+
+  return (a: T, b: T) => {
+    const aSymbol = a.symbol?.toLowerCase()
+    const bSymbol = b.symbol?.toLowerCase()
+
+    // Check for exact matches
+    if (aSymbol === trimmedQuery && bSymbol !== trimmedQuery) {
+      return -1 // a comes first
+    }
+    if (bSymbol === trimmedQuery && aSymbol !== trimmedQuery) {
+      return 1 // b comes first
     }
 
-    const matches = query
-      .toLowerCase()
-      .split(/\s+/)
-      .filter((s) => s.length > 0)
+    // Check for substring matches
+    const aStartsWith = aSymbol?.startsWith(trimmedQuery) ? 1 : 0
+    const bStartsWith = bSymbol?.startsWith(trimmedQuery) ? 1 : 0
 
-    if (matches.length > 1) {
-      return tokens
+    if (aStartsWith !== bStartsWith) {
+      return bStartsWith - aStartsWith // The one with substring match comes first
     }
 
-    const exactMatches: T[] = []
-    const symbolSubtrings: T[] = []
-    const rest: T[] = []
-
-    // sort tokens by exact match -> subtring on symbol match -> rest
-    const trimmedQuery = query.toLowerCase().trim()
-    tokens.map((token) => {
-      const symbol = token.symbol?.toLowerCase()
-      if (symbol === matches[0]) {
-        return exactMatches.push(token)
-      } else if (symbol?.startsWith(trimmedQuery)) {
-        return symbolSubtrings.push(token)
-      } else {
-        return rest.push(token)
-      }
-    })
-
-    return [...exactMatches, ...symbolSubtrings, ...rest]
-  }, [tokens, query])
+    // If none of the above conditions are met, maintain original order
+    return 0
+  }
 }

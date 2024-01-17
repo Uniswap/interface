@@ -1,15 +1,16 @@
 import { TickMarkType, UTCTimestamp } from 'lightweight-charts'
 
+/** Compatible with ISeriesApi<'Area' | 'Candlestick'> */
 export enum PriceChartType {
-  LINE = 'Line',
+  LINE = 'Area',
   CANDLESTICK = 'Candlestick',
 }
 
 export enum ChartType {
   PRICE = 'Price',
   VOLUME = 'Volume',
-  TVL = 'TVL',
-  FEES_ACCRUED = 'Fees',
+  TVL = 'TVL', // Locked value distributed by timestamp
+  LIQUIDITY = 'Liquidity', // Locked value distributed by tick
 }
 
 /**

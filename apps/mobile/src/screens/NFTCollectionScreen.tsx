@@ -54,7 +54,9 @@ const keyExtractor = (item: NFTItem | string, index: number): string =>
 
 function gqlNFTAssetToNFTItem(data: NftCollectionScreenQuery | undefined): NFTItem[] | undefined {
   const items = data?.nftAssets?.edges?.flatMap((item) => item.node)
-  if (!items) return
+  if (!items) {
+    return
+  }
 
   return items.map((item): NFTItem => {
     return {
@@ -106,7 +108,9 @@ export function NFTCollectionScreen({
       : undefined
 
   const onListEndReached = useCallback(async () => {
-    if (!data?.nftAssets?.pageInfo?.hasNextPage) return
+    if (!data?.nftAssets?.pageInfo?.hasNextPage) {
+      return
+    }
     await fetchMore({
       variables: {
         first: ASSET_FETCH_PAGE_SIZE,
@@ -205,7 +209,9 @@ export function NFTCollectionScreen({
   const gridDataLoading = networkStatus === NetworkStatus.loading && !collectionItems
 
   const gridDataWithLoadingElements = useMemo(() => {
-    if (gridDataLoading) return LOADING_ITEMS_ARRAY
+    if (gridDataLoading) {
+      return LOADING_ITEMS_ARRAY
+    }
 
     const extraLoadingItems: NFTItem[] = extraLoadingItemAmount
       ? Array(extraLoadingItemAmount).fill(LOADING_ITEM)

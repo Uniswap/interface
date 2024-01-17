@@ -33,7 +33,7 @@ const StyledLink = styled(Link)<{ flex?: string }>`
   `};
 `
 
-const FindPoolTabsText = styled(ThemedText.SubHeaderLarge)`
+const FindPoolTabsText = styled(ThemedText.H1Small)`
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -58,9 +58,10 @@ export function FindPoolTabs({ origin }: { origin: string }) {
   )
 }
 
-const AddRemoveTitleText = styled(ThemedText.SubHeaderLarge)`
+const AddRemoveTitleText = styled(ThemedText.H1Small)<{ $center: boolean }>`
   flex: 1;
   margin: auto;
+  text-align: ${({ $center }) => ($center ? 'center' : 'start')};
 `
 
 export function AddRemoveTabs({
@@ -104,7 +105,7 @@ export function AddRemoveTabs({
         >
           <StyledArrowLeft stroke={theme.neutral2} />
         </StyledLink>
-        <AddRemoveTitleText textAlign={children ? 'start' : 'center'}>
+        <AddRemoveTitleText $center={!children}>
           {creating ? (
             <Trans>Create a pair</Trans>
           ) : adding ? (

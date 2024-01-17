@@ -74,7 +74,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
             "flexShrink": 1,
             "fontFamily": "Basel-Book",
             "fontSize": 15,
-            "lineHeight": 16,
+            "lineHeight": 20,
           }
         }
         suppressHighlighting={true}
@@ -198,6 +198,18 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
       </Text>
     </View>
     <View
+      animatedStyle={
+        {
+          "value": {
+            "transform": [
+              {
+                "rotateZ": "0deg",
+              },
+            ],
+          },
+        }
+      }
+      collapsable={false}
       sentry-label="SpinningLoader"
       style={
         {
@@ -357,7 +369,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
             "flexShrink": 1,
             "fontFamily": "Basel-Book",
             "fontSize": 15,
-            "lineHeight": 16,
+            "lineHeight": 20,
           }
         }
         suppressHighlighting={true}
@@ -488,7 +500,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
           "color": "#7D7D7D",
           "fontFamily": "Basel-Book",
           "fontSize": 15,
-          "lineHeight": 16,
+          "lineHeight": 20,
         }
       }
       suppressHighlighting={true}
@@ -573,7 +585,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
             "flexShrink": 1,
             "fontFamily": "Basel-Book",
             "fontSize": 15,
-            "lineHeight": 16,
+            "lineHeight": 20,
           }
         }
         suppressHighlighting={true}
@@ -704,7 +716,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
           "color": "#222222",
           "fontFamily": "Basel-Book",
           "fontSize": 15,
-          "lineHeight": 16,
+          "lineHeight": 20,
         }
       }
       suppressHighlighting={true}

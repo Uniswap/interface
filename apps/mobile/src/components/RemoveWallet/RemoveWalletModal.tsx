@@ -112,7 +112,9 @@ export function RemoveWalletModal(): JSX.Element | null {
 
   const onPress = async (): Promise<void> => {
     // we want to call onRemoveWallet only once
-    if (inProgress) return
+    if (inProgress) {
+      return
+    }
     if (currentStep === RemoveWalletStep.Warning) {
       setCurrentStep(RemoveWalletStep.Final)
     } else if (currentStep === RemoveWalletStep.Final) {
@@ -170,12 +172,12 @@ export function RemoveWalletModal(): JSX.Element | null {
             <Text textAlign="center" variant="body1">
               {title}
             </Text>
-            <Text color="$neutral2" textAlign="center" variant="body2">
+            <Text color="$neutral2" textAlign="center" variant="body3">
               {description}
             </Text>
           </Flex>
         </Flex>
-        <Flex centered gap="$spacing24">
+        <Flex centered gap="$spacing16">
           {currentStep === RemoveWalletStep.Final && isRemovingRecoveryPhrase ? (
             <>
               <AssociatedAccountsList accounts={associatedAccounts} />

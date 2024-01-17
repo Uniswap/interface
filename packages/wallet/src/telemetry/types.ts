@@ -1,4 +1,4 @@
-import { MoonpayEventName, SwapEventName } from '@uniswap/analytics-events'
+import { MoonpayEventName, SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
 import { TraceProps } from 'utilities/src/telemetry/trace/Trace'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -46,6 +46,10 @@ type TransferProperties = {
 }
 
 export type WalletEventProperties = {
+  [SharedEventName.ANALYTICS_SWITCH_TOGGLED]: {
+    enabled: boolean
+  }
+  [SharedEventName.HEARTBEAT]: undefined
   [MoonpayEventName.MOONPAY_GEOCHECK_COMPLETED]: {
     success: boolean
     networkError: boolean

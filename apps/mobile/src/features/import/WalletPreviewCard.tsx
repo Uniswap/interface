@@ -1,11 +1,10 @@
 import React from 'react'
-import { SelectionCircle } from 'src/components/input/SelectionCircle'
 import { Unicon } from 'src/components/unicons/Unicon'
 import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { ChainId } from 'wallet/src/constants/chains'
-import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { shortenAddress } from 'wallet/src/utils/addresses'
@@ -32,16 +31,14 @@ export default function WalletPreviewCard({
   ...rest
 }: Props): JSX.Element {
   const { name: ensName } = useENS(ChainId.Mainnet, address)
-  const isDarkMode = useIsDarkMode()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const balanceFormatted = convertFiatAmountFormatted(balance, NumberType.FiatTokenQuantity)
-  const unselectedBorderColor = isDarkMode ? '$transparent' : '$surface3'
 
   return (
     <TouchableArea
-      backgroundColor="$surface2"
-      borderColor={selected ? '$accent1' : unselectedBorderColor}
+      backgroundColor={selected ? '$surface1' : '$surface2'}
+      borderColor={selected ? '$surface3' : '$surface2'}
       borderRadius="$rounded20"
       borderWidth={1}
       px="$spacing16"
@@ -60,8 +57,8 @@ export default function WalletPreviewCard({
             ) : null}
           </Flex>
         </Flex>
-        {!hideSelectionCircle && (
-          <SelectionCircle selected={selected} size="icon16" unselectedColor="$neutral2" />
+        {!hideSelectionCircle && selected && (
+          <Icons.Check color="$accent1" size={iconSizes.icon20} />
         )}
       </Flex>
     </TouchableArea>

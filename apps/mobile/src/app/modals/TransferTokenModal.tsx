@@ -4,8 +4,11 @@ import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { ModalName } from 'src/features/telemetry/constants'
+import { TransferFlow as TransferFlowRewrite } from 'src/features/transactions/swapRewrite/transfer/TransferFlow'
 import { TransferFlow } from 'src/features/transactions/transfer/TransferFlow'
 import { useSporeColors } from 'ui/src'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 
 export function TransferTokenModal(): JSX.Element {
   const colors = useSporeColors()
@@ -16,7 +19,11 @@ export function TransferTokenModal(): JSX.Element {
     appDispatch(closeModal({ name: ModalName.Send }))
   }, [appDispatch])
 
-  return (
+  const isSendRewriteEnabled = useFeatureFlag(FEATURE_FLAGS.SendRewrite)
+
+  return isSendRewriteEnabled ? (
+    <TransferFlowRewrite />
+  ) : (
     <BottomSheetModal
       fullScreen
       hideHandlebar

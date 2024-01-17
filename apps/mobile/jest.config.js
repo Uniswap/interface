@@ -1,7 +1,7 @@
-const presets = require('../../config/jest-presets/jest/jest-preset')
+const preset = require('../../config/jest-presets/jest/jest-preset')
 
 module.exports = {
-  ...presets,
+  ...preset,
   preset: 'jest-expo',
   displayName: 'Mobile Wallet',
   collectCoverageFrom: [
@@ -22,7 +22,7 @@ module.exports = {
   ],
   // we map core/web to tamagui's test bundle, this just makes setup simpler for jest
   moduleNameMapper: {
-    ...presets.moduleNameMapper,
+    ...preset.moduleNameMapper,
     '@tamagui/core': '@tamagui/core/native-test',
     '@tamagui/web': '@tamagui/core/native-test',
   },

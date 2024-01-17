@@ -35,6 +35,8 @@ describe(walletReducer, () => {
       isUnlocked: false,
       settings: {
         swapProtection: SwapProtectionSetting.On,
+        hideSmallBalances: true,
+        hideSpamTokens: true,
       },
     })
   })

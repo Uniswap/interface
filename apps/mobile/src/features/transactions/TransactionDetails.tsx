@@ -92,8 +92,8 @@ export function TransactionDetails({
       )}
       {!showWarning && banner && <Flex py="$spacing16">{banner}</Flex>}
       {children ? (
-        <Flex centered row pb="$spacing16">
-          <Separator mr="$spacing16" />
+        <Flex centered row gap="$spacing16" mb="$spacing16" px="$spacing12">
+          <Separator />
           <TouchableArea
             alignItems="center"
             flexDirection="row"
@@ -118,10 +118,10 @@ export function TransactionDetails({
               />
             )}
           </TouchableArea>
-          <Separator ml="$spacing16" />
+          <Separator />
         </Flex>
       ) : null}
-      <Flex gap="$spacing12" pb="$spacing8" px="$spacing12">
+      <Flex gap="$spacing8" pb="$spacing8" px="$spacing12">
         {showChildren ? <Flex gap="$spacing12">{children}</Flex> : null}
         {feeOnTransferInfo && <FeeOnTransferInfo {...feeOnTransferInfo} />}
         {displaySwapFeeInfo && (

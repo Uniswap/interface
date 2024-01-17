@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import 'react-native-reanimated'
-import { useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useEagerExternalProfileRootNavigation } from 'src/app/navigation/hooks'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
 import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
@@ -12,17 +12,26 @@ import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { WalletQRCode } from 'src/components/QRCodeScanner/WalletQRCode'
 import Trace from 'src/components/Trace/Trace'
 import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/ConnectedDappsList'
-import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet/util'
+import {
+  getSupportedURI,
+  isAllowedUwULinkRequest,
+  URIType,
+  UWULINK_PREFIX,
+} from 'src/components/WalletConnect/ScanSheet/util'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
+import { addRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
+import { EthMethod, UwULinkRequest } from 'wallet/src/features/walletConnect/types'
 
 type Props = {
   initialScreenState?: ScannerModalState
@@ -42,6 +51,8 @@ export function WalletConnectModal({
     useState<ScannerModalState>(initialScreenState)
   const [shouldFreezeCamera, setShouldFreezeCamera] = useState(false)
   const { preload, navigate } = useEagerExternalProfileRootNavigation()
+  const dispatch = useAppDispatch()
+  const uwuLinkEnabled = useFeatureFlag(FEATURE_FLAGS.UwULink)
 
   // Update QR scanner states when pending session error alert is shown from WCv2 saga event channel
   useEffect(() => {
@@ -54,10 +65,12 @@ export function WalletConnectModal({
   const onScanCode = useCallback(
     async (uri: string) => {
       // don't scan any QR codes if there is an error popup open or camera is frozen
-      if (!activeAddress || hasPendingSessionError || shouldFreezeCamera) return
+      if (!activeAddress || hasPendingSessionError || shouldFreezeCamera) {
+        return
+      }
       await selectionAsync()
 
-      const supportedURI = await getSupportedURI(uri)
+      const supportedURI = await getSupportedURI(uri, uwuLinkEnabled)
       if (!supportedURI) {
         setShouldFreezeCamera(true)
         Alert.alert(
@@ -124,6 +137,50 @@ export function WalletConnectModal({
         }
       }
 
+      if (supportedURI.type === URIType.UwULink) {
+        setShouldFreezeCamera(true)
+        try {
+          const parsedUwulinkRequest: UwULinkRequest = JSON.parse(supportedURI.value)
+          const isAllowed = isAllowedUwULinkRequest(parsedUwulinkRequest)
+
+          if (!isAllowed) {
+            Alert.alert(t('UwU Link error'), t('This QR code is not supported.'), [
+              {
+                text: t('OK'),
+                onPress: (): void => {
+                  setShouldFreezeCamera(false)
+                },
+              },
+            ])
+            return
+          }
+
+          dispatch(
+            addRequest({
+              account: activeAddress,
+              request: {
+                type: EthMethod.EthSendTransaction,
+                transaction: { from: activeAddress, ...parsedUwulinkRequest.value },
+                sessionId: UWULINK_PREFIX, // session/internalId is WalletConnect specific, but not needed here
+                internalId: UWULINK_PREFIX,
+                account: activeAddress,
+                dapp: {
+                  ...parsedUwulinkRequest.dapp,
+                  source: UWULINK_PREFIX,
+                  chain_id: parsedUwulinkRequest.chainId,
+                  webhook: parsedUwulinkRequest.webhook,
+                },
+                chainId: parsedUwulinkRequest.chainId,
+              },
+            })
+          )
+          onClose()
+        } catch (_) {
+          setShouldFreezeCamera(false)
+          Alert.alert(t('UwU Link error'), t('There was an issue scanning this QR code.'))
+        }
+      }
+
       if (supportedURI.type === URIType.EasterEgg) {
         setShouldFreezeCamera(true)
         Alert.alert('Have you tried full-sending lately?', 'Highly recommend it', [
@@ -145,7 +202,9 @@ export function WalletConnectModal({
       setShouldFreezeCamera,
       shouldFreezeCamera,
       hasPendingSessionError,
+      uwuLinkEnabled,
       t,
+      dispatch,
     ]
   )
 
@@ -165,7 +224,9 @@ export function WalletConnectModal({
     setCurrentScreenState(ScannerModalState.ScanQr)
   }
 
-  if (!activeAddress) return null
+  if (!activeAddress) {
+    return null
+  }
 
   return (
     <BottomSheetModal

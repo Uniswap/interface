@@ -94,7 +94,9 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     networkStatus === NetworkStatus.fetchMore && nftDataItems && nftDataItems.length % 2 === 1
 
   const onListEndReached = useCallback(async () => {
-    if (!data?.nftBalances?.pageInfo?.hasNextPage) return
+    if (!data?.nftBalances?.pageInfo?.hasNextPage) {
+      return
+    }
 
     await fetchMore({
       variables: {

@@ -16,7 +16,9 @@ const slice = createSlice({
     foundCloudBackup: (state, action: PayloadAction<{ backup: CloudStorageMnemonicBackup }>) => {
       const { backup } = action.payload
       const duplicateBackup = state.backupsFound.some((b) => b.mnemonicId === backup.mnemonicId)
-      if (!duplicateBackup) state.backupsFound.push(backup)
+      if (!duplicateBackup) {
+        state.backupsFound.push(backup)
+      }
     },
     clearCloudBackups: (state) => {
       state.backupsFound = []

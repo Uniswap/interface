@@ -56,19 +56,27 @@ export function useLockScreenOnBlur(isDisabled?: boolean): void {
   const { setIsLockScreenVisible } = useLockScreenContext()
   const isFocused = useIsFocused()
   useAppStateTrigger('inactive', 'active', () => {
-    if (!isFocused || isDisabled) return
+    if (!isFocused || isDisabled) {
+      return
+    }
     setIsLockScreenVisible(false)
   })
   useAppStateTrigger('active', 'inactive', () => {
-    if (!isFocused || isDisabled) return
+    if (!isFocused || isDisabled) {
+      return
+    }
     setIsLockScreenVisible(true)
   })
   useAppStateTrigger('background', 'active', () => {
-    if (!isFocused || isDisabled) return
+    if (!isFocused || isDisabled) {
+      return
+    }
     setIsLockScreenVisible(false)
   })
   useAppStateTrigger('active', 'background', () => {
-    if (!isFocused || isDisabled) return
+    if (!isFocused || isDisabled) {
+      return
+    }
     setIsLockScreenVisible(true)
   })
 }

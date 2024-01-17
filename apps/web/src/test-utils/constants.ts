@@ -11,7 +11,6 @@ import { ClassicTrade, DutchOrderTrade, PreviewTrade, QuoteMethod } from 'state/
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
 export const TEST_TOKEN_2 = new Token(1, '0x0000000000000000000000000000000000000002', 18, 'DEF', 'Def')
 export const TEST_TOKEN_3 = new Token(1, '0x0000000000000000000000000000000000000003', 18, 'GHI', 'Ghi')
-export const TEST_RECIPIENT_ADDRESS = '0x0000000000000000000000000000000000000004'
 export const ETH_MAINNET = nativeOnChain(ChainId.MAINNET)
 
 export const TEST_POOL_12 = new Pool(

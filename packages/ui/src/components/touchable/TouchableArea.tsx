@@ -48,7 +48,9 @@ export function TouchableArea({
 
   const onPressHandler = useCallback(
     async (event: GestureResponderEvent) => {
-      if (!onPress) return
+      if (!onPress) {
+        return
+      }
 
       if (!ignoreDragEvents) {
         const { pageX, pageY } = event.nativeEvent
@@ -80,13 +82,17 @@ export function TouchableArea({
     return ({ nativeEvent: { pageX, pageY } }: GestureResponderEvent) => {
       touchActivationPositionRef.current = { pageX, pageY }
 
-      if (!scaleTo) return
+      if (!scaleTo) {
+        return
+      }
       scale.value = withTiming(scaleTo, ScaleTimingConfigIn)
     }
   }, [scale, scaleTo])
 
   const onPressOutHandler = useMemo(() => {
-    if (!scaleTo) return
+    if (!scaleTo) {
+      return
+    }
     return () => {
       scale.value = withDelay(50, withTiming(1, ScaleTimingConfigOut))
     }

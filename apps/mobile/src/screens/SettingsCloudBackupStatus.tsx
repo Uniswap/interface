@@ -84,7 +84,7 @@ export function SettingsCloudBackupStatus({
   const { trigger: biometricTrigger } = useBiometricPrompt(deleteBackup)
 
   const onPressBack = (): void => {
-    navigation.navigate(Screens.SettingsWallet, { address })
+    navigation.navigate(Screens.Settings)
   }
 
   const googleDriveEmail = backups[0]?.googleDriveEmail

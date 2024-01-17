@@ -72,15 +72,18 @@ export function RestoreCloudBackupLoadingScreen({
    * Stops the backup fetching process and sets the loading state to false once the timeout is reached.
    */
   useEffect(() => {
-    if (!isLoading) return
+    if (!isLoading) {
+      return
+    }
     const timer = setTimeout(
       () => {
-        if (backups.length === 0)
+        if (backups.length === 0) {
           logger.debug(
             'RestoreCloudBackupLoadingScreen',
             'fetchCloudStorageBackups',
             `Timed out fetching cloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`
           )
+        }
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         stopFetchingCloudStorageBackups()
         setIsLoading(false)
@@ -115,7 +118,9 @@ export function RestoreCloudBackupLoadingScreen({
    * - If multiple backups are found, navigates the user to a screen to choose which backup to restore.
    */
   useEffect(() => {
-    if (isLoading !== false || backups.length === 0) return
+    if (isLoading !== false || backups.length === 0) {
+      return
+    }
     if (backups.length === 1 && backups[0]) {
       navigation.replace(OnboardingScreens.RestoreCloudBackupPassword, {
         importType,

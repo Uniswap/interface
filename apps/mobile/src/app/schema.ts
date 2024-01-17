@@ -406,6 +406,27 @@ export const v55Schema = {
   },
 }
 
+export const v56Schema = {
+  ...v55Schema,
+  telemetry: {
+    ...v55Schema.telemetry,
+    allowAnalytics: true,
+    lastHeartbeat: 0,
+  },
+}
+
+export const v57Schema = {
+  ...v56Schema,
+  wallet: {
+    ...v56Schema.wallet,
+    settings: {
+      ...v56Schema.wallet.settings,
+      hideSmallBalances: true,
+      hideSpamTokens: true,
+    },
+  },
+}
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v54Schema => v54Schema
+export const getSchema = (): typeof v57Schema => v57Schema

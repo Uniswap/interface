@@ -122,7 +122,6 @@ function SubmittedIcon({ className }: { className?: string }) {
 }
 
 const IconCss = css`
-  position: absolute;
   height: 64px;
   width: 64px;
 `

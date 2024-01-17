@@ -1,38 +1,19 @@
 import React from 'react'
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
-import { EthToken, TopNFTCollections, TopTokens } from 'src/test/gqlFixtures'
 import { render, screen } from 'src/test/test-utils'
-import {
-  SearchPopularNftCollectionsDocument,
-  SearchPopularTokensDocument,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+import { Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
+import { EthToken, TopTokens } from 'wallet/src/test/gqlFixtures'
 
-const TokensMock = {
-  request: {
-    query: SearchPopularTokensDocument,
-  },
-  result: {
-    data: {
-      topTokens: TopTokens,
-      eth: EthToken,
-    },
-  },
-}
-
-const NFTsMock = {
-  request: {
-    query: SearchPopularNftCollectionsDocument,
-  },
-  result: {
-    data: {
-      topCollections: TopNFTCollections,
-    },
+const resolvers: Resolvers = {
+  Query: {
+    topTokens: () => TopTokens,
+    tokens: () => [EthToken],
   },
 }
 
 describe(SearchPopularTokens, () => {
   it('renders without error', async () => {
-    const tree = render(<SearchPopularTokens />, { mocks: [TokensMock, NFTsMock] })
+    const tree = render(<SearchPopularTokens />, { resolvers })
 
     // Loading should show Token loader
     expect(screen.getAllByText('Token Full Name')).toBeDefined()

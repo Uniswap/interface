@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import ImageColors from 'react-native-image-colors'
 import { useSporeColors } from 'ui/src'
@@ -158,7 +159,9 @@ export function useExtractedColors(
   cache = true
 ): { colors?: ExtractedColors; colorsLoading: boolean } {
   const getImageColors = useCallback(async () => {
-    if (!imageUrl) return
+    if (!imageUrl) {
+      return
+    }
 
     const imageColors = await ImageColors.getColors(imageUrl, {
       key: imageUrl,
@@ -216,12 +219,14 @@ function getSpecialCaseTokenColor(imageUrl: Maybe<string>, isDarkMode: boolean):
  * ```
  *
  * @param imageUrl The URL of the image to extract a color from
+ * @param tokenName The ticker of the asset (used to derive a color when no logo is available)
  * @param backgroundColor The hex value of the background color to check contrast against
  * @param defaultColor The color that will be returned while the extraction is still loading
  * @returns The extracted color as a hex code string
  */
 export function useExtractedTokenColor(
   imageUrl: Maybe<string>,
+  tokenName: Maybe<string>,
   backgroundColor: string,
   defaultColor: string
 ): { tokenColor: Nullable<string>; tokenColorLoading: boolean } {
@@ -230,6 +235,7 @@ export function useExtractedTokenColor(
   const [tokenColor, setTokenColor] = useState(defaultColor)
   const [tokenColorLoading, setTokenColorLoading] = useState(true)
   const isDarkMode = useIsDarkMode()
+  const logolessColorScheme = useLogolessColorScheme(tokenName ?? '')
 
   useEffect(() => {
     if (!colorsLoading && !!colors) {
@@ -252,10 +258,88 @@ export function useExtractedTokenColor(
   }
 
   if (!imageUrl) {
-    return { tokenColor: null, tokenColorLoading: false }
+    const { foreground } = isDarkMode ? logolessColorScheme.dark : logolessColorScheme.light
+    return { tokenColor: foreground, tokenColorLoading: false }
   }
 
   return { tokenColor, tokenColorLoading }
+}
+
+enum LOGOLESS_COLORS {
+  PINK = 'PINK',
+  ORANGE = 'ORANGE',
+  YELLOW = 'YELLOW',
+  GREEN = 'GREEN',
+  TURQUOISE = 'TURQUOISE',
+  CYAN = 'CYAN',
+  BLUE = 'BLUE',
+  PURPLE = 'PURPLE',
+}
+
+type ColorScheme = {
+  light: { foreground: string; background: string }
+  dark: { foreground: string; background: string }
+}
+
+type LogolessColorSchemes = {
+  [key in LOGOLESS_COLORS]: ColorScheme
+}
+
+const logolessColorSchemes: LogolessColorSchemes = {
+  // TODO (MOB-2417): update the colors in the global colors file to these and pull from there
+  [LOGOLESS_COLORS.PINK]: {
+    light: { foreground: '#FC74FE', background: '#FEF4FF' },
+    dark: { foreground: '#FC74FE', background: '#361A37' },
+  },
+  [LOGOLESS_COLORS.ORANGE]: {
+    light: { foreground: '#FF7715', background: '#FFF2F1' },
+    dark: { foreground: '#FF7715', background: '#2E0805' },
+  },
+  [LOGOLESS_COLORS.YELLOW]: {
+    light: { foreground: '#FFBF17', background: '#FFFCF2' },
+    dark: { foreground: '#FFF612', background: '#1F1E02' },
+  },
+  [LOGOLESS_COLORS.GREEN]: {
+    light: { foreground: '#2FBA61', background: '#EEFBF1' },
+    dark: { foreground: '#2FBA61', background: '#0F2C1A' },
+  },
+  [LOGOLESS_COLORS.TURQUOISE]: {
+    light: { foreground: '#00C3A0', background: '#F7FEEB' },
+    dark: { foreground: '#5CFE9D', background: '#1A2A21' },
+  },
+  [LOGOLESS_COLORS.CYAN]: {
+    light: { foreground: '#2ABDFF', background: '#EBF8FF' },
+    dark: { foreground: '#2ABDFF', background: '#15242B' },
+  },
+  [LOGOLESS_COLORS.BLUE]: {
+    light: { foreground: '#3271FF', background: '#EFF4FF' },
+    dark: { foreground: '#3271FF', background: '#10143D' },
+  },
+  [LOGOLESS_COLORS.PURPLE]: {
+    light: { foreground: '#9E62FF', background: '#FAF5FF' },
+    dark: { foreground: '#9E62FF', background: '#1A0040' },
+  },
+}
+
+function getLogolessColorIndex(tokenName: string, numOptions: number): number {
+  const charCodes = Array.from(tokenName).map((char) => char.charCodeAt(0))
+  const sum = charCodes.reduce((acc, curr) => acc + curr, 0)
+  return sum % numOptions
+}
+
+/**
+ * Picks a color scheme for a token that doesn't have a logo.
+ * The color scheme is derived from the characters of the token name and will only change if the name changes
+ * @param tokenName The name of the token
+ * @returns a light and dark version of a color scheme with a foreground and background color
+ */
+export function useLogolessColorScheme(tokenName: string): ColorScheme {
+  return useMemo(() => {
+    const index = getLogolessColorIndex(tokenName, Object.keys(LOGOLESS_COLORS).length)
+    return logolessColorSchemes[
+      LOGOLESS_COLORS[Object.keys(LOGOLESS_COLORS)[index] as keyof typeof LOGOLESS_COLORS]
+    ]
+  }, [tokenName])
 }
 
 /**

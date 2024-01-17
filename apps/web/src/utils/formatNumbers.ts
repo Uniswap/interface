@@ -223,6 +223,14 @@ const tokenNonTxFormatter: FormatterRule[] = [
   },
 ]
 
+const tokenQuantityStatsFormatter: FormatterRule[] = [
+  // if token stat value is 0, we probably don't have the data for it, so show '-' as a placeholder
+  { exact: 0, hardCodedInput: { hardcodedOutput: '-' }, formatterOptions: NO_DECIMALS },
+  { upperBound: 0.01, hardCodedInput: { input: 0.01, prefix: '<' }, formatterOptions: TWO_DECIMALS },
+  { upperBound: 1000, formatterOptions: TWO_DECIMALS },
+  { upperBound: Infinity, formatterOptions: SHORTHAND_ONE_DECIMAL },
+]
+
 const tokenTxFormatter: FormatterRule[] = [
   { exact: 0, formatterOptions: NO_DECIMALS },
   {
@@ -267,14 +275,14 @@ const fiatTokenDetailsFormatter: FormatterRule[] = [
   { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_TWO_DECIMALS },
 ]
 
-const fiatTokenChartScaleFormatter: FormatterRule[] = [
+const fiatTokenChartStatsScaleFormatter: FormatterRule[] = [
   {
     upperBound: 0.001,
     hardCodedInput: { input: 0.001, prefix: '<' },
     formatterOptions: ONE_SIG_FIG_CURRENCY,
   },
-  { upperBound: 1, formatterOptions: TWO_DECIMALS_CURRENCY },
-  { upperBound: 1000, formatterOptions: ONE_SIG_FIG_CURRENCY },
+  { upperBound: 2, formatterOptions: TWO_DECIMALS_CURRENCY },
+  { upperBound: 1000, formatterOptions: NO_DECIMALS_CURRENCY },
   { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_ONE_DECIMAL },
 ]
 
@@ -401,6 +409,9 @@ export enum NumberType {
   // used for token quantities in non-transaction contexts (e.g. portfolio balances)
   TokenNonTx = 'token-non-tx',
 
+  // used for token quantity stats where shorthand is okay (e.g. pool stats balances)
+  TokenQuantityStats = 'token-quantity-stats',
+
   // used for token quantities in transaction contexts (e.g. swap, send)
   TokenTx = 'token-tx',
 
@@ -420,8 +431,8 @@ export enum NumberType {
   // fiat values for market cap, TVL, volume, etc in any chart header
   FiatTokenStatChartHeader = 'fiat-token-stat-chart-header',
 
-  // fiat prices in any token chart price scale
-  FiatTokenChartPriceScale = 'fiat-token-chart-price-scale',
+  // fiat prices in any token bar chart scale (volume, fees, etc)
+  FiatTokenChartStatsScale = 'fiat-token-chart-stats-scale',
 
   // fiat prices everywhere except Token Details flow
   FiatTokenPrice = 'fiat-token-price',
@@ -460,6 +471,7 @@ export enum NumberType {
 type FormatterType = NumberType | FormatterRule[]
 const TYPE_TO_FORMATTER_RULES = {
   [NumberType.TokenNonTx]: tokenNonTxFormatter,
+  [NumberType.TokenQuantityStats]: tokenQuantityStatsFormatter,
   [NumberType.TokenTx]: tokenTxFormatter,
   [NumberType.SwapPrice]: swapPriceFormatter,
   [NumberType.SwapTradeAmount]: swapTradeAmountFormatter,
@@ -467,7 +479,7 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.FiatTokenQuantity]: fiatTokenQuantityFormatter,
   [NumberType.FiatTokenDetails]: fiatTokenDetailsFormatter,
   [NumberType.FiatTokenStatChartHeader]: fiatTokenStatChartHeaderFormatter,
-  [NumberType.FiatTokenChartPriceScale]: fiatTokenChartScaleFormatter,
+  [NumberType.FiatTokenChartStatsScale]: fiatTokenChartStatsScaleFormatter,
   [NumberType.FiatTokenPrice]: fiatTokenPricesFormatter,
   [NumberType.FiatTokenStats]: fiatTokenStatsFormatter,
   [NumberType.FiatGasPrice]: fiatGasPriceFormatter,

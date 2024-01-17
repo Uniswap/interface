@@ -138,7 +138,9 @@ export function useItemOrderUpdater(
 
       const displayToRenderIndex = displayToRenderIndexValue.value
       const activeDisplayIndex = renderIndexToDisplayIndex[activeRenderIndex]
-      if (activeDisplayIndex === undefined) return
+      if (activeDisplayIndex === undefined) {
+        return
+      }
 
       //
       // Swap the order of the current item and the active item
@@ -182,7 +184,9 @@ export function useAutoScroll(
 
   const scrollToOffset = useStableCallback((offset: number) => {
     const scrollable = scrollableRef.current
-    if (!scrollable || touchedIndex.value === null) return
+    if (!scrollable || touchedIndex.value === null) {
+      return
+    }
 
     if ('scrollTo' in scrollable) {
       scrollable.scrollTo({ y: offset, animated: true })
@@ -201,9 +205,13 @@ export function useAutoScroll(
 
   useAnimatedReaction(
     () => {
-      if (activeIndex === null) return null
+      if (activeIndex === null) {
+        return null
+      }
       const activeMeasurements = itemAtIndexMeasurements.value[activeIndex]
-      if (!activeMeasurements) return null
+      if (!activeMeasurements) {
+        return null
+      }
 
       return {
         itemAbsoluteY:
@@ -219,7 +227,9 @@ export function useAutoScroll(
       }
     },
     (props) => {
-      if (!props) return
+      if (!props) {
+        return
+      }
       const { itemAbsoluteY, scrollY, minOffset, maxOffset, activeHeight, visibleHeight } = props
 
       let currentScrollTarget = scrollTarget.value

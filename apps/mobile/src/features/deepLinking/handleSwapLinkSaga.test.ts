@@ -130,39 +130,47 @@ const swapFormState = formTransactionState(
 ) as TransactionState
 
 describe(handleSwapLink, () => {
-  it('Navigates to the swap screen with all params if all inputs are valid', () => {
-    return expectSaga(handleSwapLink, swapUrl)
-      .put(openModal({ name: ModalName.Swap, initialState: swapFormState }))
-      .silentRun()
+  describe('valid inputs', () => {
+    it('Navigates to the swap screen with all params if all inputs are valid', () => {
+      return expectSaga(handleSwapLink, swapUrl)
+        .put(openModal({ name: ModalName.Swap, initialState: swapFormState }))
+        .silentRun()
+    })
   })
 
-  it('Navigates to an empty swap screen if outputCurrency is invalid', () => {
-    return expectSaga(handleSwapLink, invalidOutputCurrencySwapUrl)
-      .put(openModal({ name: ModalName.Swap }))
-      .silentRun()
-  })
+  describe('invalid inputs', () => {
+    beforeAll(() => {
+      jest.spyOn(console, 'error').mockImplementation(() => undefined)
+    })
 
-  it('Navigates to an empty swap screen if inputToken is invalid', () => {
-    return expectSaga(handleSwapLink, invalidInputTokenSwapURl)
-      .put(openModal({ name: ModalName.Swap }))
-      .silentRun()
-  })
+    it('Navigates to an empty swap screen if outputCurrency is invalid', () => {
+      return expectSaga(handleSwapLink, invalidOutputCurrencySwapUrl)
+        .put(openModal({ name: ModalName.Swap }))
+        .silentRun()
+    })
 
-  it('Navigates to an empty swap screen if the chain is not supported', () => {
-    return expectSaga(handleSwapLink, invalidChainSwapUrl)
-      .put(openModal({ name: ModalName.Swap }))
-      .silentRun()
-  })
+    it('Navigates to an empty swap screen if inputToken is invalid', () => {
+      return expectSaga(handleSwapLink, invalidInputTokenSwapURl)
+        .put(openModal({ name: ModalName.Swap }))
+        .silentRun()
+    })
 
-  it('Navigates to an empty swap screen if the swap amount is invalid', () => {
-    return expectSaga(handleSwapLink, invalidAmountSwapUrl)
-      .put(openModal({ name: ModalName.Swap }))
-      .silentRun()
-  })
+    it('Navigates to an empty swap screen if the chain is not supported', () => {
+      return expectSaga(handleSwapLink, invalidChainSwapUrl)
+        .put(openModal({ name: ModalName.Swap }))
+        .silentRun()
+    })
 
-  it('Navigates to an empty swap screen if currency field is invalid', () => {
-    return expectSaga(handleSwapLink, invalidCurrencyFieldSwapUrl)
-      .put(openModal({ name: ModalName.Swap }))
-      .silentRun()
+    it('Navigates to an empty swap screen if the swap amount is invalid', () => {
+      return expectSaga(handleSwapLink, invalidAmountSwapUrl)
+        .put(openModal({ name: ModalName.Swap }))
+        .silentRun()
+    })
+
+    it('Navigates to an empty swap screen if currency field is invalid', () => {
+      return expectSaga(handleSwapLink, invalidCurrencyFieldSwapUrl)
+        .put(openModal({ name: ModalName.Swap }))
+        .silentRun()
+    })
   })
 })

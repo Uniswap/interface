@@ -122,7 +122,9 @@ export function TransferStatus({
     goBack()
   }, [onNext])
 
-  if (!chainId) return null
+  if (!chainId) {
+    return null
+  }
 
   return (
     <TransactionPending

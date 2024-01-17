@@ -56,7 +56,9 @@ function CountrySelectorContent({
   const debouncedSearchText = useDebounce(searchText)
 
   const filtredeData = useMemo(() => {
-    if (!data) return []
+    if (!data) {
+      return []
+    }
     return bubbleToTop(data, (c) => c.country.countryCode === currentCountryCode).filter(
       (item) =>
         !debouncedSearchText ||

@@ -4,12 +4,13 @@ import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
+import ShareButton from 'components/BreadcrumbNav/ShareButton'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
-import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import TokenDetailsSkeleton, {
   LeftPanel,
   RightPanel,
@@ -54,7 +55,6 @@ import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 import { ActivitySection } from './ActivitySection'
 import BalanceSummary from './BalanceSummary'
-import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentBreadcrumb } from './BreadcrumbNav'
 import { AdvancedPriceChartToggle } from './ChartTypeSelectors/AdvancedPriceChartToggle'
 import ChartTypeSelector from './ChartTypeSelectors/ChartTypeSelector'
 import InvalidTokenDetails from './InvalidTokenDetails'
@@ -288,6 +288,11 @@ export default function TokenDetails({
     return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!address} />
   }
   const tokenSymbolName = detailedToken && (detailedToken.symbol ?? <Trans>Symbol not found</Trans>)
+  const twitterShareName =
+    detailedToken && detailedToken.name && detailedToken.symbol
+      ? `${detailedToken.name} (${detailedToken.symbol})`
+      : detailedToken?.name || detailedToken?.symbol || ''
+
   return (
     <Trace
       page={InterfacePageName.TOKEN_DETAILS_PAGE}
@@ -298,11 +303,14 @@ export default function TokenDetails({
         {detailedToken && !isPending ? (
           <LeftPanel>
             {isInfoTDPEnabled ? (
-              <BreadcrumbNavContainer aria-label="breadcrumb-nav">
+              <BreadcrumbNavContainer isInfoTDPEnabled aria-label="breadcrumb-nav">
+                <BreadcrumbNavLink to={`/explore/${chain.toLowerCase()}`}>
+                  <Trans>Explore</Trans> <ChevronRight size={14} />
+                </BreadcrumbNavLink>
                 <BreadcrumbNavLink to={`/explore/tokens/${chain.toLowerCase()}`}>
-                  <Trans>Explore</Trans> <ChevronRight size={14} /> <Trans>Tokens</Trans> <ChevronRight size={14} />
-                </BreadcrumbNavLink>{' '}
-                <CurrentBreadcrumb address={address} currency={detailedToken} />
+                  <Trans>Tokens</Trans> <ChevronRight size={14} />
+                </BreadcrumbNavLink>
+                <CurrentPageBreadcrumb address={address} currency={detailedToken} chainId={detailedToken.chainId} />
               </BreadcrumbNavContainer>
             ) : (
               <BreadcrumbNavContainer aria-label="breadcrumb-nav">
@@ -335,7 +343,9 @@ export default function TokenDetails({
                         onChartTypeChange={setPriceChartType}
                       />
                     )}
+
                     <ChartTypeSelector
+                      options={[{ value: ChartType.PRICE }, { value: ChartType.VOLUME }, { value: ChartType.TVL }]}
                       currentChartType={chartType}
                       onChartTypeChange={(c: ChartType) => {
                         setChartType(c)
@@ -344,7 +354,7 @@ export default function TokenDetails({
                     />
                   </>
                 ) : (
-                  <ShareButton currency={detailedToken} />
+                  <ShareButton name={twitterShareName} />
                 )}
               </ChartActions>
             </TokenInfoContainer>

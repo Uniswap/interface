@@ -1,5 +1,6 @@
 /**
  * Copied from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/highlight-bar-crosshair/highlight-bar-crosshair.ts.
+ * Modifications are called out with comments.
  */
 import { CanvasRenderingTarget2D } from 'fancy-canvas'
 import {
@@ -9,7 +10,6 @@ import {
   ISeriesPrimitivePaneView,
   MouseEventParams,
   SeriesAttachedParameter,
-  SeriesPrimitivePaneViewZOrder,
   Time,
 } from 'lightweight-charts'
 
@@ -70,12 +70,35 @@ class CrosshairHighlightPaneRenderer implements ISeriesPrimitivePaneRenderer {
       const crosshairPos = positionsLine(this._data.x, scope.horizontalPixelRatio, Math.max(1, this._data.barSpacing))
       ctx.fillStyle = this._data.color
       const crosshairYPosition = this._data.crosshairYPosition * scope.verticalPixelRatio
-      ctx.fillRect(
+
+      // Modification: use rounded rectangle
+      ctx.beginPath()
+      ctx.roundRect(
         crosshairPos.position,
         crosshairYPosition,
         crosshairPos.length,
+        scope.bitmapSize.height - crosshairYPosition,
+        9
+      )
+      ctx.fill()
+
+      // Modification: lower opacity of all content outside the highlight bar
+      ctx.globalCompositeOperation = 'destination-out'
+      ctx.globalAlpha = 0.76 // results in existing items being left with 0.24 opacity
+      ctx.fillStyle = 'black'
+
+      // lower opacity to left of highlight bar
+      ctx.fillRect(0, crosshairYPosition, crosshairPos.position, scope.bitmapSize.height - crosshairYPosition)
+      // lower opacity to right of highlight bar
+      ctx.fillRect(
+        crosshairPos.position + crosshairPos.length,
+        crosshairYPosition,
+        scope.bitmapSize.width - (crosshairPos.position + crosshairPos.length),
         scope.bitmapSize.height - crosshairYPosition
       )
+      // reset global settings
+      ctx.globalAlpha = 1
+      ctx.globalCompositeOperation = 'source-over'
     })
   }
 }
@@ -88,16 +111,13 @@ class CrosshairHighlightPaneView implements ISeriesPrimitivePaneView {
     this._options = options
   }
 
-  update(data: CrosshairHighlightData): void {
+  update(data: CrosshairHighlightData, options: HighlightBarCrosshairOptions): void {
     this._data = data
+    this._options = options
   }
 
   renderer(): ISeriesPrimitivePaneRenderer | null {
     return new CrosshairHighlightPaneRenderer({ ...this._data, ...this._options })
-  }
-
-  zOrder(): SeriesPrimitivePaneViewZOrder {
-    return 'bottom'
   }
 }
 
@@ -136,14 +156,24 @@ export class CrosshairHighlightPrimitive implements ISeriesPrimitive<Time> {
   }
 
   updateAllViews() {
-    this._paneViews.forEach((pw) => pw.update(this._data))
+    this._paneViews.forEach((pw) => pw.update(this._data, this._options))
   }
 
   setData(data: CrosshairHighlightData) {
     this._data = data
-    this.updateAllViews()
+
     this._attachedParams?.requestUpdate()
+    this.updateAllViews()
   }
+
+  public applyOptions(options: Partial<HighlightBarCrosshairOptions>): void {
+    this._options = {
+      ...this._options,
+      ...options,
+    }
+    this.updateAllViews()
+  }
+
   chart() {
     return this._attachedParams?.chart
   }

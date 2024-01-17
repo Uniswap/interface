@@ -157,7 +157,7 @@ const AssetInfoContainer = styled.div`
   gap: 8px;
 `
 
-const AssetHeader = styled.div`
+const AssetHeader = styled.h1`
   display: -webkit-box;
   align-items: center;
   font-size: 28px;
@@ -168,6 +168,7 @@ const AssetHeader = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
   color: ${({ theme }) => theme.neutral1};
+  margin: 0;
 `
 
 const CollectionNameContainer = styled.div`

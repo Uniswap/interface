@@ -1,0 +1,469 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EmptyState renders without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "column",
+      "gap": 24,
+      "justifyContent": "center",
+      "paddingBottom": 12,
+      "paddingLeft": 12,
+      "paddingRight": 12,
+      "paddingTop": 12,
+      "width": "100%",
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "column",
+        "gap": 16,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "column",
+          "gap": 8,
+          "justifyContent": "center",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={true}
+        maxFontSizeMultiplier={1.4}
+        style={
+          {
+            "color": "#7D7D7D",
+            "fontFamily": "Basel-Book",
+            "fontSize": 17,
+            "lineHeight": 24,
+            "textAlign": "center",
+          }
+        }
+        suppressHighlighting={true}
+      >
+        description
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "stretch",
+        "flexDirection": "row",
+        "gap": 16,
+      }
+    }
+  />
+</View>
+`;
+
+exports[`ErrorState renders without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "column",
+      "flexGrow": 1,
+      "gap": 24,
+      "justifyContent": "center",
+      "paddingBottom": 12,
+      "paddingLeft": 12,
+      "paddingRight": 12,
+      "paddingTop": 12,
+      "width": "100%",
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "column",
+        "gap": 16,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "column",
+          "gap": 8,
+          "justifyContent": "center",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={true}
+        maxFontSizeMultiplier={1.4}
+        style={
+          {
+            "color": "#7D7D7D",
+            "fontFamily": "Basel-Book",
+            "fontSize": 17,
+            "lineHeight": 24,
+            "textAlign": "center",
+          }
+        }
+        suppressHighlighting={true}
+      >
+        Something went wrong
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "stretch",
+        "flexDirection": "row",
+      }
+    }
+  />
+</View>
+`;
+
+exports[`Header renders without error 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  hitSlop={
+    {
+      "bottom": 5,
+      "left": 5,
+      "right": 5,
+      "top": 5,
+    }
+  }
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "borderBottomColor": "#2222220D",
+      "borderBottomWidth": 0.25,
+      "borderStyle": "solid",
+      "opacity": 1,
+      "paddingBottom": 12,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 12,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 16,
+        "justifyContent": "space-between",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "stretch",
+          "flexDirection": "column",
+          "gap": 4,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "gap": 8,
+          }
+        }
+      >
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
+          style={
+            {
+              "color": "#7D7D7D",
+              "fontFamily": "Basel-Book",
+              "fontSize": 17,
+              "lineHeight": 24,
+            }
+          }
+          suppressHighlighting={true}
+        >
+          title
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "borderBottomLeftRadius": 999999,
+          "borderBottomRightRadius": 999999,
+          "borderTopLeftRadius": 999999,
+          "borderTopRightRadius": 999999,
+          "flexDirection": "column",
+          "justifyContent": "center",
+          "transform": [
+            {
+              "rotate": "180deg",
+            },
+          ],
+        }
+      }
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight="20"
+        bbWidth="24"
+        fill="none"
+        focusable={false}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        stroke="currentColor"
+        strokeWidth={8}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "color": "#7D7D7D",
+              "height": 20,
+              "width": 24,
+            },
+            {
+              "flex": 0,
+              "height": 20,
+              "width": 24,
+            },
+          ]
+        }
+        tintColor="#7D7D7D"
+        vbHeight={24}
+        vbWidth={24}
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+            ]
+          }
+          stroke={
+            {
+              "type": 2,
+            }
+          }
+          strokeWidth="8"
+        >
+          <RNSVGPath
+            d="M15 6L9 12L15 18"
+            fill={
+              {
+                "payload": 4278190080,
+                "type": 0,
+              }
+            }
+            propList={
+              [
+                "stroke",
+                "strokeWidth",
+                "strokeLinecap",
+                "strokeLinejoin",
+              ]
+            }
+            stroke={
+              {
+                "type": 2,
+              }
+            }
+            strokeLinecap={1}
+            strokeLinejoin={1}
+            strokeWidth="3"
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+  </View>
+</View>
+`;
+
+exports[`InlineErrorState renders without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#F9F9F9",
+      "borderBottomLeftRadius": 16,
+      "borderBottomRightRadius": 16,
+      "borderTopLeftRadius": 16,
+      "borderTopRightRadius": 16,
+      "flexDirection": "row",
+      "flexGrow": 1,
+      "gap": 24,
+      "justifyContent": "space-between",
+      "paddingBottom": 12,
+      "paddingLeft": 12,
+      "paddingRight": 12,
+      "paddingTop": 12,
+      "width": "100%",
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "flexShrink": 1,
+        "gap": 8,
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight="16"
+      bbWidth="16"
+      fill="currentColor"
+      focusable={false}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      strokeWidth={8}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "color": "#CECECE",
+            "height": 16,
+            "width": 16,
+          },
+          {
+            "flex": 0,
+            "height": 16,
+            "width": 16,
+          },
+        ]
+      }
+      testID="error-icon"
+      tintColor="#CECECE"
+      vbHeight={24}
+      vbWidth={24}
+    >
+      <RNSVGGroup
+        fill={
+          {
+            "type": 2,
+          }
+        }
+        propList={
+          [
+            "fill",
+            "strokeWidth",
+          ]
+        }
+        strokeWidth="8"
+      >
+        <RNSVGPath
+          d="M21.6074 17.1522L15.0004 4.79599C13.7204 2.40199 10.2814 2.40199 9.00042 4.79599L2.39349 17.1522C1.21949 19.3482 2.81353 22.0001 5.30853 22.0001H18.6923C21.1863 22.0001 22.7814 19.3472 21.6074 17.1522ZM11.2504 10.0001C11.2504 9.58609 11.5864 9.25009 12.0004 9.25009C12.4144 9.25009 12.7504 9.58609 12.7504 10.0001V14.0001C12.7504 14.4141 12.4144 14.7501 12.0004 14.7501C11.5864 14.7501 11.2504 14.4141 11.2504 14.0001V10.0001ZM12.0204 18.0001C11.4684 18.0001 11.0153 17.5521 11.0153 17.0001C11.0153 16.4481 11.4584 16.0001 12.0104 16.0001H12.0204C12.5734 16.0001 13.0204 16.4481 13.0204 17.0001C13.0204 17.5521 12.5724 18.0001 12.0204 18.0001Z"
+          fill={
+            {
+              "type": 2,
+            }
+          }
+          propList={
+            [
+              "fill",
+            ]
+          }
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+    <Text
+      allowFontScaling={true}
+      maxFontSizeMultiplier={1.4}
+      numberOfLines={1}
+      style={
+        {
+          "color": "#222222",
+          "fontFamily": "Basel-Book",
+          "fontSize": 17,
+          "lineHeight": 24,
+          "textAlign": "center",
+        }
+      }
+      suppressHighlighting={true}
+    >
+      Oops! Something went wrong.
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`Shadow renders without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "stretch",
+      "backgroundColor": "#FFFFFFff",
+      "borderBottomLeftRadius": 16,
+      "borderBottomRightRadius": 16,
+      "borderTopLeftRadius": 16,
+      "borderTopRightRadius": 16,
+      "flexDirection": "column",
+      "paddingBottom": 12,
+      "paddingLeft": 12,
+      "paddingRight": 12,
+      "paddingTop": 12,
+      "shadowColor": "rgb(0,0,0)",
+      "shadowOffset": {
+        "height": 2,
+        "width": 0,
+      },
+      "shadowOpacity": 0.0075,
+      "shadowRadius": 10,
+    }
+  }
+/>
+`;

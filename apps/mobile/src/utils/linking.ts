@@ -30,7 +30,7 @@ export async function openUri(
   const trimmedURI = uri.trim()
   if (!isSafeUri && !ALLOWED_EXTERNAL_URI_SCHEMES.some((scheme) => trimmedURI.startsWith(scheme))) {
     // TODO: [MOB-253] show a visual warning that the link cannot be opened.
-    logger.error('User attempted to open potentially unsafe url', {
+    logger.error(new Error('User attempted to open potentially unsafe url'), {
       tags: {
         file: 'linking',
         function: 'openUri',
@@ -68,7 +68,9 @@ export async function openTransactionLink(
   hash: string | undefined,
   chainId: ChainId
 ): Promise<void> {
-  if (!hash) return
+  if (!hash) {
+    return
+  }
   const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
   return openUri(explorerUrl)
 }
@@ -126,7 +128,9 @@ export function getExplorerLink(chainId: ChainId, data: string, type: ExplorerDa
 }
 
 export function getNftCollectionUrl(contractAddress: Maybe<string>): string | undefined {
-  if (!contractAddress) return undefined
+  if (!contractAddress) {
+    return undefined
+  }
   return `${uniswapUrls.appUrl}/nfts/collection/${contractAddress}`
 }
 
@@ -140,7 +144,9 @@ export function getProfileUrl(walletAddress: string): string {
 
 export function getTokenUrl(currencyId: string): string | undefined {
   const chainId = currencyIdToChain(currencyId)
-  if (!chainId) return
+  if (!chainId) {
+    return
+  }
   const network = toUniswapWebAppLink(chainId)
   try {
     let tokenAddress = currencyIdToGraphQLAddress(currencyId)

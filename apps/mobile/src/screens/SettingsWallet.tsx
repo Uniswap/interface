@@ -28,35 +28,24 @@ import {
 } from 'src/features/notifications/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { useWalletRestore } from 'src/features/wallet/hooks'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
-import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
-import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Screens, UnitagScreens } from 'src/screens/Screens'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import NotificationIcon from 'ui/src/assets/icons/bell.svg'
-import ChartIcon from 'ui/src/assets/icons/chart.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
-import KeyIcon from 'ui/src/assets/icons/key.svg'
-import ShieldQuestionIcon from 'ui/src/assets/icons/shield-question.svg'
 import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
 import { iconSizes } from 'ui/src/theme'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
-import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useUnitag } from 'wallet/src/features/unitags/hooks'
 import {
   EditAccountAction,
   editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
-import {
-  useAccounts,
-  useSelectAccountHideSmallBalances,
-  useSelectAccountHideSpamTokens,
-  useSelectAccountNotificationSetting,
-} from 'wallet/src/features/wallet/hooks'
-import { isAndroid } from 'wallet/src/utils/platform'
+import { AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { useAccounts, useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWallet>
 
@@ -74,12 +63,6 @@ export function SettingsWallet({
   const readonly = currentAccount?.type === AccountType.Readonly
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
 
-  const hasCloudBackup = currentAccount?.backups?.includes(BackupType.Cloud)
-
-  const { walletNeedsRestore } = useWalletRestore()
-
-  const hideSmallBalances = useSelectAccountHideSmallBalances(address)
-  const hideSpamTokens = useSelectAccountHideSpamTokens(address)
   const notificationOSPermission = useNotificationOSPermissionsEnabled()
   const notificationsEnabledOnFirebase = useSelectAccountNotificationSetting(address)
   const [notificationSwitchEnabled, setNotificationSwitchEnabled] = useState<boolean>(
@@ -130,26 +113,6 @@ export function SettingsWallet({
     }
   }
 
-  const toggleHideSmallBalances = (): void => {
-    dispatch(
-      editAccountActions.trigger({
-        type: EditAccountAction.ToggleShowSmallBalances,
-        enabled: hideSmallBalances, // Toggles showSmallBalances since hideSmallBalances is the flipped value of showSmallBalances
-        address,
-      })
-    )
-  }
-
-  const toggleHideSpamTokens = (): void => {
-    dispatch(
-      editAccountActions.trigger({
-        type: EditAccountAction.ToggleShowSpamTokens,
-        enabled: hideSpamTokens, // Toggles showSpamTokens since hideSpamTokens is the flipped value of showSpamTokens
-        address,
-      })
-    )
-  }
-
   const iconProps: SvgProps = {
     color: colors.neutral2.get(),
     height: iconSizes.icon24,
@@ -184,52 +147,10 @@ export function SettingsWallet({
           icon: <NotificationIcon {...iconProps} />,
         },
         {
-          action: <Switch value={hideSmallBalances} onValueChange={toggleHideSmallBalances} />,
-          text: t('Hide small balances'),
-          icon: <ChartIcon {...iconProps} />,
-        },
-        {
-          action: <Switch value={hideSpamTokens} onValueChange={toggleHideSpamTokens} />,
-          text: t('Hide unknown tokens'),
-          icon: <ShieldQuestionIcon {...iconProps} />,
-        },
-        {
           screen: Screens.SettingsWalletManageConnection,
           text: t('Manage connections'),
           icon: <GlobalIcon {...iconProps} />,
           screenProps: { address },
-          isHidden: readonly,
-        },
-      ],
-    },
-    {
-      subTitle: t('Security'),
-      isHidden: readonly,
-      data: [
-        {
-          screen: Screens.SettingsViewSeedPhrase,
-          text: t('Recovery phrase'),
-          icon: <KeyIcon {...iconProps} />,
-          screenProps: { address, walletNeedsRestore },
-          isHidden: readonly,
-        },
-        {
-          screen: walletNeedsRestore
-            ? Screens.OnboardingStack
-            : hasCloudBackup
-            ? Screens.SettingsCloudBackupStatus
-            : Screens.SettingsCloudBackupPasswordCreate,
-          screenProps: walletNeedsRestore
-            ? {
-                screen: OnboardingScreens.RestoreCloudBackupLoading,
-                params: {
-                  entryPoint: OnboardingEntryPoint.Sidebar,
-                  importType: ImportType.Restore,
-                },
-              }
-            : { address },
-          text: isAndroid ? t('Google Drive backup') : t('iCloud backup'),
-          icon: <Icons.OSDynamicCloudIcon color="$neutral2" size="$icon.24" />,
           isHidden: readonly,
         },
       ],
@@ -244,7 +165,9 @@ export function SettingsWallet({
     if ('component' in item) {
       return item.component
     }
-    if (item.isHidden) return null
+    if (item.isHidden) {
+      return null
+    }
     return <SettingsRow key={item.screen} navigation={navigation} page={item} />
   }
 

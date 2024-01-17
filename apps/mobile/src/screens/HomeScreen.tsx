@@ -58,7 +58,7 @@ import {
   ModalName,
   SectionName,
 } from 'src/features/telemetry/constants'
-import { useLastBalancesReporter } from 'src/features/telemetry/hooks'
+import { useHeartbeatReporter, useLastBalancesReporter } from 'src/features/telemetry/hooks'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
@@ -73,7 +73,7 @@ import {
   useMedia,
   useSporeColors,
 } from 'ui/src'
-import ReceiveIcon from 'ui/src/assets/icons/arrow-down-circle-filled.svg'
+import ReceiveIcon from 'ui/src/assets/icons/arrow-down-circle.svg'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-home.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
@@ -111,6 +111,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   // opens the wallet restore modal if recovery phrase is missing after the app is opened
   useWalletRestore({ openModalImmediately: true })
 
+  // Record a heartbeat for anonymous user DAU
+  const heartbeatReporter = useHeartbeatReporter()
+  useInterval(heartbeatReporter, ONE_SECOND_MS * 15, true)
+
   // Report balances at most every 24 hours, checking every 15 seconds when app is open
   const lastBalancesReporter = useLastBalancesReporter()
   useInterval(lastBalancesReporter, ONE_SECOND_MS * 15, true)
@@ -141,7 +145,9 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   useEffect(
     function syncTabIndex() {
       const newTabIndex = props?.route.params?.tab
-      if (newTabIndex === undefined) return
+      if (newTabIndex === undefined) {
+        return
+      }
       setTabIndex(newTabIndex)
     },
     [props?.route.params?.tab]
@@ -313,6 +319,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       ),
     [dispatch]
   )
+  const onPressViewOnlyLabel = useCallback(
+    () => dispatch(openModal({ name: ModalName.ViewOnlyExplainer })),
+    [dispatch]
+  )
 
   // Hide actions when active account isn't a signer account.
   const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
@@ -380,11 +390,13 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
         {isSignerAccount ? (
           <QuickActions actions={actions} sentry-label="QuickActions" />
         ) : (
-          <Flex centered row bg="$surface2" br="$rounded12" minHeight={40} p="$spacing8">
-            <Text allowFontScaling={false} color="$neutral2" variant="body2">
-              {viewOnlyLabel}
-            </Text>
-          </Flex>
+          <TouchableArea hapticFeedback mt="$spacing16" onPress={onPressViewOnlyLabel}>
+            <Flex centered row bg="$surface2" br="$rounded12" minHeight={40} p="$spacing8">
+              <Text allowFontScaling={false} color="$neutral2" variant="body2">
+                {viewOnlyLabel}
+              </Text>
+            </Flex>
+          </TouchableArea>
         )}
         {hasClaimEligibility && (
           <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
@@ -393,7 +405,14 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
         )}
       </Flex>
     )
-  }, [activeAccount.address, isSignerAccount, viewOnlyLabel, actions, hasClaimEligibility])
+  }, [
+    activeAccount.address,
+    isSignerAccount,
+    viewOnlyLabel,
+    actions,
+    hasClaimEligibility,
+    onPressViewOnlyLabel,
+  ])
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
@@ -659,6 +678,7 @@ function QuickActions({ actions }: { actions: QuickAction[] }): JSX.Element {
     <Flex centered row gap="$spacing12">
       {actions.map((action) => (
         <ActionButton
+          key={action.name}
           Icon={action.Icon}
           eventName={action.eventName}
           flex={1}

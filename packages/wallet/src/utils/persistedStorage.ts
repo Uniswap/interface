@@ -7,7 +7,7 @@ export const passwordKey = `${prefix}.password`
  * Chrome storage wrapper
  * @implements {redux-persist#Storage}
  *
- * NOTE: class avoids dependency on redux-persist by not explicity definiing implements
+ * NOTE: class avoids dependency on redux-persist by not explicity defining implements
  * */
 export class PersistedStorage {
   constructor(private area: AreaName = 'local') {}

@@ -11,7 +11,9 @@ export function unique<T>(
 
 export function next<T>(array: T[], current: T): T | undefined {
   const i = array.findIndex((v) => v === current)
-  if (i < 0) return undefined
+  if (i < 0) {
+    return undefined
+  }
   return array[(i + 1) % array.length]
 }
 
@@ -29,7 +31,9 @@ export function differenceWith<T>(
 }
 
 export function bubbleToTop<T>(arr: T[], predicate: (element: T) => boolean): T[] {
-  if (!arr.length) return arr
+  if (!arr.length) {
+    return arr
+  }
 
   const result = [...arr]
 

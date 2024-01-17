@@ -54,6 +54,8 @@ import {
   v52Schema,
   v53Schema,
   v54Schema,
+  v55Schema,
+  v56Schema,
   v5Schema,
   v6Schema,
   v7Schema,
@@ -99,9 +101,13 @@ import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'wallet/s
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getAllKeysOfNestedObject = (obj: any, prefix = ''): string[] => {
   const keys = Object.keys(obj)
-  if (!keys.length && prefix !== '') return [prefix.slice(0, -1)]
+  if (!keys.length && prefix !== '') {
+    return [prefix.slice(0, -1)]
+  }
   return keys.reduce<string[]>((res, el) => {
-    if (Array.isArray(obj[el])) return [...res]
+    if (Array.isArray(obj[el])) {
+      return [...res]
+    }
 
     if (typeof obj[el] === 'object' && obj[el] !== null) {
       return [...res, ...getAllKeysOfNestedObject(obj[el], prefix + el + '.')]
@@ -176,8 +182,12 @@ describe('Redux state migrations', () => {
     const initialStateKeys = new Set(getAllKeysOfNestedObject(initialState))
 
     for (const key of initialStateKeys) {
-      if (latestSchemaKeys.has(key)) latestSchemaKeys.delete(key)
-      if (migratedSchemaKeys.has(key)) migratedSchemaKeys.delete(key)
+      if (latestSchemaKeys.has(key)) {
+        latestSchemaKeys.delete(key)
+      }
+      if (migratedSchemaKeys.has(key)) {
+        migratedSchemaKeys.delete(key)
+      }
       initialStateKeys.delete(key)
     }
 
@@ -1249,5 +1259,36 @@ describe('Redux state migrations', () => {
     const v55 = migrations[55](v54Stub)
 
     expect(v55.behaviorHistory.hasViewedReviewScreen).toBe(false)
+  })
+
+  it('migrates from v55 to 56', () => {
+    const v55Stub = { ...v55Schema }
+    const v56 = migrations[56](v55Stub)
+
+    expect(v56.telemetry.allowAnalytics).toBe(true)
+    expect(v56.telemetry.lastHeartbeat).toBe(0)
+  })
+
+  it('migrates from v56 to 57', () => {
+    const v56Stub = {
+      ...v56Schema,
+      wallet: {
+        ...v56Schema.wallet,
+        accounts: [
+          {
+            type: AccountType.Readonly,
+            address: '0x',
+            name: 'Test Account 1',
+            pending: false,
+            hideSpamTokens: true,
+          },
+        ],
+      },
+    }
+    const v57 = migrations[57](v56Stub)
+    expect(v57.wallet.settings.hideSmallBalances).toBe(true)
+    expect(v57.wallet.settings.hideSpamTokens).toBe(true)
+    expect(v57.wallet.accounts[0].showSpamTokens).toBeUndefined()
+    expect(v57.wallet.accounts[0].showSmallBalances).toBeUndefined()
   })
 })

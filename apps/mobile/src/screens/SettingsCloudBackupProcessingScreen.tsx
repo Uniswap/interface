@@ -18,7 +18,7 @@ export function SettingsCloudBackupProcessingScreen({
   }
 
   const onErrorPress = (): void => {
-    navigation.navigate(Screens.SettingsWallet, { address })
+    navigation.navigate(Screens.Settings)
   }
 
   return (

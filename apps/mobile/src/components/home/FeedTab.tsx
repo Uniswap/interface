@@ -19,10 +19,7 @@ import { GQLQueries } from 'wallet/src/data/queries'
 import { useFormattedTransactionDataForFeed } from 'wallet/src/features/activity/hooks'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
-import {
-  useActiveAccountWithThrow,
-  useSelectAccountHideSpamTokens,
-} from 'wallet/src/features/wallet/hooks'
+import { useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
 import { isAndroid } from 'wallet/src/utils/platform'
 
 export const FEED_TAB_DATA_DEPENDENCIES = [GQLQueries.FeedTransactionList]
@@ -53,8 +50,7 @@ export const FeedTab = memo(
     const { onContentSizeChange } = useAdaptiveFooter(containerProps?.contentContainerStyle)
 
     // Hide all spam transactions if active wallet has enabled setting.
-    const activeAccount = useActiveAccountWithThrow()
-    const hideSpamTokens = useSelectAccountHideSpamTokens(activeAccount.address)
+    const hideSpamTokens = useHideSpamTokensSetting()
 
     const renderActivityItem = useMemo(() => {
       return generateActivityItemRenderer(

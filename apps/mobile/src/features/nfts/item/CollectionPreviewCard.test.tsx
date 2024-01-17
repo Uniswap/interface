@@ -1,7 +1,7 @@
 import React from 'react'
 import { CollectionPreviewCard } from 'src/features/nfts/item/CollectionPreviewCard'
-import { TopNFTCollections } from 'src/test/gqlFixtures'
 import { render } from 'src/test/test-utils'
+import { TopNFTCollections } from 'wallet/src/test/gqlFixtures'
 
 it('renders collection preview card', () => {
   const tree = render(

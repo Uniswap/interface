@@ -176,7 +176,7 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
     title = t('Oops! Something went wrong.'),
     onRetry: retry,
     retryButtonLabel = t('Retry'),
-    icon = <Icons.AlertTriangle color="$neutral3" size="$icon.16" />,
+    icon = <Icons.AlertTriangle color="$neutral3" size="$icon.16" testID="error-icon" />,
   } = props
 
   return (

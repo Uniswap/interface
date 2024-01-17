@@ -45,7 +45,9 @@ export function useTransactionGasWarning({
 
   return useMemo(() => {
     // if balance is already insufficient, dont need to show warning about network fee
-    if (gasFee === undefined || balanceInsufficient || !nativeCurrencyBalance || hasGasFunds) return
+    if (gasFee === undefined || balanceInsufficient || !nativeCurrencyBalance || hasGasFunds) {
+      return
+    }
 
     return {
       type: WarningLabel.InsufficientGasFunds,

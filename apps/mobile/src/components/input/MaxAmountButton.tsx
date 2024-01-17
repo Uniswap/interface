@@ -31,7 +31,9 @@ export function MaxAmountButton({
     currencyAmount?.toExact() === maxInputAmount.toExact()
 
   const onPress = (): void => {
-    if (disableMaxButton) return
+    if (disableMaxButton) {
+      return
+    }
 
     onSetMax(maxInputAmount.toExact())
   }

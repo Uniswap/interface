@@ -1,3 +1,0 @@
-{
-  "**/*+(.ts?|.tsx)": ["turbo staged:lint:fix staged:format --filter=// --"]
-}

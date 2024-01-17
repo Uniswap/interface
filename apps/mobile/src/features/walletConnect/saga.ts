@@ -7,7 +7,6 @@ import { IWeb3Wallet, Web3Wallet, Web3WalletTypes } from '@walletconnect/web3wal
 import { Alert } from 'react-native'
 import { EventChannel, eventChannel } from 'redux-saga'
 import { appSelect } from 'src/app/hooks'
-import { store } from 'src/app/store'
 import { registerWCClientForPushNotifications } from 'src/features/walletConnect/api'
 import {
   getAccountAddressFromEIP155String,
@@ -125,6 +124,17 @@ function* watchWalletConnectEvents() {
   }
 }
 
+function showAlert(title: string, message: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    Alert.alert(title, message, [
+      {
+        text: 'OK',
+        onPress: () => resolve(true),
+      },
+    ])
+  })
+}
+
 function* handleSessionProposal(proposal: ProposalTypes.Struct) {
   const activeAccountAddress = yield* appSelect(selectActiveAccountAddress)
 
@@ -174,6 +184,7 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
             name: dapp.name,
             url: dapp.url,
             icon: dapp.icons[0] ?? null,
+            source: 'walletconnect',
           },
         },
       })
@@ -189,7 +200,8 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
       ', '
     )
 
-    Alert.alert(
+    const confirmed = yield* call(
+      showAlert,
       i18n.t('Connection Error'),
       i18n.t(
         `Uniswap Wallet currently supports {{ chains }}. Please only use "{{ dappName }}" on these chains`,
@@ -197,16 +209,11 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
           chains: chainLabels,
           dappName: dapp.name,
         }
-      ),
-      [
-        {
-          text: 'OK',
-          onPress: (): void => {
-            store.dispatch(setHasPendingSessionError(false))
-          },
-        },
-      ]
+      )
     )
+    if (confirmed) {
+      yield* put(setHasPendingSessionError(false))
+    }
 
     // Set error state to cancel loading state in WalletConnectModal UI
     yield* put(setHasPendingSessionError(true))
@@ -300,17 +307,23 @@ function* populateActiveSessions() {
     // Get account address connected to the session from first namespace
     const namespaces = Object.values(session.namespaces)
     const eip155Account = namespaces[0]?.accounts[0]
-    if (!eip155Account) continue
+    if (!eip155Account) {
+      continue
+    }
 
     const accountAddress = getAccountAddressFromEIP155String(eip155Account)
 
-    if (!accountAddress) continue
+    if (!accountAddress) {
+      continue
+    }
 
     // Verify account address for session exists in wallet's accounts
     const matchingAccount = Object.values(accounts).find(
       (account) => account.address.toLowerCase() === accountAddress.toLowerCase()
     )
-    if (!matchingAccount) continue
+    if (!matchingAccount) {
+      continue
+    }
 
     // Get all chains for session namespaces, supporting `eip155:CHAIN_ID` and `eip155` namespace formats
     const chains: ChainId[] = []
@@ -327,6 +340,7 @@ function* populateActiveSessions() {
             name: session.peer.metadata.name,
             url: session.peer.metadata.url,
             icon: session.peer.metadata.icons[0] ?? null,
+            source: 'walletconnect',
           },
           chains,
           namespaces: session.namespaces,

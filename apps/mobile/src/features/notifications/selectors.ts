@@ -10,7 +10,9 @@ export const selectActiveAccountNotifications = createSelector(
   selectNotificationQueue,
   selectActiveAccountAddress,
   (notificationQueue, address) => {
-    if (!address) return
+    if (!address) {
+      return
+    }
     // If a notification doesn't have an address param assume it belongs to the active account
     return notificationQueue.filter((notif) => !notif.address || notif.address === address)
   }
@@ -31,7 +33,9 @@ export const makeSelectHasNotifications = (): Selector<
     selectNotificationStatus,
     (_: MobileState, address: Address | null) => address,
     (notificationStatuses, address) => {
-      if (!address) return undefined
+      if (!address) {
+        return undefined
+      }
       return notificationStatuses?.[address]
     }
   )

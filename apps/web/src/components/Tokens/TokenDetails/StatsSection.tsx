@@ -36,8 +36,9 @@ export const StatPair = styled.div`
   flex-wrap: wrap;
 `
 
-const Header = styled(ThemedText.MediumHeader)`
+const Header = styled(ThemedText.MediumHeader)<{ isInfoTDPEnabled?: boolean }>`
   font-size: 28px !important;
+  padding-top: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '40' : '24')}px;
 `
 
 const StatPrice = styled.div`
@@ -45,8 +46,9 @@ const StatPrice = styled.div`
   font-size: 28px;
   color: ${({ theme }) => theme.neutral1};
 `
-const NoData = styled.div`
+const NoData = styled.div<{ isInfoTDPEnabled?: boolean }>`
   color: ${({ theme }) => theme.neutral3};
+  ${({ isInfoTDPEnabled }) => isInfoTDPEnabled && 'padding-top: 40px;'}
 `
 export const StatsWrapper = styled.div`
   gap: 16px;
@@ -109,7 +111,7 @@ export default function StatsSection(props: StatsSectionProps) {
   if (hasStats) {
     return (
       <StatsWrapper data-testid="token-details-stats">
-        <Header>
+        <Header isInfoTDPEnabled={isInfoTDPEnabled}>
           <Trans>Stats</Trans>
         </Header>
         <TokenStatsSection>
@@ -185,7 +187,7 @@ export default function StatsSection(props: StatsSectionProps) {
   } else {
     return UNSUPPORTED_METADATA_CHAINS.includes(chainId) ? (
       <>
-        <Header>
+        <Header isInfoTDPEnabled={isInfoTDPEnabled}>
           <Trans>Stats</Trans>
         </Header>
         <ThemedText.BodySecondary paddingTop="12px">
@@ -198,7 +200,7 @@ export default function StatsSection(props: StatsSectionProps) {
         </ThemedText.BodySecondary>
       </>
     ) : (
-      <NoData>No stats available</NoData>
+      <NoData isInfoTDPEnabled={isInfoTDPEnabled}>No stats available</NoData>
     )
   }
 }

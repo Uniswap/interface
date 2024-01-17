@@ -2,7 +2,7 @@ import Fuse from 'fuse.js'
 import { unique } from 'utilities/src/primitives/array'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 
-type AutocompleteOption<T> = { data: T; key: string }
+export type AutocompleteOption<T> = { data: T; key: string }
 
 const defaultOptions: Fuse.IFuseOptions<AutocompleteOption<SearchableRecipient>> = {
   includeMatches: true,
@@ -27,7 +27,9 @@ export function filterRecipientsByName(
   searchPattern: string | null,
   list: AutocompleteOption<SearchableRecipient>[]
 ): AutocompleteOption<SearchableRecipient>[] {
-  if (!searchPattern) return []
+  if (!searchPattern) {
+    return []
+  }
 
   const fuse = new Fuse(list, searchNameOptions)
 
@@ -40,7 +42,9 @@ export function filterRecipientsByAddress(
   searchPattern: string | null,
   list: AutocompleteOption<SearchableRecipient>[]
 ): AutocompleteOption<SearchableRecipient>[] {
-  if (!searchPattern) return []
+  if (!searchPattern) {
+    return []
+  }
 
   const fuse = new Fuse(list, searchAddressOptions)
 
@@ -53,7 +57,9 @@ export function filterRecipientByNameAndAddress(
   searchPattern: string | null,
   list: AutocompleteOption<SearchableRecipient>[]
 ): AutocompleteOption<SearchableRecipient>[] {
-  if (!searchPattern) return []
+  if (!searchPattern) {
+    return []
+  }
 
   // run both fuses and remove dupes
   return unique(

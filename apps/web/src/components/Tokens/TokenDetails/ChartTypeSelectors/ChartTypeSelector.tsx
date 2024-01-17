@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { ChartType } from 'components/Charts/utils'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import PillMultiToggle from 'components/Toggle/PillMultiToggle'
@@ -6,8 +7,6 @@ import { Check } from 'react-feather'
 import { useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { css, useTheme } from 'styled-components'
-
-const CHART_SELECTOR_OPTIONS = [{ value: ChartType.PRICE }, { value: ChartType.VOLUME }, { value: ChartType.TVL }]
 
 const StyledDropdownButton = css`
   border-radius: 20px;
@@ -20,9 +19,11 @@ const StyledMenuFlyout = css`
   right: 20px;
 `
 const ChartTypeDropdown = ({
+  options,
   currentChartType,
   onSelectOption,
 }: {
+  options: { value: ChartType }[]
   currentChartType: ChartType
   onSelectOption: (option: ChartType) => void
 }) => {
@@ -35,7 +36,7 @@ const ChartTypeDropdown = ({
       menuLabel={<>{currentChartType}</>}
       internalMenuItems={
         <>
-          {CHART_SELECTOR_OPTIONS.map(({ value: chartType }) => {
+          {options.map(({ value: chartType }) => {
             return (
               <InternalMenuItem
                 key={chartType}
@@ -44,7 +45,7 @@ const ChartTypeDropdown = ({
                   toggleMenu()
                 }}
               >
-                {chartType}
+                <Trans>{chartType}</Trans>
                 {chartType === currentChartType && <Check size={16} color={theme.accent1} />}
               </InternalMenuItem>
             )
@@ -58,19 +59,23 @@ const ChartTypeDropdown = ({
 }
 
 export default function ChartTypeSelector({
+  options,
   currentChartType,
   onChartTypeChange,
 }: {
+  options: { value: ChartType }[]
   currentChartType: ChartType
   onChartTypeChange: (c: ChartType) => void
 }) {
   const screenSize = useScreenSize()
   if (!screenSize['sm']) {
-    return <ChartTypeDropdown currentChartType={currentChartType} onSelectOption={onChartTypeChange} />
+    return (
+      <ChartTypeDropdown options={options} currentChartType={currentChartType} onSelectOption={onChartTypeChange} />
+    )
   } else {
     return (
       <PillMultiToggle
-        options={CHART_SELECTOR_OPTIONS}
+        options={options}
         currentSelected={currentChartType}
         onSelectOption={onChartTypeChange as (c: string) => void}
       />

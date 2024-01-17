@@ -13,6 +13,7 @@ export enum Screens {
   SettingsCloudBackupProcessing = 'SettingsCloudBackupProcessing',
   SettingsCloudBackupStatus = 'SettingsCloudBackupStatus',
   SettingsLanguage = 'SettingsLanguage',
+  SettingsPrivacy = 'SettingsPrivacy',
   SettingsWallet = 'SettingsWallet',
   SettingsWalletEdit = 'SettingsWalletEdit',
   SettingsWalletManageConnection = 'SettingsWalletManageConnection',

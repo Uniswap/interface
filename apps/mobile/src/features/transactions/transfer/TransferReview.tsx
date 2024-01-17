@@ -113,7 +113,9 @@ export function TransferReview({
     nftIn ? transferNFTCallback?.() : transferERC20Callback?.()
   }
 
-  if (!recipient) return null
+  if (!recipient) {
+    return null
+  }
 
   const actionButtonProps = {
     disabled: actionButtonDisabled,

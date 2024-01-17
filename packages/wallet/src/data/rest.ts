@@ -78,9 +78,13 @@ export function useRestQuery<
 
   useEffect(() => {
     // avoid triggering refetch when a request is in flight
-    if (result.networkStatus !== NetworkStatus.ready) return
+    if (result.networkStatus !== NetworkStatus.ready) {
+      return
+    }
 
-    if (cacheExpired) result.refetch().catch(() => undefined)
+    if (cacheExpired) {
+      result.refetch().catch(() => undefined)
+    }
   }, [cacheExpired, result])
 
   return result
@@ -91,9 +95,13 @@ const getCacheExpired = (
   ttl: number | undefined
 ): boolean => {
   // if there is no timestamp, then it's the first ever query and there is no cache to expire
-  if (!lastFetchedTimestamp) return false
+  if (!lastFetchedTimestamp) {
+    return false
+  }
   // if there's no ttl, we just use apollo's fetch-policy and we do not want to manually refetch
-  if (ttl === undefined) return false
+  if (ttl === undefined) {
+    return false
+  }
 
   return Date.now() - lastFetchedTimestamp > ttl
 }

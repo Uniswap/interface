@@ -1,17 +1,19 @@
 import { Trans } from '@lingui/macro'
+import { ChartType, PriceChartType } from 'components/Charts/utils'
 import Column from 'components/Column'
-import { PoolDetailsHeader } from 'components/Pools/PoolDetails/PoolDetailsHeader'
+import ChartSection from 'components/Pools/PoolDetails/ChartSection'
+import { PoolDetailsBreadcrumb, PoolDetailsHeader } from 'components/Pools/PoolDetails/PoolDetailsHeader'
 import { PoolDetailsLink } from 'components/Pools/PoolDetails/PoolDetailsLink'
 import { PoolDetailsStats } from 'components/Pools/PoolDetails/PoolDetailsStats'
 import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetailsStatsButtons'
-import { PoolDetailsTableSkeleton } from 'components/Pools/PoolDetails/PoolDetailsTableSkeleton'
+import { PoolDetailsTableTab } from 'components/Pools/PoolDetails/PoolDetailsTable'
 import Row from 'components/Row'
-import { LoadingBubble } from 'components/Tokens/loading'
-import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
+import { AdvancedPriceChartToggle } from 'components/Tokens/TokenDetails/ChartTypeSelectors/AdvancedPriceChartToggle'
+import ChartTypeSelector from 'components/Tokens/TokenDetails/ChartTypeSelectors/ChartTypeSelector'
 import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { usePoolData } from 'graphql/thegraph/PoolData'
 import NotFound from 'pages/NotFound'
-import { useReducer } from 'react'
+import { useReducer, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -45,15 +47,16 @@ const LeftColumn = styled(Column)`
   }
 `
 
+const ChartTypeSelectorContainer = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+`
+
 const HR = styled.hr`
   border: 0.5px solid ${({ theme }) => theme.surface3};
   margin: 16px 0px;
   width: 100%;
-`
-
-const ChartHeaderBubble = styled(LoadingBubble)`
-  width: 180px;
-  height: 32px;
 `
 
 const RightColumn = styled(Column)`
@@ -110,25 +113,53 @@ export default function PoolDetailsPage() {
   const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
+  const [chartType, setChartType] = useState<ChartType>(ChartType.PRICE)
+  const [priceChartType, setPriceChartType] = useState<PriceChartType>(PriceChartType.LINE)
+
   if (poolNotFound) return <NotFound />
   return (
     <PageWrapper>
       <LeftColumn>
-        <Column gap="sm">
-          <PoolDetailsHeader
+        <Column gap="lg">
+          <PoolDetailsBreadcrumb
             chainId={chainId}
             poolAddress={poolAddress}
             token0={token0}
             token1={token1}
-            feeTier={poolData?.feeTier}
-            toggleReversed={toggleReversed}
             loading={loading}
           />
-          <LoadingChart />
+          <Row justify="space-between">
+            <PoolDetailsHeader
+              chainId={chainId}
+              token0={token0}
+              token1={token1}
+              feeTier={poolData?.feeTier}
+              toggleReversed={toggleReversed}
+              loading={loading}
+            />
+            <ChartTypeSelectorContainer>
+              {chartType === ChartType.PRICE && (
+                <AdvancedPriceChartToggle currentChartType={priceChartType} onChartTypeChange={setPriceChartType} />
+              )}
+              <ChartTypeSelector
+                options={[{ value: ChartType.PRICE }, { value: ChartType.VOLUME }, { value: ChartType.LIQUIDITY }]}
+                currentChartType={chartType}
+                onChartTypeChange={(c: ChartType) => {
+                  setChartType(c)
+                  if (c === ChartType.PRICE) setPriceChartType(PriceChartType.LINE)
+                }}
+              />
+            </ChartTypeSelectorContainer>
+          </Row>
+          <ChartSection
+            chartType={chartType}
+            priceChartType={priceChartType}
+            feeTier={poolData?.feeTier}
+            loading={loading}
+          />
         </Column>
         <HR />
-        <ChartHeaderBubble />
-        <PoolDetailsTableSkeleton />
+        <PoolDetailsTableTab poolAddress={poolAddress} token0={token0} token1={token1} />
       </LeftColumn>
       <RightColumn>
         <PoolDetailsStatsButtons

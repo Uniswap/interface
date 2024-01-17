@@ -9,7 +9,9 @@ export function BigNumberMax(bn1: BigNumber, bn2: BigNumber): BigNumber {
 }
 
 export function toStringish(n?: BigNumberish): string | undefined {
-  if (n === undefined) return undefined
+  if (n === undefined) {
+    return undefined
+  }
 
   return BigNumber.from(n).toString()
 }

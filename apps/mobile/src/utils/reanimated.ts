@@ -331,10 +331,14 @@ interface OptionsType {
 function convertSmallSciNotationToDecimal(value: number): string {
   'worklet'
   const num = value.toPrecision(3)
-  if (!num.includes('e-')) return num
+  if (!num.includes('e-')) {
+    return num
+  }
 
   const [base, exponent] = num.split('e-')
-  if (!base || !exponent) return '-'
+  if (!base || !exponent) {
+    return '-'
+  }
 
   const decimal = base.replace('.', '')
   return '0.'.concat('0'.repeat(Number(exponent) - 1).concat(decimal))

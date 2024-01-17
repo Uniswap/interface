@@ -53,7 +53,6 @@ describe('Swap Context', () => {
       setSwapState: expect.any(Function),
       swapState: {
         independentField: 'INPUT',
-        recipient: null,
         typedValue: '',
       },
     })

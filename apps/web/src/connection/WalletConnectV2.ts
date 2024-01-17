@@ -30,6 +30,12 @@ export class WalletConnectV2 extends WalletConnect {
       options: {
         projectId: process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID as string,
         chains: [defaultChainId],
+        metadata: {
+          name: 'Uniswap',
+          description: 'Uniswap Interface',
+          url: 'https://app.uniswap.org',
+          icons: ['https://app.uniswap.org/favicon.ico'],
+        },
         optionalChains: [...L1_CHAIN_IDS, ...L2_CHAIN_IDS],
         showQrModal: qrcode,
         rpcMap: RPC_URLS_WITHOUT_FALLBACKS,

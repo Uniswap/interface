@@ -63,7 +63,9 @@ export default function TokenWarningModal({
   const showWarningIcon =
     safetyLevel === SafetyLevel.StrongWarning || safetyLevel === SafetyLevel.Blocked
 
-  if (!isVisible) return null
+  if (!isVisible) {
+    return null
+  }
 
   return (
     <BottomSheetModal name={ModalName.TokenWarningModal} onClose={onClose}>

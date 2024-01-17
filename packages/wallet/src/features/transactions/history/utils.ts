@@ -165,7 +165,9 @@ export function deriveCurrencyAmountFromAssetResponse(
   quantity: string
 ): string {
   const chainId = fromGraphQLChain(chain)
-  if (!chainId) return ''
+  if (!chainId) {
+    return ''
+  }
 
   const currency =
     tokenStandard === TokenStandard.Native

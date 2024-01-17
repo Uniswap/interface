@@ -84,15 +84,21 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
       (address) => address.balance && address.balance > 0
     )
 
-    if (accountsWithBalance?.length) return accountsWithBalance
+    if (accountsWithBalance?.length) {
+      return accountsWithBalance
+    }
 
     // if all addresses have 0 total token value, show the first address
     const firstFilteredAccount = filteredAccounts?.[0]
-    if (firstFilteredAccount) return [firstFilteredAccount]
+    if (firstFilteredAccount) {
+      return [firstFilteredAccount]
+    }
 
     // if query for address balances returned null, show the first address
     const firstPendingAddress = addresses[0]
-    if (firstPendingAddress) return [{ ownerAddress: firstPendingAddress, balance: undefined }]
+    if (firstPendingAddress) {
+      return [{ ownerAddress: firstPendingAddress, balance: undefined }]
+    }
   }, [addresses, allAddressBalances])
 
   const initialSelectedAddresses = useMemo(
@@ -129,13 +135,17 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
      * In the event that the initial state of `selectedAddresses` is empty due to
      * delay in importAccountSaga, we need to set the fallback account as selected
      */
-    if (isImportingAccounts || loading || selectedAddresses.length > 0) return
+    if (isImportingAccounts || loading || selectedAddresses.length > 0) {
+      return
+    }
 
     initialSelectedAddresses.forEach((address) => setSelectedAddresses(address))
   }, [initialSelectedAddresses, isImportingAccounts, loading, selectedAddresses.length])
 
   const onPress = (address: string): void => {
-    if (initialShownAccounts?.length === 1 && selectedAddresses.length === 1) return
+    if (initialShownAccounts?.length === 1 && selectedAddresses.length === 1) {
+      return
+    }
     setSelectedAddresses(address)
   }
 
@@ -191,11 +201,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
     ? t('One wallet found')
     : t('Select wallets to import')
 
-  const subtitle = isLoading
-    ? t('Your wallets will appear below.')
-    : isOnlyOneAccount
-    ? t('Please confirm that the wallet below is the one you’d like to import.')
-    : t('We found several wallets associated with your recovery phrase.')
+  const subtitle = isLoading ? t('Your wallets will appear below.') : undefined
 
   return (
     <>

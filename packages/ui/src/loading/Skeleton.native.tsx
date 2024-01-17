@@ -47,9 +47,12 @@ export function Skeleton({ children, contrast, disabled }: SkeletonProps): JSX.E
     return (
       <Flex
         opacity={0}
+        testID="shimmer-placeholder"
         onLayout={(event: {
           nativeEvent: { layout: SetStateAction<LayoutRectangle | null | undefined> }
-        }): void => setLayout(event.nativeEvent.layout)}>
+        }): void => {
+          setLayout(event.nativeEvent.layout)
+        }}>
         {children}
       </Flex>
     )
@@ -62,7 +65,8 @@ export function Skeleton({ children, contrast, disabled }: SkeletonProps): JSX.E
       style={{
         width: layout.width,
         height: layout.height,
-      }}>
+      }}
+      testID="shimmer">
       <Flex grow backgroundColor={contrast ? '$neutral2' : '$surface3'} overflow="hidden" />
       <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
         <MaskedView

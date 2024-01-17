@@ -15,7 +15,9 @@ export function FiatOnRampCountryPicker({
   onPress: () => void
   currentCountryCode: Maybe<string>
 }): JSX.Element | null {
-  if (!currentCountryCode) return null
+  if (!currentCountryCode) {
+    return null
+  }
 
   const countryFlagUrl = getCountryFlagSvgUrl(currentCountryCode)
 

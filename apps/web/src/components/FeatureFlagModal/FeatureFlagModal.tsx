@@ -6,11 +6,12 @@ import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains
 import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
 import { useEip6963EnabledFlag } from 'featureFlags/flags/eip6963'
 import { useFallbackProviderEnabledFlag } from 'featureFlags/flags/fallbackProvider'
-import { useGatewayDNSUpdateEnabledFlag } from 'featureFlags/flags/gatewayDNSUpdate'
+import { useGatewayDNSUpdateAllEnabledFlag, useGatewayDNSUpdateEnabledFlag } from 'featureFlags/flags/gatewayDNSUpdate'
 import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
 import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
 import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
 import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
+import { useLandingPageV2Flag } from 'featureFlags/flags/landingPageV2'
 import { useLimitsEnabledFlag } from 'featureFlags/flags/limits'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
@@ -275,6 +276,12 @@ export default function FeatureFlagModal() {
         />
         <FeatureFlagOption
           variant={BaseVariant}
+          value={useGatewayDNSUpdateAllEnabledFlag()}
+          featureFlag={FeatureFlag.gatewayDNSUpdateAll}
+          label="Use gateway URL for all /v2 endpoints"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
           value={useEip6963EnabledFlag()}
           featureFlag={FeatureFlag.eip6963Enabled}
           label="Enable EIP-6963: Multi Injected Provider Discovery"
@@ -314,6 +321,12 @@ export default function FeatureFlagModal() {
           value={useProgressIndicatorV2Flag()}
           featureFlag={FeatureFlag.progressIndicatorV2}
           label="Refreshed swap progress indicator"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useLandingPageV2Flag()}
+          featureFlag={FeatureFlag.landingPageV2}
+          label="Refreshed landing page"
         />
         <FeatureFlagGroup name="Quick routes">
           <FeatureFlagOption

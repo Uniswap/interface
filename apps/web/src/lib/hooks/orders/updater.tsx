@@ -1,4 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
+import { useGatewayDNSUpdateAllEnabled } from 'featureFlags/flags/gatewayDNSUpdate'
 import ms from 'ms'
 import { useEffect } from 'react'
 import { isFinalizedOrder } from 'state/signatures/hooks'
@@ -7,13 +8,15 @@ import { UniswapXOrderDetails } from 'state/signatures/types'
 import { OrderQueryResponse, UniswapXBackendOrder } from './types'
 
 const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
-if (UNISWAP_API_URL === undefined) {
-  throw new Error(`UNISWAP_API_URL must be a defined environment variable`)
+const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
+if (UNISWAP_API_URL === undefined || UNISWAP_GATEWAY_DNS_URL === undefined) {
+  throw new Error(`UNISWAP_API_URL and UNISWAP_GATEWAY_DNS_URL must be defined environment variables`)
 }
 
-function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[]) {
+function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[], gatewayDNSUpdateAllEnabled: boolean) {
   const orderHashes = orders.map((order) => order.orderHash).join(',')
-  return global.fetch(`${UNISWAP_API_URL}/orders?swapper=${account}&orderHashes=${orderHashes}`)
+  const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
+  return global.fetch(`${baseURL}/orders?swapper=${account}&orderHashes=${orderHashes}`)
 }
 
 const OFF_CHAIN_ORDER_STATUS_POLLING = ms(`2s`)
@@ -26,6 +29,8 @@ interface UpdaterProps {
 export default function OrderUpdater({ pendingOrders, onOrderUpdate }: UpdaterProps): null {
   const { account } = useWeb3React()
 
+  const gatewayDNSUpdateAllEnabled = useGatewayDNSUpdateAllEnabled()
+
   useEffect(() => {
     async function getOrderStatuses() {
       if (!account || pendingOrders.length === 0) return
@@ -37,7 +42,7 @@ export default function OrderUpdater({ pendingOrders, onOrderUpdate }: UpdaterPr
       }
 
       try {
-        const pollOrderStatus = await fetchOrderStatuses(account, pendingOrders)
+        const pollOrderStatus = await fetchOrderStatuses(account, pendingOrders, gatewayDNSUpdateAllEnabled)
 
         const orderStatuses: OrderQueryResponse = await pollOrderStatus.json()
         pendingOrders.forEach((pendingOrder) => {
@@ -53,7 +58,7 @@ export default function OrderUpdater({ pendingOrders, onOrderUpdate }: UpdaterPr
 
     const interval = setInterval(getOrderStatuses, OFF_CHAIN_ORDER_STATUS_POLLING)
     return () => clearInterval(interval)
-  }, [account, onOrderUpdate, pendingOrders])
+  }, [account, gatewayDNSUpdateAllEnabled, onOrderUpdate, pendingOrders])
 
   return null
 }

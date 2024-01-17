@@ -150,8 +150,6 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   const buttonEnabled =
     !isLoading && (!eligible || (!isError && fiatOnRampHostUrl && quoteCurrencyAmountReady))
 
-  const showSoftInputOnFocus = showNativeKeyboard && eligible
-
   const onChangeValue =
     (source: MobileEventProperties[MobileEventName.FiatOnRampAmountEntered]['source']) =>
     (newAmount: string): void => {
@@ -163,14 +161,15 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
 
   const [showTokenSelector, setShowTokenSelector] = useState(false)
 
-  // hide keyboard when user goes to token selector screen
   useEffect(() => {
     if (showTokenSelector) {
+      // hide keyboard when user goes to token selector screen
       inputRef.current?.blur()
-    } else if (showSoftInputOnFocus) {
+    } else if (showNativeKeyboard && eligible) {
+      // autofocus
       inputRef.current?.focus()
     }
-  }, [showSoftInputOnFocus, showTokenSelector])
+  }, [showNativeKeyboard, eligible, showTokenSelector])
 
   const hideInnerContentRouter = showTokenSelector
   const screenXOffset = useSharedValue(hideInnerContentRouter ? -fullWidth : 0)
@@ -202,6 +201,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
               <Text variant="subheading1">{t('Buy')}</Text>
               <FiatOnRampAmountSection
                 currency={currency}
+                disabled={!eligible}
                 errorColor={errorColor}
                 errorText={errorText}
                 inputRef={inputRef}
@@ -211,7 +211,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                 selectTokenLoading={selectTokenLoading}
                 setSelection={setSelection}
                 showNativeKeyboard={showNativeKeyboard}
-                showSoftInputOnFocus={showSoftInputOnFocus}
+                showSoftInputOnFocus={showNativeKeyboard}
                 value={value}
                 onChoosePredifendAmount={onChangeValue('chip')}
                 onEnterAmount={onChangeValue('textInput')}

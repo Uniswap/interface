@@ -42,7 +42,7 @@ export function Cell({
 }>) {
   return (
     <Container $width={width} $minWidth={minWidth} $maxWidth={maxWidth} $grow={grow} $justifyContent={justifyContent}>
-      {loading ? <LoadingDataBubble /> : children}
+      {loading ? <LoadingDataBubble data-testid="cell-loading-bubble" /> : children}
     </Container>
   )
 }

@@ -1,9 +1,10 @@
 import { MaxUint256 } from '@ethersproject/constants'
-import { call } from '@redux-saga/core/effects'
+import { call, select } from '@redux-saga/core/effects'
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { expectSaga } from 'redux-saga-test-plan'
+import { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
 import { approveAndSwap, SwapParams } from 'src/features/transactions/swap/swapSaga'
 import { ChainId } from 'wallet/src/constants/chains'
 import { DAI } from 'wallet/src/constants/tokens'
@@ -15,6 +16,8 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { getProvider } from 'wallet/src/features/wallet/context'
+import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
+import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { account, mockProvider } from 'wallet/src/test/fixtures'
 import { currencyId } from 'wallet/src/utils/currencyId'
 
@@ -68,36 +71,28 @@ const swapParamsWithoutApprove: SwapParams = {
 const nonce = 1
 
 describe(approveAndSwap, () => {
+  const sharedProviders: (EffectProviders | StaticProvider)[] = [
+    [select(selectWalletSwapProtectionSetting), SwapProtectionSetting.Off],
+    [call(getProvider, mockSwapTxRequest.chainId), mockProvider],
+    [
+      call(sendTransaction, {
+        chainId: mockSwapTxRequest.chainId,
+        account: swapParams.account,
+        options: { request: mockApproveTxRequest },
+        typeInfo: transactionTypeInfo,
+      }),
+      undefined,
+    ],
+  ]
+
   it('sends a swap tx', async () => {
-    await expectSaga(approveAndSwap, swapParamsWithoutApprove)
-      .provide([
-        [call(getProvider, mockSwapTxRequest.chainId), mockProvider],
-        [
-          call(sendTransaction, {
-            chainId: mockSwapTxRequest.chainId,
-            account: swapParams.account,
-            options: { request: mockSwapTxRequest },
-            typeInfo: transactionTypeInfo,
-          }),
-          undefined,
-        ],
-      ])
-      .silentRun()
+    await expectSaga(approveAndSwap, swapParamsWithoutApprove).provide(sharedProviders).silentRun()
   })
 
   it('sends a swap tx with incremented nonce if an approve tx is sent first', async () => {
     await expectSaga(approveAndSwap, swapParams)
       .provide([
-        [call(getProvider, mockSwapTxRequest.chainId), mockProvider],
-        [
-          call(sendTransaction, {
-            chainId: mockSwapTxRequest.chainId,
-            account: swapParams.account,
-            options: { request: mockApproveTxRequest },
-            typeInfo: transactionTypeInfo,
-          }),
-          undefined,
-        ],
+        ...sharedProviders,
         [
           call(sendTransaction, {
             chainId: mockTrade.inputAmount.currency.chainId,

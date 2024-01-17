@@ -93,6 +93,12 @@ function getSettings(darkMode: boolean) {
     breakpoint: BREAKPOINTS,
     transition: transitions,
     opacity: opacities,
+    text: {
+      heading: {
+        fontFamily: 'inherit',
+        fontWeight: 485,
+      },
+    },
   }
 }
 

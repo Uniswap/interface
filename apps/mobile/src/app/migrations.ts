@@ -61,7 +61,9 @@ export const migrations = {
   2: (state: any) => {
     const newState = { ...state }
     const oldFollowingAddresses = state?.favorites?.followedAddresses
-    if (oldFollowingAddresses) newState.favorites.watchedAddresses = oldFollowingAddresses
+    if (oldFollowingAddresses) {
+      newState.favorites.watchedAddresses = oldFollowingAddresses
+    }
     delete newState?.favorites?.followedAddresses
     return newState
   },
@@ -221,7 +223,9 @@ export const migrations = {
 
   17: (state: any) => {
     const accounts: Record<Address, Account> | undefined = state?.wallet?.accounts
-    if (!accounts) return
+    if (!accounts) {
+      return
+    }
 
     for (const account of Object.values(accounts)) {
       account.pushNotificationsEnabled = false
@@ -251,10 +255,14 @@ export const migrations = {
     }>(
       (tempState, chainIdString) => {
         const chainId = toSupportedChainId(chainIdString)
-        if (!chainId) return tempState
+        if (!chainId) {
+          return tempState
+        }
 
         const chainInfo = chainState?.byChainId[chainId]
-        if (!chainInfo) return tempState
+        if (!chainInfo) {
+          return tempState
+        }
 
         tempState.byChainId[chainId] = chainInfo
         return tempState
@@ -266,10 +274,14 @@ export const migrations = {
     const newBlockState = Object.keys(blockState?.byChainId ?? {}).reduce<any>(
       (tempState, chainIdString) => {
         const chainId = toSupportedChainId(chainIdString)
-        if (!chainId) return tempState
+        if (!chainId) {
+          return tempState
+        }
 
         const blockInfo = blockState?.byChainId[chainId]
-        if (!blockInfo) return tempState
+        if (!blockInfo) {
+          return tempState
+        }
 
         tempState.byChainId[chainId] = blockInfo
         return tempState
@@ -281,15 +293,21 @@ export const migrations = {
     const newTransactionState = Object.keys(transactionState ?? {}).reduce<TransactionStateMap>(
       (tempState, address) => {
         const txs = transactionState?.[address]
-        if (!txs) return tempState
+        if (!txs) {
+          return tempState
+        }
 
         const newAddressTxState = Object.keys(txs).reduce<ChainIdToTxIdToDetails>(
           (tempAddressState, chainIdString) => {
             const chainId = toSupportedChainId(chainIdString)
-            if (!chainId) return tempAddressState
+            if (!chainId) {
+              return tempAddressState
+            }
 
             const txInfo = txs[chainId]
-            if (!txInfo) return tempAddressState
+            if (!txInfo) {
+              return tempAddressState
+            }
 
             tempAddressState[chainId] = txInfo
             return tempAddressState
@@ -724,6 +742,42 @@ export const migrations = {
     newState.behaviorHistory = {
       hasViewedReviewScreen: false,
       hasSubmittedHoldToSwap: false,
+    }
+
+    return newState
+  },
+
+  56: function addAllowAnalyticsSwitch(state: any) {
+    const newState = { ...state }
+
+    newState.telemetry = {
+      ...state.telemetry,
+      allowAnalytics: true,
+      lastHeartbeat: 0,
+    }
+
+    return newState
+  },
+
+  57: function moveSettingStateToGlobal(state: any) {
+    const newState = { ...state }
+
+    // get old accounts
+    const accounts = newState?.wallet?.accounts ?? {}
+    const firstAccountKey = Object.keys(accounts)[0]
+
+    // Read setting from the first wallet, or assign default value
+    const hideSmallBalances = firstAccountKey ? !accounts[firstAccountKey].showSmallBalances : true // default to true
+    const hideSpamTokens = firstAccountKey ? !accounts[firstAccountKey].showSpamTokens : true // default to true
+
+    newState.wallet.settings.hideSmallBalances = hideSmallBalances
+    newState.wallet.settings.hideSpamTokens = hideSpamTokens
+
+    // delete old account specific state
+    const accountKeys = Object.keys(accounts ?? {})
+    for (const accountKey of accountKeys) {
+      delete accounts[accountKey].showSmallBalances
+      delete accounts[accountKey].showSpamTokens
     }
 
     return newState

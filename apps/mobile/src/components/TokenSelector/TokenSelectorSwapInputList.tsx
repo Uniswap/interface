@@ -48,7 +48,9 @@ function useTokenSectionsForSwapInput(
   }, [refetchPopularTokenOptions, refetchPortfolioTokenOptions])
 
   const sections = useMemo(() => {
-    if (loading) return
+    if (loading) {
+      return
+    }
 
     const popularMinusPortfolioTokens = tokenOptionDifference(
       popularTokenOptions,

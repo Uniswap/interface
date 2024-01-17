@@ -17,8 +17,10 @@ import {
   usePersistedError,
 } from 'wallet/src/features/dataApi/utils'
 import { useAccountToTokenVisibility } from 'wallet/src/features/transactions/selectors'
-import { selectAccounts } from 'wallet/src/features/wallet/selectors'
-import { useAppSelector } from 'wallet/src/state'
+import {
+  useHideSmallBalancesSetting,
+  useHideSpamTokensSetting,
+} from 'wallet/src/features/wallet/hooks'
 import { CurrencyId, currencyId } from 'wallet/src/utils/currencyId'
 
 type SortedPortfolioBalances = {
@@ -42,8 +44,10 @@ export function usePortfolioValueModifiers(
     () => (!address ? [] : Array.isArray(address) ? address : [address]),
     [address]
   )
-  const accounts = useAppSelector(selectAccounts)
   const accountToTokensVisibility = useAccountToTokenVisibility(addressArray)
+
+  const hideSpamTokens = useHideSpamTokensSetting()
+  const hideSmallBalances = useHideSmallBalancesSetting()
 
   const modifiers = useMemo<PortfolioValueModifier[]>(() => {
     return addressArray.map((addr) => {
@@ -76,11 +80,11 @@ export function usePortfolioValueModifiers(
         ownerAddress: addr,
         tokenIncludeOverrides,
         tokenExcludeOverrides,
-        includeSmallBalances: accounts[addr]?.showSmallBalances ?? false,
-        includeSpamTokens: accounts[addr]?.showSpamTokens ?? false,
+        includeSmallBalances: !hideSmallBalances,
+        includeSpamTokens: !hideSpamTokens,
       }
     })
-  }, [accountToTokensVisibility, accounts, addressArray])
+  }, [accountToTokensVisibility, addressArray, hideSmallBalances, hideSpamTokens])
 
   return modifiers.length > 0 ? modifiers : undefined
 }
@@ -132,7 +136,9 @@ export function usePortfolioBalances({
   const balancesForAddress = balancesData?.portfolios?.[0]?.tokenBalances
 
   const formattedData = useMemo(() => {
-    if (!balancesForAddress) return
+    if (!balancesForAddress) {
+      return
+    }
 
     const byId: Record<CurrencyId, PortfolioBalance> = {}
     balancesForAddress.forEach((balance) => {
@@ -150,7 +156,9 @@ export function usePortfolioBalances({
       const chainId = fromGraphQLChain(chain)
 
       // require all of these fields to be defined
-      if (!balance || !quantity || !token) return
+      if (!balance || !quantity || !token) {
+        return
+      }
 
       const currency = buildCurrency({
         chainId,
@@ -160,7 +168,9 @@ export function usePortfolioBalances({
         name,
       })
 
-      if (!currency) return
+      if (!currency) {
+        return
+      }
 
       const id = currencyId(currency)
 
@@ -232,7 +242,9 @@ export function usePortfolioTotalValue({
   const portfolioForAddress = balancesData?.portfolios?.[0]
 
   const formattedData = useMemo(() => {
-    if (!portfolioForAddress) return
+    if (!portfolioForAddress) {
+      return
+    }
 
     return {
       balanceUSD: portfolioForAddress?.tokensTotalDenominatedValue?.value,
@@ -289,7 +301,9 @@ export function useTokenBalancesGroupedByVisibility({
   hiddenTokens: PortfolioBalance[] | undefined
 } {
   return useMemo(() => {
-    if (!balancesById) return { shownTokens: undefined, hiddenTokens: undefined }
+    if (!balancesById) {
+      return { shownTokens: undefined, hiddenTokens: undefined }
+    }
 
     const { shown, hidden } = Object.values(balancesById).reduce<{
       shown: PortfolioBalance[]
@@ -367,13 +381,21 @@ export function sortPortfolioBalances(balances: PortfolioBalance[]): PortfolioBa
 
   return [
     ...balancesWithUSDValue.sort((a, b) => {
-      if (!a.balanceUSD) return 1
-      if (!b.balanceUSD) return -1
+      if (!a.balanceUSD) {
+        return 1
+      }
+      if (!b.balanceUSD) {
+        return -1
+      }
       return b.balanceUSD - a.balanceUSD
     }),
     ...balancesWithoutUSDValue.sort((a, b) => {
-      if (!a.currencyInfo.currency.name) return 1
-      if (!b.currencyInfo.currency.name) return -1
+      if (!a.currencyInfo.currency.name) {
+        return 1
+      }
+      if (!b.currencyInfo.currency.name) {
+        return -1
+      }
       return a.currencyInfo.currency.name?.localeCompare(b.currencyInfo.currency.name)
     }),
   ]

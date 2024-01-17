@@ -58,7 +58,9 @@ export const promptPushPermission = (
 
 export const getOneSignalUserIdOrError = async (): Promise<string> => {
   const onesignalUserId = (await OneSignal.getDeviceState())?.userId
-  if (!onesignalUserId) throw new Error('Onesignal user ID is not defined')
+  if (!onesignalUserId) {
+    throw new Error('Onesignal user ID is not defined')
+  }
   return onesignalUserId
 }
 

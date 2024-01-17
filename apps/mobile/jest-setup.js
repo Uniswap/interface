@@ -25,8 +25,6 @@ jest.mock('@sentry/react-native', () => ({
   ReactNativeTracing: jest.fn(),
 }))
 
-require('react-native-reanimated/src/reanimated2/jestUtils').setUpTests()
-
 // Disables animated driver warning
 jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper')
 
@@ -40,7 +38,7 @@ jest.mock('react-native-onesignal', () => {
     promptForPushNotificationsWithUserResponse: jest.fn(),
     setNotificationWillShowInForegroundHandler: jest.fn(),
     setNotificationOpenedHandler: jest.fn(),
-    getDeviceState: () => ({ userId: 'dummyUserId' }),
+    getDeviceState: () => ({ userId: 'dummyUserId', pushToken: 'dummyPushToken' }),
   }
 })
 
@@ -75,21 +73,47 @@ jest.mock('react-native', () => {
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),
+  SafeAreaProvider: jest.fn(({ children }) => children),
 }))
 
 jest.mock('@react-navigation/elements', () => ({
   useHeaderHeight: jest.fn().mockImplementation(() => 200),
 }))
 
-global.__reanimatedWorkletInit = () => ({})
-jest.mock('react-native-reanimated', () => require('react-native-reanimated/mock'))
+require('react-native-reanimated').setUpTests()
 
 jest.mock('wallet/src/features/language/LocalizationContext', () => MockLocalizationContext)
 
-jest.mock('react-native/Libraries/Share/Share', () => {
-  return {
-    share: jest.fn(),
-  }
-})
+jest.mock('react-native/Libraries/Share/Share', () => ({
+  share: jest.fn(),
+}))
 
 jest.mock('react-native-localize', () => mockRNLocalize)
+
+jest.mock('@react-native-firebase/auth', () => () => ({
+  signInAnonymously: jest.fn(),
+}))
+
+jest.mock('react-native/Libraries/Linking/Linking', () => ({
+  openURL: jest.fn(),
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+  canOpenURL: jest.fn(),
+  getInitialURL: jest.fn(),
+}))
+
+jest.mock('react-i18next', () => ({
+  // this mock makes sure any components using the translate hook can use it without a warning being shown
+  useTranslation: () => {
+    return {
+      t: (str) => str,
+      i18n: {
+        changeLanguage: () => new Promise(jest.fn()),
+      },
+    }
+  },
+  initReactI18next: {
+    type: '3rdParty',
+    init: jest.fn(),
+  },
+}))

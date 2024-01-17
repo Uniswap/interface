@@ -63,7 +63,7 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         const selectedMenuAction = menuActions[e.nativeEvent.index]
         // Handle switching selected sort option
         if (!selectedMenuAction) {
-          logger.error('Unexpected context menu index selected', {
+          logger.error(new Error('Unexpected context menu index selected'), {
             tags: { file: 'SortButton', function: 'SortButtonContextMenu:onPress' },
           })
           return
@@ -84,7 +84,7 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         onLongPress={disableOnPress}>
         <Flex row gap="$spacing4">
           {orderBy === TokenSortableField.Volume || orderBy === TokenSortableField.TotalValueLocked}
-          <Text color="$neutral2" variant="buttonLabel3">
+          <Text ellipse color="$neutral2" flexShrink={1} numberOfLines={1} variant="buttonLabel3">
             {getTokensOrderBySelectedLabel(orderBy, t)}
           </Text>
           <Icons.RotatableChevron

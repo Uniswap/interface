@@ -30,7 +30,9 @@ const slice = createSlice({
         const indexToRemove = state.notificationQueue.findIndex(
           (notif) => notif.address === address
         )
-        if (indexToRemove !== -1) state.notificationQueue.splice(indexToRemove, 1)
+        if (indexToRemove !== -1) {
+          state.notificationQueue.splice(indexToRemove, 1)
+        }
       }
     },
     resetNotifications: () => initialNotificationsState,

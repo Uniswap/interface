@@ -31,14 +31,18 @@ export function getCurrencyAmount<T extends Currency>({
   valueType: ValueType
   currency?: T | null
 }): CurrencyAmount<T> | null | undefined {
-  if (!value || !currency) return undefined
+  if (!value || !currency) {
+    return undefined
+  }
 
   try {
     let parsedValue = sanitizeTokenAmount({ value, valueType })
 
     if (valueType === ValueType.Exact) {
       parsedValue = parseUnits(parsedValue, currency.decimals).toString()
-      if (parsedValue === '0') return null
+      if (parsedValue === '0') {
+        return null
+      }
     }
 
     return CurrencyAmount.fromRawAmount(currency, parsedValue)
@@ -71,6 +75,11 @@ const sanitizeTokenAmount = ({
   valueType: ValueType
 }): string => {
   let sanitizedValue = convertScientificNotationToNumber(value)
+
+  if (sanitizedValue === '.') {
+    // Prevents an error being thrown when calling `BigNumber.from('.')`
+    sanitizedValue = '0.'
+  }
 
   if (valueType === ValueType.Exact && !ALL_NUMBERS_OR_SEPARATOR_REGEX.test(sanitizedValue)) {
     throw new Error('Provided value is invalid')

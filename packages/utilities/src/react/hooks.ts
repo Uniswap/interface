@@ -25,63 +25,57 @@ export function useAsyncData<T>(
   data: T | undefined
 } {
   const [state, setState] = useState<{
-    data: {
-      res: T | undefined
-      input: () => Promise<T> | undefined
-    }
+    data: T | undefined
     isLoading: boolean
   }>({
-    data: {
-      res: undefined,
-      input: asyncCallback,
-    },
+    data: undefined,
     isLoading: true,
   })
-
-  const isMountedRef = useRef(true)
-
-  useEffect(() => {
-    return () => {
-      isMountedRef.current = false
-    }
-  }, [])
+  const onCancelRef = useRef(onCancel)
+  const lastCompletedAsyncCallbackRef = useRef(asyncCallback)
 
   useEffect(() => {
-    if (!state.isLoading) {
-      setState((currentState) => ({ ...currentState, isLoading: true }))
-    }
-
-    let isCancelled = false
+    let isPending = false
 
     async function runCallback(): Promise<void> {
-      const res = await asyncCallback()
-      // Prevent setting state if the component has unmounted (prevents memory leaks)
-      if (!isMountedRef.current) return
-      // Prevent setting state if the request was cancelled
-      if (isCancelled) return
-      setState({
-        isLoading: false,
-        data: {
-          res,
-          input: asyncCallback,
-        },
-      })
+      isPending = true
+      const data = await asyncCallback()
+      if (isPending) {
+        lastCompletedAsyncCallbackRef.current = asyncCallback
+        setState((prevState) => ({ ...prevState, data, isLoading: false }))
+      }
     }
 
-    runCallback().catch(() => undefined)
+    runCallback()
+      .catch(() => {
+        if (isPending) {
+          lastCompletedAsyncCallbackRef.current = asyncCallback
+          setState((prevState) => ({ ...prevState, isLoading: false }))
+        }
+      })
+      .finally(() => {
+        isPending = false
+      })
+
+    const handleCancel = onCancelRef.current
 
     return () => {
-      isCancelled = true
-      onCancel?.()
+      if (!isPending) {
+        return
+      }
+      isPending = false
+      if (handleCancel) {
+        handleCancel()
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [asyncCallback])
 
   return useMemo(() => {
-    if (asyncCallback !== state.data.input) return { isLoading: true, data: undefined }
-
-    return { isLoading: state.isLoading, data: state.data.res }
-  }, [asyncCallback, state.isLoading, state.data])
+    if (asyncCallback !== lastCompletedAsyncCallbackRef.current) {
+      return { isLoading: true, data: undefined }
+    }
+    return state
+  }, [asyncCallback, state])
 }
 
 // modified from https://usehooks.com/useMemoCompare/

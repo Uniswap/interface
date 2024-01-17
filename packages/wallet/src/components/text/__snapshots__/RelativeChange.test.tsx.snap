@@ -1,21 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders a relative change 1`] = `
-<div
-  className=""
+<View
   style={
     {
       "alignItems": "center",
-      "boxSizing": "border-box",
-      "display": "flex",
-      "flexBasis": "auto",
       "flexDirection": "row",
-      "flexShrink": 0,
-      "gap": "",
+      "gap": 2,
       "justifyContent": "flex-start",
-      "minHeight": 0,
-      "minWidth": 0,
-      "position": "relative",
     }
   }
 >
@@ -81,64 +73,41 @@ exports[`renders a relative change 1`] = `
       />
     </RNSVGGroup>
   </RNSVGSvgView>
-  <div
-    className=""
+  <View
     style={
       {
         "alignItems": "stretch",
-        "boxSizing": "border-box",
-        "display": "flex",
-        "flexBasis": "auto",
         "flexDirection": "column",
-        "flexShrink": 0,
-        "minHeight": 0,
-        "minWidth": 0,
-        "position": "relative",
       }
     }
   >
-    <span
-      className="font_subHeading "
+    <Text
+      allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
       style={
         {
-          "boxSizing": "border-box",
           "color": "#7D7D7D",
-          "display": "inline",
-          "fontFamily": "",
+          "fontFamily": "Basel-Book",
           "fontSize": 17,
-          "fontWeight": "400",
           "lineHeight": 24,
-          "marginBottom": 0,
-          "marginLeft": 0,
-          "marginRight": 0,
-          "marginTop": 0,
-          "wordWrap": "break-word",
         }
       }
+      suppressHighlighting={true}
     >
       12%
-    </span>
-  </div>
-</div>
+    </Text>
+  </View>
+</View>
 `;
 
 exports[`renders placeholders with absolute change 1`] = `
-<div
-  className=""
+<View
   style={
     {
       "alignItems": "center",
-      "boxSizing": "border-box",
-      "display": "flex",
-      "flexBasis": "auto",
       "flexDirection": "row",
-      "flexShrink": 0,
-      "gap": "",
+      "gap": 2,
       "justifyContent": "flex-start",
-      "minHeight": 0,
-      "minWidth": 0,
-      "position": "relative",
     }
   }
 >
@@ -204,105 +173,67 @@ exports[`renders placeholders with absolute change 1`] = `
       />
     </RNSVGGroup>
   </RNSVGSvgView>
-  <div
-    className=""
+  <View
     style={
       {
         "alignItems": "stretch",
-        "boxSizing": "border-box",
-        "display": "flex",
-        "flexBasis": "auto",
         "flexDirection": "column",
-        "flexShrink": 0,
-        "minHeight": 0,
-        "minWidth": 0,
-        "position": "relative",
       }
     }
   >
-    <span
-      className="font_subHeading "
+    <Text
+      allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
       style={
         {
-          "boxSizing": "border-box",
           "color": "#7D7D7D",
-          "display": "inline",
-          "fontFamily": "",
+          "fontFamily": "Basel-Book",
           "fontSize": 17,
-          "fontWeight": "400",
           "lineHeight": 24,
-          "marginBottom": 0,
-          "marginLeft": 0,
-          "marginRight": 0,
-          "marginTop": 0,
-          "wordWrap": "break-word",
         }
       }
+      suppressHighlighting={true}
     >
       $100.00 (12%)
-    </span>
-  </div>
-</div>
+    </Text>
+  </View>
+</View>
 `;
 
 exports[`renders placeholders without a change 1`] = `
-<div
-  className=""
+<View
   style={
     {
       "alignItems": "center",
-      "boxSizing": "border-box",
-      "display": "flex",
-      "flexBasis": "auto",
       "flexDirection": "row",
-      "flexShrink": 0,
-      "gap": "",
+      "gap": 2,
       "justifyContent": "flex-start",
-      "minHeight": 0,
-      "minWidth": 0,
-      "position": "relative",
     }
   }
 >
-  <div
-    className=""
+  <View
     style={
       {
         "alignItems": "stretch",
-        "boxSizing": "border-box",
-        "display": "flex",
-        "flexBasis": "auto",
         "flexDirection": "column",
-        "flexShrink": 0,
-        "minHeight": 0,
-        "minWidth": 0,
-        "position": "relative",
       }
     }
   >
-    <span
-      className="font_subHeading "
+    <Text
+      allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
       style={
         {
-          "boxSizing": "border-box",
           "color": "#7D7D7D",
-          "display": "inline",
-          "fontFamily": "",
+          "fontFamily": "Basel-Book",
           "fontSize": 17,
-          "fontWeight": "400",
           "lineHeight": 24,
-          "marginBottom": 0,
-          "marginLeft": 0,
-          "marginRight": 0,
-          "marginTop": 0,
-          "wordWrap": "break-word",
         }
       }
+      suppressHighlighting={true}
     >
       -
-    </span>
-  </div>
-</div>
+    </Text>
+  </View>
+</View>
 `;

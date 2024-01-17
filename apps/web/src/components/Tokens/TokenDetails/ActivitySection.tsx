@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { ChainId, Token } from '@uniswap/sdk-core'
 import Row from 'components/Row'
+import { TokenDetailsPoolsTable } from 'components/Tokens/TokenDetails/tables/TokenDetailsPoolsTable'
 import { useState } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -40,7 +41,9 @@ export function ActivitySection({ chainId, referenceToken }: { chainId: ChainId;
           <Trans>Transactions</Trans>
         </Tab>
       </Row>
-      {activityInView === ActivityTab.Pools && <TransactionsTable chainId={chainId} referenceToken={referenceToken} />}
+      {activityInView === ActivityTab.Pools && (
+        <TokenDetailsPoolsTable chainId={chainId} referenceToken={referenceToken} />
+      )}
       {activityInView === ActivityTab.Txs && <TransactionsTable chainId={chainId} referenceToken={referenceToken} />}
     </Container>
   )

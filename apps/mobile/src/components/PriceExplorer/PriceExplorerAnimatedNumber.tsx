@@ -12,28 +12,28 @@ import Animated, {
 import {
   ADDITIONAL_WIDTH_FOR_ANIMATIONS,
   AnimatedCharStyles,
-  AnimatedFontStyles,
   DIGIT_HEIGHT,
   NUMBER_ARRAY,
   NUMBER_WIDTH_ARRAY,
   TopAndBottomGradient,
 } from 'src/components/AnimatedNumber'
-import { ValueAndFormatted } from 'src/components/PriceExplorer/usePrice'
+import { ValueAndFormattedWithAnimation } from 'src/components/PriceExplorer/usePrice'
 import { PriceNumberOfDigits } from 'src/components/PriceExplorer/usePriceHistory'
 import { useSporeColors } from 'ui/src'
 import { TextLoaderWrapper } from 'ui/src/components/text/Text'
+import { fonts } from 'ui/src/theme'
 import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
 const NumbersMain = ({
   color,
   backgroundColor,
-  hidePlacehodler,
+  hidePlaceholder,
 }: {
   color: string
   backgroundColor: string
-  hidePlacehodler(): void
+  hidePlaceholder(): void
 }): JSX.Element | null => {
-  const [showNumers, setShowNumbers] = useState(false)
+  const [showNumbers, setShowNumbers] = useState(false)
   const hideNumbers = useSharedValue(true)
 
   const animatedTextStyle = useAnimatedStyle(() => {
@@ -49,11 +49,11 @@ const NumbersMain = ({
   }, [])
 
   const onLayout = (): void => {
-    hidePlacehodler()
+    hidePlaceholder()
     hideNumbers.value = false
   }
 
-  if (showNumers) {
+  if (showNumbers) {
     return (
       <Animated.Text
         allowFontScaling={false}
@@ -82,7 +82,7 @@ const RollNumber = ({
   index,
   shouldAnimate,
   decimalPlace,
-  hidePlacehodler,
+  hidePlaceholder,
   commaIndex,
   currency,
 }: {
@@ -90,7 +90,7 @@ const RollNumber = ({
   index: number
   shouldAnimate: SharedValue<boolean>
   decimalPlace: SharedValue<number>
-  hidePlacehodler(): void
+  hidePlaceholder(): void
   commaIndex: number
   currency: FiatCurrencyInfo
 }): JSX.Element => {
@@ -139,6 +139,34 @@ const RollNumber = ({
     }
   })
 
+  // need it in case the current value is eg $999.00 but maximum value in chart is more than $1,000.00
+  // so it can hide the comma to avoid something like $,999.00
+  const animatedWrapperSeparatorStyle = useAnimatedStyle(() => {
+    const isSeparator =
+      (index - commaIndex) % 4 === 0 &&
+      index - commaIndex < 0 &&
+      index > commaIndex - decimalPlace.value
+    if (!isSeparator) {
+      return {
+        width: withTiming(0),
+      }
+    }
+
+    const digitWidth =
+      chars.value[index - (commaIndex - decimalPlace.value)] === currency.groupingSeparator ? 8 : 0
+
+    const rowWidth = Math.max(digitWidth, 0)
+
+    return {
+      transform: [
+        {
+          translateY: transformY.value,
+        },
+      ],
+      width: shouldAnimate.value ? withTiming(rowWidth) : rowWidth,
+    }
+  })
+
   if (index === commaIndex) {
     return (
       <Animated.Text
@@ -159,15 +187,17 @@ const RollNumber = ({
     index > commaIndex - decimalPlace.value
   ) {
     return (
-      <Animated.Text
-        allowFontScaling={false}
-        style={[
-          animatedFontStyle,
-          AnimatedFontStyles.fontStyle,
-          { height: DIGIT_HEIGHT, backgroundColor: colors.surface1.val },
-        ]}>
-        {currency.groupingSeparator}
-      </Animated.Text>
+      <Animated.View style={animatedWrapperSeparatorStyle}>
+        <Animated.Text
+          allowFontScaling={false}
+          style={[
+            animatedFontStyle,
+            AnimatedFontStyles.fontStyle,
+            { height: DIGIT_HEIGHT, backgroundColor: colors.surface1.val },
+          ]}>
+          {currency.groupingSeparator}
+        </Animated.Text>
+      </Animated.View>
     )
   }
 
@@ -182,7 +212,7 @@ const RollNumber = ({
       <MemoizedNumbers
         backgroundColor={colors.surface1.val}
         color={index >= commaIndex ? colors.neutral3.val : colors.neutral1.val}
-        hidePlacehodler={hidePlacehodler}
+        hidePlaceholder={hidePlaceholder}
       />
     </Animated.View>
   )
@@ -190,12 +220,12 @@ const RollNumber = ({
 
 const Numbers = ({
   price,
-  hidePlacehodler,
+  hidePlaceholder,
   numberOfDigits,
   currency,
 }: {
-  price: ValueAndFormatted
-  hidePlacehodler(): void
+  price: ValueAndFormattedWithAnimation
+  hidePlaceholder(): void
   numberOfDigits: PriceNumberOfDigits
   currency: FiatCurrencyInfo
 }): JSX.Element[] => {
@@ -207,17 +237,21 @@ const Numbers = ({
     return price.formatted.value.indexOf(currency.decimalSeparator)
   }, [price])
 
+  const commaIndex = numberOfDigits.left + Math.floor((numberOfDigits.left - 1) / 3)
+
   return _.times(
-    numberOfDigits.left + numberOfDigits.right + Math.floor(numberOfDigits.left / 3) + 1,
+    numberOfDigits.left + numberOfDigits.right + Math.floor((numberOfDigits.left - 1) / 3) + 1,
     (index) => (
-      <Animated.View style={[{ height: DIGIT_HEIGHT }, AnimatedCharStyles.wrapperStyle]}>
+      <Animated.View
+        key={`$number_${index - (commaIndex - decimalPlace.value)}`}
+        style={[{ height: DIGIT_HEIGHT }, AnimatedCharStyles.wrapperStyle]}>
         <RollNumber
-          key={index === 0 ? `$sign` : `$_number_${numberOfDigits.left - 1 - index}`}
+          key={`$number_${index - (commaIndex - decimalPlace.value)}`}
           chars={chars}
-          commaIndex={numberOfDigits.left + Math.floor(numberOfDigits.left / 3)}
+          commaIndex={commaIndex}
           currency={currency}
           decimalPlace={decimalPlace}
-          hidePlacehodler={hidePlacehodler}
+          hidePlaceholder={hidePlaceholder}
           index={index}
           shouldAnimate={price.shouldAnimate}
         />
@@ -239,7 +273,7 @@ const PriceExplorerAnimatedNumber = ({
   numberOfDigits,
   currency,
 }: {
-  price: ValueAndFormatted
+  price: ValueAndFormattedWithAnimation
   numberOfDigits: PriceNumberOfDigits
   currency: FiatCurrencyInfo
 }): JSX.Element => {
@@ -254,7 +288,7 @@ const PriceExplorerAnimatedNumber = ({
     }
   })
 
-  const hidePlacehodler = (): void => {
+  const hidePlaceholder = (): void => {
     hideShimmer.value = true
   }
 
@@ -274,7 +308,7 @@ const PriceExplorerAnimatedNumber = ({
       <View style={RowWrapper.wrapperStyle}>
         <TopAndBottomGradient />
         {currency.symbolAtFront && currencySymbol}
-        {Numbers({ price, hidePlacehodler, numberOfDigits, currency })}
+        {Numbers({ price, hidePlaceholder, numberOfDigits, currency })}
         {!currency.symbolAtFront && currencySymbol}
       </View>
     </>
@@ -293,5 +327,14 @@ export const Shimmer = StyleSheet.create({
   shimmerSize: {
     height: DIGIT_HEIGHT,
     width: 200,
+  },
+})
+
+const AnimatedFontStyles = StyleSheet.create({
+  fontStyle: {
+    fontFamily: fonts.heading2.family,
+    fontSize: fonts.heading2.fontSize,
+    fontWeight: fonts.heading2.fontWeight,
+    lineHeight: fonts.heading2.lineHeight,
   },
 })

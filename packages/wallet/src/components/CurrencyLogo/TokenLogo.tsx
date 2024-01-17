@@ -1,28 +1,34 @@
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 import { Image } from 'react-native'
 import { Flex, Text, useSporeColors } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
 import { STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { style, THIN_BORDER } from 'wallet/src/components/CurrencyLogo/styles'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { RemoteSvg } from 'wallet/src/features/images/RemoteSvg'
+import { useLogolessColorScheme } from 'wallet/src/utils/colors'
 import { NetworkLogo } from './NetworkLogo'
 
 interface TokenLogoProps {
   url?: string | null
   symbol?: string
+  name?: string | null
   chainId?: ChainId
   size?: number
   hideNetworkLogo?: boolean
+  networkLogoBorderWidth?: number
 }
 
 export const TokenLogo = memo(function _TokenLogo({
   url,
   symbol,
+  name,
   chainId,
   size = iconSizes.icon40,
   hideNetworkLogo,
+  networkLogoBorderWidth = spacing.spacing2,
 }: TokenLogoProps): JSX.Element {
   const colors = useSporeColors()
 
@@ -64,6 +70,17 @@ export const TokenLogo = memo(function _TokenLogo({
     }
   }
 
+  const isDarkMode = useIsDarkMode()
+  const logolessColorScheme = useLogolessColorScheme(name ?? symbol ?? '')
+  const { foreground, background } = isDarkMode
+    ? logolessColorScheme.dark
+    : logolessColorScheme.light
+
+  const textStyle = useMemo(
+    () => ({ color: foreground, fontFamily: fonts.buttonLabel3.family, fontWeight: '500' }),
+    [foreground]
+  )
+
   return (
     <Flex alignItems="center" height={size} justifyContent="center" width={size}>
       {httpUri ? (
@@ -71,18 +88,18 @@ export const TokenLogo = memo(function _TokenLogo({
       ) : (
         <Flex
           alignItems="center"
-          bg="$surface3"
           borderRadius="$roundedFull"
           height={size}
           justifyContent="center"
           px="$spacing8"
+          style={{ backgroundColor: background }}
           width={size}>
           <Text
             adjustsFontSizeToFit
-            color="$neutral1"
             lineHeight={size * 0.5}
             minimumFontScale={0.5}
             numberOfLines={1}
+            style={textStyle}
             textAlign="center">
             {symbol?.slice(0, 3)}
           </Text>
@@ -91,12 +108,12 @@ export const TokenLogo = memo(function _TokenLogo({
       {showNetworkLogo && (
         <Flex
           borderColor="$surface1"
-          borderRadius={8}
-          borderWidth={2}
+          borderRadius={spacing.spacing8}
+          borderWidth={networkLogoBorderWidth}
           bottom={-2}
           position="absolute"
           right={-3}>
-          <NetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
+          <NetworkLogo chainId={chainId} size={Math.round(size * STATUS_RATIO)} />
         </Flex>
       )}
     </Flex>

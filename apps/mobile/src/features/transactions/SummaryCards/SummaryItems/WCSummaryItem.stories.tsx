@@ -29,6 +29,7 @@ const baseUnknownItem: Omit<TransactionDetails, 'status'> & { typeInfo: WCConfir
       icon: 'https://synapseprotocol.com/favicon.ico',
       name: 'Synapse',
       url: 'https://synapseprotocol.com',
+      source: 'walletconnect',
     },
   },
 }

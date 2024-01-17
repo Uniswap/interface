@@ -24,13 +24,19 @@ function remoteTxStatusToLocalTxStatus(
 ): TransactionStatus {
   switch (status) {
     case RemoteTransactionStatus.Failed:
-      if (type === RemoteTransactionType.Cancel) return TransactionStatus.FailedCancel
+      if (type === RemoteTransactionType.Cancel) {
+        return TransactionStatus.FailedCancel
+      }
       return TransactionStatus.Failed
     case RemoteTransactionStatus.Pending:
-      if (type === RemoteTransactionType.Cancel) return TransactionStatus.Cancelling
+      if (type === RemoteTransactionType.Cancel) {
+        return TransactionStatus.Cancelling
+      }
       return TransactionStatus.Pending
     case RemoteTransactionStatus.Confirmed:
-      if (type === RemoteTransactionType.Cancel) return TransactionStatus.Cancelled
+      if (type === RemoteTransactionType.Cancel) {
+        return TransactionStatus.Cancelled
+      }
       return TransactionStatus.Success
   }
 }
@@ -45,7 +51,9 @@ function remoteTxStatusToLocalTxStatus(
 export default function extractTransactionDetails(
   transaction: TransactionListQueryResponse
 ): TransactionDetails | null {
-  if (transaction?.details.__typename !== 'TransactionDetails') return null
+  if (transaction?.details.__typename !== 'TransactionDetails') {
+    return null
+  }
 
   let typeInfo: TransactionTypeInfo | undefined
   switch (transaction.details.type) {

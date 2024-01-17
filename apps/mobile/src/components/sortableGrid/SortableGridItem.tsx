@@ -101,7 +101,9 @@ function SortableGridItem<I>({
     const renderMeasurements = itemAtIndexMeasurements[renderIndex]
     const displayMeasurements = itemAtIndexMeasurements[displayIndex]
 
-    if (!renderMeasurements || !displayMeasurements) return { x: 0, y: 0 }
+    if (!renderMeasurements || !displayMeasurements) {
+      return { x: 0, y: 0 }
+    }
 
     return {
       x: displayMeasurements.x - renderMeasurements.x,
@@ -112,7 +114,9 @@ function SortableGridItem<I>({
   const handleDragEnd = useWorkletCallback(() => {
     dragActivationProgress.value = withTiming(0, { duration: TIME_TO_ACTIVATE_PAN })
     touchedIndex.value = null
-    if (!isActiveValue.value) return
+    if (!isActiveValue.value) {
+      return
+    }
     // Reset the active item
     previousActiveIndex.value = renderIndex
     // Reset this before state is updated to disable animated reactions
@@ -142,7 +146,9 @@ function SortableGridItem<I>({
       active: isActiveValue.value,
     }),
     ({ active, activeTranslation }) => {
-      if (!active || touchedIndex.value === null) return
+      if (!active || touchedIndex.value === null) {
+        return
+      }
       dragTranslateX.value = activeTranslation.x
       dragTranslateY.value = activeTranslation.y
     }
@@ -156,11 +162,15 @@ function SortableGridItem<I>({
       active: isActiveValue.value,
     }),
     ({ displayIndex, active, itemAtIndexMeasurements }) => {
-      if (active) return
+      if (active) {
+        return
+      }
 
       const renderMeasurements = itemAtIndexMeasurements[renderIndex]
       const displayMeasurements = itemAtIndexMeasurements[displayIndex]
-      if (!renderMeasurements || !displayMeasurements) return
+      if (!renderMeasurements || !displayMeasurements) {
+        return
+      }
 
       if (activeIndex !== null && touchedIndex.value !== null) {
         // If the order changes as a result of the user dragging an item,
@@ -188,13 +198,17 @@ function SortableGridItem<I>({
           dragActivationProgress.value = withTiming(1, { duration: TIME_TO_ACTIVATE_PAN })
         })
         .onStart(() => {
-          if (touchedIndex.value !== renderIndex) return
+          if (touchedIndex.value !== renderIndex) {
+            return
+          }
           activeTranslationValue.value = { x: 0, y: 0 }
           dragActivationProgress.value = withTiming(1, { duration: TIME_TO_ACTIVATE_PAN })
           runOnJS(setActiveIndex)(renderIndex)
         })
         .onUpdate((e) => {
-          if (!isActiveValue.value) return
+          if (!isActiveValue.value) {
+            return
+          }
           activeTranslationValue.value = { x: e.translationX, y: e.translationY }
         })
         .onTouchesCancelled(handleDragEnd)

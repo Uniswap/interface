@@ -47,14 +47,18 @@ export function useAllCommonBaseCurrencies(): GqlResult<CurrencyInfo[]> {
   // bridged version on other networks
   const filteredBaseCurrencyInfos = useMemo(() => {
     return baseCurrencyInfos?.filter((currencyInfo) => {
-      if (currencyInfo.currency.isNative) return true
+      if (currencyInfo.currency.isNative) {
+        return true
+      }
 
       const { address } = currencyInfo.currency
       const bridgedAsset = BRIDGED_BASE_ADDRESSES.find((bridgedAddress) =>
         areAddressesEqual(bridgedAddress, address)
       )
 
-      if (!bridgedAsset) return true
+      if (!bridgedAsset) {
+        return true
+      }
 
       return false
     })
@@ -149,7 +153,9 @@ export function useCurrencyInfosToTokenOptions({
   // we use useMemo here to avoid recalculation of internals when function params are the same,
   // but the component, where this hook is used is re-rendered
   return useMemo(() => {
-    if (!currencyInfos) return undefined
+    if (!currencyInfos) {
+      return undefined
+    }
     const sortedCurrencyInfos = sortAlphabetically
       ? [...currencyInfos].sort((a, b) => {
           if (a.currency.name && b.currency.name) {

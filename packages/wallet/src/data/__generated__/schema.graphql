@@ -1,30 +1,28 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
-"""
-Tells the service this field/object has access authorized by an OIDC token.
-"""
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Cognito User Pools token.
-"""
-directive @aws_cognito_user_pools(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
 """Tells the service which mutation triggers this subscription."""
 directive @aws_subscribe(
   """
   List of mutations which will trigger this subscription when they are called.
   """
   mutations: [String]
+) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Lambda Authorizer.
+"""
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
+
+"""Directs the schema to enforce authorization on a field"""
+directive @aws_auth(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
 ) on FIELD_DEFINITION
 
 """
@@ -39,28 +37,37 @@ directive @aws_publish(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by a Lambda Authorizer.
+Tells the service this field/object has access authorized by a Cognito User Pools token.
 """
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
-"""Directs the schema to enforce authorization on a field"""
-directive @aws_auth(
+directive @aws_cognito_user_pools(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
-) on FIELD_DEFINITION
+) on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by an API key.
+Tells the service this field/object has access authorized by an OIDC token.
 """
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
+"""
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
+
+"""
+  Types, unions, and inputs (alphabetized):
+ These are colocated to highlight the relationship between some types and their inputs.
+"""
 union ActivityDetails = TransactionDetails | SwapOrderDetails
 
 input ActivityDetailsInput {
-  transaction: TransactionDetailsInput
+  transactionDetails: TransactionDetailsInput
 }
 
-"""  deprecated and replaced with TransactionType, please do not use this"""
+"""
+  Enums (alphabetized):
+ deprecated and replaced with TransactionType, please do not use this
+"""
 enum ActivityType {
   APPROVE
   CANCEL
@@ -98,8 +105,23 @@ type AmountChange {
 }
 
 input AmountInput {
-  currency: Currency!
+  currency: Currency
   value: Float!
+}
+
+type ApplicationContract implements IContract {
+  id: ID!
+  chain: Chain!
+  address: String!
+  name: String
+  icon: Image
+}
+
+input ApplicationContractInput {
+  chain: Chain!
+  address: String!
+  name: String
+  icon: ImageInput
 }
 
 type AssetActivity {
@@ -194,6 +216,11 @@ enum Currency {
   VND
 }
 
+input CurrencyAmountInput {
+  currency: Currency!
+  value: Float!
+}
+
 type DescriptionTranslations {
   id: ID!
   descriptionZhHans: String
@@ -223,6 +250,11 @@ type Dimensions {
   width: Float
 }
 
+input DimensionsInput {
+  height: Float
+  width: Float
+}
+
 enum HighLow {
   HIGH
   LOW
@@ -237,6 +269,7 @@ enum HistoryDuration {
   MAX
 }
 
+"""  Interfaces (alphabetized):"""
 interface IAmount {
   currency: Currency
   value: Float!
@@ -251,6 +284,11 @@ type Image {
   id: ID!
   url: String!
   dimensions: Dimensions
+}
+
+input ImageInput {
+  url: String!
+  dimensions: DimensionsInput
 }
 
 enum MediaType {
@@ -316,6 +354,7 @@ type NftApproval {
 }
 
 input NftApprovalInput {
+  nftStandard: NftStandard!
   asset: NftAssetInput!
   approvedAddress: String!
 }
@@ -331,6 +370,7 @@ type NftApproveForAll {
 }
 
 input NftApproveForAllInput {
+  nftStandard: NftStandard!
   asset: NftAssetInput!
   operatorAddress: String!
   approved: Boolean!
@@ -378,8 +418,17 @@ type NftAssetEdge {
 }
 
 input NftAssetInput {
-  address: String!
+  collection: NftCollectionInput
+  description: String
+  animationUrl: String
+  image: ImageInput
+  thumbnail: ImageInput
+  smallImage: ImageInput
+  name: String
+  nftContract: NftContractInput
   tokenId: String!
+  mediaType: MediaType
+  isSpam: Boolean
 }
 
 type NftAssetRarity {
@@ -425,6 +474,11 @@ type NftBalance {
   quantity: Int
 }
 
+input NftBalanceAssetInput {
+  address: String!
+  tokenId: String!
+}
+
 type NftBalanceConnection {
   pageInfo: PageInfo!
   edges: [NftBalanceEdge!]!
@@ -437,7 +491,7 @@ type NftBalanceEdge {
 
 input NftBalancesFilterInput {
   addresses: [String!]
-  assets: [NftAssetInput!]
+  assets: [NftBalanceAssetInput!]
   filterSpam: Boolean
 }
 
@@ -496,6 +550,12 @@ type NftCollectionEdge {
   node: NftCollection!
 }
 
+input NftCollectionInput {
+  collectionId: String!
+  name: String
+  nftContracts: [NftContractInput!]
+}
+
 type NftCollectionMarket {
   id: ID!
   nftContracts: [NftContract!]
@@ -542,6 +602,15 @@ type NftCollectionTraitStats {
 
 type NftContract implements IContract {
   id: ID!
+  address: String!
+  chain: Chain!
+  name: String
+  standard: NftStandard
+  symbol: String
+  totalSupply: Int
+}
+
+input NftContractInput {
   address: String!
   chain: Chain!
   name: String
@@ -660,6 +729,7 @@ type NftTransfer {
 }
 
 input NftTransferInput {
+  nftStandard: NftStandard!
   asset: NftAssetInput!
   sender: String!
   recipient: String!
@@ -758,9 +828,12 @@ type PushNotification {
 }
 
 type Query {
-  """  returns top pools by total value locked"""
+  """  returns top v3 pools sorted by total value locked in desc order"""
   topV3Pools(chain: Chain!, first: Int!, tvlCursor: Float, tokenFilter: String): [V3Pool!]
-  convert(fromAmount: AmountInput!, toCurrency: Currency!): Amount
+
+  """  returns top v2 pairs sorted by total value locked in desc order"""
+  topV2Pairs(chain: Chain!, first: Int!, tvlCursor: Float, tokenFilter: String): [V2Pair!]
+  convert(fromAmount: CurrencyAmountInput!, toCurrency: Currency!): Amount
   tokens(contracts: [ContractInput!]!): [Token]
 
   """
@@ -806,7 +879,8 @@ type SwapOrderDetails {
   id: ID!
   offerer: String!
   hash: String!
-  status: SwapOrderStatus!
+  status: SwapOrderStatus! @deprecated(reason: "use swapOrderStatus to disambiguate from transactionStatus")
+  swapOrderStatus: SwapOrderStatus!
   inputToken: Token!
   inputTokenQuantity: String!
   outputToken: Token!
@@ -862,6 +936,7 @@ type TokenApproval {
 }
 
 input TokenApprovalInput {
+  tokenStandard: TokenStandard!
   asset: TokenAssetInput!
   approvedAddress: String!
   quantity: String!
@@ -869,7 +944,11 @@ input TokenApprovalInput {
 
 input TokenAssetInput {
   chain: Chain!
-  address: String!
+  address: String
+  standard: TokenStandard
+  decimals: Int
+  name: String
+  symbol: String
 }
 
 type TokenBalance {
@@ -985,6 +1064,7 @@ type TokenTransfer {
 }
 
 input TokenTransferInput {
+  tokenStandard: TokenStandard!
   asset: TokenAssetInput!
   sender: String!
   recipient: String!
@@ -1017,18 +1097,22 @@ type TransactionDetails {
   from: String!
   to: String!
   hash: String!
-  status: TransactionStatus!
+  status: TransactionStatus! @deprecated(reason: "use transactionStatus to disambiguate from swapOrderStatus")
+  transactionStatus: TransactionStatus!
   nonce: Int!
+  application: ApplicationContract
 }
 
 input TransactionDetailsInput {
   type: TransactionType!
-  assetChanges: [AssetChangeInput!]!
+  assetChanges: [AssetChangeInput]!
   from: String!
   to: String!
   hash: String!
-  status: TransactionStatus!
+  status: TransactionStatus
+  transactionStatus: TransactionStatus!
   nonce: Int!
+  application: ApplicationContractInput
 }
 
 enum TransactionDirection {
@@ -1066,6 +1150,21 @@ enum TransactionType {
   UNKNOWN
   UNSTAKE
   WITHDRAW
+}
+
+type V2Pair {
+  id: ID!
+  protocolVersion: ProtocolVersion!
+  chain: Chain!
+  address: String!
+  createdAtTimestamp: Int
+  totalLiquidity: Amount
+  token0: Token
+  token0Supply: Float
+  token1: Token
+  token1Supply: Float
+  txCount: Int
+  cumulativeVolume(duration: HistoryDuration): Amount
 }
 
 type V3Pool {

@@ -21,7 +21,9 @@ export function SearchPopularNFTCollections(): JSX.Element {
   const { data, loading } = useSearchPopularNftCollectionsQuery()
 
   const formattedItems = useMemo(() => {
-    if (!data?.topCollections?.edges) return
+    if (!data?.topCollections?.edges) {
+      return
+    }
 
     const searchResults = data.topCollections.edges.map(({ node }) =>
       gqlNFTToNFTCollectionSearchResult(node)

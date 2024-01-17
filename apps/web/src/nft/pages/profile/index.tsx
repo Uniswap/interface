@@ -1,18 +1,21 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
-import { useToggleAccountDrawer } from 'components/AccountDrawer'
+import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonPrimary } from 'components/Button'
+import useENSName from 'hooks/useENSName'
 import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
 import { useBag, useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { useEffect, useRef } from 'react'
+import { Helmet } from 'react-helmet'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
+import { shortenAddress } from 'utils'
 
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from './shared'
 
@@ -59,6 +62,18 @@ const ConnectWalletButton = styled(ButtonPrimary)`
   border: none;
 `
 
+function getProfilePageTitle(account: string | undefined, ENSName: string | null | undefined): string {
+  if (!account) {
+    return t`NFT collection on Uniswap`
+  }
+
+  if (!ENSName) {
+    return t`NFT collection on Uniswap - ${shortenAddress(account)}`
+  }
+
+  return t`${ENSName}'s NFT collection on Uniswap`
+}
+
 export default function Profile() {
   const sellPageState = useProfilePageState((state) => state.state)
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
@@ -66,6 +81,7 @@ export default function Profile() {
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
 
   const { account } = useWeb3React()
+  const { ENSName } = useENSName(account)
   const accountRef = useRef(account)
   const toggleWalletDrawer = useToggleAccountDrawer()
 
@@ -81,25 +97,30 @@ export default function Profile() {
   const isListingNfts = sellPageState === ProfilePageStateType.LISTING
 
   return (
-    <Trace page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
-      <ProfilePageWrapper>
-        {account ? (
-          <LoadedAccountPage cartExpanded={cartExpanded} isListingNfts={isListingNfts}>
-            {!isListingNfts ? <ProfilePage /> : <ListPage />}
-          </LoadedAccountPage>
-        ) : (
-          <Center>
-            <ThemedText.HeadlineMedium lineHeight="36px" color="neutral2" fontWeight="535" marginBottom="24px">
-              <Trans>No items to display</Trans>
-            </ThemedText.HeadlineMedium>
-            <ConnectWalletButton onClick={toggleWalletDrawer}>
-              <ThemedText.SubHeader color="white" lineHeight="20px">
-                <Trans>Connect wallet</Trans>
-              </ThemedText.SubHeader>
-            </ConnectWalletButton>
-          </Center>
-        )}
-      </ProfilePageWrapper>
-    </Trace>
+    <>
+      <Helmet>
+        <title>{getProfilePageTitle(account, ENSName)}</title>
+      </Helmet>
+      <Trace page={InterfacePageName.NFT_PROFILE_PAGE} shouldLogImpression>
+        <ProfilePageWrapper>
+          {account ? (
+            <LoadedAccountPage cartExpanded={cartExpanded} isListingNfts={isListingNfts}>
+              {!isListingNfts ? <ProfilePage /> : <ListPage />}
+            </LoadedAccountPage>
+          ) : (
+            <Center>
+              <ThemedText.HeadlineMedium lineHeight="36px" color="neutral2" fontWeight="535" marginBottom="24px">
+                <Trans>No items to display</Trans>
+              </ThemedText.HeadlineMedium>
+              <ConnectWalletButton onClick={toggleWalletDrawer}>
+                <ThemedText.SubHeader color="white" lineHeight="20px">
+                  <Trans>Connect wallet</Trans>
+                </ThemedText.SubHeader>
+              </ConnectWalletButton>
+            </Center>
+          )}
+        </ProfilePageWrapper>
+      </Trace>
+    </>
   )
 }

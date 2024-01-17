@@ -1,4 +1,6 @@
-import { useMemo } from 'react'
+import { impactAsync } from 'expo-haptics'
+import { useCallback, useMemo } from 'react'
+import { setClipboard } from 'src/utils/clipboard'
 import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
@@ -6,6 +8,9 @@ import {
   SearchPopularTokensQuery,
   useSearchPopularTokensQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
+import { useAppDispatch } from 'wallet/src/state'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export type TopToken = NonNullable<NonNullable<SearchPopularTokensQuery['topTokens']>[0]>
@@ -19,7 +24,9 @@ export function usePopularTokens(): {
   const { data, loading } = useSearchPopularTokensQuery()
 
   const popularTokens = useMemo(() => {
-    if (!data || !data.topTokens) return
+    if (!data || !data.topTokens) {
+      return
+    }
 
     // special case to replace weth with eth because the backend does not return eth data
     // eth will be defined only if all the required data is available
@@ -29,7 +36,9 @@ export function usePopularTokens(): {
 
     return data.topTokens
       .map((token) => {
-        if (!token) return
+        if (!token) {
+          return
+        }
 
         const isWeth =
           areAddressesEqual(token.address, wethAddress) && token?.chain === Chain.Ethereum
@@ -45,4 +54,16 @@ export function usePopularTokens(): {
   }, [data])
 
   return { popularTokens, loading }
+}
+
+export function useCopyTokenAddressCallback(tokenAddress: Address): () => void {
+  const dispatch = useAppDispatch()
+  return useCallback(async () => {
+    await impactAsync()
+    await setClipboard(tokenAddress)
+
+    dispatch(
+      pushNotification({ type: AppNotificationType.Copied, copyType: CopyNotificationType.Address })
+    )
+  }, [tokenAddress, dispatch])
 }

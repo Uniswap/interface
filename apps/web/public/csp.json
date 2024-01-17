@@ -1,0 +1,9 @@
+{
+  "defaultSrc": "'self'",
+  "scriptSrc": "'self' 'unsafe-eval' 'wasm-unsafe-eval' 'unsafe-inline' https://www.google-analytics.com https://www.googletagmanager.com https://translate.googleapis.com/ https://vercel.live/ https://vercel.com data:",
+  "styleSrc": "'self' 'unsafe-inline' 'unsafe-eval'",
+  "imgSrc": "* 'self' https://i.seadn.io/ https://cdn.center.app/ https://raw.githubusercontent.com/ https://assets.coingecko.com/ https://static.optimism.io/ https://ethereum-optimism.github.io/ https://explorer-api.walletconnect.com/ https://s2.coinmarketcap.com/ https://openseauserdata.com/ https://raw.seadn.io/ https://lh3.googleusercontent.com/ https://vercel.live/ https://vercel.com data: blob:",
+  "frameSrc": "'self' https://verify.walletconnect.com/ https://verify.walletconnect.org/ https://buy.moonpay.com/ https://vercel.live/ https://vercel.com",
+  "connectSrc": "* 'self' https://api.uniswap.org https://interface.gateway.uniswap.org https://o1037921.ingest.sentry.io https://mainnet.infura.io https://cloudflare-ipfs.com https://raw.githubusercontent.com https://tokens.coingecko.com https://bridge.arbitrum.io https://static.optimism.io https://celo-org.github.io https://www.gemini.com https://tokenlist.arbitrum.io https://gateway.ipfs.io/ https://arbitrum-mainnet.infura.io/ https://optimism-mainnet.infura.io/ https://polygon-mainnet.infura.io/ https://base-mainnet.infura.io/ https://avalanche-mainnet.infura.io/ https://forno.celo.org/ wss://www.walletlink.org/rpc https://explorer-api.walletconnect.com wss://relay.walletconnect.com/ https://temp.api.uniswap.org/ https://us-central1-uniswap-mobile.cloudfunctions.net/ https://ultra-blue-flower.quiknode.pro https://api.thegraph.com/ https://api.moonpay.com/ https://old-wispy-arrow.bsc.quiknode.pro/ https://vercel.live/ https://vercel.com data: blob:",
+  "workerSrc": "* 'self' blob:"
+}

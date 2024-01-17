@@ -2,7 +2,7 @@ import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace, TraceEvent } from 'analytics'
-import { useToggleAccountDrawer } from 'components/AccountDrawer'
+import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, Menu } from 'components/Menu'
@@ -164,9 +164,9 @@ function WrongNetworkCard() {
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow padding="0">
-              <ThemedText.LargeHeader>
+              <ThemedText.H1Large>
                 <Trans>Pools</Trans>
-              </ThemedText.LargeHeader>
+              </ThemedText.H1Large>
             </TitleRow>
 
             <MainContentWrapper>

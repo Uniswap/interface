@@ -22,7 +22,9 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
   const dispatch = useAppDispatch()
 
   const onPressCopyAddress = useCallback(async () => {
-    if (!address) return
+    if (!address) {
+      return
+    }
     await impactAsync()
     await setClipboard(address)
     dispatch(
@@ -35,7 +37,9 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
   }, [address])
 
   const onPressShare = useCallback(async () => {
-    if (!address) return
+    if (!address) {
+      return
+    }
     try {
       const url = getProfileUrl(address)
       await Share.share({

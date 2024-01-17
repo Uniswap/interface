@@ -203,6 +203,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
                 name: session.peer.metadata.name,
                 url: session.peer.metadata.url,
                 icon: session.peer.metadata.icons[0] ?? null,
+                source: 'walletconnect',
               },
               chains: pendingSession.chains,
               namespaces,

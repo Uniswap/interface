@@ -9,12 +9,16 @@ import { Inset } from 'ui/src'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 
 function gqlTokenToTokenSearchResult(token: Maybe<TopToken>): TokenSearchResult | null {
-  if (!token || !token.project) return null
+  if (!token || !token.project) {
+    return null
+  }
 
   const { chain, address, symbol, project } = token
   const { name } = project
   const chainId = fromGraphQLChain(chain)
-  if (!chainId || !symbol || !name) return null
+  if (!chainId || !symbol || !name) {
+    return null
+  }
 
   return {
     type: SearchResultType.Token,

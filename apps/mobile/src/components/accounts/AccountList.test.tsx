@@ -1,46 +1,23 @@
-import { MockedResponse } from '@apollo/client/testing'
 import { fireEvent } from '@testing-library/react-native'
 import React from 'react'
 import { AccountList } from 'src/components/accounts/AccountList'
-import { ON_PRESS_EVENT_PAYLOAD } from 'src/test/eventFixtures'
-import { Portfolios } from 'src/test/gqlFixtures'
 import { render, screen } from 'src/test/test-utils'
 import { NumberType } from 'utilities/src/format/types'
-import {
-  AccountListDocument,
-  AccountListQuery,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+import { Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
+import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/eventFixtures'
 import { account } from 'wallet/src/test/fixtures'
+import { Amounts, Portfolios } from 'wallet/src/test/gqlFixtures'
 import { mockLocalizedFormatter } from 'wallet/src/test/utils'
 
-jest.mock('@react-navigation/drawer', () => ({ useDrawerStatus: jest.fn(() => 'unknown') }))
-
-const mock: MockedResponse<AccountListQuery> = {
-  request: {
-    query: AccountListDocument,
-    variables: {
-      addresses: [account.address],
-      valueModifiers: [
-        {
-          ownerAddress: account.address,
-          tokenIncludeOverrides: [],
-          tokenExcludeOverrides: [],
-          includeSmallBalances: false,
-          includeSpamTokens: false,
-        },
-      ],
-    },
-  },
-  result: {
-    data: {
-      portfolios: Portfolios,
-    },
+const resolvers: Resolvers = {
+  Portfolio: {
+    tokensTotalDenominatedValue: () => Amounts.md,
   },
 }
 
 describe(AccountList, () => {
   it('renders without error', async () => {
-    const tree = render(<AccountList accounts={[account]} onPress={jest.fn()} />, { mocks: [mock] })
+    const tree = render(<AccountList accounts={[account]} onPress={jest.fn()} />, { resolvers })
 
     expect(
       await screen.findByText(
@@ -57,7 +34,7 @@ describe(AccountList, () => {
   it('handles press on card items', async () => {
     const onPressSpy = jest.fn()
     render(<AccountList accounts={[account]} onPress={onPressSpy} />, {
-      mocks: [mock],
+      resolvers,
     })
     // go to success state
     expect(
@@ -70,10 +47,7 @@ describe(AccountList, () => {
       )
     ).toBeDefined()
 
-    await fireEvent.press(
-      screen.getByTestId(`account_item/${account.address}`),
-      ON_PRESS_EVENT_PAYLOAD
-    )
+    fireEvent.press(screen.getByTestId(`account_item/${account.address}`), ON_PRESS_EVENT_PAYLOAD)
 
     expect(onPressSpy).toHaveBeenCalledTimes(1)
   })

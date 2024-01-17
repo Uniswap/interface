@@ -133,7 +133,7 @@ export type TextProps = TextFrameProps & {
 
 export const TextPlaceholder = ({ children }: PropsWithChildren<unknown>): JSX.Element => {
   return (
-    <Flex row alignItems="center">
+    <Flex row alignItems="center" testID="text-placeholder">
       <Flex row alignItems="center" position="relative">
         <HiddenFromScreenReaders>{children}</HiddenFromScreenReaders>
         <Flex

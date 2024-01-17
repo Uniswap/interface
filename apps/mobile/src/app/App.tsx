@@ -4,6 +4,7 @@ import * as Sentry from '@sentry/react-native'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import { default as React, PropsWithChildren, StrictMode, useCallback, useEffect } from 'react'
 import { NativeModules, StatusBar } from 'react-native'
+import appsFlyer from 'react-native-appsflyer'
 import { getUniqueId } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
@@ -28,6 +29,7 @@ import { initOneSignal } from 'src/features/notifications/Onesignal'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
+import { selectAllowAnalytics } from 'src/features/telemetry/selectors'
 import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
 import {
   processWidgetEvents,
@@ -40,6 +42,7 @@ import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/versi
 import { Statsig, StatsigProvider } from 'statsig-react-native'
 import { flexStyles } from 'ui/src'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
+import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { config } from 'wallet/src/config'
@@ -211,9 +214,29 @@ function AppOuter(): JSX.Element | null {
 }
 
 function AppInner(): JSX.Element {
+  const dispatch = useAppDispatch()
   const isDarkMode = useIsDarkMode()
   const themeSetting = useCurrentAppearanceSetting()
-  const dispatch = useAppDispatch()
+  const allowAnalytics = useAppSelector(selectAllowAnalytics)
+
+  useEffect(() => {
+    if (allowAnalytics) {
+      appsFlyer.startSdk()
+      logger.info('AppsFlyer', 'status', 'started')
+    } else {
+      appsFlyer.stop(!allowAnalytics, (res: unknown) => {
+        if (typeof res === 'string' && res === 'Success') {
+          logger.info('AppsFlyer', 'status', 'stopped')
+        } else {
+          logger.warn(
+            'AppsFlyer',
+            'stop',
+            `Got an error when trying to stop the AppsFlyer SDK: ${res}`
+          )
+        }
+      })
+    }
+  }, [allowAnalytics])
 
   useEffect(() => {
     dispatch(updateLanguage(null))

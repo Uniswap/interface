@@ -107,7 +107,10 @@ async function getPermit2PermitSignature(
   }
 }
 
-export function usePermit2Signature(currencyInAmount: Maybe<CurrencyAmount<Currency>>): {
+export function usePermit2Signature(
+  currencyInAmount: Maybe<CurrencyAmount<Currency>>,
+  skip?: boolean
+): {
   isLoading: boolean
   data: PermitSignatureInfo | undefined
 } {
@@ -117,7 +120,9 @@ export function usePermit2Signature(currencyInAmount: Maybe<CurrencyAmount<Curre
   const provider = useProvider(currencyIn?.chainId ?? ChainId.Mainnet)
 
   const permitSignatureFetcher = useCallback(() => {
-    if (!provider || !currencyIn || currencyIn.isNative) return
+    if (!provider || !currencyIn || currencyIn.isNative || skip) {
+      return
+    }
 
     return getPermit2PermitSignature(
       provider,
@@ -127,7 +132,7 @@ export function usePermit2Signature(currencyInAmount: Maybe<CurrencyAmount<Curre
       currencyIn.chainId,
       currencyInAmount.quotient.toString()
     )
-  }, [account, currencyIn, currencyInAmount?.quotient, provider, signerManager])
+  }, [account, currencyIn, currencyInAmount?.quotient, provider, signerManager, skip])
 
   return useAsyncData(permitSignatureFetcher)
 }

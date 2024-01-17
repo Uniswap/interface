@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
@@ -18,6 +19,7 @@ import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'n
 import * as styles from 'nft/pages/collection/index.css'
 import { blocklistedCollections } from 'nft/utils'
 import { Suspense, useEffect } from 'react'
+import { Helmet } from 'react-helmet'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { animated, easings, useSpring } from 'react-spring'
 import styled from 'styled-components'
@@ -181,6 +183,9 @@ const Collection = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{t`Buy, sell & trade ${collectionStats.name} on Uniswap`}</title>
+      </Helmet>
       <Trace
         page={InterfacePageName.NFT_COLLECTION_PAGE}
         properties={{ collection_address: contractAddress, chain_id: chainId, is_activity_view: isActivityToggled }}

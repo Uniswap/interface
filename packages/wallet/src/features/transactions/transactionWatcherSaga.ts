@@ -108,7 +108,9 @@ export function* watchFiatOnRampTransaction(transaction: TransactionDetails) {
         /** previousTransactionDetails= */ transaction
       )
 
-      if (!updatedTransaction) return
+      if (!updatedTransaction) {
+        return
+      }
 
       // not strictly necessary but avoid dispatching an action if tx hasn't changed
       if (JSON.stringify(updatedTransaction) !== JSON.stringify(transaction)) {
@@ -226,14 +228,18 @@ export async function waitForReceipt(
 function* waitForCancellation(chainId: ChainId, id: string) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof cancelTransaction>>(cancelTransaction.type)
-    if (payload.cancelRequest && payload.chainId === chainId && payload.id === id) return true
+    if (payload.cancelRequest && payload.chainId === chainId && payload.id === id) {
+      return true
+    }
   }
 }
 
 function* waitForReplacement(chainId: ChainId, id: string) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof replaceTransaction>>(replaceTransaction.type)
-    if (payload.chainId === chainId && payload.id === id) return payload
+    if (payload.chainId === chainId && payload.id === id) {
+      return payload
+    }
   }
 }
 /**
@@ -249,8 +255,13 @@ export function* waitForTxnInvalidated(
     const { payload } = yield* take<ReturnType<typeof transactionActions.finalizeTransaction>>(
       transactionActions.finalizeTransaction.type
     )
-    if (payload.chainId === chainId && payload.id !== id && payload.options.request.nonce === nonce)
+    if (
+      payload.chainId === chainId &&
+      payload.id !== id &&
+      payload.options.request.nonce === nonce
+    ) {
       return true
+    }
   }
 }
 

@@ -50,7 +50,9 @@ const slice = createSlice({
         `finalizeTransaction: Attempted to finalize a missing tx with id ${id}`
       )
       state[from]![chainId]![id]!.status = status
-      if (receipt) state[from]![chainId]![id]!.receipt = receipt
+      if (receipt) {
+        state[from]![chainId]![id]!.receipt = receipt
+      }
     },
     deleteTransaction: (
       state,

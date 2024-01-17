@@ -9,7 +9,9 @@ export class SignerManager {
 
   async getSignerForAccount(account: Account): Promise<Signer> {
     const signer = this.signers[account.address]
-    if (signer) return signer
+    if (signer) {
+      return signer
+    }
 
     if (account.type === AccountType.SignerMnemonic) {
       const addresses = await Keyring.getAddressesForStoredPrivateKeys()

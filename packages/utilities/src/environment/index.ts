@@ -1,6 +1,2 @@
-export function isNonJestDev(
-  isDevEnvironment = __DEV__,
-  jestWorkerId: Maybe<string> = process.env.JEST_WORKER_ID
-): boolean {
-  return isDevEnvironment && !jestWorkerId
-}
+export const isJestRun = !!process.env.JEST_WORKER_ID
+export const isNonJestDev = __DEV__ && !isJestRun

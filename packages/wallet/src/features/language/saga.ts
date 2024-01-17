@@ -26,7 +26,9 @@ export function* appLanguageWatcherSaga() {
 
 function* appLanguageSaga(action: ReturnType<typeof updateLanguage>) {
   const featureEnabled = Statsig.checkGate(FEATURE_FLAGS.LanguageSelection)
-  if (!featureEnabled) return
+  if (!featureEnabled) {
+    return
+  }
 
   const { payload: preferredLanguage } = action
   const currentAppLanguage = yield* select(selectCurrentLanguage)
@@ -35,7 +37,9 @@ function* appLanguageSaga(action: ReturnType<typeof updateLanguage>) {
   const localeToSet = getLocale(languageToSet)
   yield* put(setCurrentLanguage(languageToSet))
 
-  if (currentAppLanguage === languageToSet && localeToSet === i18n.language) return
+  if (currentAppLanguage === languageToSet && localeToSet === i18n.language) {
+    return
+  }
 
   try {
     yield* call([i18n, i18n.changeLanguage], localeToSet)

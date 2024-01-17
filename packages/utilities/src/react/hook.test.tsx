@@ -24,13 +24,15 @@ describe('usePrevious', () => {
   })
 })
 
-describe('useAsyncData', () => {
-  const promise = new Promise((resolve) => {
+function createPromise<R>(response: R, timeout = 100): Promise<R> {
+  return new Promise((resolve) => {
     setTimeout(() => {
-      resolve('data')
-    }, 1000)
+      resolve(response)
+    }, timeout)
   })
+}
 
+describe('useAsyncData', () => {
   it('returns undefined and isLoading set to true before data is loaded', async () => {
     const asyncCallback = jest.fn().mockResolvedValue('data')
 
@@ -43,12 +45,11 @@ describe('useAsyncData', () => {
   it('returns the data and isLoading set to false after data is loaded', async () => {
     const asyncCallback = jest.fn().mockResolvedValue('data')
 
-    const { result, waitForNextUpdate, rerender } = renderHook(() => useAsyncData(asyncCallback))
+    const { result, waitForNextUpdate } = renderHook(() => useAsyncData(asyncCallback))
 
     expect(result.current).toEqual({ data: undefined, isLoading: true })
 
     await act(async () => {
-      rerender()
       await waitForNextUpdate()
     })
 
@@ -68,7 +69,7 @@ describe('useAsyncData', () => {
     expect(onCancel).toHaveBeenCalled()
   })
 
-  it.skip("doesn't call onCancel when the component is unmounted and the request is not pending", async () => {
+  it("doesn't call onCancel when the component is unmounted and the request is not pending", async () => {
     const asyncCallback = jest.fn().mockResolvedValue('data')
     const onCancel = jest.fn()
 
@@ -112,7 +113,7 @@ describe('useAsyncData', () => {
 
   it('cancels the old callback and calls the new one when the callback attribute changes', async () => {
     // Long async callback that won't finish before the new callback is passed
-    const initialCallback = jest.fn().mockImplementation(() => promise)
+    const initialCallback = jest.fn().mockImplementation(() => createPromise('data'))
     const cancel = jest.fn()
     const { rerender, waitForNextUpdate } = renderHook(
       ({ asyncCallback, onCancel }) => useAsyncData(asyncCallback, onCancel),
@@ -135,13 +136,46 @@ describe('useAsyncData', () => {
     expect(cancel).toHaveBeenCalledTimes(1)
   })
 
+  it('enters loading state and returns new callback result when the callback changes', async () => {
+    const initialCallback = jest.fn().mockImplementation(() => createPromise('data1'))
+    const { rerender, result, waitForNextUpdate } = renderHook(
+      ({ asyncCallback }) => useAsyncData(asyncCallback),
+      {
+        initialProps: { asyncCallback: initialCallback },
+      }
+    )
+
+    expect(result.current).toEqual({ data: undefined, isLoading: true })
+
+    await act(async () => {
+      await waitForNextUpdate()
+    })
+
+    expect(result.current).toEqual({ data: 'data1', isLoading: false })
+
+    // Re-render with a new callback
+    const newCallback = jest.fn().mockImplementation(() => createPromise('data2'))
+
+    await act(async () => {
+      rerender({ asyncCallback: newCallback })
+    })
+
+    expect(result.current).toEqual({ data: undefined, isLoading: true })
+
+    await act(async () => {
+      await waitForNextUpdate()
+    })
+
+    expect(result.current).toEqual({ data: 'data2', isLoading: false })
+  })
+
   it("doesn't cause additional re-renders when the callback attribute changes", async () => {
     // Long async callback that won't finish before the new callback is passed
-    const onCancel = jest.fn().mockImplementation(() => promise)
+    const onCancel = jest.fn().mockImplementation(() => createPromise('data'))
 
     let rendersCount = 0
 
-    const fn1 = jest.fn().mockImplementation(() => promise)
+    const fn1 = jest.fn().mockImplementation(() => createPromise('data'))
     const { rerender, result, waitForNextUpdate } = renderHook(() => {
       rendersCount += 1
       return useAsyncData(fn1, onCancel)
@@ -149,7 +183,7 @@ describe('useAsyncData', () => {
 
     expect(rendersCount).toBe(1)
 
-    const fn2 = jest.fn().mockImplementation(() => promise)
+    const fn2 = jest.fn().mockImplementation(() => createPromise('data'))
     await act(async () => {
       rerender({ asyncCallback: fn2, onCancel })
       await waitForNextUpdate()

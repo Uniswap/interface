@@ -1,12 +1,16 @@
 import React from 'react'
 import { useColorScheme } from 'react-native'
 import renderer, { act } from 'react-test-renderer'
+import * as appHooks from 'src/app/hooks'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import * as biometricHooks from 'src/features/biometrics/hooks'
 import { AuthMethod, UserPropertyName } from 'src/features/telemetry/constants'
 import * as versionUtils from 'src/utils/version'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import * as appearanceHooks from 'wallet/src/features/appearance/hooks'
+import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
+import * as fiatCurrencyHooks from 'wallet/src/features/fiatCurrency/hooks'
+import * as languageHooks from 'wallet/src/features/language/hooks'
 import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import * as walletHooks from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -56,8 +60,6 @@ describe('TraceUserProperties', () => {
       type: AccountType.SignerMnemonic,
       backups: [BackupType.Cloud],
       pushNotificationsEnabled: true,
-      showSmallBalances: true,
-      showSpamTokens: false,
     })
     mockFn(walletHooks, 'useViewOnlyAccounts', ['address1', 'address2'])
     mockFn(walletHooks, 'useSwapProtectionSetting', SwapProtectionSetting.On)
@@ -66,6 +68,8 @@ describe('TraceUserProperties', () => {
       signerAccount2,
       signerAccount3,
     ])
+    mockFn(walletHooks, 'useHideSpamTokensSetting', true)
+    mockFn(walletHooks, 'useHideSmallBalancesSetting', false)
     mockFn(biometricHooks, 'useBiometricAppSettings', {
       requiredForAppAccess: true,
       requiredForTransactions: true,
@@ -75,6 +79,9 @@ describe('TraceUserProperties', () => {
       faceId: true,
     })
     mockFn(appearanceHooks, 'useIsDarkMode', true)
+    mockFn(fiatCurrencyHooks, 'useAppFiatCurrency', FiatCurrency.UnitedStatesDollar)
+    mockFn(languageHooks, 'useCurrentLanguageInfo', { loggingName: 'English' })
+    mockFn(appHooks, 'useAppSelector', { enabled: true })
 
     // mock setUserProperty
     const mocked = mockFn(analytics, 'setUserProperty', undefined)
@@ -110,8 +117,10 @@ describe('TraceUserProperties', () => {
     )
     expect(mocked).toHaveBeenCalledWith(UserPropertyName.AppOpenAuthMethod, AuthMethod.FaceId)
     expect(mocked).toHaveBeenCalledWith(UserPropertyName.TransactionAuthMethod, AuthMethod.FaceId)
+    expect(mocked).toHaveBeenCalledWith(UserPropertyName.Language, 'English')
+    expect(mocked).toHaveBeenCalledWith(UserPropertyName.Currency, 'USD')
 
-    expect(mocked).toHaveBeenCalledTimes(14)
+    expect(mocked).toHaveBeenCalledTimes(16)
   })
 
   it('sets user properties without active account', async () => {
@@ -132,6 +141,8 @@ describe('TraceUserProperties', () => {
       faceId: false,
     })
     mockFn(appearanceHooks, 'useIsDarkMode', true)
+    mockFn(fiatCurrencyHooks, 'useAppFiatCurrency', FiatCurrency.UnitedStatesDollar)
+    mockFn(languageHooks, 'useCurrentLanguageInfo', { loggingName: 'English' })
 
     // mock setUserProperty
     const mocked = mockFn(analytics, 'setUserProperty', undefined)
@@ -149,6 +160,6 @@ describe('TraceUserProperties', () => {
     expect(mocked).toHaveBeenCalledWith(UserPropertyName.AppOpenAuthMethod, AuthMethod.None)
     expect(mocked).toHaveBeenCalledWith(UserPropertyName.TransactionAuthMethod, AuthMethod.None)
 
-    expect(mocked).toHaveBeenCalledTimes(8)
+    expect(mocked).toHaveBeenCalledTimes(10)
   })
 })

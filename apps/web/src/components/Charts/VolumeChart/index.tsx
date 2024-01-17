@@ -1,126 +1,54 @@
-import { refitChartContentAtom } from 'components/Tokens/TokenDetails/TimeSelector'
+import { t, Trans } from '@lingui/macro'
+import { Chart, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
+import { useHeaderDateFormatter } from 'components/Charts/hooks'
+import Column from 'components/Column'
+import { BIPS_BASE } from 'constants/misc'
 import { PricePoint, TimePeriod, toHistoryDuration } from 'graphql/data/util'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useUpdateAtom } from 'jotai/utils'
-import { createChart, HistogramData, LogicalRange, UTCTimestamp } from 'lightweight-charts'
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { BarPrice, HistogramData, ISeriesApi, UTCTimestamp } from 'lightweight-charts'
+import { useMemo, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { textFadeIn } from 'theme/styles'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { formatTickMarks } from '../utils'
 import { CrosshairHighlightPrimitive } from './CrosshairHighlightPrimitive'
 
-const ChartContainer = styled.div<{ $height: number }>`
-  width: 100%;
-  height: ${({ $height }) => $height}px;
-`
+type VolumeChartModelParams = ChartModelParams<HistogramData<UTCTimestamp>> & { headerHeight: number }
 
-const ChartHeader = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  gap: 4px;
-  padding-bottom: 14px;
-  text-align: left;
-  pointer-events: none;
-`
-interface VolumeChartProps {
-  volumes?: PricePoint[]
-  timePeriod: TimePeriod
-  height: number
-  extractedColor: string
-}
+class VolumeChartModel extends ChartModel<HistogramData<UTCTimestamp>> {
+  protected series: ISeriesApi<'Histogram'>
+  private highlightBarPrimitive: CrosshairHighlightPrimitive
 
-export function VolumeChart({ volumes, timePeriod, height, extractedColor }: VolumeChartProps) {
-  const chartRef = useRef<HTMLDivElement>(null)
-  const setRefitChartContent = useUpdateAtom(refitChartContentAtom)
+  constructor(chartDiv: HTMLDivElement, params: VolumeChartModelParams) {
+    super(chartDiv, params)
 
-  const chartHeaderRef = useRef<HTMLDivElement>(null)
-  const [headerData, setHeaderData] = useState<{ time: string; value: string }>({ time: '-', value: '-' })
+    this.series = this.api.addHistogramSeries()
+    this.series.setData(this.data)
+    this.highlightBarPrimitive = new CrosshairHighlightPrimitive({
+      color: params.theme.surface3,
+      crosshairYPosition: params.headerHeight,
+    })
+    this.series.attachPrimitive(this.highlightBarPrimitive)
 
-  const { formatFiatPrice } = useFormatter()
-  const priceFormatter = useCallback(
-    (price?: number) =>
-      formatFiatPrice({
-        price,
-        type: NumberType.FiatTokenStatChartHeader,
-      }),
-    [formatFiatPrice]
-  )
-  const scalePriceFormatter = useCallback(
-    (price: number) =>
-      formatFiatPrice({
-        price,
-        type: NumberType.FiatTokenChartPriceScale,
-      }),
-    [formatFiatPrice]
-  )
-  const locale = useActiveLocale()
-  const headerDateFormatter = useCallback(
-    (time?: UTCTimestamp) => {
-      if (!time) return '-'
-      const headerTimeFormatOptions: Intl.DateTimeFormatOptions = {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric',
-      }
-      return new Date(time * 1000).toLocaleString(locale, headerTimeFormatOptions)
-    },
-    [locale]
-  )
+    this.updateOptions(params)
+    this.fitContent()
+  }
 
-  const theme = useTheme()
-
-  const data = useMemo(() => {
-    if (!volumes) return []
-    return volumes.map((volume) => ({
-      time: volume.timestamp as UTCTimestamp,
-      value: volume.value,
-    }))
-  }, [volumes])
-  // Mock cumulative volumes data for chart header
-  const cumulativeData = useMemo(
-    () => ({
-      [TimePeriod.HOUR]: Math.random() * 1e3,
-      [TimePeriod.DAY]: Math.random() * 1e4,
-      [TimePeriod.WEEK]: Math.random() * 1e5,
-      [TimePeriod.MONTH]: Math.random() * 1e6,
-      [TimePeriod.YEAR]: Math.random() * 1e10,
-    }),
-    []
-  )
-  const setHeaderStatsToCumulative = useCallback(
-    (timePeriod: TimePeriod) => {
-      setHeaderData({
-        time: `Last 1 ${toHistoryDuration(timePeriod).toLowerCase()}`,
-        value: priceFormatter(cumulativeData[timePeriod]),
-      })
-    },
-    [cumulativeData, priceFormatter]
-  )
-
-  // lightweight-charts requires an existing div to draw the chart in — hence chart creation done via ref here
-  useLayoutEffect(() => {
-    if (!chartRef.current) return
-
-    /* Create chart */
-    const chart = createChart(chartRef.current, {
+  updateOptions(params: VolumeChartModelParams) {
+    const volumeChartOptions = {
       autoSize: true,
       localization: {
-        locale,
-        priceFormatter: scalePriceFormatter,
-      },
-      timeScale: {
-        tickMarkFormatter: formatTickMarks,
-        borderVisible: false,
-        timeVisible: true,
+        locale: params.locale,
+        priceFormatter: (price: BarPrice) =>
+          params.format.formatFiatPrice({ price, type: NumberType.FiatTokenChartStatsScale }),
       },
       rightPriceScale: {
         borderVisible: false,
+        scaleMargins: {
+          top: 0.3,
+          bottom: 0,
+        },
       },
       handleScale: {
         axisPressedMouseMove: false,
@@ -128,112 +56,162 @@ export function VolumeChart({ volumes, timePeriod, height, extractedColor }: Vol
       handleScroll: {
         vertTouchDrag: false,
       },
-      layout: { textColor: theme.neutral2, background: { color: 'transparent' } },
-      grid: {
-        vertLines: {
-          visible: false,
-        },
-        horzLines: {
-          visible: false,
-        },
-      },
       crosshair: {
         horzLine: {
           visible: false,
           labelVisible: false,
         },
+        vertLine: {
+          visible: false,
+          labelVisible: false,
+        },
       },
-    })
+    }
 
-    /* Create volume histogram */
-    const volumeSeries = chart.addHistogramSeries({
-      color: extractedColor,
+    super.updateOptions(params, volumeChartOptions)
+    const { data, theme, color } = params
+
+    // Handles changes in data, e.g. time period selection
+    if (this.data !== data) {
+      this.data = data
+      this.series.setData(data)
+      this.fitContent()
+    }
+
+    this.series.applyOptions({
+      color,
       priceFormat: {
         type: 'volume',
       },
       priceLineVisible: false,
       lastValueVisible: false,
     })
-    volumeSeries.priceScale().applyOptions({
-      scaleMargins: {
-        top: 0.3, // highest point of the series will be 30% away from the top
-        bottom: 0,
-      },
-    })
 
-    volumeSeries.setData(data)
-    chart.timeScale().fitContent()
-    // Prevent scrolling or scaling too far beyond selected time period
-    chart.timeScale().subscribeVisibleLogicalRangeChange((range: LogicalRange | null) => {
-      if (range) {
-        const rangeWidth = range.to - range.from
-        const emptyBuffer = rangeWidth / 6
-        if (range.from < -emptyBuffer && range.to > data.length - 1 + emptyBuffer) {
-          // Scaling out too far
-          chart.timeScale().setVisibleLogicalRange({ from: -emptyBuffer, to: data.length - 1 + emptyBuffer })
-        } else {
-          // Scrolling out too far
-          if (range.from < -emptyBuffer) {
-            chart.timeScale().setVisibleLogicalRange({ from: -emptyBuffer, to: -emptyBuffer + rangeWidth })
-          }
-          if (range.to > data.length - 1 + emptyBuffer) {
-            chart.timeScale().setVisibleLogicalRange({
-              from: data.length - 1 + emptyBuffer - rangeWidth,
-              to: data.length - 1 + emptyBuffer,
-            })
-          }
-        }
-      }
-    })
-    setRefitChartContent(() => {
-      return () => chart.timeScale().fitContent()
-    })
-
-    /* Add crosshair highlight bar */
-    const crosshairYPosition = chartHeaderRef?.current?.offsetHeight ?? 0
-    const crosshair = new CrosshairHighlightPrimitive({
+    // Add crosshair highlight bar
+    this.highlightBarPrimitive.applyOptions({
       color: theme.surface3,
-      crosshairYPosition,
+      crosshairYPosition: params.headerHeight,
     })
-    volumeSeries.attachPrimitive(crosshair)
+  }
+}
 
-    /* Create dynamic chart header */
-    setHeaderStatsToCumulative(timePeriod)
+const ChartHeaderWrapper = styled.div<{ stale?: boolean }>`
+  position: absolute;
+  ${textFadeIn};
+  animation-duration: ${({ theme }) => theme.transition.duration.medium};
+  ${({ theme, stale }) => stale && `color: ${theme.neutral2}`};
 
-    const width = chartRef.current.clientWidth
-    chart.subscribeCrosshairMove((p) => {
-      if (!p || !p.time || !p.point || p.point.x < 0 || p.point.x > width || p.point.y < 0 || p.point.y > height) {
-        setHeaderStatsToCumulative(timePeriod)
-      } else {
-        const dataPoint = p.seriesData.get(volumeSeries) as HistogramData<UTCTimestamp> | undefined
-        setHeaderData({ time: headerDateFormatter(dataPoint?.time), value: priceFormatter(dataPoint?.value) })
-      }
-    })
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 14px;
+`
 
-    return () => {
-      chart.remove()
-      setRefitChartContent(undefined)
+function VolumeChartHeader({
+  crosshairData,
+  timePeriod,
+  feeTier,
+  noFeesData,
+}: {
+  crosshairData?: HistogramData<UTCTimestamp>
+  timePeriod: TimePeriod
+  feeTier?: number
+  noFeesData: boolean
+}) {
+  const { formatFiatPrice } = useFormatter()
+  const headerDateFormatter = useHeaderDateFormatter()
+
+  const display = useMemo(() => {
+    const mockDisplay = {
+      volume: '-',
+      fees: '-',
+      time: '-',
     }
-  }, [
-    extractedColor,
-    data,
-    locale,
-    priceFormatter,
-    theme,
-    setRefitChartContent,
-    headerDateFormatter,
-    scalePriceFormatter,
-    height,
-    setHeaderStatsToCumulative,
-    timePeriod,
-  ])
+    const priceFormatter = (price?: number) =>
+      formatFiatPrice({
+        price,
+        type: NumberType.FiatTokenStatChartHeader,
+      })
+    if (!crosshairData) {
+      // TODO: use timePeriod to get cumulative data
+      const mockCumulativeVolume = Math.random() * 1e10
+      mockDisplay.volume = priceFormatter(mockCumulativeVolume)
+      mockDisplay.fees = priceFormatter(mockCumulativeVolume * ((feeTier ?? 0) / BIPS_BASE / 100))
+      mockDisplay.time = t`Past ${toHistoryDuration(timePeriod).toLowerCase()}`
+    } else {
+      mockDisplay.volume = priceFormatter(crosshairData.value)
+      const fees = crosshairData.value * ((feeTier ?? 0) / BIPS_BASE / 100)
+      mockDisplay.fees = priceFormatter(fees)
+      mockDisplay.time = headerDateFormatter(crosshairData.time)
+    }
+    return mockDisplay
+  }, [crosshairData, feeTier, formatFiatPrice, headerDateFormatter, timePeriod])
+
+  const statsTextDisplay = noFeesData ? (
+    <ThemedText.HeadlineLarge color="inherit">{display.volume}</ThemedText.HeadlineLarge>
+  ) : (
+    <Column>
+      <ThemedText.HeadlineSmall color="inherit">
+        {display.volume} <Trans>volume</Trans>
+      </ThemedText.HeadlineSmall>
+      <ThemedText.HeadlineSmall color="inherit">
+        {display.fees} <Trans>fees</Trans>
+      </ThemedText.HeadlineSmall>
+    </Column>
+  )
 
   return (
-    <ChartContainer $height={height} ref={chartRef}>
-      <ChartHeader ref={chartHeaderRef}>
-        <ThemedText.HeadlineLarge>{headerData.value}</ThemedText.HeadlineLarge>
-        <ThemedText.Caption color="neutral2">{headerData.time}</ThemedText.Caption>
-      </ChartHeader>
-    </ChartContainer>
+    <ChartHeaderWrapper data-cy="chart-header">
+      {statsTextDisplay}
+      <ThemedText.Caption color="neutral2">{display.time}</ThemedText.Caption>
+    </ChartHeaderWrapper>
+  )
+}
+
+interface VolumeChartProps {
+  height: number
+  volumes?: PricePoint[]
+  feeTier?: number
+  timePeriod: TimePeriod
+  color?: string
+}
+
+export function VolumeChart({ height, volumes, feeTier, timePeriod, color }: VolumeChartProps) {
+  const locale = useActiveLocale()
+  const theme = useTheme()
+  const format = useFormatter()
+  const [crosshairData, setCrosshairData] = useState<HistogramData<UTCTimestamp>>()
+
+  const data = useMemo(
+    () =>
+      volumes?.map((volumePoint) => {
+        return { value: volumePoint.value, time: volumePoint.timestamp as UTCTimestamp }
+      }) ?? [],
+    [volumes]
+  )
+
+  const noFeesData = feeTier === undefined // i.e. if is token volume chart
+  const params: VolumeChartModelParams = useMemo(() => {
+    return {
+      data,
+      locale,
+      theme,
+      color: color ?? theme.accent1,
+      format,
+      onCrosshairMove: setCrosshairData,
+      headerHeight: noFeesData ? 75 : 90,
+    }
+  }, [data, locale, theme, color, format, noFeesData])
+
+  return (
+    <>
+      <VolumeChartHeader
+        crosshairData={crosshairData}
+        timePeriod={timePeriod}
+        feeTier={feeTier}
+        noFeesData={noFeesData}
+      />
+      <Chart Model={VolumeChartModel} params={params} height={height} />
+    </>
   )
 }

@@ -68,6 +68,7 @@ export interface PoolData {
   // volume
   volumeUSD: number
   volumeUSDChange: number
+  volumeUSD24H: number
   volumeUSDWeek: number
 
   // liquidity
@@ -81,6 +82,7 @@ export interface PoolData {
   // token amounts
   tvlToken0: number
   tvlToken1: number
+  txCount: string
 }
 
 export function usePoolData(
@@ -110,7 +112,7 @@ export function usePoolData(
     error: error24,
     data: data24,
   } = usePoolDataQuery({
-    variables: { poolId, block: { number: parseFloat(block24?.number) } },
+    variables: { poolId, block: block24 && { number: parseFloat(block24.number) } },
     client: apolloClient,
     fetchPolicy: 'no-cache',
   })
@@ -119,7 +121,7 @@ export function usePoolData(
     error: error48,
     data: data48,
   } = usePoolDataQuery({
-    variables: { poolId, block: { number: parseFloat(block48?.number) } },
+    variables: { poolId, block: block48 && { number: parseFloat(block48.number) } },
     client: apolloClient,
     fetchPolicy: 'no-cache',
   })
@@ -128,7 +130,7 @@ export function usePoolData(
     error: errorWeek,
     data: dataWeek,
   } = usePoolDataQuery({
-    variables: { poolId, block: { number: parseFloat(blockWeek?.number) } },
+    variables: { poolId, block: blockWeek && { number: parseFloat(blockWeek.number) } },
     client: apolloClient,
     fetchPolicy: 'no-cache',
   })
@@ -164,6 +166,13 @@ export function usePoolData(
     const volumeUSDWeek =
       current && week
         ? parseFloat(current.volumeUSD) - parseFloat(week.volumeUSD)
+        : current
+        ? parseFloat(current.volumeUSD)
+        : 0
+
+    const volumeUSD24H =
+      current && oneDay
+        ? parseFloat(current.volumeUSD) - parseFloat(oneDay.volumeUSD)
         : current
         ? parseFloat(current.volumeUSD)
         : 0
@@ -207,6 +216,7 @@ export function usePoolData(
             volumeUSD,
             volumeUSDChange,
             volumeUSDWeek,
+            volumeUSD24H,
             tvlUSD,
             tvlUSDChange,
             tvlToken0,

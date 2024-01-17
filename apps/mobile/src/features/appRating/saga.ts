@@ -27,7 +27,9 @@ export function* appRatingWatcherSaga() {
     // count successful swaps
 
     // TODO(MOB-1814): Remove once Android goes live
-    if (isAndroid) return
+    if (isAndroid) {
+      return
+    }
 
     if (
       action.payload.typeInfo.type === TransactionType.Swap &&
@@ -44,14 +46,20 @@ export function* appRatingWatcherSaga() {
 function* maybeRequestAppRating() {
   try {
     const canRequestReview = yield* call(StoreReview.hasAction)
-    if (!canRequestReview) return
+    if (!canRequestReview) {
+      return
+    }
 
     const activeAddress = yield* select(selectActiveAccountAddress)
-    if (!activeAddress) return
+    if (!activeAddress) {
+      return
+    }
 
     // Conditions
     const appRatingProvidedMs = yield* appSelect((state) => state.wallet.appRatingProvidedMs)
-    if (appRatingProvidedMs) return // avoids prompting again
+    if (appRatingProvidedMs) {
+      return
+    } // avoids prompting again
 
     const appRatingPromptedMs = yield* appSelect((state) => state.wallet.appRatingPromptedMs ?? 0)
     const appRatingFeedbackProvidedMs = yield* appSelect(

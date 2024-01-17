@@ -108,6 +108,7 @@ export const colors = {
   surface5_dark: '#00000004',
   accent1_dark: '#FC72FF',
   accent2_dark: '#311C31',
+  accent3_dark: '#4C82FB',
   neutral1_light: '#222222',
   neutral2_light: '#7D7D7D',
   neutral3_light: '#CECECE',
@@ -118,12 +119,13 @@ export const colors = {
   surface5_light: '#00000004',
   accent1_light: '#FC72FF',
   accent2_light: '#FFEFFF',
+  accent3_light: '#4C82FB',
   success: '#40B66B',
   critical: '#FF5F52',
   scrim: 'rgba(0, 0, 0, 0.60)',
 }
 
-type Theme = typeof darkTheme
+export type ThemeColors = typeof darkTheme
 
 const commonTheme = {
   white: colors.white,
@@ -171,12 +173,13 @@ export const darkTheme = {
 
   accent1: colors.accent1_dark,
   accent2: colors.accent2_dark,
+  accent3: colors.accent3_dark,
   success: colors.success,
   critical: colors.critical,
   scrim: colors.scrim,
 }
 
-export const lightTheme: Theme = {
+export const lightTheme: ThemeColors = {
   ...commonTheme,
 
   background: colors.white,
@@ -193,6 +196,7 @@ export const lightTheme: Theme = {
 
   accent1: colors.accent1_light,
   accent2: colors.accent2_light,
+  accent3: colors.accent3_light,
 
   success: colors.success,
   critical: colors.critical,

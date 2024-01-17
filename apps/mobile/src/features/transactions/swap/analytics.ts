@@ -7,7 +7,7 @@ import {
   LocalizationContextState,
   useLocalizationContext,
 } from 'wallet/src/features/language/LocalizationContext'
-import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
+import { QuoteData, QuoteType, Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { SwapTradeBaseProperties } from 'wallet/src/telemetry/types'
 import { currencyAddress, getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
@@ -41,7 +41,9 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
   // send analytics event only on unique trades and not on swap quote refreshes
   useEffect(() => {
     const currTrade = tradeRef.current
-    if (!currTrade || !inputAmount) return
+    if (!currTrade || !inputAmount) {
+      return
+    }
 
     sendMobileAnalyticsEvent(
       SwapEventName.SWAP_QUOTE_RECEIVED,
@@ -56,7 +58,7 @@ export function getBaseTradeAnalyticsProperties(
   formatter: LocalizationContextState,
   trade: Trade<Currency, Currency, TradeType>
 ): SwapTradeBaseProperties {
-  const portionAmount = trade.quote?.portionAmount
+  const portionAmount = getPortionAmountFromQuoteData(trade.quoteData)
 
   const feeCurrencyAmount = getCurrencyAmount({
     value: portionAmount,
@@ -95,7 +97,8 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo(
   const outputCurrencyAmount = currencyAmounts[CurrencyField.OUTPUT]
   const slippageTolerance =
     derivedSwapInfo.customSlippageTolerance ?? derivedSwapInfo.autoSlippageTolerance
-  const portionAmount = derivedSwapInfo.trade.trade?.quote?.portionAmount
+
+  const portionAmount = getPortionAmountFromQuoteData(derivedSwapInfo.trade.trade?.quoteData)
 
   const feeCurrencyAmount = getCurrencyAmount({
     value: portionAmount,
@@ -130,4 +133,17 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo(
     allowed_slippage_basis_points: slippageTolerance ? slippageTolerance * 100 : undefined,
     fee_amount: portionAmount,
   }
+}
+
+// Index into the quote response for portion amount based on the response type
+function getPortionAmountFromQuoteData(quoteData?: QuoteData): string | undefined {
+  if (!quoteData?.quote) {
+    return undefined
+  }
+
+  if (quoteData.quoteType === QuoteType.RoutingApi) {
+    return quoteData.quote.portionAmount
+  }
+
+  return quoteData.quote.quote.portionAmount
 }

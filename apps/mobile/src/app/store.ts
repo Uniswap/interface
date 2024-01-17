@@ -75,7 +75,7 @@ export const persistConfig = {
   key: 'root',
   storage: reduxStorage,
   whitelist,
-  version: 55,
+  version: 57,
   migrate: createMigrate(migrations),
 }
 
@@ -91,10 +91,18 @@ const sentryReduxEnhancer = Sentry.createReduxEnhancer({
 
     return action
   },
+  stateTransformer: (state: MobileState): Maybe<MobileState> => {
+    // Do not log the state if a user has opted out of analytics.
+    if (state.telemetry.allowAnalytics) {
+      return state
+    } else {
+      return null
+    }
+  },
 })
 
 const middlewares: Middleware[] = [fiatOnRampApi.middleware, fiatOnRampAggregatorApi.middleware]
-if (isNonJestDev()) {
+if (isNonJestDev) {
   const createDebugger = require('redux-flipper').default
   middlewares.push(createDebugger())
 }

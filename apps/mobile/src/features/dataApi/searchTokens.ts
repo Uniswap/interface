@@ -24,11 +24,15 @@ export function useSearchTokens(
   const persistedError = usePersistedError(loading, error)
 
   const formattedData = useMemo(() => {
-    if (!data || !data.searchTokens) return
+    if (!data || !data.searchTokens) {
+      return
+    }
 
     return data.searchTokens
       .map((token) => {
-        if (!token) return null
+        if (!token) {
+          return null
+        }
 
         return gqlTokenToCurrencyInfo(token)
       })

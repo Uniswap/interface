@@ -18,12 +18,16 @@ export function TokenBalanceList({ owner }: TokenBalanceListProps): JSX.Element 
   })
 
   const listItems = useMemo((): PortfolioBalance[] | undefined => {
-    if (!data) return
+    if (!data) {
+      return
+    }
 
     const { balances, hiddenBalances } = data
 
     // No balances
-    if (!balances.length && !hiddenBalances.length) return
+    if (!balances.length && !hiddenBalances.length) {
+      return
+    }
 
     // No hidden tokens
     if (balances.length > 0 && hiddenBalances.length === 0) {

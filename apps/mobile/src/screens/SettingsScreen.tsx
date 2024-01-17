@@ -1,10 +1,12 @@
+/* eslint-disable max-lines */
 import { useNavigation } from '@react-navigation/core'
-import { default as React, useMemo, useState } from 'react'
+import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, ListRenderItemInfo, SectionList, StyleSheet } from 'react-native'
 import { FadeInDown, FadeOutUp } from 'react-native-reanimated'
 import { SvgProps } from 'react-native-svg'
 import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'src/app/hooks'
 import {
   OnboardingStackNavigationProp,
   SettingsStackNavigationProp,
@@ -22,10 +24,12 @@ import { APP_FEEDBACK_LINK } from 'src/constants/urls'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { ModalName } from 'src/features/telemetry/constants'
-import { Screens } from 'src/screens/Screens'
+import { useWalletRestore } from 'src/features/wallet/hooks'
+import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { getFullAppVersion } from 'src/utils/version'
 import {
   AnimatedFlex,
+  Button,
   Flex,
   IconProps,
   Icons,
@@ -52,12 +56,29 @@ import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
-import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
-import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { resetWallet, setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
+import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
+import {
+  AccountType,
+  BackupType,
+  SignerMnemonicAccount,
+} from 'wallet/src/features/wallet/accounts/types'
+import {
+  useAccounts,
+  useHideSmallBalancesSetting,
+  useHideSpamTokensSetting,
+  useSignerAccounts,
+} from 'wallet/src/features/wallet/hooks'
+import {
+  resetWallet,
+  setFinishedOnboarding,
+  setHideSmallBalances,
+  setHideSpamTokens,
+} from 'wallet/src/features/wallet/slice'
+import { isAndroid } from 'wallet/src/utils/platform'
 
 export function SettingsScreen(): JSX.Element {
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
+  const dispatch = useAppDispatch()
   const colors = useSporeColors()
   const insets = useDeviceInsets()
   const { deviceSupportsBiometrics } = useBiometricContext()
@@ -73,6 +94,23 @@ export function SettingsScreen(): JSX.Element {
   const currentAppearanceSetting = useCurrentAppearanceSetting()
   const currentFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const { originName: currentLanguage } = useCurrentLanguageInfo()
+
+  const hideSmallBalances = useHideSmallBalancesSetting()
+  const onToggleHideSmallBalances = useCallback(() => {
+    dispatch(setHideSmallBalances(!hideSmallBalances))
+  }, [dispatch, hideSmallBalances])
+
+  const hideSpamTokens = useHideSpamTokensSetting()
+  const onToggleHideSpamTokens = useCallback(() => {
+    dispatch(setHideSpamTokens(!hideSpamTokens))
+  }, [dispatch, hideSpamTokens])
+
+  // Signer account info
+  const signerAccount = useSignerAccounts()[0]
+  // We sync backup state across all accounts under the same mnemonic, so can check status with any account.
+  const hasCloudBackup = signerAccount?.backups?.includes(BackupType.Cloud)
+  const noSignerAccountImported = !signerAccount
+  const { walletNeedsRestore } = useWalletRestore()
 
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
     const svgProps: SvgProps = {
@@ -93,22 +131,8 @@ export function SettingsScreen(): JSX.Element {
     // Defining them inline instead of outside component b.c. they need t()
     return [
       {
-        subTitle: t('App settings'),
+        subTitle: t('Preferences'),
         data: [
-          ...(deviceSupportsBiometrics
-            ? [
-                {
-                  screen: Screens.SettingsBiometricAuth as Screens.SettingsBiometricAuth,
-                  isHidden: !isTouchIdSupported && !isFaceIdSupported,
-                  text: authenticationTypeName,
-                  icon: isTouchIdSupported ? (
-                    <FingerprintIcon {...svgProps} />
-                  ) : (
-                    <FaceIdIcon {...svgProps} />
-                  ),
-                },
-              ]
-            : []),
           {
             screen: Screens.SettingsAppearance,
             text: t('Appearance'),
@@ -120,6 +144,7 @@ export function SettingsScreen(): JSX.Element {
                 : t('Light mode'),
             icon: <ContrastIcon {...svgProps} />,
           },
+
           ...(currencyConversionEnabled
             ? ([
                 {
@@ -136,7 +161,70 @@ export function SettingsScreen(): JSX.Element {
             currentSetting: currentLanguage,
             icon: <Icons.Language {...iconProps} />,
           },
+          {
+            screen: Screens.SettingsPrivacy,
+            text: t('Privacy'),
+            icon: <Icons.LineChartDots {...iconProps} />,
+          },
+          {
+            text: t('Hide small balances'),
+            icon: <Icons.Chart {...iconProps} />,
+            isToggleEnabled: hideSmallBalances,
+            onToggle: onToggleHideSmallBalances,
+          },
+          {
+            text: t('Hide unknown tokens'),
+            icon: <Icons.ShieldQuestion {...iconProps} />,
+            isToggleEnabled: hideSpamTokens,
+            onToggle: onToggleHideSpamTokens,
+          },
           // @TODO: [MOB-250] add back testnet toggle once we support testnets
+        ],
+      },
+      {
+        subTitle: t('Security'),
+        isHidden: noSignerAccountImported,
+        data: [
+          ...(deviceSupportsBiometrics
+            ? [
+                {
+                  screen: Screens.SettingsBiometricAuth as Screens.SettingsBiometricAuth,
+                  isHidden: !isTouchIdSupported && !isFaceIdSupported,
+                  text: authenticationTypeName,
+                  icon: isTouchIdSupported ? (
+                    <FingerprintIcon {...svgProps} />
+                  ) : (
+                    <FaceIdIcon {...svgProps} />
+                  ),
+                },
+              ]
+            : []),
+          {
+            screen: Screens.SettingsViewSeedPhrase,
+            text: t('Recovery phrase'),
+            icon: <Icons.Key {...iconProps} />,
+            screenProps: { address: signerAccount?.address ?? '', walletNeedsRestore },
+            isHidden: noSignerAccountImported,
+          },
+          {
+            screen: walletNeedsRestore
+              ? Screens.OnboardingStack
+              : hasCloudBackup
+              ? Screens.SettingsCloudBackupStatus
+              : Screens.SettingsCloudBackupPasswordCreate,
+            screenProps: walletNeedsRestore
+              ? {
+                  screen: OnboardingScreens.RestoreCloudBackupLoading,
+                  params: {
+                    entryPoint: OnboardingEntryPoint.Sidebar,
+                    importType: ImportType.Restore,
+                  },
+                }
+              : { address: signerAccount?.address ?? '' },
+            text: isAndroid ? t('Google Drive backup') : t('iCloud backup'),
+            icon: <Icons.OSDynamicCloudIcon color="$neutral2" size="$icon.24" />,
+            isHidden: noSignerAccountImported,
+          },
         ],
       },
       {
@@ -202,13 +290,21 @@ export function SettingsScreen(): JSX.Element {
     colors.neutral2,
     t,
     currentAppearanceSetting,
-    currentLanguage,
     currencyConversionEnabled,
     currentFiatCurrencyInfo.code,
+    currentLanguage,
+    hideSmallBalances,
+    onToggleHideSmallBalances,
+    hideSpamTokens,
+    onToggleHideSpamTokens,
     deviceSupportsBiometrics,
     isTouchIdSupported,
     isFaceIdSupported,
     authenticationTypeName,
+    walletNeedsRestore,
+    noSignerAccountImported,
+    hasCloudBackup,
+    signerAccount?.address,
   ])
 
   const renderItem = ({
@@ -216,8 +312,12 @@ export function SettingsScreen(): JSX.Element {
   }: ListRenderItemInfo<
     SettingsSectionItem | SettingsSectionItemComponent
   >): JSX.Element | null => {
-    if (item.isHidden) return null
-    if ('component' in item) return item.component
+    if (item.isHidden) {
+      return null
+    }
+    if ('component' in item) {
+      return item.component
+    }
     return <SettingsRow key={item.screen} navigation={navigation} page={item} />
   }
 
@@ -235,7 +335,7 @@ export function SettingsScreen(): JSX.Element {
           renderItem={renderItem}
           renderSectionFooter={(): JSX.Element => <Flex pt="$spacing24" />}
           renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
-            <Flex bg="$surface1" pb="$spacing12">
+            <Flex bg="$surface1" py="$spacing12">
               <Text color="$neutral2" variant="body1">
                 {subTitle}
               </Text>
@@ -282,9 +382,9 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
   )
 }
 
-function WalletSettings(): JSX.Element {
-  const DEFAULT_ACCOUNTS_TO_DISPLAY = 5
+const DEFAULT_ACCOUNTS_TO_DISPLAY = 6
 
+function WalletSettings(): JSX.Element {
   const { t } = useTranslation()
   const navigation = useSettingsStackNavigation()
   const addressToAccount = useAccounts()
@@ -319,13 +419,6 @@ function WalletSettings(): JSX.Element {
         <Text color="$neutral2" variant="body1">
           {t('Wallet settings')}
         </Text>
-        {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
-          <TouchableArea onPress={toggleViewAll}>
-            <Text color="$neutral2" mb="$spacing12" variant="subheading2">
-              {showAll ? t('View less') : t('View all')}
-            </Text>
-          </TouchableArea>
-        )}
       </Flex>
       {allAccounts
         .slice(0, showAll ? allAccounts.length : DEFAULT_ACCOUNTS_TO_DISPLAY)
@@ -353,6 +446,13 @@ function WalletSettings(): JSX.Element {
             </Flex>
           </TouchableArea>
         ))}
+      {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
+        <Button theme="tertiary" onPress={toggleViewAll}>
+          <Text color="$neutral1" variant="buttonLabel4">
+            {showAll ? t('View less') : t('View all')}
+          </Text>
+        </Button>
+      )}
     </Flex>
   )
 }

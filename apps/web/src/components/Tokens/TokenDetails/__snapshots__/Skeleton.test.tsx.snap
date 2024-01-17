@@ -1,0 +1,826 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TDP Skeleton should render correctly 1`] = `
+<DocumentFragment>
+  .c11 {
+  color: #222222;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  color: #222222;
+  font-size: 14px;
+  line-height: 20px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 12px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #7D7D7D;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c3:hover {
+  color: #CECECE;
+}
+
+.c41 {
+  border-radius: 12px;
+  height: 40px;
+  width: 40px;
+  position: relative;
+  margin-top: -18px;
+  margin-bottom: -18px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #F9F9F9;
+  border: 4px solid;
+  border-color: #FFFFFF;
+  z-index: 2;
+}
+
+.c43 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.c42 {
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  margin: 0;
+}
+
+.c33 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 4px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 8px;
+  border: 1px solid #22222212;
+  border-radius: 16px;
+  background-color: #FFFFFF;
+}
+
+.c37 {
+  background-color: #F9F9F9;
+  border-radius: 4px;
+  height: 56px;
+  width: 60px;
+}
+
+.c39 {
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  height: 56px;
+  width: 100px;
+}
+
+.c44 {
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  height: 56px;
+  width: 100%;
+}
+
+.c38 {
+  background-color: #22222212;
+  height: 36px;
+}
+
+.c34 {
+  padding: 8px;
+}
+
+.c36 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c35 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 30px;
+  padding: 48px 12px;
+}
+
+.c40 {
+  position: relative;
+}
+
+.c6 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c25 {
+  background-color: #22222212;
+  border: none;
+  height: 0.5px;
+}
+
+.c26 {
+  gap: 16px;
+  padding: 24px 0px;
+  -webkit-animation: iAjNNh 125ms ease-in;
+  animation: iAjNNh 125ms ease-in;
+}
+
+.c27 {
+  font-size: 28px !important;
+}
+
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  height: 436px;
+  margin-bottom: :24px;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  position: relative;
+}
+
+.c22 {
+  color: #7D7D7D;
+  font-size: 14px;
+  min-width: 121px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.c21 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.c18 {
+  gap: 16px;
+  -webkit-animation: iAjNNh 125ms ease-in;
+  animation: iAjNNh 125ms ease-in;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0 16px 52px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.c1 {
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  max-width: 780px;
+  overflow: hidden;
+}
+
+.c32 {
+  display: none;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 20px;
+  width: 360px;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  height: 100%;
+  padding-bottom: 66px;
+  overflow: hidden;
+  margin-bottom: 44px;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-bottom: 4px;
+  gap: 20px;
+  -webkit-animation: iAjNNh 125ms ease-in;
+  animation: iAjNNh 125ms ease-in;
+  -webkit-animation-duration: 250ms;
+  animation-duration: 250ms;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 8px;
+  font-size: 20px;
+  line-height: 28px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c7 {
+  height: 16px;
+  width: 180px;
+}
+
+.c12 {
+  height: 32px;
+  border-radius: 8px;
+}
+
+.c8 {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.c9 {
+  width: 136px;
+}
+
+.c13 {
+  margin-top: 4px;
+  height: 40px;
+}
+
+.c19 {
+  width: 120px;
+}
+
+.c23 {
+  width: 80px;
+  margin-bottom: 4px;
+}
+
+.c24 {
+  width: 116px;
+}
+
+.c28 {
+  margin-bottom: 6px;
+  width: 100%;
+}
+
+.c31 {
+  width: 120px;
+}
+
+.c29 {
+  width: 50%;
+}
+
+.c20 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.c30 {
+  padding-top: 24px;
+}
+
+.c16 {
+  -webkit-animation: wave 8s cubic-bezier(0.36,0.45,0.63,0.53) infinite;
+  animation: wave 8s cubic-bezier(0.36,0.45,0.63,0.53) infinite;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  overflow: hidden;
+  margin-top: 90px;
+}
+
+.c14 {
+  height: 6px;
+}
+
+.c17 {
+  height: 4px;
+}
+
+@media screen and (max-width:640px) {
+  .c22 {
+    min-width: 168px;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c0 {
+    gap: 16px;
+  }
+}
+
+@media screen and (min-width:768px) {
+  .c0 {
+    gap: 40px;
+    padding: 48px 20px;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c0 {
+    gap: 60px;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c32 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+<div
+    class="c0"
+  >
+    <div
+      class="c1"
+    >
+      <nav
+        class="c2"
+      >
+        <a
+          class="c3"
+          href="/tokens"
+        >
+          <svg
+            fill="none"
+            height="14"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line
+              x1="19"
+              x2="5"
+              y1="12"
+              y2="12"
+            />
+            <polyline
+              points="12 19 5 12 12 5"
+            />
+          </svg>
+           Tokens
+        </a>
+      </nav>
+      <div
+        class="c4"
+      >
+        <div
+          class="c5"
+        >
+          <div
+            class="c6 c7 c8"
+          />
+          <div
+            class="c6 c7 c9"
+          />
+        </div>
+      </div>
+      <div
+        class="c10"
+      >
+        <div
+          class="c11 css-15popx1"
+        >
+          <div
+            class="c6 c7 c12 c13"
+          />
+        </div>
+        <div
+          class="c14"
+        />
+        <div
+          class="c15"
+        >
+          <div>
+            <div
+              class="c16"
+            >
+              <svg
+                height="160"
+                width="416"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M 0 80 Q 104 10, 208 80 T 416 80"
+                  fill="transparent"
+                  stroke="#22222212"
+                  stroke-width="2"
+                />
+              </svg>
+              <svg
+                height="160"
+                width="416"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M 0 80 Q 104 10, 208 80 T 416 80"
+                  fill="transparent"
+                  stroke="#22222212"
+                  stroke-width="2"
+                />
+              </svg>
+              <svg
+                height="160"
+                width="416"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M 0 80 Q 104 10, 208 80 T 416 80"
+                  fill="transparent"
+                  stroke="#22222212"
+                  stroke-width="2"
+                />
+              </svg>
+              <svg
+                height="160"
+                width="416"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M 0 80 Q 104 10, 208 80 T 416 80"
+                  fill="transparent"
+                  stroke="#22222212"
+                  stroke-width="2"
+                />
+              </svg>
+              <svg
+                height="160"
+                width="416"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M 0 80 Q 104 10, 208 80 T 416 80"
+                  fill="transparent"
+                  stroke="#22222212"
+                  stroke-width="2"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="c17"
+      />
+      <div
+        class="c18"
+      >
+        <div
+          class="c6 c7 c12 c19"
+        />
+        <div
+          class="c20"
+        >
+          <div
+            class="c21"
+          >
+            <div
+              class="c22"
+            >
+              <div
+                class="c6 c7 c23"
+              />
+              <div
+                class="c6 c7 c12 c24"
+              />
+            </div>
+            <div
+              class="c22"
+            >
+              <div
+                class="c6 c7 c23"
+              />
+              <div
+                class="c6 c7 c12 c24"
+              />
+            </div>
+          </div>
+          <div
+            class="c21"
+          >
+            <div
+              class="c22"
+            >
+              <div
+                class="c6 c7 c23"
+              />
+              <div
+                class="c6 c7 c12 c24"
+              />
+            </div>
+            <div
+              class="c22"
+            >
+              <div
+                class="c6 c7 c23"
+              />
+              <div
+                class="c6 c7 c12 c24"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr
+        class="c25"
+      />
+      <div
+        class="c26"
+      >
+        <div
+          class="c11 c27 css-1a9hfw6"
+        >
+          <div
+            class="c6 c7 c12 c19"
+          />
+        </div>
+      </div>
+      <div
+        class="c6 c7 c28"
+      />
+      <div
+        class="c6 c7 c28"
+      />
+      <div
+        class="c6 c7 c28 c29"
+        style="margin-bottom: 24px;"
+      />
+      <div
+        class="c30"
+      >
+        <div
+          class="c6 c7 c28 c31"
+        />
+        <div
+          class="c6 c7 c28 c29"
+        />
+      </div>
+      <div
+        class="c30"
+      >
+        <div
+          class="c6 c7 c28 c31"
+        />
+        <div
+          class="c6 c7 c28 c29"
+        />
+      </div>
+    </div>
+    <div
+      class="c32"
+    >
+      <div
+        class="c33"
+      >
+        <div
+          class="c34"
+        >
+          <div
+            class="c11 css-n8z49y"
+          >
+            Swap
+          </div>
+        </div>
+        <div
+          class="c35"
+        >
+          <div
+            class="c36"
+          >
+            <div
+              class="c37 c38"
+              width="60"
+            />
+            <div
+              class="c39 c38"
+              radius="16"
+              width="100"
+            />
+          </div>
+        </div>
+        <div
+          class="c40"
+        >
+          <div
+            class="c41 c42"
+          >
+            <div
+              class="c43"
+            >
+              <svg
+                fill="none"
+                height="16"
+                stroke="#CECECE"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  x1="12"
+                  x2="12"
+                  y1="5"
+                  y2="19"
+                />
+                <polyline
+                  points="19 12 12 19 5 12"
+                />
+              </svg>
+            </div>
+          </div>
+          <div
+            class="c35"
+          >
+            <div
+              class="c36"
+            >
+              <div
+                class="c37 c38"
+                width="60"
+              />
+              <div
+                class="c39 c38"
+                radius="16"
+                width="100"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          class="c44"
+          radius="16"
+        />
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`getLoadingTitle should return correct title 1`] = `
+<DocumentFragment>
+  token data for 
+  .c0 {
+  color: #CECECE;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c0:hover {
+  opacity: 0.6;
+}
+
+.c0:active {
+  opacity: 0.4;
+}
+
+<a
+    class="c0"
+    href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    rel="noopener noreferrer"
+    target="_blank"
+  >
+    USD//C (USDC)
+  </a>
+   on Ethereum
+</DocumentFragment>
+`;

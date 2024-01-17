@@ -8,10 +8,14 @@ import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 export class NativeCurrency implements NativeCurrencyClass {
   constructor(chainId: number) {
     const supportedChainId = toSupportedChainId(chainId)
-    if (!supportedChainId) throw new Error(`Unsupported chain ID: ${chainId}`)
+    if (!supportedChainId) {
+      throw new Error(`Unsupported chain ID: ${chainId}`)
+    }
 
     const chainInfo = CHAIN_INFO[supportedChainId]
-    if (!chainInfo) throw new Error('Native currrency info not found')
+    if (!chainInfo) {
+      throw new Error('Native currrency info not found')
+    }
 
     this.chainId = supportedChainId
     this.decimals = chainInfo.nativeCurrency.decimals

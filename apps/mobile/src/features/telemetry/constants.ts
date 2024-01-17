@@ -6,11 +6,17 @@ export function getAuthMethod(
   isTouchIdSupported: boolean,
   isFaceIdSupported: boolean
 ): AuthMethod {
-  if (!isSettingEnabled) return AuthMethod.None
+  if (!isSettingEnabled) {
+    return AuthMethod.None
+  }
 
   // both cannot be true since no iOS device supports both
-  if (isFaceIdSupported) return AuthMethod.FaceId
-  if (isTouchIdSupported) return AuthMethod.TouchId
+  if (isFaceIdSupported) {
+    return AuthMethod.FaceId
+  }
+  if (isTouchIdSupported) {
+    return AuthMethod.TouchId
+  }
 
   return AuthMethod.None
 }
@@ -115,6 +121,7 @@ export const enum ModalName {
   NetworkFeeInfo = 'network-fee-info',
   NetworkSelector = 'network-selector-modal',
   NftCollection = 'nft-collection',
+  QRCodeNetworkInfo = 'qr-code-network-info',
   RemoveWallet = 'remove-wallet-modal',
   RestoreWallet = 'restore-wallet-modal',
   RemoveSeedPhraseWarningModal = 'remove-seed-phrase-warning-modal',
@@ -133,6 +140,7 @@ export const enum ModalName {
   TransactionActions = 'transaction-actions',
   UnitagsIntro = 'unitags-intro-modal',
   ViewSeedPhraseWarning = 'view-seed-phrase-warning',
+  ViewOnlyExplainer = 'view-only-explainer-modal',
   WalletConnectScan = 'wallet-connect-scan-modal',
   WCDappConnectedNetworks = 'wc-dapp-connected-networks-modal',
   WCPendingConnection = 'wc-pending-connection-modal',
@@ -252,6 +260,8 @@ export enum UserPropertyName {
   IsHideSmallBalancesEnabled = 'is_hide_small_balances_enabled',
   IsHideSpamTokensEnabled = 'is_hide_spam_tokens_enabled',
   IsPushEnabled = 'is_push_enabled',
+  Language = 'language',
+  Currency = 'currency',
   TransactionAuthMethod = 'transaction_auth_method',
   WalletSignerAccounts = `wallet_signer_accounts`,
   WalletSignerCount = 'wallet_signer_count',

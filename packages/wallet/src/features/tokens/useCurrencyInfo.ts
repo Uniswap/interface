@@ -16,7 +16,9 @@ export function useCurrencyInfo(_currencyId?: string): Maybe<CurrencyInfo> {
   })
 
   return useMemo(() => {
-    if (!data?.token || !_currencyId) return
+    if (!data?.token || !_currencyId) {
+      return
+    }
 
     return gqlTokenToCurrencyInfo(data.token)
   }, [data, _currencyId])

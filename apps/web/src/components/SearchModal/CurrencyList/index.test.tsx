@@ -38,7 +38,6 @@ it('renders loading rows when isLoading is true', () => {
     <CurrencyList
       height={10}
       currencies={[]}
-      otherListTokens={[]}
       onCurrencySelect={noOp}
       isLoading={true}
       searchQuery=""
@@ -57,7 +56,6 @@ it('renders currency rows correctly when currencies list is non-empty', () => {
     <CurrencyList
       height={10}
       currencies={[DAI, USDC_MAINNET, WBTC]}
-      otherListTokens={[]}
       onCurrencySelect={noOp}
       isLoading={false}
       searchQuery=""
@@ -79,7 +77,6 @@ it('renders currency rows correctly with balances', () => {
     <CurrencyList
       height={10}
       currencies={[DAI, USDC_MAINNET, WBTC]}
-      otherListTokens={[]}
       onCurrencySelect={noOp}
       isLoading={false}
       searchQuery=""

@@ -131,7 +131,9 @@ export const DecimalPadInput = memo(
 
     const onPress = useCallback(
       (label: KeyLabel, action: KeyAction) => {
-        if (disabled) return
+        if (disabled) {
+          return
+        }
         if (action === KeyAction.Insert) {
           handleInsert(label)
         } else {
@@ -143,7 +145,9 @@ export const DecimalPadInput = memo(
 
     const onLongPress = useCallback(
       (_: KeyLabel, action: KeyAction) => {
-        if (disabled || action !== KeyAction.Delete) return
+        if (disabled || action !== KeyAction.Delete) {
+          return
+        }
         resetSelection({ start: 0, end: 0 })
         updateValue('')
       },

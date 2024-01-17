@@ -22,6 +22,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
         "opacity": 0,
       }
     }
+    testID="shimmer-placeholder"
   >
     <View
       style={
@@ -88,6 +89,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
                   "flexDirection": "row",
                 }
               }
+              testID="text-placeholder"
             >
               <View
                 style={
@@ -157,6 +159,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
                     "flexDirection": "row",
                   }
                 }
+                testID="text-placeholder"
               >
                 <View
                   style={
@@ -268,6 +271,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
                   "flexDirection": "row",
                 }
               }
+              testID="text-placeholder"
             >
               <View
                 style={
@@ -337,6 +341,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
                     "flexDirection": "row",
                   }
                 }
+                testID="text-placeholder"
               >
                 <View
                   style={
@@ -411,7 +416,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
         "type": 1,
       },
       {
-        "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
         "chainId": 1,
         "logoUrl": "https://loremflickr.com/640/480",
         "name": "USD Coin",
@@ -454,6 +459,11 @@ exports[`SearchPopularTokens renders without error 2`] = `
               "onPress": [Function],
               "systemIcon": "arrow.2.squarepath",
               "title": "Swap",
+            },
+            {
+              "onPress": [Function],
+              "systemIcon": "doc.on.doc",
+              "title": "Copy contract address",
             },
             {
               "onPress": [Function],
@@ -652,6 +662,11 @@ exports[`SearchPopularTokens renders without error 2`] = `
             },
             {
               "onPress": [Function],
+              "systemIcon": "doc.on.doc",
+              "title": "Copy contract address",
+            },
+            {
+              "onPress": [Function],
               "systemIcon": "square.and.arrow.up",
               "title": "Share",
             },
@@ -844,7 +859,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
                     }
                     suppressHighlighting={true}
                   >
-                    0xA0b8...eB48
+                    0xa0b8...eb48
                   </Text>
                 </View>
               </View>

@@ -42,7 +42,9 @@ export const getSessionNamespaces = (
  * @returns {ChainId[]} list of supported ChainIds
  */
 export const getSupportedWalletConnectChains = (chains?: string[]): ChainId[] | undefined => {
-  if (!chains) return
+  if (!chains) {
+    return
+  }
 
   return chains
     .map((chain) => getChainIdFromEIP155String(chain))
@@ -64,7 +66,9 @@ export const getChainIdFromEIP155String = (chain: string): ChainId | null => {
  */
 export const getAccountAddressFromEIP155String = (account: string): Address | null => {
   const address = account.startsWith('eip155:') ? account.split(':')[2] : undefined
-  if (!address) return null
+  if (!address) {
+    return null
+  }
   return address
 }
 
@@ -102,6 +106,7 @@ export const parseSignRequest = (
         name: dapp.name,
         url: dapp.url,
         icon: dapp.icons[0] ?? null,
+        source: 'walletconnect',
       },
     },
   }
@@ -150,6 +155,7 @@ export const parseTransactionRequest = (
         name: dapp.name,
         url: dapp.url,
         icon: dapp.icons[0] ?? null,
+        source: 'walletconnect',
       },
     },
   }

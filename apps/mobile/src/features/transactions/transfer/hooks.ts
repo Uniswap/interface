@@ -207,7 +207,9 @@ function useTransferCallback(
   const dispatch = useAppDispatch()
 
   return useMemo(() => {
-    if (!transferTokenParams || !txRequest) return null
+    if (!transferTokenParams || !txRequest) {
+      return null
+    }
 
     return () => {
       dispatch(transferTokenActions.trigger({ transferTokenParams, txRequest }))
@@ -226,7 +228,9 @@ export function useIsSmartContractAddress(
   const provider = useProvider(chainId)
 
   const fetchIsSmartContractAddress = useCallback(async () => {
-    if (!address) return false
+    if (!address) {
+      return false
+    }
     const code = await provider?.getCode(address)
     // provider.getCode(address) will return a hex string if a smart contract is deployed at that address
     // returning just 0x means there's no code and it's not a smart contract

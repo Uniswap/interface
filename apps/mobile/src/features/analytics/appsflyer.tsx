@@ -12,6 +12,8 @@ export function initAppsFlyer(): void {
       onInstallConversionDataListener: false,
       onDeepLinkListener: false,
       timeToWaitForATTUserAuthorization: 10,
+      // Ensures we have to manually start the SDK to respect any opting out
+      manualStart: true,
     },
     (result) => {
       logger.debug('appsflyer', 'initAppsFlyer', 'Result:', result)

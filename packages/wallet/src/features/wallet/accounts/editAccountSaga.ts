@@ -17,8 +17,6 @@ export enum EditAccountAction {
   Remove = 'Remove',
   TogglePushNotification = 'TogglePushNotification',
   ToggleTestnetSettings = 'ToggleTestnetSettings',
-  ToggleShowSmallBalances = 'ToggleShowSmallBalances',
-  ToggleShowSpamTokens = 'ToggleShowSpamTokenss',
   UpdateLanguage = 'UpdateLanguage',
   // May need a reorder action here eventually
 }
@@ -55,16 +53,6 @@ export interface ToggleTestnetSettingsParams extends EditParamsBase {
   enabled: boolean
 }
 
-export interface ToggleShowSmallBalancesParams extends EditParamsBase {
-  type: EditAccountAction.ToggleShowSmallBalances
-  enabled: boolean
-}
-
-export interface ToggleShowSpamTokensParams extends EditParamsBase {
-  type: EditAccountAction.ToggleShowSpamTokens
-  enabled: boolean
-}
-
 export interface UpdateLanguageParams extends EditParamsBase {
   type: EditAccountAction.UpdateLanguage
   locale: string
@@ -77,8 +65,6 @@ export type EditAccountParams =
   | RemoveParams
   | TogglePushNotificationParams
   | ToggleTestnetSettingsParams
-  | ToggleShowSmallBalancesParams
-  | ToggleShowSpamTokensParams
   | UpdateLanguageParams
 
 function* editAccount(params: EditAccountParams) {
@@ -87,7 +73,9 @@ function* editAccount(params: EditAccountParams) {
   const accounts = yield* appSelect(selectAccounts)
   const account = accounts[address]
 
-  if (!account) throw new Error(`No account found for ${address}`)
+  if (!account) {
+    throw new Error(`No account found for ${address}`)
+  }
 
   switch (type) {
     case EditAccountAction.Rename:
@@ -101,12 +89,6 @@ function* editAccount(params: EditAccountParams) {
       break
     case EditAccountAction.RemoveBackupMethod:
       yield* call(removeBackupMethod, params, account)
-      break
-    case EditAccountAction.ToggleShowSmallBalances:
-      yield* call(toggleShowSmallBalances, params, account)
-      break
-    case EditAccountAction.ToggleShowSpamTokens:
-      yield* call(toggleShowSpamTokens, params, account)
       break
     default:
       break
@@ -138,7 +120,9 @@ function* removeAccount(params: RemoveParams) {
 
 // Adds the backup to all accounts that share the same seed phrase
 function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
-  if (account.type !== AccountType.SignerMnemonic) return
+  if (account.type !== AccountType.SignerMnemonic) {
+    return
+  }
 
   const { backupMethod } = params
 
@@ -172,7 +156,9 @@ function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
 
 // Removes the backup method from all accounts that share the same seed phrase
 function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account) {
-  if (account.type !== AccountType.SignerMnemonic) return
+  if (account.type !== AccountType.SignerMnemonic) {
+    return
+  }
 
   const { backupMethod } = params
 
@@ -202,34 +188,6 @@ function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account)
     'removeBackupMethod',
     'Removing backup method',
     mnemonicAccounts.map((a) => a.address)
-  )
-}
-
-function* toggleShowSmallBalances(params: ToggleShowSmallBalancesParams, account: Account) {
-  const { address, enabled } = params
-  logger.debug('editAccountSaga', 'toggleShowSmallBalances', address, 'to', enabled)
-  yield* put(
-    editInStore({
-      address,
-      updatedAccount: {
-        ...account,
-        showSmallBalances: enabled,
-      },
-    })
-  )
-}
-
-function* toggleShowSpamTokens(params: ToggleShowSpamTokensParams, account: Account) {
-  const { address, enabled } = params
-  logger.debug('editAccountSaga', 'toggleShowSpamTokens', address, 'to', enabled)
-  yield* put(
-    editInStore({
-      address,
-      updatedAccount: {
-        ...account,
-        showSpamTokens: enabled,
-      },
-    })
   )
 }
 

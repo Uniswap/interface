@@ -43,11 +43,36 @@ export type EthSignMethod =
   | EthMethod.EthSign
   | EthMethod.SignTypedDataV4
 
-export interface DappInfo {
+interface UwULinkRequestDappInfo {
+  name: string
+  url: string
+  icon: string
+}
+
+export interface UwULinkRequest {
+  method: EthMethod.EthSendTransaction
+  value: EthTransaction
+  chainId: number
+  dapp: UwULinkRequestDappInfo
+  webhook?: string
+}
+export interface DappInfoWC {
+  source: 'walletconnect'
   name: string
   url: string
   icon: string | null
 }
+
+export interface DappInfoUwULink {
+  source: 'uwulink'
+  name: string
+  url: string
+  icon: string
+  chain_id: number
+  webhook?: string
+}
+
+export type DappInfo = DappInfoWC | DappInfoUwULink
 
 export interface EthTransaction {
   to?: string

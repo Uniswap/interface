@@ -31,8 +31,12 @@ export function Modal({
 }: // ...rest (TODO above)
 Props): JSX.Element {
   let justifyContent: FlexProps['justifyContent'] = 'center'
-  if (position === 'top') justifyContent = 'flex-start'
-  if (position === 'bottom') justifyContent = 'flex-end'
+  if (position === 'top') {
+    justifyContent = 'flex-start'
+  }
+  if (position === 'bottom') {
+    justifyContent = 'flex-end'
+  }
 
   return (
     <BaseModal

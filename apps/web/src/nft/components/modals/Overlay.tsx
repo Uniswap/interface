@@ -1,4 +1,4 @@
-import noop from 'utils/noop'
+import noop from 'utilities/src/react/noop'
 
 import { Box } from '../Box'
 import * as styles from './Overlay.css'

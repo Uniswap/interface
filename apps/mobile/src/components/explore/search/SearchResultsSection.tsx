@@ -65,13 +65,17 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   })
 
   const tokenResults = useMemo<TokenSearchResult[] | undefined>(() => {
-    if (!searchResultsData || !searchResultsData.searchTokens) return
+    if (!searchResultsData || !searchResultsData.searchTokens) {
+      return
+    }
 
     return formatTokenSearchResults(searchResultsData.searchTokens, searchQuery)
   }, [searchQuery, searchResultsData])
 
   const nftCollectionResults = useMemo<NFTCollectionSearchResult[] | undefined>(() => {
-    if (!searchResultsData || !searchResultsData.nftCollections) return
+    if (!searchResultsData || !searchResultsData.nftCollections) {
+      return
+    }
 
     return formatNFTCollectionSearchResults(searchResultsData.nftCollections)
   }, [searchResultsData])
@@ -186,7 +190,9 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     walletSearchResults,
   ])
 
-  if (searchResultsLoading || walletsLoading) return <SearchResultsLoader />
+  if (searchResultsLoading || walletsLoading) {
+    return <SearchResultsLoader />
+  }
 
   if (error) {
     return (

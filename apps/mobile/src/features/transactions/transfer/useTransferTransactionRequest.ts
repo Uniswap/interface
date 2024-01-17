@@ -30,7 +30,9 @@ export function useTransferTransactionRequest(
   const contractManager = useContractManager()
 
   const transactionFetcher = useCallback(() => {
-    if (!provider) return
+    if (!provider) {
+      return
+    }
 
     return getTransferTransaction(provider, contractManager, account, derivedTransferInfo)
   }, [account, contractManager, derivedTransferInfo, provider])
@@ -45,7 +47,9 @@ async function getTransferTransaction(
   derivedTransferInfo: DerivedTransferInfo
 ): Promise<providers.TransactionRequest | undefined> {
   const params = getTransferParams(account, derivedTransferInfo)
-  if (!params) return
+  if (!params) {
+    return
+  }
 
   const { type, tokenAddress, chainId } = params
   switch (type) {

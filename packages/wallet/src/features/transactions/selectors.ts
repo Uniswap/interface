@@ -41,10 +41,14 @@ export const makeSelectAddressTransactions = (): Selector<
     selectTransactions,
     (_: RootState, address: Address | null) => address,
     (transactions, address) => {
-      if (!address) return
+      if (!address) {
+        return
+      }
 
       const addressTransactions = transactions[address]
-      if (!addressTransactions) return
+      if (!addressTransactions) {
+        return
+      }
 
       return unique(flattenObjectOfObjects(addressTransactions), (tx, _, self) => {
         // Remove dummy fiat onramp transactions from TransactionList, notification badge, etc.
@@ -103,7 +107,9 @@ export const makeSelectTokenVisibilityFromLocalTxs = (): Selector<
     (transactions, addresses) => {
       return addresses.reduce<AccountToTokenVisibility>((addressAcc, address) => {
         const addressTransactions = address && transactions[address]
-        if (!addressTransactions) return addressAcc
+        if (!addressTransactions) {
+          return addressAcc
+        }
 
         addressAcc[address] = flattenObjectOfObjects(addressTransactions).reduce<
           Record<string, TokenVisibility>

@@ -44,7 +44,7 @@ type CurrentInputPanelProps = {
   onSetExactAmount: (amount: string) => void
   onSetMax?: (amount: string, currencyField: CurrencyField) => void
   onShowTokenSelector: () => void
-  onToggleIsFiatMode: () => void
+  onToggleIsFiatMode: (currencyField: CurrencyField) => void
   selection?: TextInputProps['selection']
   showNonZeroBalancesOnly?: boolean
   showSoftInputOnFocus?: boolean
@@ -107,6 +107,11 @@ export const CurrencyInputPanel = memo(
       usdValue?.toExact(),
       NumberType.FiatTokenQuantity
     )
+
+    const _onToggleIsFiatMode = useCallback(() => {
+      onToggleIsFiatMode(currencyField)
+    }, [currencyField, onToggleIsFiatMode])
+
     const formattedCurrencyAmount = currencyAmount
       ? formatCurrencyAmount({ value: currencyAmount, type: NumberType.TokenTx })
       : ''
@@ -266,6 +271,7 @@ export const CurrencyInputPanel = memo(
                   focusable={Boolean(currencyInfo)}
                   fontFamily="$heading"
                   fontSize={isCollapsed ? MIN_INPUT_FONT_SIZE : fontSize}
+                  maxDecimals={currencyInfo.currency.decimals}
                   maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
                   // This is a hacky workaround for Android to prevent text from being cut off
                   // (the text input height is greater than the font size and the input is
@@ -315,7 +321,7 @@ export const CurrencyInputPanel = memo(
             {/* Keep the animated parent container so animation styles are always mounted  */}
             {currencyInfo && (
               <>
-                <TouchableArea disabled={fiatModeFeatureEnabled} onPress={onToggleIsFiatMode}>
+                <TouchableArea disabled={fiatModeFeatureEnabled} onPress={_onToggleIsFiatMode}>
                   <Flex centered row shrink gap="$spacing4">
                     <Text color="$neutral2" numberOfLines={1} variant="body3">
                       {inputPanelFormattedValue}

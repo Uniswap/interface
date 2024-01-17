@@ -1,4 +1,4 @@
-import React, { useCallback, useReducer, useState } from 'react'
+import React, { useCallback, useReducer, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent } from 'react-native'
 import Markdown, { MarkdownProps } from 'react-native-markdown-display'
@@ -33,22 +33,22 @@ export function LongMarkdownText(props: LongMarkdownTextProps): JSX.Element {
 
   const [expanded, toggleExpanded] = useReducer((isExpanded) => !isExpanded, true)
   const [textLengthExceedsLimit, setTextLengthExceedsLimit] = useState(false)
-  const [initialContentHeight, setInitialContentHeight] = useState<number | undefined>(undefined)
   const [textLineHeight, setTextLineHeight] = useState<number>(fonts[variant].lineHeight)
+  const initialContentHeightRef = useRef<number>()
   const maxVisibleHeight = textLineHeight * initialDisplayedLines
 
   const onMarkdownLayout = useCallback(
     (event: LayoutChangeEvent) => {
-      if (initialContentHeight !== undefined) {
+      if (initialContentHeightRef.current !== undefined) {
         return
       }
       const textContentHeight = event.nativeEvent.layout.height
       const currentLines = Math.floor(textContentHeight / textLineHeight)
       setTextLengthExceedsLimit(currentLines > initialDisplayedLines)
       toggleExpanded()
-      setInitialContentHeight(textContentHeight)
+      initialContentHeightRef.current = textContentHeight
     },
-    [initialContentHeight, initialDisplayedLines, textLineHeight]
+    [initialDisplayedLines, textLineHeight]
   )
 
   const codeStyle = { backgroundColor: codeBackgroundColor, borderColor: 'transparent' }
@@ -74,7 +74,7 @@ export function LongMarkdownText(props: LongMarkdownTextProps): JSX.Element {
 
   return (
     <Flex gap={gap}>
-      <Flex onLayout={onMarkdownLayout}>
+      <Flex testID="markdown-wrapper" onLayout={onMarkdownLayout}>
         {/* Render fake one-line markdown to properly measure the height of a single text line */}
         <Flex
           opacity={0}

@@ -91,7 +91,7 @@ export const fonts = {
   body3: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(14),
-    lineHeight: 16,
+    lineHeight: 20,
     fontWeight: '400',
     maxFontSizeMultiplier: 1.4,
   },

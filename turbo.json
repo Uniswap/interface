@@ -25,6 +25,7 @@
       ]
     },
     "check:circular": {},
+    "check:deps:usage": {},
     "lint": {
       "dependsOn": [
         "typecheck"
@@ -34,12 +35,6 @@
       "dependsOn": [
         "typecheck"
       ]
-    },
-    "//#staged:lint:fix": {
-      "outputs": []
-    },
-    "//#staged:format": {
-      "outputs": []
     },
     "test": {
       "dependsOn": [

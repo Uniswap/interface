@@ -54,7 +54,9 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
   const { requiredForAppAccess, requiredForTransactions } = useBiometricAppSettings()
   const { trigger } = useBiometricPrompt<BiometricPromptTriggerArgs>(
     (args?: BiometricPromptTriggerArgs) => {
-      if (!args) return
+      if (!args) {
+        return
+      }
       const { biometricAppSettingType, newValue } = args
       switch (biometricAppSettingType) {
         case BiometricSettingType.RequiredForAppAccess:
@@ -68,7 +70,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
   )
 
   const options: BiometricAuthSetting[] = useMemo((): BiometricAuthSetting[] => {
-    const handleFaceIdTurnedOff = (): void => {
+    const handleOSBiometricAuthTurnedOff = (): void => {
       isIOS
         ? Alert.alert(
             t('{{capitalizedAuthTypeName}} is turned off', { capitalizedAuthTypeName }),
@@ -100,15 +102,21 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
             return
           }
 
-          if (await checkOsBiometricAuthEnabled()) {
-            await trigger({
-              biometricAppSettingType: BiometricSettingType.RequiredForAppAccess,
-              newValue: newRequiredForAppAccessValue,
-            })
-            return
+          if (newRequiredForAppAccessValue) {
+            // We only need to check if biometrics are enabled at the OS level when turning this setting on.
+            // We can skip this check when turning it off because the user will be prompted to authenticate via passcode anyway.
+            const isOSBiometricAuthEnabled = await checkOsBiometricAuthEnabled()
+
+            if (!isOSBiometricAuthEnabled) {
+              handleOSBiometricAuthTurnedOff()
+              return
+            }
           }
 
-          handleFaceIdTurnedOff()
+          await trigger({
+            biometricAppSettingType: BiometricSettingType.RequiredForAppAccess,
+            newValue: newRequiredForAppAccessValue,
+          })
         },
         value: requiredForAppAccess,
         text: t('App access'),
@@ -122,15 +130,23 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
             return
           }
 
-          if (await checkOsBiometricAuthEnabled()) {
-            await trigger({
-              biometricAppSettingType: BiometricSettingType.RequiredForTransactions,
-              newValue: newRequiredForTransactionsValue,
-            })
-            return
+          if (newRequiredForTransactionsValue) {
+            // We only need to check if biometrics are enabled at the OS level when turning this setting on.
+            // We can skip this check when turning it off because the user will be prompted to authenticate via passcode anyway.
+            const isOSBiometricAuthEnabled = await checkOsBiometricAuthEnabled()
+
+            if (!isOSBiometricAuthEnabled) {
+              handleOSBiometricAuthTurnedOff()
+              return
+            }
           }
 
-          handleFaceIdTurnedOff()
+          await trigger({
+            biometricAppSettingType: BiometricSettingType.RequiredForTransactions,
+            newValue: newRequiredForTransactionsValue,
+          })
+
+          handleOSBiometricAuthTurnedOff()
         },
         value: requiredForTransactions,
         text: t('Transactions'),

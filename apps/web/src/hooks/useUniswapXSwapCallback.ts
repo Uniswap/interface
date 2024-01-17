@@ -7,6 +7,7 @@ import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { getConnection } from 'connection'
+import { useGatewayDNSUpdateAllEnabled } from 'featureFlags/flags/gatewayDNSUpdate'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { DutchOrderTrade, TradeFillType } from 'state/routing/types'
@@ -24,17 +25,23 @@ const isErrorResponse = (res: Response, order: DutchAuctionOrderResponse): order
   res.status < 200 || res.status > 202
 
 const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
-if (UNISWAP_API_URL === undefined) {
-  throw new Error(`UNISWAP_API_URL must be a defined environment variable`)
+const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
+if (UNISWAP_API_URL === undefined || UNISWAP_GATEWAY_DNS_URL === undefined) {
+  throw new Error(`UNISWAP_API_URL and UNISWAP_GATEWAY_DNS_URL must be defined environment variables`)
 }
 
 // getUpdatedNonce queries the UniswapX service for the most up-to-date nonce for a user.
 // The `nonce` exists as part of the Swap quote response already, but if a user submits back-to-back
 // swaps without refreshing the quote (and therefore uses the same nonce), then the subsequent swaps will fail.
 //
-async function getUpdatedNonce(swapper: string, chainId: number): Promise<BigNumber | null> {
+async function getUpdatedNonce(
+  swapper: string,
+  chainId: number,
+  gatewayDNSUpdateAllEnabled: boolean
+): Promise<BigNumber | null> {
+  const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
   try {
-    const res = await fetch(`${UNISWAP_API_URL}/nonce?address=${swapper}&chainId=${chainId}`)
+    const res = await fetch(`${baseURL}/nonce?address=${swapper}&chainId=${chainId}`)
     const { nonce } = await res.json()
     return BigNumber.from(nonce)
   } catch (e) {
@@ -58,6 +65,7 @@ export function useUniswapXSwapCallback({
 }) {
   const { account, provider, connector } = useWeb3React()
   const analyticsContext = useTrace()
+  const gatewayDNSUpdateAllEnabled = useGatewayDNSUpdateAllEnabled()
 
   const { data } = useCachedPortfolioBalancesQuery({ account })
   const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
@@ -71,7 +79,7 @@ export function useUniswapXSwapCallback({
 
         const signDutchOrder = async (): Promise<{ signature: string; updatedOrder: DutchOrder }> => {
           try {
-            const updatedNonce = await getUpdatedNonce(account, trade.order.chainId)
+            const updatedNonce = await getUpdatedNonce(account, trade.order.chainId, gatewayDNSUpdateAllEnabled)
 
             const startTime = Math.floor(Date.now() / 1000) + trade.startTimeBufferSecs
             setTraceData('startTime', startTime)
@@ -130,7 +138,8 @@ export function useUniswapXSwapCallback({
           [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
         })
 
-        const res = await fetch(`${UNISWAP_API_URL}/order`, {
+        const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
+        const res = await fetch(`${baseURL}/order`, {
           method: 'POST',
           body: JSON.stringify({
             encodedOrder: updatedOrder.serialize(),
@@ -166,6 +175,16 @@ export function useUniswapXSwapCallback({
           response: { orderHash: body.hash, deadline: updatedOrder.info.deadline },
         }
       }),
-    [account, provider, trade, allowedSlippage, fiatValues, portfolioBalanceUsd, analyticsContext, connector]
+    [
+      account,
+      provider,
+      trade,
+      allowedSlippage,
+      fiatValues,
+      portfolioBalanceUsd,
+      analyticsContext,
+      connector,
+      gatewayDNSUpdateAllEnabled,
+    ]
   )
 }

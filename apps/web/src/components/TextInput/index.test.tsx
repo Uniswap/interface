@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from 'test-utils/render'
-import noop from 'utils/noop'
+import noop from 'utilities/src/react/noop'
 
 import { ResizingTextArea, TextInput } from './'
 

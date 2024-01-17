@@ -5,9 +5,11 @@ import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import ms from 'ms'
 import { useEffect } from 'react'
+import { DefaultTheme } from 'styled-components'
+import { ThemeColors } from 'theme/colors'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
-import { Chain, ContractInput, HistoryDuration, TokenStandard } from './__generated__/types-and-hooks'
+import { Chain, ContractInput, HistoryDuration, PriceSource, TokenStandard } from './__generated__/types-and-hooks'
 
 export enum PollingInterval {
   Slow = ms(`5m`),
@@ -241,4 +243,19 @@ export function unwrapToken<
     address: NATIVE_CHAIN_ID,
     extensions: undefined, // prevents marking cross-chain wrapped tokens as native
   }
+}
+
+type ProtocolMeta = { name: string; color: keyof ThemeColors }
+const PROTOCOL_META: { [source in PriceSource]: ProtocolMeta } = {
+  [PriceSource.SubgraphV2]: { name: 'v2', color: 'accent3' },
+  [PriceSource.SubgraphV3]: { name: 'v3', color: 'accent1' },
+  /* [PriceSource.UniswapX]: { name: 'UniswapX', color: purple } */
+}
+
+export function getProtocolColor(priceSource: PriceSource, theme: DefaultTheme): string {
+  return theme[PROTOCOL_META[priceSource].color]
+}
+
+export function getProtocolName(priceSource: PriceSource): string {
+  return PROTOCOL_META[priceSource].name
 }

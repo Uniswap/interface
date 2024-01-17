@@ -215,7 +215,9 @@ export function SwapReview({
       )
     }
 
-    if (!acceptedTrade || !trade) return null
+    if (!acceptedTrade || !trade) {
+      return null
+    }
 
     return (
       <SwapDetails

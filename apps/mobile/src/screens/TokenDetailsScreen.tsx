@@ -76,6 +76,7 @@ function HeaderTitleElement({
   const price = offChainData?.markets?.[0]?.price?.value ?? onChainData?.market?.price?.value
   const logo = offChainData?.logoUrl ?? undefined
   const symbol = onChainData?.symbol
+  const name = onChainData?.name
   const chain = onChainData?.chain
 
   return (
@@ -89,6 +90,7 @@ function HeaderTitleElement({
       <Flex centered row gap="$spacing4">
         <TokenLogo
           chainId={fromGraphQLChain(chain) ?? undefined}
+          name={name}
           size={iconSizes.icon16}
           symbol={symbol ?? undefined}
           url={logo}
@@ -184,12 +186,14 @@ function TokenDetails({
 }): JSX.Element {
   const colors = useSporeColors()
   const insets = useDeviceInsets()
+  const isDarkMode = useIsDarkMode()
 
   const currencyChainId = currencyIdToChain(_currencyId) ?? ChainId.Mainnet
   const currencyAddress = currencyIdToAddress(_currencyId)
 
   const token = data?.token
   const tokenLogoUrl = token?.project?.logoUrl
+  const tokenSymbol = token?.project?.name
 
   const crossChainTokens = token?.project?.tokens
   const { currentChainBalance, otherChainBalances } = useCrossChainBalances(
@@ -199,6 +203,7 @@ function TokenDetails({
 
   const { tokenColor, tokenColorLoading } = useExtractedTokenColor(
     tokenLogoUrl,
+    tokenSymbol,
     /*background=*/ colors.surface1.val,
     /*default=*/ colors.neutral3.val
   )
@@ -260,7 +265,6 @@ function TokenDetails({
 
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
 
-  const isDarkMode = useIsDarkMode()
   const loadingColor = isDarkMode ? colors.neutral3.val : colors.surface3.val
 
   const [ellipsisMenuVisible, setEllipsisMenuVisible] = useState<boolean>(false)

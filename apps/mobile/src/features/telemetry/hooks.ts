@@ -4,16 +4,20 @@ import { useAccountList } from 'src/components/accounts/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import {
+  selectAllowAnalytics,
   selectLastBalancesReport,
   selectLastBalancesReportValue,
+  selectLastHeartbeat,
   selectWalletIsFunded,
 } from 'src/features/telemetry/selectors'
 import {
   recordBalancesReport,
+  recordHeartbeat,
   recordWalletFunded,
   shouldReportBalances,
 } from 'src/features/telemetry/slice'
 import { useAsyncData } from 'utilities/src/react/hooks'
+import { areSameDays } from 'utilities/src/time/date'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { sendWalletAppsFlyerEvent } from 'wallet/src/telemetry'
@@ -79,6 +83,27 @@ export function useLastBalancesReporter(): () => void {
       })
       // record that a report has been sent
       dispatch(recordBalancesReport({ totalBalance }))
+    }
+  }
+
+  return reporter
+}
+
+// Returns a function that checks if the app needs to send a heartbeat action to record anonymous DAU
+// Only logs when the user has allowing product analytics off and a heartbeat has not been sent for the user's local day
+export function useHeartbeatReporter(): () => void {
+  const dispatch = useAppDispatch()
+  const allowAnalytics = useAppSelector(selectAllowAnalytics)
+  const lastHeartbeat = useAppSelector(selectLastHeartbeat)
+
+  const nowDate = new Date(Date.now())
+  const lastHeartbeatDate = new Date(lastHeartbeat)
+
+  const heartbeatDue = !areSameDays(nowDate, lastHeartbeatDate)
+
+  const reporter = (): void => {
+    if (!allowAnalytics && heartbeatDue) {
+      dispatch(recordHeartbeat())
     }
   }
 

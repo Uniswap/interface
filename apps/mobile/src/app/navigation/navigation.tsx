@@ -49,6 +49,7 @@ import { SettingsCloudBackupPasswordConfirmScreen } from 'src/screens/SettingsCl
 import { SettingsCloudBackupPasswordCreateScreen } from 'src/screens/SettingsCloudBackupPasswordCreateScreen'
 import { SettingsCloudBackupProcessingScreen } from 'src/screens/SettingsCloudBackupProcessingScreen'
 import { SettingsCloudBackupStatus } from 'src/screens/SettingsCloudBackupStatus'
+import { SettingsPrivacyScreen } from 'src/screens/SettingsPrivacyScreen'
 import { SettingsScreen } from 'src/screens/SettingsScreen'
 import { SettingsViewSeedPhraseScreen } from 'src/screens/SettingsViewSeedPhraseScreen'
 import { SettingsWallet } from 'src/screens/SettingsWallet'
@@ -115,12 +116,12 @@ function SettingsStackGroup(): JSX.Element {
         component={SettingsAppearanceScreen}
         name={Screens.SettingsAppearance}
       />
+      <SettingsStack.Screen component={SettingsPrivacyScreen} name={Screens.SettingsPrivacy} />
     </SettingsStack.Navigator>
   )
 }
 
 export function WrappedHomeScreen(props: AppStackScreenProp<Screens.Home>): JSX.Element {
-  useBiometricCheck()
   const activeAccount = useActiveAccountWithThrow()
   // Adding `key` forces a full re-render and re-mount when switching accounts
   // to avoid issues with wrong cached data being shown in some memoized components that are already mounted.
@@ -300,6 +301,7 @@ export function UnitagStackNavigator(): JSX.Element {
 
 export function AppStackNavigator(): JSX.Element {
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
+  useBiometricCheck()
 
   return (
     <AppStack.Navigator

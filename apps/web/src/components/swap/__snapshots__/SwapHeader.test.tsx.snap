@@ -282,11 +282,13 @@ exports[`SwapHeader.tsx matches base snapshot 1`] = `
     <div
       class="c0 c1 c4 c5"
     >
-      <button
+      <h1
         class="c6 c7"
+        role="button"
+        tabindex="0"
       >
         Swap
-      </button>
+      </h1>
       <div
         class="c8"
       >

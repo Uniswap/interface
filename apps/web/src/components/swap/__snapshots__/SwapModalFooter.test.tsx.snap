@@ -164,6 +164,16 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
   height: inherit;
 }
 
+.c6 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+.c8 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
 .c9 {
   background-color: transparent;
   border: none;
@@ -194,16 +204,6 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
-}
-
-.c8 {
-  text-align: right;
-  overflow-wrap: break-word;
-}
-
-.c6 {
-  cursor: help;
-  color: #7D7D7D;
 }
 
 .c12 {
@@ -767,6 +767,21 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
   height: inherit;
 }
 
+.c6 {
+  cursor: auto;
+  color: #7D7D7D;
+}
+
+.c9 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+.c7 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
 .c8 {
   background-color: transparent;
   border: none;
@@ -797,21 +812,6 @@ exports[`SwapModalFooter.tsx renders a preview trade while disabling submission 
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
-}
-
-.c7 {
-  text-align: right;
-  overflow-wrap: break-word;
-}
-
-.c6 {
-  cursor: auto;
-  color: #7D7D7D;
-}
-
-.c9 {
-  cursor: help;
-  color: #7D7D7D;
 }
 
 .c14 {

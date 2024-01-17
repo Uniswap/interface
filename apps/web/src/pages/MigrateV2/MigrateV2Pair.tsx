@@ -54,6 +54,7 @@ import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { BodyWrapper } from '../AppBody'
+import { MigrateHeader } from '.'
 
 const ZERO = JSBI.BigInt(0)
 
@@ -736,9 +737,9 @@ export default function MigrateV2Pair() {
       <AutoColumn gap="16px">
         <AutoRow style={{ alignItems: 'center', justifyContent: 'space-between' }} gap="8px">
           <BackArrowLink to="/migrate/v2" />
-          <ThemedText.DeprecatedMediumHeader>
+          <MigrateHeader>
             <Trans>Migrate V2 liquidity</Trans>
-          </ThemedText.DeprecatedMediumHeader>
+          </MigrateHeader>
           <SettingsTab autoSlippage={DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE} chainId={chainId} hideRoutingSettings />
         </AutoRow>
 

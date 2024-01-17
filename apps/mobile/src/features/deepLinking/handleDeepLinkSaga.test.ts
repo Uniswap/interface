@@ -1,5 +1,6 @@
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
+import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import {
   handleDeepLink,
   handleUniswapAppDeepLink,
@@ -16,9 +17,15 @@ import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
 import { Screens } from 'src/screens/Screens'
 import { UNISWAP_APP_HOSTNAME } from 'wallet/src/constants/urls'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import { account, SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
+import {
+  account,
+  SAMPLE_CURRENCY_ID_1,
+  SAMPLE_CURRENCY_ID_2,
+  SAMPLE_SEED_ADDRESS_1,
+  SAMPLE_SEED_ADDRESS_2,
+} from 'wallet/src/test/fixtures'
 
-const swapUrl = `https://uniswap.org/app?screen=swap&userAddress=${account.address}`
+const swapUrl = `https://uniswap.org/app?screen=swap&userAddress=${account.address}&inputCurrencyId=${SAMPLE_CURRENCY_ID_1}&outputCurrencyId=${SAMPLE_CURRENCY_ID_2}&currencyField=INPUT`
 const transactionUrl = `https://uniswap.org/app?screen=transaction&userAddress=${account.address}`
 const swapDeepLinkPayload = { url: swapUrl, coldStart: false }
 const transactionDeepLinkPayload = { url: transactionUrl, coldStart: false }
@@ -44,6 +51,11 @@ const stateWithActiveAccountAddress = {
 }
 
 describe(handleDeepLink, () => {
+  beforeAll(() => {
+    jest.spyOn(navigationRef, 'isReady').mockReturnValue(true)
+    jest.spyOn(navigationRef, 'navigate').mockReturnValue(undefined)
+  })
+
   it('Routes to the swap deep link handler if screen=swap and userAddress is valid', () => {
     return expectSaga(handleDeepLink, { payload: swapDeepLinkPayload, type: '' })
       .withState(stateWithActiveAccountAddress)
@@ -70,6 +82,8 @@ describe(handleDeepLink, () => {
   })
 
   it('Fails if the screen param is not supported', () => {
+    jest.spyOn(console, 'error').mockImplementation(() => undefined)
+
     return expectSaga(handleDeepLink, { payload: unsupportedScreenDeepLinkPayload, type: '' })
       .withState(stateWithActiveAccountAddress)
       .silentRun()
@@ -96,7 +110,6 @@ describe(handleDeepLink, () => {
       .provide([[call(waitForWcWeb3WalletIsReady), undefined]])
       .call(handleWalletConnectDeepLink, wcUri)
       .returns(undefined)
-
       .silentRun()
   })
 

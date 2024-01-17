@@ -119,7 +119,7 @@ export const TokenItem = memo(function _TokenItem({
                 </Text>
               </Flex>
             )}
-            <TokenLogo symbol={symbol} url={logoUrl} />
+            <TokenLogo name={name} symbol={symbol} url={logoUrl} />
           </Flex>
           <Flex shrink gap="$spacing2">
             <Text numberOfLines={1} variant="body1">

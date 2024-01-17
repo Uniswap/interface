@@ -47,7 +47,9 @@ export function* refetchGQLQueries({
     })
   }
 
-  if (!currencyIdToStartingBalance) return
+  if (!currencyIdToStartingBalance) {
+    return
+  }
 
   let freshnessLag = REFETCH_INTERVAL
   // poll every second until the cache has updated balances for the relevant currencies
@@ -57,7 +59,9 @@ export function* refetchGQLQueries({
       currencyIds: currenciesWithBalToUpdate,
       apolloClient,
     })
-    if (checkIfBalancesUpdated(currencyIdToStartingBalance, currencyIdToUpdatedBalance)) break
+    if (checkIfBalancesUpdated(currencyIdToStartingBalance, currencyIdToUpdatedBalance)) {
+      break
+    }
 
     yield* delay(REFETCH_INTERVAL)
 
@@ -83,7 +87,9 @@ function getCurrenciesWithExpectedUpdates(
   const currenciesWithBalToUpdate: Set<CurrencyId> = new Set()
   const txChainId = transaction.chainId
 
-  if (transaction.typeInfo.type === TransactionType.FiatPurchase) return undefined
+  if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
+    return undefined
+  }
 
   // All txs besides FOR at least use gas so check for update of gas token
   currenciesWithBalToUpdate.add(buildNativeCurrencyId(txChainId))
@@ -115,7 +121,9 @@ function readBalancesFromCache({
   currencyIds: Set<CurrencyId> | undefined
   apolloClient: ApolloClient<NormalizedCacheObject> | null
 }): CurrencyIdToBalance | undefined {
-  if (!currencyIds?.size) return undefined
+  if (!currencyIds?.size) {
+    return undefined
+  }
   const currencyIdsToUpdate = new Set(currencyIds)
 
   const currencyIdToBalance: CurrencyIdToBalance = Array.from(currencyIdsToUpdate).reduce(
@@ -130,7 +138,9 @@ function readBalancesFromCache({
 
   for (const tokenData of cachedBalancesData?.portfolios?.[0]?.tokenBalances ?? []) {
     const chainId = fromGraphQLChain(tokenData?.token?.chain)
-    if (!chainId) continue
+    if (!chainId) {
+      continue
+    }
 
     // backend represents native currency addresses as null but client uses a reserved address
     const tokenAddress = tokenData?.token?.address ?? getNativeAddress(chainId)
@@ -141,7 +151,9 @@ function readBalancesFromCache({
       currencyIdToBalance[currencyId] = tokenData?.quantity ?? 0
     }
 
-    if (!currencyIdsToUpdate.size) break
+    if (!currencyIdsToUpdate.size) {
+      break
+    }
   }
 
   return currencyIdToBalance
@@ -151,10 +163,14 @@ function checkIfBalancesUpdated(
   balance1: CurrencyIdToBalance,
   balance2: Maybe<CurrencyIdToBalance>
 ) {
-  if (!balance2) return true // if no currencies to check, then assume balances are updated
+  if (!balance2) {
+    return true
+  } // if no currencies to check, then assume balances are updated
   const currencyIds = Object.keys(balance1)
   for (const currencyId of currencyIds) {
-    if (balance1[currencyId] === balance2[currencyId]) return false
+    if (balance1[currencyId] === balance2[currencyId]) {
+      return false
+    }
   }
 
   return true

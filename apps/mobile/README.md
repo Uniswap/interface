@@ -80,21 +80,46 @@ Install a version of `ruby`:
 Set this as your default version:
 `rbenv global 3.2.2`
 
-#### CocoaPods
+Install cocoapods and fastlane using bundler (make sure to run in `mobile`)
+`bundle install`
 
-Install cocoapods:
-`gem install cocoapods -v 1.13.0`
-
-If you hit ruby errors around `ActiveSupport.deprecator`, downgrade your `activesupport` package by running:
-`gem uninstall activesupport && gem install activesupport -v 7.0.8`
-
-### Add Xcode Command Line Tools
+#### Add Xcode Command Line Tools
 
 Open Xcode and go to:
 
 `Preferences → Locations → Command Line Tools`
 
 And select the version that pops up.
+
+#### JDK (Android)
+
+Taken from [RN instructions](https://reactnative.dev/docs/environment-setup?guide=native&platform=android)
+
+```
+brew tap homebrew/cask-versions
+brew install --cask zulu17
+
+# Get path to where cask was installed to double-click installer
+brew info --cask zulu17
+```
+
+Add the following to your .rc file
+`export JAVA_HOME=/Library/Java/JavaVirtualMachines/zulu-17.jdk/Contents/Home`
+
+#### Android Studio
+
+Install [Android Studio](https://developer.android.com/studio)
+
+Add the following to your .rc file
+```
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+```
+
+Android Studio should have an emulator already, but if not:
+Open the project at `universe/apps/mobile/android`
+Tools -> Device Manager to create a new emulator
 
 ## Development
 

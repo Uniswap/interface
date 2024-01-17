@@ -110,6 +110,10 @@ export const HeaderRow = styled(TableRow)`
 export const CellContainer = styled.div`
   display: flex;
   flex-grow: 1;
+
+  &:last-child {
+    justify-content: flex-end;
+  }
 `
 export const StyledExternalLink = styled(ExternalLink)`
   text-decoration: none;

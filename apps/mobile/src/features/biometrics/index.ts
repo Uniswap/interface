@@ -7,7 +7,6 @@ import {
 } from 'expo-local-authentication'
 import { NativeModulesProxy } from 'expo-modules-core'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 const ELA = NativeModulesProxy.ExpoLocalAuthentication
 
@@ -25,6 +24,7 @@ export enum BiometricAuthenticationStatus {
   Lockout = 'LOCKOUT',
   UserCancel = 'USER_CANCEL',
   SystemCancel = 'SYSTEM_CANCEL',
+  Invalid = 'INVALID',
 }
 
 export async function enroll(): Promise<void> {
@@ -33,8 +33,6 @@ export async function enroll(): Promise<void> {
 
 const DEFAULT_AUTHENTICATE_OPTIONS = {
   promptMessage: 'Please authenticate',
-  // Temporary disabled due to the android AppState foreground -> background triggers of biometrics popup with pin fallback
-  disableDeviceFallback: isAndroid ? true : false,
   cancelLabel: 'Cancel',
 }
 

@@ -1,5 +1,5 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
-import { memo, useEffect, useMemo, useState } from 'react'
+import { memo, useMemo } from 'react'
 import { I18nManager } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 import { LineChart, LineChartProvider, TLineChartDataProp } from 'react-native-wagmi-charts'
@@ -27,19 +27,14 @@ type PriceTextProps = {
   spotPrice?: number
 }
 
-function PriceTextSection({
-  loading,
-  relativeChange,
-  numberOfDigits,
-  spotPrice,
-}: PriceTextProps): JSX.Element {
+function PriceTextSection({ loading, numberOfDigits, spotPrice }: PriceTextProps): JSX.Element {
   const price = useLineChartPrice(spotPrice)
   const currency = useAppFiatCurrencyInfo()
   const mx = spacing.spacing12
 
   return (
     <Flex mx={mx}>
-      {/* Specify maxWidth to allow text scalling. onLayout was sometimes called after more
+      {/* Specify maxWidth to allow text scaling. onLayout was sometimes called after more
       than 5 seconds which is not acceptable so we have to provide the approximate width
       of the PriceText component explicitly. */}
       <PriceExplorerAnimatedNumber
@@ -48,7 +43,7 @@ function PriceTextSection({
         price={price}
       />
       <Flex row gap="$spacing4">
-        <RelativeChangeText loading={loading} spotRelativeChange={relativeChange} />
+        <RelativeChangeText loading={loading} />
         <DatetimeText loading={loading} />
       </Flex>
     </Flex>
@@ -70,19 +65,8 @@ export const PriceExplorer = memo(function PriceExplorer({
   forcePlaceholder?: boolean
   onRetry: () => void
 }): JSX.Element {
-  const [fetchComplete, setFetchComplete] = useState(false)
-  const onFetchComplete = (): void => {
-    setFetchComplete(true)
-  }
-
   const { data, loading, error, refetch, setDuration, selectedDuration, numberOfDigits } =
-    useTokenPriceHistory(currencyId, onFetchComplete)
-
-  useEffect(() => {
-    if (loading && fetchComplete) {
-      setFetchComplete(false)
-    }
-  }, [loading, fetchComplete])
+    useTokenPriceHistory(currencyId)
 
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount().amount
@@ -115,7 +99,9 @@ export const PriceExplorer = memo(function PriceExplorer({
   ) {
     // Propagate retry up while refetching, if available
     const refetchAndRetry = (): void => {
-      if (refetch) refetch()
+      if (refetch) {
+        refetch()
+      }
       onRetry()
     }
     return <PriceExplorerError showRetry={error !== undefined} onRetry={refetchAndRetry} />
@@ -129,18 +115,18 @@ export const PriceExplorer = memo(function PriceExplorer({
   } else if (convertedPriceHistory?.length) {
     content = (
       // TODO(MOB-2308): add better loading state
-      // <Flex opacity={fetchComplete ? 1 : 0.35}>
-      <PriceExplorerChart
-        additionalPadding={additionalPadding}
-        lastPricePoint={lastPricePoint}
-        loading={loading}
-        numberOfDigits={numberOfDigits}
-        priceHistory={convertedPriceHistory}
-        shouldShowAnimatedDot={shouldShowAnimatedDot}
-        spot={convertedSpot}
-        tokenColor={tokenColor}
-      />
-      // </Flex>
+      <Flex opacity={!loading ? 1 : 0.35}>
+        <PriceExplorerChart
+          additionalPadding={additionalPadding}
+          lastPricePoint={lastPricePoint}
+          loading={loading}
+          numberOfDigits={numberOfDigits}
+          priceHistory={convertedPriceHistory}
+          shouldShowAnimatedDot={shouldShowAnimatedDot}
+          spot={convertedSpot}
+          tokenColor={tokenColor}
+        />
+      </Flex>
     )
   } else {
     content = <PriceExplorerPlaceholder loading={loading} numberOfDigits={numberOfDigits} />

@@ -48,7 +48,9 @@ export function useNFTMenu({
     shouldHideNft({ nftsData, owner, contractAddress, tokenId, isSpam })
 
   const onPressShare = useCallback(async (): Promise<void> => {
-    if (!contractAddress || !tokenId) return
+    if (!contractAddress || !tokenId) {
+      return
+    }
     try {
       const url = getNftUrl(contractAddress, tokenId)
       await Share.share({
@@ -64,7 +66,9 @@ export function useNFTMenu({
   }, [contractAddress, tokenId])
 
   const onPressHiddenStatus = useCallback(() => {
-    if (!owner || !contractAddress || !tokenId) return
+    if (!owner || !contractAddress || !tokenId) {
+      return
+    }
     dispatch(
       toggleNftVisibility({
         owner,

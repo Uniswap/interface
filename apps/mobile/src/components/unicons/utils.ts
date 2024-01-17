@@ -23,7 +23,9 @@ export const deriveUniconAttributeIndices = (
   address: string,
   randomSeed = 0
 ): UniconAttributesToIndices | undefined => {
-  if (!isEthAddress(address)) return
+  if (!isEthAddress(address)) {
+    return
+  }
 
   const hexAddr = address.slice(-40)
   const newIndices = {
@@ -65,21 +67,23 @@ export const useUniconColors = (
 } => {
   const colors = useSporeColors()
   const attributeIndices = deriveUniconAttributeIndices(activeAddress || '')
-  if (!attributeIndices)
+  if (!attributeIndices) {
     return {
       gradientStart: colors.accent1.val,
       gradientEnd: colors.accent2.val,
       glow: colors.accent1.val,
     }
+  }
 
   const attributeData = getUniconAttributeData(attributeIndices)
   const blurColor = blurs[attributeIndices[UniconAttributes.GradientStart]]
-  if (!blurColor)
+  if (!blurColor) {
     return {
       gradientStart: colors.accent1.val,
       gradientEnd: colors.accent2.val,
       glow: colors.accent1.val,
     }
+  }
 
   return {
     gradientStart: attributeData[UniconAttributes.GradientStart].toString(),

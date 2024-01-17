@@ -18,19 +18,25 @@ export function formatTokenSearchResults(
   data: ExploreSearchResult['searchTokens'],
   searchQuery: string
 ): TokenSearchResult[] | undefined {
-  if (!data) return
+  if (!data) {
+    return
+  }
 
   // Prevent showing "duplicate" token search results for tokens that are on multiple chains
   // and share the same TokenProject id. Only show the token that has the highest 1Y Uniswap trading volume
   // ex. UNI on Mainnet, Arbitrum, Optimism -> only show UNI on Mainnet b/c it has highest 1Y volume
   const tokenResultsMap = data.reduce<Record<string, TokenSearchResult & { volume1D: number }>>(
     (tokensMap, token) => {
-      if (!token) return tokensMap
+      if (!token) {
+        return tokensMap
+      }
 
       const { chain, address, symbol, project, market } = token
       const chainId = fromGraphQLChain(chain)
 
-      if (!chainId || !project) return tokensMap
+      if (!chainId || !project) {
+        return tokensMap
+      }
 
       const { name, safetyLevel, logoUrl } = project
 
@@ -81,7 +87,9 @@ function isExactTokenSearchResultMatch(searchResult: TokenSearchResult, query: s
 export function formatNFTCollectionSearchResults(
   data: ExploreSearchResult['nftCollections']
 ): NFTCollectionSearchResult[] | undefined {
-  if (!data) return
+  if (!data) {
+    return
+  }
 
   return data.edges.reduce<NFTCollectionSearchResult[]>((accum, { node }) => {
     const formatted = gqlNFTToNFTCollectionSearchResult(node)

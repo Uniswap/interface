@@ -7,6 +7,7 @@ import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import { useRestQuery } from 'wallet/src/data/rest'
+import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { transformQuoteToTrade } from 'wallet/src/features/transactions/swap/routeUtils'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import { SwapRouterNativeAssets } from 'wallet/src/utils/currencyId'
@@ -55,9 +56,11 @@ export interface TradeQuoteRequest {
 export function useQuoteQuery(
   request: TradeQuoteRequest | undefined,
   { pollInterval }: QueryHookOptions
-): ReturnType<typeof useRestQuery<TradeQuoteResult>> {
+): GqlResult<TradeQuoteResult> {
   const params: QuoteRequest | undefined = useMemo(() => {
-    if (!request) return undefined
+    if (!request) {
+      return undefined
+    }
 
     const {
       amount,

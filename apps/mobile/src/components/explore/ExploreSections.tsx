@@ -71,7 +71,9 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
   usePollOnFocusOnly(startPolling, stopPolling, PollingInterval.Fast)
 
   const topTokenItems = useMemo(() => {
-    if (!data || !data.topTokens) return
+    if (!data || !data.topTokens) {
+      return
+    }
 
     // special case to replace weth with eth because the backend does not return eth data
     // eth will be defined only if all the required data is available
@@ -81,7 +83,9 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
 
     const topTokens = data.topTokens
       .map((token) => {
-        if (!token) return
+        if (!token) {
+          return
+        }
 
         const isWeth =
           areAddressesEqual(token.address, wethAddress) && token?.chain === Chain.Ethereum
@@ -95,7 +99,9 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
       })
       .filter(Boolean) as TokenItemData[]
 
-    if (!clientOrderBy) return topTokens
+    if (!clientOrderBy) {
+      return topTokens
+    }
 
     // Apply client side sort order
     const compareFn = getClientTokensOrderByCompareFn(clientOrderBy)
@@ -182,10 +188,12 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
               mr="$spacing12"
               mt="$spacing16"
               pl="$spacing4">
-              <Text color="$neutral2" variant="subheading2">
+              <Text color="$neutral2" flexShrink={0} paddingEnd="$spacing8" variant="subheading2">
                 {t('Top tokens')}
               </Text>
-              <SortButton orderBy={orderBy} />
+              <Flex flexShrink={1}>
+                <SortButton orderBy={orderBy} />
+              </Flex>
             </Flex>
           </Flex>
         }
@@ -212,7 +220,9 @@ const tokenKey = (token: TokenItemData): string => {
 function gqlTokenToTokenItemData(
   token: Maybe<NonNullable<NonNullable<ExploreTokensTabQuery['topTokens']>[0]>>
 ): TokenItemData | null {
-  if (!token || !token.project) return null
+  if (!token || !token.project) {
+    return null
+  }
 
   const { symbol, address, chain, project, market } = token
   const { logoUrl, markets, name } = project
@@ -242,7 +252,9 @@ function FavoritesSection(props: FavoritesSectionProps): JSX.Element | null {
   const hasFavoritedTokens = useAppSelector(selectHasFavoriteTokens)
   const hasFavoritedWallets = useAppSelector(selectHasWatchedWallets)
 
-  if (!hasFavoritedTokens && !hasFavoritedWallets) return null
+  if (!hasFavoritedTokens && !hasFavoritedWallets) {
+    return null
+  }
 
   return (
     <Flex

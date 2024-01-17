@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { getClipboard } from 'src/utils/clipboard'
-import { Button, Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 
 export default function PasteButton({
   inline,
@@ -41,13 +41,18 @@ export default function PasteButton({
   }
 
   return (
-    <Button
-      icon={<Icons.Paste color="$neutral1" size="$icon.16" />}
-      size="small"
-      theme="tertiary"
+    <TouchableArea
+      backgroundColor="$accent2"
+      borderRadius="$rounded12"
+      p="$spacing8"
       onPress={onPressButton}
       onPressIn={beforePress}>
-      {label}
-    </Button>
+      <Flex centered row gap="$spacing4">
+        <Text color="$accent1" variant="buttonLabel4">
+          {label}
+        </Text>
+        <Icons.StickyNoteSquare color="$accent1" size="$icon.16" />
+      </Flex>
+    </TouchableArea>
   )
 }

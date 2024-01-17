@@ -21,9 +21,13 @@ export const hasConsecutiveRecentSwapsSelector: Selector<RootState, boolean> = c
     for (const tx of txs) {
       for (const transaction of Object.values(tx)) {
         // ignore transactions completed before last prompt
-        if (transaction.addedTime < appRatingPromptedMs) continue
+        if (transaction.addedTime < appRatingPromptedMs) {
+          continue
+        }
 
-        if (transaction.typeInfo.type === TransactionType.Swap) swapTxs.push(transaction)
+        if (transaction.typeInfo.type === TransactionType.Swap) {
+          swapTxs.push(transaction)
+        }
       }
     }
 

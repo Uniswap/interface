@@ -60,11 +60,13 @@ export function SwapModalHeaderAmount({
   return (
     <Row align="center" justify="space-between" gap="md">
       <Column gap="xs">
-        <ThemedText.BodySecondary>
-          <MouseoverTooltip text={tooltipText} disabled={!tooltipText}>
-            <Label cursor={tooltipText ? 'help' : undefined}>{label}</Label>
-          </MouseoverTooltip>
-        </ThemedText.BodySecondary>
+        {label && (
+          <ThemedText.BodySecondary>
+            <MouseoverTooltip text={tooltipText} disabled={!tooltipText}>
+              <Label cursor={tooltipText ? 'help' : undefined}>{label}</Label>
+            </MouseoverTooltip>
+          </ThemedText.BodySecondary>
+        )}
         <Column gap="xs">
           <ResponsiveHeadline data-testid={`${field}-amount`} color={isLoading ? 'neutral2' : undefined}>
             {formatReviewSwapCurrencyAmount(amount)} {currency?.symbol}

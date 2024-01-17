@@ -1,16 +1,24 @@
 import { Trans } from '@lingui/macro'
+import { Currency } from '@uniswap/sdk-core'
+import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
+import Row from 'components/Row'
 import { SwapSkeleton } from 'components/swap/SwapSkeleton'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
+import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
+import { useCurrency } from 'hooks/Tokens'
+import { ReactNode } from 'react'
 import { ArrowLeft, ChevronRight } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
-import { ThemedText } from 'theme/components'
+import { BREAKPOINTS } from 'theme'
+import { ClickableStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
+import { capitalize } from 'tsafe'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { LoadingBubble } from '../loading'
 import { AboutContainer, AboutHeader } from './About'
-import { BreadcrumbNavContainer, BreadcrumbNavLink } from './BreadcrumbNav'
 import { ChartContainer } from './ChartSection'
 import { Hr } from './shared'
 import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
@@ -49,14 +57,14 @@ export const RightPanel = styled.div<{ isInfoTDPEnabled?: boolean }>`
     display: flex;
   }
 `
-const LoadingChartContainer = styled.div`
+const LoadingChartContainer = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
   flex-direction: row;
   align-items: flex-end;
   height: 100%;
-  margin-bottom: 44px;
   padding-bottom: 66px;
   overflow: hidden;
+  margin-bottom: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '14' : '44')}px;
 `
 export const TokenInfoContainer = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
@@ -162,6 +170,73 @@ const Space = styled.div<{ heightSize: number }>`
   height: ${({ heightSize }) => `${heightSize}px`};
 `
 
+const loadingFooterTextCss = css`
+  color: ${({ theme }) => theme.neutral3};
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  text-decoration: none;
+`
+
+const LoadingFooterHeaderContainer = styled(Row)`
+  align-items: center;
+  ${loadingFooterTextCss}
+
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    padding: 16px 90px 8px 0;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    justify-content: flex-end;
+  }
+`
+
+const LoadingFooterHeader = styled.h1`
+  ${loadingFooterTextCss}
+`
+
+const LoadingFooterLink = styled.a`
+  ${loadingFooterTextCss}
+  ${ClickableStyle}
+`
+
+// exported for testing
+export function getLoadingTitle(
+  token: Currency | undefined,
+  tokenAddress: string,
+  chainId: number,
+  chainName: string | undefined
+): ReactNode {
+  let tokenName = ''
+  if (token?.name && token?.symbol) {
+    tokenName = `${token?.name} (${token?.symbol})`
+  } else if (token?.name) {
+    tokenName = token?.name
+  } else if (token?.symbol) {
+    tokenName = token?.symbol
+  } else {
+    tokenName = tokenAddress || ''
+  }
+  const chainSuffix = chainName ? ` on ${capitalize(chainName)}` : ''
+  const tokenLink = token?.isNative ? (
+    tokenName
+  ) : (
+    <LoadingFooterLink
+      href={getExplorerLink(chainId, tokenAddress, ExplorerDataType.TOKEN)}
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {tokenName}
+    </LoadingFooterLink>
+  )
+  return (
+    <Trans>
+      token data for {tokenLink}
+      {chainSuffix}
+    </Trans>
+  )
+}
+
 function Wave() {
   const theme = useTheme()
   return (
@@ -172,13 +247,14 @@ function Wave() {
 }
 
 export function LoadingChart() {
+  const isInfoTDPEnabled = useInfoTDPEnabled()
   return (
-    <ChartContainer>
+    <ChartContainer isInfoTDPEnabled={isInfoTDPEnabled}>
       <ThemedText.HeadlineLarge>
         <PriceBubble />
       </ThemedText.HeadlineLarge>
       <Space heightSize={6} />
-      <LoadingChartContainer>
+      <LoadingChartContainer isInfoTDPEnabled={isInfoTDPEnabled}>
         <div>
           <ChartAnimation>
             <Wave />
@@ -225,17 +301,22 @@ function LoadingStats() {
 
 /* Loading State: row component with loading bubbles */
 export default function TokenDetailsSkeleton() {
-  const { chainName } = useParams<{ chainName?: string }>()
+  const { chainName, tokenAddress } = useParams<{ chainName?: string; tokenAddress?: string }>()
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
   const isInfoTDPEnabled = useInfoTDPEnabled()
+  const chainId = supportedChainIdFromGQLChain(validateUrlChainParam(chainName))
+  const token = useCurrency(tokenAddress === 'NATIVE' ? 'ETH' : tokenAddress, chainId)
 
   return (
     <LeftPanel>
       {isInfoTDPEnabled ? (
-        <BreadcrumbNavContainer isInfoTDPEnabled>
-          <BreadcrumbNavLink to={`${isInfoExplorePageEnabled ? '/explore' : ''}/tokens/${chainName}`}>
-            <Trans>Explore</Trans> <ChevronRight size={14} /> <Trans>Tokens</Trans> <ChevronRight size={14} />
-          </BreadcrumbNavLink>{' '}
+        <BreadcrumbNavContainer isInfoTDPEnabled aria-label="breadcrumb-nav">
+          <BreadcrumbNavLink to={`/explore/${chainName}`}>
+            <Trans>Explore</Trans> <ChevronRight size={14} />
+          </BreadcrumbNavLink>
+          <BreadcrumbNavLink to={`/explore/tokens/${chainName}`}>
+            <Trans>Tokens</Trans> <ChevronRight size={14} />
+          </BreadcrumbNavLink>
           <NavBubble />
         </BreadcrumbNavContainer>
       ) : (
@@ -274,6 +355,12 @@ export default function TokenDetailsSkeleton() {
         <ThinTitleBubble />
         <HalfWideBubble />
       </ExtraDetailsContainer>
+      {tokenAddress && (
+        <LoadingFooterHeaderContainer gap="xs">
+          <Trans>Loading</Trans>
+          <LoadingFooterHeader>{getLoadingTitle(token, tokenAddress, chainId, chainName)}</LoadingFooterHeader>
+        </LoadingFooterHeaderContainer>
+      )}
     </LeftPanel>
   )
 }

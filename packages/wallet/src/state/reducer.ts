@@ -22,4 +22,6 @@ export const sharedReducers = {
 
 // used to type RootState
 export const sharedRootReducer = combineReducers(sharedReducers)
+
+export type SharedState = ReturnType<typeof sharedRootReducer>
 export type RootReducerNames = keyof typeof sharedReducers

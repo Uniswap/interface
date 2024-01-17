@@ -1,5 +1,5 @@
 import React from 'react'
-import { SharedValue, useAnimatedStyle } from 'react-native-reanimated'
+import { useAnimatedStyle } from 'react-native-reanimated'
 import { useLineChartDatetime } from 'react-native-wagmi-charts'
 import { AnimatedText } from 'src/components/text/AnimatedText'
 import { Flex, Icons, useSporeColors } from 'ui/src'
@@ -10,13 +10,7 @@ import { isAndroid } from 'wallet/src/utils/platform'
 import { AnimatedDecimalNumber } from './AnimatedDecimalNumber'
 import { useLineChartPrice, useLineChartRelativeChange } from './usePrice'
 
-export function PriceText({
-  loading,
-  maxWidth,
-}: {
-  loading: boolean
-  maxWidth?: number
-}): JSX.Element {
+export function PriceText({ maxWidth }: { loading: boolean; maxWidth?: number }): JSX.Element {
   const price = useLineChartPrice()
   const colors = useSporeColors()
   const currency = useAppFiatCurrency()
@@ -44,16 +38,10 @@ export function PriceText({
   )
 }
 
-export function RelativeChangeText({
-  loading,
-  spotRelativeChange,
-}: {
-  loading: boolean
-  spotRelativeChange?: SharedValue<number>
-}): JSX.Element {
+export function RelativeChangeText({ loading }: { loading: boolean }): JSX.Element {
   const colors = useSporeColors()
 
-  const relativeChange = useLineChartRelativeChange({ spotRelativeChange })
+  const relativeChange = useLineChartRelativeChange()
 
   const styles = useAnimatedStyle(() => ({
     color: relativeChange.value.value > 0 ? colors.statusSuccess.val : colors.statusCritical.val,
@@ -102,7 +90,9 @@ export function DatetimeText({ loading }: { loading: boolean }): JSX.Element | n
   // `datetime` when scrubbing the chart
   const datetime = useLineChartDatetime({ locale })
 
-  if (loading) return null
+  if (loading) {
+    return null
+  }
 
   return <AnimatedText color="$neutral2" text={datetime.formatted} variant="body1" />
 }

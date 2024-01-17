@@ -146,6 +146,16 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   fill: #7D7D7D;
 }
 
+.c19 {
+  cursor: help;
+  color: #7D7D7D;
+}
+
+.c20 {
+  text-align: right;
+  overflow-wrap: break-word;
+}
+
 .c8 {
   background-color: transparent;
   border: none;
@@ -176,16 +186,6 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   -moz-user-select: text;
   -ms-user-select: text;
   user-select: text;
-}
-
-.c20 {
-  text-align: right;
-  overflow-wrap: break-word;
-}
-
-.c19 {
-  cursor: help;
-  color: #7D7D7D;
 }
 
 .c22 {

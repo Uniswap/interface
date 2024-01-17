@@ -119,7 +119,9 @@ function UniconSvg({
     viewBox: `0 0 ${size} ${size}`,
   }
 
-  if (!attributeIndices || !attributeData) return null
+  if (!attributeIndices || !attributeData) {
+    return null
+  }
 
   return (
     <svg {...svgProps}>
@@ -159,7 +161,9 @@ function _Unicon({ address, size = 24, randomSeed = 0, mobile }: Props): JSX.Ele
     [address, randomSeed]
   )
 
-  if (!address || !isEthAddress(address) || !attributeIndices) return null
+  if (!address || !isEthAddress(address) || !attributeIndices) {
+    return null
+  }
 
   return (
     // eslint-disable-next-line react-native/no-inline-styles

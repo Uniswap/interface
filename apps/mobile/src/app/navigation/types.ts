@@ -19,7 +19,7 @@ type NFTItemScreenParams = {
   fallbackData?: NFTItem
 }
 
-export type CloudBackupFormParms = {
+export type CloudBackupFormParams = {
   address: Address
   password: string
 }
@@ -37,21 +37,22 @@ export type ExploreStackParamList = {
 }
 
 export type SettingsStackParamList = {
+  [Screens.Dev]: undefined
   [Screens.Settings]: undefined
+  [Screens.SettingsAppearance]: undefined
+  [Screens.SettingsBiometricAuth]: undefined
+  [Screens.SettingsCloudBackupPasswordConfirm]: CloudBackupFormParams
+  [Screens.SettingsCloudBackupPasswordCreate]: { address: Address }
+  [Screens.SettingsCloudBackupProcessing]: CloudBackupFormParams
+  [Screens.SettingsCloudBackupStatus]: { address: Address }
+  [Screens.SettingsHelpCenter]: undefined
+  [Screens.SettingsLanguage]: undefined
+  [Screens.SettingsPrivacy]: undefined
+  [Screens.SettingsViewSeedPhrase]: { address: Address; walletNeedsRestore?: boolean }
   [Screens.SettingsWallet]: { address: Address }
   [Screens.SettingsWalletEdit]: { address: Address }
   [Screens.SettingsWalletManageConnection]: { address: Address }
-  [Screens.SettingsHelpCenter]: undefined
-  [Screens.SettingsBiometricAuth]: undefined
-  [Screens.SettingsAppearance]: undefined
-  [Screens.SettingsLanguage]: undefined
   [Screens.WebView]: { headerTitle: string; uriLink: string }
-  [Screens.Dev]: undefined
-  [Screens.SettingsCloudBackupPasswordCreate]: { address: Address }
-  [Screens.SettingsCloudBackupPasswordConfirm]: CloudBackupFormParms
-  [Screens.SettingsCloudBackupProcessing]: CloudBackupFormParms
-  [Screens.SettingsCloudBackupStatus]: { address: Address }
-  [Screens.SettingsViewSeedPhrase]: { address: Address; walletNeedsRestore?: boolean }
 }
 
 export type OnboardingStackBaseParams = {
@@ -64,8 +65,8 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.BackupCloudPasswordCreate]: {
     address: Address
   } & OnboardingStackBaseParams
-  [OnboardingScreens.BackupCloudPasswordConfirm]: CloudBackupFormParms & OnboardingStackBaseParams
-  [OnboardingScreens.BackupCloudProcessing]: CloudBackupFormParms & OnboardingStackBaseParams
+  [OnboardingScreens.BackupCloudPasswordConfirm]: CloudBackupFormParams & OnboardingStackBaseParams
+  [OnboardingScreens.BackupCloudProcessing]: CloudBackupFormParams & OnboardingStackBaseParams
   [OnboardingScreens.Backup]: OnboardingStackBaseParams
   [OnboardingScreens.Landing]: OnboardingStackBaseParams
   [OnboardingScreens.EditName]: OnboardingStackBaseParams

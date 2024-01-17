@@ -13,7 +13,7 @@ const config: CodegenConfig = {
   generates: {
     // generates a single output for every app and package
     'packages/wallet/src/data/__generated__/types-and-hooks.ts': {
-      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],
+      plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo', 'typescript-resolvers'],
       config: {
         withHooks: true,
       },

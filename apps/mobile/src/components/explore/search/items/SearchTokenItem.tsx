@@ -77,7 +77,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
         onLongPress={disableOnPress}
         onPress={onPress}>
         <Flex row alignItems="center" gap="$spacing12" px="$spacing8" py="$spacing12">
-          <TokenLogo chainId={chainId} symbol={symbol} url={logoUrl ?? undefined} />
+          <TokenLogo chainId={chainId} name={name} symbol={symbol} url={logoUrl ?? undefined} />
           <Flex shrink alignItems="flex-start">
             <Flex centered row gap="$spacing8">
               <Flex shrink>

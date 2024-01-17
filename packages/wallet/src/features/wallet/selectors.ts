@@ -102,19 +102,11 @@ export const makeSelectAccountNotificationSetting = (): Selector<RootState, bool
     (accounts, address) => !!accounts[address]?.pushNotificationsEnabled
   )
 
-export const makeSelectAccountHideSmallBalances = (): Selector<RootState, boolean, [Address]> =>
-  createSelector(
-    selectAccounts,
-    (_: RootState, address: Address) => address,
-    (accounts, address) => !accounts?.[address]?.showSmallBalances
-  )
+export const selectWalletHideSmallBalancesSetting = (state: RootState): boolean =>
+  state.wallet.settings.hideSmallBalances
 
-export const makeSelectAccountHideSpamTokens = (): Selector<RootState, boolean, [Address]> =>
-  createSelector(
-    selectAccounts,
-    (_: RootState, address: Address) => address,
-    (accounts, address) => !accounts?.[address]?.showSpamTokens
-  )
+export const selectWalletHideSpamTokensSetting = (state: RootState): boolean =>
+  state.wallet.settings.hideSpamTokens
 
 export const selectWalletSwapProtectionSetting = (state: RootState): SwapProtectionSetting =>
   state.wallet.settings.swapProtection

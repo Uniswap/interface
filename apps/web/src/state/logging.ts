@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react'
-import noop from 'utils/noop'
+import noop from 'utilities/src/react/noop'
 
 import { AppState } from './reducer'
 

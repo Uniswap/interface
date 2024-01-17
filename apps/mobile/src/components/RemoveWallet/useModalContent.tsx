@@ -89,7 +89,7 @@ export const useModalContent = ({
           <Trans t={t}>
             <Text color="$neutral1" variant="body1">
               You’re removing your{' '}
-              <Text color="$statusCritical" variant="body1">
+              <Text color="$neutral1" variant="body1">
                 recovery phrase
               </Text>
             </Text>
@@ -98,14 +98,14 @@ export const useModalContent = ({
         description: isAndroid ? (
           <Trans t={t}>
             Make sure you’ve written down your recovery phrase or backed it up on Google Drive.{' '}
-            <Text color="$neutral2" maxFontSizeMultiplier={1.4} variant="buttonLabel3">
+            <Text color="$statusCritical" maxFontSizeMultiplier={1.4} variant="body3">
               You will not be able to access your funds otherwise.
             </Text>
           </Trans>
         ) : (
           <Trans t={t}>
             Make sure you’ve written down your recovery phrase or backed it up on iCloud.{' '}
-            <Text color="$neutral2" maxFontSizeMultiplier={1.4} variant="buttonLabel3">
+            <Text color="$statusCritical" maxFontSizeMultiplier={1.4} variant="body3">
               You will not be able to access your funds otherwise.
             </Text>
           </Trans>

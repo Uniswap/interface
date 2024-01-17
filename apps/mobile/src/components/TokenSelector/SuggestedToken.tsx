@@ -37,7 +37,14 @@ function _SuggestedToken({
         backgroundColor="$surface3"
         borderRadius="$roundedFull"
         foregroundColor={colors.neutral1.val}
-        icon={<TokenLogo size={iconSizes.icon28} symbol={currency.symbol} url={logoUrl} />}
+        icon={
+          <TokenLogo
+            name={currency.name}
+            size={iconSizes.icon28}
+            symbol={currency.symbol}
+            url={logoUrl}
+          />
+        }
         label={getSymbolDisplayText(currency.symbol)}
         mr="$spacing8"
         my="$spacing4"

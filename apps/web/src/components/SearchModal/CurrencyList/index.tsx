@@ -8,7 +8,7 @@ import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
+import { CSSProperties, MutableRefObject, useCallback } from 'react'
 import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -24,9 +24,14 @@ import { MouseoverTooltip } from '../../Tooltip'
 import { LoadingRows, MenuItem } from '../styled'
 import { scrollbarStyle } from './index.css'
 
-function currencyKey(currency: Currency): string {
+function currencyKey(currency: Currency | CurrencyListSectionTitle): string {
+  if (currency instanceof CurrencyListSectionTitle) {
+    return currency.label
+  }
   return currency.isToken ? currency.address : 'ETHER'
 }
+
+const ROW_ITEM_SIZE = 56
 
 const StyledBalanceText = styled(Text)`
   white-space: nowrap;
@@ -57,6 +62,12 @@ const Tag = styled.div`
 
 const WarningContainer = styled.div`
   margin-left: 0.3em;
+`
+
+const LabelContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
 `
 
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
@@ -215,10 +226,24 @@ const LoadingRow = () => (
   </LoadingRows>
 )
 
+/**
+ * This is used to intersperse section titles into the list without needing to break up the data array
+ * and render multiple lists.
+ */
+export class CurrencyListSectionTitle {
+  private _label: string
+  constructor(label: string) {
+    this._label = label
+  }
+
+  get label(): string {
+    return this._label
+  }
+}
+
 export default function CurrencyList({
   height,
   currencies,
-  otherListTokens,
   selectedCurrency,
   onCurrencySelect,
   otherCurrency,
@@ -230,8 +255,7 @@ export default function CurrencyList({
   balances,
 }: {
   height: number
-  currencies: Currency[]
-  otherListTokens?: TokenFromList[]
+  currencies: Array<Currency | CurrencyListSectionTitle>
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency, hasWarning?: boolean) => void
   otherCurrency?: Currency | null
@@ -242,18 +266,18 @@ export default function CurrencyList({
   isAddressSearch: string | false
   balances: TokenBalances
 }) {
-  const itemData: Currency[] = useMemo(() => {
-    if (otherListTokens && otherListTokens?.length > 0) {
-      return [...currencies, ...otherListTokens]
-    }
-    return currencies
-  }, [currencies, otherListTokens])
-
   const Row = useCallback(
     function TokenRow({ data, index, style }: TokenRowProps) {
       const row: Currency = data[index]
-
       const currency = row
+
+      if (currency instanceof CurrencyListSectionTitle) {
+        return (
+          <LabelContainer style={style}>
+            <ThemedText.BodySecondary>{currency.label}</ThemedText.BodySecondary>
+          </LabelContainer>
+        )
+      }
 
       const balance =
         tryParseCurrencyAmount(
@@ -298,7 +322,7 @@ export default function CurrencyList({
     ]
   )
 
-  const itemKey = useCallback((index: number, data: typeof itemData) => {
+  const itemKey = useCallback((index: number, data: typeof currencies) => {
     const currency = data[index]
     return currencyKey(currency)
   }, [])
@@ -313,7 +337,7 @@ export default function CurrencyList({
           width="100%"
           itemData={[]}
           itemCount={10}
-          itemSize={56}
+          itemSize={ROW_ITEM_SIZE}
         >
           {LoadingRow}
         </FixedSizeList>
@@ -323,9 +347,9 @@ export default function CurrencyList({
           height={height}
           ref={fixedListRef as any}
           width="100%"
-          itemData={itemData}
-          itemCount={itemData.length}
-          itemSize={56}
+          itemData={currencies}
+          itemCount={currencies.length}
+          itemSize={ROW_ITEM_SIZE}
           itemKey={itemKey}
         >
           {Row}

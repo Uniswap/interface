@@ -44,6 +44,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
@@ -153,7 +154,6 @@ private fun SeedPhrasePasteButton(
 ) {
 
   val clipboardManager = LocalClipboardManager.current
-  val isDarkTheme = isSystemInDarkTheme()
 
   Button(
     onClick = {
@@ -166,7 +166,7 @@ private fun SeedPhrasePasteButton(
     },
     colors = ButtonDefaults.buttonColors(
       contentColor = UniswapTheme.colors.neutral2,
-      backgroundColor = if (isDarkTheme) UniswapTheme.colors.surface3 else UniswapTheme.colors.surface2
+      backgroundColor = UniswapTheme.colors.surface3.compositeOver(UniswapTheme.colors.surface2),
     ),
     shape = UniswapTheme.shapes.buttonMedium,
     contentPadding = PaddingValues(

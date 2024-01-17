@@ -53,9 +53,10 @@ export function useRecipients(): {
 
   const sections = useMemo(() => {
     const sectionsArr = []
+
     if (validatedAddressRecipient.length) {
       sectionsArr.push({
-        title: t('Search Results'),
+        title: t('Search results'),
         data: validatedAddressRecipient,
       })
     }

@@ -16,7 +16,9 @@ export function getFormattedCurrencyAmount(
     currency,
   })
 
-  if (!currencyAmount) return ''
+  if (!currencyAmount) {
+    return ''
+  }
 
   const formattedAmount = formatter.formatCurrencyAmount({ value: currencyAmount })
   return isApproximateAmount ? `~${formattedAmount} ` : `${formattedAmount} `

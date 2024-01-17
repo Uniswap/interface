@@ -24,7 +24,7 @@ import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 export let apolloClient: ApolloClient<NormalizedCacheObject> | null = null
 
 const mmkv = new MMKV()
-if (isNonJestDev()) {
+if (isNonJestDev) {
   // requires Flipper plugin `react-native-mmkv` to be installed
   require('react-native-mmkv-flipper-plugin').initializeMMKVFlipper({ default: mmkv })
 }
@@ -91,7 +91,7 @@ export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> 
   useAsyncData(init)
 
   useEffect(() => {
-    if (isNonJestDev()) {
+    if (isNonJestDev) {
       // requires Flipper plugin `react-native-apollo-devtools` to be installed
       require('react-native-apollo-devtools-client').apolloDevToolsInit(client)
     }

@@ -4,7 +4,7 @@ import { SlippageTolerance } from 'state/user/types'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 import { lightDeprecatedTheme } from 'theme/deprecatedColors'
-import noop from 'utils/noop'
+import noop from 'utilities/src/react/noop'
 
 import MenuButton from '.'
 

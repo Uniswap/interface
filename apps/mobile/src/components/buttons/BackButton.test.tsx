@@ -1,7 +1,7 @@
 import React from 'react'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { ON_PRESS_EVENT_PAYLOAD } from 'src/test/eventFixtures'
 import { fireEvent, render, screen } from 'src/test/test-utils'
+import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/eventFixtures'
 
 const mockedGoBack = jest.fn()
 jest.mock('@react-navigation/native', () => {

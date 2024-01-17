@@ -22,6 +22,9 @@ interface CreateStoreProps {
   preloadedState?: PreloadedState<RootState>
 }
 
+// Disable eslint rule to infer return type from the returned value
+// (it is complex and not worth the effort to type it manually)
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function createStore({
   additionalSagas = [],
   middlewareAfter = [],
@@ -29,7 +32,7 @@ export function createStore({
   preloadedState = {},
   enhancers = [],
   reducer,
-}: CreateStoreProps): ReturnType<typeof configureStore> {
+}: CreateStoreProps) {
   const sagaMiddleware = createSagaMiddleware({
     context: {
       signers: walletContextValue.signers,

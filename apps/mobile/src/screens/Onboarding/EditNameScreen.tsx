@@ -10,7 +10,7 @@ import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboa
 import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { AnimatePresence, Button, Flex, Icons, Text, useMedia } from 'ui/src'
+import { AnimatePresence, Button, Flex, Icons, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { ImportType } from 'wallet/src/features/onboarding/types'
@@ -113,7 +113,6 @@ function CustomizationSection({
   setAccountName: Dispatch<SetStateAction<string>>
 }): JSX.Element {
   const { t } = useTranslation()
-  const media = useMedia()
   const textInputRef = useRef<NativeTextInput>(null)
 
   // we default it to `true` to avoid flickering of a pencil icon,
@@ -124,8 +123,6 @@ function CustomizationSection({
     textInputRef.current?.focus()
   }
 
-  const inputSize = media.short ? fonts.heading3.fontSize : fonts.heading2.fontSize
-
   return (
     <Flex
       centered
@@ -133,39 +130,46 @@ function CustomizationSection({
         gap: '$none',
       }}
       gap="$spacing24">
-      <Flex centered gap="$spacing24" h={200} width="100%">
-        <Flex centered row>
-          <TextInput
-            ref={textInputRef}
-            autoFocus
-            fontSize={inputSize}
-            maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
-            maxLength={NICKNAME_MAX_LENGTH}
-            placeholder={t('Nickname')}
-            placeholderTextColor="$neutral3"
-            style={isAndroid ? styles.noHorizontalPadding : {}}
-            testID="customize/name"
-            textAlign="center"
-            value={accountName}
-            onBlur={(): void => {
-              setFocused(false)
-              setAccountName(accountName.trim())
-            }}
-            onChangeText={setAccountName}
-            onFocus={(): void => setFocused(true)}
-          />
-          <AnimatePresence>
-            {!focused && (
-              <Button
-                fadeIn
-                fadeOut
-                animation="lazy"
-                icon={<Icons.Pencil color="$neutral2" />}
-                theme="secondary"
-                onPress={focusInputWithKeyboard}
-              />
-            )}
-          </AnimatePresence>
+      <Flex centered gap="$spacing24" h={200} px="$spacing16" width="100%">
+        <Flex
+          borderColor="$surface3"
+          borderRadius="$rounded16"
+          borderWidth={1}
+          py="$spacing12"
+          width="100%">
+          <Flex centered row>
+            <TextInput
+              ref={textInputRef}
+              autoFocus
+              fontSize={fonts.heading3.fontSize}
+              maxFontSizeMultiplier={fonts.heading3.maxFontSizeMultiplier}
+              maxLength={NICKNAME_MAX_LENGTH}
+              placeholder={t('Nickname')}
+              placeholderTextColor="$neutral3"
+              style={isAndroid ? styles.noHorizontalPadding : {}}
+              testID="customize/name"
+              textAlign="center"
+              value={accountName}
+              onBlur={(): void => {
+                setFocused(false)
+                setAccountName(accountName.trim())
+              }}
+              onChangeText={setAccountName}
+              onFocus={(): void => setFocused(true)}
+            />
+            <AnimatePresence>
+              {!focused && (
+                <Button
+                  fadeIn
+                  fadeOut
+                  animation="lazy"
+                  icon={<Icons.Pencil color="$neutral2" />}
+                  theme="secondary"
+                  onPress={focusInputWithKeyboard}
+                />
+              )}
+            </AnimatePresence>
+          </Flex>
         </Flex>
         <Flex centered gap="$spacing4">
           <Text color="$neutral3" variant="body3">

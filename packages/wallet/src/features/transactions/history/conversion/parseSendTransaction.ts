@@ -14,11 +14,15 @@ import {
 export default function parseSendTransaction(
   transaction: NonNullable<TransactionListQueryResponse>
 ): SendTokenTransactionInfo | undefined {
-  if (transaction.details.__typename !== 'TransactionDetails') return undefined
+  if (transaction.details.__typename !== 'TransactionDetails') {
+    return undefined
+  }
 
   const change = transaction.details.assetChanges?.[0]
 
-  if (!change) return undefined
+  if (!change) {
+    return undefined
+  }
 
   // Found NFT transfer
   if (change.__typename === 'NftTransfer') {
@@ -30,8 +34,9 @@ export default function parseSendTransaction(
       const collectionName = change.asset?.collection?.name
       const imageURL = change.asset?.image?.url
       const tokenId = change.asset?.tokenId
-      if (!(recipient && tokenAddress && collectionName && imageURL && name && tokenId))
+      if (!(recipient && tokenAddress && collectionName && imageURL && name && tokenId)) {
         return undefined
+      }
       return {
         type: TransactionType.Send,
         assetType,
@@ -66,7 +71,9 @@ export default function parseSendTransaction(
     // Filter out send transactions with tokens that have spamCode 2 (token with URL name)
     const isSpam = Boolean(change.asset.project?.spamCode === SpamCode.HIGH)
 
-    if (!(recipient && tokenAddress)) return undefined
+    if (!(recipient && tokenAddress)) {
+      return undefined
+    }
 
     return {
       type: TransactionType.Send,

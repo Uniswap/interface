@@ -53,12 +53,15 @@ export function ActivityRow({ activity }: { activity: Activity }) {
 
   const onClick = useCallback(() => {
     if (offchainOrderDetails) {
-      openOffchainActivityModal(offchainOrderDetails)
+      openOffchainActivityModal(offchainOrderDetails, {
+        inputLogo: activity?.logos?.[0],
+        outputLogo: activity?.logos?.[1],
+      })
       return
     }
 
     window.open(getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION), '_blank')
-  }, [chainId, hash, offchainOrderDetails, openOffchainActivityModal])
+  }, [activity?.logos, chainId, hash, offchainOrderDetails, openOffchainActivityModal])
 
   return (
     <TraceEvent

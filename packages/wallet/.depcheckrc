@@ -1,0 +1,13 @@
+ignores: [
+    # Dependencies that depcheck thinks are unused but are actually used
+    "@typechain/ethers-v5",
+    "jest-presets",
+    # Dependencies that depcheck thinks are missing but are actually present or never used
+    ## Internal packages / workspaces
+    "eslint-config-custom",
+    "wallet",
+    "src",
+    "tsconfig",
+    # types
+    "@types/chrome",
+  ]

@@ -1,9 +1,11 @@
+import { t } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Trace } from 'analytics'
 import { useNftAssetDetails } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
+import { Helmet } from 'react-helmet'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
@@ -43,6 +45,11 @@ const AssetPage = () => {
   if (loading) return <AssetDetailsLoading />
   return (
     <>
+      <Helmet>
+        <title>
+          {asset.name ?? ''} {asset.name ? '|' : ''} {collection.collectionName ?? t`Explore NFTs`} on Uniswap
+        </title>
+      </Helmet>
       <Trace
         page={InterfacePageName.NFT_DETAILS_PAGE}
         properties={{ collection_address: contractAddress, token_id: tokenId }}

@@ -13,7 +13,9 @@ import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currenc
 export default function parseNFTMintTransaction(
   transaction: NonNullable<TransactionListQueryResponse>
 ): NFTMintTransactionInfo | undefined {
-  if (transaction.details.__typename !== 'TransactionDetails') return undefined
+  if (transaction.details.__typename !== 'TransactionDetails') {
+    return undefined
+  }
 
   const tokenChange = transaction.details.assetChanges?.find(
     (change) => change?.__typename === 'TokenTransfer'
@@ -23,7 +25,9 @@ export default function parseNFTMintTransaction(
   )
 
   // Mints must include the NFT minted
-  if (!nftChange || nftChange.__typename !== 'NftTransfer') return undefined
+  if (!nftChange || nftChange.__typename !== 'NftTransfer') {
+    return undefined
+  }
 
   const name = nftChange.asset.name
   const collectionName = nftChange.asset.collection?.name
@@ -34,7 +38,9 @@ export default function parseNFTMintTransaction(
 
   let transactedUSDValue: number | undefined
 
-  if (!name || !collectionName || !imageURL || !tokenId || !chainId) return undefined
+  if (!name || !collectionName || !imageURL || !tokenId || !chainId) {
+    return undefined
+  }
 
   let purchaseCurrencyId: string | undefined
   let purchaseCurrencyAmountRaw: string | undefined

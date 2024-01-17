@@ -78,7 +78,7 @@ export function useProvider(chainId: ChainId, rpcType: RPCType = RPCType.Public)
 
 export function* getProviderManager() {
   // TODO: is there a better way to handle when execution context is not react?
-  return yield* getContext<ProviderManager>('providers') ?? walletContextValue.providers
+  return (yield* getContext<ProviderManager>('providers')) ?? walletContextValue.providers
 }
 
 export function* getProvider(chainId: ChainId, rpcType: RPCType = RPCType.Public) {

@@ -20,7 +20,9 @@ export const RemoteSvg = ({
   width,
 }: Props): JSX.Element | null => {
   const fetchSvg = useCallback(async () => {
-    if (!imageHttpUrl) return
+    if (!imageHttpUrl) {
+      return
+    }
     try {
       const res = await fetch(imageHttpUrl)
       const svgStr = await res.text()
@@ -36,7 +38,9 @@ export const RemoteSvg = ({
 
   const { data: svg } = useAsyncData(fetchSvg)
 
-  if (!svg) return <View />
+  if (!svg) {
+    return <View />
+  }
   return (
     <SvgXml height={height} style={{ backgroundColor, borderRadius }} width={width} xml={svg} />
   )

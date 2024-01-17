@@ -28,6 +28,12 @@ export enum RouterPreference {
   API = 'api',
 }
 
+// TODO: add Limit market price intent
+export enum QuoteIntent {
+  Pricing = 'pricing',
+  Quote = 'quote',
+}
+
 export interface GetQuoteArgs {
   tokenInAddress: string
   tokenInChainId: ChainId
@@ -60,6 +66,7 @@ export type GetQuickQuoteArgs = {
   tradeType: TradeType
   inputTax: Percent
   outputTax: Percent
+  gatewayDNSUpdateAllEnabled: boolean
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts

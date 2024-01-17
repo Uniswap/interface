@@ -59,7 +59,7 @@ const Nav = styled(Link)`
   text-decoration: none;
 `
 
-const HeaderText = styled(ThemedText.SubHeaderLarge)`
+const HeaderText = styled(ThemedText.H1Small)`
   margin: auto !important;
 `
 

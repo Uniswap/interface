@@ -35,7 +35,9 @@ export function useSyncFiatAndTokenAmountUpdater(): void {
   const chainId = currencyIdToChain(exactCurrency?.currencyId ?? '')
 
   useEffect(() => {
-    if (!exactCurrency || !usdPriceOfCurrency || !chainId) return
+    if (!exactCurrency || !usdPriceOfCurrency || !chainId) {
+      return
+    }
 
     if (isFiatMode) {
       const usdAmount = (parseFloat(exactAmountFiat ?? '0') / conversionRate).toFixed(

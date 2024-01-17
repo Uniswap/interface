@@ -7,8 +7,6 @@ import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { useAppSelector } from 'wallet/src/state'
 import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 import {
-  makeSelectAccountHideSmallBalances,
-  makeSelectAccountHideSpamTokens,
   makeSelectAccountNotificationSetting,
   selectAccounts,
   selectActiveAccount,
@@ -19,6 +17,8 @@ import {
   selectSignerMnemonicAccountExists,
   selectSignerMnemonicAccounts,
   selectViewOnlyAccounts,
+  selectWalletHideSmallBalancesSetting,
+  selectWalletHideSpamTokensSetting,
   selectWalletSwapProtectionSetting,
 } from './selectors'
 
@@ -30,7 +30,9 @@ export function useAccounts(): Record<string, Account> {
 
 export function useAccount(address: Address): Account {
   const account = useAppSelector<Record<string, Account>>(selectAccounts)[address]
-  if (!account) throw new Error(`No account found for address ${address}`)
+  if (!account) {
+    throw new Error(`No account found for address ${address}`)
+  }
   return account
 }
 
@@ -76,14 +78,18 @@ export function useActiveAccountAddressWithThrow(): Address {
     addressRef.current = activeAccountAddress
   }
 
-  if (!addressRef.current) throw new Error('No active account address')
+  if (!addressRef.current) {
+    throw new Error('No active account address')
+  }
 
   return addressRef.current
 }
 
 export function useActiveAccountWithThrow(): Account {
   const activeAccount = useAppSelector(selectActiveAccount)
-  if (!activeAccount) throw new Error('No active account')
+  if (!activeAccount) {
+    throw new Error('No active account')
+  }
   return activeAccount
 }
 
@@ -96,14 +102,12 @@ export function useSelectAccountNotificationSetting(address: Address): boolean {
   return useAppSelector((state) => selectAccountNotificationSetting(state, address))
 }
 
-export function useSelectAccountHideSmallBalances(address: string): boolean {
-  const selectAccountHideSmallBalances = useMemo(() => makeSelectAccountHideSmallBalances(), [])
-  return useAppSelector((state) => selectAccountHideSmallBalances(state, address))
+export function useHideSmallBalancesSetting(): boolean {
+  return useAppSelector(selectWalletHideSmallBalancesSetting)
 }
 
-export function useSelectAccountHideSpamTokens(address: string): boolean {
-  const selectAccountHideSpamTokens = useMemo(() => makeSelectAccountHideSpamTokens(), [])
-  return useAppSelector((state) => selectAccountHideSpamTokens(state, address))
+export function useHideSpamTokensSetting(): boolean {
+  return useAppSelector(selectWalletHideSpamTokensSetting)
 }
 
 /**
@@ -126,7 +130,9 @@ export function useDisplayName(
   const maybeLocalNamePending = usePendingAccounts()[address ?? '']?.name
   const localName = maybeLocalName ?? maybeLocalNamePending
 
-  if (!address) return
+  if (!address) {
+    return
+  }
 
   if (ens.data) {
     return {

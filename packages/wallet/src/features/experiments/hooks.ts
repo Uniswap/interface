@@ -4,7 +4,13 @@ import {
   useGate,
   useGateWithExposureLoggingDisabled,
 } from 'statsig-react-native'
-import { EXPERIMENT_NAMES, EXPERIMENT_PARAMS, FEATURE_FLAGS } from './constants'
+import {
+  EXPERIMENT_NAMES,
+  EXPERIMENT_PARAMS,
+  FEATURE_FLAGS,
+  SwapRewriteVariant,
+  SWAP_VARIANT_TYPE_PARAMETER_NAME,
+} from './constants'
 
 export function useFeatureFlag(flagName: FEATURE_FLAGS): boolean {
   const { value } = useGate(flagName)
@@ -27,15 +33,6 @@ export function useExperimentEnabledWithExposureLoggingDisabled(
     EXPERIMENT_PARAMS.Enabled
   ) as boolean
 }
-
-// these should match the paramerter options in the experiment settings
-export enum SwapRewriteVariant {
-  Disabled = 'disabled',
-  RewriteStandard = 'rewrite-standard',
-  RewriteNoGas = 'rewrite-no-gas',
-}
-
-const SWAP_VARIANT_TYPE_PARAMETER_NAME = 'swap-variant-type'
 
 export function useSwapRewriteVariant(): SwapRewriteVariant {
   const variant = useExperiment(EXPERIMENT_NAMES.SwapRewriteVariants).config.get(

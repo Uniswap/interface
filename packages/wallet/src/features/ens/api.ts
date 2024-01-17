@@ -49,7 +49,9 @@ async function getAvatarFetch(address: string, provider: providers.JsonRpcProvid
 export const getOnChainEnsFetch = async (params: EnsLookupParams): Promise<Response> => {
   const { type, nameOrAddress } = params
   const provider = createEthersProvider(ChainId.Mainnet)
-  if (!provider) return new Response(JSON.stringify({ data: undefined }))
+  if (!provider) {
+    return new Response(JSON.stringify({ data: undefined }))
+  }
 
   let response: string | null
 

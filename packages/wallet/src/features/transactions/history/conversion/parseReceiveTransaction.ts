@@ -25,11 +25,15 @@ const MOONPAY_SENDER_ADDRESSES = [
 export default function parseReceiveTransaction(
   transaction: NonNullable<TransactionListQueryResponse>
 ): ReceiveTokenTransactionInfo | FiatPurchaseTransactionInfo | undefined {
-  if (transaction.details.__typename !== 'TransactionDetails') return undefined
+  if (transaction.details.__typename !== 'TransactionDetails') {
+    return undefined
+  }
 
   const change = transaction.details.assetChanges?.[0]
 
-  if (!change) return undefined
+  if (!change) {
+    return undefined
+  }
 
   // Found NFT transfer
   if (change.__typename === 'NftTransfer') {
@@ -43,8 +47,9 @@ export default function parseReceiveTransaction(
       const tokenId = change.asset.tokenId
       const isSpam = change.asset?.isSpam ?? false
 
-      if (!(sender && tokenAddress && collectionName && imageURL && name && tokenId))
+      if (!(sender && tokenAddress && collectionName && imageURL && name && tokenId)) {
         return undefined
+      }
       return {
         type: TransactionType.Receive,
         assetType,
@@ -89,7 +94,9 @@ export default function parseReceiveTransaction(
       change.asset.project?.isSpam || change.asset.project?.spamCode === SpamCode.HIGH
     )
 
-    if (!(sender && tokenAddress)) return undefined
+    if (!(sender && tokenAddress)) {
+      return undefined
+    }
 
     // special case Moonpay transactions as fiat purchases
     if (isMoonpayPurchase) {

@@ -1,4 +1,4 @@
-import React, { ComponentProps, useCallback, useState } from 'react'
+import React, { ComponentProps, useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, TextLayoutEventData } from 'react-native'
 import { Flex, SpaceTokens, Text, useSporeColors } from 'ui/src'
@@ -33,19 +33,19 @@ export function LongText(props: LongTextProps): JSX.Element {
 
   const [expanded, setExpanded] = useState(true)
   const [textLengthExceedsLimit, setTextLengthExceedsLimit] = useState(false)
-  const [initialized, setInitialized] = useState(false)
+  const isInitializedRef = useRef(false)
 
   const onTextLayout = useCallback(
     (e: NativeSyntheticEvent<TextLayoutEventData>) => {
       // Only needs to measure full number of lines once
-      if (initialized) {
+      if (isInitializedRef.current) {
         return
       }
       setTextLengthExceedsLimit(e.nativeEvent.lines.length > initialDisplayedLines)
-      setInitialized(true)
       setExpanded(false)
+      isInitializedRef.current = true
     },
-    [initialDisplayedLines, initialized]
+    [initialDisplayedLines]
   )
 
   return (

@@ -1,19 +1,23 @@
 import { Trans } from '@lingui/macro'
+import { Currency } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
+import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
+import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { PoolData } from 'graphql/thegraph/PoolData'
 import { useCurrency } from 'hooks/Tokens'
 import { useColor } from 'hooks/useColor'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { ReactNode, useMemo } from 'react'
+import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
-import { ThemedText } from 'theme/components'
+import { ClickableStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { DetailBubble } from './shared'
@@ -61,9 +65,9 @@ const PoolBalanceSymbols = styled(Row)`
   }
 `
 
-const PoolBalanceTokenNames = styled(Row)`
+const PoolBalanceTokenNamesContainer = styled(Row)`
   font-weight: 485;
-  font-size: 18px;
+  font-size: 16px;
   line-height: 24px;
   width: max-content;
 
@@ -72,6 +76,13 @@ const PoolBalanceTokenNames = styled(Row)`
     line-height: 28px;
     width: 100%;
   }
+`
+
+const StyledLink = styled(Link)`
+  display: flex;
+  align-items: center;
+  color: ${({ theme }) => theme.neutral1};
+  ${ClickableStyle}
 `
 
 const leftBarChartStyles = css`
@@ -104,6 +115,43 @@ const StatHeaderBubble = styled(LoadingBubble)`
   border-radius: 8px;
 `
 
+type TokenFullData = Token & {
+  price: number
+  tvl: number
+  color: string
+  percent: number
+  currency?: Currency
+}
+
+const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chainId?: number }) => {
+  const isScreenSize = useScreenSize()
+  const screenIsNotLarge = isScreenSize['lg']
+  const { formatNumber } = useFormatter()
+
+  return (
+    <PoolBalanceTokenNamesContainer>
+      {!screenIsNotLarge && <CurrencyLogo currency={token.currency} size="20px" style={{ marginRight: '8px' }} />}
+      {formatNumber({
+        input: token.tvl,
+        type: NumberType.TokenQuantityStats,
+      })}
+      &nbsp;
+      <StyledLink
+        to={getTokenDetailsURL({
+          address: token.id,
+          chain: chainIdToBackendName(chainId),
+          isInfoExplorePageEnabled: true,
+        })}
+      >
+        {screenIsNotLarge && (
+          <CurrencyLogo currency={token.currency} size="16px" style={{ marginRight: '4px', marginLeft: '4px' }} />
+        )}
+        {token.symbol}
+      </StyledLink>
+    </PoolBalanceTokenNamesContainer>
+  )
+}
+
 interface PoolDetailsStatsProps {
   poolData?: PoolData
   isReversed?: boolean
@@ -114,7 +162,6 @@ interface PoolDetailsStatsProps {
 export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: PoolDetailsStatsProps) {
   const isScreenSize = useScreenSize()
   const screenIsNotLarge = isScreenSize['lg']
-  const { formatNumber } = useFormatter()
   const theme = useTheme()
 
   const currency0 = useCurrency(poolData?.token0?.id, chainId) ?? undefined
@@ -129,7 +176,7 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
   const [token0, token1] = useMemo(() => {
     if (poolData) {
       const fullWidth = poolData?.tvlToken0 / poolData?.token0Price + poolData?.tvlToken1
-      const token0FullData = {
+      const token0FullData: TokenFullData = {
         ...poolData?.token0,
         price: poolData?.token0Price,
         tvl: poolData?.tvlToken0,
@@ -137,7 +184,7 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
         percent: poolData?.tvlToken0 / poolData?.token0Price / fullWidth,
         currency: currency0,
       }
-      const token1FullData = {
+      const token1FullData: TokenFullData = {
         ...poolData?.token1,
         price: poolData?.token1Price,
         tvl: poolData?.tvlToken1,
@@ -177,28 +224,8 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
           <Trans>Pool balances</Trans>
         </ThemedText.BodySecondary>
         <PoolBalanceSymbols>
-          <PoolBalanceTokenNames>
-            {!screenIsNotLarge && (
-              <CurrencyLogo currency={token0.currency} size="20px" style={{ marginRight: '8px' }} />
-            )}
-            {formatNumber({
-              input: token0.tvl,
-              type: NumberType.TokenNonTx,
-            })}
-            &nbsp;
-            {token0.symbol}
-          </PoolBalanceTokenNames>
-          <PoolBalanceTokenNames>
-            {!screenIsNotLarge && (
-              <CurrencyLogo currency={token1.currency} size="20px" style={{ marginRight: '8px' }} />
-            )}
-            {formatNumber({
-              input: token1.tvl,
-              type: NumberType.TokenNonTx,
-            })}
-            &nbsp;
-            {token1.symbol}
-          </PoolBalanceTokenNames>
+          <PoolBalanceTokenNames token={token0} chainId={chainId} />
+          <PoolBalanceTokenNames token={token1} chainId={chainId} />
         </PoolBalanceSymbols>
         {screenIsNotLarge && (
           <Row data-testid="pool-balance-chart">

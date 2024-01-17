@@ -7,7 +7,6 @@
 const { getMetroAndroidAssetsResolutionFix } = require('react-native-monorepo-tools')
 const androidAssetsResolutionFix = getMetroAndroidAssetsResolutionFix()
 
-
 const path = require('path')
 const { getDefaultConfig } = require('metro-config')
 

@@ -80,14 +80,19 @@ export function formatNumberOrString({
   type: NumberType
   placeholder?: string
 }): string {
-  if (price === null || price === undefined) return placeholder
-  if (typeof price === 'string')
+  if (price === null || price === undefined) {
+    return placeholder
+  }
+  if (typeof price === 'string') {
     return formatNumber({ input: parseFloat(price), locale, currencyCode, type, placeholder })
+  }
   return formatNumber({ input: price, locale, currencyCode, type, placeholder })
 }
 
 export function formatPercent(rawPercentage: Maybe<number | string>, locale: string): string {
-  if (rawPercentage === null || rawPercentage === undefined) return '-'
+  if (rawPercentage === null || rawPercentage === undefined) {
+    return '-'
+  }
   const percentage =
     typeof rawPercentage === 'string'
       ? parseFloat(rawPercentage)
