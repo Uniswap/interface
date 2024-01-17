@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmRUdEZRqLCxxz4VQnPTTVrZVGDXBDX3kog6khivksne6u`
-- CIDv1: `bafybeibotyfb47xlr4se7nnegt7oeufmue7ztobxvsjprwib2uga2tq3ki`
+- CIDv0: `QmV3G3jJxFrN3q1XUo67J8Q1U7jBP42DDWkS8JSVWcfWbS`
+- CIDv1: `bafybeiddrvh2jskkihnnlw4i4rs23m43bg56bjpdr43cfon6oddmha6lue`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,59 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeibotyfb47xlr4se7nnegt7oeufmue7ztobxvsjprwib2uga2tq3ki.ipfs.dweb.link/
-- https://bafybeibotyfb47xlr4se7nnegt7oeufmue7ztobxvsjprwib2uga2tq3ki.ipfs.cf-ipfs.com/
-- [ipfs://QmRUdEZRqLCxxz4VQnPTTVrZVGDXBDX3kog6khivksne6u/](ipfs://QmRUdEZRqLCxxz4VQnPTTVrZVGDXBDX3kog6khivksne6u/)
+- https://bafybeiddrvh2jskkihnnlw4i4rs23m43bg56bjpdr43cfon6oddmha6lue.ipfs.dweb.link/
+- https://bafybeiddrvh2jskkihnnlw4i4rs23m43bg56bjpdr43cfon6oddmha6lue.ipfs.cf-ipfs.com/
+- [ipfs://QmV3G3jJxFrN3q1XUo67J8Q1U7jBP42DDWkS8JSVWcfWbS/](ipfs://QmV3G3jJxFrN3q1XUo67J8Q1U7jBP42DDWkS8JSVWcfWbS/)
 
-## 5.4.0 (2024-01-17)
-
-
-### Features
-
-* **web:** [info] add PDP volume chart + use new init pattern for TDP volume chart (#5449) 2235363
-* **web:** [info] Add TDP Pools Table (#5500) fdaa398
-* **web:** [info] PDP My Positions Table (#5521) 76cd654
-* **web:** [info] PDP Transactions Table (#5357) 5763046
-* **web:** [info] Pools Explore Table (#5309) 7cc1767
-* **web:** [info] use BreadcrumbNav in PDP + separate TDP breadcrumb (#5439) 4a482c8
-* **web:** [info] use sigFigs to determine exact in vs out for PDP Tx Table (#5580) 6b52b6a
-* **web:** [info/explore] add stacked volume charts (#5322) 8863cb1
-* **web:** [info/pdp] PDP stats pool balances polish (#5644) f0c7161
-* **web:** [landing-page] add modal to download the mobile app (#5612) 245e3e4
-* **web:** [landing-page] add navbar button to get the app (#5611) 47167c2
-* **web:** A check if we are using iframes (#5654) 2e3c0a2
-* **web:** add detail rows to X detail sheet (#5366) a0aa241
-* **web:** add feature flag to toggle new DNS gateway for quickroutes (#5569) 35a406a
-* **web:** add initial landing page (#5514) e9c5321
-* **web:** Add quote intent to requests (#5465) 12c8a99
-* **web:** add title to TDP loading state for web crawlers (#5594) 03a032f
-* **web:** Basic form for limits (#5457) e4d241a
-* **web:** Limits on mainnet only (#5429) 1437fae
-* **web:** more dynamic page titles for SEO (#5572) 94e8bdc
-* **web:** move time selector to in-chart container (#5433) 11d9978
-* **web:** SEO h1 tags for titles (#5379) b13b883
-* **web:** token selector groupings and refactor (#5403) 065fb49
-* **web:** tvl charts (#5599) db447ab
-* **web:** update volume bar style (#5616) fdc75ec
-* **web:** use new DNS gateway for other API endpoints (#5570) 0e3dbb5
-* **web:** X order modal UI (#5354) 803de62
+### 5.4.1 (2024-01-17)
 
 
 ### Bug Fixes
 
-* **web:** [info] fix PDP 404 flickering + TDP pools table bugs (#5650) 3fb17b7
-* **web:** allow vercel.live domain for CSP scripts to allow Vercel Preview Comments (#5697) 9b16897
-* **web:** bug with URL prefilled tokens (#5705) 57dfaa7
-* **web:** center confirmation modal icons (#5491) 4761373
-* **web:** remove framer motion in a few places to improve performance of new landing page (#5641) 14f427c
-* **web:** set recent-connection metadata on user state initialization (#5698) c1b7197
-* **web:** show default list tokens when searched (#5494) 7feb22f
-* **web:** specify WC metadata (#5634) fec88e8
-* **web:** update snapshots for 2024 (#5567) 112673a
-
-
-### Code Refactoring
-
-* **web:** explore and volume chart structure (#5596) 8f22ebf
+* **web:** remove Object.hasOwn usage (#5751) 82c322b
 
 
