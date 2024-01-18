@@ -4,6 +4,15 @@ import { BigNumber } from 'ethers'
 import { TypedEvent } from 'generated/common'
 import { useRomulusDelegateContract } from 'hooks/useContract'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import fetchEvents from 'utils/fetchEvents'
+
+type VoteCast = [string, BigNumber, number, BigNumber, string] & {
+  voter: string
+  proposalId: BigNumber
+  support: number
+  votes: BigNumber
+  reason: string
+}
 
 type VoteMap = {
   [proposalId: string]: TypedEvent<
@@ -29,7 +38,7 @@ export const useVoteCasts = (romulusAddress: Address) => {
       return
     }
     const filter = romulusContract.filters.VoteCast(address, null, null, null, null)
-    const voteEvents = await romulusContract.queryFilter(filter)
+    const voteEvents = await fetchEvents<TypedEvent<VoteCast>>(romulusContract, filter)
     setVoteEvents(
       voteEvents.reduce((acc, event) => {
         acc[event.args.proposalId.toString()] = event

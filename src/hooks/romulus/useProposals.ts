@@ -4,6 +4,7 @@ import { BigNumber } from 'ethers'
 import { TypedEvent } from 'generated/common'
 import { useRomulusDelegateContract } from 'hooks/useContract'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import fetchEvents from 'utils/fetchEvents'
 
 import { ubeGovernanceAddresses } from '../../constants'
 
@@ -29,7 +30,7 @@ export const useProposals = (): Array<TypedEvent<Proposal>> | undefined => {
   const call = useCallback(async () => {
     if (!romulusAddress || !romulusContract || !mountRef.current) return
     const filter = romulusContract.filters.ProposalCreated(null, null, null, null, null, null, null, null, null)
-    const proposalEvents = await romulusContract.queryFilter(filter)
+    const proposalEvents = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter)
     setProposals(proposalEvents)
   }, [romulusContract, romulusAddress])
 

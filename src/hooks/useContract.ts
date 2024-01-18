@@ -8,6 +8,7 @@ import { StakingInfo } from 'state/stake/hooks'
 
 import ENS_PUBLIC_RESOLVER_ABI from '../constants/abis/ens-public-resolver.json'
 import ERC20_ABI, { ERC20_BYTES32_ABI } from '../constants/abis/erc20'
+import FARM_REGISTRY_ABI from '../constants/abis/FarmRegistry.json'
 import LIMIT_ORDER_PROTOCOL_ABI from '../constants/abis/limit/LimitOrderProtocol.json'
 import ORDER_BOOK_ABI from '../constants/abis/limit/OrderBook.json'
 import ORDER_BOOK_REWARD_DISTRUBUTOR_ABI from '../constants/abis/limit/OrderBookRewardDistributor.json'
@@ -21,6 +22,7 @@ import VOTABLE_STAKING_REWARDS_ABI from '../constants/abis/VotableStakingRewards
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import {
   Erc20,
+  FarmRegistry,
   LimitOrderProtocol,
   MoolaStakingRewards,
   OrderBook,
@@ -164,4 +166,8 @@ export function useRomulusDelegateContract(address?: string, withSignerIfPossibl
 
 export function usePoofTokenContract(address?: string, withSignerIfPossible?: boolean): PoofToken | null {
   return useContract(address, POOF_TOKEN_ABI, withSignerIfPossible) as PoofToken | null
+}
+
+export function useFarmRegistryContract(address?: string, withSignerIfPossible?: boolean): FarmRegistry | null {
+  return useContract(address, FARM_REGISTRY_ABI, withSignerIfPossible) as FarmRegistry | null
 }

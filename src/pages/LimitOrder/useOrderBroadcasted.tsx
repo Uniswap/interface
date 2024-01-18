@@ -2,14 +2,13 @@ import { useCelo, useProvider } from '@celo/react-celo'
 import { ChainId } from '@ubeswap/sdk'
 import { BigNumber } from 'ethers'
 import { OrderBook__factory } from 'generated'
+import { OrderBroadcastedEvent } from 'generated/OrderBook'
 import { useLimitOrderProtocolContract } from 'hooks/useContract'
 import React, { useEffect } from 'react'
 import { useSingleContractMultipleData } from 'state/multicall/hooks'
+import fetchEvents from 'utils/fetchEvents'
 
 import { LIMIT_ORDER_ADDRESS, ORDER_BOOK_ADDRESS } from '../../constants'
-
-// TODO: Just do batch fetching in the future
-const CREATION_BLOCK = 10_000_000
 
 export interface LimitOrdersHistory {
   orderHash: string
@@ -63,11 +62,8 @@ export const useOrderBroadcasted = () => {
       return
     }
     const orderBook = OrderBook__factory.connect(orderBookAddr, provider)
-    const orderBookEvents = await orderBook.queryFilter(
-      orderBook.filters['OrderBroadcasted'](account),
-      CREATION_BLOCK,
-      'latest'
-    )
+    const filter = orderBook.filters['OrderBroadcasted'](account)
+    const orderBookEvents = await fetchEvents<OrderBroadcastedEvent>(orderBook, filter)
     const orderBroadcasts = orderBookEvents.map((orderBookEvent) => {
       return {
         ...orderBookEvent.args,

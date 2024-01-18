@@ -2,12 +2,14 @@ import { ApolloQueryResult, gql, useApolloClient, useQuery } from '@apollo/clien
 import { useCelo } from '@celo/react-celo'
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
-import { Percent, TokenAmount } from '@ubeswap/sdk'
+import { ChainId, Percent, TokenAmount } from '@ubeswap/sdk'
 import { ethers } from 'ethers'
+import { FarmDataEvent, FarmInfoEvent, LPInfoEvent } from 'generated/FarmRegistry'
+import { useFarmRegistryContract } from 'hooks/useContract'
 import React, { useEffect } from 'react'
-import { AbiItem } from 'web3-utils'
+import fetchEvents from 'utils/fetchEvents'
 
-import farmRegistryAbi from '../../constants/abis/FarmRegistry.json'
+import { farmRegistryAddresses } from '../../constants'
 import { CACHED_FARM_INFO_BLOCK, cachedFarmInfoEvents, cachedLpInfoEvents } from './cachedFarmInfo'
 import { useCustomStakingInfo } from './useCustomStakingInfo'
 
@@ -57,7 +59,6 @@ const pairDataGql = gql`
   }
 `
 const COMPOUNDS_PER_YEAR = 2
-const CREATION_BLOCK = 9840049
 const LAST_N_BLOCKS = 5760 // Last 8 hours
 
 export interface WarningInfo {
@@ -66,59 +67,64 @@ export interface WarningInfo {
 }
 
 export const useFarmRegistry = () => {
-  const { kit } = useCelo()
+  const { network } = useCelo()
+  const farmRegistryAddress = farmRegistryAddresses[network.chainId as ChainId]
+  const farmRegistryContract = useFarmRegistryContract(farmRegistryAddress)
   const client = useApolloClient()
   const [farmSummaries, setFarmSummaries] = React.useState<FarmSummary[]>([])
+  const olderFarmInfoEvents = cachedFarmInfoEvents.map((e) => e.returnValues)
+  const olderLpInfoEvents = cachedLpInfoEvents.map((e) => e.returnValues)
+
   const call = React.useCallback(async () => {
-    const farmRegistry = new kit.connection.web3.eth.Contract(
-      farmRegistryAbi as AbiItem[],
-      '0xa2bf67e12EeEDA23C7cA1e5a34ae2441a17789Ec'
-    )
-    const lastBlock = await kit.connection.web3.eth.getBlockNumber()
+    if (!farmRegistryAddress || !farmRegistryContract || !client) return
+
+    const farmInfoFilter = farmRegistryContract.filters.FarmInfo()
+    const lpInfoFilter = farmRegistryContract.filters.LPInfo()
+    const farmDataFilter = farmRegistryContract.filters.FarmData()
     const [farmInfoEvents, lpInfoEvents, farmDataEvents] = await Promise.all([
-      farmRegistry
-        .getPastEvents('FarmInfo', {
-          fromBlock: CACHED_FARM_INFO_BLOCK,
-          toBlock: lastBlock,
-        })
-        .then((events) => events.concat(cachedFarmInfoEvents)),
-      farmRegistry
-        .getPastEvents('LPInfo', { fromBlock: CACHED_FARM_INFO_BLOCK, toBlock: lastBlock })
-        .then((events) => events.concat(cachedLpInfoEvents)),
-      farmRegistry.getPastEvents('FarmData', {
-        fromBlock: lastBlock - LAST_N_BLOCKS,
-        toBlock: lastBlock,
+      fetchEvents<FarmInfoEvent>(farmRegistryContract, farmInfoFilter, CACHED_FARM_INFO_BLOCK, 'latest').then(
+        (events) => {
+          const onlyArgs = events.map((e) => e.args)
+          return olderFarmInfoEvents.concat(onlyArgs)
+        }
+      ),
+      fetchEvents<LPInfoEvent>(farmRegistryContract, lpInfoFilter, CACHED_FARM_INFO_BLOCK, 'latest').then((events) => {
+        const onlyArgs = events.map((e) => e.args)
+        return olderLpInfoEvents.concat(onlyArgs)
       }),
+      fetchEvents<FarmDataEvent>(farmRegistryContract, farmDataFilter, -LAST_N_BLOCKS, 'latest').then((events) =>
+        events.map((e) => e.args)
+      ),
     ])
 
     const lps: Record<string, [string, string]> = {}
     lpInfoEvents.forEach((e) => {
-      lps[e.returnValues.lpAddress] = [e.returnValues.token0Address, e.returnValues.token1Address]
+      lps[e.lpAddress] = [e.token0Address, e.token1Address]
     })
     const farmData: Record<string, FarmData> = {}
     farmDataEvents.forEach((e) => {
-      farmData[e.returnValues.stakingAddress] = {
-        tvlUSD: e.returnValues.tvlUSD,
-        rewardsUSDPerYear: e.returnValues.rewardsUSDPerYear,
+      farmData[e.stakingAddress] = {
+        tvlUSD: e.tvlUSD.toString(),
+        rewardsUSDPerYear: e.rewardsUSDPerYear.toString(),
       }
     })
     const farmSummaries: FarmSummary[] = []
     farmInfoEvents
-      .filter((e) => !blacklist[e.returnValues.stakingAddress.toLowerCase()])
+      .filter((e) => !blacklist[e.stakingAddress.toLowerCase()])
       .forEach((e) => {
         // sometimes there is no farm data for the staking address return early to avoid crash
-        if (!farmData[e.returnValues.stakingAddress]) {
+        if (!farmData[e.stakingAddress]) {
           return
         }
         farmSummaries.push({
-          farmName: ethers.utils.parseBytes32String(e.returnValues.farmName),
-          stakingAddress: e.returnValues.stakingAddress,
-          lpAddress: e.returnValues.lpAddress,
-          token0Address: lps[e.returnValues.lpAddress][0],
-          token1Address: lps[e.returnValues.lpAddress][1],
-          tvlUSD: BigNumber.from(farmData[e.returnValues.stakingAddress].tvlUSD),
-          rewardsUSDPerYear: BigNumber.from(farmData[e.returnValues.stakingAddress].rewardsUSDPerYear),
-          isFeatured: !!featuredPoolWhitelist[e.returnValues.stakingAddress],
+          farmName: ethers.utils.parseBytes32String(e.farmName),
+          stakingAddress: e.stakingAddress,
+          lpAddress: e.lpAddress,
+          token0Address: lps[e.lpAddress][0],
+          token1Address: lps[e.lpAddress][1],
+          tvlUSD: BigNumber.from(farmData[e.stakingAddress].tvlUSD),
+          rewardsUSDPerYear: BigNumber.from(farmData[e.stakingAddress].rewardsUSDPerYear),
+          isFeatured: !!featuredPoolWhitelist[e.stakingAddress],
           isImported: false,
         })
       })
@@ -139,7 +145,7 @@ export const useFarmRegistry = () => {
         ...farmInfos[index],
       }))
     )
-  }, [kit.connection.web3.eth, client])
+  }, [farmRegistryAddress, farmRegistryContract, client, olderFarmInfoEvents, olderLpInfoEvents])
 
   useEffect(() => {
     call()

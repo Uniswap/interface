@@ -219,6 +219,12 @@ export const ubeGovernanceAddresses = {
   [ChainId.BAKLAVA]: '0xa7581d8E26007f4D2374507736327f5b46Dd6bA8',
 }
 
+export const farmRegistryAddresses = {
+  [ChainId.MAINNET]: '0xa2bf67e12EeEDA23C7cA1e5a34ae2441a17789Ec',
+  [ChainId.ALFAJORES]: '0xa2bf67e12EeEDA23C7cA1e5a34ae2441a17789Ec',
+  [ChainId.BAKLAVA]: '0xa2bf67e12EeEDA23C7cA1e5a34ae2441a17789Ec',
+}
+
 export const KNOWN_ADDRESSES: Record<
   string,
   {
@@ -281,3 +287,9 @@ export const DEXES_TO_EXCLUDE = [
   'uniswap-v3',
   ...(process.env.REACT_APP_DEX_EXCLUSION_LIST?.split(',') ?? []),
 ]
+
+export const EVENT_FETCH_RPC_URLS = {
+  [ChainId.MAINNET]: 'https://celo-mainnet.infura.io/v3/801f4c55ea6b48b4b629c9645964eaa9',
+  [ChainId.ALFAJORES]: '',
+  [ChainId.BAKLAVA]: '',
+}

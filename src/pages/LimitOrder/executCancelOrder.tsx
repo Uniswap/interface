@@ -1,6 +1,8 @@
 import { CancelLimitOrderExecutor } from 'components/swap/routing'
 import { ContractTransaction } from 'ethers'
 import { LimitOrderProtocol__factory, OrderBook__factory } from 'generated'
+import { OrderBroadcastedEvent } from 'generated/OrderBook'
+import fetchEvents from 'utils/fetchEvents'
 
 import { LIMIT_ORDER_ADDRESS, ORDER_BOOK_ADDRESS } from '../../constants'
 
@@ -12,7 +14,8 @@ export const executeCancelOrder: CancelLimitOrderExecutor = async ({ signer, cha
   const limitOrderProtocolFactory = LimitOrderProtocol__factory.connect(limitOrderAddr, signer)
 
   const cancel = async (): Promise<ContractTransaction> => {
-    const orders = await orderBook.queryFilter(orderBook.filters['OrderBroadcasted'](undefined, orderHash), 0, 'latest')
+    const filter = orderBook.filters['OrderBroadcasted'](undefined, orderHash)
+    const orders = await fetchEvents<OrderBroadcastedEvent>(orderBook, filter)
     if (orders.length === 0) {
       throw new Error('Error finding the order')
     } else if (orders.length > 0) {
