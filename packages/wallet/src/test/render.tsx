@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { InMemoryCache } from '@apollo/client'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
 import {
@@ -18,6 +19,7 @@ import { AutoMockedApolloProvider } from 'wallet/src/test/mocks/provider'
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderOptions = RenderOptions & {
+  cache?: InMemoryCache
   resolvers?: Resolvers
   preloadedState?: PreloadedState<SharedState>
   store?: EnhancedStore<SharedState>
@@ -33,6 +35,7 @@ type ExtendedRenderOptions = RenderOptions & {
 export function renderWithProviders(
   ui: React.ReactElement,
   {
+    cache,
     resolvers,
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
@@ -48,7 +51,7 @@ export function renderWithProviders(
 } {
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
-      <AutoMockedApolloProvider resolvers={resolvers}>
+      <AutoMockedApolloProvider cache={cache} resolvers={resolvers}>
         <SharedProvider reduxStore={store}>{children}</SharedProvider>
       </AutoMockedApolloProvider>
     )
@@ -61,6 +64,7 @@ export function renderWithProviders(
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderHookOptions<P> = RenderHookOptions<P> & {
+  cache?: InMemoryCache
   resolvers?: Resolvers
   preloadedState?: PreloadedState<SharedState>
   store?: EnhancedStore<SharedState>
@@ -98,6 +102,7 @@ export function renderHookWithProviders<P extends any[], R>(
   hookOptions?: ExtendedRenderHookOptions<P>
 ): RenderHookWithProvidersResult<R, P> {
   const {
+    cache,
     resolvers,
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
@@ -111,7 +116,7 @@ export function renderHookWithProviders<P extends any[], R>(
 
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
-      <AutoMockedApolloProvider resolvers={resolvers}>
+      <AutoMockedApolloProvider cache={cache} resolvers={resolvers}>
         <SharedProvider reduxStore={store}>{children}</SharedProvider>
       </AutoMockedApolloProvider>
     )

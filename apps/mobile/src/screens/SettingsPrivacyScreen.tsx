@@ -1,12 +1,12 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { Switch } from 'src/components/buttons/Switch'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { selectAllowAnalytics } from 'src/features/telemetry/selectors'
 import { setAllowAnalytics } from 'src/features/telemetry/slice'
 import { Flex, Text } from 'ui/src'
+import { Switch } from 'wallet/src/components/buttons/Switch'
 
 export function SettingsPrivacyScreen(): JSX.Element {
   const { t } = useTranslation()

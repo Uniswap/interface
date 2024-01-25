@@ -56,4 +56,9 @@ export enum UnitagScreens {
   EditProfile = 'EditProfile',
 }
 
-export type AppScreen = Screens | OnboardingScreens | UnitagScreens
+export enum FiatOnRampScreens {
+  AmountInput = 'FiatOnRampAmountInput',
+  ServiceProviders = 'FiatOnRampServiceProviders',
+}
+
+export type AppScreen = Screens | OnboardingScreens | UnitagScreens | FiatOnRampScreens

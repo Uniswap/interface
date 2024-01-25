@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { Linking } from 'react-native'
 import { Action } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { closeModal } from 'src/features/modals/modalSlice'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Button, Flex, Icons, Text } from 'ui/src'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 import { isAndroid } from 'wallet/src/utils/platform'
 
 // TODO(MOB-1190): this is DEP_blue_300 at 10% opacity, remove when we have a named color for this

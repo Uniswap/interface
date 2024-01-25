@@ -2,30 +2,39 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TouchableWithoutFeedback } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
+import { useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { Screen } from 'src/components/layout/Screen'
-import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
-import { HandleBar } from 'src/components/modals/HandleBar'
-import { WarningSeverity } from 'src/components/modals/WarningModal/types'
-import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import Trace from 'src/components/Trace/Trace'
-import { ModalName, SectionName } from 'src/features/telemetry/constants'
-import { SwapSettingsModal } from 'src/features/transactions/swap/modals/SwapSettingsModal'
+import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { SwapForm } from 'src/features/transactions/swap/SwapForm'
 import { SwapReview } from 'src/features/transactions/swap/SwapReview'
 import { SwapStatus } from 'src/features/transactions/swap/SwapStatus'
 import { HeaderContent } from 'src/features/transactions/TransactionFlowHeaderContent'
-import { transactionStateActions } from 'src/features/transactions/transactionState/transactionState'
-import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
-import { TransferReview } from 'src/features/transactions/transfer/TransferReview'
 import { TransferStatus } from 'src/features/transactions/transfer/TransferStatus'
-import { TransferTokenForm } from 'src/features/transactions/transfer/TransferTokenForm'
+import { useWalletRestore } from 'src/features/wallet/hooks'
 import { AnimatedFlex, Flex, useDeviceDimensions, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme'
+import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
+import { HandleBar } from 'wallet/src/components/modals/HandleBar'
+import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
+import { SwapSettingsModal } from 'wallet/src/features/transactions/swap/modals/SwapSettingsModal'
+import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
+import { transactionStateActions } from 'wallet/src/features/transactions/transactionState/transactionState'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import {
+  useTransferERC20Callback,
+  useTransferNFTCallback,
+} from 'wallet/src/features/transactions/transfer/hooks/useTransferCallback'
+import { TransferReview } from 'wallet/src/features/transactions/transfer/TransferReview'
+import { TransferTokenForm } from 'wallet/src/features/transactions/transfer/TransferTokenForm'
+import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
+import { TransactionFlowProps, TransactionStep } from 'wallet/src/features/transactions/types'
 import { ANIMATE_SPRING_CONFIG } from 'wallet/src/features/transactions/utils'
-import { DerivedSwapInfo } from './swap/types'
-import { TransactionFlowProps, TransactionStep } from './types'
+import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
+import { ModalName, SectionName } from 'wallet/src/telemetry/constants'
+import { currencyAddress } from 'wallet/src/utils/currencyId'
 
 type InnerContentProps = Pick<
   TransactionFlowProps,
@@ -108,7 +117,7 @@ export function TransactionFlow({
       <Screen edges={['top']}>
         <HandleBar backgroundColor="none" />
         <AnimatedFlex grow row height="100%" style={wrapperStyle}>
-          {/* Padding bottom must have a similar size to the handlebar 
+          {/* Padding bottom must have a similar size to the handlebar
           height as 100% height doesn't include the handlebar height */}
           <Flex gap="$spacing16" pb="$spacing24" px="$spacing16" width="100%">
             {step !== TransactionStep.SUBMITTED && (
@@ -301,6 +310,47 @@ function TransferInnerContent({
   onReviewNext,
   onReviewPrev,
 }: TransferInnerContentProps): JSX.Element | null {
+  // TODO: move this up in the tree to mobile specific flow
+  const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
+  const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
+    useShouldShowNativeKeyboard()
+
+  const { currencyAmounts, recipient, currencyInInfo, nftIn, chainId, txId } = derivedTransferInfo
+  const transferERC20Callback = useTransferERC20Callback(
+    txId,
+    chainId,
+    recipient,
+    currencyInInfo ? currencyAddress(currencyInInfo.currency) : undefined,
+    currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
+    txRequest,
+    onReviewNext
+  )
+  const transferNFTCallback = useTransferNFTCallback(
+    txId,
+    chainId,
+    recipient,
+    nftIn?.nftContract?.address,
+    nftIn?.tokenId,
+    txRequest,
+    onReviewNext
+  )
+
+  const onTransfer = (): void => {
+    onFormNext()
+    nftIn ? transferNFTCallback?.() : transferERC20Callback?.()
+  }
+
+  const { trigger: biometricAuthAndTransfer } = useBiometricPrompt(onTransfer)
+  const { requiredForTransactions: biometricRequired } = useBiometricAppSettings()
+
+  const onReviewSubmit = async (): Promise<void> => {
+    if (biometricRequired) {
+      await biometricAuthAndTransfer()
+    } else {
+      onTransfer()
+    }
+  }
+
   switch (step) {
     case TransactionStep.SUBMITTED:
       return (
@@ -318,8 +368,14 @@ function TransferInnerContent({
           <TransferTokenForm
             derivedTransferInfo={derivedTransferInfo}
             dispatch={dispatch}
+            isLayoutPending={isLayoutPending}
+            openWalletRestoreModal={openWalletRestoreModal}
+            showNativeKeyboard={showNativeKeyboard}
             showingSelectorScreen={showingSelectorScreen}
+            walletNeedsRestore={!!walletNeedsRestore}
             warnings={warnings}
+            onDecimalPadLayout={onDecimalPadLayout}
+            onInputPanelLayout={onInputPanelLayout}
             onNext={onFormNext}
           />
         </Trace>
@@ -332,8 +388,8 @@ function TransferInnerContent({
             gasFee={gasFee}
             txRequest={txRequest}
             warnings={warnings}
-            onNext={onReviewNext}
             onPrev={onReviewPrev}
+            onReviewSubmit={onReviewSubmit}
           />
         </Trace>
       )

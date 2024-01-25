@@ -13,17 +13,17 @@ import {
   MIN_AUTO_SLIPPAGE_TOLERANCE,
 } from 'wallet/src/constants/transactions'
 import { QuoteResponse } from 'wallet/src/data/tradingApi/__generated__/api'
-import { isL2Chain } from 'wallet/src/features/chains/utils'
+import { isL2Chain, toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { useRouterQuote } from 'wallet/src/features/routing/hooks'
 import { QuoteResult, SwapFee } from 'wallet/src/features/routing/types'
 import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
 import { transformQuoteToTrade } from 'wallet/src/features/transactions/swap/routeUtils'
+import {
+  isClassicQuote,
+  transformTradingApiResponseToTrade,
+} from 'wallet/src/features/transactions/swap/tradingApi/utils'
 import { clearStaleTrades } from 'wallet/src/features/transactions/swap/utils'
-
-export enum QuoteType {
-  RoutingApi = 'RoutingApi',
-  TradingApi = 'TradingApi',
-}
+import { QuoteType } from 'wallet/src/features/transactions/utils'
 
 // Response data from either legacy for trading api quote request
 export type QuoteData =
@@ -180,19 +180,29 @@ export function useSetTradeSlippage(
     const tokenInIsNative = inputAmount.currency.isNative
     const tokenOutIsNative = outputAmount.currency.isNative
 
-    // TODO:api this util will only be used for routing api quotes, ignore other case and return early
-    if (quoteData?.quoteType === QuoteType.TradingApi) {
+    if (!quoteData) {
       return { trade, autoSlippageTolerance }
     }
 
-    const newTrade = transformQuoteToTrade(
-      tokenInIsNative,
-      tokenOutIsNative,
-      tradeType,
-      deadline,
-      autoSlippageTolerance,
-      quoteData?.quote
-    )
+    // Based on the quote type, transform the quote data into a trade
+    const newTrade =
+      quoteData.quoteType === QuoteType.RoutingApi
+        ? transformQuoteToTrade(
+            tokenInIsNative,
+            tokenOutIsNative,
+            tradeType,
+            deadline,
+            autoSlippageTolerance,
+            quoteData?.quote
+          )
+        : transformTradingApiResponseToTrade({
+            tokenInIsNative,
+            tokenOutIsNative,
+            tradeType,
+            deadline,
+            slippageTolerance: autoSlippageTolerance,
+            data: quoteData?.quote,
+          })
 
     return {
       trade: {
@@ -217,30 +227,52 @@ export function useSetTradeSlippage(
  */
 // TODO: move logic to `transformResponse` method of routingApi when endpoint returns output USD value
 function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
-  // TODO:api this hook will only be used for routing api quotes, ignore other case
-  const maybeRoutingApiQuote =
-    trade?.quoteData?.quoteType === QuoteType.RoutingApi ? trade?.quoteData?.quote : undefined
+  // Enforce quote types
+  const isLegacyQuote = trade?.quoteData?.quoteType === QuoteType.RoutingApi
 
-  const chainId = maybeRoutingApiQuote?.route?.[0]?.[0]?.tokenIn.chainId
-  const gasCostUSD = maybeRoutingApiQuote?.gasUseEstimateUSD
   const outputAmountUSD = useUSDCValue(trade?.outputAmount)?.toExact()
 
   return useMemo<number>(() => {
-    const onL2 = isL2Chain(chainId)
-    if (onL2 || !gasCostUSD || !outputAmountUSD) {
-      return MIN_AUTO_SLIPPAGE_TOLERANCE
+    if (isLegacyQuote) {
+      const chainId = trade.quoteData.quote?.route[0]?.[0]?.tokenIn?.chainId
+      const onL2 = isL2Chain(chainId)
+      const gasCostUSD = trade.quoteData.quote?.gasUseEstimateUSD
+      return calculateAutoSlippage({ onL2, gasCostUSD, outputAmountUSD })
+    } else {
+      // TODO:api remove this during Uniswap X integration
+      const quote = isClassicQuote(trade?.quoteData?.quote?.quote)
+        ? trade?.quoteData?.quote?.quote
+        : undefined
+      const chainId = toSupportedChainId(quote?.chainId) ?? undefined
+      const onL2 = isL2Chain(chainId)
+      const gasCostUSD = quote?.gasFeeUSD
+      return calculateAutoSlippage({ onL2, gasCostUSD, outputAmountUSD })
     }
+  }, [isLegacyQuote, outputAmountUSD, trade])
+}
 
-    const suggestedSlippageTolerance = (Number(gasCostUSD) / Number(outputAmountUSD)) * 100
+function calculateAutoSlippage({
+  onL2,
+  gasCostUSD,
+  outputAmountUSD,
+}: {
+  onL2: boolean
+  gasCostUSD?: string
+  outputAmountUSD?: string
+}): number {
+  if (onL2 || !gasCostUSD || !outputAmountUSD) {
+    return MIN_AUTO_SLIPPAGE_TOLERANCE
+  }
 
-    if (suggestedSlippageTolerance > MAX_AUTO_SLIPPAGE_TOLERANCE) {
-      return MAX_AUTO_SLIPPAGE_TOLERANCE
-    }
+  const suggestedSlippageTolerance = (Number(gasCostUSD) / Number(outputAmountUSD)) * 100
 
-    if (suggestedSlippageTolerance < MIN_AUTO_SLIPPAGE_TOLERANCE) {
-      return MIN_AUTO_SLIPPAGE_TOLERANCE
-    }
+  if (suggestedSlippageTolerance > MAX_AUTO_SLIPPAGE_TOLERANCE) {
+    return MAX_AUTO_SLIPPAGE_TOLERANCE
+  }
 
-    return Number(suggestedSlippageTolerance.toFixed(2))
-  }, [chainId, gasCostUSD, outputAmountUSD])
+  if (suggestedSlippageTolerance < MIN_AUTO_SLIPPAGE_TOLERANCE) {
+    return MIN_AUTO_SLIPPAGE_TOLERANCE
+  }
+
+  return Number(suggestedSlippageTolerance.toFixed(2))
 }

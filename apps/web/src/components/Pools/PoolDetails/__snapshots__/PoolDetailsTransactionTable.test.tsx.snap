@@ -25,19 +25,31 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   justify-content: flex-start;
 }
 
-.c9 {
+.c11 {
   color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
-.c17 {
+.c21 {
   color: #40B66B;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
-.c18 {
+.c22 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
-.c12 {
+.c16 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -48,45 +60,45 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   font-weight: 500;
 }
 
-.c12:hover {
+.c16:hover {
   opacity: 0.6;
 }
 
-.c12:active {
-  opacity: 0.4;
-}
-
-.c19 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c19:hover {
-  opacity: 0.6;
-}
-
-.c19:active {
+.c16:active {
   opacity: 0.4;
 }
 
 .c23 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c23:hover {
+  opacity: 0.6;
+}
+
+.c23:active {
+  opacity: 0.4;
+}
+
+.c27 {
   height: 16px;
   width: 16px;
 }
 
-.c23 path {
+.c27 path {
   stroke: #FC72FF;
   background: #7D7D7D;
   fill: none;
 }
 
-.c24 {
+.c28 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
 }
@@ -137,7 +149,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   background: #FFFFFF;
 }
 
-.c15 {
+.c19 {
   width: 100%;
   position: relative;
   overflow-x: auto;
@@ -154,11 +166,11 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   scrollbar-width: none;
 }
 
-.c15::-webkit-scrollbar {
+.c19::-webkit-scrollbar {
   display: none;
 }
 
-.c21 {
+.c25 {
   position: -webkit-sticky;
   position: sticky;
   -webkit-box-pack: center;
@@ -169,7 +181,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   visibility: hidden;
 }
 
-.c22 {
+.c26 {
   background: #FFEFFF;
   border-radius: 8px;
   width: -webkit-fit-content;
@@ -185,7 +197,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
 }
 
 .c5 {
-  padding: 0px 20px;
+  padding: 0px 12px;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -197,7 +209,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   min-height: 64px;
 }
 
-.c16:hover {
+.c20:hover {
   background: #22222212;
 }
 
@@ -239,34 +251,62 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   justify-content: flex-end;
 }
 
-.c8 {
-  width: undefinedpx;
-  min-width: 150px;
-  min-width: undefinedpx;
-  -webkit-flex: 0;
-  -ms-flex: 0;
-  flex: 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
+.c9 {
   -webkit-box-pack: start;
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
+  cursor: pointer;
+  width: 100%;
+  gap: 4px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c9:hover {
+  opacity: 0.6;
+}
+
+.c9:active {
+  opacity: 0.4;
 }
 
 .c10 {
-  width: undefinedpx;
-  min-width: 100px;
-  min-width: undefinedpx;
+  height: 16px;
+  width: 16px;
+  color: #7D7D7D;
+  -webkit-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
+.c13 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  gap: 4px;
+}
+
+.c13:hover {
+  opacity: 0.6;
+}
+
+.c13:active {
+  opacity: 0.4;
+}
+
+.c8 {
+  min-width: 150px;
   -webkit-flex: 0;
   -ms-flex: 0;
   flex: 0;
@@ -282,39 +322,35 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   overflow: hidden;
   padding: 12px 8px;
 }
 
-.c11 {
-  width: undefinedpx;
-  min-width: 125px;
-  min-width: undefinedpx;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c13 {
-  width: undefinedpx;
+.c12 {
   min-width: 100px;
-  min-width: undefinedpx;
+  -webkit-flex: 0;
+  -ms-flex: 0;
+  flex: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c15 {
+  min-width: 125px;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -330,36 +366,60 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c17 {
+  min-width: 100px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c18 {
+  min-width: 32px;
+  -webkit-flex: 0;
+  -ms-flex: 0;
+  flex: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: lining-nums tabular-nums;
   overflow: hidden;
   padding: 12px 8px;
 }
 
 .c14 {
-  width: undefinedpx;
-  min-width: 32px;
-  min-width: undefinedpx;
-  -webkit-flex: 0;
-  -ms-flex: 0;
-  flex: 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
+  position: relative;
 }
 
-.c20 {
+.c24 {
   color: #7D7D7D;
   stroke: #7D7D7D;
 }
@@ -384,9 +444,36 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c3 c4 c9"
                 >
-                  Time
+                  <svg
+                    class="c10"
+                    direction="desc"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="12"
+                      x2="12"
+                      y1="5"
+                      y2="19"
+                    />
+                    <polyline
+                      points="19 12 12 19 5 12"
+                    />
+                  </svg>
+                  <div
+                    class="c11 css-1urox24"
+                  >
+                    Time
+                  </div>
                 </div>
               </div>
             </div>
@@ -394,12 +481,33 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c3 c4 c13"
                 >
-                  Type
+                  <svg
+                    class="c14"
+                    fill="none"
+                    height="17"
+                    viewBox="0 0 16 17"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7.99954 13.1667C7.82887 13.1667 7.65818 13.1014 7.52818 12.9714L4.86152 10.3047C4.60085 10.044 4.60085 9.62267 4.86152 9.362C5.12218 9.10134 5.54356 9.10134 5.80422 9.362L7.99954 11.5573L10.1948 9.362C10.4555 9.10134 10.8769 9.10134 11.1376 9.362C11.3982 9.62267 11.3982 10.044 11.1376 10.3047L8.47089 12.9714C8.34089 13.1014 8.1702 13.1667 7.99954 13.1667Z"
+                      fill="#9B9B9B"
+                    />
+                    <path
+                      d="M10.6662 7.83336C10.4955 7.83336 10.3248 7.76805 10.1948 7.63805L7.99954 5.44274L5.80422 7.63805C5.54356 7.89872 5.12218 7.89872 4.86152 7.63805C4.60085 7.37738 4.60085 6.95601 4.86152 6.69534L7.52818 4.02868C7.78885 3.76801 8.21022 3.76801 8.47089 4.02868L11.1376 6.69534C11.3982 6.95601 11.3982 7.37738 11.1376 7.63805C11.0076 7.76805 10.8369 7.83336 10.6662 7.83336Z"
+                      fill="#9B9B9B"
+                    />
+                  </svg>
+                  <div
+                    class="c11 css-1urox24"
+                  >
+                    Type
+                  </div>
                 </div>
               </div>
             </div>
@@ -407,10 +515,10 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
               class="c7"
             >
               <div
-                class="c11"
+                class="c15"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c11 css-1urox24"
                 >
                   USD
                 </div>
@@ -420,14 +528,14 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
               class="c7"
             >
               <div
-                class="c11"
+                class="c15"
               >
                 <a
-                  class="c12"
+                  class="c16"
                   href="/explore/tokens/ethereum/undefined"
                 >
                   <div
-                    class="c9 css-1urox24"
+                    class="c11 css-1urox24"
                   />
                 </a>
               </div>
@@ -436,14 +544,14 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
               class="c7"
             >
               <div
-                class="c11"
+                class="c15"
               >
                 <a
-                  class="c12"
+                  class="c16"
                   href="/explore/tokens/ethereum/undefined"
                 >
                   <div
-                    class="c9 css-1urox24"
+                    class="c11 css-1urox24"
                   />
                 </a>
               </div>
@@ -452,10 +560,10 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
               class="c7"
             >
               <div
-                class="c13"
+                class="c17"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c11 css-1urox24"
                 >
                   Wallet
                 </div>
@@ -465,10 +573,10 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
               class="c7"
             >
               <div
-                class="c14"
+                class="c18"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c11 css-1urox24"
                 >
                   Tx
                 </div>
@@ -477,10 +585,10 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
           </div>
         </div>
         <div
-          class="c0 c15"
+          class="c0 c19"
         >
           <div
-            class="c3 c4 c5 c16"
+            class="c3 c4 c5 c20"
           >
             <div
               class="c7"
@@ -489,7 +597,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c11 css-1urox24"
                 >
                   01/12, 05:46am
                 </div>
@@ -499,10 +607,10 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c17 css-1urox24"
+                  class="c21 css-1urox24"
                 >
                   <span>
                     Buy Token1
@@ -514,10 +622,10 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
               class="c7"
             >
               <div
-                class="c11"
+                class="c15"
               >
                 <div
-                  class="c18 css-1urox24"
+                  class="c22 css-1urox24"
                 >
                   $400.00
                 </div>
@@ -527,10 +635,10 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
               class="c7"
             >
               <div
-                class="c11"
+                class="c15"
               >
                 <div
-                  class="c18 css-1urox24"
+                  class="c22 css-1urox24"
                 >
                   300
                 </div>
@@ -540,10 +648,10 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
               class="c7"
             >
               <div
-                class="c11"
+                class="c15"
               >
                 <div
-                  class="c18 css-1urox24"
+                  class="c22 css-1urox24"
                 >
                   200
                 </div>
@@ -553,16 +661,16 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
               class="c7"
             >
               <div
-                class="c13"
+                class="c17"
               >
                 <a
-                  class="c19 c20"
+                  class="c23 c24"
                   href="https://etherscan.io/address/0xabc"
                   rel="noopener noreferrer"
                   target="_blank"
                 >
                   <div
-                    class="c18 css-1urox24"
+                    class="c22 css-1urox24"
                   />
                 </a>
               </div>
@@ -571,10 +679,10 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
               class="c7"
             >
               <div
-                class="c14"
+                class="c18"
               >
                 <a
-                  class="c19 c20"
+                  class="c23 c24"
                   data-testid="https://etherscan.io/tx/0x123"
                   href="https://etherscan.io/tx/0x123"
                   rel="noopener noreferrer"
@@ -610,13 +718,13 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
           </div>
         </div>
         <div
-          class="c3 c4 c21"
+          class="c3 c4 c25"
         >
           <div
-            class="c3 c4 c22"
+            class="c3 c4 c26"
           >
             <svg
-              class="c23 c24"
+              class="c27 c28"
               fill="none"
               stroke="#FC72FF"
               viewBox="0 0 24 24"
@@ -669,22 +777,26 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   justify-content: flex-start;
 }
 
-.c9 {
+.c11 {
   color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
-.c20 {
+.c24 {
   height: 16px;
   width: 16px;
 }
 
-.c20 path {
+.c24 path {
   stroke: #FC72FF;
   background: #7D7D7D;
   fill: none;
 }
 
-.c21 {
+.c25 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
 }
@@ -735,7 +847,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   background: #FFFFFF;
 }
 
-.c16 {
+.c20 {
   width: 100%;
   position: relative;
   overflow-x: auto;
@@ -752,11 +864,11 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   scrollbar-width: none;
 }
 
-.c16::-webkit-scrollbar {
+.c20::-webkit-scrollbar {
   display: none;
 }
 
-.c18 {
+.c22 {
   position: -webkit-sticky;
   position: sticky;
   -webkit-box-pack: center;
@@ -767,7 +879,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   visibility: hidden;
 }
 
-.c19 {
+.c23 {
   background: #FFEFFF;
   border-radius: 8px;
   width: -webkit-fit-content;
@@ -783,7 +895,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
 }
 
 .c5 {
-  padding: 0px 20px;
+  padding: 0px 12px;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -795,7 +907,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   min-height: 64px;
 }
 
-.c17:hover {
+.c21:hover {
   background: #22222212;
 }
 
@@ -837,7 +949,61 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   justify-content: flex-end;
 }
 
-.c12 {
+.c9 {
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  cursor: pointer;
+  width: 100%;
+  gap: 4px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c9:hover {
+  opacity: 0.6;
+}
+
+.c9:active {
+  opacity: 0.4;
+}
+
+.c10 {
+  height: 16px;
+  width: 16px;
+  color: #7D7D7D;
+  -webkit-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
+.c13 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  gap: 4px;
+}
+
+.c13:hover {
+  opacity: 0.6;
+}
+
+.c13:active {
+  opacity: 0.4;
+}
+
+.c16 {
   border-radius: 12px;
   border-radius: 12px;
   height: 24px;
@@ -853,9 +1019,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
 }
 
 .c8 {
-  width: undefinedpx;
   min-width: 150px;
-  min-width: undefinedpx;
   -webkit-flex: 0;
   -ms-flex: 0;
   flex: 0;
@@ -871,15 +1035,13 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   overflow: hidden;
   padding: 12px 8px;
 }
 
-.c10 {
-  width: undefinedpx;
+.c12 {
   min-width: 100px;
-  min-width: undefinedpx;
   -webkit-flex: 0;
   -ms-flex: 0;
   flex: 0;
@@ -895,63 +1057,57 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  font-variant-numeric: tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c11 {
-  width: undefinedpx;
-  min-width: 125px;
-  min-width: undefinedpx;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c14 {
-  width: undefinedpx;
-  min-width: 100px;
-  min-width: undefinedpx;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   overflow: hidden;
   padding: 12px 8px;
 }
 
 .c15 {
-  width: undefinedpx;
+  min-width: 125px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c18 {
+  min-width: 100px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c19 {
   min-width: 32px;
-  min-width: undefinedpx;
   -webkit-flex: 0;
   -ms-flex: 0;
   flex: 0;
@@ -967,14 +1123,18 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   overflow: hidden;
   padding: 12px 8px;
 }
 
-.c13 {
+.c17 {
   width: 75%;
   height: 16px;
+}
+
+.c14 {
+  position: relative;
 }
 
 <div
@@ -997,9 +1157,36 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c3 c4 c9"
                 >
-                  Time
+                  <svg
+                    class="c10"
+                    direction="desc"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="12"
+                      x2="12"
+                      y1="5"
+                      y2="19"
+                    />
+                    <polyline
+                      points="19 12 12 19 5 12"
+                    />
+                  </svg>
+                  <div
+                    class="c11 css-1urox24"
+                  >
+                    Time
+                  </div>
                 </div>
               </div>
             </div>
@@ -1007,12 +1194,33 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c3 c4 c13"
                 >
-                  Type
+                  <svg
+                    class="c14"
+                    fill="none"
+                    height="17"
+                    viewBox="0 0 16 17"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M7.99954 13.1667C7.82887 13.1667 7.65818 13.1014 7.52818 12.9714L4.86152 10.3047C4.60085 10.044 4.60085 9.62267 4.86152 9.362C5.12218 9.10134 5.54356 9.10134 5.80422 9.362L7.99954 11.5573L10.1948 9.362C10.4555 9.10134 10.8769 9.10134 11.1376 9.362C11.3982 9.62267 11.3982 10.044 11.1376 10.3047L8.47089 12.9714C8.34089 13.1014 8.1702 13.1667 7.99954 13.1667Z"
+                      fill="#9B9B9B"
+                    />
+                    <path
+                      d="M10.6662 7.83336C10.4955 7.83336 10.3248 7.76805 10.1948 7.63805L7.99954 5.44274L5.80422 7.63805C5.54356 7.89872 5.12218 7.89872 4.86152 7.63805C4.60085 7.37738 4.60085 6.95601 4.86152 6.69534L7.52818 4.02868C7.78885 3.76801 8.21022 3.76801 8.47089 4.02868L11.1376 6.69534C11.3982 6.95601 11.3982 7.37738 11.1376 7.63805C11.0076 7.76805 10.8369 7.83336 10.6662 7.83336Z"
+                      fill="#9B9B9B"
+                    />
+                  </svg>
+                  <div
+                    class="c11 css-1urox24"
+                  >
+                    Type
+                  </div>
                 </div>
               </div>
             </div>
@@ -1020,10 +1228,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c11"
+                class="c15"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c11 css-1urox24"
                 >
                   USD
                 </div>
@@ -1033,10 +1241,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c11"
+                class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1045,10 +1253,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c11"
+                class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1057,10 +1265,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c14"
+                class="c18"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c11 css-1urox24"
                 >
                   Wallet
                 </div>
@@ -1070,10 +1278,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c15"
+                class="c19"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c11 css-1urox24"
                 >
                   Tx
                 </div>
@@ -1082,10 +1290,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
           </div>
         </div>
         <div
-          class="c0 c16"
+          class="c0 c20"
         >
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -1094,7 +1302,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1103,58 +1311,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1166,14 +1326,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -1182,7 +1390,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1191,58 +1399,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1254,14 +1414,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -1270,7 +1478,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1279,58 +1487,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1342,14 +1502,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -1358,7 +1566,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1367,58 +1575,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1430,14 +1590,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -1446,7 +1654,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1455,58 +1663,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1518,14 +1678,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -1534,7 +1742,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1543,58 +1751,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1606,14 +1766,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -1622,7 +1830,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1631,58 +1839,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1694,14 +1854,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -1710,7 +1918,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1719,58 +1927,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1782,14 +1942,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -1798,7 +2006,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1807,58 +2015,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1870,14 +2030,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -1886,7 +2094,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1895,58 +2103,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1958,14 +2118,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -1974,7 +2182,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1983,58 +2191,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2046,14 +2206,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -2062,7 +2270,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2071,58 +2279,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2134,14 +2294,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -2150,7 +2358,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2159,58 +2367,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2222,14 +2382,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -2238,7 +2446,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2247,58 +2455,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2310,14 +2470,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -2326,7 +2534,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2335,58 +2543,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2398,14 +2558,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -2414,7 +2622,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2423,58 +2631,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2486,14 +2646,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -2502,7 +2710,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2511,58 +2719,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2574,14 +2734,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -2590,7 +2798,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2599,58 +2807,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2662,14 +2822,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -2678,7 +2886,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2687,58 +2895,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2750,14 +2910,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -2766,7 +2974,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2775,58 +2983,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2838,14 +2998,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -2854,7 +3062,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2863,58 +3071,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2926,14 +3086,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -2942,7 +3150,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2951,58 +3159,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -3014,14 +3174,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -3030,7 +3238,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -3039,58 +3247,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -3102,14 +3262,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -3118,7 +3326,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -3127,58 +3335,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -3190,14 +3350,62 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c17"
+            class="c3 c4 c5 c21"
           >
             <div
               class="c7"
@@ -3206,7 +3414,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -3215,58 +3423,10 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c10"
+                class="c12"
               >
                 <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c12 c13"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c14"
-              >
-                <div
-                  class="c12 c13"
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -3278,7 +3438,55 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 class="c15"
               >
                 <div
-                  class="c12 c13"
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c15"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c18"
+              >
+                <div
+                  class="c16 c17"
+                  data-testid="cell-loading-bubble"
+                />
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <div
+                class="c19"
+              >
+                <div
+                  class="c16 c17"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -3286,13 +3494,13 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
           </div>
         </div>
         <div
-          class="c3 c4 c18"
+          class="c3 c4 c22"
         >
           <div
-            class="c3 c4 c19"
+            class="c3 c4 c23"
           >
             <svg
-              class="c20 c21"
+              class="c24 c25"
               fill="none"
               stroke="#FC72FF"
               viewBox="0 0 24 24"

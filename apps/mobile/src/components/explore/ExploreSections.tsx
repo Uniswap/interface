@@ -9,7 +9,6 @@ import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem, TokenItemData } from 'src/components/explore/TokenItem'
 import { AnimatedBottomSheetFlatList } from 'src/components/layout/AnimatedFlatList'
-import { Loader } from 'src/components/loading'
 import { AutoScrollProps } from 'src/components/sortableGrid'
 import {
   getClientTokensOrderByCompareFn,
@@ -19,6 +18,7 @@ import {
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { Flex, Text, useDeviceInsets } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { TokenLoader } from 'wallet/src/components/loading/TokenLoader'
 import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -167,7 +167,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
         ref={listRef}
         ListEmptyComponent={
           <Flex mx="$spacing24" my="$spacing12">
-            <Loader.Token repeat={5} />
+            <TokenLoader repeat={5} />
           </Flex>
         }
         ListHeaderComponent={

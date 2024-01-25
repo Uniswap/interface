@@ -1,0 +1,768 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AccountDetails renders without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "flexShrink": 1,
+      "gap": 16,
+      "justifyContent": "space-between",
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "stretch",
+        "flex": 1,
+        "flexDirection": "row",
+        "flexShrink": 1,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "gap": 8,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "stretch",
+            "backgroundColor": "transparent",
+            "borderBottomColor": "transparent",
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderBottomWidth": 0,
+            "borderLeftColor": "transparent",
+            "borderLeftWidth": 0,
+            "borderRightColor": "transparent",
+            "borderRightWidth": 0,
+            "borderStyle": "solid",
+            "borderTopColor": "transparent",
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "borderTopWidth": 0,
+            "flexDirection": "column",
+            "position": "relative",
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "borderBottomLeftRadius": 999999,
+              "borderBottomRightRadius": 999999,
+              "borderTopLeftRadius": 999999,
+              "borderTopRightRadius": 999999,
+              "flexDirection": "column",
+              "height": 50,
+              "justifyContent": "center",
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "paddingRight": 0,
+              "paddingTop": 0,
+              "width": 50,
+            }
+          }
+        >
+          <div
+            style={
+              {
+                "height": 50,
+                "position": "relative",
+                "width": 50,
+              }
+            }
+          >
+            <div
+              style={
+                {
+                  "height": 50,
+                  "overflow": "visible",
+                  "position": "absolute",
+                  "width": 50,
+                }
+              }
+            >
+              <svg
+                viewBox="0 0 50 50"
+              >
+                <defs>
+                  <defs>
+                    <mask
+                      id="container-mask0x82D56A352367453f74FC0dC7B071b311da373Fa650"
+                    >
+                      <rect
+                        fill="white"
+                        height="100%"
+                        width="100%"
+                        x="0"
+                        y="0"
+                      />
+                      <g
+                        transform="scale(1.3888888888888888) 
+ translate(0, 0)"
+                      >
+                        <path
+                          clipRule="evenodd"
+                          d="M31 33V16C31 8.8203 25.1797 3 18 3C10.8203 3 5 8.8203 5 16V33H31ZM18 0C9.16344 0 2 7.16344 2 16V35.807C2 35.9136 2.08642 36 2.19303 36H33.807C33.9136 36 34 35.9136 34 35.807V16C34 7.16344 26.8366 0 18 0Z"
+                          fill="black"
+                          fillRule="evenodd"
+                        />
+                      </g>
+                    </mask>
+                    <mask
+                      id="shape-mask0x82D56A352367453f74FC0dC7B071b311da373Fa650"
+                    >
+                      <rect
+                        fill="white"
+                        height="100%"
+                        width="100%"
+                        x="0"
+                        y="0"
+                      />
+                      <g
+                        transform="scale(1.3888888888888888) 
+ translate(10, 10)"
+                      >
+                        <path
+                          d="M8 8C8 8 13.1678 6.70089 14.2197 5.649C15.2716 4.59712 15.2583 2.87836 14.19 1.81004C13.1216 0.741719 11.4029 0.728395 10.351 1.78028C9.29911 2.83216 8 8 8 8Z"
+                          fill="black"
+                        />
+                        <path
+                          d="M8 8C8 8 13.1678 9.29911 14.2197 10.351C15.2716 11.4029 15.2583 13.1216 14.19 14.19C13.1216 15.2583 11.4029 15.2716 10.351 14.2197C9.29911 13.1678 8 8 8 8Z"
+                          fill="black"
+                        />
+                        <path
+                          d="M1.78028 10.351C2.83216 9.29911 8 8 8 8C8 8 6.70089 13.1678 5.649 14.2197C4.59712 15.2716 2.87836 15.2583 1.81004 14.19C0.741719 13.1216 0.728395 11.4029 1.78028 10.351Z"
+                          fill="black"
+                        />
+                        <path
+                          d="M8 8C8 8 2.83216 6.70089 1.78028 5.649C0.728395 4.59712 0.741719 2.87836 1.81004 1.81004C2.87836 0.741719 4.59712 0.728395 5.649 1.78028C6.70089 2.83216 8 8 8 8Z"
+                          fill="black"
+                        />
+                      </g>
+                    </mask>
+                    <mask
+                      id="mask0x82D56A352367453f74FC0dC7B071b311da373Fa650"
+                    >
+                      <g
+                        fill="white"
+                      >
+                        <g
+                          mask="url(#shape-mask0x82D56A352367453f74FC0dC7B071b311da373Fa650)"
+                        >
+                          <g
+                            transform="scale(1.3888888888888888)"
+                          >
+                            <path
+                              clipRule="evenodd"
+                              d="M31 33V16C31 8.8203 25.1797 3 18 3C10.8203 3 5 8.8203 5 16V33H31ZM18 0C9.16344 0 2 7.16344 2 16V35.807C2 35.9136 2.08642 36 2.19303 36H33.807C33.9136 36 34 35.9136 34 35.807V16C34 7.16344 26.8366 0 18 0Z"
+                              fillRule="evenodd"
+                            />
+                          </g>
+                        </g>
+                        <g
+                          mask="url(#container-mask0x82D56A352367453f74FC0dC7B071b311da373Fa650)"
+                        >
+                          <g
+                            transform="scale(1.3888888888888888)
+        translate(10, 10)"
+                          >
+                            <path
+                              d="M8 8C8 8 13.1678 6.70089 14.2197 5.649C15.2716 4.59712 15.2583 2.87836 14.19 1.81004C13.1216 0.741719 11.4029 0.728395 10.351 1.78028C9.29911 2.83216 8 8 8 8Z"
+                            />
+                            <path
+                              d="M8 8C8 8 13.1678 9.29911 14.2197 10.351C15.2716 11.4029 15.2583 13.1216 14.19 14.19C13.1216 15.2583 11.4029 15.2716 10.351 14.2197C9.29911 13.1678 8 8 8 8Z"
+                            />
+                            <path
+                              d="M1.78028 10.351C2.83216 9.29911 8 8 8 8C8 8 6.70089 13.1678 5.649 14.2197C4.59712 15.2716 2.87836 15.2583 1.81004 14.19C0.741719 13.1216 0.728395 11.4029 1.78028 10.351Z"
+                            />
+                            <path
+                              d="M8 8C8 8 2.83216 6.70089 1.78028 5.649C0.728395 4.59712 0.741719 2.87836 1.81004 1.81004C2.87836 0.741719 4.59712 0.728395 5.649 1.78028C6.70089 2.83216 8 8 8 8Z"
+                            />
+                          </g>
+                        </g>
+                      </g>
+                    </mask>
+                  </defs>
+                  <linearGradient
+                    id="gradient0x82D56A352367453f74FC0dC7B071b311da373Fa650"
+                  >
+                    <stop
+                      offset="0%"
+                      stopColor="#6100FF"
+                    />
+                    <stop
+                      offset="100%"
+                      stopColor="#76D191"
+                    />
+                  </linearGradient>
+                  <filter
+                    height="200%"
+                    id="blur0x82D56A352367453f74FC0dC7B071b311da373Fa650"
+                    width="200%"
+                    x="-50%"
+                    y="-50%"
+                  >
+                    <feGaussianBlur
+                      in="SourceGraphic"
+                      stdDeviation={16.666666666666668}
+                    />
+                  </filter>
+                </defs>
+                <g
+                  mask="url(#mask0x82D56A352367453f74FC0dC7B071b311da373Fa650)"
+                >
+                  <rect
+                    fill="url(#gradient0x82D56A352367453f74FC0dC7B071b311da373Fa650)"
+                    height="100%"
+                    width="100%"
+                    x="0"
+                    y="0"
+                  />
+                  <rect
+                    fill="black"
+                    height="100%"
+                    opacity={0.08}
+                    width="100%"
+                    x="0"
+                    y="0"
+                  />
+                  <ellipse
+                    cx={25}
+                    cy={0}
+                    fill="#D3EBA3"
+                    filter="url(#blur0x82D56A352367453f74FC0dC7B071b311da373Fa650)"
+                    rx={25}
+                    ry={25}
+                  />
+                </g>
+              </svg>
+            </div>
+          </div>
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "column",
+            "flexShrink": 1,
+            "gap": 0,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "gap": 12,
+              "justifyContent": "center",
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "gap": 4,
+                "justifyContent": "center",
+              }
+            }
+          >
+            <Text
+              adjustsFontSizeToFit={true}
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.4}
+              numberOfLines={1}
+              style={
+                {
+                  "color": "#222222",
+                  "flexShrink": 1,
+                  "fontFamily": "Basel-Book",
+                  "fontSize": 15,
+                  "lineHeight": 20,
+                }
+              }
+              suppressHighlighting={true}
+              testID="address-display/name/0x​82D5...3Fa6"
+            >
+              0x​82D5...3Fa6
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flex": 1,
+        "flexDirection": "row",
+        "flexShrink": 1,
+        "gap": 4,
+        "justifyContent": "flex-end",
+      }
+    }
+  >
+    <Text
+      allowFontScaling={true}
+      maxFontSizeMultiplier={1.4}
+      style={
+        {
+          "color": "#7D7D7D",
+          "fontFamily": "Basel-Book",
+          "fontSize": 15,
+          "lineHeight": 20,
+        }
+      }
+      suppressHighlighting={true}
+    >
+      0x82D5...3Fa6
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`AccountDetails renders without error with chevron 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "flexShrink": 1,
+      "gap": 16,
+      "justifyContent": "space-between",
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "stretch",
+        "flex": 1,
+        "flexDirection": "row",
+        "flexShrink": 1,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "gap": 8,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "stretch",
+            "backgroundColor": "transparent",
+            "borderBottomColor": "transparent",
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderBottomWidth": 0,
+            "borderLeftColor": "transparent",
+            "borderLeftWidth": 0,
+            "borderRightColor": "transparent",
+            "borderRightWidth": 0,
+            "borderStyle": "solid",
+            "borderTopColor": "transparent",
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "borderTopWidth": 0,
+            "flexDirection": "column",
+            "position": "relative",
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "borderBottomLeftRadius": 999999,
+              "borderBottomRightRadius": 999999,
+              "borderTopLeftRadius": 999999,
+              "borderTopRightRadius": 999999,
+              "flexDirection": "column",
+              "height": 50,
+              "justifyContent": "center",
+              "paddingBottom": 0,
+              "paddingLeft": 0,
+              "paddingRight": 0,
+              "paddingTop": 0,
+              "width": 50,
+            }
+          }
+        >
+          <div
+            style={
+              {
+                "height": 50,
+                "position": "relative",
+                "width": 50,
+              }
+            }
+          >
+            <div
+              style={
+                {
+                  "height": 50,
+                  "overflow": "visible",
+                  "position": "absolute",
+                  "width": 50,
+                }
+              }
+            >
+              <svg
+                viewBox="0 0 50 50"
+              >
+                <defs>
+                  <defs>
+                    <mask
+                      id="container-mask0x82D56A352367453f74FC0dC7B071b311da373Fa650"
+                    >
+                      <rect
+                        fill="white"
+                        height="100%"
+                        width="100%"
+                        x="0"
+                        y="0"
+                      />
+                      <g
+                        transform="scale(1.3888888888888888) 
+ translate(0, 0)"
+                      >
+                        <path
+                          clipRule="evenodd"
+                          d="M31 33V16C31 8.8203 25.1797 3 18 3C10.8203 3 5 8.8203 5 16V33H31ZM18 0C9.16344 0 2 7.16344 2 16V35.807C2 35.9136 2.08642 36 2.19303 36H33.807C33.9136 36 34 35.9136 34 35.807V16C34 7.16344 26.8366 0 18 0Z"
+                          fill="black"
+                          fillRule="evenodd"
+                        />
+                      </g>
+                    </mask>
+                    <mask
+                      id="shape-mask0x82D56A352367453f74FC0dC7B071b311da373Fa650"
+                    >
+                      <rect
+                        fill="white"
+                        height="100%"
+                        width="100%"
+                        x="0"
+                        y="0"
+                      />
+                      <g
+                        transform="scale(1.3888888888888888) 
+ translate(10, 10)"
+                      >
+                        <path
+                          d="M8 8C8 8 13.1678 6.70089 14.2197 5.649C15.2716 4.59712 15.2583 2.87836 14.19 1.81004C13.1216 0.741719 11.4029 0.728395 10.351 1.78028C9.29911 2.83216 8 8 8 8Z"
+                          fill="black"
+                        />
+                        <path
+                          d="M8 8C8 8 13.1678 9.29911 14.2197 10.351C15.2716 11.4029 15.2583 13.1216 14.19 14.19C13.1216 15.2583 11.4029 15.2716 10.351 14.2197C9.29911 13.1678 8 8 8 8Z"
+                          fill="black"
+                        />
+                        <path
+                          d="M1.78028 10.351C2.83216 9.29911 8 8 8 8C8 8 6.70089 13.1678 5.649 14.2197C4.59712 15.2716 2.87836 15.2583 1.81004 14.19C0.741719 13.1216 0.728395 11.4029 1.78028 10.351Z"
+                          fill="black"
+                        />
+                        <path
+                          d="M8 8C8 8 2.83216 6.70089 1.78028 5.649C0.728395 4.59712 0.741719 2.87836 1.81004 1.81004C2.87836 0.741719 4.59712 0.728395 5.649 1.78028C6.70089 2.83216 8 8 8 8Z"
+                          fill="black"
+                        />
+                      </g>
+                    </mask>
+                    <mask
+                      id="mask0x82D56A352367453f74FC0dC7B071b311da373Fa650"
+                    >
+                      <g
+                        fill="white"
+                      >
+                        <g
+                          mask="url(#shape-mask0x82D56A352367453f74FC0dC7B071b311da373Fa650)"
+                        >
+                          <g
+                            transform="scale(1.3888888888888888)"
+                          >
+                            <path
+                              clipRule="evenodd"
+                              d="M31 33V16C31 8.8203 25.1797 3 18 3C10.8203 3 5 8.8203 5 16V33H31ZM18 0C9.16344 0 2 7.16344 2 16V35.807C2 35.9136 2.08642 36 2.19303 36H33.807C33.9136 36 34 35.9136 34 35.807V16C34 7.16344 26.8366 0 18 0Z"
+                              fillRule="evenodd"
+                            />
+                          </g>
+                        </g>
+                        <g
+                          mask="url(#container-mask0x82D56A352367453f74FC0dC7B071b311da373Fa650)"
+                        >
+                          <g
+                            transform="scale(1.3888888888888888)
+        translate(10, 10)"
+                          >
+                            <path
+                              d="M8 8C8 8 13.1678 6.70089 14.2197 5.649C15.2716 4.59712 15.2583 2.87836 14.19 1.81004C13.1216 0.741719 11.4029 0.728395 10.351 1.78028C9.29911 2.83216 8 8 8 8Z"
+                            />
+                            <path
+                              d="M8 8C8 8 13.1678 9.29911 14.2197 10.351C15.2716 11.4029 15.2583 13.1216 14.19 14.19C13.1216 15.2583 11.4029 15.2716 10.351 14.2197C9.29911 13.1678 8 8 8 8Z"
+                            />
+                            <path
+                              d="M1.78028 10.351C2.83216 9.29911 8 8 8 8C8 8 6.70089 13.1678 5.649 14.2197C4.59712 15.2716 2.87836 15.2583 1.81004 14.19C0.741719 13.1216 0.728395 11.4029 1.78028 10.351Z"
+                            />
+                            <path
+                              d="M8 8C8 8 2.83216 6.70089 1.78028 5.649C0.728395 4.59712 0.741719 2.87836 1.81004 1.81004C2.87836 0.741719 4.59712 0.728395 5.649 1.78028C6.70089 2.83216 8 8 8 8Z"
+                            />
+                          </g>
+                        </g>
+                      </g>
+                    </mask>
+                  </defs>
+                  <linearGradient
+                    id="gradient0x82D56A352367453f74FC0dC7B071b311da373Fa650"
+                  >
+                    <stop
+                      offset="0%"
+                      stopColor="#6100FF"
+                    />
+                    <stop
+                      offset="100%"
+                      stopColor="#76D191"
+                    />
+                  </linearGradient>
+                  <filter
+                    height="200%"
+                    id="blur0x82D56A352367453f74FC0dC7B071b311da373Fa650"
+                    width="200%"
+                    x="-50%"
+                    y="-50%"
+                  >
+                    <feGaussianBlur
+                      in="SourceGraphic"
+                      stdDeviation={16.666666666666668}
+                    />
+                  </filter>
+                </defs>
+                <g
+                  mask="url(#mask0x82D56A352367453f74FC0dC7B071b311da373Fa650)"
+                >
+                  <rect
+                    fill="url(#gradient0x82D56A352367453f74FC0dC7B071b311da373Fa650)"
+                    height="100%"
+                    width="100%"
+                    x="0"
+                    y="0"
+                  />
+                  <rect
+                    fill="black"
+                    height="100%"
+                    opacity={0.08}
+                    width="100%"
+                    x="0"
+                    y="0"
+                  />
+                  <ellipse
+                    cx={25}
+                    cy={0}
+                    fill="#D3EBA3"
+                    filter="url(#blur0x82D56A352367453f74FC0dC7B071b311da373Fa650)"
+                    rx={25}
+                    ry={25}
+                  />
+                </g>
+              </svg>
+            </div>
+          </div>
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "column",
+            "flexShrink": 1,
+            "gap": 0,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "gap": 12,
+              "justifyContent": "center",
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "gap": 4,
+                "justifyContent": "center",
+              }
+            }
+          >
+            <Text
+              adjustsFontSizeToFit={true}
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.4}
+              numberOfLines={1}
+              style={
+                {
+                  "color": "#222222",
+                  "flexShrink": 1,
+                  "fontFamily": "Basel-Book",
+                  "fontSize": 15,
+                  "lineHeight": 20,
+                }
+              }
+              suppressHighlighting={true}
+              testID="address-display/name/0x​82D5...3Fa6"
+            >
+              0x​82D5...3Fa6
+            </Text>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flex": 1,
+        "flexDirection": "row",
+        "flexShrink": 1,
+        "gap": 4,
+        "justifyContent": "flex-end",
+      }
+    }
+  >
+    <Text
+      allowFontScaling={true}
+      maxFontSizeMultiplier={1.4}
+      style={
+        {
+          "color": "#7D7D7D",
+          "fontFamily": "Basel-Book",
+          "fontSize": 15,
+          "lineHeight": 20,
+        }
+      }
+      suppressHighlighting={true}
+    >
+      0x82D5...3Fa6
+    </Text>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "borderBottomLeftRadius": 999999,
+          "borderBottomRightRadius": 999999,
+          "borderTopLeftRadius": 999999,
+          "borderTopRightRadius": 999999,
+          "flexDirection": "column",
+          "justifyContent": "center",
+          "transform": [
+            {
+              "rotate": "180deg",
+            },
+          ],
+        }
+      }
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight="50"
+        bbWidth="50"
+        fill="none"
+        focusable={false}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        stroke="currentColor"
+        strokeWidth={8}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "color": "#7D7D7D",
+              "height": 50,
+              "width": 50,
+            },
+            {
+              "flex": 0,
+              "height": 50,
+              "width": 50,
+            },
+          ]
+        }
+        tintColor="#7D7D7D"
+        vbHeight={24}
+        vbWidth={24}
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+            ]
+          }
+          stroke={
+            {
+              "type": 2,
+            }
+          }
+          strokeWidth="8"
+        >
+          <RNSVGPath
+            d="M15 6L9 12L15 18"
+            fill={
+              {
+                "payload": 4278190080,
+                "type": 0,
+              }
+            }
+            propList={
+              [
+                "stroke",
+                "strokeWidth",
+                "strokeLinecap",
+                "strokeLinejoin",
+              ]
+            }
+            stroke={
+              {
+                "type": 2,
+              }
+            }
+            strokeLinecap={1}
+            strokeLinejoin={1}
+            strokeWidth="3"
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+  </View>
+</View>
+`;

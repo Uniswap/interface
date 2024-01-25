@@ -8,6 +8,7 @@ import {
   Dispatch,
   PropsWithChildren,
   SetStateAction,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -108,10 +109,15 @@ export function SwapAndLimitContextProvider({
 }>) {
   const { chainId: connectedChainId } = useWeb3React()
   const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.Swap)
-  const [currencyState, setCurrencyState] = useState<CurrencyState>({
-    inputCurrency: initialInputCurrency,
-    outputCurrency: initialOutputCurrency,
-  })
+
+  const getInitialCurrencyState = useCallback(() => {
+    return {
+      inputCurrency: initialInputCurrency,
+      outputCurrency: initialOutputCurrency,
+    }
+  }, [initialInputCurrency, initialOutputCurrency])
+
+  const [currencyState, setCurrencyState] = useState<CurrencyState>(getInitialCurrencyState)
 
   const prefilledState = useMemo(
     () => ({
@@ -124,19 +130,21 @@ export function SwapAndLimitContextProvider({
   const previousConnectedChainId = usePrevious(connectedChainId)
   const previousPrefilledState = usePrevious(prefilledState)
 
+  // effect to sync inputCurrency, outputCurrency props to state, as they start undefined
+  // since `getInitialCurrencyState` only changes when input/output change this works
+  useEffect(() => {
+    setCurrencyState(getInitialCurrencyState)
+  }, [getInitialCurrencyState])
+
   useEffect(() => {
     const combinedCurrencyState = { ...currencyState, ...prefilledState }
     const chainChanged = previousConnectedChainId && previousConnectedChainId !== connectedChainId
-    const prefilledInputChanged = Boolean(
-      previousPrefilledState?.inputCurrency
-        ? !prefilledState.inputCurrency?.equals(previousPrefilledState.inputCurrency)
-        : prefilledState.inputCurrency
-    )
-    const prefilledOutputChanged = Boolean(
-      previousPrefilledState?.outputCurrency
-        ? !prefilledState?.outputCurrency?.equals(previousPrefilledState.outputCurrency)
-        : prefilledState.outputCurrency
-    )
+    const prefilledInputChanged =
+      previousPrefilledState?.inputCurrency &&
+      !prefilledState.inputCurrency?.equals(previousPrefilledState.inputCurrency)
+    const prefilledOutputChanged =
+      previousPrefilledState?.outputCurrency &&
+      !prefilledState?.outputCurrency?.equals(previousPrefilledState.outputCurrency)
 
     if (chainChanged || prefilledInputChanged || prefilledOutputChanged) {
       setCurrencyState({
@@ -146,17 +154,24 @@ export function SwapAndLimitContextProvider({
     }
   }, [connectedChainId, currencyState, prefilledState, previousConnectedChainId, previousPrefilledState])
 
-  return (
-    <SwapAndLimitContext.Provider
-      value={{ currencyState, setCurrencyState, currentTab, setCurrentTab, prefilledState, chainId }}
-    >
-      {children}
-    </SwapAndLimitContext.Provider>
-  )
+  const value = useMemo(() => {
+    return {
+      currencyState,
+      setCurrencyState,
+      currentTab,
+      setCurrentTab,
+      prefilledState,
+      chainId,
+    }
+  }, [currencyState, setCurrencyState, currentTab, setCurrentTab, prefilledState, chainId])
+
+  return <SwapAndLimitContext.Provider value={value}>{children}</SwapAndLimitContext.Provider>
 }
 
 export function SwapContextProvider({ children }: { children: React.ReactNode }) {
-  const [swapState, setSwapState] = useState<SwapState>({ ...initialSwapState })
+  const [swapState, setSwapState] = useState<SwapState>({
+    ...initialSwapState,
+  })
   const derivedSwapInfo = useDerivedSwapInfo(swapState)
   return <SwapContext.Provider value={{ swapState, setSwapState, derivedSwapInfo }}>{children}</SwapContext.Provider>
 }

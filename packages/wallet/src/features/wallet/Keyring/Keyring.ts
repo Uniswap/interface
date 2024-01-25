@@ -10,6 +10,15 @@ export interface IKeyring {
   /** Locks keyring */
   lock(): Promise<boolean>
 
+  /** @returns true if input password matches current password */
+  checkPassword(password: string): Promise<boolean>
+
+  /**
+   * Changes password and re-encrypts stored mnemonics
+   * @returns true if successful
+   */
+  changePassword(newPassword: string): Promise<boolean>
+
   /**
    * Fetches all mnemonic IDs, which are used as keys to access the actual mnemonics
    * in key-value store.
@@ -86,6 +95,14 @@ class NullKeyring implements IKeyring {
 
   lock(): Promise<boolean> {
     return Promise.resolve(true)
+  }
+
+  checkPassword(_password: string): Promise<boolean> {
+    throw new NotImplementedError('checkPassword')
+  }
+
+  changePassword(_newPassword: string): Promise<boolean> {
+    throw new NotImplementedError('changePassword')
   }
 
   getMnemonicIds(): Promise<string[]> {

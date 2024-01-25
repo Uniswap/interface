@@ -1,50 +1,15 @@
-import { t } from '@lingui/macro'
-import { Chart, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
-import { useHeaderDateFormatter } from 'components/Charts/hooks'
-import { ChartContainer } from 'components/Charts/shared'
-import Column from 'components/Column'
-import Row, { RowBetween } from 'components/Row'
+import { ChartHeaderProtocolInfo } from 'components/Charts/ChartHeader'
+import { ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { PriceSource } from 'graphql/data/__generated__/types-and-hooks'
-import { getProtocolColor, getProtocolName, TimePeriod } from 'graphql/data/util'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ISeriesApi } from 'lightweight-charts'
-import { useMemo, useState } from 'react'
-import styled, { useTheme } from 'styled-components'
-import { colors } from 'theme/colors'
-import { ThemedText } from 'theme/components'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { CrosshairHighlightPrimitive } from '../VolumeChart/CrosshairHighlightPrimitive'
 import { StackedBarsData } from './renderer'
 import { getCumulativeSum, StackedBarsSeries } from './stacked-bar-series'
 
-const ChartHeader = styled(RowBetween)`
-  position: absolute;
-  padding-bottom: 14px;
-  text-align: left;
-  pointer-events: none;
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    padding: 0px;
-    gap: 4px;
-  }
-`
-export const ProtocolLegend = styled(Column)`
-  padding: 4px 12px;
-  gap: 12px;
-  text-align: left;
-  pointer-events: none;
-`
-const ProtocolBlip = styled.div<{ color: string }>`
-  background-color: ${({ color }) => color};
-  border-radius: 4px;
-  width: 12px;
-  height: 12px;
-`
-
 type StackedVolumeChartModelParams = ChartModelParams<StackedBarsData> & { colors: [string, string] }
 
-class StackedVolumeChartModel extends ChartModel<StackedBarsData> {
+export class StackedVolumeChartModel extends ChartModel<StackedBarsData> {
   protected series: ISeriesApi<'Custom'>
   private highlightBarPrimitive: CrosshairHighlightPrimitive
 
@@ -129,104 +94,24 @@ class StackedVolumeChartModel extends ChartModel<StackedBarsData> {
   }
 }
 
-const TIME_PERIOD_DESCRIPTOR: { [key in TimePeriod]: string } = {
-  [TimePeriod.HOUR]: t`Past hour`,
-  [TimePeriod.DAY]: t`Past day`,
-  [TimePeriod.WEEK]: t`Past week`,
-  [TimePeriod.MONTH]: t`Past month`,
-  [TimePeriod.YEAR]: t`Past year`,
-}
-
-export function ProtocolDetail({ protocol, value }: { protocol: PriceSource; value?: number }) {
-  const { formatFiatPrice } = useFormatter()
-  const theme = useTheme()
-
-  return (
-    <Row gap="6px" justify="flex-end">
-      <ThemedText.Caption>
-        {value
-          ? formatFiatPrice({ price: value, type: NumberType.FiatTokenStatChartHeader })
-          : getProtocolName(protocol)}
-      </ThemedText.Caption>
-      <ProtocolBlip color={getProtocolColor(protocol, theme)} />
-    </Row>
-  )
+export function getVolumeProtocolInfo(
+  data: StackedBarsData | undefined,
+  sources: PriceSource[]
+): ChartHeaderProtocolInfo[] {
+  const info = new Array<ChartHeaderProtocolInfo>()
+  for (const source of sources) {
+    switch (source) {
+      case PriceSource.SubgraphV2:
+        info.push({ protocol: source, value: data?.values.v2 })
+        break
+      case PriceSource.SubgraphV3:
+        info.push({ protocol: source, value: data?.values.v3 })
+        break
+    }
+  }
+  return info
 }
 
 export function getCumulativeVolume(data: StackedBarsData[]) {
   return data.reduce((sum, curr) => (sum += getCumulativeSum(curr)), 0)
-}
-
-function StackedVolumeChartHeader({
-  data,
-  crosshairData,
-  timePeriod,
-}: {
-  data: StackedBarsData[]
-  crosshairData?: StackedBarsData
-  timePeriod: TimePeriod
-}) {
-  const { formatFiatPrice } = useFormatter()
-  const headerDateFormatter = useHeaderDateFormatter()
-
-  const { sum, time } = useMemo(() => {
-    if (crosshairData) {
-      const sum = getCumulativeSum(crosshairData)
-      return { sum, time: headerDateFormatter(crosshairData.time) }
-    }
-
-    const sum = getCumulativeVolume(data)
-    const time = TIME_PERIOD_DESCRIPTOR[timePeriod]
-
-    return { sum, time }
-  }, [data, crosshairData, timePeriod, headerDateFormatter])
-
-  return (
-    <ChartHeader>
-      <Column>
-        <ThemedText.HeadlineLarge>
-          {formatFiatPrice({ price: sum, type: NumberType.FiatTokenStatChartHeader })}
-        </ThemedText.HeadlineLarge>
-        <ThemedText.Caption color="neutral2">{time}</ThemedText.Caption>
-      </Column>
-      <ProtocolLegend>
-        <ProtocolDetail protocol={PriceSource.SubgraphV3} value={crosshairData?.values.v3} />
-        <ProtocolDetail protocol={PriceSource.SubgraphV2} value={crosshairData?.values.v2} />
-      </ProtocolLegend>
-    </ChartHeader>
-  )
-}
-
-export function StackedVolumeChart({
-  height,
-  data,
-  timePeriod,
-}: {
-  height: number
-  data: StackedBarsData[]
-  timePeriod: TimePeriod
-}) {
-  const locale = useActiveLocale()
-  const theme = useTheme()
-  const format = useFormatter()
-
-  const [crosshairData, setCrosshairData] = useState<StackedBarsData>()
-
-  const params: StackedVolumeChartModelParams = useMemo(() => {
-    return {
-      data,
-      locale,
-      theme,
-      colors: [theme.accent1, colors.blue400],
-      format,
-      onCrosshairMove: setCrosshairData,
-    }
-  }, [data, locale, theme, format])
-
-  return (
-    <ChartContainer $height={height}>
-      <StackedVolumeChartHeader data={data} crosshairData={crosshairData} timePeriod={timePeriod} />
-      <Chart Model={StackedVolumeChartModel} params={params} height={height} />
-    </ChartContainer>
-  )
 }

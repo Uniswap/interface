@@ -1,3 +1,4 @@
+import { loadingOpacityMixin } from 'components/Loader/styled'
 import { SupportedLocale } from 'constants/locales'
 import React, { forwardRef } from 'react'
 import styled from 'styled-components'
@@ -86,7 +87,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
             // cut off prepended symbol
             const formattedValue = value.toString().includes(prependSymbol)
-              ? value.toString().slice(1, value.toString().length + 1)
+              ? value.toString().slice(prependSymbol.length, value.toString().length + 1)
               : value
 
             // replace commas with periods, because uniswap exclusively uses period as the decimal separator
@@ -116,3 +117,11 @@ Input.displayName = 'Input'
 const MemoizedInput = React.memo(Input)
 export { MemoizedInput as Input }
 // const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
+
+export const StyledNumericalInput = styled(MemoizedInput)<{ $loading: boolean }>`
+  ${loadingOpacityMixin};
+  text-align: left;
+  font-size: 36px;
+  font-weight: 485;
+  max-height: 44px;
+`

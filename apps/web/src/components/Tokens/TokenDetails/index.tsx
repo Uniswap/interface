@@ -345,7 +345,7 @@ export default function TokenDetails({
                     )}
 
                     <ChartTypeSelector
-                      options={[{ value: ChartType.PRICE }, { value: ChartType.VOLUME }, { value: ChartType.TVL }]}
+                      options={[ChartType.PRICE, ChartType.VOLUME, ChartType.TVL]}
                       currentChartType={chartType}
                       onChartTypeChange={(c: ChartType) => {
                         setChartType(c)

@@ -2,7 +2,14 @@
 
 exports[`PriceChart renders correctly with all prices filled 1`] = `
 <DocumentFragment>
-  .c3 {
+  .c2 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c4 {
   color: #40B66B;
 }
 
@@ -24,7 +31,7 @@ exports[`PriceChart renders correctly with all prices filled 1`] = `
   line-height: 44px;
 }
 
-.c2 {
+.c3 {
   height: 16px;
   display: -webkit-box;
   display: -webkit-flex;
@@ -46,18 +53,18 @@ exports[`PriceChart renders correctly with all prices filled 1`] = `
       class="c1"
     >
       <div
-        class="css-15popx1"
+        class="c2 css-15popx1"
       >
         $1.00
       </div>
     </div>
     <div
-      class="c2"
+      class="c3"
     >
       0.00%
       <svg
         aria-label="up"
-        class="c3"
+        class="c4"
         fill="none"
         height="16"
         viewBox="0 0 24 24"
@@ -349,6 +356,10 @@ exports[`PriceChart renders correctly with empty price array 1`] = `
 <DocumentFragment>
   .c1 {
   color: #CECECE;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c0 {
@@ -394,11 +405,18 @@ exports[`PriceChart renders correctly with empty price array 1`] = `
 exports[`PriceChart renders correctly with some prices filled 1`] = `
 <DocumentFragment>
   .c2 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c3 {
   display: inline-block;
   height: inherit;
 }
 
-.c4 {
+.c5 {
   color: #7D7D7D;
 }
 
@@ -421,7 +439,7 @@ exports[`PriceChart renders correctly with some prices filled 1`] = `
   line-height: 44px;
 }
 
-.c3 {
+.c4 {
   height: 16px;
   display: -webkit-box;
   display: -webkit-flex;
@@ -443,12 +461,12 @@ exports[`PriceChart renders correctly with some prices filled 1`] = `
       class="c1"
     >
       <div
-        class="css-15popx1"
+        class="c2 css-15popx1"
       >
         $1.00
       </div>
       <div
-        class="c2"
+        class="c3"
       >
         <div>
           <svg
@@ -485,12 +503,12 @@ exports[`PriceChart renders correctly with some prices filled 1`] = `
       </div>
     </div>
     <div
-      class="c3"
+      class="c4"
     >
       0.00%
       <svg
         aria-label="up"
-        class="c4"
+        class="c5"
         fill="none"
         height="16"
         viewBox="0 0 24 24"
@@ -782,6 +800,10 @@ exports[`PriceChart renders correctly with undefined prices 1`] = `
 <DocumentFragment>
   .c1 {
   color: #CECECE;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c0 {
@@ -827,11 +849,18 @@ exports[`PriceChart renders correctly with undefined prices 1`] = `
 exports[`PriceChart renders stale UI 1`] = `
 <DocumentFragment>
   .c2 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c3 {
   display: inline-block;
   height: inherit;
 }
 
-.c4 {
+.c5 {
   color: #7D7D7D;
 }
 
@@ -854,7 +883,7 @@ exports[`PriceChart renders stale UI 1`] = `
   line-height: 44px;
 }
 
-.c3 {
+.c4 {
   height: 16px;
   display: -webkit-box;
   display: -webkit-flex;
@@ -876,12 +905,12 @@ exports[`PriceChart renders stale UI 1`] = `
       class="c1"
     >
       <div
-        class="css-15popx1"
+        class="c2 css-15popx1"
       >
         $1.00
       </div>
       <div
-        class="c2"
+        class="c3"
       >
         <div>
           <svg
@@ -918,12 +947,12 @@ exports[`PriceChart renders stale UI 1`] = `
       </div>
     </div>
     <div
-      class="c3"
+      class="c4"
     >
       0.00%
       <svg
         aria-label="up"
-        class="c4"
+        class="c5"
         fill="none"
         height="16"
         viewBox="0 0 24 24"

@@ -42,7 +42,7 @@ async function processAddChanges() {
   }
 
   // Check for UI package imports that are longer than needed
-  const validLongerImports = [`'ui/src'`, `'ui/src/theme'`, `'ui/src/loading'`]
+  const validLongerImports = [`'ui/src'`, `'ui/src/theme'`, `'ui/src/loading'`, `'ui/src/assets'`]
   const longestImportLength = Math.max(...validLongerImports.map((i) => i.length))
   allLinesAdded.forEach((change) => {
     const indices = getIndicesOf(`from 'ui/src/`, change.content)
@@ -100,9 +100,9 @@ async function checkApostrophes() {
     const changedLines = (structuredDiff?.chunks || []).flatMap((chunk) => {
       return chunk.changes.filter((change) => change.type === 'add')
     })
-    changedLines.forEach((line) => {
+    changedLines.forEach((line, index) => {
       if (line.content.includes("'")) {
-        fail("You added a string using the ' character. Please use the ’ character instead!")
+        fail("You added a string using the ' character. Please use the ’ character instead!. Issue in line: " + index)
       }
     })
   }

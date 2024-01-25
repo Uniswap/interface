@@ -43,7 +43,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
   gap: 12px;
 }
 
-.c17 {
+.c18 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -60,7 +60,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
   justify-content: flex-start;
 }
 
-.c18 {
+.c19 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
@@ -69,13 +69,28 @@ exports[`OrderContent should render without error, filled order 1`] = `
 
 .c6 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c7 {
   color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
-.c22 {
+.c13 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c23 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -86,11 +101,11 @@ exports[`OrderContent should render without error, filled order 1`] = `
   font-weight: 500;
 }
 
-.c22:hover {
+.c23:hover {
   opacity: 0.6;
 }
 
-.c22:active {
+.c23:active {
   opacity: 0.4;
 }
 
@@ -146,7 +161,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
   gap: 4px;
 }
 
-.c16 {
+.c17 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -161,7 +176,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
   gap: 8px;
 }
 
-.c15 {
+.c16 {
   opacity: 0;
   -webkit-transition: opacity 250ms ease-in;
   transition: opacity 250ms ease-in;
@@ -170,7 +185,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
   border-radius: 50%;
 }
 
-.c14 {
+.c15 {
   width: 36px;
   height: 36px;
   background: #22222212;
@@ -192,7 +207,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
   justify-content: center;
 }
 
-.c13 {
+.c14 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -250,17 +265,17 @@ exports[`OrderContent should render without error, filled order 1`] = `
   border-radius: 50%;
 }
 
-.c19 {
+.c20 {
   cursor: auto;
   color: #7D7D7D;
 }
 
-.c20 {
+.c21 {
   text-align: right;
   overflow-wrap: break-word;
 }
 
-.c21 {
+.c22 {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -350,7 +365,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
             class="c12"
           >
             <div
-              class="css-1geukv8"
+              class="c13 css-15popx1"
               data-testid="INPUT-amount"
             >
               252.074
@@ -365,15 +380,15 @@ exports[`OrderContent should render without error, filled order 1`] = `
           </div>
         </div>
         <div
-          class="c13"
+          class="c14"
           style="height: 36px; width: 36px;"
         >
           <div
-            class="c14"
+            class="c15"
           >
             <img
               alt="DAI logo"
-              class="c15"
+              class="c16"
               loading="lazy"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
             />
@@ -411,7 +426,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
             class="c12"
           >
             <div
-              class="css-1geukv8"
+              class="c13 css-15popx1"
               data-testid="OUTPUT-amount"
             >
               0.10684
@@ -426,15 +441,15 @@ exports[`OrderContent should render without error, filled order 1`] = `
           </div>
         </div>
         <div
-          class="c13"
+          class="c14"
           style="height: 36px; width: 36px;"
         >
           <div
-            class="c14"
+            class="c15"
           >
             <img
               alt="WETH logo"
-              class="c15"
+              class="c16"
               loading="lazy"
               src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
             />
@@ -446,22 +461,22 @@ exports[`OrderContent should render without error, filled order 1`] = `
       class="c8 c9"
     />
     <div
-      class="c16"
+      class="c17"
     >
       <div
-        class="c1 c17 c18"
+        class="c1 c18 c19"
       >
         <div
-          class="c6 c19 css-142zc9n"
+          class="c6 c20 css-142zc9n"
           data-testid="swap-li-label"
         >
           Rate
         </div>
         <div
-          class="c6 c20 css-142zc9n"
+          class="c6 c21 css-142zc9n"
         >
           <button
-            class="c21"
+            class="c22"
             title="1 WETH = 2,359.34 DAI "
           >
             <div
@@ -474,16 +489,16 @@ exports[`OrderContent should render without error, filled order 1`] = `
         </div>
       </div>
       <div
-        class="c1 c17 c18"
+        class="c1 c18 c19"
       >
         <div
-          class="c6 c19 css-142zc9n"
+          class="c6 c20 css-142zc9n"
           data-testid="swap-li-label"
         >
           Network cost
         </div>
         <div
-          class="c6 c20 css-142zc9n"
+          class="c6 c21 css-142zc9n"
         >
           <span>
             $0
@@ -491,19 +506,19 @@ exports[`OrderContent should render without error, filled order 1`] = `
         </div>
       </div>
       <div
-        class="c1 c17 c18"
+        class="c1 c18 c19"
       >
         <div
-          class="c6 c19 css-142zc9n"
+          class="c6 c20 css-142zc9n"
           data-testid="swap-li-label"
         >
           Transaction ID
         </div>
         <div
-          class="c6 c20 css-142zc9n"
+          class="c6 c21 css-142zc9n"
         >
           <a
-            class="c22"
+            class="c23"
             href="https://etherscan.io/tx/0xad7a8f73f28fd0cc16459111899dd1632164ae139fcf5281a1bced56e1ff6564"
             rel="noopener noreferrer"
             target="_blank"

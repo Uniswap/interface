@@ -17,8 +17,3 @@ export function useSelectedColorScheme(): 'light' | 'dark' {
   const systemTheme = isDarkMode ? 'dark' : 'light'
   return systemTheme
 }
-
-export function useIsDarkMode(): boolean {
-  const selectedColorScheme = useSelectedColorScheme()
-  return selectedColorScheme === 'dark'
-}

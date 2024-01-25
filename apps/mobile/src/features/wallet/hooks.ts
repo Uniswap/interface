@@ -2,13 +2,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { ModalName } from 'src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { useAppDispatch } from 'wallet/src/state'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function useWalletRestore(params?: { openModalImmediately?: boolean }): {
   walletNeedsRestore: undefined | boolean

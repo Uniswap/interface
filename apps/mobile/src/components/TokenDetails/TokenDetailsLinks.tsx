@@ -2,16 +2,14 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, View } from 'react-native'
 import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
-import { ElementName } from 'src/features/telemetry/constants'
-import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'src/utils/linking'
 import { Flex, Text } from 'ui/src'
 import GlobeIcon from 'ui/src/assets/icons/globe-filled.svg'
-import AddressIcon from 'ui/src/assets/icons/sticky-note-text-square.svg'
-import TwitterIcon from 'ui/src/assets/icons/twitter.svg'
-import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import TwitterIcon from 'ui/src/assets/icons/x-twitter.svg'
+import { ChainId } from 'wallet/src/constants/chains'
 import { TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
-import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
+import { ElementName } from 'wallet/src/telemetry/constants'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
+import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'wallet/src/utils/linking'
 import { LinkButton, LinkButtonType } from './LinkButton'
 
 export function TokenDetailsLinks({
@@ -38,11 +36,11 @@ export function TokenDetailsLinks({
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <Flex row gap="$spacing8" px="$spacing16">
             <LinkButton
-              Icon={AddressIcon}
-              buttonType={LinkButtonType.Copy}
-              element={ElementName.TokenAddress}
-              label={sanitizeAddressText(shortenAddress(address)) ?? ''}
-              value={address}
+              Icon={getBlockExplorerIcon(chainId)}
+              buttonType={LinkButtonType.Link}
+              element={ElementName.TokenLinkEtherscan}
+              label={t('Contract')}
+              value={explorerLink}
             />
             {homepageUrl && (
               <LinkButton
@@ -58,17 +56,10 @@ export function TokenDetailsLinks({
                 Icon={TwitterIcon}
                 buttonType={LinkButtonType.Link}
                 element={ElementName.TokenLinkTwitter}
-                label={t('Twitter')}
+                label={t('X')}
                 value={getTwitterLink(twitterName)}
               />
             )}
-            <LinkButton
-              Icon={getBlockExplorerIcon(chainId)}
-              buttonType={LinkButtonType.Link}
-              element={ElementName.TokenLinkEtherscan}
-              label={CHAIN_INFO[chainId].explorer.name}
-              value={explorerLink}
-            />
           </Flex>
         </ScrollView>
       </Flex>

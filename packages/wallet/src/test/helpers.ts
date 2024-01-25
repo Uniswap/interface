@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker'
+import { Token as NativeToken } from '@uniswap/sdk-core'
 import {
   Chain,
   Currency,
@@ -7,11 +8,13 @@ import {
   SafetyLevel,
   TimestampedAmount,
   Token,
+  TokenBalance,
   TokenMarket,
   TokenProject,
 } from 'wallet/src/data/__generated__/types-and-hooks'
-import { dayMs, historyDurationMs } from 'wallet/src/test/fixtures'
-import { EthToken } from 'wallet/src/test/gqlFixtures'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { dayMs, historyDurationMs, MAX_FIXTURE_TIMESTAMP } from 'wallet/src/test/fixtures'
+import { Amounts, EthToken } from 'wallet/src/test/gqlFixtures'
 
 export const mockTokenPriceHistory = (
   duration: HistoryDuration,
@@ -117,3 +120,35 @@ export const mockTokenProject = (priceHistory: TimestampedAmount[]): TokenProjec
     ],
   }
 }
+
+export const createTokenAsset = (currency: NativeCurrency | NativeToken, chain: Chain): Token => ({
+  id: faker.datatype.uuid(),
+  name: currency.name,
+  symbol: currency.symbol,
+  decimals: currency.decimals,
+  chain,
+  address: currency.address,
+  project: {
+    id: faker.datatype.uuid(),
+    isSpam: false,
+    name: currency.name,
+    logoUrl: faker.datatype.string(),
+    tokens: [],
+    safetyLevel: SafetyLevel.Verified,
+  },
+})
+
+export const createTokenBalance = (
+  ownerAddress: string,
+  token: Token,
+  hidden = false
+): TokenBalance => ({
+  id: faker.datatype.uuid(),
+  blockNumber: 1,
+  blockTimestamp: faker.datatype.number({ max: MAX_FIXTURE_TIMESTAMP }),
+  denominatedValue: Amounts.md,
+  isHidden: hidden,
+  ownerAddress,
+  quantity: faker.datatype.number({ min: 1, max: 1000 }),
+  token,
+})

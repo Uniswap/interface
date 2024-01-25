@@ -8,9 +8,7 @@ import Trace from 'src/components/Trace/Trace'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
-import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { openSettings } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
@@ -22,6 +20,8 @@ import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
+import { ElementName, ElementNameType } from 'wallet/src/telemetry/constants'
+import { openSettings } from 'wallet/src/utils/linking'
 import { isAndroid } from 'wallet/src/utils/platform'
 
 interface ImportMethodOption {
@@ -30,7 +30,7 @@ interface ImportMethodOption {
   icon: React.ReactNode
   nav: OnboardingScreens
   importType: ImportType
-  name: ElementName
+  name: ElementNameType
 }
 
 const options: ImportMethodOption[] = [
@@ -123,9 +123,9 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
         mt="$spacing4"
         shadowColor="$surface3"
         shadowRadius={!isDarkMode ? '$spacing8' : undefined}>
-        {importOptions.map(({ title, blurb, icon, nav, importType, name }) => (
+        {importOptions.map(({ title, blurb, icon, nav, importType, name }, i) => (
           <OptionCard
-            key={'connection-option-' + title}
+            key={'connection-option-' + name + i}
             hapticFeedback
             blurb={blurb(t)}
             elementName={name}

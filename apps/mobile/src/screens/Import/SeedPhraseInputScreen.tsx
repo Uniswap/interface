@@ -7,9 +7,7 @@ import Trace from 'src/components/Trace/Trace'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
-import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { openUri } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button, Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { uniswapUrls } from 'wallet/src/constants/urls'
@@ -19,6 +17,8 @@ import { importAccountActions } from 'wallet/src/features/wallet/import/importAc
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+import { ElementName } from 'wallet/src/telemetry/constants'
+import { openUri } from 'wallet/src/utils/linking'
 import {
   MnemonicValidationError,
   translateMnemonicErrorMessage,

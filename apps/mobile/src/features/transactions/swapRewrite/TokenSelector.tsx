@@ -1,18 +1,22 @@
 import { Currency } from '@uniswap/sdk-core'
 import React, { useCallback } from 'react'
-import { SearchContext } from 'src/components/explore/search/SearchContext'
-import { flowToModalName } from 'src/components/TokenSelector/flowToModalName'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
+import { useOnSendEmptyActionPress } from 'src/features/transactions/hooks'
+import { flowToModalName } from 'wallet/src/components/TokenSelector/flowToModalName'
 import {
   TokenSelectorModal,
   TokenSelectorVariation,
-} from 'src/components/TokenSelector/TokenSelector'
-import { TokenSelectorFlow } from 'src/components/TokenSelector/types'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
+} from 'wallet/src/components/TokenSelector/TokenSelector'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
+import { SearchContext } from 'wallet/src/features/search/SearchContext'
+import {
+  SwapFormState,
+  useSwapFormContext,
+} from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
-import { SwapFormState, useSwapFormContext } from './contexts/SwapFormContext'
 
 export function TokenSelector(): JSX.Element {
   const swapContext = useSwapFormContext()
@@ -76,6 +80,7 @@ export function TokenSelector(): JSX.Element {
     },
     [onHideTokenSelector, swapContext, updateSwapForm]
   )
+  const onSendEmptyActionPress = useOnSendEmptyActionPress(onHideTokenSelector)
 
   return (
     <TokenSelectorModal
@@ -90,6 +95,7 @@ export function TokenSelector(): JSX.Element {
       }
       onClose={onHideTokenSelector}
       onSelectCurrency={onSelectCurrency}
+      onSendEmptyActionPress={onSendEmptyActionPress}
     />
   )
 }

@@ -7,8 +7,7 @@ import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
-
-import { IUniswapV3PoolStateInterface } from '../types/v3/IUniswapV3PoolState'
+import { IUniswapV3PoolStateInterface } from 'wallet/src/abis/types/v3/IUniswapV3PoolState'
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateJSON.abi) as IUniswapV3PoolStateInterface
 

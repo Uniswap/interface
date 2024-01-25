@@ -6,30 +6,25 @@ import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-c
 import { useSelectHasTokenFavorited, useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import {
-  ElementName,
-  MobileEventName,
-  ModalName,
-  SectionName,
-  ShareableEntity,
-} from 'src/features/telemetry/constants'
-import { useCopyTokenAddressCallback } from 'src/features/tokens/hooks'
-import { getTokenUrl } from 'src/utils/linking'
+import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
+import { useCopyTokenAddressCallback } from 'wallet/src/features/tokens/hooks'
 import {
   CurrencyField,
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
 import { useAppDispatch } from 'wallet/src/state'
+import { ElementName, ModalName, SectionNameType } from 'wallet/src/telemetry/constants'
+import { getTokenUrl } from 'wallet/src/utils/linking'
 
 import { CurrencyId, currencyIdToAddress } from 'wallet/src/utils/currencyId'
 
 interface TokenMenuParams {
   currencyId: CurrencyId
   chainId: ChainId
-  analyticsSection: SectionName
+  analyticsSection: SectionNameType
   // token, which are in favorite section would have it defined
   onEditFavorites?: () => void
 }

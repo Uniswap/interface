@@ -12,6 +12,7 @@ import { BaseButton } from 'components/Button'
 import { getRecentConnectionMeta } from 'connection/meta'
 import { useNewLandingPage } from 'featureFlags/flags/landingPageV2'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
+import usePrevious from 'hooks/usePrevious'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
 import { useEffect, useMemo, useRef } from 'react'
@@ -301,21 +302,26 @@ export default function Landing() {
     [shouldDisableNFTRoutes]
   )
 
-  const [accountDrawerOpen] = useAccountDrawer()
+  const isNewLandingPageEnabled = useNewLandingPage()
+
+  const location = useLocation()
+  const queryParams = useMemo(() => parse(location.search, { ignoreQueryPrefix: true }), [location])
   const navigate = useNavigate()
+  const [accountDrawerOpen] = useAccountDrawer()
+  const prevAccount = usePrevious(account)
+  const redirectOnConnect = useRef(false)
+  // Smoothly redirect to swap page if user connects while on landing page
   useEffect(() => {
+    if (accountDrawerOpen && account && !prevAccount) {
+      redirectOnConnect.current = true
+    }
     const timeoutId = setTimeout(() => {
-      if (accountDrawerOpen) {
+      if (redirectOnConnect.current) {
         navigate('/swap')
       }
     }, TRANSITION_DURATIONS.fast)
     return () => clearTimeout(timeoutId)
-  }, [accountDrawerOpen, navigate])
-
-  const location = useLocation()
-  const queryParams = parse(location.search, { ignoreQueryPrefix: true })
-
-  const isNewLandingPageEnabled = useNewLandingPage()
+  }, [account, prevAccount, accountDrawerOpen, navigate])
 
   // Redirect to swap page if user is connected or has been recently
   // The intro query parameter can be used to override this

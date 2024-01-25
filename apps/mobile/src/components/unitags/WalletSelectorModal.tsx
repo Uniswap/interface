@@ -2,12 +2,11 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { Unicon } from 'src/components/unicons/Unicon'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { Button, Flex, Icons, Separator, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Icons, Separator, Text, Unicon, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
@@ -20,6 +19,7 @@ import {
   useNativeAccountExists,
   useSignerAccounts,
 } from 'wallet/src/features/wallet/hooks'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 type WalletSelectorModalProps = {
   activeAccount: Account | null
@@ -143,13 +143,14 @@ export const SwitchAccountOption = ({
       py="$spacing12">
       <Unicon address={account.address} size={iconSizes.icon40} />
       <Flex shrink alignItems="flex-start">
-        <Text
-          color="$neutral1"
-          numberOfLines={1}
-          testID={`address-display/name/${displayName?.name}`}
-          variant="body1">
-          {displayName?.name}
-        </Text>
+        <DisplayNameText
+          displayName={displayName}
+          textProps={{
+            color: '$neutral1',
+            variant: 'body1',
+            testID: `address-display/name/${displayName?.name}`,
+          }}
+        />
         <Text color="$neutral2" variant="subheading2">
           {shortenAddress(account.address)}
         </Text>

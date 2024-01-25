@@ -5,9 +5,9 @@ import {
   TextInput as NativeTextInput,
   TextInputContentSizeChangeEventData,
 } from 'react-native'
-import { TextInput } from 'src/components/input/TextInput'
 import { ColorTokens, Flex, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { TextInput } from 'wallet/src/components/input/TextInput'
 import { isAndroid } from 'wallet/src/utils/platform'
 
 interface Props {

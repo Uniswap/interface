@@ -12,6 +12,7 @@ export enum FEATURE_FLAGS {
   MevBlocker = 'mev-blocker',
   PortionFields = 'portion-fields',
   RestoreWallet = 'restore-wallet',
+  Scantastic = 'scantastic',
   SeedPhraseRefactorNative = 'refactor-seed-phrase-native',
   SendRewrite = 'send-rewrite',
   Unitags = 'unitags',

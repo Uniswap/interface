@@ -24,6 +24,7 @@ import { Bag } from './Bag'
 import Blur from './Blur'
 import { ChainSelector } from './ChainSelector'
 import { MenuDropdown } from './MenuDropdown'
+import { More } from './More'
 import { SearchBar } from './SearchBar'
 import * as styles from './style.css'
 
@@ -66,6 +67,7 @@ export const PageTabs = () => {
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const infoExplorePageEnabled = useInfoExplorePageEnabled()
+  const isNewLandingPageEnabled = useNewLandingPage()
 
   return (
     <>
@@ -73,7 +75,7 @@ export const PageTabs = () => {
         <Trans>Swap</Trans>
       </MenuItem>
       {infoExplorePageEnabled ? (
-        <MenuItem href={`/explore/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/explore')}>
+        <MenuItem href="/explore" isActive={pathname.startsWith('/explore')}>
           <Trans>Explore</Trans>
         </MenuItem>
       ) : (
@@ -91,9 +93,13 @@ export const PageTabs = () => {
           <Trans>Pools</Trans>
         </MenuItem>
       </Box>
-      <Box marginY="4">
-        <MenuDropdown />
-      </Box>
+      {isNewLandingPageEnabled ? (
+        <More />
+      ) : (
+        <Box marginY="4">
+          <MenuDropdown />
+        </Box>
+      )}
     </>
   )
 }

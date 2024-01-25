@@ -8,12 +8,13 @@ import {
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import dayjs from 'dayjs'
-import { BigNumber, providers } from 'ethers'
+import { BigNumber, providers, TypedDataField } from 'ethers'
 import { useCallback } from 'react'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { currentTimeInSeconds, inXMinutesUnix } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
+import { Permit } from 'wallet/src/data/tradingApi/__generated__/api'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useProvider, useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -135,4 +136,41 @@ export function usePermit2Signature(
   }, [account, currencyIn, currencyInAmount?.quotient, provider, signerManager, skip])
 
   return useAsyncData(permitSignatureFetcher)
+}
+// Used to sign permit messages where we already have the domain, types, and values.
+export function usePermit2SignatureWithData(
+  currencyInAmount: Maybe<CurrencyAmount<Currency>>,
+  permitData: Maybe<Permit>,
+  skip?: boolean
+): {
+  isLoading: boolean
+  signature: string | undefined
+} {
+  const signerManager = useWalletSigners()
+  const account = useActiveAccountWithThrow()
+  const currencyIn = currencyInAmount?.currency
+  const provider = useProvider(currencyIn?.chainId ?? ChainId.Mainnet)
+
+  const { domain, types, values } = permitData || {}
+
+  const permitSignatureFetcher = useCallback(async () => {
+    if (!provider || !currencyIn || currencyIn.isNative || skip || !domain || !types || !values) {
+      return
+    }
+
+    return await signTypedData(
+      domain,
+      types as Record<string, TypedDataField[]>,
+      values as Record<string, unknown>,
+      account,
+      signerManager
+    )
+  }, [account, currencyIn, domain, provider, signerManager, skip, types, values])
+
+  const { data, isLoading } = useAsyncData(permitSignatureFetcher)
+
+  return {
+    isLoading,
+    signature: data,
+  }
 }

@@ -2,15 +2,15 @@ import { gql } from '@apollo/client'
 import { ChainId } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 
-import { Token, useTopPoolsQuery } from './__generated__/types-and-hooks'
+import { OrderDirection, Pool_OrderBy, Token, useTopPoolsQuery } from './__generated__/types-and-hooks'
 import { chainToApolloClient } from './apollo'
 
 gql`
-  query TopPools {
+  query TopPools($orderBy: Pool_orderBy, $orderDirection: OrderDirection) {
     pools(
       first: 100
-      orderBy: totalValueLockedUSD
-      orderDirection: desc
+      orderBy: $orderBy
+      orderDirection: $orderDirection
       subgraphError: allow
       where: { txCount_gte: 100 }
     ) {
@@ -42,11 +42,16 @@ export interface TablePool {
   feeTier: number
 }
 
-export function useTopPools(chainId?: ChainId) {
+export function useTopPools(
+  chainId?: ChainId,
+  orderBy: Pool_OrderBy = Pool_OrderBy.TotalValueLockedUsd,
+  orderDirection: OrderDirection = OrderDirection.Desc
+) {
   const apolloClient = chainToApolloClient[chainId || ChainId.MAINNET]
   const { loading, error, data } = useTopPoolsQuery({
     client: apolloClient,
     fetchPolicy: 'no-cache',
+    variables: { orderBy, orderDirection },
   })
 
   return useMemo(() => {

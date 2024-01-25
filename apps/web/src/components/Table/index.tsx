@@ -21,6 +21,7 @@ import {
   TableBody,
   TableContainer,
   TableHead,
+  TableRowLink,
 } from './styled'
 
 export function Table<Data extends RowData>({
@@ -142,15 +143,23 @@ export function Table<Data extends RowData>({
                       ))}
                     </DataRow>
                   ))
-                : table.getRowModel().rows.map((row) => (
-                    <DataRow key={row.id}>
-                      {row.getVisibleCells().map((cell) => (
+                : table.getRowModel().rows.map((row) => {
+                    const cells = row
+                      .getVisibleCells()
+                      .map((cell) => (
                         <CellContainer key={cell.id}>
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </CellContainer>
-                      ))}
-                    </DataRow>
-                  ))}
+                      ))
+                    const rowOriginal = row.original as any
+                    return 'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
+                      <TableRowLink to={rowOriginal.link} key={row.id}>
+                        <DataRow>{cells}</DataRow>
+                      </TableRowLink>
+                    ) : (
+                      <DataRow key={row.id}>{cells}</DataRow>
+                    )
+                  })}
             </TableBody>
           </ScrollSyncPane>
           <LoadingIndicatorContainer show={loadingMore}>

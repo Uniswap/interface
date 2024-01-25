@@ -1,16 +1,17 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import Trace from 'src/components/Trace/Trace'
-import { ElementName, MobileEventName } from 'src/features/telemetry/constants'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { Button, Icons } from 'ui/src'
+import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 interface FiatOnRampCtaButtonProps {
   onPress: () => void
-  isLoading: boolean
+  isLoading?: boolean
   eligible: boolean
   disabled: boolean
-  analyticsProperties: Record<string, unknown>
+  analyticsProperties?: Record<string, unknown>
   continueButtonText: string
 }
 

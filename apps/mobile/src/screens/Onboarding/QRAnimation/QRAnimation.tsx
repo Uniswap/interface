@@ -22,14 +22,10 @@ import {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
-import { AddressDisplay } from 'src/components/AddressDisplay'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { UniconThemedGradient } from 'src/components/gradients/UniconThemedGradient'
-import { Arrow } from 'src/components/icons/Arrow'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import Trace from 'src/components/Trace/Trace'
-import { useUniconColors } from 'src/components/unicons/utils'
-import { ElementName } from 'src/features/telemetry/constants'
 import {
   flashWipeAnimation,
   letsGoButtonFadeIn,
@@ -42,12 +38,22 @@ import {
   textSlideUpAtEnd,
   videoFadeOut,
 } from 'src/screens/Onboarding/QRAnimation/animations'
-import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
+import {
+  Button,
+  Flex,
+  Text,
+  useIsDarkMode,
+  useMedia,
+  useSporeColors,
+  useUniconColors,
+} from 'ui/src'
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'ui/src/assets'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { AnimatedFlex, flexStyles } from 'ui/src/components/layout'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
-import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
+import { Arrow } from 'wallet/src/components/icons/Arrow'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 export function QRAnimation({
   activeAddress,

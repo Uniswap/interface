@@ -1,0 +1,38 @@
+query TokenPromo($chain: Chain!, $address: String = null) {
+  token(chain: $chain, address: $address) {
+    id
+    address
+    chain
+    market(currency: USD) {
+      id
+      price {
+        id
+        value
+      }
+      pricePercentChange(duration: DAY) {
+        id
+        value
+      }
+    }
+  }
+}
+
+query CollectionPromo($addresses: [String!]!) {
+  nftCollections(filter: { addresses: $addresses }) {
+    edges {
+      node {
+        markets(currencies: ETH) {
+          floorPricePercentChange(duration: DAY) {
+            value
+          }
+        }
+      }
+    }
+  }
+}
+
+query DailyProtocolVolume($version: ProtocolVersion!) {
+  historicalProtocolVolume(chain: ETHEREUM, version: $version, duration: MONTH) {
+    value
+  }
+}

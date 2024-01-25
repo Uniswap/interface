@@ -2,13 +2,13 @@ import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { memo, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
-import { Loader } from 'src/components/loading'
-import { TokenOptionItem } from 'src/components/TokenSelector/TokenOptionItem'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
-import { ElementName } from 'src/features/telemetry/constants'
 import { Flex, Icons, Inset, Text, TouchableArea } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { TokenLoader } from 'wallet/src/components/loading/TokenLoader'
+import { TokenOptionItem } from 'wallet/src/components/TokenSelector/TokenOptionItem'
 import { ChainId } from 'wallet/src/constants/chains'
+import { ElementName } from 'wallet/src/telemetry/constants'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 interface Props {
@@ -89,7 +89,7 @@ function _TokenFiatOnRampList({
     return (
       <Flex>
         <Header onBack={onBack} />
-        <Loader.Token repeat={5} />
+        <TokenLoader repeat={5} />
       </Flex>
     )
   }

@@ -31,19 +31,22 @@ const HeaderText = styled(Text)`
   }
 `
 
-const StatsWrapper = styled(Column)`
+const StatsWrapper = styled(Column)<{ loaded?: boolean }>`
   gap: 24px;
   padding: 20px;
   border-radius: 20px;
   background: ${({ theme }) => theme.surface2};
   width: 100%;
+  z-index: 1;
+  margin-top: ${({ loaded }) => loaded && '-24px'};
 
   @media (max-width: ${BREAKPOINTS.lg - 1}px) {
     flex-direction: row;
-    background: ${({ theme }) => theme.surface1};
+    background: transparent;
     flex-wrap: wrap;
     padding: 20px 0px;
     justify-content: space-between;
+    margin-top: 0px;
   }
 `
 
@@ -215,7 +218,7 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
   }
 
   return (
-    <StatsWrapper>
+    <StatsWrapper loaded>
       <HeaderText>
         <Trans>Stats</Trans>
       </HeaderText>

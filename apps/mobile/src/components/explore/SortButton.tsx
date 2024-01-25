@@ -9,11 +9,10 @@ import {
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { TokenSortableField } from 'wallet/src/data/__generated__/types-and-hooks'
-import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { setTokensOrderBy } from 'wallet/src/features/wallet/slice'
 import { ClientTokensOrderBy, TokensOrderBy } from 'wallet/src/features/wallet/types'
 interface FilterGroupProps {

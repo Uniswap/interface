@@ -1,6 +1,6 @@
 import { UAParser } from 'ua-parser-js'
 
-const parser = new UAParser(window.navigator.userAgent)
+const parser = new UAParser(navigator.userAgent)
 const { type } = parser.getDevice()
 const { name } = parser.getBrowser()
 const { name: platform } = parser.getOS()

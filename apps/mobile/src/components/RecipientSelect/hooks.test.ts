@@ -3,8 +3,7 @@ import { waitFor } from '@testing-library/react-native'
 import { toIncludeSameMembers } from 'jest-extended'
 import { act } from 'react-test-renderer'
 import { MobileState } from 'src/app/reducer'
-import { useRecipients } from 'src/components/RecipientSelect/hooks'
-import { renderHook } from 'src/test/test-utils'
+import { useRecipients } from 'wallet/src/components/RecipientSearch/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
@@ -19,8 +18,13 @@ import {
   sendTxDetailsFailed,
   sendTxDetailsPending,
 } from 'wallet/src/test/fixtures'
+import { renderHook } from 'wallet/src/test/test-utils'
 
 expect.extend({ toIncludeSameMembers })
+
+/**
+ * Tests interaction of mobile state with useRecipients hook
+ */
 
 type PreloadedStateProps = {
   watchedAddresses?: Address[]

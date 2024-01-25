@@ -4,6 +4,10 @@ exports[`TDP Skeleton should render correctly 1`] = `
 <DocumentFragment>
   .c11 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c2 {

@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard, TextInput } from 'react-native'
 import { PasswordInput } from 'src/components/input/PasswordInput'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
-import { ElementName } from 'src/features/telemetry/constants'
-import { Button, CheckBox, Flex } from 'ui/src'
+import { Button, Flex, Icons, Text } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
+import { ElementName } from 'wallet/src/telemetry/constants'
 import { validatePassword } from 'wallet/src/utils/password'
 
 export enum PasswordErrors {
@@ -28,10 +29,9 @@ export function CloudBackupPasswordForm({
   const passwordInputRef = useRef<TextInput>(null)
   const [password, setPassword] = useState('')
 
-  const [consentChecked, setConsentChecked] = useState(false)
   const [error, setError] = useState<PasswordErrors | string | undefined>(undefined)
 
-  const isButtonDisabled = (!isConfirmation && !consentChecked) || !!error || password.length === 0
+  const isButtonDisabled = !!error || password.length === 0
 
   const onPasswordChangeText = (newPassword: string): void => {
     if (isConfirmation && newPassword === password) {
@@ -42,10 +42,6 @@ export function CloudBackupPasswordForm({
       setError(undefined)
     }
     setPassword(newPassword)
-  }
-
-  const onPressConsent = (): void => {
-    setConsentChecked(!consentChecked)
   }
 
   const onPasswordSubmitEditing = (): void => {
@@ -106,13 +102,14 @@ export function CloudBackupPasswordForm({
           {error ? <PasswordError errorText={errorText} /> : null}
         </Flex>
         {!isConfirmation && (
-          <CheckBox
-            checked={consentChecked}
-            text={t(
-              'I understand that if I forget my password, Uniswap Labs cannot retrieve my recovery phrase.'
-            )}
-            onCheckPressed={onPressConsent}
-          />
+          <Flex centered row gap="$spacing12" px="$spacing16">
+            <Icons.DiamondExclamation color="$neutral2" size={iconSizes.icon20} />
+            <Text color="$neutral2" variant="body3">
+              {t(
+                'Uniswap Labs does not store your password and can’t recover it, so it’s crucial you remember it.'
+              )}
+            </Text>
+          </Flex>
         )}
       </Flex>
       <Button disabled={isButtonDisabled} testID={ElementName.Next} onPress={onPressNext}>

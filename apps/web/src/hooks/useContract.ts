@@ -15,24 +15,32 @@ import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contr
 import NonfungiblePositionManagerJson from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import V3MigratorJson from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import { useWeb3React } from '@web3-react/core'
-import ARGENT_WALLET_DETECTOR_ABI from 'abis/argent-wallet-detector.json'
-import EIP_2612 from 'abis/eip_2612.json'
-import ENS_PUBLIC_RESOLVER_ABI from 'abis/ens-public-resolver.json'
-import ENS_ABI from 'abis/ens-registrar.json'
-import ERC20_ABI from 'abis/erc20.json'
-import ERC20_BYTES32_ABI from 'abis/erc20_bytes32.json'
-import ERC721_ABI from 'abis/erc721.json'
-import ERC1155_ABI from 'abis/erc1155.json'
-import { ArgentWalletDetector, EnsPublicResolver, EnsRegistrar, Erc20, Erc721, Erc1155, Weth } from 'abis/types'
-import WETH_ABI from 'abis/weth.json'
 import { sendAnalyticsEvent } from 'analytics'
 import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
 import { useEffect, useMemo } from 'react'
-import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'types/v3'
-import { V3Migrator } from 'types/v3/V3Migrator'
 import { getContract } from 'utils'
+import ARGENT_WALLET_DETECTOR_ABI from 'wallet/src/abis/argent-wallet-detector.json'
+import EIP_2612 from 'wallet/src/abis/eip_2612.json'
+import ENS_PUBLIC_RESOLVER_ABI from 'wallet/src/abis/ens-public-resolver.json'
+import ENS_ABI from 'wallet/src/abis/ens-registrar.json'
+import ERC20_ABI from 'wallet/src/abis/erc20.json'
+import ERC20_BYTES32_ABI from 'wallet/src/abis/erc20_bytes32.json'
+import ERC721_ABI from 'wallet/src/abis/erc721.json'
+import ERC1155_ABI from 'wallet/src/abis/erc1155.json'
+import {
+  ArgentWalletDetector,
+  EnsPublicResolver,
+  EnsRegistrar,
+  Erc20,
+  Erc721,
+  Erc1155,
+  Weth,
+} from 'wallet/src/abis/types'
+import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'wallet/src/abis/types/v3'
+import { V3Migrator } from 'wallet/src/abis/types/v3/V3Migrator'
+import WETH_ABI from 'wallet/src/abis/weth.json'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
 const { abi: IUniswapV2Router02ABI } = IUniswapV2Router02Json

@@ -1,9 +1,13 @@
 {
-  "baseBranch": "origin/main",
+  "$schema": "https://turbo.build/schema.json",
   "pipeline": {
     "prepare": {
       "inputs": [
-        "package.json"
+        "package.json",
+        "schema.graphql",
+        "scripts/fetch-schema.js",
+        "src/graphql/**",
+        "src/data/**/*.graphql"
       ],
       "outputs": [
         "src/**/__generated__/**",
@@ -11,6 +15,37 @@
         "src/locales/**",
         "src/abis/types/**",
         "src/constants/tokenLists/**"
+      ],
+      "dependsOn": [
+        "graphql:generate"
+      ]
+    },
+    "graphql:schema": {
+      "env": [
+        "THE_GRAPH_SCHEMA_ENDPOINT",
+        "REACT_APP_AWS_API_ENDPOINT"
+      ],
+      "inputs": [
+        "scripts/fetch-schema.js",
+        ".env.production",
+        "graphql.*.ts"
+      ],
+      "outputs": [
+        "schema.graphql"
+      ],
+      "dependsOn": []
+    },
+    "graphql:generate": {
+      "inputs": [
+        "schema.graphql",
+        "scripts/fetch-schema.js",
+        "src/graphql/**",
+        "src/data/**/*.graphql"
+      ],
+      "outputs": [
+        "types-and-hooks.ts",
+        "data/__generated__/*",
+        "graphql/__generated__/*"
       ],
       "dependsOn": []
     },
@@ -38,9 +73,7 @@
     },
     "test": {
       "dependsOn": [
-        "prepare",
-        "typecheck",
-        "lint"
+        "prepare"
       ]
     },
     "snapshots": {

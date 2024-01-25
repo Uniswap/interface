@@ -1,5 +1,8 @@
+import Row from 'components/Row'
 import { motion } from 'framer-motion'
-import styled from 'styled-components'
+import { parseToRgb } from 'polished'
+import styled, { keyframes, useTheme } from 'styled-components'
+import { opacify } from 'theme/utils'
 
 const Mask = motion(styled.div`
   position: relative;
@@ -15,13 +18,13 @@ const Mask = motion(styled.div`
     min-height: 32px;
   }
 `)
-const Char = motion(styled.div`
+const Char = motion(styled.div<{ color: string }>`
   font-variant-numeric: lining-nums tabular-nums;
   font-family: Basel;
   font-size: 52px;
   font-style: normal;
   font-weight: 500;
-  color: ${({ theme }) => theme.neutral1};
+  color: ${({ color }) => color};
   line-height: 52px;
   @media (max-width: 1024px) {
     font-size: 40px;
@@ -32,7 +35,7 @@ const Char = motion(styled.div`
     line-height: 32px;
   }
 `)
-const Container = styled.div`
+const Container = styled.div<{ live?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -41,10 +44,11 @@ const Container = styled.div`
 
   width: 100%;
   height: 100%;
+  max-height: 230px;
 
   padding: 32px;
 
-  background-color: ${({ theme }) => theme.surface2};
+  background-color: ${({ theme, live }) => (live ? '#2FBA610A' : theme.surface2)};
   overflow: hidden;
 
   @media (max-width: 1024px) {
@@ -52,6 +56,12 @@ const Container = styled.div`
   }
   @media (max-width: 768px) {
   }
+  background-image: radial-gradient(rgba(${({ theme }) => {
+    const { red, green, blue } = parseToRgb(theme.neutral2)
+    return `${red}, ${green}, ${blue}`
+  }}, 0.25) 0.5px, transparent 0)};
+  background-size: 12px 12px;
+  background-position: -8.5px -8.5px;
 `
 const SpriteContainer = motion(styled.div`
   pointer-events: none;
@@ -59,27 +69,52 @@ const SpriteContainer = motion(styled.div`
   flex-direction: column;
   color: ${({ theme }) => theme.neutral2};
 `)
-const Title = styled.h3`
+
+const pulsate = (color: string) => keyframes`
+  0% {
+    box-shadow: 0 0 0 0 ${opacify(24, color)};
+  }
+  100% {
+    box-shadow: 0 0 0 4px ${opacify(24, color)};
+  }
+`
+const LiveIcon = styled.div<{ display: string }>`
+  display: ${({ display }) => display};
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+  background: ${({ theme }) => theme.success};
+
+  animation-name: ${({ theme }) => pulsate(theme.success)};
+  animation-fill-mode: forwards;
+  animation-direction: alternate;
+  animation-duration: 1000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+`
+const Title = styled.h3<{ color: string }>`
   padding: 0;
   margin: 0;
   font-family: Basel;
   font-size: 24px;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 535;
   line-height: 32px; /* 133.333% */
-  color: ${({ theme }) => theme.neutral2};
+  color: ${({ color }) => color};
   @media (max-width: 1024px) {
-    font-size: 20px;
+    font-size: 18px;
     line-height: 26px;
   }
   @media (max-width: 768px) {
-    font-size: 20px;
+    font-size: 18px;
     line-height: 20px;
   }
 `
 type StatCardProps = {
   title: string
   value: string
+  live?: boolean
   prefix?: string
   suffix?: string
   delay?: number
@@ -96,13 +131,18 @@ const suffixes = [' ', 'K', 'M', 'B', 'T']
 const delineators = [',', '.']
 
 export function StatCard(props: StatCardProps) {
+  const theme = useTheme()
   return (
-    <Container>
-      <Title>{props.title}</Title>
+    <Container live={props.live}>
+      <Row align="center" gap="sm">
+        <LiveIcon display={props.live ? 'block' : 'none'} />
+        <Title color={props.live ? theme.success : theme.neutral2}>{props.title}</Title>
+      </Row>
       <StringInterpolationWithMotion
         prefix={props.prefix}
         suffix={props.suffix}
         value={props.value}
+        live={props.live}
         delay={props.delay}
         inView={props.inView}
       />
@@ -110,8 +150,9 @@ export function StatCard(props: StatCardProps) {
   )
 }
 
-function StringInterpolationWithMotion({ value, delay, inView }: Omit<StatCardProps, 'title'>) {
+function StringInterpolationWithMotion({ value, delay, inView, live }: Omit<StatCardProps, 'title'>) {
   const chars = value.split('')
+  const theme = useTheme()
 
   return (
     <Mask
@@ -129,13 +170,13 @@ function StringInterpolationWithMotion({ value, delay, inView }: Omit<StatCardPr
           ? currency
           : suffixes
 
-        return <NumberSprite char={char} key={index} charset={charset} />
+        return <NumberSprite char={char} key={index} charset={charset} color={live ? theme.success : theme.neutral1} />
       })}
     </Mask>
   )
 }
 
-function NumberSprite({ char, charset }: { char: string; charset: string[] }) {
+function NumberSprite({ char, charset, color }: { char: string; charset: string[]; color: string }) {
   const height = 60
 
   // rotate array so that the char is at the top
@@ -176,7 +217,7 @@ function NumberSprite({ char, charset }: { char: string; charset: string[] }) {
         }
 
         return (
-          <Char variants={charVariants} key={index}>
+          <Char variants={charVariants} key={index} color={color}>
             {char}
           </Char>
         )

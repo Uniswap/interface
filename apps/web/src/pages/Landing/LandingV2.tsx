@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import React, { memo, useRef } from 'react'
 import styled from 'styled-components'
 
 import { DirectToDefi } from './sections/DirectToDefi'
@@ -12,15 +12,31 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 80px;
+  gap: 120px;
+  @media (max-width: 1024px) {
+    gap: 80px;
+  }
   margin-top: -100px;
+  max-width: 1280px;
 `
 
 function LandingV2() {
+  const scrollAnchor = useRef<HTMLDivElement | null>(null)
+  const scrollToRef = () => {
+    if (scrollAnchor.current) {
+      window.scrollTo({
+        top: scrollAnchor.current.offsetTop - 120,
+        behavior: 'smooth',
+      })
+    }
+  }
+
   return (
     <Container>
-      <Hero />
-      <DirectToDefi />
+      <Hero scrollToRef={scrollToRef} />
+      <div ref={scrollAnchor}>
+        <DirectToDefi />
+      </div>
       <Stats />
       <NewsletterEtc />
       <Footer />

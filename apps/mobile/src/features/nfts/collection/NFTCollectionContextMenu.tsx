@@ -6,10 +6,10 @@ import { TripleDot } from 'src/components/icons/TripleDot'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { getNftCollectionUrl, getTwitterLink, openUri } from 'src/utils/linking'
 import { ColorTokens, Flex, TouchableArea } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
+import { getNftCollectionUrl, getTwitterLink, openUri } from 'wallet/src/utils/linking'
 import { NFTCollectionData } from './types'
 
 type MenuOption = {

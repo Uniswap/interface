@@ -1,7 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
 import Column from 'components/Column'
-import ChartSection from 'components/Pools/PoolDetails/ChartSection'
+import ChartSection, {
+  PDP_CHART_SELECTOR_OPTIONS,
+  PoolsDetailsChartType,
+} from 'components/Pools/PoolDetails/ChartSection'
 import { PoolDetailsBreadcrumb, PoolDetailsHeader } from 'components/Pools/PoolDetails/PoolDetailsHeader'
 import { PoolDetailsLink } from 'components/Pools/PoolDetails/PoolDetailsLink'
 import { PoolDetailsStats } from 'components/Pools/PoolDetails/PoolDetailsStats'
@@ -110,10 +113,11 @@ export default function PoolDetailsPage() {
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const token0 = isReversed ? poolData?.token1 : poolData?.token0
   const token1 = isReversed ? poolData?.token0 : poolData?.token1
+
   const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
-  const [chartType, setChartType] = useState<ChartType>(ChartType.PRICE)
+  const [chartType, setChartType] = useState<PoolsDetailsChartType>(ChartType.PRICE)
   const [priceChartType, setPriceChartType] = useState<PriceChartType>(PriceChartType.LINE)
 
   if (poolNotFound) return <NotFound />
@@ -142,9 +146,9 @@ export default function PoolDetailsPage() {
                 <AdvancedPriceChartToggle currentChartType={priceChartType} onChartTypeChange={setPriceChartType} />
               )}
               <ChartTypeSelector
-                options={[{ value: ChartType.PRICE }, { value: ChartType.VOLUME }, { value: ChartType.LIQUIDITY }]}
+                options={PDP_CHART_SELECTOR_OPTIONS}
                 currentChartType={chartType}
-                onChartTypeChange={(c: ChartType) => {
+                onChartTypeChange={(c) => {
                   setChartType(c)
                   if (c === ChartType.PRICE) setPriceChartType(PriceChartType.LINE)
                 }}
@@ -152,6 +156,8 @@ export default function PoolDetailsPage() {
             </ChartTypeSelectorContainer>
           </Row>
           <ChartSection
+            token0={token0}
+            token1={token1}
             chartType={chartType}
             priceChartType={priceChartType}
             feeTier={poolData?.feeTier}

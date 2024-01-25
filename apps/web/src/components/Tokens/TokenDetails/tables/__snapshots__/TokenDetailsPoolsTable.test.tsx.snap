@@ -25,28 +25,54 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   justify-content: flex-start;
 }
 
-.c23 {
+.c18 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c26 {
   height: 16px;
   width: 16px;
 }
 
-.c23 path {
+.c26 path {
   stroke: #FC72FF;
   background: #7D7D7D;
   fill: none;
 }
 
-.c24 {
+.c27 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
 }
 
 .c9 {
   color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
-.c19 {
+.c22 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c0 {
@@ -95,7 +121,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   background: #FFFFFF;
 }
 
-.c13 {
+.c15 {
   width: 100%;
   position: relative;
   overflow-x: auto;
@@ -112,11 +138,11 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   scrollbar-width: none;
 }
 
-.c13::-webkit-scrollbar {
+.c15::-webkit-scrollbar {
   display: none;
 }
 
-.c21 {
+.c24 {
   position: -webkit-sticky;
   position: sticky;
   -webkit-box-pack: center;
@@ -127,7 +153,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   visibility: hidden;
 }
 
-.c22 {
+.c25 {
   background: #FFEFFF;
   border-radius: 8px;
   width: -webkit-fit-content;
@@ -143,7 +169,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
 }
 
 .c5 {
-  padding: 0px 20px;
+  padding: 0px 12px;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -155,7 +181,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   min-height: 64px;
 }
 
-.c14:hover {
+.c17:hover {
   background: #22222212;
 }
 
@@ -197,10 +223,47 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   justify-content: flex-end;
 }
 
+.c16 {
+  color: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.c12 {
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  cursor: pointer;
+  width: 100%;
+  gap: 4px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c12:hover {
+  opacity: 0.6;
+}
+
+.c12:active {
+  opacity: 0.4;
+}
+
+.c13 {
+  height: 16px;
+  width: 16px;
+  color: #7D7D7D;
+  -webkit-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
 .c8 {
-  width: undefinedpx;
-  min-width: 48px;
-  min-width: undefinedpx;
+  min-width: 44px;
   -webkit-flex: 0;
   -ms-flex: 0;
   flex: 0;
@@ -208,23 +271,21 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   overflow: hidden;
   padding: 12px 8px;
 }
 
 .c10 {
-  width: undefinedpx;
   min-width: 240px;
-  min-width: undefinedpx;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -240,15 +301,13 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   overflow: hidden;
   padding: 12px 8px;
 }
 
 .c11 {
-  width: undefinedpx;
   min-width: 120px;
-  min-width: undefinedpx;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -264,15 +323,13 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   overflow: hidden;
   padding: 12px 8px;
 }
 
-.c12 {
-  width: undefinedpx;
-  min-width: 100px;
-  min-width: undefinedpx;
+.c14 {
+  min-width: 84px;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -288,18 +345,18 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   overflow: hidden;
   padding: 12px 8px;
 }
 
-.c16 {
+.c19 {
   position: relative;
   top: 0;
   left: 0;
 }
 
-.c17 {
+.c20 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -310,47 +367,29 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   left: 0;
 }
 
-.c17 img {
+.c20 img {
   width: 14px;
   height: 28px;
   object-fit: cover;
 }
 
-.c17 img:first-child {
+.c20 img:first-child {
   border-radius: 14px 0 0 14px;
   object-position: 0 0;
 }
 
-.c17 img:last-child {
+.c20 img:last-child {
   border-radius: 0 14px 14px 0;
   object-position: 100% 0;
 }
 
-.c18 {
+.c21 {
   width: 14px;
   height: 28px;
   border-radius: 50%;
 }
 
-.c15 {
-  gap: 8px;
-  cursor: pointer;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c15:hover {
-  opacity: 0.6;
-}
-
-.c15:active {
-  opacity: 0.4;
-}
-
-.c20 {
+.c23 {
   padding: 2px 6px;
   background: #F9F9F9;
 }
@@ -401,9 +440,36 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c3 c4 c12"
                 >
-                  TVL
+                  <svg
+                    class="c13"
+                    direction="desc"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="12"
+                      x2="12"
+                      y1="5"
+                      y2="19"
+                    />
+                    <polyline
+                      points="19 12 12 19 5 12"
+                    />
+                  </svg>
+                  <div
+                    class="c9 css-1urox24"
+                  >
+                    TVL
+                  </div>
                 </div>
               </div>
             </div>
@@ -437,7 +503,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
                   class="c9 css-1urox24"
@@ -449,127 +515,132 @@ exports[`TDPPoolTable renders data filled state 1`] = `
           </div>
         </div>
         <div
-          class="c0 c13"
+          class="c0 c15"
         >
-          <div
-            class="c3 c4 c5 c14"
+          <a
+            class="c16"
+            href="/explore/pools/ethereum/0x123"
           >
             <div
-              class="c7"
+              class="c3 c4 c5 c17"
             >
               <div
-                class="c8"
+                class="c7"
               >
                 <div
-                  class="c9 css-1urox24"
-                >
-                  1
-                </div>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c10"
-              >
-                <div
-                  class="c3 c4 c15"
+                  class="c8"
                 >
                   <div
-                    class="c16"
+                    class="c9 css-1urox24"
+                  >
+                    1
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c7"
+              >
+                <div
+                  class="c10"
+                >
+                  <div
+                    class="c3 c18"
                   >
                     <div
-                      class="c17"
-                      size="28"
+                      class="c19"
                     >
-                      <img
-                        class="c18"
+                      <div
+                        class="c20"
                         size="28"
-                        src="blank_token.svg"
-                      />
-                      <img
-                        class="c18"
-                        size="28"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                      />
+                      >
+                        <img
+                          class="c21"
+                          size="28"
+                          src="blank_token.svg"
+                        />
+                        <img
+                          class="c21"
+                          size="28"
+                          src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      class="c22 css-1urox24"
+                    >
+                      USDC/WETH
+                    </div>
+                    <div
+                      class="c9 c23 css-1m65e73"
+                    >
+                      1%
                     </div>
                   </div>
+                </div>
+              </div>
+              <div
+                class="c7"
+              >
+                <div
+                  class="c11"
+                >
                   <div
-                    class="c19 css-1urox24"
+                    class="c9 css-1urox24"
                   >
-                    USDC/WETH
+                    $300.00
                   </div>
+                </div>
+              </div>
+              <div
+                class="c7"
+              >
+                <div
+                  class="c11"
+                >
                   <div
-                    class="c9 c20 css-1m65e73"
+                    class="c9 css-1urox24"
                   >
-                    1%
+                    $400.00
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c7"
+              >
+                <div
+                  class="c11"
+                >
+                  <div
+                    class="c9 css-1urox24"
+                  >
+                    $500.00
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c7"
+              >
+                <div
+                  class="c14"
+                >
+                  <div
+                    class="c9 css-1urox24"
+                  >
+                    600.00
                   </div>
                 </div>
               </div>
             </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c9 css-1urox24"
-                >
-                  $300.00
-                </div>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c9 css-1urox24"
-                >
-                  $400.00
-                </div>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c11"
-              >
-                <div
-                  class="c9 css-1urox24"
-                >
-                  $500.00
-                </div>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c9 css-1urox24"
-                >
-                  600.00
-                </div>
-              </div>
-            </div>
-          </div>
+          </a>
         </div>
         <div
-          class="c3 c4 c21"
+          class="c3 c4 c24"
         >
           <div
-            class="c3 c4 c22"
+            class="c3 c4 c25"
           >
             <svg
-              class="c23 c24"
+              class="c26 c27"
               fill="none"
               stroke="#FC72FF"
               viewBox="0 0 24 24"
@@ -595,6 +666,10 @@ exports[`TDPPoolTable renders error state 1`] = `
 <DocumentFragment>
   .c0 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 <div
@@ -630,24 +705,28 @@ exports[`TDPPoolTable renders loading state 1`] = `
   justify-content: flex-start;
 }
 
-.c19 {
+.c21 {
   height: 16px;
   width: 16px;
 }
 
-.c19 path {
+.c21 path {
   stroke: #FC72FF;
   background: #7D7D7D;
   fill: none;
 }
 
-.c20 {
+.c22 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
 }
 
 .c9 {
   color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c0 {
@@ -696,7 +775,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
   background: #FFFFFF;
 }
 
-.c13 {
+.c15 {
   width: 100%;
   position: relative;
   overflow-x: auto;
@@ -713,11 +792,11 @@ exports[`TDPPoolTable renders loading state 1`] = `
   scrollbar-width: none;
 }
 
-.c13::-webkit-scrollbar {
+.c15::-webkit-scrollbar {
   display: none;
 }
 
-.c17 {
+.c19 {
   position: -webkit-sticky;
   position: sticky;
   -webkit-box-pack: center;
@@ -728,7 +807,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
   visibility: hidden;
 }
 
-.c18 {
+.c20 {
   background: #FFEFFF;
   border-radius: 8px;
   width: -webkit-fit-content;
@@ -744,7 +823,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
 }
 
 .c5 {
-  padding: 0px 20px;
+  padding: 0px 12px;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -756,7 +835,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
   min-height: 64px;
 }
 
-.c14:hover {
+.c16:hover {
   background: #22222212;
 }
 
@@ -798,7 +877,39 @@ exports[`TDPPoolTable renders loading state 1`] = `
   justify-content: flex-end;
 }
 
-.c15 {
+.c12 {
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  cursor: pointer;
+  width: 100%;
+  gap: 4px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c12:hover {
+  opacity: 0.6;
+}
+
+.c12:active {
+  opacity: 0.4;
+}
+
+.c13 {
+  height: 16px;
+  width: 16px;
+  color: #7D7D7D;
+  -webkit-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
+.c17 {
   border-radius: 12px;
   border-radius: 12px;
   height: 24px;
@@ -814,9 +925,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
 }
 
 .c8 {
-  width: undefinedpx;
-  min-width: 48px;
-  min-width: undefinedpx;
+  min-width: 44px;
   -webkit-flex: 0;
   -ms-flex: 0;
   flex: 0;
@@ -824,23 +933,21 @@ exports[`TDPPoolTable renders loading state 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   overflow: hidden;
   padding: 12px 8px;
 }
 
 .c10 {
-  width: undefinedpx;
   min-width: 240px;
-  min-width: undefinedpx;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -856,15 +963,13 @@ exports[`TDPPoolTable renders loading state 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   overflow: hidden;
   padding: 12px 8px;
 }
 
 .c11 {
-  width: undefinedpx;
   min-width: 120px;
-  min-width: undefinedpx;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -880,15 +985,13 @@ exports[`TDPPoolTable renders loading state 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   overflow: hidden;
   padding: 12px 8px;
 }
 
-.c12 {
-  width: undefinedpx;
-  min-width: 100px;
-  min-width: undefinedpx;
+.c14 {
+  min-width: 84px;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -904,12 +1007,12 @@ exports[`TDPPoolTable renders loading state 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   overflow: hidden;
   padding: 12px 8px;
 }
 
-.c16 {
+.c18 {
   width: 75%;
   height: 16px;
 }
@@ -960,9 +1063,36 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c3 c4 c12"
                 >
-                  TVL
+                  <svg
+                    class="c13"
+                    direction="desc"
+                    fill="none"
+                    height="24"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="12"
+                      x2="12"
+                      y1="5"
+                      y2="19"
+                    />
+                    <polyline
+                      points="19 12 12 19 5 12"
+                    />
+                  </svg>
+                  <div
+                    class="c9 css-1urox24"
+                  >
+                    TVL
+                  </div>
                 </div>
               </div>
             </div>
@@ -996,7 +1126,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
                   class="c9 css-1urox24"
@@ -1008,10 +1138,10 @@ exports[`TDPPoolTable renders loading state 1`] = `
           </div>
         </div>
         <div
-          class="c0 c13"
+          class="c0 c15"
         >
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -1020,7 +1150,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1032,7 +1162,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1044,7 +1174,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1056,7 +1186,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1068,7 +1198,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1077,17 +1207,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -1096,7 +1226,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1108,7 +1238,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1120,7 +1250,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1132,7 +1262,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1144,7 +1274,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1153,17 +1283,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -1172,7 +1302,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1184,7 +1314,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1196,7 +1326,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1208,7 +1338,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1220,7 +1350,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1229,17 +1359,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -1248,7 +1378,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1260,7 +1390,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1272,7 +1402,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1284,7 +1414,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1296,7 +1426,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1305,17 +1435,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -1324,7 +1454,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1336,7 +1466,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1348,7 +1478,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1360,7 +1490,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1372,7 +1502,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1381,17 +1511,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -1400,7 +1530,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1412,7 +1542,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1424,7 +1554,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1436,7 +1566,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1448,7 +1578,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1457,17 +1587,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -1476,7 +1606,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1488,7 +1618,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1500,7 +1630,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1512,7 +1642,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1524,7 +1654,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1533,17 +1663,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -1552,7 +1682,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1564,7 +1694,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1576,7 +1706,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1588,7 +1718,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1600,7 +1730,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1609,17 +1739,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -1628,7 +1758,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1640,7 +1770,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1652,7 +1782,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1664,7 +1794,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1676,7 +1806,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1685,17 +1815,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -1704,7 +1834,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1716,7 +1846,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1728,7 +1858,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1740,7 +1870,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1752,7 +1882,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1761,17 +1891,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -1780,7 +1910,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1792,7 +1922,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1804,7 +1934,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1816,7 +1946,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1828,7 +1958,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1837,17 +1967,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -1856,7 +1986,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1868,7 +1998,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1880,7 +2010,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1892,7 +2022,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1904,7 +2034,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1913,17 +2043,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -1932,7 +2062,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1944,7 +2074,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1956,7 +2086,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1968,7 +2098,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1980,7 +2110,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -1989,17 +2119,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -2008,7 +2138,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2020,7 +2150,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2032,7 +2162,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2044,7 +2174,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2056,7 +2186,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2065,17 +2195,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -2084,7 +2214,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2096,7 +2226,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2108,7 +2238,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2120,7 +2250,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2132,7 +2262,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2141,17 +2271,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -2160,7 +2290,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2172,7 +2302,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2184,7 +2314,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2196,7 +2326,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2208,7 +2338,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2217,17 +2347,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -2236,7 +2366,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2248,7 +2378,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2260,7 +2390,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2272,7 +2402,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2284,7 +2414,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2293,17 +2423,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -2312,7 +2442,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2324,7 +2454,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2336,7 +2466,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2348,7 +2478,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2360,7 +2490,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2369,17 +2499,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -2388,7 +2518,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2400,7 +2530,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2412,7 +2542,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2424,7 +2554,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2436,7 +2566,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2445,17 +2575,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -2464,7 +2594,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2476,7 +2606,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2488,7 +2618,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2500,7 +2630,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2512,7 +2642,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2521,17 +2651,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -2540,7 +2670,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2552,7 +2682,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2564,7 +2694,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2576,7 +2706,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2588,7 +2718,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2597,17 +2727,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -2616,7 +2746,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2628,7 +2758,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2640,7 +2770,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2652,7 +2782,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2664,7 +2794,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2673,17 +2803,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -2692,7 +2822,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2704,7 +2834,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2716,7 +2846,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2728,7 +2858,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2740,7 +2870,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2749,17 +2879,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -2768,7 +2898,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2780,7 +2910,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2792,7 +2922,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2804,7 +2934,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2816,7 +2946,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2825,17 +2955,17 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
             </div>
           </div>
           <div
-            class="c3 c4 c5 c14"
+            class="c3 c4 c5 c16"
           >
             <div
               class="c7"
@@ -2844,7 +2974,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c8"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2856,7 +2986,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c10"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2868,7 +2998,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2880,7 +3010,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2892,7 +3022,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2901,10 +3031,10 @@ exports[`TDPPoolTable renders loading state 1`] = `
               class="c7"
             >
               <div
-                class="c12"
+                class="c14"
               >
                 <div
-                  class="c15 c16"
+                  class="c17 c18"
                   data-testid="cell-loading-bubble"
                 />
               </div>
@@ -2912,13 +3042,13 @@ exports[`TDPPoolTable renders loading state 1`] = `
           </div>
         </div>
         <div
-          class="c3 c4 c17"
+          class="c3 c4 c19"
         >
           <div
-            class="c3 c4 c18"
+            class="c3 c4 c20"
           >
             <svg
-              class="c19 c20"
+              class="c21 c22"
               fill="none"
               stroke="#FC72FF"
               viewBox="0 0 24 24"

@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { useAccountList } from 'src/components/accounts/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import {
@@ -18,6 +17,7 @@ import {
 } from 'src/features/telemetry/slice'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { areSameDays } from 'utilities/src/time/date'
+import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { sendWalletAppsFlyerEvent } from 'wallet/src/telemetry'

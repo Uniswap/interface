@@ -1,9 +1,8 @@
 import React from 'react'
 import Trace from 'src/components/Trace/Trace'
-import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { ElementNameType } from 'wallet/src/telemetry/constants'
 
 export function OptionCard({
   title,
@@ -20,7 +19,7 @@ export function OptionCard({
   blurb: string
   icon: React.ReactNode
   onPress: () => void
-  elementName: ElementName
+  elementName: ElementNameType
   disabled?: boolean
   opacity?: number
   badgeText?: string | undefined

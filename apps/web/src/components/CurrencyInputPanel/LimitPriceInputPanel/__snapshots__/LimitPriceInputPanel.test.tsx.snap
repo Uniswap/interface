@@ -1,0 +1,479 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LimitPriceInputPanel should render correct subheader with inputCurrency defined, but no price 1`] = `
+.c5 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  margin-top: 8px;
+}
+
+.c7 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: unset;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c8 {
+  width: unset;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 1px;
+}
+
+.c1 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c3 {
+  color: #222222;
+  pointer-events: none;
+  width: 0;
+  position: relative;
+  font-weight: 485;
+  outline: none;
+  border: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  background-color: transparent;
+  font-size: 28px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0px;
+  -webkit-appearance: textfield;
+  text-align: right;
+}
+
+.c3::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.c3 [type='number'] {
+  -moz-appearance: textfield;
+}
+
+.c3::-webkit-outer-spin-button,
+.c3::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.c3::-webkit-input-placeholder {
+  color: #CECECE;
+}
+
+.c3::-moz-placeholder {
+  color: #CECECE;
+}
+
+.c3:-ms-input-placeholder {
+  color: #CECECE;
+}
+
+.c3::placeholder {
+  color: #CECECE;
+}
+
+.c4 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+  text-align: left;
+  font-size: 36px;
+  font-weight: 485;
+  max-height: 44px;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  position: relative;
+  border-radius: 20px;
+  z-index: 1;
+  width: initial;
+  -webkit-transition: height 1s ease;
+  transition: height 1s ease;
+  will-change: height;
+}
+
+.c9 {
+  background-color: unset;
+  color: #7D7D7D;
+  padding: 2px 8px;
+  height: 24px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: transparent;
+  border-radius: 999px;
+  border: 1px solid #22222212;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+<div
+  class="c0"
+>
+  <div
+    class="c1 css-142zc9n"
+    style="user-select: none;"
+  >
+    Limit price
+  </div>
+  <div
+    class="c2"
+  >
+    <input
+      autocomplete="off"
+      autocorrect="off"
+      class="c3 c4 limit-price-input"
+      disabled=""
+      inputmode="decimal"
+      maxlength="79"
+      minlength="1"
+      pattern="^[0-9]*[.,]?[0-9]*$"
+      placeholder="0"
+      spellcheck="false"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="c5 c6"
+  >
+    <div
+      class="c7 c8"
+      width="unset"
+    >
+      <button
+        class="c9"
+      >
+        Current
+      </button>
+    </div>
+    <button
+      class="c9"
+    >
+      <span>
+        +
+        1%
+      </span>
+    </button>
+    <button
+      class="c9"
+    >
+      <span>
+        +
+        5%
+      </span>
+    </button>
+    <button
+      class="c9"
+    >
+      <span>
+        +
+        10%
+      </span>
+    </button>
+  </div>
+</div>
+`;
+
+exports[`LimitPriceInputPanel should render the component with no currencies selected 1`] = `
+.c5 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  margin-top: 8px;
+}
+
+.c7 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: unset;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c8 {
+  width: unset;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 1px;
+}
+
+.c1 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c3 {
+  color: #222222;
+  pointer-events: none;
+  width: 0;
+  position: relative;
+  font-weight: 485;
+  outline: none;
+  border: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  background-color: transparent;
+  font-size: 28px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0px;
+  -webkit-appearance: textfield;
+  text-align: right;
+}
+
+.c3::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.c3 [type='number'] {
+  -moz-appearance: textfield;
+}
+
+.c3::-webkit-outer-spin-button,
+.c3::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.c3::-webkit-input-placeholder {
+  color: #CECECE;
+}
+
+.c3::-moz-placeholder {
+  color: #CECECE;
+}
+
+.c3:-ms-input-placeholder {
+  color: #CECECE;
+}
+
+.c3::placeholder {
+  color: #CECECE;
+}
+
+.c4 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+  text-align: left;
+  font-size: 36px;
+  font-weight: 485;
+  max-height: 44px;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  position: relative;
+  border-radius: 20px;
+  z-index: 1;
+  width: initial;
+  -webkit-transition: height 1s ease;
+  transition: height 1s ease;
+  will-change: height;
+}
+
+.c9 {
+  background-color: unset;
+  color: #7D7D7D;
+  padding: 2px 8px;
+  height: 24px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: transparent;
+  border-radius: 999px;
+  border: 1px solid #22222212;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+<div
+  class="c0"
+>
+  <div
+    class="c1 css-142zc9n"
+    style="user-select: none;"
+  >
+    Limit price
+  </div>
+  <div
+    class="c2"
+  >
+    <input
+      autocomplete="off"
+      autocorrect="off"
+      class="c3 c4 limit-price-input"
+      disabled=""
+      inputmode="decimal"
+      maxlength="79"
+      minlength="1"
+      pattern="^[0-9]*[.,]?[0-9]*$"
+      placeholder="0"
+      spellcheck="false"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="c5 c6"
+  >
+    <div
+      class="c7 c8"
+      width="unset"
+    >
+      <button
+        class="c9"
+      >
+        Current
+      </button>
+    </div>
+    <button
+      class="c9"
+    >
+      <span>
+        +
+        1%
+      </span>
+    </button>
+    <button
+      class="c9"
+    >
+      <span>
+        +
+        5%
+      </span>
+    </button>
+    <button
+      class="c9"
+    >
+      <span>
+        +
+        10%
+      </span>
+    </button>
+  </div>
+</div>
+`;

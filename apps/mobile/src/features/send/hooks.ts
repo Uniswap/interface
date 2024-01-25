@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import {
@@ -8,6 +7,7 @@ import {
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
 import { useAppDispatch } from 'wallet/src/state'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 export const useNavigateToSend: () => (
   currencyAddress: Address,

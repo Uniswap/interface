@@ -1,6 +1,5 @@
 import { t, Trans } from '@lingui/macro'
 import { InterfaceElementName } from '@uniswap/analytics-events'
-import FeatureFlagModal from 'components/FeatureFlagModal/FeatureFlagModal'
 import { PrivacyPolicyModal } from 'components/PrivacyPolicy'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Box } from 'nft/components/Box'
@@ -243,7 +242,6 @@ export const MenuDropdown = () => {
         )}
       </Box>
       <PrivacyPolicyModal />
-      <FeatureFlagModal />
     </>
   )
 }

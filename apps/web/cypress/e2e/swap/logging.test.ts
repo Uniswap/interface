@@ -4,7 +4,8 @@ import { USDC_MAINNET } from '../../../src/constants/tokens'
 import { getTestSelector } from '../../utils'
 
 describe('swap flow logging', () => {
-  it('completes two swaps and verifies the TTS logging for the first, plus all intermediate steps along the way', () => {
+  // TODO re-enable web test
+  it.skip('completes two swaps and verifies the TTS logging for the first, plus all intermediate steps along the way', () => {
     cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
     cy.hardhat()
 

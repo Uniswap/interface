@@ -7,15 +7,15 @@ import { useAppDispatch } from 'src/app/hooks'
 import { TripleDot } from 'src/components/icons/TripleDot'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
-import { setClipboard } from 'src/utils/clipboard'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'src/utils/linking'
 import { Flex, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
+import { setClipboard } from 'wallet/src/utils/clipboard'
+import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'wallet/src/utils/linking'
 
 export function ProfileContextMenu({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()

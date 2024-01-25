@@ -7,7 +7,7 @@ import {
 import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-navigation/native-stack'
 import { EducationContentType } from 'src/components/education'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
-import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
+import { FiatOnRampScreens, OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 
@@ -34,6 +34,11 @@ export type ExploreStackParamList = {
   [Screens.TokenDetails]: {
     currencyId: string
   }
+}
+
+export type FiatOnRampStackParamList = {
+  [FiatOnRampScreens.AmountInput]: undefined
+  [FiatOnRampScreens.ServiceProviders]: undefined
 }
 
 export type SettingsStackParamList = {
@@ -74,6 +79,13 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.QRAnimation]: OnboardingStackBaseParams
   [OnboardingScreens.Security]: OnboardingStackBaseParams
 
+  // unitag
+  [UnitagScreens.ClaimUnitag]: { entryPoint: OnboardingScreens.Landing | Screens.Home }
+  [UnitagScreens.ChooseProfilePicture]: {
+    entryPoint: OnboardingScreens.Landing | Screens.Home
+    unitag: string
+  }
+
   // import
   [OnboardingScreens.ImportMethod]: OnboardingStackBaseParams
   [OnboardingScreens.RestoreCloudBackupLoading]: OnboardingStackBaseParams
@@ -99,6 +111,8 @@ export type UnitagStackParamList = {
   }
   [UnitagScreens.EditProfile]: {
     address: Address
+    unitag: string
+    entryPoint: UnitagScreens.UnitagConfirmation | Screens.SettingsWallet
   }
 }
 
@@ -153,7 +167,8 @@ export type RootParamList = AppStackParamList &
   ExploreStackParamList &
   OnboardingStackParamList &
   SettingsStackParamList &
-  UnitagStackParamList
+  UnitagStackParamList &
+  FiatOnRampStackParamList
 
 export const useAppStackNavigation = (): AppStackNavigationProp =>
   useNavigation<AppStackNavigationProp>()

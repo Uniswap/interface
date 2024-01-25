@@ -1,19 +1,29 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
+import { BiometricsIcon } from 'src/components/icons/BiometricsIcon'
+import {
+  useBiometricAppSettings,
+  useBiometricPrompt,
+  useOsBiometricAuthEnabled,
+} from 'src/features/biometrics/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { ModalName } from 'src/features/telemetry/constants'
-import { updateSwapStartTimestamp } from 'src/features/telemetry/timing/slice'
 import { SwapFlow } from 'src/features/transactions/swap/SwapFlow'
-import { SwapFlow as SwapFlowRewrite } from 'src/features/transactions/swapRewrite/SwapFlow'
+import { TokenSelector } from 'src/features/transactions/swapRewrite/TokenSelector'
+import { getFocusOnCurrencyFieldFromInitialState } from 'src/features/transactions/swapRewrite/utils'
+import { useWalletRestore } from 'src/features/wallet/hooks'
 import { useSporeColors } from 'ui/src'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { useSwapRewriteEnabled } from 'wallet/src/features/experiments/hooks'
+import { SwapFormState } from 'wallet/src/features/transactions/contexts/SwapFormContext'
+import { SwapFlow as SwapFlowRewrite } from 'wallet/src/features/transactions/swap/SwapFlow'
+import { ModalName } from 'wallet/src/telemetry/constants'
+import { updateSwapStartTimestamp } from 'wallet/src/telemetry/timing/slice'
 
 export function SwapModal(): JSX.Element {
   const colors = useSporeColors()
   const appDispatch = useAppDispatch()
-  const modalState = useAppSelector(selectModalState(ModalName.Swap))
+  const { initialState } = useAppSelector(selectModalState(ModalName.Swap))
 
   const shouldShowSwapRewrite = useSwapRewriteEnabled()
 
@@ -26,8 +36,41 @@ export function SwapModal(): JSX.Element {
     appDispatch(updateSwapStartTimestamp({ timestamp: Date.now() }))
   }, [appDispatch])
 
+  const { openWalletRestoreModal, walletNeedsRestore } = useWalletRestore()
+
+  const swapRewritePrefilledState = useMemo(
+    (): SwapFormState | undefined =>
+      initialState
+        ? {
+            customSlippageTolerance: initialState.customSlippageTolerance,
+            exactAmountFiat: initialState.exactAmountFiat,
+            exactAmountToken: initialState.exactAmountToken,
+            exactCurrencyField: initialState.exactCurrencyField,
+            focusOnCurrencyField: getFocusOnCurrencyFieldFromInitialState(initialState),
+            input: initialState.input ?? undefined,
+            output: initialState.output ?? undefined,
+            selectingCurrencyField: initialState.selectingCurrencyField,
+            txId: initialState.txId,
+            isFiatMode: false,
+            isSubmitting: false,
+          }
+        : undefined,
+    [initialState]
+  )
+
+  const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
+  const { trigger: biometricsTrigger } = useBiometricPrompt()
+
   return shouldShowSwapRewrite ? (
-    <SwapFlowRewrite />
+    <SwapFlowRewrite
+      BiometricsIcon={<SwapBiometricsIcon />}
+      TokenSelector={TokenSelector}
+      authTrigger={requiresBiometrics ? biometricsTrigger : undefined}
+      openWalletRestoreModal={openWalletRestoreModal}
+      prefilledState={swapRewritePrefilledState}
+      walletNeedsRestore={Boolean(walletNeedsRestore)}
+      onClose={onClose}
+    />
   ) : (
     <BottomSheetModal
       fullScreen
@@ -37,7 +80,14 @@ export function SwapModal(): JSX.Element {
       backgroundColor={colors.surface1.get()}
       name={ModalName.Swap}
       onClose={onClose}>
-      <SwapFlow prefilledState={modalState.initialState} onClose={onClose} />
+      <SwapFlow prefilledState={initialState} onClose={onClose} />
     </BottomSheetModal>
   )
+}
+
+function SwapBiometricsIcon(): JSX.Element | null {
+  const isBiometricAuthEnabled = useOsBiometricAuthEnabled()
+  const { requiredForTransactions } = useBiometricAppSettings()
+
+  return isBiometricAuthEnabled && requiredForTransactions ? <BiometricsIcon /> : null
 }

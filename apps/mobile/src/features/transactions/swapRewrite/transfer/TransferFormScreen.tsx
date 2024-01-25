@@ -1,9 +1,9 @@
 import React from 'react'
-import { useSwapFormContext } from 'src/features/transactions/swapRewrite/contexts/SwapFormContext'
-import { useTransactionModalContext } from 'src/features/transactions/swapRewrite/contexts/TransactionModalContext'
 import { TokenSelector } from 'src/features/transactions/swapRewrite/TokenSelector'
-import { TransactionModalInnerContainer } from 'src/features/transactions/swapRewrite/TransactionModal'
 import { Text } from 'ui/src'
+import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
+import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
+import { TransactionModalInnerContainer } from 'wallet/src/features/transactions/swap/TransactionModal'
 
 export function TransferFormScreen({ hideContent }: { hideContent: boolean }): JSX.Element {
   const { handleContentLayout, bottomSheetViewStyles } = useTransactionModalContext()

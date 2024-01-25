@@ -1,22 +1,28 @@
-import React from 'react'
-import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { AnimatedTouchableArea, Flex, TouchableAreaProps } from 'ui/src'
 import { imageSizes } from 'ui/src/theme'
 
-export default function RemoveButton(props: TouchableAreaProps): JSX.Element {
+type RemoveButtonProps = TouchableAreaProps & {
+  visible?: boolean
+}
+
+export default function RemoveButton({ visible = true, ...rest }: RemoveButtonProps): JSX.Element {
+  const animatedVisibilityStyle = useAnimatedStyle(() => ({
+    opacity: visible ? withTiming(1) : withTiming(0),
+  }))
+
   return (
     <AnimatedTouchableArea
-      {...props}
       hapticFeedback
       alignItems="center"
       backgroundColor="$neutral3"
       borderRadius="$roundedFull"
-      entering={FadeIn}
-      exiting={FadeOut}
       height={imageSizes.image24}
       justifyContent="center"
+      style={animatedVisibilityStyle}
       width={imageSizes.image24}
-      zIndex="$tooltip">
+      zIndex="$tooltip"
+      {...rest}>
       <Flex backgroundColor="$surface1" borderRadius="$rounded12" height={2} width={10} />
     </AnimatedTouchableArea>
   )

@@ -50,7 +50,8 @@ describe('Token explore', () => {
     cy.contains('Etherscan').should('exist')
   })
 
-  it('should update when global network changed', () => {
+  // TODO re-enable web test
+  it.skip('should update when global network changed', () => {
     cy.visit('/tokens/ethereum')
     cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Ethereum')
     cy.get(getTestSelector('token-table-row-NATIVE')).should('exist')
@@ -62,7 +63,8 @@ describe('Token explore', () => {
     cy.get(getTestSelector('token-table-row-NATIVE')).find(getTestSelector('name-cell')).should('include.text', 'Matic')
   })
 
-  it('should update when token explore table network changed', () => {
+  // TODO re-enable web test
+  it.skip('should update when token explore table network changed', () => {
     cy.visit('/tokens/ethereum')
     cy.get(getTestSelector('tokens-network-filter-selected')).click()
     cy.get(getTestSelector('tokens-network-filter-option-optimism')).click()

@@ -4,19 +4,20 @@ import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { useAccountList } from 'src/components/accounts/hooks'
-import { AddressDisplay } from 'src/components/AddressDisplay'
+import { NotificationBadge } from 'src/components/notifications/Badge'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { setClipboard } from 'src/utils/clipboard'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
+import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
+import { ModalName } from 'wallet/src/telemetry/constants'
+import { setClipboard } from 'wallet/src/utils/clipboard'
 
 type AccountCardItemProps = {
   address: Address
@@ -133,10 +134,10 @@ export function AccountCardItem({
         <Flex row alignItems="flex-start" gap="$spacing16" testID={`account_item/${address}`}>
           <Flex fill>
             <AddressDisplay
-              showNotificationsBadge
               address={address}
               captionVariant="body3"
               gapBetweenLines="$spacing2"
+              notificationsBadgeContainer={NotificationsBadgeContainer}
               showViewOnlyBadge={isViewOnly}
               size={iconSizes.icon36}
             />
@@ -151,3 +152,11 @@ export function AccountCardItem({
     </ContextMenu>
   )
 }
+
+const NotificationsBadgeContainer = ({
+  children,
+  address,
+}: {
+  children: React.ReactNode
+  address: string
+}): JSX.Element => <NotificationBadge address={address}>{children}</NotificationBadge>

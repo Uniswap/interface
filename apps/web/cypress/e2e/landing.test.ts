@@ -22,6 +22,18 @@ describe('Landing Page', () => {
     cy.get(getTestSelector('landing-page'))
   })
 
+  it('remains on landing page when account drawer is opened and only redirects after user becomes connected', () => {
+    // Visit landing page with no connection or recent connection, and open account drawer
+    cy.visit('/', { userState: DISCONNECTED_WALLET_USER_STATE })
+    cy.get(getTestSelector('navbar-connect-wallet')).contains('Connect').click()
+    cy.url().should('not.include', '/swap')
+
+    // Connect and verify redirect
+    cy.contains('MetaMask').click()
+    cy.hardhat().then((hardhat) => cy.contains(hardhat.wallet.address.substring(0, 6)))
+    cy.url().should('include', '/swap')
+  })
+
   it('shows landing page when the unicorn icon in nav is selected', () => {
     cy.visit('/swap')
     cy.get(getTestSelector('uniswap-logo')).click()
@@ -121,7 +133,7 @@ describe('Landing Page', () => {
   })
 
   it('opens modal when Get-the-App button is selected', () => {
-    cy.visit('/', {
+    cy.visit('/?intro=true', {
       featureFlags: [{ name: FeatureFlag.landingPageV2, value: true }],
     })
     cy.get('nav').within(() => {
@@ -131,7 +143,7 @@ describe('Landing Page', () => {
   })
 
   it('closes modal when close button is selected', () => {
-    cy.visit('/', {
+    cy.visit('/?intro=true', {
       featureFlags: [{ name: FeatureFlag.landingPageV2, value: true }],
     })
     cy.get('nav').within(() => {
@@ -143,7 +155,7 @@ describe('Landing Page', () => {
   })
 
   it('closes modal when user selects area outside of modal', () => {
-    cy.visit('/', {
+    cy.visit('/?intro=true', {
       featureFlags: [{ name: FeatureFlag.landingPageV2, value: true }],
     })
     cy.get('nav').within(() => {

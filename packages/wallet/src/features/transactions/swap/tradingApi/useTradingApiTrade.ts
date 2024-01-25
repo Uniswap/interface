@@ -3,7 +3,9 @@ import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { useDebounceWithStatus } from 'utilities/src/time/timing'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useRestQuery } from 'wallet/src/data/rest'
 import {
   QuoteRequest as TradingApiQuoteRequest,
@@ -11,15 +13,12 @@ import {
   RoutingPreference,
   TradeType as TradingApiTradeType,
 } from 'wallet/src/data/tradingApi/__generated__/api'
+import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/tradingApi/client'
 import {
   getTokenAddressForApiRequest,
   toTradingApiSupportedChainId,
   transformTradingApiResponseToTrade,
 } from 'wallet/src/features/transactions/swap/tradingApi/utils'
-
-import { useDebounceWithStatus } from 'utilities/src/time/timing'
-import { uniswapUrls } from 'wallet/src/constants/urls'
-import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/tradingApi/client'
 import { TradeWithStatus, UseTradeArgs } from 'wallet/src/features/transactions/swap/useTrade'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { areCurrencyIdsEqual, currencyId } from 'wallet/src/utils/currencyId'
@@ -112,7 +111,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
   >(
     uniswapUrls.tradingApiPaths.quote,
     quoteRequestArgs ?? {},
-    ['quote'],
+    ['quote', 'permitData'],
     {
       pollInterval: pollingInterval ?? PollingInterval.Fast,
       ttlMs: ONE_MINUTE_MS,

@@ -13,22 +13,22 @@ import { TabProps, TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
-import {
-  useCreateSwapFormState,
-  useMergeLocalAndRemoteTransactions,
-} from 'src/features/transactions/hooks'
 import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
-import { useMostRecentSwapTx } from 'src/features/transactions/swap/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
+import {
+  useCreateSwapFormState,
+  useMergeLocalAndRemoteTransactions,
+} from 'wallet/src/features/transactions/hooks'
 import { SwapSummaryCallbacks } from 'wallet/src/features/transactions/SummaryCards/types'
 import { generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
+import { useMostRecentSwapTx } from 'wallet/src/features/transactions/swap/hooks'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { isAndroid } from 'wallet/src/utils/platform'
 
 export const ACTIVITY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]

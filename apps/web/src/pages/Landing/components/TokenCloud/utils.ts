@@ -1,7 +1,3 @@
-export function isNegative(n: number) {
-  return n < 0
-}
-
 export function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
@@ -12,10 +8,6 @@ export function randomFloat(min: number, max: number): number {
 
 export function randomChoice<T>(choices: T[]): T {
   return choices[Math.floor(Math.random() * choices.length)]
-}
-
-export function isInBounds(x: number, y: number, x1: number, y1: number, x2: number, y2: number) {
-  return x >= x1 && x <= x2 && y >= y1 && y <= y2
 }
 
 function shuffleArray(array: any[]) {

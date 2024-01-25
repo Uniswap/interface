@@ -6,8 +6,6 @@ import { View } from 'react-native'
 import { batch } from 'react-redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
-import { buildReceiveNotification } from 'src/features/notifications/buildReceiveNotification'
-import { selectLastTxNotificationUpdate } from 'src/features/notifications/selectors'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { GQLQueries } from 'wallet/src/data/queries'
@@ -17,6 +15,8 @@ import {
   useTransactionHistoryUpdaterQuery,
   useTransactionListLazyQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
+import { selectLastTxNotificationUpdate } from 'wallet/src/features/notifications/selectors'
 import {
   pushNotification,
   setLastTxNotificationUpdate,

@@ -1,8 +1,8 @@
 import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ElementName } from 'src/features/telemetry/constants'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 export function FavoriteHeaderRow({
   title,

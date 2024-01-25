@@ -4,7 +4,6 @@ import { APP_FEEDBACK_LINK } from 'src/constants/urls'
 import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/selectors'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { openUri } from 'src/utils/linking'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -13,6 +12,7 @@ import { TransactionStatus, TransactionType } from 'wallet/src/features/transact
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAppRating } from 'wallet/src/features/wallet/slice'
 import { appSelect } from 'wallet/src/state'
+import { openUri } from 'wallet/src/utils/linking'
 import { isAndroid } from 'wallet/src/utils/platform'
 
 // at most once per reminder period (120 days)
@@ -61,18 +61,22 @@ function* maybeRequestAppRating() {
       return
     } // avoids prompting again
 
-    const appRatingPromptedMs = yield* appSelect((state) => state.wallet.appRatingPromptedMs ?? 0)
+    const appRatingPromptedMs = yield* appSelect((state) => state.wallet.appRatingPromptedMs)
     const appRatingFeedbackProvidedMs = yield* appSelect(
-      (state) => state.wallet.appRatingFeedbackProvidedMs ?? 0
+      (state) => state.wallet.appRatingFeedbackProvidedMs
     )
+
     const consecutiveSwapsCondition = yield* appSelect(hasConsecutiveRecentSwapsSelector)
 
     // prompt if enough time has passed since last prompt or last feedback provided
     const reminderCondition =
-      Date.now() - appRatingPromptedMs > MIN_PROMPT_REMINDER_MS ||
-      Date.now() - appRatingFeedbackProvidedMs > MIN_FEEDBACK_REMINDER_MS
+      (appRatingPromptedMs !== undefined &&
+        Date.now() - appRatingPromptedMs > MIN_PROMPT_REMINDER_MS) ||
+      (appRatingFeedbackProvidedMs !== undefined &&
+        Date.now() - appRatingFeedbackProvidedMs > MIN_FEEDBACK_REMINDER_MS)
 
-    const shouldPrompt = consecutiveSwapsCondition && reminderCondition
+    const hasNeverPrompted = appRatingPromptedMs === undefined
+    const shouldPrompt = consecutiveSwapsCondition && (hasNeverPrompted || reminderCondition)
 
     if (!shouldPrompt) {
       logger.debug(

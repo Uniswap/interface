@@ -3,7 +3,8 @@ import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, U
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { nativeOnChain } from 'constants/tokens'
-import { parseUnits } from 'ethers/lib/utils'
+import { BigNumber } from 'ethers/lib/ethers'
+import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import {
   AssetActivityPartsFragment,
   Currency as GQLCurrency,
@@ -190,10 +191,18 @@ export function parseSwapAmounts(
   const inputCurrencyId = sent.asset.standard === 'NATIVE' ? 'ETH' : sent.asset.address
   const outputCurrencyId = received.asset.standard === 'NATIVE' ? 'ETH' : received.asset.address
   if (!inputCurrencyId || !outputCurrencyId) return undefined
-  const adjustedInput = parseFloat(sent.quantity) - parseFloat(refund?.quantity ?? '0')
-  const inputAmountRaw = parseUnits(adjustedInput.toString(), sent.asset.decimals).toString()
-  const outputAmountRaw = parseUnits(received.quantity, received.asset.decimals).toString()
-  const inputAmount = formatNumberOrString({ input: adjustedInput, type: NumberType.TokenNonTx })
+
+  const sentQuantity = parseUnits(sent.quantity, sent.asset.decimals)
+  const refundQuantity = refund ? parseUnits(refund.quantity, refund.asset.decimals) : BigNumber.from(0)
+  const receivedQuantity = parseUnits(received.quantity, received.asset.decimals)
+
+  const adjustedInput = sentQuantity.sub(refundQuantity)
+  const inputAmountRaw = adjustedInput.toString()
+  const outputAmountRaw = receivedQuantity.toString()
+  const inputAmount = formatNumberOrString({
+    input: formatUnits(adjustedInput, sent.asset.decimals),
+    type: NumberType.TokenNonTx,
+  })
   const outputAmount = formatNumberOrString({ input: received.quantity, type: NumberType.TokenNonTx })
   return {
     sent,

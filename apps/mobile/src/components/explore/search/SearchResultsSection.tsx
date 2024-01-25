@@ -13,23 +13,23 @@ import {
   formatTokenSearchResults,
   getSearchResultId,
 } from 'src/components/explore/search/utils'
-import {
-  NFTCollectionSearchResult,
-  SearchResultType,
-  TokenSearchResult,
-  WalletSearchResult,
-} from 'src/features/explore/SearchResult'
-import { useIsSmartContractAddress } from 'src/features/transactions/transfer/hooks'
 import { AnimatedFlex, Flex, Text } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 import { SafetyLevel, useExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { useENS } from 'wallet/src/features/ens/useENS'
+import { SearchContext } from 'wallet/src/features/search/SearchContext'
+import {
+  NFTCollectionSearchResult,
+  SearchResultType,
+  TokenSearchResult,
+  WalletSearchResult,
+} from 'wallet/src/features/search/SearchResult'
+import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'
 import i18n from 'wallet/src/i18n/i18n'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { SEARCH_RESULT_HEADER_KEY } from './constants'
-import { SearchContext } from './SearchContext'
 import { SearchResultOrHeader } from './types'
 
 const WalletHeaderItem: SearchResultOrHeader = {

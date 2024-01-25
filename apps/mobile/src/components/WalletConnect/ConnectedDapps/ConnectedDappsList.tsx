@@ -8,14 +8,13 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { DappConnectedNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappConnectedNetworksModal'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
 import {
   removePendingSession,
   WalletConnectSession,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { AnimatedFlex, Flex, Text, TouchableArea, useDeviceDimensions } from 'ui/src'
-import { Edit as EditIcon, Scan as ScanIcon } from 'ui/src/components/icons'
+import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useDeviceDimensions } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 type ConnectedDappsProps = {
   sessions: WalletConnectSession[]
@@ -61,14 +60,14 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
                   setIsEditing(!isEditing)
                 }}>
                 {isEditing ? (
-                  <EditIcon color="$accent1" size="$icon.20" />
+                  <Icons.Edit color="$accent1" size="$icon.20" />
                 ) : (
-                  <EditIcon color="$neutral2" size="$icon.20" />
+                  <Icons.Edit color="$neutral2" size="$icon.20" />
                 )}
               </TouchableArea>
             ) : (
               <TouchableArea onPress={onPressScan}>
-                <ScanIcon color="$neutral2" size="$icon.20" />
+                <Icons.Scan color="$neutral2" size="$icon.20" />
               </TouchableArea>
             )}
           </Flex>

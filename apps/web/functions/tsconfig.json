@@ -1,13 +1,12 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "functions",
+    "baseUrl": ".",
     "composite": false,
     "incremental": true,
     "isolatedModules": false,
-    "jsx": "react",
     "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/functions", // avoid clobbering the build tsbuildinfo
-    "types": ["jest", "node", "@cloudflare/workers-types"],
+    "types": ["jest", "node", "@cloudflare/workers-types"]
   },
-  "include": ["**/*.ts", ".ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx"],
 }

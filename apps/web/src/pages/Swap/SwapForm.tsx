@@ -559,7 +559,10 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               data-testid="swap-currency-button"
               onClick={() => {
                 if (disableTokenInputs) return
-                onSwitchTokens(inputTokenHasTax, formattedAmounts[dependentField])
+                onSwitchTokens({
+                  newOutputHasTax: inputTokenHasTax,
+                  previouslyEstimatedOutput: formattedAmounts[dependentField],
+                })
                 maybeLogFirstSwapAction(trace)
               }}
               color={theme.neutral1}

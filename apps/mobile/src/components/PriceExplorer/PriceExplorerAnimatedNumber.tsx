@@ -24,6 +24,22 @@ import { TextLoaderWrapper } from 'ui/src/components/text/Text'
 import { fonts } from 'ui/src/theme'
 import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
+// if price per token has > 3 numbers before the decimal, start showing decimals in neutral3
+// otherwise, show entire price in neutral1
+const DEEMPHASIZED_DECIMALS_THRESHOLD = 3
+
+const getEmphasizedNumberColor = (
+  index: number,
+  commaIndex: number,
+  emphasizedColor: string,
+  deemphasizedColor: string
+): string => {
+  if (index >= commaIndex && commaIndex > DEEMPHASIZED_DECIMALS_THRESHOLD) {
+    return deemphasizedColor
+  }
+  return emphasizedColor
+}
+
 const NumbersMain = ({
   color,
   backgroundColor,
@@ -95,6 +111,12 @@ const RollNumber = ({
   currency: FiatCurrencyInfo
 }): JSX.Element => {
   const colors = useSporeColors()
+  const numberColor = getEmphasizedNumberColor(
+    index,
+    commaIndex,
+    colors.neutral1.val,
+    colors.neutral3.val
+  )
 
   const animatedDigit = useDerivedValue(() => {
     const char = chars.value[index - (commaIndex - decimalPlace.value)]
@@ -103,9 +125,8 @@ const RollNumber = ({
   }, [chars])
 
   const animatedFontStyle = useAnimatedStyle(() => {
-    const color = index >= commaIndex ? colors.neutral3.val : colors.neutral1.val
     return {
-      color,
+      color: numberColor,
     }
   })
 
@@ -211,7 +232,7 @@ const RollNumber = ({
       ]}>
       <MemoizedNumbers
         backgroundColor={colors.surface1.val}
-        color={index >= commaIndex ? colors.neutral3.val : colors.neutral1.val}
+        color={numberColor}
         hidePlaceholder={hidePlaceholder}
       />
     </Animated.View>
@@ -288,6 +309,12 @@ const PriceExplorerAnimatedNumber = ({
     }
   })
 
+  const lessThanStyle = useAnimatedStyle(() => {
+    return {
+      width: price.formatted.value[0] === '<' ? withTiming(22) : withTiming(0),
+    }
+  })
+
   const hidePlaceholder = (): void => {
     hideShimmer.value = true
   }
@@ -300,6 +327,18 @@ const PriceExplorerAnimatedNumber = ({
     </Text>
   )
 
+  const lessThanSymbol = (
+    <Animated.Text
+      allowFontScaling={false}
+      style={[
+        AnimatedFontStyles.fontStyle,
+        { height: DIGIT_HEIGHT, color: colors.neutral1.val },
+        lessThanStyle,
+      ]}>
+      {'<'}
+    </Animated.Text>
+  )
+
   return (
     <>
       <Animated.View style={animatedWrapperStyle}>
@@ -307,6 +346,7 @@ const PriceExplorerAnimatedNumber = ({
       </Animated.View>
       <View style={RowWrapper.wrapperStyle}>
         <TopAndBottomGradient />
+        {lessThanSymbol}
         {currency.symbolAtFront && currencySymbol}
         {Numbers({ price, hidePlaceholder, numberOfDigits, currency })}
         {!currency.symbolAtFront && currencySymbol}

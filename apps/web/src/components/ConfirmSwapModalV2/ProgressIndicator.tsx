@@ -13,6 +13,7 @@ import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import { isUniswapXTrade } from 'state/routing/utils'
 import { useOrder } from 'state/signatures/hooks'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components'
@@ -161,9 +162,9 @@ export default function ProgressIndicator({
         inProgressTitle: t`Swap pending...`,
         timeToEnd: estimatedTransactionTime,
         delayedEndTitle: t`Longer than expected...`,
-        ...(trade?.fillType === TradeFillType.UniswapX
+        ...(isUniswapXTrade(trade)
           ? {
-              timeToStart: trade.order.info.deadline - Math.floor(Date.now() / 1000),
+              timeToStart: trade.asDutchOrderTrade().order.info.deadline - Math.floor(Date.now() / 1000),
               delayedStartTitle: t`Confirmation timed out. Please retry.`,
               timeToEnd: 60, // TODO: dynamically update UniswapX estimated fill time
             }

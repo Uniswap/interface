@@ -18,6 +18,7 @@ export {
   Popover,
   ScrollView,
   Sheet,
+  Square,
   styled,
   Switch,
   Tabs,
@@ -61,10 +62,14 @@ export {
 export * as Logos from './components/logos'
 export * from './components/text'
 export * from './components/touchable'
-export * from './components/Unicon'
+export * from './components/Unicon/'
+export * from './components/Unicon/Container'
+export * from './components/Unicon/Emblem'
+export * from './components/Unicon/types'
 export * from './components/Unicon/utils'
 export { useDeviceDimensions } from './hooks/useDeviceDimensions'
 export { useDeviceInsets } from './hooks/useDeviceInsets'
+export { useIsDarkMode } from './hooks/useIsDarkMode'
 export { useSporeColors, type DynamicColor } from './hooks/useSporeColors'
 export * from './loading/FlexLoader'
 export * from './loading/Loader'

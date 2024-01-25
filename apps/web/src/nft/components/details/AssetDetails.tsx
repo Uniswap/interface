@@ -60,7 +60,7 @@ const SocialsContainer = styled.div`
   margin-top: 20px;
 `
 
-const DescriptionText = styled.div`
+const DescriptionText = styled.p`
   margin-top: 8px;
   font-size: 14px;
   line-height: 20px;

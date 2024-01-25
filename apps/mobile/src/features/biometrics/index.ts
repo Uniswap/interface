@@ -2,11 +2,11 @@ import {
   authenticateAsync,
   hasHardwareAsync,
   isEnrolledAsync,
-  LocalAuthenticationOptions,
   LocalAuthenticationResult,
 } from 'expo-local-authentication'
 import { NativeModulesProxy } from 'expo-modules-core'
 import { logger } from 'utilities/src/logger/logger'
+import i18n from 'wallet/src/i18n/i18n'
 
 const ELA = NativeModulesProxy.ExpoLocalAuthentication
 
@@ -31,15 +31,8 @@ export async function enroll(): Promise<void> {
   ELA?.enrollForAuthentication()
 }
 
-const DEFAULT_AUTHENTICATE_OPTIONS = {
-  promptMessage: 'Please authenticate',
-  cancelLabel: 'Cancel',
-}
-
 // TODO: [MOB-220] Move into a saga
-export async function tryLocalAuthenticate(
-  authenticateOptions?: LocalAuthenticationOptions
-): Promise<BiometricAuthenticationStatus> {
+export async function tryLocalAuthenticate(): Promise<BiometricAuthenticationStatus> {
   try {
     const compatible = await hasHardwareAsync()
 
@@ -49,11 +42,15 @@ export async function tryLocalAuthenticate(
 
     /**
      * Important: ExpoLocalAuthentication.isEnrolledAsync() method nested in isEnrolledAsync() returns false when
-                  when users excieds the amount of retries. Exactly the same when user has no biometric setup on the device
-                  and thats why we have to call authenticateAsync to be able to distingush between different errors.
+                  when users exceeds the amount of retries. Exactly the same when user has no biometric setup on the device
+                  and thats why we have to call authenticateAsync to be able to distinguish between different errors.
      */
     const enrolled = await isEnrolledAsync()
-    const result = await authenticateAsync(authenticateOptions || DEFAULT_AUTHENTICATE_OPTIONS)
+    const result = await authenticateAsync({
+      cancelLabel: i18n.t('Cancel'),
+      promptMessage: i18n.t('Please authenticate'),
+      requireConfirmation: false,
+    })
 
     if (result.success === true) {
       return BiometricAuthenticationStatus.Authenticated

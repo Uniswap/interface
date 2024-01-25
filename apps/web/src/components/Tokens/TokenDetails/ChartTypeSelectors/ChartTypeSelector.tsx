@@ -18,15 +18,15 @@ const StyledMenuFlyout = css`
   border-radius: 16px;
   right: 20px;
 `
-const ChartTypeDropdown = ({
+function ChartTypeDropdown<T extends ChartType>({
   options,
   currentChartType,
   onSelectOption,
 }: {
-  options: { value: ChartType }[]
-  currentChartType: ChartType
-  onSelectOption: (option: ChartType) => void
-}) => {
+  options: readonly T[]
+  currentChartType: T
+  onSelectOption: (option: T) => void
+}) {
   const theme = useTheme()
   const toggleMenu = useToggleModal(ApplicationModal.TDP_CHART_TYPE_SELECTOR)
 
@@ -36,7 +36,7 @@ const ChartTypeDropdown = ({
       menuLabel={<>{currentChartType}</>}
       internalMenuItems={
         <>
-          {options.map(({ value: chartType }) => {
+          {options.map((chartType) => {
             return (
               <InternalMenuItem
                 key={chartType}
@@ -58,16 +58,17 @@ const ChartTypeDropdown = ({
   )
 }
 
-export default function ChartTypeSelector({
+export default function ChartTypeSelector<T extends ChartType>({
   options,
   currentChartType,
   onChartTypeChange,
 }: {
-  options: { value: ChartType }[]
-  currentChartType: ChartType
-  onChartTypeChange: (c: ChartType) => void
+  options: readonly T[]
+  currentChartType: T
+  onChartTypeChange: (c: T) => void
 }) {
   const screenSize = useScreenSize()
+
   if (!screenSize['sm']) {
     return (
       <ChartTypeDropdown options={options} currentChartType={currentChartType} onSelectOption={onChartTypeChange} />

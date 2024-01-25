@@ -2,7 +2,6 @@ import { maxBy } from 'lodash'
 import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
 import { SharedValue } from 'react-native-reanimated'
 import { TLineChartData } from 'react-native-wagmi-charts'
-import { GqlResult } from 'src/features/dataApi/types'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import {
@@ -10,6 +9,7 @@ import {
   TimestampedAmount,
   useTokenPriceHistoryQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
@@ -95,7 +95,7 @@ export function useTokenPriceHistory(
     if (max) {
       return {
         left: String(convertedMaxValue).split('.')[0]?.length || 10,
-        right: Number(String(convertedMaxValue).split('.')[0]) > 0 ? 2 : 10,
+        right: Number(String(convertedMaxValue.toFixed(10)).split('.')[0]) > 0 ? 2 : 10,
       }
     }
 

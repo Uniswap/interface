@@ -1,21 +1,22 @@
 import { Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { useAppSelector } from 'src/app/hooks'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { ModalName, SectionName } from 'src/features/telemetry/constants'
+import { useOnCloseSendModal } from 'src/features/transactions/swapRewrite/hooks/useOnCloseSendModal'
+import { TransferFormScreen } from 'src/features/transactions/swapRewrite/transfer/TransferFormScreen'
+import { getFocusOnCurrencyFieldFromInitialState } from 'src/features/transactions/swapRewrite/utils'
+import { useWalletRestore } from 'src/features/wallet/hooks'
+import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import {
   SwapFormContextProvider,
   SwapFormState,
-} from 'src/features/transactions/swapRewrite/contexts/SwapFormContext'
+} from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import {
   TransferScreen,
   TransferScreenContextProvider,
   useTransferScreenContext,
-} from 'src/features/transactions/swapRewrite/contexts/TransferScreenContex'
-import { useOnCloseSendModal } from 'src/features/transactions/swapRewrite/hooks/useOnCloseSwapModal'
-import { TransactionModal } from 'src/features/transactions/swapRewrite/TransactionModal'
-import { TransferFormScreen } from 'src/features/transactions/swapRewrite/transfer/TransferFormScreen'
-import { getFocusOnCurrencyFieldFromInitialState } from 'src/features/transactions/swapRewrite/utils'
-import { Trace } from 'utilities/src/telemetry/trace/Trace'
+} from 'wallet/src/features/transactions/contexts/TransferScreenContext'
+import { TransactionModal } from 'wallet/src/features/transactions/swap/TransactionModal'
+import { ModalName, SectionName } from 'wallet/src/telemetry/constants'
 
 export function TransferFlow(): JSX.Element {
   // We need this additional `screen` state outside of the `SwapScreenContext` because the `TransferContextProvider` needs to be inside the `BottomSheetModal`'s `Container`.
@@ -23,8 +24,15 @@ export function TransferFlow(): JSX.Element {
   const fullscreen = screen === TransferScreen.TransferForm
   const onClose = useOnCloseSendModal()
 
+  const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
+
   return (
-    <TransactionModal fullscreen={fullscreen} modalName={ModalName.Send} onClose={onClose}>
+    <TransactionModal
+      fullscreen={fullscreen}
+      modalName={ModalName.Send}
+      openWalletRestoreModal={openWalletRestoreModal}
+      walletNeedsRestore={walletNeedsRestore}
+      onClose={onClose}>
       <TransferContextsContainer>
         <CurrentScreen screen={screen} setScreen={setScreen} />
       </TransferContextsContainer>
@@ -66,7 +74,6 @@ function TransferFormScreenDelayedRender(): JSX.Element {
 }
 
 function TransferContextsContainer({ children }: { children?: ReactNode }): JSX.Element {
-  const onClose = useOnCloseSendModal()
   const { initialState } = useAppSelector(selectModalState(ModalName.Send))
 
   const prefilledState = useMemo(
@@ -91,9 +98,7 @@ function TransferContextsContainer({ children }: { children?: ReactNode }): JSX.
 
   return (
     <TransferScreenContextProvider>
-      <SwapFormContextProvider prefilledState={prefilledState} onClose={onClose}>
-        {children}
-      </SwapFormContextProvider>
+      <SwapFormContextProvider prefilledState={prefilledState}>{children}</SwapFormContextProvider>
     </TransferScreenContextProvider>
   )
 }

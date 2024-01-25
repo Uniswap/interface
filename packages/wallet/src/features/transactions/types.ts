@@ -1,10 +1,16 @@
+import { AnyAction } from '@reduxjs/toolkit'
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
+import { Dispatch } from 'react'
 import { ChainId } from 'wallet/src/constants/chains'
 import { TransactionListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { AssetType } from 'wallet/src/entities/assets'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
+import { GasFeeResult } from 'wallet/src/features/gas/types'
+import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
+import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
+import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
 import { DappInfo } from 'wallet/src/features/walletConnect/types'
 
 export enum WrapType {
@@ -284,4 +290,28 @@ export function isFinalizedTx(
     tx.status === TransactionStatus.Cancelled ||
     tx.status === TransactionStatus.FailedCancel
   )
+}
+
+export enum TransactionStep {
+  FORM,
+  REVIEW,
+  SUBMITTED,
+}
+
+export interface TransactionFlowProps {
+  dispatch: Dispatch<AnyAction>
+  showRecipientSelector?: boolean
+  recipientSelector?: JSX.Element
+  flowName: string
+  derivedInfo: DerivedTransferInfo | DerivedSwapInfo
+  onClose: () => void
+  approveTxRequest?: providers.TransactionRequest
+  txRequest?: providers.TransactionRequest
+  gasFee: GasFeeResult
+  step: TransactionStep
+  setStep: (newStep: TransactionStep) => void
+  warnings: Warning[]
+  exactValue: string
+  isFiatInput?: boolean
+  showFiatToggle?: boolean
 }

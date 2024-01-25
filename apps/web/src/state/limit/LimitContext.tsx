@@ -2,7 +2,7 @@ import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext,
 
 import { LimitInfo, useDerivedLimitInfo } from './hooks'
 
-enum Expiry {
+export enum Expiry {
   Day = 1,
   Week,
   Month,
@@ -11,9 +11,13 @@ enum Expiry {
 
 export interface LimitState {
   readonly inputAmount: string
-  readonly price: string
   readonly outputAmount: string
   readonly expiry: Expiry
+  readonly limitPrice: string
+
+  // The limit form has 3 fields, but only two of them can be independent at a time.
+  // Always prefer `marketPrice` be independent, so either derive the input amount or the output amount
+  readonly isInputAmountFixed: boolean
 }
 
 type LimitContextType = {
@@ -24,12 +28,14 @@ type LimitContextType = {
 
 const DEFAULT_LIMIT_STATE = {
   inputAmount: '',
-  price: '',
+  limitPrice: '',
   outputAmount: '',
   expiry: Expiry.Day, // TODO: update default expiry?
+  isInputAmountFixed: true,
 }
 
-const LimitContext = createContext<LimitContextType>({
+// exported for testing
+export const LimitContext = createContext<LimitContextType>({
   limitState: DEFAULT_LIMIT_STATE,
   setLimitState: () => undefined,
   derivedLimitInfo: {
@@ -44,9 +50,18 @@ export function useLimitContext() {
 
 export function LimitContextProvider({ children }: PropsWithChildren) {
   const [limitState, setLimitState] = useState<LimitState>(DEFAULT_LIMIT_STATE)
+
   const derivedLimitInfo = useDerivedLimitInfo(limitState)
 
   return (
     <LimitContext.Provider value={{ limitState, setLimitState, derivedLimitInfo }}>{children}</LimitContext.Provider>
   )
+}
+
+export function useLimitPrice() {
+  const { limitState, setLimitState } = useLimitContext()
+  const setLimitPrice = (limitPrice: string) => {
+    setLimitState((prevState) => ({ ...prevState, limitPrice }))
+  }
+  return { limitPrice: limitState.limitPrice, setLimitPrice }
 }

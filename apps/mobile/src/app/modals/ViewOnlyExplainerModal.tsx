@@ -1,16 +1,15 @@
 import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { Button, Flex, Text } from 'ui/src'
+import { Button, Flex, Text, useIsDarkMode } from 'ui/src'
 import ViewOnlyWalletDark from 'ui/src/assets/graphics/view-only-wallet-dark.svg'
 import ViewOnlyWalletLight from 'ui/src/assets/graphics/view-only-wallet-light.svg'
-import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 const WALLET_IMAGE_ASPECT_RATIO = 327 / 215
 

@@ -1,7 +1,9 @@
-import { ApolloClient, from, InMemoryCache } from '@apollo/client'
+import { ApolloClient, from } from '@apollo/client'
 import { RetryLink } from '@apollo/client/link/retry'
 import { RestLink } from 'apollo-link-rest'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { uniswapUrls } from 'wallet/src/constants/urls'
+import { createNewInMemoryCache } from 'wallet/src/data/cache'
 import { useRestMutation, useRestQuery } from 'wallet/src/data/rest'
 import {
   UnitagAddressResponse,
@@ -9,6 +11,7 @@ import {
   UnitagClaimEligibilityResponse,
   UnitagClaimResponse,
   UnitagClaimUsernameRequestBody,
+  UnitagGetAvatarUploadUrlResponse,
   UnitagUpdateMetadataRequestBody,
   UnitagUpdateMetadataResponse,
   UnitagUsernameResponse,
@@ -22,18 +25,17 @@ const retryLink = new RetryLink()
 
 const apolloClient = new ApolloClient({
   link: from([retryLink, restLink]),
-  cache: new InMemoryCache(),
+  cache: createNewInMemoryCache(),
   defaultOptions: {
     watchQuery: {
       // ensures query is returning data even if some fields errored out
       errorPolicy: 'all',
-      fetchPolicy: 'no-cache',
-      nextFetchPolicy: 'no-cache',
+      fetchPolicy: 'cache-and-network',
     },
   },
 })
 
-function addQueryParamsToEndpoint(
+export function addQueryParamsToEndpoint(
   endpoint: string,
   params: Record<string, string | number | boolean | undefined>
 ): string {
@@ -117,6 +119,23 @@ export function useUnitagClaimEligibilityQuery({
     {},
     ['canClaim', 'errorCode', 'message'], // return all fields
     { skip, fetchPolicy: 'no-cache' },
+    'GET',
+    apolloClient
+  )
+}
+
+export function useUnitagGetAvatarUploadUrlQuery({
+  username,
+  skip,
+}: {
+  username?: string
+  skip?: boolean
+}): ReturnType<typeof useRestQuery<UnitagGetAvatarUploadUrlResponse>> {
+  return useRestQuery<UnitagGetAvatarUploadUrlResponse, Record<string, never>>(
+    addQueryParamsToEndpoint('/username/avatar-upload-url', { username }),
+    {},
+    ['success', 'avatarUrl', 'preSignedUrl', 's3UploadFields'], // return all fields
+    { skip: !username || skip, ttlMs: ONE_SECOND_MS * 110 },
     'GET',
     apolloClient
   )

@@ -7,7 +7,8 @@ import { SimulatedGasEstimationInfo } from 'wallet/src/features/gas/types'
 import { RoutingIntent, TradeQuoteRequest, useQuoteQuery } from 'wallet/src/features/routing/api'
 import { TradeQuoteResult } from 'wallet/src/features/routing/types'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
-import { QuoteType, UseTradeArgs } from 'wallet/src/features/transactions/swap/useTrade'
+import { UseTradeArgs } from 'wallet/src/features/transactions/swap/useTrade'
+import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import {
   areCurrencyIdsEqual,

@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-picker'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { ChooseNftModal } from 'src/components/unitags/ChooseNftModal'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 // Selected image will be shrunk to max width/height
 // URI will then be for an image of those dimensions

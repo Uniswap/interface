@@ -3,7 +3,8 @@ import Column from 'components/Column'
 import { HideScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { CornerLeftUp } from 'react-feather'
+import { OrderDirection } from 'graphql/thegraph/__generated__/types-and-hooks'
+import { ArrowDown, CornerLeftUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { ClickableStyle, ExternalLink } from 'theme/components'
@@ -84,8 +85,9 @@ export const LoadingIndicator = styled(Row)`
   height: 34px;
   z-index: ${Z_INDEX.under_dropdown};
 `
+
 const TableRow = styled(Row)`
-  padding: 0px 20px;
+  padding: 0px 12px;
   width: fit-content;
   min-width: 100%;
   display: flex;
@@ -124,4 +126,30 @@ export const StyledInternalLink = styled(Link)`
   text-decoration: none;
   ${ClickableStyle}
   color: ${({ theme }) => theme.neutral1}
+`
+
+export const TableRowLink = styled(Link)`
+  color: none;
+  text-decoration: none;
+  cursor: pointer;
+`
+
+export const ClickableHeaderRow = styled(Row)<{ $justify?: string }>`
+  justify-content: ${({ $justify }) => $justify ?? 'flex-end'};
+  cursor: pointer;
+  width: 100%;
+  gap: 4px;
+  ${ClickableStyle}
+`
+export const HeaderArrow = styled(ArrowDown)<{ direction: OrderDirection }>`
+  height: 16px;
+  width: 16px;
+  color: ${({ theme }) => theme.neutral2};
+  transform: ${({ direction }) => (direction === OrderDirection.Asc ? 'rotate(180deg)' : 'rotate(0deg)')};
+`
+export const FilterHeaderRow = styled(Row)<{ modalOpen?: boolean }>`
+  ${({ modalOpen }) => !modalOpen && ClickableStyle}
+  cursor: pointer;
+  user-select: none;
+  gap: 4px;
 `

@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmV3G3jJxFrN3q1XUo67J8Q1U7jBP42DDWkS8JSVWcfWbS`
-- CIDv1: `bafybeiddrvh2jskkihnnlw4i4rs23m43bg56bjpdr43cfon6oddmha6lue`
+- CIDv0: `QmfJZyV1FNLS52DKthuXkGMPoFfVhiWTaUUPqMqceQQ2xr`
+- CIDv1: `bafybeih4byuzedugrnnand4go4tzh5iok7a6wqxup6csffeb3iy4lhzgwm`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,82 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiddrvh2jskkihnnlw4i4rs23m43bg56bjpdr43cfon6oddmha6lue.ipfs.dweb.link/
-- https://bafybeiddrvh2jskkihnnlw4i4rs23m43bg56bjpdr43cfon6oddmha6lue.ipfs.cf-ipfs.com/
-- [ipfs://QmV3G3jJxFrN3q1XUo67J8Q1U7jBP42DDWkS8JSVWcfWbS/](ipfs://QmV3G3jJxFrN3q1XUo67J8Q1U7jBP42DDWkS8JSVWcfWbS/)
+- https://bafybeih4byuzedugrnnand4go4tzh5iok7a6wqxup6csffeb3iy4lhzgwm.ipfs.dweb.link/
+- https://bafybeih4byuzedugrnnand4go4tzh5iok7a6wqxup6csffeb3iy4lhzgwm.ipfs.cf-ipfs.com/
+- [ipfs://QmfJZyV1FNLS52DKthuXkGMPoFfVhiWTaUUPqMqceQQ2xr/](ipfs://QmfJZyV1FNLS52DKthuXkGMPoFfVhiWTaUUPqMqceQQ2xr/)
 
-### 5.4.1 (2024-01-17)
+## 5.5.0 (2024-01-25)
+
+
+### Features
+
+* **web:** [info] add new token tables (#5714) 8f43de5
+* **web:** [info] Add Sorting to Info Tables (#5601) c6ccc29
+* **web:** [info] Adds Filter Dropdown to all TX tables (#5607) 8d9aaa9
+* **web:** [info] Change checkbox size and deprecate some VE usage (#5780) 7fb8bd0
+* **web:** [info] Make PDP titles clickable (#5710) 1b318b9
+* **web:** [info] reveal an in line swap module on pdp (#5639) 5bb9dd2
+* **web:** [landing-page] add landing page design tweaks (#5806) 2f882d0
+* **web:** [landing-page] add refreshed More option / dropdown menu to navbar (#5674) b7c10da
+* **web:** [landing-page] integrate protocol stats with live volume (#5913) ddf2be9
+* **web:** [landing-page] integrate token cloud with live data (#5823) c21be43
+* **web:** [landing-page] integrate token listings with live data (#5826) 04195b4
+* **web:** [landing-page] refactor redirect conditions (#5783) 2a709c9
+* **web:** [landing-page] update connect-with-us section (#5896) 4288784
+* **web:** [landing-page] update stats section (#5781) 6bad18d
+* **web:** add expiry selection to limit form (#5566) 8c94d7d
+* **web:** auto update input or output based on price (#5748) c3ebb6d
+* **web:** build initial price input for limits (#5461) 283d845
+* **web:** build limit price preset buttons (#5462) 54d679b
+* **web:** custom limit price reactive button (#5463) 2bbe27f
+* **web:** fix market price calculation for limit prices (#5678) 8a548d0
+* **web:** full recipient form implementation (#5905) 69e37fb
+* **web:** gas estimation for transaction (#5874) dffefa7
+* **web:** LimitOrderTrade class + tests (#5673) 233c226
+* **web:** limits form - switch tokens (#5677) b86c2bc
+* **web:** minimize eth_blockNumber calls (#5725) 8de99c0
+* **web:** new address modal speed bump (#5910) 3b8d370
+* **web:** pdp price chart (#5692) 5f68798
+* **web:** review modal for limit orders (#5679) c482b54
+* **web:** send (#5926) fe14e81
+* **web:** send context and derived send info hook (#5798) 37bbbd4
+* **web:** send currency selector (#5872) afc86d8
+* **web:** send feature flag and swap tab setup (#5795) a4c0053
+* **web:** send input amount (#5871) 0950741
+* **web:** send input setup (#5841) 8c5481e
+* **web:** send review modal (#5907) 66c2e65
+* **web:** send smart contract speed bump (#5908) c561e1b
+* **web:** sets up appropriate transaction parsing for send info (#5797) 79f3558
+* **web:** useUSDTokenUpdater for send (#5832) f484f3f
 
 
 ### Bug Fixes
 
-* **web:** remove Object.hasOwn usage (#5751) 82c322b
+* **web:** [landing-page] add polish (#5914) 7fb6d2d
+* **web:** [landing-page] update protocol copy and 24H volume period (#5930) 183d92c
+* **web:** class name to work w/ zzmp's refactor (#5863) c5a9a59
+* **web:** currency search mobile bugs (#5788) 5f850a4
+* **web:** de-duplicate eth_blockNumber calls (#5727) d7f83b1
+* **web:** disallow more resources in robots.txt (#5776) 15cf3b1
+* **web:** fix cypress tests in CI (#5625) d31dfad
+* **web:** mini portfolio mobile height (#5779) 076f1be
+* **web:** MP parsing small numbers (#5771) b69e6a4
+* **web:** numerical input prepend symbol more than one char (#5787) 0127a0d
+* **web:** polling for token balances (#5911) e216b75
+* **web:** re-enable rich link previews (#5912) f513b94
+* **web:** remove Object.hasOwn usage (#5750) bb247b4
+* **web:** send need to check parsedInput and not inputs given (#5928) f38c324
+* **web:** Show UniswapX icon and gas breakdown in swap review (#5840) 7aa45b2
+* **web:** use <p> tag on NFT pages (#5728) 9ebc0b4
+
+
+### Performance Improvements
+
+* **web:** memoize SwapContext to avoid extra re-renders (#5713) afe1daf
+
+
+### Code Refactoring
+
+* **web:** reusable chart header (#5649) df9038c
 
 

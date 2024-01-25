@@ -6,8 +6,8 @@ import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import * as biometricHooks from 'src/features/biometrics/hooks'
 import { AuthMethod, UserPropertyName } from 'src/features/telemetry/constants'
 import * as versionUtils from 'src/utils/version'
+import * as useIsDarkModeFile from 'ui/src/hooks/useIsDarkMode'
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
-import * as appearanceHooks from 'wallet/src/features/appearance/hooks'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import * as fiatCurrencyHooks from 'wallet/src/features/fiatCurrency/hooks'
 import * as languageHooks from 'wallet/src/features/language/hooks'
@@ -78,7 +78,7 @@ describe('TraceUserProperties', () => {
       touchId: false,
       faceId: true,
     })
-    mockFn(appearanceHooks, 'useIsDarkMode', true)
+    mockFn(useIsDarkModeFile, 'useIsDarkMode', true)
     mockFn(fiatCurrencyHooks, 'useAppFiatCurrency', FiatCurrency.UnitedStatesDollar)
     mockFn(languageHooks, 'useCurrentLanguageInfo', { loggingName: 'English' })
     mockFn(appHooks, 'useAppSelector', { enabled: true })
@@ -140,7 +140,7 @@ describe('TraceUserProperties', () => {
       touchId: false,
       faceId: false,
     })
-    mockFn(appearanceHooks, 'useIsDarkMode', true)
+    mockFn(useIsDarkModeFile, 'useIsDarkMode', true)
     mockFn(fiatCurrencyHooks, 'useAppFiatCurrency', FiatCurrency.UnitedStatesDollar)
     mockFn(languageHooks, 'useCurrentLanguageInfo', { loggingName: 'English' })
 

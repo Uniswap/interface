@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Box } from '../Generics'
 import { ArrowRight } from '../Icons'
 
-const Button = styled(motion.button)<{ cursor?: string }>`
+const Button = styled(motion.a)<{ cursor?: string }>`
   display: flex;
   padding: 12px 16px;
   border-radius: 24px;
@@ -28,6 +28,9 @@ const Label = styled.span`
   color: ${(props) => props.color};
   font-family: Basel;
   font-size: 20px;
+  @media (max-width: 1024px) {
+    font-size: 18px;
+  }
   font-style: normal;
   font-weight: 535;
   line-height: 24px; /* 120% */

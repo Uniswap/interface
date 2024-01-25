@@ -1,5 +1,5 @@
 diff --git a/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt b/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt
-index 9980dfabbd5179753ba99f50c6ecfadd732cfdb9..c7b0bc2acd8ab516e9d14ef108a078a64afe8b97 100644
+index 9980dfabbd5179753ba99f50c6ecfadd732cfdb9..589c58e427989181dddaa5ccd4ccf31fcc0e53c7 100644
 --- a/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt
 +++ b/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt
 @@ -7,6 +7,7 @@ import android.content.Context
@@ -68,7 +68,7 @@ index 9980dfabbd5179753ba99f50c6ecfadd732cfdb9..c7b0bc2acd8ab516e9d14ef108a078a6
    @ExpoMethod
    fun authenticateAsync(options: Map<String?, Any?>, promise: Promise) {
      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-@@ -220,10 +239,16 @@ class LocalAuthenticationModule(context: Context) : ExportedModule(context), Act
+@@ -220,10 +239,19 @@ class LocalAuthenticationModule(context: Context) : ExportedModule(context), Act
              promptInfoBuilder.setNegativeButtonText(it)
            }
          } else {
@@ -85,7 +85,48 @@ index 9980dfabbd5179753ba99f50c6ecfadd732cfdb9..c7b0bc2acd8ab516e9d14ef108a078a6
 +            promptInfoBuilder.setAllowedAuthenticators(
 +              BiometricManager.Authenticators.BIOMETRIC_STRONG
 +            )
++            cancelLabel?.let {
++              promptInfoBuilder.setNegativeButtonText(it)
++            }
 +          }
          }
          promptInfoBuilder.setConfirmationRequired(requireConfirmation)
          val promptInfo = promptInfoBuilder.build()
+diff --git a/src/LocalAuthentication.ts b/src/LocalAuthentication.ts
+index b9f3f0732b61138f790e7c3a33a92d8d726a71f1..b754d8588701c7d74a86a07b8e6c09c2434b9d43 100644
+--- a/src/LocalAuthentication.ts
++++ b/src/LocalAuthentication.ts
+@@ -78,11 +78,16 @@ export async function getEnrolledLevelAsync(): Promise<SecurityLevel> {
+  * @return Returns a promise which fulfils with [`LocalAuthenticationResult`](#localauthenticationresult).
+  */
+ export async function authenticateAsync(
+-  options: LocalAuthenticationOptions = {}
++  options: LocalAuthenticationOptions
+ ): Promise<LocalAuthenticationResult> {
+   if (!ExpoLocalAuthentication.authenticateAsync) {
+     throw new UnavailabilityError('expo-local-authentication', 'authenticateAsync');
+   }
++  
++  invariant(
++    typeof options.cancelLabel === 'string' && options.cancelLabel.length,
++    'LocalAuthentication.authenticateAsync : `options.cancelLabel` must be a non-empty string.'
++  );
+ 
+   if (options.hasOwnProperty('promptMessage')) {
+     invariant(
+diff --git a/src/LocalAuthentication.types.ts b/src/LocalAuthentication.types.ts
+index a65b16d5bc5d18c03cee3ca8e4d223c9b736659b..d1ae18df61714b2bd44f3b9867718568707c1dc6 100644
+--- a/src/LocalAuthentication.types.ts
++++ b/src/LocalAuthentication.types.ts
+@@ -42,9 +42,9 @@ export type LocalAuthenticationOptions = {
+    */
+   promptMessage?: string;
+   /**
+-   * Allows to customize the default `Cancel` label shown.
++   * Allows to customize the default `Cancel` label shown. Required to be non-empty for Android or it might cause crashes.
+    */
+-  cancelLabel?: string;
++  cancelLabel: string;
+   /**
+    * After several failed attempts the system will fallback to the device passcode. This setting
+    * allows you to disable this option and instead handle the fallback yourself. This can be

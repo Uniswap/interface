@@ -4,25 +4,24 @@ import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { firebaseDataWatcher } from 'src/features/firebase/firebaseDataSaga'
 import { modalWatcher } from 'src/features/modals/saga'
-import { notificationWatcher } from 'src/features/notifications/notificationWatcherSaga'
 import { telemetrySaga } from 'src/features/telemetry/saga'
-import {
-  swapActions,
-  swapReducer,
-  swapSaga,
-  swapSagaName,
-} from 'src/features/transactions/swap/swapSaga'
-import {
-  tokenWrapActions,
-  tokenWrapReducer,
-  tokenWrapSaga,
-  tokenWrapSagaName,
-} from 'src/features/transactions/swap/wrapSaga'
 import { restoreMnemonicCompleteWatcher } from 'src/features/wallet/saga'
 import { walletConnectSaga } from 'src/features/walletConnect/saga'
 import { signWcRequestSaga } from 'src/features/walletConnect/signWcRequestSaga'
 import { spawn } from 'typed-redux-saga'
 import { appLanguageWatcherSaga } from 'wallet/src/features/language/saga'
+import {
+  swapActions,
+  swapReducer,
+  swapSaga,
+  swapSagaName,
+} from 'wallet/src/features/transactions/swap/swapSaga'
+import {
+  tokenWrapActions,
+  tokenWrapReducer,
+  tokenWrapSaga,
+  tokenWrapSagaName,
+} from 'wallet/src/features/transactions/swap/wrapSaga'
 import { transactionWatcher } from 'wallet/src/features/transactions/transactionWatcherSaga'
 import {
   editAccountActions,
@@ -53,7 +52,6 @@ const sagas = [
   deepLinkWatcher,
   firebaseDataWatcher,
   modalWatcher,
-  notificationWatcher,
   pendingAccountSaga,
   restoreMnemonicCompleteWatcher,
   signWcRequestSaga,

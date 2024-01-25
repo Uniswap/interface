@@ -1,25 +1,29 @@
 import React, { useEffect, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { WarningAction } from 'src/components/modals/WarningModal/types'
+import { useOnSendEmptyActionPress } from 'src/features/transactions/hooks'
+import { TransactionFlow } from 'src/features/transactions/TransactionFlow'
 import {
   TokenSelectorModal,
   TokenSelectorVariation,
-} from 'src/components/TokenSelector/TokenSelector'
-import { TokenSelectorFlow } from 'src/components/TokenSelector/types'
-import { useTokenSelectorActionHandlers } from 'src/features/transactions/hooks'
-import { useDerivedSwapInfo, useSwapTxAndGasInfoLegacy } from 'src/features/transactions/swap/hooks'
-import { useSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
-import { TransactionFlow } from 'src/features/transactions/TransactionFlow'
+} from 'wallet/src/components/TokenSelector/TokenSelector'
+import { useSwapWarnings } from 'wallet/src/features/transactions/hooks/useSwapWarnings'
+import { useTokenSelectorActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenSelectorActionHandlers'
+import { useTransactionGasWarning } from 'wallet/src/features/transactions/hooks/useTransactionGasWarning'
+import {
+  useDerivedSwapInfo,
+  useSwapTxAndGasInfoLegacy,
+} from 'wallet/src/features/transactions/swap/hooks'
 import {
   initialState as emptyState,
   transactionStateReducer,
-} from 'src/features/transactions/transactionState/transactionState'
-import { TransactionStep } from 'src/features/transactions/types'
-import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
+} from 'wallet/src/features/transactions/transactionState/transactionState'
 import {
   CurrencyField,
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
+import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
+import { TransactionStep } from 'wallet/src/features/transactions/types'
+import { WarningAction } from 'wallet/src/features/transactions/WarningModal/types'
 
 interface SwapFormProps {
   prefilledState?: TransactionState
@@ -81,6 +85,8 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Elemen
     ? currencies[otherCurrencyField(selectingCurrencyField)]?.currency.chainId
     : undefined
 
+  const onSendEmptyActionPress = useOnSendEmptyActionPress(onClose)
+
   return (
     <>
       <TransactionFlow
@@ -104,6 +110,7 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Elemen
           variation={listVariation}
           onClose={onHideTokenSelector}
           onSelectCurrency={onSelectCurrency}
+          onSendEmptyActionPress={onSendEmptyActionPress}
         />
       )}
     </>

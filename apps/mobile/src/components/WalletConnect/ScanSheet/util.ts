@@ -5,6 +5,7 @@ import {
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/handleDeepLinkSaga'
+import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
 import { UwULinkRequest } from 'wallet/src/features/walletConnect/types'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 
@@ -13,12 +14,18 @@ export enum URIType {
   WalletConnectV2URL = 'walletconnect-v2',
   Address = 'address',
   EasterEgg = 'easter-egg',
+  Scantastic = 'scantastic',
   UwULink = 'uwu-link',
 }
 
 export type URIFormat = {
   type: URIType
   value: string
+}
+
+interface EnabledFeatureFlags {
+  isUwULinkEnabled: boolean
+  isScantasticEnabled: boolean
 }
 
 const UNISNAP_CONTRACT_ADDRESS = '0xFd2308677A0eb48e2d0c4038c12AA7DCb703e8DC'
@@ -38,7 +45,7 @@ export function truncateDappName(name: string): string {
 
 export async function getSupportedURI(
   uri: string,
-  isUwULinkEnabled?: boolean
+  enabledFeatureFlags?: EnabledFeatureFlags
 ): Promise<URIFormat | undefined> {
   if (!uri) {
     return undefined
@@ -52,6 +59,11 @@ export async function getSupportedURI(
   const maybeMetamaskAddress = getMetamaskAddress(uri)
   if (maybeMetamaskAddress) {
     return { type: URIType.Address, value: maybeMetamaskAddress }
+  }
+
+  const maybeScantasticAddress = getScantasticAddress(uri)
+  if (enabledFeatureFlags?.isScantasticEnabled && maybeScantasticAddress) {
+    return { type: URIType.Scantastic, value: maybeScantasticAddress }
   }
 
   // The check for custom prefixes must be before the parseUri version 2 check because
@@ -79,7 +91,7 @@ export async function getSupportedURI(
     return { type: URIType.EasterEgg, value: uri }
   }
 
-  if (isUwULinkEnabled && isUwULink(uri)) {
+  if (enabledFeatureFlags?.isUwULinkEnabled && isUwULink(uri)) {
     return { type: URIType.UwULink, value: uri.slice(UWULINK_PREFIX.length) }
   }
 }
@@ -138,4 +150,26 @@ function getMetamaskAddress(uri: string): Nullable<string> {
   }
 
   return getValidAddress(uriParts[1], /*withChecksum=*/ true, /*log=*/ false)
+}
+
+// format is scantastic://<uri>
+function getScantasticAddress(uri: string): Nullable<string> {
+  const uriParts = uri.split('://')
+
+  if (uriParts.length < 2) {
+    return null
+  }
+
+  return uriParts[1] || null
+}
+
+/** parses scantastic params for a valid scantastic URI. */
+export function parseScantasticParams(uri: string): ScantasticModalState {
+  const pubKey = new URLSearchParams(uri).get('pubKey') || ''
+  const uuid = new URLSearchParams(uri).get('uuid') || ''
+  const vendor = new URLSearchParams(uri).get('vendor') || ''
+  const model = new URLSearchParams(uri).get('model') || ''
+  const browser = new URLSearchParams(uri).get('browser') || ''
+  const expiry = new URLSearchParams(uri).get('expiry') || ''
+  return { pubKey, uuid, expiry, vendor, model, browser }
 }

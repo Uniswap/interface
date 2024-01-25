@@ -10,7 +10,7 @@ import { getConnection } from 'connection'
 import { useGatewayDNSUpdateAllEnabled } from 'featureFlags/flags/gatewayDNSUpdate'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
-import { DutchOrderTrade, TradeFillType } from 'state/routing/types'
+import { DutchOrderTrade, LimitOrderTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
 import { SignatureExpiredError, UserRejectedRequestError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
@@ -59,7 +59,7 @@ export function useUniswapXSwapCallback({
   allowedSlippage,
   fiatValues,
 }: {
-  trade?: DutchOrderTrade
+  trade?: DutchOrderTrade | LimitOrderTrade
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   allowedSlippage: Percent
 }) {
@@ -79,7 +79,16 @@ export function useUniswapXSwapCallback({
 
         const signDutchOrder = async (): Promise<{ signature: string; updatedOrder: DutchOrder }> => {
           try {
-            const updatedNonce = await getUpdatedNonce(account, trade.order.chainId, gatewayDNSUpdateAllEnabled)
+            const updatedNonce = await getUpdatedNonce(
+              account,
+              trade.inputAmount.currency.chainId,
+              gatewayDNSUpdateAllEnabled
+            )
+
+            // TODO(limits): WEB-3434 - add error state for missing nonce
+            if (!updatedNonce) throw new Error('missing nonce')
+
+            const order = trade.asDutchOrderTrade({ nonce: updatedNonce, swapper: account }).order
 
             const startTime = Math.floor(Date.now() / 1000) + trade.startTimeBufferSecs
             setTraceData('startTime', startTime)
@@ -91,14 +100,14 @@ export function useUniswapXSwapCallback({
             setTraceData('deadline', deadline)
 
             // Set timestamp and account based values when the user clicks 'swap' to make them as recent as possible
-            const updatedOrder = DutchOrderBuilder.fromOrder(trade.order)
+            const updatedOrder = DutchOrderBuilder.fromOrder(order)
               .decayStartTime(startTime)
               .decayEndTime(endTime)
               .deadline(deadline)
               .swapper(account)
               .nonFeeRecipient(account, trade.swapFee?.recipient)
               // if fetching the nonce fails for any reason, default to existing nonce from the Swap quote.
-              .nonce(updatedNonce ?? trade.order.info.nonce)
+              .nonce(updatedNonce ?? order.info.nonce)
               .build()
 
             const { domain, types, values } = updatedOrder.permitData()

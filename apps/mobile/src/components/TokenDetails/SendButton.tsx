@@ -1,8 +1,8 @@
 import React from 'react'
-import { ElementName } from 'src/features/telemetry/constants'
 import { Flex, TouchableArea } from 'ui/src'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { iconSizes } from 'ui/src/theme'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 type Props = {
   onPress: () => void

@@ -10,13 +10,13 @@ export interface BiometricContextValue {
   deviceSupportsBiometrics: boolean | undefined
 }
 
-const biomericContextValue: BiometricContextValue = {
+const biometricContextValue: BiometricContextValue = {
   authenticationStatus: BiometricAuthenticationStatus.Invalid,
   setAuthenticationStatus: () => undefined,
   deviceSupportsBiometrics: undefined,
 }
 
-const BiometricContext = createContext<BiometricContextValue>(biomericContextValue)
+const BiometricContext = createContext<BiometricContextValue>(biometricContextValue)
 
 export function BiometricContextProvider({ children }: PropsWithChildren<unknown>): JSX.Element {
   // global authenticationStatus

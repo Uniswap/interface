@@ -4,11 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SvgUri } from 'react-native-svg'
-import { SearchTextInput } from 'src/components/input/SearchTextInput'
 import { Loader } from 'src/components/loading'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { useBottomSheetFocusHook } from 'src/components/modals/hooks'
-import { ModalName } from 'src/features/telemetry/constants'
 import {
   AnimatedFlex,
   Flex,
@@ -22,18 +18,21 @@ import Check from 'ui/src/assets/icons/check.svg'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { bubbleToTop } from 'utilities/src/primitives/array'
 import { useDebounce } from 'utilities/src/time/timing'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { useFiatOnRampAggregatorCountryListQuery } from 'wallet/src/features/fiatOnRamp/api'
 import {
   getCountryFlagSvgUrl,
   MeldCountryPaymentMethodsResponse,
 } from 'wallet/src/features/fiatOnRamp/meld'
+import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { isIOS } from 'wallet/src/utils/platform'
 
 const ICON_SIZE = 32 // design prefers a custom value here
 
 interface CountrySelectorProps {
   onSelectCountry: (country: NonNullable<MeldCountryPaymentMethodsResponse[0]>['country']) => void
-  currentCountryCode: string
+  countryCode: string
 }
 
 function key(item: NonNullable<MeldCountryPaymentMethodsResponse[0]>): string {
@@ -43,7 +42,7 @@ function key(item: NonNullable<MeldCountryPaymentMethodsResponse[0]>): string {
 
 function CountrySelectorContent({
   onSelectCountry,
-  currentCountryCode,
+  countryCode,
 }: CountrySelectorProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -59,12 +58,12 @@ function CountrySelectorContent({
     if (!data) {
       return []
     }
-    return bubbleToTop(data, (c) => c.country.countryCode === currentCountryCode).filter(
+    return bubbleToTop(data, (c) => c.country.countryCode === countryCode).filter(
       (item) =>
         !debouncedSearchText ||
         item.country.displayName.toLowerCase().startsWith(debouncedSearchText.toLowerCase())
     )
-  }, [currentCountryCode, data, debouncedSearchText])
+  }, [countryCode, data, debouncedSearchText])
 
   const renderItem = useCallback(
     ({
@@ -83,7 +82,7 @@ function CountrySelectorContent({
               <SvgUri height={ICON_SIZE} uri={countryFlagUrl} width={ICON_SIZE} />
             </Flex>
             <Text>{item.country.displayName}</Text>
-            {item.country.countryCode === currentCountryCode && (
+            {item.country.countryCode === countryCode && (
               <Flex grow alignItems="flex-end" justifyContent="center">
                 <Check
                   color={colors.accent1.get()}
@@ -96,7 +95,7 @@ function CountrySelectorContent({
         </TouchableArea>
       )
     },
-    [colors.accent1, currentCountryCode, onSelectCountry]
+    [colors.accent1, countryCode, onSelectCountry]
   )
 
   return (
@@ -122,7 +121,6 @@ function CountrySelectorContent({
                 ListFooterComponent={<Inset all="$spacing36" />}
                 bounces={true}
                 data={filtredeData}
-                focusHook={useBottomSheetFocusHook}
                 keyExtractor={key}
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps="always"
@@ -159,7 +157,7 @@ const CountryListPlaceholder = React.memo(function CountryListPlaceholder({
 export function FiatOnRampCountryListModal({
   onClose,
   onSelectCountry,
-  currentCountryCode,
+  countryCode,
 }: {
   onClose: () => void
 } & CountrySelectorProps): JSX.Element {
@@ -175,10 +173,7 @@ export function FiatOnRampCountryListModal({
       name={ModalName.FiatOnRampCountryList}
       snapPoints={['70%', '100%']}
       onClose={onClose}>
-      <CountrySelectorContent
-        currentCountryCode={currentCountryCode}
-        onSelectCountry={onSelectCountry}
-      />
+      <CountrySelectorContent countryCode={countryCode} onSelectCountry={onSelectCountry} />
     </BottomSheetModal>
   )
 }

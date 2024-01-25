@@ -20,9 +20,9 @@ import {
 } from 'nft/queries/openSea/constants'
 import { INVERSE_BASIS_POINTS } from 'nft/queries/openSea/constants'
 import { getX2Y2OrderId, newX2Y2Order } from 'nft/queries/x2y2'
+import ERC721 from 'wallet/src/abis/erc721.json'
+import ERC1155 from 'wallet/src/abis/erc1155.json'
 
-import ERC721 from '../../abis/erc721.json'
-import ERC1155 from '../../abis/erc1155.json'
 import { ListingMarket, ListingStatus, WalletAsset } from '../types'
 import { createSellOrder, encodeOrder, OfferItem, OrderPayload, signOrderData } from './x2y2'
 

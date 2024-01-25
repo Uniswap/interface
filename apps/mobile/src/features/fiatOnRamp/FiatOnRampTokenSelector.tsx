@@ -4,13 +4,14 @@ import { TokenFiatOnRampList } from 'src/components/TokenSelector/TokenFiatOnRam
 import Trace from 'src/components/Trace/Trace'
 import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
-import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { AnimatedFlex } from 'ui/src'
+import { SectionName } from 'wallet/src/telemetry/constants'
 
-import { useAllCommonBaseCurrencies } from 'src/components/TokenSelector/hooks'
+import { useAllCommonBaseCurrencies } from 'wallet/src/components/TokenSelector/hooks'
 import { fromMoonpayNetwork } from 'wallet/src/features/chains/utils'
 import { CurrencyInfo, GqlResult } from 'wallet/src/features/dataApi/types'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 interface Props {
   onBack: () => void

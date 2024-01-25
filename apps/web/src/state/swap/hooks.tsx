@@ -27,7 +27,7 @@ import {
 
 export function useSwapActionHandlers(): {
   onCurrencySelection: (field: Field, currency: Currency) => void
-  onSwitchTokens: (newOutputHasTax: boolean, previouslyEstimatedOutput: string) => void
+  onSwitchTokens: (options: { newOutputHasTax: boolean; previouslyEstimatedOutput: string }) => void
   onUserInput: (field: Field, typedValue: string) => void
 } {
   const { swapState, setSwapState } = useSwapContext()
@@ -58,7 +58,13 @@ export function useSwapActionHandlers(): {
   )
 
   const onSwitchTokens = useCallback(
-    (newOutputHasTax: boolean, previouslyEstimatedOutput: string) => {
+    ({
+      newOutputHasTax,
+      previouslyEstimatedOutput,
+    }: {
+      newOutputHasTax: boolean
+      previouslyEstimatedOutput: string
+    }) => {
       // To prevent swaps with FOT tokens as exact-outputs, we leave it as an exact-in swap and use the previously estimated output amount as the new exact-in amount.
       if (newOutputHasTax && swapState.independentField === Field.INPUT) {
         setSwapState((swapState) => ({

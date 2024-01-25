@@ -16,8 +16,6 @@ import { useAppDispatch } from 'src/app/hooks'
 import { pulseAnimation } from 'src/components/buttons/utils'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { prepareSwapFormState } from 'src/features/transactions/swap/utils'
 import { Screens } from 'src/screens/Screens'
 import {
   AnimatedFlex,
@@ -28,12 +26,14 @@ import {
   Text,
   TouchableArea,
   useDeviceInsets,
+  useIsDarkMode,
   useSporeColors,
 } from 'ui/src'
 import { borderRadii, fonts } from 'ui/src/theme'
-import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
+import { prepareSwapFormState } from 'wallet/src/features/transactions/swap/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 import { opacify } from 'wallet/src/utils/colors'
 import { isAndroid, isIOS } from 'wallet/src/utils/platform'
 

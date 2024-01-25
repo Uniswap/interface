@@ -5,6 +5,7 @@
     "@gorhom/bottom-sheet": "4.5.1",
     "@react-native-masked-view/masked-view": "0.2.9",
     "@shopify/flash-list": "1.4.3",
+    "@shopify/react-native-skia": "0.1.187",
     "@tamagui/animations-css": "1.74.16",
     "@tamagui/animations-react-native": "1.74.16",
     "@tamagui/font-inter": "1.74.16",

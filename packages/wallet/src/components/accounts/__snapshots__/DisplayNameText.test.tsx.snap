@@ -1,0 +1,140 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AccountDetails renders address display name without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 4,
+      "justifyContent": "center",
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    numberOfLines={1}
+    style={
+      {
+        "color": "#222222",
+        "flexShrink": 1,
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    0x82D56A352367453f74FC0dC7B071b311da373Fa6
+  </Text>
+</View>
+`;
+
+exports[`AccountDetails renders ens display name without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 4,
+      "justifyContent": "center",
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    numberOfLines={1}
+    style={
+      {
+        "color": "#222222",
+        "flexShrink": 1,
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    vitalik.eth
+  </Text>
+</View>
+`;
+
+exports[`AccountDetails renders local display name without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 4,
+      "justifyContent": "center",
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    numberOfLines={1}
+    style={
+      {
+        "color": "#222222",
+        "flexShrink": 1,
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    Wallet 1
+  </Text>
+</View>
+`;
+
+exports[`AccountDetails renders unitag without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 4,
+      "justifyContent": "center",
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    numberOfLines={1}
+    style={
+      {
+        "color": "#FC72FF",
+        "flexShrink": 1,
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    luni
+  </Text>
+  <View
+    style={
+      {
+        "alignItems": "stretch",
+        "flexDirection": "column",
+        "marginTop": -4,
+      }
+    }
+  >
+    <svg
+      data-file-name="SvgUnitag"
+      height={24}
+      width={24}
+    />
+  </View>
+</View>
+`;

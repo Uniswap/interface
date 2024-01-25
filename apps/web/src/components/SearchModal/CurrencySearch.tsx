@@ -100,6 +100,10 @@ export function CurrencySearch({
 
     const tokenFilter = (token: Token) => {
       if (onlyShowCurrenciesWithBalance) {
+        if (token.isNative && token.symbol) {
+          return balanceMap[token.symbol]?.usdValue > 0
+        }
+
         return balanceMap[token.address?.toLowerCase()]?.usdValue > 0
       }
 
@@ -198,19 +202,25 @@ export function CurrencySearch({
   )
 
   const finalCurrencyList = useMemo(() => {
-    return debouncedQuery || portfolioTokens.length === 0
-      ? [
-          new CurrencyListSectionTitle(debouncedQuery ? t`Search Results` : t`Popular tokens`),
-          ...sortedCombinedTokens,
-          ...filteredInactiveTokens,
-        ]
-      : [
-          new CurrencyListSectionTitle(t`Your tokens`),
-          ...portfolioTokens,
-          new CurrencyListSectionTitle(t`Popular tokens`),
-          ...sortedTokensWithoutPortfolio,
-          ...filteredInactiveTokens,
-        ]
+    if (debouncedQuery || portfolioTokens.length === 0) {
+      return [
+        new CurrencyListSectionTitle(debouncedQuery ? t`Search Results` : t`Popular tokens`),
+        ...sortedCombinedTokens,
+        ...filteredInactiveTokens,
+      ]
+    }
+
+    if (sortedTokensWithoutPortfolio.length === 0 && filteredInactiveTokens.length === 0) {
+      return [new CurrencyListSectionTitle(t`Your tokens`), ...portfolioTokens]
+    }
+
+    return [
+      new CurrencyListSectionTitle(t`Your tokens`),
+      ...portfolioTokens,
+      new CurrencyListSectionTitle(t`Popular tokens`),
+      ...sortedTokensWithoutPortfolio,
+      ...filteredInactiveTokens,
+    ]
   }, [debouncedQuery, filteredInactiveTokens, portfolioTokens, sortedCombinedTokens, sortedTokensWithoutPortfolio])
 
   // Timeout token loader after 3 seconds to avoid hanging in a loading state.

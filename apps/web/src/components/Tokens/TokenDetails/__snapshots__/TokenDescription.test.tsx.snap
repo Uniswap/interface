@@ -27,6 +27,10 @@ exports[`TokenDescription no description or social buttons shown when not availa
 
 .c2 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c8 {
@@ -235,6 +239,10 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
 
 .c2 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c8 {
@@ -521,6 +529,10 @@ exports[`TokenDescription truncates description and shows more 1`] = `
 
 .c2 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c8 {

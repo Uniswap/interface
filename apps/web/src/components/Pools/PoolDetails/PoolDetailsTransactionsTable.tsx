@@ -2,18 +2,20 @@ import { Trans } from '@lingui/macro'
 import { createColumnHelper } from '@tanstack/react-table'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
+import { Filter } from 'components/Table/Filter'
+import { ClickableHeaderRow, FilterHeaderRow, HeaderArrow } from 'components/Table/styled'
 import { getLocaleTimeString } from 'components/Table/utils'
 import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
-import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
+import { OrderDirection, Token, Transaction_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { PoolTransaction, PoolTransactionType, usePoolTransactions } from 'graphql/thegraph/PoolTransactions'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useMemo } from 'react'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { useCallback, useMemo, useReducer, useRef, useState } from 'react'
 import { ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
-import { countSignificantFigures } from 'utils'
 import { shortenAddress } from 'utils/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -22,6 +24,11 @@ const StyledExternalLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.neutral2};
   stroke: ${({ theme }) => theme.neutral2};
 `
+
+type PoolTxTableSortState = {
+  sortBy: Transaction_OrderBy
+  sortDirection: OrderDirection
+}
 
 export function PoolDetailsTransactionsTable({
   poolAddress,
@@ -38,7 +45,44 @@ export function PoolDetailsTransactionsTable({
   const locale = useActiveLocale()
   const activeLocalCurrency = useActiveLocalCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
-  const { transactions, loading, loadMore, error } = usePoolTransactions(poolAddress, chainId)
+  const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
+  const filterModalRef = useRef<HTMLDivElement>(null)
+  useOnClickOutside(filterModalRef, filterModalIsOpen ? toggleFilterModal : undefined)
+  const [filter, setFilters] = useState<PoolTransactionType[]>([
+    PoolTransactionType.BUY,
+    PoolTransactionType.SELL,
+    PoolTransactionType.BURN,
+    PoolTransactionType.MINT,
+  ])
+
+  const [sortState, setSortMethod] = useState<PoolTxTableSortState>({
+    sortBy: Transaction_OrderBy.Timestamp,
+    sortDirection: OrderDirection.Desc,
+  })
+  const { transactions, loading, loadMore, error } = usePoolTransactions(
+    poolAddress,
+    chainId,
+    sortState.sortBy,
+    sortState.sortDirection,
+    filter
+  )
+
+  const handleHeaderClick = useCallback(
+    (newSortMethod: Transaction_OrderBy) => {
+      if (sortState.sortBy === newSortMethod) {
+        setSortMethod({
+          sortBy: newSortMethod,
+          sortDirection: sortState.sortDirection === OrderDirection.Asc ? OrderDirection.Desc : OrderDirection.Asc,
+        })
+      } else {
+        setSortMethod({
+          sortBy: newSortMethod,
+          sortDirection: OrderDirection.Desc,
+        })
+      }
+    },
+    [sortState.sortBy, sortState.sortDirection]
+  )
 
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolTransaction>()
@@ -47,9 +91,14 @@ export function PoolDetailsTransactionsTable({
         id: 'timestamp',
         header: () => (
           <Cell minWidth={150} justifyContent="flex-start">
-            <ThemedText.BodySecondary>
-              <Trans>Time</Trans>
-            </ThemedText.BodySecondary>
+            <ClickableHeaderRow $justify="flex-start" onClick={() => handleHeaderClick(Transaction_OrderBy.Timestamp)}>
+              {sortState.sortBy === Transaction_OrderBy.Timestamp && (
+                <HeaderArrow direction={sortState.sortDirection} />
+              )}
+              <ThemedText.BodySecondary>
+                <Trans>Time</Trans>
+              </ThemedText.BodySecondary>
+            </ClickableHeaderRow>
           </Cell>
         ),
         cell: (timestamp) => (
@@ -63,20 +112,13 @@ export function PoolDetailsTransactionsTable({
       columnHelper.accessor(
         (row) => {
           let color, text
-          if (row.type === PoolTransactionType.SWAP) {
+          if (row.type === PoolTransactionType.BUY || row.type === PoolTransactionType.SELL) {
             // Determine which of token0 and token1 is the input and which is the output token
             const [tokenIn, tokenOut] =
               row.amount0 > 0 ? [row.pool.token0, row.pool.token1] : [row.pool.token1, row.pool.token0]
-            // Determine if swap is exact in vs exact out based on which amount has fewer sig figs
-            const token0SigFigs = countSignificantFigures(row.amount0)
-            const token1SigFigs = countSignificantFigures(row.amount1)
-            const isExactIn =
-              tokenIn.id.toLowerCase() === token0?.id.toLowerCase()
-                ? token0SigFigs < token1SigFigs
-                : token1SigFigs < token0SigFigs
             // If swap is exactIn, tx type is Sell tokenIn, otherwise Buy tokenOut
-            color = isExactIn ? 'critical' : 'success'
-            text = isExactIn ? (
+            color = row.isExactIn ? 'critical' : 'success'
+            text = row.isExactIn ? (
               <span>
                 <Trans>Sell</Trans>&nbsp;{tokenIn.symbol}
               </span>
@@ -95,9 +137,17 @@ export function PoolDetailsTransactionsTable({
           id: 'swap-type',
           header: () => (
             <Cell minWidth={100} justifyContent="flex-start">
-              <ThemedText.BodySecondary>
-                <Trans>Type</Trans>
-              </ThemedText.BodySecondary>
+              <FilterHeaderRow modalOpen={filterModalIsOpen} onClick={() => toggleFilterModal()} ref={filterModalRef}>
+                <Filter
+                  allFilters={Object.values(PoolTransactionType)}
+                  activeFilter={filter}
+                  setFilters={setFilters}
+                  isOpen={filterModalIsOpen}
+                />
+                <ThemedText.BodySecondary>
+                  <Trans>Type</Trans>
+                </ThemedText.BodySecondary>
+              </FilterHeaderRow>
             </Cell>
           ),
           cell: (poolTransactionType) => (
@@ -201,10 +251,15 @@ export function PoolDetailsTransactionsTable({
     activeLocalCurrency,
     chainId,
     chainName,
+    filter,
+    filterModalIsOpen,
     formatFiatPrice,
     formatNumber,
+    handleHeaderClick,
     loading,
     locale,
+    sortState.sortBy,
+    sortState.sortDirection,
     theme.neutral1,
     token0?.id,
     token0?.symbol,

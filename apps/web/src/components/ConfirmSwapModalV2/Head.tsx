@@ -12,13 +12,13 @@ const CloseIcon = styled(X)<{ onClick: () => void }>`
   cursor: pointer;
   ${ClickableStyle}
 `
-export default function Head({ onDismiss }: { onDismiss: () => void }) {
+export default function Head({ onDismiss, isLimitTrade }: { onDismiss: () => void; isLimitTrade: boolean }) {
   return (
     <Row width="100%" align="center">
       <Row justify="left">
         <FadePresence>
           <ThemedText.SubHeader>
-            <Trans>Review swap</Trans>
+            {isLimitTrade ? <Trans>Review limit</Trans> : <Trans>Review swap</Trans>}
           </ThemedText.SubHeader>
         </FadePresence>
       </Row>

@@ -1,20 +1,18 @@
 import React from 'react'
-import { Unicon } from 'src/components/unicons/Unicon'
-import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, Unicon } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
-import { ChainId } from 'wallet/src/constants/chains'
-import { useENS } from 'wallet/src/features/ens/useENS'
+import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { shortenAddress } from 'wallet/src/utils/addresses'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { ElementNameType } from 'wallet/src/telemetry/constants'
 
 interface Props {
   address: string
   selected: boolean
   balance?: number | null
   onSelect: (address: string) => void
-  name?: ElementName
+  name?: ElementNameType
   testID?: string
   hideSelectionCircle?: boolean
 }
@@ -30,7 +28,7 @@ export default function WalletPreviewCard({
   hideSelectionCircle,
   ...rest
 }: Props): JSX.Element {
-  const { name: ensName } = useENS(ChainId.Mainnet, address)
+  const displayName = useDisplayName(address, { showLocalName: true })
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const balanceFormatted = convertFiatAmountFormatted(balance, NumberType.FiatTokenQuantity)
@@ -49,7 +47,7 @@ export default function WalletPreviewCard({
         <Flex row ai="center" gap="$spacing12" height={ADDRESS_WRAPPER_HEIGHT} jc="flex-start">
           <Unicon address={address} size={UNICON_SIZE} />
           <Flex ai="flex-start">
-            <Text variant="body1">{ensName ?? shortenAddress(address)}</Text>
+            <DisplayNameText displayName={displayName} textProps={{ variant: 'body1' }} />
             {balance ? (
               <Text color="$neutral2" variant="subheading2">
                 {balanceFormatted}

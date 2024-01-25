@@ -2,9 +2,10 @@ import { MixedRouteSDK } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
+import { BigNumber } from 'ethers'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import {
-  ChainId,
+  ChainId as TradingApiChainId,
   ClassicQuote,
   Quote,
   QuoteResponse,
@@ -14,7 +15,8 @@ import {
 } from 'wallet/src/data/tradingApi/__generated__/api'
 import { SwapFee } from 'wallet/src/features/routing/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-import { QuoteType, Trade } from 'wallet/src/features/transactions/swap/useTrade'
+import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
+import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 const NATIVE_ADDRESS_FOR_TRADING_API = '0x0000000000000000000000000000000000000000'
@@ -159,7 +161,7 @@ export function computeRoutesTradingApi(
 }
 
 function parseTokenApi(token: TradingApiTokenInRoute): Token {
-  const { address, chainId, decimals, symbol } = token
+  const { address, chainId, decimals, symbol, buyFeeBps, sellFeeBps } = token
   if (!chainId || !address || !decimals || !symbol) {
     throw new Error('Expected token to have chainId, address, decimals, and symbol')
   }
@@ -169,7 +171,9 @@ function parseTokenApi(token: TradingApiTokenInRoute): Token {
     parseInt(decimals.toString(), 10),
     symbol,
     /**name=*/ undefined,
-    false
+    false,
+    buyFeeBps ? BigNumber.from(buyFeeBps) : undefined,
+    sellFeeBps ? BigNumber.from(sellFeeBps) : undefined
   )
 }
 
@@ -230,15 +234,19 @@ export function isClassicQuote(quote?: Quote): quote is ClassicQuote {
   return 'route' in quote
 }
 
+const SUPPORTED_TRADING_API_CHAIN_IDS: number[] = Object.values(TradingApiChainId).map((c) => c)
+
 // Parse any chain id to check if its supported by the API ChainId type
-function isTradingApiSupportedChainId(chainId?: number): chainId is ChainId {
+function isTradingApiSupportedChainId(chainId?: number): chainId is TradingApiChainId {
   if (!chainId) {
     return false
   }
-  return chainId in ChainId
+  return Object.values(SUPPORTED_TRADING_API_CHAIN_IDS).includes(chainId)
 }
 
-export function toTradingApiSupportedChainId(chainId: Maybe<number>): ChainId | undefined {
+export function toTradingApiSupportedChainId(
+  chainId: Maybe<number>
+): TradingApiChainId | undefined {
   if (!chainId || !isTradingApiSupportedChainId(chainId)) {
     return undefined
   }

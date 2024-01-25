@@ -11,6 +11,7 @@ import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { ReactNode, useMemo, useRef } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import { isLimitTrade } from 'state/routing/utils'
 import { useOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
@@ -127,6 +128,28 @@ interface ContentArgs {
   onRetryUniswapXSignature?: () => void
 }
 
+export function getTitle({
+  trade,
+  swapPending,
+  swapConfirmed,
+}: {
+  trade?: InterfaceTrade
+  swapPending: boolean
+  swapConfirmed: boolean
+}): ReactNode {
+  if (isLimitTrade(trade)) {
+    if (swapPending) return t`Limit submitted`
+    if (swapConfirmed) return t`Limit filled!`
+
+    return t`Confirm limit`
+  }
+
+  if (swapPending) return t`Swap submitted`
+  if (swapConfirmed) return t`Swap success!`
+
+  return t`Confirm swap`
+}
+
 function getPendingConfirmationContent({
   swapConfirmed,
   swapPending,
@@ -139,8 +162,8 @@ function getPendingConfirmationContent({
   ContentArgs,
   'swapConfirmed' | 'swapPending' | 'trade' | 'chainId' | 'swapResult' | 'swapError' | 'onRetryUniswapXSignature'
 >): PendingModalStep {
-  const title = swapPending ? t`Swap submitted` : swapConfirmed ? t`Swap success!` : t`Confirm Swap`
   const tradeSummary = trade ? <TradeSummary trade={trade} /> : null
+  const title = getTitle({ trade, swapPending, swapConfirmed })
   if (swapPending && trade?.fillType === TradeFillType.UniswapX) {
     return {
       title,

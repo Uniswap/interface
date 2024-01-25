@@ -234,21 +234,34 @@ exports[`renders wallet preview card 1`] = `
           }
         }
       >
-        <Text
-          allowFontScaling={true}
-          maxFontSizeMultiplier={1.4}
+        <View
           style={
             {
-              "color": "#222222",
-              "fontFamily": "Basel-Book",
-              "fontSize": 19,
-              "lineHeight": 24,
+              "alignItems": "center",
+              "flexDirection": "row",
+              "gap": 4,
+              "justifyContent": "center",
             }
           }
-          suppressHighlighting={true}
         >
-          0x82D5...3Fa6
-        </Text>
+          <Text
+            allowFontScaling={true}
+            maxFontSizeMultiplier={1.4}
+            numberOfLines={1}
+            style={
+              {
+                "color": "#222222",
+                "flexShrink": 1,
+                "fontFamily": "Basel-Book",
+                "fontSize": 19,
+                "lineHeight": 24,
+              }
+            }
+            suppressHighlighting={true}
+          >
+            0x​82D5...3Fa6
+          </Text>
+        </View>
       </View>
     </View>
     <RNSVGSvgView

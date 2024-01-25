@@ -1,8 +1,6 @@
 import React from 'react'
-import { UniconAttributes } from 'src/components/unicons/types'
-import { Unicon } from 'src/components/unicons/Unicon'
-import { deriveUniconAttributeIndices, isEthAddress } from 'src/components/unicons/utils'
 import { render } from 'src/test/test-utils'
+import { deriveUniconAttributeIndices, isEthAddress, Unicon, UniconAttributes } from 'ui/src'
 
 it('renders a Unicon', () => {
   const tree = render(

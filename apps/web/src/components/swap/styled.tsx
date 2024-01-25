@@ -21,7 +21,7 @@ export const PageWrapper = styled.div`
 `
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
-const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
+export const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
   position: relative;
   z-index: ${Z_INDEX.default};
   border: 1px solid ${({ theme }) => theme.surface3};

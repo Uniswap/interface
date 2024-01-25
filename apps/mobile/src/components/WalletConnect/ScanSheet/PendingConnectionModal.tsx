@@ -2,15 +2,13 @@ import { getSdkError } from '@walletconnect/utils'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { AccountDetails } from 'src/components/accounts/AccountDetails'
 import { LinkButton } from 'src/components/buttons/LinkButton'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { NetworkLogos } from 'src/components/WalletConnect/NetworkLogos'
 import { PendingConnectionSwitchAccountModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchAccountModal'
 import { truncateDappName } from 'src/components/WalletConnect/ScanSheet/util'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { ElementName, MobileEventName, ModalName } from 'src/features/telemetry/constants'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { getSessionNamespaces } from 'src/features/walletConnect/utils'
@@ -23,6 +21,8 @@ import {
 import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ChainId } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -37,6 +37,7 @@ import {
   WCEventType,
   WCRequestOutcome,
 } from 'wallet/src/features/walletConnect/types'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = {
   pendingSession: WalletConnectPendingSession

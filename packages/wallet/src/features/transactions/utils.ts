@@ -9,6 +9,11 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
+export enum QuoteType {
+  RoutingApi = 'RoutingApi',
+  TradingApi = 'TradingApi',
+}
+
 export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,
   chainId?: ChainId

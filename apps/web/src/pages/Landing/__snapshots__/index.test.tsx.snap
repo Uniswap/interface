@@ -86,6 +86,10 @@ exports[`disable nft on landing page does not render nft information and card 1`
 
 .c27 {
   color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c13 {
@@ -1049,6 +1053,18 @@ exports[`disable nft on landing page does not render nft information and card 1`
   color: #CECECE;
 }
 
+.c30 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+  text-align: left;
+  font-size: 36px;
+  font-weight: 485;
+  max-height: 44px;
+}
+
 .c25 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1277,18 +1293,6 @@ exports[`disable nft on landing page does not render nft information and card 1`
   margin: 0 0.25rem 0 0.25rem;
   font-size: 20px;
   font-weight: 535;
-}
-
-.c30 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-  text-align: left;
-  font-size: 36px;
-  font-weight: 485;
-  max-height: 44px;
 }
 
 .c0 {
@@ -2706,6 +2710,10 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
 
 .c27 {
   color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c13 {
@@ -3701,6 +3709,18 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   color: #CECECE;
 }
 
+.c30 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+  text-align: left;
+  font-size: 36px;
+  font-weight: 485;
+  max-height: 44px;
+}
+
 .c25 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -3929,18 +3949,6 @@ exports[`disable nft on landing page renders nft information and card 1`] = `
   margin: 0 0.25rem 0 0.25rem;
   font-size: 20px;
   font-weight: 535;
-}
-
-.c30 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-  text-align: left;
-  font-size: 36px;
-  font-weight: 485;
-  max-height: 44px;
 }
 
 .c0 {

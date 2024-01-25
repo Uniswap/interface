@@ -44,6 +44,10 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
 
 .c7 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c13 {
@@ -374,6 +378,10 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
 
 .c7 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c14 {

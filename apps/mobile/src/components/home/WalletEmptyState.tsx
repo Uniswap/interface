@@ -4,12 +4,12 @@ import { useAppDispatch } from 'src/app/hooks'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import Trace from 'src/components/Trace/Trace'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import PaperStackIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { colors as rawColors, iconSizes } from 'ui/src/theme'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { ElementName, ElementNameType, ModalName } from 'wallet/src/telemetry/constants'
 import { opacify } from 'wallet/src/utils/colors'
 
 interface ActionCardItem {
@@ -17,7 +17,7 @@ interface ActionCardItem {
   blurb: string
   icon: JSX.Element
   onPress: () => void
-  elementName: ElementName
+  elementName: ElementNameType
   badgeText?: string
 }
 

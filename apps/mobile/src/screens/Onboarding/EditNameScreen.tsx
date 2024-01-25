@@ -4,14 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, StyleSheet, TextInput as NativeTextInput } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { TextInput } from 'src/components/input/TextInput'
 import Trace from 'src/components/Trace/Trace'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
-import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { AnimatePresence, Button, Flex, Icons, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
+import { TextInput } from 'wallet/src/components/input/TextInput'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { ImportType } from 'wallet/src/features/onboarding/types'
 import {
@@ -24,6 +23,7 @@ import {
   pendingAccountActions,
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
+import { ElementName } from 'wallet/src/telemetry/constants'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 import { isAndroid } from 'wallet/src/utils/platform'
 

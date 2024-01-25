@@ -159,8 +159,20 @@ module.exports = {
             importNames: ["usePortfolioValueModifiers"],
             message: "Use the wrapper hooks `usePortfolioTotalValue`, `useAccountList` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly.",
           },
+          {
+            name: '@gorhom/bottom-sheet',
+            importNames: ["BottomSheetTextInput"],
+            message: "Use our internal `BottomSheetTextInput` wrapper from `/wallet/src/components/modals/BottomSheetModal`.",
+          },
         ],
       },
+    ],
+    'no-restricted-syntax': [
+      "error",
+      {
+        "selector": "NewExpression[callee.name='InMemoryCache']",
+        "message": "Use `createNewInMemoryCache()` instead of `new InMemoryCache()` to correctly support our custom `ttlMs` cache invalidation policy (see `useRestQuery`). See PR #5683 for details."
+      }
     ],
     // React Plugin
     // Overrides rules from @react-native-community:
@@ -319,7 +331,6 @@ module.exports = {
               'you’d',
               'you’ll',
               'you’re',
-              'you’ve',
               'Arbitrum',
               'blockchain',
               'validators',
@@ -334,7 +345,8 @@ module.exports = {
               'yourname',
               'yourusername',
               'Unitags',
-              'Uw'
+              'Uw',
+              'Passcode',
             ],
           },
 

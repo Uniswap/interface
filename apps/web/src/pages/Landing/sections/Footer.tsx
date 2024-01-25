@@ -1,11 +1,13 @@
 import { Trans } from '@lingui/macro'
-import { motion } from 'framer-motion'
+import { useScreenSize } from 'hooks/useScreenSize'
 import { Link } from 'react-router-dom'
+import { useTogglePrivacyPolicy } from 'state/application/hooks'
 import styled, { css } from 'styled-components'
 import { ExternalLink } from 'theme/components'
 
+import { Wiggle } from '../components/animations'
 import { Body1, Box, H3 } from '../components/Generics'
-import { Discord, Github, Instagram, Twitter } from '../components/Icons'
+import { Discord, Github, Twitter } from '../components/Icons'
 
 const SocialIcon = styled(Wiggle)`
   flex: 0;
@@ -38,12 +40,11 @@ const MenuItemStyles = css`
   padding: 0;
   margin: 0;
   text-align: center;
-  /* Body/2 */
   font-family: Basel;
   font-size: 16px;
   font-style: normal;
   font-weight: 500;
-  line-height: 24px; /* 150% */
+  line-height: 24px;
   color: ${({ theme }) => theme.neutral2};
   stroke: none;
   transition: color 0.1s ease-in-out;
@@ -59,35 +60,27 @@ const StyledInternalLink = styled(Link)`
 const StyledExternalLink = styled(ExternalLink)`
   ${MenuItemStyles}
 `
-function Wiggle({ ...props }) {
-  const variants = {
-    initial: { rotate: 0, scale: 1 },
-    animate: { rotate: [20, 0], scale: 1.2, transition: { type: 'spring', stiffness: 200 } },
-  }
-  return <motion.div {...props} whileHover="animate" initial="initial" variants={variants} />
-}
-
-function Socials() {
+const ModalItem = styled.div`
+  ${MenuItemStyles}
+  cursor: pointer;
+  user-select: none;
+`
+export function Socials({ iconSize }: { iconSize?: string }) {
   return (
     <Box gap="24px">
       <SocialIcon hoverColor="#00C32B">
         <StyledExternalLink href="https://github.com/Uniswap">
-          <Github fill="inherit" />
+          <Github size={iconSize} fill="inherit" />
         </StyledExternalLink>
       </SocialIcon>
       <SocialIcon hoverColor="#20BAFF">
         <StyledExternalLink href="https://twitter.com/Uniswap">
-          <Twitter fill="inherit" />
+          <Twitter size={iconSize} fill="inherit" />
         </StyledExternalLink>
       </SocialIcon>
       <SocialIcon hoverColor="#5F51FF">
-        <StyledExternalLink href="https://discord.gg/FCfyBSbCU5">
-          <Discord fill="inherit" />
-        </StyledExternalLink>
-      </SocialIcon>
-      <SocialIcon hoverColor="#FF0DCA">
-        <StyledExternalLink href="https://www.instagram.com/uniswap">
-          <Instagram fill="inherit" />
+        <StyledExternalLink href="https://discord.com/invite/uniswap">
+          <Discord size={iconSize} fill="inherit" />
         </StyledExternalLink>
       </SocialIcon>
     </Box>
@@ -95,9 +88,12 @@ function Socials() {
 }
 
 export function Footer() {
+  const screenIsLarge = useScreenSize()['lg']
+  const togglePrivacyPolicy = useTogglePrivacyPolicy()
+
   return (
-    <Box as="footer" direction="column" align="center" padding="0 24px">
-      <Box direction="row" maxWidth="1328px" gap="24px">
+    <Box as="footer" direction="column" align="center" padding={screenIsLarge ? '0 40px' : '0 48px'}>
+      <Box direction="row" maxWidth="1280px" gap="24px">
         <RowToCol direction="row" justify-content="space-between" gap="32px">
           <Box direction="column" height="100%" gap="64px">
             <Box direction="column" gap="10px">
@@ -151,9 +147,9 @@ export function Footer() {
                 <StyledExternalLink href="https://github.com/Uniswap/brand-assets">
                   <Trans>Brand Assets</Trans>
                 </StyledExternalLink>
-                <StyledExternalLink href="https://uniswap.org/privacy-policy">
-                  <Trans>Privacy Policy</Trans>
-                </StyledExternalLink>
+                <ModalItem onClick={togglePrivacyPolicy}>
+                  <Trans>Terms & Privacy</Trans>
+                </ModalItem>
                 <StyledExternalLink href="https://uniswap.org/trademark">
                   <Trans>Trademark Policy</Trans>
                 </StyledExternalLink>

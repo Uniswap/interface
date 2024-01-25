@@ -17,6 +17,7 @@ import {
   GetQuoteArgs,
   InterfaceTrade,
   isClassicQuoteResponse,
+  LimitOrderTrade,
   PoolType,
   PreviewTrade,
   QuickRouteResponse,
@@ -352,6 +353,10 @@ export function isSubmittableTrade(trade?: InterfaceTrade): trade is Submittable
   return trade?.fillType === TradeFillType.Classic || trade?.fillType === TradeFillType.UniswapX
 }
 
-export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchOrderTrade {
+export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchOrderTrade | LimitOrderTrade {
   return trade?.fillType === TradeFillType.UniswapX
+}
+
+export function isLimitTrade(trade?: InterfaceTrade): trade is LimitOrderTrade {
+  return trade?.fillType === TradeFillType.UniswapX && trade?.offchainOrderType === 'limit_order'
 }
