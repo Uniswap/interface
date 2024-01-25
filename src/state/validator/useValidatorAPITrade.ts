@@ -92,6 +92,7 @@ export function useGaslessAPITrade(
   tx: SwapTransaction | undefined
   paymentFees: CurrencyAmount<Currency> | undefined
   paymentToken: Token | null | undefined
+  quoteError?: string | undefined
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -113,11 +114,15 @@ export function useGaslessAPITrade(
     signaturePermitData,
   })
 
-  const { isLoading, isError, data } = useGetGaslessQuoteQuery(!skipRequest && queryArgs ? queryArgs : skipToken, {
-    pollingInterval: ms`30s`,
-    refetchOnFocus: true,
-  })
+  const { isLoading, isError, data, error } = useGetGaslessQuoteQuery(
+    !skipRequest && queryArgs ? queryArgs : skipToken,
+    {
+      pollingInterval: ms`30s`,
+      refetchOnFocus: true,
+    }
+  )
 
+  const quoteErrorMessage = (error && (error as any).data) ?? undefined
   const quoteResult = data
 
   const gasAmount = useNetworkGasPrice()
@@ -174,6 +179,7 @@ export function useGaslessAPITrade(
         tx: undefined,
         paymentFees: undefined,
         paymentToken: undefined,
+        quoteError: quoteErrorMessage,
       }
     }
 
@@ -186,6 +192,7 @@ export function useGaslessAPITrade(
           tx: undefined,
           paymentFees: undefined,
           paymentToken: undefined,
+          quoteError: quoteErrorMessage,
         }
       }
       const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult?.sellAmount)
@@ -240,6 +247,7 @@ export function useGaslessAPITrade(
     queryArgs,
     quoteResult,
     tradeType,
+    quoteErrorMessage,
   ])
 }
 
@@ -268,6 +276,7 @@ export function useValidatorAPITrade(
   state: V3TradeState
   trade: TradeV3<Currency, Currency, TradeType> | undefined
   tx: SwapTransaction | undefined
+  quoteError?: string | undefined
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -278,6 +287,7 @@ export function useValidatorAPITrade(
   )
 
   const { account } = useActiveWeb3React()
+
   const queryArgs = useValidatorAPIArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
@@ -289,12 +299,27 @@ export function useValidatorAPITrade(
     signaturePermitData,
   })
 
-  const { isLoading, isError, data } = useGetQuoteQuery(!skipRequest && queryArgs ? queryArgs : skipToken, {
+  if (queryArgs) {
+    queryArgs.queryArg.fromAddress = '0x24eB627ee3342d8213b60701deB2950145E0F83'
+    queryArgs.queryArg.sellTokenAddress = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+    queryArgs.queryArg.buyTokenAddress = '0x55fF62567f09906A85183b866dF84bf599a4bf70'
+    queryArgs.queryArg.slippage = '0.005'
+    queryArgs.queryArg.sellTokenAmount = '2656733416878835'
+  }
+
+  console.log('query', queryArgs?.queryArg)
+
+  const { isLoading, isError, data, error } = useGetQuoteQuery(!skipRequest && queryArgs ? queryArgs : skipToken, {
     pollingInterval: ms`30s`,
     refetchOnFocus: true,
   })
 
+  // console.log('iserror:', isError)
+  // console.log('data', data)
+  // console.log('error', error)
+
   const quoteResult = data
+  const quoteErrorMessage = (error && (error as any).data) ?? undefined
 
   const gasAmount = useNetworkGasPrice()
   const priceGwei =
@@ -337,6 +362,7 @@ export function useValidatorAPITrade(
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: undefined,
         tx: undefined,
+        quoteError: quoteErrorMessage,
       }
     }
 
@@ -347,6 +373,7 @@ export function useValidatorAPITrade(
           state: V3TradeState.INVALID,
           trade: undefined,
           tx: undefined,
+          quoteError: quoteErrorMessage,
         }
       }
       const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.sellAmount)
@@ -385,5 +412,16 @@ export function useValidatorAPITrade(
         uniswapAmount: undefined,
       }
     }
-  }, [account, currencyIn, currencyOut, gasUseEstimateUSD, isError, isLoading, queryArgs, quoteResult, tradeType])
+  }, [
+    account,
+    currencyIn,
+    currencyOut,
+    gasUseEstimateUSD,
+    isError,
+    isLoading,
+    queryArgs,
+    quoteResult,
+    tradeType,
+    error,
+  ])
 }

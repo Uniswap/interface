@@ -86,11 +86,17 @@ export function TransactionPreparingContent({
   onDismiss,
   inline,
   routeIsNotFound,
+  errorMessage,
 }: {
   onDismiss: () => void
   inline?: boolean // not in modal
   routeIsNotFound: boolean
+  errorMessage: string | undefined
 }) {
+  const defaultErrorMessage =
+    'Error occured, reattempting transaction building! If the error persists, cancel the trade and try again.'
+
+  if (errorMessage) console.log('QUOTE ERROR: ', errorMessage)
   return (
     <Wrapper>
       <AutoColumn gap="md">
@@ -112,10 +118,7 @@ export function TransactionPreparingContent({
               <Trans>
                 {' '}
                 <Text fontWeight={500} fontSize={15} textAlign="center" color="red">
-                  <Trans>
-                    Error occured, reattempting transaction building! If the error persists, cancel the trade and try
-                    again.
-                  </Trans>
+                  <Trans>{errorMessage ?? defaultErrorMessage}</Trans>
                 </Text>
               </Trans>
             ) : (

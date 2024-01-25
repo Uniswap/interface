@@ -339,6 +339,7 @@ export default function Market({ history }: RouteComponentProps) {
     feeImpactHigh,
     amountToReceive,
     inputTokenShouldBeWrapped,
+    quoteError,
   } = useDerivedMarketInfo(
     toggledVersion,
     showConfirm,
@@ -683,6 +684,7 @@ export default function Market({ history }: RouteComponentProps) {
                     priceImpactAccepted={priceImpactAccepted}
                     feeImpactAccepted={feeImpactAccepted}
                     routeIsNotFound={routeNotFound}
+                    quoteErrorMessage={quoteError}
                   />
                   <AutoColumn gap={'md'}>
                     <div style={{ display: 'relative' }}>
@@ -1218,6 +1220,7 @@ export default function Market({ history }: RouteComponentProps) {
               priceImpactAccepted={priceImpactAccepted}
               feeImpactAccepted={feeImpactAccepted}
               routeIsNotFound={routeNotFound}
+              quoteErrorMessage={quoteError}
             />
             <AutoColumn gap={'md'}>
               <div style={{ display: 'relative' }}>
