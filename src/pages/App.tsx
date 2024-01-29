@@ -1,4 +1,3 @@
-import ToastContainer, { setToast } from 'components/Toast'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
 import { Route, Switch, useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
@@ -78,15 +77,6 @@ export default function App() {
   const showFallbackRoute =
     !pathname.includes('swap') && !pathname.includes('limitorder') && !pathname.includes('balance')
 
-  setToast({
-    title: '$CLIQUE: WAR OF DEX',
-    description: `Stand a chance to win 25000 OP when you swap \r\nor provide liquidity on Optimism network.`,
-    ctaText: 'More Info',
-    ctaUrl: 'https://x.com/KromatikaFi/status/1740035551036891541',
-    toastId: 'warofdex',
-    imageUrl: CliqueLogo,
-  })
-
   return (
     <ErrorBoundary>
       <Route component={GoogleAnalyticsReporter} />
@@ -97,7 +87,6 @@ export default function App() {
           <Route exact strict path="/darkswapwidget" component={SwapWidget} />
           <Route exact strict path="/lightswapwidget" component={SwapWidget} />
           <AppWrapper>
-            <ToastContainer />
             <HeaderWrapper>
               <Header />
             </HeaderWrapper>
