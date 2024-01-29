@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmU1QSS7dNky4pkCfkknkmcBKmFfx9m7HctyzzNCTJpBbk`
-- CIDv1: `bafybeicug7zwouvztzcfjasynspfg7kjt76w4pg5m6lsj3iez6d3wbmvf4`
+- CIDv0: `Qmbj1BRiCidfqEHnayhdwiEWEwFvP7RJbH58pmw3G81PvV`
+- CIDv1: `bafybeigg4hnmdqhtzox3vuqnfy2pmvb6mkr5kgoubridxbe3idri7qx6qy`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,16 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeicug7zwouvztzcfjasynspfg7kjt76w4pg5m6lsj3iez6d3wbmvf4.ipfs.dweb.link/
-- https://bafybeicug7zwouvztzcfjasynspfg7kjt76w4pg5m6lsj3iez6d3wbmvf4.ipfs.cf-ipfs.com/
-- [ipfs://QmU1QSS7dNky4pkCfkknkmcBKmFfx9m7HctyzzNCTJpBbk/](ipfs://QmU1QSS7dNky4pkCfkknkmcBKmFfx9m7HctyzzNCTJpBbk/)
+- https://bafybeigg4hnmdqhtzox3vuqnfy2pmvb6mkr5kgoubridxbe3idri7qx6qy.ipfs.dweb.link/
+- https://bafybeigg4hnmdqhtzox3vuqnfy2pmvb6mkr5kgoubridxbe3idri7qx6qy.ipfs.cf-ipfs.com/
+- [ipfs://Qmbj1BRiCidfqEHnayhdwiEWEwFvP7RJbH58pmw3G81PvV/](ipfs://Qmbj1BRiCidfqEHnayhdwiEWEwFvP7RJbH58pmw3G81PvV/)
 
-### 5.5.1 (2024-01-26)
+## 5.6.0 (2024-01-29)
 
 
-### Bug Fixes
+### Features
 
-* **web): Revert "chore(web:** added opensea api to csp and made long … (#5938) d7aa795
-* **web): Revert "fix(web:** re-enable rich link previews (#5912)" (#5942) b835519
+* **web:** bump v2-sdk [hotfix for prod] (#5987) 22b73de
 
 

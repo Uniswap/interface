@@ -12613,7 +12613,7 @@ __metadata:
     "@uniswap/universal-router-sdk": 1.5.8
     "@uniswap/v2-core": 1.0.1
     "@uniswap/v2-periphery": 1.1.0-beta.0
-    "@uniswap/v2-sdk": 3.2.3
+    "@uniswap/v2-sdk": 4.1.0
     "@uniswap/v3-core": 1.0.1
     "@uniswap/v3-periphery": 1.4.4
     "@uniswap/v3-sdk": 3.10.2
@@ -13174,16 +13174,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/v2-sdk@npm:3.2.3":
-  version: 3.2.3
-  resolution: "@uniswap/v2-sdk@npm:3.2.3"
+"@uniswap/v2-sdk@npm:4.1.0":
+  version: 4.1.0
+  resolution: "@uniswap/v2-sdk@npm:4.1.0"
   dependencies:
     "@ethersproject/address": ^5.0.0
     "@ethersproject/solidity": ^5.0.0
     "@uniswap/sdk-core": ^4.0.7
     tiny-invariant: ^1.1.0
     tiny-warning: ^1.0.3
-  checksum: 0e1838673508654b8270c54d9ee97c010e9a2463065e623aa78f96ade47f424627a9858fb39587331fb4e9b016d5113b821a475450018f1f62e8e4ab166e2893
+  checksum: c2722fc800339fd0cd4c3aa9aa2b083e3f29ce6df15ddf0e6f671c378d50a9ec2d05035d80e9ecf6418aeb716a26c43e13f79b6e7c05931f324954ed4f44b0e7
   languageName: node
   linkType: hard
 
@@ -42476,7 +42476,7 @@ __metadata:
     "@uniswap/router-sdk": 1.7.1
     "@uniswap/sdk-core": 4.0.7
     "@uniswap/universal-router-sdk": 1.5.8
-    "@uniswap/v2-sdk": 3.2.3
+    "@uniswap/v2-sdk": 4.1.0
     "@uniswap/v3-sdk": 3.10.2
     apollo-link-rest: 0.9.0
     dayjs: 1.11.7

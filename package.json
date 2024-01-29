@@ -36,7 +36,7 @@
     "cypress": "12.12.0",
     "@babel/preset-env": "7.23.3",
     "immer": "9.0.21",
-    "@uniswap/v2-sdk": "3.2.3",
+    "@uniswap/v2-sdk": "4.1.0",
     "@apollo/client": "3.7.11",
     "@uniswap/sdk-core": "4.0.7",
     "@react-navigation/routers": "6.1.9",
