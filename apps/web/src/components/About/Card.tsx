@@ -15,7 +15,9 @@ const StyledCard = styled.div<{ $isDarkMode: boolean; $backgroundImgSrc?: string
   background: ${({ $isDarkMode, $backgroundImgSrc, $type, theme }) =>
     $isDarkMode
       ? `${theme.surface2} ${$backgroundImgSrc ? ` url(${$backgroundImgSrc})` : ''}`
-      : `${$type === CardType.Primary ? 'white' : theme.surface2} url(${$backgroundImgSrc})`};
+      : `${$type === CardType.Primary ? 'white' : theme.surface2} ${
+        $backgroundImgSrc ? ` url(${$backgroundImgSrc})` : ''
+      }`};
   background-size: auto 100%;
   background-position: right;
   background-repeat: no-repeat;
