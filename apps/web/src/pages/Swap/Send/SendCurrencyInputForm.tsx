@@ -8,44 +8,56 @@ import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { Input as NumericalInput } from 'components/NumericalInput'
 import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
-import Row from 'components/Row'
+import Row, { RowBetween } from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { useActiveLocalCurrency, useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
 import { STABLECOIN_AMOUNT_OUT } from 'hooks/useStablecoinPrice'
+import { useUSDPrice } from 'hooks/useUSDPrice'
 import { useCallback, useMemo, useState } from 'react'
 import { SendInputError } from 'state/send/hooks'
 import { useSendContext } from 'state/send/SendContext'
 import { CurrencyState, useSwapAndLimitContext } from 'state/swap/SwapContext'
 import styled, { css } from 'styled-components'
-import { ClickableStyle, CloseIcon, ThemedText } from 'theme/components'
+import { ClickableStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
+
+import { ReactComponent as DropDown } from '../../../assets/images/dropdown.svg'
 
 const Wrapper = styled(Column)<{ $disabled: boolean }>`
   opacity: ${({ $disabled }) => (!$disabled ? 1 : 0.4)};
   pointer-events: ${({ $disabled }) => (!$disabled ? 'initial' : 'none')};
+  gap: 1px;
 `
 
 const CurrencyInputWrapper = styled(PrefetchBalancesWrapper)`
   display: flex;
   background-color: ${({ theme }) => theme.surface2};
-  padding: 14px 12px;
-  border-radius: 16px 16px 0px 0px;
+  padding: 16px 16px;
+  border-radius: 0px 0px 16px 16px;
   height: 64px;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid ${({ theme }) => theme.surface1};
+  position: relative;
+`
+const ClickableRowBetween = styled(RowBetween)`
+  ${ClickableStyle};
 `
 
 const InputWrapper = styled(Column)`
   position: relative;
   background-color: ${({ theme }) => theme.surface2};
-  padding: 0px 12px;
-  height: 220px;
+  padding: 0px 12px 60px 12px;
+  height: 256px;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 16px;
-  border-radius: 0px 0px 16px 16px;
+  border-radius: 16px 16px 0px 0px;
+`
+const InputLabelContainer = styled.div`
+  position: absolute;
+  top: 16px;
+  left: 16px;
 `
 
 const StyledNumericalInput = styled(NumericalInput)<{ usePercent?: boolean }>`
@@ -65,16 +77,22 @@ const StyledUpAndDownArrowIcon = styled(ReverseArrow)`
 `
 
 const MaxButton = styled(ButtonLight)`
+  position: absolute;
+  right: 40px;
   height: min-content;
   width: min-content;
   padding: 2px 8px;
   font-size: 14px;
   line-height: 20px;
 `
-
-const StyledCloseIcon = styled(CloseIcon)`
-  color: ${({ theme }) => theme.neutral3};
+const StyledDropDown = styled(DropDown)`
   ${ClickableStyle}
+  width: 20px;
+  height: 8px;
+  path {
+    stroke: ${({ theme }) => theme.neutral3};
+    stroke-width: 2px;
+  }
 `
 
 const CurrencySelectorRow = styled(Row)`
@@ -177,6 +195,7 @@ export default function SendCurrencyInputForm({
   const { account } = useWeb3React()
   const { formatCurrencyAmount } = useFormatter()
   const { symbol: fiatSymbol } = useActiveLocalCurrencyComponents()
+  const { formatNumber } = useFormatter()
 
   const { sendState, setSendState, derivedSendInfo } = useSendContext()
   const { inputInFiat, exactAmountToken, exactAmountFiat, inputCurrency } = sendState
@@ -192,6 +211,8 @@ export default function SendCurrencyInputForm({
     amount: currencyBalance,
     type: NumberType.TokenNonTx,
   })
+
+  const fiatBalanceValue = useUSDPrice(currencyBalance, inputCurrency)
 
   const handleUserInput = useCallback(
     (newValue: string) => {
@@ -257,30 +278,12 @@ export default function SendCurrencyInputForm({
 
   return (
     <Wrapper $disabled={disabled}>
-      <CurrencyInputWrapper shouldFetchOnAccountUpdate={tokenSelectorOpen}>
-        <Row justify="space-between" width="100%" gap="sm">
-          <Row width="100%" gap="md">
-            <CurrencySelectorRow width="100%" gap="md" onClick={() => setTokenSelectorOpen(true)}>
-              {inputCurrency && (
-                <PortfolioLogo currencies={[inputCurrency]} size="36px" chainId={chainId ?? ChainId.MAINNET} />
-              )}
-              <Row width="100%">
-                <Column>
-                  <ThemedText.BodyPrimary lineHeight="24px">{inputCurrency?.name}</ThemedText.BodyPrimary>
-                  <ThemedText.LabelMicro lineHeight="16px">{currencyBalance && formattedBalance}</ThemedText.LabelMicro>
-                </Column>
-              </Row>
-            </CurrencySelectorRow>
-            {showMaxButton && (
-              <MaxButton onClick={handleMaxInput}>
-                <Trans>Max</Trans>
-              </MaxButton>
-            )}
-          </Row>
-          <StyledCloseIcon size="20px" onClick={() => setTokenSelectorOpen(true)} />
-        </Row>
-      </CurrencyInputWrapper>
       <InputWrapper>
+        <InputLabelContainer>
+          <ThemedText.SubHeaderSmall color="neutral2">
+            <Trans>You&apos;re sending</Trans>
+          </ThemedText.SubHeaderSmall>
+        </InputLabelContainer>
         <StyledNumericalInput
           value={inputInFiat ? exactAmountFiat : exactAmountToken}
           disabled={disabled}
@@ -294,6 +297,41 @@ export default function SendCurrencyInputForm({
         />
         <InputError />
       </InputWrapper>
+      <CurrencyInputWrapper shouldFetchOnAccountUpdate={tokenSelectorOpen}>
+        <ClickableRowBetween onClick={() => setTokenSelectorOpen(true)}>
+          <Row width="100%" gap="md">
+            <CurrencySelectorRow width="100%" gap="md" onClick={() => setTokenSelectorOpen(true)}>
+              {inputCurrency && (
+                <PortfolioLogo currencies={[inputCurrency]} size="36px" chainId={chainId ?? ChainId.MAINNET} />
+              )}
+              <Row width="100%">
+                <Column>
+                  <ThemedText.BodyPrimary lineHeight="24px">
+                    {inputCurrency?.symbol ?? inputCurrency?.name}
+                  </ThemedText.BodyPrimary>
+                  <Row gap="xs" width="100%">
+                    {currencyBalance && (
+                      <ThemedText.LabelMicro lineHeight="16px">{`Balance: ${formattedBalance}`}</ThemedText.LabelMicro>
+                    )}
+                    {Boolean(fiatBalanceValue.data) && (
+                      <ThemedText.LabelMicro lineHeight="16px" color="neutral3">{`(${formatNumber({
+                        input: fiatBalanceValue.data,
+                        type: NumberType.FiatTokenPrice,
+                      })})`}</ThemedText.LabelMicro>
+                    )}
+                  </Row>
+                </Column>
+              </Row>
+            </CurrencySelectorRow>
+          </Row>
+          <StyledDropDown />
+        </ClickableRowBetween>
+        {showMaxButton && (
+          <MaxButton onClick={handleMaxInput}>
+            <Trans>Max</Trans>
+          </MaxButton>
+        )}
+      </CurrencyInputWrapper>
       <CurrencySearchModal
         isOpen={tokenSelectorOpen}
         onDismiss={() => setTokenSelectorOpen(false)}
