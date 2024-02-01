@@ -6,6 +6,7 @@ import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
+import AddTokenToWallet from 'components/AddTokenToWallet'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import ConfirmMarketModal from 'components/market/ConfirmMarketModal'
 import MarketHeader from 'components/market/MarketHeader'
@@ -927,6 +928,9 @@ export default function Market({ history }: RouteComponentProps) {
                         </ButtonPrimary>
                       </AutoColumn>
                     )}
+                    {currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.isToken && (
+                      <AddTokenToWallet token={currencies[Field.OUTPUT] as Token} />
+                    )}
                     {priceImpactHigh && (
                       <PriceImpactWarning>
                         <span>
@@ -1456,6 +1460,9 @@ export default function Market({ history }: RouteComponentProps) {
                   <ButtonPrimary onClick={wrapToken}>Wrap my {CHAIN_NATIVE_TOKEN_SYMBOL[chainId ?? 1]}</ButtonPrimary>
                 </AutoColumn>
               )}
+              {currencies[Field.OUTPUT] && currencies[Field.OUTPUT]?.isToken && (
+                <AddTokenToWallet token={currencies[Field.OUTPUT] as Token} />
+              )}
               {priceImpactHigh && (
                 <PriceImpactWarning>
                   <span>
@@ -1472,7 +1479,7 @@ export default function Market({ history }: RouteComponentProps) {
                       type="checkbox"
                       onChange={() => toggleFeeImpactAccepted()}
                       defaultChecked={feeImpactAccepted}
-                    />{' '}
+                    />
                   </span>
                 </PriceImpactWarning>
               )}
@@ -1625,7 +1632,6 @@ export default function Market({ history }: RouteComponentProps) {
       {refEnabled && (
         <ReferralStyle>
           <AppBody>
-            {' '}
             {account ? (
               <Trans>
                 <ReferralContainer>
@@ -1689,8 +1695,7 @@ export default function Market({ history }: RouteComponentProps) {
             ) : (
               <Trans>
                 <NoWalletStyle>
-                  {' '}
-                  Connect wallet to generate referral link. How it works ?{' '}
+                  Connect wallet to generate referral link. How it works ?
                   <a href="https://docs.kromatika.finance" target="_blank" rel="noreferrer">
                     Read More
                   </a>

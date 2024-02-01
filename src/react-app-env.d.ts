@@ -12,6 +12,7 @@ interface Window {
     on?: (...args: any[]) => void
     removeListener?: (...args: any[]) => void
     autoRefreshOnNetworkChange?: boolean
+    request: (any) => Promise<void>
   }
   web3?: Record<string, unknown>
   safary?: {
