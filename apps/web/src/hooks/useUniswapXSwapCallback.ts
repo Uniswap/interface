@@ -41,9 +41,10 @@ async function getUpdatedNonce(
 ): Promise<BigNumber | null> {
   const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
   try {
-    const res = await fetch(`${baseURL}/nonce?address=${swapper}&chainId=${chainId}`)
+    // endpoint fetches current nonce
+    const res = await fetch(`${baseURL}/nonce?address=${swapper.toLowerCase()}&chainId=${chainId}`)
     const { nonce } = await res.json()
-    return BigNumber.from(nonce)
+    return BigNumber.from(nonce).add(1)
   } catch (e) {
     Sentry.withScope(function (scope) {
       scope.setTag('method', 'getUpdatedNonce')
