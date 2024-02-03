@@ -470,6 +470,10 @@ export default function Market({ history }: RouteComponentProps) {
     } else setApprovalLoading(false)
   }, [allowedSlippage, trade, approvalState])
 
+  useEffect(() => {
+    console.log(approvalState)
+  })
+
   const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
 
@@ -1019,19 +1023,35 @@ export default function Market({ history }: RouteComponentProps) {
                               }
                             >
                               <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                                <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
+                                <span
+                                  style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    whiteSpace: 'break-spaces',
+                                    width: '100%',
+                                  }}
+                                >
                                   <CurrencyLogo
                                     currency={currencies[Field.INPUT]}
                                     size={'20px'}
                                     style={{ marginRight: '8px', flexShrink: 0 }}
                                   />
-                                  {/* we need to shorten this string on mobile */}
-                                  {approvalState === ApprovalState.APPROVED ||
-                                  signatureState === UseERC20PermitState.SIGNED ? (
-                                    <Trans>You can now swap {currencies[Field.INPUT]?.symbol}</Trans>
-                                  ) : (
-                                    <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
-                                  )}
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      justifyContent: 'center',
+                                      width: '100%',
+                                    }}
+                                  >
+                                    {/* we need to shorten this string on mobile */}
+                                    {approvalState === ApprovalState.APPROVED ||
+                                    signatureState === UseERC20PermitState.SIGNED ? (
+                                      <Trans>You can now swap {currencies[Field.INPUT]?.symbol}</Trans>
+                                    ) : (
+                                      <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
+                                    )}
+                                  </div>
                                 </span>
                                 {approvalState === ApprovalState.PENDING ? (
                                   <Loader stroke="white" />
@@ -1545,19 +1565,35 @@ export default function Market({ history }: RouteComponentProps) {
                         }
                       >
                         <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                          <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
+                          <span
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              whiteSpace: 'break-spaces',
+                              width: '100%',
+                            }}
+                          >
                             <CurrencyLogo
                               currency={currencies[Field.INPUT]}
                               size={'20px'}
                               style={{ marginRight: '8px', flexShrink: 0 }}
                             />
-                            {/* we need to shorten this string on mobile */}
-                            {approvalState === ApprovalState.APPROVED ||
-                            signatureState === UseERC20PermitState.SIGNED ? (
-                              <Trans>You can now swap {currencies[Field.INPUT]?.symbol}</Trans>
-                            ) : (
-                              <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
-                            )}
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                width: '100%',
+                              }}
+                            >
+                              {/* we need to shorten this string on mobile */}
+                              {approvalState === ApprovalState.APPROVED ||
+                              signatureState === UseERC20PermitState.SIGNED ? (
+                                <Trans>You can now swap {currencies[Field.INPUT]?.symbol}</Trans>
+                              ) : (
+                                <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
+                              )}
+                            </div>
                           </span>
                           {approvalState === ApprovalState.PENDING ? (
                             <Loader stroke="white" />
