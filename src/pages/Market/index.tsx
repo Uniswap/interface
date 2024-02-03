@@ -422,6 +422,7 @@ export default function Market({ history }: RouteComponentProps) {
   )
 
   // check whether the user has approved the router on the input token
+  // @dev: default value =  DefaultState.UNKNOWN
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage, swapTransaction)
   const {
     state: signatureState,
@@ -449,15 +450,25 @@ export default function Market({ history }: RouteComponentProps) {
     }
   }, [approveCallback, gatherPermitSignature, signatureState, toggledVersion, trade?.inputAmount.currency.symbol])
 
+  // check if the allowance of the user is still loading (=/= pending)
+  const [approvalLoading, setApprovalLoading] = useState<boolean>(false)
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
 
   // mark when a user has submitted an approval, reset onTokenSelection for input field
   useEffect(() => {
+    console.log('Approvalchanged')
+    console.log(approvalState)
     if (approvalState === ApprovalState.PENDING) {
       setApprovalSubmitted(true)
     }
   }, [approvalState, approvalSubmitted])
+
+  useEffect(() => {
+    if (allowedSlippage && trade && approvalState === ApprovalState.UNKNOWN) {
+      setApprovalLoading(true)
+    } else setApprovalLoading(false)
+  }, [allowedSlippage, trade, approvalState])
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
@@ -976,7 +987,7 @@ export default function Market({ history }: RouteComponentProps) {
                               <Trans>Unwrap</Trans>
                             ) : null)}
                         </ButtonPrimary>
-                      ) : routeIsSyncing || routeIsLoading ? (
+                      ) : routeIsSyncing || routeIsLoading || approvalLoading ? (
                         <GreyCard style={{ textAlign: 'center' }}>
                           <TYPE.main mb="4px">
                             <Dots>
@@ -1503,7 +1514,7 @@ export default function Market({ history }: RouteComponentProps) {
                         <Trans>Unwrap</Trans>
                       ) : null)}
                   </ButtonPrimary>
-                ) : routeIsSyncing || routeIsLoading ? (
+                ) : routeIsSyncing || routeIsLoading || approvalLoading ? (
                   <GreyCard style={{ textAlign: 'center' }}>
                     <TYPE.main mb="4px">
                       <Dots>
