@@ -141,16 +141,13 @@ export function WalletConnectModal({
       }
 
       if (supportedURI.type === URIType.Scantastic) {
-        const { pubKey, uuid, vendor, model, browser, expiry } = parseScantasticParams(
-          supportedURI.value
-        )
+        const { pubKey, uuid, vendor, model, browser } = parseScantasticParams(supportedURI.value)
 
         setShouldFreezeCamera(true)
         dispatch(
           openModal({
             name: ModalName.Scantastic,
             initialState: {
-              expiry,
               pubKey,
               uuid,
               vendor,

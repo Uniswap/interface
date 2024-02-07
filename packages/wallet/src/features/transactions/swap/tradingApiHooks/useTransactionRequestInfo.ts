@@ -1,13 +1,19 @@
+import { SwapEventName } from '@uniswap/analytics-events'
 import { providers } from 'ethers'
 import { useMemo } from 'react'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useRestQuery } from 'wallet/src/data/rest'
-import { CreateSwapRequest, CreateSwapResponse } from 'wallet/src/data/tradingApi/__generated__/api'
+import {
+  CreateSwapRequest,
+  CreateSwapResponse,
+  TransactionFailureReason,
+} from 'wallet/src/data/tradingApi/__generated__/api'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
-import { GasSpeed } from 'wallet/src/features/gas/types'
+import { GasFeeResult, GasSpeed } from 'wallet/src/features/gas/types'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { getBaseTradeAnalyticsPropertiesFromSwapInfo } from 'wallet/src/features/transactions/swap/analytics'
 import { useWrapTransactionRequest } from 'wallet/src/features/transactions/swap/hooks'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/tradingApi/client'
 import { isClassicQuote } from 'wallet/src/features/transactions/swap/tradingApi/utils'
@@ -16,13 +22,11 @@ import { usePermit2SignatureWithData } from 'wallet/src/features/transactions/sw
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { WrapType } from 'wallet/src/features/transactions/types'
 import { QuoteType } from 'wallet/src/features/transactions/utils'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 
 interface TransactionRequestInfo {
   transactionRequest: providers.TransactionRequest | undefined
-  gasFeeResult: {
-    value: string | undefined
-    loading: boolean
-  }
+  gasFeeResult: GasFeeResult
 }
 
 export function useTransactionRequestInfo({
@@ -32,6 +36,8 @@ export function useTransactionRequestInfo({
   derivedSwapInfo: DerivedSwapInfo
   skip: boolean
 }): TransactionRequestInfo {
+  const formatter = useLocalizationContext()
+
   const { trade: tradeWithStatus, currencyAmounts } = derivedSwapInfo
   const { trade } = tradeWithStatus || { trade: undefined }
 
@@ -81,15 +87,14 @@ export function useTransactionRequestInfo({
 
   const skipTransactionRequest = !swapRequestArgs || isWrapApplicable || skip
 
-  const { data, error } = useRestQuery<
+  const { data, error, loading } = useRestQuery<
     CreateSwapResponse,
     CreateSwapRequest | Record<string, never>
   >(
     uniswapUrls.tradingApiPaths.swap,
     swapRequestArgs ?? {},
-    ['swap', 'gasFee', 'requestId'],
+    ['swap', 'gasFee', 'requestId', 'txFailureReasons'],
     {
-      pollInterval: PollingInterval.Fast,
       ttlMs: ONE_MINUTE_MS,
       skip: skipTransactionRequest,
     },
@@ -97,21 +102,35 @@ export function useTransactionRequestInfo({
     TradingApiApolloClient
   )
 
-  // TODO: MOB(2438) https://linear.app/uniswap/issue/MOB-2438/uniswap-x-clean-old-trading-api-code
-  const classicQuote = isClassicQuote(quote?.quote) ? quote?.quote : undefined
+  // TODO: pull type from the api spec once its updated
+  // This is a case where simulation fails on backend, meaning txn is expected to fail
+  const simulationError = data?.txFailureReasons?.includes(TransactionFailureReason.SimulationError)
+
+  const gasEstimateError = simulationError || error
+
   const wrapGasFee = useTransactionGasFee(wrapTxRequest, GasSpeed.Urgent, !isWrapApplicable)
-  const gasFeeValue = isWrapApplicable ? wrapGasFee.value : classicQuote?.gasFee
+  const gasFeeValue = isWrapApplicable ? wrapGasFee.value : data?.gasFee
   const gasFeeResult = {
     value: gasFeeValue,
-    loading: isWrapApplicable && wrapGasFee.loading,
+    loading: (isWrapApplicable && wrapGasFee.loading) || loading,
+    error: gasEstimateError,
   }
 
-  if (error) {
-    logger.error(error, {
+  if (gasEstimateError) {
+    // Copy this exact error string that we use in other places in the app, so they can group.
+    const errorToLog = simulationError ? new Error('Unknown gas simulation error') : error
+
+    logger.error(errorToLog, {
       tags: { file: 'useTransactionRequestInfo', function: 'useTransactionRequestInfo' },
       extra: {
         swapRequestArgs,
       },
+    })
+
+    sendWalletAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+      ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
+      error: errorToLog,
+      txRequest: data?.swap,
     })
   }
 

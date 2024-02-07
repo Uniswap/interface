@@ -4,17 +4,17 @@ import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import {
   FadeIn,
-  interpolate,
   SharedValue,
+  interpolate,
   useAnimatedReaction,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
-import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
-import RemoveButton from 'src/components/explore/RemoveButton'
-import { Loader } from 'src/components/loading'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
+import RemoveButton from 'src/components/explore/RemoveButton'
+import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
+import { Loader } from 'src/components/loading'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { AnimatedFlex, AnimatedTouchableArea, Flex, Text } from 'ui/src'
@@ -25,8 +25,8 @@ import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { useFavoriteTokenCardQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { removeFavoriteToken } from 'wallet/src/features/favorites/slice'

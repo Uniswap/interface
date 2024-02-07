@@ -1,5 +1,26 @@
+diff --git a/lib/typescript/src/charts/line/useDatetime.d.ts b/lib/typescript/src/charts/line/useDatetime.d.ts
+index c6f73dd8b31294d0e4c0597519dd998ccd84ad30..9f9eb03e25d1e020de37c706e8f8803d0b9dcefa 100644
+--- a/lib/typescript/src/charts/line/useDatetime.d.ts
++++ b/lib/typescript/src/charts/line/useDatetime.d.ts
+@@ -1,13 +1,10 @@
+ import type { TFormatterFn } from '../candle/types';
++import { SharedValue } from 'react-native-reanimated';
+ export declare function useLineChartDatetime({ format, locale, options, }?: {
+     format?: TFormatterFn<number>;
+     locale?: string;
+     options?: Intl.DateTimeFormatOptions;
+ }): {
+-    value: Readonly<{
+-        value: string;
+-    }>;
+-    formatted: Readonly<{
+-        value: string;
+-    }>;
++    value: SharedValue<string>;
++    formatted: SharedValue<string>;
+ };
 diff --git a/src/charts/line/ChartPath.tsx b/src/charts/line/ChartPath.tsx
-index 3807c185c9456d2976c305df94574ff7d948b32a..5cf985422cf49120f943c98084b08c16faf452d9 100644
+index 3807c185c9456d2976c305df94574ff7d948b32a..7b49281318da294617ec25c1a2c04d3e231bb298 100644
 --- a/src/charts/line/ChartPath.tsx
 +++ b/src/charts/line/ChartPath.tsx
 @@ -18,7 +18,6 @@ const BACKGROUND_COMPONENTS = [
@@ -10,13 +31,12 @@ index 3807c185c9456d2976c305df94574ff7d948b32a..5cf985422cf49120f943c98084b08c16
    'LineChartTooltip',
  ];
  const FOREGROUND_COMPONENTS = ['LineChartHighlight', 'LineChartDot'];
-@@ -166,10 +165,25 @@ export function LineChartPathWrapper({
+@@ -166,6 +165,18 @@ export function LineChartPathWrapper({
          <View style={StyleSheet.absoluteFill}>
            <AnimatedSVG animatedProps={svgProps} height={height}>
              <LineChartPath color={color} width={strokeWidth} {...pathProps} />
 +          </AnimatedSVG>
 +        </View>
-+        
 +      </LineChartPathContext.Provider>
 +      <LineChartPathContext.Provider
 +        value={{
@@ -30,9 +50,116 @@ index 3807c185c9456d2976c305df94574ff7d948b32a..5cf985422cf49120f943c98084b08c16
              {foregroundChildren}
            </AnimatedSVG>
          </View>
-+        
-       </LineChartPathContext.Provider>
-+
-     </>
-   );
- }
+diff --git a/src/charts/line/Dot.tsx b/src/charts/line/Dot.tsx
+index dd49d3e49231a5e4f56138bbf3ec51013515f7b0..dfdaa349e9a25dca297234120cc6bd9f5915ed0d 100644
+--- a/src/charts/line/Dot.tsx
++++ b/src/charts/line/Dot.tsx
+@@ -2,13 +2,12 @@ import * as React from 'react';
+ import Animated, {
+   Easing,
+   useAnimatedProps,
+-  useDerivedValue,
+   withRepeat,
+   withSequence,
+   withTiming,
+ } from 'react-native-reanimated';
+-import { Circle, CircleProps } from 'react-native-svg';
+ import { getYForX } from 'react-native-redash';
++import { Circle, CircleProps } from 'react-native-svg';
+ 
+ import { LineChartDimensionsContext } from './Chart';
+ import { LineChartPathContext } from './LineChartPathContext';
+@@ -72,29 +71,13 @@ export function LineChartDot({
+ 
+   ////////////////////////////////////////////////////////////
+ 
+-  const x = useDerivedValue(
+-    () => withTiming(pointWidth * at),
+-    [at, pointWidth]
+-  );
+-  const y = useDerivedValue(
+-    () => withTiming(getYForX(parsedPath!, x.value) || 0),
+-    [parsedPath, x]
+-  );
++  const x = pointWidth * at;
++  const y = getYForX(parsedPath!, x) ?? 0;
+ 
+   ////////////////////////////////////////////////////////////
+ 
+-  const animatedDotProps = useAnimatedProps(
+-    () => ({
+-      cx: x.value,
+-      cy: y.value,
+-    }),
+-    [x, y]
+-  );
+-
+   const animatedOuterDotProps = useAnimatedProps(() => {
+     let defaultProps = {
+-      cx: x.value,
+-      cy: y.value,
+       opacity: 0.1,
+       r: outerSize,
+     };
+@@ -113,25 +96,27 @@ export function LineChartDot({
+     const easing = Easing.out(Easing.sin);
+     const animatedOpacity = withRepeat(
+       withSequence(
+-        withTiming(0.8),
++        withTiming(0.8, {
++          duration: 0,
++        }),
+         withTiming(0, {
+           duration: pulseDurationMs,
+           easing,
+         })
+       ),
+-      -1,
+-      false
++      -1
+     );
+     const scale = withRepeat(
+       withSequence(
+-        withTiming(0),
++        withTiming(0, {
++          duration: 0,
++        }),
+         withTiming(outerSize, {
+           duration: pulseDurationMs,
+           easing,
+         })
+       ),
+-      -1,
+-      false
++      -1
+     );
+ 
+     if (pulseBehaviour === 'while-inactive') {
+@@ -146,15 +131,16 @@ export function LineChartDot({
+       opacity: animatedOpacity,
+       r: scale,
+     };
+-  }, [hasPulse, isActive, outerSize, pulseBehaviour, pulseDurationMs, x, y]);
++  }, [hasPulse, isActive, outerSize, pulseBehaviour, pulseDurationMs]);
+ 
+   ////////////////////////////////////////////////////////////
+ 
+   return (
+     <>
+       <AnimatedCircle
+-        animatedProps={animatedDotProps}
+         r={size}
++        cx={x}
++        cy={y}
+         fill={color}
+         opacity={opacity}
+         {...dotProps}
+@@ -163,6 +149,8 @@ export function LineChartDot({
+         <AnimatedCircle
+           animatedProps={animatedOuterDotProps}
+           fill={color}
++          cx={x}
++          cy={y}
+           {...outerDotProps}
+         />
+       )}

@@ -9,7 +9,7 @@ import { config } from 'wallet/src/config'
 import { createNewInMemoryCache } from 'wallet/src/data/cache'
 import { useRestQuery } from 'wallet/src/data/rest'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
-import { fetchSVG, SvgData } from 'wallet/src/features/images/utils'
+import { SvgData, fetchSVG } from 'wallet/src/features/images/utils'
 
 const restLink = new RestLink({
   uri: `${config.simpleHashApiUrl}/api/v0`,

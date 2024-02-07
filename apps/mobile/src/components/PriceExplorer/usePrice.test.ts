@@ -111,8 +111,9 @@ describe(useLineChartPrice, () => {
     })
 
     it('returns currentSpot if it is provided', async () => {
-      const { result, rerender } = renderHookWithProviders(useLineChartPrice, {
-        initialProps: [1],
+      const spotPrice = makeMutable(1)
+      const { result } = renderHookWithProviders(useLineChartPrice, {
+        initialProps: [spotPrice],
       })
 
       expect(result.current).toEqual({
@@ -121,9 +122,7 @@ describe(useLineChartPrice, () => {
         shouldAnimate: expect.objectContaining({ value: true }),
       })
 
-      await act(() => {
-        rerender([2])
-      })
+      spotPrice.value = 2
 
       await waitFor(() => {
         expect(result.current).toEqual({
@@ -150,7 +149,7 @@ describe(useLineChartPrice, () => {
     it('returns active cursor price even if currentSpot and data are provided', async () => {
       mockCursorPrice('3')
       const { result } = renderHookWithProviders(useLineChartPrice, {
-        initialProps: [4],
+        initialProps: [makeMutable(4)],
       })
 
       expect(result.current).toEqual({
@@ -163,7 +162,7 @@ describe(useLineChartPrice, () => {
     it('updates returned active cursor price when it changes', async () => {
       mockCursorPrice('1')
       const { result } = renderHookWithProviders(useLineChartPrice, {
-        initialProps: [4],
+        initialProps: [makeMutable(4)],
       })
 
       expect(result.current).toEqual(

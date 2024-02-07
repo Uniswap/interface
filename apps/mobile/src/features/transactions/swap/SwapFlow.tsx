@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useOnSendEmptyActionPress } from 'src/features/transactions/hooks'
 import { TransactionFlow } from 'src/features/transactions/TransactionFlow'
 import {
   TokenSelectorModal,
@@ -65,9 +64,10 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Elemen
   }, [warnings, gasWarning])
 
   // keep currencies list option as state so that rendered list remains stable through the slide animation
-  const [listVariation, setListVariation] = useState<TokenSelectorVariation>(
-    TokenSelectorVariation.BalancesAndPopular
-  )
+  const [listVariation, setListVariation] = useState<
+    | TokenSelectorVariation.BalancesAndPopular
+    | TokenSelectorVariation.SuggestedAndFavoritesAndPopular
+  >(TokenSelectorVariation.BalancesAndPopular)
 
   useEffect(() => {
     if (selectingCurrencyField) {
@@ -84,8 +84,6 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Elemen
   const otherCurrencyChainId = selectingCurrencyField
     ? currencies[otherCurrencyField(selectingCurrencyField)]?.currency.chainId
     : undefined
-
-  const onSendEmptyActionPress = useOnSendEmptyActionPress(onClose)
 
   return (
     <>
@@ -110,7 +108,6 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Elemen
           variation={listVariation}
           onClose={onHideTokenSelector}
           onSelectCurrency={onSelectCurrency}
-          onSendEmptyActionPress={onSendEmptyActionPress}
         />
       )}
     </>

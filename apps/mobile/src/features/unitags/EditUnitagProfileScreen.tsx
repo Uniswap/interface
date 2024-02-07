@@ -2,10 +2,13 @@ import { isEqual } from 'lodash'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native'
+import ContextMenu from 'react-native-context-menu-view'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
+import { ChangeUnitagModal } from 'src/components/unitags/ChangeUnitagModal'
 import { ChoosePhotoOptionsModal } from 'src/components/unitags/ChoosePhotoOptionsModal'
+import { DeleteUnitagModal } from 'src/components/unitags/DeleteUnitagModal'
 import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePicture'
 import { HeaderRadial } from 'src/features/externalProfile/ProfileHeader'
 import { tryUploadAvatar } from 'src/features/unitags/avatars'
@@ -31,7 +34,8 @@ import {
   useUnitagUpdateMetadataMutation,
 } from 'wallet/src/features/unitags/api'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
-import { useUnitag } from 'wallet/src/features/unitags/hooks'
+import { useUnitagUpdater } from 'wallet/src/features/unitags/context'
+import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
 import { ProfileMetadata } from 'wallet/src/features/unitags/types'
 import { useAppDispatch } from 'wallet/src/state'
 import { shortenAddress } from 'wallet/src/utils/addresses'
@@ -57,19 +61,24 @@ export function EditUnitagProfileScreen({
   const dispatch = useAppDispatch()
 
   const { name: ensName } = useENS(ChainId.Mainnet, address)
-  const { unitag: retrievedUnitag, loading } = useUnitag(address)
+  const { refetchUnitagsCounter } = useUnitagUpdater()
+  const {
+    unitag: retrievedUnitag,
+    loading,
+    refetch: refetchUnitagByAddress,
+  } = useUnitagByAddress(address)
   const unitagMetadata = retrievedUnitag?.metadata
 
   const [showAvatarModal, setShowAvatarModal] = useState(false)
   const [avatarImageUri, setAvatarImageUri] = useState<string>()
   const [bioInput, setBioInput] = useState<string>()
-  const [urlInput, setUrlInput] = useState<string>()
   const [twitterInput, setTwitterInput] = useState<string>()
+  const [showDeleteUnitagModal, setShowDeleteUnitagModal] = useState(false)
+  const [showChangeUnitagModal, setShowChangeUnitagModal] = useState(false)
 
   const updatedMetadata: ProfileMetadata = {
     avatar: avatarImageUri,
     description: bioInput,
-    url: urlInput,
     twitter: twitterInput,
   }
 
@@ -87,12 +96,16 @@ export function EditUnitagProfileScreen({
     updateResponse?.metadata ?? unitagMetadata
   )
 
+  // Force refetch of canClaimUnitag if refetchUnitagsCounter changes
+  useEffect(() => {
+    refetchUnitagByAddress?.()
+  }, [refetchUnitagsCounter, refetchUnitagByAddress])
+
   useEffect(() => {
     // Only want to set values on first time unitag loads, when we have not yet made the PUT request
     if (!updateRequestMade && unitagMetadata) {
       setAvatarImageUri(unitagMetadata.avatar)
       setBioInput(unitagMetadata.description)
-      setUrlInput(unitagMetadata.url)
       setTwitterInput(unitagMetadata.twitter)
     }
   }, [updateRequestMade, unitagMetadata])
@@ -150,7 +163,7 @@ export function EditUnitagProfileScreen({
       ? { ...updatedMetadata, avatar: avatarUploadUrlResponse?.avatarUrl }
       : updatedMetadata
 
-    await updateUnitagMetadata({ address, metadata })
+    await updateUnitagMetadata({ address, metadata, clearAvatar: metadata.avatar === undefined })
     dispatch(
       pushNotification({
         type: AppNotificationType.Success,
@@ -172,15 +185,46 @@ export function EditUnitagProfileScreen({
     )
   }
 
+  const menuActions = useMemo(() => {
+    return [
+      { title: t('Edit username'), systemIcon: 'pencil' },
+      { title: t('Delete username'), systemIcon: 'trash', destructive: true },
+    ]
+  }, [t])
+
   return (
     <Screen>
       <KeyboardAvoidingView
         behavior={isIOS ? 'padding' : undefined}
         contentContainerStyle={styles.expand}
+        // Disable the keyboard avoiding view when the modals are open, otherwise background elements will shift up when the user is editing their username
+        enabled={!showDeleteUnitagModal && !showChangeUnitagModal}
         style={styles.base}>
         {/* Necessary to handle different header configuration when navigating from SettingsStack vs. UnitagsStack */}
         {entryPoint === Screens.SettingsWallet ? (
-          <BackHeader alignment="center" mx="$spacing16" py="$spacing16">
+          <BackHeader
+            alignment="center"
+            endAdornment={
+              <ContextMenu
+                dropdownMenuMode
+                actions={menuActions}
+                onPress={(e): void => {
+                  // Emitted index based on order of menu action array
+                  // Edit username
+                  if (e.nativeEvent.index === 0) {
+                    setShowChangeUnitagModal(true)
+                  }
+                  // Delete username
+                  if (e.nativeEvent.index === 1) {
+                    setShowDeleteUnitagModal(true)
+                  }
+                }}>
+                <Flex pr="$spacing8">
+                  <Icons.TripleDots color="$neutral2" size={iconSizes.icon24} />
+                </Flex>
+              </ContextMenu>
+            }
+            p="$spacing16">
             <Text variant="body1">{t('Edit profile')}</Text>
           </BackHeader>
         ) : (
@@ -211,7 +255,7 @@ export function EditUnitagProfileScreen({
                     style={styles.headerGradient}
                   />
                   {avatarImageUri && avatarColors?.primary ? (
-                    <HeaderRadial color={avatarColors.primary} />
+                    <HeaderRadial borderRadius={spacing.spacing20} color={avatarColors.primary} />
                   ) : null}
                 </Flex>
                 <Flex
@@ -275,28 +319,6 @@ export function EditUnitagProfileScreen({
                 </Flex>
                 <Flex row>
                   <Text color="$neutral2" flex={1} variant="subheading1">
-                    {t('Website')}
-                  </Text>
-                  {!loading ? (
-                    <TextInput
-                      blurOnSubmit
-                      autoCapitalize="none"
-                      flex={2}
-                      fontFamily="$body"
-                      fontSize="$small"
-                      numberOfLines={1}
-                      p="$none"
-                      placeholder={t('Type your website url here')}
-                      placeholderTextColor="$neutral3"
-                      returnKeyType="done"
-                      textAlign="left"
-                      value={urlInput}
-                      onChangeText={setUrlInput}
-                    />
-                  ) : null}
-                </Flex>
-                <Flex row>
-                  <Text color="$neutral2" flex={1} variant="subheading1">
                     {t('Twitter')}
                   </Text>
                   {!loading ? (
@@ -347,6 +369,20 @@ export function EditUnitagProfileScreen({
           />
         )}
       </KeyboardAvoidingView>
+      {showDeleteUnitagModal && (
+        <DeleteUnitagModal
+          address={address}
+          unitag={unitag}
+          onClose={(): void => setShowDeleteUnitagModal(false)}
+        />
+      )}
+      {showChangeUnitagModal && (
+        <ChangeUnitagModal
+          address={address}
+          unitag={unitag}
+          onClose={(): void => setShowChangeUnitagModal(false)}
+        />
+      )}
     </Screen>
   )
 }

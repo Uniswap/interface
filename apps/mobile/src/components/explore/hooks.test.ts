@@ -49,7 +49,7 @@ describe(useExploreTokenContextMenu, () => {
           onPress: expect.any(Function),
         }),
         expect.objectContaining({
-          title: 'Copy contract address',
+          title: 'Receive',
           onPress: expect.any(Function),
         }),
         expect.objectContaining({
@@ -84,7 +84,7 @@ describe(useExploreTokenContextMenu, () => {
           onPress: expect.any(Function),
         }),
         expect.objectContaining({
-          title: 'Copy contract address',
+          title: 'Receive',
           onPress: expect.any(Function),
         }),
       ])
@@ -138,7 +138,7 @@ describe(useExploreTokenContextMenu, () => {
           onPress: expect.any(Function),
         }),
         expect.objectContaining({
-          title: 'Copy contract address',
+          title: 'Receive',
           onPress: expect.any(Function),
         }),
         expect.objectContaining({

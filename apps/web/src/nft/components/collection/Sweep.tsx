@@ -5,7 +5,7 @@ import { formatEther as ethersFormatEther, parseEther } from '@ethersproject/uni
 import { Trans } from '@lingui/macro'
 import { SweepFetcherParams, useSweepNftAssets } from 'graphql/data/nft/Asset'
 import { useBag, useCollectionFilters } from 'nft/hooks'
-import { GenieAsset, isPooledMarket, Markets } from 'nft/types'
+import { GenieAsset, Markets, isPooledMarket } from 'nft/types'
 import { calcPoolPrice, isInSameSudoSwapPool } from 'nft/utils'
 import { default as Slider } from 'rc-slider'
 import { useEffect, useMemo, useReducer, useState } from 'react'

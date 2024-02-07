@@ -7,6 +7,7 @@ import Row from 'components/Row'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import useENSName from 'hooks/useENSName'
 import { useCallback } from 'react'
+import { SignatureType } from 'state/signatures/types'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utils'
@@ -29,11 +30,12 @@ const StyledTimestamp = styled(ThemedText.BodySmall)`
   font-feature-settings: 'tnum' on, 'lnum' on, 'ss02' on;
 `
 
-function StatusIndicator({ activity: { status, timestamp } }: { activity: Activity }) {
+function StatusIndicator({ activity: { status, timestamp, offchainOrderDetails } }: { activity: Activity }) {
   const timeSince = useTimeSince(timestamp)
 
   switch (status) {
     case TransactionStatus.Pending:
+      if (offchainOrderDetails?.type === SignatureType.SIGN_LIMIT) return null
       return <LoaderV2 />
     case TransactionStatus.Confirmed:
       return <StyledTimestamp>{timeSince}</StyledTimestamp>

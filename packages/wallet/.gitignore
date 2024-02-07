@@ -6,5 +6,5 @@ tsconfig.tsbuildinfo
 # Generated contract types
 src/abis/types
 
-# generated graphql files
+# generated graphql and api files
 src/**/__generated__

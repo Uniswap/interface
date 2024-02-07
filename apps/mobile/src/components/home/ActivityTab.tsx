@@ -3,28 +3,28 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
-import { NoTransactions } from 'src/components/icons/NoTransactions'
 import {
   AnimatedBottomSheetFlatList,
   AnimatedFlatList,
 } from 'src/components/layout/AnimatedFlatList'
-import { TabProps, TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
+import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
-import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
-import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, useDeviceInsets, useSporeColors } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
+import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
+import { SwapSummaryCallbacks } from 'wallet/src/features/transactions/SummaryCards/types'
+import { generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
 import {
   useCreateSwapFormState,
   useMergeLocalAndRemoteTransactions,
 } from 'wallet/src/features/transactions/hooks'
-import { SwapSummaryCallbacks } from 'wallet/src/features/transactions/SummaryCards/types'
-import { generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { useMostRecentSwapTx } from 'wallet/src/features/transactions/swap/hooks'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
@@ -62,6 +62,9 @@ export const ActivityTab = memo(
     const colors = useSporeColors()
     const insets = useDeviceInsets()
 
+    const { trigger: biometricsTrigger } = useBiometricPrompt()
+    const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
+
     const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(
       containerProps?.contentContainerStyle
     )
@@ -86,9 +89,10 @@ export const ActivityTab = memo(
         TransactionSummaryLayout,
         <Loader.Transaction />,
         SectionTitle,
-        swapCallbacks
+        swapCallbacks,
+        requiresBiometrics ? biometricsTrigger : undefined
       )
-    }, [swapCallbacks])
+    }, [swapCallbacks, requiresBiometrics, biometricsTrigger])
 
     const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } =
       useFormattedTransactionDataForActivity(
@@ -126,7 +130,7 @@ export const ActivityTab = memo(
                   'When you approve, trade, or transfer tokens or NFTs, your transactions will appear here.'
                 )
           }
-          icon={<NoTransactions />}
+          icon={<Icons.NoTransactions size="$icon.100" />}
           title={t('No activity yet')}
           onPress={onPressReceive}
         />

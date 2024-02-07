@@ -26,7 +26,7 @@ import ms from 'ms'
 import { useEffect, useState } from 'react'
 import store from 'state'
 import { addSignature } from 'state/signatures/reducer'
-import { SignatureType } from 'state/signatures/types'
+import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { TransactionType as LocalTransactionType } from 'state/transactions/types'
 import { isAddress } from 'utils'
 import { isSameAddress } from 'utils/addresses'
@@ -34,7 +34,7 @@ import { currencyId } from 'utils/currencyId'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { MOONPAY_SENDER_ADDRESSES, OrderStatusTable, OrderTextTable } from '../constants'
-import { Activity, OffchainOrderDetails } from './types'
+import { Activity } from './types'
 
 type TransactionChanges = {
   NftTransfer: NftTransferPartsFragment[]
@@ -279,7 +279,7 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
   activity: AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment },
   changes: TransactionChanges,
   formatNumberOrString: FormatNumberOrStringFunctionType
-): OffchainOrderDetails | undefined {
+): UniswapXOrderDetails | undefined {
   const chainId = supportedChainIdFromGQLChain(activity.chain)
   if (!activity || !activity.details || !chainId) return undefined
   if (changes.TokenTransfer.length < 2) return undefined
@@ -291,6 +291,9 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
   const { inputCurrencyId, outputCurrencyId, inputAmountRaw, outputAmountRaw } = swapAmounts
 
   return {
+    orderHash: activity.details.hash,
+    id: activity.details.id,
+    offerer: activity.details.from,
     txHash: activity.details.hash,
     chainId,
     type: SignatureType.SIGN_UNISWAPX_ORDER,
@@ -508,8 +511,12 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
     status,
     statusMessage,
     offchainOrderDetails: {
+      id: details.id,
+      // TODO(limits): check type from backend and use SignatureType.SIGN_LIMIT here if necessary
       type: SignatureType.SIGN_UNISWAPX_ORDER,
       txHash: details.hash,
+      orderHash: details.hash,
+      offerer: details.offerer,
       chainId: supportedChain,
       status: uniswapXOrderStatus,
       addedTime: timestamp,
@@ -517,12 +524,12 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
         isUniswapXOrder: true,
         type: LocalTransactionType.SWAP,
         tradeType: TradeType.EXACT_INPUT,
-        inputCurrencyId: inputToken.id,
-        outputCurrencyId: outputToken.id,
-        inputCurrencyAmountRaw: inputTokenQuantity,
-        expectedOutputCurrencyAmountRaw: outputTokenQuantity,
-        minimumOutputCurrencyAmountRaw: outputTokenQuantity,
-        settledOutputCurrencyAmountRaw: outputTokenQuantity,
+        inputCurrencyId: inputToken.address ?? '',
+        outputCurrencyId: outputToken.address ?? '',
+        inputCurrencyAmountRaw: parseUnits(inputTokenQuantity, inputToken.decimals).toString(),
+        expectedOutputCurrencyAmountRaw: parseUnits(outputTokenQuantity, outputToken.decimals).toString(),
+        minimumOutputCurrencyAmountRaw: parseUnits(outputTokenQuantity, outputToken.decimals).toString(),
+        settledOutputCurrencyAmountRaw: parseUnits(outputTokenQuantity, outputToken.decimals).toString(),
       },
     },
     timestamp,

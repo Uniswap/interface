@@ -8,10 +8,11 @@ import { useTokenPromoQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/useScreenSize'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { useCallback } from 'react'
 import { Box } from '../Generics'
 import { Computer } from '../Icons'
 import { PillButton } from './PillButton'
@@ -88,6 +89,9 @@ const TokenName = styled.h3`
     font-size: 16px;
     line-height: 20px;
   }
+  @media (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
+    display: none;
+  }
 `
 const TokenTicker = styled.h3`
   padding: 0;
@@ -105,6 +109,9 @@ const TokenTicker = styled.h3`
   @media (max-width: 468px) {
     font-size: 16px;
     line-height: 20px;
+  }
+  @media (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
+    color: ${(props) => props.color || props.theme.neutral1};
   }
 `
 const TokenPrice = styled.h3`
@@ -148,10 +155,13 @@ const DeltaText = styled.h3`
     width: 50px;
   }
 `
-const UnstyledLink = styled(Link)`
-  text-decoration: none;
-  color: inherit;
-  width: 100%;
+const DeltaContainer = styled(Box)`
+  @media (min-width: 1030px) and (max-width: 1150px) {
+    display: none;
+  }
+  @media (min-width: 767px) and (max-width: 915px) {
+    display: none;
+  }
 `
 
 type WebappCardProps = {
@@ -182,7 +192,7 @@ const tokens = [
 
 function Token({ chainId, address }: { chainId: ChainId; address: string }) {
   const screenIsSmall = useScreenSize()['sm']
-
+  const navigate = useNavigate()
   const { formatFiatPrice, formatDelta } = useFormatter()
   const currency = useCurrency(address, chainId)
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
@@ -194,37 +204,41 @@ function Token({ chainId, address }: { chainId: ChainId; address: string }) {
   })
   const price = tokenPromoQuery.data?.token?.market?.price?.value ?? 0
   const pricePercentChange = tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0
-
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation()
+      navigate(
+        getTokenDetailsURL({
+          address: address === 'ETH' ? 'NATIVE' : address,
+          chain: chainIdToBackendName(chainId),
+          isInfoExplorePageEnabled,
+        })
+      )
+    },
+    [address, chainId, isInfoExplorePageEnabled, navigate]
+  )
   return (
-    <UnstyledLink
-      to={getTokenDetailsURL({
-        address: address === 'ETH' ? 'NATIVE' : address,
-        chain: chainIdToBackendName(chainId),
-        isInfoExplorePageEnabled,
-      })}
-    >
-      <TokenRow>
-        <PortfolioLogo currencies={[currency]} chainId={chainId} size={screenIsSmall ? '32px' : '24px'} />
-        <Box justify="space-between" gap="16px">
-          <Box width="auto" gap="8px" align="center" overflow="hidden">
-            <TokenName>{currency?.name}</TokenName>
-            <TokenTicker>{currency?.symbol}</TokenTicker>
-          </Box>
-          <Box width="auto" gap="8px" align="center">
-            <TokenPrice>
-              {formatFiatPrice({
-                price,
-                type: NumberType.FiatTokenPrice,
-              })}
-            </TokenPrice>
-            <Box gap="4px" align="center" justify="flex-end">
-              <DeltaArrow delta={pricePercentChange} />
-              <DeltaText color={pricePercentChange < 0 ? 'red' : 'green'}>{formatDelta(pricePercentChange)}</DeltaText>
-            </Box>
-          </Box>
+    <TokenRow onClick={handleClick}>
+      <PortfolioLogo currencies={[currency]} chainId={chainId} size={screenIsSmall ? '32px' : '24px'} />
+      <Box justify="space-between" gap="16px">
+        <Box width="auto" gap="8px" align="center" overflow="hidden">
+          <TokenName>{currency?.name}</TokenName>
+          <TokenTicker>{currency?.symbol}</TokenTicker>
         </Box>
-      </TokenRow>
-    </UnstyledLink>
+        <Box width="auto" gap="8px" align="center">
+          <TokenPrice>
+            {formatFiatPrice({
+              price,
+              type: NumberType.FiatTokenPrice,
+            })}
+          </TokenPrice>
+          <DeltaContainer gap="4px" align="center" justify="flex-end">
+            <DeltaArrow delta={pricePercentChange} />
+            <DeltaText color={pricePercentChange < 0 ? 'red' : 'green'}>{formatDelta(pricePercentChange)}</DeltaText>
+          </DeltaContainer>
+        </Box>
+      </Box>
+    </TokenRow>
   )
 }
 

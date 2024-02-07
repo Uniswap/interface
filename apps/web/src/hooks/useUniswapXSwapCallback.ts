@@ -149,10 +149,12 @@ export function useUniswapXSwapCallback({
         })
 
         const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
+        const encodedOrder = updatedOrder.serialize()
+
         const res = await fetch(`${baseURL}/order`, {
           method: 'POST',
           body: JSON.stringify({
-            encodedOrder: updatedOrder.serialize(),
+            encodedOrder,
             signature,
             chainId: updatedOrder.chainId,
             quoteId: trade.quoteId,
@@ -182,7 +184,7 @@ export function useUniswapXSwapCallback({
 
         return {
           type: TradeFillType.UniswapX as const,
-          response: { orderHash: body.hash, deadline: updatedOrder.info.deadline },
+          response: { orderHash: body.hash, deadline: updatedOrder.info.deadline, encodedOrder },
         }
       }),
     [

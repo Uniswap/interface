@@ -13,8 +13,10 @@ export const ONBOARDING_QR_ETCHING_VIDEO_DARK = require('./videos/dark-etching.m
 export const AVATARS_LIGHT = require('./misc/avatars-light.png')
 export const AVATARS_DARK = require('./misc/avatars-dark.png')
 export const APP_SCREENSHOT_ICON = require('./misc/app-screenshot-icon.png')
-export const UNITAGS_BANNER_HORIZONTAL = require('./misc/unitags-banner-h.png')
-export const UNITAGS_BANNER_VERTICAL = require('./misc/unitags-banner-v.png')
+export const UNITAGS_BANNER_VERTICAL_LIGHT = require('./graphics/unitags-banner-v-light.png')
+export const UNITAGS_BANNER_VERTICAL_DARK = require('./graphics/unitags-banner-v-dark.png')
+export const UNITAGS_INTRO_BANNER_LIGHT = require('./graphics/unitags-intro-banner-light.png')
+export const UNITAGS_INTRO_BANNER_DARK = require('./graphics/unitags-intro-banner-dark.png')
 
 export const DAI_LOGO = require('./logos/png/dai-logo.png')
 export const USDC_LOGO = require('./logos/png/usdc-logo.png')

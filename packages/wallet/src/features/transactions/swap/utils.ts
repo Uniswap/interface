@@ -12,8 +12,9 @@ import { NumberType } from 'utilities/src/format/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
+import { isClassicQuote } from 'wallet/src/features/transactions/swap/tradingApi/utils'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
-import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
+import { QuoteData, Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import {
   CurrencyField,
   TransactionState,
@@ -29,9 +30,9 @@ import { ElementName, ElementNameType } from 'wallet/src/telemetry/constants'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import {
+  CurrencyId,
   areCurrencyIdsEqual,
   buildWrappedNativeCurrencyId,
-  CurrencyId,
   currencyId,
   currencyIdToAddress,
   currencyIdToChain,
@@ -103,12 +104,7 @@ export function tradeToTransactionInfo(
   const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
   const { quoteData, slippageTolerance } = trade
 
-  // TODO: add additional fields when trading api adds them
-  // https://linear.app/uniswap/issue/MOB-2453/add-additional-properties-to-trading-api
-  const routingApiQuote =
-    quoteData?.quoteType === QuoteType.RoutingApi ? quoteData.quote : undefined
-
-  const { quoteId, gasUseEstimate, routeString } = routingApiQuote || {}
+  const { quoteId, gasUseEstimate, routeString } = parseQuoteTypeSpecificParms(quoteData)
 
   const baseTransactionInfo = {
     inputCurrencyId: currencyId(trade.inputAmount.currency),
@@ -118,6 +114,7 @@ export function tradeToTransactionInfo(
     gasUseEstimate,
     routeString,
     protocol: getProtocolVersionFromTrade(trade),
+    quoteType: quoteData?.quoteType,
   }
 
   return trade.tradeType === TradeType.EXACT_INPUT
@@ -141,6 +138,29 @@ export function tradeToTransactionInfo(
           .maximumAmountIn(slippageTolerancePercent)
           .quotient.toString(),
       }
+}
+
+function parseQuoteTypeSpecificParms(quoteData: QuoteData | undefined): {
+  gasUseEstimate: string | undefined
+  routeString: string | undefined
+  quoteId: string | undefined
+} {
+  const isLegacyQuote = quoteData?.quoteType === QuoteType.RoutingApi
+  const maybeTradingApiQuote = !isLegacyQuote
+    ? isClassicQuote(quoteData?.quote?.quote)
+      ? quoteData?.quote?.quote
+      : undefined
+    : undefined
+
+  const quoteId = isLegacyQuote ? quoteData?.quote?.quoteId : maybeTradingApiQuote?.quoteId
+  const gasUseEstimate = isLegacyQuote
+    ? quoteData.quote?.gasUseEstimate
+    : maybeTradingApiQuote?.gasFeeUSD
+  const routeString = isLegacyQuote
+    ? quoteData?.quote?.routeString
+    : maybeTradingApiQuote?.routeString
+
+  return { quoteId, gasUseEstimate, routeString }
 }
 
 // any price movement below ACCEPT_NEW_TRADE_THRESHOLD is auto-accepted for the user

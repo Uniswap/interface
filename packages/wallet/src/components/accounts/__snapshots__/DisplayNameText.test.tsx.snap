@@ -6,7 +6,7 @@ exports[`AccountDetails renders address display name without error 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
-      "gap": 4,
+      "gap": 2,
       "justifyContent": "center",
     }
   }
@@ -37,7 +37,7 @@ exports[`AccountDetails renders ens display name without error 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
-      "gap": 4,
+      "gap": 2,
       "justifyContent": "center",
     }
   }
@@ -68,7 +68,7 @@ exports[`AccountDetails renders local display name without error 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
-      "gap": 4,
+      "gap": 2,
       "justifyContent": "center",
     }
   }
@@ -99,7 +99,7 @@ exports[`AccountDetails renders unitag without error 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
-      "gap": 4,
+      "gap": 2,
       "justifyContent": "center",
     }
   }
@@ -110,7 +110,7 @@ exports[`AccountDetails renders unitag without error 1`] = `
     numberOfLines={1}
     style={
       {
-        "color": "#FC72FF",
+        "color": "#222222",
         "flexShrink": 1,
         "fontFamily": "Basel-Book",
         "fontSize": 17,
@@ -124,9 +124,7 @@ exports[`AccountDetails renders unitag without error 1`] = `
   <View
     style={
       {
-        "alignItems": "stretch",
         "flexDirection": "column",
-        "marginTop": -4,
       }
     }
   >

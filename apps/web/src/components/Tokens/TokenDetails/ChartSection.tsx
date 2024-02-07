@@ -64,14 +64,12 @@ export default function ChartSection({
   timePeriod,
   onChangeTimePeriod,
   tokenPriceQuery,
-  extractedColor,
 }: {
   chartType: ChartType
   priceChartType: PriceChartType
   timePeriod: TimePeriod
   onChangeTimePeriod: (t: TimePeriod) => void
   tokenPriceQuery?: TokenPriceQuery
-  extractedColor: string
 }) {
   const isInfoTDPEnabled = useInfoTDPEnabled()
 
@@ -87,7 +85,6 @@ export default function ChartSection({
           priceChartType={priceChartType}
           timePeriod={timePeriod}
           tokenPriceQuery={tokenPriceQuery}
-          extractedColor={extractedColor}
         />
         {isInfoTDPEnabled ? (
           <TimePeriodSelectorContainer>
@@ -106,13 +103,11 @@ function Chart({
   priceChartType,
   timePeriod,
   tokenPriceQuery,
-  extractedColor,
 }: {
   chartType: ChartType
   priceChartType: PriceChartType
   timePeriod: TimePeriod
   tokenPriceQuery: TokenPriceQuery
-  extractedColor: string
 }) {
   const prices = usePriceHistory(tokenPriceQuery)
 
@@ -131,9 +126,7 @@ function Chart({
     case ChartType.PRICE:
       return <PriceChart prices={prices} height={TDP_CHART_HEIGHT_PX} type={priceChartType} />
     case ChartType.VOLUME:
-      return (
-        <VolumeChart volumes={prices} height={TDP_CHART_HEIGHT_PX} color={extractedColor} timePeriod={timePeriod} />
-      )
+      return <VolumeChart volumes={prices} height={TDP_CHART_HEIGHT_PX} timePeriod={timePeriod} />
     case ChartType.TVL:
       return <StackedLineChart height={TDP_CHART_HEIGHT_PX} />
     default:

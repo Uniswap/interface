@@ -5,19 +5,19 @@ import Row from 'components/Row'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 
-const InputCurencySymbolContainer = styled.span`
+const CurrencySymbolContainer = styled.span`
   display: inline-block;
   margin: 0 8px;
 `
 
 export function LimitPriceInputLabel({
-  inputCurrency,
+  currency,
   showCurrencyMessage,
 }: {
-  inputCurrency?: Currency
+  currency?: Currency
   showCurrencyMessage: boolean
 }) {
-  if (!inputCurrency || !showCurrencyMessage) {
+  if (!currency || !showCurrencyMessage) {
     return (
       <ThemedText.LabelSmall style={{ userSelect: 'none' }}>
         <Trans>Limit price</Trans>
@@ -28,12 +28,12 @@ export function LimitPriceInputLabel({
     <ThemedText.LabelSmall style={{ userSelect: 'none' }}>
       <Row align="center">
         <Trans>When 1</Trans>{' '}
-        <InputCurencySymbolContainer>
+        <CurrencySymbolContainer>
           <Row gap="xs" align="center" height="100%">
-            <CurrencyLogo currency={inputCurrency} size="16px" />
-            <ThemedText.BodyPrimary display="inline">{inputCurrency.symbol}</ThemedText.BodyPrimary>
+            <CurrencyLogo currency={currency} size="16px" />
+            <ThemedText.BodyPrimary display="inline">{currency.symbol}</ThemedText.BodyPrimary>
           </Row>
-        </InputCurencySymbolContainer>{' '}
+        </CurrencySymbolContainer>{' '}
         <Trans>is worth</Trans>
       </Row>
     </ThemedText.LabelSmall>

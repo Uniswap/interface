@@ -7,7 +7,7 @@ import {
   FinalizedTransactionStatus,
   TransactionStatus,
 } from 'wallet/src/features/transactions/types'
-import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 export enum QuoteType {
   RoutingApi = 'RoutingApi',

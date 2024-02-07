@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { selectionAsync } from 'expo-haptics'
 import React from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -9,12 +9,12 @@ import { LandingBackground } from 'src/components/gradients/LandingBackground'
 import { Screen } from 'src/components/layout/Screen'
 import Trace from 'src/components/Trace/Trace'
 import { openModal } from 'src/features/modals/modalSlice'
+import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
 import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { isDevBuild } from 'src/utils/version'
 import { Button, Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { useTimeout } from 'utilities/src/time/timing'
-import { uniswapUrls } from 'wallet/src/constants/urls'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
@@ -23,7 +23,6 @@ import {
   pendingAccountActions,
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
-import { openUri } from 'wallet/src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
 
@@ -41,6 +40,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
         screen: UnitagScreens.ClaimUnitag,
         params: {
           entryPoint: OnboardingScreens.Landing,
+          importType: ImportType.CreateNew,
         },
       })
     } else {
@@ -106,25 +106,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
               </TouchableArea>
             </Trace>
             <Flex $short={{ py: '$none', mx: '$spacing12' }} mx="$spacing24" py="$spacing12">
-              <Text color="$neutral2" mx="$spacing4" textAlign="center" variant="buttonLabel4">
-                <Trans t={t}>
-                  By continuing, I agree to the{' '}
-                  <Text
-                    color="$accent1"
-                    variant="buttonLabel4"
-                    onPress={(): Promise<void> => openUri(uniswapUrls.termsOfServiceUrl)}>
-                    Terms of Service
-                  </Text>{' '}
-                  and consent to the{' '}
-                  <Text
-                    color="$accent1"
-                    variant="buttonLabel4"
-                    onPress={(): Promise<void> => openUri(uniswapUrls.privacyPolicyUrl)}>
-                    Privacy Policy
-                  </Text>
-                  .
-                </Trans>
-              </Text>
+              <TermsOfService />
             </Flex>
           </Flex>
         </Flex>

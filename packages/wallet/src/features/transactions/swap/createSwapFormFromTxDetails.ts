@@ -8,7 +8,7 @@ import {
 } from 'wallet/src/features/transactions/transactionState/types'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 import { currencyAddress, currencyIdToAddress } from 'wallet/src/utils/currencyId'
-import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 interface Props {
   transactionDetails: TransactionDetails

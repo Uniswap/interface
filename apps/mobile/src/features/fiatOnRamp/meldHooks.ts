@@ -11,11 +11,8 @@ import {
   useFiatCurrencyInfo,
 } from 'wallet/src/features/fiatCurrency/hooks'
 import { useFiatOnRampAggregatorCryptoQuoteQuery } from 'wallet/src/features/fiatOnRamp/api'
-import {
-  extractCurrencyAmountFromError,
-  isMeldApiError,
-  MeldQuote,
-} from 'wallet/src/features/fiatOnRamp/meld'
+import { extractCurrencyAmountFromError, isMeldApiError } from 'wallet/src/features/fiatOnRamp/meld'
+import { FORQuote } from 'wallet/src/features/fiatOnRamp/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 // TODO: https://linear.app/uniswap/issue/MOB-2532/implement-fetching-of-available-fiat-currencies-from-meld
@@ -42,7 +39,7 @@ export function useMeldFiatCurrencySupportInfo(): {
 /**
  * Hook to load quotes
  */
-export function useMeldQuotes({
+export function useFiatOnRampQuotes({
   baseCurrencyAmount,
   baseCurrencyCode,
   quoteCurrencyCode,
@@ -55,18 +52,18 @@ export function useMeldQuotes({
 }): {
   loading: boolean
   error?: FetchBaseQueryError | SerializedError
-  quotes: MeldQuote[] | undefined
+  quotes: FORQuote[] | undefined
 } {
   const debouncedBaseCurrencyAmount = useDebounce(baseCurrencyAmount, Delay.Short)
 
   const {
-    currentData: quotes,
+    currentData: quotesResponse,
     isFetching: quotesFetching,
     error: quotesError,
   } = useFiatOnRampAggregatorCryptoQuoteQuery(
     baseCurrencyAmount && countryCode && quoteCurrencyCode && baseCurrencyCode
       ? {
-          amount: baseCurrencyAmount,
+          sourceAmount: baseCurrencyAmount,
           sourceCurrencyCode: baseCurrencyCode,
           destinationCurrencyCode: quoteCurrencyCode,
           countryCode,
@@ -85,7 +82,7 @@ export function useMeldQuotes({
   return {
     loading,
     error,
-    quotes: quotes ?? undefined,
+    quotes: quotesResponse?.quotes ?? undefined,
   }
 }
 

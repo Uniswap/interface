@@ -9,7 +9,7 @@ import { SectionName } from 'wallet/src/telemetry/constants'
 import { useAllCommonBaseCurrencies } from 'wallet/src/components/TokenSelector/hooks'
 import { CurrencyInfo, GqlResult } from 'wallet/src/features/dataApi/types'
 import { useFiatOnRampAggregatorSupportedTokensQuery } from 'wallet/src/features/fiatOnRamp/api'
-import { MeldCryptoCurrency } from 'wallet/src/features/fiatOnRamp/meld'
+import { FORSupportedToken } from 'wallet/src/features/fiatOnRamp/types'
 import { ElementName } from 'wallet/src/telemetry/constants'
 
 interface Props {
@@ -19,20 +19,20 @@ interface Props {
   countryCode: string
 }
 
-const findTokenOptionForMeldCurrency = (
+const findTokenOptionForFiatOnRampToken = (
   commonBaseCurrencies: CurrencyInfo[] | undefined,
-  meldCurrency: MeldCryptoCurrency
+  fiatOnRampToken: FORSupportedToken
 ): Maybe<CurrencyInfo> => {
   return (commonBaseCurrencies || []).find(
     (item) =>
       item &&
-      meldCurrency.cryptoCurrencyCode.toLowerCase() === item.currency.symbol?.toLowerCase() &&
-      meldCurrency.chainId === item.currency.chainId.toString()
+      fiatOnRampToken.cryptoCurrencyCode.toLowerCase() === item.currency.symbol?.toLowerCase() &&
+      fiatOnRampToken.chainId === item.currency.chainId.toString()
   )
 }
 
 function useFiatOnRampTokenList(
-  supportedTokens: MeldCryptoCurrency[] | undefined
+  supportedTokens: FORSupportedToken[] | undefined
 ): GqlResult<FiatOnRampCurrency[]> {
   const {
     data: commonBaseCurrencies,
@@ -44,8 +44,8 @@ function useFiatOnRampTokenList(
   const data = useMemo(
     () =>
       (supportedTokens || [])
-        .map((meldCurrency) => ({
-          currencyInfo: findTokenOptionForMeldCurrency(commonBaseCurrencies, meldCurrency),
+        .map((fiatOnRampToken) => ({
+          currencyInfo: findTokenOptionForFiatOnRampToken(commonBaseCurrencies, fiatOnRampToken),
         }))
         .filter((item) => !!item.currencyInfo),
     [commonBaseCurrencies, supportedTokens]
@@ -66,7 +66,7 @@ function _FiatOnRampAggregatorTokenSelector({
   countryCode,
 }: Props): JSX.Element {
   const {
-    data: supportedTokens,
+    data: supportedTokensResponse,
     isLoading: supportedTokensLoading,
     error: supportedTokensQueryError,
     refetch: supportedTokensQueryRefetch,
@@ -77,7 +77,7 @@ function _FiatOnRampAggregatorTokenSelector({
     loading: tokenListLoading,
     error: tokenListError,
     refetch: tokenListRefetch,
-  } = useFiatOnRampTokenList(supportedTokens)
+  } = useFiatOnRampTokenList(supportedTokensResponse?.supportedTokens)
 
   const loading = supportedTokensLoading || tokenListLoading
   const error = Boolean(supportedTokensQueryError || tokenListError)

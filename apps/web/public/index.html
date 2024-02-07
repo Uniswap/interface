@@ -18,7 +18,7 @@
     <% const cspConfig = require('./csp.json'); %>
     <meta
       http-equiv="Content-Security-Policy" 
-      content="default-src <%= cspConfig.defaultSrc %>; script-src <%= cspConfig.scriptSrc %>; style-src <%= cspConfig.styleSrc %>; img-src <%= cspConfig.imgSrc %>; frame-src <%= cspConfig.frameSrc %>; connect-src <%= cspConfig.connectSrc %>; worker-src <%= cspConfig.workerSrc %>;"
+      content="default-src <%= cspConfig.defaultSrc.join(' ') %>; script-src <%= cspConfig.scriptSrc.join(' ') %>; style-src <%= cspConfig.styleSrc.join(' ') %>; img-src <%= cspConfig.imgSrc.join(' ') %>; frame-src <%= cspConfig.frameSrc.join(' ') %>; connect-src <%= cspConfig.connectSrc.join(' ') %>; worker-src <%= cspConfig.workerSrc.join(' ') %>;"
     >
     
     <!-- 
@@ -36,10 +36,10 @@
     <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
-    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
-    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Book.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
-    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
    
     <style>
       * {
@@ -56,8 +56,8 @@
         font-style: normal;
         font-display: block;
         src: 
-          url('%PUBLIC_URL%/fonts/Basel-Medium.woff2') format('woff2'),
-          url('%PUBLIC_URL%/fonts/Basel-Medium.woff') format('woff');
+          url('%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
+          url('%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff') format('woff');
       }
 
       @font-face {
@@ -66,8 +66,8 @@
         font-style: normal;
         font-display: block;
         src: 
-          url('%PUBLIC_URL%/fonts/Basel-Book.woff') format('woff2'),
-          url('%PUBLIC_URL%/fonts/Basel-Book.woff') format('woff');
+          url('%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
+          url('%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff') format('woff');
       }
 
       @supports (font-variation-settings: normal) {

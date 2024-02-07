@@ -15,9 +15,12 @@ export function createDefaultStore() {
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         thunk: true,
-        immutableCheck: {
-          ignoredPaths: [routingApi.reducerPath, 'logs', 'lists'],
-        },
+        immutableCheck:
+          process.env.NODE_ENV === 'test'
+            ? false
+            : {
+                ignoredPaths: [routingApi.reducerPath, 'logs', 'lists'],
+              },
         serializableCheck:
           process.env.NODE_ENV === 'test'
             ? false

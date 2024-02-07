@@ -65,7 +65,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 1 1`] = `
     <svg
       aria-labelledby="titleID"
       height="20"
-      style="margin-right: 12px;"
+      style="margin-right: 12px; width: 20px; height: 20px;"
       width="20"
     >
       <title
@@ -185,7 +185,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 5 1`] = `
     <svg
       aria-labelledby="titleID"
       height="20"
-      style="margin-right: 12px;"
+      style="margin-right: 12px; width: 20px; height: 20px;"
       width="20"
     >
       <title
@@ -289,7 +289,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 10 1`] = `
     <svg
       aria-labelledby="titleID"
       height="20"
-      style="margin-right: 12px;"
+      style="margin-right: 12px; width: 20px; height: 20px;"
       width="20"
     >
       <title
@@ -393,7 +393,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 56 1`] = `
     <svg
       aria-labelledby="titleID"
       height="20"
-      style="margin-right: 12px;"
+      style="margin-right: 12px; width: 20px; height: 20px;"
       width="20"
     >
       <title
@@ -497,7 +497,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 137 1`] = `
     <svg
       aria-labelledby="titleID"
       height="20"
-      style="margin-right: 12px;"
+      style="margin-right: 12px; width: 20px; height: 20px;"
       width="20"
     >
       <title
@@ -601,7 +601,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 420 1`] = `
     <svg
       aria-labelledby="titleID"
       height="20"
-      style="margin-right: 12px;"
+      style="margin-right: 12px; width: 20px; height: 20px;"
       width="20"
     >
       <title
@@ -705,7 +705,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 8453 1`] = `
     <svg
       aria-labelledby="titleID"
       height="20"
-      style="margin-right: 12px;"
+      style="margin-right: 12px; width: 20px; height: 20px;"
       width="20"
     >
       <title
@@ -809,7 +809,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 42161 1`] = `
     <svg
       aria-labelledby="titleID"
       height="20"
-      style="margin-right: 12px;"
+      style="margin-right: 12px; width: 20px; height: 20px;"
       width="20"
     >
       <title
@@ -913,7 +913,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 42220 1`] = `
     <svg
       aria-labelledby="titleID"
       height="20"
-      style="margin-right: 12px;"
+      style="margin-right: 12px; width: 20px; height: 20px;"
       width="20"
     >
       <title
@@ -1017,7 +1017,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 43114 1`] = `
     <svg
       aria-labelledby="titleID"
       height="20"
-      style="margin-right: 12px;"
+      style="margin-right: 12px; width: 20px; height: 20px;"
       width="20"
     >
       <title
@@ -1121,7 +1121,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 44787 1`] = `
     <svg
       aria-labelledby="titleID"
       height="20"
-      style="margin-right: 12px;"
+      style="margin-right: 12px; width: 20px; height: 20px;"
       width="20"
     >
       <title
@@ -1225,7 +1225,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 80001 1`] = `
     <svg
       aria-labelledby="titleID"
       height="20"
-      style="margin-right: 12px;"
+      style="margin-right: 12px; width: 20px; height: 20px;"
       width="20"
     >
       <title
@@ -1391,7 +1391,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 421613 1`] = `
     <svg
       aria-labelledby="titleID"
       height="20"
-      style="margin-right: 12px;"
+      style="margin-right: 12px; width: 20px; height: 20px;"
       width="20"
     >
       <title
@@ -1495,7 +1495,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 11155111 1`] = `
     <svg
       aria-labelledby="titleID"
       height="20"
-      style="margin-right: 12px;"
+      style="margin-right: 12px; width: 20px; height: 20px;"
       width="20"
     >
       <title

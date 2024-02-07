@@ -1,7 +1,6 @@
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { DebounceSwapQuoteVariant, useDebounceSwapQuoteFlag } from 'featureFlags/flags/debounceSwapQuote'
 import { useMemo } from 'react'
 import { ClassicTrade, InterfaceTrade, QuoteMethod, RouterPreference, TradeState } from 'state/routing/types'
 import { usePreviewTrade } from 'state/routing/usePreviewTrade'
@@ -14,9 +13,6 @@ import useDebounce from './useDebounce'
 // Prevents excessive quote requests between keystrokes.
 const DEBOUNCE_TIME = 350
 const DEBOUNCE_TIME_QUICKROUTE = 50
-
-// Temporary until we remove the feature flag.
-const DEBOUNCE_TIME_INCREASED = 650
 
 export function useDebouncedTrade(
   tradeType: TradeType,
@@ -75,9 +71,7 @@ export function useDebouncedTrade(
     () => [amountSpecified, otherCurrency],
     [amountSpecified, otherCurrency]
   )
-  const debouncedSwapQuoteFlagEnabled = useDebounceSwapQuoteFlag() === DebounceSwapQuoteVariant.Enabled
-  const isDebouncing =
-    useDebounce(inputs, debouncedSwapQuoteFlagEnabled ? DEBOUNCE_TIME_INCREASED : DEBOUNCE_TIME) !== inputs
+  const isDebouncing = useDebounce(inputs, DEBOUNCE_TIME) !== inputs
 
   const isPreviewTradeDebouncing = useDebounce(inputs, DEBOUNCE_TIME_QUICKROUTE) !== inputs
 

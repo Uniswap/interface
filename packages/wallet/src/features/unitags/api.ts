@@ -1,17 +1,19 @@
 import { ApolloClient, from } from '@apollo/client'
 import { RetryLink } from '@apollo/client/link/retry'
 import { RestLink } from 'apollo-link-rest'
+import axios from 'axios'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { createNewInMemoryCache } from 'wallet/src/data/cache'
 import { useRestMutation, useRestQuery } from 'wallet/src/data/rest'
 import {
   UnitagAddressResponse,
+  UnitagChangeUsernameRequestBody,
   UnitagClaimEligibilityParams,
   UnitagClaimEligibilityResponse,
-  UnitagClaimResponse,
   UnitagClaimUsernameRequestBody,
   UnitagGetAvatarUploadUrlResponse,
+  UnitagResponse,
   UnitagUpdateMetadataRequestBody,
   UnitagUpdateMetadataResponse,
   UnitagUsernameResponse,
@@ -55,7 +57,7 @@ export function useUnitagQuery(
   return useRestQuery<UnitagUsernameResponse, Record<string, never>>(
     addQueryParamsToEndpoint('/username', { username }),
     {},
-    ['available', 'requiresEnsMatch', 'metadata', 'address'], // return all fields
+    ['available', 'requiresEnsMatch', 'username', 'metadata', 'address'], // return all fields
     {
       skip: !username, // skip if username is not provided
       fetchPolicy: 'no-cache',
@@ -82,9 +84,9 @@ export function useUnitagByAddressQuery(
 }
 
 export function useClaimUnitagMutation(): ReturnType<
-  typeof useRestMutation<UnitagClaimResponse, UnitagClaimUsernameRequestBody>
+  typeof useRestMutation<UnitagResponse, UnitagClaimUsernameRequestBody>
 > {
-  return useRestMutation<UnitagClaimResponse, UnitagClaimUsernameRequestBody>(
+  return useRestMutation<UnitagResponse, UnitagClaimUsernameRequestBody>(
     '/username',
     ['success', 'errorCode'], // return all fields
     {},
@@ -137,6 +139,36 @@ export function useUnitagGetAvatarUploadUrlQuery({
     ['success', 'avatarUrl', 'preSignedUrl', 's3UploadFields'], // return all fields
     { skip: !username || skip, ttlMs: ONE_SECOND_MS * 110 },
     'GET',
+    apolloClient
+  )
+}
+
+// TODO (MOB-1791): add signature authentication in headers
+export async function getUnitagAvatarUploadUrl(
+  username: string
+): ReturnType<typeof axios.get<UnitagGetAvatarUploadUrlResponse>> {
+  const avatarUploadUrl = `${uniswapUrls.unitagsApiUrl}/username/avatar-upload-url`
+  return await axios.get<UnitagGetAvatarUploadUrlResponse>(avatarUploadUrl, {
+    params: { username },
+  })
+}
+
+export async function deleteUnitag(
+  username: string,
+  address: Address
+): ReturnType<typeof axios.delete<UnitagResponse>> {
+  const avatarUploadUrl = `${uniswapUrls.unitagsApiUrl}/username`
+  return await axios.delete<UnitagResponse>(avatarUploadUrl, { data: { username, address } })
+}
+
+export function useUnitagChangeMutation(): ReturnType<
+  typeof useRestMutation<UnitagResponse, UnitagChangeUsernameRequestBody>
+> {
+  return useRestMutation<UnitagResponse, UnitagChangeUsernameRequestBody>(
+    '/username/change',
+    ['success', 'errorCode'], // return all fields
+    {},
+    'POST',
     apolloClient
   )
 }

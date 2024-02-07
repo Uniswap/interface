@@ -16,9 +16,8 @@ import {
   getTokensOrderByValues,
 } from 'src/features/explore/utils'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
-import { Flex, Text, useDeviceInsets } from 'ui/src'
+import { Flex, Loader, Text, useDeviceInsets } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { TokenLoader } from 'wallet/src/components/loading/TokenLoader'
 import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -167,7 +166,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
         ref={listRef}
         ListEmptyComponent={
           <Flex mx="$spacing24" my="$spacing12">
-            <TokenLoader repeat={5} />
+            <Loader.Token repeat={5} />
           </Flex>
         }
         ListHeaderComponent={

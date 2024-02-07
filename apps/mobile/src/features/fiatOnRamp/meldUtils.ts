@@ -1,8 +1,8 @@
-import { MeldQuote, MeldServiceProvider } from 'wallet/src/features/fiatOnRamp/meld'
+import { FORQuote, FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
 
 export function getServiceProviderForQuote(
-  quote: MeldQuote | undefined,
-  serviceProviders: MeldServiceProvider[] | undefined
-): MeldServiceProvider | undefined {
+  quote: FORQuote | undefined,
+  serviceProviders: FORServiceProvider[] | undefined
+): FORServiceProvider | undefined {
   return serviceProviders?.find((sp) => sp.serviceProvider === quote?.serviceProvider)
 }

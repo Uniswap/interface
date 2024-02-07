@@ -9,11 +9,13 @@ export enum TooltipSize {
   ExtraSmall = '200px',
   Small = '256px',
   Large = '400px',
+  Max = 'max-content',
 }
 
 const getPaddingForSize = (size: TooltipSize) => {
   switch (size) {
     case TooltipSize.ExtraSmall:
+    case TooltipSize.Max:
       return '8px'
     case TooltipSize.Small:
       return '12px'

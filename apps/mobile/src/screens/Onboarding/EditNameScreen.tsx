@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, StyleSheet, TextInput as NativeTextInput } from 'react-native'
+import { ActivityIndicator, TextInput as NativeTextInput, StyleSheet } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import Trace from 'src/components/Trace/Trace'
@@ -64,7 +64,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
     navigation.navigate({
       name:
         params?.importType === ImportType.CreateNew
-          ? OnboardingScreens.QRAnimation
+          ? OnboardingScreens.WelcomeWallet
           : OnboardingScreens.Notifications,
       merge: true,
       params,

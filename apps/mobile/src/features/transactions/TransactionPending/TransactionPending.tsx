@@ -4,9 +4,9 @@ import { StatusAnimation } from 'src/features/transactions/TransactionPending/St
 import { AnimatedFlex, Button, Flex, Text, TouchableArea } from 'ui/src'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
-  isFinalizedTx,
   TransactionDetails,
   TransactionStatus,
+  isFinalizedTx,
 } from 'wallet/src/features/transactions/types'
 import { ElementName } from 'wallet/src/telemetry/constants'
 import { openTransactionLink } from 'wallet/src/utils/linking'

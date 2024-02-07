@@ -4,34 +4,22 @@ import { useLimitsEnabled } from 'featureFlags/flags/limits'
 import { useSendEnabled } from 'featureFlags/flags/send'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/SwapContext'
 import styled from 'styled-components'
-import { ButtonText } from 'theme/components'
 import { isIFramed } from 'utils/isIFramed'
 
 import { RowBetween, RowFixed } from '../Row'
 import SettingsTab from '../Settings'
-import { SwapTab } from './constants'
 import SwapBuyFiatButton from './SwapBuyFiatButton'
+import { SwapTab } from './constants'
+import { SwapHeaderTabButton } from './styled'
 
 const StyledSwapHeader = styled(RowBetween)`
-  margin-bottom: 10px;
+  margin-bottom: 4px;
   color: ${({ theme }) => theme.neutral2};
 `
 
 const HeaderButtonContainer = styled(RowFixed)`
-  padding: 0 12px;
   gap: 16px;
-`
-
-const StyledTextButton = styled(ButtonText)<{ $isActive: boolean }>`
-  color: ${({ theme, $isActive }) => ($isActive ? theme.neutral1 : theme.neutral2)};
-  gap: 4px;
-  font-weight: 485;
-  &:focus {
-    text-decoration: none;
-  }
-  &:active {
-    text-decoration: none;
-  }
+  padding-bottom: 8px;
 `
 
 export default function SwapHeader() {
@@ -50,7 +38,7 @@ export default function SwapHeader() {
   return (
     <StyledSwapHeader>
       <HeaderButtonContainer>
-        <StyledTextButton
+        <SwapHeaderTabButton
           as="h1"
           role="button"
           tabIndex={0}
@@ -64,18 +52,18 @@ export default function SwapHeader() {
           }}
         >
           <Trans>Swap</Trans>
-        </StyledTextButton>
-        <SwapBuyFiatButton />
-        {sendEnabled && (
-          <StyledTextButton $isActive={currentTab === SwapTab.Send} onClick={() => setCurrentTab(SwapTab.Send)}>
-            <Trans>Send</Trans>
-          </StyledTextButton>
-        )}
+        </SwapHeaderTabButton>
         {limitsEnabled && chainId === ChainId.MAINNET && (
-          <StyledTextButton $isActive={currentTab === SwapTab.Limit} onClick={() => setCurrentTab(SwapTab.Limit)}>
+          <SwapHeaderTabButton $isActive={currentTab === SwapTab.Limit} onClick={() => setCurrentTab(SwapTab.Limit)}>
             <Trans>Limit</Trans>
-          </StyledTextButton>
+          </SwapHeaderTabButton>
         )}
+        {sendEnabled && (
+          <SwapHeaderTabButton $isActive={currentTab === SwapTab.Send} onClick={() => setCurrentTab(SwapTab.Send)}>
+            <Trans>Send</Trans>
+          </SwapHeaderTabButton>
+        )}
+        <SwapBuyFiatButton />
       </HeaderButtonContainer>
       <RowFixed>
         <SettingsTab autoSlippage={autoSlippage} chainId={chainId} trade={trade.trade} />

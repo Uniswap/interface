@@ -51,7 +51,7 @@ const InputWrapper = styled(Column)`
   height: 256px;
   align-items: center;
   justify-content: flex-end;
-  gap: 16px;
+  gap: 4px;
   border-radius: 16px 16px 0px 0px;
 `
 const InputLabelContainer = styled.div`
@@ -61,7 +61,7 @@ const InputLabelContainer = styled.div`
 `
 
 const StyledNumericalInput = styled(NumericalInput)<{ usePercent?: boolean }>`
-  max-height: 60px;
+  max-height: 84px;
   width: 100%;
   text-align: center;
   font-size: 70px;
@@ -276,6 +276,13 @@ export default function SendCurrencyInputForm({
     }
   }, [maxInputAmount, setSendState])
 
+  const currencyFilters = useMemo(
+    () => ({
+      onlyShowCurrenciesWithBalance: Boolean(account),
+    }),
+    [account]
+  )
+
   return (
     <Wrapper $disabled={disabled}>
       <InputWrapper>
@@ -337,7 +344,7 @@ export default function SendCurrencyInputForm({
         onDismiss={() => setTokenSelectorOpen(false)}
         onCurrencySelect={handleSelectCurrency}
         selectedCurrency={inputCurrency}
-        onlyShowCurrenciesWithBalance={account ? true : false}
+        currencySearchFilters={currencyFilters}
       />
     </Wrapper>
   )

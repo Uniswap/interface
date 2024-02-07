@@ -1,14 +1,14 @@
-import { ChainId, Token, TradeType as MockTradeType } from '@uniswap/sdk-core'
+import { ChainId, TradeType as MockTradeType, Token } from '@uniswap/sdk-core'
 import { PERMIT2_ADDRESS } from '@uniswap/universal-router-sdk'
-import { DAI as MockDAI, nativeOnChain, USDC_MAINNET as MockUSDC_MAINNET, USDT as MockUSDT } from 'constants/tokens'
+import { DAI as MockDAI, USDC_MAINNET as MockUSDC_MAINNET, USDT as MockUSDT, nativeOnChain } from 'constants/tokens'
 import { TransactionStatus as MockTxStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { ChainTokenMap } from 'hooks/Tokens'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  TransactionType as MockTxType,
   TransactionDetails,
   TransactionInfo,
-  TransactionType as MockTxType,
 } from 'state/transactions/types'
 import { renderHook } from 'test-utils/render'
 import { useFormatter } from 'utils/formatNumbers'
@@ -502,7 +502,7 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('Signature to activity - returns undefined if is on chain order', () => {
+  it('Signature to activity - returns undefined if is filled onchain order', () => {
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     expect(
@@ -515,16 +515,65 @@ describe('parseLocalActivity', () => {
         formatNumber
       )
     ).toBeUndefined()
+  })
+
+  it('Signature to activity - returns activity if is cancelled onchain order', () => {
+    const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     expect(
       signatureToActivity(
         {
           type: SignatureType.SIGN_UNISWAPX_ORDER,
           status: UniswapXOrderStatus.CANCELLED,
+          chainId: ChainId.MAINNET,
+          swapInfo: mockSwapInfo(
+            MockTradeType.EXACT_INPUT,
+            MockUSDC_MAINNET,
+            mockCurrencyAmountRawUSDC,
+            MockDAI,
+            mockCurrencyAmountRaw
+          ),
         } as SignatureDetails,
-        {},
+        {
+          [ChainId.MAINNET]: {
+            [MockUSDC_MAINNET.address]: MockUSDC_MAINNET,
+            [MockDAI.address]: MockDAI,
+          },
+        },
         formatNumber
       )
-    ).toBeUndefined()
+    ).toEqual({
+      chainId: 1,
+      currencies: [MockUSDC_MAINNET, MockDAI],
+      descriptor: '1.00 USDC for 1.00 DAI',
+      from: undefined,
+      hash: undefined,
+      offchainOrderDetails: {
+        addedTime: undefined,
+        chainId: 1,
+        encodedOrder: undefined,
+        id: undefined,
+        offerer: undefined,
+        orderHash: undefined,
+        status: 'cancelled',
+        swapInfo: {
+          expectedOutputCurrencyAmountRaw: '1000000000000000000',
+          inputCurrencyAmountRaw: '1000000',
+          inputCurrencyId: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+          isUniswapXOrder: false,
+          minimumOutputCurrencyAmountRaw: '1000000000000000000',
+          outputCurrencyId: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
+          tradeType: 0,
+          type: 1,
+        },
+        txHash: undefined,
+        type: 'signUniswapXOrder',
+      },
+      prefixIconSrc: undefined,
+      status: 'FAILED',
+      statusMessage: undefined,
+      timestamp: NaN,
+      title: 'Swap cancelled',
+    })
   })
 })

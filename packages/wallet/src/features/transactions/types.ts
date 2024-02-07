@@ -10,6 +10,7 @@ import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
+import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
 import { DappInfo } from 'wallet/src/features/walletConnect/types'
 
@@ -163,6 +164,7 @@ export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   routeString?: string
   gasUseEstimate?: string
   protocol?: Protocol
+  quoteType?: QuoteType
 }
 
 export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {

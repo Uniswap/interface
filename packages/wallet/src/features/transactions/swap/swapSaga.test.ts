@@ -10,7 +10,7 @@ import { DAI } from 'wallet/src/constants/tokens'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
-import { approveAndSwap, SwapParams } from 'wallet/src/features/transactions/swap/swapSaga'
+import { SwapParams, approveAndSwap } from 'wallet/src/features/transactions/swap/swapSaga'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import {
   ExactInputSwapTransactionInfo,

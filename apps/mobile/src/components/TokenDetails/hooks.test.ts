@@ -5,7 +5,7 @@ import { USDBC_BASE, USDC_ARBITRUM } from 'wallet/src/constants/tokens'
 import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
-import { mockWalletPreloadedState, SAMPLE_CURRENCY_ID_1 } from 'wallet/src/test/fixtures'
+import { SAMPLE_CURRENCY_ID_1, mockWalletPreloadedState } from 'wallet/src/test/fixtures'
 import { Portfolio, Portfolio2, PortfolioBalancesById } from 'wallet/src/test/gqlFixtures'
 
 const mockedNavigation = {

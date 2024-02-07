@@ -36,7 +36,7 @@ export enum OnboardingScreens {
   Landing = 'OnboardingLanding',
   EditName = 'EditName',
   Notifications = 'OnboardingNotifications',
-  QRAnimation = 'QRAnimation',
+  WelcomeWallet = 'WelcomeWallet',
   Security = 'OnboardingSecurity',
 
   // import
@@ -59,6 +59,7 @@ export enum UnitagScreens {
 export enum FiatOnRampScreens {
   AmountInput = 'FiatOnRampAmountInput',
   ServiceProviders = 'FiatOnRampServiceProviders',
+  Connecting = 'FiatOnRampConnecting',
 }
 
 export type AppScreen = Screens | OnboardingScreens | UnitagScreens | FiatOnRampScreens

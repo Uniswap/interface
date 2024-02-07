@@ -23,6 +23,7 @@ import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { ExternalProfileScreen } from 'src/screens/ExternalProfileScreen'
+import { FiatOnRampConnectingScreen } from 'src/screens/FiatOnRampConnecting'
 import { FiatOnRampScreen } from 'src/screens/FiatOnRampScreen'
 import { FiatOnRampServiceProvidersScreen } from 'src/screens/FiatOnRampServiceProviders'
 import { HomeScreen } from 'src/screens/HomeScreen'
@@ -44,8 +45,8 @@ import { EditNameScreen } from 'src/screens/Onboarding/EditNameScreen'
 import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
 import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
-import { QRAnimationScreen } from 'src/screens/Onboarding/QRAnimationScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
+import { WelcomeWalletScreen } from 'src/screens/Onboarding/WelcomeWalletScreen'
 import { FiatOnRampScreens, OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { SettingsAppearanceScreen } from 'src/screens/SettingsAppearanceScreen'
 import { SettingsBiometricAuthScreen } from 'src/screens/SettingsBiometricAuthScreen'
@@ -197,6 +198,10 @@ export function FiatOnRampStackNavigator(): JSX.Element {
             component={FiatOnRampServiceProvidersScreen}
             name={FiatOnRampScreens.ServiceProviders}
           />
+          <FiatOnRampStack.Screen
+            component={FiatOnRampConnectingScreen}
+            name={FiatOnRampScreens.Connecting}
+          />
         </FiatOnRampStack.Navigator>
       </FiatOnRampProvider>
     </NavigationContainer>
@@ -254,8 +259,8 @@ export function OnboardingStackNavigator(): JSX.Element {
           name={OnboardingScreens.BackupManual}
         />
         <OnboardingStack.Screen
-          component={QRAnimationScreen}
-          name={OnboardingScreens.QRAnimation}
+          component={WelcomeWalletScreen}
+          name={OnboardingScreens.WelcomeWallet}
           // There should be no header shown on this screen but if headerShown: false and the user is adding a wallet from the
           // sidebar then when this screen is navigated away from the header will reappear on the home screen on top of the account
           // header.
@@ -340,6 +345,7 @@ export function UnitagStackNavigator(): JSX.Element {
         <UnitagStack.Screen
           component={UnitagConfirmationScreen}
           name={UnitagScreens.UnitagConfirmation}
+          options={{ ...navOptions.noHeader, gestureEnabled: false }}
         />
         <UnitagStack.Screen component={EditUnitagProfileScreen} name={UnitagScreens.EditProfile} />
       </UnitagStack.Group>

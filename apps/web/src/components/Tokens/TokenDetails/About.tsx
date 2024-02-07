@@ -7,7 +7,7 @@ import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 
 import Resource from './Resource'
-import { NoInfoAvailable, TRUNCATE_CHARACTER_COUNT, truncateDescription, TruncateDescriptionButton } from './shared'
+import { NoInfoAvailable, TRUNCATE_CHARACTER_COUNT, TruncateDescriptionButton, truncateDescription } from './shared'
 
 const TokenDescriptionContainer = styled.div`
   overflow: hidden;

@@ -3,9 +3,8 @@ import { ChainId, Token } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { TokenDetailsPoolsTable } from 'components/Tokens/TokenDetails/tables/TokenDetailsPoolsTable'
 import { useState } from 'react'
-import { Text } from 'rebass'
 import styled from 'styled-components'
-import { ClickableStyle } from 'theme/components'
+import { ClickableStyle, ThemedText } from 'theme/components'
 
 import { TransactionsTable } from './tables/TransactionsTable'
 
@@ -14,10 +13,8 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 `
-const Tab = styled(Text)<{ isActive?: boolean }>`
+const Tab = styled(ThemedText.HeadlineMedium)<{ isActive?: boolean }>`
   cursor: pointer;
-  font-size: 24px !important;
-  line-height: 32px !important;
   color: ${({ isActive, theme }) => (isActive ? theme.neutral1 : theme.neutral2)};
   ${ClickableStyle};
 `

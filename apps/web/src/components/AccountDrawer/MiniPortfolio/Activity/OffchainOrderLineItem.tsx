@@ -2,12 +2,12 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { DetailLineItem, LineItemData } from 'components/swap/DetailLineItem'
 import TradePrice from 'components/swap/TradePrice'
+import { UniswapXOrderDetails } from 'state/signatures/types'
 import { ExternalLink } from 'theme/components'
 import { ellipseMiddle } from 'utils/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { formatTimestamp } from '../formatTimestamp'
-import { OffchainOrderDetails } from './types'
 
 export enum OffchainOrderLineItemType {
   EXCHANGE_RATE = 'EXCHANGE_RATE',
@@ -26,12 +26,12 @@ export type OffchainOrderLineItemProps =
     }
   | {
       type: OffchainOrderLineItemType.EXPIRY
-      order: OffchainOrderDetails
+      order: UniswapXOrderDetails
     }
   | {
       type: OffchainOrderLineItemType.TRANSACTION_ID
       explorerLink: string
-      order: OffchainOrderDetails
+      order: UniswapXOrderDetails
     }
   | {
       type: OffchainOrderLineItemType.NETWORK_COST

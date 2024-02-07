@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { MEDIUM_MEDIA_BREAKPOINT } from '../constants'
-import { filterStringAtom } from '../state'
+import { exploreSearchStringAtom } from '../state'
 const ICON_SIZE = '20px'
 
 const SearchBarContainer = styled.div<{ isInfoExplorePageEnabled: boolean }>`
@@ -68,16 +68,17 @@ const SearchInput = styled.input<{ isInfoExplorePageEnabled: boolean; isOpen?: b
 `
 
 export default function SearchBar({ tab }: { tab?: string }) {
-  const currentString = useAtomValue(filterStringAtom)
+  const currentString = useAtomValue(exploreSearchStringAtom)
   const [localFilterString, setLocalFilterString] = useState(currentString)
-  const setFilterString = useUpdateAtom(filterStringAtom)
+  const setFilterString = useUpdateAtom(exploreSearchStringAtom)
   const debouncedLocalFilterString = useDebounce(localFilterString, 300)
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     setLocalFilterString(currentString)
-  }, [currentString])
+    if (currentString && isInfoExplorePageEnabled) setIsOpen(true)
+  }, [currentString, isInfoExplorePageEnabled])
 
   useEffect(() => {
     setFilterString(debouncedLocalFilterString)

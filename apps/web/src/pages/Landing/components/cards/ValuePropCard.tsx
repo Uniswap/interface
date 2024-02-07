@@ -2,8 +2,7 @@ import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 
-import { BoxProps } from '../Generics'
-import { Box } from '../Generics'
+import { Box, BoxProps } from '../Generics'
 
 type ValuePropCardProps = {
   isDarkMode?: boolean

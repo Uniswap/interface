@@ -5,7 +5,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
   sentry-label="Screen"
   style={
     {
-      "alignItems": "stretch",
       "backgroundColor": "#FFFFFF",
       "flex": 1,
       "flexDirection": "column",
@@ -50,7 +49,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
           exiting={[Function]}
           style={
             {
-              "alignItems": "stretch",
               "flexDirection": "column",
               "flexGrow": 1,
               "gap": 16,
@@ -65,7 +63,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
           <View
             style={
               {
-                "alignItems": "stretch",
                 "flexDirection": "column",
                 "gap": 12,
                 "marginBottom": 12,
@@ -112,7 +109,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
           <View
             style={
               {
-                "alignItems": "stretch",
                 "flexDirection": "column",
                 "flexGrow": 1,
                 "justifyContent": "space-between",
@@ -122,7 +118,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
             <View
               style={
                 {
-                  "alignItems": "stretch",
                   "flexDirection": "column",
                   "gap": 16,
                 }
@@ -131,7 +126,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
               <View
                 style={
                   {
-                    "alignItems": "stretch",
                     "flexDirection": "column",
                     "paddingLeft": 8,
                     "paddingRight": 8,
@@ -143,7 +137,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                   onTouchEnd={[Function]}
                   style={
                     {
-                      "alignItems": "stretch",
                       "flexDirection": "column",
                       "gap": 12,
                     }
@@ -152,7 +145,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                   <View
                     style={
                       {
-                        "alignItems": "stretch",
                         "backgroundColor": "#FFFFFF",
                         "borderBottomColor": "#2222220D",
                         "borderBottomLeftRadius": 20,
@@ -194,7 +186,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                         autoCorrect={false}
                         autoFocus={true}
                         blurOnSubmit={true}
-                        editable={true}
                         focusable={true}
                         maxFontSizeMultiplier={1.4}
                         multiline={true}
@@ -291,7 +282,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                       <View
                         style={
                           {
-                            "alignItems": "stretch",
                             "flexDirection": "column",
                             "paddingTop": 64,
                             "position": "absolute",
@@ -446,7 +436,6 @@ exports[`SeedPhraseInputScreen seed phrase initial screen rendering 1`] = `
                   <View
                     style={
                       {
-                        "alignItems": "stretch",
                         "flexDirection": "column",
                       }
                     }

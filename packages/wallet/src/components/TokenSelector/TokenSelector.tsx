@@ -1,9 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
 import { hasStringAsync } from 'expo-clipboard'
-import { memo, useCallback, useEffect, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { Flex, useSporeColors } from 'ui/src'
+import { logger } from 'utilities/src/logger/logger'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { useDebounce } from 'utilities/src/time/timing'
 import PasteButton from 'wallet/src/components/buttons/PasteButton'
@@ -37,13 +38,11 @@ export enum TokenSelectorVariation {
   SuggestedAndFavoritesAndPopular = 'suggested-and-favorites-and-popular',
 }
 
-interface TokenSelectorProps {
+interface BaseTokenSelectorProps {
   currencyField: CurrencyField
   flow: TokenSelectorFlow
   chainId?: ChainId
-  variation: TokenSelectorVariation
   onClose: () => void
-  onSendEmptyActionPress: () => void
   onSelectCurrency: (
     currency: Currency,
     currencyField: CurrencyField,
@@ -51,11 +50,26 @@ interface TokenSelectorProps {
   ) => void
 }
 
+type TokenSelectorProps = BaseTokenSelectorProps &
+  (
+    | {
+        onSendEmptyActionPress: () => void
+        variation: TokenSelectorVariation.BalancesOnly
+      }
+    | {
+        onSendEmptyActionPress?: never
+        variation:
+          | TokenSelectorVariation.BalancesAndPopular
+          | TokenSelectorVariation.SuggestedAndFavoritesAndPopular
+      }
+  )
+
 function TokenSelectorContent({
   currencyField,
   flow,
   onSelectCurrency,
   chainId,
+  onClose,
   onSendEmptyActionPress,
   variation,
 }: TokenSelectorProps): JSX.Element {
@@ -116,6 +130,71 @@ function TokenSelectorContent({
 
   const [searchInFocus, setSearchInFocus] = useState(false)
 
+  const onSendEmptyActionPressWithClose = useCallback(() => {
+    onClose()
+    if (!onSendEmptyActionPress) {
+      logger.error(
+        new Error(
+          'Invalid call to `onSendEmptyActionPressWithClose` with missing `onSendEmptyActionPress`'
+        ),
+        { tags: { file: 'TokenSelector.tsx', function: 'onSendEmptyActionPressWithClose' } }
+      )
+      return
+    }
+    onSendEmptyActionPress()
+  }, [onClose, onSendEmptyActionPress])
+
+  const tokenSelector = useMemo(() => {
+    if (searchInFocus && !searchFilter) {
+      return <TokenSelectorEmptySearchList onSelectCurrency={onSelectCurrencyCallback} />
+    }
+
+    if (searchFilter) {
+      return (
+        <TokenSelectorSearchResultsList
+          chainFilter={chainFilter}
+          debouncedSearchFilter={debouncedSearchFilter}
+          isBalancesOnlySearch={variation === TokenSelectorVariation.BalancesOnly}
+          searchFilter={searchFilter}
+          onSelectCurrency={onSelectCurrencyCallback}
+        />
+      )
+    }
+
+    switch (variation) {
+      case TokenSelectorVariation.BalancesOnly:
+        return (
+          <TokenSelectorSendList
+            chainFilter={chainFilter}
+            onEmptyActionPress={onSendEmptyActionPressWithClose}
+            onSelectCurrency={onSelectCurrencyCallback}
+          />
+        )
+      case TokenSelectorVariation.BalancesAndPopular:
+        return (
+          <TokenSelectorSwapInputList
+            chainFilter={chainFilter}
+            onSelectCurrency={onSelectCurrencyCallback}
+          />
+        )
+      case TokenSelectorVariation.SuggestedAndFavoritesAndPopular:
+        return (
+          <TokenSelectorSwapOutputList
+            chainFilter={chainFilter}
+            onSelectCurrency={onSelectCurrencyCallback}
+          />
+        )
+    }
+  }, [
+    searchInFocus,
+    searchFilter,
+    variation,
+    onSelectCurrencyCallback,
+    chainFilter,
+    debouncedSearchFilter,
+    onSendEmptyActionPressWithClose,
+  ])
+
   return (
     <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
       <Flex grow gap="$spacing16" px="$spacing16">
@@ -133,33 +212,8 @@ function TokenSelectorContent({
 
         {isSheetReady && (
           <Flex grow>
-            {searchInFocus && !searchFilter ? (
-              <TokenSelectorEmptySearchList onSelectCurrency={onSelectCurrencyCallback} />
-            ) : searchFilter ? (
-              <TokenSelectorSearchResultsList
-                chainFilter={chainFilter}
-                debouncedSearchFilter={debouncedSearchFilter}
-                isBalancesOnlySearch={variation === TokenSelectorVariation.BalancesOnly}
-                searchFilter={searchFilter}
-                onSelectCurrency={onSelectCurrencyCallback}
-              />
-            ) : variation === TokenSelectorVariation.BalancesOnly ? (
-              <TokenSelectorSendList
-                chainFilter={chainFilter}
-                onEmptyActionPress={onSendEmptyActionPress}
-                onSelectCurrency={onSelectCurrencyCallback}
-              />
-            ) : variation === TokenSelectorVariation.BalancesAndPopular ? (
-              <TokenSelectorSwapInputList
-                chainFilter={chainFilter}
-                onSelectCurrency={onSelectCurrencyCallback}
-              />
-            ) : variation === TokenSelectorVariation.SuggestedAndFavoritesAndPopular ? (
-              <TokenSelectorSwapOutputList
-                chainFilter={chainFilter}
-                onSelectCurrency={onSelectCurrencyCallback}
-              />
-            ) : null}
+            {tokenSelector}
+
             {(!searchInFocus || searchFilter) && (
               <Flex position="absolute" right={0}>
                 <NetworkFilter

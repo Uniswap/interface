@@ -17,7 +17,7 @@ import {
   BottomSheetTextInput,
 } from 'wallet/src/components/modals/BottomSheetModal'
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
-import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
 import {
   MAX_AUTO_SLIPPAGE_TOLERANCE,
   MAX_CUSTOM_SLIPPAGE_TOLERANCE,
@@ -31,7 +31,7 @@ import { SwapProtectionInfoModal } from 'wallet/src/features/transactions/swap/m
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { slippageToleranceToPercent } from 'wallet/src/features/transactions/swap/utils'
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
-import { setSwapProtectionSetting, SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
+import { SwapProtectionSetting, setSwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { useAppDispatch } from 'wallet/src/state'
 import { ModalName } from 'wallet/src/telemetry/constants'
 import { errorShakeAnimation } from 'wallet/src/utils/animations'

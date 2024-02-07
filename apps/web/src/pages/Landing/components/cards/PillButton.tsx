@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { Box } from '../Generics'
 import { ArrowRight } from '../Icons'
 
-const Button = styled(motion.a)<{ cursor?: string }>`
+const Button = styled(motion.button)<{ cursor?: string }>`
   display: flex;
   padding: 12px 16px;
   border-radius: 24px;

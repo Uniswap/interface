@@ -1,10 +1,11 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { DropdownIcon } from 'components/Table/icons'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
 import { Checkbox } from 'nft/components/layout/Checkbox'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
@@ -49,13 +50,23 @@ interface FilterProps<T extends string> {
   activeFilter: T[]
   setFilters: (filter: T[]) => void
   isOpen: boolean
+  toggleFilterModal: () => void
   isSticky?: boolean
 }
 
-export function Filter<T extends string>({ allFilters, activeFilter, setFilters, isOpen, isSticky }: FilterProps<T>) {
+export function Filter<T extends string>({
+  allFilters,
+  activeFilter,
+  setFilters,
+  isOpen,
+  toggleFilterModal,
+  isSticky,
+}: FilterProps<T>) {
   const [hoveredRow, setHoveredRow] = useState(-1)
   const isScreenSize = useScreenSize()
   const isMobile = !isScreenSize['sm']
+  const filterModalRef = useRef<HTMLDivElement>(null)
+  useOnClickOutside(filterModalRef, isOpen ? toggleFilterModal : undefined)
 
   const handleFilterOptionClick = useCallback(
     (filter: T) => {
@@ -70,7 +81,7 @@ export function Filter<T extends string>({ allFilters, activeFilter, setFilters,
 
   const Modal = useMemo(
     () => (
-      <FilterDropdown isSticky={isSticky}>
+      <FilterDropdown isSticky={isSticky} ref={filterModalRef}>
         {allFilters.map((filter, index) => (
           <FilterRow
             key={filter}

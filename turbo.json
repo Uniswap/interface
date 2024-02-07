@@ -7,7 +7,8 @@
         "schema.graphql",
         "scripts/fetch-schema.js",
         "src/graphql/**",
-        "src/data/**/*.graphql"
+        "src/data/**/*.graphql",
+        "src/data/tradingApi/api.json"
       ],
       "outputs": [
         "src/**/__generated__/**",

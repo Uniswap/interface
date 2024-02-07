@@ -82,7 +82,11 @@ export const LandingBackground = (): JSX.Element | null => {
   }
 
   // Android 9 and 10 have issues with Rive, so we fallback on image
-  if ((isAndroid && Platform.Version < 30) || language !== Language.English) {
+  if (
+    // Android Platform.Version is always a number
+    (isAndroid && typeof Platform.Version === 'number' && Platform.Version < 30) ||
+    language !== Language.English
+  ) {
     return <OnboardingStaticImage />
   }
 

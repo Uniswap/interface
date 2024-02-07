@@ -1,11 +1,11 @@
 import { ApolloError, NetworkStatus } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import {
   useFeedTransactionListQuery,
   useTransactionListQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { useLocalizedDayjs } from 'wallet/src/features/language/localizedDayjs'
 import {
@@ -14,7 +14,7 @@ import {
   parseDataResponseToTransactionDetails,
 } from 'wallet/src/features/transactions/history/utils'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
-import { isLoadingItem, isSectionHeader, LoadingItem, SectionHeader } from './utils'
+import { LoadingItem, SectionHeader, isLoadingItem, isSectionHeader } from './utils'
 
 const LOADING_ITEM = (index: number): LoadingItem => ({ itemType: 'LOADING', id: index })
 const LOADING_DATA = [LOADING_ITEM(1), LOADING_ITEM(2), LOADING_ITEM(3), LOADING_ITEM(4)]

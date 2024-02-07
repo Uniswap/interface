@@ -1,11 +1,10 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
-import { TraceEvent } from 'analytics'
-import { Trace } from 'analytics'
+import { Trace, TraceEvent } from 'analytics'
 import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { AutoRow } from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { filterStringAtom } from 'components/Tokens/state'
+import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { TopTokensTable } from 'components/Tokens/TokenTable'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import OldTokenTable from 'components/Tokens/TokenTable/OldTokenTable'
@@ -163,7 +162,7 @@ const Pages: Array<Page> = [
 ]
 
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
-  const resetFilterString = useResetAtom(filterStringAtom)
+  const resetFilterString = useResetAtom(exploreSearchStringAtom)
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -185,8 +184,10 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   }, [tab])
 
   useEffect(() => {
-    resetFilterString()
-  }, [location, resetFilterString])
+    if (!isInfoExplorePageEnabled) {
+      resetFilterString()
+    }
+  }, [isInfoExplorePageEnabled, location, resetFilterString])
 
   const { component: Page, key: currentKey } = Pages[currentTab]
 

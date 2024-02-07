@@ -11,12 +11,12 @@ import {
 import { ResizeMode, Video } from 'expo-av'
 import React, { useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
+import { StyleSheet } from 'react-native'
 import {
-  AnimateStyle,
   Easing,
   EntryExitAnimationFunction,
   runOnJS,
+  StyleProps,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -50,7 +50,7 @@ import {
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'ui/src/assets'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { AnimatedFlex, flexStyles } from 'ui/src/components/layout'
-import { fonts, iconSizes, opacify } from 'ui/src/theme'
+import { fonts, iconSizes, opacify, spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
 import { ElementName } from 'wallet/src/telemetry/constants'
@@ -87,7 +87,7 @@ export function QRAnimation({
   // the config for this animation is defined in the animations.ts file in the same folder as this component, but because of the callback it made more sense to leave the actual animation definition in this file
   const qrSlideUpAndFadeIn: EntryExitAnimationFunction = () => {
     'worklet'
-    const animations: AnimateStyle<StyleProp<ViewStyle>> = {
+    const animations: StyleProps = {
       opacity: withDelay(
         qrSlideUpAndFadeInConfig.opacity.delay,
         withTiming(qrSlideUpAndFadeInConfig.opacity.endValue, {
@@ -107,9 +107,7 @@ export function QRAnimation({
         },
       ],
     }
-    // <StyleProp<ViewStyle>> doesn't quite work because of translateY
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const initialValues: AnimateStyle<any> = {
+    const initialValues: StyleProps = {
       opacity: qrSlideUpAndFadeInConfig.opacity.startValue,
       transform: [{ translateY: qrSlideUpAndFadeInConfig.translateY.startValue }],
     }
@@ -165,7 +163,7 @@ export function QRAnimation({
 
   // used throughout the page the get the size of the QR code container
   // setting as a constant so that it doesn't get defined by padding and screen size and give us less design control
-  const QR_CONTAINER_SIZE = media.short ? 160 : 242
+  const QR_CONTAINER_SIZE = media.short ? 175 : 242
   const QR_CODE_SIZE = media.short ? 140 : 190
   const UNICON_SIZE = 64
 
@@ -185,7 +183,7 @@ export function QRAnimation({
         <Flex centered grow gap="$spacing36" mb="$spacing12" mt="$spacing12">
           <Flex centered gap="$spacing12" pt="$spacing48">
             <AnimatedFlex entering={qrSlideUpAndFadeIn}>
-              <AnimatedFlex entering={qrSlideUpAtEnd}>
+              <AnimatedFlex centered entering={qrSlideUpAtEnd}>
                 <AnimatedFlex entering={flashWipeAnimation} style={styles.behindQrBlur}>
                   <Canvas style={flexStyles.fill}>
                     <Group transform={[{ translateX: 50 }, { translateY: 50 }]}>
@@ -262,34 +260,35 @@ export function QRAnimation({
                     />
                   </AnimatedFlex>
                 </AnimatedFlex>
-                <AnimatedFlex entering={textSlideUpAtEnd}>
-                  <Flex centered mt="$spacing24">
-                    <AddressDisplay
-                      showCopy
-                      address={activeAddress}
-                      captionTextColor="$neutral3"
-                      captionVariant="subheading2"
-                      showAccountIcon={false}
-                      variant="heading3"
-                    />
-                  </Flex>
-                </AnimatedFlex>
               </AnimatedFlex>
             </AnimatedFlex>
+            {/* negative top margin required because the glow around the QR code is absolute with -50 margin */}
+            <AnimatedFlex entering={textSlideUpAtEnd} style={{ marginTop: -spacing.spacing48 }}>
+              <Flex centered mt={-spacing.spacing4}>
+                <AddressDisplay
+                  showCopy
+                  address={activeAddress}
+                  captionTextColor="$neutral3"
+                  captionVariant="subheading2"
+                  showAccountIcon={false}
+                  variant="heading3"
+                />
+              </Flex>
+            </AnimatedFlex>
           </Flex>
-          <AnimatedFlex entering={textSlideUpAtEnd} style={[styles.textContainer]}>
+          <AnimatedFlex entering={textSlideUpAtEnd} pt="$spacing4" style={[styles.textContainer]}>
             <Text
-              $short={{ variant: 'subheading2', maxFontSizeMultiplier: 1.1 }}
-              maxFontSizeMultiplier={fonts.heading3.maxFontSizeMultiplier}
+              $short={{ variant: 'subheading2' }}
+              maxFontSizeMultiplier={media.short ? 1.1 : fonts.heading3.maxFontSizeMultiplier}
               pb="$spacing12"
               textAlign="center"
               variant="subheading1">
               {t('Welcome to your new wallet')}
             </Text>
             <Text
-              $short={{ variant: 'body3', maxFontSizeMultiplier: 1.1 }}
+              $short={{ variant: 'body3' }}
               color="$neutral2"
-              maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
+              maxFontSizeMultiplier={media.short ? 1.1 : fonts.body1.maxFontSizeMultiplier}
               textAlign="center"
               variant="body2">
               {isNewWallet
@@ -360,6 +359,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     marginHorizontal: 28,
+    marginTop: spacing.spacing60,
   },
   video: {
     bottom: 4,

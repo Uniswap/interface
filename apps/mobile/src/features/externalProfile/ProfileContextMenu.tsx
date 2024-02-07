@@ -11,15 +11,18 @@ import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
-import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
+import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
 import { setClipboard } from 'wallet/src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'wallet/src/utils/linking'
 
 export function ProfileContextMenu({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+  const unitag = useUnitagByAddress(address)
 
   const onPressCopyAddress = useCallback(async () => {
     if (!address) {
@@ -35,6 +38,12 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
   const openExplorerLink = useCallback(async () => {
     await openUri(getExplorerLink(ChainId.Mainnet, address, ExplorerDataType.ADDRESS))
   }, [address])
+
+  const onReportProfile = useCallback(async () => {
+    openUri(uniswapUrls.reportUnitagUrl).catch((e) =>
+      logger.error(e, { tags: { file: 'ProfileContextMenu', function: 'reportProfileLink' } })
+    )
+  }, [])
 
   const onPressShare = useCallback(async () => {
     if (!address) {
@@ -54,8 +63,8 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
     }
   }, [address])
 
-  const menuActions = useMemo(
-    () => [
+  const menuActions = useMemo(() => {
+    const options = [
       {
         title: t('View on {{ blockExplorerName }}', {
           blockExplorerName: CHAIN_INFO[ChainId.Mainnet].explorer.name,
@@ -73,9 +82,16 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
         action: onPressShare,
         systemIcon: 'square.and.arrow.up',
       },
-    ],
-    [onPressCopyAddress, onPressShare, openExplorerLink, t]
-  )
+    ]
+    if (unitag.unitag) {
+      options.push({
+        title: t('Report profile'),
+        action: onReportProfile,
+        systemIcon: 'flag',
+      })
+    }
+    return options
+  }, [onPressCopyAddress, onPressShare, onReportProfile, openExplorerLink, t, unitag.unitag])
 
   return (
     <ContextMenu

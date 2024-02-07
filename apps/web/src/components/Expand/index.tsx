@@ -1,6 +1,6 @@
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
-import React, { PropsWithChildren, ReactElement } from 'react'
+import { PropsWithChildren, ReactElement } from 'react'
 import { ChevronDown } from 'react-feather'
 import styled from 'styled-components'
 

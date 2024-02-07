@@ -60,7 +60,6 @@ export enum MobileEventName {
   ShareButtonClicked = 'Share Button Clicked',
   ShareLinkOpened = 'Share Link Opened',
   TokenDetailsOtherChainButtonPressed = 'Token Details Other Chain Button Pressed',
-  TokenSelected = 'Token Selected',
   WalletAdded = 'Wallet Added',
   WalletConnectSheetCompleted = 'Wallet Connect Sheet Completed',
   WidgetConfigurationUpdated = 'Widget Configuration Updated',

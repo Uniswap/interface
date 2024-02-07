@@ -14,7 +14,7 @@ import {
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { QuoteType } from 'wallet/src/features/transactions/utils'
-import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 export function transformQuoteToTrade(
   tokenInIsNative: boolean,

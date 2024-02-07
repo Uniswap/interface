@@ -4,7 +4,6 @@ exports[`AccountList renders without error 1`] = `
 <View
   style={
     {
-      "alignItems": "stretch",
       "flexDirection": "column",
       "flexShrink": 1,
     }
@@ -63,7 +62,6 @@ exports[`AccountList renders without error 1`] = `
         <View
           style={
             {
-              "alignItems": "stretch",
               "flex": 1,
               "flexDirection": "column",
               "paddingBottom": 8,
@@ -168,7 +166,6 @@ exports[`AccountList renders without error 1`] = `
               <View
                 style={
                   {
-                    "alignItems": "stretch",
                     "flex": 1,
                     "flexDirection": "column",
                   }
@@ -186,7 +183,6 @@ exports[`AccountList renders without error 1`] = `
                   <View
                     style={
                       {
-                        "alignItems": "stretch",
                         "flexDirection": "column",
                         "position": "relative",
                       }
@@ -195,7 +191,6 @@ exports[`AccountList renders without error 1`] = `
                     <View
                       style={
                         {
-                          "alignItems": "stretch",
                           "backgroundColor": "transparent",
                           "borderBottomColor": "transparent",
                           "borderBottomLeftRadius": 999999,
@@ -237,7 +232,6 @@ exports[`AccountList renders without error 1`] = `
                         <View
                           style={
                             {
-                              "alignItems": "stretch",
                               "flexDirection": "column",
                               "height": 36,
                               "width": 36,
@@ -247,7 +241,6 @@ exports[`AccountList renders without error 1`] = `
                           <View
                             style={
                               {
-                                "alignItems": "stretch",
                                 "flexDirection": "column",
                                 "height": 36,
                                 "width": 36,
@@ -410,7 +403,7 @@ exports[`AccountList renders without error 1`] = `
                           {
                             "alignItems": "center",
                             "flexDirection": "row",
-                            "gap": 4,
+                            "gap": 2,
                             "justifyContent": "center",
                           }
                         }

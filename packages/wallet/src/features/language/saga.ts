@@ -1,16 +1,16 @@
-import { getLocales, Locale as DeviceLocale } from 'expo-localization'
 import { I18nManager } from 'react-native'
 import RNRestart from 'react-native-restart'
 import { Statsig } from 'statsig-react-native'
 import { call, put, select, takeLatest } from 'typed-redux-saga'
+import { getDeviceLocales } from 'utilities/src/device/locales'
 import { logger } from 'utilities/src/logger/logger'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import {
   Language,
   Locale,
+  SUPPORTED_LANGUAGES,
   mapDeviceLanguageToLanguage,
   mapLocaleToLanguage,
-  SUPPORTED_LANGUAGES,
 } from 'wallet/src/features/language/constants'
 import { getLocale } from 'wallet/src/features/language/hooks'
 import {
@@ -75,27 +75,6 @@ function getDeviceLanguage(): Language {
 
   // Default to English if no supported language is found
   return Language.English
-}
-
-function getDeviceLocales(): DeviceLocale[] {
-  try {
-    return getLocales()
-  } catch (e) {
-    logger.error(e, { level: 'warning', tags: { file: 'saga.ts', function: 'getDeviceLocales' } })
-  }
-  return [
-    {
-      languageCode: 'en',
-      languageTag: 'en-US',
-      regionCode: null,
-      currencyCode: null,
-      currencySymbol: null,
-      decimalSeparator: null,
-      digitGroupingSeparator: null,
-      textDirection: null,
-      measurementSystem: null,
-    },
-  ]
 }
 
 function restartAppIfRTL(currentLocale: Locale) {

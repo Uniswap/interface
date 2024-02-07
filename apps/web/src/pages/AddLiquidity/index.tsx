@@ -5,7 +5,7 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventN
 import { Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent, TraceEvent, useTrace } from 'analytics'
+import { TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
@@ -647,7 +647,6 @@ function AddLiquidity() {
                           showMaxButton={!atMaxAmounts[Field.CURRENCY_A]}
                           currency={currencies[Field.CURRENCY_A] ?? null}
                           id="add-liquidity-input-tokena"
-                          showCommonBases
                         />
 
                         <CurrencyInputPanel
@@ -661,7 +660,6 @@ function AddLiquidity() {
                           showMaxButton={!atMaxAmounts[Field.CURRENCY_B]}
                           currency={currencies[Field.CURRENCY_B] ?? null}
                           id="add-liquidity-input-tokenb"
-                          showCommonBases
                         />
                       </RowBetween>
 
@@ -878,7 +876,6 @@ function AddLiquidity() {
                       currency={currencies[Field.CURRENCY_A] ?? null}
                       id="add-liquidity-input-tokena"
                       fiatValue={currencyAFiat}
-                      showCommonBases
                       locked={depositADisabled}
                     />
 
@@ -892,7 +889,6 @@ function AddLiquidity() {
                       fiatValue={currencyBFiat}
                       currency={currencies[Field.CURRENCY_B] ?? null}
                       id="add-liquidity-input-tokenb"
-                      showCommonBases
                       locked={depositBDisabled}
                     />
                   </AutoColumn>

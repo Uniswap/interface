@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
+import { FixedHeightRow } from '.'
 import { BIG_INT_ZERO } from '../../constants/misc'
 import { useColor } from '../../hooks/useColor'
 import { useTotalSupply } from '../../hooks/useTotalSupply'
@@ -24,7 +25,6 @@ import { CardNoise } from '../earn/styled'
 import CurrencyLogo from '../Logo/CurrencyLogo'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
 import { Dots } from '../swap/styled'
-import { FixedHeightRow } from '.'
 
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   border: none;

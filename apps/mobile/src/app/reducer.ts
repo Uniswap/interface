@@ -1,7 +1,7 @@
 import { combineReducers } from '@reduxjs/toolkit'
-import { biometricSettingsReducer } from 'src/features/biometrics/slice'
 import { cloudBackupReducer } from 'src/features/CloudBackup/cloudBackupSlice'
 import { passwordLockoutReducer } from 'src/features/CloudBackup/passwordLockoutSlice'
+import { biometricSettingsReducer } from 'src/features/biometrics/slice'
 import { modalsReducer } from 'src/features/modals/modalSlice'
 import { telemetryReducer } from 'src/features/telemetry/slice'
 import { tweaksReducer } from 'src/features/tweaks/slice'

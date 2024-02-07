@@ -22,6 +22,7 @@ export const uniswapUrls = {
     walletHelp: `${helpUrl}/hc/en-us/categories/11301970439565-Uniswap-Wallet`,
   },
   apiBaseUrl: getUniswapApiBaseUrl(),
+  apiBaseExtensionUrl: getExtensionApiBaseUrl(),
   apiBaseUrlCloudflare: getCloudflareApiBaseUrl(),
   appBaseUrl: 'https://uniswap.org/app',
   gasServicePath: getUniswapGasServicePath(),
@@ -32,6 +33,7 @@ export const uniswapUrls = {
   statsigProxyUrl: getUniswapStatsigProxyUrl(),
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
+  reportUnitagUrl: 'https://support.uniswap.org/hc/en-us/requests/new',
   appUrl: `https://${UNISWAP_APP_HOSTNAME}`,
   interfaceUrl: `https://${UNISWAP_APP_HOSTNAME}/#/swap`,
   unitagsApiUrl: getUnitagsApiUrl(),
@@ -48,6 +50,10 @@ function getCloudflareApiBaseUrl(): string {
 
 function getUniswapApiBaseUrl(): string {
   return config.uniswapApiBaseUrl
+}
+
+function getExtensionApiBaseUrl(): string {
+  return 'https://gateway.uniswap.org/v2'
 }
 
 function getUniswapRoutingApiUrl(): string {

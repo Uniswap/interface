@@ -1,7 +1,7 @@
 import React from 'react'
-import { Flex, Unicon, useSporeColors } from 'ui/src'
-import { spacing } from 'ui/src/theme'
+import { Flex, useSporeColors } from 'ui/src'
 import { isSVGUri } from 'utilities/src/format/urls'
+import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { RemoteSvg } from 'wallet/src/features/images/RemoteSvg'
 
@@ -39,14 +39,11 @@ export function UnitagProfilePicture({
       )}
     </Flex>
   ) : (
-    <Flex
-      bg="$surface1"
-      borderRadius="$roundedFull"
-      p="$spacing16"
-      shadowColor="$neutral3"
-      shadowOpacity={0.4}
-      shadowRadius="$spacing4">
-      <Unicon address={address} size={size - spacing.spacing12} />
-    </Flex>
+    <AccountIcon
+      address={address}
+      avatarUri={profilePictureUri}
+      showBackground={true}
+      size={size}
+    />
   )
 }

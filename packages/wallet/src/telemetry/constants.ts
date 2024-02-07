@@ -57,6 +57,8 @@ export const ModalName = {
   TokenWarningModal: 'token-warning-modal',
   TooltipContent: 'tooltip-content',
   TransactionActions: 'transaction-actions',
+  UnitagsChange: 'unitags-change-modal',
+  UnitagsDelete: 'unitags-delete-modal',
   UnitagsIntro: 'unitags-intro-modal',
   ViewSeedPhraseWarning: 'view-seed-phrase-warning',
   ViewOnlyExplainer: 'view-only-explainer-modal',

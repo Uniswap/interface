@@ -1,5 +1,6 @@
 import { createContext, ReactNode, useContext, useMemo } from 'react'
 import { LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native'
+import { AuthTrigger } from 'wallet/src/features/auth/types'
 
 export type TransactionModalContextState = {
   bottomSheetViewStyles: StyleProp<ViewStyle>
@@ -8,10 +9,7 @@ export type TransactionModalContextState = {
   walletNeedsRestore?: boolean
   onClose: () => void
   BiometricsIcon?: JSX.Element | null
-  authTrigger?: (args: {
-    successCallback: () => void
-    failureCallback: () => void
-  }) => Promise<void>
+  authTrigger?: AuthTrigger
 }
 
 export const TransactionModalContext = createContext<TransactionModalContextState | undefined>(

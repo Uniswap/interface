@@ -16,7 +16,7 @@ const SocialIcon = styled(Wiggle)`
   transition: fill;
   transition-duration: 0.2s;
   &:hover {
-    fill: ${(props) => props.hoverColor};
+    fill: ${(props) => props.$hoverColor};
   }
 `
 const RowToCol = styled(Box)`
@@ -39,7 +39,7 @@ const HideWhenLarge = styled(Box)`
 const MenuItemStyles = css`
   padding: 0;
   margin: 0;
-  text-align: center;
+  text-align: left;
   font-family: Basel;
   font-size: 16px;
   font-style: normal;
@@ -60,6 +60,9 @@ const StyledInternalLink = styled(Link)`
 const StyledExternalLink = styled(ExternalLink)`
   ${MenuItemStyles}
 `
+const DownloadLink = styled.a`
+  ${MenuItemStyles}
+`
 const ModalItem = styled.div`
   ${MenuItemStyles}
   cursor: pointer;
@@ -68,17 +71,17 @@ const ModalItem = styled.div`
 export function Socials({ iconSize }: { iconSize?: string }) {
   return (
     <Box gap="24px">
-      <SocialIcon hoverColor="#00C32B">
+      <SocialIcon $hoverColor="#00C32B">
         <StyledExternalLink href="https://github.com/Uniswap">
           <Github size={iconSize} fill="inherit" />
         </StyledExternalLink>
       </SocialIcon>
-      <SocialIcon hoverColor="#20BAFF">
+      <SocialIcon $hoverColor="#20BAFF">
         <StyledExternalLink href="https://twitter.com/Uniswap">
           <Twitter size={iconSize} fill="inherit" />
         </StyledExternalLink>
       </SocialIcon>
-      <SocialIcon hoverColor="#5F51FF">
+      <SocialIcon $hoverColor="#5F51FF">
         <StyledExternalLink href="https://discord.com/invite/uniswap">
           <Discord size={iconSize} fill="inherit" />
         </StyledExternalLink>
@@ -105,7 +108,7 @@ export function Footer() {
             </HideWhenSmall>
           </Box>
           <RowToCol direction="row" height="100%" gap="16px">
-            <Box direction="row">
+            <Box direction="row" gap="16px">
               <Box direction="column" gap="10px">
                 <Body1>App</Body1>
                 <StyledInternalLink to="/swap">
@@ -133,7 +136,7 @@ export function Footer() {
                 </StyledExternalLink>
               </Box>
             </Box>
-            <Box direction="row">
+            <Box direction="row" gap="16px">
               <Box direction="column" gap="10px">
                 <Body1>
                   <Trans>Company</Trans>
@@ -144,9 +147,9 @@ export function Footer() {
                 <StyledExternalLink href="https://blog.uniswap.org/">
                   <Trans>Blog</Trans>
                 </StyledExternalLink>
-                <StyledExternalLink href="https://github.com/Uniswap/brand-assets">
+                <DownloadLink href="https://github.com/Uniswap/brand-assets/raw/main/Uniswap%20Brand%20Assets.zip">
                   <Trans>Brand Assets</Trans>
-                </StyledExternalLink>
+                </DownloadLink>
                 <ModalItem onClick={togglePrivacyPolicy}>
                   <Trans>Terms & Privacy</Trans>
                 </ModalItem>

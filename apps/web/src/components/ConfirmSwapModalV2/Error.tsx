@@ -5,6 +5,7 @@ import { SupportArticleURL } from 'constants/supportArticles'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { AlertTriangle } from 'react-feather'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import { isLimitTrade } from 'state/routing/utils'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -25,7 +26,19 @@ interface ErrorModalContentProps {
   onRetry: () => void
 }
 
-function getErrorContent(errorType: PendingModalError, swapResult?: SwapResult) {
+function getErrorContent({
+  errorType,
+  trade,
+  swapResult,
+}: {
+  errorType: PendingModalError
+  swapResult?: SwapResult
+  trade?: InterfaceTrade
+}): {
+  title: JSX.Element
+  message?: JSX.Element
+  supportArticleURL?: SupportArticleURL
+} {
   switch (errorType) {
     case PendingModalError.TOKEN_APPROVAL_ERROR:
       return {
@@ -44,13 +57,22 @@ function getErrorContent(errorType: PendingModalError, swapResult?: SwapResult) 
         supportArticleURL: SupportArticleURL.APPROVALS_EXPLAINER,
       }
     case PendingModalError.CONFIRMATION_ERROR:
-      return {
-        title: <Trans>Swap failed</Trans>,
-        message: <Trans>Try using higher than normal slippage and gas to ensure your transaction is completed.</Trans>,
-        supportArticleURL:
-          swapResult?.type === TradeFillType.UniswapX
-            ? SupportArticleURL.UNISWAP_X_FAILURE
-            : SupportArticleURL.TRANSACTION_FAILURE,
+      if (isLimitTrade(trade)) {
+        return {
+          title: <Trans>Limit failed</Trans>,
+          supportArticleURL: SupportArticleURL.UNISWAP_X_FAILURE,
+        }
+      } else {
+        return {
+          title: <Trans>Swap failed</Trans>,
+          message: (
+            <Trans>Try using higher than normal slippage and gas to ensure your transaction is completed.</Trans>
+          ),
+          supportArticleURL:
+            swapResult?.type === TradeFillType.UniswapX
+              ? SupportArticleURL.UNISWAP_X_FAILURE
+              : SupportArticleURL.TRANSACTION_FAILURE,
+        }
       }
     case PendingModalError.WRAP_ERROR:
       return {
@@ -82,7 +104,7 @@ const Section = styled(ColumnCenter)`
 `
 export default function Error({ errorType, trade, swapResult, onRetry }: ErrorModalContentProps) {
   const theme = useTheme()
-  const { title, message, supportArticleURL } = getErrorContent(errorType, swapResult)
+  const { title, message, supportArticleURL } = getErrorContent({ errorType, swapResult, trade })
 
   return (
     <Container gap="md">

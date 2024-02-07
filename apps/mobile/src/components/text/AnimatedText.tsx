@@ -1,13 +1,13 @@
 import React from 'react'
 import {
+  TextProps as RNTextProps,
   StyleSheet,
   TextInput,
   TextInputProps,
-  TextProps as RNTextProps,
   useWindowDimensions,
 } from 'react-native'
 import Animated, { useAnimatedProps } from 'react-native-reanimated'
-import { Flex, TextFrame, TextProps as TamaTextProps, usePropsAndStyle } from 'ui/src'
+import { Flex, TextProps as TamaTextProps, TextFrame, usePropsAndStyle } from 'ui/src'
 import { TextLoaderWrapper } from 'ui/src/components/text/Text'
 import { fonts } from 'ui/src/theme'
 

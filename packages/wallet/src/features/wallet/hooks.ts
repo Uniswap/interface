@@ -1,9 +1,10 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { trimToLength } from 'utilities/src/primitives/string'
 import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
-import { useUnitag } from 'wallet/src/features/unitags/hooks'
+import { useUnitagUpdater } from 'wallet/src/features/unitags/context'
+import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
@@ -132,6 +133,8 @@ export function useDisplayName(
   address: Maybe<string>,
   options?: DisplayNameOptions
 ): DisplayName | undefined {
+  const { refetchUnitagsCounter } = useUnitagUpdater()
+
   const defaultOptions = {
     showShortenedEns: false,
     includeUnitagSuffix: false,
@@ -142,7 +145,12 @@ export function useDisplayName(
 
   const validated = getValidAddress(address)
   const ens = useENSName(validated ?? undefined)
-  const { unitag } = useUnitag(validated ?? undefined)
+  const { unitag, refetch: refetchUnitagByAddress } = useUnitagByAddress(validated ?? undefined)
+
+  // Force refetch of useUnitagByAddress if refetchUnitagsCounter changes
+  useEffect(() => {
+    refetchUnitagByAddress?.()
+  }, [refetchUnitagsCounter, refetchUnitagByAddress])
 
   // Need to account for pending accounts for use within onboarding
   const maybeLocalName = useAccounts()[address ?? '']?.name
@@ -171,7 +179,10 @@ export function useDisplayName(
     return { name: localName, type: DisplayNameType.Local }
   }
 
-  return { name: `${sanitizeAddressText(shortenAddress(address))}`, type: DisplayNameType.Address }
+  return {
+    name: `${sanitizeAddressText(shortenAddress(address))}`,
+    type: DisplayNameType.Address,
+  }
 }
 
 /*
@@ -186,7 +197,7 @@ export function useAvatar(address: Maybe<string>): {
   loading: boolean
 } {
   const { data: avatar } = useENSAvatar(address)
-  const { unitag, loading } = useUnitag(address || undefined)
+  const { unitag, loading } = useUnitagByAddress(address || undefined)
 
   if (loading) {
     return { avatar: undefined, loading }

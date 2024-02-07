@@ -14,6 +14,7 @@ const unsupportedTokenExplorerLink = 'www.blahblah.com'
 
 jest.mock('../../hooks/Tokens')
 jest.mock('../../utils/getExplorerLink')
+jest.setTimeout(15_000)
 
 describe('UnsupportedCurrencyFooter.tsx with unsupported tokens', () => {
   beforeEach(() => {

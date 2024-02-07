@@ -15,10 +15,12 @@ export function parseUnitagErrorCode(
     case UnitagErrorCodes.AddressLimitReached:
     case UnitagErrorCodes.DeviceLimitReached:
       return t('Unable to claim Unitag')
-    case UnitagErrorCodes.ExistingUnitagForDevice:
-      return t('Existing unitag for this device')
-    case UnitagErrorCodes.ExistingUnitagForAddress:
-      return t('You already have a Unitag for this address')
+    case UnitagErrorCodes.DeviceActiveLimitReached:
+      return t('You have hit the maximum number of unitags that can be active for this device')
+    case UnitagErrorCodes.AddressActiveLimitReached:
+      return t(
+        'You already have made the maximum number of changes to your unitags for this address'
+      )
     default:
       return t('Unknown error')
   }

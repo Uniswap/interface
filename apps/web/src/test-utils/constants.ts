@@ -201,5 +201,4 @@ export const LIMIT_ORDER_TRADE = new LimitOrderTrade({
   approveInfo: { needsApprove: false },
   swapper: '0xSwapperAddress',
   deadlineBufferSecs: expiryToDeadlineSeconds(Expiry.Week),
-  nonce: BigNumber.from(0),
 })

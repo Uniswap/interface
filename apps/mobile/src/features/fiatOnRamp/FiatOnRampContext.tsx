@@ -8,15 +8,15 @@ import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { MeldQuote, MeldServiceProvider } from 'wallet/src/features/fiatOnRamp/meld'
+import { FORQuote, FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 interface FiatOnRampContextType {
-  quotesSections?: SectionListData<MeldQuote>[] | undefined
-  setQuotesSections: (quotesSections: SectionListData<MeldQuote>[] | undefined) => void
-  selectedQuote?: MeldQuote
-  setSelectedQuote: (quote: MeldQuote | undefined) => void
+  quotesSections?: SectionListData<FORQuote>[] | undefined
+  setQuotesSections: (quotesSections: SectionListData<FORQuote>[] | undefined) => void
+  selectedQuote?: FORQuote
+  setSelectedQuote: (quote: FORQuote | undefined) => void
   countryCode: string
   setCountryCode: (countryCode: string) => void
   baseCurrencyInfo?: FiatCurrencyInfo
@@ -25,8 +25,8 @@ interface FiatOnRampContextType {
   setQuoteCurrency: (quoteCurrency: FiatOnRampCurrency) => void
   amount?: number
   setAmount: (amount: number | undefined) => void
-  serviceProviders?: MeldServiceProvider[]
-  setServiceProviders: (serviceProviders: MeldServiceProvider[] | undefined) => void
+  serviceProviders?: FORServiceProvider[]
+  setServiceProviders: (serviceProviders: FORServiceProvider[] | undefined) => void
 }
 
 const initialState: FiatOnRampContextType = {
@@ -49,11 +49,11 @@ export function useFiatOnRampContext(): FiatOnRampContextType {
 
 export function FiatOnRampProvider({ children }: { children: React.ReactNode }): JSX.Element {
   const [quotesSections, setQuotesSections] = useState<FiatOnRampContextType['quotesSections']>()
-  const [selectedQuote, setSelectedQuote] = useState<MeldQuote | undefined>()
+  const [selectedQuote, setSelectedQuote] = useState<FORQuote | undefined>()
   const [countryCode, setCountryCode] = useState<string>(getCountry())
   const [baseCurrencyInfo, setBaseCurrencyInfo] = useState<FiatCurrencyInfo>()
   const [amount, setAmount] = useState<number>()
-  const [serviceProviders, setServiceProviders] = useState<MeldServiceProvider[]>()
+  const [serviceProviders, setServiceProviders] = useState<FORServiceProvider[]>()
 
   // We hardcode ETH as the starting currency
   const ethCurrencyInfo = useCurrencyInfo(

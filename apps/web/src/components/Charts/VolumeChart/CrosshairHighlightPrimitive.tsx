@@ -71,10 +71,18 @@ class CrosshairHighlightPaneRenderer implements ISeriesPrimitivePaneRenderer {
       ctx.fillStyle = this._data.color
       const crosshairYPosition = this._data.crosshairYPosition * scope.verticalPixelRatio
 
+      // Modification: increase space between bars
+      const margin =
+        Math.min(
+          Math.max(scope.horizontalPixelRatio, crosshairPos.length),
+          this._data.barSpacing * scope.horizontalPixelRatio
+        ) * 0.035
+      const crosshairXPosition = crosshairPos.position + margin
+
       // Modification: use rounded rectangle
       ctx.beginPath()
       ctx.roundRect(
-        crosshairPos.position,
+        crosshairXPosition,
         crosshairYPosition,
         crosshairPos.length,
         scope.bitmapSize.height - crosshairYPosition,
@@ -88,12 +96,12 @@ class CrosshairHighlightPaneRenderer implements ISeriesPrimitivePaneRenderer {
       ctx.fillStyle = 'black'
 
       // lower opacity to left of highlight bar
-      ctx.fillRect(0, crosshairYPosition, crosshairPos.position, scope.bitmapSize.height - crosshairYPosition)
+      ctx.fillRect(0, crosshairYPosition, crosshairXPosition, scope.bitmapSize.height - crosshairYPosition)
       // lower opacity to right of highlight bar
       ctx.fillRect(
-        crosshairPos.position + crosshairPos.length,
+        crosshairXPosition + crosshairPos.length,
         crosshairYPosition,
-        scope.bitmapSize.width - (crosshairPos.position + crosshairPos.length),
+        scope.bitmapSize.width - (crosshairXPosition + crosshairPos.length),
         scope.bitmapSize.height - crosshairYPosition
       )
       // reset global settings

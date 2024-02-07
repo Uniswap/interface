@@ -43,7 +43,6 @@ exports[`renders wallet loader 1`] = `
     <View
       style={
         {
-          "alignItems": "stretch",
           "backgroundColor": "#CECECE",
           "borderBottomLeftRadius": 999999,
           "borderBottomRightRadius": 999999,
@@ -68,7 +67,6 @@ exports[`renders wallet loader 1`] = `
         onLayout={[Function]}
         style={
           {
-            "alignItems": "stretch",
             "flexDirection": "column",
             "opacity": 0,
           }
@@ -117,7 +115,6 @@ exports[`renders wallet loader 1`] = `
             <View
               style={
                 {
-                  "alignItems": "stretch",
                   "backgroundColor": "#F9F9F9",
                   "borderBottomLeftRadius": 4,
                   "borderBottomRightRadius": 4,
@@ -139,7 +136,6 @@ exports[`renders wallet loader 1`] = `
         onLayout={[Function]}
         style={
           {
-            "alignItems": "stretch",
             "flexDirection": "column",
             "opacity": 0,
           }
@@ -188,7 +184,6 @@ exports[`renders wallet loader 1`] = `
             <View
               style={
                 {
-                  "alignItems": "stretch",
                   "backgroundColor": "#F9F9F9",
                   "borderBottomLeftRadius": 4,
                   "borderBottomRightRadius": 4,

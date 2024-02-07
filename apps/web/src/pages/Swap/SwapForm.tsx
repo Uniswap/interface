@@ -65,6 +65,10 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { getIsReviewableQuote } from '.'
 import { OutputTaxTooltipBody } from './TaxTooltipBody'
 
+const SWAP_FORM_CURRENCY_SEARCH_FILTERS = {
+  showCommonBases: true,
+}
+
 interface SwapFormProps {
   disableTokenInputs?: boolean
   onCurrencyChange?: (selected: CurrencyState) => void
@@ -542,7 +546,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               fiatValue={showFiatValueInput ? fiatValueInput : undefined}
               onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
-              showCommonBases
+              currencySearchFilters={SWAP_FORM_CURRENCY_SEARCH_FILTERS}
               id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
               loading={independentField === Field.OUTPUT && routeIsSyncing}
               ref={inputCurrencyNumericalInputRef}
@@ -588,7 +592,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 currency={currencies[Field.OUTPUT] ?? null}
                 onCurrencySelect={handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
-                showCommonBases
+                currencySearchFilters={SWAP_FORM_CURRENCY_SEARCH_FILTERS}
                 id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
                 loading={independentField === Field.INPUT && routeIsSyncing}
                 numericalInputSettings={{
@@ -606,14 +610,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
             </Trace>
           </OutputSwapSection>
         </div>
-        {showDetailsDropdown && (
-          <SwapDetailsDropdown
-            trade={trade}
-            syncing={routeIsSyncing}
-            loading={routeIsLoading}
-            allowedSlippage={allowedSlippage}
-          />
-        )}
+
         {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
         <div>
           {swapIsUnsupported ? (
@@ -705,6 +702,14 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 </Text>
               </ButtonError>
             </TraceEvent>
+          )}
+          {showDetailsDropdown && (
+            <SwapDetailsDropdown
+              trade={trade}
+              syncing={routeIsSyncing}
+              loading={routeIsLoading}
+              allowedSlippage={allowedSlippage}
+            />
           )}
         </div>
       </AutoColumn>

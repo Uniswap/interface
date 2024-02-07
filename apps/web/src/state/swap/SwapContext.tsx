@@ -8,7 +8,6 @@ import {
   Dispatch,
   PropsWithChildren,
   SetStateAction,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -110,14 +109,10 @@ export function SwapAndLimitContextProvider({
   const { chainId: connectedChainId } = useWeb3React()
   const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.Swap)
 
-  const getInitialCurrencyState = useCallback(() => {
-    return {
-      inputCurrency: initialInputCurrency,
-      outputCurrency: initialOutputCurrency,
-    }
-  }, [initialInputCurrency, initialOutputCurrency])
-
-  const [currencyState, setCurrencyState] = useState<CurrencyState>(getInitialCurrencyState)
+  const [currencyState, setCurrencyState] = useState<CurrencyState>({
+    inputCurrency: initialInputCurrency,
+    outputCurrency: initialOutputCurrency,
+  })
 
   const prefilledState = useMemo(
     () => ({
@@ -130,21 +125,19 @@ export function SwapAndLimitContextProvider({
   const previousConnectedChainId = usePrevious(connectedChainId)
   const previousPrefilledState = usePrevious(prefilledState)
 
-  // effect to sync inputCurrency, outputCurrency props to state, as they start undefined
-  // since `getInitialCurrencyState` only changes when input/output change this works
-  useEffect(() => {
-    setCurrencyState(getInitialCurrencyState)
-  }, [getInitialCurrencyState])
-
   useEffect(() => {
     const combinedCurrencyState = { ...currencyState, ...prefilledState }
     const chainChanged = previousConnectedChainId && previousConnectedChainId !== connectedChainId
-    const prefilledInputChanged =
-      previousPrefilledState?.inputCurrency &&
-      !prefilledState.inputCurrency?.equals(previousPrefilledState.inputCurrency)
-    const prefilledOutputChanged =
-      previousPrefilledState?.outputCurrency &&
-      !prefilledState?.outputCurrency?.equals(previousPrefilledState.outputCurrency)
+    const prefilledInputChanged = Boolean(
+      previousPrefilledState?.inputCurrency
+        ? !prefilledState.inputCurrency?.equals(previousPrefilledState.inputCurrency)
+        : prefilledState.inputCurrency
+    )
+    const prefilledOutputChanged = Boolean(
+      previousPrefilledState?.outputCurrency
+        ? !prefilledState?.outputCurrency?.equals(previousPrefilledState.outputCurrency)
+        : prefilledState.outputCurrency
+    )
 
     if (chainChanged || prefilledInputChanged || prefilledOutputChanged) {
       setCurrencyState({

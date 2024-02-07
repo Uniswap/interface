@@ -24,6 +24,7 @@ const mockLimitContextValue = {
     outputAmount: '',
     expiry: 1,
     isInputAmountFixed: true,
+    limitPriceEdited: false,
   },
   setLimitState: jest.fn(),
   derivedLimitInfo: {

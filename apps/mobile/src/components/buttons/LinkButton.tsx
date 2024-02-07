@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { Flex, FlexProps, Text, TouchableArea, TouchableAreaProps, useSporeColors } from 'ui/src'
 import ExternalLinkIcon from 'ui/src/assets/icons/external-link.svg'
-import { iconSizes, TextVariantTokens } from 'ui/src/theme'
+import { TextVariantTokens, iconSizes } from 'ui/src/theme'
 import { openUri } from 'wallet/src/utils/linking'
 
 interface LinkButtonProps extends Omit<TouchableAreaProps, 'onPress'> {

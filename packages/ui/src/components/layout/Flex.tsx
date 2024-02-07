@@ -1,5 +1,5 @@
+import Animated from 'react-native-reanimated'
 import { Stack, StackProps, styled } from 'tamagui'
-import { withAnimated } from 'ui/src/components/factories/animated'
 
 export const flexStyles = {
   fill: { flex: 1 },
@@ -52,4 +52,5 @@ export const Flex = styled(Stack, {
   } as const,
 })
 
-export const AnimatedFlex = withAnimated(Flex)
+export const AnimatedFlex = Animated.createAnimatedComponent(Flex)
+AnimatedFlex.displayName = 'AnimatedFlex'

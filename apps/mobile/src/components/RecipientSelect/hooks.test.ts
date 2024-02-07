@@ -234,7 +234,6 @@ describe(useRecipients, () => {
         }),
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const section = result.current.sections[0]!
       expect(section.title).toEqual('Recent')
       // This method doesn't check the order of the elements

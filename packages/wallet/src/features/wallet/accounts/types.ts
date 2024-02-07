@@ -20,6 +20,7 @@ export interface AccountBase {
   pending?: boolean
   timeImportedMs: number
   pushNotificationsEnabled?: boolean
+  skippedUnitagPrompt?: boolean
 }
 
 export interface SignerMnemonicAccount extends AccountBase {

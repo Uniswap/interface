@@ -40,15 +40,18 @@ export function useSwapTxAndGasInfoTradingApi({
     transactionRequestInfo?.gasFeeResult.value
   )
 
+  const approvalError = tokenApprovalInfo?.action === ApprovalAction.Unknown
+
   const gasFeeResult = {
     value: totalGasFee,
     loading: !tokenApprovalInfo || transactionRequestInfo.gasFeeResult.loading,
+    error: transactionRequestInfo.gasFeeResult.error || approvalError,
   }
 
   return {
     txRequest: transactionRequestInfo.transactionRequest,
     approveTxRequest: tokenApprovalInfo?.txRequest || undefined,
-    approvalError: tokenApprovalInfo?.action === ApprovalAction.Unknown,
+    approvalError,
     gasFee: gasFeeResult,
   }
 }

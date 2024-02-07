@@ -12,7 +12,7 @@ import { ChevronDown } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
 import { isSubmittableTrade } from 'state/routing/utils'
 import styled, { useTheme } from 'styled-components'
-import { Separator, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 
 import GasEstimateTooltip from './GasEstimateTooltip'
@@ -35,7 +35,6 @@ const SwapDetailsWrapper = styled(Column)`
 `
 
 const Wrapper = styled(Column)`
-  border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 16px;
   padding: 12px 16px;
 `
@@ -106,14 +105,12 @@ function AdvancedSwapDetails(props: SwapDetailsProps & { open: boolean }) {
   return (
     <AnimatedDropdown open={open}>
       <SwapDetailsWrapper gap="md" data-testid="advanced-swap-details">
-        <Separator />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.PRICE_IMPACT} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.MAX_SLIPPAGE} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.SWAP_FEE} />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.NETWORK_COST} />
-        <Separator />
         <SwapLineItem {...lineItemProps} type={SwapLineItemType.ROUTING_INFO} />
       </SwapDetailsWrapper>
     </AnimatedDropdown>

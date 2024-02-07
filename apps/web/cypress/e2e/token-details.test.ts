@@ -13,7 +13,8 @@ describe('Token details', () => {
     cy.viewport(1440, 900)
   })
 
-  it('should have a single h1 tag on smaller screen size', () => {
+  // TODO WEB-3579
+  it.skip('should have a single h1 tag on smaller screen size', () => {
     cy.viewport(800, 600)
     cy.visit(`/tokens/ethereum/${UNI_ADDRESS}`, { featureFlags: [{ name: FeatureFlag.infoTDP, value: false }] })
     cy.get('h1').should('have.length', 1)

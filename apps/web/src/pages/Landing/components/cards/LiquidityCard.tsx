@@ -48,12 +48,12 @@ export function LiquidityCard(props: LiquidityCardProps) {
   return (
     <ValuePropCard
       to="/pools"
-      tagText="Provide Liquidity"
+      tagText={t`Provide Liquidity`}
       height={screenIsLarge ? '340px' : '240px'}
       isDarkMode={props.isDarkMode}
       textColor={primary}
       backgroundColor={{ dark: 'rgba(136, 63, 255, 0.12)', light: 'rgba(136, 63, 255, 0.06)' }}
-      button={<PillButton color={primary} label="Liquidity" icon={<Bars size="24px" fill={primary} />} />}
+      button={<PillButton color={primary} label={t`Liquidity`} icon={<Bars size="24px" fill={primary} />} />}
       titleText={t`Provide liquidity to pools on the Uniswap Protocol and earn fees on swaps.`}
       paddingRight={screenIsXLarge ? '16%' : '0%'}
       alignTextToBottom

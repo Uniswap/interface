@@ -16,8 +16,8 @@ import {
   GetQuickQuoteArgs,
   GetQuoteArgs,
   InterfaceTrade,
-  isClassicQuoteResponse,
   LimitOrderTrade,
+  OffchainOrderType,
   PoolType,
   PreviewTrade,
   QuickRouteResponse,
@@ -35,6 +35,7 @@ import {
   URAQuoteType,
   V2PoolInRoute,
   V3PoolInRoute,
+  isClassicQuoteResponse,
 } from './types'
 
 interface RouteResult {
@@ -215,6 +216,12 @@ export function transformQuickRouteToTrade(args: GetQuickQuoteArgs, data: QuickR
   return new PreviewTrade({ inputAmount, outputAmount, tradeType })
 }
 
+export function getUSDCostPerGas(gasUseEstimateUSD?: number, gasUseEstimate?: number): number | undefined {
+  // Some sus javascript float math but it's ok because its just an estimate for display purposes
+  if (!gasUseEstimateUSD || !gasUseEstimate) return undefined
+  return gasUseEstimateUSD / gasUseEstimate
+}
+
 export async function transformQuoteToTrade(
   args: GetQuoteArgs,
   data: URAQuoteResponse,
@@ -228,8 +235,7 @@ export async function transformQuoteToTrade(
 
   const { gasUseEstimateUSD, blockNumber, routes, gasUseEstimate, swapFee } = getClassicTradeDetails(args, data)
 
-  // Some sus javascript float math but it's ok because its just an estimate for display purposes
-  const usdCostPerGas = gasUseEstimateUSD && gasUseEstimate ? gasUseEstimateUSD / gasUseEstimate : undefined
+  const usdCostPerGas = getUSDCostPerGas(gasUseEstimateUSD, gasUseEstimate)
 
   const approveInfo = await getApproveInfo(account, currencyIn, amount, usdCostPerGas)
 
@@ -262,6 +268,7 @@ export async function transformQuoteToTrade(
         })) ?? [],
     tradeType,
     gasUseEstimateUSD,
+    gasUseEstimate,
     approveInfo,
     blockNumber,
     requestId: data.quote.requestId,
@@ -358,5 +365,5 @@ export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchOrderTrad
 }
 
 export function isLimitTrade(trade?: InterfaceTrade): trade is LimitOrderTrade {
-  return trade?.fillType === TradeFillType.UniswapX && trade?.offchainOrderType === 'limit_order'
+  return trade?.fillType === TradeFillType.UniswapX && trade?.offchainOrderType === OffchainOrderType.LIMIT_ORDER
 }

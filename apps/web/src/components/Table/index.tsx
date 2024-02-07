@@ -2,8 +2,7 @@ import { Trans } from '@lingui/macro'
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, RowData, useReactTable } from '@tanstack/react-table'
 import Loader from 'components/Icons/LoadingSpinner'
 import useDebounce from 'hooks/useDebounce'
-import { useEffect, useRef } from 'react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import { FadePresence } from 'theme/components/FadePresence'
 
@@ -152,8 +151,9 @@ export function Table<Data extends RowData>({
                         </CellContainer>
                       ))
                     const rowOriginal = row.original as any
+                    const linkState = rowOriginal.linkState // optional data passed to linked page, accessible via useLocation().state
                     return 'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
-                      <TableRowLink to={rowOriginal.link} key={row.id}>
+                      <TableRowLink to={rowOriginal.link} key={row.id} state={linkState}>
                         <DataRow>{cells}</DataRow>
                       </TableRowLink>
                     ) : (

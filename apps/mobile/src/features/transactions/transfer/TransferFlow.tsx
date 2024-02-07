@@ -2,7 +2,7 @@ import { providers } from 'ethers'
 import React, { useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
-import { useOnSendEmptyActionPress } from 'src/features/transactions/hooks'
+import { useOnSendEmptyActionPress } from 'src/features/transactions/hooks/useOnSendEmptyActionPress'
 import { TransactionFlow } from 'src/features/transactions/TransactionFlow'
 import {
   TokenSelectorModal,
@@ -71,7 +71,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
     dispatch,
     TokenSelectorFlow.Transfer
   )
-  const onSendEmptyActionPress = useOnSendEmptyActionPress(onHideTokenSelector)
+  const onSendEmptyActionPress = useOnSendEmptyActionPress()
 
   return (
     <>

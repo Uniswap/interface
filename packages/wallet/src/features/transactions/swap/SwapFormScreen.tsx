@@ -35,6 +35,7 @@ import { ElementName, SectionName } from 'wallet/src/telemetry/constants'
 
 // eslint-disable-next-line no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
+import { SwapTokenSelector } from 'wallet/src/features/transactions/swap/SwapTokenSelector'
 
 const SWAP_DIRECTION_BUTTON_SIZE = iconSizes.icon24
 const SWAP_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing8 + spacing.spacing2
@@ -42,15 +43,7 @@ const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
 
 const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
 
-export function SwapFormScreen({
-  TokenSelector,
-  hideContent,
-}: {
-  // TODO(felipe): This is a temporary prop to allow us to move this flow screen-by-screen into the shared wallet package + extension.
-  //               In a future PR we'll move the `TokenSelector` component (and its dependencies) into the shared wallet package.
-  TokenSelector: React.FC
-  hideContent: boolean
-}): JSX.Element {
+export function SwapFormScreen({ hideContent }: { hideContent: boolean }): JSX.Element {
   const { handleContentLayout, bottomSheetViewStyles } = useTransactionModalContext()
   const { selectingCurrencyField } = useSwapFormContext()
 
@@ -63,7 +56,7 @@ export function SwapFormScreen({
 
       {!hideContent && <SwapFormContent />}
 
-      {!hideContent && !!selectingCurrencyField && <TokenSelector />}
+      {!hideContent && !!selectingCurrencyField && <SwapTokenSelector />}
     </TransactionModalInnerContainer>
   )
 }
@@ -401,7 +394,8 @@ function SwapFormContent(): JSX.Element {
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing2">
+      {/* TODO(EXT-526): re-enable `exiting` animation when it's fixed. */}
+      <AnimatedFlex entering={FadeIn} exiting={isWeb ? undefined : FadeOut} gap="$spacing2">
         <Trace section={SectionName.CurrencyInputPanel}>
           <AnimatedFlex
             borderColor="$surface3"
@@ -495,7 +489,6 @@ function SwapFormContent(): JSX.Element {
           <GasAndWarningRows renderEmptyRows />
         </Flex>
       </AnimatedFlex>
-
       {!isWeb && (
         <>
           {/*

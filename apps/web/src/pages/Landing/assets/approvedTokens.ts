@@ -166,15 +166,6 @@ export const approvedERC20: InteractiveToken[] = [
     standard: TokenStandard.ERC20,
   },
   {
-    name: 'HarryPotterObamaSonic10Inu',
-    symbol: 'BITCOIN',
-    color: '#007CF0',
-    logoUrl: 'https://assets.coingecko.com/coins/images/30323/large/hpos10i_logo_casino_night-dexview.png?1696529224',
-    address: '0x72e4f9f808c49a2a61de9c5896298920dc4eeea9',
-    chain: Chain.Ethereum,
-    standard: TokenStandard.ERC20,
-  },
-  {
     name: 'Apecoin',
     symbol: 'APE',
     color: '#1046D5',
@@ -204,19 +195,49 @@ export const approvedERC20: InteractiveToken[] = [
     chain: Chain.Ethereum,
     standard: TokenStandard.ERC20,
   },
+  {
+    name: 'Blur',
+    symbol: 'BLUR',
+    color: '#EA672B',
+    logoUrl:
+      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x5283D291DBCF85356A21bA090E6db59121208b44/logo.png',
+    address: '0x5283D291DBCF85356A21bA090E6db59121208b44',
+    chain: Chain.Ethereum,
+    standard: TokenStandard.ERC20,
+  },
+  {
+    name: 'Compound',
+    symbol: 'COMP',
+    color: '#00D395',
+    logoUrl:
+      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xc00e94Cb662C3520282E6f5717214004A7f26888/logo.png',
+    address: '0xc00e94Cb662C3520282E6f5717214004A7f26888',
+    chain: Chain.Ethereum,
+    standard: TokenStandard.ERC20,
+  },
+  {
+    name: 'Curve DAO Token',
+    symbol: 'CRV',
+    color: '#930201',
+    logoUrl:
+      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xD533a949740bb3306d119CC777fa900bA034cd52/logo.png',
+    address: '0xD533a949740bb3306d119CC777fa900bA034cd52',
+    chain: Chain.Ethereum,
+    standard: TokenStandard.ERC20,
+  },
+  {
+    name: 'Ethereum Name Service',
+    symbol: 'ENS',
+    color: '#66A0F5',
+    logoUrl:
+      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC18360217D8F7Ab5e7c516566761Ea12Ce7F9D72/logo.png',
+    address: '0xC18360217D8F7Ab5e7c516566761Ea12Ce7F9D72',
+    chain: Chain.Ethereum,
+    standard: TokenStandard.ERC20,
+  },
 ]
 
 export const approvedERC721: InteractiveToken[] = [
-  {
-    name: 'Blitmap',
-    symbol: 'BLIT',
-    address: '0x8d04a8c79cEB0889Bdd12acdF3Fa9D207eD3Ff63',
-    chain: Chain.Ethereum,
-    standard: TokenStandard.ERC721,
-    color: '#274AFB',
-    logoUrl:
-      'https://i.seadn.io/gae/N61iOqLx-qWAjIqVet9L0Fx-tWrgr_Jn6hdlyke23nnRdkRqDeE8Htz_BVjlOJ7KxEfB3KyujldKWnQg0bDao-Y1zyEJnogKtvaf?auto=format&dpr=1&w=384',
-  },
   {
     name: 'Unisocks',
     symbol: 'SOCKS',
@@ -236,15 +257,6 @@ export const approvedERC721: InteractiveToken[] = [
     color: '#FE007A',
     logoUrl:
       'https://i.seadn.io/gae/YPrTXYJJn4SiRupatfXX2dzDVbOsSh2yoRVXuFOCpRA70aOkvGlg2rzGRl_U5reKUIykOxJzbCNXlQnwg3MW5Agk5OnAzUFJVZ0J?auto=format&dpr=1&w=384',
-  },
-  {
-    name: 'Terraforms by Mathcastles',
-    symbol: 'TERRAFORMS',
-    address: '0x4E1f41613c9084FdB9E34E11fAE9412427480e56',
-    chain: Chain.Ethereum,
-    standard: TokenStandard.ERC721,
-    color: '#FF9000',
-    logoUrl: 'https://i.seadn.io/gcs/files/8987b795655076fdf8183a7daee3754a.gif?auto=format&dpr=1&w=2048',
   },
   {
     name: 'mfers',
@@ -342,55 +354,6 @@ export const approvedERC721: InteractiveToken[] = [
     logoUrl:
       'https://assets.coingecko.com/nft_contracts/images/1290/large/8b3c65ff29a58dd59ae26503ad40ab72.png?1659692625',
     address: '0xf528e3381372c43f5e8a55b3e6c252e32f1a26e4',
-    chain: Chain.Ethereum,
-    standard: TokenStandard.ERC721,
-  },
-  {
-    name: 'Mutant Ape Yacht Club',
-    symbol: 'MAYC',
-    color: '#CFDD40',
-    logoUrl:
-      'https://i.seadn.io/gae/lHexKRMpw-aoSyB1WdFBff5yfANLReFxHzt1DOj_sg7mS14yARpuvYcUtsyyx-Nkpk6WTcUPFoG53VnLJezYi8hAs0OxNZwlw6Y-dmI?w=500&auto=format',
-    address: '0x60e4d786628fea6478f785a6d7e704777c86a7c6',
-    chain: Chain.Ethereum,
-    standard: TokenStandard.ERC721,
-  },
-  {
-    name: 'Pudgy Penguins',
-    symbol: 'PUDGY',
-    color: '#80AAFE',
-    logoUrl:
-      'https://i.seadn.io/gae/yNi-XdGxsgQCPpqSio4o31ygAV6wURdIdInWRcFIl46UjUQ1eV7BEndGe8L661OoG-clRi7EgInLX4LPu9Jfw4fq0bnVYHqg7RFi?w=500&auto=format',
-    address: '0xbd3531da5cf5857e7cfaa92426877b022e612cf8',
-    chain: Chain.Ethereum,
-    standard: TokenStandard.ERC721,
-  },
-  {
-    name: 'Milady Maker',
-    symbol: 'MILADY',
-    color: '#69358A',
-    logoUrl:
-      'https://i.seadn.io/gae/a_frplnavZA9g4vN3SexO5rrtaBX_cBTaJYcgrPtwQIqPhzgzUendQxiwUdr51CGPE2QyPEa1DHnkW1wLrHAv5DgfC3BP-CWpFq6BA?w=500&auto=format',
-    address: '0x1a92f7381b9f03921564a437210bb9396471050c',
-    chain: Chain.Ethereum,
-    standard: TokenStandard.ERC721,
-  },
-  {
-    name: 'Azuki',
-    symbol: 'AZUKI',
-    color: '#BC3748',
-    logoUrl:
-      'https://i.seadn.io/gae/H8jOCJuQokNqGBpkBN5wk1oZwO7LM8bNnrHCaekV2nKjnCqw6UB5oaH8XyNeBDj6bA_n1mjejzhFQUP3O1NfjFLHr3FOaeHcTOOT?w=500&auto=format',
-    address: '0x7b6ab32ca02b31485fbf7265437c2853792cc5d9',
-    chain: Chain.Ethereum,
-    standard: TokenStandard.ERC721,
-  },
-  {
-    name: 'Bored Ape Yacht Club',
-    symbol: 'BAYC',
-    color: '#F4B000',
-    logoUrl: 'https://i.seadn.io/gae/2hQ3ZI6Kk',
-    address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
     chain: Chain.Ethereum,
     standard: TokenStandard.ERC721,
   },

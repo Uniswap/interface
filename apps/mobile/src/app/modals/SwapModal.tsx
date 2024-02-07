@@ -9,7 +9,6 @@ import {
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { SwapFlow } from 'src/features/transactions/swap/SwapFlow'
-import { TokenSelector } from 'src/features/transactions/swapRewrite/TokenSelector'
 import { getFocusOnCurrencyFieldFromInitialState } from 'src/features/transactions/swapRewrite/utils'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { useSporeColors } from 'ui/src'
@@ -64,7 +63,6 @@ export function SwapModal(): JSX.Element {
   return shouldShowSwapRewrite ? (
     <SwapFlowRewrite
       BiometricsIcon={<SwapBiometricsIcon />}
-      TokenSelector={TokenSelector}
       authTrigger={requiresBiometrics ? biometricsTrigger : undefined}
       openWalletRestoreModal={openWalletRestoreModal}
       prefilledState={swapRewritePrefilledState}

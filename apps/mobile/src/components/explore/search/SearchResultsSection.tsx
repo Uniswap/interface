@@ -2,12 +2,13 @@ import React, { useCallback, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { SearchResultsLoader } from 'src/components/explore/search/SearchResultsLoader'
+import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
+import { SearchENSAddressItem } from 'src/components/explore/search/items/SearchENSAddressItem'
 import { SearchEtherscanItem } from 'src/components/explore/search/items/SearchEtherscanItem'
 import { SearchNFTCollectionItem } from 'src/components/explore/search/items/SearchNFTCollectionItem'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
-import { SearchWalletItem } from 'src/components/explore/search/items/SearchWalletItem'
-import { SearchResultsLoader } from 'src/components/explore/search/SearchResultsLoader'
-import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
+import { SearchUnitagItem } from 'src/components/explore/search/items/SearchUnitagItem'
 import {
   formatNFTCollectionSearchResults,
   formatTokenSearchResults,
@@ -16,7 +17,7 @@ import {
 import { AnimatedFlex, Flex, Text } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
 import { SafetyLevel, useExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
@@ -27,6 +28,7 @@ import {
   WalletSearchResult,
 } from 'wallet/src/features/search/SearchResult'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'
+import { useUnitagByAddress, useUnitagByName } from 'wallet/src/features/unitags/hooks'
 import i18n from 'wallet/src/i18n/i18n'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { SEARCH_RESULT_HEADER_KEY } from './constants'
@@ -87,15 +89,23 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     loading: ensLoading,
   } = useENS(ChainId.Mainnet, searchQuery, true)
 
-  const validAddress: Address | null = getValidAddress(searchQuery, true, false)
+  // Search for matching Unitag by name
+  const { unitag: unitagByName, loading: unitagLoading } = useUnitagByName(searchQuery)
+
+  const validAddress: Address | undefined = getValidAddress(searchQuery, true, false)
     ? searchQuery
-    : null
+    : undefined
+
+  // Search for matching Unitag by address
+  const { unitag: unitagByAddress, loading: unitagByAddressLoading } =
+    useUnitagByAddress(validAddress)
 
   // Search for matching EOA wallet address
   const { isSmartContractAddress, loading: loadingIsSmartContractAddress } =
-    useIsSmartContractAddress(validAddress ?? undefined, ChainId.Mainnet)
+    useIsSmartContractAddress(validAddress, ChainId.Mainnet)
 
-  const walletsLoading = ensLoading || loadingIsSmartContractAddress
+  const walletsLoading =
+    ensLoading || loadingIsSmartContractAddress || unitagLoading || unitagByAddressLoading
 
   const onRetry = useCallback(async () => {
     await refetch()
@@ -104,30 +114,48 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   const hasENSResult = ensName && ensAddress
   const hasEOAResult = validAddress && !isSmartContractAddress
   const walletSearchResults: WalletSearchResult[] = useMemo(() => {
-    if (hasENSResult) {
-      return [
-        {
-          type: SearchResultType.Wallet,
-          address: ensAddress,
-          ensName,
-        },
-      ]
+    const results: WalletSearchResult[] = []
+
+    if (unitagByName?.address?.address && unitagByName?.username) {
+      results.push({
+        type: SearchResultType.Unitag,
+        address: unitagByName.address.address,
+        unitag: unitagByName.username,
+      })
     }
-    if (hasEOAResult) {
-      return [
-        {
-          type: SearchResultType.Wallet,
-          address: validAddress,
-        },
-      ]
+
+    // Do not show ENS result if it is the same as the Unitag result
+    if (hasENSResult && ensAddress !== unitagByName?.address?.address) {
+      results.push({
+        type: SearchResultType.ENSAddress,
+        address: ensAddress,
+        ensName,
+      })
     }
-    return []
-  }, [ensAddress, ensName, hasENSResult, hasEOAResult, validAddress])
+
+    if (unitagByAddress?.username && validAddress) {
+      results.push({
+        type: SearchResultType.Unitag,
+        address: validAddress,
+        unitag: unitagByAddress.username,
+      })
+    }
+
+    // Do not show EOA address result if there is a Unitag result by address
+    if (hasEOAResult && !unitagByAddress) {
+      results.push({
+        type: SearchResultType.ENSAddress,
+        address: validAddress,
+      })
+    }
+
+    return results as WalletSearchResult[]
+  }, [ensAddress, ensName, unitagByName, unitagByAddress, hasENSResult, hasEOAResult, validAddress])
 
   const countTokenResults = tokenResults?.length ?? 0
   const countNftCollectionResults = nftCollectionResults?.length ?? 0
-  const countENSResults = hasENSResult || hasEOAResult ? 1 : 0
-  const countTotalResults = countTokenResults + countNftCollectionResults + countENSResults
+  const countWalletResults = walletSearchResults.length
+  const countTotalResults = countTokenResults + countNftCollectionResults + countWalletResults
 
   // Only consider queries with the .eth suffix as an exact ENS match
   const exactENSMatch =
@@ -146,7 +174,8 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   const hasVerifiedNFTResults = Boolean(nftCollectionResults?.some((res) => res.isVerified))
 
-  const showWalletSectionFirst = exactENSMatch && !prefixTokenMatch
+  const showWalletSectionFirst =
+    unitagByName || unitagByAddress || (exactENSMatch && !prefixTokenMatch)
   const showNftCollectionsBeforeTokens = hasVerifiedNFTResults && !hasVerifiedTokenResults
 
   const sortedSearchResults: SearchResultOrHeader[] = useMemo(() => {
@@ -245,6 +274,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 }
 
 // Render function for FlatList of SearchResult items
+
 export const renderSearchItem = ({
   item: searchResult,
   searchContext,
@@ -259,8 +289,10 @@ export const renderSearchItem = ({
       )
     case SearchResultType.Token:
       return <SearchTokenItem searchContext={searchContext} token={searchResult} />
-    case SearchResultType.Wallet:
-      return <SearchWalletItem searchContext={searchContext} wallet={searchResult} />
+    case SearchResultType.ENSAddress:
+      return <SearchENSAddressItem searchContext={searchContext} searchResult={searchResult} />
+    case SearchResultType.Unitag:
+      return <SearchUnitagItem searchContext={searchContext} searchResult={searchResult} />
     case SearchResultType.NFTCollection:
       return <SearchNFTCollectionItem collection={searchResult} searchContext={searchContext} />
     case SearchResultType.Etherscan:

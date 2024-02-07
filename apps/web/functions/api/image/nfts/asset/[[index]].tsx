@@ -1,6 +1,5 @@
 /* eslint-disable import/no-unused-modules */
 import { ImageResponse } from '@vercel/og'
-import React from 'react'
 
 import { blocklistedCollections } from '../../../../../src/nft/utils/blocklist'
 import { WATERMARK_URL } from '../../../../constants'

@@ -5,7 +5,7 @@ import { didUserReject } from 'connection/utils'
 import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
 import { useCallback } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { addPopup, PopupType } from 'state/application/reducer'
+import { PopupType, addPopup } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 
 import { useSwitchChain } from './useSwitchChain'

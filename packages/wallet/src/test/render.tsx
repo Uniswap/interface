@@ -12,6 +12,7 @@ import {
 } from '@testing-library/react-native'
 import React, { PropsWithChildren } from 'react'
 import { Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
+import { UnitagUpdaterContextProvider } from 'wallet/src/features/unitags/context'
 import { SharedProvider } from 'wallet/src/provider'
 import { sharedRootReducer, type SharedState } from 'wallet/src/state/reducer'
 import { AutoMockedApolloProvider } from 'wallet/src/test/mocks/provider'
@@ -52,7 +53,9 @@ export function renderWithProviders(
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
       <AutoMockedApolloProvider cache={cache} resolvers={resolvers}>
-        <SharedProvider reduxStore={store}>{children}</SharedProvider>
+        <SharedProvider reduxStore={store}>
+          <UnitagUpdaterContextProvider>{children}</UnitagUpdaterContextProvider>
+        </SharedProvider>
       </AutoMockedApolloProvider>
     )
   }

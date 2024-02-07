@@ -105,7 +105,7 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
   const invalidInput = value && !numericInputRegex.test(value)
 
   useEffect(() => {
-    // Resets input if non-numberic value is passed
+    // Resets input if non-numeric value is passed
     if (invalidInput) {
       onChangeText?.('')
     }
@@ -172,7 +172,7 @@ export const AmountInput = forwardRef<NativeTextInput, Props>(function _AmountIn
         return
       }
       // Dismiss keyboard when app is foregrounded (showSoftInputOnFocus doesn't
-      // wotk when the app activates from the background)
+      // work when the app activates from the background)
       Keyboard.dismiss()
     })
 

@@ -6,7 +6,7 @@ import { StackedAreaSeries } from 'components/Charts/StackedLineChart/stacked-ar
 import { PriceSource } from 'graphql/data/__generated__/types-and-hooks'
 import { getProtocolColor } from 'graphql/data/util'
 import { CustomStyleOptions, DeepPartial, ISeriesApi, Logical, UTCTimestamp, WhitespaceData } from 'lightweight-charts'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTheme } from 'styled-components'
 
 export interface StackedLineData extends WhitespaceData<UTCTimestamp> {
@@ -43,6 +43,8 @@ export class TVLChartModel extends ChartModel<StackedLineData> {
 
   updateOptions(params: TVLChartParams) {
     super.updateOptions(params, {
+      handleScale: false,
+      handleScroll: false,
       rightPriceScale: {
         visible: params.colors.length == 1, // Hide pricescale on multi-line charts
         borderVisible: false,

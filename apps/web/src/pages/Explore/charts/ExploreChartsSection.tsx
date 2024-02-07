@@ -2,20 +2,16 @@ import { Trans } from '@lingui/macro'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart } from 'components/Charts/ChartModel'
 import { StackedLineData, TVLChartModel } from 'components/Charts/StackedLineChart'
-import {
-  getCumulativeVolume,
-  getVolumeProtocolInfo,
-  StackedVolumeChartModel,
-} from 'components/Charts/StackedVolumeChart'
-import { StackedBarsData } from 'components/Charts/StackedVolumeChart/renderer'
-import { getCumulativeSum } from 'components/Charts/StackedVolumeChart/stacked-bar-series'
 import TimePeriodSelector from 'components/Charts/TimeSelector'
 import { getTimePeriodDisplay } from 'components/Charts/VolumeChart'
+import { CustomVolumeChartModel } from 'components/Charts/VolumeChart/CustomVolumeChartModel'
+import { StackedHistogramData } from 'components/Charts/VolumeChart/renderer'
+import { getCumulativeSum, getCumulativeVolume, getVolumeProtocolInfo } from 'components/Charts/VolumeChart/utils'
 import Column from 'components/Column'
 import { RowBetween } from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { PriceSource } from 'graphql/data/__generated__/types-and-hooks'
-import { getProtocolColor, TimePeriod } from 'graphql/data/util'
+import { TimePeriod, getProtocolColor } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { HARDCODED_TVL_DATA, HARDCODED_VOLUME_DATA } from 'pages/Explore/charts/mockData'
 import { ReactNode, useMemo, useState } from 'react'
@@ -72,7 +68,7 @@ const StyledChart = styled(Chart)`
   height: ${EXPLORE_CHART_HEIGHT_PX}px;
 ` /* cast preserves generic Chart props that the `styled` return type looses: */ as typeof Chart
 
-function VolumeChartSection({ data }: { data: StackedBarsData[] }) {
+function VolumeChartSection({ data }: { data: StackedHistogramData[] }) {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
 
   const mockDataForTimePeriod = useMemo(() => {
@@ -96,8 +92,8 @@ function VolumeChartSection({ data }: { data: StackedBarsData[] }) {
 
   const theme = useTheme()
 
-  const params = useMemo<{ data: StackedBarsData[]; colors: [string, string] }>(
-    () => ({ data: mockDataForTimePeriod, colors: [theme.accent1, theme.accent3] }),
+  const params = useMemo<{ data: StackedHistogramData[]; colors: [string, string]; headerHeight: number }>(
+    () => ({ data: mockDataForTimePeriod, colors: [theme.accent1, theme.accent3], headerHeight: 85 }),
     [mockDataForTimePeriod, theme]
   )
   const cumulativeVolume = useMemo(() => getCumulativeVolume(mockDataForTimePeriod), [mockDataForTimePeriod])
@@ -127,7 +123,7 @@ function VolumeChartSection({ data }: { data: StackedBarsData[] }) {
           />
         </div>
       </RowBetween>
-      <StyledChart Model={StackedVolumeChartModel} params={params}>
+      <StyledChart Model={CustomVolumeChartModel<StackedHistogramData>} params={params}>
         {(crosshairData) => (
           <ChartHeader
             value={crosshairData ? getCumulativeSum(crosshairData) : getCumulativeVolume(mockDataForTimePeriod)}

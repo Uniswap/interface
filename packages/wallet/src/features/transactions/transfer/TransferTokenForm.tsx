@@ -255,7 +255,8 @@ export function TransferTokenForm({
       <Flex grow gap="$spacing8" justifyContent="space-between">
         <AnimatedFlex
           entering={FadeIn}
-          exiting={FadeOut}
+          // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
+          exiting={isWeb ? undefined : FadeOut}
           gap="$spacing2"
           onLayout={onInputPanelLayout}>
           {nftIn ? (
@@ -395,7 +396,8 @@ export function TransferTokenForm({
 
         <AnimatedFlex
           bottom={0}
-          exiting={FadeOutDown}
+          // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
+          exiting={isWeb ? undefined : FadeOutDown}
           gap="$spacing8"
           left={0}
           opacity={isLayoutPending ? 0 : 1}

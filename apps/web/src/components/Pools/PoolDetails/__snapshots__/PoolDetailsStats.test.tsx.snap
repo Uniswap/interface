@@ -77,23 +77,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   justify-content: flex-start;
 }
 
-.c11 {
-  opacity: 0;
-  -webkit-transition: opacity 250ms ease-in;
-  transition: opacity 250ms ease-in;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
 .c10 {
-  width: 20px;
-  height: 20px;
-  background: #22222212;
-  -webkit-transition: background-color 250ms ease-in;
-  transition: background-color 250ms ease-in;
-  box-shadow: 0 0 1px white;
-  border-radius: 50%;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -102,10 +86,15 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c11 {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
 }
 
 .c9 {
@@ -297,9 +286,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
               class="c10"
             >
               <img
-                alt="USDC logo"
                 class="c11"
-                loading="lazy"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
               />
             </div>
@@ -323,9 +310,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
               class="c10"
             >
               <img
-                alt="WETH logo"
                 class="c11"
-                loading="lazy"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
               />
             </div>
@@ -523,23 +508,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   justify-content: flex-start;
 }
 
-.c12 {
-  opacity: 0;
-  -webkit-transition: opacity 250ms ease-in;
-  transition: opacity 250ms ease-in;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-}
-
 .c11 {
-  width: 16px;
-  height: 16px;
-  background: #22222212;
-  -webkit-transition: background-color 250ms ease-in;
-  transition: background-color 250ms ease-in;
-  box-shadow: 0 0 1px white;
-  border-radius: 50%;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -548,10 +517,15 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c12 {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
 }
 
 .c10 {
@@ -634,7 +608,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
 .c13 {
   height: 8px;
   width: 40.698463777008904%;
-  background: #0066d9;
+  background: #FC72FF;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   border-right: 1px solid #F9F9F9;
@@ -643,7 +617,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
 .c14 {
   height: 8px;
   width: 59.3015362229911%;
-  background: #FC72FF;
+  background: #4C82FB;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   border-left: 1px solid #F9F9F9;
@@ -766,9 +740,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
                 class="c11"
               >
                 <img
-                  alt="USDC logo"
                   class="c12"
-                  loading="lazy"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                 />
               </div>
@@ -792,9 +764,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
                 class="c11"
               >
                 <img
-                  alt="WETH logo"
                   class="c12"
-                  loading="lazy"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
                 />
               </div>

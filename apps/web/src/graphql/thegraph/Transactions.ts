@@ -152,7 +152,7 @@ export function useRecentTransactions(
   filter: TransactionType[] = [TransactionType.SWAP, TransactionType.MINT, TransactionType.BURN]
 ) {
   const apolloClient = chainToApolloClient[chainId || ChainId.MAINNET]
-  const { data, loading, fetchMore } = useTransactionsQuery({
+  const { data, loading, fetchMore, error } = useTransactionsQuery({
     variables: {
       first: 20,
       skip: 0,
@@ -252,7 +252,8 @@ export function useRecentTransactions(
       transactions,
       loading,
       loadMore,
+      error,
     }),
-    [transactions, loading, loadMore]
+    [transactions, loading, loadMore, error]
   )
 }

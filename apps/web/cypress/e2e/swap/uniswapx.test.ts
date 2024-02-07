@@ -42,6 +42,7 @@ function stubSwapTxReceipt() {
 }
 
 // TODO: FIX THESE TESTS where we should NOT stub for pricing requests
+// TODO: add test case for cancelling a uniswapx order
 describe.skip('UniswapX Toggle', () => {
   beforeEach(() => {
     stubNonPriceQuoteWith(QuoteWhereUniswapXIsBetter)

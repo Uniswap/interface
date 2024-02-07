@@ -35,6 +35,7 @@ const AppChrome = lazy(() => import('./AppChrome'))
 const BodyWrapper = styled.div<{ bannerIsVisible?: boolean }>`
   display: flex;
   flex-direction: column;
+  position: relative;
   width: 100%;
   min-height: calc(100vh - ${({ bannerIsVisible }) => (bannerIsVisible ? UK_BANNER_HEIGHT : 0)}px);
   padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;

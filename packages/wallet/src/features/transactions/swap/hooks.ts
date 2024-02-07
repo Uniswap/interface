@@ -39,8 +39,9 @@ import {
   getBaseTradeAnalyticsProperties,
   getBaseTradeAnalyticsPropertiesFromSwapInfo,
 } from 'wallet/src/features/transactions/swap/analytics'
-import { swapActions, SwapParams } from 'wallet/src/features/transactions/swap/swapSaga'
+import { SwapParams, swapActions } from 'wallet/src/features/transactions/swap/swapSaga'
 import { useTradingApiTrade } from 'wallet/src/features/transactions/swap/tradingApi/useTradingApiTrade'
+import { isClassicQuote } from 'wallet/src/features/transactions/swap/tradingApi/utils'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import {
   PermitSignatureInfo,
@@ -60,9 +61,9 @@ import {
   tradeToTransactionInfo,
 } from 'wallet/src/features/transactions/swap/utils'
 import {
+  WrapParams,
   getWethContract,
   tokenWrapActions,
-  WrapParams,
 } from 'wallet/src/features/transactions/swap/wrapSaga'
 import {
   updateExactAmountFiat,
@@ -88,7 +89,7 @@ import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { selectSwapStartTimestamp } from 'wallet/src/telemetry/timing/selectors'
 import { updateSwapStartTimestamp } from 'wallet/src/telemetry/timing/slice'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
-import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 import { toStringish } from 'wallet/src/utils/number'
 
 const NUM_DECIMALS_USD = 2
@@ -813,8 +814,12 @@ export function useSwapCallback(
       appDispatch(swapActions.trigger(params))
       onSubmit()
 
-      // TODO:api update missing properties when api adds them in trading api
-      // https://linear.app/uniswap/issue/MOB-2453/add-additional-properties-to-trading-api
+      const blockNumber =
+        trade.quoteData?.quoteType === QuoteType.TradingApi
+          ? isClassicQuote(trade.quoteData?.quote?.quote)
+            ? trade.quoteData?.quote?.quote?.blockNumber?.toString()
+            : undefined
+          : trade.quoteData?.quote?.blockNumber
 
       sendWalletAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
         ...getBaseTradeAnalyticsProperties({ formatter, trade }),
@@ -827,10 +832,7 @@ export function useSwapCallback(
           ? parseFloat(currencyOutAmountUSD.toFixed(2))
           : undefined,
         transaction_deadline_seconds: trade.deadline,
-        swap_quote_block_number:
-          trade.quoteData?.quoteType === QuoteType.RoutingApi
-            ? trade.quoteData.quote?.blockNumber
-            : undefined,
+        swap_quote_block_number: blockNumber,
         is_auto_slippage: isAutoSlippage,
         swap_flow_duration_milliseconds: swapStartTimestamp
           ? Date.now() - swapStartTimestamp

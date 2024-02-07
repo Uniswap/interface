@@ -1,16 +1,19 @@
 import { useTranslation } from 'react-i18next'
 import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { SwapTxNotification } from 'wallet/src/features/notifications/types'
 import { formSwapNotificationTitle } from 'wallet/src/features/notifications/utils'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
+import { useCreateSwapFormState } from 'wallet/src/features/transactions/hooks'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
 
 export function SwapNotification({
   notification: {
     chainId,
+    txId,
     txStatus,
     inputCurrencyId,
     inputCurrencyAmountRaw,
@@ -20,14 +23,8 @@ export function SwapNotification({
     address,
     hideDelay,
   },
-  onPress,
-  onPressIn,
-  onRetry,
 }: {
   notification: SwapTxNotification
-  onPress: () => void
-  onPressIn?: () => void
-  onRetry: () => void
 }): JSX.Element {
   const formatter = useLocalizationContext()
   const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
@@ -46,6 +43,14 @@ export function SwapNotification({
   )
 
   const { t } = useTranslation()
+
+  const { navigateToAccountActivityList, navigateToSwapFlow } = useWalletNavigation()
+
+  const swapFormState = useCreateSwapFormState(address, chainId, txId)
+
+  const onRetry = (): void => {
+    navigateToSwapFlow(swapFormState ? { initialState: swapFormState } : undefined)
+  }
 
   const retryButton =
     txStatus === TransactionStatus.Failed
@@ -71,8 +76,7 @@ export function SwapNotification({
       hideDelay={hideDelay}
       icon={icon}
       title={title}
-      onPress={onPress}
-      onPressIn={onPressIn}
+      onPress={navigateToAccountActivityList}
     />
   )
 }

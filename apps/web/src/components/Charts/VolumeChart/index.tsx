@@ -1,47 +1,27 @@
 import { t, Trans } from '@lingui/macro'
 import { ChartHeader } from 'components/Charts/ChartHeader'
-import { Chart, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
+import { Chart, ChartModelParams } from 'components/Charts/ChartModel'
 import { useHeaderDateFormatter } from 'components/Charts/hooks'
 import Column from 'components/Column'
 import { BIPS_BASE } from 'constants/misc'
 import { PricePoint, TimePeriod, toHistoryDuration } from 'graphql/data/util'
-import { BarPrice, HistogramData, ISeriesApi, UTCTimestamp } from 'lightweight-charts'
+import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo } from 'react'
 import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { CrosshairHighlightPrimitive } from './CrosshairHighlightPrimitive'
+import { CustomVolumeChartModel, CustomVolumeChartModelParams } from './CustomVolumeChartModel'
+import { SingleHistogramData } from './renderer'
 
-type VolumeChartModelParams = ChartModelParams<HistogramData<UTCTimestamp>> & { headerHeight: number }
-
-class VolumeChartModel extends ChartModel<HistogramData<UTCTimestamp>> {
-  protected series: ISeriesApi<'Histogram'>
-  private highlightBarPrimitive: CrosshairHighlightPrimitive
-
-  constructor(chartDiv: HTMLDivElement, params: VolumeChartModelParams) {
+class VolumeChartModel extends CustomVolumeChartModel<SingleHistogramData> {
+  constructor(chartDiv: HTMLDivElement, params: ChartModelParams<SingleHistogramData> & CustomVolumeChartModelParams) {
     super(chartDiv, params)
-
-    this.series = this.api.addHistogramSeries()
-    this.series.setData(this.data)
-    this.highlightBarPrimitive = new CrosshairHighlightPrimitive({
-      color: params.theme.surface3,
-      crosshairYPosition: params.headerHeight,
-    })
-    this.series.attachPrimitive(this.highlightBarPrimitive)
-
-    this.updateOptions(params)
-    this.fitContent()
   }
 
-  updateOptions(params: VolumeChartModelParams) {
+  updateOptions(params: ChartModelParams<SingleHistogramData> & CustomVolumeChartModelParams) {
     const volumeChartOptions = {
       autoSize: true,
-      localization: {
-        locale: params.locale,
-        priceFormatter: (price: BarPrice) =>
-          params.format.formatFiatPrice({ price, type: NumberType.FiatTokenChartStatsScale }),
-      },
       rightPriceScale: {
         borderVisible: false,
         scaleMargins: {
@@ -55,42 +35,9 @@ class VolumeChartModel extends ChartModel<HistogramData<UTCTimestamp>> {
       handleScroll: {
         vertTouchDrag: false,
       },
-      crosshair: {
-        horzLine: {
-          visible: false,
-          labelVisible: false,
-        },
-        vertLine: {
-          visible: false,
-          labelVisible: false,
-        },
-      },
     }
 
     super.updateOptions(params, volumeChartOptions)
-    const { data, theme, color } = params
-
-    // Handles changes in data, e.g. time period selection
-    if (this.data !== data) {
-      this.data = data
-      this.series.setData(data)
-      this.fitContent()
-    }
-
-    this.series.applyOptions({
-      color,
-      priceFormat: {
-        type: 'volume',
-      },
-      priceLineVisible: false,
-      lastValueVisible: false,
-    })
-
-    // Add crosshair highlight bar
-    this.highlightBarPrimitive.applyOptions({
-      color: theme.surface3,
-      crosshairYPosition: params.headerHeight,
-    })
   }
 }
 
@@ -104,7 +51,7 @@ function VolumeChartHeader({
   feeTier,
   noFeesData,
 }: {
-  crosshairData?: HistogramData<UTCTimestamp>
+  crosshairData?: SingleHistogramData
   timePeriod: TimePeriod
   feeTier?: number
   noFeesData: boolean
@@ -165,13 +112,12 @@ interface VolumeChartProps {
   volumes?: PricePoint[]
   feeTier?: number
   timePeriod: TimePeriod
-  color?: string
 }
 
-export function VolumeChart({ height, volumes, feeTier, timePeriod, color }: VolumeChartProps) {
+export function VolumeChart({ height, volumes, feeTier, timePeriod }: VolumeChartProps) {
   const theme = useTheme()
 
-  const data = useMemo(
+  const data: SingleHistogramData[] = useMemo(
     () =>
       volumes?.map((volumePoint) => {
         return { value: volumePoint.value, time: volumePoint.timestamp as UTCTimestamp }
@@ -180,13 +126,10 @@ export function VolumeChart({ height, volumes, feeTier, timePeriod, color }: Vol
   )
 
   const noFeesData = feeTier === undefined // i.e. if is token volume chart
-  const params = useMemo(() => {
-    return {
-      data,
-      color: color ?? theme.accent1,
-      headerHeight: noFeesData ? 75 : 90,
-    }
-  }, [data, theme, color, noFeesData])
+  const params = useMemo(
+    () => ({ data, colors: [theme.accent1], headerHeight: noFeesData ? 75 : 90 }),
+    [data, theme.accent1, noFeesData]
+  )
 
   return (
     <Chart Model={VolumeChartModel} params={params} height={height}>

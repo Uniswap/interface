@@ -6,8 +6,8 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
-  sendTransaction,
   SendTransactionParams,
+  sendTransaction,
 } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { TransactionType } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'

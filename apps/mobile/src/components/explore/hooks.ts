@@ -3,6 +3,7 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, Share } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { useSelectHasTokenFavorited, useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
@@ -10,16 +11,14 @@ import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constan
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
-import { useCopyTokenAddressCallback } from 'wallet/src/features/tokens/hooks'
 import {
   CurrencyField,
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
 import { useAppDispatch } from 'wallet/src/state'
 import { ElementName, ModalName, SectionNameType } from 'wallet/src/telemetry/constants'
-import { getTokenUrl } from 'wallet/src/utils/linking'
-
 import { CurrencyId, currencyIdToAddress } from 'wallet/src/utils/currencyId'
+import { getTokenUrl } from 'wallet/src/utils/linking'
 
 interface TokenMenuParams {
   currencyId: CurrencyId
@@ -47,7 +46,13 @@ export function useExploreTokenContextMenu({
   // currencyId, where we have hardcoded addresses for native currencies
   const currencyAddress = currencyIdToAddress(currencyId)
 
-  const onPressCopyContractAddress = useCopyTokenAddressCallback(currencyAddress)
+  const onPressReceive = useCallback(
+    () =>
+      dispatch(
+        openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+      ),
+    [dispatch]
+  )
 
   const onPressShare = useCallback(async () => {
     const tokenUrl = getTokenUrl(currencyId)
@@ -109,9 +114,9 @@ export function useExploreTokenContextMenu({
         : []),
       { title: t('Swap'), systemIcon: 'arrow.2.squarepath', onPress: onPressSwap },
       {
-        title: t('Copy contract address'),
-        systemIcon: 'doc.on.doc',
-        onPress: onPressCopyContractAddress,
+        title: t('Receive'),
+        systemIcon: 'qrcode',
+        onPress: onPressReceive,
       },
       ...(!onEditFavorites
         ? [
@@ -129,7 +134,7 @@ export function useExploreTokenContextMenu({
       onPressToggleFavorite,
       onEditFavorites,
       onPressSwap,
-      onPressCopyContractAddress,
+      onPressReceive,
       onPressShare,
     ]
   )

@@ -1,4 +1,4 @@
-export * from './'
+export * from '.'
 export { BackArrow } from './BackArrow'
 export { AnimatedCaretChange, Caret } from './Caret'
 export { OSDynamicCloudIcon } from './OSDynamicCloudIcon'

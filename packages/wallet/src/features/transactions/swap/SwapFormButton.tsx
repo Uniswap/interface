@@ -94,7 +94,7 @@ export function SwapFormButton(): JSX.Element {
 
   return (
     <Flex alignItems="center" gap="$spacing16">
-      {!isHoldToSwapPressed && showHoldToSwapTip && <HoldToInstantSwapRow />}
+      {!isWeb && !isHoldToSwapPressed && showHoldToSwapTip && <HoldToInstantSwapRow />}
 
       <Trace logPress element={ElementName.SwapReview}>
         <Button

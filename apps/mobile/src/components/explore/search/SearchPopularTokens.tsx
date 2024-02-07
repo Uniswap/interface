@@ -2,8 +2,7 @@ import React, { useMemo } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { getSearchResultId } from 'src/components/explore/search/utils'
-import { Inset } from 'ui/src'
-import { TokenLoader } from 'wallet/src/components/loading/TokenLoader'
+import { Inset, Loader } from 'ui/src'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
 import { TopToken, usePopularTokens } from 'wallet/src/features/tokens/hooks'
@@ -43,7 +42,7 @@ export function SearchPopularTokens(): JSX.Element {
   if (loading) {
     return (
       <Inset all="$spacing8">
-        <TokenLoader repeat={2} />
+        <Loader.Token repeat={2} />
       </Inset>
     )
   }

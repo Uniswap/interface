@@ -1,15 +1,15 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { ChainId } from 'wallet/src/constants/chains'
-import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 const NATIVE_CURRENCY_DECIMALS = 18
 
 // TODO(MOB-181): calculate this in a more scientific way
 export const MIN_ETH_FOR_GAS: JSBI = JSBI.multiply(
   JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(NATIVE_CURRENCY_DECIMALS - 3)),
-  JSBI.BigInt(12)
-) // .012 ETH
+  JSBI.BigInt(15)
+) // .015 ETH
 
 export const MIN_POLYGON_FOR_GAS: JSBI = JSBI.multiply(
   JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(NATIVE_CURRENCY_DECIMALS - 2)),
@@ -18,8 +18,8 @@ export const MIN_POLYGON_FOR_GAS: JSBI = JSBI.multiply(
 
 export const MIN_ARBITRUM_FOR_GAS: JSBI = JSBI.multiply(
   JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(NATIVE_CURRENCY_DECIMALS - 4)),
-  JSBI.BigInt(6)
-) // .0006 ETH
+  JSBI.BigInt(8)
+) // .0008 ETH
 
 export const MIN_OPTIMISM_FOR_GAS: JSBI = MIN_ARBITRUM_FOR_GAS
 

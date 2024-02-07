@@ -8,8 +8,8 @@ import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { makeSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
 import {
-  sendTransaction,
   SendTransactionParams,
+  sendTransaction,
 } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { tradeToTransactionInfo } from 'wallet/src/features/transactions/swap/utils'
@@ -82,7 +82,10 @@ export function* approveAndSwap(params: SwapParams) {
 
     yield* call(sendTransaction, sendTransactionParams)
   } catch (error) {
-    logger.error(error, { tags: { file: 'swapSaga', function: 'approveAndSwap' } })
+    logger.error(error, {
+      tags: { file: 'swapSaga', function: 'approveAndSwap' },
+      extra: { analytics: params.analytics },
+    })
   }
 }
 

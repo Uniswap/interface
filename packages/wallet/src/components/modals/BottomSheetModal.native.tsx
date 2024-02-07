@@ -1,11 +1,11 @@
 import {
+  BottomSheetModal as BaseModal,
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetHandleProps,
-  BottomSheetModal as BaseModal,
+  BottomSheetView,
   // eslint-disable-next-line no-restricted-imports
   BottomSheetTextInput as GorhomBottomSheetTextInput,
-  BottomSheetView,
   useBottomSheetDynamicSnapPoints,
 } from '@gorhom/bottom-sheet'
 import { BlurView } from 'expo-blur'

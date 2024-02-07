@@ -4,6 +4,7 @@ import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'state/hooks'
+import { OffchainOrderType } from 'state/routing/types'
 
 import { addSignature } from './reducer'
 import { SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
@@ -26,7 +27,7 @@ export function useOrder(orderHash: string): UniswapXOrderDetails | undefined {
   const signatures = useAllSignatures()
   return useMemo(() => {
     const order = signatures[orderHash]
-    if (!order || order.type !== SignatureType.SIGN_UNISWAPX_ORDER) return undefined
+    if (!order || ![SignatureType.SIGN_UNISWAPX_ORDER, SignatureType.SIGN_LIMIT].includes(order.type)) return undefined
     return order
   }, [signatures, orderHash])
 }
@@ -40,11 +41,16 @@ export function useAddOrder() {
       orderHash: string,
       chainId: ChainId,
       expiry: number,
-      swapInfo: UniswapXOrderDetails['swapInfo']
+      swapInfo: UniswapXOrderDetails['swapInfo'],
+      encodedOrder: string,
+      offchainOrderType?: OffchainOrderType
     ) => {
       dispatch(
         addSignature({
-          type: SignatureType.SIGN_UNISWAPX_ORDER,
+          type:
+            offchainOrderType === OffchainOrderType.DUTCH_AUCTION
+              ? SignatureType.SIGN_UNISWAPX_ORDER
+              : SignatureType.SIGN_LIMIT,
           offerer,
           id: orderHash,
           chainId,
@@ -53,6 +59,7 @@ export function useAddOrder() {
           swapInfo,
           status: UniswapXOrderStatus.OPEN,
           addedTime: Date.now(),
+          encodedOrder,
         })
       )
     },
@@ -65,7 +72,7 @@ export function isFinalizedOrder(orderStatus: UniswapXOrderStatus) {
 }
 
 export function isOnChainOrder(orderStatus: UniswapXOrderStatus) {
-  return orderStatus === UniswapXOrderStatus.FILLED || orderStatus === UniswapXOrderStatus.CANCELLED
+  return orderStatus === UniswapXOrderStatus.FILLED
 }
 
 function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrderDetails {

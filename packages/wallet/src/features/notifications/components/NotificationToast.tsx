@@ -7,7 +7,7 @@ import {
 } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
 import { isWeb } from 'tamagui'
-import { AnimatedFlex, Flex, mediumShadowProps, Text, TouchableArea, useDeviceInsets } from 'ui/src'
+import { AnimatedFlex, Flex, Text, TouchableArea, mediumShadowProps, useDeviceInsets } from 'ui/src'
 import { borderRadii, spacing } from 'ui/src/theme'
 import { useTimeout } from 'utilities/src/time/timing'
 import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
@@ -58,7 +58,7 @@ export function NotificationToast({
   const currentNotification = notifications?.[0]
   const hasQueuedNotification = !!notifications?.[1]
 
-  const showOffset = useDeviceInsets().top + spacing.spacing4
+  const showOffset = useDeviceInsets().top + spacing.spacing4 + (isWeb ? spacing.spacing12 : 0)
   const bannerOffset = useSharedValue(HIDE_OFFSET_Y)
 
   useEffect(() => {
@@ -67,17 +67,12 @@ export function NotificationToast({
     }
   }, [showOffset, bannerOffset, currentNotification])
 
-  const mobileAnimatedStyle = useAnimatedStyle(
+  const animatedStyle = useAnimatedStyle(
     () => ({
       transform: [{ translateY: bannerOffset.value }],
     }),
     [bannerOffset]
   )
-
-  // TODO: Re-enable animations once we figure out why react-animated-web isn't working.
-  const webStyle = {
-    top: showOffset + spacing.spacing20,
-  }
 
   const dismissLatest = useCallback(() => {
     bannerOffset.value = withSpring(HIDE_OFFSET_Y, SPRING_ANIMATION)
@@ -118,13 +113,19 @@ export function NotificationToast({
     <FlingGestureHandler direction={Directions.UP} onHandlerStateChange={onFling}>
       <AnimatedFlex
         centered
+        borderRadius={LARGE_TOAST_RADIUS}
         pointerEvents="box-none"
         position="absolute"
-        style={isWeb ? webStyle : mobileAnimatedStyle}
+        style={animatedStyle}
         top={0}
         width="100%"
         zIndex="$modal">
-        <Flex {...mediumShadowProps} mx={smallToast ? 'auto' : '$spacing24'}>
+        <Flex
+          {...mediumShadowProps}
+          borderColor="$surface3"
+          borderRadius={smallToast ? SMALL_TOAST_RADIUS : LARGE_TOAST_RADIUS}
+          borderWidth={TOAST_BORDER_WIDTH}
+          mx={smallToast ? 'auto' : '$spacing24'}>
           {smallToast ? (
             <NotificationContentSmall
               icon={icon}
@@ -164,9 +165,7 @@ function NotificationContent({
     <TouchableArea
       alignItems="center"
       bg="$surface2"
-      borderColor="$surface3"
       borderRadius={LARGE_TOAST_RADIUS}
-      borderWidth={TOAST_BORDER_WIDTH}
       flex={1}
       flexDirection="row"
       minHeight={NOTIFICATION_HEIGHT}
@@ -220,9 +219,7 @@ function NotificationContentSmall({
     <Flex centered row shrink pointerEvents="box-none">
       <TouchableArea
         bg="$surface2"
-        borderColor="$surface3"
         borderRadius={SMALL_TOAST_RADIUS}
-        borderWidth={TOAST_BORDER_WIDTH}
         p="$spacing12"
         onPress={onPress}
         onPressIn={onPressIn}>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -11,18 +11,24 @@ import { AnimatedFlex, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ClockIcon from 'ui/src/assets/icons/clock.svg'
 import TrendArrowIcon from 'ui/src/assets/icons/trend-up.svg'
 import { iconSizes } from 'ui/src/theme'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { clearSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
-import { SearchResultType, WalletSearchResult } from 'wallet/src/features/search/SearchResult'
+import {
+  SearchResult,
+  SearchResultType,
+  WalletSearchResult,
+} from 'wallet/src/features/search/SearchResult'
 import { selectSearchHistory } from 'wallet/src/features/search/selectSearchHistory'
 
 export const SUGGESTED_WALLETS: WalletSearchResult[] = [
   {
-    type: SearchResultType.Wallet,
+    type: SearchResultType.ENSAddress,
     address: '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045',
     ensName: 'vitalik.eth',
   },
   {
-    type: SearchResultType.Wallet,
+    type: SearchResultType.ENSAddress,
     address: '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3',
     ensName: 'hayden.eth',
   },
@@ -32,10 +38,27 @@ export function SearchEmptySection(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const searchHistory = useAppSelector(selectSearchHistory)
+  const unitagFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
 
   const onPressClearSearchHistory = (): void => {
     dispatch(clearSearchHistory())
   }
+
+  const modifiedHistory: SearchResult[] = useMemo(
+    () =>
+      searchHistory.map((historyItem: SearchResult) => {
+        if (!unitagFeatureFlagEnabled && historyItem.type === SearchResultType.Unitag) {
+          return {
+            type: SearchResultType.ENSAddress,
+            address: historyItem.address,
+            searchId: historyItem.searchId,
+          }
+        } else {
+          return historyItem
+        }
+      }),
+    [searchHistory, unitagFeatureFlagEnabled]
+  )
 
   // Show search history (if applicable), trending tokens, and wallets
   return (
@@ -58,7 +81,7 @@ export function SearchEmptySection(): JSX.Element {
                 </TouchableArea>
               </Flex>
             }
-            data={searchHistory}
+            data={modifiedHistory}
             renderItem={(props): JSX.Element | null =>
               renderSearchItem({ ...props, searchContext: { isHistory: true } })
             }

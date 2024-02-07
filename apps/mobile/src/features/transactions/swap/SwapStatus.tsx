@@ -14,11 +14,11 @@ import { useSelectTransaction } from 'wallet/src/features/transactions/hooks'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import {
-  isConfirmedSwapTypeInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
   WrapType,
+  isConfirmedSwapTypeInfo,
 } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'

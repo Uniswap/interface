@@ -15,9 +15,9 @@ import {
 import NoNFTsIcon from 'ui/src/assets/icons/empty-state-picture.svg'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { HiddenNftsRowLeft, HiddenNftsRowRight } from 'wallet/src/components/nfts/NFTHiddenRow'
+import { useNftsTabQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { useNftsTabQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   EMPTY_NFT_ITEM,
   ESTIMATED_NFT_LIST_ITEM_SIZE,

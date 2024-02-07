@@ -403,23 +403,7 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
   opacity: 0.4;
 }
 
-.c6 {
-  opacity: 0;
-  -webkit-transition: opacity 250ms ease-in;
-  transition: opacity 250ms ease-in;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
 .c5 {
-  width: 20px;
-  height: 20px;
-  background: #22222212;
-  -webkit-transition: background-color 250ms ease-in;
-  transition: background-color 250ms ease-in;
-  box-shadow: 0 0 1px white;
-  border-radius: 50%;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -428,10 +412,15 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c6 {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
 }
 
 .c4 {
@@ -574,9 +563,7 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
           class="c5"
         >
           <img
-            alt="USDC logo"
             class="c6"
-            loading="lazy"
             src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
           />
         </div>

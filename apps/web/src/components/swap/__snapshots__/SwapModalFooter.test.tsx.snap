@@ -141,7 +141,7 @@ exports[`SwapModalFooter.tsx matches base snapshot, test trade exact input 1`] =
 }
 
 .c19 > * {
-  fill: #7D7D7D;
+  fill: #CECECE;
 }
 
 .c13 {

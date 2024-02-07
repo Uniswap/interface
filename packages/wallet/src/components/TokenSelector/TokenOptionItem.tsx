@@ -67,6 +67,7 @@ function _TokenOptionItem({
         hapticStyle={ImpactFeedbackStyle.Light}
         opacity={showWarnings && safetyLevel === SafetyLevel.Blocked ? 0.5 : 1}
         testID={`token-option-${currency.chainId}-${currency.symbol}`}
+        width="100%"
         onPress={onPressTokenOption}>
         <Flex
           row

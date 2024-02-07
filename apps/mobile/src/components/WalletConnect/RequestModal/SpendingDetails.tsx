@@ -9,7 +9,7 @@ import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useNativeCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
-import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 export function SpendingDetails({
   value,

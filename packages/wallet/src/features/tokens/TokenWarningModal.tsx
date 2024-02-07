@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { iconSizes, imageSizes, opacify, ThemeNames } from 'ui/src/theme'
+import { ThemeNames, iconSizes, imageSizes, opacify } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'wallet/src/components/icons/WarningIcon'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'

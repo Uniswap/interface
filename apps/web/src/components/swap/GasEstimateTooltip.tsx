@@ -20,7 +20,7 @@ const StyledGasIcon = styled(Gas)`
   width: 16px;
   // We apply the following to all children of the SVG in order to override the default color
   & > * {
-    fill: ${({ theme }) => theme.neutral2};
+    fill: ${({ theme }) => theme.neutral3};
   }
 `
 

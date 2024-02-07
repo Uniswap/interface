@@ -58,7 +58,7 @@ const SendModalHeader = ({
           {subheader}
         </ThemedText.BodySmall>
       </Column>
-      {image}
+      <div style={{ height: '36px' }}>{image}</div>
     </Row>
   )
 }
@@ -94,7 +94,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
 
   return (
     <Modal $scrollOverlay isOpen onDismiss={onDismiss} maxHeight={90}>
-      <ModalWrapper gap="md">
+      <ModalWrapper data-testid="send-review-modal" gap="md">
         <Row width="100%" padding="8px 12px 4px" align="center">
           <Row justify="left">
             <ThemedText.SubHeader>

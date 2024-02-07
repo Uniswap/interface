@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import {
-  filterStringAtom,
+  exploreSearchStringAtom,
   filterTimeAtom,
   sortAscendingAtom,
   sortMethodAtom,
@@ -133,7 +133,7 @@ function useSortedTokens(tokens: TopTokens100Query['topTokens']) {
 }
 
 function useFilteredTokens(tokens: TopTokens100Query['topTokens']) {
-  const filterString = useAtomValue(filterStringAtom)
+  const filterString = useAtomValue(exploreSearchStringAtom)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
 

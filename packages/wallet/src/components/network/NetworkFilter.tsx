@@ -2,12 +2,13 @@ import { ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutAnimation, StyleSheet, VirtualizedList } from 'react-native'
+import { isWeb } from 'tamagui'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { colors, iconSizes } from 'ui/src/theme'
 import {
-  NetworkLogo,
   SQUARE_BORDER_RADIUS as NETWORK_LOGO_SQUARE_BORDER_RADIUS,
+  NetworkLogo,
 } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { ActionSheetModal } from 'wallet/src/components/modals/ActionSheetModal'
 import { useNetworkOptions } from 'wallet/src/components/network/hooks'
@@ -109,7 +110,9 @@ export function NetworkFilter({
   const onPress = useCallback(
     async (chainId: ChainId | null) => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-      await selectionAsync()
+      if (!isWeb) {
+        await selectionAsync()
+      }
       setShowModal(false)
       if (showEllipsisIcon && chainId !== selectedChain) {
         setShowEllipsisIcon(false)

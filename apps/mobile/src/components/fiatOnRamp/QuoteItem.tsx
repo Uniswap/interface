@@ -8,7 +8,7 @@ import { useFormatExactCurrencyAmount } from 'src/features/fiatOnRamp/hooks'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { MeldQuote, MeldServiceProvider } from 'wallet/src/features/fiatOnRamp/meld'
+import { FORQuote, FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
@@ -23,8 +23,8 @@ export function FORQuoteItem({
   showCarret,
   active,
 }: {
-  quote: MeldQuote | undefined
-  serviceProvider: MeldServiceProvider | undefined
+  quote: FORQuote | undefined
+  serviceProvider: FORServiceProvider | undefined
   currency: Maybe<Currency>
   loading: boolean
   baseCurrency: FiatCurrencyInfo
@@ -41,7 +41,7 @@ export function FORQuoteItem({
   )
 
   const quoteEquivalentInSourceCurrencyAmount = addFiatSymbolToNumber({
-    value: quote?.sourceAmountWithoutFees || 0,
+    value: quote?.sourceAmount || 0,
     currencyCode: baseCurrency.code,
     currencySymbol: baseCurrency.symbol,
   })

@@ -5,7 +5,7 @@ import Row from 'components/Row'
 import { Input, InputContainer } from 'components/Settings/Input'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import ms from 'ms'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useUserTransactionTTL } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 

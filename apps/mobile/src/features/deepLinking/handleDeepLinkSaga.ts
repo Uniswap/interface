@@ -17,7 +17,7 @@ import { WidgetType } from 'src/features/widgets/widgets'
 import { Screens } from 'src/screens/Screens'
 import { call, put, takeLatest } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
-import { uniswapUrls, UNISWAP_APP_HOSTNAME } from 'wallet/src/constants/urls'
+import { UNISWAP_APP_HOSTNAME, uniswapUrls } from 'wallet/src/constants/urls'
 import { fromUniswapWebAppLink } from 'wallet/src/features/chains/utils'
 import {
   selectAccounts,
@@ -29,7 +29,7 @@ import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import i18n from 'wallet/src/i18n/i18n'
 import { ModalName } from 'wallet/src/telemetry/constants'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
-import { openUri, UNISWAP_APP_NATIVE_TOKEN } from 'wallet/src/utils/linking'
+import { UNISWAP_APP_NATIVE_TOKEN, openUri } from 'wallet/src/utils/linking'
 
 export interface DeepLink {
   url: string

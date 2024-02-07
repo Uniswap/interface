@@ -11,8 +11,9 @@ import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
 import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
 import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
 import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
-import { useLandingPageV2Flag } from 'featureFlags/flags/landingPageV2'
+import { useExitAnimationFlag, useLandingPageV2Flag } from 'featureFlags/flags/landingPageV2'
 import { useLimitsEnabledFlag } from 'featureFlags/flags/limits'
+import { useLimitsFeeesEnabledFlag } from 'featureFlags/flags/limitsFees'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
 import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
@@ -307,6 +308,12 @@ export default function FeatureFlagModal() {
         />
         <FeatureFlagOption
           variant={BaseVariant}
+          value={useLimitsFeeesEnabledFlag()}
+          featureFlag={FeatureFlag.limitsFees}
+          label="Enable Limits fees"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
           value={useFallbackProviderEnabledFlag()}
           featureFlag={FeatureFlag.fallbackProvider}
           label="Enable fallback provider"
@@ -334,6 +341,12 @@ export default function FeatureFlagModal() {
           value={useLandingPageV2Flag()}
           featureFlag={FeatureFlag.landingPageV2}
           label="Refreshed landing page"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useExitAnimationFlag()}
+          featureFlag={FeatureFlag.exitAnimation}
+          label="Landing page exit animation"
         />
         <FeatureFlagGroup name="Quick routes">
           <FeatureFlagOption

@@ -1,5 +1,5 @@
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { createContext, ReactNode, useCallback, useContext } from 'react'
+import { ReactNode, createContext, useCallback, useContext } from 'react'
 import { useGate } from 'statsig-react'
 
 /**
@@ -7,7 +7,6 @@ import { useGate } from 'statsig-react'
  */
 export enum FeatureFlag {
   traceJsonRpc = 'traceJsonRpc',
-  debounceSwapQuote = 'debounce_swap_quote',
   fallbackProvider = 'fallback_provider',
   uniswapXSyntheticQuote = 'uniswapx_synthetic_quote',
   multichainUX = 'multichain_ux',
@@ -25,6 +24,8 @@ export enum FeatureFlag {
   sendEnabled = 'swap_send',
   gatewayDNSUpdateAll = 'gateway_dns_update_all',
   landingPageV2 = 'landing_page_v2',
+  limitsFees = 'limits_fees',
+  exitAnimation = 'exit_animation',
 }
 
 interface FeatureFlagsContextType {

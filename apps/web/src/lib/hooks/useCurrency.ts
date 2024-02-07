@@ -10,8 +10,7 @@ import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useEffect, useMemo } from 'react'
 
-import { DEFAULT_ERC20_DECIMALS } from '../../constants/tokens'
-import { TOKEN_SHORTHANDS } from '../../constants/tokens'
+import { DEFAULT_ERC20_DECIMALS, TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { isAddress } from '../../utils'
 
 // parse a name or symbol from a token response

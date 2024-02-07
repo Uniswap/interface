@@ -36,16 +36,16 @@ export function useTokenApprovalInfo(
   const tokenAddress = getTokenAddressForApiRequest(currencyIn)
 
   const approvalRequestArgs: ApprovalRequest | undefined = useMemo(() => {
-    const supportedChainid = toTradingApiSupportedChainId(chainId)
+    const supportedChainId = toTradingApiSupportedChainId(chainId)
 
-    if (!amount || !currencyIn || !tokenAddress || !supportedChainid) {
+    if (!amount || !currencyIn || !tokenAddress || !supportedChainId) {
       return undefined
     }
     return {
       walletAddress: address,
       token: tokenAddress,
       amount,
-      chainId: supportedChainid,
+      chainId: supportedChainId,
       includeGasInfo: true,
     }
   }, [address, amount, chainId, currencyIn, tokenAddress])

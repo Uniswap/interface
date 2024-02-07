@@ -14,6 +14,7 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { formatCurrencySymbol } from '../utils'
 import { LimitCustomMarketPriceButton, LimitPresetPriceButton } from './LimitPriceButton'
+import { LimitPriceIncrementButtons } from './LimitPriceIncrementButtons'
 import { LimitPriceInputLabel } from './LimitPriceInputLabel'
 
 const OutputCurrencyContainer = styled(Row)`
@@ -34,6 +35,7 @@ export function LimitPriceInputPanel() {
   const { limitPrice, setLimitPrice } = useLimitPrice()
   const {
     derivedLimitInfo: { parsedLimitPrice, marketPrice },
+    setLimitState,
   } = useLimitContext()
 
   const {
@@ -41,6 +43,11 @@ export function LimitPriceInputPanel() {
   } = useSwapAndLimitContext()
 
   const { formatCurrencyAmount } = useFormatter()
+
+  const oneUnitOfInputCurrency: CurrencyAmount<Currency> | undefined = useMemo(() => {
+    if (!inputCurrency) return undefined
+    return CurrencyAmount.fromRawAmount(inputCurrency, JSBI.BigInt(parseUnits('1', inputCurrency?.decimals)))
+  }, [inputCurrency])
 
   const formattedLimitPriceOutputAmount: string = useMemo(() => {
     // If the user has manually typed in a limit price, use that.
@@ -55,7 +62,7 @@ export function LimitPriceInputPanel() {
   }, [limitPrice, inputCurrency, formatCurrencyAmount, parsedLimitPrice])
 
   const adjustedPrices = useMemo(() => {
-    if (!marketPrice || !inputCurrency || !outputCurrency) return undefined
+    if (!marketPrice || !inputCurrency || !oneUnitOfInputCurrency || !outputCurrency) return undefined
     const getAdjustedPrice = (priceAdjustmentPercentage: number) => {
       return new Price({
         // 100 input token
@@ -65,9 +72,7 @@ export function LimitPriceInputPanel() {
           outputCurrency,
           JSBI.multiply(
             JSBI.BigInt(100 + priceAdjustmentPercentage),
-            marketPrice.quote(
-              CurrencyAmount.fromRawAmount(inputCurrency, JSBI.BigInt(parseUnits('1', inputCurrency.decimals)))
-            ).quotient
+            marketPrice.quote(oneUnitOfInputCurrency).quotient
           )
         ),
       })
@@ -77,28 +82,28 @@ export function LimitPriceInputPanel() {
       5: getAdjustedPrice(5),
       10: getAdjustedPrice(10),
     }
-  }, [inputCurrency, marketPrice, outputCurrency])
+  }, [marketPrice, inputCurrency, oneUnitOfInputCurrency, outputCurrency])
+
+  const onePercentOfMarketPrice: CurrencyAmount<Currency> | undefined = useMemo(() => {
+    if (!marketPrice || !oneUnitOfInputCurrency || !outputCurrency) return undefined
+    const marketQuote = marketPrice.quote(oneUnitOfInputCurrency).quotient
+    return CurrencyAmount.fromRawAmount(outputCurrency, JSBI.divide(marketQuote, JSBI.BigInt(100)))
+  }, [oneUnitOfInputCurrency, marketPrice, outputCurrency])
 
   const currentPriceAdjustment: number | undefined = useMemo(() => {
-    if (!parsedLimitPrice || !marketPrice || !inputCurrency || !outputCurrency) return undefined
-    const marketQuote = marketPrice.quote(
-      CurrencyAmount.fromRawAmount(inputCurrency, 10 ** inputCurrency.decimals)
-    ).quotient
-    const parsedPriceQuote = parsedLimitPrice.quote(
-      CurrencyAmount.fromRawAmount(inputCurrency, 10 ** inputCurrency.decimals)
-    ).quotient
+    if (!parsedLimitPrice || !marketPrice || !oneUnitOfInputCurrency || !outputCurrency) return undefined
+    const marketQuote = marketPrice.quote(oneUnitOfInputCurrency).quotient
+    const parsedPriceQuote = parsedLimitPrice.quote(oneUnitOfInputCurrency).quotient
     const difference = JSBI.subtract(parsedPriceQuote, marketQuote)
     const percentageChange = new Fraction(difference, marketQuote)
 
-    return Number(percentageChange.toFixed(2)) * 100
-  }, [inputCurrency, outputCurrency, marketPrice, parsedLimitPrice])
+    return Number(percentageChange.multiply(100).toFixed(2))
+  }, [oneUnitOfInputCurrency, outputCurrency, marketPrice, parsedLimitPrice])
 
   const onSelectLimitPrice = useCallback(
     (adjustedPrice: Price<Currency, Currency> | undefined) => {
-      if (!inputCurrency) return
-      const marketOutputAmount = adjustedPrice?.quote(
-        CurrencyAmount.fromRawAmount(inputCurrency, 10 ** inputCurrency.decimals)
-      )
+      if (!oneUnitOfInputCurrency) return
+      const marketOutputAmount = adjustedPrice?.quote(oneUnitOfInputCurrency)
       setLimitPrice(
         formatCurrencyAmount({
           amount: marketOutputAmount,
@@ -106,13 +111,14 @@ export function LimitPriceInputPanel() {
           placeholder: limitPrice,
         })
       )
+      setLimitState((prev) => ({ ...prev, limitPriceEdited: true }))
     },
-    [formatCurrencyAmount, inputCurrency, limitPrice, setLimitPrice]
+    [formatCurrencyAmount, limitPrice, oneUnitOfInputCurrency, setLimitPrice, setLimitState]
   )
 
   return (
     <InputPanel>
-      <LimitPriceInputLabel inputCurrency={inputCurrency} showCurrencyMessage={!!formattedLimitPriceOutputAmount} />
+      <LimitPriceInputLabel currency={inputCurrency} showCurrencyMessage={!!formattedLimitPriceOutputAmount} />
       <TextInputRow>
         <StyledNumericalInput
           disabled={!(inputCurrency && outputCurrency)}
@@ -130,35 +136,59 @@ export function LimitPriceInputPanel() {
           </OutputCurrencyContainer>
         )}
       </TextInputRow>
-      <Row gap="sm" marginTop="8px">
-        <LimitCustomMarketPriceButton
-          key="limit-price-market"
-          customAdjustmentPercentage={
-            currentPriceAdjustment !== undefined &&
-            currentPriceAdjustment !== 0 &&
-            !PRICE_ADJUSTMENT_PRESETS.includes(currentPriceAdjustment)
-              ? currentPriceAdjustment
-              : undefined
-          }
-          disabled={!inputCurrency || !outputCurrency}
-          selected={Boolean(
-            currentPriceAdjustment !== undefined && !PRICE_ADJUSTMENT_PRESETS.includes(currentPriceAdjustment)
-          )}
-          onSelect={() => onSelectLimitPrice(marketPrice)}
-        />
-        {PRICE_ADJUSTMENT_PRESETS.map((adjustmentPercentage) => {
-          const adjustedPrice = adjustedPrices?.[adjustmentPercentage as keyof typeof adjustedPrices]
-          return (
-            <LimitPresetPriceButton
-              key={`limit-price-${adjustmentPercentage}`}
-              priceAdjustmentPercentage={adjustmentPercentage}
-              disabled={!inputCurrency || !outputCurrency || !marketPrice}
-              // TODO (WEB-3416): give this equality check some small +- threshold
-              selected={currentPriceAdjustment === adjustmentPercentage}
-              onSelect={() => onSelectLimitPrice(adjustedPrice)}
-            />
-          )
-        })}
+      <Row marginTop="8px" justify="space-between">
+        <Row gap="sm">
+          <LimitCustomMarketPriceButton
+            key="limit-price-market"
+            customAdjustmentPercentage={
+              currentPriceAdjustment !== undefined &&
+              currentPriceAdjustment !== 0 &&
+              !PRICE_ADJUSTMENT_PRESETS.includes(currentPriceAdjustment)
+                ? currentPriceAdjustment
+                : undefined
+            }
+            disabled={!inputCurrency || !outputCurrency}
+            selected={Boolean(
+              currentPriceAdjustment !== undefined && !PRICE_ADJUSTMENT_PRESETS.includes(currentPriceAdjustment)
+            )}
+            onSelect={() => onSelectLimitPrice(marketPrice)}
+          />
+          {PRICE_ADJUSTMENT_PRESETS.map((adjustmentPercentage) => {
+            const adjustedPrice = adjustedPrices?.[adjustmentPercentage as keyof typeof adjustedPrices]
+            return (
+              <LimitPresetPriceButton
+                key={`limit-price-${adjustmentPercentage}`}
+                priceAdjustmentPercentage={adjustmentPercentage}
+                disabled={!inputCurrency || !outputCurrency || !marketPrice}
+                // TODO (WEB-3416): give this equality check some small +- threshold
+                selected={currentPriceAdjustment === adjustmentPercentage}
+                onSelect={() => onSelectLimitPrice(adjustedPrice)}
+              />
+            )
+          })}
+        </Row>
+        {parsedLimitPrice && onePercentOfMarketPrice && oneUnitOfInputCurrency && (
+          <LimitPriceIncrementButtons
+            onIncrement={() => {
+              setLimitPrice(
+                formatCurrencyAmount({
+                  amount: parsedLimitPrice?.quote(oneUnitOfInputCurrency).add(onePercentOfMarketPrice),
+                  type: NumberType.SwapTradeAmount,
+                  placeholder: limitPrice,
+                })
+              )
+            }}
+            onDecrement={() => {
+              setLimitPrice(
+                formatCurrencyAmount({
+                  amount: parsedLimitPrice?.quote(oneUnitOfInputCurrency).subtract(onePercentOfMarketPrice),
+                  type: NumberType.SwapTradeAmount,
+                  placeholder: limitPrice,
+                })
+              )
+            }}
+          />
+        )}
       </Row>
     </InputPanel>
   )

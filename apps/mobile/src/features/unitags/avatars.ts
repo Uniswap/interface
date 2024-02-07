@@ -2,7 +2,7 @@ import { FetchResult } from '@apollo/client'
 import axios from 'axios'
 import { Platform } from 'react-native'
 import { logger } from 'utilities/src/logger/logger'
-import { uniswapUrls } from 'wallet/src/constants/urls'
+import { getUnitagAvatarUploadUrl } from 'wallet/src/features/unitags/api'
 import {
   UnitagAvatarUploadCredentials,
   UnitagGetAvatarUploadUrlResponse,
@@ -92,12 +92,7 @@ export async function uploadAndUpdateAvatarAfterClaim(
 ): Promise<{ success: boolean }> {
   try {
     // First get pre-signedUrl and s3UploadFields from the backend
-    // TODO (MOB-1791): add signature authentication in headers
-    const avatarUploadUrl = `${uniswapUrls.unitagsApiUrl}/username/avatar-upload-url`
-    const { data: avatarUploadUrlResponse } = await axios.get<UnitagGetAvatarUploadUrlResponse>(
-      avatarUploadUrl,
-      { params: { username } }
-    )
+    const { data: avatarUploadUrlResponse } = await getUnitagAvatarUploadUrl(username)
 
     // Then upload to S3
     const { success: uploadSuccess } = await uploadFileToS3(imageUri, {

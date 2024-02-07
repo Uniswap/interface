@@ -97,8 +97,8 @@ function EmptyState({
   icon,
 }: EmptyStateProps): JSX.Element {
   return (
-    <Flex centered gap="$spacing24" p="$spacing12" width="100%">
-      <Flex centered gap="$spacing16">
+    <Flex centered gap="$spacing16" width="100%">
+      <Flex centered gap="$spacing4">
         {icon}
         <Flex centered gap="$spacing8">
           {title && (

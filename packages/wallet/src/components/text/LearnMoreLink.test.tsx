@@ -1,5 +1,6 @@
-import { fireEvent, render } from '@testing-library/react-native'
+import { fireEvent } from '@testing-library/react-native'
 import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/eventFixtures'
+import { renderWithProviders } from 'wallet/src/test/render'
 import { openUri } from 'wallet/src/utils/linking'
 import { LearnMoreLink } from './LearnMoreLink'
 
@@ -9,13 +10,13 @@ jest.mock('wallet/src/utils/linking', () => ({
 
 describe(LearnMoreLink, () => {
   it('renders without error', () => {
-    const tree = render(<LearnMoreLink url="https://example.com" />)
+    const tree = renderWithProviders(<LearnMoreLink url="https://example.com" />)
 
     expect(tree).toMatchSnapshot()
   })
 
   it('renders a learn more link', () => {
-    const { queryByText } = render(<LearnMoreLink url="https://example.com" />)
+    const { queryByText } = renderWithProviders(<LearnMoreLink url="https://example.com" />)
 
     const learnMoreLink = queryByText('Learn more')
 
@@ -23,7 +24,7 @@ describe(LearnMoreLink, () => {
   })
 
   it('calls openUri when pressed', () => {
-    const { getByText } = render(<LearnMoreLink url="https://example.com" />)
+    const { getByText } = renderWithProviders(<LearnMoreLink url="https://example.com" />)
 
     const learnMoreLink = getByText('Learn more')
     fireEvent.press(learnMoreLink, ON_PRESS_EVENT_PAYLOAD)

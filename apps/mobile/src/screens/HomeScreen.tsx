@@ -8,9 +8,9 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, StyleProp, View, ViewProps, ViewStyle } from 'react-native'
 import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-gesture-handler'
 import Animated, {
-  cancelAnimation,
   FadeIn,
   FadeOut,
+  cancelAnimation,
   interpolateColor,
   runOnJS,
   useAnimatedGestureHandler,
@@ -25,27 +25,26 @@ import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { AppStackScreenProp } from 'src/app/navigation/types'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import Trace from 'src/components/Trace/Trace'
+import TraceTabView from 'src/components/Trace/TraceTabView'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { pulseAnimation } from 'src/components/buttons/utils'
-import { ActivityTab, ACTIVITY_TAB_DATA_DEPENDENCIES } from 'src/components/home/ActivityTab'
-import { FeedTab, FEED_TAB_DATA_DEPENDENCIES } from 'src/components/home/FeedTab'
-import { NftsTab, NFTS_TAB_DATA_DEPENDENCIES } from 'src/components/home/NftsTab'
-import { TokensTab, TOKENS_TAB_DATA_DEPENDENCIES } from 'src/components/home/TokensTab'
+import { ACTIVITY_TAB_DATA_DEPENDENCIES, ActivityTab } from 'src/components/home/ActivityTab'
+import { FEED_TAB_DATA_DEPENDENCIES, FeedTab } from 'src/components/home/FeedTab'
+import { NFTS_TAB_DATA_DEPENDENCIES, NftsTab } from 'src/components/home/NftsTab'
+import { TOKENS_TAB_DATA_DEPENDENCIES, TokensTab } from 'src/components/home/TokensTab'
 import { Screen } from 'src/components/layout/Screen'
 import {
   HeaderConfig,
-  renderTabLabel,
   ScrollPair,
-  TabContentProps,
   TAB_BAR_HEIGHT,
   TAB_STYLES,
   TAB_VIEW_SCROLL_THROTTLE,
+  TabContentProps,
+  renderTabLabel,
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
-import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { TokenBalanceListRow } from 'src/components/TokenBalanceList/TokenBalanceListContext'
-import Trace from 'src/components/Trace/Trace'
-import TraceTabView from 'src/components/Trace/TraceTabView'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
@@ -78,6 +77,8 @@ import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
+import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
+import { useUnitagUpdater } from 'wallet/src/features/unitags/context'
 import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -380,7 +381,20 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     ]
   )
 
-  const hasClaimEligibility = useCanActiveAddressClaimUnitag()
+  const { refetchUnitagsCounter } = useUnitagUpdater()
+  const { canClaimUnitag, refetch: refetchCanActiveAddressClaimUnitag } =
+    useCanActiveAddressClaimUnitag()
+
+  // Force refetch of canClaimUnitag if refetchUnitagsCounter changes
+  useEffect(() => {
+    refetchCanActiveAddressClaimUnitag?.()
+  }, [refetchUnitagsCounter, refetchCanActiveAddressClaimUnitag])
+
+  const shouldPromptUnitag =
+    activeAccount.type === AccountType.SignerMnemonic &&
+    activeAccount.skippedUnitagPrompt !== true &&
+    canClaimUnitag
+
   const viewOnlyLabel = t('This is a view-only wallet')
   const contentHeader = useMemo(() => {
     return (
@@ -400,7 +414,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
             </Flex>
           </TouchableArea>
         )}
-        {hasClaimEligibility && (
+        {shouldPromptUnitag && (
           <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
             <UnitagBanner />
           </AnimatedFlex>
@@ -410,10 +424,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   }, [
     activeAccount.address,
     isSignerAccount,
-    viewOnlyLabel,
     actions,
-    hasClaimEligibility,
     onPressViewOnlyLabel,
+    viewOnlyLabel,
+    shouldPromptUnitag,
   ])
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(

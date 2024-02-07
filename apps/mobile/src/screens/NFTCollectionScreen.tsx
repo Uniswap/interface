@@ -6,10 +6,10 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { useAnimatedScrollHandler, useSharedValue, withTiming } from 'react-native-reanimated'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
+import Trace from 'src/components/Trace/Trace'
 import { Screen } from 'src/components/layout/Screen'
 import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
 import { Loader } from 'src/components/loading'
-import Trace from 'src/components/Trace/Trace'
 import { ListPriceBadge } from 'src/features/nfts/collection/ListPriceCard'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import {
@@ -29,11 +29,11 @@ import {
 } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { isError } from 'wallet/src/data/utils'
 import {
   NftCollectionScreenQuery,
   useNftCollectionScreenQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { isError } from 'wallet/src/data/utils'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'

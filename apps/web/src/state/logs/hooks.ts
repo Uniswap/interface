@@ -5,7 +5,7 @@ import { useEffect, useMemo } from 'react'
 
 import { useAppDispatch, useAppSelector } from '../hooks'
 import { addListener, removeListener } from './slice'
-import { filterToKey, isHistoricalLog, Log } from './utils'
+import { Log, filterToKey, isHistoricalLog } from './utils'
 
 enum LogsState {
   // The filter is invalid

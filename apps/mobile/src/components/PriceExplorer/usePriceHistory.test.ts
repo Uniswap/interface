@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { waitFor } from '@testing-library/react-native'
 import { act } from 'react-test-renderer'
 import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
@@ -9,15 +8,15 @@ import {
   TokenMarket as TokenMarketType,
   TokenProject as TokenProjectType,
 } from 'wallet/src/data/__generated__/types-and-hooks'
-import { faker, SAMPLE_CURRENCY_ID_1 } from 'wallet/src/test/fixtures'
+import { SAMPLE_CURRENCY_ID_1, faker } from 'wallet/src/test/fixtures'
 import {
   EthToken,
   TokenDayPriceHistory,
   TokenMarket,
   TokenProjectDay,
-  TokenProjects,
   TokenProjectWeek,
   TokenProjectYear,
+  TokenProjects,
   TokenWeekPriceHistory,
   TokenYearPriceHistory,
 } from 'wallet/src/test/gqlFixtures'
@@ -86,8 +85,8 @@ describe(useTokenPriceHistory, () => {
     })
 
     expect(result.current.data?.spot).toEqual({
-      value: { value: TokenMarket.price?.value },
-      relativeChange: { value: TokenMarket.pricePercentChange?.value },
+      value: expect.objectContaining({ value: TokenMarket.price?.value }),
+      relativeChange: expect.objectContaining({ value: TokenMarket.pricePercentChange?.value }),
     })
   })
 
@@ -216,8 +215,10 @@ describe(useTokenPriceHistory, () => {
 
       await waitFor(() => {
         expect(result.current.data?.spot).toEqual({
-          value: { value: TokenProjectDay.markets?.[0]?.price?.value },
-          relativeChange: { value: TokenProjectDay.markets?.[0]?.pricePercentChange24h?.value },
+          value: expect.objectContaining({ value: TokenProjectDay.markets?.[0]?.price?.value }),
+          relativeChange: expect.objectContaining({
+            value: TokenProjectDay.markets?.[0]?.pricePercentChange24h?.value,
+          }),
         })
       })
     })
@@ -249,8 +250,10 @@ describe(useTokenPriceHistory, () => {
 
       await waitFor(() => {
         expect(result.current.data?.spot).toEqual({
-          value: { value: TokenProjectYear.markets?.[0]?.price?.value },
-          relativeChange: { value: TokenProjectYear.markets?.[0]?.pricePercentChange24h?.value },
+          value: expect.objectContaining({ value: TokenProjectYear.markets?.[0]?.price?.value }),
+          relativeChange: expect.objectContaining({
+            value: TokenProjectYear.markets?.[0]?.pricePercentChange24h?.value,
+          }),
         })
       })
     })
@@ -298,8 +301,10 @@ describe(useTokenPriceHistory, () => {
         expect(result.current.data).toEqual({
           priceHistory: formatPriceHistory(TokenDayPriceHistory),
           spot: {
-            value: { value: TokenProjectDay.markets?.[0]?.price?.value },
-            relativeChange: { value: TokenProjectDay.markets?.[0]?.pricePercentChange24h?.value },
+            value: expect.objectContaining({ value: TokenProjectDay.markets?.[0]?.price?.value }),
+            relativeChange: expect.objectContaining({
+              value: TokenProjectDay.markets?.[0]?.pricePercentChange24h?.value,
+            }),
           },
         })
       })
@@ -313,8 +318,10 @@ describe(useTokenPriceHistory, () => {
         expect(result.current.data).toEqual({
           priceHistory: formatPriceHistory(TokenWeekPriceHistory),
           spot: {
-            value: { value: TokenProjectWeek.markets?.[0]?.price?.value },
-            relativeChange: { value: TokenProjectWeek.markets?.[0]?.pricePercentChange24h?.value },
+            value: expect.objectContaining({ value: TokenProjectWeek.markets?.[0]?.price?.value }),
+            relativeChange: expect.objectContaining({
+              value: TokenProjectWeek.markets?.[0]?.pricePercentChange24h?.value,
+            }),
           },
         })
       })

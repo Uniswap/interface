@@ -5,7 +5,7 @@ import { truncateDappName } from 'src/components/WalletConnect/ScanSheet/util'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { Text } from 'ui/src'
 import { EthMethod } from 'wallet/src/features/walletConnect/types'
-import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 export function HeaderText({
   request,

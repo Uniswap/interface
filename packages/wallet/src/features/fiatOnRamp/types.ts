@@ -160,3 +160,76 @@ export type MoonpayTransactionResponseItem = MoonpayQuote & {
     actions: 'complete_bank_transfer' | 'retry_kyc' | 'verify_card_by_code' | 'verify_card_by_file'
   }>
 }
+
+// /supported-countries
+
+export type FORSupportedCountry = {
+  countryCode: string
+  displayName: string
+}
+
+export type FORSupportedCountriesResponse = {
+  supportedCountries: FORSupportedCountry[]
+}
+
+// /quote
+
+export type FORQuoteRequest = {
+  countryCode: string
+  destinationCurrencyCode: string
+  sourceAmount: number
+  sourceCurrencyCode: string
+}
+
+export type FORQuote = {
+  countryCode: string | null
+  sourceAmount: number
+  sourceCurrencyCode: string
+  destinationAmount: number
+  destinationCurrencyCode: string
+  serviceProvider: string
+}
+
+export type FORQuoteResponse = {
+  quotes: Maybe<FORQuote[]>
+  message: string | null
+  error: string | null
+}
+
+// /service-providers
+
+export type FORLogo = {
+  darkLogo: string
+  lightLogo: string
+}
+
+export type FORServiceProvider = {
+  serviceProvider: string
+  name: string
+  url: string
+  logos: FORLogo
+}
+
+export type FORServiceProvidersResponse = {
+  serviceProviders: FORServiceProvider[]
+}
+
+// /supported-tokens
+
+export type FORSupportedTokensRequest = {
+  fiatCurrency: string
+  countryCode: string
+}
+
+export type FORSupportedToken = {
+  cryptoCurrencyCode: string
+  displayName: string
+  address: string
+  cryptoCurrencyChain: string
+  chainId: string
+  symbol: string
+}
+
+export type FORSupportedTokensResponse = {
+  supportedTokens: FORSupportedToken[]
+}

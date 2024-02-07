@@ -2,8 +2,7 @@ import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import { BlockedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import styled, { useTheme } from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme/components'
-import { CopyHelper } from 'theme/components'
+import { CopyHelper, ExternalLink, ThemedText } from 'theme/components'
 
 import Modal from '../Modal'
 

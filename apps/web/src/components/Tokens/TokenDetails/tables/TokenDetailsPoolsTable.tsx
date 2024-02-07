@@ -1,8 +1,9 @@
 import { Trans } from '@lingui/macro'
 import { ChainId, Token } from '@uniswap/sdk-core'
-import { PoolsTable, PoolTableColumns, PoolTableSortState } from 'components/Pools/PoolTable/PoolTable'
-import { OrderDirection, Pool_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
-import { usePoolsFromTokenAddress } from 'graphql/thegraph/PoolsFromTokenAddress'
+import { PoolTableColumns, PoolsTable } from 'components/Pools/PoolTable/PoolTable'
+import { usePoolsFromTokenAddress } from 'graphql/data/pools/usePoolsFromTokenAddress'
+import { PoolSortFields, PoolTableSortState } from 'graphql/data/pools/useTopPools'
+import { OrderDirection } from 'graphql/data/util'
 import { useCallback, useState } from 'react'
 import { ThemedText } from 'theme/components'
 
@@ -10,18 +11,13 @@ const HIDDEN_COLUMNS = [PoolTableColumns.Transactions]
 
 export function TokenDetailsPoolsTable({ chainId, referenceToken }: { chainId: ChainId; referenceToken: Token }) {
   const [sortState, setSortMethod] = useState<PoolTableSortState>({
-    sortBy: Pool_OrderBy.TotalValueLockedUsd,
+    sortBy: PoolSortFields.TVL,
     sortDirection: OrderDirection.Desc,
   })
-  const { pools, loading, error, loadMore } = usePoolsFromTokenAddress(
-    referenceToken.address,
-    chainId,
-    sortState.sortBy,
-    sortState.sortDirection
-  )
+  const { pools, loading, error, loadMore } = usePoolsFromTokenAddress(referenceToken.address, sortState, chainId)
 
   const handleHeaderClick = useCallback(
-    (newSortMethod: Pool_OrderBy) => {
+    (newSortMethod: PoolSortFields) => {
       if (sortState.sortBy === newSortMethod) {
         setSortMethod({
           sortBy: newSortMethod,

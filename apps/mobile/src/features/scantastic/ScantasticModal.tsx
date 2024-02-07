@@ -7,16 +7,16 @@ import { selectModalState } from 'src/features/modals/selectModalState'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { getDurationRemainingString } from 'utilities/src/time/duration'
+import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { ModalName } from 'wallet/src/telemetry/constants'
 import { getEncryptedMnemonic } from './ScantasticEncryption'
-
-const TEMP_SCANTASTIC_API_URL = 'https://3ei5he6obb.execute-api.us-east-2.amazonaws.com'
 
 enum OtpState {
   Pending = 'pending',
@@ -25,7 +25,7 @@ enum OtpState {
 }
 interface OtpStateApiResponse {
   otp?: OtpState
-  expiresAt?: number
+  expiresAtInSeconds?: number
 }
 
 export function ScantasticModal(): JSX.Element | null {
@@ -37,8 +37,9 @@ export function ScantasticModal(): JSX.Element | null {
 
   const { initialState } = useAppSelector(selectModalState(ModalName.Scantastic))
   const [OTP, setOTP] = useState('')
-  const [expirationTimestamp, setExpirationTimestamp] = useState(
-    Number(initialState?.expiry) * ONE_SECOND_MS
+  // Once a user has scanned a QR they have 6 minutes to correctly input the OTP
+  const [expirationTimestamp, setExpirationTimestamp] = useState<number>(
+    Date.now() + 6 * ONE_MINUTE_MS
   )
   const pubKey: JsonWebKey = initialState?.pubKey ? JSON.parse(initialState?.pubKey) : undefined
   const uuid = initialState?.uuid
@@ -61,20 +62,15 @@ export function ScantasticModal(): JSX.Element | null {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (Number.isNaN(expirationTimestamp)) {
-        return
-      }
       const timeLeft = expirationTimestamp - Date.now()
-
       if (timeLeft <= 0) {
-        setExpiryText(t('Expired'))
-        clearInterval(interval)
-        setExpired(true)
-      } else {
-        const minutes = Math.floor(timeLeft / 60000)
-        const seconds = ((timeLeft % 60000) / 1000).toFixed(0)
-        setExpiryText(t(`Session expires in ${minutes}m${seconds}s`))
+        return setExpiryText(t('Expired'))
       }
+      return setExpiryText(
+        t('Expires in {{duration}}...', {
+          duration: getDurationRemainingString(expirationTimestamp),
+        })
+      )
     }, ONE_SECOND_MS)
 
     return () => clearInterval(interval)
@@ -99,11 +95,12 @@ export function ScantasticModal(): JSX.Element | null {
 
     try {
       // submit encrypted blob
-      const response = await fetch(`${TEMP_SCANTASTIC_API_URL}/blob`, {
+      const response = await fetch(`${uniswapUrls.apiBaseExtensionUrl}/scantastic/blob`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
+          Origin: 'https://uniswap.org',
         },
         body: JSON.stringify({
           uuid,
@@ -117,7 +114,7 @@ export function ScantasticModal(): JSX.Element | null {
       if (!data?.otp) {
         throw new Error(t('OTP unavailable'))
       } else {
-        setExpirationTimestamp(Date.now() + 1000 * 60 * 2)
+        setExpirationTimestamp(Date.now() + ONE_MINUTE_MS * 2)
         setOTP(data.otp)
       }
     } catch (e) {
@@ -141,11 +138,20 @@ export function ScantasticModal(): JSX.Element | null {
   }
 
   const checkOTPState = useCallback(async (): Promise<void> => {
-    if (!OTP) {
+    if (!OTP || !uuid) {
       return
     }
     try {
-      const response = await fetch(`${TEMP_SCANTASTIC_API_URL}/otp-state/${uuid}`)
+      const response = await fetch(
+        `${uniswapUrls.apiBaseExtensionUrl}/scantastic/otp-state/${uuid}`,
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            Origin: 'https://uniswap.org',
+          },
+        }
+      )
       if (!response.ok) {
         return
       }
@@ -154,10 +160,9 @@ export function ScantasticModal(): JSX.Element | null {
       if (!otpState) {
         return
       }
-
-      const expiresAtMs = data.expiresAt && data.expiresAt * ONE_SECOND_MS
-      setExpirationTimestamp((current) => expiresAtMs ?? current)
-
+      if (data.expiresAtInSeconds) {
+        setExpirationTimestamp(data.expiresAtInSeconds * ONE_SECOND_MS)
+      }
       if (otpState === OtpState.Redeemed) {
         setRedeemed(true)
       }

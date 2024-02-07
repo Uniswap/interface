@@ -57,6 +57,7 @@ export function AccountIcon({
           borderRadius={size}
           fallback={uniconImage}
           height={size}
+          resizeMode="cover"
           uri={avatarUri}
           width={size}
         />

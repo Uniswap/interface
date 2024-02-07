@@ -7,7 +7,7 @@ import { Screens } from 'src/screens/Screens'
 import { isDevBuild } from 'src/utils/version'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
-import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
+import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
@@ -50,7 +50,7 @@ export function AccountHeader(): JSX.Element {
     }
   }
 
-  const walletHasName = displayName?.type !== DisplayNameType.Address
+  const walletHasName = displayName && displayName?.type !== DisplayNameType.Address
   const iconSize = 52
 
   return (
@@ -91,15 +91,7 @@ export function AccountHeader(): JSX.Element {
                 flexShrink={1}
                 hitSlop={20}
                 onPress={onPressAccountHeader}>
-                <DisplayNameText displayName={displayName} textProps={{ variant: 'subheading1' }} />
-              </TouchableArea>
-              <TouchableArea hapticFeedback flexGrow={1} hitSlop={20} onPress={onPressCopyAddress}>
-                <Flex row alignItems="center" gap="$spacing4">
-                  <Text color="$neutral3" numberOfLines={1} variant="body2">
-                    {sanitizeAddressText(shortenAddress(activeAddress))}
-                  </Text>
-                  <Icons.CopyAlt color="$neutral3" size="$icon.16" />
-                </Flex>
+                <AnimatedUnitagDisplayName address={activeAddress} displayName={displayName} />
               </TouchableArea>
             </Flex>
           ) : (

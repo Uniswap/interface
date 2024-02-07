@@ -3,7 +3,7 @@ import { Percent } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { X } from 'react-feather'
 import styled, { css } from 'styled-components'
-import { ClickableStyle } from 'theme/components'
+import { ClickableStyle, ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 
 interface LimitPriceButtonProps {
@@ -75,7 +75,7 @@ export function LimitPresetPriceButton({
       {priceAdjustmentPercentage === 0 ? (
         <Trans>Current</Trans>
       ) : (
-        <span>+{formatPercent(new Percent(priceAdjustmentPercentage, 100))}</span>
+        <ThemedText.LabelSmall>+{formatPercent(new Percent(priceAdjustmentPercentage, 100))}</ThemedText.LabelSmall>
       )}
     </Container>
   )
@@ -105,10 +105,10 @@ export function LimitCustomMarketPriceButton({
         {!customAdjustmentPercentage ? (
           <Trans>Current</Trans>
         ) : (
-          <span>
+          <ThemedText.LabelSmall>
             {customAdjustmentPercentage > 0 ? '+' : ''}
-            {formatPercent(new Percent(customAdjustmentPercentage, 100))}
-          </span>
+            {formatPercent(new Percent(Math.floor(customAdjustmentPercentage), 100))}
+          </ThemedText.LabelSmall>
         )}
       </Container>
       {customAdjustmentPercentage && (

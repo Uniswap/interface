@@ -1,19 +1,19 @@
 /* eslint-disable max-lines */
 import { ApolloError, NetworkStatus } from '@apollo/client'
-import { setupWalletCache } from 'wallet/src/data/cache'
 import {
   Chain,
-  Portfolio as PortfolioType,
   PortfolioBalanceDocument,
+  Portfolio as PortfolioType,
   Resolvers,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { setupWalletCache } from 'wallet/src/data/cache'
 import { PortfolioBalance as PortfolioBalanceType } from 'wallet/src/features/dataApi/types'
 import { FavoritesState, initialFavoritesState } from 'wallet/src/features/favorites/slice'
-import { initialWalletState, WalletState } from 'wallet/src/features/wallet/slice'
+import { WalletState, initialWalletState } from 'wallet/src/features/wallet/slice'
 import {
   PortfolioBalance,
-  PortfolioBalancesWithUSD,
   PortfolioBalanceWithoutUSD,
+  PortfolioBalancesWithUSD,
   SAMPLE_CURRENCY_ID_1,
   SAMPLE_CURRENCY_ID_2,
   SAMPLE_SEED_ADDRESS_1,
@@ -559,7 +559,6 @@ describe(sortPortfolioBalances, () => {
   it('sorts balances with USD value by USD value in descending order', () => {
     const result = sortPortfolioBalances(PortfolioBalancesWithUSD)
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     expect(result).toEqual(PortfolioBalancesWithUSD.sort((a, b) => b.balanceUSD! - a.balanceUSD!))
   })
 

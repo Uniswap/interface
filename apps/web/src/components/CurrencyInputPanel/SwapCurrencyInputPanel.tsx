@@ -13,13 +13,14 @@ import Tooltip from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
 import ms from 'ms'
 import { darken } from 'polished'
-import { forwardRef, ReactNode, useCallback, useEffect, useState } from 'react'
+import { ReactNode, forwardRef, useCallback, useEffect, useState } from 'react'
 import { Lock } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ButtonGray } from '../Button'
@@ -66,7 +67,7 @@ const CurrencySelect = styled(ButtonGray)<{
   align-items: center;
   background-color: ${({ selected, theme }) => (selected ? theme.surface1 : theme.accent1)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
-  color: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.white)};
+  color: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.neutralContrast)};
   cursor: pointer;
   height: 36px;
   border-radius: 18px;
@@ -177,7 +178,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin-left: 8px;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.white)};
+    stroke: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.neutralContrast)};
     stroke-width: 2px;
   }
 `
@@ -223,13 +224,11 @@ interface SwapCurrencyInputPanelProps {
   fiatValue?: { data?: number; isLoading: boolean }
   priceImpact?: Percent
   id: string
-  showCommonBases?: boolean
-  showCurrencyAmount?: boolean
-  disableNonToken?: boolean
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
   loading?: boolean
   disabled?: boolean
+  currencySearchFilters?: CurrencySearchFilters
   numericalInputSettings?: {
     disabled?: boolean
     onDisabledClick?: () => void
@@ -248,9 +247,6 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
       currency,
       otherCurrency,
       id,
-      showCommonBases,
-      showCurrencyAmount,
-      disableNonToken,
       renderBalance,
       fiatValue,
       priceImpact,
@@ -260,6 +256,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
       locked = false,
       loading = false,
       disabled = false,
+      currencySearchFilters,
       numericalInputSettings,
       label,
       ...rest
@@ -424,9 +421,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
             onCurrencySelect={onCurrencySelect}
             selectedCurrency={currency}
             otherSelectedCurrency={otherCurrency}
-            showCommonBases={showCommonBases}
-            showCurrencyAmount={showCurrencyAmount}
-            disableNonToken={disableNonToken}
+            currencySearchFilters={currencySearchFilters}
           />
         )}
       </InputPanel>

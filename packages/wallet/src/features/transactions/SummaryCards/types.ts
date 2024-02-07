@@ -1,8 +1,10 @@
 import { ChainId } from 'wallet/src/constants/chains'
+import { AuthTrigger } from 'wallet/src/features/auth/types'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
 
 export interface TransactionSummaryLayoutProps {
+  authTrigger?: AuthTrigger
   transaction: TransactionDetails
   title?: string
   caption: string
@@ -11,6 +13,7 @@ export interface TransactionSummaryLayoutProps {
 }
 
 export interface SummaryItemProps {
+  authTrigger?: AuthTrigger
   transaction: TransactionDetails
   layoutElement: React.FunctionComponent<TransactionSummaryLayoutProps>
   swapCallbacks?: SwapSummaryCallbacks

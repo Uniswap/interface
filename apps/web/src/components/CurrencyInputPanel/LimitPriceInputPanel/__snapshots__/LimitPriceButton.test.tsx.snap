@@ -26,6 +26,14 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly 1`] = 
   gap: 1px;
 }
 
+.c3 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c2 {
   background-color: #22222212;
   color: #222222;
@@ -64,7 +72,7 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly 1`] = 
   opacity: 0.4;
 }
 
-.c3 {
+.c4 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -94,11 +102,11 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly 1`] = 
   border-left: 1px solid transparent;
 }
 
-.c3:hover {
+.c4:hover {
   opacity: 0.6;
 }
 
-.c3:active {
+.c4:active {
   opacity: 0.4;
 }
 
@@ -109,13 +117,15 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly 1`] = 
   <button
     class="c2"
   >
-    <span>
+    <div
+      class="c3 css-142zc9n"
+    >
       +
       10%
-    </span>
+    </div>
   </button>
   <button
-    class="c3"
+    class="c4"
   >
     <svg
       fill="none"
@@ -171,6 +181,14 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly, negat
   gap: 1px;
 }
 
+.c3 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c2 {
   background-color: #22222212;
   color: #222222;
@@ -209,7 +227,7 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly, negat
   opacity: 0.4;
 }
 
-.c3 {
+.c4 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -239,11 +257,11 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly, negat
   border-left: 1px solid transparent;
 }
 
-.c3:hover {
+.c4:hover {
   opacity: 0.6;
 }
 
-.c3:active {
+.c4:active {
   opacity: 0.4;
 }
 
@@ -254,12 +272,14 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly, negat
   <button
     class="c2"
   >
-    <span>
+    <div
+      class="c3 css-142zc9n"
+    >
       -10%
-    </span>
+    </div>
   </button>
   <button
-    class="c3"
+    class="c4"
   >
     <svg
       fill="none"
@@ -406,6 +426,14 @@ exports[`LimitPresetPriceButton renders 0 correctly, disabled true and selected 
 `;
 
 exports[`LimitPresetPriceButton renders 5 correctly, disabled false and selected true 1`] = `
+.c1 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c0 {
   background-color: unset;
   color: #222222;
@@ -444,14 +472,24 @@ exports[`LimitPresetPriceButton renders 5 correctly, disabled false and selected
 <button
   class="c0"
 >
-  <span>
+  <div
+    class="c1 css-142zc9n"
+  >
     +
     5%
-  </span>
+  </div>
 </button>
 `;
 
 exports[`LimitPresetPriceButton renders 5 correctly, disabled true and selected false 1`] = `
+.c1 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c0 {
   background-color: unset;
   color: #7D7D7D;
@@ -477,14 +515,24 @@ exports[`LimitPresetPriceButton renders 5 correctly, disabled true and selected 
 <button
   class="c0"
 >
-  <span>
+  <div
+    class="c1 css-142zc9n"
+  >
     +
     5%
-  </span>
+  </div>
 </button>
 `;
 
 exports[`LimitPresetPriceButton renders 10 correctly, disabled false and selected true 1`] = `
+.c1 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c0 {
   background-color: unset;
   color: #222222;
@@ -523,9 +571,11 @@ exports[`LimitPresetPriceButton renders 10 correctly, disabled false and selecte
 <button
   class="c0"
 >
-  <span>
+  <div
+    class="c1 css-142zc9n"
+  >
     +
     10%
-  </span>
+  </div>
 </button>
 `;

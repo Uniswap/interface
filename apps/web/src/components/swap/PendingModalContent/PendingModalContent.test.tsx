@@ -6,8 +6,8 @@ import { LIMIT_ORDER_TRADE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 
-import { ConfirmModalState } from '../ConfirmSwapModal'
 import { getTitle, PendingModalContent } from '.'
+import { ConfirmModalState } from '../ConfirmSwapModal'
 import { ErrorModalContent, PendingModalError } from './ErrorModalContent'
 
 jest.mock('state/transactions/hooks')

@@ -268,8 +268,8 @@ function parseIndependentFieldURLParameter(urlParam: any): Field {
 }
 
 export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCurrencyState {
-  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
-  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
+  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency ?? parsedQs.inputcurrency)
+  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency ?? parsedQs.outputcurrency)
   const independentField = parseIndependentFieldURLParameter(parsedQs.exactField)
 
   if (inputCurrency === '' && outputCurrency === '' && independentField === Field.INPUT) {

@@ -17,14 +17,14 @@ import { AnimatedFlex, Button, Flex, Icons, Inset, Separator, Text } from 'ui/sr
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
-import { MeldQuote } from 'wallet/src/features/fiatOnRamp/meld'
+import { FORQuote } from 'wallet/src/features/fiatOnRamp/types'
 import { ElementName } from 'wallet/src/telemetry/constants'
 
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.ServiceProviders>
 
-const key = (item: MeldQuote): string => item.serviceProvider
+const key = (item: FORQuote): string => item.serviceProvider
 
-export function FiatOnRampServiceProvidersScreen({ navigation: _navigation }: Props): JSX.Element {
+export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
   const {
     selectedQuote,
@@ -35,7 +35,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation: _navigation }: Pr
     serviceProviders,
   } = useFiatOnRampContext()
 
-  const renderItem = ({ item }: ListRenderItemInfo<MeldQuote>): JSX.Element => {
+  const renderItem = ({ item }: ListRenderItemInfo<FORQuote>): JSX.Element => {
     return (
       <Flex px="$spacing12" py="$spacing8">
         {baseCurrencyInfo && (
@@ -58,7 +58,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation: _navigation }: Pr
   const renderSectionHeader = ({
     section: { type },
   }: {
-    section: SectionListData<MeldQuote, { type?: InitialQuoteSelection }>
+    section: SectionListData<FORQuote, { type?: InitialQuoteSelection }>
   }): JSX.Element => {
     return (
       <Flex px="$spacing12">
@@ -85,8 +85,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation: _navigation }: Pr
   const onContinue = (): void => {
     const serviceProvider = getServiceProviderForQuote(selectedQuote, serviceProviders)
     if (serviceProvider) {
-      // TODO: Uncomment this when working on https://linear.app/uniswap/issue/MOB-2564/implement-connecting-screen
-      // navigation.navigate(FiatOnRampScreens.Connecting)
+      navigation.navigate(FiatOnRampScreens.Connecting)
     }
   }
 

@@ -95,14 +95,16 @@ type ChainLogoProps = {
   borderRadius?: number
   style?: CSSProperties
   testId?: string
+  fillContainer?: boolean
 }
 export function ChainLogo({
   chainId,
   className,
   style,
-  size = 16,
+  size = 12,
   borderRadius = getDefaultBorderRadius(size),
   testId,
+  fillContainer = false,
 }: ChainLogoProps) {
   const darkMode = useIsDarkMode()
   const { surface2 } = useTheme()
@@ -111,12 +113,21 @@ export function ChainLogo({
   const { label } = getChainInfo(chainId)
 
   const { Symbol, bgColor } = getChainUI(chainId, darkMode)
+  const iconSize = fillContainer ? '100%' : size
+
   return (
-    <svg width={size} height={size} className={className} style={style} aria-labelledby="titleID" data-testid={testId}>
+    <svg
+      width={iconSize}
+      height={iconSize}
+      className={className}
+      style={{ ...style, width: iconSize, height: iconSize }}
+      aria-labelledby="titleID"
+      data-testid={testId}
+    >
       <title id="titleID">{`${label} logo`}</title>
-      <rect rx={borderRadius} fill={surface2} width={size} height={size} />
-      <rect rx={borderRadius} fill={bgColor} width={size} height={size} />
-      <Symbol width={size} height={size} />
+      <rect rx={borderRadius} fill={surface2} width={iconSize} height={iconSize} />
+      <rect rx={borderRadius} fill={bgColor} width={iconSize} height={iconSize} />
+      <Symbol width={iconSize} height={iconSize} />
     </svg>
   )
 }

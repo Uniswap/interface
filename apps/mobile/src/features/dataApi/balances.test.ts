@@ -1,8 +1,8 @@
 import { act, renderHook, waitFor } from 'src/test/test-utils'
 import {
-  mockWalletPreloadedState,
   SAMPLE_CURRENCY_ID_1,
   SAMPLE_CURRENCY_ID_2,
+  mockWalletPreloadedState,
 } from 'wallet/src/test/fixtures'
 import { Portfolio, PortfolioBalancesById } from 'wallet/src/test/gqlFixtures'
 import { useBalances } from './balances'

@@ -2,7 +2,7 @@ import { OperationVariables, QueryResult } from '@apollo/client'
 import * as Sentry from '@sentry/react'
 import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
-import { NATIVE_CHAIN_ID, nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'constants/tokens'
 import ms from 'ms'
 import { useEffect } from 'react'
 import { DefaultTheme } from 'styled-components'
@@ -258,4 +258,9 @@ export function getProtocolColor(priceSource: PriceSource, theme: DefaultTheme):
 
 export function getProtocolName(priceSource: PriceSource): string {
   return PROTOCOL_META[priceSource].name
+}
+
+export enum OrderDirection {
+  Asc = 'asc',
+  Desc = 'desc',
 }

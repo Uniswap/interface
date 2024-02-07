@@ -8,6 +8,7 @@ import { TraceProps } from 'utilities/src/telemetry/trace/Trace'
 import { ChainId } from 'wallet/src/constants/chains'
 import { ImportType } from 'wallet/src/features/onboarding/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { WalletAppsFlyerEvents, WalletEventName } from 'wallet/src/telemetry/constants'
 
 export type SwapTradeBaseProperties = {
@@ -22,6 +23,8 @@ export type SwapTradeBaseProperties = {
   token_in_amount: string
   token_out_amount: string
   fee_amount?: string
+  quoteType?: QuoteType
+  requestId?: string
 } & TraceProps
 
 type SwapTransactionResultProperties = {
@@ -42,6 +45,7 @@ type SwapTransactionResultProperties = {
   submitViaPrivateRpc?: boolean
   protocol?: Protocol
   transactedUSDValue?: number
+  quoteType?: QuoteType
 }
 
 type TransferProperties = {

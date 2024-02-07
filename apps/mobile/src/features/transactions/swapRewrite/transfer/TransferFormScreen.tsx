@@ -1,5 +1,4 @@
 import React from 'react'
-import { TokenSelector } from 'src/features/transactions/swapRewrite/TokenSelector'
 import { Text } from 'ui/src'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
@@ -20,4 +19,9 @@ export function TransferFormScreen({ hideContent }: { hideContent: boolean }): J
       </Text>
     </TransactionModalInnerContainer>
   )
+}
+
+function TokenSelector(): JSX.Element | null {
+  // TODO: implement. See `wallet/.../SwapTokenSelector.tsx` for reference.
+  return null
 }

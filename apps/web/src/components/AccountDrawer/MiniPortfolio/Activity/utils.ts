@@ -1,7 +1,13 @@
+import { Web3Provider } from '@ethersproject/providers'
 import { t } from '@lingui/macro'
+import { ChainId } from '@uniswap/sdk-core'
+import { DutchOrder, getCancelSingleParams } from '@uniswap/uniswapx-sdk'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import { Permit2 } from 'wallet/src/abis/types'
 
+import { BigNumber } from 'ethers/lib/ethers'
 import { Activity } from './types'
 
 interface ActivityGroup {
@@ -62,4 +68,89 @@ export const createGroups = (activities?: Array<Activity>) => {
   ]
 
   return transactionGroups.filter((transactionInformation) => transactionInformation.transactions.length > 0)
+}
+
+export async function cancelUniswapXOrder({
+  encodedOrder,
+  chainId,
+  permit2,
+  provider,
+}: {
+  encodedOrder: string
+  chainId: ChainId
+  permit2: Permit2 | null
+  provider?: Web3Provider
+}) {
+  const parsedOrder = DutchOrder.parse(encodedOrder, chainId)
+  const invalidateNonceInput = getCancelSingleParams(parsedOrder.info.nonce)
+  if (!permit2 || !provider) return
+  try {
+    return await permit2.invalidateUnorderedNonces(invalidateNonceInput.word, invalidateNonceInput.mask)
+  } catch (error) {
+    if (!didUserReject(error)) console.error(error)
+    return undefined
+  }
+}
+
+// TODO(WEB-3594): just use the uniswapx-sdk when getCancelMultipleParams is available
+
+interface SplitNonce {
+  word: BigNumber
+  bitPos: BigNumber
+}
+
+function splitNonce(nonce: BigNumber): SplitNonce {
+  const word = nonce.div(256)
+  const bitPos = nonce.mod(256)
+  return { word, bitPos }
+}
+
+// Get parameters to cancel multiple nonces
+// source: https://github.com/Uniswap/uniswapx-sdk/pull/112
+function getCancelMultipleParams(noncesToCancel: BigNumber[]): {
+  word: BigNumber
+  mask: BigNumber
+}[] {
+  const splitNonces = noncesToCancel.map(splitNonce)
+  const splitNoncesByWord: { [word: string]: SplitNonce[] } = {}
+  splitNonces.forEach((splitNonce) => {
+    const word = splitNonce.word.toString()
+    if (!splitNoncesByWord[word]) {
+      splitNoncesByWord[word] = []
+    }
+    splitNoncesByWord[word].push(splitNonce)
+  })
+  return Object.entries(splitNoncesByWord).map(([word, splitNonce]) => {
+    let mask = BigNumber.from(0)
+    splitNonce.forEach((splitNonce) => {
+      mask = mask.or(BigNumber.from(2).pow(splitNonce.bitPos))
+    })
+    return { word: BigNumber.from(word), mask }
+  })
+}
+
+export async function cancelMultipleUniswapXOrders({
+  encodedOrders,
+  chainId,
+  permit2,
+  provider,
+}: {
+  encodedOrders: string[]
+  chainId: ChainId
+  permit2: Permit2 | null
+  provider?: Web3Provider
+}) {
+  const parsedOrders = encodedOrders.map((encodedOrder) => DutchOrder.parse(encodedOrder, chainId))
+  const nonces: BigNumber[] = parsedOrders.map((order) => order.info.nonce)
+  const cancelParams = getCancelMultipleParams(nonces)
+  if (!permit2 || !provider) return
+  try {
+    for (const params of cancelParams) {
+      await permit2.invalidateUnorderedNonces(params.word, params.mask)
+    }
+    return true
+  } catch (error) {
+    if (!didUserReject(error)) console.error(error)
+    return undefined
+  }
 }

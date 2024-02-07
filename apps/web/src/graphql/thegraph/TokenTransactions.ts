@@ -85,7 +85,7 @@ export function useTokenTransactions(
   skip?: number
 ) {
   const apolloClient = chainToApolloClient[chainId || ChainId.MAINNET]
-  const { data, loading, fetchMore } = useTokenTransactionsQuery({
+  const { data, loading, fetchMore, error } = useTokenTransactionsQuery({
     variables: {
       address: address.toLowerCase(),
       first,
@@ -141,6 +141,7 @@ export function useTokenTransactions(
       transactions,
       loading,
       loadMore,
+      error,
     }
-  }, [transactions, loading, loadMore])
+  }, [transactions, loading, loadMore, error])
 }

@@ -12,10 +12,33 @@ exports[`LimitPriceInputPanel should render correct subheader with inputCurrency
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
+}
+
+.c9 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
   width: unset;
 }
 
 .c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c8 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -33,7 +56,7 @@ exports[`LimitPriceInputPanel should render correct subheader with inputCurrency
   gap: 8px;
 }
 
-.c8 {
+.c10 {
   width: unset;
   display: -webkit-box;
   display: -webkit-flex;
@@ -138,7 +161,7 @@ exports[`LimitPriceInputPanel should render correct subheader with inputCurrency
   will-change: height;
 }
 
-.c9 {
+.c11 {
   background-color: unset;
   color: #7D7D7D;
   padding: 2px 8px;
@@ -203,38 +226,48 @@ exports[`LimitPriceInputPanel should render correct subheader with inputCurrency
   >
     <div
       class="c7 c8"
-      width="unset"
     >
-      <button
-        class="c9"
+      <div
+        class="c9 c10"
+        width="unset"
       >
-        Current
+        <button
+          class="c11"
+        >
+          Current
+        </button>
+      </div>
+      <button
+        class="c11"
+      >
+        <div
+          class="c1 css-142zc9n"
+        >
+          +
+          1%
+        </div>
+      </button>
+      <button
+        class="c11"
+      >
+        <div
+          class="c1 css-142zc9n"
+        >
+          +
+          5%
+        </div>
+      </button>
+      <button
+        class="c11"
+      >
+        <div
+          class="c1 css-142zc9n"
+        >
+          +
+          10%
+        </div>
       </button>
     </div>
-    <button
-      class="c9"
-    >
-      <span>
-        +
-        1%
-      </span>
-    </button>
-    <button
-      class="c9"
-    >
-      <span>
-        +
-        5%
-      </span>
-    </button>
-    <button
-      class="c9"
-    >
-      <span>
-        +
-        10%
-      </span>
-    </button>
   </div>
 </div>
 `;
@@ -251,10 +284,33 @@ exports[`LimitPriceInputPanel should render the component with no currencies sel
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
+}
+
+.c9 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
   width: unset;
 }
 
 .c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c8 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -272,7 +328,7 @@ exports[`LimitPriceInputPanel should render the component with no currencies sel
   gap: 8px;
 }
 
-.c8 {
+.c10 {
   width: unset;
   display: -webkit-box;
   display: -webkit-flex;
@@ -377,7 +433,7 @@ exports[`LimitPriceInputPanel should render the component with no currencies sel
   will-change: height;
 }
 
-.c9 {
+.c11 {
   background-color: unset;
   color: #7D7D7D;
   padding: 2px 8px;
@@ -442,38 +498,48 @@ exports[`LimitPriceInputPanel should render the component with no currencies sel
   >
     <div
       class="c7 c8"
-      width="unset"
     >
-      <button
-        class="c9"
+      <div
+        class="c9 c10"
+        width="unset"
       >
-        Current
+        <button
+          class="c11"
+        >
+          Current
+        </button>
+      </div>
+      <button
+        class="c11"
+      >
+        <div
+          class="c1 css-142zc9n"
+        >
+          +
+          1%
+        </div>
+      </button>
+      <button
+        class="c11"
+      >
+        <div
+          class="c1 css-142zc9n"
+        >
+          +
+          5%
+        </div>
+      </button>
+      <button
+        class="c11"
+      >
+        <div
+          class="c1 css-142zc9n"
+        >
+          +
+          10%
+        </div>
       </button>
     </div>
-    <button
-      class="c9"
-    >
-      <span>
-        +
-        1%
-      </span>
-    </button>
-    <button
-      class="c9"
-    >
-      <span>
-        +
-        5%
-      </span>
-    </button>
-    <button
-      class="c9"
-    >
-      <span>
-        +
-        10%
-      </span>
-    </button>
   </div>
 </div>
 `;

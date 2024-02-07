@@ -1,6 +1,6 @@
 import React, { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 import { Icon } from 'react-feather'
-import styled, { css, DefaultTheme } from 'styled-components'
+import styled, { DefaultTheme, css } from 'styled-components'
 import useResizeObserver from 'use-resize-observer'
 
 import { TRANSITION_DURATIONS } from '../../theme/styles'

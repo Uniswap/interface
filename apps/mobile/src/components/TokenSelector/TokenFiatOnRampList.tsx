@@ -3,9 +3,8 @@ import React, { memo, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
-import { Flex, Icons, Inset, Text, TouchableArea } from 'ui/src'
+import { Flex, Icons, Inset, Loader, Text, TouchableArea } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { TokenLoader } from 'wallet/src/components/loading/TokenLoader'
 import { TokenOptionItem } from 'wallet/src/components/TokenSelector/TokenOptionItem'
 import { ChainId } from 'wallet/src/constants/chains'
 import { ElementName } from 'wallet/src/telemetry/constants'
@@ -89,7 +88,7 @@ function _TokenFiatOnRampList({
     return (
       <Flex>
         <Header onBack={onBack} />
-        <TokenLoader repeat={5} />
+        <Loader.Token repeat={5} />
       </Flex>
     )
   }

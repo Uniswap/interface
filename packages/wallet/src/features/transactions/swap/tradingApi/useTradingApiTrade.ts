@@ -8,9 +8,9 @@ import { PollingInterval } from 'wallet/src/constants/misc'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useRestQuery } from 'wallet/src/data/rest'
 import {
+  RoutingPreference,
   QuoteRequest as TradingApiQuoteRequest,
   QuoteResponse as TradingApiQuoteResponse,
-  RoutingPreference,
   TradeType as TradingApiTradeType,
 } from 'wallet/src/data/tradingApi/__generated__/api'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/tradingApi/client'

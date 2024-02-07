@@ -25,17 +25,17 @@ import ARGENT_WALLET_DETECTOR_ABI from 'wallet/src/abis/argent-wallet-detector.j
 import EIP_2612 from 'wallet/src/abis/eip_2612.json'
 import ENS_PUBLIC_RESOLVER_ABI from 'wallet/src/abis/ens-public-resolver.json'
 import ENS_ABI from 'wallet/src/abis/ens-registrar.json'
+import ERC1155_ABI from 'wallet/src/abis/erc1155.json'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import ERC20_BYTES32_ABI from 'wallet/src/abis/erc20_bytes32.json'
 import ERC721_ABI from 'wallet/src/abis/erc721.json'
-import ERC1155_ABI from 'wallet/src/abis/erc1155.json'
 import {
   ArgentWalletDetector,
   EnsPublicResolver,
   EnsRegistrar,
+  Erc1155,
   Erc20,
   Erc721,
-  Erc1155,
   Weth,
 } from 'wallet/src/abis/types'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'wallet/src/abis/types/v3'

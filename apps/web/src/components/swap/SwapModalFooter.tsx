@@ -5,7 +5,6 @@ import { TraceEvent } from 'analytics'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
 import SpinningLoader from 'components/Loader/SpinningLoader'
-import { SupportArticleURL } from 'constants/supportArticles'
 import { useNewSwapFlow } from 'featureFlags/flags/progressIndicatorV2'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult } from 'hooks/useSwapCallback'
@@ -23,16 +22,16 @@ import { ExternalLink, Separator, ThemedText } from 'theme/components'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
 
+import { Info } from 'components/Icons/Info'
 import { ReactComponent as ExpandoIconClosed } from '../../assets/svg/expando-icon-closed.svg'
 import { ReactComponent as ExpandoIconOpened } from '../../assets/svg/expando-icon-opened.svg'
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
 import { SwapCallbackError, SwapShowAcceptChanges } from './styled'
-import { SwapLineItemProps, SwapLineItemType } from './SwapLineItem'
-import SwapLineItem from './SwapLineItem'
+import SwapLineItem, { SwapLineItemProps, SwapLineItemType } from './SwapLineItem'
 
 const DetailsContainer = styled(Column)<{ isNewSwapFlowEnabled?: boolean }>`
-  ${({ isNewSwapFlowEnabled }) => (isNewSwapFlowEnabled ? 'padding: 0px 16px 12px 16px' : 'padding-bottom: 8px')};
+  ${({ isNewSwapFlowEnabled }) => (isNewSwapFlowEnabled ? 'padding: 0px 16px 8px 16px' : 'padding-bottom: 8px')};
 `
 
 const StyledAlertTriangle = styled(AlertTriangle)`
@@ -124,7 +123,7 @@ export default function SwapModalFooter({
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
   showAcceptChanges: boolean
-  onAcceptChanges: () => void
+  onAcceptChanges?: () => void
   isLoading: boolean
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
@@ -141,18 +140,10 @@ export default function SwapModalFooter({
     if (allowance && allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
       return {
         buttonText: t`Approve and swap`,
-        helpLink: {
-          text: t`Why do I have to approve a token?`,
-          url: SupportArticleURL.APPROVALS_EXPLAINER,
-        },
       }
     } else if (allowance && allowance.state === AllowanceState.REQUIRED && allowance.needsPermitSignature) {
       return {
         buttonText: t`Sign and swap`,
-        helpLink: {
-          text: t`Why are signatures required?`,
-          url: SupportArticleURL.APPROVALS_EXPLAINER,
-        },
       }
     } else {
       return {
@@ -338,6 +329,12 @@ function LimitLineItems({ trade }: { trade: LimitOrderTrade }) {
       <SwapLineItem trade={trade} type={SwapLineItemType.EXPIRY} />
       <SwapLineItem trade={trade} type={SwapLineItemType.SWAP_FEE} />
       <SwapLineItem trade={trade} type={SwapLineItemType.NETWORK_COST} />
+      <Row gap="xs" justify="center" marginTop="12px">
+        <Info width={16} height={16} />
+        <ThemedText.LabelMicro>
+          <Trans>Canceling a limit will require a small network cost</Trans>
+        </ThemedText.LabelMicro>
+      </Row>
     </>
   )
 }

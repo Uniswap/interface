@@ -63,6 +63,11 @@ export function useAllTokensMultichain(): ChainTokenMap {
   }, [allTokensFromLists, userAddedTokensMap])
 }
 
+export function useDefaultListTokens(chainId: Maybe<ChainId>) {
+  const defaultListTokens = useCombinedActiveList()
+  return useTokensFromMap(defaultListTokens, chainId)
+}
+
 /** Returns all tokens from the default list + user added tokens */
 export function useDefaultActiveTokens(chainId: Maybe<ChainId>): { [address: string]: Token } {
   const defaultListTokens = useCombinedActiveList()

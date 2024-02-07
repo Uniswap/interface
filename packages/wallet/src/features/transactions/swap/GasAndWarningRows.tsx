@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { isWeb } from 'tamagui'
 import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
@@ -99,7 +100,8 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
               centered
               row
               entering={FadeIn}
-              exiting={FadeOut}
+              // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
+              exiting={isWeb ? undefined : FadeOut}
               gap="$spacing8"
               px="$spacing24">
               {formScreenWarning.Icon && (

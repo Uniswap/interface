@@ -1,11 +1,11 @@
-import React from 'react'
 import styled from 'styled-components'
 
+import { Trans } from '@lingui/macro'
+import { Box, H2 } from '../components/Generics'
 import { DocumentationCard } from '../components/cards/DocumentationCard'
 import { DownloadWalletCard } from '../components/cards/DownloadWalletCard'
 import { LiquidityCard } from '../components/cards/LiquidityCard'
 import { WebappCard } from '../components/cards/WebappCard'
-import { Box, H2 } from '../components/Generics'
 
 const SectionLayout = styled.div`
   display: flex;
@@ -38,7 +38,9 @@ export function DirectToDefi() {
   return (
     <SectionLayout>
       <SectionCol direction="column" gap="40px" maxWidth="1280px">
-        <H2>Go direct to DeFi</H2>
+        <H2>
+          <Trans>Go direct to DeFi</Trans>
+        </H2>
         <Box direction="column" gap="16px">
           <RowToCol direction="row" gap="16px">
             <WebappCard />

@@ -6,7 +6,7 @@ import {
   useDeviceSupportsBiometricAuth,
 } from 'src/features/biometrics/hooks'
 import { setUserProperty } from 'src/features/telemetry'
-import { getAuthMethod, UserPropertyName } from 'src/features/telemetry/constants'
+import { UserPropertyName, getAuthMethod } from 'src/features/telemetry/constants'
 import { selectAllowAnalytics } from 'src/features/telemetry/selectors'
 import { getFullAppVersion } from 'src/utils/version'
 import { useIsDarkMode } from 'ui/src'

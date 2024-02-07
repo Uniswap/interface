@@ -1,4 +1,4 @@
-import React, { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
@@ -27,14 +27,10 @@ import { ModalName, SectionName } from 'wallet/src/telemetry/constants'
 
 export function SwapFlow({
   prefilledState,
-  TokenSelector,
   ...transactionModalProps
 }: {
   prefilledState?: SwapFormState
   onClose: () => void
-  // TODO(felipe): This is a temporary prop to allow us to move this flow screen-by-screen into the shared wallet package + extension.
-  //               In a future PR we'll move the `TokenSelector` component (and its dependencies) into the shared wallet package.
-  TokenSelector: React.FC
 } & Omit<TransactionModalProps, 'fullscreen' | 'modalName'>): JSX.Element {
   // We need this additional `screen` state outside of the `SwapScreenContext` because the `SwapScreenContextProvider` needs to be inside the `BottomSheetModal`'s `Container`.
   const [screen, setScreen] = useState<SwapScreen>(SwapScreen.SwapForm)
@@ -47,7 +43,7 @@ export function SwapFlow({
   return (
     <TransactionModal fullscreen={fullscreen} modalName={ModalName.Swap} {...transactionModalProps}>
       <SwapContextsContainer prefilledState={prefilledState}>
-        <CurrentScreen TokenSelector={TokenSelector} screen={screen} setScreen={setScreen} />
+        <CurrentScreen screen={screen} setScreen={setScreen} />
         {/*
         We render the `Review` button here instead of doing it inside `SwapFormScreen` so that it stays in place when the user is "holding to swap".
       */}
@@ -64,11 +60,9 @@ export function SwapFlow({
 function CurrentScreen({
   screen,
   setScreen,
-  TokenSelector,
 }: {
   screen: SwapScreen
   setScreen: Dispatch<SetStateAction<SwapScreen>>
-  TokenSelector: React.FC
 }): JSX.Element {
   const { screen: contextScreen, screenRef: contextScreenRef } = useSwapScreenContext()
 
@@ -80,7 +74,7 @@ function CurrentScreen({
     case SwapScreen.SwapForm:
       return (
         <Trace logImpression section={SectionName.SwapForm}>
-          <SwapFormScreenDelayedRender TokenSelector={TokenSelector} />
+          <SwapFormScreenDelayedRender />
         </Trace>
       )
     case SwapScreen.SwapReview:
@@ -96,14 +90,14 @@ function CurrentScreen({
 }
 
 // We add a short hardcoded delay to allow the sheet to animate quickly both on first render and when going back from Review -> Form.
-function SwapFormScreenDelayedRender({ TokenSelector }: { TokenSelector: React.FC }): JSX.Element {
+function SwapFormScreenDelayedRender(): JSX.Element {
   const [hideContent, setHideContent] = useState(true)
 
   useEffect(() => {
     setTimeout(() => setHideContent(false), 25)
   }, [])
 
-  return <SwapFormScreen TokenSelector={TokenSelector} hideContent={hideContent} />
+  return <SwapFormScreen hideContent={hideContent} />
 }
 
 // We add a short hardcoded delay to allow the sheet to animate quickly when going from Form -> Review.

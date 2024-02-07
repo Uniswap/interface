@@ -6,7 +6,6 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
   onTouchEnd={[Function]}
   style={
     {
-      "alignItems": "stretch",
       "flexDirection": "column",
       "gap": 12,
     }
@@ -15,7 +14,6 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
   <View
     style={
       {
-        "alignItems": "stretch",
         "backgroundColor": "#FFFFFF",
         "borderBottomColor": "#2222220D",
         "borderBottomLeftRadius": 20,
@@ -57,7 +55,6 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         autoCorrect={false}
         autoFocus={true}
         blurOnSubmit={false}
-        editable={true}
         focusable={true}
         maxFontSizeMultiplier={1.4}
         multiline={true}
@@ -154,7 +151,6 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
       <View
         style={
           {
-            "alignItems": "stretch",
             "flexDirection": "column",
             "paddingTop": 64,
             "position": "absolute",
@@ -309,7 +305,6 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
   <View
     style={
       {
-        "alignItems": "stretch",
         "flexDirection": "column",
       }
     }

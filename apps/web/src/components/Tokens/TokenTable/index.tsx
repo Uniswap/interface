@@ -47,6 +47,8 @@ interface TokenTableValues {
   volume: number
   sparkline: ReactElement
   link: string
+  /** Used for pre-loading TDP with logo to extract color from */
+  linkState: { preloadedLogoSrc?: string }
 }
 
 function TokenDescription({ token }: { token: TopToken }) {
@@ -149,6 +151,7 @@ function TokenTable({
             chain: chainIdToBackendName(chainId),
             isInfoExplorePageEnabled: true,
           }),
+          linkState: { preloadedLogoSrc: token.project?.logoUrl },
         }
       }) ?? [],
     [chainId, formatDelta, sparklines, tokenSortRank, tokens]

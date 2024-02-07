@@ -3,10 +3,8 @@ import { persistor } from 'state'
 
 import { initialState as initialListsState } from '../lists/reducer'
 import { RouterPreference } from '../routing/types'
-import { TransactionState } from '../transactions/reducer'
-import { initialState as initialTransactionsState } from '../transactions/reducer'
-import { UserState } from '../user/reducer'
-import { initialState as initialUserState } from '../user/reducer'
+import { initialState as initialTransactionsState, TransactionState } from '../transactions/reducer'
+import { initialState as initialUserState, UserState } from '../user/reducer'
 import { SlippageTolerance } from '../user/types'
 
 const currentTimestamp = () => new Date().getTime()

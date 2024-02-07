@@ -39,6 +39,7 @@ export type ExploreStackParamList = {
 export type FiatOnRampStackParamList = {
   [FiatOnRampScreens.AmountInput]: undefined
   [FiatOnRampScreens.ServiceProviders]: undefined
+  [FiatOnRampScreens.Connecting]: undefined
 }
 
 export type SettingsStackParamList = {
@@ -65,6 +66,18 @@ export type OnboardingStackBaseParams = {
   entryPoint: OnboardingEntryPoint
 }
 
+export type SharedUnitagScreenParams = {
+  [UnitagScreens.ClaimUnitag]: {
+    entryPoint: OnboardingScreens.Landing | OnboardingEntryPoint.Sidebar | Screens.Home
+    importType: ImportType.CreateNew | ImportType.CreateAdditional
+  }
+  [UnitagScreens.ChooseProfilePicture]: {
+    entryPoint: OnboardingScreens.Landing | OnboardingEntryPoint.Sidebar | Screens.Home
+    importType: ImportType.CreateNew | ImportType.CreateAdditional
+    unitag: string
+  }
+}
+
 export type OnboardingStackParamList = {
   [OnboardingScreens.BackupManual]: OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudPasswordCreate]: {
@@ -76,15 +89,8 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.Landing]: OnboardingStackBaseParams
   [OnboardingScreens.EditName]: OnboardingStackBaseParams
   [OnboardingScreens.Notifications]: OnboardingStackBaseParams
-  [OnboardingScreens.QRAnimation]: OnboardingStackBaseParams
+  [OnboardingScreens.WelcomeWallet]: OnboardingStackBaseParams
   [OnboardingScreens.Security]: OnboardingStackBaseParams
-
-  // unitag
-  [UnitagScreens.ClaimUnitag]: { entryPoint: OnboardingScreens.Landing | Screens.Home }
-  [UnitagScreens.ChooseProfilePicture]: {
-    entryPoint: OnboardingScreens.Landing | Screens.Home
-    unitag: string
-  }
 
   // import
   [OnboardingScreens.ImportMethod]: OnboardingStackBaseParams
@@ -96,14 +102,9 @@ export type OnboardingStackParamList = {
   [OnboardingScreens.SeedPhraseInput]: OnboardingStackBaseParams
   [OnboardingScreens.SelectWallet]: OnboardingStackBaseParams
   [OnboardingScreens.WatchWallet]: OnboardingStackBaseParams
-}
+} & SharedUnitagScreenParams
 
-export type UnitagStackParamList = {
-  [UnitagScreens.ClaimUnitag]: { entryPoint: OnboardingScreens.Landing | Screens.Home }
-  [UnitagScreens.ChooseProfilePicture]: {
-    entryPoint: OnboardingScreens.Landing | Screens.Home
-    unitag: string
-  }
+export type UnitagStackParamList = SharedUnitagScreenParams & {
   [UnitagScreens.UnitagConfirmation]: {
     unitag: string
     address: Address

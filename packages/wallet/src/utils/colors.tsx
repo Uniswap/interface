@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import ImageColors from 'react-native-image-colors'
 import { useIsDarkMode, useSporeColors } from 'ui/src'
-import { ColorKeys, colors as GlobalColors, colorsLight, GlobalPalette } from 'ui/src/theme'
+import { ColorKeys, colors as GlobalColors, GlobalPalette, colorsLight } from 'ui/src/theme'
 import { assert } from 'utilities/src/errors'
 import { isSVGUri } from 'utilities/src/format/urls'
 import { useAsyncData } from 'utilities/src/react/hooks'
