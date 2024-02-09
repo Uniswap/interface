@@ -15,6 +15,11 @@ import { useExitAnimationFlag, useLandingPageV2Flag } from 'featureFlags/flags/l
 import { useLimitsEnabledFlag } from 'featureFlags/flags/limits'
 import { useLimitsFeeesEnabledFlag } from 'featureFlags/flags/limitsFees'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
+import {
+  useOutageBannerArbitrum,
+  useOutageBannerOptimism,
+  useOutageBannerPolygon,
+} from 'featureFlags/flags/outageBanner'
 import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
 import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
 import { useSendEnabledFlag } from 'featureFlags/flags/send'
@@ -395,6 +400,26 @@ export default function FeatureFlagModal() {
             value={useInfoLiveViewsFlag()}
             featureFlag={FeatureFlag.infoLiveViews}
             label="Info site migration - Support live view graphs"
+          />
+        </FeatureFlagGroup>
+        <FeatureFlagGroup name="Outage Banners">
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useOutageBannerArbitrum()}
+            featureFlag={FeatureFlag.outageBannerArbitrum}
+            label="Outage Banner for Arbitrum"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useOutageBannerPolygon()}
+            featureFlag={FeatureFlag.outageBannerPolygon}
+            label="Outage Banner for Polygon"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useOutageBannerOptimism()}
+            featureFlag={FeatureFlag.outageBannerOptimism}
+            label="Outage Banner for Optimism"
           />
         </FeatureFlagGroup>
         <FeatureFlagGroup name="Debug">

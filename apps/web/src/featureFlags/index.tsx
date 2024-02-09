@@ -26,6 +26,10 @@ export enum FeatureFlag {
   landingPageV2 = 'landing_page_v2',
   limitsFees = 'limits_fees',
   exitAnimation = 'exit_animation',
+  // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
+  outageBannerOptimism = 'outage_banner_feb_2024_optimism',
+  outageBannerArbitrum = 'outage_banner_feb_2024_arbitrum',
+  outageBannerPolygon = 'outage_banner_feb_2024_polygon',
 }
 
 interface FeatureFlagsContextType {

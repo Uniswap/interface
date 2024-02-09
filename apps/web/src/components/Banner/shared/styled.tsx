@@ -11,11 +11,12 @@ export const PopupContainer = styled.div<{ show: boolean }>`
   color: ${({ theme }) => theme.neutral1};
   position: fixed;
   z-index: ${Z_INDEX.sticky};
-  user-select: none;
-  border-radius: 20px;
   bottom: 40px;
   right: 20px;
   width: 360px;
+
+  user-select: none;
+  border-radius: 20px;
   height: 92px;
   border: 1.3px solid ${({ theme }) => theme.surface3};
 

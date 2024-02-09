@@ -138,6 +138,17 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
   base: Chain.Base,
 }
 
+const URL_CHAIN_PARAM_TO_CHAIN_ID: { [key: string]: ChainId } = {
+  ethereum: ChainId.MAINNET,
+  polygon: ChainId.POLYGON,
+  celo: ChainId.CELO,
+  arbitrum: ChainId.ARBITRUM_ONE,
+  optimism: ChainId.OPTIMISM,
+  bnb: ChainId.BNB,
+  avalanche: ChainId.AVALANCHE,
+  base: ChainId.BASE,
+}
+
 /**
  * @param chainName parsed in chain name from url query parameter
  * @returns if chainName is a valid chain name, returns the backend chain name, otherwise returns undefined
@@ -145,6 +156,15 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
 export function getValidUrlChainName(chainName: string | undefined): Chain | undefined {
   const validChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
   return validChainName ? validChainName : undefined
+}
+
+/**
+ * @param chainName parsed in chain name from the url query parameter
+ * @returns if chainName is a valid chain name, returns the ChainId, otherwise returns undefined
+ */
+export function getValidUrlChainId(chainName: string | undefined): ChainId | undefined {
+  const validChainId = chainName && URL_CHAIN_PARAM_TO_CHAIN_ID[chainName]
+  return validChainId ? validChainId : undefined
 }
 
 /**

@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmTcGpuhdwLHa429mtTtCTpbSk31UsQDAnDkiuD5BwvBPz`
-- CIDv1: `bafybeicojl6bm5fa5lxr4fluhdsc2lhj5nkanb5vo4dg7vjdiwbkhgy5qu`
+- CIDv0: `QmciGvhbiSVjSu6u9JwRzFp5uBRnawnd5M8NMk8d9XNACT`
+- CIDv1: `bafybeigvrxb4vjhzc3k7xqtwa4dijoev545kpjmo4anikgsbckku45k4qq`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,70 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeicojl6bm5fa5lxr4fluhdsc2lhj5nkanb5vo4dg7vjdiwbkhgy5qu.ipfs.dweb.link/
-- https://bafybeicojl6bm5fa5lxr4fluhdsc2lhj5nkanb5vo4dg7vjdiwbkhgy5qu.ipfs.cf-ipfs.com/
-- [ipfs://QmTcGpuhdwLHa429mtTtCTpbSk31UsQDAnDkiuD5BwvBPz/](ipfs://QmTcGpuhdwLHa429mtTtCTpbSk31UsQDAnDkiuD5BwvBPz/)
+- https://bafybeigvrxb4vjhzc3k7xqtwa4dijoev545kpjmo4anikgsbckku45k4qq.ipfs.dweb.link/
+- https://bafybeigvrxb4vjhzc3k7xqtwa4dijoev545kpjmo4anikgsbckku45k4qq.ipfs.cf-ipfs.com/
+- [ipfs://QmciGvhbiSVjSu6u9JwRzFp5uBRnawnd5M8NMk8d9XNACT/](ipfs://QmciGvhbiSVjSu6u9JwRzFp5uBRnawnd5M8NMk8d9XNACT/)
 
-## 5.7.0 (2024-02-07)
+## 5.8.0 (2024-02-09)
 
 
 ### Features
 
-* **web:** "open limits" button in MP (#5952) ffcff07
-* **web:** [info] convert v3 & v2 pools queries to GQL BE (#5851) 925b6e7
-* **web:** [info] Implement search for top pools (#6075) 23b79fa
-* **web:** [info] numerator based pdp tx table (#5989) 352642b
-* **web:** [info] TDP color extraction (#5981) 5944365
-* **web:** [info] truncate timestamps on tx tables (#5777) 6327b62
-* **web:** [info] Use token links in Tx tables (#5997) 8ca5e44
-* **web:** add "open limits" button below the limit form (#6039) 74120b4
-* **web:** Add feature flagging for limit fees (#6055) 14a026b
-* **web:** Add fees to limit orders (#5917) f318b89
-* **web:** add incrementing buttons to limit form (#5718) 57754f1
-* **web:** Add L2 logos to token icons in token selector and swap review (#5934) a1db924
-* **web:** Add network switcher in token selector (#5867) 58f760b
-* **web:** add warning to review modal for limits (#6037) 6c7ce6c
-* **web:** allow importing any package from packages/* (#5974) 2cffcf3
-* **web:** Autofill limit market price (#5862) 327834c
-* **web:** basel grotesk fonts (#6036) 9dded2a
-* **web:** build limits-specific ActivityRow for Mini Portfolio (#5971) fdbc470
-* **web:** cancel X orders (#5424) 861a906
-* **web:** constrain limits tokens to default list (#5749) 94ab5f3
-* **web:** create reusable Dialog component (#6000) c161ab2
-* **web:** filter limits from pending activity (#5951) 3a63a90
-* **web:** fix content in review/error modal for limits (#5954) 46f9de0
-* **web:** fixes to eslint config for formatting on save (#5970) b5b9e1b
-* **web:** limit order submission (#5680) 60a1c39
-* **web:** limit orders in MP and fixes (#5842) 2bd205f
-* **web:** limits cancel modal (#6032) 5038aef
-* **web:** limits cancel multiple (#6107) 0859595
-* **web:** limits menu in MP (#5953) 706633a
-* **web:** restyle swap tabs (#5722) 6e331ab
-* **web:** switch ordering for Swap header (#5879) f7a2976
-* **web:** update TDP tab titles again (#5724) 3666d5f
-
-
-### Bug Fixes
-
-* **web:** [info] add back info section to TDP on mobile view (#5799) b54daac
-* **web:** [info] Allow filter row item selection on mobile (#5969) fa83983
-* **web:** [info] don't grow first column in the table (#6093) 31230de
-* **web:** [landing-page] hotfix (#6180) d1c3c2e
-* **web:** [landing-page] update token cloud (#5985) 0678e9c
-* **web:** Add one to UniswapX nonce and lowercase swapper address  (#6112) 1ee4657
-* **web:** console error and unused flag (#6116) d05720b
-* **web:** fix cypress not running for web checks (#5949) 9297239
-* **web:** fix web_quality_checks always not running web cypress (#6025) 917df2e
-* **web:** hotfix send fixes (#6140) b930680
-* **web:** limits local activity tracking bugs (#6106) 7d7f78d
-* **web:** make currency url params case-insensitive (#5834) 768940b
-* **web:** move checks out of web_quality to rely on turbo more (#6089) 1e0db1d
-* **web:** re-disable uniswapx e2e tests (#5950) eff86ee
-* **web:** remove helper text in swap preview (#5861) f5e76d1
-* **web:** Revert the correct PR for blank page bug (#5945) d1a2f29
-* **web:** send flow UI fixes (#6031) e393802
-* **web:** swap header tab button spacing (#6092) b37007d
-* **web:** token page swap reset (#6098) f4070a3
-* **web): Revert "chore(web:** added opensea api to csp and made long csp directives into lists" (#5936) 47858e0
+* **web:** outage banner for arbitrum, optimism, polygon (#6218) e57ca63
 
 

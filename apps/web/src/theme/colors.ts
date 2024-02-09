@@ -182,6 +182,8 @@ export const darkTheme = {
   success: colors.success,
   critical: colors.critical,
   scrim: colors.scrim,
+
+  warning2: colors.gold200,
 }
 
 export const lightTheme: ThemeColors = {
@@ -210,4 +212,6 @@ export const lightTheme: ThemeColors = {
   success: colors.success,
   critical: colors.critical,
   scrim: colors.scrim,
+
+  warning2: colors.gold200,
 }
