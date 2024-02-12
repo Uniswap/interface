@@ -6,7 +6,7 @@ import { ChainId, Percent, TokenAmount } from '@ubeswap/sdk'
 import { ethers } from 'ethers'
 import { FarmDataEvent, FarmInfoEvent, LPInfoEvent } from 'generated/FarmRegistry'
 import { useFarmRegistryContract } from 'hooks/useContract'
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import fetchEvents from 'utils/fetchEvents'
 
 import { farmRegistryAddresses } from '../../constants'
@@ -72,8 +72,12 @@ export const useFarmRegistry = () => {
   const farmRegistryContract = useFarmRegistryContract(farmRegistryAddress)
   const client = useApolloClient()
   const [farmSummaries, setFarmSummaries] = React.useState<FarmSummary[]>([])
-  const olderFarmInfoEvents = cachedFarmInfoEvents.map((e) => e.returnValues)
-  const olderLpInfoEvents = cachedLpInfoEvents.map((e) => e.returnValues)
+  const olderFarmInfoEvents = useMemo(() => {
+    return cachedFarmInfoEvents.map((e) => e.returnValues)
+  }, [])
+  const olderLpInfoEvents = useMemo(() => {
+    return cachedLpInfoEvents.map((e) => e.returnValues)
+  }, [])
 
   const call = React.useCallback(async () => {
     if (!farmRegistryAddress || !farmRegistryContract || !client) return
