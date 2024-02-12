@@ -1,8 +1,6 @@
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
 
-import { getDefaultTokensTitle } from './getDefaultTokensTitle'
-import { getExploreTitle } from './getExploreTitle'
-import { paths } from './paths'
+import { getDefaultTokensTitle, getExploreTitle, paths } from './paths'
 import { routes } from './RouteDefinitions'
 
 describe('Paths', () => {

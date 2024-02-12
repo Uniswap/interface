@@ -1,5 +1,4 @@
 import { formatTickMarks } from 'components/Charts/utils'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useUpdateAtom } from 'jotai/utils'
 import {
   BarPrice,
@@ -14,28 +13,22 @@ import {
   Time,
   TimeChartOptions,
 } from 'lightweight-charts'
-import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
-import styled, { DefaultTheme, useTheme } from 'styled-components'
+import { useEffect, useRef, useState } from 'react'
+import { DefaultTheme } from 'styled-components'
 import { useFormatter } from 'utils/formatNumbers'
 
 import { refitChartContentAtom } from './TimeSelector'
 
 type SeriesDataItemType = SeriesDataItemTypeMap<Time>[keyof SeriesOptionsMap]
 
-interface ChartUtilParams<TDataType extends SeriesDataItemType> {
+export interface ChartModelParams<TDataType extends SeriesDataItemType> {
   locale: string
   theme: DefaultTheme
+  color?: string
+  data: TDataType[]
   format: ReturnType<typeof useFormatter>
   onCrosshairMove?: (data: TDataType | undefined) => void
 }
-
-interface ChartDataParams<TDataType extends SeriesDataItemType> {
-  color?: string
-  data: TDataType[]
-}
-
-export type ChartModelParams<TDataType extends SeriesDataItemType> = ChartUtilParams<TDataType> &
-  ChartDataParams<TDataType>
 
 /** Util for managing lightweight-charts' state outside of the React Lifecycle. */
 export abstract class ChartModel<TDataType extends SeriesDataItemType> {
@@ -143,53 +136,35 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
   }
 }
 
-const ChartDiv = styled.div<{ height?: number }>`
-  ${({ height }) => height && `height: ${height}px`};
-  width: 100%;
-  position: relative;
-`
-
 /** Returns a div injected with a lightweight-chart, corresponding to the given Model and params */
-export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType extends SeriesDataItemType>({
+export function Chart<TParamType extends ChartModelParams<TDataType>, TDataType extends SeriesDataItemType>({
   Model,
   params,
   height,
-  children,
-  className,
 }: {
-  Model: new (chartDiv: HTMLDivElement, params: TParamType & ChartUtilParams<TDataType>) => ChartModel<TDataType>
+  Model: new (chartDiv: HTMLDivElement, params: TParamType) => ChartModel<TDataType>
   params: TParamType
-  height?: number
-  children?: (crosshair?: TDataType) => ReactElement
-  className?: string
+  height: number
 }) {
   const setRefitChartContent = useUpdateAtom(refitChartContentAtom)
   // Lightweight-charts injects a canvas into the page through the div referenced below
   // It is stored in state to cause a re-render upon div mount, avoiding delay in chart creation
   const [chartDivElement, setChartDivElement] = useState<HTMLDivElement | null>(null)
-  const [crosshairData, setCrosshairData] = useState<TDataType | undefined>(undefined)
-  const format = useFormatter()
-  const theme = useTheme()
-  const locale = useActiveLocale()
-  const modelParams = useMemo(
-    () => ({ ...params, format, theme, locale, onCrosshairMove: setCrosshairData }),
-    [format, locale, params, theme]
-  )
 
   // Chart model state should not affect React render cycles since the chart canvas is drawn outside of React, so we store via ref
   const chartModelRef = useRef<ChartModel<TDataType>>()
 
   // Creates the chart as soon as the chart div ref is defined
   if (chartDivElement && chartModelRef.current === undefined) {
-    chartModelRef.current = new Model(chartDivElement, modelParams)
+    chartModelRef.current = new Model(chartDivElement, params)
     // Providers the time period selector with a handle to refit the chart
     setRefitChartContent(() => () => chartModelRef.current?.fitContent())
   }
 
   // Keeps the chart up-to-date with latest data/params, without re-creating the entire chart
   useEffect(() => {
-    chartModelRef.current?.updateOptions(modelParams)
-  }, [modelParams])
+    chartModelRef.current?.updateOptions(params)
+  }, [params])
 
   // Handles chart removal on unmount
   useEffect(() => {
@@ -203,8 +178,12 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   }, [setRefitChartContent])
 
   return (
-    <ChartDiv ref={setChartDivElement} height={height} className={className}>
-      {children && children(crosshairData)}
-    </ChartDiv>
+    <div
+      ref={setChartDivElement}
+      style={{
+        height,
+        width: '100%',
+      }}
+    />
   )
 }

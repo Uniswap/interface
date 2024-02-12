@@ -1,6 +1,6 @@
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
-import { SearchToken } from 'graphql/data/SearchTokens'
 import { Chain, NftCollection, useRecentlySearchedAssetsQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { SearchToken } from 'graphql/data/SearchTokens'
 import { logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'

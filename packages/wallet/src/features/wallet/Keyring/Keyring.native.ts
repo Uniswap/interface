@@ -22,16 +22,6 @@ class NativeKeyring implements IKeyring {
     return Promise.resolve(true)
   }
 
-  // Not used on mobile
-  checkPassword(_password: string): Promise<boolean> {
-    throw new NotImplementedError('checkPassword')
-  }
-
-  // Not used on mobile
-  changePassword(_newPassword: string): Promise<boolean> {
-    throw new NotImplementedError('changePassword')
-  }
-
   getMnemonicIds(): Promise<string[]> {
     return RNEthersRS.getMnemonicIds()
   }

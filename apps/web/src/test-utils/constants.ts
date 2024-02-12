@@ -3,12 +3,10 @@ import { ChainId, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { V3Route } from '@uniswap/smart-order-router'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
-import { DAI, nativeOnChain, USDC_MAINNET } from 'constants/tokens'
+import { nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
-import { expiryToDeadlineSeconds } from 'state/limit/hooks'
-import { Expiry } from 'state/limit/LimitContext'
-import { ClassicTrade, DutchOrderTrade, LimitOrderTrade, PreviewTrade, QuoteMethod } from 'state/routing/types'
+import { ClassicTrade, DutchOrderTrade, PreviewTrade, QuoteMethod } from 'state/routing/types'
 
 export const TEST_TOKEN_1 = new Token(1, '0x0000000000000000000000000000000000000001', 18, 'ABC', 'Abc')
 export const TEST_TOKEN_2 = new Token(1, '0x0000000000000000000000000000000000000002', 18, 'DEF', 'Def')
@@ -191,14 +189,4 @@ export const PREVIEW_EXACT_IN_TRADE = new PreviewTrade({
   inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
   outputAmount: toCurrencyAmount(TEST_TOKEN_2, 1000),
   tradeType: TradeType.EXACT_INPUT,
-})
-
-export const LIMIT_ORDER_TRADE = new LimitOrderTrade({
-  amountIn: CurrencyAmount.fromRawAmount(DAI, 100),
-  amountOut: CurrencyAmount.fromRawAmount(USDC_MAINNET, 100),
-  tradeType: TradeType.EXACT_INPUT,
-  wrapInfo: { needsWrap: false },
-  approveInfo: { needsApprove: false },
-  swapper: '0xSwapperAddress',
-  deadlineBufferSecs: expiryToDeadlineSeconds(Expiry.Week),
 })

@@ -1,28 +1,20 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { AddressDisplay } from 'src/components/AddressDisplay'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { UniconThemedGradient } from 'src/components/gradients/UniconThemedGradient'
+import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
+import { LearnMoreLink } from 'src/components/text/LearnMoreLink'
+import { useUniconColors } from 'src/components/unicons/utils'
 import { NetworkLogos } from 'src/components/WalletConnect/NetworkLogos'
-import {
-  AnimatedFlex,
-  Flex,
-  Icons,
-  Text,
-  TouchableArea,
-  useIsDarkMode,
-  useMedia,
-  useSporeColors,
-  useUniconColors,
-} from 'ui/src'
+import { ModalName } from 'src/features/telemetry/constants'
+import { AnimatedFlex, Flex, Icons, Text, useMedia, useSporeColors } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { ALL_SUPPORTED_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { uniswapUrls } from 'wallet/src/constants/urls'
-import { ModalName } from 'wallet/src/telemetry/constants'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 interface Props {
   address?: Address
@@ -87,17 +79,16 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
         <Text color="$neutral2" lineHeight={20} textAlign="center" variant="body3">
           {t('You can send tokens on all of our supported networks to this address.')}
         </Text>
-        <TouchableArea onPress={(): void => setShowModal(true)}>
-          <Flex row gap="$spacing4">
-            <NetworkLogos negativeGap chains={ALL_SUPPORTED_CHAIN_IDS} />
-            <Icons.RotatableChevron
-              color="$neutral3"
-              direction="down"
-              height={iconSizes.icon20}
-              width={iconSizes.icon20}
-            />
-          </Flex>
-        </TouchableArea>
+        <Flex row gap="$spacing4">
+          <NetworkLogos negativeGap chains={ALL_SUPPORTED_CHAIN_IDS} />
+          <Icons.RotatableChevron
+            color="$neutral3"
+            direction="down"
+            height={iconSizes.icon20}
+            width={iconSizes.icon20}
+            onPress={(): void => setShowModal(true)}
+          />
+        </Flex>
       </AnimatedFlex>
       {showModal && (
         <WarningModal

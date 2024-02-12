@@ -2,7 +2,7 @@ import type { Middleware, PayloadAction, PreloadedState } from '@reduxjs/toolkit
 import { isRejectedWithValue } from '@reduxjs/toolkit'
 import * as Sentry from '@sentry/react'
 import { MMKV } from 'react-native-mmkv'
-import { Storage, persistReducer, persistStore } from 'redux-persist'
+import { persistReducer, persistStore, Storage } from 'redux-persist'
 import createMigrate from 'src/app/createMigrate'
 import { migrations } from 'src/app/migrations'
 import { isNonJestDev } from 'utilities/src/environment'
@@ -11,7 +11,7 @@ import { fiatOnRampAggregatorApi, fiatOnRampApi } from 'wallet/src/features/fiat
 import { importAccountSagaName } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { createStore } from 'wallet/src/state'
 import { RootReducerNames } from 'wallet/src/state/reducer'
-import { MobileState, ReducerNames, mobileReducer } from './reducer'
+import { mobileReducer, MobileState, ReducerNames } from './reducer'
 import { mobileSaga } from './saga'
 
 const storage = new MMKV()
@@ -107,9 +107,9 @@ if (isNonJestDev) {
   middlewares.push(createDebugger())
 }
 
+// eslint-disable-next-line prettier/prettier, @typescript-eslint/explicit-function-return-type
 export const setupStore = (
   preloadedState?: PreloadedState<MobileState>
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 ) => {
   return createStore({
     reducer: persistedReducer,

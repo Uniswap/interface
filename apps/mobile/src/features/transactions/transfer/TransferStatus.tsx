@@ -1,7 +1,9 @@
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { goBack } from 'src/app/navigation/rootNavigation'
+import { useSelectTransaction } from 'src/features/transactions/hooks'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
+import { DerivedTransferInfo } from 'src/features/transactions/transfer/hooks'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { NumberType } from 'utilities/src/format/types'
 import { FiatCurrencyInfo, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
@@ -9,9 +11,7 @@ import {
   LocalizationContextState,
   useLocalizationContext,
 } from 'wallet/src/features/language/LocalizationContext'
-import { useSelectTransaction } from 'wallet/src/features/transactions/hooks'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
 import {
   TransactionDetails,
   TransactionStatus,
@@ -105,8 +105,7 @@ export function TransferStatus({
 
   const transaction = useSelectTransaction(activeAddress, chainId, txId)
 
-  const displayName = useDisplayName(recipient, { includeUnitagSuffix: true })
-  const recipientName = displayName?.name ?? recipient
+  const recipientName = useDisplayName(recipient)?.name ?? recipient
   const { title, description } = useMemo(() => {
     return getTextFromTransferStatus(
       t,

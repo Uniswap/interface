@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
-import { ChainId, DEFAULT_NATIVE_ADDRESS } from 'wallet/src/constants/chains'
+import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { areAddressesEqual } from './addresses'
 
@@ -112,8 +112,4 @@ export function currencyIdToGraphQLAddress(_currencyId?: string): Address | null
 
 export function currencyIdToChain(_currencyId: string): ChainId | null {
   return toSupportedChainId(_currencyId.split('-')[0])
-}
-
-export function isDefaultNativeAddress(address: string): boolean {
-  return areAddressesEqual(address, DEFAULT_NATIVE_ADDRESS)
 }

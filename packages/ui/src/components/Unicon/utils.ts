@@ -1,9 +1,7 @@
-// dummy file to make sure we don't get an error when importing Unicon
-
 import { isAddress } from 'ethers/lib/utils'
 
-import { containerSvgPaths } from './Container'
-import { emblemSvgPaths } from './Emblem'
+import { svgPaths as containerPaths } from './Container'
+import { svgPaths as emblemPaths } from './Emblem'
 import {
   blurs,
   gradientEnds,
@@ -13,7 +11,7 @@ import {
   UniconAttributesArray,
   UniconAttributesToIndices,
   UniconNumOptions,
-} from './types.web'
+} from './types'
 
 const NUM_CHARS_TO_USE_PER_ATTRIBUTE = 2
 
@@ -55,8 +53,8 @@ export const getUniconAttributeData = (
     [UniconAttributes.GradientStart]:
       gradientStarts[attributeIndices[UniconAttributes.GradientStart]],
     [UniconAttributes.GradientEnd]: gradientEnds[attributeIndices[UniconAttributes.GradientEnd]],
-    [UniconAttributes.Container]: containerSvgPaths[attributeIndices[UniconAttributes.Container]],
-    [UniconAttributes.Shape]: emblemSvgPaths[attributeIndices[UniconAttributes.Shape]],
+    [UniconAttributes.Container]: containerPaths[attributeIndices[UniconAttributes.Container]],
+    [UniconAttributes.Shape]: emblemPaths[attributeIndices[UniconAttributes.Shape]],
   } as UniconAttributeData
 }
 

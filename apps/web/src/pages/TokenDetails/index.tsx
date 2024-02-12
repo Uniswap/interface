@@ -2,16 +2,13 @@ import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/Prefetch
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { useTokenPriceQuery, useTokenQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { TimePeriod, toHistoryDuration, validateUrlChainParam } from 'graphql/data/util'
-import { useSrcColor } from 'hooks/useColor'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useEffect, useMemo, useState } from 'react'
 import { Helmet } from 'react-helmet'
-import { useLocation, useParams } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components'
-import { ThemeProvider } from 'theme'
+import { useParams } from 'react-router-dom'
+import styled from 'styled-components'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 import { getTokenPageTitle } from './utils'
@@ -21,7 +18,6 @@ const StyledPrefetchBalancesWrapper = styled(PrefetchBalancesWrapper)`
 `
 
 export default function TokenDetailsPage() {
-  const isInfoTDPEnabled = useInfoTDPEnabled()
   const { tokenAddress, chainName } = useParams<{
     tokenAddress: string
     chainName?: string
@@ -35,8 +31,6 @@ export default function TokenDetailsPage() {
     () => [isNative ? getNativeTokenDBAddress(chain) : tokenAddress ?? '', toHistoryDuration(timePeriod)],
     [chain, isNative, timePeriod, tokenAddress]
   )
-
-  const { preloadedLogoSrc } = (useLocation().state as { preloadedLogoSrc?: string }) ?? {}
 
   const parsedQs = useParsedQueryString()
 
@@ -67,29 +61,22 @@ export default function TokenDetailsPage() {
     if (tokenPriceQuery) setCurrentPriceQuery(tokenPriceQuery)
   }, [setCurrentPriceQuery, tokenPriceQuery])
 
-  const theme = useTheme()
-
-  const extractedColorSrc = isInfoTDPEnabled ? tokenQuery?.token?.project?.logoUrl ?? preloadedLogoSrc : undefined
-  const extractedAccent1 = useSrcColor(extractedColorSrc, { backgroundColor: theme.surface2, darkMode: theme.darkMode })
-
   if (!tokenQuery) return <TokenDetailsPageSkeleton />
 
   return (
-    <ThemeProvider accent1={extractedAccent1}>
-      <StyledPrefetchBalancesWrapper shouldFetchOnAccountUpdate={true} shouldFetchOnHover={false}>
-        <Helmet>
-          <title>{getTokenPageTitle(tokenQuery)}</title>
-        </Helmet>
-        <TokenDetails
-          urlAddress={tokenAddress}
-          chain={chain}
-          tokenQuery={tokenQuery}
-          tokenPriceQuery={currentPriceQuery}
-          inputTokenAddress={parsedInputTokenAddress}
-          timePeriod={timePeriod}
-          onChangeTimePeriod={setTimePeriod}
-        />
-      </StyledPrefetchBalancesWrapper>
-    </ThemeProvider>
+    <StyledPrefetchBalancesWrapper shouldFetchOnAccountUpdate={true} shouldFetchOnHover={false}>
+      <Helmet>
+        <title>{getTokenPageTitle(tokenQuery)}</title>
+      </Helmet>
+      <TokenDetails
+        urlAddress={tokenAddress}
+        chain={chain}
+        tokenQuery={tokenQuery}
+        tokenPriceQuery={currentPriceQuery}
+        inputTokenAddress={parsedInputTokenAddress}
+        timePeriod={timePeriod}
+        onChangeTimePeriod={setTimePeriod}
+      />
+    </StyledPrefetchBalancesWrapper>
   )
 }

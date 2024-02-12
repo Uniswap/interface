@@ -1,5 +1,5 @@
 import { ColorTokens, Flex, Icons, Text } from 'ui/src'
-import { IconSizeTokens, fonts } from 'ui/src/theme'
+import { fonts, IconSizeTokens } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'

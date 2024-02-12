@@ -10,7 +10,6 @@ type Props = {
   uri: string
   height: number
   width: number
-  resizeMode?: ImageResizeMode
   fallback?: JSX.Element
 }
 
@@ -23,7 +22,6 @@ export function RemoteImage({
   uri,
   height,
   width,
-  resizeMode = RESIZE_MODE_CONTAIN,
   fallback,
 }: Props): JSX.Element | null {
   const imageHttpUrl = uriToHttp(uri)[0]
@@ -50,7 +48,7 @@ export function RemoteImage({
     flex: aspectRatio ? 1 : undefined,
     backgroundColor,
     borderRadius,
-    resizeMode,
+    resizeMode: RESIZE_MODE_CONTAIN,
     width: !aspectRatio ? width : undefined,
     height: !aspectRatio ? height : undefined,
   }

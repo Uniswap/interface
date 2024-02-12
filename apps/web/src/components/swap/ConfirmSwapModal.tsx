@@ -23,7 +23,7 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
-import { isLimitTrade, isPreviewTrade } from 'state/routing/utils'
+import { isPreviewTrade } from 'state/routing/utils'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -429,15 +429,7 @@ export default function ConfirmSwapModal({
           <ErrorModalContent errorType={errorType} onRetry={startSwapFlow} />
         ) : (
           <ConfirmationModalContent
-            title={
-              confirmModalState === ConfirmModalState.REVIEWING ? (
-                isLimitTrade(trade) ? (
-                  <Trans>Confirm limit</Trans>
-                ) : (
-                  <Trans>Review swap</Trans>
-                )
-              ) : undefined
-            }
+            title={confirmModalState === ConfirmModalState.REVIEWING ? <Trans>Review swap</Trans> : undefined}
             onDismiss={onModalDismiss}
             topContent={modalHeader}
             bottomContent={modalBottom}

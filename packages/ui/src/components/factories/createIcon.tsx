@@ -3,11 +3,11 @@ import { createElement, forwardRef } from 'react'
 import { Svg, SvgProps } from 'react-native-svg'
 import {
   ColorTokens,
+  isWeb,
   SpecificTokens,
   Stack,
-  ThemeKeys,
-  isWeb,
   styled,
+  ThemeKeys,
   usePropsAndStyle,
 } from 'tamagui'
 import { DynamicColor } from 'ui/src/hooks/useSporeColors'

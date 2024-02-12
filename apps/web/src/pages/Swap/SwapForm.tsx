@@ -56,7 +56,6 @@ import { ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { isEmptyObject } from 'utils/isEmpty'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { largerPercentValue } from 'utils/percent'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
@@ -64,10 +63,6 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 import { getIsReviewableQuote } from '.'
 import { OutputTaxTooltipBody } from './TaxTooltipBody'
-
-const SWAP_FORM_CURRENCY_SEARCH_FILTERS = {
-  showCommonBases: true,
-}
 
 interface SwapFormProps {
   disableTokenInputs?: boolean
@@ -112,23 +107,22 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
 
   // dismiss warning if all imported tokens are in active lists
   const defaultTokens = useDefaultActiveTokens(chainId)
-  const urlTokensNotInDefault = useMemo(
+  const importTokensNotInDefault = useMemo(
     () =>
-      urlLoadedTokens && !isEmptyObject(defaultTokens)
-        ? urlLoadedTokens
-            .filter((token: Token) => {
-              return !(token.address in defaultTokens)
-            })
-            .filter((token: Token) => {
-              // Any token addresses that are loaded from the shorthands map do not need to show the import URL
-              const supported = asSupportedChain(chainId)
-              if (!supported) return true
-              return !Object.keys(TOKEN_SHORTHANDS).some((shorthand) => {
-                const shorthandTokenAddress = TOKEN_SHORTHANDS[shorthand][supported]
-                return shorthandTokenAddress && shorthandTokenAddress === token.address
-              })
-            })
-        : [],
+      urlLoadedTokens &&
+      urlLoadedTokens
+        .filter((token: Token) => {
+          return !(token.address in defaultTokens)
+        })
+        .filter((token: Token) => {
+          // Any token addresses that are loaded from the shorthands map do not need to show the import URL
+          const supported = asSupportedChain(chainId)
+          if (!supported) return true
+          return !Object.keys(TOKEN_SHORTHANDS).some((shorthand) => {
+            const shorthandTokenAddress = TOKEN_SHORTHANDS[shorthand][supported]
+            return shorthandTokenAddress && shorthandTokenAddress === token.address
+          })
+        }),
     [chainId, defaultTokens, urlLoadedTokens]
   )
 
@@ -479,9 +473,9 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   return (
     <>
       <TokenSafetyModal
-        isOpen={urlTokensNotInDefault.length > 0 && !dismissTokenWarning}
-        tokenAddress={urlTokensNotInDefault[0]?.address}
-        secondTokenAddress={urlTokensNotInDefault[1]?.address}
+        isOpen={importTokensNotInDefault.length > 0 && !dismissTokenWarning}
+        tokenAddress={importTokensNotInDefault[0]?.address}
+        secondTokenAddress={importTokensNotInDefault[1]?.address}
         onContinue={handleConfirmTokenWarning}
         onCancel={handleDismissTokenWarning}
         showCancel={true}
@@ -546,7 +540,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               fiatValue={showFiatValueInput ? fiatValueInput : undefined}
               onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
-              currencySearchFilters={SWAP_FORM_CURRENCY_SEARCH_FILTERS}
+              showCommonBases
               id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
               loading={independentField === Field.OUTPUT && routeIsSyncing}
               ref={inputCurrencyNumericalInputRef}
@@ -563,10 +557,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               data-testid="swap-currency-button"
               onClick={() => {
                 if (disableTokenInputs) return
-                onSwitchTokens({
-                  newOutputHasTax: inputTokenHasTax,
-                  previouslyEstimatedOutput: formattedAmounts[dependentField],
-                })
+                onSwitchTokens(inputTokenHasTax, formattedAmounts[dependentField])
                 maybeLogFirstSwapAction(trace)
               }}
               color={theme.neutral1}
@@ -592,7 +583,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 currency={currencies[Field.OUTPUT] ?? null}
                 onCurrencySelect={handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
-                currencySearchFilters={SWAP_FORM_CURRENCY_SEARCH_FILTERS}
+                showCommonBases
                 id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
                 loading={independentField === Field.INPUT && routeIsSyncing}
                 numericalInputSettings={{
@@ -610,7 +601,14 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
             </Trace>
           </OutputSwapSection>
         </div>
-
+        {showDetailsDropdown && (
+          <SwapDetailsDropdown
+            trade={trade}
+            syncing={routeIsSyncing}
+            loading={routeIsLoading}
+            allowedSlippage={allowedSlippage}
+          />
+        )}
         {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
         <div>
           {swapIsUnsupported ? (
@@ -702,14 +700,6 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 </Text>
               </ButtonError>
             </TraceEvent>
-          )}
-          {showDetailsDropdown && (
-            <SwapDetailsDropdown
-              trade={trade}
-              syncing={routeIsSyncing}
-              loading={routeIsLoading}
-              allowedSlippage={allowedSlippage}
-            />
           )}
         </div>
       </AutoColumn>

@@ -21,14 +21,6 @@ jest.mock('graphql/thegraph/PoolData', () => {
   }
 })
 
-jest.mock('hooks/useColor', () => {
-  const originalModule = jest.requireActual('hooks/useColor')
-  return {
-    ...originalModule,
-    useColor: jest.fn().mockReturnValue('#FFFFFF'),
-  }
-})
-
 describe('PoolDetailsPage', () => {
   beforeEach(() => {
     jest.spyOn(Router, 'useParams').mockReturnValue(validParams)

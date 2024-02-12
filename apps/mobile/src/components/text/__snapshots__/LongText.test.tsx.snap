@@ -4,6 +4,7 @@ exports[`LongText renders without error 1`] = `
 <View
   style={
     {
+      "alignItems": "stretch",
       "flexDirection": "column",
       "gap": 8,
     }

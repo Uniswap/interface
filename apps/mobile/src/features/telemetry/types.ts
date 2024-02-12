@@ -1,10 +1,17 @@
+import { ApolloError } from '@apollo/client'
+import { SerializedError } from '@reduxjs/toolkit'
+import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query/fetchBaseQuery'
 import { RenderPassReport } from '@shopify/react-native-performance'
-import { SharedEventName } from '@uniswap/analytics-events'
+import { SharedEventName, SwapEventName } from '@uniswap/analytics-events'
+import { providers } from 'ethers'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { WidgetEvent, WidgetType } from 'src/features/widgets/widgets'
 import { TraceProps } from 'utilities/src/telemetry/trace/Trace'
+import { ChainId } from 'wallet/src/constants/chains'
 import { ImportType } from 'wallet/src/features/onboarding/types'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { EthMethod, WCEventType, WCRequestOutcome } from 'wallet/src/features/walletConnect/types'
+import { SwapTradeBaseProperties } from 'wallet/src/telemetry/types'
 
 // Events related to Moonpay internal transactions
 // NOTE: we do not currently have access to the full life cycle of these txs
@@ -57,6 +64,9 @@ export type MobileEventProperties = {
     AssetDetailsBaseProperties & {
       type: 'collection' | 'token' | 'address'
     }
+  [MobileEventName.ExploreSearchCancel]: {
+    query: string
+  }
   [MobileEventName.ExploreTokenItemSelected]: AssetDetailsBaseProperties & {
     position: number
   }
@@ -67,6 +77,9 @@ export type MobileEventProperties = {
   [MobileEventName.FiatOnRampBannerPressed]: TraceProps
   [MobileEventName.FiatOnRampAmountEntered]: TraceProps & { source: 'chip' | 'textInput' }
   [MobileEventName.FiatOnRampWidgetOpened]: TraceProps & { externalTransactionId: string }
+  [MobileEventName.NetworkFilterSelected]: TraceProps & {
+    chain: ChainId | 'All'
+  }
   [MobileEventName.OnboardingCompleted]: OnboardingCompletedProps & TraceProps
   [MobileEventName.PerformanceReport]: RenderPassReport
   [MobileEventName.PerformanceGraphql]: {
@@ -84,6 +97,11 @@ export type MobileEventProperties = {
     url: string
   }
   [MobileEventName.TokenDetailsOtherChainButtonPressed]: TraceProps
+  [MobileEventName.TokenSelected]: TraceProps &
+    AssetDetailsBaseProperties &
+    SearchResultContextProperties & {
+      field: CurrencyField
+    }
   [MobileEventName.WalletAdded]: OnboardingCompletedProps & TraceProps
   [MobileEventName.WalletConnectSheetCompleted]: {
     request_type: WCEventType
@@ -103,4 +121,24 @@ export type MobileEventProperties = {
   [SharedEventName.APP_LOADED]: TraceProps | undefined
   [SharedEventName.ELEMENT_CLICKED]: TraceProps
   [SharedEventName.PAGE_VIEWED]: TraceProps
+  [SwapEventName.SWAP_DETAILS_EXPANDED]: TraceProps | undefined
+  [SwapEventName.SWAP_QUOTE_RECEIVED]: {
+    quote_latency_milliseconds?: number
+  } & SwapTradeBaseProperties
+  [SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED]: {
+    estimated_network_fee_wei?: string
+    gas_limit?: string
+    transaction_deadline_seconds?: number
+    token_in_amount_usd?: number
+    token_out_amount_usd?: number
+    is_auto_slippage?: boolean
+    swap_quote_block_number?: string
+    swap_flow_duration_milliseconds?: number
+    is_hold_to_swap?: boolean
+    is_fiat_input_mode?: boolean
+  } & SwapTradeBaseProperties
+  [SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED]: {
+    error?: ApolloError | FetchBaseQueryError | SerializedError | Error | string
+    txRequest?: providers.TransactionRequest
+  } & SwapTradeBaseProperties
 }

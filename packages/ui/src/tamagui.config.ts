@@ -28,15 +28,14 @@ export const config = createTamagui({
   themes,
   tokens,
   media: createMedia({
-    // the order here is important: least strong to most
-    xxxl: { maxWidth: breakpoints.xxxl },
-    xxl: { maxWidth: breakpoints.xxl },
-    xl: { maxWidth: breakpoints.xl },
-    lg: { maxWidth: breakpoints.lg },
-    md: { maxWidth: breakpoints.md },
-    sm: { maxWidth: breakpoints.sm },
-    xs: { maxWidth: breakpoints.xs },
     xxs: { maxWidth: breakpoints.xxs },
+    xs: { maxWidth: breakpoints.xs },
+    sm: { maxWidth: breakpoints.sm },
+    md: { maxWidth: breakpoints.md },
+    lg: { maxWidth: breakpoints.lg },
+    xl: { maxWidth: breakpoints.xl },
+    xxl: { maxWidth: breakpoints.xxl },
+    xxxl: { maxWidth: breakpoints.xxxl },
     short: { maxHeight: heightBreakpoints.short },
   }),
   settings: {

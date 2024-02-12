@@ -1,52 +1,45 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
+import { Screen } from 'src/components/layout/Screen'
 import { ChoosePhotoOptionsModal } from 'src/components/unitags/ChoosePhotoOptionsModal'
+import { ScreenRow } from 'src/components/unitags/ScreenRow'
 import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePicture'
-import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
-import { isLocalFileUri, uploadAndUpdateAvatarAfterClaim } from 'src/features/unitags/avatars'
 import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
-import { AnimatedFlex, Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
-import Unitag from 'ui/src/assets/graphics/unitag.svg'
-import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
-import { logger } from 'utilities/src/logger/logger'
+import { Button, Flex, Icons, Text, useDeviceInsets } from 'ui/src'
+import Unitag from 'ui/src/assets/icons/unitag.svg'
+import { fonts, iconSizes, imageSizes } from 'ui/src/theme'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
-import {
-  useClaimUnitagMutation,
-  useUnitagUpdateMetadataMutation,
-} from 'wallet/src/features/unitags/api'
-import { useUnitagUpdater } from 'wallet/src/features/unitags/context'
+import { useClaimUnitagMutation } from 'wallet/src/features/unitags/api'
 import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
 import { useActiveAccountAddress, usePendingAccounts } from 'wallet/src/features/wallet/hooks'
-import { useAppDispatch } from 'wallet/src/state'
 
 export function ChooseProfilePictureScreen({
   route,
 }: UnitagStackScreenProp<UnitagScreens.ChooseProfilePicture>): JSX.Element {
-  const { entryPoint, unitag, importType } = route.params
+  const { entryPoint, unitag } = route.params
   const activeAddress = useActiveAccountAddress()
   const pendingAccountAddress = Object.values(usePendingAccounts())?.[0]?.address
   const unitagAddress = activeAddress || pendingAccountAddress
 
+  const insets = useDeviceInsets()
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
-  const colors = useSporeColors()
-  const { data: deviceId } = useAsyncData(getUniqueId)
-  const { triggerRefetchUnitags } = useUnitagUpdater()
-
   const [imageUri, setImageUri] = useState<string>()
   const [showModal, setShowModal] = useState(false)
   const [claimError, setClaimError] = useState<string>()
-  const [isClaiming, setIsClaiming] = useState(false)
-
-  const [claimUnitag] = useClaimUnitagMutation()
-  const [updateUnitagMetadata] = useUnitagUpdateMetadataMutation(unitag)
+  const [
+    claimUnitag,
+    {
+      called: claimRequestMade,
+      loading: claimResponseLoading,
+      data: claimResponse,
+      reset: resetClaimResponse,
+    },
+  ] = useClaimUnitagMutation()
+  const { data: deviceId } = useAsyncData(getUniqueId)
 
   const openModal = (): void => {
     setShowModal(true)
@@ -56,190 +49,128 @@ export function ChooseProfilePictureScreen({
     setShowModal(false)
   }
 
-  const onPressContinue = async (): Promise<void> => {
+  const onPressFinish = async (): Promise<void> => {
     if (!deviceId) {
       return // Should never hit this condition. Button is disabled if deviceId is undefined
     }
 
     // throw error if unitagAddress is falsey
     if (!unitagAddress) {
-      const error = new Error('unitagAddress should never be null when claiming a unitag')
-      logger.error(error, {
-        tags: { file: 'ChooseProfilePictureScreen', function: 'onPressFinish' },
-      })
-      return
+      throw new Error('unitagAddress should never be null when claiming a unitag')
     }
 
-    setIsClaiming(true)
-
-    try {
-      const { data: claimResponse } = await claimUnitag({
-        address: unitagAddress,
-        username: unitag,
-        deviceId,
-        metadata: {
-          avatar: imageUri && isLocalFileUri(imageUri) ? undefined : imageUri,
-        },
-      })
-
-      if (claimResponse?.data.errorCode) {
-        setClaimError(parseUnitagErrorCode(t, unitag, claimResponse?.data.errorCode))
-        setIsClaiming(false)
-        return
-      }
-
-      if (claimResponse?.data.success) {
-        await onClaimSuccess()
-        return
-      }
-    } catch (e) {
-      setIsClaiming(false)
-      logger.error(e, { tags: { file: 'ChooseProfilePictureScreen', function: 'claimUnitag' } })
-      dispatch(
-        pushNotification({
-          type: AppNotificationType.Error,
-          errorMessage: t('Could not claim username. Try again later.'),
-        })
-      )
-    }
+    await claimUnitag({
+      address: unitagAddress,
+      username: unitag,
+      deviceId,
+      metadata: {
+        avatar: imageUri ?? '', // TODO (MOB-2271): upload profile pic image to backend
+        description: '',
+        url: '',
+        twitter: '',
+      },
+    })
   }
 
-  const onClaimSuccess = useCallback(async (): Promise<void> => {
-    if (imageUri && isLocalFileUri(imageUri) && !!unitagAddress) {
-      // unitagAddress should always be defined here otherwise onPressContinue would've thrown an error
-      const { success: uploadUpdateAvatarSuccess } = await uploadAndUpdateAvatarAfterClaim(
-        unitag,
-        unitagAddress,
-        imageUri,
-        updateUnitagMetadata
-      )
-
-      if (!uploadUpdateAvatarSuccess) {
-        setIsClaiming(false)
-        dispatch(
-          pushNotification({
-            type: AppNotificationType.Error,
-            errorMessage: t('Could not set avatar. Try again later.'),
-          })
-        )
-        return
-      }
-    }
-
-    setIsClaiming(false)
-    triggerRefetchUnitags()
-
+  const onClaimSuccess = useCallback((): void => {
     if (entryPoint === Screens.Home) {
-      if (!unitagAddress) {
-        const error = new Error(
-          'unitagAddress should never be null when Unitag entryPoint is Home Screen'
-        )
-        logger.error(error, {
-          tags: { file: 'ChooseProfilePictureScreen', function: 'onClaimSuccess' },
-        })
-        return
+      if (!activeAddress) {
+        throw new Error('activeAddress should never be null when Unitag entryPoint is Home Screen')
       }
       navigate(Screens.UnitagStack, {
         screen: UnitagScreens.UnitagConfirmation,
         params: {
           unitag,
-          address: unitagAddress,
+          address: activeAddress,
           profilePictureUri: imageUri,
         },
       })
-    } else if (entryPoint === OnboardingScreens.Landing || importType === ImportType.CreateNew) {
+    } else {
+      // entryPoint === OnboardingScreens.Landing
       navigate(Screens.OnboardingStack, {
-        screen: OnboardingScreens.WelcomeWallet,
+        screen: OnboardingScreens.QRAnimation,
         params: {
           importType: ImportType.CreateNew,
-          entryPoint:
-            OnboardingEntryPoint.Sidebar === entryPoint
-              ? OnboardingEntryPoint.Sidebar
-              : OnboardingEntryPoint.FreshInstallOrReplace,
-        },
-      })
-    } else {
-      // entryPoint === OnboardingEntryPoint.Sidebar and adding an additional wallet
-      navigate(Screens.OnboardingStack, {
-        screen: OnboardingScreens.Notifications,
-        params: {
-          importType: ImportType.CreateAdditional,
-          entryPoint: OnboardingEntryPoint.Sidebar,
+          entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
         },
       })
     }
+  }, [activeAddress, entryPoint, imageUri, unitag])
+
+  useEffect(() => {
+    if (claimRequestMade && !claimResponseLoading && !!claimResponse) {
+      // We POSTed to claim and got a response
+      if (claimResponse.success) {
+        onClaimSuccess()
+        return
+      }
+      if (claimResponse.errorCode) {
+        setClaimError(parseUnitagErrorCode(t, unitag, claimResponse.errorCode))
+      }
+      // Reset everything so called=false, claimResponse=undefined
+      resetClaimResponse()
+    }
   }, [
-    dispatch,
-    entryPoint,
-    imageUri,
-    importType,
-    t,
+    claimResponseLoading,
+    claimResponse,
+    onClaimSuccess,
     unitag,
-    unitagAddress,
-    updateUnitagMetadata,
-    triggerRefetchUnitags,
+    claimRequestMade,
+    resetClaimResponse,
+    t,
   ])
 
   return (
-    <SafeKeyboardOnboardingScreen
-      subtitle={t(
-        'Upload your own or stick with your unique Unicon. You can always change this later.'
-      )}
-      title={t('Choose a profile photo')}>
-      <Flex centered gap="$spacing20" mt="$spacing48">
-        <Flex onPress={openModal}>
-          <Flex px="$spacing4">
-            <ProfilePicture address={unitagAddress} imageUri={imageUri} />
-          </Flex>
-          <Flex
-            bg="$surface1"
-            borderRadius="$roundedFull"
-            bottom={-spacing.spacing4}
-            position="absolute"
-            right={-spacing.spacing4}>
-            <Flex
-              bg="$neutral2"
-              borderColor="$surface1"
-              borderRadius="$roundedFull"
-              borderWidth="$spacing4"
-              p="$spacing8">
-              <Icons.PencilDetailed color="$surface1" size={iconSizes.icon16} />
+    <Screen edges={['right', 'left']}>
+      <Flex
+        grow
+        $short={{ gap: '$none' }}
+        gap="$spacing16"
+        pb="$spacing16"
+        px="$spacing16"
+        style={{ marginTop: insets.top, marginBottom: insets.bottom }}>
+        <ScreenRow />
+        <TitleRow />
+        <Flex fill justifyContent="space-between">
+          <Flex centered gap="$spacing24" py="$spacing24">
+            <Flex>
+              <Flex px="$spacing4" onPress={openModal}>
+                <ProfilePicture address={unitagAddress} imageUri={imageUri} />
+              </Flex>
+              <Flex
+                backgroundColor="$neutral1"
+                borderRadius="$roundedFull"
+                bottom={0}
+                p="$spacing8"
+                position="absolute"
+                right={0}
+                onPress={openModal}>
+                <Icons.Edit color="$surface1" size={iconSizes.icon16} />
+              </Flex>
             </Flex>
+            <Flex row gap="$spacing8" px="$spacing24">
+              <Text color="$neutral1" variant="heading2">
+                {unitag}
+              </Text>
+              <Flex position="absolute" right={0}>
+                <Unitag height={iconSizes.icon24} width={iconSizes.icon24} />
+              </Flex>
+            </Flex>
+            {!!claimError && (
+              <Text color="$statusCritical" variant="body2">
+                {claimError}
+              </Text>
+            )}
           </Flex>
+          <Button
+            disabled={!deviceId || !!claimError}
+            size="medium"
+            theme="primary"
+            onPress={onPressFinish}>
+            {entryPoint === Screens.Home ? t('Finish') : t('Create wallet')}
+          </Button>
         </Flex>
-        <AnimatedFlex
-          row
-          alignSelf="center"
-          animation="lazy"
-          // eslint-disable-next-line react-native/no-inline-styles
-          enterStyle={{ o: 0 }}
-          gap="$spacing20">
-          <Text color="$neutral1" variant="heading2">
-            {unitag}
-          </Text>
-          <Flex row position="absolute" right={-spacing.spacing8} top={-spacing.spacing8}>
-            <Unitag height={iconSizes.icon28} width={iconSizes.icon28} />
-          </Flex>
-        </AnimatedFlex>
-        {!!claimError && (
-          <Text color="$statusCritical" variant="body2">
-            {claimError}
-          </Text>
-        )}
       </Flex>
-      <Button
-        disabled={!deviceId || !!claimError || isClaiming}
-        size="medium"
-        theme="primary"
-        onPress={onPressContinue}>
-        {isClaiming ? (
-          <Flex height={fonts.buttonLabel1.lineHeight}>
-            <ActivityIndicator color={colors.sporeWhite.val} />
-          </Flex>
-        ) : (
-          t('Continue')
-        )}
-      </Button>
       {showModal && (
         <ChoosePhotoOptionsModal
           address={activeAddress}
@@ -248,7 +179,31 @@ export function ChooseProfilePictureScreen({
           onClose={onCloseModal}
         />
       )}
-    </SafeKeyboardOnboardingScreen>
+    </Screen>
+  )
+}
+
+function TitleRow(): JSX.Element {
+  const { t } = useTranslation()
+
+  return (
+    <Flex centered gap="$spacing12" m="$spacing12">
+      <Text
+        $short={{ variant: 'subheading1' }}
+        allowFontScaling={false}
+        textAlign="center"
+        variant="heading3">
+        {t('Choose a profile photo')}
+      </Text>
+      <Text
+        $short={{ variant: 'body3', maxFontSizeMultiplier: 1.1 }}
+        color="$neutral2"
+        maxFontSizeMultiplier={fonts.body2.maxFontSizeMultiplier}
+        textAlign="center"
+        variant="body2">
+        {t('Upload your own or stick with your unique Unicon. You can always change this later.')}
+      </Text>
+    </Flex>
   )
 }
 

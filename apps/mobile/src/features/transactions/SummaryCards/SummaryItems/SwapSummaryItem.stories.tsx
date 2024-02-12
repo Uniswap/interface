@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react'
 import { TradeType } from '@uniswap/sdk-core'
 import React from 'react'
+import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { ChainId } from 'wallet/src/constants/chains'
 import { TokenDocument } from 'wallet/src/data/__generated__/types-and-hooks'
 import { SwapSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/SwapSummaryItem'
-import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,

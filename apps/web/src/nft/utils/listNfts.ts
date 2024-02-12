@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { parseEther } from '@ethersproject/units'
-import { MakerOrder, SupportedChainId, addressesByNetwork, signMakerOrder } from '@looksrare/sdk'
+import { addressesByNetwork, MakerOrder, signMakerOrder, SupportedChainId } from '@looksrare/sdk'
 import { Seaport } from '@opensea/seaport-js'
 import { ItemType } from '@opensea/seaport-js/lib/constants'
 import { ConsiderationInputItem } from '@opensea/seaport-js/lib/types'
@@ -13,18 +13,18 @@ import { createLooksRareOrder } from 'nft/queries/looksRare'
 import { LOOKSRARE_MARKETPLACE_CONTRACT_721 } from 'nft/queries/looksRare/constants'
 import { PostOpenSeaSellOrder } from 'nft/queries/openSea'
 import {
-  INVERSE_BASIS_POINTS,
   OPENSEA_DEFAULT_CROSS_CHAIN_CONDUIT_KEY,
   OPENSEA_FEE_ADDRESS,
   OPENSEA_KEY_TO_CONDUIT,
   OPENSEA_SEAPORT_V1_5_CONTRACT,
 } from 'nft/queries/openSea/constants'
+import { INVERSE_BASIS_POINTS } from 'nft/queries/openSea/constants'
 import { getX2Y2OrderId, newX2Y2Order } from 'nft/queries/x2y2'
-import ERC1155 from 'wallet/src/abis/erc1155.json'
-import ERC721 from 'wallet/src/abis/erc721.json'
 
+import ERC721 from '../../abis/erc721.json'
+import ERC1155 from '../../abis/erc1155.json'
 import { ListingMarket, ListingStatus, WalletAsset } from '../types'
-import { OfferItem, OrderPayload, createSellOrder, encodeOrder, signOrderData } from './x2y2'
+import { createSellOrder, encodeOrder, OfferItem, OrderPayload, signOrderData } from './x2y2'
 
 export const LOOKS_RARE_CREATOR_BASIS_POINTS = 50
 

@@ -40,16 +40,15 @@ import {
   TimePeriod,
 } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
-import { getInitialUrl } from 'hooks/useAssetLogoSource'
+import { useColor } from 'hooks/useColor'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
-import { useScreenSize } from 'hooks/useScreenSize'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { Swap } from 'pages/Swap'
 import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft, ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/SwapContext'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { EllipsisStyle } from 'theme/components'
 import { isAddress } from 'utils'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
@@ -104,8 +103,7 @@ const DividerLine = styled(Hr)`
   margin-top: 40px;
   margin-bottom: 40px;
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
-    opacity: 0;
-    margin-bottom: 0;
+    display: none;
   }
 `
 
@@ -208,8 +206,8 @@ export default function TokenDetails({
   const isBlockedToken = tokenWarning?.canProceed === false
   const navigate = useNavigate()
 
-  const screenSize = useScreenSize()
-  const isLargeScreenSize = screenSize['lg']
+  const theme = useTheme()
+  const extractedColor = useColor(detailedToken ?? undefined, theme.surface2, theme.darkMode)
 
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
   const isInfoTDPEnabled = useInfoTDPEnabled()
@@ -250,25 +248,22 @@ export default function TokenDetails({
       }
 
       const newDefaultToken = tokens.outputCurrency ?? tokens.inputCurrency
-
       if (!newDefaultToken) return
 
-      const preloadedLogoSrc = getInitialUrl(
-        newDefaultToken.wrapped.address,
-        newDefaultToken.chainId,
-        newDefaultToken.isNative
+      startTokenTransition(() =>
+        navigate(
+          getTokenDetailsURL({
+            // The function falls back to "NATIVE" if the address is null
+            address: newDefaultToken.isNative ? null : newDefaultToken.address,
+            chain,
+            inputAddress:
+              // If only one token was selected before we navigate, then it was the default token and it's being replaced.
+              // On the new page, the *new* default token becomes the output, and we don't have another option to set as the input token.
+              tokens.inputCurrency && tokens.inputCurrency !== newDefaultToken ? inputCurrencyURLAddress : null,
+            isInfoExplorePageEnabled,
+          })
+        )
       )
-      const url = getTokenDetailsURL({
-        // The function falls back to "NATIVE" if the address is null
-        address: newDefaultToken.isNative ? null : newDefaultToken.address,
-        chain,
-        inputAddress:
-          // If only one token was selected before we navigate, then it was the default token and it's being replaced.
-          // On the new page, the *new* default token becomes the output, and we don't have another option to set as the input token.
-          tokens.inputCurrency && tokens.inputCurrency !== newDefaultToken ? inputCurrencyURLAddress : null,
-        isInfoExplorePageEnabled,
-      })
-      startTokenTransition(() => navigate(url, { state: { preloadedLogoSrc } }))
     },
     [address, chain, isInfoExplorePageEnabled, navigate]
   )
@@ -350,7 +345,7 @@ export default function TokenDetails({
                     )}
 
                     <ChartTypeSelector
-                      options={[ChartType.PRICE, ChartType.VOLUME, ChartType.TVL]}
+                      options={[{ value: ChartType.PRICE }, { value: ChartType.VOLUME }, { value: ChartType.TVL }]}
                       currentChartType={chartType}
                       onChartTypeChange={(c: ChartType) => {
                         setChartType(c)
@@ -369,6 +364,7 @@ export default function TokenDetails({
               timePeriod={timePeriod}
               onChangeTimePeriod={onChangeTimePeriod}
               tokenPriceQuery={tokenPriceQuery}
+              extractedColor={extractedColor}
             />
 
             <StatsSection chainId={pageChainId} address={address} tokenQueryData={tokenQueryData} />
@@ -395,22 +391,19 @@ export default function TokenDetails({
         ) : (
           <TokenDetailsSkeleton />
         )}
+
         <RightPanel isInfoTDPEnabled={isInfoTDPEnabled} onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
-          {isLargeScreenSize && (
-            <>
-              <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
-                <Swap
-                  chainId={pageChainId}
-                  initialInputCurrency={inputCurrency}
-                  initialOutputCurrency={outputCurrency}
-                  onCurrencyChange={handleCurrencyChange}
-                  disableTokenInputs={pageChainId !== connectedChainId}
-                />
-              </div>
-              {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
-              {detailedToken && <BalanceSummary currency={detailedToken} chain={chain} multiChainMap={multiChainMap} />}
-            </>
-          )}
+          <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
+            <Swap
+              chainId={pageChainId}
+              initialInputCurrency={inputCurrency}
+              initialOutputCurrency={outputCurrency}
+              onCurrencyChange={handleCurrencyChange}
+              disableTokenInputs={pageChainId !== connectedChainId}
+            />
+          </div>
+          {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
+          {detailedToken && <BalanceSummary currency={detailedToken} chain={chain} multiChainMap={multiChainMap} />}
           {isInfoTDPEnabled && (
             <TokenDescription
               tokenAddress={address}

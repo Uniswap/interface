@@ -27,7 +27,7 @@ import {
 
 export function useSwapActionHandlers(): {
   onCurrencySelection: (field: Field, currency: Currency) => void
-  onSwitchTokens: (options: { newOutputHasTax: boolean; previouslyEstimatedOutput: string }) => void
+  onSwitchTokens: (newOutputHasTax: boolean, previouslyEstimatedOutput: string) => void
   onUserInput: (field: Field, typedValue: string) => void
 } {
   const { swapState, setSwapState } = useSwapContext()
@@ -58,13 +58,7 @@ export function useSwapActionHandlers(): {
   )
 
   const onSwitchTokens = useCallback(
-    ({
-      newOutputHasTax,
-      previouslyEstimatedOutput,
-    }: {
-      newOutputHasTax: boolean
-      previouslyEstimatedOutput: string
-    }) => {
+    (newOutputHasTax: boolean, previouslyEstimatedOutput: string) => {
       // To prevent swaps with FOT tokens as exact-outputs, we leave it as an exact-in swap and use the previously estimated output amount as the new exact-in amount.
       if (newOutputHasTax && swapState.independentField === Field.INPUT) {
         setSwapState((swapState) => ({
@@ -268,8 +262,8 @@ function parseIndependentFieldURLParameter(urlParam: any): Field {
 }
 
 export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCurrencyState {
-  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency ?? parsedQs.inputcurrency)
-  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency ?? parsedQs.outputcurrency)
+  let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency)
+  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency)
   const independentField = parseIndependentFieldURLParameter(parsedQs.exactField)
 
   if (inputCurrency === '' && outputCurrency === '' && independentField === Field.INPUT) {

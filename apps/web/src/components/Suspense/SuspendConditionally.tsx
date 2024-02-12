@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useState } from 'react'
 
 export const SuspendConditionally = (props: { if: boolean; children: React.ReactNode }) => {
   useSuspendIf(props.if)

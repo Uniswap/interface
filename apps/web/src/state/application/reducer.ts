@@ -46,7 +46,6 @@ export enum ApplicationModal {
   VOTE,
   UK_DISCLAIMER,
   UNISWAP_NFT_AIRDROP_CLAIM,
-  GET_THE_APP,
 }
 
 export type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>

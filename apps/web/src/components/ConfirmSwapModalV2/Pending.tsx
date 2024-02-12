@@ -2,9 +2,9 @@ import { t, Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
-import Column, { ColumnCenter } from 'components/Column'
+import { ColumnCenter } from 'components/Column'
+import Column from 'components/Column'
 import Row from 'components/Row'
-import { getTitle } from 'components/swap/PendingModalContent'
 import { SupportArticleURL } from 'constants/supportArticles'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { SwapResult } from 'hooks/useSwapCallback'
@@ -18,7 +18,8 @@ import styled, { css } from 'styled-components'
 import { ExternalLink } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
 import { ThemedText } from 'theme/components/text'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import { slideInAnimation, slideOutAnimation } from '../swap/PendingModalContent/animations'
 import {
@@ -131,7 +132,7 @@ export default function Pending({
         <AnimationWrapper>
           <StepTitleAnimationContainer gap="md" ref={currentStepContainerRef} disableEntranceAnimation>
             <ThemedText.SubHeader width="100%" textAlign="center" data-testid="pending-modal-content-title">
-              {getTitle({ trade, swapPending, swapConfirmed })}
+              {swapPending ? t`Swap submitted` : swapConfirmed ? t`Swap success` : t`Confirm Swap`}
             </ThemedText.SubHeader>
             {trade && (
               <ThemedText.LabelSmall textAlign="center">

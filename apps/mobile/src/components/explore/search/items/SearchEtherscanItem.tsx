@@ -1,16 +1,16 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import { default as React } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
+import { Arrow } from 'src/components/icons/Arrow'
 import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
+import { addToSearchHistory } from 'src/features/explore/searchHistorySlice'
+import { EtherscanSearchResult } from 'src/features/explore/SearchResult'
+import { ElementName } from 'src/features/telemetry/constants'
+import { ExplorerDataType, getExplorerLink, openUri } from 'src/utils/linking'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { Arrow } from 'wallet/src/components/icons/Arrow'
 import { ChainId } from 'wallet/src/constants/chains'
-import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
-import { EtherscanSearchResult } from 'wallet/src/features/search/SearchResult'
-import { ElementName } from 'wallet/src/telemetry/constants'
 import { shortenAddress } from 'wallet/src/utils/addresses'
-import { ExplorerDataType, getExplorerLink, openUri } from 'wallet/src/utils/linking'
 
 type SearchEtherscanItemProps = {
   etherscanResult: EtherscanSearchResult

@@ -8,7 +8,7 @@ import { safeNamehash } from 'utils/safeNamehash'
 
 import { isAddress } from '../utils'
 import isZero from '../utils/isZero'
-import { useENSRegistrarContract, useENSResolverContract, useERC1155Contract, useERC721Contract } from './useContract'
+import { useENSRegistrarContract, useENSResolverContract, useERC721Contract, useERC1155Contract } from './useContract'
 import useDebounce from './useDebounce'
 import useENSName from './useENSName'
 

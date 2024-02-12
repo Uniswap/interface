@@ -1,5 +1,4 @@
-import { impactAsync } from 'expo-haptics'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   LayoutChangeEvent,
@@ -9,25 +8,23 @@ import {
   TextInputSelectionChangeEventData,
 } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
-import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { useFormatExactCurrencyAmount } from 'src/features/fiatOnRamp/hooks'
+import { useDynamicFontSizing } from 'src/app/hooks'
+import { AmountInput } from 'src/components/input/AmountInput'
+import { SpinningLoader } from 'src/components/loading/SpinningLoader'
+import { Pill } from 'src/components/text/Pill'
+import {
+  useFormatExactCurrencyAmount,
+  useMoonpayFiatCurrencySupportInfo,
+} from 'src/features/fiatOnRamp/hooks'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
-import { AnimatedFlex, ColorTokens, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { ElementName } from 'src/features/telemetry/constants'
+import { ColorTokens, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
-import { usePrevious } from 'utilities/src/react/hooks'
-import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
-import { AmountInput } from 'wallet/src/components/input/AmountInput'
-import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
-import { Pill } from 'wallet/src/components/text/Pill'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
-import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { ElementName } from 'wallet/src/telemetry/constants'
-import { errorShakeAnimation } from 'wallet/src/utils/animations'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
-import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 const MAX_INPUT_FONT_SIZE = 56
 const MIN_INPUT_FONT_SIZE = 32
@@ -44,7 +41,7 @@ interface Props {
   showNativeKeyboard: boolean
   onInputPanelLayout: (event: LayoutChangeEvent) => void
   inputRef: React.RefObject<TextInput>
-  disabled?: boolean
+  disabled: boolean
   showSoftInputOnFocus: boolean
   value: string
   setSelection: (selection: TextInputProps['selection']) => void
@@ -58,8 +55,6 @@ interface Props {
   selectTokenLoading: boolean
   onTokenSelectorPress: () => void
   predefinedAmountsSupported: boolean
-  appFiatCurrencySupported: boolean
-  fiatCurrencyInfo: FiatCurrencyInfo
 }
 
 export function FiatOnRampAmountSection({
@@ -80,8 +75,6 @@ export function FiatOnRampAmountSection({
   selectTokenLoading,
   onTokenSelectorPress,
   predefinedAmountsSupported,
-  appFiatCurrencySupported,
-  fiatCurrencyInfo,
 }: Props): JSX.Element {
   const { t } = useTranslation()
   const {
@@ -89,7 +82,6 @@ export function FiatOnRampAmountSection({
     fontSize,
     onSetFontSize,
   } = useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE)
-  const prevErrorText = usePrevious(errorText)
 
   const onChangeValue =
     (next: OnChangeAmount) =>
@@ -106,75 +98,47 @@ export function FiatOnRampAmountSection({
     setSelection({ start, end })
   }
 
+  const { appFiatCurrencySupportedInMoonpay, moonpaySupportedFiatCurrency } =
+    useMoonpayFiatCurrencySupportInfo()
   const { formatNumberOrString } = useLocalizationContext()
-
-  const inputShakeX = useSharedValue(0)
-  const inputAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: inputShakeX.value }],
-  }))
-
-  useEffect(() => {
-    async function shake(): Promise<void> {
-      inputShakeX.value = errorShakeAnimation(inputShakeX)
-      await impactAsync()
-    }
-    if (errorText && prevErrorText !== errorText) {
-      shake().catch(() => undefined)
-    }
-  }, [errorText, inputShakeX, prevErrorText])
-
-  // Design has asked to make it around 100ms and DEFAULT_DELAY is 200ms
-  const debouncedErrorText = useDebounce(errorText, DEFAULT_DELAY / 2)
 
   return (
     <Flex gap="$spacing16" onLayout={onInputPanelLayout}>
       <Flex
         grow
         alignItems="center"
-        gap="$spacing8"
+        gap="$spacing16"
         justifyContent="center"
         onLayout={onInputLayout}>
-        <AnimatedFlex
-          height={spacing.spacing24}
-          /* We want to reserve the space here, so when error occurs - layout does not jump */
-          mt="$spacing48">
-          {debouncedErrorText && errorColor && (
-            <Text color={errorColor} textAlign="center" variant="buttonLabel4">
-              {debouncedErrorText}
-            </Text>
-          )}
-        </AnimatedFlex>
-        <AnimatedFlex style={inputAnimatedStyle}>
-          <AmountInput
-            ref={inputRef}
-            autoFocus
-            alignSelf="stretch"
-            backgroundColor="$transparent"
-            borderWidth={0}
-            caretHidden={!showNativeKeyboard}
-            disabled={disabled}
-            fiatCurrencyInfo={fiatCurrencyInfo}
-            fontFamily="$heading"
-            fontSize={fontSize}
-            maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
-            minHeight={MAX_INPUT_FONT_SIZE}
-            placeholder={formatNumberOrString({
-              value: 0,
-              type: NumberType.FiatStandard,
-              currencyCode: fiatCurrencyInfo.code,
-            })}
-            placeholderTextColor="$neutral3"
-            px="$none"
-            py="$none"
-            returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-            showCurrencySign={value !== ''}
-            showSoftInputOnFocus={showSoftInputOnFocus}
-            textAlign="center"
-            value={value}
-            onChangeText={onChangeValue(onEnterAmount)}
-            onSelectionChange={onSelectionChange}
-          />
-        </AnimatedFlex>
+        <AmountInput
+          ref={inputRef}
+          autoFocus
+          alignSelf="stretch"
+          backgroundColor="$transparent"
+          borderWidth={0}
+          caretHidden={!showNativeKeyboard}
+          disabled={disabled}
+          fontFamily="$heading"
+          fontSize={fontSize}
+          maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
+          minHeight={MAX_INPUT_FONT_SIZE}
+          mt="$spacing48"
+          placeholder={formatNumberOrString({
+            value: 0,
+            type: NumberType.FiatStandard,
+            currencyCode: moonpaySupportedFiatCurrency.code,
+          })}
+          placeholderTextColor="$neutral3"
+          px="$none"
+          py="$none"
+          returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
+          showCurrencySign={value !== ''}
+          showSoftInputOnFocus={showSoftInputOnFocus}
+          textAlign="center"
+          value={value}
+          onChangeText={onChangeValue(onEnterAmount)}
+          onSelectionChange={onSelectionChange}
+        />
         {currency.currencyInfo && (
           <SelectTokenButton
             amount={quoteAmount}
@@ -184,20 +148,28 @@ export function FiatOnRampAmountSection({
             onPress={onTokenSelectorPress}
           />
         )}
+        <Flex
+          /* We want to reserve the space here, so when error occurs - layout does not jump */
+          height={spacing.spacing24}>
+          {errorText && errorColor && (
+            <Text color={errorColor} textAlign="center" variant="buttonLabel4">
+              {errorText}
+            </Text>
+          )}
+        </Flex>
         {predefinedAmountsSupported ? (
-          <Flex centered row gap="$spacing12" mt="$spacing16" pb="$spacing4">
+          <Flex centered row gap="$spacing12" pb="$spacing4">
             {PREDEFINED_AMOUNTS.map((amount) => (
               <PredefinedAmount
                 key={amount}
                 amount={amount}
                 currentAmount={value}
-                fiatCurrencyInfo={fiatCurrencyInfo}
                 onPress={onChoosePredifendAmount}
               />
             ))}
           </Flex>
         ) : null}
-        {!appFiatCurrencySupported ? (
+        {!appFiatCurrencySupportedInMoonpay ? (
           <Flex centered>
             <Text color="$neutral3" variant="body3">
               {t('Only available to purchase in USD')}
@@ -228,7 +200,7 @@ function SelectTokenButton({
     amount.toString(),
     selectedCurrencyInfo.currency
   )
-  const textColor = disabled || loading ? '$neutral3' : '$neutral2'
+  const textColor = disabled ? '$neutral3' : '$neutral2'
 
   return (
     <TouchableArea
@@ -236,7 +208,7 @@ function SelectTokenButton({
       borderRadius="$roundedFull"
       testID={ElementName.TokenSelectorToggle}
       onPress={onPress}>
-      <Flex centered row flexDirection="row" gap="$none" p="$spacing4">
+      <Flex centered row flexDirection="row" gap="$spacing4" p="$spacing4">
         {loading ? (
           <SpinningLoader />
         ) : (
@@ -246,7 +218,7 @@ function SelectTokenButton({
             size={iconSizes.icon24}
           />
         )}
-        <Text color={textColor} pl="$spacing8" variant="body1">
+        <Text color={textColor} pl="$spacing4" variant="body1">
           {formattedAmount}
         </Text>
         <Text color={textColor} pl="$spacing1" variant="body1">
@@ -263,33 +235,27 @@ function PredefinedAmount({
   amount,
   onPress,
   currentAmount,
-  fiatCurrencyInfo,
 }: {
   amount: number
   currentAmount: string
   onPress: (amount: string) => void
-  fiatCurrencyInfo: FiatCurrencyInfo
 }): JSX.Element {
   const colors = useSporeColors()
+  const { moonpaySupportedFiatCurrency } = useMoonpayFiatCurrencySupportInfo()
   const { addFiatSymbolToNumber } = useLocalizationContext()
   const formattedAmount = addFiatSymbolToNumber({
     value: amount,
-    currencyCode: fiatCurrencyInfo.code,
-    currencySymbol: fiatCurrencyInfo.symbol,
+    currencyCode: moonpaySupportedFiatCurrency.code,
+    currencySymbol: moonpaySupportedFiatCurrency.symbol,
   })
 
-  const highlighted = currentAmount === amount.toString()
+  const highlighted = currentAmount === formattedAmount
 
   return (
-    <TouchableOpacity
-      onPress={async (): Promise<void> => {
-        await impactAsync()
-        onPress(amount.toString())
-      }}>
+    <TouchableOpacity onPress={(): void => onPress(amount.toString())}>
       <Pill
-        backgroundColor={highlighted ? '$surface2' : '$surface1'}
-        customBorderColor={colors.surface3.val}
-        foregroundColor={colors[highlighted ? 'neutral1' : 'neutral2'].val}
+        backgroundColor={highlighted ? '$DEP_backgroundActionButton' : '$surface2'}
+        foregroundColor={colors[highlighted ? 'accent1' : 'neutral2'].val}
         label={formattedAmount}
         px="$spacing16"
         textVariant="buttonLabel3"

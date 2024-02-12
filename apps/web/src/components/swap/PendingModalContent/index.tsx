@@ -2,7 +2,8 @@ import { t, Trans } from '@lingui/macro'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
-import Column, { ColumnCenter } from 'components/Column'
+import { ColumnCenter } from 'components/Column'
+import Column from 'components/Column'
 import Row from 'components/Row'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { SwapResult } from 'hooks/useSwapCallback'
@@ -10,7 +11,6 @@ import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { ReactNode, useMemo, useRef } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
-import { isLimitTrade } from 'state/routing/utils'
 import { useOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
@@ -19,7 +19,8 @@ import { ExternalLink } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
 import { ThemedText } from 'theme/components/text'
 import { SignatureExpiredError } from 'utils/errors'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType } from 'utils/getExplorerLink'
 
 import { ConfirmModalState } from '../ConfirmSwapModal'
 import { slideInAnimation, slideOutAnimation } from './animations'
@@ -126,28 +127,6 @@ interface ContentArgs {
   onRetryUniswapXSignature?: () => void
 }
 
-export function getTitle({
-  trade,
-  swapPending,
-  swapConfirmed,
-}: {
-  trade?: InterfaceTrade
-  swapPending: boolean
-  swapConfirmed: boolean
-}): ReactNode {
-  if (isLimitTrade(trade)) {
-    if (swapPending) return t`Limit submitted`
-    if (swapConfirmed) return t`Limit filled!`
-
-    return t`Confirm limit`
-  }
-
-  if (swapPending) return t`Swap submitted`
-  if (swapConfirmed) return t`Swap success!`
-
-  return t`Confirm swap`
-}
-
 function getPendingConfirmationContent({
   swapConfirmed,
   swapPending,
@@ -160,8 +139,8 @@ function getPendingConfirmationContent({
   ContentArgs,
   'swapConfirmed' | 'swapPending' | 'trade' | 'chainId' | 'swapResult' | 'swapError' | 'onRetryUniswapXSignature'
 >): PendingModalStep {
+  const title = swapPending ? t`Swap submitted` : swapConfirmed ? t`Swap success!` : t`Confirm Swap`
   const tradeSummary = trade ? <TradeSummary trade={trade} /> : null
-  const title = getTitle({ trade, swapPending, swapConfirmed })
   if (swapPending && trade?.fillType === TradeFillType.UniswapX) {
     return {
       title,

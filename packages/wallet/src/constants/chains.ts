@@ -15,7 +15,7 @@ import {
 import { config } from 'wallet/src/config'
 
 /** Address that represents native currencies on ETH, Arbitrum, etc. */
-export const DEFAULT_NATIVE_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+const DEFAULT_NATIVE_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
 
 export enum RPCType {
   Public = 'public',

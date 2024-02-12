@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, Currency, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position } from '@uniswap/v3-sdk'
 import { USDC_MAINNET } from 'constants/tokens'
-import { Token as BEToken, Chain, Exact, TokenProjectQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { Chain, Exact, TokenProjectQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { PoolData } from 'graphql/thegraph/PoolData'
 
@@ -17,7 +17,6 @@ export const validPoolToken0 = {
   derivedETH: '0.0006240873011635544626425964678706127',
   __typename: 'Token',
 } as Token
-export const validBEPoolToken0 = { ...validPoolToken0, chain: 'ETHEREUM' } as BEToken
 
 export const validUSDCCurrency = {
   isNative: false,
@@ -42,7 +41,6 @@ export const validPoolToken1 = {
   derivedETH: '1',
   __typename: 'Token',
 } as Token
-export const validBEPoolToken1 = { ...validPoolToken1, chain: 'ETHEREUM' } as BEToken
 
 export const owner = '0xf5b6bb25f5beaea03dd014c6ef9fa9f3926bf36c'
 

@@ -9,14 +9,14 @@ const Container = styled.div<{
   $justifyContent?: string
   $grow?: boolean
 }>`
-  ${({ $width }) => $width && `width: ${$width}px`};
-  ${({ $minWidth }) => $minWidth && `min-width: ${$minWidth}px`};
-  ${({ $maxWidth }) => $maxWidth && `max-width: ${$maxWidth}px`};
+  ${({ $width }) => `width: ${$width}px`};
+  ${({ $minWidth }) => `min-width: ${$minWidth}px`};
+  ${({ $maxWidth }) => `min-width: ${$maxWidth}px`};
   flex: ${({ $grow }) => ($grow ? '1' : '0')};
   display: flex;
   justify-content: ${({ $justifyContent }) => $justifyContent ?? 'flex-end'};
   align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
+  font-variant-numeric: tabular-nums;
   overflow: hidden;
   padding: 12px 8px;
 `

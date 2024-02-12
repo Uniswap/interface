@@ -4,6 +4,8 @@ import { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { Delay } from 'src/components/layout/Delayed'
+import { SpinningLoader } from 'src/components/loading/SpinningLoader'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { AssociatedAccountsList } from 'src/components/RemoveWallet/AssociatedAccountsList'
 import { RemoveLastMnemonicWalletFooter } from 'src/components/RemoveWallet/RemoveLastMnemonicWalletFooter'
 import { RemoveWalletStep, useModalContent } from 'src/components/RemoveWallet/useModalContent'
@@ -11,11 +13,10 @@ import { navigateToOnboardingImportMethod } from 'src/components/RemoveWallet/ut
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { AnimatedFlex, Button, ColorTokens, Flex, Text, ThemeKeys, useSporeColors } from 'ui/src'
 import { iconSizes, opacify } from 'ui/src/theme'
-import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import {
   EditAccountAction,
@@ -24,7 +25,6 @@ import {
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { selectSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 export function RemoveWalletModal(): JSX.Element | null {
   const { t } = useTranslation()

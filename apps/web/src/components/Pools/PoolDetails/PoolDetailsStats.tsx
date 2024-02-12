@@ -1,21 +1,19 @@
 import { Trans } from '@lingui/macro'
-import { Currency } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
-import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
+import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { PoolData } from 'graphql/thegraph/PoolData'
-import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useCurrency } from 'hooks/Tokens'
+import { useColor } from 'hooks/useColor'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { ReactNode, useMemo } from 'react'
-import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
-import { ClickableStyle, ThemedText } from 'theme/components'
+import { colors } from 'theme/colors'
+import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { DetailBubble } from './shared'
@@ -29,22 +27,19 @@ const HeaderText = styled(Text)`
   }
 `
 
-const StatsWrapper = styled(Column)<{ loaded?: boolean }>`
+const StatsWrapper = styled(Column)`
   gap: 24px;
   padding: 20px;
   border-radius: 20px;
   background: ${({ theme }) => theme.surface2};
   width: 100%;
-  z-index: 1;
-  margin-top: ${({ loaded }) => loaded && '-24px'};
 
   @media (max-width: ${BREAKPOINTS.lg - 1}px) {
     flex-direction: row;
-    background: transparent;
+    background: ${({ theme }) => theme.surface1};
     flex-wrap: wrap;
     padding: 20px 0px;
     justify-content: space-between;
-    margin-top: 0px;
   }
 `
 
@@ -66,9 +61,9 @@ const PoolBalanceSymbols = styled(Row)`
   }
 `
 
-const PoolBalanceTokenNamesContainer = styled(Row)`
+const PoolBalanceTokenNames = styled(Row)`
   font-weight: 485;
-  font-size: 16px;
+  font-size: 18px;
   line-height: 24px;
   width: max-content;
 
@@ -77,13 +72,6 @@ const PoolBalanceTokenNamesContainer = styled(Row)`
     line-height: 28px;
     width: 100%;
   }
-`
-
-const StyledLink = styled(Link)`
-  display: flex;
-  align-items: center;
-  color: ${({ theme }) => theme.neutral1};
-  ${ClickableStyle}
 `
 
 const leftBarChartStyles = css`
@@ -116,42 +104,6 @@ const StatHeaderBubble = styled(LoadingBubble)`
   border-radius: 8px;
 `
 
-type TokenFullData = Token & {
-  price: number
-  tvl: number
-  percent: number
-  currency?: Currency
-}
-
-const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chainId?: number }) => {
-  const isScreenSize = useScreenSize()
-  const screenIsNotLarge = isScreenSize['lg']
-  const { formatNumber } = useFormatter()
-
-  return (
-    <PoolBalanceTokenNamesContainer>
-      {!screenIsNotLarge && <CurrencyLogo currency={token.currency} size="20px" style={{ marginRight: '8px' }} />}
-      {formatNumber({
-        input: token.tvl,
-        type: NumberType.TokenQuantityStats,
-      })}
-      &nbsp;
-      <StyledLink
-        to={getTokenDetailsURL({
-          address: token.id,
-          chain: chainIdToBackendName(chainId),
-          isInfoExplorePageEnabled: true,
-        })}
-      >
-        {screenIsNotLarge && (
-          <CurrencyLogo currency={token.currency} size="16px" style={{ marginRight: '4px', marginLeft: '4px' }} />
-        )}
-        {token.symbol}
-      </StyledLink>
-    </PoolBalanceTokenNamesContainer>
-  )
-}
-
 interface PoolDetailsStatsProps {
   poolData?: PoolData
   isReversed?: boolean
@@ -162,25 +114,34 @@ interface PoolDetailsStatsProps {
 export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: PoolDetailsStatsProps) {
   const isScreenSize = useScreenSize()
   const screenIsNotLarge = isScreenSize['lg']
+  const { formatNumber } = useFormatter()
   const theme = useTheme()
 
   const currency0 = useCurrency(poolData?.token0?.id, chainId) ?? undefined
   const currency1 = useCurrency(poolData?.token1?.id, chainId) ?? undefined
 
+  const color0 = useColor(currency0, theme.surface2, theme.darkMode)
+  let color1 = useColor(currency1, theme.surface2, theme.darkMode)
+  if (color0 === color1 && color0 === theme.accent1) {
+    color1 = colors.blue400
+  }
+
   const [token0, token1] = useMemo(() => {
     if (poolData) {
       const fullWidth = poolData?.tvlToken0 / poolData?.token0Price + poolData?.tvlToken1
-      const token0FullData: TokenFullData = {
+      const token0FullData = {
         ...poolData?.token0,
         price: poolData?.token0Price,
         tvl: poolData?.tvlToken0,
+        color: color0,
         percent: poolData?.tvlToken0 / poolData?.token0Price / fullWidth,
         currency: currency0,
       }
-      const token1FullData: TokenFullData = {
+      const token1FullData = {
         ...poolData?.token1,
         price: poolData?.token1Price,
         tvl: poolData?.tvlToken1,
+        color: color1,
         percent: poolData?.tvlToken1 / fullWidth,
         currency: currency1,
       }
@@ -188,7 +149,7 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
     } else {
       return [undefined, undefined]
     }
-  }, [currency0, currency1, isReversed, poolData])
+  }, [color0, color1, currency0, currency1, isReversed, poolData])
 
   if (loading || !token0 || !token1 || !poolData) {
     return (
@@ -207,7 +168,7 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
   }
 
   return (
-    <StatsWrapper loaded>
+    <StatsWrapper>
       <HeaderText>
         <Trans>Stats</Trans>
       </HeaderText>
@@ -216,13 +177,33 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
           <Trans>Pool balances</Trans>
         </ThemedText.BodySecondary>
         <PoolBalanceSymbols>
-          <PoolBalanceTokenNames token={token0} chainId={chainId} />
-          <PoolBalanceTokenNames token={token1} chainId={chainId} />
+          <PoolBalanceTokenNames>
+            {!screenIsNotLarge && (
+              <CurrencyLogo currency={token0.currency} size="20px" style={{ marginRight: '8px' }} />
+            )}
+            {formatNumber({
+              input: token0.tvl,
+              type: NumberType.TokenNonTx,
+            })}
+            &nbsp;
+            {token0.symbol}
+          </PoolBalanceTokenNames>
+          <PoolBalanceTokenNames>
+            {!screenIsNotLarge && (
+              <CurrencyLogo currency={token1.currency} size="20px" style={{ marginRight: '8px' }} />
+            )}
+            {formatNumber({
+              input: token1.tvl,
+              type: NumberType.TokenNonTx,
+            })}
+            &nbsp;
+            {token1.symbol}
+          </PoolBalanceTokenNames>
         </PoolBalanceSymbols>
         {screenIsNotLarge && (
           <Row data-testid="pool-balance-chart">
-            <BalanceChartSide percent={token0.percent} $color={theme.token0} isLeft={true} />
-            <BalanceChartSide percent={token1.percent} $color={theme.token1} isLeft={false} />
+            {token0.color && <BalanceChartSide percent={token0.percent} $color={token0.color} isLeft={true} />}
+            {token1.color && <BalanceChartSide percent={token1.percent} $color={token1.color} isLeft={false} />}
           </Row>
         )}
       </StatItemColumn>

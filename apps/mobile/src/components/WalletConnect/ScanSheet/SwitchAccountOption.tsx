@@ -1,7 +1,7 @@
 import React from 'react'
-import { Flex, Separator, Text, Unicon, useSporeColors } from 'ui/src'
+import { Unicon } from 'src/components/unicons/Unicon'
+import { Flex, Separator, Text, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
-import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
@@ -23,10 +23,13 @@ export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Elem
       <Flex row alignItems="center" justifyContent="space-between" px="$spacing24" py="$spacing8">
         <Unicon address={account.address} size={ICON_SIZE} />
         <Flex shrink alignItems="center" p="$none">
-          <DisplayNameText
-            displayName={displayName}
-            textProps={{ variant: 'body1', testID: `address-display/name/${displayName?.name}` }}
-          />
+          <Text
+            color="$neutral1"
+            numberOfLines={1}
+            testID={`address-display/name/${displayName?.name}`}
+            variant="body1">
+            {displayName?.name}
+          </Text>
           <Text color="$neutral2" variant="subheading2">
             {shortenAddress(account.address)}
           </Text>

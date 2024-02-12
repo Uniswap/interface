@@ -5,32 +5,30 @@ import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import { AutoColumn } from 'components/Column'
-import { LoadingOpacityContainer } from 'components/Loader/styled'
+import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { StyledNumericalInput } from 'components/NumericalInput'
 import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import Tooltip from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
 import ms from 'ms'
 import { darken } from 'polished'
-import { ReactNode, forwardRef, useCallback, useEffect, useState } from 'react'
+import { forwardRef, ReactNode, useCallback, useEffect, useState } from 'react'
 import { Lock } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ButtonGray } from '../Button'
 import DoubleCurrencyLogo from '../DoubleLogo'
+import { Input as NumericalInput } from '../NumericalInput'
 import { RowBetween, RowFixed } from '../Row'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import { FiatValue } from './FiatValue'
-import { formatCurrencySymbol } from './utils'
 
-export const InputPanel = styled.div<{ hideInput?: boolean }>`
+const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${flexColumnNoWrap};
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
@@ -67,7 +65,7 @@ const CurrencySelect = styled(ButtonGray)<{
   align-items: center;
   background-color: ${({ selected, theme }) => (selected ? theme.surface1 : theme.accent1)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
-  color: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.neutralContrast)};
+  color: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.white)};
   cursor: pointer;
   height: 36px;
   border-radius: 18px;
@@ -178,7 +176,7 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin-left: 8px;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.neutralContrast)};
+    stroke: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.white)};
     stroke-width: 2px;
   }
 `
@@ -209,6 +207,14 @@ const StyledBalanceMax = styled.button<{ disabled?: boolean }>`
   }
 `
 
+const StyledNumericalInput = styled(NumericalInput)<{ $loading: boolean }>`
+  ${loadingOpacityMixin};
+  text-align: left;
+  font-size: 36px;
+  font-weight: 485;
+  max-height: 44px;
+`
+
 interface SwapCurrencyInputPanelProps {
   value: string
   onUserInput: (value: string) => void
@@ -224,11 +230,13 @@ interface SwapCurrencyInputPanelProps {
   fiatValue?: { data?: number; isLoading: boolean }
   priceImpact?: Percent
   id: string
+  showCommonBases?: boolean
+  showCurrencyAmount?: boolean
+  disableNonToken?: boolean
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
   loading?: boolean
   disabled?: boolean
-  currencySearchFilters?: CurrencySearchFilters
   numericalInputSettings?: {
     disabled?: boolean
     onDisabledClick?: () => void
@@ -247,6 +255,9 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
       currency,
       otherCurrency,
       id,
+      showCommonBases,
+      showCurrencyAmount,
+      disableNonToken,
       renderBalance,
       fiatValue,
       priceImpact,
@@ -256,7 +267,6 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
       locked = false,
       loading = false,
       disabled = false,
-      currencySearchFilters,
       numericalInputSettings,
       label,
       ...rest
@@ -354,7 +364,11 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                           className="token-symbol-container"
                           active={Boolean(currency && currency.symbol)}
                         >
-                          {currency ? formatCurrencySymbol(currency) : <Trans>Select token</Trans>}
+                          {(currency && currency.symbol && currency.symbol.length > 20
+                            ? currency.symbol.slice(0, 4) +
+                              '...' +
+                              currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
+                            : currency?.symbol) || <Trans>Select token</Trans>}
                         </StyledTokenName>
                       )}
                     </RowFixed>
@@ -421,7 +435,9 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
             onCurrencySelect={onCurrencySelect}
             selectedCurrency={currency}
             otherSelectedCurrency={otherCurrency}
-            currencySearchFilters={currencySearchFilters}
+            showCommonBases={showCommonBases}
+            showCurrencyAmount={showCurrencyAmount}
+            disableNonToken={disableNonToken}
           />
         )}
       </InputPanel>

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Alert } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList, SettingsStackParamList } from 'src/app/navigation/types'
+import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
 import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { Flex, Text, useSporeColors } from 'ui/src'
@@ -12,7 +13,6 @@ import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { promiseMinDelay } from 'utilities/src/time/timing'
-import { CheckmarkCircle } from 'wallet/src/components/icons/CheckmarkCircle'
 import {
   EditAccountAction,
   editAccountActions,

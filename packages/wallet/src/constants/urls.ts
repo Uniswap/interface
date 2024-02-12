@@ -3,8 +3,6 @@ import { isAndroid } from 'wallet/src/utils/platform'
 
 export const UNISWAP_APP_HOSTNAME = 'app.uniswap.org'
 
-const TRADING_API_BASE_PATH = '/v2/trade'
-
 const helpUrl = 'https://support.uniswap.org'
 
 export const uniswapUrls = {
@@ -22,7 +20,6 @@ export const uniswapUrls = {
     walletHelp: `${helpUrl}/hc/en-us/categories/11301970439565-Uniswap-Wallet`,
   },
   apiBaseUrl: getUniswapApiBaseUrl(),
-  apiBaseExtensionUrl: getExtensionApiBaseUrl(),
   apiBaseUrlCloudflare: getCloudflareApiBaseUrl(),
   appBaseUrl: 'https://uniswap.org/app',
   gasServicePath: getUniswapGasServicePath(),
@@ -33,15 +30,9 @@ export const uniswapUrls = {
   statsigProxyUrl: getUniswapStatsigProxyUrl(),
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
-  reportUnitagUrl: 'https://support.uniswap.org/hc/en-us/requests/new',
   appUrl: `https://${UNISWAP_APP_HOSTNAME}`,
   interfaceUrl: `https://${UNISWAP_APP_HOSTNAME}/#/swap`,
   unitagsApiUrl: getUnitagsApiUrl(),
-  tradingApiPaths: {
-    quote: getTradingApiQuotePath(),
-    approval: getTradingApiApprovalPath(),
-    swap: getTradingApiSwapPath(),
-  },
 }
 
 function getCloudflareApiBaseUrl(): string {
@@ -50,10 +41,6 @@ function getCloudflareApiBaseUrl(): string {
 
 function getUniswapApiBaseUrl(): string {
   return config.uniswapApiBaseUrl
-}
-
-function getExtensionApiBaseUrl(): string {
-  return 'https://gateway.uniswap.org/v2'
 }
 
 function getUniswapRoutingApiUrl(): string {
@@ -82,16 +69,4 @@ function getUniswapStatsigProxyUrl(): string {
 
 function getUnitagsApiUrl(): string {
   return config.unitagsApiUrl
-}
-
-function getTradingApiQuotePath(): string {
-  return `${TRADING_API_BASE_PATH}/quote`
-}
-
-function getTradingApiApprovalPath(): string {
-  return `${TRADING_API_BASE_PATH}/check_approval`
-}
-
-function getTradingApiSwapPath(): string {
-  return `${TRADING_API_BASE_PATH}/swap`
 }

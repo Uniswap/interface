@@ -1,41 +1,35 @@
 /* eslint-disable complexity */
 import { providers } from 'ethers'
-import { notificationAsync } from 'expo-haptics'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
+import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import Trace from 'src/components/Trace/Trace'
-import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
-import { NumberType } from 'utilities/src/format/types'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { GasFeeResult } from 'wallet/src/features/gas/types'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { ModalName, SectionName } from 'src/features/telemetry/constants'
 import {
   useAcceptedTrade,
   useSwapCallback,
   useWrapCallback,
-} from 'wallet/src/features/transactions/swap/hooks'
-import { FeeOnTransferInfoModal } from 'wallet/src/features/transactions/swap/modals/FeeOnTransferInfoModal'
-import { NetworkFeeInfoModal } from 'wallet/src/features/transactions/swap/modals/NetworkFeeInfoModal'
-import { SlippageInfoModal } from 'wallet/src/features/transactions/swap/modals/SlippageInfoModal'
-import { SwapFeeInfoModal } from 'wallet/src/features/transactions/swap/modals/SwapFeeInfoModal'
-import { SwapDetails } from 'wallet/src/features/transactions/swap/SwapDetails'
-import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
+} from 'src/features/transactions/swap/hooks'
+import { FeeOnTransferInfoModal } from 'src/features/transactions/swap/modals/FeeOnTransferInfoModal'
+import { NetworkFeeInfoModal } from 'src/features/transactions/swap/modals/NetworkFeeInfoModal'
+import { SlippageInfoModal } from 'src/features/transactions/swap/modals/SlippageInfoModal'
+import { SwapFeeInfoModal } from 'src/features/transactions/swap/modals/SwapFeeInfoModal'
+import { SwapDetails } from 'src/features/transactions/swap/SwapDetails'
 import {
   getActionElementName,
   getActionName,
   isWrapAction,
-} from 'wallet/src/features/transactions/swap/utils'
-import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
-import { TransactionReview } from 'wallet/src/features/transactions/TransactionReview/TransactionReview'
+} from 'src/features/transactions/swap/utils'
+import { TransactionDetails } from 'src/features/transactions/TransactionDetails'
+import { TransactionReview } from 'src/features/transactions/TransactionReview'
+import { NumberType } from 'utilities/src/format/types'
+import { GasFeeResult } from 'wallet/src/features/gas/types'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import {
-  Warning,
-  WarningAction,
-  WarningSeverity,
-} from 'wallet/src/features/transactions/WarningModal/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { ModalName, SectionName } from 'wallet/src/telemetry/constants'
+import { DerivedSwapInfo } from './types'
 
 interface SwapFormProps {
   onNext: () => void
@@ -125,39 +119,24 @@ export function SwapReview({
     txId
   )
 
-  const onSwapOrWrap = useCallback(() => {
-    return isWrapAction(wrapType) ? onWrap() : onSwap()
-  }, [onSwap, onWrap, wrapType])
-
-  const { trigger: biometricAuthAndTransfer } = useBiometricPrompt(onSwapOrWrap)
-  const { requiredForTransactions: biometricRequired } = useBiometricAppSettings()
-
-  const onAuthAndSubmitTxn = useCallback(async () => {
-    if (biometricRequired) {
-      await biometricAuthAndTransfer()
-    } else {
-      onSwapOrWrap()
-    }
-  }, [biometricAuthAndTransfer, biometricRequired, onSwapOrWrap])
-
-  const onPress = useCallback(async () => {
+  const onPress = useCallback(() => {
     if (swapWarning && !showWarningModal && !warningAcknowledged) {
       setShouldSubmitTx(true)
       setShowWarningModal(true)
       return
     }
-    await notificationAsync()
-    await onAuthAndSubmitTxn()
-  }, [swapWarning, showWarningModal, warningAcknowledged, onAuthAndSubmitTxn])
 
-  const onConfirmWarning = useCallback(async () => {
+    isWrapAction(wrapType) ? onWrap() : onSwap()
+  }, [warningAcknowledged, swapWarning, showWarningModal, wrapType, onWrap, onSwap])
+
+  const onConfirmWarning = useCallback(() => {
     setWarningAcknowledged(true)
     setShowWarningModal(false)
 
     if (shouldSubmitTx) {
-      await onAuthAndSubmitTxn()
+      isWrapAction(wrapType) ? onWrap() : onSwap()
     }
-  }, [shouldSubmitTx, onAuthAndSubmitTxn])
+  }, [wrapType, onWrap, onSwap, shouldSubmitTx])
 
   const onCancelWarning = useCallback(() => {
     setShowWarningModal(false)

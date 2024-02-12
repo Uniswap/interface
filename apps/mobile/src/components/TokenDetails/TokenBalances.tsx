@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { InlineNetworkPill } from 'src/components/Network/NetworkPill'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import Trace from 'src/components/Trace/Trace'
 import { MobileEventName } from 'src/features/telemetry/constants'
@@ -7,7 +8,6 @@ import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
-import { InlineNetworkPill } from 'wallet/src/components/network/NetworkPill'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
@@ -33,7 +33,7 @@ export function TokenBalances({
 
   const activeAccount = useActiveAccount()
   const accountType = activeAccount?.type
-  const displayName = useDisplayName(activeAccount?.address, { includeUnitagSuffix: true })?.name
+  const displayName = useDisplayName(activeAccount?.address)?.name
   const isReadonly = accountType === AccountType.Readonly
 
   const hasCurrentChainBalances = Boolean(currentChainBalance)

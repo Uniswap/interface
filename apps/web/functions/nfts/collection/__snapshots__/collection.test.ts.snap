@@ -18,12 +18,13 @@ exports[`should inject metadata for collections 1`] = `
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#fff" />
-    
     <meta
-      http-equiv="Content-Security-Policy" 
-      content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://vercel.com https://vercel.live/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * 'self' blob: data: https://assets.coingecko.com/ https://cdn.center.app/ https://ethereum-optimism.github.io/ https://explorer-api.walletconnect.com/ https://i.seadn.io/ https://lh3.googleusercontent.com/ https://openseauserdata.com/ https://raw.githubusercontent.com/ https://raw.seadn.io/ https://s2.coinmarketcap.com/ https://static.optimism.io/ https://vercel.com https://vercel.live/; frame-src 'self' https://buy.moonpay.com/ https://vercel.com https://vercel.live/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src * 'self' blob: data: https://api.moonpay.com/ https://api.opensea.io https://api.thegraph.com/ https://api.uniswap.org https://arbitrum-mainnet.infura.io/ https://avalanche-mainnet.infura.io/ https://base-mainnet.infura.io/ https://bridge.arbitrum.io https://celo-org.github.io https://cloudflare-ipfs.com https://explorer-api.walletconnect.com https://forno.celo.org/ https://gateway.ipfs.io/ https://interface.gateway.uniswap.org https://mainnet.infura.io https://o1037921.ingest.sentry.io https://old-wispy-arrow.bsc.quiknode.pro/ https://optimism-mainnet.infura.io/ https://polygon-mainnet.infura.io/ https://raw.githubusercontent.com https://static.optimism.io https://temp.api.uniswap.org/ https://tokenlist.arbitrum.io https://tokens.coingecko.com https://ultra-blue-flower.quiknode.pro https://us-central1-uniswap-mobile.cloudfunctions.net/ https://vercel.com https://vercel.live/ https://www.gemini.com wss://relay.walletconnect.com/ wss://www.walletlink.org/rpc; worker-src * 'self' blob:;"
-    >
-    
+      http-equiv="Content-Security-Policy"
+      
+        content="script-src 'self' 'unsafe-inline'"
+      
+    />
+
     <!-- 
       Apple Smart App Banner for Safari on iOS
       https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
@@ -39,10 +40,10 @@ exports[`should inject metadata for collections 1`] = `
     <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
-    <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff" as="font" type="font/woff" crossorigin />
-    <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff" as="font" type="font/woff" crossorigin />
-    <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff2" as="font" type="font/woff2" crossorigin />
    
     <style>
       * {
@@ -59,8 +60,8 @@ exports[`should inject metadata for collections 1`] = `
         font-style: normal;
         font-display: block;
         src: 
-          url('/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
-          url('/fonts/Basel-Grotesk-Medium.woff') format('woff');
+          url('/fonts/Basel-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Medium.woff') format('woff');
       }
 
       @font-face {
@@ -69,8 +70,8 @@ exports[`should inject metadata for collections 1`] = `
         font-style: normal;
         font-display: block;
         src: 
-          url('/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
-          url('/fonts/Basel-Grotesk-Book.woff') format('woff');
+          url('/fonts/Basel-Book.woff') format('woff2'),
+          url('/fonts/Basel-Book.woff') format('woff');
       }
 
       @supports (font-variation-settings: normal) {
@@ -165,12 +166,13 @@ exports[`should inject metadata for collections 2`] = `
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#fff" />
-    
     <meta
-      http-equiv="Content-Security-Policy" 
-      content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://vercel.com https://vercel.live/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * 'self' blob: data: https://assets.coingecko.com/ https://cdn.center.app/ https://ethereum-optimism.github.io/ https://explorer-api.walletconnect.com/ https://i.seadn.io/ https://lh3.googleusercontent.com/ https://openseauserdata.com/ https://raw.githubusercontent.com/ https://raw.seadn.io/ https://s2.coinmarketcap.com/ https://static.optimism.io/ https://vercel.com https://vercel.live/; frame-src 'self' https://buy.moonpay.com/ https://vercel.com https://vercel.live/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src * 'self' blob: data: https://api.moonpay.com/ https://api.opensea.io https://api.thegraph.com/ https://api.uniswap.org https://arbitrum-mainnet.infura.io/ https://avalanche-mainnet.infura.io/ https://base-mainnet.infura.io/ https://bridge.arbitrum.io https://celo-org.github.io https://cloudflare-ipfs.com https://explorer-api.walletconnect.com https://forno.celo.org/ https://gateway.ipfs.io/ https://interface.gateway.uniswap.org https://mainnet.infura.io https://o1037921.ingest.sentry.io https://old-wispy-arrow.bsc.quiknode.pro/ https://optimism-mainnet.infura.io/ https://polygon-mainnet.infura.io/ https://raw.githubusercontent.com https://static.optimism.io https://temp.api.uniswap.org/ https://tokenlist.arbitrum.io https://tokens.coingecko.com https://ultra-blue-flower.quiknode.pro https://us-central1-uniswap-mobile.cloudfunctions.net/ https://vercel.com https://vercel.live/ https://www.gemini.com wss://relay.walletconnect.com/ wss://www.walletlink.org/rpc; worker-src * 'self' blob:;"
-    >
-    
+      http-equiv="Content-Security-Policy"
+      
+        content="script-src 'self' 'unsafe-inline'"
+      
+    />
+
     <!-- 
       Apple Smart App Banner for Safari on iOS
       https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
@@ -186,10 +188,10 @@ exports[`should inject metadata for collections 2`] = `
     <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
-    <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff" as="font" type="font/woff" crossorigin />
-    <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff" as="font" type="font/woff" crossorigin />
-    <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff2" as="font" type="font/woff2" crossorigin />
    
     <style>
       * {
@@ -206,8 +208,8 @@ exports[`should inject metadata for collections 2`] = `
         font-style: normal;
         font-display: block;
         src: 
-          url('/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
-          url('/fonts/Basel-Grotesk-Medium.woff') format('woff');
+          url('/fonts/Basel-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Medium.woff') format('woff');
       }
 
       @font-face {
@@ -216,8 +218,8 @@ exports[`should inject metadata for collections 2`] = `
         font-style: normal;
         font-display: block;
         src: 
-          url('/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
-          url('/fonts/Basel-Grotesk-Book.woff') format('woff');
+          url('/fonts/Basel-Book.woff') format('woff2'),
+          url('/fonts/Basel-Book.woff') format('woff');
       }
 
       @supports (font-variation-settings: normal) {
@@ -312,12 +314,13 @@ exports[`should inject metadata for collections 3`] = `
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#fff" />
-    
     <meta
-      http-equiv="Content-Security-Policy" 
-      content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://vercel.com https://vercel.live/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * 'self' blob: data: https://assets.coingecko.com/ https://cdn.center.app/ https://ethereum-optimism.github.io/ https://explorer-api.walletconnect.com/ https://i.seadn.io/ https://lh3.googleusercontent.com/ https://openseauserdata.com/ https://raw.githubusercontent.com/ https://raw.seadn.io/ https://s2.coinmarketcap.com/ https://static.optimism.io/ https://vercel.com https://vercel.live/; frame-src 'self' https://buy.moonpay.com/ https://vercel.com https://vercel.live/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src * 'self' blob: data: https://api.moonpay.com/ https://api.opensea.io https://api.thegraph.com/ https://api.uniswap.org https://arbitrum-mainnet.infura.io/ https://avalanche-mainnet.infura.io/ https://base-mainnet.infura.io/ https://bridge.arbitrum.io https://celo-org.github.io https://cloudflare-ipfs.com https://explorer-api.walletconnect.com https://forno.celo.org/ https://gateway.ipfs.io/ https://interface.gateway.uniswap.org https://mainnet.infura.io https://o1037921.ingest.sentry.io https://old-wispy-arrow.bsc.quiknode.pro/ https://optimism-mainnet.infura.io/ https://polygon-mainnet.infura.io/ https://raw.githubusercontent.com https://static.optimism.io https://temp.api.uniswap.org/ https://tokenlist.arbitrum.io https://tokens.coingecko.com https://ultra-blue-flower.quiknode.pro https://us-central1-uniswap-mobile.cloudfunctions.net/ https://vercel.com https://vercel.live/ https://www.gemini.com wss://relay.walletconnect.com/ wss://www.walletlink.org/rpc; worker-src * 'self' blob:;"
-    >
-    
+      http-equiv="Content-Security-Policy"
+      
+        content="script-src 'self' 'unsafe-inline'"
+      
+    />
+
     <!-- 
       Apple Smart App Banner for Safari on iOS
       https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
@@ -333,10 +336,10 @@ exports[`should inject metadata for collections 3`] = `
     <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
-    <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff" as="font" type="font/woff" crossorigin />
-    <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff" as="font" type="font/woff" crossorigin />
-    <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff2" as="font" type="font/woff2" crossorigin />
    
     <style>
       * {
@@ -353,8 +356,8 @@ exports[`should inject metadata for collections 3`] = `
         font-style: normal;
         font-display: block;
         src: 
-          url('/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
-          url('/fonts/Basel-Grotesk-Medium.woff') format('woff');
+          url('/fonts/Basel-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Medium.woff') format('woff');
       }
 
       @font-face {
@@ -363,8 +366,8 @@ exports[`should inject metadata for collections 3`] = `
         font-style: normal;
         font-display: block;
         src: 
-          url('/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
-          url('/fonts/Basel-Grotesk-Book.woff') format('woff');
+          url('/fonts/Basel-Book.woff') format('woff2'),
+          url('/fonts/Basel-Book.woff') format('woff');
       }
 
       @supports (font-variation-settings: normal) {

@@ -10,7 +10,7 @@ import { getConnection } from 'connection'
 import { useGatewayDNSUpdateAllEnabled } from 'featureFlags/flags/gatewayDNSUpdate'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
-import { DutchOrderTrade, LimitOrderTrade, TradeFillType } from 'state/routing/types'
+import { DutchOrderTrade, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
 import { SignatureExpiredError, UserRejectedRequestError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
@@ -41,10 +41,9 @@ async function getUpdatedNonce(
 ): Promise<BigNumber | null> {
   const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
   try {
-    // endpoint fetches current nonce
-    const res = await fetch(`${baseURL}/nonce?address=${swapper.toLowerCase()}&chainId=${chainId}`)
+    const res = await fetch(`${baseURL}/nonce?address=${swapper}&chainId=${chainId}`)
     const { nonce } = await res.json()
-    return BigNumber.from(nonce).add(1)
+    return BigNumber.from(nonce)
   } catch (e) {
     Sentry.withScope(function (scope) {
       scope.setTag('method', 'getUpdatedNonce')
@@ -60,7 +59,7 @@ export function useUniswapXSwapCallback({
   allowedSlippage,
   fiatValues,
 }: {
-  trade?: DutchOrderTrade | LimitOrderTrade
+  trade?: DutchOrderTrade
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   allowedSlippage: Percent
 }) {
@@ -80,16 +79,7 @@ export function useUniswapXSwapCallback({
 
         const signDutchOrder = async (): Promise<{ signature: string; updatedOrder: DutchOrder }> => {
           try {
-            const updatedNonce = await getUpdatedNonce(
-              account,
-              trade.inputAmount.currency.chainId,
-              gatewayDNSUpdateAllEnabled
-            )
-
-            // TODO(limits): WEB-3434 - add error state for missing nonce
-            if (!updatedNonce) throw new Error('missing nonce')
-
-            const order = trade.asDutchOrderTrade({ nonce: updatedNonce, swapper: account }).order
+            const updatedNonce = await getUpdatedNonce(account, trade.order.chainId, gatewayDNSUpdateAllEnabled)
 
             const startTime = Math.floor(Date.now() / 1000) + trade.startTimeBufferSecs
             setTraceData('startTime', startTime)
@@ -101,14 +91,14 @@ export function useUniswapXSwapCallback({
             setTraceData('deadline', deadline)
 
             // Set timestamp and account based values when the user clicks 'swap' to make them as recent as possible
-            const updatedOrder = DutchOrderBuilder.fromOrder(order)
+            const updatedOrder = DutchOrderBuilder.fromOrder(trade.order)
               .decayStartTime(startTime)
               .decayEndTime(endTime)
               .deadline(deadline)
               .swapper(account)
               .nonFeeRecipient(account, trade.swapFee?.recipient)
               // if fetching the nonce fails for any reason, default to existing nonce from the Swap quote.
-              .nonce(updatedNonce ?? order.info.nonce)
+              .nonce(updatedNonce ?? trade.order.info.nonce)
               .build()
 
             const { domain, types, values } = updatedOrder.permitData()
@@ -149,12 +139,10 @@ export function useUniswapXSwapCallback({
         })
 
         const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
-        const encodedOrder = updatedOrder.serialize()
-
         const res = await fetch(`${baseURL}/order`, {
           method: 'POST',
           body: JSON.stringify({
-            encodedOrder,
+            encodedOrder: updatedOrder.serialize(),
             signature,
             chainId: updatedOrder.chainId,
             quoteId: trade.quoteId,
@@ -184,7 +172,7 @@ export function useUniswapXSwapCallback({
 
         return {
           type: TradeFillType.UniswapX as const,
-          response: { orderHash: body.hash, deadline: updatedOrder.info.deadline, encodedOrder },
+          response: { orderHash: body.hash, deadline: updatedOrder.info.deadline },
         }
       }),
     [

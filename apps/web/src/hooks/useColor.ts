@@ -1,18 +1,30 @@
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { DEFAULT_COLOR } from 'constants/tokenColors'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
-import { rgb } from 'polished'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { darken, lighten, rgb } from 'polished'
+import { useEffect, useState } from 'react'
 import { TokenFromList } from 'state/lists/tokenFromList'
 import { useTheme } from 'styled-components'
-import { getAccessibleColor } from 'theme/utils'
 import { getColor } from 'utils/getColor'
+import { hex } from 'wcag-contrast'
+
+// The WCAG AA standard color contrast threshold
+const MIN_COLOR_CONTRAST_THRESHOLD = 3
+
+/**
+ * Compares a given color against the background color to determine if it passes the minimum contrast threshold.
+ * @param color The hex value of the extracted color
+ * @param backgroundColor The hex value of the background color to check contrast against
+ * @returns either 'sporeWhite' or 'sporeBlack'
+ */
+function passesContrast(color: string, backgroundColor: string): boolean {
+  const contrast = hex(color, backgroundColor)
+  return contrast >= MIN_COLOR_CONTRAST_THRESHOLD
+}
 
 function URIForEthToken(address: string) {
   return `https://raw.githubusercontent.com/uniswap/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 }
-
-const COLOR_CACHE: Record<string, string | undefined> = {}
 
 /**
  * Retrieves the average color from a token's symbol using various sources.
@@ -20,85 +32,67 @@ const COLOR_CACHE: Record<string, string | undefined> = {}
  * @param {Currency} currency - The currency for which to fetch the color.
  * @param {string} primarySrc - Primary source URL for color retrieval (optional).
  *
- * @returns {Promise<string | null>} A promise that resolves to a color string or null if color cannot be determined.
+ * @returns {Promise< | null>} A promise that resolves to a color string or null if color cannot be determined.
  */
-async function getColorFromToken(srcs: string[]): Promise<string | undefined> {
+async function getColorFromToken(currency: Currency, primarySrc?: string): Promise<string | null> {
+  const wrappedToken = currency.wrapped as TokenFromList
   let color: string | null = null
+
   try {
-    for (const src of srcs) {
-      const cachedColor = COLOR_CACHE[src]
-      if (cachedColor) return cachedColor
-
-      const colorArray = await getColor(src)
+    if (primarySrc) {
+      const colorArray = await getColor(primarySrc)
       color = colorArray === DEFAULT_COLOR ? null : convertColorArrayToString(colorArray)
-      if (color) {
-        COLOR_CACHE[src] = color
-        return color
-      }
     }
-    return undefined
+
+    if (!color && wrappedToken?.logoURI) {
+      const colorArray = await getColor(wrappedToken.logoURI)
+      color = colorArray === DEFAULT_COLOR ? null : convertColorArrayToString(colorArray)
+    }
+
+    if (!color && currency.chainId === ChainId.MAINNET) {
+      const colorArray = await getColor(URIForEthToken(wrappedToken.address))
+      color = colorArray === DEFAULT_COLOR ? null : convertColorArrayToString(colorArray)
+    }
+
+    return color
   } catch (error) {
-    console.warn(`Unable to extract color from logo sources: ${srcs}`)
-    return undefined
+    console.warn(`Unable to load logoURI (${currency.symbol}): ${primarySrc}, ${wrappedToken.logoURI}`)
+    return null
   }
-}
-
-function getBackupCurrencySrcs(currency?: Currency) {
-  const srcs = []
-  const wrappedToken = currency?.wrapped as TokenFromList
-
-  if (wrappedToken?.logoURI) {
-    srcs.push(wrappedToken.logoURI)
-  }
-  if (currency?.chainId === ChainId.MAINNET) {
-    srcs.push(URIForEthToken(wrappedToken.address))
-  }
-
-  return srcs
 }
 
 function convertColorArrayToString([red, green, blue]: number[]): string {
   return rgb({ red, green, blue })
 }
 
-type ContrastSettings = { backgroundColor: string; darkMode: boolean }
-
-export function useColor(currency?: Currency, contrastSettings?: ContrastSettings) {
+export function useColor(currency?: Currency, backgroundColor?: string, makeLighter?: boolean) {
   const theme = useTheme()
+  const [color, setColor] = useState(theme.accent1)
   const [src] = useTokenLogoSource(currency?.wrapped.address, currency?.chainId, currency?.isNative)
 
-  const srcs = useMemo(() => {
-    const backupSrcs = getBackupCurrencySrcs(currency)
-    return src ? [src, ...backupSrcs] : backupSrcs
-  }, [currency, src])
-
-  return useSrcColor(srcs, contrastSettings) ?? theme.accent1
-}
-
-export function useSrcColor(src?: string[] | string, contrastSettings?: ContrastSettings) {
-  const theme = useTheme()
-  const [color, setColor] = useState<string | undefined>()
-
-  const prevSrcRef = useRef(src)
-  prevSrcRef.current = src
-
   useEffect(() => {
-    async function fetchColor() {
-      if (src) {
-        let color = await getColorFromToken(Array.isArray(src) ? src : [src])
-        // Update the color if the src has not changed since before fetch started
-        if (color && prevSrcRef.current === src) {
-          if (contrastSettings) {
-            color = getAccessibleColor(color, contrastSettings.backgroundColor, contrastSettings.darkMode)
+    let stale = false
+
+    if (currency) {
+      getColorFromToken(currency, src).then((tokenColor) => {
+        if (!stale && tokenColor !== null) {
+          if (backgroundColor) {
+            let increment = 0.1
+            while (!passesContrast(tokenColor, backgroundColor)) {
+              tokenColor = makeLighter ? lighten(increment, tokenColor) : darken(increment, tokenColor)
+              increment += 0.1
+            }
           }
-          setColor(color)
-        } else {
-          setColor(undefined)
+          setColor(tokenColor)
         }
-      }
+      })
     }
-    fetchColor()
-  }, [contrastSettings, src, theme.accent1])
+
+    return () => {
+      stale = true
+      setColor(theme.accent1)
+    }
+  }, [backgroundColor, makeLighter, src, theme.accent1, currency])
 
   return color
 }

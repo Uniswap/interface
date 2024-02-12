@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { I18nManager, StyleSheet, View } from 'react-native'
 import {
-  SharedValue,
   interpolateColor,
+  SharedValue,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'

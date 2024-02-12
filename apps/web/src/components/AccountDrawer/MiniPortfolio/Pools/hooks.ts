@@ -1,12 +1,12 @@
 import {
   ChainId,
   MULTICALL_ADDRESSES,
-  Token,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES as V3NFT_ADDRESSES,
+  Token,
 } from '@uniswap/sdk-core'
 import type { AddressMap } from '@uniswap/smart-order-router'
-import NFTPositionManagerJSON from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import MulticallJSON from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
+import NFTPositionManagerJSON from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import { useWeb3React } from '@web3-react/core'
 import { isSupportedChain } from 'constants/chains'
 import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
@@ -16,9 +16,9 @@ import { ContractInput, useUniswapPricesQuery } from 'graphql/data/__generated__
 import { toContractInput } from 'graphql/data/util'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useMemo } from 'react'
+import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'types/v3'
 import { getContract } from 'utils'
 import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils/currencyKey'
-import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'wallet/src/abis/types/v3'
 
 import { PositionInfo } from './cache'
 

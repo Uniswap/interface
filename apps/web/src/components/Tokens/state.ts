@@ -11,7 +11,7 @@ export enum TokenSortMethod {
   VOLUME = 'Volume',
 }
 
-export const exploreSearchStringAtom = atomWithReset<string>('')
+export const filterStringAtom = atomWithReset<string>('')
 export const filterTimeAtom = atom<TimePeriod>(TimePeriod.DAY)
 export const sortMethodAtom = atom<TokenSortMethod>(TokenSortMethod.VOLUME)
 export const sortAscendingAtom = atom<boolean>(false)

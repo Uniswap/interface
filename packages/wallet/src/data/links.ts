@@ -6,13 +6,13 @@ import { config } from 'wallet/src/config'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import {
   EnsLookupParams,
-  STUB_ONCHAIN_ENS_ENDPOINT,
   getOnChainEnsFetch,
+  STUB_ONCHAIN_ENS_ENDPOINT,
 } from 'wallet/src/features/ens/api'
 import {
   BalanceLookupParams,
-  STUB_ONCHAIN_BALANCES_ENDPOINT,
   getOnChainBalancesFetch,
+  STUB_ONCHAIN_BALANCES_ENDPOINT,
 } from 'wallet/src/features/portfolio/api'
 import { isAndroid, isIOS } from 'wallet/src/utils/platform'
 

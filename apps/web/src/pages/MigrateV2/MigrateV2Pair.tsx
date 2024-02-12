@@ -37,7 +37,6 @@ import { useTheme } from 'styled-components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
-import { MigrateHeader } from '.'
 import { AutoColumn } from '../../components/Column'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
 import CurrencyLogo from '../../components/Logo/CurrencyLogo'
@@ -55,6 +54,7 @@ import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { BodyWrapper } from '../AppBody'
+import { MigrateHeader } from '.'
 
 const ZERO = JSBI.BigInt(0)
 

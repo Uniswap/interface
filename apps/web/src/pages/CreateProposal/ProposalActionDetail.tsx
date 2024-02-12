@@ -4,7 +4,6 @@ import AddressInputPanel from 'components/AddressInputPanel'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import styled from 'styled-components'
 
-import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { ProposalAction } from './ProposalActionSelector'
 
 enum ProposalActionDetailField {
@@ -24,11 +23,6 @@ const ProposalActionDetailContainer = styled.div`
     margin-bottom: 10px;
   }
 `
-
-const CREATE_PROPOSAL_CURRENCY_SEARCH_FILTERS: CurrencySearchFilters = {
-  disableNonToken: true,
-  showCommonBases: false,
-}
 
 export const ProposalActionDetail = ({
   className,
@@ -83,10 +77,11 @@ export const ProposalActionDetail = ({
             onUserInput={(amount: string) => onAmountInput(amount)}
             onCurrencySelect={(currency: Currency) => onCurrencySelect(currency)}
             showMaxButton={false}
+            showCommonBases={false}
             showCurrencyAmount={false}
+            disableNonToken
             hideBalance
             id="currency-input"
-            currencySearchFilters={CREATE_PROPOSAL_CURRENCY_SEARCH_FILTERS}
           />
         ) : null
       )}

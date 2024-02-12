@@ -66,6 +66,7 @@ describe(LongText, () => {
         const readMoreButton = tree.queryByTestId('read-more-button')
 
         expect(readMoreButton).toBeTruthy()
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         expect(within(readMoreButton!).getByText('Read more')).toBeTruthy()
       })
     })

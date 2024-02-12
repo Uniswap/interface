@@ -1,7 +1,7 @@
 import React from 'react'
+import { Arrow } from 'src/components/icons/Arrow'
 import { Flex, TouchableArea, TouchableAreaProps, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { Arrow } from 'wallet/src/components/icons/Arrow'
 
 type SwapArrowButtonProps = Pick<
   TouchableAreaProps,

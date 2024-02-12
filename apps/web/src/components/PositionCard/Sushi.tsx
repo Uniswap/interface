@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
-import { FixedHeightRow } from '.'
 import { useColor } from '../../hooks/useColor'
 import { unwrappedToken } from '../../utils/unwrappedToken'
 import { ButtonEmpty } from '../Button'
@@ -16,6 +15,7 @@ import DoubleCurrencyLogo from '../DoubleLogo'
 import { CardNoise } from '../earn/styled'
 import { AutoRow, RowFixed } from '../Row'
 import { Dots } from '../swap/styled'
+import { FixedHeightRow } from '.'
 
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
   border: none;

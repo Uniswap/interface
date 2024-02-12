@@ -5,13 +5,13 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
+import { Unicon } from 'src/components/unicons/Unicon'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Flex, Icons, Text, TouchableArea, Unicon, useIsDarkMode } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -24,7 +24,6 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function RestoreCloudBackupScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const isDarkMode = useIsDarkMode()
   // const backups = useMockCloudBackups(4) // returns 4 mock backups with random mnemonicIds and createdAt dates
   const backups = useCloudBackups()
   const sortedBackups = backups.slice().sort((a, b) => b.createdAt - a.createdAt)
@@ -49,7 +48,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
           ? t('There are multiple recovery phrases backed up to your Google Drive.')
           : t('There are multiple recovery phrases backed up to your iCloud.')
       }
-      title={t('Select a backup to restore')}>
+      title={t('Select backup to restore')}>
       <ScrollView>
         <Flex gap="$spacing8">
           {sortedBackups.map((backup) => {
@@ -57,13 +56,11 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
             return (
               <TouchableArea
                 key={backup.mnemonicId}
-                backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
-                borderColor="$surface3"
-                borderRadius="$rounded20"
+                backgroundColor="$surface2"
+                borderColor="$surface2"
+                borderRadius="$rounded16"
                 borderWidth={1}
                 p="$spacing16"
-                shadowColor="$surface3"
-                shadowRadius={!isDarkMode ? '$spacing4' : undefined}
                 onPress={(): Promise<void> => onPressRestoreBackup(backup)}>
                 <Flex row alignItems="center" justifyContent="space-between">
                   <Flex centered row gap="$spacing12">
@@ -73,16 +70,11 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                         {sanitizeAddressText(shortenAddress(mnemonicId))}
                       </Text>
                       <Text adjustsFontSizeToFit color="$neutral2" variant="buttonLabel4">
-                        {dayjs.unix(createdAt).format('MMM D, YYYY [at] h:mma')}
+                        {dayjs.unix(createdAt).format('MMM D, YYYY, h:mma')}
                       </Text>
                     </Flex>
                   </Flex>
-                  <Icons.RotatableChevron
-                    color="$neutral2"
-                    direction="end"
-                    height={iconSizes.icon20}
-                    width={iconSizes.icon20}
-                  />
+                  <Icons.RotatableChevron color="$neutral2" direction="end" />
                 </Flex>
               </TouchableArea>
             )

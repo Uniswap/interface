@@ -3,7 +3,7 @@ import { useWindowDimensions } from 'react-native'
 import { useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { AnimatedText } from 'src/components/text/AnimatedText'
 import { Flex, useDeviceDimensions, useSporeColors } from 'ui/src'
-import { TextVariantTokens, fonts } from 'ui/src/theme'
+import { fonts, TextVariantTokens } from 'ui/src/theme'
 import { ValueAndFormatted } from './usePrice'
 
 type AnimatedDecimalNumberProps = {

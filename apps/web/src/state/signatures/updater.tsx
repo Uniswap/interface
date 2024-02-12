@@ -24,8 +24,7 @@ export default function Updater() {
     () =>
       Object.values(signatures).filter(
         (signature) =>
-          [SignatureType.SIGN_UNISWAPX_ORDER, SignatureType.SIGN_LIMIT].includes(signature.type) &&
-          signature.status === UniswapXOrderStatus.OPEN
+          signature.type === SignatureType.SIGN_UNISWAPX_ORDER && signature.status === UniswapXOrderStatus.OPEN
       ) as UniswapXOrderDetails[],
     [signatures]
   )

@@ -1,7 +1,7 @@
+import { ModalName } from 'src/features/telemetry/constants'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
 import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 // only add fields that are persisted
 export const initialSchema = {

@@ -134,18 +134,6 @@ const slice = createSlice({
       }
       state.activeAccountAddress = id
     },
-    markAccountDismissedUnitagPrompt: (state, action: PayloadAction<Address>) => {
-      const address = action.payload
-      const id = getValidAddress(address, true)
-      if (!id) {
-        throw new Error('Cannot operate on an invalid address')
-      }
-      const account = state.accounts[id]
-      if (!account) {
-        throw new Error(`Cannot mark prompt skipped for missing account ${id}`)
-      }
-      account.skippedUnitagPrompt = true
-    },
     unlockWallet: (state) => {
       state.isUnlocked = true
     },
@@ -209,7 +197,6 @@ export const {
   setAccountsNonPending,
   editAccount,
   setAccountAsActive,
-  markAccountDismissedUnitagPrompt,
   unlockWallet,
   lockWallet,
   resetWallet,

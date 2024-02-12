@@ -2,20 +2,19 @@ import { Trans } from '@lingui/macro'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
-import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { BIPS_BASE } from 'constants/misc'
-import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
+import { chainIdToBackendName } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import React from 'react'
 import { ChevronRight } from 'react-feather'
-import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 
+import { ReversedArrowsIcon } from './icons'
 import { DetailBubble } from './shared'
 
 const FeeTier = styled(ThemedText.LabelMicro)`
@@ -24,9 +23,8 @@ const FeeTier = styled(ThemedText.LabelMicro)`
   border-radius: 4px;
 `
 
-const ToggleReverseArrows = styled(ReverseArrow)`
+const ToggleReverseArrows = styled(ReversedArrowsIcon)`
   ${ClickableStyle}
-  fill: ${({ theme }) => theme.neutral2};
 `
 
 const IconBubble = styled(LoadingBubble)`
@@ -74,12 +72,6 @@ export function PoolDetailsBreadcrumb({ chainId, poolAddress, token0, token1, lo
   )
 }
 
-const StyledLink = styled(Link)`
-  color: ${({ theme }) => theme.neutral1};
-  text-decoration: none;
-  ${ClickableStyle}
-`
-
 interface PoolDetailsHeaderProps {
   chainId?: number
   token0?: Token
@@ -115,25 +107,7 @@ export function PoolDetailsHeader({
           <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
         )}
         <ThemedText.HeadlineSmall>
-          <StyledLink
-            to={getTokenDetailsURL({
-              address: token0?.id,
-              chain: chainIdToBackendName(chainId),
-              isInfoExplorePageEnabled: true,
-            })}
-          >
-            {token0?.symbol}
-          </StyledLink>
-          &nbsp;/&nbsp;
-          <StyledLink
-            to={getTokenDetailsURL({
-              address: token1?.id,
-              chain: chainIdToBackendName(chainId),
-              isInfoExplorePageEnabled: true,
-            })}
-          >
-            {token1?.symbol}
-          </StyledLink>
+          {token0?.symbol} / {token1?.symbol}
         </ThemedText.HeadlineSmall>
       </Row>
       {!!feeTier && <FeeTier>{feeTier / BIPS_BASE}%</FeeTier>}

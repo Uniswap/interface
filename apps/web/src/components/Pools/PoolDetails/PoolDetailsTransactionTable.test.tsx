@@ -65,7 +65,7 @@ describe('PoolDetailsTransactionsTable', () => {
         amount0: 200,
         amount1: 300,
         amountUSD: '400',
-        type: PoolTransactionType.BUY,
+        type: PoolTransactionType.SWAP,
       },
     ]
     mocked(usePoolTransactions).mockReturnValue({

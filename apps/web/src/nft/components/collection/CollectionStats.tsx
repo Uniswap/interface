@@ -227,10 +227,9 @@ const CollectionName = ({
   )
 }
 
-const CollectionDescriptionText = styled.p<{ readMore: boolean }>`
+const CollectionDescriptionText = styled.div<{ readMore: boolean }>`
   vertical-align: top;
   text-overflow: ellipsis;
-  margin: 0;
 
   ${({ readMore }) =>
     readMore
@@ -288,11 +287,9 @@ const CollectionDescription = ({ description }: { description: string }) => {
       descriptionRef.current &&
       (descriptionRef.current.getBoundingClientRect().width >= baseRef.current?.getBoundingClientRect().width - 112 ||
         descriptionRef.current.getBoundingClientRect().width >= 590)
-    ) {
+    )
       setShowReadMore(true)
-    } else {
-      setShowReadMore(false)
-    }
+    else setShowReadMore(false)
   }, [descriptionRef, baseRef, isCollectionStatsLoading, description])
 
   return isCollectionStatsLoading ? (

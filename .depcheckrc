@@ -14,5 +14,4 @@ ignores: [
     "@yarnpkg/plugin-git",
     "semver",
     "typanion",
-    "turbo-ignore",
   ]

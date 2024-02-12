@@ -2,7 +2,6 @@ import React from 'react'
 import { AccountSwitcherModal } from 'src/app/modals/AccountSwitcherModal'
 import { ExperimentsModal } from 'src/app/modals/ExperimentsModal'
 import { ExploreModal } from 'src/app/modals/ExploreModal'
-import { FiatOnRampAggregatorModal } from 'src/app/modals/FiatOnRampModalAggregator'
 import { SwapModal } from 'src/app/modals/SwapModal'
 import { TransferTokenModal } from 'src/app/modals/TransferTokenModal'
 import { LazyModalRenderer } from 'src/app/modals/utils'
@@ -13,11 +12,11 @@ import { RestoreWalletModal } from 'src/components/RestoreWalletModal/RestoreWal
 import { UnitagsIntroModal } from 'src/components/unitags/UnitagsIntroModal'
 import { WalletConnectModals } from 'src/components/WalletConnect/WalletConnectModals'
 import { LockScreenModal } from 'src/features/authentication/LockScreenModal'
+import { FiatOnRampAggregatorModal } from 'src/features/fiatOnRamp/FiatOnRampAggregatorModal'
 import { FiatOnRampModal } from 'src/features/fiatOnRamp/FiatOnRampModal'
-import { ScantasticModal } from 'src/features/scantastic/ScantasticModal'
+import { ModalName } from 'src/features/telemetry/constants'
 import { SettingsFiatCurrencyModal } from 'src/screens/SettingsFiatCurrencyModal'
 import { SettingsLanguageModal } from 'src/screens/SettingsLanguageModal'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function AppModals(): JSX.Element {
   return (
@@ -41,10 +40,6 @@ export function AppModals(): JSX.Element {
       <ForceUpgradeModal />
 
       <LockScreenModal />
-
-      <LazyModalRenderer name={ModalName.Scantastic}>
-        <ScantasticModal />
-      </LazyModalRenderer>
 
       <LazyModalRenderer name={ModalName.Swap}>
         <SwapModal />

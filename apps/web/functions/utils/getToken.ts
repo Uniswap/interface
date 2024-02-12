@@ -1,4 +1,5 @@
-import { Chain, TokenDocument, TokenQuery } from '../../src/graphql/data/__generated__/types-and-hooks'
+import { TokenDocument, TokenQuery } from '../../src/graphql/data/__generated__/types-and-hooks'
+import { Chain } from '../../src/graphql/data/__generated__/types-and-hooks'
 import client from '../client'
 
 function formatTitleName(symbol: string | undefined, name: string | undefined) {

@@ -1,4 +1,4 @@
-import { CHAIN_INFO, ChainId, RPCType } from 'wallet/src/constants/chains'
+import { ChainId, CHAIN_INFO, RPCType } from 'wallet/src/constants/chains'
 
 // Should match supported chains in `InfuraProvider` class within `getUrl` method
 export type InfuraChainName =

@@ -4,6 +4,7 @@ exports[`renders text with few matches 1`] = `
 <View
   style={
     {
+      "alignItems": "stretch",
       "flexDirection": "row",
       "gap": 16,
     }

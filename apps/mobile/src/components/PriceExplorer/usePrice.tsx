@@ -26,9 +26,7 @@ export type ValueAndFormattedWithAnimation = ValueAndFormatted & {
  * Wrapper around react-native-wagmi-chart#useLineChartPrice
  * @returns latest price when not scrubbing and active price when scrubbing
  */
-export function useLineChartPrice(
-  currentSpot?: SharedValue<number>
-): ValueAndFormattedWithAnimation {
+export function useLineChartPrice(currentSpot?: number): ValueAndFormattedWithAnimation {
   const { value: activeCursorPrice } = useRNWagmiChartLineChartPrice({
     // do not round
     precision: 18,
@@ -57,7 +55,7 @@ export function useLineChartPrice(
 
     shouldAnimate.value = true
     // show spot price when chart not scrubbing, or if not available, show the last price in the chart
-    return currentSpot?.value ?? data[data.length - 1]?.value ?? 0
+    return currentSpot ?? data[data.length - 1]?.value ?? 0
   })
   const priceFormatted = useDerivedValue(() => {
     const { symbol, code } = currencyInfo

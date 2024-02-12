@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
-import { useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
   Chain,
@@ -12,8 +12,8 @@ import {
 import { fromGraphQLChain, toGraphQLChain } from 'wallet/src/features/chains/utils'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import {
-  CurrencyId,
   currencyId,
+  CurrencyId,
   currencyIdToChain,
   currencyIdToGraphQLAddress,
   isNativeCurrencyAddress,
@@ -38,10 +38,10 @@ export function currencyIdToContractInput(id: CurrencyId): ContractInput {
 }
 
 export function tokenProjectToCurrencyInfos(
-  tokenProjects: TokenProjectsQuery['tokenProjects'],
+  tokenProject: TokenProjectsQuery['tokenProjects'],
   chainFilter?: ChainId | null
 ): CurrencyInfo[] {
-  return tokenProjects
+  return tokenProject
     ?.flatMap((project) =>
       project?.tokens.map((token) => {
         const { logoUrl, safetyLevel, name } = project ?? {}
@@ -150,11 +150,14 @@ until the network request returns.
 Feature request to enable persisted errors: https://github.com/apollographql/apollo-feature-requests/issues/348
 */
 export function usePersistedError(loading: boolean, error?: ApolloError): ApolloError | undefined {
-  const persistedErrorRef = useRef<ApolloError>()
+  const [persistedError, setPersistedError] = useState<ApolloError>()
 
-  if (error || !loading) {
-    persistedErrorRef.current = error
-  }
+  useEffect(() => {
+    if (error || !loading) {
+      setPersistedError(error)
+      return
+    }
+  }, [error, loading, setPersistedError])
 
-  return persistedErrorRef.current
+  return persistedError
 }

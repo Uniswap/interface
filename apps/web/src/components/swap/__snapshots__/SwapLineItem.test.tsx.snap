@@ -25,7 +25,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   justify-content: flex-start;
 }
 
-.c8 {
+.c7 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -43,24 +43,6 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   gap: 4px;
 }
 
-.c11 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -68,30 +50,15 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   justify-content: space-between;
 }
 
-.c9 {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  margin: -xs;
-}
-
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c10 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
-.c16 {
+.c11 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -102,27 +69,15 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   font-weight: 500;
 }
 
-.c16:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c16:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c12 {
-  color: #4673fa;
-}
-
-.c13 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -137,13 +92,13 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   height: inherit;
 }
 
-.c17 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c17::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -157,43 +112,43 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   background: #FFFFFF;
 }
 
-.c17.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c17.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c17.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c17.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c17.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c17.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c17.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c17.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c14 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -220,16 +175,8 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
   overflow-wrap: break-word;
 }
 
-.c15 {
-  display: inline;
-}
-
 @supports (-webkit-background-clip:text) and (-webkit-text-fill-color:transparent) {
-  .c12 {
-    background-image: linear-gradient(91.39deg,#4673fa -101.76%,#9646fa 101.76%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
+
 }
 
 <div>
@@ -250,128 +197,59 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
             class="c3 c6 css-142zc9n"
           >
             <div
-              class="c5"
+              class="c0 c7"
             >
-              <div>
-                <div
-                  class="c7"
-                >
-                  <div
-                    class="c0 c8 c9"
-                  >
-                    <svg
-                      data-testid="gas-estimate-uniswapx-icon"
-                      fill="none"
-                      height="14"
-                      viewBox="0 0 10 14"
-                      width="10"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <defs>
-                        <lineargradient
-                          gradientUnits="userSpaceOnUse"
-                          id="AutoRouterIconGradientfixed-uuid-value"
-                          x1="-10.1807"
-                          x2="10.6573"
-                          y1="-12.0006"
-                          y2="-11.6017"
-                        >
-                          <stop
-                            stop-color="#4673FA"
-                          />
-                          <stop
-                            offset="1"
-                            stop-color="#9646FA"
-                          />
-                        </lineargradient>
-                      </defs>
-                      <path
-                        d="M9.97131 6.19803C9.91798 6.07737 9.79866 6.00003 9.66666 6.00003H6.66666V1.00003C6.66666 0.862034 6.58201 0.738037 6.45267 0.688704C6.32267 0.638704 6.17799 0.674696 6.08532 0.776696L0.0853237 7.44336C-0.00267631 7.54136 -0.0253169 7.68137 0.0286831 7.80204C0.0820164 7.9227 0.20133 8.00003 0.33333 8.00003H3.33333V13C3.33333 13.138 3.41799 13.262 3.54732 13.3114C3.58665 13.326 3.62666 13.3334 3.66666 13.3334C3.75933 13.3334 3.85 13.2947 3.91467 13.2227L9.91467 6.55603C10.0027 6.4587 10.0246 6.31803 9.97131 6.19803Z"
-                        fill="url(#AutoRouterIconGradientfixed-uuid-value)"
-                      />
-                    </svg>
-                    <div
-                      class="c10 css-142zc9n"
-                    >
-                      <div
-                        class="c0 c11"
-                      >
-                        <div
-                          class="c12"
-                        >
-                          <div
-                            style="font-weight: 535;"
-                          >
-                            $0
-                          </div>
-                        </div>
-                        <div>
-                          <s>
-                            $7.87
-                          </s>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c13"
-              style="position: fixed; left: 0px; top: 0px;"
-            >
-              <div
-                class="c14"
+              <svg
+                aria-labelledby="titleID"
+                height="16"
+                width="16"
               >
-                <div
-                  class="c10 css-obwv3p"
+                <title
+                  id="titleID"
                 >
-                  <div
-                    class="c12 c15"
-                  >
-                    UniswapX
-                  </div>
-                   aggregates liquidity sources for better prices and gas free swaps. 
-                  <a
-                    class="c16"
-                    href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    Learn more
-                  </a>
-                </div>
-              </div>
-              <div
-                class="c17 arrow-"
-                style="position: absolute;"
-              />
+                  Ethereum logo
+                </title>
+                <rect
+                  fill="#F9F9F9"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <rect
+                  fill="#6B8AFF33"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <svg
+                  height="16"
+                  width="16"
+                >
+                  ethereum.svg
+                </svg>
+              </svg>
+              $0
             </div>
           </div>
         </div>
       </div>
       <div
-        class="c13"
+        class="c8"
         style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c14"
+          class="c9"
         >
           <div
             class="c10 css-obwv3p"
           >
             <div
-              class="c10 css-obwv3p"
+              class="c10 css-1m65e73"
             >
-              <div
-                class="c12 c15"
-              >
-                UniswapX
-              </div>
-               aggregates liquidity sources for better prices and gas free swaps. 
+              Network cost is paid in ETH on the ETHEREUM network in order to transact. 
               <a
-                class="c16"
-                href="https://support.uniswap.org/hc/en-us/articles/17515415311501"
+                class="c11"
+                href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                 rel="noopener noreferrer"
                 target="_blank"
               >
@@ -381,7 +259,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
           </div>
         </div>
         <div
-          class="c17 arrow-"
+          class="c12 arrow-"
           style="position: absolute;"
         />
       </div>
@@ -437,18 +315,10 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c8 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c14 {
@@ -716,18 +586,10 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c10 {
@@ -932,18 +794,10 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
@@ -1146,18 +1000,10 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c12 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c14 {
@@ -1423,7 +1269,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   justify-content: flex-start;
 }
 
-.c8 {
+.c7 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1441,24 +1287,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   gap: 4px;
 }
 
-.c12 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -1466,30 +1294,15 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   justify-content: space-between;
 }
 
-.c9 {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  margin: -xs;
-}
-
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
+}
+
+.c10 {
+  color: #7D7D7D;
 }
 
 .c11 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c15 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -1500,23 +1313,15 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   font-weight: 500;
 }
 
-.c15:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c15:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c13 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -1531,13 +1336,13 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   height: inherit;
 }
 
-.c16 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c16::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -1551,43 +1356,43 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   background: #FFFFFF;
 }
 
-.c16.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c16.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c16.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c16.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c16.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c16.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c16.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c16.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c14 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -1614,15 +1419,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   overflow-wrap: break-word;
 }
 
-.c10 {
-  height: 16px;
-  width: 16px;
-}
-
-.c10 > * {
-  fill: #CECECE;
-}
-
 <div>
     <div
       class="c0 c1 c2"
@@ -1641,90 +1437,58 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             class="c3 c6 css-142zc9n"
           >
             <div
-              class="c5"
+              class="c0 c7"
             >
-              <div>
-                <div
-                  class="c7"
-                >
-                  <div
-                    class="c0 c8 c9"
-                  >
-                    <svg
-                      class="c10"
-                      fill="none"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        clip-rule="evenodd"
-                        d="M15.3078 1.77827C15.7064 1.39599 16.3395 1.40923 16.7217 1.80783L20.9689 6.23633C21.2428 6.47474 21.4729 6.76205 21.6459 7.08464C21.8481 7.43172 22 7.84819 22 8.32698V16.7012C22 18.2484 20.7455 19.5 19.2 19.5C17.6536 19.5 16.4 18.2464 16.4 16.7V14.3999C16.4 13.8476 15.9523 13.3999 15.4 13.3999H14V20.5C14 20.569 13.9965 20.6372 13.9897 20.7045C13.9515 21.08 13.8095 21.4249 13.5927 21.7098C13.2274 22.19 12.6499 22.5 12 22.5H4C3.30964 22.5 2.70098 22.1502 2.34157 21.6182C2.12592 21.299 2.00001 20.9142 2 20.5V5.4999C2 3.84305 3.34315 2.4999 5 2.4999H11C12.6569 2.4999 14 3.84305 14 5.4999V11.3999H15.4C17.0569 11.3999 18.4 12.7431 18.4 14.3999V16.7C18.4 17.1418 18.7582 17.5 19.2 17.5C19.6427 17.5 20 17.1422 20 16.7012V11.3292C19.6872 11.4397 19.3506 11.4999 19 11.4999C17.3431 11.4999 16 10.1568 16 8.4999C16 7.28851 16.718 6.24482 17.7517 5.77117L15.2783 3.19217C14.896 2.79357 14.9092 2.16055 15.3078 1.77827ZM19.6098 7.70731C19.441 7.57725 19.2296 7.4999 19 7.4999C18.4477 7.4999 18 7.94762 18 8.4999C18 9.05219 18.4477 9.4999 19 9.4999C19.5523 9.4999 20 9.05219 20 8.4999C20 8.34084 19.9629 8.19045 19.8968 8.05693C19.8303 7.95164 19.7349 7.83559 19.6098 7.70731ZM5.21572 4.72463C4.66343 4.72463 4.21572 5.17235 4.21572 5.72463V9.72463C4.21572 10.2769 4.66343 10.7246 5.21572 10.7246H10.7157C11.268 10.7246 11.7157 10.2769 11.7157 9.72463V5.72463C11.7157 5.17235 11.268 4.72463 10.7157 4.72463H5.21572Z"
-                        fill="currentColor"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                    <div
-                      class="c11 css-142zc9n"
-                    >
-                      <div
-                        class="c0 c12"
-                      >
-                        <div>
-                          $1.00
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c13"
-              style="position: fixed; left: 0px; top: 0px;"
-            >
-              <div
-                class="c14"
+              <svg
+                aria-labelledby="titleID"
+                height="16"
+                width="16"
               >
-                <div
-                  class="c11 css-1m65e73"
+                <title
+                  id="titleID"
                 >
-                  Network cost is paid in ETH on the ETHEREUM network in order to transact. 
-                  <a
-                    class="c15"
-                    href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    Learn more
-                  </a>
-                </div>
-              </div>
-              <div
-                class="c16 arrow-"
-                style="position: absolute;"
-              />
+                  Ethereum logo
+                </title>
+                <rect
+                  fill="#F9F9F9"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <rect
+                  fill="#6B8AFF33"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <svg
+                  height="16"
+                  width="16"
+                >
+                  ethereum.svg
+                </svg>
+              </svg>
+              $1.00
             </div>
           </div>
         </div>
       </div>
       <div
-        class="c13"
+        class="c8"
         style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c14"
+          class="c9"
         >
           <div
-            class="c11 css-obwv3p"
+            class="c10 css-obwv3p"
           >
             <div
-              class="c11 css-1m65e73"
+              class="c10 css-1m65e73"
             >
               Network cost is paid in ETH on the ETHEREUM network in order to transact. 
               <a
-                class="c15"
+                class="c11"
                 href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -1735,7 +1499,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
           </div>
         </div>
         <div
-          class="c16 arrow-"
+          class="c12 arrow-"
           style="position: absolute;"
         />
       </div>
@@ -1773,18 +1537,10 @@ exports[`SwapLineItem.tsx exact input 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
@@ -1980,18 +1736,10 @@ exports[`SwapLineItem.tsx exact input 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c8 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c14 {
@@ -2255,18 +2003,10 @@ exports[`SwapLineItem.tsx exact input 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c10 {
@@ -2467,18 +2207,10 @@ exports[`SwapLineItem.tsx exact input 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
@@ -2626,7 +2358,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   min-width: 0;
 }
 
-.c24 {
+.c23 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -2650,7 +2382,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   justify-content: flex-start;
 }
 
-.c25 {
+.c24 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -2675,41 +2407,26 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   justify-content: space-between;
 }
 
-.c26 {
+.c25 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c26 > * {
+.c25 > * {
   margin: 1px !important;
 }
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
-.c10 {
+.c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -2724,13 +2441,13 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   height: inherit;
 }
 
-.c32 {
+.c31 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c32::before {
+.c31::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -2744,43 +2461,43 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   background: #FFFFFF;
 }
 
-.c32.arrow-top {
+.c31.arrow-top {
   bottom: -4px;
 }
 
-.c32.arrow-top::before {
+.c31.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c32.arrow-bottom {
+.c31.arrow-bottom {
   top: -4px;
 }
 
-.c32.arrow-bottom::before {
+.c31.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c32.arrow-left {
+.c31.arrow-left {
   right: -4px;
 }
 
-.c32.arrow-left::before {
+.c31.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c32.arrow-right {
+.c31.arrow-right {
   left: -4px;
 }
 
-.c32.arrow-right::before {
+.c31.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c9 {
+.c8 {
   max-width: 400px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -2797,7 +2514,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c31 {
+.c30 {
   max-width: 200px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -2824,7 +2541,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   overflow-wrap: break-word;
 }
 
-.c11 {
+.c10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2839,7 +2556,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   gap: 12px;
 }
 
-.c20 {
+.c19 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -2861,26 +2578,25 @@ exports[`SwapLineItem.tsx exact input 1`] = `
 }
 
 .c15 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c16 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
   width: 20px;
   height: 20px;
   border-radius: 50%;
 }
 
 .c14 {
+  width: 20px;
+  height: 20px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c13 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -2888,7 +2604,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   display: flex;
 }
 
-.c28 {
+.c27 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -2899,16 +2615,16 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   flex-direction: row;
 }
 
-.c29 {
+.c28 {
   z-index: 1;
 }
 
-.c30 {
+.c29 {
   position: absolute;
   left: -10px !important;
 }
 
-.c12 {
+.c11 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -2916,12 +2632,12 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   width: 100%;
 }
 
-.c13 {
+.c12 {
   display: grid;
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c17 {
+.c16 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -2938,7 +2654,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   position: relative;
 }
 
-.c27 {
+.c26 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2946,7 +2662,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   padding: 4px 4px;
 }
 
-.c18 {
+.c17 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2961,11 +2677,11 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   opacity: 0.5;
 }
 
-.c19 path {
+.c18 path {
   stroke: #22222212;
 }
 
-.c21 {
+.c20 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -2979,7 +2695,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   z-index: 1020;
 }
 
-.c22 {
+.c21 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -2988,7 +2704,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   z-index: 1021;
 }
 
-.c23 {
+.c22 {
   word-break: normal;
 }
 
@@ -3010,7 +2726,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             class="c3 c6 css-142zc9n"
           >
             <div
-              class="c7 css-142zc9n"
+              class="css-142zc9n"
             >
               Uniswap Client
             </div>
@@ -3018,70 +2734,72 @@ exports[`SwapLineItem.tsx exact input 1`] = `
         </div>
       </div>
       <div
-        class="c8"
+        class="c7"
         style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9"
+          class="c8"
         >
           <div
-            class="c10 css-obwv3p"
+            class="c9 css-obwv3p"
           >
             <div
-              class="c11"
+              class="c10"
             >
               <div
-                class="c12 css-vurnku"
+                class="c11 css-vurnku"
               >
                 <div
-                  class="c0 c1 c13"
+                  class="c0 c1 c12"
                 >
                   <div
-                    class="c14"
+                    class="c13"
                     style="height: 20px; width: 20px;"
                   >
                     <div
-                      class="c15"
+                      class="c14"
                     >
                       <img
-                        class="c16"
+                        alt="ABC logo"
+                        class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                       />
                     </div>
                   </div>
                   <div
-                    class="c0 c1 c17"
+                    class="c0 c1 c16"
                   >
                     <div
-                      class="c18"
+                      class="c17"
                     >
                       <svg
-                        class="c19"
+                        class="c18"
                       >
                         dot_line.svg
                       </svg>
                     </div>
                     <div
-                      class="c20 c21"
+                      class="c19 c20"
                     >
                       <div
-                        class="c20 c22"
+                        class="c19 c21"
                       >
                         <div
-                          class="c3 c23 css-1m65e73"
+                          class="c3 c22 css-1m65e73"
                         >
                           V3
                         </div>
                       </div>
                       <div
-                        class="c10 c23 css-1m65e73"
+                        class="c9 c22 css-1m65e73"
                         style="min-width: auto;"
                       >
                         100%
                       </div>
                     </div>
                     <div
-                      class="c24 c25 c26"
+                      class="c23 c24 c25"
                       style="justify-content: space-evenly; z-index: 2;"
                       width="100%"
                     >
@@ -3090,43 +2808,47 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                       >
                         <div>
                           <div
-                            class="c20 c27"
+                            class="c19 c26"
                           >
                             <div
                               class="css-mbnpt3"
                             >
                               <div
-                                class="c28"
+                                class="c27"
                               >
                                 <div
-                                  class="c29"
+                                  class="c28"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
                                     style="height: 20px; width: 20px;"
                                   >
                                     <div
-                                      class="c15"
+                                      class="c14"
                                     >
                                       <img
-                                        class="c16"
+                                        alt="DEF logo"
+                                        class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                       />
                                     </div>
                                   </div>
                                 </div>
                                 <div
-                                  class="c30"
+                                  class="c29"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
                                     style="height: 20px; width: 20px;"
                                   >
                                     <div
-                                      class="c15"
+                                      class="c14"
                                     >
                                       <img
-                                        class="c16"
+                                        alt="ABC logo"
+                                        class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                       />
                                     </div>
@@ -3135,7 +2857,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                               </div>
                             </div>
                             <div
-                              class="c10 c23 css-1m65e73"
+                              class="c9 c22 css-1m65e73"
                             >
                               1%
                             </div>
@@ -3143,30 +2865,32 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c8"
+                        class="c7"
                         style="position: fixed; left: 0px; top: 0px;"
                       >
                         <div
-                          class="c31"
+                          class="c30"
                         >
                           ABC/DEF 1% pool
                         </div>
                         <div
-                          class="c32 arrow-"
+                          class="c31 arrow-"
                           style="position: absolute;"
                         />
                       </div>
                     </div>
                   </div>
                   <div
-                    class="c14"
+                    class="c13"
                     style="height: 20px; width: 20px;"
                   >
                     <div
-                      class="c15"
+                      class="c14"
                     >
                       <img
-                        class="c16"
+                        alt="DEF logo"
+                        class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                       />
                     </div>
@@ -3174,7 +2898,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                 </div>
               </div>
               <div
-                class="c10 css-obwv3p"
+                class="c9 css-obwv3p"
               >
                 Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
               </div>
@@ -3182,7 +2906,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
           </div>
         </div>
         <div
-          class="c32 arrow-"
+          class="c31 arrow-"
           style="position: absolute;"
         />
       </div>
@@ -3216,7 +2940,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   justify-content: flex-start;
 }
 
-.c8 {
+.c7 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -3234,24 +2958,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   gap: 4px;
 }
 
-.c12 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -3259,30 +2965,15 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   justify-content: space-between;
 }
 
-.c9 {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  margin: -xs;
-}
-
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
+}
+
+.c10 {
+  color: #7D7D7D;
 }
 
 .c11 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c15 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -3293,23 +2984,15 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   font-weight: 500;
 }
 
-.c15:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c15:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c13 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -3324,13 +3007,13 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   height: inherit;
 }
 
-.c16 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c16::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -3344,43 +3027,43 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   background: #FFFFFF;
 }
 
-.c16.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c16.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c16.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c16.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c16.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c16.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c16.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c16.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c14 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -3407,15 +3090,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   overflow-wrap: break-word;
 }
 
-.c10 {
-  height: 16px;
-  width: 16px;
-}
-
-.c10 > * {
-  fill: #CECECE;
-}
-
 <div>
     <div
       class="c0 c1 c2"
@@ -3434,90 +3108,58 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             class="c3 c6 css-142zc9n"
           >
             <div
-              class="c5"
+              class="c0 c7"
             >
-              <div>
-                <div
-                  class="c7"
-                >
-                  <div
-                    class="c0 c8 c9"
-                  >
-                    <svg
-                      class="c10"
-                      fill="none"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        clip-rule="evenodd"
-                        d="M15.3078 1.77827C15.7064 1.39599 16.3395 1.40923 16.7217 1.80783L20.9689 6.23633C21.2428 6.47474 21.4729 6.76205 21.6459 7.08464C21.8481 7.43172 22 7.84819 22 8.32698V16.7012C22 18.2484 20.7455 19.5 19.2 19.5C17.6536 19.5 16.4 18.2464 16.4 16.7V14.3999C16.4 13.8476 15.9523 13.3999 15.4 13.3999H14V20.5C14 20.569 13.9965 20.6372 13.9897 20.7045C13.9515 21.08 13.8095 21.4249 13.5927 21.7098C13.2274 22.19 12.6499 22.5 12 22.5H4C3.30964 22.5 2.70098 22.1502 2.34157 21.6182C2.12592 21.299 2.00001 20.9142 2 20.5V5.4999C2 3.84305 3.34315 2.4999 5 2.4999H11C12.6569 2.4999 14 3.84305 14 5.4999V11.3999H15.4C17.0569 11.3999 18.4 12.7431 18.4 14.3999V16.7C18.4 17.1418 18.7582 17.5 19.2 17.5C19.6427 17.5 20 17.1422 20 16.7012V11.3292C19.6872 11.4397 19.3506 11.4999 19 11.4999C17.3431 11.4999 16 10.1568 16 8.4999C16 7.28851 16.718 6.24482 17.7517 5.77117L15.2783 3.19217C14.896 2.79357 14.9092 2.16055 15.3078 1.77827ZM19.6098 7.70731C19.441 7.57725 19.2296 7.4999 19 7.4999C18.4477 7.4999 18 7.94762 18 8.4999C18 9.05219 18.4477 9.4999 19 9.4999C19.5523 9.4999 20 9.05219 20 8.4999C20 8.34084 19.9629 8.19045 19.8968 8.05693C19.8303 7.95164 19.7349 7.83559 19.6098 7.70731ZM5.21572 4.72463C4.66343 4.72463 4.21572 5.17235 4.21572 5.72463V9.72463C4.21572 10.2769 4.66343 10.7246 5.21572 10.7246H10.7157C11.268 10.7246 11.7157 10.2769 11.7157 9.72463V5.72463C11.7157 5.17235 11.268 4.72463 10.7157 4.72463H5.21572Z"
-                        fill="currentColor"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                    <div
-                      class="c11 css-142zc9n"
-                    >
-                      <div
-                        class="c0 c12"
-                      >
-                        <div>
-                          $1.00
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c13"
-              style="position: fixed; left: 0px; top: 0px;"
-            >
-              <div
-                class="c14"
+              <svg
+                aria-labelledby="titleID"
+                height="16"
+                width="16"
               >
-                <div
-                  class="c11 css-1m65e73"
+                <title
+                  id="titleID"
                 >
-                  Network cost is paid in ETH on the ETHEREUM network in order to transact. 
-                  <a
-                    class="c15"
-                    href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    Learn more
-                  </a>
-                </div>
-              </div>
-              <div
-                class="c16 arrow-"
-                style="position: absolute;"
-              />
+                  Ethereum logo
+                </title>
+                <rect
+                  fill="#F9F9F9"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <rect
+                  fill="#6B8AFF33"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <svg
+                  height="16"
+                  width="16"
+                >
+                  ethereum.svg
+                </svg>
+              </svg>
+              $1.00
             </div>
           </div>
         </div>
       </div>
       <div
-        class="c13"
+        class="c8"
         style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c14"
+          class="c9"
         >
           <div
-            class="c11 css-obwv3p"
+            class="c10 css-obwv3p"
           >
             <div
-              class="c11 css-1m65e73"
+              class="c10 css-1m65e73"
             >
               Network cost is paid in ETH on the ETHEREUM network in order to transact. 
               <a
-                class="c15"
+                class="c11"
                 href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -3528,7 +3170,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
           </div>
         </div>
         <div
-          class="c16 arrow-"
+          class="c12 arrow-"
           style="position: absolute;"
         />
       </div>
@@ -3566,18 +3208,10 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
@@ -3773,18 +3407,10 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c8 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c14 {
@@ -4048,18 +3674,10 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c10 {
@@ -4260,18 +3878,10 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
@@ -4419,7 +4029,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   min-width: 0;
 }
 
-.c24 {
+.c23 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -4443,7 +4053,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   justify-content: flex-start;
 }
 
-.c25 {
+.c24 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -4468,41 +4078,26 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   justify-content: space-between;
 }
 
-.c26 {
+.c25 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c26 > * {
+.c25 > * {
   margin: 1px !important;
 }
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
-.c10 {
+.c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -4517,13 +4112,13 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   height: inherit;
 }
 
-.c32 {
+.c31 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c32::before {
+.c31::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -4537,43 +4132,43 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   background: #FFFFFF;
 }
 
-.c32.arrow-top {
+.c31.arrow-top {
   bottom: -4px;
 }
 
-.c32.arrow-top::before {
+.c31.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c32.arrow-bottom {
+.c31.arrow-bottom {
   top: -4px;
 }
 
-.c32.arrow-bottom::before {
+.c31.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c32.arrow-left {
+.c31.arrow-left {
   right: -4px;
 }
 
-.c32.arrow-left::before {
+.c31.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c32.arrow-right {
+.c31.arrow-right {
   left: -4px;
 }
 
-.c32.arrow-right::before {
+.c31.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c9 {
+.c8 {
   max-width: 400px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -4590,7 +4185,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c31 {
+.c30 {
   max-width: 200px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -4617,7 +4212,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   overflow-wrap: break-word;
 }
 
-.c11 {
+.c10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4632,7 +4227,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   gap: 12px;
 }
 
-.c20 {
+.c19 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -4654,26 +4249,25 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
 }
 
 .c15 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c16 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
   width: 20px;
   height: 20px;
   border-radius: 50%;
 }
 
 .c14 {
+  width: 20px;
+  height: 20px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c13 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -4681,7 +4275,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   display: flex;
 }
 
-.c28 {
+.c27 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -4692,16 +4286,16 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   flex-direction: row;
 }
 
-.c29 {
+.c28 {
   z-index: 1;
 }
 
-.c30 {
+.c29 {
   position: absolute;
   left: -10px !important;
 }
 
-.c12 {
+.c11 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -4709,12 +4303,12 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   width: 100%;
 }
 
-.c13 {
+.c12 {
   display: grid;
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c17 {
+.c16 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -4731,7 +4325,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   position: relative;
 }
 
-.c27 {
+.c26 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4739,7 +4333,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   padding: 4px 4px;
 }
 
-.c18 {
+.c17 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4754,11 +4348,11 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   opacity: 0.5;
 }
 
-.c19 path {
+.c18 path {
   stroke: #22222212;
 }
 
-.c21 {
+.c20 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -4772,7 +4366,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   z-index: 1020;
 }
 
-.c22 {
+.c21 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -4781,7 +4375,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   z-index: 1021;
 }
 
-.c23 {
+.c22 {
   word-break: normal;
 }
 
@@ -4803,7 +4397,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             class="c3 c6 css-142zc9n"
           >
             <div
-              class="c7 css-142zc9n"
+              class="css-142zc9n"
             >
               Uniswap API
             </div>
@@ -4811,70 +4405,72 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
         </div>
       </div>
       <div
-        class="c8"
+        class="c7"
         style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9"
+          class="c8"
         >
           <div
-            class="c10 css-obwv3p"
+            class="c9 css-obwv3p"
           >
             <div
-              class="c11"
+              class="c10"
             >
               <div
-                class="c12 css-vurnku"
+                class="c11 css-vurnku"
               >
                 <div
-                  class="c0 c1 c13"
+                  class="c0 c1 c12"
                 >
                   <div
-                    class="c14"
+                    class="c13"
                     style="height: 20px; width: 20px;"
                   >
                     <div
-                      class="c15"
+                      class="c14"
                     >
                       <img
-                        class="c16"
+                        alt="ABC logo"
+                        class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                       />
                     </div>
                   </div>
                   <div
-                    class="c0 c1 c17"
+                    class="c0 c1 c16"
                   >
                     <div
-                      class="c18"
+                      class="c17"
                     >
                       <svg
-                        class="c19"
+                        class="c18"
                       >
                         dot_line.svg
                       </svg>
                     </div>
                     <div
-                      class="c20 c21"
+                      class="c19 c20"
                     >
                       <div
-                        class="c20 c22"
+                        class="c19 c21"
                       >
                         <div
-                          class="c3 c23 css-1m65e73"
+                          class="c3 c22 css-1m65e73"
                         >
                           V3
                         </div>
                       </div>
                       <div
-                        class="c10 c23 css-1m65e73"
+                        class="c9 c22 css-1m65e73"
                         style="min-width: auto;"
                       >
                         100%
                       </div>
                     </div>
                     <div
-                      class="c24 c25 c26"
+                      class="c23 c24 c25"
                       style="justify-content: space-evenly; z-index: 2;"
                       width="100%"
                     >
@@ -4883,43 +4479,47 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                       >
                         <div>
                           <div
-                            class="c20 c27"
+                            class="c19 c26"
                           >
                             <div
                               class="css-mbnpt3"
                             >
                               <div
-                                class="c28"
+                                class="c27"
                               >
                                 <div
-                                  class="c29"
+                                  class="c28"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
                                     style="height: 20px; width: 20px;"
                                   >
                                     <div
-                                      class="c15"
+                                      class="c14"
                                     >
                                       <img
-                                        class="c16"
+                                        alt="DEF logo"
+                                        class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                       />
                                     </div>
                                   </div>
                                 </div>
                                 <div
-                                  class="c30"
+                                  class="c29"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
                                     style="height: 20px; width: 20px;"
                                   >
                                     <div
-                                      class="c15"
+                                      class="c14"
                                     >
                                       <img
-                                        class="c16"
+                                        alt="ABC logo"
+                                        class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                       />
                                     </div>
@@ -4928,7 +4528,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                               </div>
                             </div>
                             <div
-                              class="c10 c23 css-1m65e73"
+                              class="c9 c22 css-1m65e73"
                             >
                               1%
                             </div>
@@ -4936,30 +4536,32 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c8"
+                        class="c7"
                         style="position: fixed; left: 0px; top: 0px;"
                       >
                         <div
-                          class="c31"
+                          class="c30"
                         >
                           ABC/DEF 1% pool
                         </div>
                         <div
-                          class="c32 arrow-"
+                          class="c31 arrow-"
                           style="position: absolute;"
                         />
                       </div>
                     </div>
                   </div>
                   <div
-                    class="c14"
+                    class="c13"
                     style="height: 20px; width: 20px;"
                   >
                     <div
-                      class="c15"
+                      class="c14"
                     >
                       <img
-                        class="c16"
+                        alt="DEF logo"
+                        class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                       />
                     </div>
@@ -4967,7 +4569,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                 </div>
               </div>
               <div
-                class="c10 css-obwv3p"
+                class="c9 css-obwv3p"
               >
                 Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
               </div>
@@ -4975,7 +4577,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
           </div>
         </div>
         <div
-          class="c32 arrow-"
+          class="c31 arrow-"
           style="position: absolute;"
         />
       </div>
@@ -5009,7 +4611,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   justify-content: flex-start;
 }
 
-.c8 {
+.c7 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -5027,24 +4629,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   gap: 4px;
 }
 
-.c12 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -5052,30 +4636,15 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   justify-content: space-between;
 }
 
-.c9 {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  margin: -xs;
-}
-
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
+}
+
+.c10 {
+  color: #7D7D7D;
 }
 
 .c11 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c15 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -5086,23 +4655,15 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   font-weight: 500;
 }
 
-.c15:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c15:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c13 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -5117,13 +4678,13 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   height: inherit;
 }
 
-.c16 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c16::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -5137,43 +4698,43 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   background: #FFFFFF;
 }
 
-.c16.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c16.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c16.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c16.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c16.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c16.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c16.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c16.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c14 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -5200,15 +4761,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   overflow-wrap: break-word;
 }
 
-.c10 {
-  height: 16px;
-  width: 16px;
-}
-
-.c10 > * {
-  fill: #CECECE;
-}
-
 <div>
     <div
       class="c0 c1 c2"
@@ -5227,90 +4779,58 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             class="c3 c6 css-142zc9n"
           >
             <div
-              class="c5"
+              class="c0 c7"
             >
-              <div>
-                <div
-                  class="c7"
-                >
-                  <div
-                    class="c0 c8 c9"
-                  >
-                    <svg
-                      class="c10"
-                      fill="none"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        clip-rule="evenodd"
-                        d="M15.3078 1.77827C15.7064 1.39599 16.3395 1.40923 16.7217 1.80783L20.9689 6.23633C21.2428 6.47474 21.4729 6.76205 21.6459 7.08464C21.8481 7.43172 22 7.84819 22 8.32698V16.7012C22 18.2484 20.7455 19.5 19.2 19.5C17.6536 19.5 16.4 18.2464 16.4 16.7V14.3999C16.4 13.8476 15.9523 13.3999 15.4 13.3999H14V20.5C14 20.569 13.9965 20.6372 13.9897 20.7045C13.9515 21.08 13.8095 21.4249 13.5927 21.7098C13.2274 22.19 12.6499 22.5 12 22.5H4C3.30964 22.5 2.70098 22.1502 2.34157 21.6182C2.12592 21.299 2.00001 20.9142 2 20.5V5.4999C2 3.84305 3.34315 2.4999 5 2.4999H11C12.6569 2.4999 14 3.84305 14 5.4999V11.3999H15.4C17.0569 11.3999 18.4 12.7431 18.4 14.3999V16.7C18.4 17.1418 18.7582 17.5 19.2 17.5C19.6427 17.5 20 17.1422 20 16.7012V11.3292C19.6872 11.4397 19.3506 11.4999 19 11.4999C17.3431 11.4999 16 10.1568 16 8.4999C16 7.28851 16.718 6.24482 17.7517 5.77117L15.2783 3.19217C14.896 2.79357 14.9092 2.16055 15.3078 1.77827ZM19.6098 7.70731C19.441 7.57725 19.2296 7.4999 19 7.4999C18.4477 7.4999 18 7.94762 18 8.4999C18 9.05219 18.4477 9.4999 19 9.4999C19.5523 9.4999 20 9.05219 20 8.4999C20 8.34084 19.9629 8.19045 19.8968 8.05693C19.8303 7.95164 19.7349 7.83559 19.6098 7.70731ZM5.21572 4.72463C4.66343 4.72463 4.21572 5.17235 4.21572 5.72463V9.72463C4.21572 10.2769 4.66343 10.7246 5.21572 10.7246H10.7157C11.268 10.7246 11.7157 10.2769 11.7157 9.72463V5.72463C11.7157 5.17235 11.268 4.72463 10.7157 4.72463H5.21572Z"
-                        fill="currentColor"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                    <div
-                      class="c11 css-142zc9n"
-                    >
-                      <div
-                        class="c0 c12"
-                      >
-                        <div>
-                          -
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c13"
-              style="position: fixed; left: 0px; top: 0px;"
-            >
-              <div
-                class="c14"
+              <svg
+                aria-labelledby="titleID"
+                height="16"
+                width="16"
               >
-                <div
-                  class="c11 css-1m65e73"
+                <title
+                  id="titleID"
                 >
-                  Network cost is paid in ETH on the ETHEREUM network in order to transact. 
-                  <a
-                    class="c15"
-                    href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    Learn more
-                  </a>
-                </div>
-              </div>
-              <div
-                class="c16 arrow-"
-                style="position: absolute;"
-              />
+                  Ethereum logo
+                </title>
+                <rect
+                  fill="#F9F9F9"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <rect
+                  fill="#6B8AFF33"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <svg
+                  height="16"
+                  width="16"
+                >
+                  ethereum.svg
+                </svg>
+              </svg>
+              -
             </div>
           </div>
         </div>
       </div>
       <div
-        class="c13"
+        class="c8"
         style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c14"
+          class="c9"
         >
           <div
-            class="c11 css-obwv3p"
+            class="c10 css-obwv3p"
           >
             <div
-              class="c11 css-1m65e73"
+              class="c10 css-1m65e73"
             >
               Network cost is paid in ETH on the ETHEREUM network in order to transact. 
               <a
-                class="c15"
+                class="c11"
                 href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -5321,7 +4841,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
           </div>
         </div>
         <div
-          class="c16 arrow-"
+          class="c12 arrow-"
           style="position: absolute;"
         />
       </div>
@@ -5359,18 +4879,10 @@ exports[`SwapLineItem.tsx exact output 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
@@ -5566,18 +5078,10 @@ exports[`SwapLineItem.tsx exact output 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c8 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c14 {
@@ -5841,18 +5345,10 @@ exports[`SwapLineItem.tsx exact output 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c10 {
@@ -6053,18 +5549,10 @@ exports[`SwapLineItem.tsx exact output 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
@@ -6212,7 +5700,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   min-width: 0;
 }
 
-.c24 {
+.c23 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -6236,7 +5724,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   justify-content: flex-start;
 }
 
-.c25 {
+.c24 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -6261,41 +5749,26 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   justify-content: space-between;
 }
 
-.c26 {
+.c25 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c26 > * {
+.c25 > * {
   margin: 1px !important;
 }
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
-.c10 {
+.c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -6310,13 +5783,13 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   height: inherit;
 }
 
-.c32 {
+.c31 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c32::before {
+.c31::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -6330,43 +5803,43 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   background: #FFFFFF;
 }
 
-.c32.arrow-top {
+.c31.arrow-top {
   bottom: -4px;
 }
 
-.c32.arrow-top::before {
+.c31.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c32.arrow-bottom {
+.c31.arrow-bottom {
   top: -4px;
 }
 
-.c32.arrow-bottom::before {
+.c31.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c32.arrow-left {
+.c31.arrow-left {
   right: -4px;
 }
 
-.c32.arrow-left::before {
+.c31.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c32.arrow-right {
+.c31.arrow-right {
   left: -4px;
 }
 
-.c32.arrow-right::before {
+.c31.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c9 {
+.c8 {
   max-width: 400px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -6383,7 +5856,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c31 {
+.c30 {
   max-width: 200px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -6410,7 +5883,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   overflow-wrap: break-word;
 }
 
-.c11 {
+.c10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -6425,7 +5898,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   gap: 12px;
 }
 
-.c20 {
+.c19 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -6447,26 +5920,25 @@ exports[`SwapLineItem.tsx exact output 1`] = `
 }
 
 .c15 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c16 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
   width: 20px;
   height: 20px;
   border-radius: 50%;
 }
 
 .c14 {
+  width: 20px;
+  height: 20px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c13 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -6474,7 +5946,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   display: flex;
 }
 
-.c28 {
+.c27 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -6485,16 +5957,16 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   flex-direction: row;
 }
 
-.c29 {
+.c28 {
   z-index: 1;
 }
 
-.c30 {
+.c29 {
   position: absolute;
   left: -10px !important;
 }
 
-.c12 {
+.c11 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -6502,12 +5974,12 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   width: 100%;
 }
 
-.c13 {
+.c12 {
   display: grid;
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c17 {
+.c16 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -6524,7 +5996,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   position: relative;
 }
 
-.c27 {
+.c26 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -6532,7 +6004,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   padding: 4px 4px;
 }
 
-.c18 {
+.c17 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -6547,11 +6019,11 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   opacity: 0.5;
 }
 
-.c19 path {
+.c18 path {
   stroke: #22222212;
 }
 
-.c21 {
+.c20 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -6565,7 +6037,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   z-index: 1020;
 }
 
-.c22 {
+.c21 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -6574,7 +6046,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   z-index: 1021;
 }
 
-.c23 {
+.c22 {
   word-break: normal;
 }
 
@@ -6596,7 +6068,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
             class="c3 c6 css-142zc9n"
           >
             <div
-              class="c7 css-142zc9n"
+              class="css-142zc9n"
             >
               Uniswap Client
             </div>
@@ -6604,70 +6076,72 @@ exports[`SwapLineItem.tsx exact output 1`] = `
         </div>
       </div>
       <div
-        class="c8"
+        class="c7"
         style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9"
+          class="c8"
         >
           <div
-            class="c10 css-obwv3p"
+            class="c9 css-obwv3p"
           >
             <div
-              class="c11"
+              class="c10"
             >
               <div
-                class="c12 css-vurnku"
+                class="c11 css-vurnku"
               >
                 <div
-                  class="c0 c1 c13"
+                  class="c0 c1 c12"
                 >
                   <div
-                    class="c14"
+                    class="c13"
                     style="height: 20px; width: 20px;"
                   >
                     <div
-                      class="c15"
+                      class="c14"
                     >
                       <img
-                        class="c16"
+                        alt="ABC logo"
+                        class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                       />
                     </div>
                   </div>
                   <div
-                    class="c0 c1 c17"
+                    class="c0 c1 c16"
                   >
                     <div
-                      class="c18"
+                      class="c17"
                     >
                       <svg
-                        class="c19"
+                        class="c18"
                       >
                         dot_line.svg
                       </svg>
                     </div>
                     <div
-                      class="c20 c21"
+                      class="c19 c20"
                     >
                       <div
-                        class="c20 c22"
+                        class="c19 c21"
                       >
                         <div
-                          class="c3 c23 css-1m65e73"
+                          class="c3 c22 css-1m65e73"
                         >
                           V3
                         </div>
                       </div>
                       <div
-                        class="c10 c23 css-1m65e73"
+                        class="c9 c22 css-1m65e73"
                         style="min-width: auto;"
                       >
                         100%
                       </div>
                     </div>
                     <div
-                      class="c24 c25 c26"
+                      class="c23 c24 c25"
                       style="justify-content: space-evenly; z-index: 2;"
                       width="100%"
                     >
@@ -6676,43 +6150,47 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                       >
                         <div>
                           <div
-                            class="c20 c27"
+                            class="c19 c26"
                           >
                             <div
                               class="css-mbnpt3"
                             >
                               <div
-                                class="c28"
+                                class="c27"
                               >
                                 <div
-                                  class="c29"
+                                  class="c28"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
                                     style="height: 20px; width: 20px;"
                                   >
                                     <div
-                                      class="c15"
+                                      class="c14"
                                     >
                                       <img
-                                        class="c16"
+                                        alt="GHI logo"
+                                        class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
                                       />
                                     </div>
                                   </div>
                                 </div>
                                 <div
-                                  class="c30"
+                                  class="c29"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
                                     style="height: 20px; width: 20px;"
                                   >
                                     <div
-                                      class="c15"
+                                      class="c14"
                                     >
                                       <img
-                                        class="c16"
+                                        alt="ABC logo"
+                                        class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                       />
                                     </div>
@@ -6721,7 +6199,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                               </div>
                             </div>
                             <div
-                              class="c10 c23 css-1m65e73"
+                              class="c9 c22 css-1m65e73"
                             >
                               0.3%
                             </div>
@@ -6729,30 +6207,32 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c8"
+                        class="c7"
                         style="position: fixed; left: 0px; top: 0px;"
                       >
                         <div
-                          class="c31"
+                          class="c30"
                         >
                           ABC/GHI 0.3% pool
                         </div>
                         <div
-                          class="c32 arrow-"
+                          class="c31 arrow-"
                           style="position: absolute;"
                         />
                       </div>
                     </div>
                   </div>
                   <div
-                    class="c14"
+                    class="c13"
                     style="height: 20px; width: 20px;"
                   >
                     <div
-                      class="c15"
+                      class="c14"
                     >
                       <img
-                        class="c16"
+                        alt="GHI logo"
+                        class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
                       />
                     </div>
@@ -6760,7 +6240,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                 </div>
               </div>
               <div
-                class="c10 css-obwv3p"
+                class="c9 css-obwv3p"
               >
                 This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
               </div>
@@ -6768,7 +6248,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
           </div>
         </div>
         <div
-          class="c32 arrow-"
+          class="c31 arrow-"
           style="position: absolute;"
         />
       </div>
@@ -6802,7 +6282,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   justify-content: flex-start;
 }
 
-.c8 {
+.c7 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -6820,24 +6300,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   gap: 4px;
 }
 
-.c12 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -6845,30 +6307,15 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   justify-content: space-between;
 }
 
-.c9 {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  margin: -xs;
-}
-
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
+}
+
+.c10 {
+  color: #7D7D7D;
 }
 
 .c11 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c15 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -6879,23 +6326,15 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   font-weight: 500;
 }
 
-.c15:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c15:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c13 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -6910,13 +6349,13 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   height: inherit;
 }
 
-.c16 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c16::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -6930,43 +6369,43 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   background: #FFFFFF;
 }
 
-.c16.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c16.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c16.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c16.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c16.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c16.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c16.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c16.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c14 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -6993,15 +6432,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   overflow-wrap: break-word;
 }
 
-.c10 {
-  height: 16px;
-  width: 16px;
-}
-
-.c10 > * {
-  fill: #CECECE;
-}
-
 <div>
     <div
       class="c0 c1 c2"
@@ -7020,90 +6450,58 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             class="c3 c6 css-142zc9n"
           >
             <div
-              class="c5"
+              class="c0 c7"
             >
-              <div>
-                <div
-                  class="c7"
-                >
-                  <div
-                    class="c0 c8 c9"
-                  >
-                    <svg
-                      class="c10"
-                      fill="none"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        clip-rule="evenodd"
-                        d="M15.3078 1.77827C15.7064 1.39599 16.3395 1.40923 16.7217 1.80783L20.9689 6.23633C21.2428 6.47474 21.4729 6.76205 21.6459 7.08464C21.8481 7.43172 22 7.84819 22 8.32698V16.7012C22 18.2484 20.7455 19.5 19.2 19.5C17.6536 19.5 16.4 18.2464 16.4 16.7V14.3999C16.4 13.8476 15.9523 13.3999 15.4 13.3999H14V20.5C14 20.569 13.9965 20.6372 13.9897 20.7045C13.9515 21.08 13.8095 21.4249 13.5927 21.7098C13.2274 22.19 12.6499 22.5 12 22.5H4C3.30964 22.5 2.70098 22.1502 2.34157 21.6182C2.12592 21.299 2.00001 20.9142 2 20.5V5.4999C2 3.84305 3.34315 2.4999 5 2.4999H11C12.6569 2.4999 14 3.84305 14 5.4999V11.3999H15.4C17.0569 11.3999 18.4 12.7431 18.4 14.3999V16.7C18.4 17.1418 18.7582 17.5 19.2 17.5C19.6427 17.5 20 17.1422 20 16.7012V11.3292C19.6872 11.4397 19.3506 11.4999 19 11.4999C17.3431 11.4999 16 10.1568 16 8.4999C16 7.28851 16.718 6.24482 17.7517 5.77117L15.2783 3.19217C14.896 2.79357 14.9092 2.16055 15.3078 1.77827ZM19.6098 7.70731C19.441 7.57725 19.2296 7.4999 19 7.4999C18.4477 7.4999 18 7.94762 18 8.4999C18 9.05219 18.4477 9.4999 19 9.4999C19.5523 9.4999 20 9.05219 20 8.4999C20 8.34084 19.9629 8.19045 19.8968 8.05693C19.8303 7.95164 19.7349 7.83559 19.6098 7.70731ZM5.21572 4.72463C4.66343 4.72463 4.21572 5.17235 4.21572 5.72463V9.72463C4.21572 10.2769 4.66343 10.7246 5.21572 10.7246H10.7157C11.268 10.7246 11.7157 10.2769 11.7157 9.72463V5.72463C11.7157 5.17235 11.268 4.72463 10.7157 4.72463H5.21572Z"
-                        fill="currentColor"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                    <div
-                      class="c11 css-142zc9n"
-                    >
-                      <div
-                        class="c0 c12"
-                      >
-                        <div>
-                          $1.00
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c13"
-              style="position: fixed; left: 0px; top: 0px;"
-            >
-              <div
-                class="c14"
+              <svg
+                aria-labelledby="titleID"
+                height="16"
+                width="16"
               >
-                <div
-                  class="c11 css-1m65e73"
+                <title
+                  id="titleID"
                 >
-                  Network cost is paid in ETH on the ETHEREUM network in order to transact. 
-                  <a
-                    class="c15"
-                    href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    Learn more
-                  </a>
-                </div>
-              </div>
-              <div
-                class="c16 arrow-"
-                style="position: absolute;"
-              />
+                  Ethereum logo
+                </title>
+                <rect
+                  fill="#F9F9F9"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <rect
+                  fill="#6B8AFF33"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <svg
+                  height="16"
+                  width="16"
+                >
+                  ethereum.svg
+                </svg>
+              </svg>
+              $1.00
             </div>
           </div>
         </div>
       </div>
       <div
-        class="c13"
+        class="c8"
         style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c14"
+          class="c9"
         >
           <div
-            class="c11 css-obwv3p"
+            class="c10 css-obwv3p"
           >
             <div
-              class="c11 css-1m65e73"
+              class="c10 css-1m65e73"
             >
               Network cost is paid in ETH on the ETHEREUM network in order to transact. 
               <a
-                class="c15"
+                class="c11"
                 href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -7114,7 +6512,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
           </div>
         </div>
         <div
-          class="c16 arrow-"
+          class="c12 arrow-"
           style="position: absolute;"
         />
       </div>
@@ -7152,18 +6550,10 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c10 {
@@ -7368,18 +6758,10 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
@@ -7575,18 +6957,10 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c8 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c14 {
@@ -7850,18 +7224,10 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c10 {
@@ -8062,18 +7428,10 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
@@ -8221,7 +7579,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   min-width: 0;
 }
 
-.c24 {
+.c23 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -8245,7 +7603,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   justify-content: flex-start;
 }
 
-.c25 {
+.c24 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -8270,41 +7628,26 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   justify-content: space-between;
 }
 
-.c26 {
+.c25 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c26 > * {
+.c25 > * {
   margin: 1px !important;
 }
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
-.c10 {
+.c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -8319,13 +7662,13 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   height: inherit;
 }
 
-.c32 {
+.c31 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c32::before {
+.c31::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -8339,43 +7682,43 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   background: #FFFFFF;
 }
 
-.c32.arrow-top {
+.c31.arrow-top {
   bottom: -4px;
 }
 
-.c32.arrow-top::before {
+.c31.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c32.arrow-bottom {
+.c31.arrow-bottom {
   top: -4px;
 }
 
-.c32.arrow-bottom::before {
+.c31.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c32.arrow-left {
+.c31.arrow-left {
   right: -4px;
 }
 
-.c32.arrow-left::before {
+.c31.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c32.arrow-right {
+.c31.arrow-right {
   left: -4px;
 }
 
-.c32.arrow-right::before {
+.c31.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c9 {
+.c8 {
   max-width: 400px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -8392,7 +7735,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c31 {
+.c30 {
   max-width: 200px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -8419,7 +7762,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   overflow-wrap: break-word;
 }
 
-.c11 {
+.c10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -8434,7 +7777,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   gap: 12px;
 }
 
-.c20 {
+.c19 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -8456,26 +7799,25 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
 }
 
 .c15 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c16 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
   width: 20px;
   height: 20px;
   border-radius: 50%;
 }
 
 .c14 {
+  width: 20px;
+  height: 20px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c13 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -8483,7 +7825,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   display: flex;
 }
 
-.c28 {
+.c27 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -8494,16 +7836,16 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   flex-direction: row;
 }
 
-.c29 {
+.c28 {
   z-index: 1;
 }
 
-.c30 {
+.c29 {
   position: absolute;
   left: -10px !important;
 }
 
-.c12 {
+.c11 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -8511,12 +7853,12 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   width: 100%;
 }
 
-.c13 {
+.c12 {
   display: grid;
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c17 {
+.c16 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -8533,7 +7875,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   position: relative;
 }
 
-.c27 {
+.c26 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -8541,7 +7883,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   padding: 4px 4px;
 }
 
-.c18 {
+.c17 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -8556,11 +7898,11 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   opacity: 0.5;
 }
 
-.c19 path {
+.c18 path {
   stroke: #22222212;
 }
 
-.c21 {
+.c20 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -8574,7 +7916,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   z-index: 1020;
 }
 
-.c22 {
+.c21 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -8583,7 +7925,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   z-index: 1021;
 }
 
-.c23 {
+.c22 {
   word-break: normal;
 }
 
@@ -8605,7 +7947,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             class="c3 c6 css-142zc9n"
           >
             <div
-              class="c7 css-142zc9n"
+              class="css-142zc9n"
             >
               Uniswap API
             </div>
@@ -8613,70 +7955,72 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
         </div>
       </div>
       <div
-        class="c8"
+        class="c7"
         style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9"
+          class="c8"
         >
           <div
-            class="c10 css-obwv3p"
+            class="c9 css-obwv3p"
           >
             <div
-              class="c11"
+              class="c10"
             >
               <div
-                class="c12 css-vurnku"
+                class="c11 css-vurnku"
               >
                 <div
-                  class="c0 c1 c13"
+                  class="c0 c1 c12"
                 >
                   <div
-                    class="c14"
+                    class="c13"
                     style="height: 20px; width: 20px;"
                   >
                     <div
-                      class="c15"
+                      class="c14"
                     >
                       <img
-                        class="c16"
+                        alt="ABC logo"
+                        class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                       />
                     </div>
                   </div>
                   <div
-                    class="c0 c1 c17"
+                    class="c0 c1 c16"
                   >
                     <div
-                      class="c18"
+                      class="c17"
                     >
                       <svg
-                        class="c19"
+                        class="c18"
                       >
                         dot_line.svg
                       </svg>
                     </div>
                     <div
-                      class="c20 c21"
+                      class="c19 c20"
                     >
                       <div
-                        class="c20 c22"
+                        class="c19 c21"
                       >
                         <div
-                          class="c3 c23 css-1m65e73"
+                          class="c3 c22 css-1m65e73"
                         >
                           V3
                         </div>
                       </div>
                       <div
-                        class="c10 c23 css-1m65e73"
+                        class="c9 c22 css-1m65e73"
                         style="min-width: auto;"
                       >
                         100%
                       </div>
                     </div>
                     <div
-                      class="c24 c25 c26"
+                      class="c23 c24 c25"
                       style="justify-content: space-evenly; z-index: 2;"
                       width="100%"
                     >
@@ -8685,43 +8029,47 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                       >
                         <div>
                           <div
-                            class="c20 c27"
+                            class="c19 c26"
                           >
                             <div
                               class="css-mbnpt3"
                             >
                               <div
-                                class="c28"
+                                class="c27"
                               >
                                 <div
-                                  class="c29"
+                                  class="c28"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
                                     style="height: 20px; width: 20px;"
                                   >
                                     <div
-                                      class="c15"
+                                      class="c14"
                                     >
                                       <img
-                                        class="c16"
+                                        alt="DEF logo"
+                                        class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                       />
                                     </div>
                                   </div>
                                 </div>
                                 <div
-                                  class="c30"
+                                  class="c29"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
                                     style="height: 20px; width: 20px;"
                                   >
                                     <div
-                                      class="c15"
+                                      class="c14"
                                     >
                                       <img
-                                        class="c16"
+                                        alt="ABC logo"
+                                        class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                       />
                                     </div>
@@ -8730,7 +8078,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                               </div>
                             </div>
                             <div
-                              class="c10 c23 css-1m65e73"
+                              class="c9 c22 css-1m65e73"
                             >
                               1%
                             </div>
@@ -8738,30 +8086,32 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c8"
+                        class="c7"
                         style="position: fixed; left: 0px; top: 0px;"
                       >
                         <div
-                          class="c31"
+                          class="c30"
                         >
                           ABC/DEF 1% pool
                         </div>
                         <div
-                          class="c32 arrow-"
+                          class="c31 arrow-"
                           style="position: absolute;"
                         />
                       </div>
                     </div>
                   </div>
                   <div
-                    class="c14"
+                    class="c13"
                     style="height: 20px; width: 20px;"
                   >
                     <div
-                      class="c15"
+                      class="c14"
                     >
                       <img
-                        class="c16"
+                        alt="DEF logo"
+                        class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                       />
                     </div>
@@ -8769,7 +8119,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                 </div>
               </div>
               <div
-                class="c10 css-obwv3p"
+                class="c9 css-obwv3p"
               >
                 Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
               </div>
@@ -8777,7 +8127,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
           </div>
         </div>
         <div
-          class="c32 arrow-"
+          class="c31 arrow-"
           style="position: absolute;"
         />
       </div>
@@ -8811,7 +8161,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   justify-content: flex-start;
 }
 
-.c8 {
+.c7 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -8829,24 +8179,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   gap: 4px;
 }
 
-.c12 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
@@ -8854,30 +8186,15 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   justify-content: space-between;
 }
 
-.c9 {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  margin: -xs;
-}
-
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
+}
+
+.c10 {
+  color: #7D7D7D;
 }
 
 .c11 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c15 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -8888,23 +8205,15 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   font-weight: 500;
 }
 
-.c15:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c15:active {
+.c11:active {
   opacity: 0.4;
 }
 
-.c7 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c13 {
+.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -8919,13 +8228,13 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   height: inherit;
 }
 
-.c16 {
+.c12 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c16::before {
+.c12::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -8939,43 +8248,43 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   background: #FFFFFF;
 }
 
-.c16.arrow-top {
+.c12.arrow-top {
   bottom: -4px;
 }
 
-.c16.arrow-top::before {
+.c12.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c16.arrow-bottom {
+.c12.arrow-bottom {
   top: -4px;
 }
 
-.c16.arrow-bottom::before {
+.c12.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c16.arrow-left {
+.c12.arrow-left {
   right: -4px;
 }
 
-.c16.arrow-left::before {
+.c12.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c16.arrow-right {
+.c12.arrow-right {
   left: -4px;
 }
 
-.c16.arrow-right::before {
+.c12.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c14 {
+.c9 {
   max-width: 256px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -9002,15 +8311,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   overflow-wrap: break-word;
 }
 
-.c10 {
-  height: 16px;
-  width: 16px;
-}
-
-.c10 > * {
-  fill: #CECECE;
-}
-
 <div>
     <div
       class="c0 c1 c2"
@@ -9029,90 +8329,58 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             class="c3 c6 css-142zc9n"
           >
             <div
-              class="c5"
+              class="c0 c7"
             >
-              <div>
-                <div
-                  class="c7"
-                >
-                  <div
-                    class="c0 c8 c9"
-                  >
-                    <svg
-                      class="c10"
-                      fill="none"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        clip-rule="evenodd"
-                        d="M15.3078 1.77827C15.7064 1.39599 16.3395 1.40923 16.7217 1.80783L20.9689 6.23633C21.2428 6.47474 21.4729 6.76205 21.6459 7.08464C21.8481 7.43172 22 7.84819 22 8.32698V16.7012C22 18.2484 20.7455 19.5 19.2 19.5C17.6536 19.5 16.4 18.2464 16.4 16.7V14.3999C16.4 13.8476 15.9523 13.3999 15.4 13.3999H14V20.5C14 20.569 13.9965 20.6372 13.9897 20.7045C13.9515 21.08 13.8095 21.4249 13.5927 21.7098C13.2274 22.19 12.6499 22.5 12 22.5H4C3.30964 22.5 2.70098 22.1502 2.34157 21.6182C2.12592 21.299 2.00001 20.9142 2 20.5V5.4999C2 3.84305 3.34315 2.4999 5 2.4999H11C12.6569 2.4999 14 3.84305 14 5.4999V11.3999H15.4C17.0569 11.3999 18.4 12.7431 18.4 14.3999V16.7C18.4 17.1418 18.7582 17.5 19.2 17.5C19.6427 17.5 20 17.1422 20 16.7012V11.3292C19.6872 11.4397 19.3506 11.4999 19 11.4999C17.3431 11.4999 16 10.1568 16 8.4999C16 7.28851 16.718 6.24482 17.7517 5.77117L15.2783 3.19217C14.896 2.79357 14.9092 2.16055 15.3078 1.77827ZM19.6098 7.70731C19.441 7.57725 19.2296 7.4999 19 7.4999C18.4477 7.4999 18 7.94762 18 8.4999C18 9.05219 18.4477 9.4999 19 9.4999C19.5523 9.4999 20 9.05219 20 8.4999C20 8.34084 19.9629 8.19045 19.8968 8.05693C19.8303 7.95164 19.7349 7.83559 19.6098 7.70731ZM5.21572 4.72463C4.66343 4.72463 4.21572 5.17235 4.21572 5.72463V9.72463C4.21572 10.2769 4.66343 10.7246 5.21572 10.7246H10.7157C11.268 10.7246 11.7157 10.2769 11.7157 9.72463V5.72463C11.7157 5.17235 11.268 4.72463 10.7157 4.72463H5.21572Z"
-                        fill="currentColor"
-                        fill-rule="evenodd"
-                      />
-                    </svg>
-                    <div
-                      class="c11 css-142zc9n"
-                    >
-                      <div
-                        class="c0 c12"
-                      >
-                        <div>
-                          $1.00
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c13"
-              style="position: fixed; left: 0px; top: 0px;"
-            >
-              <div
-                class="c14"
+              <svg
+                aria-labelledby="titleID"
+                height="16"
+                width="16"
               >
-                <div
-                  class="c11 css-1m65e73"
+                <title
+                  id="titleID"
                 >
-                  Network cost is paid in ETH on the ETHEREUM network in order to transact. 
-                  <a
-                    class="c15"
-                    href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    Learn more
-                  </a>
-                </div>
-              </div>
-              <div
-                class="c16 arrow-"
-                style="position: absolute;"
-              />
+                  Ethereum logo
+                </title>
+                <rect
+                  fill="#F9F9F9"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <rect
+                  fill="#6B8AFF33"
+                  height="16"
+                  rx="4"
+                  width="16"
+                />
+                <svg
+                  height="16"
+                  width="16"
+                >
+                  ethereum.svg
+                </svg>
+              </svg>
+              $1.00
             </div>
           </div>
         </div>
       </div>
       <div
-        class="c13"
+        class="c8"
         style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c14"
+          class="c9"
         >
           <div
-            class="c11 css-obwv3p"
+            class="c10 css-obwv3p"
           >
             <div
-              class="c11 css-1m65e73"
+              class="c10 css-1m65e73"
             >
               Network cost is paid in ETH on the ETHEREUM network in order to transact. 
               <a
-                class="c15"
+                class="c11"
                 href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -9123,7 +8391,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
           </div>
         </div>
         <div
-          class="c16 arrow-"
+          class="c12 arrow-"
           style="position: absolute;"
         />
       </div>
@@ -9161,18 +8429,10 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c10 {
@@ -9377,18 +8637,10 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
@@ -9584,18 +8836,10 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c8 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c14 {
@@ -9859,18 +9103,10 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c10 {
@@ -10071,18 +9307,10 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
@@ -10230,7 +9458,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   min-width: 0;
 }
 
-.c24 {
+.c23 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -10254,7 +9482,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   justify-content: flex-start;
 }
 
-.c25 {
+.c24 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -10279,41 +9507,26 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   justify-content: space-between;
 }
 
-.c26 {
+.c25 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c26 > * {
+.c25 > * {
   margin: 1px !important;
 }
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
-.c10 {
+.c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c8 {
   z-index: 1070;
   pointer-events: none;
   visibility: hidden;
@@ -10328,13 +9541,13 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   height: inherit;
 }
 
-.c32 {
+.c31 {
   width: 8px;
   height: 8px;
   z-index: 9998;
 }
 
-.c32::before {
+.c31::before {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -10348,43 +9561,43 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   background: #FFFFFF;
 }
 
-.c32.arrow-top {
+.c31.arrow-top {
   bottom: -4px;
 }
 
-.c32.arrow-top::before {
+.c31.arrow-top::before {
   border-top: none;
   border-left: none;
 }
 
-.c32.arrow-bottom {
+.c31.arrow-bottom {
   top: -4px;
 }
 
-.c32.arrow-bottom::before {
+.c31.arrow-bottom::before {
   border-bottom: none;
   border-right: none;
 }
 
-.c32.arrow-left {
+.c31.arrow-left {
   right: -4px;
 }
 
-.c32.arrow-left::before {
+.c31.arrow-left::before {
   border-bottom: none;
   border-left: none;
 }
 
-.c32.arrow-right {
+.c31.arrow-right {
   left: -4px;
 }
 
-.c32.arrow-right::before {
+.c31.arrow-right::before {
   border-right: none;
   border-top: none;
 }
 
-.c9 {
+.c8 {
   max-width: 400px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -10401,7 +9614,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c31 {
+.c30 {
   max-width: 200px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -10428,7 +9641,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   overflow-wrap: break-word;
 }
 
-.c11 {
+.c10 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -10443,7 +9656,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   gap: 12px;
 }
 
-.c20 {
+.c19 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -10465,26 +9678,25 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
 }
 
 .c15 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c16 {
+  opacity: 0;
+  -webkit-transition: opacity 250ms ease-in;
+  transition: opacity 250ms ease-in;
   width: 20px;
   height: 20px;
   border-radius: 50%;
 }
 
 .c14 {
+  width: 20px;
+  height: 20px;
+  background: #22222212;
+  -webkit-transition: background-color 250ms ease-in;
+  transition: background-color 250ms ease-in;
+  box-shadow: 0 0 1px white;
+  border-radius: 50%;
+}
+
+.c13 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -10492,7 +9704,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   display: flex;
 }
 
-.c28 {
+.c27 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -10503,16 +9715,16 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   flex-direction: row;
 }
 
-.c29 {
+.c28 {
   z-index: 1;
 }
 
-.c30 {
+.c29 {
   position: absolute;
   left: -10px !important;
 }
 
-.c12 {
+.c11 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -10520,12 +9732,12 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   width: 100%;
 }
 
-.c13 {
+.c12 {
   display: grid;
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c17 {
+.c16 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -10542,7 +9754,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   position: relative;
 }
 
-.c27 {
+.c26 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -10550,7 +9762,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   padding: 4px 4px;
 }
 
-.c18 {
+.c17 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -10565,11 +9777,11 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   opacity: 0.5;
 }
 
-.c19 path {
+.c18 path {
   stroke: #22222212;
 }
 
-.c21 {
+.c20 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -10583,7 +9795,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   z-index: 1020;
 }
 
-.c22 {
+.c21 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -10592,7 +9804,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   z-index: 1021;
 }
 
-.c23 {
+.c22 {
   word-break: normal;
 }
 
@@ -10614,7 +9826,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             class="c3 c6 css-142zc9n"
           >
             <div
-              class="c7 css-142zc9n"
+              class="css-142zc9n"
             >
               Uniswap API
             </div>
@@ -10622,70 +9834,72 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
         </div>
       </div>
       <div
-        class="c8"
+        class="c7"
         style="position: fixed; left: 0px; top: 0px;"
       >
         <div
-          class="c9"
+          class="c8"
         >
           <div
-            class="c10 css-obwv3p"
+            class="c9 css-obwv3p"
           >
             <div
-              class="c11"
+              class="c10"
             >
               <div
-                class="c12 css-vurnku"
+                class="c11 css-vurnku"
               >
                 <div
-                  class="c0 c1 c13"
+                  class="c0 c1 c12"
                 >
                   <div
-                    class="c14"
+                    class="c13"
                     style="height: 20px; width: 20px;"
                   >
                     <div
-                      class="c15"
+                      class="c14"
                     >
                       <img
-                        class="c16"
+                        alt="ABC logo"
+                        class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                       />
                     </div>
                   </div>
                   <div
-                    class="c0 c1 c17"
+                    class="c0 c1 c16"
                   >
                     <div
-                      class="c18"
+                      class="c17"
                     >
                       <svg
-                        class="c19"
+                        class="c18"
                       >
                         dot_line.svg
                       </svg>
                     </div>
                     <div
-                      class="c20 c21"
+                      class="c19 c20"
                     >
                       <div
-                        class="c20 c22"
+                        class="c19 c21"
                       >
                         <div
-                          class="c3 c23 css-1m65e73"
+                          class="c3 c22 css-1m65e73"
                         >
                           V3
                         </div>
                       </div>
                       <div
-                        class="c10 c23 css-1m65e73"
+                        class="c9 c22 css-1m65e73"
                         style="min-width: auto;"
                       >
                         100%
                       </div>
                     </div>
                     <div
-                      class="c24 c25 c26"
+                      class="c23 c24 c25"
                       style="justify-content: space-evenly; z-index: 2;"
                       width="100%"
                     >
@@ -10694,43 +9908,47 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                       >
                         <div>
                           <div
-                            class="c20 c27"
+                            class="c19 c26"
                           >
                             <div
                               class="css-mbnpt3"
                             >
                               <div
-                                class="c28"
+                                class="c27"
                               >
                                 <div
-                                  class="c29"
+                                  class="c28"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
                                     style="height: 20px; width: 20px;"
                                   >
                                     <div
-                                      class="c15"
+                                      class="c14"
                                     >
                                       <img
-                                        class="c16"
+                                        alt="DEF logo"
+                                        class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                                       />
                                     </div>
                                   </div>
                                 </div>
                                 <div
-                                  class="c30"
+                                  class="c29"
                                 >
                                   <div
-                                    class="c14"
+                                    class="c13"
                                     style="height: 20px; width: 20px;"
                                   >
                                     <div
-                                      class="c15"
+                                      class="c14"
                                     >
                                       <img
-                                        class="c16"
+                                        alt="ABC logo"
+                                        class="c15"
+                                        loading="lazy"
                                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                                       />
                                     </div>
@@ -10739,7 +9957,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                               </div>
                             </div>
                             <div
-                              class="c10 c23 css-1m65e73"
+                              class="c9 c22 css-1m65e73"
                             >
                               1%
                             </div>
@@ -10747,30 +9965,32 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                         </div>
                       </div>
                       <div
-                        class="c8"
+                        class="c7"
                         style="position: fixed; left: 0px; top: 0px;"
                       >
                         <div
-                          class="c31"
+                          class="c30"
                         >
                           ABC/DEF 1% pool
                         </div>
                         <div
-                          class="c32 arrow-"
+                          class="c31 arrow-"
                           style="position: absolute;"
                         />
                       </div>
                     </div>
                   </div>
                   <div
-                    class="c14"
+                    class="c13"
                     style="height: 20px; width: 20px;"
                   >
                     <div
-                      class="c15"
+                      class="c14"
                     >
                       <img
-                        class="c16"
+                        alt="DEF logo"
+                        class="c15"
+                        loading="lazy"
                         src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                       />
                     </div>
@@ -10778,7 +9998,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                 </div>
               </div>
               <div
-                class="c10 css-obwv3p"
+                class="c9 css-obwv3p"
               >
                 Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
               </div>
@@ -10786,7 +10006,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
           </div>
         </div>
         <div
-          class="c32 arrow-"
+          class="c31 arrow-"
           style="position: absolute;"
         />
       </div>
@@ -10829,18 +10049,10 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c10 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c11 {
@@ -11063,18 +10275,10 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c10 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
@@ -11284,18 +10488,10 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c8 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c14 {
@@ -11559,10 +10755,6 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c6 {
@@ -11642,18 +10834,10 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c9 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
@@ -11827,10 +11011,6 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c6 {
@@ -11915,10 +11095,6 @@ exports[`SwapLineItem.tsx syncing 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c5 {
@@ -11989,10 +11165,6 @@ exports[`SwapLineItem.tsx syncing 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c5 {
@@ -12063,10 +11235,6 @@ exports[`SwapLineItem.tsx syncing 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c5 {
@@ -12137,10 +11305,6 @@ exports[`SwapLineItem.tsx syncing 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c5 {
@@ -12211,10 +11375,6 @@ exports[`SwapLineItem.tsx syncing 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c5 {
@@ -12285,10 +11445,6 @@ exports[`SwapLineItem.tsx syncing 1`] = `
 
 .c3 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c5 {

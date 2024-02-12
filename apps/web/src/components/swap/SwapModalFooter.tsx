@@ -5,6 +5,7 @@ import { TraceEvent } from 'analytics'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
 import SpinningLoader from 'components/Loader/SpinningLoader'
+import { SupportArticleURL } from 'constants/supportArticles'
 import { useNewSwapFlow } from 'featureFlags/flags/progressIndicatorV2'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult } from 'hooks/useSwapCallback'
@@ -14,24 +15,24 @@ import { ReactNode, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { easings, useSpring } from 'react-spring'
 import { Text } from 'rebass'
-import { InterfaceTrade, LimitOrderTrade, RouterPreference } from 'state/routing/types'
-import { isClassicTrade, isLimitTrade } from 'state/routing/utils'
+import { InterfaceTrade, RouterPreference } from 'state/routing/types'
+import { isClassicTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, Separator, ThemedText } from 'theme/components'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
 
-import { Info } from 'components/Icons/Info'
 import { ReactComponent as ExpandoIconClosed } from '../../assets/svg/expando-icon-closed.svg'
 import { ReactComponent as ExpandoIconOpened } from '../../assets/svg/expando-icon-opened.svg'
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
 import { SwapCallbackError, SwapShowAcceptChanges } from './styled'
-import SwapLineItem, { SwapLineItemProps, SwapLineItemType } from './SwapLineItem'
+import { SwapLineItemProps, SwapLineItemType } from './SwapLineItem'
+import SwapLineItem from './SwapLineItem'
 
 const DetailsContainer = styled(Column)<{ isNewSwapFlowEnabled?: boolean }>`
-  ${({ isNewSwapFlowEnabled }) => (isNewSwapFlowEnabled ? 'padding: 0px 16px 8px 16px' : 'padding-bottom: 8px')};
+  ${({ isNewSwapFlowEnabled }) => (isNewSwapFlowEnabled ? 'padding: 0px 16px 12px 16px' : 'padding-bottom: 8px')};
 `
 
 const StyledAlertTriangle = styled(AlertTriangle)`
@@ -123,7 +124,7 @@ export default function SwapModalFooter({
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
   showAcceptChanges: boolean
-  onAcceptChanges?: () => void
+  onAcceptChanges: () => void
   isLoading: boolean
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
@@ -140,32 +141,36 @@ export default function SwapModalFooter({
     if (allowance && allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
       return {
         buttonText: t`Approve and swap`,
+        helpLink: {
+          text: t`Why do I have to approve a token?`,
+          url: SupportArticleURL.APPROVALS_EXPLAINER,
+        },
       }
     } else if (allowance && allowance.state === AllowanceState.REQUIRED && allowance.needsPermitSignature) {
       return {
         buttonText: t`Sign and swap`,
+        helpLink: {
+          text: t`Why are signatures required?`,
+          url: SupportArticleURL.APPROVALS_EXPLAINER,
+        },
       }
     } else {
       return {
-        buttonText: isLimitTrade(trade) ? t`Place order` : t`Confirm swap`,
+        buttonText: t`Confirm swap`,
       }
     }
-  }, [allowance, trade])
+  }, [allowance])
 
   return (
     <>
+      <DropdownController open={showMore} onClick={() => setShowMore(!showMore)} />
       <DetailsContainer gap={isNewSwapFlowEnabled ? 'sm' : 'md'} isNewSwapFlowEnabled={isNewSwapFlowEnabled}>
-        {isLimitTrade(trade) ? (
-          <>
-            <Separator />
-            <LimitLineItems trade={trade} />
-          </>
-        ) : (
-          <>
-            <DropdownController open={showMore} onClick={() => setShowMore(!showMore)} />
-            <SwapLineItems showMore={showMore} {...lineItemProps} />
-          </>
-        )}
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.EXCHANGE_RATE} />
+        <ExpandableLineItems {...lineItemProps} open={showMore} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.SWAP_FEE} />
+        <SwapLineItem {...lineItemProps} type={SwapLineItemType.NETWORK_COST} />
       </DetailsContainer>
       {showAcceptChanges ? (
         <SwapShowAcceptChanges data-testid="show-accept-changes">
@@ -217,7 +222,7 @@ export default function SwapModalFooter({
                 <Text fontSize={20}>{callToAction.buttonText}</Text>
               ) : (
                 <ThemedText.HeadlineSmall color="deprecated_accentTextLightPrimary">
-                  {isLimitTrade(trade) ? <Trans>Confirm limit</Trans> : <Trans>Confirm swap</Trans>}
+                  <Trans>Confirm swap</Trans>
                 </ThemedText.HeadlineSmall>
               )}
             </ConfirmButton>
@@ -243,54 +248,6 @@ function AnimatedLineItem(props: SwapLineItemProps & { open: boolean; delay: num
   })
 
   return <SwapLineItem {...props} {...animatedProps} />
-}
-
-function SwapLineItems({
-  showMore,
-  trade,
-  allowedSlippage,
-  syncing,
-}: {
-  showMore: boolean
-  trade: InterfaceTrade
-  allowedSlippage: Percent
-  syncing: boolean
-}) {
-  return (
-    <>
-      <SwapLineItem
-        trade={trade}
-        allowedSlippage={allowedSlippage}
-        syncing={syncing}
-        type={SwapLineItemType.EXCHANGE_RATE}
-      />
-      <ExpandableLineItems trade={trade} allowedSlippage={allowedSlippage} open={showMore} />
-      <SwapLineItem
-        trade={trade}
-        allowedSlippage={allowedSlippage}
-        syncing={syncing}
-        type={SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER}
-      />
-      <SwapLineItem
-        trade={trade}
-        allowedSlippage={allowedSlippage}
-        syncing={syncing}
-        type={SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER}
-      />
-      <SwapLineItem
-        trade={trade}
-        allowedSlippage={allowedSlippage}
-        syncing={syncing}
-        type={SwapLineItemType.SWAP_FEE}
-      />
-      <SwapLineItem
-        trade={trade}
-        allowedSlippage={allowedSlippage}
-        syncing={syncing}
-        type={SwapLineItemType.NETWORK_COST}
-      />
-    </>
-  )
 }
 
 function ExpandableLineItems(props: { trade: InterfaceTrade; allowedSlippage: Percent; open: boolean }) {
@@ -319,22 +276,5 @@ function ExpandableLineItems(props: { trade: InterfaceTrade; allowedSlippage: Pe
         <AnimatedLineItem {...lineItemProps} type={SwapLineItemType.MAXIMUM_INPUT} delay={ms('120ms')} />
       </Column>
     </AnimatedDropdown>
-  )
-}
-
-function LimitLineItems({ trade }: { trade: LimitOrderTrade }) {
-  return (
-    <>
-      <SwapLineItem trade={trade} type={SwapLineItemType.EXCHANGE_RATE} />
-      <SwapLineItem trade={trade} type={SwapLineItemType.EXPIRY} />
-      <SwapLineItem trade={trade} type={SwapLineItemType.SWAP_FEE} />
-      <SwapLineItem trade={trade} type={SwapLineItemType.NETWORK_COST} />
-      <Row gap="xs" justify="center" marginTop="12px">
-        <Info width={16} height={16} />
-        <ThemedText.LabelMicro>
-          <Trans>Canceling a limit will require a small network cost</Trans>
-        </ThemedText.LabelMicro>
-      </Row>
-    </>
   )
 }

@@ -71,20 +71,6 @@ const CustomButtonFrame = styled(XStack, {
       },
     },
 
-    backgroundless: {
-      true: {
-        backgroundColor: 'transparent',
-        hoverStyle: {
-          backgroundColor: 'transparent',
-          opacity: 0.9,
-        },
-        pressStyle: {
-          backgroundColor: 'transparent',
-          opacity: 0.7,
-        },
-      },
-    },
-
     disabled: {
       true: {
         opacity: 0.4,

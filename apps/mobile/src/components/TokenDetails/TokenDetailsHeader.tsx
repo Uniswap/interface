@@ -1,8 +1,8 @@
 import React from 'react'
+import WarningIcon from 'src/components/tokens/WarningIcon'
 import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
 import { iconSizes, imageSizes } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
-import WarningIcon from 'wallet/src/components/icons/WarningIcon'
 import { SafetyLevel, TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 

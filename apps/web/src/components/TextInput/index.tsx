@@ -1,4 +1,4 @@
-import { ChangeEvent, memo, useCallback, useRef } from 'react'
+import React, { ChangeEvent, memo, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 
 const Input = styled.input<{ error?: boolean; fontSize?: string }>`

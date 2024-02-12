@@ -1,10 +1,9 @@
 import { renderHook } from '@testing-library/react'
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { DEFAULT_LOCAL_CURRENCY } from 'constants/localCurrencies'
 import { USDC_MAINNET } from 'constants/tokens'
 import { useCurrencyConversionFlagEnabled } from 'featureFlags/flags/currencyConversion'
-import { useLocalCurrencyConversionRate } from 'graphql/data/ConversionRate'
 import { Currency } from 'graphql/data/__generated__/types-and-hooks'
+import { useLocalCurrencyConversionRate } from 'graphql/data/ConversionRate'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { mocked } from 'test-utils/mocked'
@@ -459,34 +458,5 @@ describe('formatDelta', () => {
     expect(formatDelta(1)).toBe('1,00%')
     expect(formatDelta(10)).toBe('10,00%')
     expect(formatDelta(100)).toBe('100,00%')
-  })
-})
-
-describe('formatToFiatAmount', () => {
-  beforeEach(() => {
-    mocked(useCurrencyConversionFlagEnabled).mockReturnValue(true)
-  })
-
-  it('should return default values when undefined', () => {
-    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1, isLoading: false })
-    const { convertToFiatAmount } = renderHook(() => useFormatter()).result.current
-
-    expect(convertToFiatAmount()).toStrictEqual({ amount: 1.0, currency: DEFAULT_LOCAL_CURRENCY })
-  })
-
-  it('should return input amount for same currency', () => {
-    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Usd)
-    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1, isLoading: false })
-    const { convertToFiatAmount } = renderHook(() => useFormatter()).result.current
-
-    expect(convertToFiatAmount(12)).toStrictEqual({ amount: 12.0, currency: Currency.Usd })
-  })
-
-  it('should correctly convert different currency', () => {
-    mocked(useActiveLocalCurrency).mockReturnValue(Currency.Cad)
-    mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 0.5, isLoading: false })
-    const { convertToFiatAmount } = renderHook(() => useFormatter()).result.current
-
-    expect(convertToFiatAmount(12)).toStrictEqual({ amount: 6.0, currency: Currency.Cad })
   })
 })

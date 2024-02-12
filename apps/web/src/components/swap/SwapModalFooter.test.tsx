@@ -1,9 +1,4 @@
-import {
-  LIMIT_ORDER_TRADE,
-  PREVIEW_EXACT_IN_TRADE,
-  TEST_ALLOWED_SLIPPAGE,
-  TEST_TRADE_EXACT_INPUT,
-} from 'test-utils/constants'
+import { PREVIEW_EXACT_IN_TRADE, TEST_ALLOWED_SLIPPAGE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { render, screen, within } from 'test-utils/render'
 
 import SwapModalFooter from './SwapModalFooter'
@@ -39,6 +34,9 @@ describe('SwapModalFooter.tsx', () => {
       screen.getByText(
         'The minimum amount you are guaranteed to receive. If the price slips any further, your transaction will revert.'
       )
+    ).toBeInTheDocument()
+    expect(
+      screen.getByText('Network cost is paid in ETH on the ETHEREUM network in order to transact.')
     ).toBeInTheDocument()
     expect(screen.getByText('The impact your trade has on the market price of this pool.')).toBeInTheDocument()
   })
@@ -96,34 +94,5 @@ describe('SwapModalFooter.tsx', () => {
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText('Finalizing quote...')).toBeInTheDocument()
-  })
-
-  it('renders a limit trade', () => {
-    render(
-      <SwapModalFooter
-        isLoading
-        trade={LIMIT_ORDER_TRADE}
-        allowedSlippage={TEST_ALLOWED_SLIPPAGE}
-        swapResult={undefined}
-        onConfirm={jest.fn()}
-        swapErrorMessage={undefined}
-        disabledConfirm={false}
-        fiatValueInput={{
-          data: undefined,
-          isLoading: false,
-        }}
-        fiatValueOutput={{
-          data: undefined,
-          isLoading: false,
-        }}
-        showAcceptChanges={false}
-        onAcceptChanges={jest.fn()}
-      />
-    )
-    expect(screen.getByText('Limit price')).toBeInTheDocument()
-    expect(screen.getByText('Expiry')).toBeInTheDocument()
-    expect(screen.getByText('Fee')).toBeInTheDocument()
-    expect(screen.getByText('Network cost')).toBeInTheDocument()
-    expect(screen.getByText('Canceling a limit will require a small network cost')).toBeInTheDocument()
   })
 })

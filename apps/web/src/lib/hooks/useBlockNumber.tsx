@@ -3,7 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
 import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
-import { ReactNode, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 const MISSING_PROVIDER = Symbol()
 const BlockNumberContext = createContext<
@@ -49,8 +49,7 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
     setChainBlock((chainBlock) => {
       if (chainBlock.chainId === chainId) {
         if (!chainBlock.block || chainBlock.block < block) {
-          const mainnetBlock = chainId === ChainId.MAINNET ? block : chainBlock.mainnetBlock
-          return { chainId, block, mainnetBlock }
+          return { chainId, block, mainnetBlock: chainId === ChainId.MAINNET ? block : chainBlock.mainnetBlock }
         }
       } else if (chainId === ChainId.MAINNET) {
         if (!chainBlock.mainnetBlock || chainBlock.mainnetBlock < block) {
@@ -63,41 +62,60 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
 
   const windowVisible = useIsWindowVisible()
   useEffect(() => {
+    let stale = false
+
     if (provider && activeChainId && windowVisible) {
       setChainBlock((chainBlock) => {
+        // If chainId hasn't changed, don't clear the block. This prevents re-fetching still valid data.
         if (chainBlock.chainId !== activeChainId) {
           return { chainId: activeChainId, mainnetBlock: chainBlock.mainnetBlock }
         }
-        // If chainId hasn't changed, don't invalidate the reference, as it will trigger re-fetching of still-valid data.
         return chainBlock
       })
+
+      provider
+        .getBlockNumber()
+        .then((block) => {
+          if (!stale) onChainBlock(activeChainId, block)
+        })
+        .catch((error) => {
+          console.error(`Failed to get block number for chainId ${activeChainId}`, error)
+        })
 
       const onBlock = (block: number) => onChainBlock(activeChainId, block)
       provider.on('block', onBlock)
       return () => {
+        stale = true
         provider.removeListener('block', onBlock)
       }
     }
-    return
+
+    return void 0
   }, [activeChainId, provider, windowVisible, onChainBlock])
 
   const networkProviders = useFallbackProviderEnabled() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
+
   useEffect(() => {
-    networkProviders[ChainId.MAINNET]
-      .getBlockNumber()
-      .then((block) => {
-        onChainBlock(ChainId.MAINNET, block)
-      })
-      // swallow errors - it's ok if this fails, as we'll try again if we activate mainnet
-      .catch(() => undefined)
-  }, [networkProviders, onChainBlock])
+    if (mainnetBlock === undefined) {
+      networkProviders[ChainId.MAINNET]
+        .getBlockNumber()
+        .then((block) => {
+          onChainBlock(ChainId.MAINNET, block)
+        })
+        // swallow errors - it's ok if this fails, as we'll try again if we activate mainnet
+        .catch(() => undefined)
+    }
+  }, [mainnetBlock, networkProviders, onChainBlock])
 
   const value = useMemo(
     () => ({
       fastForward: (update: number) => {
         if (activeBlock && update > activeBlock) {
-          const mainnetUpdate = activeChainId === ChainId.MAINNET ? update : mainnetBlock
-          setChainBlock({ chainId: activeChainId, block: update, mainnetBlock: mainnetUpdate })
+          setChainBlock({
+            chainId: activeChainId,
+            block: update,
+            mainnetBlock: activeChainId === ChainId.MAINNET ? update : mainnetBlock,
+          })
         }
       },
       block: activeBlock,

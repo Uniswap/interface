@@ -10,9 +10,9 @@ import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import {
-  CurrencyId,
   buildCurrencyId,
   buildNativeCurrencyId,
+  CurrencyId,
   currencyIdToChain,
 } from 'wallet/src/utils/currencyId'
 

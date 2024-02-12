@@ -7,15 +7,15 @@ import {
   SettingsStackNavigationProp,
   SettingsStackParamList,
 } from 'src/app/navigation/types'
+import { Switch } from 'src/components/buttons/Switch'
+import { Arrow } from 'src/components/icons/Arrow'
 import { openModal } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
+import { openUri } from 'src/utils/linking'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { Switch } from 'wallet/src/components/buttons/Switch'
-import { Arrow } from 'wallet/src/components/icons/Arrow'
 import { useAppDispatch } from 'wallet/src/state'
-import { ModalName } from 'wallet/src/telemetry/constants'
-import { openUri } from 'wallet/src/utils/linking'
 
 export interface SettingsSection {
   subTitle: string
@@ -27,8 +27,7 @@ export interface SettingsSectionItemComponent {
   component: JSX.Element
   isHidden?: boolean
 }
-type SettingsModal = typeof ModalName.FiatCurrencySelector | typeof ModalName.LanguageSelector
-
+type SettingsModal = Extract<ModalName, ModalName.FiatCurrencySelector | ModalName.LanguageSelector>
 export interface SettingsSectionItem {
   screen?: keyof SettingsStackParamList | typeof Screens.OnboardingStack
   modal?: SettingsModal

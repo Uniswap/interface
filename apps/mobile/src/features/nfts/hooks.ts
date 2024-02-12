@@ -5,6 +5,7 @@ import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-c
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
+import { getNftUrl } from 'src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { selectNftsData } from 'wallet/src/features/favorites/selectors'
@@ -13,7 +14,6 @@ import { shouldHideNft } from 'wallet/src/features/nfts/hooks'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { getNftUrl } from 'wallet/src/utils/linking'
 
 interface NFTMenuParams {
   tokenId?: string

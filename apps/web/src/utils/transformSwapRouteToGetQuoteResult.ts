@@ -4,14 +4,8 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { routeAmountsToString, SwapRoute } from '@uniswap/smart-order-router'
 import { Pool } from '@uniswap/v3-sdk'
-import {
-  ClassicQuoteData,
-  QuoteResult,
-  QuoteState,
-  URAQuoteType,
-  V2PoolInRoute,
-  V3PoolInRoute,
-} from 'state/routing/types'
+import { QuoteResult, QuoteState, URAQuoteType } from 'state/routing/types'
+import { ClassicQuoteData, V2PoolInRoute, V3PoolInRoute } from 'state/routing/types'
 
 // from routing-api (https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/quote.ts#L243-L311)
 export function transformSwapRouteToGetQuoteResult(

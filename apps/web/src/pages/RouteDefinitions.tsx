@@ -8,10 +8,9 @@ import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { SpinnerSVG } from 'theme/components'
 import { isBrowserRouterEnabled } from 'utils/env'
 
-import { getDefaultTokensTitle } from './getDefaultTokensTitle'
-import { getExploreTitle } from './getExploreTitle'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from './Landing'
+import { getDefaultTokensTitle, getExploreTitle } from './paths'
 import Swap from './Swap'
 
 const NftExplore = lazy(() => import('nft/pages/explore'))

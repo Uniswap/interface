@@ -14,11 +14,10 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useSuppressPopups } from 'state/application/hooks'
 import { PopupType } from 'state/application/reducer'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
-import { isLimitTrade, isPreviewTrade } from 'state/routing/utils'
+import { isPreviewTrade } from 'state/routing/utils'
 import { useOrder } from 'state/signatures/hooks'
 import { useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled from 'styled-components'
-import { ThemeProvider } from 'theme'
 import { FadePresence } from 'theme/components/FadePresence'
 import { SignatureExpiredError } from 'utils/errors'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
@@ -72,7 +71,7 @@ export default function ConfirmSwapModalV2({
   swapResult?: SwapResult
   swapError?: Error
   clearSwapState: () => void
-  onAcceptChanges?: () => void
+  onAcceptChanges: () => void
   onConfirm: () => void
   onCurrencySelection: (field: Field, currency: Currency) => void
   onDismiss: () => void
@@ -177,84 +176,81 @@ export default function ConfirmSwapModalV2({
   }, [confirmModalState, doesTradeDiffer, onCancel, onDismiss, priceUpdate, unsuppressPopups, trade])
 
   return (
-    // Wrapping in a new theme provider resets any color extraction overriding on the current page. Swap modal should use default/non-overridden theme.
-    <ThemeProvider>
-      <SwapModal confirmModalState={confirmModalState} onDismiss={onModalDismiss}>
-        {/* Head section displays title, help button, close icon */}
-        <Container $height="24px" $padding="6px 12px 4px 12px">
-          <SwapHead onDismiss={onModalDismiss} isLimitTrade={isLimitTrade(trade)} />
+    <SwapModal confirmModalState={confirmModalState} onDismiss={onModalDismiss}>
+      {/* Head section displays title, help button, close icon */}
+      <Container $height="36px" $padding="6px 12px 4px 12px">
+        <SwapHead onDismiss={onModalDismiss} />
+      </Container>
+      {/* Preview section displays input / output currency amounts */}
+      {showPreview && (
+        <Container $padding="12px 16px 0px 16px">
+          <SwapPreview inputCurrency={inputCurrency} trade={trade} allowedSlippage={allowedSlippage} />
         </Container>
-        {/* Preview section displays input / output currency amounts */}
-        {showPreview && (
-          <Container $padding="12px 12px 0px 12px">
-            <SwapPreview inputCurrency={inputCurrency} trade={trade} allowedSlippage={allowedSlippage} />
-          </Container>
-        )}
-        {/* Details section displays rate, fees, network cost, etc. w/ additional details in drop-down menu .*/}
-        {showDetails && (
-          <Container>
-            <FadePresence>
-              <AutoColumn gap="md">
-                <SwapDetails
-                  onConfirm={() => {
-                    suppressPopups()
-                    startSwapFlow()
-                  }}
-                  trade={trade}
-                  allowance={allowance}
-                  swapResult={swapResult}
-                  allowedSlippage={allowedSlippage}
-                  isLoading={isPreviewTrade(trade)}
-                  disabledConfirm={
-                    showAcceptChanges || isPreviewTrade(trade) || allowance.state === AllowanceState.LOADING
-                  }
-                  fiatValueInput={fiatValueInput}
-                  fiatValueOutput={fiatValueOutput}
-                  showAcceptChanges={Boolean(showAcceptChanges)}
-                  onAcceptChanges={onAcceptChanges}
-                  swapErrorMessage={swapFailed ? swapError?.message : undefined}
-                />
-              </AutoColumn>
-            </FadePresence>
-          </Container>
-        )}
-        {/* Progress indicator displays all the steps of the swap flow and their current status  */}
-        {confirmModalState !== ConfirmModalState.REVIEWING && showProgressIndicator && (
-          <Container>
-            <FadePresence>
-              <SwapProgressIndicator
-                steps={pendingModalSteps}
-                currentStep={confirmModalState}
+      )}
+      {/* Details section displays rate, fees, network cost, etc. w/ additional details in drop-down menu .*/}
+      {showDetails && (
+        <Container>
+          <FadePresence>
+            <AutoColumn gap="md">
+              <SwapDetails
+                onConfirm={() => {
+                  suppressPopups()
+                  startSwapFlow()
+                }}
                 trade={trade}
+                allowance={allowance}
                 swapResult={swapResult}
-                wrapTxHash={wrapTxHash}
-                tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
-                revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
-                swapError={swapError}
-                onRetryUniswapXSignature={onConfirm}
+                allowedSlippage={allowedSlippage}
+                isLoading={isPreviewTrade(trade)}
+                disabledConfirm={
+                  showAcceptChanges || isPreviewTrade(trade) || allowance.state === AllowanceState.LOADING
+                }
+                fiatValueInput={fiatValueInput}
+                fiatValueOutput={fiatValueOutput}
+                showAcceptChanges={Boolean(showAcceptChanges)}
+                onAcceptChanges={onAcceptChanges}
+                swapErrorMessage={swapFailed ? swapError?.message : undefined}
               />
-            </FadePresence>
-          </Container>
-        )}
-        {/* Pending screen displays spinner for single-step confirmations, as well as success screen for all flows */}
-        {(showConfirming || showSuccess) && (
-          <Container>
-            <FadePresence>
-              <SwapPending
-                trade={trade}
-                swapResult={swapResult}
-                wrapTxHash={wrapTxHash}
-                tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
-                revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
-              />
-            </FadePresence>
-          </Container>
-        )}
-        {/* Error screen handles all error types with custom messaging and retry logic */}
-        {errorType && showError && (
-          <SwapError trade={trade} swapResult={swapResult} errorType={errorType} onRetry={startSwapFlow} />
-        )}
-      </SwapModal>
-    </ThemeProvider>
+            </AutoColumn>
+          </FadePresence>
+        </Container>
+      )}
+      {/* Progress indicator displays all the steps of the swap flow and their current status  */}
+      {confirmModalState !== ConfirmModalState.REVIEWING && showProgressIndicator && (
+        <Container>
+          <FadePresence>
+            <SwapProgressIndicator
+              steps={pendingModalSteps}
+              currentStep={confirmModalState}
+              trade={trade}
+              swapResult={swapResult}
+              wrapTxHash={wrapTxHash}
+              tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
+              revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
+              swapError={swapError}
+              onRetryUniswapXSignature={onConfirm}
+            />
+          </FadePresence>
+        </Container>
+      )}
+      {/* Pending screen displays spinner for single-step confirmations, as well as success screen for all flows */}
+      {(showConfirming || showSuccess) && (
+        <Container>
+          <FadePresence>
+            <SwapPending
+              trade={trade}
+              swapResult={swapResult}
+              wrapTxHash={wrapTxHash}
+              tokenApprovalPending={allowance.state === AllowanceState.REQUIRED && allowance.isApprovalPending}
+              revocationPending={allowance.state === AllowanceState.REQUIRED && allowance.isRevocationPending}
+            />
+          </FadePresence>
+        </Container>
+      )}
+      {/* Error screen handles all error types with custom messaging and retry logic */}
+      {errorType && showError && (
+        <SwapError trade={trade} swapResult={swapResult} errorType={errorType} onRetry={startSwapFlow} />
+      )}
+    </SwapModal>
   )
 }

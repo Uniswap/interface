@@ -4,7 +4,6 @@ import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-event
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
-import { ChainSelector } from 'components/NavBar/ChainSelector'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useToggle from 'hooks/useToggle'
@@ -21,17 +20,13 @@ import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
 import { UserAddedToken } from 'types/tokens'
 
-import { useDefaultActiveTokens, useDefaultListTokens, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
+import { useDefaultActiveTokens, useSearchInactiveTokenLists, useToken } from '../../hooks/Tokens'
 import { isAddress } from '../../utils'
 import Column from '../Column'
 import Row, { RowBetween } from '../Row'
 import CommonBases from './CommonBases'
-import CurrencyList, {
-  CurrencyListRow,
-  CurrencyListSectionTitle,
-  CurrencyRow,
-  formatAnalyticsEventProperties,
-} from './CurrencyList'
+import { CurrencyListSectionTitle, CurrencyRow, formatAnalyticsEventProperties } from './CurrencyList'
+import CurrencyList from './CurrencyList'
 import { PaddedColumn, SearchInput, Separator } from './styled'
 
 const ContentWrapper = styled(Column)`
@@ -43,55 +38,29 @@ const ContentWrapper = styled(Column)`
   border-radius: 20px;
 `
 
-const ChainSelectorWrapper = styled.div`
-  background-color: ${({ theme }) => theme.surface2};
-  border-radius: 12px;
-`
-
-export interface CurrencySearchFilters {
-  showCommonBases?: boolean
-  disableNonToken?: boolean
-  onlyShowCurrenciesWithBalance?: boolean
-  onlyShowDefaultList?: boolean
-  onlyShowDefaultListReason?: string
-}
-
-const DEFAULT_CURRENCY_SEARCH_FILTERS: CurrencySearchFilters = {
-  showCommonBases: true,
-  disableNonToken: false,
-  onlyShowCurrenciesWithBalance: false,
-  onlyShowDefaultList: false,
-}
-
 interface CurrencySearchProps {
   isOpen: boolean
   onDismiss: () => void
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency, hasWarning?: boolean) => void
   otherSelectedCurrency?: Currency | null
+  showCommonBases?: boolean
   showCurrencyAmount?: boolean
-  filters?: CurrencySearchFilters
+  disableNonToken?: boolean
+  onlyShowCurrenciesWithBalance?: boolean
 }
 
 export function CurrencySearch({
   selectedCurrency,
   onCurrencySelect,
   otherSelectedCurrency,
+  showCommonBases,
   showCurrencyAmount,
+  disableNonToken,
   onDismiss,
   isOpen,
-  filters,
+  onlyShowCurrenciesWithBalance,
 }: CurrencySearchProps) {
-  const {
-    showCommonBases,
-    disableNonToken,
-    onlyShowCurrenciesWithBalance,
-    onlyShowDefaultList,
-    onlyShowDefaultListReason,
-  } = {
-    ...DEFAULT_CURRENCY_SEARCH_FILTERS,
-    ...filters,
-  }
   const { chainId } = useWeb3React()
   const theme = useTheme()
 
@@ -105,12 +74,10 @@ export function CurrencySearch({
   const isAddressSearch = isAddress(debouncedQuery)
   const searchToken = useToken(debouncedQuery)
 
-  const defaultAndUserAddedTokens = useDefaultActiveTokens(chainId)
-  const defaultTokens = useDefaultListTokens(chainId)
+  const defaultTokens = useDefaultActiveTokens(chainId)
   const { balanceMap, balanceList, loading: balancesAreLoading } = useTokenBalances()
-
   const { sortedCombinedTokens, portfolioTokens, sortedTokensWithoutPortfolio } = useMemo(() => {
-    const filteredListTokens = Object.values(defaultAndUserAddedTokens)
+    const filteredListTokens = Object.values(defaultTokens)
       // Filter out tokens with balances so they aren't duplicated when we merge below.
       .filter((token) => !(token.address?.toLowerCase() in balanceMap))
 
@@ -133,10 +100,6 @@ export function CurrencySearch({
 
     const tokenFilter = (token: Token) => {
       if (onlyShowCurrenciesWithBalance) {
-        if (token.isNative && token.symbol) {
-          return balanceMap[token.symbol]?.usdValue > 0
-        }
-
         return balanceMap[token.address?.toLowerCase()]?.usdValue > 0
       }
 
@@ -163,7 +126,7 @@ export function CurrencySearch({
       portfolioTokens: portfolioTokens.filter(tokenFilter),
     }
   }, [
-    defaultAndUserAddedTokens,
+    defaultTokens,
     balancesAreLoading,
     balanceList,
     balanceMap,
@@ -228,41 +191,27 @@ export function CurrencySearch({
 
   // if no results on main list, show option to expand into inactive
   const filteredInactiveTokens = useSearchInactiveTokenLists(
-    !onlyShowCurrenciesWithBalance && sortedCombinedTokens.length === 0 ? debouncedQuery : undefined
+    !onlyShowCurrenciesWithBalance &&
+      (sortedCombinedTokens.length === 0 || (debouncedQuery.length > 2 && !isAddressSearch))
+      ? debouncedQuery
+      : undefined
   )
 
   const finalCurrencyList = useMemo(() => {
-    const disabledMapper = (token: Token) => {
-      const disabled = token.isNative ? false : (onlyShowDefaultList && !(token.address in defaultTokens)) ?? false
-      return new CurrencyListRow(token, disabled, disabled ? onlyShowDefaultListReason ?? t`Not available` : undefined)
-    }
-    if (debouncedQuery || portfolioTokens.length === 0) {
-      return [
-        new CurrencyListSectionTitle(debouncedQuery ? t`Search Results` : t`Popular tokens`),
-        ...sortedCombinedTokens.map(disabledMapper),
-        ...filteredInactiveTokens.map(disabledMapper),
-      ]
-    } else if (sortedTokensWithoutPortfolio.length === 0 && filteredInactiveTokens.length === 0) {
-      return [new CurrencyListSectionTitle(t`Your tokens`), ...portfolioTokens.map(disabledMapper)]
-    } else {
-      return [
-        new CurrencyListSectionTitle(t`Your tokens`),
-        ...portfolioTokens.map(disabledMapper),
-        new CurrencyListSectionTitle(t`Popular tokens`),
-        ...sortedTokensWithoutPortfolio.map(disabledMapper),
-        ...filteredInactiveTokens.map(disabledMapper),
-      ]
-    }
-  }, [
-    debouncedQuery,
-    defaultTokens,
-    filteredInactiveTokens,
-    onlyShowDefaultList,
-    onlyShowDefaultListReason,
-    portfolioTokens,
-    sortedCombinedTokens,
-    sortedTokensWithoutPortfolio,
-  ])
+    return debouncedQuery || portfolioTokens.length === 0
+      ? [
+          new CurrencyListSectionTitle(debouncedQuery ? t`Search Results` : t`Popular tokens`),
+          ...sortedCombinedTokens,
+          ...filteredInactiveTokens,
+        ]
+      : [
+          new CurrencyListSectionTitle(t`Your tokens`),
+          ...portfolioTokens,
+          new CurrencyListSectionTitle(t`Popular tokens`),
+          ...sortedTokensWithoutPortfolio,
+          ...filteredInactiveTokens,
+        ]
+  }, [debouncedQuery, filteredInactiveTokens, portfolioTokens, sortedCombinedTokens, sortedTokensWithoutPortfolio])
 
   // Timeout token loader after 3 seconds to avoid hanging in a loading state.
   useEffect(() => {
@@ -286,7 +235,7 @@ export function CurrencySearch({
             </Text>
             <CloseIcon onClick={onDismiss} />
           </RowBetween>
-          <Row gap="4px">
+          <Row>
             <SearchInput
               type="text"
               id="token-search-input"
@@ -298,9 +247,6 @@ export function CurrencySearch({
               onChange={handleInput}
               onKeyDown={handleEnter}
             />
-            <ChainSelectorWrapper>
-              <ChainSelector />
-            </ChainSelectorWrapper>
           </Row>
           {showCommonBases && (
             <CommonBases

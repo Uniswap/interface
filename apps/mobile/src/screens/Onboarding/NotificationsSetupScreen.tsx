@@ -11,9 +11,12 @@ import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
-import { Button, Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import { openSettings } from 'src/utils/linking'
+import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'ui/src/assets'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import {
   EditAccountAction,
@@ -22,8 +25,6 @@ import {
 import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import i18n from 'wallet/src/i18n/i18n'
-import { ElementName } from 'wallet/src/telemetry/constants'
-import { openSettings } from 'wallet/src/utils/linking'
 import { isIOS } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Notifications>

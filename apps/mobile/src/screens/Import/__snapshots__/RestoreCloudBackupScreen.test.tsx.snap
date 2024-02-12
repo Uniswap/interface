@@ -5,6 +5,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
   sentry-label="Screen"
   style={
     {
+      "alignItems": "stretch",
       "backgroundColor": "#FFFFFF",
       "flex": 1,
       "flexDirection": "column",
@@ -44,6 +45,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
       exiting={[Function]}
       style={
         {
+          "alignItems": "stretch",
           "flexDirection": "column",
           "flexGrow": 1,
           "gap": 16,
@@ -82,7 +84,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           }
           suppressHighlighting={true}
         >
-          Select a backup to restore
+          Select backup to restore
         </Text>
         <Text
           allowFontScaling={true}
@@ -104,6 +106,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
       <View
         style={
           {
+            "alignItems": "stretch",
             "flex": 1,
             "flexDirection": "column",
             "flexGrow": 1,
@@ -129,6 +132,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
             <View
               style={
                 {
+                  "alignItems": "stretch",
                   "flexDirection": "column",
                   "gap": 8,
                 }

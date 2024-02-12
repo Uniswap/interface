@@ -1,12 +1,11 @@
-import { useLocalActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { TransactionStatus, useActivityQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
 import { useEffect, useMemo } from 'react'
 import { usePendingOrders } from 'state/signatures/hooks'
-import { SignatureType } from 'state/signatures/types'
 import { usePendingTransactions, useTransactionCanceller } from 'state/transactions/hooks'
 import { useFormatter } from 'utils/formatNumbers'
 
+import { useLocalActivities } from './parseLocal'
 import { parseRemoteActivities } from './parseRemote'
 import { Activity, ActivityMap } from './types'
 
@@ -93,29 +92,12 @@ export function useAllActivities(account: string) {
   return { loading, activities: combinedActivities, refetch }
 }
 
-export function useOpenLimitOrders(account: string) {
-  const { activities, loading, refetch } = useAllActivities(account)
-  const openLimitOrders =
-    activities?.filter(
-      (activity) =>
-        activity.offchainOrderDetails?.type === SignatureType.SIGN_LIMIT &&
-        activity.status === TransactionStatus.Pending
-    ) ?? []
-  return {
-    openLimitOrders,
-    loading,
-    refetch,
-  }
-}
-
 export function usePendingActivity() {
   const pendingTransactions = usePendingTransactions()
   const pendingOrders = usePendingOrders()
 
-  const pendingOrdersWithoutLimits = pendingOrders.filter((order) => order.type !== SignatureType.SIGN_LIMIT)
-
-  const hasPendingActivity = pendingTransactions.length > 0 || pendingOrdersWithoutLimits.length > 0
-  const pendingActivityCount = pendingTransactions.length + pendingOrdersWithoutLimits.length
+  const hasPendingActivity = pendingTransactions.length > 0 || pendingOrders.length > 0
+  const pendingActivityCount = pendingTransactions.length + pendingOrders.length
 
   return { hasPendingActivity, pendingActivityCount }
 }

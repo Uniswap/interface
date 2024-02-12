@@ -1,9 +1,10 @@
+import { Currency, TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
-import { CHAIN_INFO, ChainId, RPCType } from 'wallet/src/constants/chains'
+import { ChainId, CHAIN_INFO, RPCType } from 'wallet/src/constants/chains'
 import { transactionActions } from 'wallet/src/features/transactions/slice'
-import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
+import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import {
   TransactionDetails,
   TransactionOptions,
@@ -20,6 +21,8 @@ import { getProvider, getSignerManager } from 'wallet/src/features/wallet/contex
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { WalletEventName } from 'wallet/src/telemetry/constants'
+import { getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 
 export interface SendTransactionParams {
@@ -30,7 +33,7 @@ export interface SendTransactionParams {
   account: Account
   options: TransactionOptions
   typeInfo: TransactionTypeInfo
-  analytics?: ReturnType<typeof getBaseTradeAnalyticsProperties>
+  trade?: Trade<Currency, Currency, TradeType>
 }
 
 // A utility for sagas to send transactions
@@ -83,7 +86,7 @@ export async function signAndSendTransaction(
 }
 
 function* addTransaction(
-  { chainId, typeInfo, account, options, txId, analytics }: SendTransactionParams,
+  { chainId, typeInfo, account, options, txId, trade }: SendTransactionParams,
   hash: string,
   populatedRequest: providers.TransactionRequest
 ) {
@@ -104,18 +107,30 @@ function* addTransaction(
     },
   }
 
-  if (transaction.typeInfo.type === TransactionType.Swap) {
-    if (!analytics) {
-      logger.error(new Error('Missing `analytics` for swap when calling `addTransaction`'), {
-        tags: { file: 'sendTransaction', function: 'addTransaction' },
-        extra: { transaction },
-      })
-    } else {
-      yield* call(sendWalletAnalyticsEvent, WalletEventName.SwapSubmitted, {
-        transaction_hash: hash,
-        ...analytics,
-      })
-    }
+  if (transaction.typeInfo.type === TransactionType.Swap && trade) {
+    const feeCurrencyAmount = getCurrencyAmount({
+      value: trade.quote?.portionAmount,
+      valueType: ValueType.Raw,
+      currency: trade.outputAmount.currency,
+    })
+
+    const finalOutputAmount = feeCurrencyAmount
+      ? trade.outputAmount.subtract(feeCurrencyAmount)
+      : trade.outputAmount
+
+    yield* call(sendWalletAnalyticsEvent, WalletEventName.SwapSubmitted, {
+      transaction_hash: hash,
+      chain_id: chainId,
+      price_impact_basis_points: trade.priceImpact.multiply(100).toSignificant(),
+      token_in_amount: trade.inputAmount.toExact(),
+      token_out_amount: finalOutputAmount.toExact(),
+      token_in_symbol: trade.inputAmount.currency.symbol,
+      token_in_address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
+      token_out_symbol: trade.outputAmount.currency.symbol,
+      token_out_address: getCurrencyAddressForAnalytics(trade.outputAmount.currency),
+      trade_type: trade.tradeType,
+      fee_amount: trade.quote?.portionAmount,
+    })
   }
   yield* put(transactionActions.addTransaction(transaction))
   logger.debug('sendTransaction', 'addTransaction', 'Tx added:', { chainId, ...typeInfo })

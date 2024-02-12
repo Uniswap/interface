@@ -6,34 +6,37 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
   onTouchEnd={[Function]}
   style={
     {
+      "alignItems": "stretch",
       "flexDirection": "column",
-      "gap": 12,
+      "gap": 16,
     }
   }
 >
   <View
     style={
       {
-        "backgroundColor": "#FFFFFF",
-        "borderBottomColor": "#2222220D",
+        "alignItems": "center",
+        "backgroundColor": "#F9F9F9",
+        "borderBottomColor": "#F9F9F9",
         "borderBottomLeftRadius": 20,
         "borderBottomRightRadius": 20,
         "borderBottomWidth": 1,
-        "borderLeftColor": "#2222220D",
+        "borderLeftColor": "#F9F9F9",
         "borderLeftWidth": 1,
-        "borderRightColor": "#2222220D",
+        "borderRightColor": "#F9F9F9",
         "borderRightWidth": 1,
         "borderStyle": "solid",
-        "borderTopColor": "#2222220D",
+        "borderTopColor": "#F9F9F9",
         "borderTopLeftRadius": 20,
         "borderTopRightRadius": 20,
         "borderTopWidth": 1,
         "flexDirection": "column",
         "flexShrink": 1,
+        "justifyContent": "center",
         "minHeight": 120,
         "paddingBottom": 16,
-        "paddingLeft": 24,
-        "paddingRight": 24,
+        "paddingLeft": 36,
+        "paddingRight": 36,
         "paddingTop": 16,
         "width": "100%",
       }
@@ -55,6 +58,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         autoCorrect={false}
         autoFocus={true}
         blurOnSubmit={false}
+        editable={true}
         focusable={true}
         maxFontSizeMultiplier={1.4}
         multiline={true}
@@ -86,10 +90,10 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             "borderTopWidth": 1,
             "color": "#222222",
             "fontFamily": "Basel-Book",
-            "fontSize": 17,
+            "fontSize": 19,
             "height": "auto",
             "justifyContent": "center",
-            "lineHeight": 17,
+            "lineHeight": 19,
             "minWidth": 0,
             "paddingBottom": 0,
             "paddingLeft": 0,
@@ -111,11 +115,9 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
           "flexDirection": "row",
           "flexGrow": 1,
           "gap": 8,
-          "paddingLeft": 24,
-          "paddingRight": 24,
-          "paddingTop": 16,
+          "justifyContent": "center",
+          "paddingTop": 4,
           "position": "absolute",
-          "width": "100%",
         }
       }
     >
@@ -129,7 +131,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             "color": "#7D7D7D",
             "flexShrink": 1,
             "fontFamily": "Basel-Book",
-            "fontSize": 17,
+            "fontSize": 19,
             "lineHeight": 24,
           }
         }
@@ -137,174 +139,162 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
       >
         seed phrase
       </Text>
-    </View>
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "column",
-          "justifyContent": "center",
-          "width": "100%",
-        }
-      }
-    >
       <View
+        cancelable={true}
+        focusable={true}
+        minPressDuration={0}
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        onPress={[Function]}
+        onPressIn={[Function]}
+        onPressOut={[Function]}
         style={
           {
-            "flexDirection": "column",
-            "paddingTop": 64,
-            "position": "absolute",
-            "top": 0,
+            "alignItems": "center",
+            "backgroundColor": "#2222220D",
+            "borderBottomColor": "transparent",
+            "borderBottomLeftRadius": 8,
+            "borderBottomRightRadius": 8,
+            "borderBottomWidth": 1,
+            "borderLeftColor": "transparent",
+            "borderLeftWidth": 1,
+            "borderRightColor": "transparent",
+            "borderRightWidth": 1,
+            "borderStyle": "solid",
+            "borderTopColor": "transparent",
+            "borderTopLeftRadius": 8,
+            "borderTopRightRadius": 8,
+            "borderTopWidth": 1,
+            "flexDirection": "row",
+            "gap": 4,
+            "height": "auto",
+            "justifyContent": "center",
+            "opacity": 1,
+            "paddingBottom": 8,
+            "paddingLeft": 8,
+            "paddingRight": 8,
+            "paddingTop": 8,
           }
         }
       >
-        <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
-          focusable={true}
-          hitSlop={
-            {
-              "bottom": 5,
-              "left": 5,
-              "right": 5,
-              "top": 5,
-            }
-          }
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
+        <RNSVGSvgView
+          align="xMidYMid"
+          bbHeight="16"
+          bbWidth="16"
+          fill="none"
+          focusable={false}
+          meetOrSlice={0}
+          minX={0}
+          minY={0}
+          strokeWidth={8}
           style={
-            {
-              "backgroundColor": "#FFEFFF",
-              "borderBottomLeftRadius": 12,
-              "borderBottomRightRadius": 12,
-              "borderTopLeftRadius": 12,
-              "borderTopRightRadius": 12,
-              "onPressIn": undefined,
-              "opacity": 1,
-              "paddingBottom": 8,
-              "paddingLeft": 8,
-              "paddingRight": 8,
-              "paddingTop": 8,
-            }
-          }
-        >
-          <View
-            style={
+            [
               {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "gap": 4,
-                "justifyContent": "center",
-              }
+                "backgroundColor": "transparent",
+                "borderWidth": 0,
+              },
+              {
+                "color": "#222222",
+                "height": 16,
+                "width": 16,
+              },
+              {
+                "flex": 0,
+                "height": 16,
+                "width": 16,
+              },
+            ]
+          }
+          tintColor="#222222"
+          vbHeight={14}
+          vbWidth={15}
+        >
+          <RNSVGGroup
+            fill={null}
+            propList={
+              [
+                "fill",
+                "strokeWidth",
+              ]
             }
+            strokeWidth="8"
           >
-            <Text
-              allowFontScaling={true}
-              maxFontSizeMultiplier={1.2}
-              style={
+            <RNSVGPath
+              d="M8.0835 1.16602H4.00016C3.69074 1.16602 3.394 1.28893 3.1752 1.50772C2.95641 1.72652 2.8335 2.02326 2.8335 2.33268V11.666C2.8335 11.9754 2.95641 12.2722 3.1752 12.491C3.394 12.7098 3.69074 12.8327 4.00016 12.8327H11.0002C11.3096 12.8327 11.6063 12.7098 11.8251 12.491C12.0439 12.2722 12.1668 11.9754 12.1668 11.666V5.24935L8.0835 1.16602Z"
+              fill={
                 {
-                  "color": "#FC72FF",
-                  "fontFamily": "Basel-Medium",
-                  "fontSize": 13,
-                  "fontWeight": "500",
-                  "lineHeight": 16,
+                  "payload": 4278190080,
+                  "type": 0,
                 }
               }
-              suppressHighlighting={true}
-            >
-              Paste
-            </Text>
-            <RNSVGSvgView
-              align="xMidYMid"
-              bbHeight="16"
-              bbWidth="16"
-              fill="currentColor"
-              focusable={false}
-              meetOrSlice={0}
-              minX={0}
-              minY={0}
-              strokeWidth={8}
-              style={
+              propList={
                 [
-                  {
-                    "backgroundColor": "transparent",
-                    "borderWidth": 0,
-                  },
-                  {
-                    "color": "#FC72FF",
-                    "height": 16,
-                    "width": 16,
-                  },
-                  {
-                    "flex": 0,
-                    "height": 16,
-                    "width": 16,
-                  },
+                  "stroke",
+                  "strokeWidth",
+                  "strokeLinecap",
+                  "strokeLinejoin",
                 ]
               }
-              tintColor="#FC72FF"
-              vbHeight={16}
-              vbWidth={16}
-            >
-              <RNSVGGroup
-                fill={
-                  {
-                    "type": 2,
-                  }
+              stroke={
+                {
+                  "type": 2,
                 }
-                propList={
-                  [
-                    "fill",
-                    "strokeWidth",
-                  ]
+              }
+              strokeLinecap={1}
+              strokeLinejoin={1}
+              strokeWidth="1.5"
+            />
+            <RNSVGPath
+              d="M8.0835 1.16602V5.24935H12.1668"
+              fill={
+                {
+                  "payload": 4278190080,
+                  "type": 0,
                 }
-                strokeWidth="8"
-              >
-                <RNSVGPath
-                  d="M14 4.24666V8.56665C14 8.71332 13.9866 8.86 13.9533 9H11.2533C10.0066 9 9 10.0067 9 11.2533V13.9534C8.86 13.9867 8.7134 14 8.56673 14H4.25326C2.74659 14 2 13.2467 2 11.7467V4.24666C2 2.74666 2.74659 2 4.25326 2H11.7467C13.2534 2 14 2.74666 14 4.24666ZM10 11.2533V13.48C10.06 13.44 10.1067 13.3933 10.16 13.34L13.34 10.16C13.3933 10.1067 13.44 10.06 13.48 10H11.2533C10.5599 10 10 10.56 10 11.2533Z"
-                  fill={
-                    {
-                      "type": 2,
-                    }
-                  }
-                  propList={
-                    [
-                      "fill",
-                    ]
-                  }
-                />
-              </RNSVGGroup>
-            </RNSVGSvgView>
-          </View>
-        </View>
+              }
+              propList={
+                [
+                  "stroke",
+                  "strokeWidth",
+                  "strokeLinecap",
+                  "strokeLinejoin",
+                ]
+              }
+              stroke={
+                {
+                  "type": 2,
+                }
+              }
+              strokeLinecap={1}
+              strokeLinejoin={1}
+              strokeWidth="1.5"
+            />
+          </RNSVGGroup>
+        </RNSVGSvgView>
+        <Text
+          maxFontSizeMultiplier={1.2}
+          style={
+            {
+              "color": "#222222",
+              "fontFamily": "Basel-Medium",
+              "fontSize": 17,
+              "fontWeight": "500",
+              "lineHeight": 24,
+            }
+          }
+          suppressHighlighting={true}
+        >
+          Paste
+        </Text>
       </View>
     </View>
   </View>
   <View
     style={
       {
+        "alignItems": "stretch",
         "flexDirection": "column",
       }
     }

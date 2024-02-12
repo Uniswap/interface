@@ -47,8 +47,7 @@ export const slice = createSlice({
     setAllowAnalytics: (state, { payload: { enabled } }: PayloadAction<{ enabled: boolean }>) => {
       sendWalletAnalyticsEvent(SharedEventName.ANALYTICS_SWITCH_TOGGLED, { enabled })
       analytics.flushEvents()
-      // eslint-disable-next-line no-void
-      void analytics.setAllowAnalytics(enabled).finally(() => undefined)
+      analytics.setAllowAnalytics(enabled).finally(() => undefined)
       state.allowAnalytics = enabled
     },
   },

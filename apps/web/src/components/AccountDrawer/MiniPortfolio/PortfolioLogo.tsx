@@ -57,13 +57,13 @@ const CircleLogoImage = styled.img<{ size: string }>`
 `
 
 const L2LogoContainer = styled.div`
-  position: absolute;
   border-radius: ${getDefaultBorderRadius(16)}px;
-  left: 65%;
-  top: 65%;
-  outline: 1.5px solid ${({ theme }) => theme.surface1};
-  width: 40%;
-  height: 40%;
+  height: 16px;
+  left: 70%;
+  position: absolute;
+  top: 70%;
+  outline: 2px solid ${({ theme }) => theme.surface1};
+  width: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -146,7 +146,7 @@ function SquareL2Logo({ chainId }: { chainId: ChainId }) {
 
   return (
     <L2LogoContainer>
-      <ChainLogo fillContainer={true} chainId={chainId} />
+      <ChainLogo chainId={chainId} />
     </L2LogoContainer>
   )
 }

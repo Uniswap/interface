@@ -28,7 +28,6 @@ export default function PortfolioRow({
   descriptor,
   right,
   onClick,
-  className,
 }: {
   'data-testid'?: string
   left: React.ReactNode
@@ -37,10 +36,9 @@ export default function PortfolioRow({
   right?: React.ReactNode
   setIsHover?: (b: boolean) => void
   onClick?: () => void
-  className?: string
 }) {
   return (
-    <PortfolioRowWrapper data-testid={testId} onClick={onClick} className={className}>
+    <PortfolioRowWrapper data-testid={testId} onClick={onClick}>
       {left}
       <AutoColumn grow>
         {title}

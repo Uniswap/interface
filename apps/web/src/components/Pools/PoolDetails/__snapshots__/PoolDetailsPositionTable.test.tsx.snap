@@ -45,25 +45,10 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
 
 .c7 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c8 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c12 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c0 {
@@ -155,11 +140,11 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
   color: #7D7D7D;
 }
 
-.c13 {
+.c12 {
   gap: 10px;
 }
 
-.c14 {
+.c13 {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
@@ -167,7 +152,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
 }
 
 @media screen and (max-width:640px) {
-  .c13 {
+  .c12 {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
@@ -180,7 +165,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
 }
 
 @media screen and (max-width:640px) {
-  .c15 {
+  .c14 {
     display: none;
   }
 }
@@ -223,7 +208,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
           class="c3 c10 c11"
         >
           <div
-            class="c12 css-obwv3p"
+            class="css-obwv3p"
           >
             Closed
           </div>
@@ -265,16 +250,16 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
         </div>
       </div>
       <div
-        class="c3 c10 c13"
+        class="c3 c10 c12"
       >
         <div
-          class="c7 c14 css-obwv3p"
+          class="c7 c13 css-obwv3p"
           data-testid="position-min-0"
         >
           Min: 0 WETH per USDC
         </div>
         <svg
-          class="c15"
+          class="c14"
           fill="none"
           height="9"
           viewBox="0 0 14 9"
@@ -287,7 +272,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
           />
         </svg>
         <div
-          class="c7 c14 css-obwv3p"
+          class="c7 c13 css-obwv3p"
           data-testid="position-max-1"
         >
           Max: 1.00 WETH per USDC
@@ -343,25 +328,10 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
 
 .c7 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c8 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c12 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c0 {
@@ -453,18 +423,18 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
   color: #40B66B;
 }
 
-.c14 {
+.c13 {
   gap: 10px;
 }
 
-.c15 {
+.c14 {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
   white-space: nowrap;
 }
 
-.c13 {
+.c12 {
   width: 8px;
   height: 8px;
   border-radius: 50%;
@@ -472,7 +442,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
 }
 
 @media screen and (max-width:640px) {
-  .c14 {
+  .c13 {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
@@ -485,7 +455,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
 }
 
 @media screen and (max-width:640px) {
-  .c16 {
+  .c15 {
     display: none;
   }
 }
@@ -528,26 +498,26 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
           class="c3 c10 c11"
         >
           <div
-            class="c12 css-obwv3p"
+            class="css-obwv3p"
           >
             In range
           </div>
           <div
-            class="c13"
+            class="c12"
           />
         </div>
       </div>
       <div
-        class="c3 c10 c14"
+        class="c3 c10 c13"
       >
         <div
-          class="c7 c15 css-obwv3p"
+          class="c7 c14 css-obwv3p"
           data-testid="position-min-0"
         >
           Min: 0 WETH per USDC
         </div>
         <svg
-          class="c16"
+          class="c15"
           fill="none"
           height="9"
           viewBox="0 0 14 9"
@@ -560,7 +530,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
           />
         </svg>
         <div
-          class="c7 c15 css-obwv3p"
+          class="c7 c14 css-obwv3p"
           data-testid="position-max-1"
         >
           Max: 1.00 WETH per USDC
@@ -616,25 +586,10 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] 
 
 .c7 {
   color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c8 {
   color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c12 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c0 {
@@ -726,11 +681,11 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] 
   color: #EEB317;
 }
 
-.c13 {
+.c12 {
   gap: 10px;
 }
 
-.c14 {
+.c13 {
   width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
@@ -738,7 +693,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] 
 }
 
 @media screen and (max-width:640px) {
-  .c13 {
+  .c12 {
     -webkit-flex-direction: column;
     -ms-flex-direction: column;
     flex-direction: column;
@@ -751,7 +706,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] 
 }
 
 @media screen and (max-width:640px) {
-  .c15 {
+  .c14 {
     display: none;
   }
 }
@@ -794,7 +749,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] 
           class="c3 c10 c11"
         >
           <div
-            class="c12 css-obwv3p"
+            class="css-obwv3p"
           >
             Out of range
           </div>
@@ -828,16 +783,16 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] 
         </div>
       </div>
       <div
-        class="c3 c10 c13"
+        class="c3 c10 c12"
       >
         <div
-          class="c7 c14 css-obwv3p"
+          class="c7 c13 css-obwv3p"
           data-testid="position-min-0"
         >
           Min: 0 WETH per USDC
         </div>
         <svg
-          class="c15"
+          class="c14"
           fill="none"
           height="9"
           viewBox="0 0 14 9"
@@ -850,7 +805,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] 
           />
         </svg>
         <div
-          class="c7 c14 css-obwv3p"
+          class="c7 c13 css-obwv3p"
           data-testid="position-max-1"
         >
           Max: 1.00 WETH per USDC

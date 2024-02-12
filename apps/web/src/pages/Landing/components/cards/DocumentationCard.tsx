@@ -1,15 +1,11 @@
 import { t } from '@lingui/macro'
-import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
-import { useScreenSize } from 'hooks/useScreenSize'
 import styled from 'styled-components'
 
-import { CodeBrackets } from '../Icons'
+import { Bars } from '../Icons'
 import { PillButton } from './PillButton'
 import ValuePropCard from './ValuePropCard'
 
-const Contents = styled.div`
-  width: 100%;
-  height: 100%;
+const Anim = styled.div`
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
@@ -19,9 +15,6 @@ const Contents = styled.div`
   bottom: 0;
 
   opacity: 1;
-  @media (max-width: 1280px) {
-    opacity: 0.32;
-  }
   @media (max-width: 768px) {
     opacity: 0;
   }
@@ -32,37 +25,21 @@ type WebappCardProps = {
   tagText?: string
 }
 
-const primary = '#00C3A0'
+const primary = '#1DA16A'
 
 export function DocumentationCard(props: WebappCardProps) {
-  const { rive, RiveComponent } = useRive({
-    src: '/rive/landing-page.riv',
-    artboard: 'Dev',
-    stateMachines: 'Animation',
-    layout: new Layout({ fit: Fit.Contain, alignment: Alignment.CenterRight }),
-  })
-
-  const isScreenSize = useScreenSize()
-  const screenIsLarge = isScreenSize['lg']
-  const screenIsXLarge = isScreenSize['xl']
-
   return (
     <ValuePropCard
-      height={screenIsLarge ? '340px' : '240px'}
+      height="320px"
       href="https://docs.uniswap.org/"
-      backgroundColor={{ dark: 'rgba(0, 195, 160, 0.08);', light: 'rgba(0, 195, 160, 0.06);' }}
+      backgroundColor={{ dark: 'rgba(22, 222, 139, 0.12)', light: 'rgba(22, 222, 139, 0.06)' }}
       isDarkMode={props.isDarkMode}
       textColor={primary}
-      button={
-        <PillButton color={primary} label={t`Developer docs`} icon={<CodeBrackets size="24px" fill={primary} />} />
-      }
-      titleText={t`Build the next generation of open applications and tools.`}
-      paddingRight={screenIsXLarge ? '16%' : '0%'}
-      alignTextToBottom
+      button={<PillButton color={primary} label="Developer docs" icon={<Bars size="24px" fill={primary} />} />}
+      titleText={t`Build open apps and tools that you want to see in the world.`}
+      paddingRight="15%"
     >
-      <Contents>
-        <RiveComponent onMouseEnter={() => rive && rive.play()} />
-      </Contents>
+      <Anim />
     </ValuePropCard>
   )
 }

@@ -1,3 +1,4 @@
+import { Text } from 'rebass'
 import styled, { css } from 'styled-components'
 
 const H1Styles = css<{ color?: string }>`
@@ -11,17 +12,17 @@ const H1Styles = css<{ color?: string }>`
   font-weight: 500;
   line-height: 120%; /* 76.8px */
   white-space: pre-line;
-  letter-spacing: -0.02em;
   @media (max-width: 768px) {
     font-size: 36px;
   }
 `
-
-export const H1 = styled.span`
+export const H1 = styled.h1`
   ${H1Styles}
 `
 // Matches H1 in style but does not use h1 tag for SEO improvement
-
+export const ExtendedH1 = styled(Text)`
+  ${H1Styles}
+`
 export const H2 = styled.h2`
   padding: 0;
   margin: 0;
@@ -30,7 +31,6 @@ export const H2 = styled.h2`
   font-size: 52px;
   font-style: normal;
   font-weight: 500;
-  letter-spacing: -0.02em;
   line-height: 60px; /* 115.385% */
   @media (max-width: 1024px) {
     font-size: 36px;
@@ -43,7 +43,6 @@ export const H3 = styled.h3`
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
-  letter-spacing: -0.02em;
   line-height: 32px; /* 133.333% */
   color: ${(props) => props.color || props.theme.neutral1};
 `
@@ -58,7 +57,19 @@ export const Body1 = styled.p`
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 133.333% */
-  letter-spacing: -0.01em;
+`
+export const Body2 = styled.p`
+  padding: 0;
+  margin: 0;
+  color: ${(props) => props.color || props.theme.neutral2};
+  text-align: center;
+  /* Body/2 */
+  font-family: Basel;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+  text-decoration: none;
 `
 export const Subheading = styled.p`
   padding: 0;
@@ -71,10 +82,25 @@ export const Subheading = styled.p`
   font-style: normal;
   font-weight: 500;
   line-height: 24px; /* 133.333% */
-  max-width: 430px;
-  letter-spacing: -0.01em;
 `
+export const Button = styled.button`
+  padding: 12px 16px;
+  border-radius: 24px;
+  background-color: ${({ theme }) => theme.surface2};
 
+  font-family: Basel;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 535;
+  line-height: 24px; /* 133.333% */
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  color: ${({ theme }) => theme.neutral1};
+`
 export type BoxProps = {
   position?: 'relative' | 'absolute' | 'fixed'
   top?: string

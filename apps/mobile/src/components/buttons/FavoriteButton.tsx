@@ -8,8 +8,9 @@ import {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import { AnimatedFlex, useIsDarkMode, useSporeColors } from 'ui/src'
+import { AnimatedFlex, useSporeColors } from 'ui/src'
 import HeartIcon from 'ui/src/assets/icons/heart.svg'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 interface FavoriteButtonProps {
   isFavorited: boolean

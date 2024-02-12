@@ -1282,10 +1282,35 @@ PODS:
     - React-Core
   - RNPermissions (3.6.0):
     - React-Core
-  - RNReanimated (3.6.2):
-    - RCT-Folly (= 2021.07.22.00)
+  - RNReanimated (3.3.0):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - glog
+    - hermes-engine
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
     - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-hermes
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
     - ReactCommon/turbomodule/core
+    - Yoga
   - RNScreens (3.24.0):
     - React-Core
     - React-RCTImage
@@ -1635,7 +1660,7 @@ SPEC CHECKSUMS:
   Apollo: fe380f40e55e501a2499dd5885fab0cdf082b2bb
   AppsFlyerFramework: 88a6eed37ad52bcee4ad74232efa8e22809d06c9
   Argon2Swift: 99482c1b8122a03524b61e41c4903a9548e7c33b
-  boost: 0a937fbcfdd646fca221c4f1d9750d7ccfdfc2dc
+  boost: 57d2868c099736d80fcd648bf211b4431e51a558
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
   Burnt: 708556f6283e1b81767e6642e088819d85d1ea08
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
@@ -1740,7 +1765,7 @@ SPEC CHECKSUMS:
   RNImageColors: 9ac05083b52d5c350e6972650ae3ba0e556466c1
   RNLocalize: d4b8af4e442d4bcca54e68fc687a2129b4d71a81
   RNPermissions: de7b7c3fe1680d974ac7a85e3e97aa539c0e68ea
-  RNReanimated: 807546b6fc06d978ef0edc0ebc54db5741c6e432
+  RNReanimated: d6b4b867b6d1ee0798f5fb372708fa4bb8d66029
   RNScreens: b21dc57dfa2b710c30ec600786a3fc223b1b92e7
   RNSentry: 4fb2cd7d2d6cb94423c24884488206ef881da136
   RNSVG: c1e76b81c76cdcd34b4e1188852892dc280eb902
@@ -1754,6 +1779,6 @@ SPEC CHECKSUMS:
   Yoga: 135109c9b8c5d1a8af3a58d21cd4c7aa7f3bf555
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb
 
-PODFILE CHECKSUM: 22ab4b87e0bceeaa9e245c485c36fca595139568
+PODFILE CHECKSUM: 632909767e5e0022317f148f858c5b6f587e5900
 
 COCOAPODS: 1.14.3

@@ -8,7 +8,7 @@ import { createEthersProvider } from 'wallet/src/features/providers/createEthers
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
 import { currencyAddress as getCurrencyAddress } from 'wallet/src/utils/currencyId'
-import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 // stub endpoint to conform to REST endpoint styles
 // Rest link should intercept and use custom fetcher instead

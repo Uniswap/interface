@@ -3,7 +3,7 @@ import 'react-native-reanimated'
 import { Flex, FlexProps, Text } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
-import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
+import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
 
 export type NetworkLogosProps = {
   chains: ChainId[]

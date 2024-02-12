@@ -3,15 +3,16 @@ import {
   Keyboard,
   LayoutChangeEvent,
   LayoutRectangle,
-  TextInput as NativeTextInput,
   StyleSheet,
+  TextInput as NativeTextInput,
 } from 'react-native'
+import PasteButton from 'src/components/buttons/PasteButton'
 import Trace from 'src/components/Trace/Trace'
 import InputWithSuffix from 'src/features/import/InputWithSuffix'
-import { Flex, Text, useMedia } from 'ui/src'
+import { SectionName } from 'src/features/telemetry/constants'
+import { Flex, Text, useSporeColors } from 'ui/src'
+import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { fonts } from 'ui/src/theme'
-import PasteButton from 'wallet/src/components/buttons/PasteButton'
-import { SectionName } from 'wallet/src/telemetry/constants'
 
 interface Props {
   value: string | undefined
@@ -19,6 +20,7 @@ interface Props {
   onChange: (text: string | undefined) => void
   placeholderLabel: string
   onSubmit?: () => void
+  showSuccess?: boolean // show success indicator
   inputSuffix?: string //text to auto to end of input string
   liveCheck?: boolean
   autoCorrect?: boolean
@@ -29,7 +31,6 @@ interface Props {
   afterPasteButtonPress?: () => void
   blurOnSubmit?: boolean
   textAlign?: 'left' | 'right' | 'center'
-  shouldUseMinHeight?: boolean
 }
 
 export function GenericImportForm({
@@ -38,6 +39,7 @@ export function GenericImportForm({
   errorMessage,
   placeholderLabel,
   onSubmit,
+  showSuccess,
   inputSuffix,
   liveCheck,
   autoCorrect,
@@ -48,16 +50,15 @@ export function GenericImportForm({
   blurOnSubmit,
   textAlign,
   inputAlignment = 'center',
-  shouldUseMinHeight = true,
 }: Props): JSX.Element {
+  const colors = useSporeColors()
   const [focused, setFocused] = useState(false)
   const [layout, setLayout] = useState<LayoutRectangle | null>()
   const textInputRef = useRef<NativeTextInput>(null)
   const isKeyboardVisibleRef = useRef(false)
-  const media = useMedia()
 
-  const INPUT_FONT_SIZE = media.short ? fonts.subheading2.fontSize : fonts.subheading2.fontSize
-  const INPUT_MAX_FONT_SIZE_MULTIPLIER = fonts.subheading2.maxFontSizeMultiplier
+  const INPUT_FONT_SIZE = fonts.body1.fontSize
+  const INPUT_MAX_FONT_SIZE_MULTIPLIER = fonts.body1.maxFontSizeMultiplier
 
   const handleBlur = (): void => {
     setFocused(false)
@@ -97,14 +98,10 @@ export function GenericImportForm({
   const INPUT_MIN_HEIGHT = 120
   const INPUT_MIN_HEIGHT_SHORT = 90
 
-  // Absolutely positioned paste button needs top padding to be vertically centered on bottom border of Flex
-  const PASTE_BUTTON_TOP_PADDING = INPUT_MIN_HEIGHT / 2 + 4
-  const SHORT_PASTE_BUTTON_TOP_PADDING = INPUT_MIN_HEIGHT_SHORT / 2 - 12
-
   return (
     <Trace section={SectionName.ImportAccountForm}>
       <Flex
-        gap="$spacing12"
+        gap="$spacing16"
         onStartShouldSetResponder={(): boolean => {
           // Disable touch events when keyboard is visible (it prevents dismissing the keyboard
           // when this component is pressed while the keyboard is visible)
@@ -112,18 +109,21 @@ export function GenericImportForm({
         }}
         onTouchEnd={handleFocus}>
         <Flex
+          centered
           shrink
-          $short={{
-            px: '$spacing24',
-            py: '$spacing16',
-            minHeight: shouldUseMinHeight ? INPUT_MIN_HEIGHT_SHORT : undefined,
-          }}
-          backgroundColor="$surface1"
-          borderColor="$surface3"
+          $short={{ px: '$spacing24', py: '$spacing8', minHeight: INPUT_MIN_HEIGHT_SHORT }}
+          backgroundColor="$surface2"
+          borderColor={
+            showSuccess
+              ? '$statusSuccess'
+              : errorMessage && (liveCheck || !focused) && value
+              ? '$statusCritical'
+              : '$surface2'
+          }
           borderRadius="$rounded20"
           borderWidth={1}
-          minHeight={shouldUseMinHeight ? INPUT_MIN_HEIGHT : undefined}
-          px="$spacing24"
+          minHeight={INPUT_MIN_HEIGHT}
+          px="$spacing36"
           py="$spacing16"
           width="100%">
           {/* TODO: [MOB-225] make Box press re-focus TextInput. Fine for now since TexInput has autoFocus */}
@@ -145,37 +145,22 @@ export function GenericImportForm({
           />
           {!value && (
             <Flex
+              centered
               grow
               row
-              alignItems="center"
               gap="$spacing8"
               position="absolute"
-              pt="$spacing16"
-              px="$spacing24"
-              width="100%"
+              pt="$spacing4"
               onLayout={(event: LayoutChangeEvent): void => setLayout(event.nativeEvent.layout)}>
               <Text
                 adjustsFontSizeToFit
-                $short={{ variant: 'body3' }}
                 color="$neutral2"
                 maxFontSizeMultiplier={INPUT_MAX_FONT_SIZE_MULTIPLIER}
                 numberOfLines={1}
                 style={styles.placeholderLabelStyle}
-                variant="subheading2">
+                variant="body1">
                 {placeholderLabel}
               </Text>
-            </Flex>
-          )}
-          {!value && !shouldUseMinHeight && (
-            <Flex
-              row
-              alignItems="flex-end"
-              justifyContent="flex-end"
-              position="absolute"
-              pr="$spacing12"
-              pt="$spacing12"
-              right={0}
-              width="100%">
               <PasteButton
                 afterClipboardReceived={afterPasteButtonPress}
                 beforePress={beforePasteButtonPress}
@@ -183,26 +168,12 @@ export function GenericImportForm({
               />
             </Flex>
           )}
-          {!value && shouldUseMinHeight && (
-            <Flex centered width="100%">
-              <Flex
-                $short={{ pt: SHORT_PASTE_BUTTON_TOP_PADDING }}
-                position="absolute"
-                pt={PASTE_BUTTON_TOP_PADDING}
-                top={0}>
-                <PasteButton
-                  afterClipboardReceived={afterPasteButtonPress}
-                  beforePress={beforePasteButtonPress}
-                  onPress={onChange}
-                />
-              </Flex>
-            </Flex>
-          )}
         </Flex>
         <Flex>
           {errorMessage && value && (liveCheck || !focused) && (
             <Flex centered row gap="$spacing12">
-              <Text color="$statusCritical" variant="body3">
+              <AlertTriangle color={colors.statusCritical.val} />
+              <Text color="$statusCritical" variant="body1">
                 {errorMessage}
               </Text>
             </Flex>

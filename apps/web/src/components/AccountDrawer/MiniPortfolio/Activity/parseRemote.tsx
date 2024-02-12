@@ -3,8 +3,7 @@ import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, U
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { nativeOnChain } from 'constants/tokens'
-import { BigNumber } from 'ethers/lib/ethers'
-import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { parseUnits } from 'ethers/lib/utils'
 import {
   AssetActivityPartsFragment,
   Currency as GQLCurrency,
@@ -26,7 +25,7 @@ import ms from 'ms'
 import { useEffect, useState } from 'react'
 import store from 'state'
 import { addSignature } from 'state/signatures/reducer'
-import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
+import { SignatureType } from 'state/signatures/types'
 import { TransactionType as LocalTransactionType } from 'state/transactions/types'
 import { isAddress } from 'utils'
 import { isSameAddress } from 'utils/addresses'
@@ -34,7 +33,7 @@ import { currencyId } from 'utils/currencyId'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { MOONPAY_SENDER_ADDRESSES, OrderStatusTable, OrderTextTable } from '../constants'
-import { Activity } from './types'
+import { Activity, OffchainOrderDetails } from './types'
 
 type TransactionChanges = {
   NftTransfer: NftTransferPartsFragment[]
@@ -191,18 +190,10 @@ export function parseSwapAmounts(
   const inputCurrencyId = sent.asset.standard === 'NATIVE' ? 'ETH' : sent.asset.address
   const outputCurrencyId = received.asset.standard === 'NATIVE' ? 'ETH' : received.asset.address
   if (!inputCurrencyId || !outputCurrencyId) return undefined
-
-  const sentQuantity = parseUnits(sent.quantity, sent.asset.decimals)
-  const refundQuantity = refund ? parseUnits(refund.quantity, refund.asset.decimals) : BigNumber.from(0)
-  const receivedQuantity = parseUnits(received.quantity, received.asset.decimals)
-
-  const adjustedInput = sentQuantity.sub(refundQuantity)
-  const inputAmountRaw = adjustedInput.toString()
-  const outputAmountRaw = receivedQuantity.toString()
-  const inputAmount = formatNumberOrString({
-    input: formatUnits(adjustedInput, sent.asset.decimals),
-    type: NumberType.TokenNonTx,
-  })
+  const adjustedInput = parseFloat(sent.quantity) - parseFloat(refund?.quantity ?? '0')
+  const inputAmountRaw = parseUnits(adjustedInput.toString(), sent.asset.decimals).toString()
+  const outputAmountRaw = parseUnits(received.quantity, received.asset.decimals).toString()
+  const inputAmount = formatNumberOrString({ input: adjustedInput, type: NumberType.TokenNonTx })
   const outputAmount = formatNumberOrString({ input: received.quantity, type: NumberType.TokenNonTx })
   return {
     sent,
@@ -279,7 +270,7 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
   activity: AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment },
   changes: TransactionChanges,
   formatNumberOrString: FormatNumberOrStringFunctionType
-): UniswapXOrderDetails | undefined {
+): OffchainOrderDetails | undefined {
   const chainId = supportedChainIdFromGQLChain(activity.chain)
   if (!activity || !activity.details || !chainId) return undefined
   if (changes.TokenTransfer.length < 2) return undefined
@@ -291,9 +282,6 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
   const { inputCurrencyId, outputCurrencyId, inputAmountRaw, outputAmountRaw } = swapAmounts
 
   return {
-    orderHash: activity.details.hash,
-    id: activity.details.id,
-    offerer: activity.details.from,
     txHash: activity.details.hash,
     chainId,
     type: SignatureType.SIGN_UNISWAPX_ORDER,
@@ -511,12 +499,8 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
     status,
     statusMessage,
     offchainOrderDetails: {
-      id: details.id,
-      // TODO(limits): check type from backend and use SignatureType.SIGN_LIMIT here if necessary
       type: SignatureType.SIGN_UNISWAPX_ORDER,
       txHash: details.hash,
-      orderHash: details.hash,
-      offerer: details.offerer,
       chainId: supportedChain,
       status: uniswapXOrderStatus,
       addedTime: timestamp,
@@ -524,12 +508,12 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
         isUniswapXOrder: true,
         type: LocalTransactionType.SWAP,
         tradeType: TradeType.EXACT_INPUT,
-        inputCurrencyId: inputToken.address ?? '',
-        outputCurrencyId: outputToken.address ?? '',
-        inputCurrencyAmountRaw: parseUnits(inputTokenQuantity, inputToken.decimals).toString(),
-        expectedOutputCurrencyAmountRaw: parseUnits(outputTokenQuantity, outputToken.decimals).toString(),
-        minimumOutputCurrencyAmountRaw: parseUnits(outputTokenQuantity, outputToken.decimals).toString(),
-        settledOutputCurrencyAmountRaw: parseUnits(outputTokenQuantity, outputToken.decimals).toString(),
+        inputCurrencyId: inputToken.id,
+        outputCurrencyId: outputToken.id,
+        inputCurrencyAmountRaw: inputTokenQuantity,
+        expectedOutputCurrencyAmountRaw: outputTokenQuantity,
+        minimumOutputCurrencyAmountRaw: outputTokenQuantity,
+        settledOutputCurrencyAmountRaw: outputTokenQuantity,
       },
     },
     timestamp,

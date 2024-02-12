@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { faker } from '@faker-js/faker'
 import {
   NetInfoConnectedStates,
@@ -22,10 +21,7 @@ import { HistoryDuration, SafetyLevel } from 'wallet/src/data/__generated__/type
 import { AssetType } from 'wallet/src/entities/assets'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
-import {
-  CurrencyInfo,
-  PortfolioBalance as PortfolioBalanceType,
-} from 'wallet/src/features/dataApi/types'
+import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
@@ -45,8 +41,6 @@ import { currencyId } from 'wallet/src/utils/currencyId'
 
 // Ensures stable fixtures
 export const FAKER_SEED = 123
-export const MAX_FIXTURE_TIMESTAMP = 1609459200
-
 faker.seed(FAKER_SEED)
 
 export const mockSigner = new (class {
@@ -69,11 +63,10 @@ export const SAMPLE_SEED = [
   'skull',
   'history',
 ].join(' ')
-
 export const SAMPLE_SEED_ADDRESS_1 = '0x82D56A352367453f74FC0dC7B071b311da373Fa6'
 export const SAMPLE_SEED_ADDRESS_2 = '0x55f4B664C68F398f9e81EFf63ef4444A1A184F98'
-export const SAMPLE_CURRENCY_ID_1 = '1-0x6b175474e89094c44da98b954eedeac495271d0f'
-export const SAMPLE_CURRENCY_ID_2 = '1-0x4d224452801aced8b2f0aebe155379bb5d594381'
+export const SAMPLE_CURRENCY_ID_1 = '1-0x6B175474E89094C44Da98b954EedeAC495271d0F'
+export const SAMPLE_CURRENCY_ID_2 = '1-0x4d224452801ACEd8B2F0aebE155379bb5D594381'
 
 export const MainnetEth = NativeCurrency.onChain(ChainId.Mainnet)
 export const PolygonMatic = NativeCurrency.onChain(ChainId.Polygon)
@@ -112,10 +105,7 @@ export const mockProvider = {
   getTransactionCount: (): number => 1000,
   estimateGas: (): BigNumber => BigNumber.from('30000'),
   sendTransaction: (): { hash: string } => ({ hash: '0xabcdef' }),
-  detectNetwork: (): { name: string; chainId: ChainId } => ({
-    name: 'mainnet',
-    chainId: 1,
-  }),
+  detectNetwork: (): { name: string; chainId: ChainId } => ({ name: 'mainnet', chainId: 1 }),
   getTransactionReceipt: (): typeof txReceipt => txReceipt,
   waitForTransaction: (): typeof txReceipt => txReceipt,
   getFeeData: (): typeof mockFeeData => mockFeeData,
@@ -502,67 +492,3 @@ export const historyDurationMs: Record<HistoryDuration, number> = {
   [HistoryDuration.Year]: yearMs,
   [HistoryDuration.Max]: 5 * yearMs,
 }
-
-export const PortfolioBalancesWithUSD: [
-  PortfolioBalanceType,
-  PortfolioBalanceType,
-  PortfolioBalanceType
-] = [
-  {
-    cacheId: faker.datatype.uuid(),
-    quantity: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-    balanceUSD: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-    currencyInfo: ethCurrencyInfo,
-    relativeChange24: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-    isHidden: faker.datatype.boolean(),
-  },
-  {
-    cacheId: faker.datatype.uuid(),
-    quantity: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-    balanceUSD: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-    currencyInfo: uniCurrencyInfo,
-    relativeChange24: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-    isHidden: faker.datatype.boolean(),
-  },
-  {
-    cacheId: faker.datatype.uuid(),
-    quantity: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-    balanceUSD: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-    currencyInfo: daiCurrencyInfo,
-    relativeChange24: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-    isHidden: faker.datatype.boolean(),
-  },
-]
-
-export const PortfolioBalanceWithoutUSD: [
-  PortfolioBalanceType,
-  PortfolioBalanceType,
-  PortfolioBalanceType
-] = [
-  {
-    cacheId: faker.datatype.uuid(),
-    quantity: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-    balanceUSD: null,
-    currencyInfo: ethCurrencyInfo,
-    relativeChange24: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-    isHidden: faker.datatype.boolean(),
-  },
-  {
-    cacheId: faker.datatype.uuid(),
-    quantity: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-    balanceUSD: null,
-    currencyInfo: uniCurrencyInfo,
-    relativeChange24: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-    isHidden: faker.datatype.boolean(),
-  },
-  {
-    cacheId: faker.datatype.uuid(),
-    quantity: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-    balanceUSD: null,
-    currencyInfo: daiCurrencyInfo,
-    relativeChange24: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-    isHidden: faker.datatype.boolean(),
-  },
-]
-
-export const PortfolioBalance = PortfolioBalancesWithUSD[0]

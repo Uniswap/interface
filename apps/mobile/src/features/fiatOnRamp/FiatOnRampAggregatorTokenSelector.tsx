@@ -3,14 +3,13 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { TokenFiatOnRampList } from 'src/components/TokenSelector/TokenFiatOnRampList'
 import Trace from 'src/components/Trace/Trace'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
+import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { AnimatedFlex } from 'ui/src'
-import { SectionName } from 'wallet/src/telemetry/constants'
 
-import { useAllCommonBaseCurrencies } from 'wallet/src/components/TokenSelector/hooks'
+import { useAllCommonBaseCurrencies } from 'src/components/TokenSelector/hooks'
 import { CurrencyInfo, GqlResult } from 'wallet/src/features/dataApi/types'
 import { useFiatOnRampAggregatorSupportedTokensQuery } from 'wallet/src/features/fiatOnRamp/api'
-import { FORSupportedToken } from 'wallet/src/features/fiatOnRamp/types'
-import { ElementName } from 'wallet/src/telemetry/constants'
+import { MeldCryptoCurrency } from 'wallet/src/features/fiatOnRamp/meld'
 
 interface Props {
   onBack: () => void
@@ -19,20 +18,20 @@ interface Props {
   countryCode: string
 }
 
-const findTokenOptionForFiatOnRampToken = (
+const findTokenOptionForMeldCurrency = (
   commonBaseCurrencies: CurrencyInfo[] | undefined,
-  fiatOnRampToken: FORSupportedToken
+  meldCurrency: MeldCryptoCurrency
 ): Maybe<CurrencyInfo> => {
   return (commonBaseCurrencies || []).find(
     (item) =>
       item &&
-      fiatOnRampToken.cryptoCurrencyCode.toLowerCase() === item.currency.symbol?.toLowerCase() &&
-      fiatOnRampToken.chainId === item.currency.chainId.toString()
+      meldCurrency.cryptoCurrencyCode.toLowerCase() === item.currency.symbol?.toLowerCase() &&
+      meldCurrency.chainId === item.currency.chainId.toString()
   )
 }
 
 function useFiatOnRampTokenList(
-  supportedTokens: FORSupportedToken[] | undefined
+  supportedTokens: MeldCryptoCurrency[] | undefined
 ): GqlResult<FiatOnRampCurrency[]> {
   const {
     data: commonBaseCurrencies,
@@ -44,8 +43,8 @@ function useFiatOnRampTokenList(
   const data = useMemo(
     () =>
       (supportedTokens || [])
-        .map((fiatOnRampToken) => ({
-          currencyInfo: findTokenOptionForFiatOnRampToken(commonBaseCurrencies, fiatOnRampToken),
+        .map((meldCurrency) => ({
+          currencyInfo: findTokenOptionForMeldCurrency(commonBaseCurrencies, meldCurrency),
         }))
         .filter((item) => !!item.currencyInfo),
     [commonBaseCurrencies, supportedTokens]
@@ -66,7 +65,7 @@ function _FiatOnRampAggregatorTokenSelector({
   countryCode,
 }: Props): JSX.Element {
   const {
-    data: supportedTokensResponse,
+    data: supportedTokens,
     isLoading: supportedTokensLoading,
     error: supportedTokensQueryError,
     refetch: supportedTokensQueryRefetch,
@@ -77,7 +76,7 @@ function _FiatOnRampAggregatorTokenSelector({
     loading: tokenListLoading,
     error: tokenListError,
     refetch: tokenListRefetch,
-  } = useFiatOnRampTokenList(supportedTokensResponse?.supportedTokens)
+  } = useFiatOnRampTokenList(supportedTokens)
 
   const loading = supportedTokensLoading || tokenListLoading
   const error = Boolean(supportedTokensQueryError || tokenListError)

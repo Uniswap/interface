@@ -40,17 +40,6 @@ describe('hooks', () => {
         inputCurrencyId: null,
       })
     })
-
-    test('output ETH only, lowercase', () => {
-      expect(
-        queryParametersToCurrencyState(
-          parse('?outputcurrency=eth&exactAmount=20.5', { parseArrays: false, ignoreQueryPrefix: true })
-        )
-      ).toEqual({
-        outputCurrencyId: 'ETH',
-        inputCurrencyId: null,
-      })
-    })
   })
 
   describe('#queryParametersToSwapState', () => {

@@ -32,7 +32,7 @@ class MainActivity : ReactActivity() {
       window.isNavigationBarContrastEnforced = false
     }
     val sharedI18nUtilInstance = I18nUtil.getInstance()
-    sharedI18nUtilInstance.allowRTL(applicationContext, false)
+    sharedI18nUtilInstance.allowRTL(applicationContext, true)
   }
 
   /**

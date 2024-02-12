@@ -24,22 +24,6 @@ import { TextLoaderWrapper } from 'ui/src/components/text/Text'
 import { fonts } from 'ui/src/theme'
 import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
-// if price per token has > 3 numbers before the decimal, start showing decimals in neutral3
-// otherwise, show entire price in neutral1
-const DEEMPHASIZED_DECIMALS_THRESHOLD = 3
-
-const getEmphasizedNumberColor = (
-  index: number,
-  commaIndex: number,
-  emphasizedColor: string,
-  deemphasizedColor: string
-): string => {
-  if (index >= commaIndex && commaIndex > DEEMPHASIZED_DECIMALS_THRESHOLD) {
-    return deemphasizedColor
-  }
-  return emphasizedColor
-}
-
 const NumbersMain = ({
   color,
   backgroundColor,
@@ -111,12 +95,6 @@ const RollNumber = ({
   currency: FiatCurrencyInfo
 }): JSX.Element => {
   const colors = useSporeColors()
-  const numberColor = getEmphasizedNumberColor(
-    index,
-    commaIndex,
-    colors.neutral1.val,
-    colors.neutral3.val
-  )
 
   const animatedDigit = useDerivedValue(() => {
     const char = chars.value[index - (commaIndex - decimalPlace.value)]
@@ -125,8 +103,9 @@ const RollNumber = ({
   }, [chars])
 
   const animatedFontStyle = useAnimatedStyle(() => {
+    const color = index >= commaIndex ? colors.neutral3.val : colors.neutral1.val
     return {
-      color: numberColor,
+      color,
     }
   })
 
@@ -232,7 +211,7 @@ const RollNumber = ({
       ]}>
       <MemoizedNumbers
         backgroundColor={colors.surface1.val}
-        color={numberColor}
+        color={index >= commaIndex ? colors.neutral3.val : colors.neutral1.val}
         hidePlaceholder={hidePlaceholder}
       />
     </Animated.View>

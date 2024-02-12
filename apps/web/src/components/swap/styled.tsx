@@ -4,7 +4,6 @@ import { AlertTriangle } from 'react-feather'
 import styled, { css } from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
-import { ButtonText } from 'theme/components'
 import { AutoColumn } from '../Column'
 
 export const PageWrapper = styled.div`
@@ -22,11 +21,27 @@ export const PageWrapper = styled.div`
 `
 
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
-export const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
+const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
   position: relative;
   z-index: ${Z_INDEX.default};
+  border: 1px solid ${({ theme }) => theme.surface3};
   transition: transform 250ms ease;
   border-radius: 24px;
+
+  &:before {
+    content: ' ';
+    display: flex;
+    position: absolute;
+    inset: 0;
+    transform: scale(1.1);
+    filter: blur(50px);
+    background-color: rgba(252, 114, 255, 0.075);
+    z-index: -2;
+  }
+
+  &:hover {
+    border: 1px solid ${({ theme }) => theme.surface3};
+  }
 `
 
 export const SwapWrapper = (props: React.ComponentProps<typeof SwapWrapperOuter>) => {
@@ -39,7 +54,9 @@ export const SwapWrapper = (props: React.ComponentProps<typeof SwapWrapperOuter>
 
 const SwapWrapperInner = styled.div`
   border-radius: 24px;
+  background: ${({ theme }) => theme.surface1};
   z-index: -1;
+  padding: 8px;
   padding-top: 12px;
 `
 
@@ -135,6 +152,7 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   color: ${({ theme }) => theme.accent1};
   padding: 12px;
   border-radius: 12px;
+  margin-top: 8px;
 `
 
 export const SwapSection = styled.div`
@@ -178,19 +196,4 @@ export const ArrowContainer = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
-`
-
-export const SwapHeaderTabButton = styled(ButtonText)<{ $isActive: boolean }>`
-  color: ${({ theme, $isActive }) => ($isActive ? theme.neutral1 : theme.neutral2)};
-  background-color: ${({ theme, $isActive }) => $isActive && theme.surface2};
-  padding: 8px 16px;
-  border-radius: 20px;
-  gap: 4px;
-  font-weight: 485;
-  &:focus {
-    text-decoration: none;
-  }
-  &:active {
-    text-decoration: none;
-  }
 `

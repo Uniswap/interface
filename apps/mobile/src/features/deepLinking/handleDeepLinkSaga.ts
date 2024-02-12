@@ -9,15 +9,16 @@ import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
+import { MobileEventName, ModalName, ShareableEntity } from 'src/features/telemetry/constants'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { WidgetType } from 'src/features/widgets/widgets'
 import { Screens } from 'src/screens/Screens'
+import { openUri, UNISWAP_APP_NATIVE_TOKEN } from 'src/utils/linking'
 import { call, put, takeLatest } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
-import { UNISWAP_APP_HOSTNAME, uniswapUrls } from 'wallet/src/constants/urls'
+import { uniswapUrls, UNISWAP_APP_HOSTNAME } from 'wallet/src/constants/urls'
 import { fromUniswapWebAppLink } from 'wallet/src/features/chains/utils'
 import {
   selectAccounts,
@@ -27,9 +28,7 @@ import {
 } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import i18n from 'wallet/src/i18n/i18n'
-import { ModalName } from 'wallet/src/telemetry/constants'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
-import { UNISWAP_APP_NATIVE_TOKEN, openUri } from 'wallet/src/utils/linking'
 
 export interface DeepLink {
   url: string

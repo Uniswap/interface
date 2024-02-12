@@ -1,11 +1,12 @@
-import { memo, useMemo } from 'react'
+import { memo } from 'react'
 import { Image } from 'react-native'
-import { Flex, Text, useIsDarkMode, useSporeColors } from 'ui/src'
-import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import { Flex, Text, useSporeColors } from 'ui/src'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
 import { STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
-import { THIN_BORDER, style } from 'wallet/src/components/CurrencyLogo/styles'
+import { style, THIN_BORDER } from 'wallet/src/components/CurrencyLogo/styles'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { RemoteSvg } from 'wallet/src/features/images/RemoteSvg'
 import { useLogolessColorScheme } from 'wallet/src/utils/colors'
 import { NetworkLogo } from './NetworkLogo'
@@ -75,11 +76,6 @@ export const TokenLogo = memo(function _TokenLogo({
     ? logolessColorScheme.dark
     : logolessColorScheme.light
 
-  const textStyle = useMemo(
-    () => ({ color: foreground, fontFamily: fonts.buttonLabel3.family, fontWeight: '500' }),
-    [foreground]
-  )
-
   return (
     <Flex alignItems="center" height={size} justifyContent="center" width={size}>
       {httpUri ? (
@@ -98,7 +94,7 @@ export const TokenLogo = memo(function _TokenLogo({
             lineHeight={size * 0.5}
             minimumFontScale={0.5}
             numberOfLines={1}
-            style={textStyle}
+            style={{ color: foreground }}
             textAlign="center">
             {symbol?.slice(0, 3)}
           </Text>

@@ -1,9 +1,9 @@
 import { memo, useRef } from 'react'
 import { LayoutChangeEvent, MeasureLayoutOnSuccessCallback, View } from 'react-native'
 import { Flex, FlexProps } from 'ui/src'
+import { useStableCallback } from './hooks'
 import SortableGridItem from './SortableGridItem'
 import SortableGridProvider, { useSortableGridContext } from './SortableGridProvider'
-import { useStableCallback } from './hooks'
 import { AutoScrollProps, SortableGridChangeEvent, SortableGridRenderItem } from './types'
 import { defaultKeyExtractor } from './utils'
 

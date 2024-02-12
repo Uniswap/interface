@@ -47,7 +47,7 @@
   
   [RNSplashScreen show];
   
-  [[RCTI18nUtil sharedInstance] allowRTL:NO];
+  [[RCTI18nUtil sharedInstance] allowRTL:YES];
 
   return YES;
 }

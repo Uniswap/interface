@@ -4,7 +4,6 @@
 import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
 import 'core-js' // necessary so setImmediate works in tests
 import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
-import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
 import { MockLocalizationContext } from 'wallet/src/test/utils'
 
 // avoids polluting console in test runs, while keeping important log levels
@@ -118,16 +117,3 @@ jest.mock('react-i18next', () => ({
     init: jest.fn(),
   },
 }))
-
-// Mock the appearance hook for all tests
-const mockAppearanceSetting = AppearanceSettingType.System
-jest.mock('wallet/src/features/appearance/hooks', () => {
-  return {
-    useCurrentAppearanceSetting: () => mockAppearanceSetting,
-  }
-})
-jest.mock('wallet/src/features/appearance/hooks', () => {
-  return {
-    useSelectedColorScheme: () => 'light',
-  }
-})

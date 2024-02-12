@@ -7,7 +7,7 @@ import {
   walletConnectV2Connection,
 } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedInterfaceChain, isSupportedChain } from 'constants/chains'
+import { isSupportedChain, SupportedInterfaceChain } from 'constants/chains'
 import { FALLBACK_URLS, RPC_URLS } from 'constants/networks'
 import { useCallback } from 'react'
 import { useAppDispatch } from 'state/hooks'

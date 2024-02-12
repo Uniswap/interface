@@ -1,14 +1,19 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import { Action } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountList } from 'src/components/accounts/AccountList'
+import { AddressDisplay } from 'src/components/AddressDisplay'
+import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { OnboardingScreens, Screens } from 'src/screens/Screens'
+import { openSettings } from 'src/utils/linking'
 import {
   Button,
   Flex,
@@ -20,12 +25,7 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { ActionSheetModal, MenuItemProp } from 'wallet/src/components/modals/ActionSheetModal'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
-import { useUnitagUpdater } from 'wallet/src/features/unitags/context'
-import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
 import {
@@ -35,8 +35,6 @@ import {
 import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAllAccountsSorted } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
-import { openSettings } from 'wallet/src/utils/linking'
 import { isAndroid } from 'wallet/src/utils/platform'
 
 export function AccountSwitcherModal(): JSX.Element {
@@ -71,17 +69,10 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const dispatch = useAppDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
   const modalState = useAppSelector(selectModalState(ModalName.AccountSwitcher))
-  const { refetchUnitagsCounter } = useUnitagUpdater()
-  const { canClaimUnitag, refetch: refetchCanAddressClaimUnitag } = useCanAddressClaimUnitag()
 
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
 
   const accounts = useAppSelector(selectAllAccountsSorted)
-
-  // Force refetch of canClaimUnitag if refetchUnitagsCounter changes
-  useEffect(() => {
-    refetchCanAddressClaimUnitag?.()
-  }, [refetchUnitagsCounter, refetchCanAddressClaimUnitag])
 
   const onPressAccount = useCallback(
     (address: Address) => {
@@ -121,13 +112,12 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       dispatch(createAccountActions.trigger())
 
       navigate(Screens.OnboardingStack, {
-        screen: canClaimUnitag ? UnitagScreens.ClaimUnitag : OnboardingScreens.EditName,
+        screen: OnboardingScreens.EditName,
         params: {
-          entryPoint: OnboardingEntryPoint.Sidebar,
           importType: hasImportedSeedPhrase ? ImportType.CreateAdditional : ImportType.CreateNew,
+          entryPoint: OnboardingEntryPoint.Sidebar,
         },
       })
-
       setShowAddWalletModal(false)
       onClose()
     }
@@ -187,7 +177,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       onClose()
     }
 
-    const options: MenuItemProp[] = [
+    const options = [
       {
         key: ElementName.CreateAccount,
         onPress: onPressCreateNewWallet,
@@ -236,7 +226,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     return options
-  }, [activeAccountAddress, canClaimUnitag, dispatch, hasImportedSeedPhrase, onClose, t])
+  }, [activeAccountAddress, dispatch, hasImportedSeedPhrase, onClose, t])
 
   const accountsWithoutActive = accounts.filter((a) => a.address !== activeAccountAddress)
 

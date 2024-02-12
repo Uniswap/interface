@@ -7,9 +7,11 @@ import Trace from 'src/components/Trace/Trace'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
+import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
+import { openUri } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Button, Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { ImportType } from 'wallet/src/features/onboarding/types'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -17,8 +19,6 @@ import { importAccountActions } from 'wallet/src/features/wallet/import/importAc
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { ElementName } from 'wallet/src/telemetry/constants'
-import { openUri } from 'wallet/src/utils/linking'
 import {
   MnemonicValidationError,
   translateMnemonicErrorMessage,
@@ -44,6 +44,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
   useLockScreenOnBlur(pastePermissionModalOpen)
 
   const [value, setValue] = useState<string | undefined>(undefined)
+  const [showSuccess, setShowSuccess] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
 
   const isRestoringMnemonic = params.importType === ImportType.RestoreMnemonic
@@ -87,12 +88,20 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
   const onBlur = useCallback(() => {
     const { error, invalidWord } = validateMnemonic(value)
     if (error) {
+      setShowSuccess(false)
       setErrorMessage(translateMnemonicErrorMessage(error, invalidWord, t))
     }
   }, [t, value])
 
   const onChange = (text: string | undefined): void => {
-    const { error, invalidWord } = validateSetOfWords(text)
+    const { error, invalidWord, isValidLength } = validateSetOfWords(text)
+
+    // always show success UI if phrase is valid length
+    if (isValidLength) {
+      setShowSuccess(true)
+    } else {
+      setShowSuccess(false)
+    }
 
     // suppress error messages if the  user is not done typing a word
     const suppressError =
@@ -123,30 +132,24 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
           : t('Your recovery phrase will only be stored locally on your device.')
       }
       title={isRestoringMnemonic ? t('No backups found') : t('Enter your recovery phrase')}>
-      <Flex $short={{ gap: '$spacing12' }} gap="$spacing16">
-        <Flex px="$spacing8">
-          <GenericImportForm
-            blurOnSubmit
-            liveCheck
-            afterPasteButtonPress={(): void => setPastePermissionModalOpen(false)}
-            beforePasteButtonPress={(): void => setPastePermissionModalOpen(true)}
-            errorMessage={errorMessage}
-            inputAlignment="flex-start"
-            placeholderLabel={t('Type your recovery phrase')}
-            textAlign="left"
-            value={value}
-            onBlur={onBlur}
-            onChange={onChange}
-          />
-        </Flex>
+      <Flex $short={{ gap: '$none' }} gap="$spacing8">
+        <GenericImportForm
+          blurOnSubmit
+          liveCheck
+          afterPasteButtonPress={(): void => setPastePermissionModalOpen(false)}
+          beforePasteButtonPress={(): void => setPastePermissionModalOpen(true)}
+          errorMessage={errorMessage}
+          placeholderLabel={t('Enter recovery phrase')}
+          showSuccess={showSuccess}
+          value={value}
+          onBlur={onBlur}
+          onChange={onChange}
+        />
         <Flex centered>
           <Trace logPress element={ElementName.RecoveryHelpButton}>
             <TouchableArea
-              flexDirection="row"
-              gap="$spacing8"
               onPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}>
-              <Icons.QuestionInCircleFilled color="$surface1" size="$icon.20" />
-              <Text $short={{ variant: 'body3' }} color="$neutral3" variant="body2">
+              <Text $short={{ variant: 'body3' }} color="$accent1" variant="subheading2">
                 {isRestoringMnemonic
                   ? t('Try searching again')
                   : t('How do I find my recovery phrase?')}
@@ -155,6 +158,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
           </Trace>
         </Flex>
       </Flex>
+
       <Trace logPress element={ElementName.Next}>
         <Button disabled={!!errorMessage || !value} testID="seed-input-submit" onPress={onSubmit}>
           {t('Continue')}

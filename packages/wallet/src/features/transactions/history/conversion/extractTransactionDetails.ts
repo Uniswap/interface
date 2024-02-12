@@ -1,9 +1,9 @@
 import { ChainId } from 'wallet/src/constants/chains'
+import { SpamCode } from 'wallet/src/data/types'
 import {
   TransactionStatus as RemoteTransactionStatus,
   TransactionType as RemoteTransactionType,
 } from 'wallet/src/data/__generated__/types-and-hooks'
-import { SpamCode } from 'wallet/src/data/types'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {
   TransactionDetails,

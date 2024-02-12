@@ -3,10 +3,10 @@ import React from 'react'
 import { View } from 'react-native'
 import { useAppSelector } from 'src/app/hooks'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
+import { HandleBar } from 'src/components/modals/HandleBar'
 import { selectModalState } from 'src/features/modals/selectModalState'
+import { ModalName } from 'src/features/telemetry/constants'
 import { Flex, flexStyles, useDeviceInsets, useSporeColors } from 'ui/src'
-import { HandleBar } from 'wallet/src/components/modals/HandleBar'
-import { ModalName } from 'wallet/src/telemetry/constants'
 /**
  * Wrapper view to correctly render screens within BottomSheetModal as needed. This is required
  * to enable both full screen, and bottom sheet drag gestures on a screen within a modal.

@@ -1,5 +1,6 @@
 /* eslint-disable import/no-unused-modules */
 import { ImageResponse } from '@vercel/og'
+import React from 'react'
 
 import { getColor } from '../../../../src/utils/getColor'
 import { WATERMARK_URL } from '../../../constants'

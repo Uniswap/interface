@@ -3,32 +3,32 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
-import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
+import { NoTransactions } from 'src/components/icons/NoTransactions'
 import {
   AnimatedBottomSheetFlatList,
   AnimatedFlatList,
 } from 'src/components/layout/AnimatedFlatList'
-import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
+import { TabProps, TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
-import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { openModal } from 'src/features/modals/modalSlice'
-import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Icons, Text, useDeviceInsets, useSporeColors } from 'ui/src'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { GQLQueries } from 'wallet/src/data/queries'
-import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
-import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
-import { SwapSummaryCallbacks } from 'wallet/src/features/transactions/SummaryCards/types'
-import { generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
+import { ModalName } from 'src/features/telemetry/constants'
 import {
   useCreateSwapFormState,
   useMergeLocalAndRemoteTransactions,
-} from 'wallet/src/features/transactions/hooks'
-import { useMostRecentSwapTx } from 'wallet/src/features/transactions/swap/hooks'
+} from 'src/features/transactions/hooks'
+import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
+import { useMostRecentSwapTx } from 'src/features/transactions/swap/hooks'
+import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
+import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
+import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { GQLQueries } from 'wallet/src/data/queries'
+import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
+import { SwapSummaryCallbacks } from 'wallet/src/features/transactions/SummaryCards/types'
+import { generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
-import { ModalName } from 'wallet/src/telemetry/constants'
 import { isAndroid } from 'wallet/src/utils/platform'
 
 export const ACTIVITY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]
@@ -62,9 +62,6 @@ export const ActivityTab = memo(
     const colors = useSporeColors()
     const insets = useDeviceInsets()
 
-    const { trigger: biometricsTrigger } = useBiometricPrompt()
-    const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
-
     const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(
       containerProps?.contentContainerStyle
     )
@@ -89,10 +86,9 @@ export const ActivityTab = memo(
         TransactionSummaryLayout,
         <Loader.Transaction />,
         SectionTitle,
-        swapCallbacks,
-        requiresBiometrics ? biometricsTrigger : undefined
+        swapCallbacks
       )
-    }, [swapCallbacks, requiresBiometrics, biometricsTrigger])
+    }, [swapCallbacks])
 
     const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } =
       useFormattedTransactionDataForActivity(
@@ -130,7 +126,7 @@ export const ActivityTab = memo(
                   'When you approve, trade, or transfer tokens or NFTs, your transactions will appear here.'
                 )
           }
-          icon={<Icons.NoTransactions size="$icon.100" />}
+          icon={<NoTransactions />}
           title={t('No activity yet')}
           onPress={onPressReceive}
         />

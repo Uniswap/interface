@@ -1,7 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
-import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import {
   FinalizedTransactionStatus,
   TransactionType,
@@ -21,8 +20,6 @@ export enum AppNotificationType {
   ChooseCountry,
   AssetVisibility, // could be token or NFT
   SwapPending,
-  TransferCurrencyPending,
-  ScantasticComplete,
 }
 
 interface AppNotificationBase {
@@ -133,7 +130,6 @@ export type TransactionNotification =
 
 export enum CopyNotificationType {
   Address = 'address',
-  ContractAddress = 'contractAddress',
   TransactionId = 'transactionId',
   Image = 'image',
 }
@@ -170,20 +166,10 @@ export interface SwapPendingNotification extends AppNotificationBase {
   wrapType: WrapType
 }
 
-export interface TransferCurrencyPendingNotification extends AppNotificationBase {
-  type: AppNotificationType.TransferCurrencyPending
-  currencyInfo: CurrencyInfo
-}
-
-export interface ScantasticCompleteNotification extends AppNotificationBase {
-  type: AppNotificationType.ScantasticComplete
-}
-
 export type AppNotification =
   | AppNotificationDefault
   | AppErrorNotification
   | SwapPendingNotification
-  | TransferCurrencyPendingNotification
   | CopyNotification
   | WalletConnectNotification
   | TransactionNotification
@@ -191,4 +177,3 @@ export type AppNotification =
   | ChooseCountryNotification
   | ChangeAssetVisibilityNotification
   | SuccessNotification
-  | ScantasticCompleteNotification

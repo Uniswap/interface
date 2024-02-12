@@ -7,6 +7,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Loader } from 'src/components/loading'
 import WalletPreviewCard from 'src/features/import/WalletPreviewCard'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { Button, Flex } from 'ui/src'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -26,7 +27,6 @@ import {
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import { ElementName } from 'wallet/src/telemetry/constants'
 
 const FORCED_LOADING_DURATION = 3 * ONE_SECOND_MS // 3s
 
@@ -201,7 +201,11 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
     ? t('One wallet found')
     : t('Select wallets to import')
 
-  const subtitle = isLoading ? t('Your wallets will appear below.') : undefined
+  const subtitle = isLoading
+    ? t('Your wallets will appear below.')
+    : isOnlyOneAccount
+    ? t('Please confirm that the wallet below is the one you’d like to import.')
+    : t('We found several wallets associated with your recovery phrase.')
 
   return (
     <>

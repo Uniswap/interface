@@ -1,7 +1,8 @@
 import { Group } from '@visx/group'
 import { LinePath } from '@visx/shape'
 import { easeCubicInOut } from 'd3'
-import React, { useEffect, useRef, useState } from 'react'
+import React from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { animated, useSpring } from 'react-spring'
 import { useTheme } from 'styled-components'
 

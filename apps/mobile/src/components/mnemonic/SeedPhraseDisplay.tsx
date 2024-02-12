@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { usePrevious } from 'react-native-wagmi-charts'
 import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWordView'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
+import { WarningSeverity } from 'src/components/modals/WarningModal/types'
+import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { Button, Flex } from 'ui/src'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = {
   mnemonicId: string

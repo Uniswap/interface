@@ -15,7 +15,6 @@ import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ButtonGray } from '../Button'
@@ -186,11 +185,12 @@ interface CurrencyInputPanelProps {
   otherCurrency?: Currency | null
   fiatValue?: { data?: number; isLoading: boolean }
   id: string
+  showCommonBases?: boolean
   showCurrencyAmount?: boolean
+  disableNonToken?: boolean
   renderBalance?: (amount: CurrencyAmount<Currency>) => ReactNode
   locked?: boolean
   loading?: boolean
-  currencySearchFilters?: CurrencySearchFilters
 }
 
 export default function CurrencyInputPanel({
@@ -202,8 +202,9 @@ export default function CurrencyInputPanel({
   currency,
   otherCurrency,
   id,
-  currencySearchFilters,
+  showCommonBases,
   showCurrencyAmount,
+  disableNonToken,
   renderBalance,
   fiatValue,
   hideBalance = false,
@@ -338,8 +339,9 @@ export default function CurrencyInputPanel({
           onCurrencySelect={onCurrencySelect}
           selectedCurrency={currency}
           otherSelectedCurrency={otherCurrency}
+          showCommonBases={showCommonBases}
           showCurrencyAmount={showCurrencyAmount}
-          currencySearchFilters={currencySearchFilters}
+          disableNonToken={disableNonToken}
         />
       )}
     </InputPanel>

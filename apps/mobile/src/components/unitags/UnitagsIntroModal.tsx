@@ -3,19 +3,16 @@ import { useTranslation } from 'react-i18next'
 import 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { closeModal } from 'src/features/modals/modalSlice'
-import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
+import { ModalName } from 'src/features/telemetry/constants'
 import { Screens, UnitagScreens } from 'src/screens/Screens'
-import { Button, Flex, GeneratedIcon, Icons, Image, Text, useIsDarkMode } from 'ui/src'
-import { UNITAGS_INTRO_BANNER_DARK, UNITAGS_INTRO_BANNER_LIGHT } from 'ui/src/assets'
+import { Button, Flex, GeneratedIcon, Icons, Image, Text } from 'ui/src'
+import { UNITAGS_BANNER_HORIZONTAL } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { ImportType } from 'wallet/src/features/onboarding/types'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function UnitagsIntroModal(): JSX.Element {
   const { t } = useTranslation()
-  const isDarkMode = useIsDarkMode()
   const appDispatch = useAppDispatch()
 
   const onClose = (): void => {
@@ -27,57 +24,79 @@ export function UnitagsIntroModal(): JSX.Element {
       screen: UnitagScreens.ClaimUnitag,
       params: {
         entryPoint: Screens.Home,
-        // While technically not a new wallet, required for type consistency.
-        // The entryPoint being Screens.Home ensures this value is not used to ever create a wallet.
-        importType: ImportType.CreateNew,
       },
     })
     onClose()
   }
 
+  const onPressMaybeLater = (): void => {
+    onClose()
+  }
+
   return (
     <BottomSheetModal name={ModalName.UnitagsIntro} onClose={onClose}>
-      <Flex gap="$spacing24" px="$spacing24" py="$spacing16">
+      <Flex $short={{ gap: '$spacing16' }} gap="$spacing24" px="$spacing24" py="$spacing16">
         <Flex alignItems="center" gap="$spacing12">
-          <Text variant="subheading1">{t('Introducing Usernames')}</Text>
-          <Text color="$neutral2" textAlign="center" variant="body3">
-            {t(
-              'Say goodbye to 0x addresses. Usernames are readable addresses that make it easier to receive crypto and connect with friends.'
-            )}
-          </Text>
+          <Flex maxHeight={70}>
+            <Image maxHeight={70} resizeMode="contain" source={UNITAGS_BANNER_HORIZONTAL} />
+          </Flex>
+          <Text variant="heading3">{t('Introducing Usernames')}</Text>
         </Flex>
-        <Flex alignItems="center" maxHeight={100}>
-          <Image
-            maxHeight={100}
-            resizeMode="contain"
-            source={isDarkMode ? UNITAGS_INTRO_BANNER_DARK : UNITAGS_INTRO_BANNER_LIGHT}
+        <Flex gap="$spacing16" px="$spacing12">
+          <BodyItem
+            Icon={Icons.Quotes}
+            subtitle={t('Say goodbye to copying, pasting, and triple-checking 0x addresses.')}
+            title={t('Human readable')}
           />
-        </Flex>
-        <Flex gap="$spacing16" px="$spacing20">
-          <BodyItem Icon={Icons.UserSquare} title={t('Customizable profiles')} />
-          <BodyItem Icon={Icons.Ticket} title={t('Free to claim')} />
-          <BodyItem Icon={Icons.Lightning} title={t('Powered by ENS subdomains')} />
+          <BodyItem
+            Icon={Icons.Photo}
+            subtitle={t('Upload an avatar, create a bio, and link your socials.')}
+            title={t('Customizable profile')}
+          />
+          <BodyItem
+            Icon={Icons.Ticket}
+            subtitle={t('Create your unique username for free, no network fees involved.')}
+            title={t('Free to claim')}
+          />
+          <BodyItem
+            Icon={Icons.Lightning}
+            subtitle={t('Uniswap usernames are built on top of ENS subdomains.')}
+            title={t('Powered by ENS')}
+          />
         </Flex>
         <Flex gap="$spacing8" mt="$spacing16">
           <Button size="medium" theme="primary" onPress={onPressClaimOneNow}>
-            {t('Continue')}
+            {t('Claim one now')}
           </Button>
-        </Flex>
-        <Flex $short={{ py: '$none', mx: '$spacing12' }} mx="$spacing24">
-          <TermsOfService />
+          <Button size="medium" theme="secondary" onPress={onPressMaybeLater}>
+            {t('Maybe later')}
+          </Button>
         </Flex>
       </Flex>
     </BottomSheetModal>
   )
 }
 
-function BodyItem({ Icon, title }: { Icon: GeneratedIcon; title: string }): JSX.Element {
+function BodyItem({
+  Icon,
+  title,
+  subtitle,
+}: {
+  Icon: GeneratedIcon
+  title: string
+  subtitle: string
+}): JSX.Element {
   return (
-    <Flex row alignItems="center" gap="$spacing16">
-      <Icon color="$accent1" size={iconSizes.icon20} strokeWidth={2} />
-      <Text color="$neutral2" variant="body3">
-        {title}
-      </Text>
+    <Flex row alignItems="center" gap="$spacing24">
+      <Icon color="$accent1" size={iconSizes.icon24} strokeWidth={2} />
+      <Flex fill $short={{ gap: '$spacing2' }} gap="$spacing4">
+        <Text color="$accent1" variant="subheading2">
+          {title}
+        </Text>
+        <Text color="$neutral2" variant="body3">
+          {subtitle}
+        </Text>
+      </Flex>
     </Flex>
   )
 }

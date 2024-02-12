@@ -1,13 +1,13 @@
+import { getLocales } from 'expo-localization'
 import { Platform } from 'react-native'
 import { createFont, isWeb } from 'tamagui'
-import { getDeviceLocales } from 'utilities/src/device/locales'
 
 // TODO(EXT-148): remove this type and use Tamagui's FontTokens
 export type TextVariantTokens = keyof typeof fonts
 
 // make React Native font rendering more visually similar to the web and Figma
 // Except for CJK languages (only Chinese and Japanese for now)
-const languageCode = getDeviceLocales()[0]?.languageCode
+const languageCode = getLocales()[0]?.languageCode
 const adjustedSize = (fontSize: number): number => {
   if (Platform.OS === 'web' || languageCode === 'zh' || languageCode === 'ja') {
     return fontSize

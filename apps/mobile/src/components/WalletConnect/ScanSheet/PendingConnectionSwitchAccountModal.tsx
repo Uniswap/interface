@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ActionSheetModal } from 'src/components/modals/ActionSheetModal'
 import { SwitchAccountOption } from 'src/components/WalletConnect/ScanSheet/SwitchAccountOption'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Flex, Text } from 'ui/src'
-import { ActionSheetModal } from 'wallet/src/components/modals/ActionSheetModal'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = {
   activeAccount: Account | null

@@ -3,7 +3,11 @@ import React, { useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
 import { Action } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { Switch } from 'src/components/buttons/Switch'
+import { TextInput } from 'src/components/input/TextInput'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { closeModal } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { setCustomEndpoint } from 'src/features/tweaks/slice'
 import {
@@ -22,16 +26,12 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { Switch } from 'wallet/src/components/buttons/Switch'
-import { TextInput } from 'wallet/src/components/input/TextInput'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import {
   EXPERIMENT_NAMES,
   EXPERIMENT_VALUES_BY_EXPERIMENT,
   FEATURE_FLAGS,
 } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'wallet/src/features/experiments/hooks'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function ExperimentsModal(): JSX.Element {
   const insets = useDeviceInsets()
@@ -193,7 +193,6 @@ function ExperimentRow({ name }: { name: string }): JSX.Element {
 
   const params = Object.entries(experiment.config.value).map(([key, value]) => (
     <Flex
-      key={key}
       row
       alignItems="center"
       gap="$spacing16"

@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
+import { AccountDetails } from 'src/components/accounts/AccountDetails'
+import { WarningSeverity } from 'src/components/modals/WarningModal/types'
+import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { WalletConnectRequestModal } from 'src/components/WalletConnect/RequestModal/WalletConnectRequestModal'
 import { PendingConnectionModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionModal'
 import { WalletConnectModal } from 'src/components/WalletConnect/ScanSheet/WalletConnectModal'
 import { closeModal } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import {
   removePendingSession,
@@ -16,15 +20,11 @@ import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { Flex, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme'
-import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import {
   useActiveAccount,
   useActiveAccountAddressWithThrow,
   useSignerAccounts,
 } from 'wallet/src/features/wallet/hooks'
-import { ModalName } from 'wallet/src/telemetry/constants'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export function WalletConnectModals(): JSX.Element {

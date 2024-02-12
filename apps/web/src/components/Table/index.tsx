@@ -2,7 +2,8 @@ import { Trans } from '@lingui/macro'
 import { CellContext, ColumnDef, flexRender, getCoreRowModel, RowData, useReactTable } from '@tanstack/react-table'
 import Loader from 'components/Icons/LoadingSpinner'
 import useDebounce from 'hooks/useDebounce'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
+import { useState } from 'react'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import { FadePresence } from 'theme/components/FadePresence'
 
@@ -20,7 +21,6 @@ import {
   TableBody,
   TableContainer,
   TableHead,
-  TableRowLink,
 } from './styled'
 
 export function Table<Data extends RowData>({
@@ -142,24 +142,15 @@ export function Table<Data extends RowData>({
                       ))}
                     </DataRow>
                   ))
-                : table.getRowModel().rows.map((row) => {
-                    const cells = row
-                      .getVisibleCells()
-                      .map((cell) => (
+                : table.getRowModel().rows.map((row) => (
+                    <DataRow key={row.id}>
+                      {row.getVisibleCells().map((cell) => (
                         <CellContainer key={cell.id}>
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </CellContainer>
-                      ))
-                    const rowOriginal = row.original as any
-                    const linkState = rowOriginal.linkState // optional data passed to linked page, accessible via useLocation().state
-                    return 'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
-                      <TableRowLink to={rowOriginal.link} key={row.id} state={linkState}>
-                        <DataRow>{cells}</DataRow>
-                      </TableRowLink>
-                    ) : (
-                      <DataRow key={row.id}>{cells}</DataRow>
-                    )
-                  })}
+                      ))}
+                    </DataRow>
+                  ))}
             </TableBody>
           </ScrollSyncPane>
           <LoadingIndicatorContainer show={loadingMore}>

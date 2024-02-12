@@ -16,8 +16,8 @@ import { getLocale } from 'wallet/src/features/language/hooks'
 import { selectCurrentLanguage, setCurrentLanguage } from 'wallet/src/features/language/slice'
 import {
   EditAccountAction,
-  TogglePushNotificationParams,
   editAccountActions,
+  TogglePushNotificationParams,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import {

@@ -1,21 +1,18 @@
-import { t, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { motion } from 'framer-motion'
 import styled, { useTheme } from 'styled-components'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import { PillButton } from '../components/cards/PillButton'
 import { Box, H2, H3 } from '../components/Generics'
-import { BookOpen, ChatBubbles, HelpCircle } from '../components/Icons'
+import { BookOpen, File, HelpCircle } from '../components/Icons'
 
 const SectionLayout = styled.div`
-  width: 100%;
-  max-width: 1360px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 40px;
+  padding: 0 24px;
   @media (max-width: 768px) {
-    padding: 0 48px;
+    padding: 0 64px;
   }
   @media (max-width: 468px) {
     padding: 0 24px;
@@ -23,26 +20,51 @@ const SectionLayout = styled.div`
 `
 const Layout = styled.div`
   width: 100%;
-  max-width: 1280px;
+  max-width: 1328px;
+
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
   grid-column-gap: 16px;
   grid-row-gap: 16px;
   @media (max-width: 768px) {
-    grid-template-rows: repeat(2, 1fr);
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
   }
 `
 const SectionCol = styled(Box)`
   flex-direction: column;
   max-width: 1328px;
-  gap: 24px;
+  gap: 48px;
   @media (max-width: 768px) {
     gap: 24px;
   }
 `
-const Card = styled.a<{
+const PlaceHolderInput = styled.input`
+  position: relative;
+
+  height: 56px;
+  width: 100%;
+  border-radius: 99px;
+  border: none;
+  padding: 0 32px;
+
+  font-family: Basel;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 535;
+
+  color: ${({ theme }) => theme.neutral1};
+  background-color: ${({ theme }) => theme.surface1};
+
+  box-shadow: 0px 0px 0px 0px ${({ theme }) => theme.accent1};
+  transition: box-shadow 0.1s ease-in-out;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 3px ${({ theme }) => theme.accent1};
+  }
+`
+const Card = styled.div<{
   backgroundColor?: string
 }>`
   display: flex;
@@ -50,11 +72,9 @@ const Card = styled.a<{
   align-items: flex-start;
   justify-content: space-between;
   position: relative;
-  height: 250px;
   border-radius: 20px;
   padding: 32px 28px;
   overflow: hidden;
-  text-decoration: none;
   background-color: ${(props) => props.backgroundColor || props.theme.surface2};
   @media (max-width: 1024px) {
     gap: 16px;
@@ -109,59 +129,39 @@ const RectCard = motion(styled(Card)`
     grid-row: span 1 / span 1;
   }
 `)
-
-const helpPrimary = '#FF4D00'
-const blogPrimary = '#8E8767'
-
 export function NewsletterEtc() {
   const theme = useTheme()
-  const isDarkMode = useIsDarkMode()
   return (
     <SectionLayout>
-      <Box direction="row" maxWidth="1328px" gap="24px" width="100%">
+      <Box direction="row" maxWidth="1328px" gap="24px">
         <SectionCol justify-content="space-between" height="100%">
           <H2>
-            <Trans>Connect with us</Trans>
+            <Trans>Learn more</Trans>
           </H2>
           <Layout>
-            <HelpCenterCard
-              initial="initial"
-              whileHover="hover"
-              href="https://help.uniswap.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              backgroundColor={isDarkMode ? 'rgba(255, 77, 0, 0.08)' : 'rgba(255, 77, 0, 0.04)'}
-            >
-              <PillButton icon={<HelpCircle fill={helpPrimary} />} color={helpPrimary} label={t`Help Center`} />
-              <H3 color={helpPrimary}>
+            <HelpCenterCard initial="initial" whileHover="hover" backgroundColor={theme.surface2}>
+              <PillButton icon={<HelpCircle fill={theme.neutral1} />} color={theme.neutral1} label="Help Center" />
+              <H3>
                 <Trans>Get support</Trans>
               </H3>
             </HelpCenterCard>
-            <BlogCard
-              initial="initial"
-              whileHover="hover"
-              href="https://blog.uniswap.org/"
-              target="_blank"
-              rel="noopener noreferrer"
-              backgroundColor={isDarkMode ? 'rgba(98, 84, 50, 0.16)' : 'rgba(98, 84, 50, 0.04)'}
-            >
-              <PillButton icon={<BookOpen fill={blogPrimary} />} color={blogPrimary} label={t`Blog`} />
-              <H3 color={blogPrimary}>
-                <Trans>Insights and news from the team</Trans>
+            <BlogCard initial="initial" whileHover="hover" backgroundColor={theme.surface2}>
+              <PillButton icon={<BookOpen fill={theme.neutral1} />} color={theme.neutral1} label="Blog" />
+              <H3>
+                <Trans>Insights and updates from the team</Trans>
               </H3>
             </BlogCard>
-            <RectCard
-              backgroundColor={theme.accent2}
-              initial="initial"
-              whileHover="hover"
-              href="https://twitter.com/Uniswap/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <PillButton icon={<ChatBubbles fill={theme.accent1} />} color={theme.accent1} label={t`Stay connected`} />
+            <RectCard backgroundColor={theme.accent2}>
+              <PillButton
+                icon={<File fill={theme.neutral1} />}
+                color={theme.neutral1}
+                label="Newsletter"
+                cursor="default"
+              />
               <H3 color={theme.accent1}>
-                <Trans>Follow @Uniswap on X for the latest updates</Trans>
+                <Trans>Sign up for our newsletter to stay in touch with the latest updates, news, and events.</Trans>
               </H3>
+              <PlaceHolderInput placeholder="enter email address" />
             </RectCard>
           </Layout>
         </SectionCol>

@@ -1,15 +1,15 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { ElementName } from 'src/features/telemetry/constants'
 import { StatusAnimation } from 'src/features/transactions/TransactionPending/StatusAnimation'
+import { openTransactionLink } from 'src/utils/linking'
 import { AnimatedFlex, Button, Flex, Text, TouchableArea } from 'ui/src'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
+  isFinalizedTx,
   TransactionDetails,
   TransactionStatus,
-  isFinalizedTx,
 } from 'wallet/src/features/transactions/types'
-import { ElementName } from 'wallet/src/telemetry/constants'
-import { openTransactionLink } from 'wallet/src/utils/linking'
 
 type TransactionStatusProps = {
   transaction: TransactionDetails | undefined

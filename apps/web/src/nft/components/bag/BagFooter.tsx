@@ -1,10 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
-import { Trans, t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent, sendAnalyticsEvent } from 'analytics'
+import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Column from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
@@ -38,7 +38,6 @@ import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { BuyButtonStateData, BuyButtonStates, getBuyButtonStateData } from './ButtonStates'
 
 const FooterContainer = styled.div`
@@ -175,10 +174,6 @@ const Helper = ({ children, color }: PropsWithChildren<HelperTextProps>) => {
       {children}
     </HelperText>
   )
-}
-
-const BAG_FOOTER_CURRENCY_SEARCH_FILTERS: CurrencySearchFilters = {
-  onlyShowCurrenciesWithBalance: true,
 }
 
 const InputCurrencyValue = ({
@@ -543,7 +538,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
           }
         }}
         selectedCurrency={activeCurrency ?? undefined}
-        currencySearchFilters={BAG_FOOTER_CURRENCY_SEARCH_FILTERS}
+        onlyShowCurrenciesWithBalance={true}
       />
     </FooterContainer>
   )

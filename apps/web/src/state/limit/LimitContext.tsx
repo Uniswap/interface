@@ -2,7 +2,7 @@ import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext,
 
 import { LimitInfo, useDerivedLimitInfo } from './hooks'
 
-export enum Expiry {
+enum Expiry {
   Day = 1,
   Week,
   Month,
@@ -11,17 +11,9 @@ export enum Expiry {
 
 export interface LimitState {
   readonly inputAmount: string
+  readonly price: string
   readonly outputAmount: string
   readonly expiry: Expiry
-  readonly limitPrice: string
-
-  // The form should autofill in the market price between two currencies unless the user has
-  // already manually edited the price for that currency pair
-  readonly limitPriceEdited: boolean
-
-  // The limit form has 3 fields, but only two of them can be independent at a time.
-  // Always prefer `marketPrice` be independent, so either derive the input amount or the output amount
-  readonly isInputAmountFixed: boolean
 }
 
 type LimitContextType = {
@@ -32,15 +24,12 @@ type LimitContextType = {
 
 const DEFAULT_LIMIT_STATE = {
   inputAmount: '',
-  limitPrice: '',
-  limitPriceEdited: false,
+  price: '',
   outputAmount: '',
-  expiry: Expiry.Week,
-  isInputAmountFixed: true,
+  expiry: Expiry.Day, // TODO: update default expiry?
 }
 
-// exported for testing
-export const LimitContext = createContext<LimitContextType>({
+const LimitContext = createContext<LimitContextType>({
   limitState: DEFAULT_LIMIT_STATE,
   setLimitState: () => undefined,
   derivedLimitInfo: {
@@ -55,18 +44,9 @@ export function useLimitContext() {
 
 export function LimitContextProvider({ children }: PropsWithChildren) {
   const [limitState, setLimitState] = useState<LimitState>(DEFAULT_LIMIT_STATE)
-
   const derivedLimitInfo = useDerivedLimitInfo(limitState)
 
   return (
     <LimitContext.Provider value={{ limitState, setLimitState, derivedLimitInfo }}>{children}</LimitContext.Provider>
   )
-}
-
-export function useLimitPrice() {
-  const { limitState, setLimitState } = useLimitContext()
-  const setLimitPrice = (limitPrice: string) => {
-    setLimitState((prevState) => ({ ...prevState, limitPrice, limitPriceEdited: true }))
-  }
-  return { limitPrice: limitState.limitPrice, setLimitPrice }
 }

@@ -7,7 +7,6 @@ export const RESET_APPROVAL_TOKENS = [USDT_MAINNET, LDO, NMR, MNW]
 export enum SwapTab {
   Swap = 'swap',
   Limit = 'limit',
-  Send = 'send',
 }
 
 export enum Field {

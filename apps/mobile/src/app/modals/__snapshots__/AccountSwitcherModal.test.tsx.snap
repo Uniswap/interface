@@ -4,6 +4,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
 <View
   style={
     {
+      "alignItems": "stretch",
       "flexDirection": "column",
       "maxHeight": NaN,
       "paddingBottom": 12,
@@ -13,6 +14,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
   <View
     style={
       {
+        "alignItems": "stretch",
         "flexDirection": "column",
         "gap": 16,
         "paddingBottom": 16,
@@ -32,20 +34,12 @@ exports[`AccountSwitcher renders correctly 1`] = `
       <View
         style={
           {
+            "alignItems": "stretch",
             "backgroundColor": "transparent",
-            "borderBottomColor": "transparent",
             "borderBottomLeftRadius": 999999,
             "borderBottomRightRadius": 999999,
-            "borderBottomWidth": 0,
-            "borderLeftColor": "transparent",
-            "borderLeftWidth": 0,
-            "borderRightColor": "transparent",
-            "borderRightWidth": 0,
-            "borderStyle": "solid",
-            "borderTopColor": "transparent",
             "borderTopLeftRadius": 999999,
             "borderTopRightRadius": 999999,
-            "borderTopWidth": 0,
             "flexDirection": "column",
             "position": "relative",
           }
@@ -73,6 +67,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
           <View
             style={
               {
+                "alignItems": "stretch",
                 "flexDirection": "column",
                 "height": 56,
                 "width": 56,
@@ -82,6 +77,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
             <View
               style={
                 {
+                  "alignItems": "stretch",
                   "flexDirection": "column",
                   "height": 56,
                   "width": 56,
@@ -238,36 +234,24 @@ exports[`AccountSwitcher renders correctly 1`] = `
             }
           }
         >
-          <View
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={true}
+            maxFontSizeMultiplier={1.4}
+            numberOfLines={1}
             style={
               {
-                "alignItems": "center",
-                "flexDirection": "row",
-                "gap": 2,
-                "justifyContent": "center",
+                "color": "#222222",
+                "fontFamily": "Basel-Book",
+                "fontSize": 19,
+                "lineHeight": 24,
               }
             }
+            suppressHighlighting={true}
+            testID="address-display/name/Test Account"
           >
-            <Text
-              adjustsFontSizeToFit={true}
-              allowFontScaling={true}
-              maxFontSizeMultiplier={1.4}
-              numberOfLines={1}
-              style={
-                {
-                  "color": "#222222",
-                  "flexShrink": 1,
-                  "fontFamily": "Basel-Book",
-                  "fontSize": 19,
-                  "lineHeight": 24,
-                }
-              }
-              suppressHighlighting={true}
-              testID="address-display/name/Test Account"
-            >
-              Test Account
-            </Text>
-          </View>
+            Test Account
+          </Text>
         </View>
         <View
           accessibilityState={
@@ -404,6 +388,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
     <View
       style={
         {
+          "alignItems": "stretch",
           "flexDirection": "column",
           "paddingLeft": 24,
           "paddingRight": 24,
@@ -472,6 +457,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
   <View
     style={
       {
+        "alignItems": "stretch",
         "flexDirection": "column",
         "flexShrink": 1,
       }
@@ -574,6 +560,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
       <View
         style={
           {
+            "alignItems": "stretch",
             "borderBottomColor": "#2222220D",
             "borderBottomLeftRadius": 999999,
             "borderBottomRightRadius": 999999,

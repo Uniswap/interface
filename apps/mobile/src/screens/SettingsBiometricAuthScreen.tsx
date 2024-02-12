@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Alert, ListRenderItemInfo } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
+import { Switch } from 'src/components/buttons/Switch'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
@@ -19,9 +20,8 @@ import {
   setRequiredForAppAccess,
   setRequiredForTransactions,
 } from 'src/features/biometrics/slice'
+import { openSettings } from 'src/utils/linking'
 import { Flex, Text, TouchableArea } from 'ui/src'
-import { Switch } from 'wallet/src/components/buttons/Switch'
-import { openSettings } from 'wallet/src/utils/linking'
 import { isIOS } from 'wallet/src/utils/platform'
 
 interface BiometricAuthSetting {
@@ -114,10 +114,8 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
           }
 
           await trigger({
-            params: {
-              biometricAppSettingType: BiometricSettingType.RequiredForAppAccess,
-              newValue: newRequiredForAppAccessValue,
-            },
+            biometricAppSettingType: BiometricSettingType.RequiredForAppAccess,
+            newValue: newRequiredForAppAccessValue,
           })
         },
         value: requiredForAppAccess,
@@ -144,11 +142,11 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
           }
 
           await trigger({
-            params: {
-              biometricAppSettingType: BiometricSettingType.RequiredForTransactions,
-              newValue: newRequiredForTransactionsValue,
-            },
+            biometricAppSettingType: BiometricSettingType.RequiredForTransactions,
+            newValue: newRequiredForTransactionsValue,
           })
+
+          handleOSBiometricAuthTurnedOff()
         },
         value: requiredForTransactions,
         text: t('Transactions'),
@@ -198,13 +196,11 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
           onClose={onCloseModal}
           onConfirm={async (): Promise<void> => {
             await trigger({
-              params: {
-                biometricAppSettingType: unsafeWarningModalType,
-                // flip the bit
-                newValue: !(unsafeWarningModalType === BiometricSettingType.RequiredForAppAccess
-                  ? requiredForAppAccess
-                  : requiredForTransactions),
-              },
+              biometricAppSettingType: unsafeWarningModalType,
+              // flip the bit
+              newValue: !(unsafeWarningModalType === BiometricSettingType.RequiredForAppAccess
+                ? requiredForAppAccess
+                : requiredForTransactions),
             })
             setShowUnsafeWarningModal(false)
             setUnsafeWarningModalType(null)

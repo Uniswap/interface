@@ -8,31 +8,25 @@ import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import {
+  TabProps,
   TAB_BAR_HEIGHT,
   TAB_VIEW_SCROLL_THROTTLE,
-  TabProps,
 } from 'src/components/layout/TabHelpers'
+import { Loader } from 'src/components/loading'
+import { HiddenTokensRow } from 'src/components/TokenBalanceList/HiddenTokensRow'
 import { TokenBalanceItemContextMenu } from 'src/components/TokenBalanceList/TokenBalanceItemContextMenu'
-import { Screens } from 'src/screens/Screens'
-import {
-  AnimatedFlex,
-  Flex,
-  Loader,
-  useDeviceDimensions,
-  useDeviceInsets,
-  useSporeColors,
-} from 'ui/src'
-import { zIndices } from 'ui/src/theme'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { HiddenTokensRow } from 'wallet/src/features/portfolio/HiddenTokensRow'
-import { TokenBalanceItem } from 'wallet/src/features/portfolio/TokenBalanceItem'
 import {
   HIDDEN_TOKEN_BALANCES_ROW,
   TokenBalanceListContextProvider,
   TokenBalanceListRow,
   useTokenBalanceListContext,
-} from 'wallet/src/features/portfolio/TokenBalanceListContext'
+} from 'src/components/TokenBalanceList/TokenBalanceListContext'
+import { Screens } from 'src/screens/Screens'
+import { AnimatedFlex, Flex, useDeviceDimensions, useDeviceInsets, useSporeColors } from 'ui/src'
+import { zIndices } from 'ui/src/theme'
+import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
+import { TokenBalanceItem } from 'wallet/src/features/portfolio/TokenBalanceItem'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { isAndroid } from 'wallet/src/utils/platform'
 
@@ -172,7 +166,9 @@ export const TokenBalanceListInner = forwardRef<
   // add negative z index to prevent footer from covering hidden tokens row when minimized
   const ListFooterComponentStyle = useMemo(() => ({ zIndex: zIndices.negative }), [])
 
-  const List = renderedInModal ? BottomSheetFlatList<TokenBalanceListRow> : Animated.FlatList
+  const List = renderedInModal
+    ? BottomSheetFlatList<TokenBalanceListRow>
+    : Animated.FlatList<TokenBalanceListRow>
 
   const getItemLayout = useCallback(
     (
@@ -260,7 +256,6 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
   if (item === HIDDEN_TOKEN_BALANCES_ROW) {
     return (
       <HiddenTokensRow
-        padded
         isExpanded={hiddenTokensExpanded}
         numHidden={hiddenTokensCount}
         onPress={(): void => {

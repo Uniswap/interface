@@ -10,7 +10,6 @@ export default function CurrencyLogo(
 ) {
   return (
     <AssetLogo
-      currency={props.currency}
       isNative={props.currency?.isNative}
       chainId={props.currency?.chainId}
       address={props.currency?.wrapped.address}

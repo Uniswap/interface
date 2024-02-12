@@ -1,10 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
 import Column from 'components/Column'
-import ChartSection, {
-  PDP_CHART_SELECTOR_OPTIONS,
-  PoolsDetailsChartType,
-} from 'components/Pools/PoolDetails/ChartSection'
+import ChartSection from 'components/Pools/PoolDetails/ChartSection'
 import { PoolDetailsBreadcrumb, PoolDetailsHeader } from 'components/Pools/PoolDetails/PoolDetailsHeader'
 import { PoolDetailsLink } from 'components/Pools/PoolDetails/PoolDetailsLink'
 import { PoolDetailsStats } from 'components/Pools/PoolDetails/PoolDetailsStats'
@@ -15,14 +12,12 @@ import { AdvancedPriceChartToggle } from 'components/Tokens/TokenDetails/ChartTy
 import ChartTypeSelector from 'components/Tokens/TokenDetails/ChartTypeSelectors/ChartTypeSelector'
 import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { usePoolData } from 'graphql/thegraph/PoolData'
-import { useCurrency } from 'hooks/Tokens'
-import { useColor } from 'hooks/useColor'
 import NotFound from 'pages/NotFound'
 import { useReducer, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
-import styled, { useTheme } from 'styled-components'
-import { BREAKPOINTS, ThemeProvider } from 'theme'
+import styled from 'styled-components'
+import { BREAKPOINTS } from 'theme'
 import { isAddress } from 'utils'
 
 const PageWrapper = styled(Row)`
@@ -111,97 +106,81 @@ export default function PoolDetailsPage() {
   }>()
   const chain = getValidUrlChainName(chainName)
   const chainId = chain && supportedChainIdFromGQLChain(chain)
-  const { data: poolData, loading } = usePoolData(poolAddress?.toLowerCase() ?? '', chainId)
+  const { data: poolData, loading } = usePoolData(poolAddress ?? '', chainId)
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const token0 = isReversed ? poolData?.token1 : poolData?.token0
   const token1 = isReversed ? poolData?.token0 : poolData?.token1
-
-  const { darkMode, surface2, accent1 } = useTheme()
-  const color0 = useColor(useCurrency(token0?.id, chainId), {
-    backgroundColor: surface2,
-    darkMode,
-  })
-  const color1 = useColor(useCurrency(token1?.id, chainId), {
-    backgroundColor: surface2,
-    darkMode,
-  })
-
   const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
-  const [chartType, setChartType] = useState<PoolsDetailsChartType>(ChartType.PRICE)
+  const [chartType, setChartType] = useState<ChartType>(ChartType.PRICE)
   const [priceChartType, setPriceChartType] = useState<PriceChartType>(PriceChartType.LINE)
 
-  // TODO(WEB-3483): Add support for v2 Pairs when BE adds support
   if (poolNotFound) return <NotFound />
   return (
-    <ThemeProvider token0={color0 !== accent1 ? color0 : undefined} token1={color1 !== accent1 ? color1 : undefined}>
-      <PageWrapper>
-        <LeftColumn>
-          <Column gap="lg">
-            <PoolDetailsBreadcrumb
-              chainId={chainId}
-              poolAddress={poolAddress}
-              token0={token0}
-              token1={token1}
-              loading={loading}
-            />
-            <Row justify="space-between">
-              <PoolDetailsHeader
-                chainId={chainId}
-                token0={token0}
-                token1={token1}
-                feeTier={poolData?.feeTier}
-                toggleReversed={toggleReversed}
-                loading={loading}
-              />
-              <ChartTypeSelectorContainer>
-                {chartType === ChartType.PRICE && (
-                  <AdvancedPriceChartToggle currentChartType={priceChartType} onChartTypeChange={setPriceChartType} />
-                )}
-                <ChartTypeSelector
-                  options={PDP_CHART_SELECTOR_OPTIONS}
-                  currentChartType={chartType}
-                  onChartTypeChange={(c) => {
-                    setChartType(c)
-                    if (c === ChartType.PRICE) setPriceChartType(PriceChartType.LINE)
-                  }}
-                />
-              </ChartTypeSelectorContainer>
-            </Row>
-            <ChartSection
-              token0={token0}
-              token1={token1}
-              chartType={chartType}
-              priceChartType={priceChartType}
-              feeTier={poolData?.feeTier}
-              loading={loading}
-            />
-          </Column>
-          <HR />
-          <PoolDetailsTableTab poolAddress={poolAddress} token0={token0} token1={token1} />
-        </LeftColumn>
-        <RightColumn>
-          <PoolDetailsStatsButtons
+    <PageWrapper>
+      <LeftColumn>
+        <Column gap="lg">
+          <PoolDetailsBreadcrumb
             chainId={chainId}
+            poolAddress={poolAddress}
             token0={token0}
             token1={token1}
+            loading={loading}
+          />
+          <Row justify="space-between">
+            <PoolDetailsHeader
+              chainId={chainId}
+              token0={token0}
+              token1={token1}
+              feeTier={poolData?.feeTier}
+              toggleReversed={toggleReversed}
+              loading={loading}
+            />
+            <ChartTypeSelectorContainer>
+              {chartType === ChartType.PRICE && (
+                <AdvancedPriceChartToggle currentChartType={priceChartType} onChartTypeChange={setPriceChartType} />
+              )}
+              <ChartTypeSelector
+                options={[{ value: ChartType.PRICE }, { value: ChartType.VOLUME }, { value: ChartType.LIQUIDITY }]}
+                currentChartType={chartType}
+                onChartTypeChange={(c: ChartType) => {
+                  setChartType(c)
+                  if (c === ChartType.PRICE) setPriceChartType(PriceChartType.LINE)
+                }}
+              />
+            </ChartTypeSelectorContainer>
+          </Row>
+          <ChartSection
+            chartType={chartType}
+            priceChartType={priceChartType}
             feeTier={poolData?.feeTier}
             loading={loading}
           />
-          <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} loading={loading} />
-          <TokenDetailsWrapper>
-            <TokenDetailsHeader>
-              <Trans>Links</Trans>
-            </TokenDetailsHeader>
-            <LinksContainer>
-              <PoolDetailsLink address={poolAddress} chainId={chainId} tokens={[token0, token1]} loading={loading} />
-              <PoolDetailsLink address={token0?.id} chainId={chainId} tokens={[token0]} loading={loading} />
-              <PoolDetailsLink address={token1?.id} chainId={chainId} tokens={[token1]} loading={loading} />
-            </LinksContainer>
-          </TokenDetailsWrapper>
-        </RightColumn>
-      </PageWrapper>
-    </ThemeProvider>
+        </Column>
+        <HR />
+        <PoolDetailsTableTab poolAddress={poolAddress} token0={token0} token1={token1} />
+      </LeftColumn>
+      <RightColumn>
+        <PoolDetailsStatsButtons
+          chainId={chainId}
+          token0={token0}
+          token1={token1}
+          feeTier={poolData?.feeTier}
+          loading={loading}
+        />
+        <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} loading={loading} />
+        <TokenDetailsWrapper>
+          <TokenDetailsHeader>
+            <Trans>Links</Trans>
+          </TokenDetailsHeader>
+          <LinksContainer>
+            <PoolDetailsLink address={poolAddress} chainId={chainId} tokens={[token0, token1]} loading={loading} />
+            <PoolDetailsLink address={token0?.id} chainId={chainId} tokens={[token0]} loading={loading} />
+            <PoolDetailsLink address={token1?.id} chainId={chainId} tokens={[token1]} loading={loading} />
+          </LinksContainer>
+        </TokenDetailsWrapper>
+      </RightColumn>
+    </PageWrapper>
   )
 }

@@ -7,6 +7,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import Trace from 'src/components/Trace/Trace'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
+import { ElementName } from 'src/features/telemetry/constants'
 import {
   InputValidatedEvent,
   MnemonicStoredEvent,
@@ -15,6 +16,7 @@ import {
   useSeedPhraseInputRef,
 } from 'src/screens/Import/SeedPhraseInput'
 import { OnboardingScreens } from 'src/screens/Screens'
+import { openUri } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button } from 'ui/src'
 import { uniswapUrls } from 'wallet/src/constants/urls'
@@ -23,8 +25,6 @@ import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
-import { ElementName } from 'wallet/src/telemetry/constants'
-import { openUri } from 'wallet/src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SeedPhraseInput>
 

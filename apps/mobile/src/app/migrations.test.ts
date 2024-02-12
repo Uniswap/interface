@@ -64,21 +64,22 @@ import {
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { initialBehaviorHistoryState } from 'src/features/behaviorHistory/slice'
 import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
 import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLockoutSlice'
+import { initialSearchHistoryState } from 'src/features/explore/searchHistorySlice'
 import { initialModalState } from 'src/features/modals/modalSlice'
+import { ModalName } from 'src/features/telemetry/constants'
 import { initialTelemetryState } from 'src/features/telemetry/slice'
+import { initialTokensState } from 'src/features/tokens/tokensSlice'
 import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { ChainId } from 'wallet/src/constants/chains'
-import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
 import { initialFavoritesState } from 'wallet/src/features/favorites/slice'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
 import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { initialNotificationsState } from 'wallet/src/features/notifications/slice'
-import { initialSearchHistoryState } from 'wallet/src/features/search/searchHistorySlice'
-import { initialTokensState } from 'wallet/src/features/tokens/tokensSlice'
 import {
   initialTransactionsState,
   TransactionStateMap,
@@ -94,7 +95,6 @@ import {
   SignerMnemonicAccount,
 } from 'wallet/src/features/wallet/accounts/types'
 import { initialWalletState, SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { ModalName } from 'wallet/src/telemetry/constants'
 import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'wallet/src/test/fixtures'
 
 // helps with object assignment

@@ -2,10 +2,11 @@ import React, { useMemo } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { getSearchResultId } from 'src/components/explore/search/utils'
-import { Inset, Loader } from 'ui/src'
+import { Loader } from 'src/components/loading'
+import { SearchResultType, TokenSearchResult } from 'src/features/explore/SearchResult'
+import { TopToken, usePopularTokens } from 'src/features/tokens/hooks'
+import { Inset } from 'ui/src'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
-import { SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
-import { TopToken, usePopularTokens } from 'wallet/src/features/tokens/hooks'
 
 function gqlTokenToTokenSearchResult(token: Maybe<TopToken>): TokenSearchResult | null {
   if (!token || !token.project) {

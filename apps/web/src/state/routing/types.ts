@@ -1,11 +1,9 @@
-import { AddressZero } from '@ethersproject/constants'
 import { MixedRouteSDK, ONE, Protocol, Trade } from '@uniswap/router-sdk'
 import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { DutchOrderInfo, DutchOrderInfoJSON, DutchOrderTrade as IDutchOrderTrade } from '@uniswap/uniswapx-sdk'
 import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 import { ZERO_PERCENT } from 'constants/misc'
-import { BigNumber } from 'ethers/lib/ethers'
 
 export enum TradeState {
   LOADING = 'loading',
@@ -30,7 +28,7 @@ export enum RouterPreference {
   API = 'api',
 }
 
-// TODO(limits): add Limit market price intent
+// TODO: add Limit market price intent
 export enum QuoteIntent {
   Pricing = 'pricing',
   Quote = 'quote',
@@ -200,15 +198,13 @@ export type SwapFeeInfo = { recipient: string; percent: Percent; amount: string 
 export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   public readonly fillType = TradeFillType.Classic
   approveInfo: ApproveInfo
-  gasUseEstimate?: number // gas estimate for swaps
-  gasUseEstimateUSD?: number // gas estimate for swaps in USD
+  gasUseEstimateUSD?: number // gas estimate for swaps
   blockNumber: string | null | undefined
   requestId: string | undefined
   quoteMethod: QuoteMethod
   swapFee: SwapFeeInfo | undefined
 
   constructor({
-    gasUseEstimate,
     gasUseEstimateUSD,
     blockNumber,
     requestId,
@@ -217,7 +213,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     swapFee,
     ...routes
   }: {
-    gasUseEstimate?: number
     gasUseEstimateUSD?: number
     totalGasUseEstimateUSD?: number
     blockNumber?: string | null
@@ -249,7 +244,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     this.quoteMethod = quoteMethod
     this.approveInfo = approveInfo
     this.swapFee = swapFee
-    this.gasUseEstimate = gasUseEstimate
   }
 
   public get executionPrice(): Price<Currency, Currency> {
@@ -277,15 +271,8 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   }
 }
 
-export enum OffchainOrderType {
-  DUTCH_AUCTION = 'dutch_auction',
-  LIMIT_ORDER = 'limit_order',
-}
-
 export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeType> {
   public readonly fillType = TradeFillType.UniswapX
-  public readonly offchainOrderType = OffchainOrderType.DUTCH_AUCTION
-
   quoteId?: string
   requestId?: string
   wrapInfo: WrapInfo
@@ -354,10 +341,6 @@ export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeT
     if (this.approveInfo.needsApprove) return this.approveInfo.approveGasEstimateUSD
 
     return 0
-  }
-
-  public asDutchOrderTrade() {
-    return this
   }
 }
 
@@ -451,156 +434,7 @@ export class PreviewTrade {
   }
 }
 
-// TODO(limits): get this from uniswapx-sdk
-const UNISWAPX_REACTOR = '0x6000da47483062a0d734ba3dc7576ce6a0b645c4'
-
-export class LimitOrderTrade {
-  public readonly fillType = TradeFillType.UniswapX
-  public readonly offchainOrderType = OffchainOrderType.LIMIT_ORDER
-  deadlineBufferSecs: number
-  wrapInfo: WrapInfo
-  approveInfo: ApproveInfo
-  swapFee: SwapFeeInfo | undefined
-  amountIn: CurrencyAmount<Token>
-  amountOut: CurrencyAmount<Currency>
-  tradeType: TradeType
-  swapper: string
-  deadline: number
-
-  // Placeholder values that aren't used in a limit trade
-  inputTax = ZERO_PERCENT
-  outputTax = ZERO_PERCENT
-  slippageTolerance = ZERO_PERCENT
-  quoteId = undefined
-  requestId = undefined
-
-  constructor({
-    tradeType,
-    amountIn,
-    amountOut,
-    deadlineBufferSecs,
-    swapFee,
-    wrapInfo,
-    approveInfo,
-    swapper,
-  }: {
-    tradeType: TradeType
-    amountIn: CurrencyAmount<Token>
-    amountOut: CurrencyAmount<Currency>
-    deadlineBufferSecs: number
-    swapFee?: SwapFeeInfo
-    wrapInfo: WrapInfo
-    approveInfo: ApproveInfo
-    swapper: string
-  }) {
-    this.deadlineBufferSecs = deadlineBufferSecs
-    this.swapFee = swapFee
-    this.wrapInfo = wrapInfo
-    this.approveInfo = approveInfo
-    this.amountIn = amountIn
-    this.amountOut = amountOut
-    this.tradeType = tradeType
-    this.swapper = swapper
-    // deadline is shown in the review modal, but updated on submission
-    const nowSecs = Math.floor(Date.now() / 1000)
-    this.deadline = (nowSecs + deadlineBufferSecs) * 1000
-  }
-
-  public asDutchOrderTrade(options?: {
-    nonce: BigNumber
-    swapper: string
-  }): IDutchOrderTrade<Currency, Currency, TradeType> {
-    const swapperOutput = {
-      token: this.amountOut.currency.isNative ? AddressZero : this.amountOut.currency.address,
-      recipient: options?.swapper ?? this.swapper,
-      startAmount: BigNumber.from(this.amountOut.quotient.toString()),
-      endAmount: BigNumber.from(this.amountOut.quotient.toString()),
-    }
-
-    const swapFee = this.swapFee && {
-      token: this.amountOut.currency.isNative ? AddressZero : this.amountOut.currency.address,
-      recipient: this.swapFee.recipient,
-      startAmount: BigNumber.from(this.amountOut.multiply(this.swapFee.percent).quotient.toString()),
-      endAmount: BigNumber.from(this.amountOut.multiply(this.swapFee.percent).quotient.toString()),
-    }
-
-    const outputs = swapFee ? [swapperOutput, swapFee] : [swapperOutput]
-
-    const nowSecs = Math.floor(Date.now() / 1000)
-    return new IDutchOrderTrade({
-      currencyIn: this.amountIn.currency,
-      currenciesOut: [this.amountOut.currency],
-      orderInfo: {
-        reactor: UNISWAPX_REACTOR,
-        swapper: options?.swapper ?? this.swapper,
-        deadline: (nowSecs + this.deadlineBufferSecs) * 1000,
-        additionalValidationContract: AddressZero,
-        additionalValidationData: '0x',
-        nonce: options?.nonce ?? BigNumber.from(0),
-        // decay timings dont matter at all
-        decayStartTime: nowSecs,
-        decayEndTime: nowSecs,
-        exclusiveFiller: AddressZero,
-        exclusivityOverrideBps: BigNumber.from(0),
-        input: {
-          token: this.amountIn.currency.isNative ? AddressZero : this.amountIn.currency.address,
-          startAmount: BigNumber.from(this.amountIn.quotient.toString()),
-          endAmount: BigNumber.from(this.amountIn.quotient.toString()),
-        },
-        outputs,
-      },
-      tradeType: this.tradeType,
-    })
-  }
-
-  public get inputAmount(): CurrencyAmount<Token> {
-    return this.amountIn
-  }
-
-  public get outputAmount(): CurrencyAmount<Currency> {
-    return this.amountOut
-  }
-
-  /** For UniswapX, handling token taxes in the output amount is outsourced to quoters */
-  public get postTaxOutputAmount() {
-    return this.outputAmount
-  }
-
-  public get totalGasUseEstimateUSD(): number {
-    return this.wrapInfo.needsWrap ? this.wrapInfo.wrapGasEstimateUSD : 0
-  }
-
-  public get classicGasUseEstimateUSD(): number {
-    return 0
-  }
-
-  // no decay for limit orders
-  public get startTimeBufferSecs(): number {
-    return 0
-  }
-
-  public get auctionPeriodSecs(): number {
-    return this.deadlineBufferSecs
-  }
-
-  public get executionPrice(): Price<Currency, Currency> {
-    return new Price(this.amountIn.currency, this.amountOut.currency, this.amountIn.quotient, this.amountOut.quotient)
-  }
-
-  public worstExecutionPrice(): Price<Currency, Currency> {
-    return this.executionPrice
-  }
-
-  public maximumAmountIn(): CurrencyAmount<Currency> {
-    return this.inputAmount
-  }
-
-  public minimumAmountOut(): CurrencyAmount<Currency> {
-    return this.outputAmount
-  }
-}
-
-export type SubmittableTrade = ClassicTrade | DutchOrderTrade | LimitOrderTrade
+export type SubmittableTrade = ClassicTrade | DutchOrderTrade
 export type InterfaceTrade = SubmittableTrade | PreviewTrade
 
 export enum QuoteState {

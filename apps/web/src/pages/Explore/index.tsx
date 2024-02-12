@@ -1,15 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
-import { Trace, TraceEvent } from 'analytics'
+import { TraceEvent } from 'analytics'
+import { Trace } from 'analytics'
 import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { AutoRow } from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { exploreSearchStringAtom } from 'components/Tokens/state'
-import { TopTokensTable } from 'components/Tokens/TokenTable'
+import { filterStringAtom } from 'components/Tokens/state'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
-import OldTokenTable from 'components/Tokens/TokenTable/OldTokenTable'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
+import TokenTable from 'components/Tokens/TokenTable/TokenTable'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useResetAtom } from 'jotai/utils'
@@ -144,7 +144,7 @@ const Pages: Array<Page> = [
   {
     title: <Trans>Tokens</Trans>,
     key: ExploreTab.Tokens,
-    component: TopTokensTable,
+    component: TokenTable,
     loggingElementName: InterfaceElementName.EXPLORE_TOKENS_TAB,
   },
   {
@@ -162,7 +162,7 @@ const Pages: Array<Page> = [
 ]
 
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
-  const resetFilterString = useResetAtom(exploreSearchStringAtom)
+  const resetFilterString = useResetAtom(filterStringAtom)
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -175,7 +175,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
   // to allow backward navigation between tabs
-  const { tab, chainName } = useExploreParams()
+  const { tab } = useExploreParams()
   useEffect(() => {
     const tabIndex = Pages.findIndex((page) => page.key === tab)
     if (tabIndex !== -1) {
@@ -184,10 +184,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   }, [tab])
 
   useEffect(() => {
-    if (!isInfoExplorePageEnabled) {
-      resetFilterString()
-    }
-  }, [isInfoExplorePageEnabled, location, resetFilterString])
+    resetFilterString()
+  }, [location, resetFilterString])
 
   const { component: Page, key: currentKey } = Pages[currentTab]
 
@@ -217,7 +215,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               {Pages.map(({ title, loggingElementName, key }, index) => {
                 const handleNavItemClick = () => {
                   setCurrentTab(index)
-                  navigate(`/explore/${key}` + (chainName ? `/${chainName}` : ''))
+                  navigate(`/explore/${key}`)
                 }
                 return (
                   <TraceEvent
@@ -256,7 +254,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
             </>
           )}
         </NavWrapper>
-        {isInfoExplorePageEnabled ? <Page /> : <OldTokenTable />}
+        {isInfoExplorePageEnabled ? <Page /> : <TokenTable />}
       </ExploreContainer>
     </Trace>
   )

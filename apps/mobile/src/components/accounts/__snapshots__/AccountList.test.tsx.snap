@@ -4,6 +4,7 @@ exports[`AccountList renders without error 1`] = `
 <View
   style={
     {
+      "alignItems": "stretch",
       "flexDirection": "column",
       "flexShrink": 1,
     }
@@ -62,6 +63,7 @@ exports[`AccountList renders without error 1`] = `
         <View
           style={
             {
+              "alignItems": "stretch",
               "flex": 1,
               "flexDirection": "column",
               "paddingBottom": 8,
@@ -166,6 +168,7 @@ exports[`AccountList renders without error 1`] = `
               <View
                 style={
                   {
+                    "alignItems": "stretch",
                     "flex": 1,
                     "flexDirection": "column",
                   }
@@ -183,6 +186,7 @@ exports[`AccountList renders without error 1`] = `
                   <View
                     style={
                       {
+                        "alignItems": "stretch",
                         "flexDirection": "column",
                         "position": "relative",
                       }
@@ -191,20 +195,12 @@ exports[`AccountList renders without error 1`] = `
                     <View
                       style={
                         {
+                          "alignItems": "stretch",
                           "backgroundColor": "transparent",
-                          "borderBottomColor": "transparent",
                           "borderBottomLeftRadius": 999999,
                           "borderBottomRightRadius": 999999,
-                          "borderBottomWidth": 0,
-                          "borderLeftColor": "transparent",
-                          "borderLeftWidth": 0,
-                          "borderRightColor": "transparent",
-                          "borderRightWidth": 0,
-                          "borderStyle": "solid",
-                          "borderTopColor": "transparent",
                           "borderTopLeftRadius": 999999,
                           "borderTopRightRadius": 999999,
-                          "borderTopWidth": 0,
                           "flexDirection": "column",
                           "position": "relative",
                         }
@@ -232,6 +228,7 @@ exports[`AccountList renders without error 1`] = `
                         <View
                           style={
                             {
+                              "alignItems": "stretch",
                               "flexDirection": "column",
                               "height": 36,
                               "width": 36,
@@ -241,6 +238,7 @@ exports[`AccountList renders without error 1`] = `
                           <View
                             style={
                               {
+                                "alignItems": "stretch",
                                 "flexDirection": "column",
                                 "height": 36,
                                 "width": 36,
@@ -398,36 +396,24 @@ exports[`AccountList renders without error 1`] = `
                         }
                       }
                     >
-                      <View
+                      <Text
+                        adjustsFontSizeToFit={true}
+                        allowFontScaling={true}
+                        maxFontSizeMultiplier={1.4}
+                        numberOfLines={1}
                         style={
                           {
-                            "alignItems": "center",
-                            "flexDirection": "row",
-                            "gap": 2,
-                            "justifyContent": "center",
+                            "color": "#222222",
+                            "fontFamily": "Basel-Book",
+                            "fontSize": 19,
+                            "lineHeight": 24,
                           }
                         }
+                        suppressHighlighting={true}
+                        testID="address-display/name/0x​82D5...3Fa6"
                       >
-                        <Text
-                          adjustsFontSizeToFit={true}
-                          allowFontScaling={true}
-                          maxFontSizeMultiplier={1.4}
-                          numberOfLines={1}
-                          style={
-                            {
-                              "color": "#222222",
-                              "flexShrink": 1,
-                              "fontFamily": "Basel-Book",
-                              "fontSize": 19,
-                              "lineHeight": 24,
-                            }
-                          }
-                          suppressHighlighting={true}
-                          testID="address-display/name/0x​82D5...3Fa6"
-                        >
-                          0x​82D5...3Fa6
-                        </Text>
-                      </View>
+                        0x​82D5...3Fa6
+                      </Text>
                     </View>
                   </View>
                 </View>

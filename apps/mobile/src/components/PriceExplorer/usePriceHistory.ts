@@ -1,15 +1,15 @@
 import { maxBy } from 'lodash'
 import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
-import { SharedValue, useDerivedValue } from 'react-native-reanimated'
+import { SharedValue } from 'react-native-reanimated'
 import { TLineChartData } from 'react-native-wagmi-charts'
+import { GqlResult } from 'src/features/dataApi/types'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import {
   HistoryDuration,
   TimestampedAmount,
   useTokenPriceHistoryQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
-import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
@@ -69,18 +69,15 @@ export function useTokenPriceHistory(
   const pricePercentChange24h =
     offChainData?.pricePercentChange24h?.value ?? onChainData?.pricePercentChange24h?.value ?? 0
 
-  const spotValue = useDerivedValue(() => price ?? 0)
-  const spotRelativeChange = useDerivedValue(() => pricePercentChange24h)
-
   const spot = useMemo(
     () =>
-      price !== undefined
+      price
         ? {
-            value: spotValue,
-            relativeChange: spotRelativeChange,
+            value: { value: price },
+            relativeChange: { value: pricePercentChange24h },
           }
         : undefined,
-    [price, spotValue, spotRelativeChange]
+    [price, pricePercentChange24h]
   )
 
   const formattedPriceHistory = useMemo(() => {

@@ -4,10 +4,10 @@ import { MouseoverTooltip } from 'components/Tooltip/index'
 import { NftActivityType } from 'graphql/data/__generated__/types-and-hooks'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import { Box } from 'nft/components/Box'
-import { Center } from 'nft/components/Flex'
 import { reduceFilters } from 'nft/components/collection/Activity'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
+import { Center } from 'nft/components/Flex'
 import { themeVars, vars } from 'nft/css/sprinkles.css'
 import { ActivityEventType, CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { isAudio } from 'nft/utils/isAudio'
@@ -60,7 +60,7 @@ const SocialsContainer = styled.div`
   margin-top: 20px;
 `
 
-const DescriptionText = styled.p`
+const DescriptionText = styled.div`
   margin-top: 8px;
   font-size: 14px;
   line-height: 20px;

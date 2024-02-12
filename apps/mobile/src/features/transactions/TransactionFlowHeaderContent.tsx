@@ -1,17 +1,17 @@
 import React, { Dispatch, SetStateAction } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
+import { ElementName } from 'src/features/telemetry/constants'
+import { useTokenFormActionHandlers } from 'src/features/transactions/hooks'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
 import { iconSizes } from 'ui/src/theme'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useTokenFormActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenFormActionHandlers'
-import { TransactionFlowProps, TransactionStep } from 'wallet/src/features/transactions/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { ElementName } from 'wallet/src/telemetry/constants'
+import { TransactionFlowProps, TransactionStep } from './types'
 
 type HeaderContentProps = Pick<
   TransactionFlowProps,

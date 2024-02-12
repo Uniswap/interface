@@ -1,8 +1,8 @@
 import { useCallback, useRef } from 'react'
 import { FlatList, ScrollView } from 'react-native'
-import { SharedValue, runOnJS, useAnimatedReaction, useSharedValue } from 'react-native-reanimated'
-import { useSortableGridContext } from './SortableGridProvider'
+import { runOnJS, SharedValue, useAnimatedReaction, useSharedValue } from 'react-native-reanimated'
 import { AUTO_SCROLL_THRESHOLD } from './constants'
+import { useSortableGridContext } from './SortableGridProvider'
 import { ItemMeasurements } from './types'
 
 export function useStableCallback<

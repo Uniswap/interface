@@ -5,10 +5,10 @@ import { iconSizes } from 'ui/src/theme'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
 import {
-  LoadingItem,
-  SectionHeader,
   isLoadingItem,
   isSectionHeader,
+  LoadingItem,
+  SectionHeader,
 } from 'wallet/src/features/activity/utils'
 import {
   FORMAT_DATE_MONTH_DAY,
@@ -44,10 +44,7 @@ export function generateActivityItemRenderer(
   layoutElement: React.FunctionComponent<TransactionSummaryLayoutProps>,
   loadingItem: JSX.Element,
   sectionHeaderElement: React.FunctionComponent<{ title: string }>,
-  swapCallbacks: SwapSummaryCallbacks | undefined,
-  authTrigger:
-    | ((args: { successCallback: () => void; failureCallback: () => void }) => Promise<void>)
-    | undefined
+  swapCallbacks?: SwapSummaryCallbacks
 ): ActivityItemRenderer {
   return function ActivityItemComponent({ item }: { item: ActivityItem }): JSX.Element {
     // if it's a loading item, render the loading placeholder
@@ -96,7 +93,6 @@ export function generateActivityItemRenderer(
     }
 
     return createElement(SummaryItem as React.FunctionComponent<SummaryItemProps>, {
-      authTrigger,
       transaction: item,
       layoutElement,
       swapCallbacks,

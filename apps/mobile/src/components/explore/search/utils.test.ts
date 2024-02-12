@@ -4,9 +4,9 @@ import {
   formatTokenSearchResults,
   gqlNFTToNFTCollectionSearchResult,
 } from 'src/components/explore/search/utils'
+import { SearchResultType } from 'src/features/explore/SearchResult'
 import { Chain, ExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
-import { SearchResultType } from 'wallet/src/features/search/SearchResult'
 import { SearchTokens, TopNFTCollections } from 'wallet/src/test/gqlFixtures'
 
 type ExploreSearchResult = NonNullable<ExploreSearchQuery>

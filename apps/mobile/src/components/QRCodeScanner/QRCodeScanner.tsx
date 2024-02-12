@@ -6,7 +6,10 @@ import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet } from 'react-nat
 import { launchImageLibrary } from 'react-native-image-picker'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
+import PasteButton from 'src/components/buttons/PasteButton'
 import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
+import { SpinningLoader } from 'src/components/loading/SpinningLoader'
+import { openSettings } from 'src/utils/linking'
 import {
   AnimatedFlex,
   Button,
@@ -19,9 +22,6 @@ import {
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import PasteButton from 'wallet/src/components/buttons/PasteButton'
-import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
-import { openSettings } from 'wallet/src/utils/linking'
 
 type QRCodeScannerProps = {
   onScanCode: (data: string) => void

@@ -101,6 +101,7 @@ describe(LongMarkdownText, () => {
         const readMoreButton = tree.queryByTestId('read-more-button')
 
         expect(readMoreButton).toBeTruthy()
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         expect(within(readMoreButton!).getByText('Read more')).toBeTruthy()
       })
     })
@@ -128,7 +129,7 @@ describe(LongMarkdownText, () => {
         fireEvent.press(readMoreButton)
 
         expect(readMoreButton).toBeTruthy()
-
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         expect(within(readMoreButton!).getByText('Read less')).toBeTruthy()
       })
     })

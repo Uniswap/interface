@@ -16,7 +16,6 @@ import type { MobileState } from 'src/app/reducer'
 import type { AppStore } from 'src/app/store'
 import { persistedReducer } from 'src/app/store'
 import { Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
-import { UnitagUpdaterContextProvider } from 'wallet/src/features/unitags/context'
 import { SharedProvider } from 'wallet/src/provider'
 import { AutoMockedApolloProvider } from 'wallet/src/test/mocks/provider'
 
@@ -55,9 +54,7 @@ export function renderWithProviders(
     return (
       <AutoMockedApolloProvider resolvers={resolvers}>
         <SharedProvider reduxStore={store}>
-          <UnitagUpdaterContextProvider>
-            <NavigationContainer ref={navigationRef}>{children}</NavigationContainer>
-          </UnitagUpdaterContextProvider>
+          <NavigationContainer ref={navigationRef}>{children}</NavigationContainer>
         </SharedProvider>
       </AutoMockedApolloProvider>
     )
@@ -122,9 +119,7 @@ export function renderHookWithProviders<P extends any[], R>(
     return (
       <AutoMockedApolloProvider resolvers={resolvers}>
         <NavigationContainer ref={navigationRef}>
-          <SharedProvider reduxStore={store}>
-            <UnitagUpdaterContextProvider>{children}</UnitagUpdaterContextProvider>
-          </SharedProvider>
+          <SharedProvider reduxStore={store}>{children}</SharedProvider>
         </NavigationContainer>
       </AutoMockedApolloProvider>
     )

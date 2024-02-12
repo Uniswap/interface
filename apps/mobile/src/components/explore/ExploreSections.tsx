@@ -9,6 +9,7 @@ import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem, TokenItemData } from 'src/components/explore/TokenItem'
 import { AnimatedBottomSheetFlatList } from 'src/components/layout/AnimatedFlatList'
+import { Loader } from 'src/components/loading'
 import { AutoScrollProps } from 'src/components/sortableGrid'
 import {
   getClientTokensOrderByCompareFn,
@@ -16,7 +17,7 @@ import {
   getTokensOrderByValues,
 } from 'src/features/explore/utils'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
-import { Flex, Loader, Text, useDeviceInsets } from 'ui/src'
+import { Flex, Text, useDeviceInsets } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'

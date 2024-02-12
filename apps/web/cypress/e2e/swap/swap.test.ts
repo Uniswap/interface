@@ -52,8 +52,7 @@ describe('Swap', () => {
       cy.get(`#swap-currency-output .token-amount-input`).should('not.have.value')
     })
 
-    // TODO re-enable web test
-    it.skip('swaps ETH for USDC', () => {
+    it('swaps ETH for USDC', () => {
       cy.visit('/swap')
       cy.hardhat({ automine: false })
       getBalance(USDC_MAINNET).then((initialBalance) => {

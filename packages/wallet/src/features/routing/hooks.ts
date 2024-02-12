@@ -8,7 +8,6 @@ import { RoutingIntent, TradeQuoteRequest, useQuoteQuery } from 'wallet/src/feat
 import { TradeQuoteResult } from 'wallet/src/features/routing/types'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import { UseTradeArgs } from 'wallet/src/features/transactions/swap/useTrade'
-import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import {
   areCurrencyIdsEqual,
@@ -128,28 +127,14 @@ export function useSimulatedGasLimit(
     customSlippageTolerance,
   })
 
-  // Enforce routing api quote type
-  const quote =
-    data?.trade.quoteData?.quoteType === QuoteType.RoutingApi
-      ? data?.trade.quoteData.quote
-      : undefined
-
   return useMemo(
     () => ({
       loading: loading || isDebouncing,
       error: error || data?.simulationError,
-      quoteId: quote?.quoteId,
-      requestId: quote?.requestId,
+      quoteId: data?.trade.quote?.quoteId,
+      requestId: data?.trade.quote?.requestId,
       simulatedGasLimit: data?.gasUseEstimate,
     }),
-    [
-      loading,
-      isDebouncing,
-      error,
-      data?.simulationError,
-      data?.gasUseEstimate,
-      quote?.quoteId,
-      quote?.requestId,
-    ]
+    [loading, isDebouncing, error, data]
   )
 }

@@ -1,18 +1,18 @@
 import {
-  TraceEvent as AnalyticsEvent,
-  Trace as AnalyticsTrace,
   sendAnalyticsEvent as sendAnalyticsTraceEvent,
+  Trace as AnalyticsTrace,
+  TraceEvent as AnalyticsEvent,
 } from '@uniswap/analytics'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { memo } from 'react'
 
 export {
-  OriginApplication,
+  type ITraceContext,
   getDeviceId,
   initializeAnalytics,
-  useTrace,
+  OriginApplication,
   user,
-  type ITraceContext,
+  useTrace,
 } from '@uniswap/analytics'
 
 const allowAnalyticsAtomKey = 'allow_analytics'

@@ -4,14 +4,16 @@ import dayjs from 'dayjs'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { config } from 'wallet/src/config'
-import { MeldWidgetResponse } from 'wallet/src/features/fiatOnRamp/meld'
 import {
-  FORQuoteRequest,
-  FORQuoteResponse,
-  FORServiceProvidersResponse,
-  FORSupportedCountriesResponse,
-  FORSupportedTokensRequest,
-  FORSupportedTokensResponse,
+  MeldCountryPaymentMethodsResponse,
+  MeldCryptoCurrency,
+  MeldCryptoQuoteResponse,
+  MeldQuote,
+  MeldServiceProvidersResponse,
+  MeldSupportedTokensResponse,
+  MeldWidgetResponse,
+} from 'wallet/src/features/fiatOnRamp/meld'
+import {
   FiatOnRampWidgetUrlQueryParameters,
   FiatOnRampWidgetUrlQueryResponse,
   MoonpayBuyQuoteResponse,
@@ -25,6 +27,7 @@ import { extractFiatOnRampTransactionDetails } from 'wallet/src/features/transac
 import { serializeQueryParams } from 'wallet/src/features/transactions/swap/utils'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 const COMMON_QUERY_PARAMS = serializeQueryParams({ apiKey: config.moonpayApiKey })
 const TRANSACTION_NOT_FOUND = 404
@@ -200,28 +203,66 @@ export const {
 export const fiatOnRampAggregatorApi = createApi({
   reducerPath: 'fiatOnRampAggregatorApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: config.fiatOnRampApiUrl,
+    baseUrl: config.meldApiUrl,
+    prepareHeaders: (headers) => {
+      headers.set('Authorization', `BASIC ${config.meldApiKey}`)
+      headers.set('Meld-Version', `${config.meldApiVersion}`)
+      return headers
+    },
   }),
   endpoints: (builder) => ({
-    fiatOnRampAggregatorCountryList: builder.query<FORSupportedCountriesResponse, void>({
-      query: () => `/supported-countries`,
+    fiatOnRampAggregatorCountryList: builder.query<MeldCountryPaymentMethodsResponse, void>({
+      query: () =>
+        `/service-providers/properties/country-payment-methods?category=CRYPTO_ONRAMP&accountServiceProviders=true`,
     }),
-    fiatOnRampAggregatorCryptoQuote: builder.query<FORQuoteResponse, FORQuoteRequest>({
-      query: (request) => ({
-        url: '/quote',
-        body: request,
+    fiatOnRampAggregatorCryptoQuote: builder.query<
+      MeldCryptoQuoteResponse['quotes'],
+      {
+        amount: number
+        destinationCurrencyCode: string
+        countryCode: string
+      }
+    >({
+      query: ({ amount, destinationCurrencyCode, countryCode }) => ({
+        url: '/payments/crypto/quote',
+        body: {
+          sourceAmount: amount,
+          sourceCurrencyCode: 'USD',
+          destinationCurrencyCode,
+          countryCode,
+        },
         method: 'POST',
       }),
+      transformResponse: (response: MeldCryptoQuoteResponse): Maybe<MeldQuote[]> =>
+        response?.quotes,
       keepUnusedDataFor: 0,
     }),
-    fiatOnRampAggregatorServiceProviders: builder.query<FORServiceProvidersResponse, void>({
-      query: () => '/service-providers',
+    fiatOnRampAggregatorServiceProviders: builder.query<MeldServiceProvidersResponse, void>({
+      query: () => '/service-providers/details?statuses=LIVE%2CRECENTLY_ADDED',
     }),
     fiatOnRampAggregatorSupportedTokens: builder.query<
-      FORSupportedTokensResponse,
-      FORSupportedTokensRequest
+      MeldCryptoCurrency[],
+      { fiatCurrency: string; countryCode: string }
     >({
-      query: (request) => `/supported-tokens?${new URLSearchParams(request).toString()}`,
+      query: ({ fiatCurrency }) =>
+        `/service-providers/properties?categories=CRYPTO_ONRAMP&accountServiceProviders=true&fiatCurrencies=${fiatCurrency}`,
+      transformResponse: (response: MeldSupportedTokensResponse, _, { countryCode }) =>
+        // get all crypto currencies from all service providers that support the given fiat currency in the given country
+        Object.values(
+          response.reduce((acc: Record<string, MeldCryptoCurrency>, serviceProvider) => {
+            if (!serviceProvider.crypto?.onRamp) {
+              return acc
+            }
+            const { countries, cryptoCurrencies } = serviceProvider.crypto.onRamp
+            if (countries.find((c) => c.countryCode === countryCode)) {
+              cryptoCurrencies.forEach((cryptoCurrency) => {
+                acc[buildCurrencyId(parseInt(cryptoCurrency.chainId, 10), cryptoCurrency.address)] =
+                  cryptoCurrency
+              })
+            }
+            return acc
+          }, {})
+        ),
     }),
     fiatOnRampAggregatorWidget: builder.query<
       MeldWidgetResponse,
@@ -232,8 +273,6 @@ export const fiatOnRampAggregatorApi = createApi({
         serviceProvider: string
         sourceCurrencyCode: string
         walletAddress: string
-        externalCustomerId: string
-        externalSessionId: string
       }
     >({
       query: ({
@@ -243,8 +282,6 @@ export const fiatOnRampAggregatorApi = createApi({
         serviceProvider,
         sourceCurrencyCode,
         walletAddress,
-        externalCustomerId,
-        externalSessionId,
       }) => ({
         url: 'crypto/session/widget',
         body: {
@@ -255,10 +292,7 @@ export const fiatOnRampAggregatorApi = createApi({
             serviceProvider,
             sourceCurrencyCode,
             walletAddress,
-            lockFields: ['destinationCurrencyCode'],
           },
-          externalCustomerId,
-          externalSessionId,
         },
         method: 'POST',
       }),

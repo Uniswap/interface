@@ -1,0 +1,149 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NetworkPill renders a NetworkPill with border 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#2098531a",
+      "borderBottomColor": "transparent",
+      "borderBottomLeftRadius": 999999,
+      "borderBottomRightRadius": 999999,
+      "borderBottomWidth": 1,
+      "borderColor": "#209853",
+      "borderLeftColor": "transparent",
+      "borderLeftWidth": 1,
+      "borderRightColor": "transparent",
+      "borderRightWidth": 1,
+      "borderStyle": "solid",
+      "borderTopColor": "transparent",
+      "borderTopLeftRadius": 999999,
+      "borderTopRightRadius": 999999,
+      "borderTopWidth": 1,
+      "flexDirection": "row",
+      "gap": 8,
+      "justifyContent": "center",
+      "paddingBottom": 8,
+      "paddingLeft": 4,
+      "paddingRight": 4,
+      "paddingTop": 8,
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#209853",
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+        "paddingTop": 1,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    Görli
+  </Text>
+</View>
+`;
+
+exports[`NetworkPill renders a NetworkPill without image 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#2098531a",
+      "borderBottomColor": "transparent",
+      "borderBottomLeftRadius": 999999,
+      "borderBottomRightRadius": 999999,
+      "borderBottomWidth": 1,
+      "borderColor": "transparent",
+      "borderLeftColor": "transparent",
+      "borderLeftWidth": 1,
+      "borderRightColor": "transparent",
+      "borderRightWidth": 1,
+      "borderStyle": "solid",
+      "borderTopColor": "transparent",
+      "borderTopLeftRadius": 999999,
+      "borderTopRightRadius": 999999,
+      "borderTopWidth": 1,
+      "flexDirection": "row",
+      "gap": 8,
+      "justifyContent": "center",
+      "paddingBottom": 8,
+      "paddingLeft": 4,
+      "paddingRight": 4,
+      "paddingTop": 8,
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#209853",
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+        "paddingTop": 1,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    Görli
+  </Text>
+</View>
+`;
+
+exports[`NetworkPill renders an InlineNetworkPill 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#2098531a",
+      "borderBottomColor": "transparent",
+      "borderBottomLeftRadius": 8,
+      "borderBottomRightRadius": 8,
+      "borderBottomWidth": 1,
+      "borderColor": "transparent",
+      "borderLeftColor": "transparent",
+      "borderLeftWidth": 1,
+      "borderRightColor": "transparent",
+      "borderRightWidth": 1,
+      "borderStyle": "solid",
+      "borderTopColor": "transparent",
+      "borderTopLeftRadius": 8,
+      "borderTopRightRadius": 8,
+      "borderTopWidth": 1,
+      "flexDirection": "row",
+      "gap": 8,
+      "justifyContent": "center",
+      "paddingBottom": 0,
+      "paddingLeft": 4,
+      "paddingRight": 4,
+      "paddingTop": 0,
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.2}
+    style={
+      {
+        "color": "#209853",
+        "fontFamily": "Basel-Medium",
+        "fontSize": 13,
+        "fontWeight": "500",
+        "lineHeight": 16,
+        "paddingTop": 1,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    Görli
+  </Text>
+</View>
+`;

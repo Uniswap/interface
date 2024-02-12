@@ -1,6 +1,5 @@
-import { ApolloError } from '@apollo/client'
 import {
-  exploreSearchStringAtom,
+  filterStringAtom,
   filterTimeAtom,
   sortAscendingAtom,
   sortMethodAtom,
@@ -52,16 +51,6 @@ gql`
           currency
           value
         }
-        pricePercentChange1Hour: pricePercentChange(duration: HOUR) {
-          id
-          currency
-          value
-        }
-        pricePercentChange1Day: pricePercentChange(duration: DAY) {
-          id
-          currency
-          value
-        }
         volume(duration: $duration) {
           id
           value
@@ -71,13 +60,6 @@ gql`
       project {
         id
         logoUrl
-        markets(currencies: [USD]) {
-          fullyDilutedValuation {
-            id
-            value
-            currency
-          }
-        }
       }
     }
   }
@@ -133,7 +115,7 @@ function useSortedTokens(tokens: TopTokens100Query['topTokens']) {
 }
 
 function useFilteredTokens(tokens: TopTokens100Query['topTokens']) {
-  const filterString = useAtomValue(exploreSearchStringAtom)
+  const filterString = useAtomValue(filterStringAtom)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
 
@@ -162,7 +144,6 @@ interface UseTopTokensReturnValue {
   tokenSortRank: Record<string, number>
   loadingTokens: boolean
   sparklines: SparklineMap
-  error?: ApolloError
 }
 
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
@@ -185,11 +166,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     return map
   }, [chainId, sparklineQuery?.topTokens])
 
-  const {
-    data,
-    loading: loadingTokens,
-    error,
-  } = usePollQueryWhileMounted(
+  const { data, loading: loadingTokens } = usePollQueryWhileMounted(
     useTopTokens100Query({
       variables: { duration, chain },
     }),
@@ -214,7 +191,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   )
   const filteredTokens = useFilteredTokens(sortedTokens)
   return useMemo(
-    () => ({ tokens: filteredTokens, tokenSortRank, loadingTokens, sparklines, error }),
-    [filteredTokens, tokenSortRank, loadingTokens, sparklines, error]
+    () => ({ tokens: filteredTokens, tokenSortRank, loadingTokens, sparklines }),
+    [filteredTokens, tokenSortRank, loadingTokens, sparklines]
   )
 }

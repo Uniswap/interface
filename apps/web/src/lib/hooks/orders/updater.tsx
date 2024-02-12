@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { useGatewayDNSUpdateAllEnabled } from 'featureFlags/flags/gatewayDNSUpdate'
 import ms from 'ms'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { isFinalizedOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
 
@@ -19,7 +19,7 @@ function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[], gat
   return global.fetch(`${baseURL}/orders?swapper=${account}&orderHashes=${orderHashes}`)
 }
 
-const OFF_CHAIN_ORDER_STATUS_POLLING_INITIAL_INTERVAL = ms(`2s`)
+const OFF_CHAIN_ORDER_STATUS_POLLING = ms(`2s`)
 
 interface UpdaterProps {
   pendingOrders: UniswapXOrderDetails[]
@@ -31,18 +31,16 @@ export default function OrderUpdater({ pendingOrders, onOrderUpdate }: UpdaterPr
 
   const gatewayDNSUpdateAllEnabled = useGatewayDNSUpdateAllEnabled()
 
-  const [currentDelay, setCurrentDelay] = useState(OFF_CHAIN_ORDER_STATUS_POLLING_INITIAL_INTERVAL)
-
   useEffect(() => {
-    let timeout: NodeJS.Timeout
     async function getOrderStatuses() {
       if (!account || pendingOrders.length === 0) return
 
       // Stop polling if all orders in our queue have "finalized" states
       if (pendingOrders.every((order) => isFinalizedOrder(order.status))) {
-        clearTimeout(timeout)
+        clearInterval(interval)
         return
       }
+
       try {
         const pollOrderStatus = await fetchOrderStatuses(account, pendingOrders, gatewayDNSUpdateAllEnabled)
 
@@ -56,13 +54,11 @@ export default function OrderUpdater({ pendingOrders, onOrderUpdate }: UpdaterPr
       } catch (e) {
         console.error('Error fetching order statuses', e)
       }
-      setCurrentDelay((currentDelay) => Math.min(currentDelay * 2, ms('30s')))
-      timeout = setTimeout(getOrderStatuses, currentDelay)
     }
 
-    timeout = setTimeout(getOrderStatuses, currentDelay)
-    return () => clearTimeout(timeout)
-  }, [account, currentDelay, gatewayDNSUpdateAllEnabled, onOrderUpdate, pendingOrders])
+    const interval = setInterval(getOrderStatuses, OFF_CHAIN_ORDER_STATUS_POLLING)
+    return () => clearInterval(interval)
+  }, [account, gatewayDNSUpdateAllEnabled, onOrderUpdate, pendingOrders])
 
   return null
 }

@@ -2,14 +2,14 @@ import React from 'react'
 import { SvgProps } from 'react-native-svg'
 import { useAppDispatch } from 'src/app/hooks'
 import Trace from 'src/components/Trace/Trace'
+import { ElementName } from 'src/features/telemetry/constants'
+import { setClipboard } from 'src/utils/clipboard'
+import { openUri } from 'src/utils/linking'
 import { Flex, IconProps, Text, TouchableArea, useSporeColors } from 'ui/src'
 import CopyIcon from 'ui/src/assets/icons/copy-sheets.svg'
 import { iconSizes } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { ElementNameType } from 'wallet/src/telemetry/constants'
-import { setClipboard } from 'wallet/src/utils/clipboard'
-import { openUri } from 'wallet/src/utils/linking'
 
 export enum LinkButtonType {
   Copy = 'copy',
@@ -28,7 +28,7 @@ export function LinkButton({
   buttonType: LinkButtonType
   label: string
   Icon?: React.FC<SvgProps & { size?: IconProps['size'] }>
-  element: ElementNameType
+  element: ElementName
   openExternalBrowser?: boolean
   isSafeUri?: boolean
   value: string

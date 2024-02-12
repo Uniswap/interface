@@ -3,11 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import Trace from 'src/components/Trace/Trace'
 import { openModal } from 'src/features/modals/modalSlice'
-import { MobileEventName } from 'src/features/telemetry/constants'
+import { MobileEventName, ModalName } from 'src/features/telemetry/constants'
 import { Flex, Icons, Text, TouchableArea, TouchableAreaProps, useSporeColors } from 'ui/src'
 import FiatOnRampBackground from 'ui/src/assets/backgrounds/fiat-onramp-banner.svg'
 import { iconSizes } from 'ui/src/theme'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function FiatOnRampBanner(props: TouchableAreaProps): JSX.Element {
   const { t } = useTranslation()

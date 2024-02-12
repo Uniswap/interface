@@ -1,13 +1,12 @@
-import { fireEvent } from '@testing-library/react-native'
+import { fireEvent, render } from '@testing-library/react-native'
 import React from 'react'
 import { makeMutable } from 'react-native-reanimated'
 import { act } from 'react-test-renderer'
 import { AnimatedText } from 'src/components/text/AnimatedText'
-import { renderWithProviders } from 'src/test/render'
 
 describe(AnimatedText, () => {
   it('renders without error', () => {
-    const tree = renderWithProviders(<AnimatedText text={makeMutable('Rendered')} />)
+    const tree = render(<AnimatedText text={{ value: 'Rendered' }} />)
 
     expect(tree).toMatchInlineSnapshot(`
       <TextInput
@@ -37,7 +36,7 @@ describe(AnimatedText, () => {
 
   describe('when text is in the loading state', () => {
     it('displays text placeholder with loading shimmer when the loading property is true', async () => {
-      const tree = renderWithProviders(<AnimatedText loading={true} />)
+      const tree = render(<AnimatedText loading={true} />)
 
       const shimmerPlaceholder = tree.getByTestId('shimmer-placeholder')
 
@@ -58,7 +57,7 @@ describe(AnimatedText, () => {
     })
 
     it('displays the loading placeholder without shimmer when the loading property has "no-shimmer" value', () => {
-      const tree = renderWithProviders(<AnimatedText loading="no-shimmer" />)
+      const tree = render(<AnimatedText loading="no-shimmer" />)
 
       const shimmerPlaceholder = tree.queryByTestId('shimmer-placeholder')
       expect(shimmerPlaceholder).toBeFalsy()
@@ -74,7 +73,7 @@ describe(AnimatedText, () => {
   describe('when text is not in the loading state', () => {
     it('updates text when text value is modified', async () => {
       const textValue = makeMutable('Initial')
-      const tree = renderWithProviders(<AnimatedText text={textValue} />)
+      const tree = render(<AnimatedText text={textValue} />)
 
       expect(tree.queryByDisplayValue('Initial')).toBeTruthy()
 

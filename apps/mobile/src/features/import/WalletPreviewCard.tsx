@@ -1,18 +1,21 @@
 import React from 'react'
-import { Flex, Icons, Text, TouchableArea, Unicon } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { SelectionCircle } from 'src/components/input/SelectionCircle'
+import { Unicon } from 'src/components/unicons/Unicon'
+import { ElementName } from 'src/features/telemetry/constants'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { NumberType } from 'utilities/src/format/types'
-import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
+import { ChainId } from 'wallet/src/constants/chains'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { useENS } from 'wallet/src/features/ens/useENS'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { ElementNameType } from 'wallet/src/telemetry/constants'
+import { shortenAddress } from 'wallet/src/utils/addresses'
 
 interface Props {
   address: string
   selected: boolean
   balance?: number | null
   onSelect: (address: string) => void
-  name?: ElementNameType
+  name?: ElementName
   testID?: string
   hideSelectionCircle?: boolean
 }
@@ -28,15 +31,17 @@ export default function WalletPreviewCard({
   hideSelectionCircle,
   ...rest
 }: Props): JSX.Element {
-  const displayName = useDisplayName(address, { showLocalName: true })
+  const { name: ensName } = useENS(ChainId.Mainnet, address)
+  const isDarkMode = useIsDarkMode()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const balanceFormatted = convertFiatAmountFormatted(balance, NumberType.FiatTokenQuantity)
+  const unselectedBorderColor = isDarkMode ? '$transparent' : '$surface3'
 
   return (
     <TouchableArea
-      backgroundColor={selected ? '$surface1' : '$surface2'}
-      borderColor={selected ? '$surface3' : '$surface2'}
+      backgroundColor="$surface2"
+      borderColor={selected ? '$accent1' : unselectedBorderColor}
       borderRadius="$rounded20"
       borderWidth={1}
       px="$spacing16"
@@ -47,7 +52,7 @@ export default function WalletPreviewCard({
         <Flex row ai="center" gap="$spacing12" height={ADDRESS_WRAPPER_HEIGHT} jc="flex-start">
           <Unicon address={address} size={UNICON_SIZE} />
           <Flex ai="flex-start">
-            <DisplayNameText displayName={displayName} textProps={{ variant: 'body1' }} />
+            <Text variant="body1">{ensName ?? shortenAddress(address)}</Text>
             {balance ? (
               <Text color="$neutral2" variant="subheading2">
                 {balanceFormatted}
@@ -55,8 +60,8 @@ export default function WalletPreviewCard({
             ) : null}
           </Flex>
         </Flex>
-        {!hideSelectionCircle && selected && (
-          <Icons.Check color="$accent1" size={iconSizes.icon20} />
+        {!hideSelectionCircle && (
+          <SelectionCircle selected={selected} size="icon16" unselectedColor="$neutral2" />
         )}
       </Flex>
     </TouchableArea>

@@ -5,11 +5,11 @@ import { ScrollView } from 'react-native'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 import { isAndroid } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<

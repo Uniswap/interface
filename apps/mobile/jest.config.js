@@ -1,6 +1,5 @@
 const preset = require('../../config/jest-presets/jest/jest-preset')
 
-/** @type {import('jest').Config} */
 module.exports = {
   ...preset,
   preset: 'jest-expo',

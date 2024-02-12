@@ -12,7 +12,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import store from 'state'
-import { ThemeProvider } from 'theme'
+import ThemeProvider from 'theme'
 
 i18n.load({
   [DEFAULT_LOCALE]: catalog.messages,
@@ -63,4 +63,5 @@ const customRenderHook = <Result, Props>(
 // Testing utils may export *.
 // eslint-disable-next-line no-restricted-syntax
 export * from '@testing-library/react'
-export { customRender as render, customRenderHook as renderHook }
+export { customRender as render }
+export { customRenderHook as renderHook }

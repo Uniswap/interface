@@ -76,6 +76,7 @@ exports[`renders a relative change 1`] = `
   <View
     style={
       {
+        "alignItems": "stretch",
         "flexDirection": "column",
       }
     }
@@ -175,6 +176,7 @@ exports[`renders placeholders with absolute change 1`] = `
   <View
     style={
       {
+        "alignItems": "stretch",
         "flexDirection": "column",
       }
     }
@@ -212,6 +214,7 @@ exports[`renders placeholders without a change 1`] = `
   <View
     style={
       {
+        "alignItems": "stretch",
         "flexDirection": "column",
       }
     }

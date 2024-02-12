@@ -1,21 +1,12 @@
-import { Trans } from '@lingui/macro'
-import { ChainId } from '@uniswap/sdk-core'
-import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ButtonLight } from 'components/Button'
 import Column from 'components/Column'
 import { HideScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
-import { getLocaleTimeString } from 'components/Table/utils'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { OrderDirection, chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
-import { OrderDirection as TheGraphOrderDirection } from 'graphql/thegraph/__generated__/types-and-hooks'
-import { useCurrency } from 'hooks/Tokens'
-import { useActiveLocale } from 'hooks/useActiveLocale'
-import { ArrowDown, CornerLeftUp, ExternalLink as ExternalLinkIcon } from 'react-feather'
+import { CornerLeftUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
-import { ClickableStyle, ExternalLink, ThemedText } from 'theme/components'
+import { ClickableStyle, ExternalLink } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
 export const SHOW_RETURN_TO_TOP_OFFSET = 500
@@ -93,9 +84,8 @@ export const LoadingIndicator = styled(Row)`
   height: 34px;
   z-index: ${Z_INDEX.under_dropdown};
 `
-
 const TableRow = styled(Row)`
-  padding: 0px 12px;
+  padding: 0px 20px;
   width: fit-content;
   min-width: 100%;
   display: flex;
@@ -124,120 +114,14 @@ export const CellContainer = styled.div`
   &:last-child {
     justify-content: flex-end;
   }
-
-  &:first-child {
-    flex-grow: 0;
-  }
 `
 export const StyledExternalLink = styled(ExternalLink)`
   text-decoration: none;
   ${ClickableStyle}
   color: ${({ theme }) => theme.neutral1}
 `
-const StyledInternalLink = styled(Link)`
+export const StyledInternalLink = styled(Link)`
   text-decoration: none;
   ${ClickableStyle}
   color: ${({ theme }) => theme.neutral1}
 `
-
-export const TableRowLink = styled(Link)`
-  color: none;
-  text-decoration: none;
-  cursor: pointer;
-`
-
-export const ClickableHeaderRow = styled(Row)<{ $justify?: string }>`
-  justify-content: ${({ $justify }) => $justify ?? 'flex-end'};
-  cursor: pointer;
-  width: 100%;
-  gap: 4px;
-  ${ClickableStyle}
-`
-export const HeaderArrow = styled(ArrowDown)<{ direction: OrderDirection | TheGraphOrderDirection }>`
-  height: 16px;
-  width: 16px;
-  color: ${({ theme }) => theme.neutral2};
-  transform: ${({ direction }) => (direction === 'asc' ? 'rotate(180deg)' : 'rotate(0deg)')};
-`
-export const FilterHeaderRow = styled(Row)<{ modalOpen?: boolean }>`
-  ${({ modalOpen }) => !modalOpen && ClickableStyle}
-  cursor: pointer;
-  user-select: none;
-  gap: 4px;
-`
-const StyledTimestampRow = styled(StyledExternalLink)`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-`
-const StyledExternalLinkIcon = styled(ExternalLinkIcon)`
-  display: none;
-  height: 16px;
-  width: 16px;
-  color: ${({ theme }) => theme.neutral2};
-  ${StyledTimestampRow}:hover & {
-    display: block;
-  }
-`
-
-/**
- * Converts the given timestamp to an abbreviated format (s,m,h) for timestamps younger than 1 day
- * and a full discreet format for timestamps older than 1 day (e.g. DD/MM HH:MMam/pm).
- * Hovering on the timestamp will display the full discreet format. (e.g. DD/MM/YYYY HH:MMam/pm)
- * Clicking on the timestamp will open the given link in a new tab
- * @param timestamp: unix timestamp in SECONDS
- * @param link: link to open on click
- * @returns JSX.Element containing the formatted timestamp
- */
-export const TimestampCell = ({ timestamp, link }: { timestamp: number; link: string }) => {
-  const locale = useActiveLocale()
-  const options: Intl.DateTimeFormatOptions = {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  }
-  const fullDate = new Date(timestamp * 1000)
-    .toLocaleString(locale, options)
-    .toLocaleLowerCase(locale)
-    .replace(/\s(am|pm)/, '$1')
-  return (
-    <StyledTimestampRow href={link}>
-      <MouseoverTooltip text={fullDate} placement="top" size={TooltipSize.Max}>
-        <ThemedText.BodySecondary>{getLocaleTimeString(timestamp * 1000, locale)}</ThemedText.BodySecondary>
-      </MouseoverTooltip>
-      <StyledExternalLinkIcon />
-    </StyledTimestampRow>
-  )
-}
-
-const TokenSymbolText = styled(ThemedText.BodyPrimary)`
-  white-space: nowrap;
-  overflow: hidden;
-`
-/**
- * Given a token address and chain displays the Token's Logo and Symbol with a link to its TDP
- * @param tokenAddress: token address
- * @param chainId: chainId of the token
- * @returns JSX.Element showing the Token's Logo, Chain logo if non-mainnet, and Token Symbol
- */
-export const TokenLinkCell = ({ tokenAddress, chainId }: { tokenAddress: string; chainId: ChainId }) => {
-  const currency = useCurrency(tokenAddress, chainId)
-  return (
-    <StyledInternalLink
-      to={getTokenDetailsURL({
-        address: tokenAddress,
-        chain: chainIdToBackendName(chainId),
-        isInfoExplorePageEnabled: true,
-      })}
-    >
-      <Row gap="4px" maxWidth="68px">
-        <PortfolioLogo currencies={[currency]} chainId={chainId} size="16px" />
-        <TokenSymbolText>{currency?.symbol ?? <Trans>UNKNOWN</Trans>}</TokenSymbolText>
-      </Row>
-    </StyledInternalLink>
-  )
-}

@@ -1,16 +1,8 @@
 import { ComponentProps, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  ColorTokens,
-  Flex,
-  FlexProps,
-  Icons,
-  Text,
-  TouchableArea,
-  useIsDarkMode,
-  useSporeColors,
-} from 'ui/src'
+import { ColorTokens, Flex, FlexProps, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 export const SHADOW_OFFSET_SMALL = { width: 0, height: 2 } as const
 
@@ -97,8 +89,8 @@ function EmptyState({
   icon,
 }: EmptyStateProps): JSX.Element {
   return (
-    <Flex centered gap="$spacing16" width="100%">
-      <Flex centered gap="$spacing4">
+    <Flex centered gap="$spacing24" p="$spacing12" width="100%">
+      <Flex centered gap="$spacing16">
         {icon}
         <Flex centered gap="$spacing8">
           {title && (

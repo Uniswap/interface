@@ -8,10 +8,6 @@ const QUICKNODE_MAINNET_RPC_URL = process.env.REACT_APP_QUICKNODE_MAINNET_RPC_UR
 if (typeof QUICKNODE_MAINNET_RPC_URL === 'undefined') {
   throw new Error(`REACT_APP_QUICKNODE_MAINNET_RPC_URL must be a defined environment variable`)
 }
-const QUICKNODE_ARBITRUM_RPC_URL = process.env.REACT_APP_QUICKNODE_ARBITRUM_RPC_URL
-if (typeof QUICKNODE_ARBITRUM_RPC_URL === 'undefined') {
-  throw new Error(`REACT_APP_QUICKNODE_ARBITRUM_RPC_URL must be a defined environment variable`)
-}
 const QUICKNODE_BNB_RPC_URL = process.env.REACT_APP_BNB_RPC_URL
 if (typeof QUICKNODE_BNB_RPC_URL === 'undefined') {
   throw new Error(`REACT_APP_BNB_RPC_URL must be a defined environment variable`)
@@ -144,7 +140,6 @@ export const RPC_URLS = {
   ],
   [ChainId.ARBITRUM_ONE]: [
     `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`,
-    QUICKNODE_ARBITRUM_RPC_URL,
     ...FALLBACK_URLS[ChainId.ARBITRUM_ONE],
   ],
   [ChainId.ARBITRUM_GOERLI]: [

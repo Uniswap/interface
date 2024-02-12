@@ -1,23 +1,17 @@
 import { gql } from '@apollo/client'
 import { ChainId } from '@uniswap/sdk-core'
-import { OrderDirection, Swap_OrderBy, useTokenTransactionsQuery } from 'graphql/thegraph/__generated__/types-and-hooks'
+import { useTokenTransactionsQuery } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useCallback, useMemo, useRef } from 'react'
 
 import { chainToApolloClient } from './apollo'
 
 gql`
-  query TokenTransactions(
-    $address: String!
-    $first: Int
-    $skip: Int
-    $orderBy: Swap_orderBy
-    $orderDirection: OrderDirection
-  ) {
+  query TokenTransactions($address: String!, $first: Int, $skip: Int) {
     swapsAs0: swaps(
       first: $first
       skip: $skip
-      orderBy: $orderBy
-      orderDirection: $orderDirection
+      orderBy: timestamp
+      orderDirection: desc
       where: { token0: $address }
       subgraphError: allow
     ) {
@@ -43,8 +37,8 @@ gql`
     swapsAs1: swaps(
       first: $first
       skip: $skip
-      orderBy: $orderBy
-      orderDirection: $orderDirection
+      orderBy: timestamp
+      orderDirection: desc
       where: { token1: $address }
       subgraphError: allow
     ) {
@@ -69,29 +63,13 @@ gql`
     }
   }
 `
-
-export enum TokenTransactionType {
-  BUY = 'Buy',
-  SELL = 'Sell',
-}
-
-export function useTokenTransactions(
-  address: string,
-  chainId?: ChainId,
-  orderBy: Swap_OrderBy = Swap_OrderBy.Timestamp,
-  orderDirection: OrderDirection = OrderDirection.Desc,
-  filter: TokenTransactionType[] = [TokenTransactionType.BUY, TokenTransactionType.SELL],
-  first = 25,
-  skip?: number
-) {
+export function useTokenTransactions(address: string, chainId?: ChainId, first = 25, skip?: number) {
   const apolloClient = chainToApolloClient[chainId || ChainId.MAINNET]
-  const { data, loading, fetchMore, error } = useTokenTransactionsQuery({
+  const { data, loading, fetchMore } = useTokenTransactionsQuery({
     variables: {
       address: address.toLowerCase(),
       first,
       skip,
-      orderBy,
-      orderDirection,
     },
     client: apolloClient,
   })
@@ -122,18 +100,8 @@ export function useTokenTransactions(
   )
 
   const transactions = useMemo(
-    () =>
-      [
-        ...(data?.swapsAs0.filter((swap) => {
-          const isSell = swap.amount0 > 0
-          return isSell ? filter.includes(TokenTransactionType.SELL) : filter.includes(TokenTransactionType.BUY)
-        }) ?? []),
-        ...(data?.swapsAs1.filter((swap) => {
-          const isSell = swap.amount1 > 0
-          return isSell ? filter.includes(TokenTransactionType.SELL) : filter.includes(TokenTransactionType.BUY)
-        }) ?? []),
-      ].sort((a, b) => b.timestamp - a.timestamp),
-    [data?.swapsAs0, data?.swapsAs1, filter]
+    () => [...(data?.swapsAs0 ?? []), ...(data?.swapsAs1 ?? [])].sort((a, b) => b.timestamp - a.timestamp),
+    [data?.swapsAs0, data?.swapsAs1]
   )
 
   return useMemo(() => {
@@ -141,7 +109,6 @@ export function useTokenTransactions(
       transactions,
       loading,
       loadMore,
-      error,
     }
-  }, [transactions, loading, loadMore, error])
+  }, [transactions, loading, loadMore])
 }

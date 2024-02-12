@@ -3,6 +3,7 @@ import { useAppSelector } from 'src/app/hooks'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { AppModalState } from 'src/features/modals/ModalsState'
 import { selectModalState } from 'src/features/modals/selectModalState'
+import { ModalName } from 'src/features/telemetry/constants'
 import {
   makeSelectSessions,
   selectHasPendingSessionError,
@@ -14,7 +15,6 @@ import {
   WalletConnectRequest,
   WalletConnectSession,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 interface WalletConnect {
   sessions: WalletConnectSession[]

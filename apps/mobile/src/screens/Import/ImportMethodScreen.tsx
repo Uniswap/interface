@@ -8,11 +8,12 @@ import Trace from 'src/components/Trace/Trace'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
+import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
+import { openSettings } from 'src/utils/linking'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
-import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes } from 'ui/src/theme'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
@@ -20,8 +21,6 @@ import {
   PendingAccountActions,
   pendingAccountActions,
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
-import { ElementName, ElementNameType } from 'wallet/src/telemetry/constants'
-import { openSettings } from 'wallet/src/utils/linking'
 import { isAndroid } from 'wallet/src/utils/platform'
 
 interface ImportMethodOption {
@@ -30,7 +29,7 @@ interface ImportMethodOption {
   icon: React.ReactNode
   nav: OnboardingScreens
   importType: ImportType
-  name: ElementNameType
+  name: ElementName
 }
 
 const options: ImportMethodOption[] = [
@@ -60,7 +59,6 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function ImportMethodScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const isDarkMode = useIsDarkMode()
   const dispatch = useAppDispatch()
   const entryPoint = params?.entryPoint
 
@@ -116,16 +114,11 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
       : options
 
   return (
-    <OnboardingScreen title={t('Choose how you want to add your wallet')}>
-      <Flex
-        grow
-        gap="$spacing12"
-        mt="$spacing4"
-        shadowColor="$surface3"
-        shadowRadius={!isDarkMode ? '$spacing8' : undefined}>
-        {importOptions.map(({ title, blurb, icon, nav, importType, name }, i) => (
+    <OnboardingScreen title={t('How do you want to add your wallet?')}>
+      <Flex grow gap="$spacing12" mt="$spacing4">
+        {importOptions.map(({ title, blurb, icon, nav, importType, name }) => (
           <OptionCard
-            key={'connection-option-' + name + i}
+            key={'connection-option-' + title}
             hapticFeedback
             blurb={blurb(t)}
             elementName={name}
@@ -137,7 +130,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
       </Flex>
       <Trace logPress element={ElementName.OnboardingImportBackup}>
         <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12">
-          <Flex row alignItems="center" gap="$spacing8">
+          <Flex row alignItems="center" gap="$spacing4">
             <EyeIcon
               color={colors.accent1.get()}
               height={iconSizes.icon20}

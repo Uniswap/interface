@@ -9,7 +9,7 @@ import {
   HIDDEN_NFTS_ROW_LEFT_ITEM,
   HIDDEN_NFTS_ROW_RIGHT_ITEM,
 } from 'wallet/src/features/nfts/constants'
-import { NFTItem, NftData } from 'wallet/src/features/nfts/types'
+import { NftData, NFTItem } from 'wallet/src/features/nfts/types'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { useAppSelector } from 'wallet/src/state'
 

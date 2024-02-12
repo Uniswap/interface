@@ -1,24 +1,14 @@
-IPFS hash of the deployment:
-- CIDv0: `QmciGvhbiSVjSu6u9JwRzFp5uBRnawnd5M8NMk8d9XNACT`
-- CIDv1: `bafybeigvrxb4vjhzc3k7xqtwa4dijoev545kpjmo4anikgsbckku45k4qq`
+Another week, another update. Check out whats new below:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Settings Polish — We switched spam and low balance settings to universal settings. In addition, we added an opt out for anonymous analytics within the app.
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Quick Copy Contract Addresses — We added the ability quickly copy any token address! Simply press and hold on any token to bring up the option to swap or copy a contract address.
 
-IPFS gateways:
-- https://bafybeigvrxb4vjhzc3k7xqtwa4dijoev545kpjmo4anikgsbckku45k4qq.ipfs.dweb.link/
-- https://bafybeigvrxb4vjhzc3k7xqtwa4dijoev545kpjmo4anikgsbckku45k4qq.ipfs.cf-ipfs.com/
-- [ipfs://QmciGvhbiSVjSu6u9JwRzFp5uBRnawnd5M8NMk8d9XNACT/](ipfs://QmciGvhbiSVjSu6u9JwRzFp5uBRnawnd5M8NMk8d9XNACT/)
+Other notable changes:
 
-## 5.8.0 (2024-02-09)
-
-
-### Features
-
-* **web:** outage banner for arbitrum, optimism, polygon (#6218) e57ca63
-
-
+- View-only wallet polish
+- Activity bug fixes
+- Receive QR polish
+- Import wallet polish
+- Token details page bug fixes
+- Updated treatment for tokens with no logos

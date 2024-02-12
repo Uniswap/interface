@@ -3,7 +3,6 @@ import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, TraceEvent } from 'analytics'
-import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
 import { ButtonEmphasis, ButtonSize, LoadingButtonSpinner, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import { Power } from 'components/Icons/Power'
@@ -48,7 +47,7 @@ const AuthenticatedHeaderWrapper = styled.div`
 
 const HeaderButton = styled(ThemeButton)`
   border-color: transparent;
-  border-radius: 16px;
+  border-radius: 12px;
   border-style: solid;
   border-width: 1px;
   height: 40px;
@@ -151,15 +150,7 @@ const PortfolioDrawerContainer = styled(Column)`
   flex: 1;
 `
 
-export default function AuthenticatedHeader({
-  account,
-  openSettings,
-  openLimitsMenu,
-}: {
-  account: string
-  openSettings: () => void
-  openLimitsMenu: () => void
-}) {
+export default function AuthenticatedHeader({ account, openSettings }: { account: string; openSettings: () => void }) {
   const { connector } = useWeb3React()
   const { ENSName } = useENSName(account)
   const dispatch = useAppDispatch()
@@ -353,7 +344,6 @@ export default function AuthenticatedHeader({
             </Tooltip>
           </FiatOnrampNotAvailableText>
         )}
-        <OpenLimitOrdersButton openLimitsMenu={openLimitsMenu} account={account} />
         <MiniPortfolio account={account} />
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>

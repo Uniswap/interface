@@ -6,7 +6,7 @@ import {
   modalsReducer,
   openModal,
 } from 'src/features/modals/modalSlice'
-import { ModalName } from 'wallet/src/telemetry/constants'
+import { ModalName } from 'src/features/telemetry/constants'
 import { ModalsState } from './ModalsState'
 
 const initialState = { ...initialModalState }

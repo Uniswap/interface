@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: ['@uniswap/eslint-config/native'],
+  extends: ['custom'],
   parserOptions: {
     project: 'tsconfig.json',
     tsconfigRootDir: __dirname,

@@ -1,8 +1,8 @@
 import '@reach/dialog/styles.css'
-import 'connection/eagerlyConnect'
 import 'inter-ui'
 import 'polyfills'
 import 'tracing'
+import 'connection/eagerlyConnect'
 
 import { ApolloProvider } from '@apollo/client'
 import { FeatureFlagsProvider } from 'featureFlags'
@@ -29,7 +29,7 @@ import ListsUpdater from './state/lists/updater'
 import LogsUpdater from './state/logs/updater'
 import OrderUpdater from './state/signatures/updater'
 import TransactionUpdater from './state/transactions/updater'
-import { ThemedGlobalStyle, ThemeProvider } from './theme'
+import ThemeProvider, { ThemedGlobalStyle } from './theme'
 import RadialGradientByChainUpdater from './theme/components/RadialGradientByChainUpdater'
 
 if (window.ethereum) {

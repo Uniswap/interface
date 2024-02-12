@@ -1,0 +1,445 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should inject metadata for valid assets: Azuki 1`] = `
+"<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+
+    <!--
+       will be replaced with the URL of the \`public\` folder during build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+    -->
+    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/images/192x192_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#fff" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      
+        content="script-src 'self' 'unsafe-inline'"
+      
+    />
+
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
+
+    <!--
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
+
+    <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff2" as="font" type="font/woff2" crossorigin />
+   
+    <style>
+      * {
+        font-family: 'Basel', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /**
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
+        */
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 535;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Medium.woff') format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 485;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Book.woff') format('woff2'),
+          url('/fonts/Basel-Book.woff') format('woff');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Basel', sans-serif;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      button {
+        user-select: none;
+      }
+
+      html {
+        font-size: 16px;
+        font-weight: 485;
+        font-variant: none;
+        font-smooth: always;
+        text-rendering: optimizeLegibility !important;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html {
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
+        }
+      }
+    </style>
+  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Azuki #2550"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544/2550"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Azuki #2550"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544/2550"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Azuki #2550"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/nfts/asset/0xed5af388653567af2f388e6224dc7c4b3241c544/2550"/><meta property="twitter:image:alt" content="Azuki #2550"/></head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
+    <div id="background-radial-gradient"></div>
+  </body>
+</html>
+"
+`;
+
+exports[`should inject metadata for valid assets: Bored Ape Yacht Club 1`] = `
+"<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+
+    <!--
+       will be replaced with the URL of the \`public\` folder during build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+    -->
+    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/images/192x192_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#fff" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      
+        content="script-src 'self' 'unsafe-inline'"
+      
+    />
+
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
+
+    <!--
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
+
+    <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff2" as="font" type="font/woff2" crossorigin />
+   
+    <style>
+      * {
+        font-family: 'Basel', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /**
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
+        */
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 535;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Medium.woff') format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 485;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Book.woff') format('woff2'),
+          url('/fonts/Basel-Book.woff') format('woff');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Basel', sans-serif;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      button {
+        user-select: none;
+      }
+
+      html {
+        font-size: 16px;
+        font-weight: 485;
+        font-variant: none;
+        font-smooth: always;
+        text-rendering: optimizeLegibility !important;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html {
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
+        }
+      }
+    </style>
+  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="Bored Ape Yacht Club #3735"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/nfts/asset/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/3735"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="Bored Ape Yacht Club #3735"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/nfts/asset/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/3735"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="Bored Ape Yacht Club #3735"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/nfts/asset/0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d/3735"/><meta property="twitter:image:alt" content="Bored Ape Yacht Club #3735"/></head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
+    <div id="background-radial-gradient"></div>
+  </body>
+</html>
+"
+`;
+
+exports[`should inject metadata for valid assets: CryptoPunk 1`] = `
+"<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+
+    <!--
+       will be replaced with the URL of the \`public\` folder during build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+    -->
+    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/images/192x192_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#fff" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      
+        content="script-src 'self' 'unsafe-inline'"
+      
+    />
+
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
+
+    <!--
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <link rel="preconnect" href="https://api.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
+
+    <link rel="preload" href="/fonts/Basel-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Medium.woff2" as="font" type="font/woff2" crossorigin />
+   
+    <style>
+      * {
+        font-family: 'Basel', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /**
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
+        */
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 535;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Medium.woff') format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 485;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Book.woff') format('woff2'),
+          url('/fonts/Basel-Book.woff') format('woff');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Basel', sans-serif;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      button {
+        user-select: none;
+      }
+
+      html {
+        font-size: 16px;
+        font-weight: 485;
+        font-variant: none;
+        font-smooth: always;
+        text-rendering: optimizeLegibility !important;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html {
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
+        }
+      }
+    </style>
+  <script defer src="/static/js/bundle.js"></script><meta property="og:title" content="CryptoPunk #3947"/><meta property="og:image" content="http://127.0.0.1:3000/api/image/nfts/asset/0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb/3947"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image:alt" content="CryptoPunk #3947"/><meta property="og:type" content="website"/><meta property="og:url" content="http://127.0.0.1:3000/nfts/asset/0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb/3947"/><meta property="twitter:card" content="summary_large_image"/><meta property="twitter:title" content="CryptoPunk #3947"/><meta property="twitter:image" content="http://127.0.0.1:3000/api/image/nfts/asset/0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb/3947"/><meta property="twitter:image:alt" content="CryptoPunk #3947"/></head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
+    <div id="background-radial-gradient"></div>
+  </body>
+</html>
+"
+`;

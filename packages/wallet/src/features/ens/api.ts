@@ -15,8 +15,6 @@ export enum EnsLookupType {
   Name = 'name',
   Address = 'address',
   Avatar = 'avatar',
-  Description = 'description',
-  TwitterUsername = 'com.twitter',
 }
 
 export type EnsLookupParams = {
@@ -48,12 +46,6 @@ async function getAvatarFetch(address: string, provider: providers.JsonRpcProvid
   return checkedName ? await provider.getAvatar(checkedName) : null
 }
 
-async function getTextFetch(key: string, name: string, provider: providers.JsonRpcProvider) {
-  const resolver = await provider.getResolver(name)
-  const text = resolver?.getText(key)
-  return text ?? null
-}
-
 export const getOnChainEnsFetch = async (params: EnsLookupParams): Promise<Response> => {
   const { type, nameOrAddress } = params
   const provider = createEthersProvider(ChainId.Mainnet)
@@ -72,12 +64,6 @@ export const getOnChainEnsFetch = async (params: EnsLookupParams): Promise<Respo
       break
     case EnsLookupType.Avatar:
       response = await getAvatarFetch(nameOrAddress, provider)
-      break
-    case EnsLookupType.Description:
-      response = await getTextFetch('description', nameOrAddress, provider)
-      break
-    case EnsLookupType.TwitterUsername:
-      response = await getTextFetch('com.twitter', nameOrAddress, provider)
       break
     default:
       throw new Error(`Invalid ENS lookup type: ${type}`)
@@ -120,10 +106,4 @@ export function useAddressFromEns(maybeName: string | null, chainId: ChainId = C
 }
 export function useENSAvatar(address?: string | null, chainId: ChainId = ChainId.Mainnet) {
   return useEnsQuery(EnsLookupType.Avatar, address, chainId)
-}
-export function useENSDescription(name?: string | null, chainId: ChainId = ChainId.Mainnet) {
-  return useEnsQuery(EnsLookupType.Description, name, chainId)
-}
-export function useENSTwitterUsername(name?: string | null, chainId: ChainId = ChainId.Mainnet) {
-  return useEnsQuery(EnsLookupType.TwitterUsername, name, chainId)
 }

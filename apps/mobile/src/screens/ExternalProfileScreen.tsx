@@ -8,16 +8,16 @@ import { ActivityTab } from 'src/components/home/ActivityTab'
 import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { Screen } from 'src/components/layout/Screen'
-import { renderTabLabel, TAB_STYLES, TabContentProps } from 'src/components/layout/TabHelpers'
+import { renderTabLabel, TabContentProps, TAB_STYLES } from 'src/components/layout/TabHelpers'
 import Trace from 'src/components/Trace/Trace'
 import TraceTabView from 'src/components/Trace/TraceTabView'
 import { ProfileHeader } from 'src/features/externalProfile/ProfileHeader'
+import { SectionName } from 'src/features/telemetry/constants'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
 import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { SectionName, SectionNameType } from 'wallet/src/telemetry/constants'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.ExternalProfile> & {
   renderedInModal?: boolean
@@ -76,7 +76,7 @@ export function ExternalProfileScreen({
       route,
     }: {
       route: {
-        key: SectionNameType
+        key: SectionName
         title: string
       }
     }) => {

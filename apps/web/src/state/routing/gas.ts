@@ -1,12 +1,12 @@
 import { MaxUint256, PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { ChainId, Currency } from '@uniswap/sdk-core'
+import ERC20_ABI from 'abis/erc20.json'
+import { Erc20, Weth } from 'abis/types'
+import WETH_ABI from 'abis/weth.json'
 import { SupportedInterfaceChain } from 'constants/chains'
 import { DEPRECATED_RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { getContract } from 'utils'
-import ERC20_ABI from 'wallet/src/abis/erc20.json'
-import { Erc20, Weth } from 'wallet/src/abis/types'
-import WETH_ABI from 'wallet/src/abis/weth.json'
 
 import { ApproveInfo, WrapInfo } from './types'
 

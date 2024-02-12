@@ -16,6 +16,7 @@ import { restoreMnemonicFromCloudStorage } from 'src/features/CloudBackup/RNClou
 import { selectLockoutEndTime, selectPasswordAttempts } from 'src/features/CloudBackup/selectors'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
+import { ElementName } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
@@ -24,7 +25,6 @@ import { ImportType } from 'wallet/src/features/onboarding/types'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
-import { ElementName } from 'wallet/src/telemetry/constants'
 import { isAndroid } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<
@@ -159,7 +159,11 @@ export function RestoreCloudBackupPasswordScreen({
           ? t('This password is required to recover your recovery phrase backup from Google Drive.')
           : t('This password is required to recover your recovery phrase backup from iCloud.')
       }
-      title={t('Enter backup password')}>
+      title={
+        isAndroid
+          ? t('Enter your Google Drive backup password')
+          : t('Enter your iCloud backup password')
+      }>
       <Flex>
         <PasswordInput
           ref={inputRef}

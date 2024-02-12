@@ -1,13 +1,9 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { trimToLength } from 'utilities/src/primitives/string'
-import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
+import { useENSName } from 'wallet/src/features/ens/api'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
-import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
-import { useUnitagUpdater } from 'wallet/src/features/unitags/context'
-import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
 import { useAppSelector } from 'wallet/src/state'
 import { getValidAddress, sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 import {
@@ -116,41 +112,18 @@ export function useHideSpamTokensSetting(): boolean {
 
 /**
  * Displays the ENS name if one is available otherwise displays the local name and if neither are available it shows the address.
- *
- * @param address - The address to display
- * @param options.showShortenedEns - Whether to shorten the ENS name to ENS_TRIM_LENGTH characters
- * @param options.includeUnitagSuffix - Whether to include the unitag suffix (.uni.eth) in returned unitag name
- * @param options.showLocalName - Whether to show the local wallet name
  */
-
-type DisplayNameOptions = {
-  showShortenedEns?: boolean
-  includeUnitagSuffix?: boolean
-  showLocalName?: boolean
-}
-
 export function useDisplayName(
   address: Maybe<string>,
-  options?: DisplayNameOptions
-): DisplayName | undefined {
-  const { refetchUnitagsCounter } = useUnitagUpdater()
-
-  const defaultOptions = {
-    showShortenedEns: false,
-    includeUnitagSuffix: false,
-    showLocalName: true,
-  }
-  const hookOptions = { ...defaultOptions, ...options }
-  const { showShortenedEns, includeUnitagSuffix, showLocalName } = hookOptions
-
+  showShortenedEns = false
+):
+  | {
+      name: string
+      type: 'local' | 'ens' | 'address'
+    }
+  | undefined {
   const validated = getValidAddress(address)
   const ens = useENSName(validated ?? undefined)
-  const { unitag, refetch: refetchUnitagByAddress } = useUnitagByAddress(validated ?? undefined)
-
-  // Force refetch of useUnitagByAddress if refetchUnitagsCounter changes
-  useEffect(() => {
-    refetchUnitagByAddress?.()
-  }, [refetchUnitagsCounter, refetchUnitagByAddress])
 
   // Need to account for pending accounts for use within onboarding
   const maybeLocalName = useAccounts()[address ?? '']?.name
@@ -161,51 +134,16 @@ export function useDisplayName(
     return
   }
 
-  if (unitag?.username) {
-    return {
-      name: includeUnitagSuffix ? unitag.username + UNITAG_SUFFIX : unitag.username,
-      type: DisplayNameType.Unitag,
-    }
-  }
-
   if (ens.data) {
     return {
       name: showShortenedEns ? trimToLength(ens.data, ENS_TRIM_LENGTH) : ens.data,
-      type: DisplayNameType.ENS,
+      type: 'ens',
     }
   }
 
-  if (showLocalName && localName) {
-    return { name: localName, type: DisplayNameType.Local }
+  if (localName) {
+    return { name: localName, type: 'local' }
   }
 
-  return {
-    name: `${sanitizeAddressText(shortenAddress(address))}`,
-    type: DisplayNameType.Address,
-  }
-}
-
-/*
- * Fetches avatar for address, in priority uses: unitag avatar, ens avatar, undefined
- *  Note that this hook is used instead of just useENSAvatar because our implementation
- *  of useENSAvatar checks for reverse name resolution which Unitags does not support.
- *  Chose to do this because even if we used useENSAvatar without reverse name resolution,
- *  there is more latency because it has to go to the contract via CCIP-read first.
- */
-export function useAvatar(address: Maybe<string>): {
-  avatar: string | undefined
-  loading: boolean
-} {
-  const { data: avatar } = useENSAvatar(address)
-  const { unitag, loading } = useUnitagByAddress(address || undefined)
-
-  if (loading) {
-    return { avatar: undefined, loading }
-  }
-
-  if (unitag?.metadata?.avatar) {
-    return { avatar: unitag.metadata?.avatar, loading: false }
-  }
-
-  return { avatar, loading: false }
+  return { name: `${sanitizeAddressText(shortenAddress(address))}`, type: 'address' }
 }

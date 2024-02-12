@@ -11,35 +11,36 @@ import {
 } from 'react-native-reanimated'
 import { useAppDispatch, useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { FiatOnRampCtaButton } from 'src/components/fiatOnRamp/CtaButton'
+import { DecimalPad } from 'src/components/input/DecimalPad'
+import { TextInputProps } from 'src/components/input/TextInput'
+import { useBottomSheetContext } from 'src/components/modals/BottomSheetContext'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { FiatOnRampAmountSection } from 'src/features/fiatOnRamp/FiatOnRampAmountSection'
 import {
   FiatOnRampConnectingView,
   SERVICE_PROVIDER_ICON_SIZE,
 } from 'src/features/fiatOnRamp/FiatOnRampConnecting'
 import { FiatOnRampTokenSelector } from 'src/features/fiatOnRamp/FiatOnRampTokenSelector'
-import { useMoonpayFiatOnRamp } from 'src/features/fiatOnRamp/hooks'
+import {
+  useMoonpayFiatCurrencySupportInfo,
+  useMoonpayFiatOnRamp,
+} from 'src/features/fiatOnRamp/hooks'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
+import { MobileEventName, ModalName } from 'src/features/telemetry/constants'
 import { MobileEventProperties } from 'src/features/telemetry/types'
+import { openUri } from 'src/utils/linking'
 import { AnimatedFlex, Flex, Text, useDeviceDimensions, useSporeColors } from 'ui/src'
 import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'
 import { NumberType } from 'utilities/src/format/types'
 import { useTimeout } from 'utilities/src/time/timing'
-import { TextInputProps } from 'wallet/src/components/input/TextInput'
-import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
-import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
-import { useMoonpayFiatCurrencySupportInfo } from 'wallet/src/features/fiatOnRamp/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { ANIMATE_SPRING_CONFIG } from 'wallet/src/features/transactions/utils'
-import { ModalName } from 'wallet/src/telemetry/constants'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
-import { openUri } from 'wallet/src/utils/linking'
 
 const MOONPAY_UNSUPPORTED_REGION_HELP_URL =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'
@@ -199,12 +200,10 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
               width="100%">
               <Text variant="subheading1">{t('Buy')}</Text>
               <FiatOnRampAmountSection
-                appFiatCurrencySupported={appFiatCurrencySupportedInMoonpay}
                 currency={currency}
                 disabled={!eligible}
                 errorColor={errorColor}
                 errorText={errorText}
-                fiatCurrencyInfo={moonpaySupportedFiatCurrency}
                 inputRef={inputRef}
                 predefinedAmountsSupported={predefinedAmountsSupported}
                 quoteAmount={quoteAmount}
@@ -232,7 +231,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                 right={0}
                 onLayout={onDecimalPadLayout}>
                 {!showNativeKeyboard && (
-                  <DecimalPadLegacy
+                  <DecimalPad
                     resetSelection={resetSelection}
                     selection={selection}
                     setValue={onChangeValue('textInput')}

@@ -28,6 +28,7 @@ exports[`renders selection circle 1`] = `
   <View
     style={
       {
+        "alignItems": "stretch",
         "backgroundColor": "#FC72FF",
         "borderBottomLeftRadius": 999999,
         "borderBottomRightRadius": 999999,

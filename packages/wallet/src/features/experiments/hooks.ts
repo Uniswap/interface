@@ -8,8 +8,8 @@ import {
   EXPERIMENT_NAMES,
   EXPERIMENT_PARAMS,
   FEATURE_FLAGS,
-  SWAP_VARIANT_TYPE_PARAMETER_NAME,
   SwapRewriteVariant,
+  SWAP_VARIANT_TYPE_PARAMETER_NAME,
 } from './constants'
 
 export function useFeatureFlag(flagName: FEATURE_FLAGS): boolean {

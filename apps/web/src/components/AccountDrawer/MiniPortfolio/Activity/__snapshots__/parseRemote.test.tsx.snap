@@ -103,18 +103,15 @@ Object {
   "offchainOrderDetails": Object {
     "addedTime": 10000,
     "chainId": 1,
-    "id": "someId",
-    "offerer": "someOfferer",
-    "orderHash": "someHash",
     "status": "expired",
     "swapInfo": Object {
-      "expectedOutputCurrencyAmountRaw": "200000000000000000000",
-      "inputCurrencyAmountRaw": "100000000000000000000",
+      "expectedOutputCurrencyAmountRaw": "200",
+      "inputCurrencyAmountRaw": "100",
       "inputCurrencyId": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
       "isUniswapXOrder": true,
-      "minimumOutputCurrencyAmountRaw": "200000000000000000000",
+      "minimumOutputCurrencyAmountRaw": "200",
       "outputCurrencyId": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-      "settledOutputCurrencyAmountRaw": "200000000000000000000",
+      "settledOutputCurrencyAmountRaw": "200",
       "tradeType": 0,
       "type": 1,
     },
@@ -398,9 +395,6 @@ Object {
   "offchainOrderDetails": Object {
     "addedTime": 10000,
     "chainId": 1,
-    "id": "transactionId",
-    "offerer": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
-    "orderHash": "someHash",
     "status": "filled",
     "swapInfo": Object {
       "expectedOutputCurrencyAmountRaw": "100000000000000000000",

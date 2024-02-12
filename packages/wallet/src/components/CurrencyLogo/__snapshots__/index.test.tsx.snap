@@ -37,6 +37,7 @@ exports[`renders a currency logo with network logo 1`] = `
   <View
     style={
       {
+        "alignItems": "stretch",
         "borderBottomColor": "#FFFFFF",
         "borderBottomLeftRadius": 8,
         "borderBottomRightRadius": 8,

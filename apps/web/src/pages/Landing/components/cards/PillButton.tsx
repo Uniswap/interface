@@ -28,9 +28,6 @@ const Label = styled.span`
   color: ${(props) => props.color};
   font-family: Basel;
   font-size: 20px;
-  @media (max-width: 1024px) {
-    font-size: 18px;
-  }
   font-style: normal;
   font-weight: 535;
   line-height: 24px; /* 120% */

@@ -1,18 +1,19 @@
 import { t } from '@lingui/macro'
 import { TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
 
-export const getTokenPageTitle = (tokenQuery: TokenQuery) => {
+export const getTokenPageTitle = (tokenQuery: TokenQuery, omitSearchDetail?: boolean) => {
   const tokenName = tokenQuery?.token?.name
   const tokenSymbol = tokenQuery?.token?.symbol
-  const baseTitle = t`Buy, Sell, and Trade on Uniswap`
+  const baseTitle = 'Buy & Trade'
+  const searchDetail = omitSearchDetail ? '' : ': Live Price & Chart on Uniswap'
   if (!tokenName && !tokenSymbol) {
-    return baseTitle
+    return t`${baseTitle}${searchDetail}`
   }
   if (!tokenName && tokenSymbol) {
-    return t`${tokenSymbol}: ${baseTitle}`
+    return t`${baseTitle} ${tokenSymbol}${searchDetail}`
   }
   if (tokenName && !tokenSymbol) {
-    return t`${tokenName}: ${baseTitle}`
+    return t`${baseTitle} ${tokenName}${searchDetail}`
   }
-  return t`${tokenName} (${tokenSymbol}): ${baseTitle}`
+  return t`${baseTitle} ${tokenName} (${tokenSymbol})${searchDetail}`
 }

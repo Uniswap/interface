@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
+import { TextInput } from 'src/components/input/TextInput'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { Button, Flex, Icons, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
-import { TextInput } from 'wallet/src/components/input/TextInput'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
@@ -19,7 +19,6 @@ import {
   EditAccountAction,
   editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 import { isIOS } from 'wallet/src/utils/platform'
@@ -40,8 +39,6 @@ export function SettingsWalletEdit({
   const [initialNickname, setInitialNickname] = useState(ensName || activeAccount?.name)
   const [showEditInput, setShowEditInput] = useState(false)
   const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
-  const showUnitagBanner =
-    unitagsFeatureFlagEnabled && activeAccount?.type === AccountType.SignerMnemonic
 
   const onPressShowEditInput = (): void => {
     setShowEditInput(true)
@@ -77,7 +74,7 @@ export function SettingsWalletEdit({
         contentContainerStyle={styles.expand}
         style={styles.base}>
         <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
-          <Text variant="body1">{t('Edit Label')}</Text>
+          <Text variant="body1">{t('Nickname')}</Text>
         </BackHeader>
         <Flex
           grow
@@ -125,10 +122,10 @@ export function SettingsWalletEdit({
                   {!ensName && (
                     <Flex ml="$spacing12">
                       <Button
-                        backgroundless
-                        icon={<Icons.PenLine color="$neutral3" />}
+                        icon={<Icons.Pencil color="$neutral2" />}
                         m="$none"
                         size="medium"
+                        theme="secondary"
                         onPress={onPressShowEditInput}
                       />
                     </Flex>
@@ -138,10 +135,10 @@ export function SettingsWalletEdit({
             </Flex>
             <Flex px="$spacing8" py="$spacing12">
               <Text color="$neutral3">
-                {t('Labels are not public. They are stored locally and only visible to you.')}
+                {t('Nicknames are not public. They are stored locally and only visible to you.')}
               </Text>
             </Flex>
-            {showUnitagBanner && <UnitagBanner compact />}
+            {unitagsFeatureFlagEnabled && <UnitagBanner compact />}
           </Flex>
           <Button
             hapticFeedback

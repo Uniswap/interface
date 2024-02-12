@@ -7,12 +7,7 @@ import {
   FinalizedTransactionStatus,
   TransactionStatus,
 } from 'wallet/src/features/transactions/types'
-import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
-
-export enum QuoteType {
-  RoutingApi = 'RoutingApi',
-  TradingApi = 'TradingApi',
-}
+import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,

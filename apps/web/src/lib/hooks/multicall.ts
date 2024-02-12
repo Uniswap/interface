@@ -4,8 +4,8 @@ import useBlockNumber, { useMainnetBlockNumber } from 'lib/hooks/useBlockNumber'
 import multicall from 'lib/state/multicall'
 import { SkipFirst } from 'types/tuple'
 
-export { NEVER_RELOAD } from '@uniswap/redux-multicall' // re-export for convenience
 export type { CallStateResult } from '@uniswap/redux-multicall' // re-export for convenience
+export { NEVER_RELOAD } from '@uniswap/redux-multicall' // re-export for convenience
 
 // Create wrappers for hooks so consumers don't need to get latest block themselves
 

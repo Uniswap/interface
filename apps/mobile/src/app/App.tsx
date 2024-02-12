@@ -2,7 +2,7 @@ import { ApolloProvider } from '@apollo/client'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
-import { PropsWithChildren, default as React, StrictMode, useCallback, useEffect } from 'react'
+import { default as React, PropsWithChildren, StrictMode, useCallback, useEffect } from 'react'
 import { NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
 import { getUniqueId } from 'react-native-device-info'
@@ -11,16 +11,15 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableFreeze } from 'react-native-screens'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
-import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppModals } from 'src/app/modals/AppModals'
-import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
 import { AppStackNavigator } from 'src/app/navigation/navigation'
+import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { persistor, store } from 'src/app/store'
+import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import Trace from 'src/components/Trace/Trace'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
-import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 import { usePersistedApolloClient } from 'src/data/usePersistedApolloClient'
 import { initAppsFlyer } from 'src/features/analytics/appsflyer'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
@@ -31,6 +30,7 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
 import { selectAllowAnalytics } from 'src/features/telemetry/selectors'
+import { TransactionHistoryUpdater } from 'src/features/transactions/TransactionHistoryUpdater'
 import {
   processWidgetEvents,
   setAccountAddressesUserDefaults,
@@ -40,22 +40,20 @@ import {
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
 import { Statsig, StatsigProvider } from 'statsig-react-native'
-import { flexStyles, useIsDarkMode } from 'ui/src'
+import { flexStyles } from 'ui/src'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { config } from 'wallet/src/config'
 import { uniswapUrls } from 'wallet/src/constants/urls'
-import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
+import { useCurrentAppearanceSetting, useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { EXPERIMENT_NAMES, FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
+import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
 import { updateLanguage } from 'wallet/src/features/language/slice'
-import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
-import { UnitagUpdaterContextProvider } from 'wallet/src/features/unitags/context'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
@@ -187,29 +185,25 @@ function AppOuter(): JSX.Element | null {
           <LocalizationContextProvider>
             <GestureHandlerRootView style={flexStyles.fill}>
               <WalletContextProvider>
-                <UnitagUpdaterContextProvider>
-                  <BiometricContextProvider>
-                    <LockScreenContextProvider>
-                      <Sentry.TouchEventBoundary>
-                        <DataUpdaters />
-                        <NavigationContainer
-                          onReady={(navigationRef): void => {
-                            routingInstrumentation.registerNavigationContainer(navigationRef)
-                          }}>
-                          <MobileWalletNavigationProvider>
-                            <BottomSheetModalProvider>
-                              <AppModals />
-                              <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                <AppInner />
-                              </PerformanceProfiler>
-                            </BottomSheetModalProvider>
-                            <NotificationToastWrapper />
-                          </MobileWalletNavigationProvider>
-                        </NavigationContainer>
-                      </Sentry.TouchEventBoundary>
-                    </LockScreenContextProvider>
-                  </BiometricContextProvider>
-                </UnitagUpdaterContextProvider>
+                <BiometricContextProvider>
+                  <LockScreenContextProvider>
+                    <Sentry.TouchEventBoundary>
+                      <DataUpdaters />
+                      <NavigationContainer
+                        onReady={(navigationRef): void => {
+                          routingInstrumentation.registerNavigationContainer(navigationRef)
+                        }}>
+                        <BottomSheetModalProvider>
+                          <AppModals />
+                          <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                            <AppInner />
+                          </PerformanceProfiler>
+                        </BottomSheetModalProvider>
+                        <NotificationToastWrapper />
+                      </NavigationContainer>
+                    </Sentry.TouchEventBoundary>
+                  </LockScreenContextProvider>
+                </BiometricContextProvider>
               </WalletContextProvider>
             </GestureHandlerRootView>
           </LocalizationContextProvider>

@@ -12,9 +12,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import ActiveItemDecoration from './ActiveItemDecoration'
-import { useSortableGridContext } from './SortableGridProvider'
 import { TIME_TO_ACTIVATE_PAN } from './constants'
 import { useAnimatedZIndex, useItemOrderUpdater } from './hooks'
+import { useSortableGridContext } from './SortableGridProvider'
 import { SortableGridRenderItem } from './types'
 
 type SortableGridItemProps<I> = {

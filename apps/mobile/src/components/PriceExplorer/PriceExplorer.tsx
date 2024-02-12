@@ -1,16 +1,16 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import { memo, useMemo } from 'react'
 import { I18nManager } from 'react-native'
-import { SharedValue, useDerivedValue } from 'react-native-reanimated'
+import { SharedValue } from 'react-native-reanimated'
 import { LineChart, LineChartProvider, TLineChartDataProp } from 'react-native-wagmi-charts'
+import { Loader } from 'src/components/loading'
+import { CURSOR_INNER_SIZE, CURSOR_SIZE } from 'src/components/PriceExplorer/constants'
 import PriceExplorerAnimatedNumber from 'src/components/PriceExplorer/PriceExplorerAnimatedNumber'
 import { PriceExplorerError } from 'src/components/PriceExplorer/PriceExplorerError'
 import { DatetimeText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
 import { TimeRangeGroup } from 'src/components/PriceExplorer/TimeRangeGroup'
-import { CURSOR_INNER_SIZE, CURSOR_SIZE } from 'src/components/PriceExplorer/constants'
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import { useLineChartPrice } from 'src/components/PriceExplorer/usePrice'
-import { Loader } from 'src/components/loading'
 import { invokeImpact } from 'src/utils/haptic'
 import { Flex } from 'ui/src'
 import { spacing } from 'ui/src/theme'
@@ -24,7 +24,7 @@ type PriceTextProps = {
   loading: boolean
   relativeChange?: SharedValue<number>
   numberOfDigits: PriceNumberOfDigits
-  spotPrice?: SharedValue<number>
+  spotPrice?: number
 }
 
 function PriceTextSection({ loading, numberOfDigits, spotPrice }: PriceTextProps): JSX.Element {
@@ -84,15 +84,14 @@ export const PriceExplorer = memo(function PriceExplorer({
     return { lastPricePoint: lastPoint, convertedPriceHistory: priceHistory }
   }, [data, conversionRate])
 
-  const convertedSpotValue = useDerivedValue(() => conversionRate * (data?.spot?.value?.value ?? 0))
   const convertedSpot = useMemo((): TokenSpotData | undefined => {
     return (
       data?.spot && {
         ...data?.spot,
-        value: convertedSpotValue,
+        value: { value: conversionRate * (data?.spot?.value?.value ?? 0) },
       }
     )
-  }, [data, convertedSpotValue])
+  }, [data, conversionRate])
 
   if (
     !loading &&
@@ -189,7 +188,7 @@ function PriceExplorerChart({
           loading={loading}
           numberOfDigits={numberOfDigits}
           relativeChange={spot?.relativeChange}
-          spotPrice={spot?.value}
+          spotPrice={spot?.value?.value}
         />
         {/* TODO(MOB-2166): remove forced LTR direction + scaleX horizontal flip technique once react-native-wagmi-charts fixes this: https://github.com/coinjar/react-native-wagmi-charts/issues/136 */}
         <Flex direction="ltr" my="$spacing24" style={{ transform: [{ scaleX: isRTL ? -1 : 1 }] }}>

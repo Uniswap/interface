@@ -2,7 +2,7 @@ import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { isStale } from 'utilities/src/time/time'
-import { CHAIN_INFO, ChainId, L1ChainInfo, L2ChainInfo, RPCType } from 'wallet/src/constants/chains'
+import { ChainId, CHAIN_INFO, L1ChainInfo, L2ChainInfo, RPCType } from 'wallet/src/constants/chains'
 import { createEthersProvider } from 'wallet/src/features/providers/createEthersProvider'
 import { getInfuraChainName } from 'wallet/src/features/providers/utils'
 
@@ -27,7 +27,7 @@ type ChainIdToProvider = Partial<Record<ChainId, ProviderInfo>>
 const getChainDetails = (chainId: ChainId): L1ChainInfo | L2ChainInfo => {
   const chainDetails = CHAIN_INFO[chainId]
   if (!chainDetails) {
-    logger.error(new Error('Cannot create provider for invalid chain details'), {
+    logger.error('Cannot create provider for invalid chain details', {
       tags: {
         file: 'ProviderManager',
         function: 'getChainDetails',

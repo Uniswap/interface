@@ -1,7 +1,7 @@
 import React from 'react'
+import { Unicon } from 'src/components/unicons/Unicon'
 import { Flex, useSporeColors } from 'ui/src'
 import { isSVGUri } from 'utilities/src/format/urls'
-import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { RemoteSvg } from 'wallet/src/features/images/RemoteSvg'
 
@@ -17,16 +17,7 @@ export function UnitagProfilePicture({
   const colors = useSporeColors()
 
   return profilePictureUri ? (
-    <Flex
-      shrink
-      bg="$surface1"
-      borderRadius="$roundedFull"
-      height={size}
-      overflow="hidden"
-      shadowColor="$neutral3"
-      shadowOpacity={0.4}
-      shadowRadius="$spacing4"
-      width={size}>
+    <Flex shrink borderRadius="$roundedFull" height={size} overflow="hidden" width={size}>
       {isSVGUri(profilePictureUri) ? (
         <RemoteSvg
           backgroundColor={colors.surface1.val}
@@ -39,11 +30,6 @@ export function UnitagProfilePicture({
       )}
     </Flex>
   ) : (
-    <AccountIcon
-      address={address}
-      avatarUri={profilePictureUri}
-      showBackground={true}
-      size={size}
-    />
+    <Unicon address={address} size={size} />
   )
 }

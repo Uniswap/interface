@@ -1,7 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent, sendAnalyticsEvent } from 'analytics'
+import { sendAnalyticsEvent, TraceEvent } from 'analytics'
 import PortfolioDrawer from 'components/AccountDrawer'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
@@ -104,9 +104,9 @@ const Web3StatusConnecting = styled(Web3StatusConnected)`
   }
 `
 
-const AddressAndChevronContainer = styled.div<{ $loading?: boolean }>`
+const AddressAndChevronContainer = styled.div<{ loading?: boolean }>`
   display: flex;
-  opacity: ${({ $loading, theme }) => $loading && theme.opacity.disabled};
+  opacity: ${({ loading, theme }) => loading && theme.opacity.disabled};
 
   @media only screen and (max-width: ${navSearchInputVisibleSize}px) {
     display: none;
@@ -189,7 +189,7 @@ function Web3StatusInner() {
         <IconWrapper size={24}>
           <LoaderV3 size="24px" />
         </IconWrapper>
-        <AddressAndChevronContainer $loading={true}>
+        <AddressAndChevronContainer loading={true}>
           <Text>{initialConnection.current?.ENSName ?? shortenAddress(initialConnection.current?.address)}</Text>
         </AddressAndChevronContainer>
       </Web3StatusConnecting>

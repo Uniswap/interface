@@ -19,15 +19,3 @@ export enum TokenMetadataDisplayType {
   TVL,
   Symbol,
 }
-
-export type DisplayName = {
-  name: string
-  type: DisplayNameType
-}
-
-export enum DisplayNameType {
-  Address,
-  ENS,
-  Local,
-  Unitag,
-}

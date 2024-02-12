@@ -1,9 +1,12 @@
-import { ChartHeader } from 'components/Charts/ChartHeader'
+import { Trans } from '@lingui/macro'
 import { Chart, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
+import { useHeaderDateFormatter } from 'components/Charts/hooks'
 import { getCandlestickPriceBounds } from 'components/Charts/PriceChart/utils'
 import { PriceChartType } from 'components/Charts/utils'
-import { DeltaArrow, calculateDelta } from 'components/Tokens/TokenDetails/Delta'
+import { calculateDelta, DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { PricePoint } from 'graphql/data/util'
+import { useActiveLocale } from 'hooks/useActiveLocale'
 import {
   AreaData,
   CandlestickData,
@@ -14,10 +17,13 @@ import {
   PriceLineOptions,
   UTCTimestamp,
 } from 'lightweight-charts'
-import { useMemo } from 'react'
-import styled from 'styled-components'
+import React, { useMemo, useState } from 'react'
+import { Info } from 'react-feather'
+import styled, { useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components'
+import { textFadeIn } from 'theme/styles'
 import { opacify } from 'theme/utils'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useFormatter } from 'utils/formatNumbers'
 
 type PriceChartData = CandlestickData<UTCTimestamp> & AreaData<UTCTimestamp>
 
@@ -25,7 +31,7 @@ interface PriceChartModelParams extends ChartModelParams<PriceChartData> {
   type: PriceChartType
 }
 
-export class PriceChartModel extends ChartModel<PriceChartData> {
+class PriceChartModel extends ChartModel<PriceChartData> {
   protected series: ISeriesApi<'Area' | 'Candlestick'>
   private type: PriceChartType
   private minPriceLine: IPriceLine
@@ -103,15 +109,30 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   }
 }
 
+const ChartHeaderWrapper = styled.div<{ stale?: boolean }>`
+  position: absolute;
+  ${textFadeIn};
+  animation-duration: ${({ theme }) => theme.transition.duration.medium};
+  ${({ theme, stale }) => stale && `color: ${theme.neutral2}`};
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`
+const PriceContainer = styled.div`
+  display: flex;
+  gap: 6px;
+  line-height: 50px;
+`
 const DeltaContainer = styled.div`
   height: 16px;
   display: flex;
   align-items: center;
+  margin-top: 4px;
   color: ${({ theme }) => theme.neutral2};
-  gap: 4px;
 `
 
-export const mockCandlestickData = (prices: PricePoint[] | undefined): PriceChartData[] => {
+const mockCandlestickData = (prices: PricePoint[] | undefined): PriceChartData[] => {
   if (!prices) return []
 
   let minIndex = 0
@@ -146,15 +167,49 @@ interface PriceChartDeltaProps {
   noColor?: boolean
 }
 
-export function PriceChartDelta({ startingPrice, endingPrice, noColor }: PriceChartDeltaProps) {
+function PriceChartDelta({ startingPrice, endingPrice, noColor }: PriceChartDeltaProps) {
   const delta = calculateDelta(startingPrice.close ?? startingPrice.value, endingPrice.close ?? endingPrice.value)
   const { formatDelta } = useFormatter()
 
   return (
     <DeltaContainer>
-      <DeltaArrow delta={delta} noColor={noColor} />
       {formatDelta(delta)}
+      <DeltaArrow delta={delta} noColor={noColor} />
     </DeltaContainer>
+  )
+}
+
+function PriceChartHeader({ crosshairPrice, data }: { crosshairPrice?: PriceChartData; data: PriceChartData[] }) {
+  const { formatFiatPrice } = useFormatter()
+  const headerDateFormatter = useHeaderDateFormatter()
+
+  const startingPrice = data[0]
+  const endingPrice = data[data.length - 1]
+
+  const lastValidPrice = useMemo(
+    () => [...data].reverse().find((price) => price.close !== 0 || price.value !== 0),
+    [data]
+  )
+
+  const priceOutdated = lastValidPrice !== endingPrice
+  const displayPrice = crosshairPrice ?? lastValidPrice ?? startingPrice
+
+  const displayIsStale = priceOutdated && !crosshairPrice
+  return (
+    <ChartHeaderWrapper data-cy="chart-header" stale={displayIsStale}>
+      <PriceContainer>
+        <ThemedText.HeadlineLarge color="inherit">
+          {formatFiatPrice({ price: displayPrice?.close ?? displayPrice.value })}
+        </ThemedText.HeadlineLarge>
+        {displayIsStale && (
+          <MouseoverTooltip text={<Trans>This price may not be up-to-date due to low trading volume.</Trans>}>
+            <Info size={16} data-testid="chart-stale-icon" />
+          </MouseoverTooltip>
+        )}
+      </PriceContainer>
+      <ThemedText.Caption color="neutral2">{headerDateFormatter(displayPrice?.time)}</ThemedText.Caption>
+      <PriceChartDelta startingPrice={startingPrice} endingPrice={displayPrice} noColor={priceOutdated} />
+    </ChartHeaderWrapper>
   )
 }
 
@@ -166,24 +221,19 @@ interface PriceChartProps {
 
 export function PriceChart({ height, prices, type }: PriceChartProps) {
   const mockedPrices = useMemo(() => mockCandlestickData(prices), [prices]) // TODO(info) - update to use real candlestick data
-  const params = useMemo(() => ({ data: mockedPrices, type }), [mockedPrices, type])
+  const locale = useActiveLocale()
+  const theme = useTheme()
+  const format = useFormatter()
+  const [crosshairPrice, setCrosshairPrice] = useState<PriceChartData>()
 
-  // TODO(WEB-3430): Add error state for lack of data
-  if (!mockedPrices.length) return null
+  const params: PriceChartModelParams = useMemo(() => {
+    return { data: mockedPrices, locale, theme, format, type, onCrosshairMove: setCrosshairPrice }
+  }, [mockedPrices, locale, theme, format, type])
 
-  const lastPrice = mockedPrices[mockedPrices.length - 1]
   return (
-    <Chart Model={PriceChartModel} params={params} height={height}>
-      {(crosshairData) => (
-        <ChartHeader
-          value={(crosshairData ?? lastPrice).value ?? (crosshairData ?? lastPrice).close}
-          additionalFields={
-            <PriceChartDelta startingPrice={mockedPrices[0]} endingPrice={crosshairData ?? lastPrice} />
-          }
-          valueFormatterType={NumberType.FiatTokenPrice}
-          time={crosshairData?.time}
-        />
-      )}
-    </Chart>
+    <>
+      <PriceChartHeader crosshairPrice={crosshairPrice} data={mockedPrices} />
+      <Chart Model={PriceChartModel} params={params} height={height} />
+    </>
   )
 }

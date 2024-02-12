@@ -1,6 +1,6 @@
 import { SupportedLocale } from 'constants/locales'
 import { initialLocale, useActiveLocale } from 'hooks/useActiveLocale'
-import { Provider, dynamicActivate } from 'lib/i18n'
+import { dynamicActivate, Provider } from 'lib/i18n'
 import { ReactNode, useCallback } from 'react'
 import { useUserLocaleManager } from 'state/user/hooks'
 

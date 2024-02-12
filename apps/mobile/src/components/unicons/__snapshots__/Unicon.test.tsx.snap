@@ -6,6 +6,7 @@ exports[`renders a Unicon 1`] = `
 <View
   style={
     {
+      "alignItems": "stretch",
       "flexDirection": "column",
       "height": 36,
       "width": 36,
@@ -15,6 +16,7 @@ exports[`renders a Unicon 1`] = `
   <View
     style={
       {
+        "alignItems": "stretch",
         "flexDirection": "column",
         "height": 36,
         "width": 36,

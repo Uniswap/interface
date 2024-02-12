@@ -6,4 +6,9 @@ import { styled, YStack } from 'tamagui'
 
 export const TouchableArea = styled(YStack, {
   cursor: 'pointer',
+  animation: 'quick',
+
+  pressStyle: {
+    backgroundColor: '$backgroundPress',
+  },
 })

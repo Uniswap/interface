@@ -95,8 +95,7 @@ describe('network switching', () => {
     promise.resolve()
   })
 
-  // TODO re-enable web test
-  it.skip('should switch networks', () => {
+  it('should switch networks', () => {
     // Select an output currency
     cy.get('#swap-currency-output .open-currency-select-button').click()
     cy.contains('USDC').click()

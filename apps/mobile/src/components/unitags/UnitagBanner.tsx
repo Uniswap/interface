@@ -2,22 +2,21 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
-import { Button, Flex, Image, Text, useDeviceDimensions, useIsDarkMode } from 'ui/src'
-import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/src/assets'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { markAccountDismissedUnitagPrompt } from 'wallet/src/features/wallet/slice'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
+import { Button, Flex, Image, Text, useDeviceDimensions } from 'ui/src'
+import { UNITAGS_BANNER_VERTICAL } from 'ui/src/assets'
 
-const IMAGE_ASPECT_RATIO = 0.4
+const IMAGE_ASPECT_RATIO = 0.35
 const IMAGE_SCREEN_WIDTH_PROPORTION = 0.2
 const COMPACT_IMAGE_SCREEN_WIDTH_PROPORTION = 0.16
+const COMPACT_IMAGE_TOP_SHIFT = -0.17
+const REGULAR_IMAGE_TOP_SHIFT = -0.12
+const SHORT_IMAGE_TOP_SHIFT = -0.07
 
 export function UnitagBanner({ compact }: { compact?: boolean }): JSX.Element {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const { fullWidth } = useDeviceDimensions()
-  const isDarkMode = useIsDarkMode()
-  const activeAddress = useActiveAccountAddressWithThrow()
   const imageWidth = compact
     ? COMPACT_IMAGE_SCREEN_WIDTH_PROPORTION * fullWidth
     : IMAGE_SCREEN_WIDTH_PROPORTION * fullWidth
@@ -28,7 +27,7 @@ export function UnitagBanner({ compact }: { compact?: boolean }): JSX.Element {
   }
 
   const onPressMaybeLater = (): void => {
-    dispatch(markAccountDismissedUnitagPrompt(activeAddress))
+    // TODO (MOB-1554): set a flag in redux to not show this again
   }
 
   return (
@@ -66,10 +65,12 @@ export function UnitagBanner({ compact }: { compact?: boolean }): JSX.Element {
           <Flex gap="$spacing8">
             <Text variant="subheading2">{t('Claim your Uniswap username')}</Text>
             <Text color="$neutral2" variant="body3">
-              {t('Sharing your address and connecting with friends has never been easier.')}
+              {t(
+                'Get a free username and personalized profile so people can find your across web3'
+              )}
             </Text>
           </Flex>
-          <Flex row gap="$spacing8">
+          <Flex row gap="$spacing8" pb="$spacing16">
             <Button
               borderRadius="$rounded24"
               fontSize="$small"
@@ -79,9 +80,8 @@ export function UnitagBanner({ compact }: { compact?: boolean }): JSX.Element {
               {t('Claim now')}
             </Button>
             <Button
-              backgroundless
               borderRadius="$rounded24"
-              color="$neutral3"
+              color="$neutral2"
               fontSize="$small"
               testID={ElementName.Cancel}
               theme="secondary"
@@ -91,16 +91,20 @@ export function UnitagBanner({ compact }: { compact?: boolean }): JSX.Element {
           </Flex>
         </Flex>
       )}
-      <Flex justifyContent={compact ? 'flex-start' : 'center'} width={imageWidth}>
+      <Flex aspectRatio={IMAGE_ASPECT_RATIO} maxWidth={imageWidth}>
         <Image
-          alignSelf="center"
-          position="absolute"
-          resizeMode="cover"
-          source={{
-            width: imageWidth,
-            height: imageHeight,
-            uri: isDarkMode ? UNITAGS_BANNER_VERTICAL_DARK : UNITAGS_BANNER_VERTICAL_LIGHT,
+          $short={{
+            top: SHORT_IMAGE_TOP_SHIFT * imageHeight,
           }}
+          height={imageHeight}
+          position="absolute"
+          resizeMode="center"
+          right={0}
+          source={UNITAGS_BANNER_VERTICAL}
+          top={
+            compact ? COMPACT_IMAGE_TOP_SHIFT * imageHeight : REGULAR_IMAGE_TOP_SHIFT * imageHeight
+          } // Shift image up otherwise it's not fully visible
+          width={imageWidth}
         />
       </Flex>
     </Flex>

@@ -4,7 +4,7 @@ import {
   wcInUniwapScheme,
   wcUniversalLinkUrl,
 } from 'src/features/deepLinking/handleDeepLinkSaga.test'
-import { CUSTOM_UNI_QR_CODE_PREFIX, URIType, getSupportedURI } from './util'
+import { CUSTOM_UNI_QR_CODE_PREFIX, getSupportedURI, URIType } from './util'
 
 const VALID_WC_V1_URI = 'validWcV1Uri@1?relay-protocol=irn&symKey=51e'
 const VALID_WC_V2_URI = 'validWcV2Uri@2?relay-protocol=irn&symKey=51e'

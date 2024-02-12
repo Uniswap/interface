@@ -3,10 +3,11 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Image, Platform, ViewStyle } from 'react-native'
 import Rive, { Alignment, Fit, RiveRef } from 'rive-react-native'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { useIsDarkMode, useMedia } from 'ui/src'
+import { useMedia } from 'ui/src'
 import { ONBOARDING_LANDING_DARK, ONBOARDING_LANDING_LIGHT } from 'ui/src/assets'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { useTimeout } from 'utilities/src/time/timing'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { Language } from 'wallet/src/features/language/constants'
 import { useCurrentLanguage } from 'wallet/src/features/language/hooks'
 import { isAndroid } from 'wallet/src/utils/platform'
@@ -82,11 +83,7 @@ export const LandingBackground = (): JSX.Element | null => {
   }
 
   // Android 9 and 10 have issues with Rive, so we fallback on image
-  if (
-    // Android Platform.Version is always a number
-    (isAndroid && typeof Platform.Version === 'number' && Platform.Version < 30) ||
-    language !== Language.English
-  ) {
+  if ((isAndroid && Platform.Version < 30) || language !== Language.English) {
     return <OnboardingStaticImage />
   }
 

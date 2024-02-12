@@ -13,8 +13,7 @@ describe('Token details', () => {
     cy.viewport(1440, 900)
   })
 
-  // TODO WEB-3579
-  it.skip('should have a single h1 tag on smaller screen size', () => {
+  it('should have a single h1 tag on smaller screen size', () => {
     cy.viewport(800, 600)
     cy.visit(`/tokens/ethereum/${UNI_ADDRESS}`, { featureFlags: [{ name: FeatureFlag.infoTDP, value: false }] })
     cy.get('h1').should('have.length', 1)
@@ -163,7 +162,7 @@ describe('Token details', () => {
       cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
     })
 
-    it.skip('should show a L2 token even if the user is connected to a different network', () => {
+    it('should show a L2 token even if the user is connected to a different network', () => {
       cy.visit('/tokens')
       cy.get(getTestSelector('tokens-network-filter-selected')).click()
       cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()

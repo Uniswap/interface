@@ -1,28 +1,25 @@
 import React, { useEffect, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TransactionFlow } from 'src/features/transactions/TransactionFlow'
+import { WarningAction } from 'src/components/modals/WarningModal/types'
 import {
   TokenSelectorModal,
   TokenSelectorVariation,
-} from 'wallet/src/components/TokenSelector/TokenSelector'
-import { useSwapWarnings } from 'wallet/src/features/transactions/hooks/useSwapWarnings'
-import { useTokenSelectorActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenSelectorActionHandlers'
-import { useTransactionGasWarning } from 'wallet/src/features/transactions/hooks/useTransactionGasWarning'
-import {
-  useDerivedSwapInfo,
-  useSwapTxAndGasInfoLegacy,
-} from 'wallet/src/features/transactions/swap/hooks'
+} from 'src/components/TokenSelector/TokenSelector'
+import { TokenSelectorFlow } from 'src/components/TokenSelector/types'
+import { useTokenSelectorActionHandlers } from 'src/features/transactions/hooks'
+import { useDerivedSwapInfo, useSwapTxAndGasInfo } from 'src/features/transactions/swap/hooks'
+import { useSwapWarnings } from 'src/features/transactions/swap/useSwapWarnings'
+import { TransactionFlow } from 'src/features/transactions/TransactionFlow'
 import {
   initialState as emptyState,
   transactionStateReducer,
-} from 'wallet/src/features/transactions/transactionState/transactionState'
+} from 'src/features/transactions/transactionState/transactionState'
+import { TransactionStep } from 'src/features/transactions/types'
+import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
 import {
   CurrencyField,
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
-import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
-import { TransactionStep } from 'wallet/src/features/transactions/types'
-import { WarningAction } from 'wallet/src/features/transactions/WarningModal/types'
 
 interface SwapFormProps {
   prefilledState?: TransactionState
@@ -45,15 +42,12 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Elemen
   const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
 
   const warnings = useSwapWarnings(t, derivedSwapInfo)
-
-  // Force this legacy swap flow to use the old routing api  logic, as we're planning to remove this, and splitting the code is complex.
-  const { txRequest, approveTxRequest, gasFee } = useSwapTxAndGasInfoLegacy({
+  const { txRequest, approveTxRequest, gasFee } = useSwapTxAndGasInfo({
     derivedSwapInfo,
     skipGasFeeQuery:
       step === TransactionStep.SUBMITTED ||
       warnings.some((warning) => warning.action === WarningAction.DisableReview),
   })
-
   const gasWarning = useTransactionGasWarning({
     derivedInfo: derivedSwapInfo,
     gasFee: gasFee.value,
@@ -64,10 +58,9 @@ export function SwapFlow({ prefilledState, onClose }: SwapFormProps): JSX.Elemen
   }, [warnings, gasWarning])
 
   // keep currencies list option as state so that rendered list remains stable through the slide animation
-  const [listVariation, setListVariation] = useState<
-    | TokenSelectorVariation.BalancesAndPopular
-    | TokenSelectorVariation.SuggestedAndFavoritesAndPopular
-  >(TokenSelectorVariation.BalancesAndPopular)
+  const [listVariation, setListVariation] = useState<TokenSelectorVariation>(
+    TokenSelectorVariation.BalancesAndPopular
+  )
 
   useEffect(() => {
     if (selectingCurrencyField) {

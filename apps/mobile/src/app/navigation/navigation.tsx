@@ -7,25 +7,20 @@ import {
   AppStackParamList,
   AppStackScreenProp,
   ExploreStackParamList,
-  FiatOnRampStackParamList,
   OnboardingStackParamList,
   SettingsStackParamList,
   UnitagStackParamList,
 } from 'src/app/navigation/types'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
-import { FiatOnRampProvider } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { ChooseProfilePictureScreen } from 'src/features/unitags/ChooseProfilePictureScreen'
 import { ClaimUnitagScreen } from 'src/features/unitags/ClaimUnitagScreen'
-import { EditUnitagProfileScreen } from 'src/features/unitags/EditUnitagProfileScreen'
+import { EditProfileScreen } from 'src/features/unitags/EditProfileScreen'
 import { UnitagConfirmationScreen } from 'src/features/unitags/UnitagConfirmationScreen'
 import { DevScreen } from 'src/screens/DevScreen'
 import { EducationScreen } from 'src/screens/EducationScreen'
 import { ExploreScreen } from 'src/screens/ExploreScreen'
 import { ExternalProfileScreen } from 'src/screens/ExternalProfileScreen'
-import { FiatOnRampConnectingScreen } from 'src/screens/FiatOnRampConnecting'
-import { FiatOnRampScreen } from 'src/screens/FiatOnRampScreen'
-import { FiatOnRampServiceProvidersScreen } from 'src/screens/FiatOnRampServiceProviders'
 import { HomeScreen } from 'src/screens/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
 import { RestoreCloudBackupLoadingScreen } from 'src/screens/Import/RestoreCloudBackupLoadingScreen'
@@ -45,9 +40,9 @@ import { EditNameScreen } from 'src/screens/Onboarding/EditNameScreen'
 import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
 import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
+import { QRAnimationScreen } from 'src/screens/Onboarding/QRAnimationScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
-import { WelcomeWalletScreen } from 'src/screens/Onboarding/WelcomeWalletScreen'
-import { FiatOnRampScreens, OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
+import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { SettingsAppearanceScreen } from 'src/screens/SettingsAppearanceScreen'
 import { SettingsBiometricAuthScreen } from 'src/screens/SettingsBiometricAuthScreen'
 import { SettingsCloudBackupPasswordConfirmScreen } from 'src/screens/SettingsCloudBackupPasswordConfirmScreen'
@@ -73,9 +68,8 @@ import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 const OnboardingStack = createStackNavigator<OnboardingStackParamList>()
 const AppStack = createNativeStackNavigator<AppStackParamList>()
 const ExploreStack = createNativeStackNavigator<ExploreStackParamList>()
-const FiatOnRampStack = createNativeStackNavigator<FiatOnRampStackParamList>()
 const SettingsStack = createNativeStackNavigator<SettingsStackParamList>()
-const UnitagStack = createStackNavigator<UnitagStackParamList>()
+const UnitagStack = createNativeStackNavigator<UnitagStackParamList>()
 
 function SettingsStackGroup(): JSX.Element {
   return (
@@ -177,41 +171,7 @@ export function ExploreStackNavigator(): JSX.Element {
   )
 }
 
-export function FiatOnRampStackNavigator(): JSX.Element {
-  return (
-    <NavigationContainer independent={true}>
-      <HorizontalEdgeGestureTarget />
-      <FiatOnRampProvider>
-        <FiatOnRampStack.Navigator
-          initialRouteName={FiatOnRampScreens.AmountInput}
-          screenOptions={{
-            ...navOptions.noHeader,
-            fullScreenGestureEnabled: true,
-            gestureEnabled: true,
-            animation: 'slide_from_right',
-          }}>
-          <FiatOnRampStack.Screen
-            component={FiatOnRampScreen}
-            name={FiatOnRampScreens.AmountInput}
-          />
-          <FiatOnRampStack.Screen
-            component={FiatOnRampServiceProvidersScreen}
-            name={FiatOnRampScreens.ServiceProviders}
-          />
-          <FiatOnRampStack.Screen
-            component={FiatOnRampConnectingScreen}
-            name={FiatOnRampScreens.Connecting}
-          />
-        </FiatOnRampStack.Navigator>
-      </FiatOnRampProvider>
-    </NavigationContainer>
-  )
-}
-
 const renderEmptyBackImage = (): JSX.Element => <></>
-const renderHeaderBackImage = (): JSX.Element => (
-  <Icons.RotatableChevron color="$neutral2" height={28} width={28} />
-)
 
 export function OnboardingStackNavigator(): JSX.Element {
   const colors = useSporeColors()
@@ -220,6 +180,10 @@ export function OnboardingStackNavigator(): JSX.Element {
   const SeedPhraseInputComponent = seedPhraseRefactorEnabled
     ? SeedPhraseInputScreenV2
     : SeedPhraseInputScreen
+
+  const renderHeaderBackImage = (): JSX.Element => (
+    <Icons.RotatableChevron color="$neutral2" height={28} width={28} />
+  )
 
   return (
     <OnboardingStack.Navigator>
@@ -241,12 +205,6 @@ export function OnboardingStackNavigator(): JSX.Element {
           name={OnboardingScreens.Landing}
           options={navOptions.noHeader}
         />
-        <OnboardingStack.Screen component={ClaimUnitagScreen} name={UnitagScreens.ClaimUnitag} />
-        <OnboardingStack.Screen
-          component={ChooseProfilePictureScreen}
-          name={UnitagScreens.ChooseProfilePicture}
-          options={{ ...TransitionPresets.ModalFadeTransition }}
-        />
         <OnboardingStack.Screen component={EditNameScreen} name={OnboardingScreens.EditName} />
         <OnboardingStack.Screen component={BackupScreen} name={OnboardingScreens.Backup} />
         <OnboardingStack.Screen
@@ -259,8 +217,8 @@ export function OnboardingStackNavigator(): JSX.Element {
           name={OnboardingScreens.BackupManual}
         />
         <OnboardingStack.Screen
-          component={WelcomeWalletScreen}
-          name={OnboardingScreens.WelcomeWallet}
+          component={QRAnimationScreen}
+          name={OnboardingScreens.QRAnimation}
           // There should be no header shown on this screen but if headerShown: false and the user is adding a wallet from the
           // sidebar then when this screen is navigated away from the header will reappear on the home screen on top of the account
           // header.
@@ -318,36 +276,24 @@ export function OnboardingStackNavigator(): JSX.Element {
 }
 
 export function UnitagStackNavigator(): JSX.Element {
-  const colors = useSporeColors()
-  const insets = useDeviceInsets()
-
   return (
     <UnitagStack.Navigator>
       <UnitagStack.Group
         screenOptions={{
-          headerMode: 'float',
-          headerTitle: '',
-          headerBackTitleVisible: false,
-          headerBackImage: renderHeaderBackImage,
-          headerStatusBarHeight: insets.top + spacing.spacing8,
-          headerTransparent: true,
-          headerTintColor: colors.neutral2.val,
-          headerLeftContainerStyle: { paddingLeft: spacing.spacing16 },
-          headerRightContainerStyle: { paddingRight: spacing.spacing16 },
-          ...TransitionPresets.SlideFromRightIOS,
+          ...navOptions.noHeader,
+          fullScreenGestureEnabled: true,
+          animation: 'slide_from_right',
         }}>
         <UnitagStack.Screen component={ClaimUnitagScreen} name={UnitagScreens.ClaimUnitag} />
         <UnitagStack.Screen
           component={ChooseProfilePictureScreen}
           name={UnitagScreens.ChooseProfilePicture}
-          options={{ ...TransitionPresets.ModalFadeTransition }}
         />
         <UnitagStack.Screen
           component={UnitagConfirmationScreen}
           name={UnitagScreens.UnitagConfirmation}
-          options={{ ...navOptions.noHeader, gestureEnabled: false }}
         />
-        <UnitagStack.Screen component={EditUnitagProfileScreen} name={UnitagScreens.EditProfile} />
+        <UnitagStack.Screen component={EditProfileScreen} name={UnitagScreens.EditProfile} />
       </UnitagStack.Group>
     </UnitagStack.Navigator>
   )

@@ -16,7 +16,12 @@ export const DISCONNECTED_WALLET_USER_STATE: Partial<UserState> = { recentConnec
 export function setInitialUserState(win: Cypress.AUTWindow, state: UserState) {
   // Selected wallet should also be reflected in localStorage, so that eager connections work.
   if (state.recentConnectionMeta) {
-    win.localStorage.setItem(connectionMetaKey, JSON.stringify(state.recentConnectionMeta))
+    win.localStorage.setItem(
+      connectionMetaKey,
+      JSON.stringify({
+        type: state.recentConnectionMeta,
+      })
+    )
   }
 
   win.indexedDB.deleteDatabase('redux')

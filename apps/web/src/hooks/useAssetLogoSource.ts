@@ -3,7 +3,7 @@ import { isCelo, nativeOnChain } from 'constants/tokens'
 import { checkWarning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { chainIdToNetworkName, getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import uriToHttp from 'lib/utils/uriToHttp'
-import { useCallback, useMemo, useReducer } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { isAddress } from 'utils'
 
 import celoLogo from '../assets/svg/celo_logo.svg'
@@ -38,7 +38,7 @@ function prioritizeLogoSources(uris: string[]) {
   return coingeckoUrl ? [...preferredUris, coingeckoUrl] : preferredUris
 }
 
-export function getInitialUrl(
+function getInitialUrl(
   address?: string | null,
   chainId?: number | null,
   isNative?: boolean,
@@ -67,23 +67,33 @@ export default function useAssetLogoSource(
   backupImg?: string | null
 ): [string | undefined, () => void] {
   const hideLogo = Boolean(address && checkWarning(address, chainId)?.level === WARNING_LEVEL.BLOCKED)
-  const [srcIndex, incrementSrcIndex] = useReducer((n: number) => n + 1, 0)
+  const [current, setCurrent] = useState<string | undefined>(
+    hideLogo ? undefined : getInitialUrl(address, chainId, isNative, backupImg)
+  )
+  const [fallbackSrcs, setFallbackSrcs] = useState<string[] | undefined>(undefined)
 
-  const current = useMemo(() => {
-    if (hideLogo) return undefined
-
-    if (srcIndex === 0) {
-      return getInitialUrl(address, chainId, isNative, backupImg)
-    }
-    const uris = tokenLogoLookup.getIcons(address, chainId) ?? []
-    const fallbackSrcs = prioritizeLogoSources(parseLogoSources(uris))
-    return fallbackSrcs.find((src) => !BAD_SRCS[src])
-  }, [address, backupImg, chainId, hideLogo, isNative, srcIndex])
+  useEffect(() => {
+    if (hideLogo) return
+    setCurrent(getInitialUrl(address, chainId, isNative))
+    setFallbackSrcs(undefined)
+  }, [address, chainId, hideLogo, isNative])
 
   const nextSrc = useCallback(() => {
-    if (current) BAD_SRCS[current] = true
-    incrementSrcIndex()
-  }, [current])
+    if (current) {
+      BAD_SRCS[current] = true
+    }
+    // Parses and stores logo sources from tokenlists if assets repo url fails
+    if (!fallbackSrcs) {
+      const uris = tokenLogoLookup.getIcons(address, chainId) ?? []
+      if (backupImg) uris.push(backupImg)
+      const tokenListIcons = prioritizeLogoSources(parseLogoSources(uris))
+
+      setCurrent(tokenListIcons.find((src) => !BAD_SRCS[src]))
+      setFallbackSrcs(tokenListIcons)
+    } else {
+      setCurrent(fallbackSrcs.find((src) => !BAD_SRCS[src]))
+    }
+  }, [current, fallbackSrcs, address, chainId, backupImg])
 
   return [current, nextSrc]
 }

@@ -15,6 +15,7 @@ import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { useCallback, useReducer } from 'react'
 import { Copy } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
+import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
 import { shortenAddress } from 'utils'
@@ -26,15 +27,8 @@ const TokenInfoSection = styled(Column)`
   gap: 16px;
   width: 100%;
 
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
-    gap: 24px;
-  }
-`
-
-const InfoSectionHeader = styled(ThemedText.HeadlineSmall)`
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
-    font-size: 28px !important;
-    line-height: 36px !important;
+  @media (max-width: ${BREAKPOINTS.lg - 1}px) and (min-width: ${BREAKPOINTS.sm}px) {
+    max-width: 45%;
   }
 `
 
@@ -122,9 +116,9 @@ export function TokenDescription({
 
   return (
     <TokenInfoSection>
-      <InfoSectionHeader>
+      <ThemedText.HeadlineSmall>
         <Trans>Info</Trans>
-      </InfoSectionHeader>
+      </ThemedText.HeadlineSmall>
       <TokenButtonRow>
         {!isNative && (
           <TokenInfoButton tokenColor={color} onClick={copy}>

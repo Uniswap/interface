@@ -6,10 +6,10 @@ import {
   Chain,
   Currency,
   NftStandard,
-  TransactionType as RemoteTransactionType,
   TokenStandard,
   TransactionDirection,
   TransactionStatus,
+  TransactionType as RemoteTransactionType,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   NFTTradeType,

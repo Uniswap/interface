@@ -1,7 +1,7 @@
 import { Interface } from '@ethersproject/abi'
+import ERC20ABI from 'abis/erc20.json'
+import { Erc20Interface } from 'abis/types/Erc20'
 import { NEVER_RELOAD, useMultipleContractSingleData } from 'lib/hooks/multicall'
-import ERC20ABI from 'wallet/src/abis/erc20.json'
-import { Erc20Interface } from 'wallet/src/abis/types/Erc20'
 
 const ERC20Interface = new Interface(ERC20ABI) as Erc20Interface
 

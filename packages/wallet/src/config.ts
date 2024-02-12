@@ -1,8 +1,10 @@
 import {
   APPSFLYER_API_KEY,
   APPSFLYER_APP_ID,
-  FIAT_ON_RAMP_API_URL,
   INFURA_PROJECT_ID,
+  MELD_API_KEY,
+  MELD_API_URL,
+  MELD_API_VERSION,
   MOONPAY_API_KEY,
   MOONPAY_API_URL,
   MOONPAY_WIDGET_API_URL,
@@ -12,7 +14,6 @@ import {
   SIMPLEHASH_API_KEY,
   SIMPLEHASH_API_URL,
   STATSIG_PROXY_URL,
-  TRADING_API_KEY,
   UNISWAP_API_BASE_URL,
   UNISWAP_API_KEY,
   UNISWAP_APP_URL,
@@ -24,7 +25,9 @@ import { isNonJestDev } from 'utilities/src/environment'
 export interface Config {
   appsflyerApiKey: string
   appsflyerAppId: string
-  fiatOnRampApiUrl: string
+  meldApiKey: string
+  meldApiVersion: string
+  meldApiUrl: string
   moonpayApiKey: string
   moonpayApiUrl: string
   moonpayWidgetApiUrl: string
@@ -40,13 +43,14 @@ export interface Config {
   walletConnectProjectId: string
   quicknodeBnbRpcUrl: string
   unitagsApiUrl: string
-  tradingApiKey: string
 }
 
 const _config: Config = {
   appsflyerApiKey: process.env.APPSFLYER_API_KEY || APPSFLYER_API_KEY,
   appsflyerAppId: process.env.APPSFLYER_APP_ID || APPSFLYER_APP_ID,
-  fiatOnRampApiUrl: process.env.FIAT_ON_RAMP_API_URL || FIAT_ON_RAMP_API_URL,
+  meldApiKey: process.env.MELD_API_KEY || MELD_API_KEY,
+  meldApiVersion: process.env.MELD_API_VERSION || MELD_API_VERSION,
+  meldApiUrl: process.env.MELD_API_URL || MELD_API_URL,
   moonpayApiKey: process.env.MOONPAY_API_KEY || MOONPAY_API_KEY,
   moonpayApiUrl: process.env.MOONPAY_API_URL || MOONPAY_API_URL,
   moonpayWidgetApiUrl: process.env.MOONPAY_WIDGET_API_URL || MOONPAY_WIDGET_API_URL,
@@ -62,7 +66,6 @@ const _config: Config = {
   walletConnectProjectId: process.env.WALLETCONNECT_PROJECT_ID || WALLETCONNECT_PROJECT_ID,
   quicknodeBnbRpcUrl: process.env.QUICKNODE_BNB_RPC_URL || QUICKNODE_BNB_RPC_URL,
   unitagsApiUrl: process.env.UNITAGS_API_URL || UNITAGS_API_URL,
-  tradingApiKey: process.env.TRADING_API_KEY || TRADING_API_KEY,
 }
 
 export const config = Object.freeze(_config)

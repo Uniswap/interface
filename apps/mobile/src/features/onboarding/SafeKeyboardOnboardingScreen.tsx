@@ -4,10 +4,10 @@ import React, { PropsWithChildren } from 'react'
 import { KeyboardAvoidingView, ScrollView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Screen } from 'src/components/layout/Screen'
-import { AnimatedFlex, Flex, SpaceTokens, Text, flexStyles, useMedia, useSporeColors } from 'ui/src'
+import { useKeyboardLayout } from 'src/utils/useKeyboardLayout'
+import { AnimatedFlex, Flex, flexStyles, SpaceTokens, Text, useMedia, useSporeColors } from 'ui/src'
 import { opacify, spacing } from 'ui/src/theme'
 import { isIOS } from 'wallet/src/utils/platform'
-import { useKeyboardLayout } from 'wallet/src/utils/useKeyboardLayout'
 
 type OnboardingScreenProps = {
   subtitle?: string

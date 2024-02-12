@@ -6,6 +6,7 @@ import 'react-native-reanimated'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useEagerExternalProfileRootNavigation } from 'src/app/navigation/hooks'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
+import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { WalletQRCode } from 'src/components/QRCodeScanner/WalletQRCode'
@@ -14,25 +15,23 @@ import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/
 import {
   getSupportedURI,
   isAllowedUwULinkRequest,
-  parseScantasticParams,
   URIType,
   UWULINK_PREFIX,
 } from 'src/components/WalletConnect/ScanSheet/util'
-import { openModal } from 'src/features/modals/modalSlice'
+import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { addRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { EthMethod, UwULinkRequest } from 'wallet/src/features/walletConnect/types'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = {
   initialScreenState?: ScannerModalState
@@ -53,8 +52,7 @@ export function WalletConnectModal({
   const [shouldFreezeCamera, setShouldFreezeCamera] = useState(false)
   const { preload, navigate } = useEagerExternalProfileRootNavigation()
   const dispatch = useAppDispatch()
-  const isUwULinkEnabled = useFeatureFlag(FEATURE_FLAGS.UwULink)
-  const isScantasticEnabled = useFeatureFlag(FEATURE_FLAGS.Scantastic)
+  const uwuLinkEnabled = useFeatureFlag(FEATURE_FLAGS.UwULink)
 
   // Update QR scanner states when pending session error alert is shown from WCv2 saga event channel
   useEffect(() => {
@@ -72,12 +70,11 @@ export function WalletConnectModal({
       }
       await selectionAsync()
 
-      const supportedURI = await getSupportedURI(uri, { isUwULinkEnabled, isScantasticEnabled })
+      const supportedURI = await getSupportedURI(uri, uwuLinkEnabled)
       if (!supportedURI) {
         setShouldFreezeCamera(true)
         Alert.alert(
           t('Invalid QR Code'),
-          // TODO(EXT-495): Add Scantastic product name here when ready
           t(
             'Make sure that you’re scanning a valid WalletConnect or Ethereum address QR code before trying again.'
           ),
@@ -138,26 +135,6 @@ export function WalletConnectModal({
             ]
           )
         }
-      }
-
-      if (supportedURI.type === URIType.Scantastic) {
-        const { pubKey, uuid, vendor, model, browser } = parseScantasticParams(supportedURI.value)
-
-        setShouldFreezeCamera(true)
-        dispatch(
-          openModal({
-            name: ModalName.Scantastic,
-            initialState: {
-              pubKey,
-              uuid,
-              vendor,
-              model,
-              browser,
-            },
-          })
-        )
-
-        return
       }
 
       if (supportedURI.type === URIType.UwULink) {
@@ -225,8 +202,7 @@ export function WalletConnectModal({
       setShouldFreezeCamera,
       shouldFreezeCamera,
       hasPendingSessionError,
-      isUwULinkEnabled,
-      isScantasticEnabled,
+      uwuLinkEnabled,
       t,
       dispatch,
     ]

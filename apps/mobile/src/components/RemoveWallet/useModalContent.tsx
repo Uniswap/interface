@@ -42,7 +42,7 @@ export const useModalContent = ({
 }: ModalContentParams): ModalContentResult | undefined => {
   const { t } = useTranslation()
 
-  const displayName = useDisplayName(account?.address, { includeUnitagSuffix: true })
+  const displayName = useDisplayName(account?.address)
 
   return useMemo(() => {
     // 1st speed bump when removing recovery phrase
@@ -173,7 +173,7 @@ export const useModalContent = ({
     account,
     associatedAccounts,
     currentStep,
-    displayName,
+    displayName?.name,
     isRemovingRecoveryPhrase,
     isReplacing,
     t,

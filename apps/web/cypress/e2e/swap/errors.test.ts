@@ -7,8 +7,7 @@ import { DAI, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
 describe('Swap errors', () => {
-  // TODO re-enable web test
-  it.skip('wallet rejection', () => {
+  it('wallet rejection', () => {
     cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
     cy.hardhat().then((hardhat) => {
       // Stub the wallet to reject any transaction.
@@ -29,8 +28,7 @@ describe('Swap errors', () => {
     })
   })
 
-  // TODO re-enable web test
-  it.skip('transaction past deadline', () => {
+  it('transaction past deadline', () => {
     cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
     cy.hardhat({ automine: false })
     getBalance(USDC_MAINNET).then((initialBalance) => {
