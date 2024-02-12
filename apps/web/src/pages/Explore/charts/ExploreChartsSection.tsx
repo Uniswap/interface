@@ -1,21 +1,26 @@
 import { Trans } from '@lingui/macro'
-import { StackedLineChart, StackedLineData } from 'components/Charts/StackedLineChart'
-import { getCumulativeVolume, StackedVolumeChart } from 'components/Charts/StackedVolumeChart'
-import { StackedBarsData } from 'components/Charts/StackedVolumeChart/renderer'
+import { ChartHeader } from 'components/Charts/ChartHeader'
+import { Chart } from 'components/Charts/ChartModel'
+import { StackedLineData, TVLChartModel } from 'components/Charts/StackedLineChart'
 import TimePeriodSelector from 'components/Charts/TimeSelector'
+import { getTimePeriodDisplay } from 'components/Charts/VolumeChart'
+import { CustomVolumeChartModel } from 'components/Charts/VolumeChart/CustomVolumeChartModel'
+import { StackedHistogramData } from 'components/Charts/VolumeChart/renderer'
+import { getCumulativeSum, getCumulativeVolume, getVolumeProtocolInfo } from 'components/Charts/VolumeChart/utils'
 import Column from 'components/Column'
-import Row, { RowBetween } from 'components/Row'
+import { RowBetween } from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { getProtocolColor, TimePeriod } from 'graphql/data/util'
 import { PriceSource } from 'graphql/data/__generated__/types-and-hooks'
-import { TimePeriod } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { HARDCODED_TVL_DATA, HARDCODED_VOLUME_DATA } from 'pages/Explore/charts/mockData'
 import { ReactNode, useMemo, useState } from 'react'
-import styled from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const EXPLORE_CHART_HEIGHT_PX = 368
+const EXPLORE_PRICE_SOURCES = [PriceSource.SubgraphV2, PriceSource.SubgraphV3]
 
 const TIME_SELECTOR_OPTIONS = [
   { time: TimePeriod.DAY, display: 'D' },
@@ -30,51 +35,40 @@ const StyledTimePeriodSelector = styled(TimePeriodSelector)`
     font-size: 14px;
   }
 `
-const ChartsContainer = styled.div`
+const ChartsContainer = styled(RowBetween)`
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   width: 100%;
   margin-left: auto;
   margin-right: auto;
   padding-bottom: 56px;
-
-  /* Clearfix hack allows parent div to adjust to floated children height: https://www.w3schools.com/howto/howto_css_clearfix.asp */
-  &::after {
-    content: '';
-    display: table;
-    clear: both;
-  }
 `
-// side-by-side lightweight-charts autosizing throws an error when aligned via grid or flex, so float is used instead.
-const FloatContainer = styled.div<{ side: 'left' | 'right' }>`
-  float: ${({ side }) => side};
-  width: 48%;
+// a 6% gap is achieved using two 47% width containers, as a parent gap causes an autosizing error with side-by-side lightweight-charts
+const SectionContainer = styled(Column)`
   position: relative;
-`
-const MinimalDisplaysWrapper = styled(Row)`
-  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
-  width: 100%;
-  gap: 20px;
-  padding-bottom: 40px;
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.xs}px`}) {
-    gap: 12px;
-  }
-`
-const MinimalDisplayContainer = styled(Column)`
+  width: 47%;
   gap: 4px;
-  width: 100%;
-  background-color: ${({ theme }) => theme.surface2};
-  border-radius: 20px;
-  height: 120px;
-  padding: 20px;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    background-color: ${({ theme }) => theme.surface2};
+    border-radius: 20px;
+    height: 120px;
+    padding: 20px;
+  }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.xs}px`}) {
     height: 112px;
     padding: 16px;
   }
 `
+const SectionTitle = styled(ThemedText.SubHeader)`
+  color: ${({ theme }) => theme.neutral2};
+  white-space: nowrap;
+`
+const StyledChart = styled(Chart)`
+  height: ${EXPLORE_CHART_HEIGHT_PX}px;
+` /* cast preserves generic Chart props that the `styled` return type looses: */ as typeof Chart
 
-function VolumeChartSection({ data }: { data: StackedBarsData[] }) {
+function VolumeChartSection({ data }: { data: StackedHistogramData[] }) {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
 
   const mockDataForTimePeriod = useMemo(() => {
@@ -96,12 +90,31 @@ function VolumeChartSection({ data }: { data: StackedBarsData[] }) {
     return data.slice(-numDataPoints)
   }, [timePeriod, data])
 
+  const theme = useTheme()
+
+  const params = useMemo<{ data: StackedHistogramData[]; colors: [string, string]; headerHeight: number }>(
+    () => ({ data: mockDataForTimePeriod, colors: [theme.accent1, theme.accent3], headerHeight: 85 }),
+    [mockDataForTimePeriod, theme]
+  )
+  const cumulativeVolume = useMemo(() => getCumulativeVolume(mockDataForTimePeriod), [mockDataForTimePeriod])
+
+  const isSmallScreen = !useScreenSize()['sm']
+  if (isSmallScreen) {
+    return (
+      <MinimalStatDisplay
+        title={<Trans>Uniswap volume</Trans>}
+        value={cumulativeVolume}
+        time={<Trans>Past month</Trans>}
+      />
+    )
+  }
+
   return (
-    <FloatContainer side="right">
+    <SectionContainer>
       <RowBetween>
-        <ThemedText.SubHeader color="neutral2" marginBottom="4px">
+        <SectionTitle>
           <Trans>Uniswap volume</Trans>
-        </ThemedText.SubHeader>
+        </SectionTitle>
         <div style={{ position: 'absolute', right: 0 }}>
           <StyledTimePeriodSelector
             options={TIME_SELECTOR_OPTIONS}
@@ -110,23 +123,55 @@ function VolumeChartSection({ data }: { data: StackedBarsData[] }) {
           />
         </div>
       </RowBetween>
-      <StackedVolumeChart height={EXPLORE_CHART_HEIGHT_PX} data={mockDataForTimePeriod} timePeriod={timePeriod} />
-    </FloatContainer>
+      <StyledChart Model={CustomVolumeChartModel<StackedHistogramData>} params={params}>
+        {(crosshairData) => (
+          <ChartHeader
+            value={crosshairData ? getCumulativeSum(crosshairData) : getCumulativeVolume(mockDataForTimePeriod)}
+            time={crosshairData?.time}
+            timePlaceholder={getTimePeriodDisplay(timePeriod)}
+            protocolData={getVolumeProtocolInfo(crosshairData, EXPLORE_PRICE_SOURCES)}
+          />
+        )}
+      </StyledChart>
+    </SectionContainer>
   )
 }
 
 function TVLChartSection({ data }: { data: StackedLineData[] }) {
+  const theme = useTheme()
+  const params = useMemo(
+    () => ({
+      data,
+      colors: EXPLORE_PRICE_SOURCES?.map((source) => getProtocolColor(source, theme)) ?? [theme.accent1],
+    }),
+    [data, theme]
+  )
+
+  const lastEntry = data[data.length - 1]
+  const isSmallScreen = !useScreenSize()['sm']
+  if (isSmallScreen) {
+    const currentTVL = lastEntry?.values.reduce((acc, curr) => acc + curr, 0)
+    return <MinimalStatDisplay title={<Trans>Uniswap TVL</Trans>} value={currentTVL} time={<Trans>All time</Trans>} />
+  }
+
   return (
-    <FloatContainer side="left">
-      <ThemedText.SubHeader color="neutral2" marginBottom="4px">
+    <SectionContainer>
+      <SectionTitle>
         <Trans>Uniswap TVL</Trans>
-      </ThemedText.SubHeader>
-      <StackedLineChart
-        height={EXPLORE_CHART_HEIGHT_PX}
-        data={data}
-        sources={[PriceSource.SubgraphV2, PriceSource.SubgraphV3]}
-      />
-    </FloatContainer>
+      </SectionTitle>
+      <StyledChart Model={TVLChartModel} params={params}>
+        {(crosshairData) => (
+          <ChartHeader
+            value={(crosshairData ?? lastEntry)?.values.reduce((v, sum) => (sum += v), 0)}
+            time={crosshairData?.time}
+            protocolData={EXPLORE_PRICE_SOURCES?.map((source, index) => ({
+              protocol: source,
+              value: crosshairData?.values[index],
+            }))}
+          />
+        )}
+      </StyledChart>
+    </SectionContainer>
   )
 }
 
@@ -134,35 +179,17 @@ function MinimalStatDisplay({ title, value, time }: { title: ReactNode; value: n
   const { formatFiatPrice } = useFormatter()
 
   return (
-    <MinimalDisplayContainer>
-      <ThemedText.SubHeader color="neutral2">{title}</ThemedText.SubHeader>
+    <SectionContainer>
+      <SectionTitle color="neutral2">{title}</SectionTitle>
       <ThemedText.HeadlineSmall fontSize="24px" lineHeight="32px">
         {formatFiatPrice({ price: value, type: NumberType.FiatTokenStatChartHeader })}
       </ThemedText.HeadlineSmall>
       <ThemedText.Caption color="neutral2">{time}</ThemedText.Caption>
-    </MinimalDisplayContainer>
+    </SectionContainer>
   )
 }
 
 export function ExploreChartsSection() {
-  const isNarrowDisplay = !useScreenSize()['sm']
-
-  if (isNarrowDisplay) {
-    const currentTVL = HARDCODED_TVL_DATA[HARDCODED_TVL_DATA.length - 1].values.reduce((acc, curr) => acc + curr, 0)
-    const cumulativeVolume = getCumulativeVolume(HARDCODED_VOLUME_DATA)
-
-    return (
-      <MinimalDisplaysWrapper>
-        <MinimalStatDisplay title={<Trans>Uniswap TVL</Trans>} value={currentTVL} time={<Trans>All time</Trans>} />
-        <MinimalStatDisplay
-          title={<Trans>Uniswap volume</Trans>}
-          value={cumulativeVolume}
-          time={<Trans>Past month</Trans>}
-        />
-      </MinimalDisplaysWrapper>
-    )
-  }
-
   return (
     <ChartsContainer>
       <TVLChartSection data={HARDCODED_TVL_DATA} />

@@ -1,25 +1,25 @@
 import React from 'react'
 import { SvgUri } from 'react-native-svg'
 import Trace from 'src/components/Trace/Trace'
-import { ElementName } from 'src/features/telemetry/constants'
 import { Flex, Icons, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { getCountryFlagSvgUrl } from 'wallet/src/features/fiatOnRamp/meld'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 const ICON_SIZE = iconSizes.icon16
 
 export function FiatOnRampCountryPicker({
   onPress,
-  currentCountryCode,
+  countryCode,
 }: {
   onPress: () => void
-  currentCountryCode: Maybe<string>
+  countryCode: Maybe<string>
 }): JSX.Element | null {
-  if (!currentCountryCode) {
+  if (!countryCode) {
     return null
   }
 
-  const countryFlagUrl = getCountryFlagSvgUrl(currentCountryCode)
+  const countryFlagUrl = getCountryFlagSvgUrl(countryCode)
 
   return (
     <Trace logPress element={ElementName.FiatOnRampCountryPicker}>

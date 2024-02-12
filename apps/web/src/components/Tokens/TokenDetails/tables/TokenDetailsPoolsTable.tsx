@@ -1,13 +1,41 @@
 import { Trans } from '@lingui/macro'
 import { ChainId, Token } from '@uniswap/sdk-core'
-import { PoolsTable, PoolTableColumns } from 'components/Pools/PoolTable/PoolTable'
+import { PoolsTable, PoolTableColumns, PoolTableSortState } from 'components/Pools/PoolTable/PoolTable'
 import { usePoolsFromTokenAddress } from 'graphql/thegraph/PoolsFromTokenAddress'
+import { OrderDirection, Pool_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
+import { useCallback, useState } from 'react'
 import { ThemedText } from 'theme/components'
 
 const HIDDEN_COLUMNS = [PoolTableColumns.Transactions]
 
 export function TokenDetailsPoolsTable({ chainId, referenceToken }: { chainId: ChainId; referenceToken: Token }) {
-  const { pools, loading, error, loadMore } = usePoolsFromTokenAddress(referenceToken.address, chainId)
+  const [sortState, setSortMethod] = useState<PoolTableSortState>({
+    sortBy: Pool_OrderBy.TotalValueLockedUsd,
+    sortDirection: OrderDirection.Desc,
+  })
+  const { pools, loading, error, loadMore } = usePoolsFromTokenAddress(
+    referenceToken.address,
+    chainId,
+    sortState.sortBy,
+    sortState.sortDirection
+  )
+
+  const handleHeaderClick = useCallback(
+    (newSortMethod: Pool_OrderBy) => {
+      if (sortState.sortBy === newSortMethod) {
+        setSortMethod({
+          sortBy: newSortMethod,
+          sortDirection: sortState.sortDirection === OrderDirection.Asc ? OrderDirection.Desc : OrderDirection.Asc,
+        })
+      } else {
+        setSortMethod({
+          sortBy: newSortMethod,
+          sortDirection: OrderDirection.Desc,
+        })
+      }
+    },
+    [sortState.sortBy, sortState.sortDirection]
+  )
 
   if (error) {
     return (
@@ -26,6 +54,8 @@ export function TokenDetailsPoolsTable({ chainId, referenceToken }: { chainId: C
         maxHeight={600}
         hiddenColumns={HIDDEN_COLUMNS}
         loadMore={loadMore}
+        sortState={sortState}
+        handleHeaderClick={handleHeaderClick}
       />
     </div>
   )

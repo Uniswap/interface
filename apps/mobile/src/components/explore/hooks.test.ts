@@ -3,11 +3,11 @@ import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-c
 import { act } from 'react-test-renderer'
 import configureMockStore from 'redux-mock-store'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
-import { SectionName } from 'src/features/telemetry/constants'
 import { renderHookWithProviders } from 'src/test/render'
 import { Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
 import { FavoritesState } from 'wallet/src/features/favorites/slice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { SectionName } from 'wallet/src/telemetry/constants'
 import { DaiAsset } from 'wallet/src/test/gqlFixtures'
 
 const tokenId = DaiAsset.address?.toLowerCase() ?? ''
@@ -149,7 +149,7 @@ describe(useExploreTokenContextMenu, () => {
     })
 
     it("dispatches add to favorites redux action when 'Favorite token' is pressed", async () => {
-      const store = mockStore({ favorites: { tokens: [] } })
+      const store = mockStore({ favorites: { tokens: [] }, appearance: { theme: 'system' } })
       const { result } = renderHookWithProviders(
         () => useExploreTokenContextMenu(tokenMenuParams),
         { resolvers, store }
@@ -178,6 +178,7 @@ describe(useExploreTokenContextMenu, () => {
     it("dispatches remove from favorites redux action when 'Remove favorite' is pressed", async () => {
       const store = mockStore({
         favorites: { tokens: [tokenMenuParams.currencyId.toLowerCase()] },
+        appearance: { theme: 'system' },
       })
       const { result } = renderHookWithProviders(
         () => useExploreTokenContextMenu(tokenMenuParams),
@@ -206,7 +207,10 @@ describe(useExploreTokenContextMenu, () => {
   })
 
   it('dispatches swap redux action when swap is pressed', async () => {
-    const store = mockStore({ favorites: { tokens: [] } })
+    const store = mockStore({
+      favorites: { tokens: [] },
+      selectedAppearanceSettings: { theme: 'system' },
+    })
     const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), {
       store,
       resolvers,

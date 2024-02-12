@@ -30,31 +30,35 @@ export const TokenDetailsLayout = styled.div`
   padding: 0 16px 52px;
   justify-content: center;
   width: 100%;
+  gap: 40px;
 
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
-    gap: 16px;
-  }
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
-    gap: 40px;
     padding: 48px 20px;
+  }
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    flex-direction: column;
+    align-items: center;
   }
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.xl}px) {
     gap: 60px;
   }
 `
+
 export const LeftPanel = styled.div`
   flex: 1;
   max-width: 780px;
   overflow: hidden;
+  width: 100%;
 `
 export const RightPanel = styled.div<{ isInfoTDPEnabled?: boolean }>`
-  display: none;
+  display: flex;
   flex-direction: column;
   gap: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? 40 : 20)}px;
   width: ${SWAP_COMPONENT_WIDTH}px;
 
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.lg}px) {
-    display: flex;
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    width: 100%;
+    max-width: 780px;
   }
 `
 const LoadingChartContainer = styled.div<{ isInfoTDPEnabled?: boolean }>`

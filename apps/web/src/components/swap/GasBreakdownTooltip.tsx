@@ -37,9 +37,9 @@ const GaslessSwapLabel = () => {
   return <UniswapXRouterLabel>{formatNumber({ input: 0, type: NumberType.FiatGasPrice })}</UniswapXRouterLabel>
 }
 
-type GasBreakdownTooltipProps = { trade: InterfaceTrade; hideUniswapXDescription?: boolean }
+type GasBreakdownTooltipProps = { trade: InterfaceTrade }
 
-export function GasBreakdownTooltip({ trade, hideUniswapXDescription }: GasBreakdownTooltipProps) {
+export function GasBreakdownTooltip({ trade }: GasBreakdownTooltipProps) {
   const isUniswapX = isUniswapXTrade(trade)
   const inputCurrency = trade.inputAmount.currency
   const native = nativeOnChain(inputCurrency.chainId)
@@ -51,8 +51,7 @@ export function GasBreakdownTooltip({ trade, hideUniswapXDescription }: GasBreak
   const wrapEstimate = isUniswapX && trade.wrapInfo.needsWrap ? trade.wrapInfo.wrapGasEstimateUSD : undefined
   const showEstimateDetails = Boolean(wrapEstimate || approvalEstimate)
 
-  const description =
-    isUniswapX && !hideUniswapXDescription ? <UniswapXDescription /> : <NetworkCostDescription native={native} />
+  const description = isUniswapX ? <UniswapXDescription /> : <NetworkCostDescription native={native} />
 
   if (!showEstimateDetails) return description
 

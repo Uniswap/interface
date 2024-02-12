@@ -2,13 +2,13 @@
 
 exports[`TokenDescription no description or social buttons shown when not available 1`] = `
 <DocumentFragment>
-  .c3 {
+  .c4 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c4 {
+.c5 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -27,9 +27,13 @@ exports[`TokenDescription no description or social buttons shown when not availa
 
 .c2 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
-.c8 {
+.c9 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -40,11 +44,11 @@ exports[`TokenDescription no description or social buttons shown when not availa
   font-weight: 500;
 }
 
-.c8:hover {
+.c9:hover {
   opacity: 0.6;
 }
 
-.c8:active {
+.c9:active {
   opacity: 0.4;
 }
 
@@ -62,7 +66,7 @@ exports[`TokenDescription no description or social buttons shown when not availa
   justify-content: flex-start;
 }
 
-.c10 {
+.c11 {
   color: #CECECE;
   font-weight: 485;
   font-size: 16px;
@@ -73,18 +77,18 @@ exports[`TokenDescription no description or social buttons shown when not availa
   width: 100%;
 }
 
-.c5 {
+.c6 {
   gap: 8px;
   width: 100%;
 }
 
-.c6 {
+.c7 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
 
-.c7 {
+.c8 {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
@@ -103,15 +107,15 @@ exports[`TokenDescription no description or social buttons shown when not availa
   transition-duration: 125ms;
 }
 
-.c7:hover {
+.c8:hover {
   opacity: 0.6;
 }
 
-.c7:active {
+.c8:active {
   opacity: 0.4;
 }
 
-.c9 {
+.c10 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -120,9 +124,16 @@ exports[`TokenDescription no description or social buttons shown when not availa
   white-space: pre-wrap;
 }
 
-@media (max-width:1023px) and (min-width:640px) {
+@media screen and (max-width:1024px) {
   .c1 {
-    max-width: 45%;
+    gap: 24px;
+  }
+}
+
+@media screen and (max-width:1024px) {
+  .c3 {
+    font-size: 28px !important;
+    line-height: 36px !important;
   }
 }
 
@@ -130,15 +141,15 @@ exports[`TokenDescription no description or social buttons shown when not availa
     class="c0 c1"
   >
     <div
-      class="c2 css-1jyz67g"
+      class="c2 c3 css-1jyz67g"
     >
       Info
     </div>
     <div
-      class="c3 c4 c5 c6"
+      class="c4 c5 c6 c7"
     >
       <div
-        class="c3 c4 c7"
+        class="c4 c5 c8"
       >
         <svg
           fill="none"
@@ -166,13 +177,13 @@ exports[`TokenDescription no description or social buttons shown when not availa
         0xA0b8...eB48
       </div>
       <a
-        class="c8"
+        class="c9"
         href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
         rel="noopener noreferrer"
         target="_blank"
       >
         <div
-          class="c3 c4 c7"
+          class="c4 c5 c8"
         >
           <svg
             fill="#222222"
@@ -196,10 +207,10 @@ exports[`TokenDescription no description or social buttons shown when not availa
       </a>
     </div>
     <div
-      class="c2 c9 css-1urox24"
+      class="c2 c10 css-1urox24"
     >
       <p
-        class="c10"
+        class="c11"
       >
         No token information available
       </p>
@@ -210,13 +221,13 @@ exports[`TokenDescription no description or social buttons shown when not availa
 
 exports[`TokenDescription renders token information correctly with defaults 1`] = `
 <DocumentFragment>
-  .c3 {
+  .c4 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c4 {
+.c5 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -235,9 +246,13 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
 
 .c2 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
-.c8 {
+.c9 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -248,11 +263,11 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
   font-weight: 500;
 }
 
-.c8:hover {
+.c9:hover {
   opacity: 0.6;
 }
 
-.c8:active {
+.c9:active {
   opacity: 0.4;
 }
 
@@ -270,15 +285,15 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
   justify-content: flex-start;
 }
 
-.c12 {
+.c13 {
   color: #7D7D7D;
   font-weight: 485;
   font-size: 0.85em;
   padding-top: 0.5em;
 }
 
-.c12:hover,
-.c12:focus {
+.c13:hover,
+.c13:focus {
   color: #636363;
   cursor: pointer;
 }
@@ -288,18 +303,18 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
   width: 100%;
 }
 
-.c5 {
+.c6 {
   gap: 8px;
   width: 100%;
 }
 
-.c6 {
+.c7 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
 
-.c7 {
+.c8 {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
@@ -318,15 +333,15 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
   transition-duration: 125ms;
 }
 
-.c7:hover {
+.c8:hover {
   opacity: 0.6;
 }
 
-.c7:active {
+.c8:active {
   opacity: 0.4;
 }
 
-.c9 {
+.c10 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -335,17 +350,24 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
   white-space: pre-wrap;
 }
 
-.c10 {
+.c11 {
   display: none;
 }
 
-.c11 {
+.c12 {
   display: inline;
 }
 
-@media (max-width:1023px) and (min-width:640px) {
+@media screen and (max-width:1024px) {
   .c1 {
-    max-width: 45%;
+    gap: 24px;
+  }
+}
+
+@media screen and (max-width:1024px) {
+  .c3 {
+    font-size: 28px !important;
+    line-height: 36px !important;
   }
 }
 
@@ -353,15 +375,15 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
     class="c0 c1"
   >
     <div
-      class="c2 css-1jyz67g"
+      class="c2 c3 css-1jyz67g"
     >
       Info
     </div>
     <div
-      class="c3 c4 c5 c6"
+      class="c4 c5 c6 c7"
     >
       <div
-        class="c3 c4 c7"
+        class="c4 c5 c8"
       >
         <svg
           fill="none"
@@ -389,13 +411,13 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
         0xA0b8...eB48
       </div>
       <a
-        class="c8"
+        class="c9"
         href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
         rel="noopener noreferrer"
         target="_blank"
       >
         <div
-          class="c3 c4 c7"
+          class="c4 c5 c8"
         >
           <svg
             fill="#222222"
@@ -418,13 +440,13 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
         </div>
       </a>
       <a
-        class="c8"
+        class="c9"
         href="https://www.circle.com/en/usdc"
         rel="noopener noreferrer"
         target="_blank"
       >
         <div
-          class="c3 c4 c7"
+          class="c4 c5 c8"
         >
           <svg
             fill="#222222"
@@ -443,13 +465,13 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
         </div>
       </a>
       <a
-        class="c8"
+        class="c9"
         href="https://x.com/circle"
         rel="noopener noreferrer"
         target="_blank"
       >
         <div
-          class="c3 c4 c7"
+          class="c4 c5 c8"
         >
           <svg
             fill="#222222"
@@ -469,22 +491,22 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
       </a>
     </div>
     <div
-      class="c2 c9 css-1urox24"
+      class="c2 c10 css-1urox24"
     >
       <p
-        class="c10"
+        class="c11"
         data-testid="token-description-full"
       >
         USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value between people, businesses and financial institutions just like email between mail services and texts between SMS providers. We believe by removing artificial economic borders, we can create a more inclusive global economy.
       </p>
       <p
-        class="c11"
+        class="c12"
         data-testid="token-description-truncated"
       >
         USDC is a fully collateralized US dollar stablecoin. USDC is the bridge...
       </p>
       <div
-        class="c12"
+        class="c13"
         data-testid="token-description-show-more-button"
       >
         Show more
@@ -496,13 +518,13 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
 
 exports[`TokenDescription truncates description and shows more 1`] = `
 <DocumentFragment>
-  .c3 {
+  .c4 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c4 {
+.c5 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -521,9 +543,13 @@ exports[`TokenDescription truncates description and shows more 1`] = `
 
 .c2 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
-.c8 {
+.c9 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -534,11 +560,11 @@ exports[`TokenDescription truncates description and shows more 1`] = `
   font-weight: 500;
 }
 
-.c8:hover {
+.c9:hover {
   opacity: 0.6;
 }
 
-.c8:active {
+.c9:active {
   opacity: 0.4;
 }
 
@@ -556,15 +582,15 @@ exports[`TokenDescription truncates description and shows more 1`] = `
   justify-content: flex-start;
 }
 
-.c12 {
+.c13 {
   color: #7D7D7D;
   font-weight: 485;
   font-size: 0.85em;
   padding-top: 0.5em;
 }
 
-.c12:hover,
-.c12:focus {
+.c13:hover,
+.c13:focus {
   color: #636363;
   cursor: pointer;
 }
@@ -574,18 +600,18 @@ exports[`TokenDescription truncates description and shows more 1`] = `
   width: 100%;
 }
 
-.c5 {
+.c6 {
   gap: 8px;
   width: 100%;
 }
 
-.c6 {
+.c7 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
 
-.c7 {
+.c8 {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
@@ -604,15 +630,15 @@ exports[`TokenDescription truncates description and shows more 1`] = `
   transition-duration: 125ms;
 }
 
-.c7:hover {
+.c8:hover {
   opacity: 0.6;
 }
 
-.c7:active {
+.c8:active {
   opacity: 0.4;
 }
 
-.c9 {
+.c10 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -621,17 +647,24 @@ exports[`TokenDescription truncates description and shows more 1`] = `
   white-space: pre-wrap;
 }
 
-.c10 {
+.c11 {
   display: none;
 }
 
-.c11 {
+.c12 {
   display: inline;
 }
 
-@media (max-width:1023px) and (min-width:640px) {
+@media screen and (max-width:1024px) {
   .c1 {
-    max-width: 45%;
+    gap: 24px;
+  }
+}
+
+@media screen and (max-width:1024px) {
+  .c3 {
+    font-size: 28px !important;
+    line-height: 36px !important;
   }
 }
 
@@ -639,15 +672,15 @@ exports[`TokenDescription truncates description and shows more 1`] = `
     class="c0 c1"
   >
     <div
-      class="c2 css-1jyz67g"
+      class="c2 c3 css-1jyz67g"
     >
       Info
     </div>
     <div
-      class="c3 c4 c5 c6"
+      class="c4 c5 c6 c7"
     >
       <div
-        class="c3 c4 c7"
+        class="c4 c5 c8"
       >
         <svg
           fill="none"
@@ -675,13 +708,13 @@ exports[`TokenDescription truncates description and shows more 1`] = `
         0xA0b8...eB48
       </div>
       <a
-        class="c8"
+        class="c9"
         href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
         rel="noopener noreferrer"
         target="_blank"
       >
         <div
-          class="c3 c4 c7"
+          class="c4 c5 c8"
         >
           <svg
             fill="#222222"
@@ -704,13 +737,13 @@ exports[`TokenDescription truncates description and shows more 1`] = `
         </div>
       </a>
       <a
-        class="c8"
+        class="c9"
         href="https://www.circle.com/en/usdc"
         rel="noopener noreferrer"
         target="_blank"
       >
         <div
-          class="c3 c4 c7"
+          class="c4 c5 c8"
         >
           <svg
             fill="#222222"
@@ -729,13 +762,13 @@ exports[`TokenDescription truncates description and shows more 1`] = `
         </div>
       </a>
       <a
-        class="c8"
+        class="c9"
         href="https://x.com/circle"
         rel="noopener noreferrer"
         target="_blank"
       >
         <div
-          class="c3 c4 c7"
+          class="c4 c5 c8"
         >
           <svg
             fill="#222222"
@@ -755,22 +788,22 @@ exports[`TokenDescription truncates description and shows more 1`] = `
       </a>
     </div>
     <div
-      class="c2 c9 css-1urox24"
+      class="c2 c10 css-1urox24"
     >
       <p
-        class="c10"
+        class="c11"
         data-testid="token-description-full"
       >
         USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value between people, businesses and financial institutions just like email between mail services and texts between SMS providers. We believe by removing artificial economic borders, we can create a more inclusive global economy.
       </p>
       <p
-        class="c11"
+        class="c12"
         data-testid="token-description-truncated"
       >
         USDC is a fully collateralized US dollar stablecoin. USDC is the bridge...
       </p>
       <div
-        class="c12"
+        class="c13"
         data-testid="token-description-show-more-button"
       >
         Show more

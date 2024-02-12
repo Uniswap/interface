@@ -1,6 +1,6 @@
 import { OpacityHoverState } from 'components/Common'
-import { NftActivityType } from 'graphql/data/__generated__/types-and-hooks'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
+import { NftActivityType } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { useBag, useIsMobile, useNativeUsdPrice } from 'nft/hooks'

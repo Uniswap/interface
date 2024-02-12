@@ -40,7 +40,8 @@ export function useAddOrder() {
       orderHash: string,
       chainId: ChainId,
       expiry: number,
-      swapInfo: UniswapXOrderDetails['swapInfo']
+      swapInfo: UniswapXOrderDetails['swapInfo'],
+      encodedOrder: string
     ) => {
       dispatch(
         addSignature({
@@ -53,6 +54,7 @@ export function useAddOrder() {
           swapInfo,
           status: UniswapXOrderStatus.OPEN,
           addedTime: Date.now(),
+          encodedOrder,
         })
       )
     },
@@ -65,7 +67,7 @@ export function isFinalizedOrder(orderStatus: UniswapXOrderStatus) {
 }
 
 export function isOnChainOrder(orderStatus: UniswapXOrderStatus) {
-  return orderStatus === UniswapXOrderStatus.FILLED || orderStatus === UniswapXOrderStatus.CANCELLED
+  return orderStatus === UniswapXOrderStatus.FILLED
 }
 
 function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrderDetails {

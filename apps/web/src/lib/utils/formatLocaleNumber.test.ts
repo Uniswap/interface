@@ -1,4 +1,4 @@
-import { SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
+import { SupportedLocale, SUPPORTED_LOCALES } from 'constants/locales'
 
 import formatLocaleNumber from './formatLocaleNumber'
 

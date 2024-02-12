@@ -7,8 +7,6 @@ import { useNavigateToSend } from 'src/features/send/hooks'
 import { useNavigateToSwap } from 'src/features/swap/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
-import { useCopyTokenAddressCallback } from 'src/features/tokens/hooks'
-import { getTokenUrl } from 'src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -17,6 +15,7 @@ import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { toggleTokenVisibility } from 'wallet/src/features/favorites/slice'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { useCopyTokenAddressCallback } from 'wallet/src/features/tokens/hooks'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import {
@@ -25,6 +24,7 @@ import {
   currencyIdToAddress,
   currencyIdToChain,
 } from 'wallet/src/utils/currencyId'
+import { getTokenUrl } from 'wallet/src/utils/linking'
 
 interface TokenMenuParams {
   currencyId: CurrencyId

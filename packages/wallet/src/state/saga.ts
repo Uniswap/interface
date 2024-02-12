@@ -1,5 +1,6 @@
 import { combineReducers, Reducer } from '@reduxjs/toolkit'
 import { spawn } from 'typed-redux-saga'
+import { notificationWatcher } from 'wallet/src/features/notifications/notificationWatcherSaga'
 import { initProviders } from 'wallet/src/features/providers'
 import {
   transferTokenActions,
@@ -10,7 +11,7 @@ import {
 import { SagaState } from 'wallet/src/utils/saga'
 
 // Sagas that are spawned at startup
-const sharedSagas = [initProviders] as const
+const sharedSagas = [initProviders, notificationWatcher] as const
 
 export interface MonitoredSaga {
   // TODO(MOB-645): Add more specific types

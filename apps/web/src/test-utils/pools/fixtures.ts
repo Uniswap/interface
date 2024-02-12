@@ -4,8 +4,8 @@ import { ChainId, Currency, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position } from '@uniswap/v3-sdk'
 import { USDC_MAINNET } from 'constants/tokens'
 import { Chain, Exact, TokenProjectQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { PoolData } from 'graphql/thegraph/PoolData'
+import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
 
 export const validParams = { poolAddress: '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640', chainName: 'ethereum' }
 

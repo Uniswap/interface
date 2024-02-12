@@ -1,6 +1,5 @@
 import { MetaTagInjector } from '../components/metaTagInjector'
-import Cache from './cache'
-import { Data } from './cache'
+import Cache, { Data } from './cache'
 
 export async function getMetadataRequest(
   res: Promise<Response>,

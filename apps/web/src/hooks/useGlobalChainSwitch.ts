@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
-import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName } from 'graphql/data/util'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { useEffect, useRef } from 'react'
 
 export const useOnGlobalChainSwitch = (callback: (chain: Chain) => void) => {

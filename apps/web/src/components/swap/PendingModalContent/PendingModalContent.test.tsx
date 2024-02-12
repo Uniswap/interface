@@ -2,12 +2,12 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { TradeFillType } from 'state/routing/types'
 import { useSwapTransactionStatus } from 'state/transactions/hooks'
-import { TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
+import { LIMIT_ORDER_TRADE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 
+import { getTitle, PendingModalContent } from '.'
 import { ConfirmModalState } from '../ConfirmSwapModal'
-import { PendingModalContent } from '.'
 import { ErrorModalContent, PendingModalError } from './ErrorModalContent'
 
 jest.mock('state/transactions/hooks')
@@ -192,4 +192,21 @@ describe('PendingModalContent', () => {
       expect(screen.getByTestId('confirmed-icon')).toBeInTheDocument()
     })
   })
+})
+
+describe('Modal title', () => {
+  it.each([
+    ['limit', false, false, LIMIT_ORDER_TRADE, 'Confirm limit'],
+    ['limit', true, false, LIMIT_ORDER_TRADE, 'Limit submitted'],
+    ['limit', false, true, LIMIT_ORDER_TRADE, 'Limit filled!'],
+    ['classic', false, false, TEST_TRADE_EXACT_INPUT, 'Confirm swap'],
+    ['classic', true, false, TEST_TRADE_EXACT_INPUT, 'Swap submitted'],
+    ['classic', false, true, TEST_TRADE_EXACT_INPUT, 'Swap success!'],
+  ])(
+    'renders %p trade correctly, swapPending %p and swapConfirmed %p',
+    async (type, swapPending, swapConfirmed, trade, expectedTitle) => {
+      const title = getTitle({ trade, swapPending, swapConfirmed })
+      expect(title).toBe(expectedTitle)
+    }
+  )
 })

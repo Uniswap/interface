@@ -9,6 +9,7 @@ const TextWrapper = styled(Text).withConfig({
   shouldForwardProp: (prop) => prop !== 'color',
 })<{ color: keyof string }>`
   color: ${({ color, theme }) => (theme as any)[color]};
+  letter-spacing: -0.01em;
 `
 
 const HeadingWrapper = styled.h1.withConfig({
@@ -19,6 +20,7 @@ const HeadingWrapper = styled.h1.withConfig({
   font-weight: 485;
   font-size: ${({ fontSize }) => fontSize};
   margin: ${({ margin }) => margin ?? 0};
+  letter-spacing: -0.02em;
 `
 
 type TextProps = Omit<TextPropsOriginal, 'css'>

@@ -4,8 +4,8 @@ import { Text } from 'react-native'
 import { LazyModalRenderer } from 'src/app/modals/utils'
 import { MobileState } from 'src/app/reducer'
 import { initialModalState } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
 import { renderWithProviders } from 'src/test/render'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { mockWalletPreloadedState } from 'wallet/src/test/fixtures'
 
 const preloadedState = {

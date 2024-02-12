@@ -153,6 +153,8 @@ interface Props {
   randomSeed?: number
   border?: boolean
   mobile?: boolean
+  showBorder?: boolean
+  backgroundColor?: string
 }
 
 function _Unicon({ address, size = 24, randomSeed = 0, mobile }: Props): JSX.Element | null {

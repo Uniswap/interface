@@ -1,0 +1,72 @@
+import { impactAsync } from 'expo-haptics'
+import { useCallback, useMemo } from 'react'
+import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
+import { ChainId } from 'wallet/src/constants/chains'
+import {
+  Chain,
+  SearchPopularTokensQuery,
+  useSearchPopularTokensQuery,
+} from 'wallet/src/data/__generated__/types-and-hooks'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
+import { useAppDispatch } from 'wallet/src/state'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
+import { setClipboard } from 'wallet/src/utils/clipboard'
+
+export type TopToken = NonNullable<NonNullable<SearchPopularTokensQuery['topTokens']>[0]>
+
+// Popular tokens by top Uniswap trading volume
+export function usePopularTokens(): {
+  popularTokens: TopToken[] | undefined
+  loading: boolean
+} {
+  // Load popular tokens by top Uniswap trading volume
+  const { data, loading } = useSearchPopularTokensQuery()
+
+  const popularTokens = useMemo(() => {
+    if (!data || !data.topTokens) {
+      return
+    }
+
+    // special case to replace weth with eth because the backend does not return eth data
+    // eth will be defined only if all the required data is available
+    // when eth data is not fully available, we do not replace weth with eth
+    const eth = data?.eth && data?.eth.length > 0 && data?.eth?.[0]?.project ? data.eth[0] : null
+    const wethAddress = getWrappedNativeAddress(ChainId.Mainnet)
+
+    return data.topTokens
+      .map((token) => {
+        if (!token) {
+          return
+        }
+
+        const isWeth =
+          areAddressesEqual(token.address, wethAddress) && token?.chain === Chain.Ethereum
+
+        // manually replace weth with eth given backend only returns eth data as a proxy for eth
+        if (isWeth && eth) {
+          return eth
+        }
+
+        return token
+      })
+      .filter((t): t is TopToken => Boolean(t))
+  }, [data])
+
+  return { popularTokens, loading }
+}
+
+export function useCopyTokenAddressCallback(tokenAddress: Address): () => void {
+  const dispatch = useAppDispatch()
+  return useCallback(async () => {
+    await impactAsync()
+    await setClipboard(tokenAddress)
+
+    dispatch(
+      pushNotification({
+        type: AppNotificationType.Copied,
+        copyType: CopyNotificationType.ContractAddress,
+      })
+    )
+  }, [tokenAddress, dispatch])
+}

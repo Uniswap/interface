@@ -1,5 +1,4 @@
-import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
-
+import { useIsDarkMode } from 'ui/src'
 import { MeldLogos } from 'wallet/src/features/fiatOnRamp/meld'
 
 export function useMeldLogoUrl(logos: MeldLogos | undefined): string | undefined {

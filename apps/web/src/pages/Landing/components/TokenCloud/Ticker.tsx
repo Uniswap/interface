@@ -1,63 +1,65 @@
+import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { motion } from 'framer-motion'
 import styled from 'styled-components'
+import { ThemedText } from 'theme/components'
+import { useFormatter } from 'utils/formatNumbers'
 
-import { Box } from '../Generics'
-import { PriceArrowDown, PriceArrowUp, PriceNeutral } from '../Icons'
-import { isNegative } from './utils'
+import { TickerPosition } from '.'
 
 const PriceContainer = styled(motion.div)`
   display: flex;
   flex-direction: column;
   justify-content: center;
 `
-const TickerText = styled(motion.div)`
+const TickerText = styled(motion.div)<{ tickerPosition: TickerPosition }>`
   font-size: 14px;
   font-weight: 500;
   color: ${(props) => `${props.color}`};
+  text-align: ${({ tickerPosition }) => (tickerPosition === TickerPosition.RIGHT ? 'left' : 'right')};
 `
-const TickerContainer = styled(motion.div)`
+const TickerContainer = styled(motion.div)<{ tickerPosition: TickerPosition; size: number }>`
   pointer-events: none;
   position: absolute;
   display: flex;
   flex-direction: row;
+  ${({ tickerPosition, size }) =>
+    tickerPosition === TickerPosition.RIGHT ? `left: ${size * 1.25}px` : `right: ${size * 0.6}px`};
   gap: 20px;
 `
-const PricePercentChangeText = styled(motion.div)`
-  font-size: 12px;
-  font-weight: 500;
-  color: ${(props) => `${props.color}`};
-`
-
 const PricePercentChange = styled(motion.div)`
   display: flex;
   flex-direction: row;
+  align-items: center;
 `
 export function Ticker(props: {
   color: string
-  PricePercentChange: number
+  pricePercentChange: number
   ticker: string
+  tickerPosition: TickerPosition
   size: number
   children?: React.ReactNode
   animate: string
 }) {
+  const { formatDelta } = useFormatter()
   const priceVariants = {
     rest: { opacity: 0, x: 0 },
     hover: { opacity: 1, x: 8 },
   }
   return (
-    <TickerContainer initial="rest" variants={priceVariants} animate={props.animate}>
-      <Box flex="none" width={`${props.size}px`} height={`${props.size}px`} />
+    <TickerContainer
+      initial="rest"
+      variants={priceVariants}
+      animate={props.animate}
+      tickerPosition={props.tickerPosition}
+      size={props.size}
+    >
       <PriceContainer>
-        <TickerText color={props.color}>{props.ticker}</TickerText>
+        <TickerText color={props.color} tickerPosition={props.tickerPosition}>
+          {props.ticker}
+        </TickerText>
         <PricePercentChange>
-          {(props.PricePercentChange | 0) === 0 ? (
-            <PriceNeutral />
-          ) : isNegative(props.PricePercentChange) ? (
-            <PriceArrowDown />
-          ) : (
-            <PriceArrowUp />
-          )}
-          <PricePercentChangeText>{props.PricePercentChange}</PricePercentChangeText>
+          <DeltaArrow delta={props.pricePercentChange} />
+          <ThemedText.BodySecondary>{formatDelta(props.pricePercentChange)}</ThemedText.BodySecondary>
         </PricePercentChange>
       </PriceContainer>
     </TickerContainer>

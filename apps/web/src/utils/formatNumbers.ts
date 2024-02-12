@@ -7,8 +7,8 @@ import {
 } from 'constants/localCurrencies'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
 import { useCurrencyConversionFlagEnabled } from 'featureFlags/flags/currencyConversion'
-import { Currency as GqlCurrency } from 'graphql/data/__generated__/types-and-hooks'
 import { useLocalCurrencyConversionRate } from 'graphql/data/ConversionRate'
+import { Currency as GqlCurrency } from 'graphql/data/__generated__/types-and-hooks'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import usePrevious from 'hooks/usePrevious'
@@ -223,6 +223,14 @@ const tokenNonTxFormatter: FormatterRule[] = [
   },
 ]
 
+const tokenQuantityStatsFormatter: FormatterRule[] = [
+  // if token stat value is 0, we probably don't have the data for it, so show '-' as a placeholder
+  { exact: 0, hardCodedInput: { hardcodedOutput: '-' }, formatterOptions: NO_DECIMALS },
+  { upperBound: 0.01, hardCodedInput: { input: 0.01, prefix: '<' }, formatterOptions: TWO_DECIMALS },
+  { upperBound: 1000, formatterOptions: TWO_DECIMALS },
+  { upperBound: Infinity, formatterOptions: SHORTHAND_ONE_DECIMAL },
+]
+
 const tokenTxFormatter: FormatterRule[] = [
   { exact: 0, formatterOptions: NO_DECIMALS },
   {
@@ -401,6 +409,9 @@ export enum NumberType {
   // used for token quantities in non-transaction contexts (e.g. portfolio balances)
   TokenNonTx = 'token-non-tx',
 
+  // used for token quantity stats where shorthand is okay (e.g. pool stats balances)
+  TokenQuantityStats = 'token-quantity-stats',
+
   // used for token quantities in transaction contexts (e.g. swap, send)
   TokenTx = 'token-tx',
 
@@ -460,6 +471,7 @@ export enum NumberType {
 type FormatterType = NumberType | FormatterRule[]
 const TYPE_TO_FORMATTER_RULES = {
   [NumberType.TokenNonTx]: tokenNonTxFormatter,
+  [NumberType.TokenQuantityStats]: tokenQuantityStatsFormatter,
   [NumberType.TokenTx]: tokenTxFormatter,
   [NumberType.SwapPrice]: swapPriceFormatter,
   [NumberType.SwapTradeAmount]: swapTradeAmountFormatter,
@@ -590,7 +602,7 @@ function formatDelta(delta: Nullish<number>, locale: SupportedLocale = DEFAULT_L
 
 interface FormatPriceOptions {
   price: Nullish<Price<Currency, Currency>>
-  type: FormatterType
+  type?: FormatterType
   locale?: SupportedLocale
   localCurrency?: SupportedLocalCurrency
   conversionRate?: number
@@ -704,6 +716,82 @@ function formatReviewSwapCurrencyAmount(
     formattedAmount = formatCurrencyAmount({ amount, type: NumberType.SwapTradeAmount, locale })
   }
   return formattedAmount
+}
+
+function convertToFiatAmount(
+  amount = 1,
+  toCurrency = DEFAULT_LOCAL_CURRENCY,
+  conversionRate = 1
+): { amount: number; currency: SupportedLocalCurrency } {
+  const defaultResult = { amount, currency: DEFAULT_LOCAL_CURRENCY }
+
+  if (defaultResult.currency === toCurrency) {
+    return defaultResult
+  }
+
+  return {
+    amount: amount * conversionRate,
+    currency: toCurrency,
+  }
+}
+
+// TODO: https://linear.app/uniswap/issue/WEB-3495/import-useasyncdata-from-mobile
+type FiatCurrencyComponents = {
+  groupingSeparator: string
+  decimalSeparator: string
+  symbol: string
+  fullSymbol: string // Some currencies have whitespace in between number and currency
+  symbolAtFront: boolean // All currencies are at front or back except CVE, which we won't ever support
+}
+
+/**
+ * Helper function to return components of a currency value for a specific locale
+ * E.g. comma, period, or space for separating thousands
+ */
+export function getFiatCurrencyComponents(
+  locale = DEFAULT_LOCALE,
+  localCurrency = DEFAULT_LOCAL_CURRENCY
+): FiatCurrencyComponents {
+  const format = new Intl.NumberFormat(locale, {
+    ...TWO_DECIMALS_CURRENCY,
+    currency: localCurrency,
+    currencyDisplay: LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE[localCurrency],
+  })
+
+  // See MDN for official docs https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/formatToParts
+  // Returns something like [{"type":"currency","value":"$"},{"type":"integer","value":"1"}]
+  const parts = format.formatToParts(1000000.0) // This number should provide both types of separators
+  let groupingSeparator = ','
+  let decimalSeparator = '.'
+  let symbol = ''
+  let fullSymbol = ''
+  let symbolAtFront = true
+
+  parts.forEach((part, index) => {
+    if (part.type === 'group') {
+      groupingSeparator = part.value
+    } else if (part.type === 'decimal') {
+      decimalSeparator = part.value
+    } else if (part.type === 'currency') {
+      symbol = part.value
+      fullSymbol = symbol
+
+      symbolAtFront = index === 0
+      const nextPart = symbolAtFront ? parts[index + 1] : parts[index - 1]
+      // Check for additional characters between symbol and number, like whitespace
+      if (nextPart?.type === 'literal') {
+        fullSymbol = symbolAtFront ? symbol + nextPart.value : nextPart.value + symbol
+      }
+    }
+  })
+
+  return {
+    groupingSeparator,
+    decimalSeparator,
+    symbol,
+    fullSymbol,
+    symbolAtFront,
+  }
 }
 
 export function useFormatterLocales(): {
@@ -855,8 +943,26 @@ export function useFormatter() {
     [currencyToFormatWith, formatterLocale]
   )
 
+  const convertToFiatAmountWithLocales = useCallback(
+    (amount?: number) => convertToFiatAmount(amount, currencyToFormatWith, localCurrencyConversionRateToFormatWith),
+    [currencyToFormatWith, localCurrencyConversionRateToFormatWith]
+  )
+
+  const formatConvertedFiatNumberOrString = useCallback(
+    (options: Omit<FormatNumberOrStringOptions, LocalesType>) =>
+      formatNumberOrString({
+        ...options,
+        locale: formatterLocale,
+        localCurrency: currencyToFormatWith,
+        conversionRate: undefined,
+      }),
+    [currencyToFormatWith, formatterLocale]
+  )
+
   return useMemo(
     () => ({
+      convertToFiatAmount: convertToFiatAmountWithLocales,
+      formatConvertedFiatNumberOrString,
       formatCurrencyAmount: formatCurrencyAmountWithLocales,
       formatEther: formatEtherwithLocales,
       formatFiatPrice: formatFiatPriceWithLocales,
@@ -869,12 +975,14 @@ export function useFormatter() {
       formatTickPrice: formatTickPriceWithLocales,
     }),
     [
+      convertToFiatAmountWithLocales,
+      formatConvertedFiatNumberOrString,
       formatCurrencyAmountWithLocales,
+      formatDeltaWithLocales,
       formatEtherwithLocales,
       formatFiatPriceWithLocales,
       formatNumberOrStringWithLocales,
       formatNumberWithLocales,
-      formatDeltaWithLocales,
       formatPercentWithLocales,
       formatPriceWithLocales,
       formatReviewSwapCurrencyAmountWithLocales,

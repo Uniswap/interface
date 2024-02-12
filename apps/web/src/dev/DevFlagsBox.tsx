@@ -1,3 +1,5 @@
+import { ColumnCenter } from 'components/Column'
+import { RowBetween } from 'components/Row'
 import {
   BaseVariant,
   dynamicConfigSettings as dynamicConfigSettingsAtom,
@@ -7,6 +9,9 @@ import {
 import { DynamicConfigName, useDynamicConfig } from 'featureFlags/dynamicConfig'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo, useState } from 'react'
+import { Flag, Settings } from 'react-feather'
+import { useCloseModal, useToggleModal } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
 import { useGate } from 'statsig-react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -18,16 +23,16 @@ const Box = styled.div`
   left: 20px;
   background-color: ${({ theme }) => theme.surface1};
   padding: 10px;
-  border: 1px solid ${({ theme }) => theme.accent1};
+  border: 1px solid ${({ theme }) => theme.surface3};
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0px 0px 10px 0px rgba(34, 34, 34, 0.04);
+  user-select: none;
   z-index: 1000;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     bottom: 70px;
   }
-`
-const TopBar = styled.div`
-  display: flex;
-  justify-content: space-between;
 `
 const Gate = (flagName: FeatureFlag, featureFlagSettings: Record<string, string>) => {
   const gateResult = useGate(flagName)
@@ -62,6 +67,16 @@ const Config = (name: DynamicConfigName, savedSettings: Record<string, any>) => 
   return null
 }
 
+const SettingsContainer = styled(ColumnCenter)`
+  width: 30px;
+  height: 30px;
+  justify-content: center;
+  border-radius: 12px;
+  :hover {
+    background: ${({ theme }) => theme.surface2};
+  }
+`
+
 export default function DevFlagsBox() {
   const featureFlagsAtom = useAtomValue(featureFlagSettingsAtom)
   const featureFlags = useMemo(() => Object.values(FeatureFlag), [])
@@ -73,20 +88,37 @@ export default function DevFlagsBox() {
 
   const hasOverrides = overrides.some((g) => g !== null)
 
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
   const toggleOpen = () => setIsOpen((open) => !open)
+  const toggleFeatureFlagsModal = useToggleModal(ApplicationModal.FEATURE_FLAGS)
+  const closeFeatureFlagsModal = useCloseModal()
 
   return (
-    <Box>
-      <TopBar onClick={toggleOpen}>
-        {isOpen ? '😺👇' : '😿☝️'}
-        {isOpen && (
+    <Box
+      onClick={() => {
+        toggleOpen()
+        closeFeatureFlagsModal()
+      }}
+    >
+      {isOpen ? (
+        <RowBetween>
           <ThemedText.SubHeader>
-            {isStagingEnv() && 'Staging build overrides'}
-            {isDevelopmentEnv() && 'Development build overrides'}
+            {isDevelopmentEnv() && 'Local Overrides'}
+            {isStagingEnv() && 'Staging Overrides'}
           </ThemedText.SubHeader>
-        )}
-      </TopBar>
+          <SettingsContainer
+            onClick={(e) => {
+              e.stopPropagation()
+              toggleFeatureFlagsModal()
+            }}
+          >
+            <Settings width={15} height={15} />
+          </SettingsContainer>
+        </RowBetween>
+      ) : (
+        <Flag />
+      )}
+
       {isOpen && (hasOverrides ? overrides : <ThemedText.LabelSmall>No overrides</ThemedText.LabelSmall>)}
     </Box>
   )

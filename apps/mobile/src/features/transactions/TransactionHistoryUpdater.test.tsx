@@ -13,12 +13,14 @@ import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { account, account2, faker, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 import {
+  account,
+  account2,
+  faker,
   MAX_FIXTURE_TIMESTAMP,
-  Portfolios,
-  PortfoliosWithReceive,
-} from 'wallet/src/test/gqlFixtures'
+  SAMPLE_SEED_ADDRESS_1,
+} from 'wallet/src/test/fixtures'
+import { Portfolios, PortfoliosWithReceive } from 'wallet/src/test/gqlFixtures'
 
 const mockedRefetchQueries = jest.fn()
 jest.mock('src/data/usePersistedApolloClient', () => ({
@@ -207,7 +209,7 @@ describe(getReceiveNotificationFromData, () => {
       chainId: ChainId.Mainnet,
       txHash: PortfoliosWithReceive[0].assetActivities[0]?.details.hash, // generated
       address: account.address,
-      txId: '0x80cde0e2abd1bf5fadcf7ff9edf7ae13feec1c32',
+      txId: '0x9b0e1021d79e2a85b7a419f47cfa364ea6ae10bf',
       type: AppNotificationType.Transaction,
       txType: TransactionType.Receive,
       assetType: AssetType.Currency,

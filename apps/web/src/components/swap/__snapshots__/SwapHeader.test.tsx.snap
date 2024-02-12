@@ -235,17 +235,20 @@ exports[`SwapHeader.tsx matches base snapshot 1`] = `
 }
 
 .c3 {
-  margin-bottom: 10px;
+  margin-bottom: 4px;
   color: #7D7D7D;
 }
 
 .c5 {
-  padding: 0 12px;
   gap: 16px;
+  padding-bottom: 8px;
 }
 
 .c7 {
   color: #222222;
+  background-color: #F9F9F9;
+  padding: 8px 16px;
+  border-radius: 20px;
   gap: 4px;
   font-weight: 485;
 }
@@ -262,6 +265,8 @@ exports[`SwapHeader.tsx matches base snapshot 1`] = `
 
 .c13 {
   color: #7D7D7D;
+  padding: 8px 16px;
+  border-radius: 20px;
   gap: 4px;
   font-weight: 485;
 }

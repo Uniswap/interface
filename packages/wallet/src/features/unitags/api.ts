@@ -1,14 +1,18 @@
-import { ApolloClient, from, InMemoryCache } from '@apollo/client'
+import { ApolloClient, from } from '@apollo/client'
 import { RetryLink } from '@apollo/client/link/retry'
 import { RestLink } from 'apollo-link-rest'
+import axios from 'axios'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { uniswapUrls } from 'wallet/src/constants/urls'
+import { createNewInMemoryCache } from 'wallet/src/data/cache'
 import { useRestMutation, useRestQuery } from 'wallet/src/data/rest'
 import {
   UnitagAddressResponse,
   UnitagClaimEligibilityParams,
   UnitagClaimEligibilityResponse,
-  UnitagClaimResponse,
   UnitagClaimUsernameRequestBody,
+  UnitagGetAvatarUploadUrlResponse,
+  UnitagResponse,
   UnitagUpdateMetadataRequestBody,
   UnitagUpdateMetadataResponse,
   UnitagUsernameResponse,
@@ -22,18 +26,17 @@ const retryLink = new RetryLink()
 
 const apolloClient = new ApolloClient({
   link: from([retryLink, restLink]),
-  cache: new InMemoryCache(),
+  cache: createNewInMemoryCache(),
   defaultOptions: {
     watchQuery: {
       // ensures query is returning data even if some fields errored out
       errorPolicy: 'all',
-      fetchPolicy: 'no-cache',
-      nextFetchPolicy: 'no-cache',
+      fetchPolicy: 'cache-and-network',
     },
   },
 })
 
-function addQueryParamsToEndpoint(
+export function addQueryParamsToEndpoint(
   endpoint: string,
   params: Record<string, string | number | boolean | undefined>
 ): string {
@@ -80,9 +83,9 @@ export function useUnitagByAddressQuery(
 }
 
 export function useClaimUnitagMutation(): ReturnType<
-  typeof useRestMutation<UnitagClaimResponse, UnitagClaimUsernameRequestBody>
+  typeof useRestMutation<UnitagResponse, UnitagClaimUsernameRequestBody>
 > {
-  return useRestMutation<UnitagClaimResponse, UnitagClaimUsernameRequestBody>(
+  return useRestMutation<UnitagResponse, UnitagClaimUsernameRequestBody>(
     '/username',
     ['success', 'errorCode'], // return all fields
     {},
@@ -120,4 +123,39 @@ export function useUnitagClaimEligibilityQuery({
     'GET',
     apolloClient
   )
+}
+
+export function useUnitagGetAvatarUploadUrlQuery({
+  username,
+  skip,
+}: {
+  username?: string
+  skip?: boolean
+}): ReturnType<typeof useRestQuery<UnitagGetAvatarUploadUrlResponse>> {
+  return useRestQuery<UnitagGetAvatarUploadUrlResponse, Record<string, never>>(
+    addQueryParamsToEndpoint('/username/avatar-upload-url', { username }),
+    {},
+    ['success', 'avatarUrl', 'preSignedUrl', 's3UploadFields'], // return all fields
+    { skip: !username || skip, ttlMs: ONE_SECOND_MS * 110 },
+    'GET',
+    apolloClient
+  )
+}
+
+// TODO (MOB-1791): add signature authentication in headers
+export async function getUnitagAvatarUploadUrl(
+  username: string
+): ReturnType<typeof axios.get<UnitagGetAvatarUploadUrlResponse>> {
+  const avatarUploadUrl = `${uniswapUrls.unitagsApiUrl}/username/avatar-upload-url`
+  return await axios.get<UnitagGetAvatarUploadUrlResponse>(avatarUploadUrl, {
+    params: { username },
+  })
+}
+
+export async function deleteUnitag(
+  username: string,
+  address: Address
+): ReturnType<typeof axios.delete<UnitagResponse>> {
+  const avatarUploadUrl = `${uniswapUrls.unitagsApiUrl}/username`
+  return await axios.delete<UnitagResponse>(avatarUploadUrl, { data: { username, address } })
 }

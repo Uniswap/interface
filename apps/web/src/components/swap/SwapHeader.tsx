@@ -1,9 +1,11 @@
 import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { useLimitsEnabled } from 'featureFlags/flags/limits'
+import { useSendEnabled } from 'featureFlags/flags/send'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/SwapContext'
 import styled from 'styled-components'
 import { ButtonText } from 'theme/components'
+import { isIFramed } from 'utils/isIFramed'
 
 import { RowBetween, RowFixed } from '../Row'
 import SettingsTab from '../Settings'
@@ -11,17 +13,20 @@ import { SwapTab } from './constants'
 import SwapBuyFiatButton from './SwapBuyFiatButton'
 
 const StyledSwapHeader = styled(RowBetween)`
-  margin-bottom: 10px;
+  margin-bottom: 4px;
   color: ${({ theme }) => theme.neutral2};
 `
 
 const HeaderButtonContainer = styled(RowFixed)`
-  padding: 0 12px;
   gap: 16px;
+  padding-bottom: 8px;
 `
 
 const StyledTextButton = styled(ButtonText)<{ $isActive: boolean }>`
   color: ${({ theme, $isActive }) => ($isActive ? theme.neutral1 : theme.neutral2)};
+  background-color: ${({ theme, $isActive }) => $isActive && theme.surface2};
+  padding: 8px 16px;
+  border-radius: 20px;
   gap: 4px;
   font-weight: 485;
   &:focus {
@@ -34,6 +39,7 @@ const StyledTextButton = styled(ButtonText)<{ $isActive: boolean }>`
 
 export default function SwapHeader() {
   const limitsEnabled = useLimitsEnabled()
+  const sendEnabled = useSendEnabled() && !isIFramed()
   const { chainId, currentTab, setCurrentTab } = useSwapAndLimitContext()
   const {
     derivedSwapInfo: { trade, autoSlippage },
@@ -63,6 +69,11 @@ export default function SwapHeader() {
           <Trans>Swap</Trans>
         </StyledTextButton>
         <SwapBuyFiatButton />
+        {sendEnabled && (
+          <StyledTextButton $isActive={currentTab === SwapTab.Send} onClick={() => setCurrentTab(SwapTab.Send)}>
+            <Trans>Send</Trans>
+          </StyledTextButton>
+        )}
         {limitsEnabled && chainId === ChainId.MAINNET && (
           <StyledTextButton $isActive={currentTab === SwapTab.Limit} onClick={() => setCurrentTab(SwapTab.Limit)}>
             <Trans>Limit</Trans>

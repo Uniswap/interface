@@ -1,9 +1,7 @@
 import React, { memo, useMemo } from 'react'
 import { ImageSourcePropType, StyleSheet } from 'react-native'
 import QRCode from 'src/components/QRCodeScanner/custom-qr-code-generator'
-import { Unicon } from 'src/components/unicons/Unicon'
-import { useUniconColors } from 'src/components/unicons/utils'
-import { ColorTokens, Flex, useSporeColors } from 'ui/src'
+import { ColorTokens, Flex, Unicon, useSporeColors, useUniconColors } from 'ui/src'
 import { borderRadii, opacify } from 'ui/src/theme'
 import { isAndroid } from 'wallet/src/utils/platform'
 

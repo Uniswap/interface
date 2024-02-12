@@ -4,7 +4,6 @@ import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import {
   FadeIn,
-  FadeOut,
   interpolate,
   SharedValue,
   useAnimatedReaction,
@@ -16,7 +15,6 @@ import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { Loader } from 'src/components/loading'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
-import { SectionName } from 'src/features/telemetry/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { AnimatedFlex, AnimatedTouchableArea, Flex, Text } from 'ui/src'
@@ -33,6 +31,7 @@ import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { removeFavoriteToken } from 'wallet/src/features/favorites/slice'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { SectionName } from 'wallet/src/telemetry/constants'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 114
@@ -154,7 +153,6 @@ function FavoriteTokenCard({
           bg="$surface2"
           borderRadius="$rounded16"
           entering={FadeIn}
-          exiting={FadeOut}
           hapticFeedback={!isEditing}
           hapticStyle={ImpactFeedbackStyle.Light}
           m="$spacing4"
@@ -174,11 +172,7 @@ function FavoriteTokenCard({
                   />
                   <Text variant="body1">{getSymbolDisplayText(token?.symbol)}</Text>
                 </Flex>
-                {isEditing ? (
-                  <RemoveButton onPress={onRemove} />
-                ) : (
-                  <Flex height={imageSizes.image24} />
-                )}
+                <RemoveButton visible={isEditing} onPress={onRemove} />
               </Flex>
               <Flex gap="$spacing2">
                 <Text adjustsFontSizeToFit numberOfLines={1} variant="heading3">

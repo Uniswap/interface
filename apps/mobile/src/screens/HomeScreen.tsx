@@ -51,13 +51,7 @@ import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { openModal } from 'src/features/modals/modalSlice'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
-import { useSelectAddressHasNotifications } from 'src/features/notifications/hooks'
-import {
-  ElementName,
-  MobileEventName,
-  ModalName,
-  SectionName,
-} from 'src/features/telemetry/constants'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { useHeartbeatReporter, useLastBalancesReporter } from 'src/features/telemetry/hooks'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
@@ -73,7 +67,7 @@ import {
   useMedia,
   useSporeColors,
 } from 'ui/src'
-import ReceiveIcon from 'ui/src/assets/icons/arrow-down-circle-filled.svg'
+import ReceiveIcon from 'ui/src/assets/icons/arrow-down-circle.svg'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-home.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
@@ -82,10 +76,18 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval, useTimeout } from 'utilities/src/time/timing'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import {
+  ElementName,
+  ElementNameType,
+  ModalName,
+  SectionName,
+  SectionNameType,
+} from 'wallet/src/telemetry/constants'
 import { HomeScreenTabIndex } from './HomeScreenTabIndex'
 
 const CONTENT_HEADER_HEIGHT_ESTIMATE = 270
@@ -129,7 +131,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const feedTitle = t('Feed')
 
   const routes = useMemo(() => {
-    const tabs = [
+    const tabs: Array<{ key: SectionNameType; title: string }> = [
       { key: SectionName.HomeTokensTab, title: tokensTitle },
       { key: SectionName.HomeNFTsTab, title: nftsTitle },
       { key: SectionName.HomeActivityTab, title: activityTitle },
@@ -545,7 +547,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       route,
     }: {
       route: {
-        key: SectionName
+        key: SectionNameType
         title: string
       }
     }) => {
@@ -668,7 +670,7 @@ type QuickAction = {
   eventName?: MobileEventName
   iconScale?: number
   label: string
-  name: ElementName
+  name: ElementNameType
   sentryLabel: string
   onPress: () => void
 }
@@ -703,7 +705,7 @@ function ActionButton({
   iconScale = 1,
 }: {
   eventName?: MobileEventName
-  name: ElementName
+  name: ElementNameType
   label: string
   Icon: React.FC<SvgProps>
   onPress: () => void

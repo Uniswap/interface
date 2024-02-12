@@ -1,25 +1,32 @@
-import { LinearGradient } from 'expo-linear-gradient'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StatusBar, StyleSheet } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
 import Svg, { Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { AddressDisplay } from 'src/components/AddressDisplay'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Favorite } from 'src/components/icons/Favorite'
-import { useUniconColors } from 'src/components/unicons/utils'
 import { ProfileContextMenu } from 'src/features/externalProfile/ProfileContextMenu'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import {
+  AnimatedFlex,
+  Flex,
+  Icons,
+  LinearGradient,
+  Text,
+  TouchableArea,
+  useIsDarkMode,
+  useSporeColors,
+  useUniconColors,
+} from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { passesContrast, useExtractedColors } from 'wallet/src/utils/colors'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
+import { useExtractedColors } from 'wallet/src/utils/colors'
 
 const HEADER_GRADIENT_HEIGHT = 144
 const HEADER_ICON_SIZE = 72
@@ -80,16 +87,14 @@ export const ProfileHeader = memo(function ProfileHeader({
 
   const { t } = useTranslation()
 
-  const showLightStatusBar = passesContrast('white', uniconGradientStart, 2)
-
   return (
     <Flex bg="$surface1" gap="$spacing16" pt="$spacing60" px="$spacing24">
       <StatusBar
         translucent
         backgroundColor="transparent"
-        barStyle={showLightStatusBar ? 'light-content' : 'dark-content'}
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
       />
-      {/* fixed gradient */}
+      {/* fixed gradient at 0.2 opacity overlaid on surface1 */}
       <AnimatedFlex
         bottom={0}
         entering={FadeIn}
@@ -98,18 +103,21 @@ export const ProfileHeader = memo(function ProfileHeader({
         position="absolute"
         right={0}
         top={0}>
-        <LinearGradient
-          colors={fixedGradientColors}
-          end={{ x: 1, y: 1 }}
-          start={{ x: 0, y: 1 }}
-          style={StyleSheet.absoluteFill}
-        />
+        <Flex bg="$surface1" bottom={0} left={0} position="absolute" right={0} top={0} />
+        <Flex grow opacity={0.2}>
+          <LinearGradient
+            colors={fixedGradientColors}
+            end={{ x: 1, y: 1 }}
+            start={{ x: 0, y: 1 }}
+            style={StyleSheet.absoluteFill}
+          />
+        </Flex>
         {hasAvatar && avatarColors?.primary ? <HeaderRadial color={avatarColors.primary} /> : null}
       </AnimatedFlex>
 
       {/* header row */}
       <Flex row alignItems="center" justifyContent="space-between" mx="$spacing4">
-        <Flex height={iconSizes.icon16} width={iconSizes.icon16}>
+        <Flex centered bg="$surface3" borderRadius="$roundedFull" p="$spacing4">
           <BackButton color="$sporeWhite" size={iconSizes.icon24} />
         </Flex>
         <ProfileContextMenu address={address} />
@@ -120,6 +128,7 @@ export const ProfileHeader = memo(function ProfileHeader({
         <AddressDisplay
           showCopy
           showIconBackground
+          showIconBorder
           address={address}
           captionVariant="body2"
           contentAlign="flex-start"
@@ -139,7 +148,7 @@ export const ProfileHeader = memo(function ProfileHeader({
               borderWidth={1}
               height={46}
               p="$spacing12"
-              shadowColor={isDarkMode ? '$surface2' : '$neutral3'}
+              shadowColor="$neutral1"
               style={styles.buttonShadow}
               testID={ElementName.Favorite}
               onPress={onPressFavorite}>
@@ -198,7 +207,7 @@ const styles = StyleSheet.create({
       height: 2,
       width: 0,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.04,
     shadowRadius: 4,
   },
 })

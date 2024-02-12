@@ -2,53 +2,68 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ExploreModalState } from 'src/app/modals/ExploreModalState'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
-import { ModalName } from 'src/features/telemetry/constants'
+import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
 import { getKeys } from 'utilities/src/primitives/objects'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { ModalsState } from './ModalsState'
 
-type AccountSwitcherModalParams = { name: ModalName.AccountSwitcher; initialState?: undefined }
+type AccountSwitcherModalParams = {
+  name: typeof ModalName.AccountSwitcher
+  initialState?: undefined
+}
 
-type ExperimentsModalParams = { name: ModalName.Experiments; initialState?: undefined }
+type ExperimentsModalParams = { name: typeof ModalName.Experiments; initialState?: undefined }
 
 type ExploreModalParams = {
-  name: ModalName.Explore
+  name: typeof ModalName.Explore
   initialState?: ExploreModalState
 }
 
-type FiatCurrencySelectorParams = { name: ModalName.FiatCurrencySelector; initialState?: undefined }
+type FiatCurrencySelectorParams = {
+  name: typeof ModalName.FiatCurrencySelector
+  initialState?: undefined
+}
 
-type FiatOnRampModalParams = { name: ModalName.FiatOnRamp; initialState?: undefined }
+type FiatOnRampModalParams = { name: typeof ModalName.FiatOnRamp; initialState?: undefined }
 
 type FiatOnRampAggregatorModalParams = {
-  name: ModalName.FiatOnRampAggregator
+  name: typeof ModalName.FiatOnRampAggregator
   initialState?: undefined
 }
 
 type LanguageSelectorModalParams = {
-  name: ModalName.LanguageSelector
+  name: typeof ModalName.LanguageSelector
   initialState?: undefined
 }
 
+type ScantasticModalParams = {
+  name: typeof ModalName.Scantastic
+  initialState: ScantasticModalState
+}
+
 type RemoveWalletModalParams = {
-  name: ModalName.RemoveWallet
+  name: typeof ModalName.RemoveWallet
   initialState?: RemoveWalletModalState
 }
 
-type RestoreWalletModalParams = { name: ModalName.RestoreWallet; initialState?: undefined }
+type RestoreWalletModalParams = { name: typeof ModalName.RestoreWallet; initialState?: undefined }
 
 type WalletConnectModalParams = {
-  name: ModalName.WalletConnectScan
+  name: typeof ModalName.WalletConnectScan
   initialState: ScannerModalState
 }
 
-type SwapModalParams = { name: ModalName.Swap; initialState?: TransactionState }
+type SwapModalParams = { name: typeof ModalName.Swap; initialState?: TransactionState }
 
-type SendModalParams = { name: ModalName.Send; initialState?: TransactionState }
+type SendModalParams = { name: typeof ModalName.Send; initialState?: TransactionState }
 
-type UnitagsIntroParams = { name: ModalName.UnitagsIntro; initialState?: undefined }
+type UnitagsIntroParams = { name: typeof ModalName.UnitagsIntro; initialState?: undefined }
 
-type ViewOnlyExplainerParams = { name: ModalName.ViewOnlyExplainer; initialState?: undefined }
+type ViewOnlyExplainerParams = {
+  name: typeof ModalName.ViewOnlyExplainer
+  initialState?: undefined
+}
 
 export type OpenModalParams =
   | AccountSwitcherModalParams
@@ -58,6 +73,7 @@ export type OpenModalParams =
   | FiatOnRampModalParams
   | FiatOnRampAggregatorModalParams
   | LanguageSelectorModalParams
+  | ScantasticModalParams
   | RemoveWalletModalParams
   | SendModalParams
   | SwapModalParams
@@ -80,6 +96,10 @@ export const initialModalState: ModalsState = {
   [ModalName.WalletConnectScan]: {
     isOpen: false,
     initialState: ScannerModalState.ScanQr,
+  },
+  [ModalName.Scantastic]: {
+    isOpen: false,
+    initialState: undefined,
   },
   [ModalName.Swap]: {
     isOpen: false,

@@ -12,7 +12,6 @@ import {
   SettingsStackNavigationProp,
   useSettingsStackNavigation,
 } from 'src/app/navigation/types'
-import { AddressDisplay } from 'src/components/AddressDisplay'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import {
   SettingsRow,
@@ -23,7 +22,6 @@ import {
 import { APP_FEEDBACK_LINK } from 'src/constants/urls'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
-import { ModalName } from 'src/features/telemetry/constants'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { getFullAppVersion } from 'src/utils/version'
@@ -36,6 +34,7 @@ import {
   Text,
   TouchableArea,
   useDeviceInsets,
+  useIsDarkMode,
   useSporeColors,
 } from 'ui/src'
 import { AVATARS_DARK, AVATARS_LIGHT } from 'ui/src/assets'
@@ -50,8 +49,9 @@ import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { uniswapUrls } from 'wallet/src/constants/urls'
-import { useCurrentAppearanceSetting, useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
@@ -74,6 +74,7 @@ import {
   setHideSmallBalances,
   setHideSpamTokens,
 } from 'wallet/src/features/wallet/slice'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { isAndroid } from 'wallet/src/utils/platform'
 
 export function SettingsScreen(): JSX.Element {

@@ -1,8 +1,9 @@
 import { ExploreModalState } from 'src/app/modals/ExploreModalState'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
-import { ModalName } from 'src/features/telemetry/constants'
+import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 export interface AppModalState<T> {
   isOpen: boolean
@@ -19,6 +20,7 @@ export interface ModalsState {
   [ModalName.LanguageSelector]: AppModalState<undefined>
   [ModalName.RemoveWallet]: AppModalState<RemoveWalletModalState>
   [ModalName.RestoreWallet]: AppModalState<undefined>
+  [ModalName.Scantastic]: AppModalState<ScantasticModalState>
   [ModalName.Send]: AppModalState<TransactionState>
   [ModalName.Swap]: AppModalState<TransactionState>
   [ModalName.UnitagsIntro]: AppModalState<undefined>

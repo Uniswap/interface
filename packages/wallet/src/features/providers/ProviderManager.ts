@@ -27,7 +27,7 @@ type ChainIdToProvider = Partial<Record<ChainId, ProviderInfo>>
 const getChainDetails = (chainId: ChainId): L1ChainInfo | L2ChainInfo => {
   const chainDetails = CHAIN_INFO[chainId]
   if (!chainDetails) {
-    logger.error('Cannot create provider for invalid chain details', {
+    logger.error(new Error('Cannot create provider for invalid chain details'), {
       tags: {
         file: 'ProviderManager',
         function: 'getChainDetails',

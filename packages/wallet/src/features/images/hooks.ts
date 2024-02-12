@@ -1,4 +1,4 @@
-import { ApolloClient, from, InMemoryCache } from '@apollo/client'
+import { ApolloClient, from } from '@apollo/client'
 import { RetryLink } from '@apollo/client/link/retry'
 import { RestLink } from 'apollo-link-rest'
 import { useMemo } from 'react'
@@ -6,6 +6,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { config } from 'wallet/src/config'
+import { createNewInMemoryCache } from 'wallet/src/data/cache'
 import { useRestQuery } from 'wallet/src/data/rest'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { fetchSVG, SvgData } from 'wallet/src/features/images/utils'
@@ -21,7 +22,7 @@ const retryLink = new RetryLink()
 
 const apolloClient = new ApolloClient({
   link: from([retryLink, restLink]),
-  cache: new InMemoryCache(),
+  cache: createNewInMemoryCache(),
   defaultOptions: {
     watchQuery: {
       // ensures query is returning data even if some fields errored out

@@ -21,28 +21,30 @@ async function processAddChanges() {
   .concat(danger.git.created_files)
   .filter((file) => (file.endsWith('.ts') || file.endsWith('.tsx')) && !file.includes('dangerfile.ts'))
 
-  const changes = (await Promise.all(updatedTsFiles.flatMap(async (file) => {
+  const linesAddedByFile = (await Promise.all(updatedTsFiles.flatMap(async (file) => {
     const structuredDiff = await danger.git.structuredDiffForFile(file);
 
     return (structuredDiff?.chunks || []).flatMap((chunk) => {
       return chunk.changes.filter((change) => change.type === 'add')
     })
-  }))).flatMap((x) => x)
+  })))
+
+  const allLinesAdded = linesAddedByFile.flatMap((x) => x)
 
   // Checks for any logging and reminds the developer not to log sensitive data
-  if (changes.some((change) => change.content.includes('logMessage') || change.content.includes('logger.'))) {
+  if (allLinesAdded.some((change) => change.content.includes('logMessage') || change.content.includes('logger.'))) {
     warn('You are logging data. Please confirm that nothing sensitive is being logged!')
   }
 
   // Check for direct logging calls
-  if (changes.some((change) => change.content.includes('analytics.sendEvent'))) {
+  if (allLinesAdded.some((change) => change.content.includes('analytics.sendEvent'))) {
     warn(`You are using the direct analytics call. Please use the typed wrapper for your given surface if possible!`)
   }
 
   // Check for UI package imports that are longer than needed
-  const validLongerImports = [`'ui/src'`, `'ui/src/theme'`, `'ui/src/loading'`]
+  const validLongerImports = [`'ui/src'`, `'ui/src/theme'`, `'ui/src/loading'`, `'ui/src/assets'`]
   const longestImportLength = Math.max(...validLongerImports.map((i) => i.length))
-  changes.forEach((change) => {
+  allLinesAdded.forEach((change) => {
     const indices = getIndicesOf(`from 'ui/src/`, change.content)
 
     indices.forEach((idx) => {
@@ -54,21 +56,27 @@ async function processAddChanges() {
     })
   })
 
-  // Check for non-recommended sentry usage
-  if (changes.some((change) => /logger\.error\(\s*new Error\(/.test(change.content))) {
-    warn(`It appears you may be manually logging a Sentry error. Please log the error directly if possible. If you need to use a custom error message, ensure the error object is added to the 'cause' property.`)
-  }
-  if (changes.some((change) => /logger\.error\(\s*['`"]/.test(change.content))) {
-    warn(`Please log an error, not a string!`)
-  }
+  linesAddedByFile.forEach((linesAdded) => {
+    const concatenatedAddedLines = linesAdded.reduce((acc, curr) => acc + curr.content, '')
 
-  // Check for incorrect usage of `createSelector`
-  if (changes.some((change) => change.content.includes(`createSelector(`))) {
-    warn("You've added a new call to `createSelector()`. This is Ok, but please make sure you're using it correctly and you're not creating a new selector on every render. See PR #5172 for details.")
-  }
-  if (changes.some((change) => /(useAppSelector|appSelect|select)\(\s*makeSelect/.test(change.content))) {
-    fail(`It appears you may be creating a new selector on every render. See PR #5172 for details on how to fix this.`)
-  }
+    // In this section we concatenate all the added lines by file in order to account for multiline changes.
+
+    // Check for non-recommended sentry usage
+    if (/logger\.error\(\s*new Error\(/.test(concatenatedAddedLines)) {
+      warn(`It appears you may be manually logging a Sentry error. Please log the error directly if possible. If you need to use a custom error message, ensure the error object is added to the 'cause' property.`)
+    }
+    if (/logger\.error\(\s*['`"]/.test(concatenatedAddedLines)) {
+      warn(`Please log an error, not a string!`)
+    }
+
+    // Check for incorrect usage of `createSelector`
+    if (concatenatedAddedLines.includes(`createSelector(`)) {
+      warn("You've added a new call to `createSelector()`. This is Ok, but please make sure you're using it correctly and you're not creating a new selector on every render. See PR #5172 for details.")
+    }
+    if (/(useAppSelector|appSelect|select)\(\s*makeSelect/.test(concatenatedAddedLines)) {
+      fail(`It appears you may be creating a new selector on every render. See PR #5172 for details on how to fix this.`)
+    }
+  })
 }
 
 async function checkCocoaPodsVersion() {
@@ -92,9 +100,9 @@ async function checkApostrophes() {
     const changedLines = (structuredDiff?.chunks || []).flatMap((chunk) => {
       return chunk.changes.filter((change) => change.type === 'add')
     })
-    changedLines.forEach((line) => {
+    changedLines.forEach((line, index) => {
       if (line.content.includes("'")) {
-        fail("You added a string using the ' character. Please use the ’ character instead!")
+        fail("You added a string using the ' character. Please use the ’ character instead!. Issue in line: " + index)
       }
     })
   }

@@ -1,11 +1,11 @@
-import { searchResultId } from 'src/features/explore/searchHistorySlice'
+import { Chain, ExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import { searchResultId } from 'wallet/src/features/search/searchHistorySlice'
 import {
   NFTCollectionSearchResult,
   SearchResultType,
   TokenSearchResult,
-} from 'src/features/explore/SearchResult'
-import { Chain, ExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+} from 'wallet/src/features/search/SearchResult'
 import { SEARCH_RESULT_HEADER_KEY } from './constants'
 import { SearchResultOrHeader } from './types'
 

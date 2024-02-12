@@ -2,16 +2,13 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Button, Flex, Image, Text, useDeviceDimensions } from 'ui/src'
 import { UNITAGS_BANNER_VERTICAL } from 'ui/src/assets'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
-const IMAGE_ASPECT_RATIO = 0.35
+const IMAGE_ASPECT_RATIO = 0.4
 const IMAGE_SCREEN_WIDTH_PROPORTION = 0.2
 const COMPACT_IMAGE_SCREEN_WIDTH_PROPORTION = 0.16
-const COMPACT_IMAGE_TOP_SHIFT = -0.17
-const REGULAR_IMAGE_TOP_SHIFT = -0.12
-const SHORT_IMAGE_TOP_SHIFT = -0.07
 
 export function UnitagBanner({ compact }: { compact?: boolean }): JSX.Element {
   const dispatch = useAppDispatch()
@@ -70,7 +67,7 @@ export function UnitagBanner({ compact }: { compact?: boolean }): JSX.Element {
               )}
             </Text>
           </Flex>
-          <Flex row gap="$spacing8" pb="$spacing16">
+          <Flex row gap="$spacing8">
             <Button
               borderRadius="$rounded24"
               fontSize="$small"
@@ -91,20 +88,16 @@ export function UnitagBanner({ compact }: { compact?: boolean }): JSX.Element {
           </Flex>
         </Flex>
       )}
-      <Flex aspectRatio={IMAGE_ASPECT_RATIO} maxWidth={imageWidth}>
+      <Flex centered width={imageWidth}>
         <Image
-          $short={{
-            top: SHORT_IMAGE_TOP_SHIFT * imageHeight,
-          }}
-          height={imageHeight}
+          alignSelf="center"
           position="absolute"
-          resizeMode="center"
-          right={0}
-          source={UNITAGS_BANNER_VERTICAL}
-          top={
-            compact ? COMPACT_IMAGE_TOP_SHIFT * imageHeight : REGULAR_IMAGE_TOP_SHIFT * imageHeight
-          } // Shift image up otherwise it's not fully visible
-          width={imageWidth}
+          resizeMode="cover"
+          source={{
+            width: imageWidth,
+            height: imageHeight,
+            uri: UNITAGS_BANNER_VERTICAL,
+          }}
         />
       </Flex>
     </Flex>

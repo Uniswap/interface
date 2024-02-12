@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ColorValue } from 'react-native'
-import WarningModal from 'src/components/modals/WarningModal/WarningModal'
-import { ModalName } from 'src/features/telemetry/constants'
+import { ColorValue, Keyboard } from 'react-native'
 import { TouchableArea, TouchableAreaProps, useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
+import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 const DEFAULT_ICON_SIZE = 20
 
@@ -33,7 +33,12 @@ export function TooltipInfoButton({
   const { t } = useTranslation()
   return (
     <>
-      <TouchableArea onPress={(): void => setShowModal(true)} {...rest}>
+      <TouchableArea
+        onPress={(): void => {
+          Keyboard.dismiss()
+          setShowModal(true)
+        }}
+        {...rest}>
         <InfoCircle
           color={colors.neutral2.get()}
           height={size ?? DEFAULT_ICON_SIZE}

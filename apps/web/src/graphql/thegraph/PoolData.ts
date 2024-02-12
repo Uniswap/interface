@@ -2,10 +2,10 @@ import { ChainId } from '@uniswap/sdk-core'
 import gql from 'graphql-tag'
 import { useMemo } from 'react'
 
-import { Pool, Token, usePoolDataQuery } from './__generated__/types-and-hooks'
 import { chainToApolloClient } from './apollo'
 import { useBlocksFromTimestamps } from './useBlocksFromTimestamps'
 import { get2DayChange, useDeltaTimestamps } from './utils'
+import { Pool, Token, usePoolDataQuery } from './__generated__/types-and-hooks'
 
 gql`
   query PoolData($poolId: [ID!], $block: Block_height = null) {

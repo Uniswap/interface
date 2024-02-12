@@ -84,7 +84,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
           }
           suppressHighlighting={true}
         >
-          Select backup to restore
+          Select a backup to restore
         </Text>
         <Text
           allowFontScaling={true}

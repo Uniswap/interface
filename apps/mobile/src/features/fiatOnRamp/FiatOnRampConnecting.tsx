@@ -2,14 +2,13 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, ImageBackground, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, Text, useDeviceInsets } from 'ui/src'
+import { AnimatedFlex, Flex, Text, useDeviceInsets, useIsDarkMode } from 'ui/src'
 import {
   FOR_CONNECTING_BACKGROUND_DARK,
   FOR_CONNECTING_BACKGROUND_LIGHT,
   UNISWAP_LOGO_LARGE,
 } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
-import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 
 export const SERVICE_PROVIDER_ICON_SIZE = 90
 

@@ -219,15 +219,16 @@ export const fiatOnRampAggregatorApi = createApi({
       MeldCryptoQuoteResponse['quotes'],
       {
         amount: number
+        sourceCurrencyCode: string
         destinationCurrencyCode: string
         countryCode: string
       }
     >({
-      query: ({ amount, destinationCurrencyCode, countryCode }) => ({
+      query: ({ amount, sourceCurrencyCode, destinationCurrencyCode, countryCode }) => ({
         url: '/payments/crypto/quote',
         body: {
           sourceAmount: amount,
-          sourceCurrencyCode: 'USD',
+          sourceCurrencyCode,
           destinationCurrencyCode,
           countryCode,
         },
@@ -273,6 +274,8 @@ export const fiatOnRampAggregatorApi = createApi({
         serviceProvider: string
         sourceCurrencyCode: string
         walletAddress: string
+        externalCustomerId: string
+        externalSessionId: string
       }
     >({
       query: ({
@@ -282,6 +285,8 @@ export const fiatOnRampAggregatorApi = createApi({
         serviceProvider,
         sourceCurrencyCode,
         walletAddress,
+        externalCustomerId,
+        externalSessionId,
       }) => ({
         url: 'crypto/session/widget',
         body: {
@@ -292,7 +297,10 @@ export const fiatOnRampAggregatorApi = createApi({
             serviceProvider,
             sourceCurrencyCode,
             walletAddress,
+            lockFields: ['destinationCurrencyCode'],
           },
+          externalCustomerId,
+          externalSessionId,
         },
         method: 'POST',
       }),

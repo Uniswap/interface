@@ -2,11 +2,11 @@ import { InterfaceEventName } from '@uniswap/analytics-events'
 import { ChainId, Percent } from '@uniswap/sdk-core'
 import { WETH_ADDRESS as getWethAddress } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
-import FOT_DETECTOR_ABI from 'abis/fee-on-transfer-detector.json'
-import { FeeOnTransferDetector } from 'abis/types'
 import { sendAnalyticsEvent } from 'analytics'
 import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
 import { useEffect, useState } from 'react'
+import FOT_DETECTOR_ABI from 'wallet/src/abis/fee-on-transfer-detector.json'
+import { FeeOnTransferDetector } from 'wallet/src/abis/types'
 
 import { useContract } from './useContract'
 

@@ -1,5 +1,4 @@
 export { useBag } from './useBag'
-export type { CollectionFilters, Trait } from './useCollectionFilters'
 export {
   initialCollectionFilterState,
   SortBy,
@@ -7,6 +6,7 @@ export {
   SortByQueries,
   useCollectionFilters,
 } from './useCollectionFilters'
+export type { CollectionFilters, Trait } from './useCollectionFilters'
 export { useFiltersExpanded } from './useFiltersExpanded'
 export { useIsCollectionLoading } from './useIsCollectionLoading'
 export { useIsMobile } from './useIsMobile'

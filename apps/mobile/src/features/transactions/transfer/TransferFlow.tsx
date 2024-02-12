@@ -1,34 +1,33 @@
 import { providers } from 'ethers'
 import React, { useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { WarningAction } from 'src/components/modals/WarningModal/types'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
+import { useOnSendEmptyActionPress } from 'src/features/transactions/hooks/useOnSendEmptyActionPress'
+import { TransactionFlow } from 'src/features/transactions/TransactionFlow'
 import {
   TokenSelectorModal,
   TokenSelectorVariation,
-} from 'src/components/TokenSelector/TokenSelector'
-import { TokenSelectorFlow } from 'src/components/TokenSelector/types'
-import { useTokenSelectorActionHandlers } from 'src/features/transactions/hooks'
-import { TransactionFlow } from 'src/features/transactions/TransactionFlow'
+} from 'wallet/src/components/TokenSelector/TokenSelector'
+import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
+import { GasSpeed } from 'wallet/src/features/gas/types'
+import { useTokenSelectorActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenSelectorActionHandlers'
+import { useTransactionGasWarning } from 'wallet/src/features/transactions/hooks/useTransactionGasWarning'
 import {
   initialState as emptyState,
   transactionStateReducer,
-} from 'src/features/transactions/transactionState/transactionState'
-import { TransactionStep } from 'src/features/transactions/types'
-import { useTransactionGasWarning } from 'src/features/transactions/useTransactionGasWarning'
-import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
-import { GasSpeed } from 'wallet/src/features/gas/types'
+} from 'wallet/src/features/transactions/transactionState/transactionState'
 import {
   CurrencyField,
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
-import {
-  useDerivedTransferInfo,
-  useOnSelectRecipient,
-  useOnToggleShowRecipientSelector,
-} from './hooks'
-import { useTransferTransactionRequest } from './useTransferTransactionRequest'
-import { useTransferWarnings } from './useTransferWarnings'
+import { useDerivedTransferInfo } from 'wallet/src/features/transactions/transfer/hooks/useDerivedTransferInfo'
+import { useOnSelectRecipient } from 'wallet/src/features/transactions/transfer/hooks/useOnSelectRecipient'
+import { useOnToggleShowRecipientSelector } from 'wallet/src/features/transactions/transfer/hooks/useOnToggleShowRecipientSelector'
+import { useTransferTransactionRequest } from 'wallet/src/features/transactions/transfer/hooks/useTransferTransactionRequest'
+import { useTransferWarnings } from 'wallet/src/features/transactions/transfer/hooks/useTransferWarnings'
+import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
+import { TransactionStep } from 'wallet/src/features/transactions/types'
+import { WarningAction } from 'wallet/src/features/transactions/WarningModal/types'
 
 interface TransferFormProps {
   prefilledState?: TransactionState
@@ -72,6 +71,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
     dispatch,
     TokenSelectorFlow.Transfer
   )
+  const onSendEmptyActionPress = useOnSendEmptyActionPress()
 
   return (
     <>
@@ -104,6 +104,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
           variation={TokenSelectorVariation.BalancesOnly}
           onClose={onHideTokenSelector}
           onSelectCurrency={onSelectCurrency}
+          onSendEmptyActionPress={onSendEmptyActionPress}
         />
       )}
     </>

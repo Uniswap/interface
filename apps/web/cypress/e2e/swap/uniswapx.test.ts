@@ -42,7 +42,9 @@ function stubSwapTxReceipt() {
 }
 
 // TODO: FIX THESE TESTS where we should NOT stub for pricing requests
-describe.skip('UniswapX Toggle', () => {
+// TODO: add test case for cancelling a uniswapx order
+
+describe.only('UniswapX Toggle', () => {
   beforeEach(() => {
     stubNonPriceQuoteWith(QuoteWhereUniswapXIsBetter)
     cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
@@ -58,7 +60,7 @@ describe.skip('UniswapX Toggle', () => {
   })
 })
 
-describe.skip('UniswapX Orders', () => {
+describe('UniswapX Orders', () => {
   beforeEach(() => {
     stubNonPriceQuoteWith(QuoteWhereUniswapXIsBetter)
     cy.intercept(OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })
@@ -141,7 +143,7 @@ describe.skip('UniswapX Orders', () => {
   })
 })
 
-describe.skip('UniswapX Eth Input', () => {
+describe('UniswapX Eth Input', () => {
   beforeEach(() => {
     stubNonPriceQuoteWith(QuoteWithEthInput)
     cy.intercept(OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })
@@ -244,7 +246,7 @@ describe.skip('UniswapX Eth Input', () => {
   })
 })
 
-describe.skip('UniswapX activity history', () => {
+describe('UniswapX activity history', () => {
   beforeEach(() => {
     cy.intercept(QuoteEndpoint, { fixture: QuoteWhereUniswapXIsBetter })
     cy.intercept(OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })

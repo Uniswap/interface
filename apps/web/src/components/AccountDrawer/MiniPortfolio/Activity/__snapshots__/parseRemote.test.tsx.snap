@@ -103,6 +103,9 @@ Object {
   "offchainOrderDetails": Object {
     "addedTime": 10000,
     "chainId": 1,
+    "id": "someId",
+    "offerer": "someOfferer",
+    "orderHash": "someHash",
     "status": "expired",
     "swapInfo": Object {
       "expectedOutputCurrencyAmountRaw": "200",
@@ -395,6 +398,9 @@ Object {
   "offchainOrderDetails": Object {
     "addedTime": 10000,
     "chainId": 1,
+    "id": "transactionId",
+    "offerer": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+    "orderHash": "someHash",
     "status": "filled",
     "swapInfo": Object {
       "expectedOutputCurrencyAmountRaw": "100000000000000000000",

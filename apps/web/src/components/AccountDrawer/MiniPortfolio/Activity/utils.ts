@@ -1,6 +1,12 @@
+import { Web3Provider } from '@ethersproject/providers'
 import { t } from '@lingui/macro'
+import { ChainId } from '@uniswap/sdk-core'
+import { DutchOrder, splitNonce } from '@uniswap/uniswapx-sdk'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
+import { BigNumber } from 'ethers/lib/ethers'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import { Permit2 } from 'wallet/src/abis/types'
 
 import { Activity } from './types'
 
@@ -62,4 +68,41 @@ export const createGroups = (activities?: Array<Activity>) => {
   ]
 
   return transactionGroups.filter((transactionInformation) => transactionInformation.transactions.length > 0)
+}
+
+/**
+ * Calculates the word position and bit position within a word for a given nonce.
+ *
+ * This function takes a BigNumber 'nonce' and performs two operations:
+ * 1. Right shifts the nonce by 8 bits (shr(8)) to find the word position.
+ * 2. Performs a bitwise AND with 0xff (255 in decimal) to find the bit position within that word.
+ *
+ * https://github.com/Uniswap/permit2/blob/cc56ad0f3439c502c246fc5cfcc3db92bb8b7219/src/SignatureTransfer.sol#L136-L141
+ */
+function getCancelSingleParams(nonceToCancel: BigNumber): { word: BigNumber; mask: BigNumber } {
+  const { word, bitPos } = splitNonce(nonceToCancel)
+  const mask = BigNumber.from(2).pow(bitPos)
+  return { word, mask }
+}
+
+export async function cancelUniswapXOrder({
+  encodedOrder,
+  chainId,
+  permit2,
+  provider,
+}: {
+  encodedOrder: string
+  chainId: ChainId
+  permit2: Permit2 | null
+  provider?: Web3Provider
+}) {
+  const parsedOrder = DutchOrder.parse(encodedOrder, chainId)
+  const invalidateNonceInput = getCancelSingleParams(parsedOrder.info.nonce)
+  if (!permit2 || !provider) return
+  try {
+    return await permit2.invalidateUnorderedNonces(invalidateNonceInput.word, invalidateNonceInput.mask)
+  } catch (error) {
+    if (!didUserReject(error)) console.error(error)
+    return undefined
+  }
 }

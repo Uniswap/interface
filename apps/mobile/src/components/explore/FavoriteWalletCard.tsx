@@ -5,15 +5,16 @@ import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
-import { AccountIcon } from 'src/components/AccountIcon'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
-import { borderRadii, iconSizes, imageSizes } from 'ui/src/theme'
+import { Flex, TouchableArea } from 'ui/src'
+import { borderRadii, iconSizes } from 'ui/src/theme'
+import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
+import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { removeWatchedAddress } from 'wallet/src/features/favorites/slice'
-import { useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type FavoriteWalletCardProps = {
   address: Address
@@ -32,7 +33,7 @@ export default function FavoriteWalletCard({
   const { preload, navigate } = useEagerExternalProfileNavigation()
 
   const displayName = useDisplayName(address)
-  const { data: avatar } = useENSAvatar(address)
+  const { avatar } = useAvatar(address)
 
   const icon = useMemo(() => {
     return <AccountIcon address={address} avatarUri={avatar} size={iconSizes.icon20} />
@@ -83,16 +84,15 @@ export default function FavoriteWalletCard({
           <Flex row gap="$spacing4" justifyContent="space-between">
             <Flex row shrink alignItems="center" gap="$spacing8">
               {icon}
-              <Text
-                adjustsFontSizeToFit={displayName?.type === 'address'}
-                color="$neutral1"
-                numberOfLines={1}
-                style={flexStyles.shrink}
-                variant="body1">
-                {displayName?.name}
-              </Text>
+              <DisplayNameText
+                displayName={displayName}
+                textProps={{
+                  adjustsFontSizeToFit: displayName?.type === DisplayNameType.Address,
+                  variant: 'body1',
+                }}
+              />
             </Flex>
-            {isEditing ? <RemoveButton onPress={onRemove} /> : <Flex height={imageSizes.image24} />}
+            <RemoveButton visible={isEditing} onPress={onRemove} />
           </Flex>
         </BaseCard.Shadow>
       </TouchableArea>

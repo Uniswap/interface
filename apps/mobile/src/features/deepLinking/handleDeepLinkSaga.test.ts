@@ -12,11 +12,12 @@ import {
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { openModal, OpenModalParams } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName, ModalName } from 'src/features/telemetry/constants'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
 import { Screens } from 'src/screens/Screens'
 import { UNISWAP_APP_HOSTNAME } from 'wallet/src/constants/urls'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import {
   account,
   SAMPLE_CURRENCY_ID_1,

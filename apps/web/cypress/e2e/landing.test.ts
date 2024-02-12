@@ -1,3 +1,5 @@
+import { FeatureFlag } from 'featureFlags'
+
 import { getTestSelector } from '../utils'
 import { CONNECTED_WALLET_USER_STATE, DISCONNECTED_WALLET_USER_STATE } from '../utils/user-state'
 
@@ -18,6 +20,18 @@ describe('Landing Page', () => {
   it('shows landing page when a user has already connected a wallet but ?intro=true is in query', () => {
     cy.visit('/?intro=true', { userState: CONNECTED_WALLET_USER_STATE })
     cy.get(getTestSelector('landing-page'))
+  })
+
+  it('remains on landing page when account drawer is opened and only redirects after user becomes connected', () => {
+    // Visit landing page with no connection or recent connection, and open account drawer
+    cy.visit('/', { userState: DISCONNECTED_WALLET_USER_STATE })
+    cy.get(getTestSelector('navbar-connect-wallet')).contains('Connect').click()
+    cy.url().should('not.include', '/swap')
+
+    // Connect and verify redirect
+    cy.contains('MetaMask').click()
+    cy.hardhat().then((hardhat) => cy.contains(hardhat.wallet.address.substring(0, 6)))
+    cy.url().should('include', '/swap')
   })
 
   it('shows landing page when the unicorn icon in nav is selected', () => {
@@ -84,5 +98,71 @@ describe('Landing Page', () => {
     })
     cy.visit('/swap')
     cy.contains('UK disclaimer')
+  })
+
+  it('shows a nav button to download the app when feature is enabled', () => {
+    cy.visit('/?intro=true', {
+      featureFlags: [{ name: FeatureFlag.landingPageV2, value: true }],
+    })
+    cy.get('nav').within(() => {
+      cy.contains('Get the app').should('be.visible')
+    })
+    cy.visit('/swap', {
+      featureFlags: [{ name: FeatureFlag.landingPageV2, value: true }],
+    })
+    cy.get('nav').within(() => {
+      cy.contains('Get the app').should('not.exist')
+    })
+  })
+
+  it('does not show a nav button to download the app when feature is in control', () => {
+    cy.visit('/?intro=true', {
+      featureFlags: [{ name: FeatureFlag.landingPageV2, value: false }],
+    })
+    cy.get('nav').within(() => {
+      cy.contains('Get the app').should('not.exist')
+    })
+  })
+
+  it('hides call to action text on small screen sizes', () => {
+    cy.viewport('iphone-8')
+    cy.visit('/?intro=true', {
+      featureFlags: [{ name: FeatureFlag.landingPageV2, value: true }],
+    })
+    cy.get(getTestSelector('get-the-app-cta')).should('not.be.visible')
+  })
+
+  it('opens modal when Get-the-App button is selected', () => {
+    cy.visit('/?intro=true', {
+      featureFlags: [{ name: FeatureFlag.landingPageV2, value: true }],
+    })
+    cy.get('nav').within(() => {
+      cy.contains('Get the app').should('exist').click()
+    })
+    cy.contains('Download the Uniswap app').should('exist')
+  })
+
+  it('closes modal when close button is selected', () => {
+    cy.visit('/?intro=true', {
+      featureFlags: [{ name: FeatureFlag.landingPageV2, value: true }],
+    })
+    cy.get('nav').within(() => {
+      cy.contains('Get the app').should('exist').click()
+    })
+    cy.contains('Download the Uniswap app').should('exist')
+    cy.get(getTestSelector('get-the-app-close-button')).click()
+    cy.contains('Download the Uniswap app').should('not.exist')
+  })
+
+  it('closes modal when user selects area outside of modal', () => {
+    cy.visit('/?intro=true', {
+      featureFlags: [{ name: FeatureFlag.landingPageV2, value: true }],
+    })
+    cy.get('nav').within(() => {
+      cy.contains('Get the app').should('exist').click()
+    })
+    cy.contains('Download the Uniswap app').should('exist')
+    cy.get('nav').click({ force: true })
+    cy.contains('Download the Uniswap app').should('not.exist')
   })
 })

@@ -1,9 +1,8 @@
 import React from 'react'
 import Trace from 'src/components/Trace/Trace'
-import { ElementName } from 'src/features/telemetry/constants'
-import { Flex, Text, TouchableArea, useMedia } from 'ui/src'
+import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { ElementNameType } from 'wallet/src/telemetry/constants'
 
 export function OptionCard({
   title,
@@ -20,22 +19,19 @@ export function OptionCard({
   blurb: string
   icon: React.ReactNode
   onPress: () => void
-  elementName: ElementName
+  elementName: ElementNameType
   disabled?: boolean
   opacity?: number
   badgeText?: string | undefined
   hapticFeedback?: boolean | undefined
 }): JSX.Element {
-  const media = useMedia()
   const isDarkMode = useIsDarkMode()
-
-  const iconSize = media.short ? iconSizes.icon24 : iconSizes.icon36
 
   return (
     <Trace logPress element={elementName}>
       <TouchableArea
-        backgroundColor="$surface2"
-        borderColor={isDarkMode ? '$transparent' : '$surface3'}
+        backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
+        borderColor="$surface3"
         borderRadius="$rounded20"
         borderWidth={1}
         disabled={disabled}
@@ -44,21 +40,21 @@ export function OptionCard({
         p="$spacing16"
         testID={elementName}
         onPress={onPress}>
-        <Flex row alignContent="center" alignItems="center" gap="$spacing16">
+        <Flex row alignContent="center" alignItems="flex-start" gap="$spacing16">
           <Flex
             alignItems="center"
             backgroundColor="$DEP_magentaDark"
             borderRadius="$roundedFull"
-            height={iconSize}
+            height={iconSizes.icon24}
             justifyContent="center"
             p="$spacing16"
-            width={iconSize}>
+            width={iconSizes.icon24}>
             {icon}
           </Flex>
           <Flex row alignItems="center" gap="$spacing4" pr="$spacing60">
             <Flex fill alignItems="flex-start" gap="$spacing4" justifyContent="space-around">
               <Flex row gap="$spacing8">
-                <Text $short={{ variant: 'subheading2' }} allowFontScaling={false} variant="body1">
+                <Text $short={{ variant: 'subheading2' }} allowFontScaling={false} variant="body2">
                   {title}
                 </Text>
                 {badgeText && (
@@ -73,7 +69,7 @@ export function OptionCard({
                   </Flex>
                 )}
               </Flex>
-              <Text allowFontScaling={false} color="$neutral2" variant="body2">
+              <Text allowFontScaling={false} color="$neutral2" variant="body3">
                 {blurb}
               </Text>
             </Flex>

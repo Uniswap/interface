@@ -1,3 +1,4 @@
+import { ApolloError } from '@apollo/client'
 import {
   filterStringAtom,
   filterTimeAtom,
@@ -10,12 +11,6 @@ import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 
 import {
-  Chain,
-  TopTokens100Query,
-  useTopTokens100Query,
-  useTopTokensSparklineQuery,
-} from './__generated__/types-and-hooks'
-import {
   isPricePoint,
   PollingInterval,
   PricePoint,
@@ -24,6 +19,12 @@ import {
   unwrapToken,
   usePollQueryWhileMounted,
 } from './util'
+import {
+  Chain,
+  TopTokens100Query,
+  useTopTokens100Query,
+  useTopTokensSparklineQuery,
+} from './__generated__/types-and-hooks'
 
 gql`
   query TopTokens100($duration: HistoryDuration!, $chain: Chain!) {
@@ -51,6 +52,16 @@ gql`
           currency
           value
         }
+        pricePercentChange1Hour: pricePercentChange(duration: HOUR) {
+          id
+          currency
+          value
+        }
+        pricePercentChange1Day: pricePercentChange(duration: DAY) {
+          id
+          currency
+          value
+        }
         volume(duration: $duration) {
           id
           value
@@ -60,6 +71,13 @@ gql`
       project {
         id
         logoUrl
+        markets(currencies: [USD]) {
+          fullyDilutedValuation {
+            id
+            value
+            currency
+          }
+        }
       }
     }
   }
@@ -144,6 +162,7 @@ interface UseTopTokensReturnValue {
   tokenSortRank: Record<string, number>
   loadingTokens: boolean
   sparklines: SparklineMap
+  error?: ApolloError
 }
 
 export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
@@ -166,7 +185,11 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
     return map
   }, [chainId, sparklineQuery?.topTokens])
 
-  const { data, loading: loadingTokens } = usePollQueryWhileMounted(
+  const {
+    data,
+    loading: loadingTokens,
+    error,
+  } = usePollQueryWhileMounted(
     useTopTokens100Query({
       variables: { duration, chain },
     }),
@@ -191,7 +214,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   )
   const filteredTokens = useFilteredTokens(sortedTokens)
   return useMemo(
-    () => ({ tokens: filteredTokens, tokenSortRank, loadingTokens, sparklines }),
-    [filteredTokens, tokenSortRank, loadingTokens, sparklines]
+    () => ({ tokens: filteredTokens, tokenSortRank, loadingTokens, sparklines, error }),
+    [filteredTokens, tokenSortRank, loadingTokens, sparklines, error]
   )
 }

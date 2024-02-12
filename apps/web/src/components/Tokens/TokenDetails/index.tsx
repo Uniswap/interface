@@ -21,16 +21,10 @@ import TokenDetailsSkeleton, {
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
-import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { nativeOnChain, NATIVE_CHAIN_ID } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
-import {
-  Chain,
-  PortfolioTokenBalancePartsFragment,
-  TokenPriceQuery,
-  TokenQuery,
-} from 'graphql/data/__generated__/types-and-hooks'
 import { TokenQueryData } from 'graphql/data/Token'
 import {
   getTokenDetailsURL,
@@ -39,9 +33,16 @@ import {
   supportedChainIdFromGQLChain,
   TimePeriod,
 } from 'graphql/data/util'
+import {
+  Chain,
+  PortfolioTokenBalancePartsFragment,
+  TokenPriceQuery,
+  TokenQuery,
+} from 'graphql/data/__generated__/types-and-hooks'
 import { useCurrency } from 'hooks/Tokens'
 import { useColor } from 'hooks/useColor'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
+import { useScreenSize } from 'hooks/useScreenSize'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
 import { Swap } from 'pages/Swap'
 import { useCallback, useMemo, useState, useTransition } from 'react'
@@ -103,7 +104,8 @@ const DividerLine = styled(Hr)`
   margin-top: 40px;
   margin-bottom: 40px;
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
-    display: none;
+    opacity: 0;
+    margin-bottom: 0;
   }
 `
 
@@ -208,6 +210,8 @@ export default function TokenDetails({
 
   const theme = useTheme()
   const extractedColor = useColor(detailedToken ?? undefined, theme.surface2, theme.darkMode)
+  const screenSize = useScreenSize()
+  const isLargeScreenSize = screenSize['lg']
 
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
   const isInfoTDPEnabled = useInfoTDPEnabled()
@@ -345,7 +349,7 @@ export default function TokenDetails({
                     )}
 
                     <ChartTypeSelector
-                      options={[{ value: ChartType.PRICE }, { value: ChartType.VOLUME }, { value: ChartType.TVL }]}
+                      options={[ChartType.PRICE, ChartType.VOLUME, ChartType.TVL]}
                       currentChartType={chartType}
                       onChartTypeChange={(c: ChartType) => {
                         setChartType(c)
@@ -391,19 +395,22 @@ export default function TokenDetails({
         ) : (
           <TokenDetailsSkeleton />
         )}
-
         <RightPanel isInfoTDPEnabled={isInfoTDPEnabled} onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}>
-          <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
-            <Swap
-              chainId={pageChainId}
-              initialInputCurrency={inputCurrency}
-              initialOutputCurrency={outputCurrency}
-              onCurrencyChange={handleCurrencyChange}
-              disableTokenInputs={pageChainId !== connectedChainId}
-            />
-          </div>
-          {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
-          {detailedToken && <BalanceSummary currency={detailedToken} chain={chain} multiChainMap={multiChainMap} />}
+          {isLargeScreenSize && (
+            <>
+              <div style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}>
+                <Swap
+                  chainId={pageChainId}
+                  initialInputCurrency={inputCurrency}
+                  initialOutputCurrency={outputCurrency}
+                  onCurrencyChange={handleCurrencyChange}
+                  disableTokenInputs={pageChainId !== connectedChainId}
+                />
+              </div>
+              {tokenWarning && <TokenSafetyMessage tokenAddress={address} warning={tokenWarning} />}
+              {detailedToken && <BalanceSummary currency={detailedToken} chain={chain} multiChainMap={multiChainMap} />}
+            </>
+          )}
           {isInfoTDPEnabled && (
             <TokenDescription
               tokenAddress={address}

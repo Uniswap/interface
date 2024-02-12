@@ -2,30 +2,31 @@ import { impactAsync, ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { AccountIcon } from 'src/components/AccountIcon'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { setClipboard } from 'src/utils/clipboard'
 import { isDevBuild } from 'src/utils/version'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
-import { useENSAvatar } from 'wallet/src/features/ens/api'
+import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
+import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import {
   selectActiveAccount,
   selectActiveAccountAddress,
 } from 'wallet/src/features/wallet/selectors'
+import { DisplayNameType } from 'wallet/src/features/wallet/types'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
+import { setClipboard } from 'wallet/src/utils/clipboard'
 
 export function AccountHeader(): JSX.Element {
   const activeAddress = useAppSelector(selectActiveAccountAddress)
   const account = useAppSelector(selectActiveAccount)
   const dispatch = useAppDispatch()
 
-  const { data: avatar } = useENSAvatar(activeAddress)
+  const { avatar } = useAvatar(activeAddress)
   const displayName = useDisplayName(activeAddress)
 
   const onPressAccountHeader = useCallback(() => {
@@ -49,7 +50,7 @@ export function AccountHeader(): JSX.Element {
     }
   }
 
-  const walletHasName = displayName?.type !== 'address'
+  const walletHasName = displayName && displayName?.type !== DisplayNameType.Address
   const iconSize = 52
 
   return (
@@ -90,17 +91,7 @@ export function AccountHeader(): JSX.Element {
                 flexShrink={1}
                 hitSlop={20}
                 onPress={onPressAccountHeader}>
-                <Text color="$neutral1" flexShrink={1} numberOfLines={1} variant="subheading1">
-                  {displayName?.name}
-                </Text>
-              </TouchableArea>
-              <TouchableArea hapticFeedback flexGrow={1} hitSlop={20} onPress={onPressCopyAddress}>
-                <Flex row alignItems="center" gap="$spacing4">
-                  <Text color="$neutral3" numberOfLines={1} variant="body2">
-                    {sanitizeAddressText(shortenAddress(activeAddress))}
-                  </Text>
-                  <Icons.CopyAlt color="$neutral3" size="$icon.16" />
-                </Flex>
+                <AnimatedUnitagDisplayName address={activeAddress} displayName={displayName} />
               </TouchableArea>
             </Flex>
           ) : (

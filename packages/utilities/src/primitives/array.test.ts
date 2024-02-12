@@ -1,4 +1,4 @@
-import { bubbleToTop, differenceWith, next } from './array'
+import { arraysAreEqual, bubbleToTop, differenceWith, next } from './array'
 
 it('returns undefined for empty arrays', () => {
   expect(next([], '123')).toBe(undefined)
@@ -43,5 +43,17 @@ describe('bubbleToTop', () => {
     const predicate = (element: number): boolean => element === 10
     const result = bubbleToTop(inputArray, predicate)
     expect(result).toEqual(inputArray) // The array should remain unchanged
+  })
+})
+
+describe('arraysAreEqual', () => {
+  it('should return false for mismatched length', () => {
+    expect(arraysAreEqual([1, 1], [1, 1, 1])).toBe(false)
+  })
+  it('should return false for mismatched contents', () => {
+    expect(arraysAreEqual([1, 1], [1, 2])).toBe(false)
+  })
+  it('should return true for equal arrays', () => {
+    expect(arraysAreEqual([1, 1], [1, 1])).toBe(true)
   })
 })

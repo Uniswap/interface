@@ -1,12 +1,16 @@
 import { gql } from '@apollo/client'
 import { ChainId } from '@uniswap/sdk-core'
-import { useTransactionsQuery } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { chainToApolloClient } from 'graphql/thegraph/apollo'
+import {
+  OrderDirection,
+  Transaction_OrderBy,
+  useTransactionsQuery,
+} from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useCallback, useMemo, useRef } from 'react'
 
 gql`
-  query Transactions($first: Int, $skip: Int) {
-    transactions(first: $first, skip: $skip, orderBy: timestamp, orderDirection: desc, subgraphError: allow) {
+  query Transactions($first: Int, $skip: Int, $orderBy: Transaction_orderBy, $orderDirection: OrderDirection) {
+    transactions(first: $first, skip: $skip, orderBy: $orderBy, orderDirection: $orderDirection, subgraphError: allow) {
       id
       timestamp
       mints {
@@ -141,12 +145,19 @@ interface TransactionResults {
   transactions: TransactionEntry[]
 }
 
-export function useRecentTransactions(chainId: number) {
+export function useRecentTransactions(
+  chainId: number,
+  orderBy: Transaction_OrderBy = Transaction_OrderBy.Timestamp,
+  orderDirection: OrderDirection = OrderDirection.Desc,
+  filter: TransactionType[] = [TransactionType.SWAP, TransactionType.MINT, TransactionType.BURN]
+) {
   const apolloClient = chainToApolloClient[chainId || ChainId.MAINNET]
   const { data, loading, fetchMore } = useTransactionsQuery({
     variables: {
       first: 20,
       skip: 0,
+      orderBy,
+      orderDirection,
     },
     client: apolloClient,
   })
@@ -178,56 +189,62 @@ export function useRecentTransactions(chainId: number) {
   const transactions = useMemo(
     () =>
       (data as TransactionResults)?.transactions?.reduce((accum: Transaction[], t: TransactionEntry) => {
-        const mints = t.mints.map((m) => {
-          return {
-            type: TransactionType.MINT,
-            hash: t.id,
-            timestamp: t.timestamp,
-            sender: m.origin,
-            token0Symbol: m.pool.token0.symbol,
-            token1Symbol: m.pool.token1.symbol,
-            token0Address: m.pool.token0.id,
-            token1Address: m.pool.token1.id,
-            amountUSD: parseFloat(m.amountUSD),
-            amountToken0: parseFloat(m.amount0),
-            amountToken1: parseFloat(m.amount1),
-          }
-        })
-        const burns = t.burns.map((m) => {
-          return {
-            type: TransactionType.BURN,
-            hash: t.id,
-            timestamp: t.timestamp,
-            sender: m.origin,
-            token0Symbol: m.pool.token0.symbol,
-            token1Symbol: m.pool.token1.symbol,
-            token0Address: m.pool.token0.id,
-            token1Address: m.pool.token1.id,
-            amountUSD: parseFloat(m.amountUSD),
-            amountToken0: parseFloat(m.amount0),
-            amountToken1: parseFloat(m.amount1),
-          }
-        })
+        const mints = filter.includes(TransactionType.MINT)
+          ? t.mints.map((m) => {
+              return {
+                type: TransactionType.MINT,
+                hash: t.id,
+                timestamp: t.timestamp,
+                sender: m.origin,
+                token0Symbol: m.pool.token0.symbol,
+                token1Symbol: m.pool.token1.symbol,
+                token0Address: m.pool.token0.id,
+                token1Address: m.pool.token1.id,
+                amountUSD: parseFloat(m.amountUSD),
+                amountToken0: parseFloat(m.amount0),
+                amountToken1: parseFloat(m.amount1),
+              }
+            })
+          : []
+        const burns = filter.includes(TransactionType.BURN)
+          ? t.burns.map((m) => {
+              return {
+                type: TransactionType.BURN,
+                hash: t.id,
+                timestamp: t.timestamp,
+                sender: m.origin,
+                token0Symbol: m.pool.token0.symbol,
+                token1Symbol: m.pool.token1.symbol,
+                token0Address: m.pool.token0.id,
+                token1Address: m.pool.token1.id,
+                amountUSD: parseFloat(m.amountUSD),
+                amountToken0: parseFloat(m.amount0),
+                amountToken1: parseFloat(m.amount1),
+              }
+            })
+          : []
 
-        const swaps = t.swaps.map((m) => {
-          return {
-            hash: t.id,
-            type: TransactionType.SWAP,
-            timestamp: t.timestamp,
-            sender: m.origin,
-            token0Symbol: m.pool.token0.symbol,
-            token1Symbol: m.pool.token1.symbol,
-            token0Address: m.pool.token0.id,
-            token1Address: m.pool.token1.id,
-            amountUSD: parseFloat(m.amountUSD),
-            amountToken0: parseFloat(m.amount0),
-            amountToken1: parseFloat(m.amount1),
-          }
-        })
+        const swaps = filter.includes(TransactionType.SWAP)
+          ? t.swaps.map((m) => {
+              return {
+                hash: t.id,
+                type: TransactionType.SWAP,
+                timestamp: t.timestamp,
+                sender: m.origin,
+                token0Symbol: m.pool.token0.symbol,
+                token1Symbol: m.pool.token1.symbol,
+                token0Address: m.pool.token0.id,
+                token1Address: m.pool.token1.id,
+                amountUSD: parseFloat(m.amountUSD),
+                amountToken0: parseFloat(m.amount0),
+                amountToken1: parseFloat(m.amount1),
+              }
+            })
+          : []
         accum = [...accum, ...mints, ...burns, ...swaps]
         return accum
       }, []),
-    [data]
+    [data, filter]
   )
 
   return useMemo(

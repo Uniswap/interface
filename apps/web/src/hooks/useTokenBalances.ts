@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
-import { PortfolioTokenBalancePartsFragment } from 'graphql/data/__generated__/types-and-hooks'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { PortfolioTokenBalancePartsFragment } from 'graphql/data/__generated__/types-and-hooks'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import { useMemo } from 'react'
 

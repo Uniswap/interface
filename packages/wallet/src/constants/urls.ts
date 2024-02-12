@@ -3,6 +3,8 @@ import { isAndroid } from 'wallet/src/utils/platform'
 
 export const UNISWAP_APP_HOSTNAME = 'app.uniswap.org'
 
+const TRADING_API_BASE_PATH = '/v2/trade'
+
 const helpUrl = 'https://support.uniswap.org'
 
 export const uniswapUrls = {
@@ -33,6 +35,11 @@ export const uniswapUrls = {
   appUrl: `https://${UNISWAP_APP_HOSTNAME}`,
   interfaceUrl: `https://${UNISWAP_APP_HOSTNAME}/#/swap`,
   unitagsApiUrl: getUnitagsApiUrl(),
+  tradingApiPaths: {
+    quote: getTradingApiQuotePath(),
+    approval: getTradingApiApprovalPath(),
+    swap: getTradingApiSwapPath(),
+  },
 }
 
 function getCloudflareApiBaseUrl(): string {
@@ -69,4 +76,16 @@ function getUniswapStatsigProxyUrl(): string {
 
 function getUnitagsApiUrl(): string {
   return config.unitagsApiUrl
+}
+
+function getTradingApiQuotePath(): string {
+  return `${TRADING_API_BASE_PATH}/quote`
+}
+
+function getTradingApiApprovalPath(): string {
+  return `${TRADING_API_BASE_PATH}/check_approval`
+}
+
+function getTradingApiSwapPath(): string {
+  return `${TRADING_API_BASE_PATH}/swap`
 }

@@ -26,6 +26,7 @@ const activationStateAtom = atom<ActivationState>(IDLE_ACTIVATION_STATE)
 function useTryActivation() {
   const setActivationState = useUpdateAtom(activationStateAtom)
   const { pathname } = useLocation()
+
   const currentPage = getCurrentPageFromLocation(pathname)
 
   return useCallback(

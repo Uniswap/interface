@@ -6,38 +6,41 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleSheet, TextInputProps } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useShouldShowNativeKeyboard } from 'src/app/hooks'
-import { CurrencyInputPanel } from 'src/components/input/CurrencyInputPanel'
-import { DecimalPad } from 'src/components/input/DecimalPad'
-import { SpinningLoader } from 'src/components/loading/SpinningLoader'
-import { Warning, WarningAction, WarningSeverity } from 'src/components/modals/WarningModal/types'
-import WarningModal, { getAlertColor } from 'src/components/modals/WarningModal/WarningModal'
-import { TokenSelectorFlow } from 'src/components/TokenSelector/types'
 import Trace from 'src/components/Trace/Trace'
-import { ElementName, ModalName, SectionName } from 'src/features/telemetry/constants'
-import {
-  useTokenFormActionHandlers,
-  useTokenSelectorActionHandlers,
-} from 'src/features/transactions/hooks'
-import { useSwapAnalytics } from 'src/features/transactions/swap/analytics'
-import { useShowSwapNetworkNotification } from 'src/features/transactions/swap/hooks'
 import { SwapArrowButton } from 'src/features/transactions/swap/SwapArrowButton'
-import { isPriceImpactWarning } from 'src/features/transactions/swap/useSwapWarnings'
-import { getRateToDisplay, isWrapAction } from 'src/features/transactions/swap/utils'
-import { BlockedAddressWarning } from 'src/features/trm/BlockedAddressWarning'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { CurrencyInputPanelLegacy } from 'wallet/src/components/legacy/CurrencyInputPanelLegacy'
+import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
+import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
+import { getAlertColor, WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
+import { useSwapAnalytics } from 'wallet/src/features/transactions/swap/analytics'
+import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
+import { ModalName, SectionName } from 'wallet/src/telemetry/constants'
 // eslint-disable-next-line no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
+import { isPriceImpactWarning } from 'wallet/src/features/transactions/hooks/useSwapWarnings'
+import { useTokenFormActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenFormActionHandlers'
+import { useTokenSelectorActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenSelectorActionHandlers'
+import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/hooks'
+import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
+import { getRateToDisplay, isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
+import {
+  Warning,
+  WarningAction,
+  WarningSeverity,
+} from 'wallet/src/features/transactions/WarningModal/types'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
-import { DerivedSwapInfo } from './types'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 interface SwapFormProps {
   dispatch: Dispatch<AnyAction>
@@ -245,7 +248,7 @@ function _SwapForm({
           onLayout={onInputPanelLayout}>
           <Trace section={SectionName.CurrencyInputPanel}>
             <Flex backgroundColor="$surface2" borderRadius="$rounded20">
-              <CurrencyInputPanel
+              <CurrencyInputPanelLegacy
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
                 currencyInfo={currencies[CurrencyField.INPUT]}
@@ -306,7 +309,7 @@ function _SwapForm({
                 borderTopRightRadius="$rounded20"
                 overflow="hidden"
                 position="relative">
-                <CurrencyInputPanel
+                <CurrencyInputPanelLegacy
                   isOutput
                   currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
                   currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
@@ -461,7 +464,7 @@ function _SwapForm({
           right={0}
           onLayout={onDecimalPadLayout}>
           {!showNativeKeyboard && (
-            <DecimalPad
+            <DecimalPadLegacy
               resetSelection={resetSelection}
               selection={focusOnCurrencyField ? selection[focusOnCurrencyField] : undefined}
               setValue={setValue}

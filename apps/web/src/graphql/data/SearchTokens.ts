@@ -3,8 +3,8 @@ import gql from 'graphql-tag'
 import { useMemo } from 'react'
 import invariant from 'tiny-invariant'
 
-import { Chain, SearchTokensQuery, useSearchTokensQuery } from './__generated__/types-and-hooks'
 import { BACKEND_SUPPORTED_CHAINS, chainIdToBackendName } from './util'
+import { Chain, SearchTokensQuery, useSearchTokensQuery } from './__generated__/types-and-hooks'
 
 gql`
   query SearchTokens($searchQuery: String!) {

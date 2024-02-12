@@ -1,7 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSelectTransaction } from 'src/features/transactions/hooks'
 import { TransactionPending } from 'src/features/transactions/TransactionPending/TransactionPending'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -11,6 +10,8 @@ import {
   useLocalizationContext,
 } from 'wallet/src/features/language/LocalizationContext'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
+import { useSelectTransaction } from 'wallet/src/features/transactions/hooks'
+import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import {
   isConfirmedSwapTypeInfo,
@@ -21,7 +22,6 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'
-import { DerivedSwapInfo } from './types'
 
 type SwapStatusProps = {
   derivedSwapInfo: DerivedSwapInfo

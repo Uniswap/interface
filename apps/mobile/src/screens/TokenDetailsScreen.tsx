@@ -16,14 +16,11 @@ import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDet
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsLinks } from 'src/components/TokenDetails/TokenDetailsLinks'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
-import TokenWarningModal from 'src/components/tokens/TokenWarningModal'
 import Trace from 'src/components/Trace/Trace'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { useNavigateToSend } from 'src/features/send/hooks'
 import { useNavigateToSwap } from 'src/features/swap/hooks'
-import { ModalName } from 'src/features/telemetry/constants'
-import { useTokenWarningDismissed } from 'src/features/tokens/safetyHooks'
 import { Screens } from 'src/screens/Screens'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { useSkeletonLoading } from 'src/utils/useSkeletonLoading'
@@ -34,6 +31,7 @@ import {
   Text,
   TouchableArea,
   useDeviceInsets,
+  useIsDarkMode,
   useSporeColors,
 } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
@@ -49,14 +47,16 @@ import {
   TokenDetailsScreenQuery,
   useTokenDetailsScreenQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
-import { useIsDarkMode } from 'wallet/src/features/appearance/hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { Language } from 'wallet/src/features/language/constants'
 import { useCurrentLanguage } from 'wallet/src/features/language/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
+import TokenWarningModal from 'wallet/src/features/tokens/TokenWarningModal'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { useExtractedTokenColor } from 'wallet/src/utils/colors'
 import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 

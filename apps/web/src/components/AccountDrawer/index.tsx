@@ -20,7 +20,7 @@ const DRAWER_WIDTH_XL = '390px'
 const DRAWER_WIDTH = '320px'
 const DRAWER_MARGIN = '8px'
 const DRAWER_OFFSET = '10px'
-const DRAWER_TOP_MARGIN_MOBILE_WEB = '72px'
+const DRAWER_TOP_MARGIN_MOBILE_WEB = '24px'
 
 const ScrimBackground = styled.div<{ $open: boolean }>`
   z-index: ${Z_INDEX.modalBackdrop};

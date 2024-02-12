@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { LoadingRow } from 'components/Loader/styled'
-import { ChainLogo } from 'components/Logo/ChainLogo'
 import RouterLabel from 'components/RouterLabel'
 import Row from 'components/Row'
 import { TooltipSize } from 'components/Tooltip'
@@ -11,7 +11,7 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import React, { useEffect, useState } from 'react'
 import { animated, SpringValue } from 'react-spring'
 import { InterfaceTrade, SubmittableTrade, TradeFillType } from 'state/routing/types'
-import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
+import { isLimitTrade, isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import styled, { DefaultTheme } from 'styled-components'
@@ -21,6 +21,7 @@ import { getPriceImpactColor } from 'utils/prices'
 
 import { DetailLineItem, LineItemData } from './DetailLineItem'
 import { GasBreakdownTooltip, UniswapXDescription } from './GasBreakdownTooltip'
+import GasEstimateTooltip from './GasEstimateTooltip'
 import { MaxSlippageTooltip } from './MaxSlippageTooltip'
 import { RoutingTooltip, SwapRoute } from './SwapRoute'
 import TradePrice from './TradePrice'
@@ -36,6 +37,7 @@ export enum SwapLineItemType {
   MAXIMUM_INPUT,
   MINIMUM_OUTPUT,
   ROUTING_INFO,
+  EXPIRY,
 }
 
 const ColorWrapper = styled.span<{ textColor?: keyof DefaultTheme }>`
@@ -120,7 +122,7 @@ function FeeRow({ trade: { swapFee, outputAmount } }: { trade: SubmittableTrade 
 
 function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   const { trade, syncing, allowedSlippage, type } = props
-  const { formatNumber, formatPercent } = useFormatter()
+  const { formatPercent } = useFormatter()
   const isAutoSlippage = useUserSlippageTolerance()[0] === SlippageTolerance.Auto
   const feesEnabled = useFeesEnabled()
 
@@ -137,7 +139,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   switch (type) {
     case SwapLineItemType.EXCHANGE_RATE:
       return {
-        Label: () => <Trans>Rate</Trans>,
+        Label: () => (isLimitTrade(trade) ? <Trans>Limit price</Trans> : <Trans>Rate</Trans>),
         Value: () => <TradePrice price={trade.executionPrice} />,
         TooltipBody: !isPreview ? () => <RoutingTooltip trade={trade} /> : undefined,
         tooltipSize: isUniswapX ? TooltipSize.Small : TooltipSize.Large,
@@ -146,15 +148,10 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       if (!SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) return
       return {
         Label: () => <Trans>Network cost</Trans>,
-        TooltipBody: () => <GasBreakdownTooltip trade={trade} hideUniswapXDescription />,
+        TooltipBody: () => <GasBreakdownTooltip trade={trade} />,
         Value: () => {
           if (isPreview) return <Loading />
-          return (
-            <Row gap="4px">
-              <ChainLogo chainId={chainId} />
-              {formatNumber({ input: trade.totalGasUseEstimateUSD, type: NumberType.FiatGasPrice })}
-            </Row>
-          )
+          return <GasEstimateTooltip trade={trade} loading={!!syncing} />
         },
       }
     case SwapLineItemType.PRICE_IMPACT:
@@ -168,7 +165,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
     case SwapLineItemType.MAX_SLIPPAGE:
       return {
         Label: () => <Trans>Max. slippage</Trans>,
-        TooltipBody: () => <MaxSlippageTooltip {...props} />,
+        TooltipBody: () => <MaxSlippageTooltip trade={trade} allowedSlippage={allowedSlippage ?? new Percent(0)} />,
         Value: () => (
           <Row gap="8px">
             {isAutoSlippage && <AutoBadge />} {formatPercent(allowedSlippage)}
@@ -198,7 +195,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
             revert.
           </Trans>
         ),
-        Value: () => <CurrencyAmountRow amount={trade.maximumAmountIn(allowedSlippage)} />,
+        Value: () => <CurrencyAmountRow amount={trade.maximumAmountIn(allowedSlippage ?? new Percent(0))} />,
         loaderWidth: 70,
       }
     case SwapLineItemType.MINIMUM_OUTPUT:
@@ -211,7 +208,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
             revert.
           </Trans>
         ),
-        Value: () => <CurrencyAmountRow amount={trade.minimumAmountOut(allowedSlippage)} />,
+        Value: () => <CurrencyAmountRow amount={trade.minimumAmountOut(allowedSlippage ?? new Percent(0))} />,
         loaderWidth: 70,
       }
     case SwapLineItemType.ROUTING_INFO:
@@ -228,6 +225,12 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
     case SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER:
     case SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER:
       return getFOTLineItem(props)
+    case SwapLineItemType.EXPIRY:
+      if (!isLimitTrade(trade)) return
+      return {
+        Label: () => <Trans>Expiry</Trans>,
+        Value: () => <Row>{formatTimestamp(trade.deadline, true)}</Row>,
+      }
   }
 }
 
@@ -246,8 +249,8 @@ function getFOTLineItem({ type, trade }: SwapLineItemProps): LineItemData | unde
 
 export interface SwapLineItemProps {
   trade: InterfaceTrade
-  syncing: boolean
-  allowedSlippage: Percent
+  syncing?: boolean
+  allowedSlippage?: Percent
   type: SwapLineItemType
   animatedOpacity?: SpringValue<number>
 }

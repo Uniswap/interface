@@ -2,11 +2,15 @@ import { ButtonLight } from 'components/Button'
 import Column from 'components/Column'
 import { HideScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
+import { getLocaleTimeString } from 'components/Table/utils'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { CornerLeftUp } from 'react-feather'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { OrderDirection } from 'graphql/thegraph/__generated__/types-and-hooks'
+import { useActiveLocale } from 'hooks/useActiveLocale'
+import { ArrowDown, CornerLeftUp } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
-import { ClickableStyle, ExternalLink } from 'theme/components'
+import { ClickableStyle, ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
 export const SHOW_RETURN_TO_TOP_OFFSET = 500
@@ -84,8 +88,9 @@ export const LoadingIndicator = styled(Row)`
   height: 34px;
   z-index: ${Z_INDEX.under_dropdown};
 `
+
 const TableRow = styled(Row)`
-  padding: 0px 20px;
+  padding: 0px 12px;
   width: fit-content;
   min-width: 100%;
   display: flex;
@@ -125,3 +130,56 @@ export const StyledInternalLink = styled(Link)`
   ${ClickableStyle}
   color: ${({ theme }) => theme.neutral1}
 `
+
+export const TableRowLink = styled(Link)`
+  color: none;
+  text-decoration: none;
+  cursor: pointer;
+`
+
+export const ClickableHeaderRow = styled(Row)<{ $justify?: string }>`
+  justify-content: ${({ $justify }) => $justify ?? 'flex-end'};
+  cursor: pointer;
+  width: 100%;
+  gap: 4px;
+  ${ClickableStyle}
+`
+export const HeaderArrow = styled(ArrowDown)<{ direction: OrderDirection }>`
+  height: 16px;
+  width: 16px;
+  color: ${({ theme }) => theme.neutral2};
+  transform: ${({ direction }) => (direction === OrderDirection.Asc ? 'rotate(180deg)' : 'rotate(0deg)')};
+`
+export const FilterHeaderRow = styled(Row)<{ modalOpen?: boolean }>`
+  ${({ modalOpen }) => !modalOpen && ClickableStyle}
+  cursor: pointer;
+  user-select: none;
+  gap: 4px;
+`
+
+/**
+ * Converts the given timestamp to an abbreviated format (s,m,h) for timestamps younger than 1 day
+ * and a full discreet format for timestamps older than 1 day (e.g. DD/MM HH:MMam/pm).
+ * Hovering on the timestamp will display the full discreet format. (e.g. DD/MM/YYYY HH:MMam/pm)
+ * @param timestamp: unix timestamp in SECONDS
+ * @returns JSX.Element containing the formatted timestamp
+ */
+export const TimestampCell = ({ timestamp }: { timestamp: number }) => {
+  const locale = useActiveLocale()
+  const options: Intl.DateTimeFormatOptions = {
+    year: '2-digit',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }
+  const fullDate = new Date(timestamp * 1000)
+    .toLocaleString(locale, options)
+    .toLocaleLowerCase(locale)
+    .replace(/\s(am|pm)/, '$1')
+  return (
+    <MouseoverTooltip text={fullDate} placement="top" size={TooltipSize.Max}>
+      <ThemedText.BodySecondary>{getLocaleTimeString(timestamp * 1000, locale)}</ThemedText.BodySecondary>
+    </MouseoverTooltip>
+  )
+}

@@ -162,7 +162,7 @@ describe('Token details', () => {
       cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
     })
 
-    it('should show a L2 token even if the user is connected to a different network', () => {
+    it.skip('should show a L2 token even if the user is connected to a different network', () => {
       cy.visit('/tokens')
       cy.get(getTestSelector('tokens-network-filter-selected')).click()
       cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()

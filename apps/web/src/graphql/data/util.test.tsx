@@ -1,7 +1,7 @@
 import { ChainId } from '@uniswap/sdk-core'
 
-import { Chain } from './__generated__/types-and-hooks'
 import { getValidUrlChainName, isSupportedGQLChain, supportedChainIdFromGQLChain } from './util'
+import { Chain } from './__generated__/types-and-hooks'
 
 describe('fromGraphQLChain', () => {
   it('should return the corresponding chain ID for supported chains', () => {

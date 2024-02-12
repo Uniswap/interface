@@ -3,13 +3,14 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { TokenFiatOnRampList } from 'src/components/TokenSelector/TokenFiatOnRampList'
 import Trace from 'src/components/Trace/Trace'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
-import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { AnimatedFlex } from 'ui/src'
+import { SectionName } from 'wallet/src/telemetry/constants'
 
-import { useAllCommonBaseCurrencies } from 'src/components/TokenSelector/hooks'
+import { useAllCommonBaseCurrencies } from 'wallet/src/components/TokenSelector/hooks'
 import { CurrencyInfo, GqlResult } from 'wallet/src/features/dataApi/types'
 import { useFiatOnRampAggregatorSupportedTokensQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { MeldCryptoCurrency } from 'wallet/src/features/fiatOnRamp/meld'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 interface Props {
   onBack: () => void

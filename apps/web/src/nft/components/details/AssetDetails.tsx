@@ -1,8 +1,8 @@
 import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import Resource from 'components/Tokens/TokenDetails/Resource'
 import { MouseoverTooltip } from 'components/Tooltip/index'
-import { NftActivityType } from 'graphql/data/__generated__/types-and-hooks'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
+import { NftActivityType } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import { reduceFilters } from 'nft/components/collection/Activity'
 import { LoadingSparkle } from 'nft/components/common/Loading/LoadingSparkle'
@@ -60,7 +60,7 @@ const SocialsContainer = styled.div`
   margin-top: 20px;
 `
 
-const DescriptionText = styled.div`
+const DescriptionText = styled.p`
   margin-top: 8px;
   font-size: 14px;
   line-height: 20px;

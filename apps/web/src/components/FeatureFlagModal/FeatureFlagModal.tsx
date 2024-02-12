@@ -16,6 +16,7 @@ import { useLimitsEnabledFlag } from 'featureFlags/flags/limits'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
 import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
 import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
+import { useSendEnabledFlag } from 'featureFlags/flags/send'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useFeesEnabledFlag } from 'featureFlags/flags/useFees'
@@ -47,7 +48,7 @@ const StyledModal = styled.div`
   border: 1px solid ${({ theme }) => theme.surface3};
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
-    max-height: 100vh;
+    max-height: 80vh;
   }
 `
 
@@ -87,10 +88,10 @@ const ToggleButton = styled.button`
 `
 
 const Header = styled(Row)`
+  padding: 0px 16px 8px;
   font-weight: 535;
   font-size: 16px;
   border-bottom: 1px solid ${({ theme }) => theme.surface3};
-  margin-bottom: 8px;
 `
 const FlagName = styled.span`
   font-size: 16px;
@@ -261,18 +262,24 @@ export default function FeatureFlagModal() {
 
   return (
     <Modal open={open}>
+      <Header>
+        Feature Flag Settings
+        <CloseButton onClick={toggleModal}>
+          <X size={24} />
+        </CloseButton>
+      </Header>
       <FlagsColumn>
-        <Header>
-          Feature Flag Settings
-          <CloseButton onClick={toggleModal}>
-            <X size={24} />
-          </CloseButton>
-        </Header>
         <FeatureFlagOption
           variant={BaseVariant}
           value={useGatewayDNSUpdateEnabledFlag()}
           featureFlag={FeatureFlag.gatewayDNSUpdate}
           label="Use gateway URL for routing api"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useSendEnabledFlag()}
+          featureFlag={FeatureFlag.sendEnabled}
+          label="Send on swap component"
         />
         <FeatureFlagOption
           variant={BaseVariant}

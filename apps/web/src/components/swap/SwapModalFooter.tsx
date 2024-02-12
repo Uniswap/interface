@@ -15,8 +15,8 @@ import { ReactNode, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { easings, useSpring } from 'react-spring'
 import { Text } from 'rebass'
-import { InterfaceTrade, RouterPreference } from 'state/routing/types'
-import { isClassicTrade } from 'state/routing/utils'
+import { InterfaceTrade, LimitOrderTrade, RouterPreference } from 'state/routing/types'
+import { isClassicTrade, isLimitTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, Separator, ThemedText } from 'theme/components'
@@ -28,8 +28,7 @@ import { ReactComponent as ExpandoIconOpened } from '../../assets/svg/expando-ic
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
 import { SwapCallbackError, SwapShowAcceptChanges } from './styled'
-import { SwapLineItemProps, SwapLineItemType } from './SwapLineItem'
-import SwapLineItem from './SwapLineItem'
+import SwapLineItem, { SwapLineItemProps, SwapLineItemType } from './SwapLineItem'
 
 const DetailsContainer = styled(Column)<{ isNewSwapFlowEnabled?: boolean }>`
   ${({ isNewSwapFlowEnabled }) => (isNewSwapFlowEnabled ? 'padding: 0px 16px 12px 16px' : 'padding-bottom: 8px')};
@@ -124,7 +123,7 @@ export default function SwapModalFooter({
   fiatValueInput: { data?: number; isLoading: boolean }
   fiatValueOutput: { data?: number; isLoading: boolean }
   showAcceptChanges: boolean
-  onAcceptChanges: () => void
+  onAcceptChanges?: () => void
   isLoading: boolean
 }) {
   const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
@@ -156,21 +155,25 @@ export default function SwapModalFooter({
       }
     } else {
       return {
-        buttonText: t`Confirm swap`,
+        buttonText: isLimitTrade(trade) ? t`Place order` : t`Confirm swap`,
       }
     }
-  }, [allowance])
+  }, [allowance, trade])
 
   return (
     <>
-      <DropdownController open={showMore} onClick={() => setShowMore(!showMore)} />
       <DetailsContainer gap={isNewSwapFlowEnabled ? 'sm' : 'md'} isNewSwapFlowEnabled={isNewSwapFlowEnabled}>
-        <SwapLineItem {...lineItemProps} type={SwapLineItemType.EXCHANGE_RATE} />
-        <ExpandableLineItems {...lineItemProps} open={showMore} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemType.SWAP_FEE} />
-        <SwapLineItem {...lineItemProps} type={SwapLineItemType.NETWORK_COST} />
+        {isLimitTrade(trade) ? (
+          <>
+            <Separator />
+            <LimitLineItems trade={trade} />
+          </>
+        ) : (
+          <>
+            <DropdownController open={showMore} onClick={() => setShowMore(!showMore)} />
+            <SwapLineItems showMore={showMore} {...lineItemProps} />
+          </>
+        )}
       </DetailsContainer>
       {showAcceptChanges ? (
         <SwapShowAcceptChanges data-testid="show-accept-changes">
@@ -222,7 +225,7 @@ export default function SwapModalFooter({
                 <Text fontSize={20}>{callToAction.buttonText}</Text>
               ) : (
                 <ThemedText.HeadlineSmall color="deprecated_accentTextLightPrimary">
-                  <Trans>Confirm swap</Trans>
+                  {isLimitTrade(trade) ? <Trans>Confirm limit</Trans> : <Trans>Confirm swap</Trans>}
                 </ThemedText.HeadlineSmall>
               )}
             </ConfirmButton>
@@ -248,6 +251,54 @@ function AnimatedLineItem(props: SwapLineItemProps & { open: boolean; delay: num
   })
 
   return <SwapLineItem {...props} {...animatedProps} />
+}
+
+function SwapLineItems({
+  showMore,
+  trade,
+  allowedSlippage,
+  syncing,
+}: {
+  showMore: boolean
+  trade: InterfaceTrade
+  allowedSlippage: Percent
+  syncing: boolean
+}) {
+  return (
+    <>
+      <SwapLineItem
+        trade={trade}
+        allowedSlippage={allowedSlippage}
+        syncing={syncing}
+        type={SwapLineItemType.EXCHANGE_RATE}
+      />
+      <ExpandableLineItems trade={trade} allowedSlippage={allowedSlippage} open={showMore} />
+      <SwapLineItem
+        trade={trade}
+        allowedSlippage={allowedSlippage}
+        syncing={syncing}
+        type={SwapLineItemType.INPUT_TOKEN_FEE_ON_TRANSFER}
+      />
+      <SwapLineItem
+        trade={trade}
+        allowedSlippage={allowedSlippage}
+        syncing={syncing}
+        type={SwapLineItemType.OUTPUT_TOKEN_FEE_ON_TRANSFER}
+      />
+      <SwapLineItem
+        trade={trade}
+        allowedSlippage={allowedSlippage}
+        syncing={syncing}
+        type={SwapLineItemType.SWAP_FEE}
+      />
+      <SwapLineItem
+        trade={trade}
+        allowedSlippage={allowedSlippage}
+        syncing={syncing}
+        type={SwapLineItemType.NETWORK_COST}
+      />
+    </>
+  )
 }
 
 function ExpandableLineItems(props: { trade: InterfaceTrade; allowedSlippage: Percent; open: boolean }) {
@@ -276,5 +327,16 @@ function ExpandableLineItems(props: { trade: InterfaceTrade; allowedSlippage: Pe
         <AnimatedLineItem {...lineItemProps} type={SwapLineItemType.MAXIMUM_INPUT} delay={ms('120ms')} />
       </Column>
     </AnimatedDropdown>
+  )
+}
+
+function LimitLineItems({ trade }: { trade: LimitOrderTrade }) {
+  return (
+    <>
+      <SwapLineItem trade={trade} type={SwapLineItemType.EXCHANGE_RATE} />
+      <SwapLineItem trade={trade} type={SwapLineItemType.EXPIRY} />
+      <SwapLineItem trade={trade} type={SwapLineItemType.SWAP_FEE} />
+      <SwapLineItem trade={trade} type={SwapLineItemType.NETWORK_COST} />
+    </>
   )
 }

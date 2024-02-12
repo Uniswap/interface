@@ -41,10 +41,12 @@ export const useCanAddressClaimUnitag = (address?: Address): boolean => {
   return !loading && !!data?.canClaim
 }
 
-export const useUnitag = (address?: Address): UnitagAddressResponse | undefined => {
+export const useUnitag = (
+  address?: Address
+): { unitag?: UnitagAddressResponse; loading: boolean } => {
   const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
-  const { data } = useUnitagByAddressQuery(unitagsFeatureFlagEnabled ? address : undefined)
-  return data
+  const { data, loading } = useUnitagByAddressQuery(unitagsFeatureFlagEnabled ? address : undefined)
+  return { unitag: data, loading }
 }
 
 // Helper function to enforce unitag length and alphanumeric characters

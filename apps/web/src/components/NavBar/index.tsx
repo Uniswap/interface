@@ -4,14 +4,17 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { UniIcon } from 'components/Logo/UniIcon'
 import Web3Status from 'components/Web3Status'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
+import { useNewLandingPage } from 'featureFlags/flags/landingPageV2'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
+import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
+import { GetTheAppButton } from 'pages/Landing/components/DownloadApp/GetTheAppButton'
 import { ReactNode, useCallback } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
@@ -21,6 +24,7 @@ import { Bag } from './Bag'
 import Blur from './Blur'
 import { ChainSelector } from './ChainSelector'
 import { MenuDropdown } from './MenuDropdown'
+import { More } from './More'
 import { SearchBar } from './SearchBar'
 import * as styles from './style.css'
 
@@ -63,6 +67,7 @@ export const PageTabs = () => {
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const infoExplorePageEnabled = useInfoExplorePageEnabled()
+  const isNewLandingPageEnabled = useNewLandingPage()
 
   return (
     <>
@@ -70,7 +75,7 @@ export const PageTabs = () => {
         <Trans>Swap</Trans>
       </MenuItem>
       {infoExplorePageEnabled ? (
-        <MenuItem href={`/explore/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/explore')}>
+        <MenuItem href="/explore" isActive={pathname.startsWith('/explore')}>
           <Trans>Explore</Trans>
         </MenuItem>
       ) : (
@@ -88,15 +93,21 @@ export const PageTabs = () => {
           <Trans>Pools</Trans>
         </MenuItem>
       </Box>
-      <Box marginY="4">
-        <MenuDropdown />
-      </Box>
+      {isNewLandingPageEnabled ? (
+        <More />
+      ) : (
+        <Box marginY="4">
+          <MenuDropdown />
+        </Box>
+      )}
     </>
   )
 }
 
 const Navbar = ({ blur }: { blur: boolean }) => {
   const isNftPage = useIsNftPage()
+  const isLandingPage = useIsLandingPage()
+  const isNewLandingPageEnabled = useNewLandingPage()
   const sellPageState = useProfilePageState((state) => state.state)
   const navigate = useNavigate()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
@@ -156,7 +167,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
                   <ChainSelector />
                 </Box>
               )}
-
+              {isLandingPage && isNewLandingPageEnabled && <GetTheAppButton />}
               <Web3Status />
             </Row>
           </Box>

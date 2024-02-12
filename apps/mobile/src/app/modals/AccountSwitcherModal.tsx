@@ -5,15 +5,10 @@ import { Action } from 'redux'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountList } from 'src/components/accounts/AccountList'
-import { AddressDisplay } from 'src/components/AddressDisplay'
-import { ActionSheetModal, MenuItemProp } from 'src/components/modals/ActionSheetModal'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { openSettings } from 'src/utils/linking'
 import {
   Button,
   Flex,
@@ -25,6 +20,9 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
+import { ActionSheetModal, MenuItemProp } from 'wallet/src/components/modals/ActionSheetModal'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
@@ -35,6 +33,8 @@ import {
 import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAllAccountsSorted } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
+import { openSettings } from 'wallet/src/utils/linking'
 import { isAndroid } from 'wallet/src/utils/platform'
 
 export function AccountSwitcherModal(): JSX.Element {
@@ -177,7 +177,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       onClose()
     }
 
-    const options = [
+    const options: MenuItemProp[] = [
       {
         key: ElementName.CreateAccount,
         onPress: onPressCreateNewWallet,

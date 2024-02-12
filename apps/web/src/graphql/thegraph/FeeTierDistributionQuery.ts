@@ -2,8 +2,8 @@ import { ApolloError, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { useMemo } from 'react'
 
-import { FeeTierDistributionQuery } from './__generated__/types-and-hooks'
 import { apolloClient } from './apollo'
+import { FeeTierDistributionQuery } from './__generated__/types-and-hooks'
 
 const query = gql`
   query FeeTierDistribution($token0: String!, $token1: String!) {

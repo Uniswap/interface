@@ -21,6 +21,7 @@ import {
   MigrateV2LiquidityToV3TransactionInfo,
   QueueTransactionInfo,
   RemoveLiquidityV3TransactionInfo,
+  SendTransactionInfo,
   TransactionInfo,
   TransactionType,
   VoteTransactionInfo,
@@ -271,6 +272,16 @@ function AddLiquidityV2PoolSummary({
   )
 }
 
+function SendSummary({ info }: { info: SendTransactionInfo }) {
+  return (
+    <Trans>
+      Sent
+      <FormattedCurrencyAmountManaged rawAmount={info.amount} currencyId={info.currencyId} sigFigs={6} /> to{' '}
+      {info.recipient}
+    </Trans>
+  )
+}
+
 function SwapSummary({ info }: { info: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo }) {
   if (info.tradeType === TradeType.EXACT_INPUT) {
     return (
@@ -361,5 +372,8 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.SUBMIT_PROPOSAL:
       return <SubmitProposalTransactionSummary />
+
+    case TransactionType.SEND:
+      return <SendSummary info={info} />
   }
 }

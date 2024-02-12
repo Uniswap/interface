@@ -1,15 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
-import { TraceEvent } from 'analytics'
-import { Trace } from 'analytics'
+import { Trace, TraceEvent } from 'analytics'
 import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { AutoRow } from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { filterStringAtom } from 'components/Tokens/state'
+import { TopTokensTable } from 'components/Tokens/TokenTable'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
+import OldTokenTable from 'components/Tokens/TokenTable/OldTokenTable'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
-import TokenTable from 'components/Tokens/TokenTable/TokenTable'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useResetAtom } from 'jotai/utils'
@@ -144,7 +144,7 @@ const Pages: Array<Page> = [
   {
     title: <Trans>Tokens</Trans>,
     key: ExploreTab.Tokens,
-    component: TokenTable,
+    component: TopTokensTable,
     loggingElementName: InterfaceElementName.EXPLORE_TOKENS_TAB,
   },
   {
@@ -175,7 +175,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
   // to allow backward navigation between tabs
-  const { tab } = useExploreParams()
+  const { tab, chainName } = useExploreParams()
   useEffect(() => {
     const tabIndex = Pages.findIndex((page) => page.key === tab)
     if (tabIndex !== -1) {
@@ -215,7 +215,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               {Pages.map(({ title, loggingElementName, key }, index) => {
                 const handleNavItemClick = () => {
                   setCurrentTab(index)
-                  navigate(`/explore/${key}`)
+                  navigate(`/explore/${key}` + (chainName ? `/${chainName}` : ''))
                 }
                 return (
                   <TraceEvent
@@ -254,7 +254,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
             </>
           )}
         </NavWrapper>
-        {isInfoExplorePageEnabled ? <Page /> : <TokenTable />}
+        {isInfoExplorePageEnabled ? <Page /> : <OldTokenTable />}
       </ExploreContainer>
     </Trace>
   )

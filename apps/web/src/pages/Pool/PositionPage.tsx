@@ -18,7 +18,8 @@ import { Dots } from 'components/swap/styled'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
-import { isGqlSupportedChain } from 'graphql/data/util'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
+import { chainIdToBackendName, getTokenDetailsURL, isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -212,8 +213,9 @@ const TokenLink = ({
   chainId,
   address,
 }: PropsWithChildren<{ chainId: keyof typeof CHAIN_IDS_TO_NAMES; address: string }>) => {
-  const chainName = CHAIN_IDS_TO_NAMES[chainId]
-  return <StyledRouterLink to={`/tokens/${chainName}/${address}`}>{children}</StyledRouterLink>
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+  const tokenLink = getTokenDetailsURL({ address, chain: chainIdToBackendName(chainId), isInfoExplorePageEnabled })
+  return <StyledRouterLink to={tokenLink}>{children}</StyledRouterLink>
 }
 
 const ExternalTokenLink = ({ children, chainId, address }: PropsWithChildren<{ chainId: number; address: string }>) => {

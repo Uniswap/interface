@@ -9,13 +9,14 @@ import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { BaseButton } from 'components/Button'
+import { getRecentConnectionMeta } from 'connection/meta'
 import { useNewLandingPage } from 'featureFlags/flags/landingPageV2'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
+import usePrevious from 'hooks/usePrevious'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
 import { useEffect, useMemo, useRef } from 'react'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-import { Link as NativeLink } from 'react-router-dom'
+import { Link as NativeLink, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -292,6 +293,7 @@ export default function Landing() {
   const isDarkMode = useIsDarkMode()
   const cardsRef = useRef<HTMLDivElement>(null)
   const { account } = useWeb3React()
+  const recentConnectionMeta = getRecentConnectionMeta()
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const cards = useMemo(
@@ -299,23 +301,30 @@ export default function Landing() {
     [shouldDisableNFTRoutes]
   )
 
-  const [accountDrawerOpen] = useAccountDrawer()
+  const isNewLandingPageEnabled = useNewLandingPage()
+
+  const location = useLocation()
+  const queryParams = useMemo(() => parse(location.search, { ignoreQueryPrefix: true }), [location])
   const navigate = useNavigate()
+  const [accountDrawerOpen] = useAccountDrawer()
+  const prevAccount = usePrevious(account)
+  const redirectOnConnect = useRef(false)
+  // Smoothly redirect to swap page if user connects while on landing page
   useEffect(() => {
+    if (accountDrawerOpen && account && !prevAccount) {
+      redirectOnConnect.current = true
+    }
     const timeoutId = setTimeout(() => {
-      if (accountDrawerOpen) {
+      if (redirectOnConnect.current) {
         navigate('/swap')
       }
     }, TRANSITION_DURATIONS.fast)
     return () => clearTimeout(timeoutId)
-  }, [accountDrawerOpen, navigate])
+  }, [account, prevAccount, accountDrawerOpen, navigate])
 
-  const location = useLocation()
-  const queryParams = parse(location.search, { ignoreQueryPrefix: true })
-
-  const isNewLandingPageEnabled = useNewLandingPage()
-
-  if (account && !queryParams.intro) {
+  // Redirect to swap page if user is connected or has been recently
+  // The intro query parameter can be used to override this
+  if ((account || recentConnectionMeta) && !queryParams.intro) {
     return <Navigate to={{ ...location, pathname: '/swap' }} replace />
   }
 

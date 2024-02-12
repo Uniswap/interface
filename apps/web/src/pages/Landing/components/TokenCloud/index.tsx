@@ -1,10 +1,10 @@
+import { approvedERC20, approvedERC721, InteractiveToken } from 'pages/Landing/assets/approvedTokens'
 import PoissonDiskSampling from 'poisson-disk-sampling'
 import { useMemo, useRef, useState } from 'react'
 import styled from 'styled-components'
 
-import { defaultCoin, staticCoins, staticCollections } from '../../assets/staticTokens'
 import { Token } from './Token'
-import { isInBounds, mixArrays, randomFloat, randomInt } from './utils'
+import { mixArrays, randomFloat, randomInt } from './utils'
 
 const Container = styled.div`
   width: 100%;
@@ -16,23 +16,17 @@ const Container = styled.div`
   top: 0;
 `
 const Inner = styled.div`
-  width: 3000px;
+  width: 100vw;
+  height: 100vh;
   flex-shrink: 0;
-  height: 800px;
   position: relative;
   overflow: visible;
 `
-
-type Token = {
-  address: string
-  color: string
-  logoUrl: string
-  PricePercentChange: number
-  symbol: string
-  type: string
+export enum TickerPosition {
+  RIGHT,
+  LEFT,
 }
-
-export type TokenPoint = Token & {
+export type TokenPoint = InteractiveToken & {
   x: number
   y: number
   blur: number
@@ -44,45 +38,35 @@ export type TokenPoint = Token & {
   delay: number
   floatDuration: number
   ticker: string
-}
-
-const w = 3000
-const h = 800 - 72
-
-const centerRect = {
-  x: w / 2 - 250,
-  y: 0,
-  w: w / 2 + 250,
-  h,
-}
-
-const poissonConfig = {
-  shape: [w, h],
-  minDistance: 225,
-  maxDistance: 350,
-  tries: 10,
+  tickerPosition: TickerPosition
 }
 
 export function TokenCloud() {
   const pts = useMemo(() => {
-    const tokenList = mixArrays(staticCoins, staticCollections, 0.33)
+    const tokenList: InteractiveToken[] = mixArrays(approvedERC20, approvedERC721, 0.33)
 
+    const w = window.innerWidth
+    const h = window.innerHeight - 72
+    const leftThreshold = w / 2 - 225
+    const rightThreshold = w / 2 + 225
+    const poissonConfig = {
+      shape: [w, h],
+      minDistance: 200,
+      maxDistance: 300,
+      tries: 10,
+    }
     const poissonDiskSampling = new PoissonDiskSampling(poissonConfig)
     const points = poissonDiskSampling
       .fill()
-      // Remove points inside center rectangle which is occupied by the headline and swap interface
-      .filter(([x, y]) => !isInBounds(x, y, centerRect.x, centerRect.y, centerRect.w, centerRect.h))
       // Order by distance from center, ie idx = 0 is closest to center
       .sort((a, b) => Math.abs(a[0] - w / 2) - Math.abs(b[0] - w / 2))
       .map(([x, y], idx: number) => {
-        const token = !tokenList[idx] ? defaultCoin : tokenList[idx]
-
+        const token: InteractiveToken = tokenList[idx % tokenList.length]
         const size = randomInt(40, 96)
-
         return {
           x,
           y,
-          blur: (1 / size) * 1000, // make blur bigger for smaller icons
+          blur: (1 / size) * 500 * ((x > leftThreshold && x < rightThreshold) || y < 100 ? 10 : 1), // make blur bigger for smaller icons
           size,
           color: token.color,
           logoUrl: token.logoUrl,
@@ -91,9 +75,11 @@ export function TokenCloud() {
           delay: Math.abs(x - w / 2) / 800,
           floatDuration: randomFloat(3, 6),
           ticker: token.symbol,
-          PricePercentChange: token.PricePercentChange,
-          type: token.type,
+          tickerPosition:
+            (x < leftThreshold && x + 100 > leftThreshold) || x + 200 > w ? TickerPosition.LEFT : TickerPosition.RIGHT,
+          standard: token.standard,
           address: token.address,
+          chain: token.chain,
         }
       })
       .map((p) => {

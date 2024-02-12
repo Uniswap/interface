@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, providers } from 'ethers'
-import { BigNumberMax } from 'src/utils/number'
 import { FeeType, GasFeeResult } from 'wallet/src/features/gas/types'
+import { BigNumberMax } from 'wallet/src/utils/number'
 
 export type FeeDetails =
   | { type: FeeType.Legacy; params: { gasPrice: string } }

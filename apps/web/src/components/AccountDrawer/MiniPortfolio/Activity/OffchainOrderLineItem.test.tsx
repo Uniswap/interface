@@ -27,6 +27,9 @@ describe('OffchainOrderLineItem', () => {
         type={OffchainOrderLineItemType.EXPIRY}
         order={{
           txHash: '0x123',
+          orderHash: '0x123',
+          offerer: '0xSenderAddress',
+          id: 'tx123',
           chainId: 1,
           type: SignatureType.SIGN_UNISWAPX_ORDER,
           status: UniswapXOrderStatus.FILLED,
@@ -62,6 +65,9 @@ describe('OffchainOrderLineItem', () => {
         explorerLink="https://etherscan.io/tx/0x123"
         order={{
           txHash: '0x123',
+          orderHash: '0x123',
+          offerer: '0xSenderAddress',
+          id: 'tx123',
           chainId: 1,
           type: SignatureType.SIGN_UNISWAPX_ORDER,
           status: UniswapXOrderStatus.FILLED,

@@ -1,5 +1,7 @@
 /* eslint-disable max-lines */
-export const svgPaths: React.SVGProps<SVGPathElement>[][] = [
+
+// dummy data to prevent errors importing
+export const emblemSvgPaths: React.SVGProps<SVGPathElement>[][] = [
   [
     {
       d: 'M0 8C0 3.58172 3.58172 0 8 0V4C5.79086 4 4 5.79086 4 8H0ZM8 8L4 8C4 10.2091 5.79086 12 8 12V16C12.4183 16 16 12.4183 16 8H12C12 5.79086 10.2091 4 8 4L8 8ZM8 8L12 8C12 10.2091 10.2091 12 8 12L8 8Z',

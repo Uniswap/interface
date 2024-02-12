@@ -1,8 +1,8 @@
 import '@reach/dialog/styles.css'
+import 'connection/eagerlyConnect'
 import 'inter-ui'
 import 'polyfills'
 import 'tracing'
-import 'connection/eagerlyConnect'
 
 import { ApolloProvider } from '@apollo/client'
 import { FeatureFlagsProvider } from 'featureFlags'

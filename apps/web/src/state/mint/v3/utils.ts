@@ -4,8 +4,8 @@ import {
   FeeAmount,
   nearestUsableTick,
   priceToClosestTick,
-  TICK_SPACINGS,
   TickMath,
+  TICK_SPACINGS,
 } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 

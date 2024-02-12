@@ -1,7 +1,7 @@
 import { by, device, element, expect } from 'detox'
 import { Accounts } from 'src/e2e/utils/fixtures'
-import { ElementName } from 'src/features/telemetry/constants'
 import { sleep } from 'utilities/src/time/timing'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 export function ImportAccounts() {
   it('creates a readonly account', async () => {

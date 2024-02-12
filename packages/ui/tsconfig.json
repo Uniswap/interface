@@ -3,4 +3,9 @@
   "include": [
     "src"
   ],
+  "references": [
+    {
+      "path": "../utilities"
+    },
+  ],
 }

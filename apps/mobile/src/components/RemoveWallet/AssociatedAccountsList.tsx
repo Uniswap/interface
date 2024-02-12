@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
-import { useAccountList } from 'src/components/accounts/hooks'
-import { AddressDisplay } from 'src/components/AddressDisplay'
 import { Flex, Text, useDeviceDimensions } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { AccountListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 

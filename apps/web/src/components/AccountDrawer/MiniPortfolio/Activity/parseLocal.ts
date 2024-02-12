@@ -19,10 +19,12 @@ import {
   ExactOutputSwapTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
   RemoveLiquidityV3TransactionInfo,
+  SendTransactionInfo,
   TransactionDetails,
   TransactionType,
   WrapTransactionInfo,
 } from 'state/transactions/types'
+import { isAddress } from 'utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { CancelledTransactionTitleTable, getActivityTitle, OrderTextTable } from '../constants'
@@ -174,6 +176,28 @@ function parseMigrateCreateV3(
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
 
+function parseSend(
+  send: SendTransactionInfo,
+  chainId: ChainId,
+  tokens: ChainTokenMap,
+  formatNumber: FormatNumberFunctionType
+): Partial<Activity> {
+  const { currencyId, amount, recipient } = send
+  const currency = getCurrency(currencyId, chainId, tokens)
+  const formattedAmount = currency
+    ? formatNumber({
+        input: parseFloat(CurrencyAmount.fromRawAmount(currency, amount).toSignificant()),
+        type: NumberType.TokenNonTx,
+      })
+    : t`Unknown`
+
+  return {
+    descriptor: `${formattedAmount} ${currency?.symbol} ${t`to`} `,
+    otherAccount: isAddress(recipient) || undefined,
+    currencies: [currency],
+  }
+}
+
 export function getTransactionStatus(details: TransactionDetails): TransactionStatus {
   return !details.receipt
     ? TransactionStatus.Pending
@@ -220,6 +244,8 @@ export function transactionToActivity(
       additionalFields = parseCollectFees(info, chainId, tokens, formatNumber)
     } else if (info.type === TransactionType.MIGRATE_LIQUIDITY_V3 || info.type === TransactionType.CREATE_V3_POOL) {
       additionalFields = parseMigrateCreateV3(info, chainId, tokens)
+    } else if (info.type === TransactionType.SEND) {
+      additionalFields = parseSend(info, chainId, tokens, formatNumber)
     }
 
     const activity = { ...defaultFields, ...additionalFields }
@@ -254,14 +280,18 @@ export function signatureToActivity(
         title,
         status,
         offchainOrderDetails: {
-          txHash: signature.orderHash,
+          orderHash: signature.orderHash,
+          id: signature.id,
+          offerer: signature.offerer,
+          txHash: signature.txHash,
           chainId: signature.chainId,
           type: SignatureType.SIGN_UNISWAPX_ORDER,
           status: signature.status,
           swapInfo: signature.swapInfo,
           addedTime: signature.addedTime,
+          encodedOrder: signature.encodedOrder,
         },
-        timestamp: signature.addedTime,
+        timestamp: signature.addedTime / 1000,
         from: signature.offerer,
         statusMessage,
         prefixIconSrc: UniswapXBolt,

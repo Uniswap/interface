@@ -1,9 +1,9 @@
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { NftView } from 'src/components/NFT/NftView'
-import { ModalName } from 'src/features/telemetry/constants'
 import { Flex, useSporeColors } from 'ui/src'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
 import { NFTItem } from 'wallet/src/features/nfts/types'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 type ChooseNftProps = {
   address: string

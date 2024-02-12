@@ -11,31 +11,66 @@ import { BiometricSettingsState } from 'src/features/biometrics/slice'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { isAndroid } from 'wallet/src/utils/platform'
 
+type TriggerArgs<T> = {
+  params?: T
+  successCallback?: (params?: T) => void
+  failureCallback?: () => void
+}
+
 /**
  * Hook shortcut to use the biometric prompt.
+ *
+ * It can be used by either declaring the success/failure callbacks at the time you call the hook,
+ * or by declaring them when you call the trigger function:
+ *
+ * Example 1:
+ *
+ * ```ts
+ * const { trigger } = useBiometricPrompt(() => { success() }, () => { failure() })
+ * triger({
+ *   params: { ... },
+ * })
+ * ```
+ *
+ * Example 2:
+ *
+ * ```ts
+ * const { trigger } = useBiometricPrompt()
+ * triger({
+ *  successCallback: () => { success() },
+ *  failureCallback: () => { success() },
+ *  params: { ... },
+ * })
+ * ```
+ *
+ * TODO(MOB-2523): standardize usage of this hook and remove the style of Example 1.
+ *
  * @returns trigger Trigger the OS biometric flow and invokes successCallback on success.
  */
 export function useBiometricPrompt<T = undefined>(
   successCallback?: (params?: T) => void,
   failureCallback?: () => void
 ): {
-  trigger: (params?: T) => Promise<void>
+  trigger: (args?: TriggerArgs<T>) => Promise<void>
 } {
   const { setAuthenticationStatus } = useBiometricContext()
 
-  const trigger = async (params?: T): Promise<void> => {
+  const trigger = async (args?: TriggerArgs<T>): Promise<void> => {
     setAuthenticationStatus(BiometricAuthenticationStatus.Authenticating)
     const authStatus = await tryLocalAuthenticate()
 
     setAuthenticationStatus(authStatus)
 
+    const _successCallback = args?.successCallback ?? successCallback
+    const _failureCallback = args?.failureCallback ?? failureCallback
+
     if (
       biometricAuthenticationSuccessful(authStatus) ||
       biometricAuthenticationDisabledByOS(authStatus)
     ) {
-      successCallback?.(params)
+      _successCallback?.(args?.params)
     } else {
-      failureCallback?.()
+      _failureCallback?.()
     }
   }
 

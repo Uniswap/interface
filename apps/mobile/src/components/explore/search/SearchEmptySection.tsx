@@ -7,13 +7,13 @@ import { SearchPopularNFTCollections } from 'src/components/explore/search/Searc
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { renderSearchItem } from 'src/components/explore/search/SearchResultsSection'
 import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
-import { clearSearchHistory } from 'src/features/explore/searchHistorySlice'
-import { SearchResultType, WalletSearchResult } from 'src/features/explore/SearchResult'
-import { selectSearchHistory } from 'src/features/explore/selectSearchHistory'
 import { AnimatedFlex, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ClockIcon from 'ui/src/assets/icons/clock.svg'
 import TrendArrowIcon from 'ui/src/assets/icons/trend-up.svg'
 import { iconSizes } from 'ui/src/theme'
+import { clearSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
+import { SearchResultType, WalletSearchResult } from 'wallet/src/features/search/SearchResult'
+import { selectSearchHistory } from 'wallet/src/features/search/selectSearchHistory'
 
 export const SUGGESTED_WALLETS: WalletSearchResult[] = [
   {

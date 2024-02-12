@@ -5,10 +5,13 @@ import {
   getSearchResultId,
   gqlNFTToNFTCollectionSearchResult,
 } from 'src/components/explore/search/utils'
-import { Loader } from 'src/components/loading'
-import { NFTCollectionSearchResult, SearchResultType } from 'src/features/explore/SearchResult'
 import { Inset } from 'ui/src'
+import { TokenLoader } from 'wallet/src/components/loading/TokenLoader'
 import { useSearchPopularNftCollectionsQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import {
+  NFTCollectionSearchResult,
+  SearchResultType,
+} from 'wallet/src/features/search/SearchResult'
 
 function isNFTCollectionSearchResult(
   result: NFTCollectionSearchResult | null
@@ -34,7 +37,7 @@ export function SearchPopularNFTCollections(): JSX.Element {
   if (loading) {
     return (
       <Inset all="$spacing8">
-        <Loader.Token repeat={2} />
+        <TokenLoader repeat={2} />
       </Inset>
     )
   }

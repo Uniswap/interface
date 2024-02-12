@@ -3,28 +3,28 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWordView'
 import { MnemonicConfirmation } from 'src/components/mnemonic/MnemonicConfirmation'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import WarningModal from 'src/components/modals/WarningModal/WarningModal'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { ElementName, ManualPageViewScreen, ModalName } from 'src/features/telemetry/constants'
+import { ManualPageViewScreen } from 'src/features/telemetry/constants'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { iconSizes } from 'ui/src/theme'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import {
   EditAccountAction,
   editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupManual>
 
@@ -105,7 +105,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
     case View.SeedPhrase:
       return (
         <OnboardingScreen
-          subtitle={t('Remember to record your words in the same order as they appear below.')}
+          subtitle={t('You can check this in settings at any time.')}
           title={t('Write down your recovery phrase in order')}>
           {showScreenShotWarningModal && (
             <WarningModal
@@ -173,7 +173,7 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
       <Flex centered gap="$spacing16" pb="$spacing24" pt="$spacing24" px="$spacing24">
         <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
           <LockIcon
-            color={colors.neutral2.val}
+            color={colors.neutral1.val}
             height={iconSizes.icon24}
             width={iconSizes.icon24}
           />
@@ -183,14 +183,12 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
         </Text>
         <Text color="$neutral2" textAlign="center" variant="body2">
           {t(
-            'Your recovery phrase is what grants you (and anyone who has it) access to your funds. Be sure to store it in a safe place.'
+            'Your recovery phrase is what grants you (and anyone who has it) access to your funds. Be sure to keep it to yourself.'
           )}
         </Text>
-        <TouchableOpacity hitSlop={24} onPress={onPress}>
-          <Text color="$accent1" pt="$spacing24" variant="buttonLabel2">
-            {t('Continue')}
-          </Text>
-        </TouchableOpacity>
+        <Button flexGrow={1} mt="$spacing16" theme="primary" width="100%" onPress={onPress}>
+          {t('I’m ready')}
+        </Button>
       </Flex>
     </BottomSheetModal>
   )

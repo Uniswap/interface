@@ -49,7 +49,8 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
     setChainBlock((chainBlock) => {
       if (chainBlock.chainId === chainId) {
         if (!chainBlock.block || chainBlock.block < block) {
-          return { chainId, block, mainnetBlock: chainId === ChainId.MAINNET ? block : chainBlock.mainnetBlock }
+          const mainnetBlock = chainId === ChainId.MAINNET ? block : chainBlock.mainnetBlock
+          return { chainId, block, mainnetBlock }
         }
       } else if (chainId === ChainId.MAINNET) {
         if (!chainBlock.mainnetBlock || chainBlock.mainnetBlock < block) {
@@ -62,60 +63,41 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
 
   const windowVisible = useIsWindowVisible()
   useEffect(() => {
-    let stale = false
-
     if (provider && activeChainId && windowVisible) {
       setChainBlock((chainBlock) => {
-        // If chainId hasn't changed, don't clear the block. This prevents re-fetching still valid data.
         if (chainBlock.chainId !== activeChainId) {
           return { chainId: activeChainId, mainnetBlock: chainBlock.mainnetBlock }
         }
+        // If chainId hasn't changed, don't invalidate the reference, as it will trigger re-fetching of still-valid data.
         return chainBlock
       })
-
-      provider
-        .getBlockNumber()
-        .then((block) => {
-          if (!stale) onChainBlock(activeChainId, block)
-        })
-        .catch((error) => {
-          console.error(`Failed to get block number for chainId ${activeChainId}`, error)
-        })
 
       const onBlock = (block: number) => onChainBlock(activeChainId, block)
       provider.on('block', onBlock)
       return () => {
-        stale = true
         provider.removeListener('block', onBlock)
       }
     }
-
-    return void 0
+    return
   }, [activeChainId, provider, windowVisible, onChainBlock])
 
   const networkProviders = useFallbackProviderEnabled() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
-
   useEffect(() => {
-    if (mainnetBlock === undefined) {
-      networkProviders[ChainId.MAINNET]
-        .getBlockNumber()
-        .then((block) => {
-          onChainBlock(ChainId.MAINNET, block)
-        })
-        // swallow errors - it's ok if this fails, as we'll try again if we activate mainnet
-        .catch(() => undefined)
-    }
-  }, [mainnetBlock, networkProviders, onChainBlock])
+    networkProviders[ChainId.MAINNET]
+      .getBlockNumber()
+      .then((block) => {
+        onChainBlock(ChainId.MAINNET, block)
+      })
+      // swallow errors - it's ok if this fails, as we'll try again if we activate mainnet
+      .catch(() => undefined)
+  }, [networkProviders, onChainBlock])
 
   const value = useMemo(
     () => ({
       fastForward: (update: number) => {
         if (activeBlock && update > activeBlock) {
-          setChainBlock({
-            chainId: activeChainId,
-            block: update,
-            mainnetBlock: activeChainId === ChainId.MAINNET ? update : mainnetBlock,
-          })
+          const mainnetUpdate = activeChainId === ChainId.MAINNET ? update : mainnetBlock
+          setChainBlock({ chainId: activeChainId, block: update, mainnetBlock: mainnetUpdate })
         }
       },
       block: activeBlock,

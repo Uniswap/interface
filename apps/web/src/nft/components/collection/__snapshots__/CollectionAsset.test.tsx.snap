@@ -27,6 +27,10 @@ exports[`NftCard renders correctly 1`] = `
 
 .c16 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c11 {

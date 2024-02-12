@@ -1,9 +1,9 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import Trace from 'src/components/Trace/Trace'
-import { ElementName, SectionName } from 'src/features/telemetry/constants'
 import { Button, Flex } from 'ui/src'
 import { validColor } from 'ui/src/theme'
+import { ElementName, ElementNameType, SectionName } from 'wallet/src/telemetry/constants'
 import { getContrastPassingTextColor } from 'wallet/src/utils/colors'
 
 function CTAButton({
@@ -13,7 +13,7 @@ function CTAButton({
   tokenColor,
 }: {
   title: string
-  element: ElementName
+  element: ElementNameType
   onPress: () => void
   tokenColor?: Maybe<string>
 }): JSX.Element {

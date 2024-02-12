@@ -14,7 +14,7 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useSuppressPopups } from 'state/application/hooks'
 import { PopupType } from 'state/application/reducer'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
-import { isPreviewTrade } from 'state/routing/utils'
+import { isLimitTrade, isPreviewTrade } from 'state/routing/utils'
 import { useOrder } from 'state/signatures/hooks'
 import { useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled from 'styled-components'
@@ -71,7 +71,7 @@ export default function ConfirmSwapModalV2({
   swapResult?: SwapResult
   swapError?: Error
   clearSwapState: () => void
-  onAcceptChanges: () => void
+  onAcceptChanges?: () => void
   onConfirm: () => void
   onCurrencySelection: (field: Field, currency: Currency) => void
   onDismiss: () => void
@@ -178,12 +178,12 @@ export default function ConfirmSwapModalV2({
   return (
     <SwapModal confirmModalState={confirmModalState} onDismiss={onModalDismiss}>
       {/* Head section displays title, help button, close icon */}
-      <Container $height="36px" $padding="6px 12px 4px 12px">
-        <SwapHead onDismiss={onModalDismiss} />
+      <Container $height="24px" $padding="6px 12px 4px 12px">
+        <SwapHead onDismiss={onModalDismiss} isLimitTrade={isLimitTrade(trade)} />
       </Container>
       {/* Preview section displays input / output currency amounts */}
       {showPreview && (
-        <Container $padding="12px 16px 0px 16px">
+        <Container $padding="12px 12px 0px 12px">
           <SwapPreview inputCurrency={inputCurrency} trade={trade} allowedSlippage={allowedSlippage} />
         </Container>
       )}

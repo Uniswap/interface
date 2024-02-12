@@ -34,6 +34,10 @@ exports[`OffchainOrderLineItem should render type EXCHANGE_RATE 1`] = `
 
 .c3 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c4 {
@@ -140,6 +144,10 @@ exports[`OffchainOrderLineItem should render type NETWORK_COST 1`] = `
 
 .c3 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c4 {
@@ -206,6 +214,10 @@ exports[`OffchainOrderLineItem should render type TRANSACTION_ID 1`] = `
 
 .c3 {
   color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c6 {

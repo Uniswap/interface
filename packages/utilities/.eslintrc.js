@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  extends: ['custom'],
+  extends: ['@uniswap/eslint-config/native'],
   ignorePatterns: ['node_modules', '.turbo', '.eslintrc.js', 'codegen.ts'],
   parserOptions: {
     project: 'tsconfig.json',

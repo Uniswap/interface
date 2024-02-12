@@ -6,6 +6,6 @@ ignores: [
     "@tamagui/theme-base",
     ## Internal packages / workspaces
     "ui",
-    "eslint-config-custom",
     "tsconfig",
+    "utilities",
   ]

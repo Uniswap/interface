@@ -12,7 +12,7 @@ export type UnitagAddressResponse = {
   metadata?: ProfileMetadata
 }
 
-export type UnitagClaimResponse = {
+export type UnitagResponse = {
   success: boolean
   errorCode?: UnitagErrorCodes
 }
@@ -51,6 +51,23 @@ export type UnitagUpdateMetadataResponse = {
   metadata?: ProfileMetadata
 }
 
+export type UnitagGetAvatarUploadUrlResponse = {
+  success: boolean
+  avatarUrl?: string
+  preSignedUrl?: string
+  s3UploadFields?: Record<string, string>
+}
+
+export type UnitagDeleteUsernameRequestBody = {
+  username: string
+  address: Address
+}
+
+export type UnitagAvatarUploadCredentials = {
+  preSignedUrl?: string
+  s3UploadFields?: Record<string, string>
+}
+
 // Copied enum from unitags backend code -- needs to be up-to-date
 export enum UnitagErrorCodes {
   UnitagNotAvailable = 'unitags-1',
@@ -60,4 +77,6 @@ export enum UnitagErrorCodes {
   DeviceLimitReached = 'unitags-5',
   ExistingUnitagForDevice = 'unitags-6',
   ExistingUnitagForAddress = 'unitags-7',
+  NoUnitagForAddress = 'unitags-8',
+  UnitagNotActive = 'unitags-9',
 }

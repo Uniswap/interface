@@ -3,17 +3,16 @@ import { providers } from 'ethers'
 import { default as React, memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
-import { SpinningLoader } from 'src/components/loading/SpinningLoader'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
-import { ModalName } from 'src/features/telemetry/constants'
-import { useLowestPendingNonce } from 'src/features/transactions/hooks'
 import { CancelConfirmationView } from 'src/features/transactions/SummaryCards/CancelConfirmationView'
 import TransactionActionsModal from 'src/features/transactions/SummaryCards/TransactionActionsModal'
-import { openMoonpayTransactionLink, openTransactionLink } from 'src/utils/linking'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
+import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
+import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { useLowestPendingNonce } from 'wallet/src/features/transactions/hooks'
 import { cancelTransaction } from 'wallet/src/features/transactions/slice'
 import { TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import {
@@ -25,7 +24,9 @@ import {
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
+import { openMoonpayTransactionLink, openTransactionLink } from 'wallet/src/utils/linking'
 
 const LOADING_SPINNER_SIZE = 20
 
@@ -137,10 +138,11 @@ function TransactionSummaryLayout({
             <Flex grow>
               <Flex grow row alignItems="center" gap="$spacing4" justifyContent="space-between">
                 <Flex row shrink alignItems="center" gap="$spacing4">
-                  {walletDisplayName?.name ? (
-                    <Text color="$accent1" numberOfLines={1} variant="body1">
-                      {walletDisplayName.name}
-                    </Text>
+                  {walletDisplayName ? (
+                    <DisplayNameText
+                      displayName={walletDisplayName}
+                      textProps={{ color: '$accent1', variant: 'body1' }}
+                    />
                   ) : null}
                   <Text color="$neutral2" numberOfLines={1} variant="body2">
                     {title}

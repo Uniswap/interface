@@ -1,5 +1,6 @@
 import { InterfaceTrade } from 'state/routing/types'
 import {
+  LIMIT_ORDER_TRADE,
   PREVIEW_EXACT_IN_TRADE,
   TEST_ALLOWED_SLIPPAGE,
   TEST_DUTCH_TRADE_ETH_INPUT,
@@ -9,7 +10,7 @@ import {
   TEST_TRADE_FEE_ON_BUY,
   TEST_TRADE_FEE_ON_SELL,
 } from 'test-utils/constants'
-import { render } from 'test-utils/render'
+import { render, screen } from 'test-utils/render'
 
 jest.mock('../../featureFlags/flags/useFees', () => ({ useFeesEnabled: () => true }))
 
@@ -26,6 +27,8 @@ jest.mock('react-dom', () => {
 jest.mock('uuid', () => ({
   v4: () => 'fixed-uuid-value',
 }))
+
+import { Percent } from '@uniswap/sdk-core'
 
 import SwapLineItem, { SwapLineItemType } from './SwapLineItem'
 
@@ -71,5 +74,18 @@ describe('SwapLineItem.tsx', () => {
   })
   it('preview exact in', () => {
     testTradeLineItems(PREVIEW_EXACT_IN_TRADE)
+  })
+  it('Expiry', () => {
+    render(
+      <SwapLineItem
+        key={SwapLineItemType.EXPIRY}
+        trade={LIMIT_ORDER_TRADE}
+        type={SwapLineItemType.EXPIRY}
+        syncing={false}
+        allowedSlippage={new Percent(0)}
+      />
+    )
+    // TODO: mock Date Time so we can use a snapshot test here
+    expect(screen.getByText('Expiry')).toBeInTheDocument()
   })
 })

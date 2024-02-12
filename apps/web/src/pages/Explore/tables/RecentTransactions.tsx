@@ -3,14 +3,21 @@ import { createColumnHelper } from '@tanstack/react-table'
 import { ChainId } from '@uniswap/sdk-core'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
-import { StyledExternalLink, StyledInternalLink } from 'components/Table/styled'
-import { getLocaleTimeString } from 'components/Table/utils'
-import { DEFAULT_LOCALE } from 'constants/locales'
+import { Filter } from 'components/Table/Filter'
+import {
+  ClickableHeaderRow,
+  FilterHeaderRow,
+  HeaderArrow,
+  StyledExternalLink,
+  StyledInternalLink,
+  TimestampCell,
+} from 'components/Table/styled'
 import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { Transaction, TransactionType, useRecentTransactions } from 'graphql/thegraph/Transactions'
+import { OrderDirection, Transaction_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useActiveLocale } from 'hooks/useActiveLocale'
-import { useMemo } from 'react'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { useCallback, useMemo, useReducer, useRef, useState } from 'react'
 import { ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import { useTheme } from 'styled-components'
@@ -19,33 +26,75 @@ import { shortenAddress } from 'utils/addresses'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
+type ExploreTxTableSortState = {
+  sortBy: Transaction_OrderBy
+  sortDirection: OrderDirection
+}
+
 export default function RecentTransactions() {
   const theme = useTheme()
-  const locale = useActiveLocale()
   const activeLocalCurrency = useActiveLocalCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
+  const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
+  const filterModalRef = useRef<HTMLDivElement>(null)
+  useOnClickOutside(filterModalRef, filterModalIsOpen ? toggleFilterModal : undefined)
+  const [filter, setFilters] = useState<TransactionType[]>([
+    TransactionType.SWAP,
+    TransactionType.BURN,
+    TransactionType.MINT,
+  ])
 
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   const chainId = supportedChainIdFromGQLChain(chainName)
-  const { transactions, loading, loadMore } = useRecentTransactions(chainId ?? ChainId.MAINNET)
 
+  const [sortState, setSortMethod] = useState<ExploreTxTableSortState>({
+    sortBy: Transaction_OrderBy.Timestamp,
+    sortDirection: OrderDirection.Desc,
+  })
+  const { transactions, loading, loadMore } = useRecentTransactions(
+    chainId ?? ChainId.MAINNET,
+    sortState.sortBy,
+    sortState.sortDirection,
+    filter
+  )
+
+  const handleHeaderClick = useCallback(
+    (newSortMethod: Transaction_OrderBy) => {
+      if (sortState.sortBy === newSortMethod) {
+        setSortMethod({
+          sortBy: newSortMethod,
+          sortDirection: sortState.sortDirection === OrderDirection.Asc ? OrderDirection.Desc : OrderDirection.Asc,
+        })
+      } else {
+        setSortMethod({
+          sortBy: newSortMethod,
+          sortDirection: OrderDirection.Desc,
+        })
+      }
+    },
+    [sortState.sortBy, sortState.sortDirection]
+  )
+  // TODO(WEB-3236): once GQL BE Transaction query is supported add usd, token0 amount, and token1 amount sort support
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<Transaction>()
     return [
       columnHelper.accessor((transaction) => transaction.timestamp, {
         id: 'timestamp',
         header: () => (
-          <Cell minWidth={185} justifyContent="flex-start" grow>
-            <ThemedText.BodySecondary>
-              <Trans>Time</Trans>
-            </ThemedText.BodySecondary>
+          <Cell minWidth={150} justifyContent="flex-start" grow>
+            <ClickableHeaderRow $justify="flex-start" onClick={() => handleHeaderClick(Transaction_OrderBy.Timestamp)}>
+              {sortState.sortBy === Transaction_OrderBy.Timestamp && (
+                <HeaderArrow direction={sortState.sortDirection} />
+              )}
+              <ThemedText.BodySecondary>
+                <Trans>Time</Trans>
+              </ThemedText.BodySecondary>
+            </ClickableHeaderRow>
           </Cell>
         ),
         cell: (timestamp) => (
-          <Cell loading={loading} minWidth={185} justifyContent="flex-start" grow>
-            <ThemedText.BodySecondary>
-              {getLocaleTimeString(Number(timestamp.getValue?.()) * 1000, locale ?? DEFAULT_LOCALE)}
-            </ThemedText.BodySecondary>
+          <Cell loading={loading} minWidth={150} justifyContent="flex-start" grow>
+            <TimestampCell timestamp={Number(timestamp.getValue?.())} />
           </Cell>
         ),
       }),
@@ -53,9 +102,18 @@ export default function RecentTransactions() {
         id: 'swap-type',
         header: () => (
           <Cell minWidth={185} justifyContent="flex-start" grow>
-            <ThemedText.BodySecondary>
-              <Trans>Type</Trans>
-            </ThemedText.BodySecondary>
+            <FilterHeaderRow modalOpen={filterModalIsOpen} onClick={() => toggleFilterModal()} ref={filterModalRef}>
+              <Filter
+                allFilters={Object.values(TransactionType)}
+                activeFilter={filter}
+                setFilters={setFilters}
+                isOpen={filterModalIsOpen}
+                isSticky={true}
+              />
+              <ThemedText.BodySecondary>
+                <Trans>Type</Trans>
+              </ThemedText.BodySecondary>
+            </FilterHeaderRow>
           </Cell>
         ),
         cell: (transaction) => (
@@ -143,7 +201,7 @@ export default function RecentTransactions() {
         header: () => (
           <Cell minWidth={125}>
             <ThemedText.BodySecondary>
-              <Trans>Maker</Trans>
+              <Trans>Wallet</Trans>
             </ThemedText.BodySecondary>
           </Cell>
         ),
@@ -176,7 +234,20 @@ export default function RecentTransactions() {
         }
       ),
     ]
-  }, [activeLocalCurrency, chainId, chainName, formatFiatPrice, formatNumber, loading, locale, theme.neutral2])
+  }, [
+    activeLocalCurrency,
+    chainId,
+    chainName,
+    filter,
+    filterModalIsOpen,
+    formatFiatPrice,
+    formatNumber,
+    handleHeaderClick,
+    loading,
+    sortState.sortBy,
+    sortState.sortDirection,
+    theme.neutral2,
+  ])
 
   return <Table columns={columns} data={transactions} loading={loading} loadMore={loadMore} />
 }

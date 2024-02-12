@@ -1,5 +1,7 @@
-import { svgPaths as containerPaths } from './Container'
-import { svgPaths as emblemPaths } from './Emblem'
+import { containerSvgPaths } from './Container'
+import { emblemSvgPaths } from './Emblem'
+
+// dummy data to prevent errors importing
 
 export enum UniconAttributes {
   GradientStart = 0,
@@ -71,6 +73,6 @@ export const gradientEnds = [
 export const UniconNumOptions = {
   [UniconAttributes.GradientStart]: gradientStarts.length,
   [UniconAttributes.GradientEnd]: gradientEnds.length,
-  [UniconAttributes.Container]: containerPaths.length,
-  [UniconAttributes.Shape]: emblemPaths.length,
+  [UniconAttributes.Container]: containerSvgPaths.length,
+  [UniconAttributes.Shape]: emblemSvgPaths.length,
 }

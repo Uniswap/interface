@@ -54,12 +54,19 @@ interface PillMultiToggleOption {
   display?: JSX.Element // Optional custom display element
 }
 
+function getPillMultiToggleOption(option: PillMultiToggleOption | string): PillMultiToggleOption {
+  if (typeof option === 'string') {
+    return { value: option }
+  }
+  return option
+}
+
 export default function PillMultiToggle({
   options,
   currentSelected,
   onSelectOption,
 }: {
-  options: PillMultiToggleOption[]
+  options: readonly (PillMultiToggleOption | string)[]
   currentSelected: string
   onSelectOption: (option: string) => void
 }) {
@@ -70,7 +77,9 @@ export default function PillMultiToggle({
   useLayoutEffect(() => {
     const sizeMap = buttonRefs.reduce((acc, ref, index) => {
       const current = ref.current
-      acc[options[index].value] = { width: (current?.offsetWidth ?? 0) + 'px', left: (current?.offsetLeft ?? 0) + 'px' }
+      const { value } = getPillMultiToggleOption(options[index])
+
+      acc[value] = { width: (current?.offsetWidth ?? 0) + 'px', left: (current?.offsetLeft ?? 0) + 'px' }
       return acc
     }, {} as { [option: string]: ActivePillStyle })
     setButtonSizing(sizeMap)
@@ -80,7 +89,7 @@ export default function PillMultiToggle({
     <OptionsSelector>
       <ActivePill style={buttonSizing[currentSelected]} />
       {options.map((option, i) => {
-        const { value, display } = option
+        const { value, display } = getPillMultiToggleOption(option)
         const ref = buttonRefs[i]
         return (
           <OptionButton ref={ref} key={value} active={currentSelected === value} onClick={() => onSelectOption(value)}>

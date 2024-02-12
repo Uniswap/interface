@@ -7,7 +7,7 @@ import { EthToken, TopTokens } from 'wallet/src/test/gqlFixtures'
 const resolvers: Resolvers = {
   Query: {
     topTokens: () => TopTokens,
-    tokens: () => [EthToken],
+    tokens: () => [{ ...EthToken, address: null }],
   },
 }
 

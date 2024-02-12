@@ -1,20 +1,15 @@
 import { memo, PropsWithChildren } from 'react'
-import {
-  ElementName,
-  ManualPageViewScreen,
-  MobileEventName,
-  ModalName,
-  SectionName,
-} from 'src/features/telemetry/constants'
+import { ManualPageViewScreen, MobileEventName } from 'src/features/telemetry/constants'
 import { AppScreen } from 'src/screens/Screens'
 import { Trace as UntypedTrace, TraceProps } from 'utilities/src/telemetry/trace/Trace'
+import { ElementNameType, ModalNameType, SectionNameType } from 'wallet/src/telemetry/constants'
 
 // Mobile specific version of ITraceContext
 interface MobileTraceContext {
   screen?: AppScreen | ManualPageViewScreen
-  section?: SectionName
-  modal?: ModalName
-  element?: ElementName
+  section?: SectionNameType
+  modal?: ModalNameType
+  element?: ElementNameType
 }
 
 interface MobileTracePropsOverrides {

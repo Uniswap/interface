@@ -21,6 +21,7 @@ export interface UniswapXOrderDetails extends BaseSignatureFields {
   status: UniswapXOrderStatus
   swapInfo: (ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo) & { isUniswapXOrder: true }
   txHash?: string
+  encodedOrder?: string
 }
 
 export type SignatureDetails = UniswapXOrderDetails

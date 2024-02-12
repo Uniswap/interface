@@ -7,9 +7,9 @@ import {
   Pool,
   Position,
   priceToClosestTick,
-  TICK_SPACINGS,
   TickMath,
   tickToPrice,
+  TICK_SPACINGS,
 } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from 'hooks/usePools'

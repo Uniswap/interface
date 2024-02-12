@@ -19,7 +19,6 @@ ignores: [
     "src",
     "ui",
     "tsconfig",
-    "eslint-config-custom",
     ## Subpackages of installed packages
     "@redux-saga/core",
     "@ethersproject/constants",

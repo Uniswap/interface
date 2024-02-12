@@ -10,7 +10,6 @@ import {
   SignRequest,
   WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { ExplorerDataType, getExplorerLink } from 'src/utils/linking'
 import { useNoYoloParser } from 'src/utils/useNoYoloParser'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { iconSizes, TextVariantTokens } from 'ui/src/theme'
@@ -20,6 +19,7 @@ import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { EthMethod, EthTransaction } from 'wallet/src/features/walletConnect/types'
 import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
+import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
 
 const getStrMessage = (request: WalletConnectRequest): string => {
   if (request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign) {

@@ -21,6 +21,8 @@ module.exports = {
     SIMPLEHASH_API_KEY: 'key',
     SIMPLEHASH_API_URL: 'https://api.simplehash.com',
     STATSIG_PROXY_URL: 'https://api.statsig.com',
+    TEMP_SCANTASTIC_URL: 'https://api.uniswap.org',
+    TRADING_API_KEY: 'key',
     UNISWAP_API_KEY: 'key',
     UNISWAP_API_BASE_URL: 'https://api.uniswap.org',
     UNISWAP_APP_URL: 'https://app.uniswap.org',

@@ -2,45 +2,30 @@
 // consider splitting into multiple files
 /* eslint-disable max-lines */
 import React from 'react'
-import { TFunction, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { SvgUri } from 'react-native-svg'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { useEagerActivityNavigation } from 'src/app/navigation/hooks'
-import { store } from 'src/app/store'
 import { CheckmarkCircle } from 'src/components/icons/CheckmarkCircle'
-import { SpinningLoader } from 'src/components/loading/SpinningLoader'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
-import { NotificationToast } from 'src/features/notifications/NotificationToast'
-import {
-  formApproveNotificationTitle,
-  formSwapNotificationTitle,
-  formTransferCurrencyNotificationTitle,
-  formTransferNFTNotificationTitle,
-  formUnknownTxTitle,
-  formWCNotificationTitle,
-  formWrapNotificationTitle,
-} from 'src/features/notifications/utils'
-import { ModalName } from 'src/features/telemetry/constants'
-import { useCreateSwapFormState, useCreateWrapFormState } from 'src/features/transactions/hooks'
-import { Flex, useSporeColors } from 'ui/src'
+import { closeModal, openModal } from 'src/features/modals/modalSlice'
+import { useNavigateToProfileTab } from 'src/features/notifications/hooks/useNavigateToProfileTab'
+import { Flex, Icons, useSporeColors } from 'ui/src'
 import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import {
   DappLogoWithTxStatus,
   LogoWithTxStatus,
 } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
-import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
-import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { getCountryFlagSvgUrl } from 'wallet/src/features/fiatOnRamp/meld'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useNFT } from 'wallet/src/features/nfts/hooks'
+import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
+import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import {
   AppErrorNotification,
   AppNotificationDefault,
@@ -49,9 +34,7 @@ import {
   ChooseCountryNotification as ChooseCountryNotificationType,
   CopyNotification,
   CopyNotificationType,
-  SwapNetworkNotification as SwapNetworkNotificationType,
-  SwapPendingNotification as SwapPendingNotificationType,
-  SwapTxNotification,
+  ScantasticCompleteNotification as ScantasticCompleteNotificationType,
   TransactionNotificationBase,
   TransferCurrencyTxNotification,
   TransferNFTTxNotification,
@@ -59,50 +42,24 @@ import {
   WrapTxNotification,
 } from 'wallet/src/features/notifications/types'
 import {
+  formApproveNotificationTitle,
+  formTransferCurrencyNotificationTitle,
+  formTransferNFTNotificationTitle,
+  formUnknownTxTitle,
+  formWCNotificationTitle,
+  formWrapNotificationTitle,
+} from 'wallet/src/features/notifications/utils'
+import {
   useCurrencyInfo,
   useNativeCurrencyInfo,
   useWrappedNativeCurrencyInfo,
 } from 'wallet/src/features/tokens/useCurrencyInfo'
-import {
-  TransactionStatus,
-  TransactionType,
-  WrapType,
-} from 'wallet/src/features/transactions/types'
+import { useCreateWrapFormState } from 'wallet/src/features/transactions/hooks'
+import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
-
-export const NOTIFICATION_ICON_SIZE = iconSizes.icon36
-
-// Helpers to preload profile data, and dismiss modals and navigate
-const useNavigateToProfileTab = (
-  address: string | undefined
-): {
-  onPressIn: () => Promise<void>
-  onPress: () => void
-} => {
-  const { preload, navigate } = useEagerActivityNavigation()
-
-  const onPressIn = async (): Promise<void> => {
-    if (!address) {
-      return
-    }
-    await preload(address)
-  }
-
-  const onPress = (): void => {
-    if (!address) {
-      return
-    }
-    navigate()
-    store.dispatch(closeAllModals())
-  }
-
-  return {
-    onPressIn,
-    onPress,
-  }
-}
 
 export function WCNotification({
   notification,
@@ -179,75 +136,6 @@ export function ApproveNotification({
 
   return (
     <NotificationToast
-      address={address}
-      hideDelay={hideDelay}
-      icon={icon}
-      title={title}
-      onPress={onPress}
-      onPressIn={onPressIn}
-    />
-  )
-}
-
-export function SwapNotification({
-  notification: {
-    chainId,
-    txId,
-    txStatus,
-    inputCurrencyId,
-    inputCurrencyAmountRaw,
-    outputCurrencyId,
-    outputCurrencyAmountRaw,
-    tradeType,
-    address,
-    hideDelay,
-  },
-}: {
-  notification: SwapTxNotification
-}): JSX.Element {
-  const formatter = useLocalizationContext()
-  const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
-  const outputCurrencyInfo = useCurrencyInfo(outputCurrencyId)
-  const title = formSwapNotificationTitle(
-    formatter,
-    txStatus,
-    inputCurrencyInfo?.currency,
-    outputCurrencyInfo?.currency,
-    inputCurrencyId,
-    outputCurrencyId,
-    inputCurrencyAmountRaw,
-    outputCurrencyAmountRaw,
-    tradeType
-  )
-
-  const swapFormState = useCreateSwapFormState(address, chainId, txId)
-  const dispatch = useAppDispatch()
-  const { t } = useTranslation()
-  const retryButton =
-    txStatus === TransactionStatus.Failed
-      ? {
-          title: t('Retry'),
-          onPress: (): void => {
-            dispatch(closeModal({ name: ModalName.Swap }))
-            dispatch(openModal({ name: ModalName.Swap, initialState: swapFormState ?? undefined }))
-          },
-        }
-      : undefined
-
-  const { onPress, onPressIn } = useNavigateToProfileTab(address)
-
-  const icon = (
-    <SplitLogo
-      chainId={chainId}
-      inputCurrencyInfo={inputCurrencyInfo}
-      outputCurrencyInfo={outputCurrencyInfo}
-      size={NOTIFICATION_ICON_SIZE}
-    />
-  )
-
-  return (
-    <NotificationToast
-      actionButton={retryButton}
       address={address}
       hideDelay={hideDelay}
       icon={icon}
@@ -513,6 +401,9 @@ export function CopiedNotification({
     case CopyNotificationType.Address:
       title = t('Address copied')
       break
+    case CopyNotificationType.ContractAddress:
+      title = t('Contract address copied')
+      break
     case CopyNotificationType.TransactionId:
       title = t('Transaction ID copied')
       break
@@ -522,24 +413,6 @@ export function CopiedNotification({
   }
 
   return <SuccessNotification notification={{ title, hideDelay }} />
-}
-
-export function SwapNetworkNotification({
-  notification: { chainId, hideDelay },
-}: {
-  notification: SwapNetworkNotificationType
-}): JSX.Element {
-  const { t } = useTranslation()
-  const network = CHAIN_INFO[chainId].label
-
-  return (
-    <NotificationToast
-      smallToast
-      hideDelay={hideDelay}
-      icon={<NetworkLogo chainId={chainId} size={iconSizes.icon24} />}
-      title={t('Swapping on {{ network }}', { network })}
-    />
-  )
 }
 
 export function ChooseCountryNotification({
@@ -559,6 +432,37 @@ export function ChooseCountryNotification({
         </Flex>
       }
       title={t('Switched to {{name}}', { name: countryName })}
+    />
+  )
+}
+
+export function ScantasticCompleteNotification({
+  notification: { hideDelay },
+}: {
+  notification: ScantasticCompleteNotificationType
+}): JSX.Element {
+  const { t } = useTranslation()
+  return (
+    <NotificationToast
+      hideDelay={hideDelay}
+      icon={
+        <Flex position="relative">
+          <Flex backgroundColor="$accent2" borderRadius="$roundedFull" p="$spacing12">
+            <Icons.Laptop color="$accent1" size="$icon.24" />
+          </Flex>
+          <Flex
+            backgroundColor="$statusSuccess"
+            borderRadius="$roundedFull"
+            bottom={0}
+            p="$spacing4"
+            position="absolute"
+            right={0}>
+            <Icons.Check color="$white" size="$icon.8" />
+          </Flex>
+        </Flex>
+      }
+      subtitle={t('Continue on Uniswap Extension')}
+      title={t('Success')}
     />
   )
 }
@@ -597,38 +501,4 @@ export function ChangeAssetVisibilityNotification({
       }
     />
   )
-}
-
-// We roughly track the L1 block time, accuracy isnt crucial because we have other pending states,
-// and when a txn confirms it ll replace this toast.
-const SWAP_PENDING_NOTIFICATION_DELAY = 10 * ONE_SECOND_MS
-
-export function SwapPendingNotification({
-  notification,
-}: {
-  notification: SwapPendingNotificationType
-}): JSX.Element {
-  const { t } = useTranslation()
-
-  const notificationText = getNotificationText(notification.wrapType, t)
-
-  return (
-    <NotificationToast
-      smallToast
-      hideDelay={SWAP_PENDING_NOTIFICATION_DELAY}
-      icon={<SpinningLoader color="$accent1" />}
-      title={notificationText}
-    />
-  )
-}
-
-function getNotificationText(wrapType: WrapType, t: TFunction): string {
-  switch (wrapType) {
-    case WrapType.NotApplicable:
-      return t('Swap pending')
-    case WrapType.Unwrap:
-      return t('Unwrap pending')
-    case WrapType.Wrap:
-      return t('Wrap pending')
-  }
 }

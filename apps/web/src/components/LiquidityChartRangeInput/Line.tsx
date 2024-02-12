@@ -1,5 +1,5 @@
 import { ScaleLinear } from 'd3'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import styled from 'styled-components'
 
 const StyledLine = styled.line`

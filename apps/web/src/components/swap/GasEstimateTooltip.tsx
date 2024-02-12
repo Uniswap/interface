@@ -3,7 +3,7 @@ import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
 import { Gas } from 'components/Icons/Gas'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
-import { UniswapXRouterIcon } from 'components/RouterLabel/UniswapXRouterLabel'
+import { UniswapXGradient, UniswapXRouterIcon } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row, { RowFixed } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
@@ -20,7 +20,7 @@ const StyledGasIcon = styled(Gas)`
   width: 16px;
   // We apply the following to all children of the SVG in order to override the default color
   & > * {
-    fill: ${({ theme }) => theme.neutral2};
+    fill: ${({ theme }) => theme.neutral3};
   }
 `
 
@@ -47,13 +47,25 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Submitt
         <RowFixed gap="xs">
           {isUniswapXTrade(trade) ? <UniswapXRouterIcon testId="gas-estimate-uniswapx-icon" /> : <StyledGasIcon />}
           <ThemedText.BodySmall color="neutral2">
-            <Row gap="xs">
-              <div>
-                {formatNumber({
-                  input: trade.totalGasUseEstimateUSD,
-                  type: NumberType.FiatGasPrice,
-                })}
-              </div>
+            <Row gap="sm">
+              {isUniswapXTrade(trade) ? (
+                <UniswapXGradient>
+                  <div style={{ fontWeight: 535 }}>
+                    {formatNumber({
+                      input: trade.totalGasUseEstimateUSD,
+                      type: NumberType.FiatGasPrice,
+                    })}
+                  </div>
+                </UniswapXGradient>
+              ) : (
+                <div>
+                  {formatNumber({
+                    input: trade.totalGasUseEstimateUSD,
+                    type: NumberType.FiatGasPrice,
+                  })}
+                </div>
+              )}
+
               {isUniswapXTrade(trade) && (
                 <div>
                   <s>

@@ -11,11 +11,11 @@ import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceLi
 import { TokenBalanceListRow } from 'src/components/TokenBalanceList/TokenBalanceListContext'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { Flex } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'wallet/src/data/queries'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 export const TOKENS_TAB_DATA_DEPENDENCIES = [GQLQueries.PortfolioBalances]

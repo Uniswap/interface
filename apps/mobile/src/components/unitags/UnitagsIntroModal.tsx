@@ -3,13 +3,13 @@ import { useTranslation } from 'react-i18next'
 import 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
 import { closeModal } from 'src/features/modals/modalSlice'
-import { ModalName } from 'src/features/telemetry/constants'
 import { Screens, UnitagScreens } from 'src/screens/Screens'
 import { Button, Flex, GeneratedIcon, Icons, Image, Text } from 'ui/src'
 import { UNITAGS_BANNER_HORIZONTAL } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function UnitagsIntroModal(): JSX.Element {
   const { t } = useTranslation()

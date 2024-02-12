@@ -12,7 +12,6 @@ import {
   TAB_BAR_HEIGHT,
   TAB_VIEW_SCROLL_THROTTLE,
 } from 'src/components/layout/TabHelpers'
-import { Loader } from 'src/components/loading'
 import { HiddenTokensRow } from 'src/components/TokenBalanceList/HiddenTokensRow'
 import { TokenBalanceItemContextMenu } from 'src/components/TokenBalanceList/TokenBalanceItemContextMenu'
 import {
@@ -25,6 +24,7 @@ import { Screens } from 'src/screens/Screens'
 import { AnimatedFlex, Flex, useDeviceDimensions, useDeviceInsets, useSporeColors } from 'ui/src'
 import { zIndices } from 'ui/src/theme'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { TokenLoader } from 'wallet/src/components/loading/TokenLoader'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { TokenBalanceItem } from 'wallet/src/features/portfolio/TokenBalanceItem'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
@@ -193,7 +193,7 @@ export const TokenBalanceListInner = forwardRef<
       {!balancesById ? (
         isNonPollingRequestInFlight(networkStatus) ? (
           <Flex px="$spacing24" style={containerProps?.loadingContainerStyle}>
-            <Loader.Token repeat={6} />
+            <TokenLoader repeat={6} />
           </Flex>
         ) : (
           <Flex fill grow justifyContent="center" style={containerProps?.emptyContainerStyle}>
@@ -276,7 +276,7 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
     // As soon as the view comes back into focus, the FlatList will re-render with the latest data, so users won't really see this Skeleton for more than a few milliseconds when this happens.
     return (
       <Flex height={ESTIMATED_TOKEN_ITEM_HEIGHT} px="$spacing24">
-        <Loader.Token />
+        <TokenLoader />
       </Flex>
     )
   }

@@ -4,16 +4,17 @@ import { ChainId } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
+import { ClickableHeaderRow, HeaderArrow } from 'components/Table/styled'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { BIPS_BASE } from 'constants/misc'
 import { chainIdToBackendName, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
-import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { TablePool, useTopPools } from 'graphql/thegraph/TopPools'
+import { OrderDirection, Pool_OrderBy, Token } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useCurrency } from 'hooks/Tokens'
-import { ReactElement, useMemo } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { ReactElement, useCallback, useMemo, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import { ClickableStyle, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { DoubleCurrencyAndChainLogo } from '../PoolDetails/PoolDetailsHeader'
@@ -21,12 +22,6 @@ import { DoubleCurrencyAndChainLogo } from '../PoolDetails/PoolDetailsHeader'
 const TableWrapper = styled.div`
   margin: 0 auto;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
-`
-
-const PoolDescriptionCell = styled(Row)`
-  gap: 8px;
-  cursor: pointer;
-  ${ClickableStyle}
 `
 
 const FeeTier = styled(ThemedText.LabelMicro)`
@@ -42,6 +37,7 @@ interface PoolTableValues {
   volume24h: number
   volumeWeek: number
   turnover: number
+  link: string
 }
 
 export enum PoolTableColumns {
@@ -59,32 +55,54 @@ function PoolDescription({
   token1,
   feeTier,
   chainId,
-  poolAddress,
 }: {
   token0: Token
   token1: Token
   feeTier: number
   chainId: ChainId
-  poolAddress: string
 }) {
   const currencies = [useCurrency(token0.id, chainId), useCurrency(token1.id, chainId)]
-  const navigate = useNavigate()
-  const chainName = chainIdToBackendName(chainId).toLowerCase()
   return (
-    <PoolDescriptionCell onClick={() => navigate(`/explore/pools/${chainName}/${poolAddress}`)}>
+    <Row gap="sm">
       <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={28} />
       <ThemedText.BodyPrimary>
         {token0.symbol}/{token1.symbol}
       </ThemedText.BodyPrimary>
       <FeeTier>{feeTier / BIPS_BASE}%</FeeTier>
-    </PoolDescriptionCell>
+    </Row>
   )
+}
+
+export type PoolTableSortState = {
+  sortBy: Pool_OrderBy
+  sortDirection: OrderDirection
 }
 
 export function TopPoolTable() {
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   const chainId = supportedChainIdFromGQLChain(chainName)
-  const { topPools, loading, error } = useTopPools(chainId)
+  const [sortState, setSortMethod] = useState<PoolTableSortState>({
+    sortBy: Pool_OrderBy.TotalValueLockedUsd,
+    sortDirection: OrderDirection.Desc,
+  })
+  const { topPools, loading, error } = useTopPools(chainId, sortState.sortBy, sortState.sortDirection)
+
+  const handleHeaderClick = useCallback(
+    (newSortMethod: Pool_OrderBy) => {
+      if (sortState.sortBy === newSortMethod) {
+        setSortMethod({
+          sortBy: newSortMethod,
+          sortDirection: sortState.sortDirection === OrderDirection.Asc ? OrderDirection.Desc : OrderDirection.Asc,
+        })
+      } else {
+        setSortMethod({
+          sortBy: newSortMethod,
+          sortDirection: OrderDirection.Desc,
+        })
+      }
+    },
+    [sortState.sortBy, sortState.sortDirection]
+  )
 
   if (error) {
     return (
@@ -98,7 +116,13 @@ export function TopPoolTable() {
 
   return (
     <TableWrapper data-testid="top-pools-explore-table">
-      <PoolsTable pools={topPools} loading={loading} chainId={chainId} />
+      <PoolsTable
+        pools={topPools}
+        loading={loading}
+        chainId={chainId}
+        sortState={sortState}
+        handleHeaderClick={handleHeaderClick}
+      />
     </TableWrapper>
   )
 }
@@ -108,6 +132,8 @@ export function PoolsTable({
   loading,
   loadMore,
   chainId,
+  sortState,
+  handleHeaderClick,
   maxHeight,
   hiddenColumns,
 }: {
@@ -115,6 +141,8 @@ export function PoolsTable({
   loading: boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
   chainId: ChainId
+  sortState: PoolTableSortState
+  handleHeaderClick: (newSortMethod: Pool_OrderBy) => void
   maxHeight?: number
   hiddenColumns?: PoolTableColumns[]
 }) {
@@ -125,24 +153,19 @@ export function PoolsTable({
         return {
           index: index + 1,
           poolDescription: (
-            <PoolDescription
-              token0={pool.token0}
-              token1={pool.token1}
-              feeTier={pool.feeTier}
-              chainId={chainId}
-              poolAddress={pool.hash}
-            />
+            <PoolDescription token0={pool.token0} token1={pool.token1} feeTier={pool.feeTier} chainId={chainId} />
           ),
           txCount: pool.txCount,
           tvl: pool.tvl,
           volume24h: pool.volume24h,
           volumeWeek: pool.volumeWeek,
           turnover: pool.turnover,
+          link: `/explore/pools/${chainIdToBackendName(chainId).toLowerCase()}/${pool.hash}`,
         }
       }) ?? [],
     [chainId, pools]
   )
-
+  // TODO(WEB-3236): once GQL BE Pool query add 1 day, 7 day, turnover sort support
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolTableValues>()
     return [
@@ -150,12 +173,12 @@ export function PoolsTable({
         ? columnHelper.accessor((row) => row.index, {
             id: 'index',
             header: () => (
-              <Cell justifyContent="flex-start" minWidth={48}>
+              <Cell justifyContent="center" minWidth={44}>
                 <ThemedText.BodySecondary>#</ThemedText.BodySecondary>
               </Cell>
             ),
             cell: (index) => (
-              <Cell justifyContent="flex-start" loading={loading} minWidth={48}>
+              <Cell justifyContent="center" loading={loading} minWidth={44}>
                 <ThemedText.BodySecondary>{index.getValue?.()}</ThemedText.BodySecondary>
               </Cell>
             ),
@@ -183,9 +206,12 @@ export function PoolsTable({
             id: 'transactions',
             header: () => (
               <Cell justifyContent="flex-end" minWidth={120} grow>
-                <ThemedText.BodySecondary>
-                  <Trans>Transactions</Trans>
-                </ThemedText.BodySecondary>
+                <ClickableHeaderRow $justify="flex-end" onClick={() => handleHeaderClick(Pool_OrderBy.TxCount)}>
+                  {sortState.sortBy === Pool_OrderBy.TxCount && <HeaderArrow direction={sortState.sortDirection} />}
+                  <ThemedText.BodySecondary>
+                    <Trans>Transactions</Trans>
+                  </ThemedText.BodySecondary>
+                </ClickableHeaderRow>
               </Cell>
             ),
             cell: (txCount) => (
@@ -202,9 +228,17 @@ export function PoolsTable({
             id: 'tvl',
             header: () => (
               <Cell minWidth={120} grow>
-                <ThemedText.BodySecondary>
-                  <Trans>TVL</Trans>
-                </ThemedText.BodySecondary>
+                <ClickableHeaderRow
+                  $justify="flex-end"
+                  onClick={() => handleHeaderClick(Pool_OrderBy.TotalValueLockedUsd)}
+                >
+                  {sortState.sortBy === Pool_OrderBy.TotalValueLockedUsd && (
+                    <HeaderArrow direction={sortState.sortDirection} />
+                  )}
+                  <ThemedText.BodySecondary>
+                    <Trans>TVL</Trans>
+                  </ThemedText.BodySecondary>
+                </ClickableHeaderRow>
               </Cell>
             ),
             cell: (tvl) => (
@@ -258,14 +292,14 @@ export function PoolsTable({
         ? columnHelper.accessor((row) => row.turnover, {
             id: 'turnover',
             header: () => (
-              <Cell minWidth={100} grow>
+              <Cell minWidth={84} grow>
                 <ThemedText.BodySecondary>
                   <Trans>Turnover</Trans>
                 </ThemedText.BodySecondary>
               </Cell>
             ),
             cell: (turnover) => (
-              <Cell minWidth={100} loading={loading} grow>
+              <Cell minWidth={84} loading={loading} grow>
                 <ThemedText.BodySecondary>{formatNumber({ input: turnover.getValue?.() })}</ThemedText.BodySecondary>
               </Cell>
             ),
@@ -273,7 +307,7 @@ export function PoolsTable({
         : null,
       // Filter out null values
     ].filter(Boolean) as ColumnDef<PoolTableValues, any>[]
-  }, [formatNumber, hiddenColumns, loading])
+  }, [formatNumber, handleHeaderClick, hiddenColumns, loading, sortState.sortBy, sortState.sortDirection])
 
   return <Table columns={columns} data={poolTableValues} loading={loading} loadMore={loadMore} maxHeight={maxHeight} />
 }

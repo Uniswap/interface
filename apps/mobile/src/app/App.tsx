@@ -12,6 +12,7 @@ import { enableFreeze } from 'react-native-screens'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorBoundary } from 'src/app/ErrorBoundary'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import { AppModals } from 'src/app/modals/AppModals'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
 import { AppStackNavigator } from 'src/app/navigation/navigation'
@@ -40,14 +41,14 @@ import {
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
 import { Statsig, StatsigProvider } from 'statsig-react-native'
-import { flexStyles } from 'ui/src'
+import { flexStyles, useIsDarkMode } from 'ui/src'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { config } from 'wallet/src/config'
 import { uniswapUrls } from 'wallet/src/constants/urls'
-import { useCurrentAppearanceSetting, useIsDarkMode } from 'wallet/src/features/appearance/hooks'
+import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { EXPERIMENT_NAMES, FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
@@ -193,13 +194,15 @@ function AppOuter(): JSX.Element | null {
                         onReady={(navigationRef): void => {
                           routingInstrumentation.registerNavigationContainer(navigationRef)
                         }}>
-                        <BottomSheetModalProvider>
-                          <AppModals />
-                          <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                            <AppInner />
-                          </PerformanceProfiler>
-                        </BottomSheetModalProvider>
-                        <NotificationToastWrapper />
+                        <MobileWalletNavigationProvider>
+                          <BottomSheetModalProvider>
+                            <AppModals />
+                            <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                              <AppInner />
+                            </PerformanceProfiler>
+                          </BottomSheetModalProvider>
+                          <NotificationToastWrapper />
+                        </MobileWalletNavigationProvider>
                       </NavigationContainer>
                     </Sentry.TouchEventBoundary>
                   </LockScreenContextProvider>

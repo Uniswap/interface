@@ -11,8 +11,6 @@ import {
   SettingsStackNavigationProp,
   SettingsStackParamList,
 } from 'src/app/navigation/types'
-import { AddressDisplay } from 'src/components/AddressDisplay'
-import { Switch } from 'src/components/buttons/Switch'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import {
@@ -25,9 +23,8 @@ import { openModal } from 'src/features/modals/modalSlice'
 import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
-} from 'src/features/notifications/hooks'
+} from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { Screens, UnitagScreens } from 'src/screens/Screens'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
@@ -35,6 +32,8 @@ import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
 import { iconSizes } from 'ui/src/theme'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
+import { Switch } from 'wallet/src/components/buttons/Switch'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
@@ -46,6 +45,7 @@ import {
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts, useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWallet>
 
@@ -228,14 +228,16 @@ const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
 function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
   const ensName = useENS(ChainId.Mainnet, address)?.name
-  const hasUnitag = !!useUnitag(address)?.username
+  const { unitag } = useUnitag(address)
 
   const onPressEditProfile = (): void => {
-    if (hasUnitag) {
+    if (unitag?.username) {
       navigate(Screens.UnitagStack, {
         screen: UnitagScreens.EditProfile,
         params: {
           address,
+          unitag: unitag.username,
+          entryPoint: Screens.SettingsWallet,
         },
       })
     } else {
@@ -255,14 +257,14 @@ function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
           variant="body1"
         />
       </Flex>
-      {(!ensName || hasUnitag) && (
+      {(!ensName || !!unitag) && (
         <Button
           color="$neutral1"
           fontSize="$small"
           size="medium"
           theme="tertiary"
           onPress={onPressEditProfile}>
-          {hasUnitag ? t('Edit profile') : t('Edit label')}
+          {unitag ? t('Edit profile') : t('Edit label')}
         </Button>
       )}
     </Flex>

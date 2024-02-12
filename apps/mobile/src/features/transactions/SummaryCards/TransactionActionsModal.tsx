@@ -2,12 +2,12 @@ import dayjs from 'dayjs'
 import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
-import { ActionSheetModalContent, MenuItemProp } from 'src/components/modals/ActionSheetModal'
-import { BottomSheetModal } from 'src/components/modals/BottomSheetModal'
-import { ElementName, ModalName } from 'src/features/telemetry/constants'
-import { setClipboard } from 'src/utils/clipboard'
-import { openMoonpayHelpLink, openUniswapHelpLink } from 'src/utils/linking'
 import { ColorTokens, Flex, Separator, Text } from 'ui/src'
+import {
+  ActionSheetModalContent,
+  MenuItemProp,
+} from 'wallet/src/components/modals/ActionSheetModal'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { CHAIN_INFO } from 'wallet/src/constants/chains'
 import { FORMAT_DATE_LONG, useFormattedDate } from 'wallet/src/features/language/localizedDayjs'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -18,7 +18,10 @@ import {
   TransactionDetails,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
+import { setClipboard } from 'wallet/src/utils/clipboard'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
+import { openMoonpayHelpLink, openUniswapHelpLink } from 'wallet/src/utils/linking'
 
 function renderOptionItem(label: string, textColorOverride?: ColorTokens): () => JSX.Element {
   return function OptionItem(): JSX.Element {

@@ -1,14 +1,11 @@
-Another week, another update. Check out whats new below:
+Back again with more updates to our Wallet! Here’s what is new:
 
-Settings Polish — We switched spam and low balance settings to universal settings. In addition, we added an opt out for anonymous analytics within the app.
+Onboarding Polish — We updated many steps in our onboarding flow to be clearer and more intuitive. It is easier than ever to set up a new wallet (or get your friends and family to do the same…)
 
-Quick Copy Contract Addresses — We added the ability quickly copy any token address! Simply press and hold on any token to bring up the option to swap or copy a contract address.
+Increased Gas Buffer — We updated our wallet logic to default to leaving a larger quantity of native tokens in your wallet after a swap. With gas prices rising, we want to ensure that users never get stuck without the ability to make a swap! 
 
 Other notable changes:
 
-- View-only wallet polish
-- Activity bug fixes
-- Receive QR polish
-- Import wallet polish
-- Token details page bug fixes
-- Updated treatment for tokens with no logos
+- External profile UI polish
+- Token details page polish
+- Bug fixes

@@ -67,7 +67,14 @@ describe('PoolDetailsHeader', () => {
     const { asFragment } = render(<PoolDetailsHeader {...mockHeaderProps} />)
     expect(asFragment()).toMatchSnapshot()
 
-    expect(screen.getAllByText(/USDC\s*\/\s*WETH/i).length).toBeGreaterThan(0)
+    const usdcLink = document.querySelector(
+      'a[href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"]'
+    )
+    const wethLink = document.querySelector(
+      'a[href="/explore/tokens/ethereum/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"]'
+    )
+    expect(usdcLink?.textContent).toBe('USDC')
+    expect(wethLink?.textContent).toBe('WETH')
     expect(screen.getByText('0.05%')).toBeInTheDocument()
   })
 

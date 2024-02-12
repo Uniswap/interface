@@ -1,8 +1,8 @@
 import gql from 'graphql-tag'
 import { useMemo } from 'react'
 
-import { useTrendingTokensQuery } from './__generated__/types-and-hooks'
 import { chainIdToBackendName, unwrapToken } from './util'
+import { useTrendingTokensQuery } from './__generated__/types-and-hooks'
 
 gql`
   query TrendingTokens($chain: Chain!) {

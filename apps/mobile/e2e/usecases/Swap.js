@@ -1,5 +1,5 @@
 import { by, device, element, expect } from 'detox'
-import { ElementName } from 'src/features/telemetry/constants'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 export function Swap() {
   it('saves the original amount on usd toggle', async () => {

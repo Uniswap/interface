@@ -1,4 +1,9 @@
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { motion } from 'framer-motion'
+import { getTokenDetailsURL } from 'graphql/data/util'
+import { useCollectionPromoQuery, useTokenPromoQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { TokenStandard } from 'pages/Landing/assets/approvedTokens'
+import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 
@@ -56,10 +61,10 @@ const RotateContainer = styled.div<{ duration?: number }>`
 const TokenIconRing = styled(motion.div)<{
   size: number
   color: string
-  type: string
+  standard: TokenStandard
   borderRadius: number
 }>`
-  border-radius: ${(props) => (props.type === 'COIN' ? '50%' : `${props.borderRadius}px`)}};
+  border-radius: ${(props) => (props.standard === TokenStandard.ERC20 ? '50%' : `${props.borderRadius}px`)}};
   width: ${(props) => `${props.size}px`};
   height: ${(props) => `${props.size}px`};
   background-color: rgba(0,0,0,0);
@@ -73,13 +78,13 @@ const TokenIcon = styled(motion.div)<{
   size: number
   blur: number
   color: string
-  type: string
+  standard: TokenStandard
   rotation: number
   opacity: number
   borderRadius: number
   logoUrl: string
 }>`
-    border-radius: ${(props) => (props.type === 'COIN' ? '50%' : `${props.borderRadius}px`)}};
+    border-radius: ${(props) => (props.standard === TokenStandard.ERC20 ? '50%' : `${props.borderRadius}px`)}};
     width: ${(props) => `${props.size}px`};
     height: ${(props) => `${props.size}px`};
     background-color:${(props) => `${props.color}`};
@@ -107,15 +112,54 @@ export function Token(props: { point: TokenPoint; idx: number; cursor: number; s
     delay,
     floatDuration,
     logoUrl,
-    type,
-    PricePercentChange,
+    standard,
     ticker,
+    tickerPosition,
     color,
     address,
+    chain,
   } = point
 
+  const tokenPromoQuery = useTokenPromoQuery({
+    variables: {
+      address: address !== 'NATIVE' ? address : undefined,
+      chain,
+    },
+    skip: standard !== TokenStandard.ERC20,
+  })
+  const collectionPromoQuery = useCollectionPromoQuery({
+    variables: {
+      addresses: [address],
+    },
+    skip: standard !== TokenStandard.ERC721,
+  })
+  const pricePercentChange = useMemo(() => {
+    const value =
+      standard === TokenStandard.ERC20
+        ? tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0
+        : collectionPromoQuery.data?.nftCollections?.edges?.[0].node.markets?.[0].floorPricePercentChange?.value
+    return value ?? 0
+  }, [
+    collectionPromoQuery.data?.nftCollections?.edges,
+    tokenPromoQuery.data?.token?.market?.pricePercentChange?.value,
+    standard,
+  ])
+
   const navigate = useNavigate()
-  const handleOnClick = () => navigate(type === 'COIN' ? `/tokens/ethereum/${address}` : `/nfts/collection/${address}`)
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+  const handleOnClick = useMemo(
+    () => () =>
+      navigate(
+        standard === TokenStandard.ERC20
+          ? getTokenDetailsURL({
+              address,
+              chain,
+              isInfoExplorePageEnabled,
+            })
+          : `/nfts/collection/${address}`
+      ),
+    [address, chain, isInfoExplorePageEnabled, navigate, standard]
+  )
 
   const borderRadius = size / 8
 
@@ -185,8 +229,9 @@ export function Token(props: { point: TokenPoint; idx: number; cursor: number; s
         <Ticker
           size={size}
           color={color}
-          PricePercentChange={PricePercentChange}
+          pricePercentChange={pricePercentChange}
           ticker={ticker}
+          tickerPosition={tickerPosition}
           animate={hovered ? 'hover' : 'animate'}
         />
         <RotateContainer duration={duration}>
@@ -194,7 +239,7 @@ export function Token(props: { point: TokenPoint; idx: number; cursor: number; s
             size={size}
             blur={blur}
             color={color}
-            type={type}
+            standard={standard}
             rotation={rotation}
             logoUrl={logoUrl}
             opacity={opacity}
@@ -208,14 +253,14 @@ export function Token(props: { point: TokenPoint; idx: number; cursor: number; s
             <TokenIconRing
               variants={iconRingVariant1}
               size={size}
-              type={type}
+              standard={standard}
               color={color}
               borderRadius={borderRadius * 1.3}
             />
             <TokenIconRing
               variants={iconRingVariant2}
               size={size}
-              type={type}
+              standard={standard}
               color={color}
               borderRadius={borderRadius * 1.6}
             />

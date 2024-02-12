@@ -1,6 +1,5 @@
 import { SwapEventName } from '@uniswap/analytics-events'
-import { ITraceContext } from 'analytics'
-import { sendAnalyticsEvent } from 'analytics'
+import { ITraceContext, sendAnalyticsEvent } from 'analytics'
 import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 
 import { SwapEventType, timestampTracker } from './SwapEventTimestampTracker'

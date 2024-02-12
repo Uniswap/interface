@@ -1,0 +1,86 @@
+  query RecentTokenTransfers($address: String!) {
+    portfolios(ownerAddresses: [$address], chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]) {
+      id
+      ownerAddress
+      assetActivities(pageSize: 100, page: 1, chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]) {
+        id
+        timestamp
+        chain
+        details {
+          ... on TransactionDetails {
+            to
+            type
+            hash
+            from
+            status
+            assetChanges {
+              __typename
+              ... on TokenTransfer {
+                id
+                asset {
+                  id
+                  symbol
+                  address
+                  decimals
+                  chain
+                  project {
+                    id
+                    isSpam
+                    spamCode
+                  }
+                }
+                tokenStandard
+                quantity
+                sender
+                recipient
+                direction
+                transactedValue {
+                  currency
+                  value
+                }
+              }
+              ... on NftTransfer {
+                id
+                asset {
+                  id
+                  name
+                  isSpam
+                  nftContract {
+                    id
+                    chain
+                    address
+                  }
+                  tokenId
+                  image {
+                    id
+                    url
+                  }
+                  collection {
+                    id
+                    name
+                  }
+                }
+                nftStandard
+                sender
+                recipient
+                direction
+              }
+              ... on TokenApproval {
+                id
+                asset {
+                  id
+                  symbol
+                  decimals
+                  address
+                  chain
+                }
+                tokenStandard
+                approvedAddress
+                quantity
+              }
+            }
+          }
+        }
+      }
+    }
+  }

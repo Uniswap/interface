@@ -17,7 +17,6 @@ import {
   Token,
 } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import GOVERNOR_BRAVO_ABI from 'abis/governor-bravo.json'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'
 import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap_grants_proposal_description'
@@ -25,6 +24,7 @@ import { useContract } from 'hooks/useContract'
 import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useCallback, useMemo } from 'react'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
+import GOVERNOR_BRAVO_ABI from 'wallet/src/abis/governor-bravo.json'
 
 import {
   BRAVO_START_BLOCK,
