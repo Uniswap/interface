@@ -23,7 +23,7 @@ export function Indicator({
         <Flex
           key={`indicator-${i}`}
           fill
-          bg="$neutral1"
+          backgroundColor="$neutral1"
           borderRadius="$rounded16"
           height={4}
           opacity={i === currentStep ? 1 : 0.2}
@@ -68,7 +68,7 @@ function AnimatedIndicatorPill({
     <AnimatedFlex
       key={`indicator-${index}`}
       fill
-      bg="$neutral1"
+      backgroundColor="$neutral1"
       borderRadius="$rounded16"
       height={4}
       style={style}

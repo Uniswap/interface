@@ -4,8 +4,8 @@ import { getDeviceId, sendAnalyticsEvent, sendInitializationEvent, Trace, user }
 import ErrorBoundary from 'components/ErrorBoundary'
 import Loader from 'components/Icons/LoadingSpinner'
 import NavBar, { PageTabs } from 'components/NavBar'
-import { UkBanner, UK_BANNER_HEIGHT, UK_BANNER_HEIGHT_MD, UK_BANNER_HEIGHT_SM } from 'components/NavBar/UkBanner'
-import { useFeatureFlagsIsLoaded } from 'featureFlags'
+import { UK_BANNER_HEIGHT, UK_BANNER_HEIGHT_MD, UK_BANNER_HEIGHT_SM, UkBanner } from 'components/NavBar/UkBanner'
+import { useFeatureFlagsIsLoaded, useFeatureFlagURLOverrides } from 'featureFlags'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
 import { lazy, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react'
@@ -35,6 +35,7 @@ const AppChrome = lazy(() => import('./AppChrome'))
 const BodyWrapper = styled.div<{ bannerIsVisible?: boolean }>`
   display: flex;
   flex-direction: column;
+  position: relative;
   width: 100%;
   min-height: calc(100vh - ${({ bannerIsVisible }) => (bannerIsVisible ? UK_BANNER_HEIGHT : 0)}px);
   padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;
@@ -109,7 +110,8 @@ export default function App() {
   useEffect(() => {
     window.scrollTo(0, 0)
     setScrollY(0)
-  }, [pathname])
+    // URL may change without page changing (e.g. when switching chains), and we only want to reset scroll to top if the page changes
+  }, [currentPage])
 
   const [searchParams] = useSearchParams()
   useEffect(() => {
@@ -119,6 +121,8 @@ export default function App() {
       setShouldDisableNFTRoutes(false)
     }
   }, [searchParams, setShouldDisableNFTRoutes])
+
+  useFeatureFlagURLOverrides()
 
   useEffect(() => {
     const scrollListener = () => {
@@ -194,7 +198,11 @@ export default function App() {
                     route.enabled(routerConfig) ? (
                       <Route key={route.path} path={route.path} element={route.getElement(routerConfig)}>
                         {route.nestedPaths.map((nestedPath) => (
-                          <Route path={nestedPath} key={`${route.path}/${nestedPath}`} />
+                          <Route
+                            path={nestedPath}
+                            element={route.getElement(routerConfig)}
+                            key={`${route.path}/${nestedPath}`}
+                          />
                         ))}
                       </Route>
                     ) : null

@@ -46,7 +46,7 @@ export function ExploreScreen(): JSX.Element {
   useScrollToTop(listRef)
 
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const debouncedSearchQuery = useDebounce(searchQuery)
+  const debouncedSearchQuery = useDebounce(searchQuery).trim()
   const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
   const textInputRef = useRef<TextInput>(null)
 
@@ -75,12 +75,11 @@ export function ExploreScreen(): JSX.Element {
   }, [])
 
   return (
-    <Screen bg="$transparent" edges={['top']}>
+    <Screen backgroundColor="$transparent" edges={['top']}>
       <HandleBar backgroundColor="none" />
       <Flex backgroundColor="$transparent" p="$spacing16">
         <SearchTextInput
           ref={textInputRef}
-          showCancelButton
           backgroundColor={isSearchMode ? contrastBackgroundColor : searchBarBackgroundColor}
           placeholder={t('Search tokens and wallets')}
           showShadow={!isSearchMode}

@@ -1,26 +1,41 @@
+import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
 import { ListRenderItemInfo, SectionList, SectionListData } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { AnimatedFlex, Inset, Text, TouchableArea } from 'ui/src'
+import { isWeb } from 'tamagui'
+import { AnimatedFlex, Text, TouchableArea, useDeviceInsets } from 'ui/src'
+import { spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 
 interface RecipientListProps {
+  renderedInModal?: boolean
   sections: SectionListData<SearchableRecipient>[]
   onPress: (recipient: string) => void
 }
 
-export function RecipientList({ onPress, sections }: RecipientListProps): JSX.Element {
+export function RecipientList({
+  onPress,
+  sections,
+  renderedInModal = false,
+}: RecipientListProps): JSX.Element {
+  const insets = useDeviceInsets()
+
   const renderItem = function ({ item }: ListRenderItemInfo<SearchableRecipient>): JSX.Element {
     return (
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} py="$spacing12">
+      // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
+      <AnimatedFlex entering={FadeIn} exiting={isWeb ? undefined : FadeOut} py="$spacing12">
         <RecipientRow recipient={item} onPress={onPress} />
       </AnimatedFlex>
     )
   }
 
+  const List = renderedInModal ? BottomSheetSectionList : SectionList
+
   return (
-    <SectionList
-      ListFooterComponent={<Inset all="$spacing36" />}
+    <List
+      contentContainerStyle={{
+        paddingBottom: insets.bottom + spacing.spacing12,
+      }}
       keyExtractor={key}
       keyboardDismissMode="on-drag"
       keyboardShouldPersistTaps="always"
@@ -34,7 +49,12 @@ export function RecipientList({ onPress, sections }: RecipientListProps): JSX.El
 
 function SectionHeader(info: { section: SectionListData<SearchableRecipient> }): JSX.Element {
   return (
-    <AnimatedFlex backgroundColor="$surface1" entering={FadeIn} exiting={FadeOut} py="$spacing8">
+    <AnimatedFlex
+      backgroundColor="$surface1"
+      entering={FadeIn}
+      // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
+      exiting={isWeb ? undefined : FadeOut}
+      py="$spacing8">
       <Text color="$neutral2" variant="subheading2">
         {info.section.title}
       </Text>

@@ -20,7 +20,7 @@ describe('useAccountRiskCheck', () => {
     renderHook(() => useAccountRiskCheck(account))
 
     await waitFor(() => {
-      expect(fetchMock).toHaveBeenCalledWith('https://api.uniswap.org/v1/screen', {
+      expect(fetchMock).toHaveBeenCalledWith('https://interface.gateway.uniswap.org/v1/screen', {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ describe('useAccountRiskCheck', () => {
     renderHook(() => useAccountRiskCheck(account))
 
     await waitFor(() => {
-      expect(fetchMock).toHaveBeenCalledWith('https://api.uniswap.org/v1/screen', {
+      expect(fetchMock).toHaveBeenCalledWith('https://interface.gateway.uniswap.org/v1/screen', {
         method: 'POST',
         headers: new Headers({
           'Content-Type': 'application/json',

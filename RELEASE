@@ -1,11 +1,63 @@
-Back again with more updates to our Wallet! Here’s what is new:
+IPFS hash of the deployment:
+- CIDv0: `Qmf6XKUvbFPHvKbi1atVQVyMwr4iVxCSpLHffiTio8Hw2h`
+- CIDv1: `bafybeihy7ayma2n3ltw6zn2aewegv4eyvxo4f52n2ixpnxgyx47xidce5i`
 
-Onboarding Polish — We updated many steps in our onboarding flow to be clearer and more intuitive. It is easier than ever to set up a new wallet (or get your friends and family to do the same…)
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-Increased Gas Buffer — We updated our wallet logic to default to leaving a larger quantity of native tokens in your wallet after a swap. With gas prices rising, we want to ensure that users never get stuck without the ability to make a swap! 
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-Other notable changes:
+IPFS gateways:
+- https://bafybeihy7ayma2n3ltw6zn2aewegv4eyvxo4f52n2ixpnxgyx47xidce5i.ipfs.dweb.link/
+- https://bafybeihy7ayma2n3ltw6zn2aewegv4eyvxo4f52n2ixpnxgyx47xidce5i.ipfs.cf-ipfs.com/
+- [ipfs://Qmf6XKUvbFPHvKbi1atVQVyMwr4iVxCSpLHffiTio8Hw2h/](ipfs://Qmf6XKUvbFPHvKbi1atVQVyMwr4iVxCSpLHffiTio8Hw2h/)
 
-- External profile UI polish
-- Token details page polish
-- Bug fixes
+## 5.9.0 (2024-02-12)
+
+
+### Features
+
+* **web:** [info] fix TDP/PDP header mobile responsiveness (#5636) 64edb1a
+* **web:** [info] move chart type selector and time selector to below chart (#5880) 524734a
+* **web:** add copy tooltip behavior (#5919) aed3633
+* **web:** add limit price inversion (#6198) de2d048
+* **web:** Allow feature flag overriding through URL parameters (#6182) 01181cf
+* **web:** change output currency from limit price panel (#6192) 8651e59
+* **web:** deploy v2 everywhere feature flag (#6161) dfa90e7
+* **web:** do not reset scroll between tabs (#6090) 4d0d682
+* **web:** explore/tokens and /explore should not be interchangeable (#6088) f4ca806
+* **web:** Make limit price section first and auto-fill with USDC if no output currency selected (#6013) b8ecb58
+* **web:** more dns gateway updates (#5964) 5051029
+* **web:** outage banner for arbitrum, optimism, polygon (#6218) 30af199
+* **web:** remove increment buttons from Limit Price Input (#6189) b27d874
+* **web:** Update submission endpoint for limits (#6236) 35c1e29
+* **web:** use pill toggle for TDP/PDP chart times (#6002) f3631b4
+* **web:** use protocol stats for explore charts (#6030) d42aa99
+
+
+### Bug Fixes
+
+* **web:** [landing-page] add missing translations, improve layout responsiveness, update brand assets (#6166) 38e9e47
+* **web:** de-flake swap flow logging test (#6150) 0f7214e
+* **web:** de-flake TDP cypress test (#6147) c999070
+* **web:** fix and re-enable swap e2e tests (#6143) 6922d5b
+* **web:** followup fixes for outage banner (#6229) a6db458
+* **web:** left aligned input send (#6144) cd926ae
+* **web:** make new landing page enabled by default (#6287) ce952ad
+* **web:** re-enable some cypress tests (#6122) 0aaecb1
+* **web:** send currency logos in send review are extending too far on safari (#6137) b6eecf2
+* **web:** send numbers cutoff on safari (#6136) eed1540
+* **web:** swap out OP for LDO on homepage (#6206) ea0ea23
+* **web:** update gql schema (#6246) 07432fe
+* **web:** use sentence casing (#6046) d2958ee
+
+
+### Tests
+
+* **web:** add e2e test for cancelling X order (#6146) 131aedc
+* **web:** update permit2 tests to use new ConfirmSwapModalV2 (#6165) 02c6883
+* **web:** use ConfirmSwapModalV2 in swap errors e2e tests (#6167) 25e4bad
+
+

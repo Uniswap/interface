@@ -3,20 +3,20 @@ import { call, delay } from 'typed-redux-saga'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { GQLQueries } from 'wallet/src/data/queries'
 import {
   PortfolioBalancesDocument,
   PortfolioBalancesQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { GQLQueries } from 'wallet/src/data/queries'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { WalletEventName } from 'wallet/src/telemetry/constants'
 import {
+  CurrencyId,
   buildCurrencyId,
   buildNativeCurrencyId,
   buildWrappedNativeCurrencyId,
-  CurrencyId,
 } from 'wallet/src/utils/currencyId'
 
 type CurrencyIdToBalance = Record<CurrencyId, number>

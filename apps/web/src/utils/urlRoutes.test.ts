@@ -8,6 +8,27 @@ describe('getCurrentPageFromLocation', () => {
     expect(result).toBe(InterfacePageName.SWAP_PAGE)
   })
 
+  it('should return TOKEN_DETAILS_PAGE when location pathname starts with "/explore/tokens/:chainName/0x"', () => {
+    let result = getCurrentPageFromLocation('/explore/tokens/optimism/0x123')
+    expect(result).toBe(InterfacePageName.TOKEN_DETAILS_PAGE)
+
+    result = getCurrentPageFromLocation('/explore/tokens/polygon/NATIVE')
+    expect(result).toBe(InterfacePageName.TOKEN_DETAILS_PAGE)
+  })
+
+  it('should return POOL_DETAILS_PAGE when location pathname starts with "/explore/pools/0x"', () => {
+    const result = getCurrentPageFromLocation('/explore/pools/optimism/0x456')
+    expect(result).toBe(InterfacePageName.POOL_DETAILS_PAGE)
+  })
+
+  it('should return EXPLORE_PAGE when location pathname starts with "/explore" but does not match detail-page routes', () => {
+    let result = getCurrentPageFromLocation('/explore/tokens/ethereum')
+    expect(result).toBe(InterfacePageName.EXPLORE_PAGE)
+
+    result = getCurrentPageFromLocation('/explore/pools/optimism')
+    expect(result).toBe(InterfacePageName.EXPLORE_PAGE)
+  })
+
   it('should return VOTE_PAGE when location pathname starts with "/vote"', () => {
     const result = getCurrentPageFromLocation('/vote/456')
     expect(result).toBe(InterfacePageName.VOTE_PAGE)

@@ -43,10 +43,15 @@ export default function WalletPreviewCard({
       py="$spacing16"
       onPress={(): void => onSelect(address)}
       {...rest}>
-      <Flex row alignItems="center" jc="space-between">
-        <Flex row ai="center" gap="$spacing12" height={ADDRESS_WRAPPER_HEIGHT} jc="flex-start">
+      <Flex row alignItems="center" justifyContent="space-between">
+        <Flex
+          row
+          alignItems="center"
+          gap="$spacing12"
+          height={ADDRESS_WRAPPER_HEIGHT}
+          justifyContent="flex-start">
           <Unicon address={address} size={UNICON_SIZE} />
-          <Flex ai="flex-start">
+          <Flex alignItems="flex-start">
             <DisplayNameText displayName={displayName} textProps={{ variant: 'body1' }} />
             {balance ? (
               <Text color="$neutral2" variant="subheading2">

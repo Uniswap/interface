@@ -16,8 +16,8 @@ import {
   GetQuickQuoteArgs,
   GetQuoteArgs,
   InterfaceTrade,
-  isClassicQuoteResponse,
   LimitOrderTrade,
+  OffchainOrderType,
   PoolType,
   PreviewTrade,
   QuickRouteResponse,
@@ -35,6 +35,7 @@ import {
   URAQuoteType,
   V2PoolInRoute,
   V3PoolInRoute,
+  isClassicQuoteResponse,
 } from './types'
 
 interface RouteResult {
@@ -364,5 +365,5 @@ export function isUniswapXTrade(trade?: InterfaceTrade): trade is DutchOrderTrad
 }
 
 export function isLimitTrade(trade?: InterfaceTrade): trade is LimitOrderTrade {
-  return trade?.fillType === TradeFillType.UniswapX && trade?.offchainOrderType === 'limit_order'
+  return trade?.fillType === TradeFillType.UniswapX && trade?.offchainOrderType === OffchainOrderType.LIMIT_ORDER
 }

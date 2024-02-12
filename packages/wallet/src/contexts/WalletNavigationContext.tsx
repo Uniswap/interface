@@ -7,6 +7,7 @@ export type WalletNavigationContextState = {
   navigateToAccountTokenList: () => void
   navigateToAccountActivityList: () => void
   navigateToSwapFlow: (args: NavigateToSwapFlowArgs) => void
+  navigateToTokenDetails: (currencyId: string) => void
 }
 
 export const WalletNavigationContext = createContext<WalletNavigationContextState | undefined>(

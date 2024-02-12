@@ -18,7 +18,7 @@ describe('BreadcrumbNav', () => {
       symbol: 'WBTC',
     })
     const { asFragment } = render(
-      <CurrentPageBreadcrumb address="0x2260fac5e5542a773aa44fbcfedf7c193bc2c599" currency={currency} chainId={1} />
+      <CurrentPageBreadcrumb address="0x2260fac5e5542a773aa44fbcfedf7c193bc2c599" currency={currency} />
     )
     expect(asFragment()).toMatchSnapshot()
 
@@ -30,7 +30,7 @@ describe('BreadcrumbNav', () => {
 
   it('does not display address hover for native tokens', async () => {
     const ETH = nativeOnChain(ChainId.MAINNET)
-    const { asFragment } = render(<CurrentPageBreadcrumb address="NATIVE" currency={ETH} chainId={1} />)
+    const { asFragment } = render(<CurrentPageBreadcrumb address="NATIVE" currency={ETH} />)
     expect(asFragment()).toMatchSnapshot()
 
     await act(() => userEvent.hover(screen.getByTestId('current-breadcrumb')))

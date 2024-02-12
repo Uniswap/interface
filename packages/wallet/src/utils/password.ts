@@ -60,6 +60,8 @@ function translateWarning(warning: string): string {
 
 export const REQUIRED_PASSWORD_STRENGTH_SCORE = 3
 
+export const PASSWORD_VALIDATION_DEBOUNCE_MS = 750
+
 export function validatePassword(password: string): PasswordValidationResult {
   const { score, feedback } = zxcvbn(password)
   if (score >= REQUIRED_PASSWORD_STRENGTH_SCORE) {

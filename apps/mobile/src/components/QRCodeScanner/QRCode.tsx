@@ -148,7 +148,7 @@ const _QRCodeDisplay = ({
       </Flex>
       <Flex
         alignItems="center"
-        bg="$transparent"
+        backgroundColor="$transparent"
         borderRadius="$roundedFull"
         overflow="visible"
         pl="$spacing2"

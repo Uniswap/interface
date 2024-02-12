@@ -4,7 +4,6 @@ exports[`SearchPopularTokens renders without error 1`] = `
 <View
   style={
     {
-      "alignItems": "stretch",
       "flexDirection": "column",
       "paddingBottom": 8,
       "paddingLeft": 8,
@@ -17,7 +16,6 @@ exports[`SearchPopularTokens renders without error 1`] = `
     onLayout={[Function]}
     style={
       {
-        "alignItems": "stretch",
         "flexDirection": "column",
         "opacity": 0,
       }
@@ -27,7 +25,6 @@ exports[`SearchPopularTokens renders without error 1`] = `
     <View
       style={
         {
-          "alignItems": "stretch",
           "flexDirection": "column",
           "flexGrow": 1,
           "gap": 4,
@@ -61,7 +58,6 @@ exports[`SearchPopularTokens renders without error 1`] = `
           <View
             style={
               {
-                "alignItems": "stretch",
                 "backgroundColor": "#CECECE",
                 "borderBottomLeftRadius": 999999,
                 "borderBottomRightRadius": 999999,
@@ -125,7 +121,6 @@ exports[`SearchPopularTokens renders without error 1`] = `
                 <View
                   style={
                     {
-                      "alignItems": "stretch",
                       "backgroundColor": "#F9F9F9",
                       "borderBottomLeftRadius": 4,
                       "borderBottomRightRadius": 4,
@@ -195,7 +190,6 @@ exports[`SearchPopularTokens renders without error 1`] = `
                   <View
                     style={
                       {
-                        "alignItems": "stretch",
                         "backgroundColor": "#F9F9F9",
                         "borderBottomLeftRadius": 4,
                         "borderBottomRightRadius": 4,
@@ -243,7 +237,6 @@ exports[`SearchPopularTokens renders without error 1`] = `
           <View
             style={
               {
-                "alignItems": "stretch",
                 "backgroundColor": "#CECECE",
                 "borderBottomLeftRadius": 999999,
                 "borderBottomRightRadius": 999999,
@@ -307,7 +300,6 @@ exports[`SearchPopularTokens renders without error 1`] = `
                 <View
                   style={
                     {
-                      "alignItems": "stretch",
                       "backgroundColor": "#F9F9F9",
                       "borderBottomLeftRadius": 4,
                       "borderBottomRightRadius": 4,
@@ -377,7 +369,6 @@ exports[`SearchPopularTokens renders without error 1`] = `
                   <View
                     style={
                       {
-                        "alignItems": "stretch",
                         "backgroundColor": "#F9F9F9",
                         "borderBottomLeftRadius": 4,
                         "borderBottomRightRadius": 4,
@@ -412,16 +403,18 @@ exports[`SearchPopularTokens renders without error 2`] = `
         "chainId": 1,
         "logoUrl": "https://loremflickr.com/640/480",
         "name": "Ethereum",
+        "safetyLevel": "VERIFIED",
         "symbol": "ETH",
-        "type": 1,
+        "type": 2,
       },
       {
         "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
         "chainId": 1,
         "logoUrl": "https://loremflickr.com/640/480",
         "name": "USD Coin",
+        "safetyLevel": "VERIFIED",
         "symbol": "USDC",
-        "type": 1,
+        "type": 2,
       },
     ]
   }
@@ -462,8 +455,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
             },
             {
               "onPress": [Function],
-              "systemIcon": "doc.on.doc",
-              "title": "Copy contract address",
+              "systemIcon": "qrcode",
+              "title": "Receive",
             },
             {
               "onPress": [Function],
@@ -586,7 +579,6 @@ exports[`SearchPopularTokens renders without error 2`] = `
                 <View
                   style={
                     {
-                      "alignItems": "stretch",
                       "flexDirection": "column",
                       "flexShrink": 1,
                     }
@@ -662,8 +654,8 @@ exports[`SearchPopularTokens renders without error 2`] = `
             },
             {
               "onPress": [Function],
-              "systemIcon": "doc.on.doc",
-              "title": "Copy contract address",
+              "systemIcon": "qrcode",
+              "title": "Receive",
             },
             {
               "onPress": [Function],
@@ -786,7 +778,6 @@ exports[`SearchPopularTokens renders without error 2`] = `
                 <View
                   style={
                     {
-                      "alignItems": "stretch",
                       "flexDirection": "column",
                       "flexShrink": 1,
                     }
@@ -839,7 +830,6 @@ exports[`SearchPopularTokens renders without error 2`] = `
                 <View
                   style={
                     {
-                      "alignItems": "stretch",
                       "flexDirection": "column",
                       "flexShrink": 1,
                     }

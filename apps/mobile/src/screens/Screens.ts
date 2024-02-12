@@ -36,7 +36,7 @@ export enum OnboardingScreens {
   Landing = 'OnboardingLanding',
   EditName = 'EditName',
   Notifications = 'OnboardingNotifications',
-  QRAnimation = 'QRAnimation',
+  WelcomeWallet = 'WelcomeWallet',
   Security = 'OnboardingSecurity',
 
   // import

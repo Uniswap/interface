@@ -1,7 +1,7 @@
 import { useIsDarkMode } from 'ui/src'
-import { MeldLogos } from 'wallet/src/features/fiatOnRamp/meld'
+import { FORLogo } from 'wallet/src/features/fiatOnRamp/types'
 
-export function useMeldLogoUrl(logos: MeldLogos | undefined): string | undefined {
+export function useFiatOnRampLogoUrl(logos: FORLogo | undefined): string | undefined {
   const isDarkMode = useIsDarkMode()
 
   if (!logos) {

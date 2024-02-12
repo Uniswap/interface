@@ -6,12 +6,8 @@ exports[`EmptyState renders without error 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "column",
-      "gap": 24,
+      "gap": 16,
       "justifyContent": "center",
-      "paddingBottom": 12,
-      "paddingLeft": 12,
-      "paddingRight": 12,
-      "paddingTop": 12,
       "width": "100%",
     }
   }
@@ -21,7 +17,7 @@ exports[`EmptyState renders without error 1`] = `
       {
         "alignItems": "center",
         "flexDirection": "column",
-        "gap": 16,
+        "gap": 4,
         "justifyContent": "center",
       }
     }
@@ -57,7 +53,6 @@ exports[`EmptyState renders without error 1`] = `
   <View
     style={
       {
-        "alignItems": "stretch",
         "flexDirection": "row",
         "gap": 16,
       }
@@ -124,7 +119,6 @@ exports[`ErrorState renders without error 1`] = `
   <View
     style={
       {
-        "alignItems": "stretch",
         "flexDirection": "row",
       }
     }
@@ -195,7 +189,6 @@ exports[`Header renders without error 1`] = `
     <View
       style={
         {
-          "alignItems": "stretch",
           "flexDirection": "column",
           "gap": 4,
         }
@@ -445,7 +438,6 @@ exports[`Shadow renders without error 1`] = `
 <View
   style={
     {
-      "alignItems": "stretch",
       "backgroundColor": "#FFFFFFff",
       "borderBottomLeftRadius": 16,
       "borderBottomRightRadius": 16,

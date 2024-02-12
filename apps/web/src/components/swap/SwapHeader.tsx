@@ -4,13 +4,14 @@ import { useLimitsEnabled } from 'featureFlags/flags/limits'
 import { useSendEnabled } from 'featureFlags/flags/send'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/SwapContext'
 import styled from 'styled-components'
-import { ButtonText } from 'theme/components'
 import { isIFramed } from 'utils/isIFramed'
 
+import { useLocation } from 'react-router-dom'
 import { RowBetween, RowFixed } from '../Row'
 import SettingsTab from '../Settings'
-import { SwapTab } from './constants'
 import SwapBuyFiatButton from './SwapBuyFiatButton'
+import { SwapTab } from './constants'
+import { SwapHeaderTabButton } from './styled'
 
 const StyledSwapHeader = styled(RowBetween)`
   margin-bottom: 4px;
@@ -22,21 +23,6 @@ const HeaderButtonContainer = styled(RowFixed)`
   padding-bottom: 8px;
 `
 
-const StyledTextButton = styled(ButtonText)<{ $isActive: boolean }>`
-  color: ${({ theme, $isActive }) => ($isActive ? theme.neutral1 : theme.neutral2)};
-  background-color: ${({ theme, $isActive }) => $isActive && theme.surface2};
-  padding: 8px 16px;
-  border-radius: 20px;
-  gap: 4px;
-  font-weight: 485;
-  &:focus {
-    text-decoration: none;
-  }
-  &:active {
-    text-decoration: none;
-  }
-`
-
 export default function SwapHeader() {
   const limitsEnabled = useLimitsEnabled()
   const sendEnabled = useSendEnabled() && !isIFramed()
@@ -44,6 +30,7 @@ export default function SwapHeader() {
   const {
     derivedSwapInfo: { trade, autoSlippage },
   } = useSwapContext()
+  const { pathname } = useLocation()
 
   // Limits is only available on mainnet for now
   if (chainId !== ChainId.MAINNET && currentTab === SwapTab.Limit) {
@@ -53,13 +40,13 @@ export default function SwapHeader() {
   return (
     <StyledSwapHeader>
       <HeaderButtonContainer>
-        <StyledTextButton
-          as="h1"
+        <SwapHeaderTabButton
+          as={pathname === '/swap' ? 'h1' : 'button'}
           role="button"
           tabIndex={0}
           $isActive={currentTab === SwapTab.Swap}
           onClick={() => setCurrentTab(SwapTab.Swap)}
-          onKeyDown={(e) => {
+          onKeyDown={(e: React.KeyboardEvent<HTMLHeadingElement | HTMLButtonElement>) => {
             if (e.key === 'Enter' || e.key === 'Space') {
               e.preventDefault()
               setCurrentTab(SwapTab.Swap)
@@ -67,18 +54,18 @@ export default function SwapHeader() {
           }}
         >
           <Trans>Swap</Trans>
-        </StyledTextButton>
-        <SwapBuyFiatButton />
-        {sendEnabled && (
-          <StyledTextButton $isActive={currentTab === SwapTab.Send} onClick={() => setCurrentTab(SwapTab.Send)}>
-            <Trans>Send</Trans>
-          </StyledTextButton>
-        )}
+        </SwapHeaderTabButton>
         {limitsEnabled && chainId === ChainId.MAINNET && (
-          <StyledTextButton $isActive={currentTab === SwapTab.Limit} onClick={() => setCurrentTab(SwapTab.Limit)}>
+          <SwapHeaderTabButton $isActive={currentTab === SwapTab.Limit} onClick={() => setCurrentTab(SwapTab.Limit)}>
             <Trans>Limit</Trans>
-          </StyledTextButton>
+          </SwapHeaderTabButton>
         )}
+        {sendEnabled && (
+          <SwapHeaderTabButton $isActive={currentTab === SwapTab.Send} onClick={() => setCurrentTab(SwapTab.Send)}>
+            <Trans>Send</Trans>
+          </SwapHeaderTabButton>
+        )}
+        <SwapBuyFiatButton />
       </HeaderButtonContainer>
       <RowFixed>
         <SettingsTab autoSlippage={autoSlippage} chainId={chainId} trade={trade.trade} />

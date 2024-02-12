@@ -124,5 +124,6 @@ describe('SwapModalFooter.tsx', () => {
     expect(screen.getByText('Expiry')).toBeInTheDocument()
     expect(screen.getByText('Fee')).toBeInTheDocument()
     expect(screen.getByText('Network cost')).toBeInTheDocument()
+    expect(screen.getByText('Canceling a limit will require a small network cost')).toBeInTheDocument()
   })
 })

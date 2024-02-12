@@ -32,6 +32,11 @@ type FiatOnRampAggregatorModalParams = {
   initialState?: undefined
 }
 
+type ReceiveCryptoModalParams = {
+  name: typeof ModalName.ReceiveCryptoModal
+  initialState?: undefined
+}
+
 type LanguageSelectorModalParams = {
   name: typeof ModalName.LanguageSelector
   initialState?: undefined
@@ -58,7 +63,10 @@ type SwapModalParams = { name: typeof ModalName.Swap; initialState?: Transaction
 
 type SendModalParams = { name: typeof ModalName.Send; initialState?: TransactionState }
 
-type UnitagsIntroParams = { name: typeof ModalName.UnitagsIntro; initialState?: undefined }
+type UnitagsIntroParams = {
+  name: typeof ModalName.UnitagsIntro
+  initialState?: { address: Address }
+}
 
 type ViewOnlyExplainerParams = {
   name: typeof ModalName.ViewOnlyExplainer
@@ -72,6 +80,7 @@ export type OpenModalParams =
   | FiatCurrencySelectorParams
   | FiatOnRampModalParams
   | FiatOnRampAggregatorModalParams
+  | ReceiveCryptoModalParams
   | LanguageSelectorModalParams
   | ScantasticModalParams
   | RemoveWalletModalParams
@@ -90,6 +99,10 @@ export const initialModalState: ModalsState = {
     initialState: undefined,
   },
   [ModalName.FiatOnRampAggregator]: {
+    isOpen: false,
+    initialState: undefined,
+  },
+  [ModalName.ReceiveCryptoModal]: {
     isOpen: false,
     initialState: undefined,
   },

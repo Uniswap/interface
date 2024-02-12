@@ -8,6 +8,8 @@ import { Box, H2, H3 } from '../components/Generics'
 import { BookOpen, ChatBubbles, HelpCircle } from '../components/Icons'
 
 const SectionLayout = styled.div`
+  width: 100%;
+  max-width: 1360px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -22,7 +24,6 @@ const SectionLayout = styled.div`
 const Layout = styled.div`
   width: 100%;
   max-width: 1280px;
-
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
@@ -117,7 +118,7 @@ export function NewsletterEtc() {
   const isDarkMode = useIsDarkMode()
   return (
     <SectionLayout>
-      <Box direction="row" maxWidth="1328px" gap="24px">
+      <Box direction="row" maxWidth="1328px" gap="24px" width="100%">
         <SectionCol justify-content="space-between" height="100%">
           <H2>
             <Trans>Connect with us</Trans>
@@ -131,7 +132,7 @@ export function NewsletterEtc() {
               rel="noopener noreferrer"
               backgroundColor={isDarkMode ? 'rgba(255, 77, 0, 0.08)' : 'rgba(255, 77, 0, 0.04)'}
             >
-              <PillButton icon={<HelpCircle fill={helpPrimary} />} color={helpPrimary} label="Help Center" />
+              <PillButton icon={<HelpCircle fill={helpPrimary} />} color={helpPrimary} label={t`Help Center`} />
               <H3 color={helpPrimary}>
                 <Trans>Get support</Trans>
               </H3>
@@ -144,9 +145,9 @@ export function NewsletterEtc() {
               rel="noopener noreferrer"
               backgroundColor={isDarkMode ? 'rgba(98, 84, 50, 0.16)' : 'rgba(98, 84, 50, 0.04)'}
             >
-              <PillButton icon={<BookOpen fill={blogPrimary} />} color={blogPrimary} label="Blog" />
+              <PillButton icon={<BookOpen fill={blogPrimary} />} color={blogPrimary} label={t`Blog`} />
               <H3 color={blogPrimary}>
-                <Trans>Insights and updates from the team</Trans>
+                <Trans>Insights and news from the team</Trans>
               </H3>
             </BlogCard>
             <RectCard

@@ -1,10 +1,10 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { Trace, TraceEvent } from 'analytics'
-import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAccountDrawer, useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight } from 'components/Button'
 import Column from 'components/Column'
 import ConfirmSwapModalV2 from 'components/ConfirmSwapModalV2'
@@ -15,9 +15,10 @@ import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/style
 import { isSupportedChain } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
+import { STABLECOIN_AMOUNT_OUT } from 'hooks/useStablecoinPrice'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { LimitContextProvider, LimitState, useLimitContext } from 'state/limit/LimitContext'
 import { LimitOrderTrade, TradeFillType } from 'state/routing/types'
@@ -28,6 +29,10 @@ import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
+import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
+import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
+import { useAtom } from 'jotai'
 import { LimitExpirySection } from './LimitExpirySection'
 
 const CustomHeightSwapSection = styled(SwapSection)`
@@ -40,31 +45,70 @@ const ShortArrowWrapper = styled(ArrowWrapper)`
   margin-bottom: -22px;
 `
 
+export const LIMIT_FORM_CURRENCY_SEARCH_FILTERS: CurrencySearchFilters = {
+  showCommonBases: true,
+  onlyShowDefaultList: true,
+  onlyShowDefaultListReason: t`Not available for limits`,
+}
+
 type LimitFormProps = {
   onCurrencyChange?: (selected: CurrencyState) => void
 }
 
 function LimitForm({ onCurrencyChange }: LimitFormProps) {
-  const { chainId } = useWeb3React()
+  const { chainId, account } = useWeb3React()
   const {
     currencyState: { inputCurrency, outputCurrency },
     setCurrencyState,
   } = useSwapAndLimitContext()
 
   const { limitState, setLimitState, derivedLimitInfo } = useLimitContext()
-  const { currencyBalances, parsedAmounts, parsedLimitPrice, limitOrderTrade } = derivedLimitInfo
+  const { currencyBalances, parsedAmounts, parsedLimitPrice, limitOrderTrade, marketPrice } = derivedLimitInfo
   const [showConfirm, setShowConfirm] = useState(false)
   const [swapResult, setSwapResult] = useState<SwapResult>()
   const [swapError, setSwapError] = useState()
 
   const theme = useTheme()
   const { onSwitchTokens } = useSwapActionHandlers()
+  const { formatCurrencyAmount } = useFormatter()
+  const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
+  const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
+
+  useEffect(() => {
+    if (limitState.limitPriceEdited || !marketPrice || !inputCurrency || !outputCurrency) return
+
+    const marketPriceString = formatCurrencyAmount({
+      amount: (() => {
+        if (limitState.limitPriceInverted) {
+          return marketPrice.invert().quote(CurrencyAmount.fromRawAmount(outputCurrency, 10 ** outputCurrency.decimals))
+        } else {
+          return marketPrice.quote(CurrencyAmount.fromRawAmount(inputCurrency, 10 ** inputCurrency.decimals))
+        }
+      })(),
+      type: NumberType.SwapTradeAmount,
+      placeholder: '',
+    })
+
+    setLimitState((prev) => ({
+      ...prev,
+      limitPrice: marketPriceString,
+    }))
+  }, [
+    formatCurrencyAmount,
+    inputCurrency,
+    limitState.limitPriceEdited,
+    limitState.limitPriceInverted,
+    marketPrice,
+    outputCurrency,
+    setLimitState,
+  ])
 
   const onTypeInput = useCallback(
     (type: keyof LimitState) => (newValue: string) => {
       setLimitState((prev) => ({
         ...prev,
         [type]: newValue,
+        limitPriceEdited: type === 'limitPrice',
         isInputAmountFixed: type !== 'outputAmount',
       }))
     },
@@ -72,14 +116,23 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   )
 
   const onSelectCurrency = (type: keyof CurrencyState) => (newCurrency: Currency) => {
+    if ((type === 'inputCurrency' ? outputCurrency : inputCurrency)?.equals(newCurrency)) {
+      onSwitchTokens({ newOutputHasTax: false, previouslyEstimatedOutput: limitState.outputAmount })
+      return
+    }
     const [newInput, newOutput] =
       type === 'inputCurrency' ? [newCurrency, outputCurrency] : [inputCurrency, newCurrency]
     const newCurrencyState = {
       inputCurrency: newInput,
       outputCurrency: newOutput,
     }
+    setLimitState((prev) => ({ ...prev, limitPriceEdited: false }))
     onCurrencyChange?.(newCurrencyState)
     setCurrencyState(newCurrencyState)
+  }
+
+  if (!outputCurrency && chainId) {
+    onSelectCurrency('outputCurrency')(STABLECOIN_AMOUNT_OUT[chainId].currency)
   }
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
@@ -103,7 +156,6 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   const fiatValueTradeInput = useUSDPrice(parsedAmounts.INPUT)
   const fiatValueTradeOutput = useUSDPrice(parsedAmounts.OUTPUT)
-  const { formatCurrencyAmount } = useFormatter()
 
   const formattedAmounts = useMemo(() => {
     // if there is no Price field, then just default to user-typed amounts
@@ -163,6 +215,11 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   return (
     <Column gap="xs">
+      <CustomHeightSwapSection>
+        <LimitPriceInputPanel
+          onCurrencySelect={onSelectCurrency(limitState.limitPriceInverted ? 'inputCurrency' : 'outputCurrency')}
+        />
+      </CustomHeightSwapSection>
       <SwapSection>
         <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
           <SwapCurrencyInputPanel
@@ -174,14 +231,11 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
             onCurrencySelect={onSelectCurrency('inputCurrency')}
             otherCurrency={outputCurrency}
             onMax={handleMaxInput}
-            showCommonBases
+            currencySearchFilters={LIMIT_FORM_CURRENCY_SEARCH_FILTERS}
             id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
           />
         </Trace>
       </SwapSection>
-      <CustomHeightSwapSection>
-        <LimitPriceInputPanel />
-      </CustomHeightSwapSection>
       <ShortArrowWrapper clickable={isSupportedChain(chainId)}>
         <TraceEvent
           events={[BrowserEvent.onClick]}
@@ -209,7 +263,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
             onUserInput={onTypeInput('outputAmount')}
             onCurrencySelect={onSelectCurrency('outputCurrency')}
             otherCurrency={inputCurrency}
-            showCommonBases
+            currencySearchFilters={LIMIT_FORM_CURRENCY_SEARCH_FILTERS}
             id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
           />
         </Trace>
@@ -229,11 +283,8 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           inputCurrency={inputCurrency}
           allowedSlippage={ZERO_PERCENT}
           clearSwapState={() => {
-            setLimitState((prev) => ({
-              ...prev,
-              inputAmount: '',
-              outputAmount: '',
-            }))
+            setSwapError(undefined)
+            setSwapResult(undefined)
           }}
           fiatValueInput={fiatValueTradeInput}
           fiatValueOutput={fiatValueTradeOutput}
@@ -244,6 +295,16 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           onDismiss={() => setShowConfirm(false)}
           swapResult={swapResult}
           swapError={swapError}
+        />
+      )}
+      {account && (
+        <OpenLimitOrdersButton
+          account={account}
+          disabled={accountDrawerOpen}
+          openLimitsMenu={() => {
+            setMenu(MenuState.LIMITS)
+            toggleAccountDrawer()
+          }}
         />
       )}
     </Column>
@@ -285,7 +346,9 @@ function SubmitOrderButton({
       data-testid="submit-order-button"
       disabled={!trade}
     >
-      <ThemedText.HeadlineSmall fontSize={20}>Submit order</ThemedText.HeadlineSmall>
+      <ThemedText.HeadlineSmall color="white" fontSize={20}>
+        Submit order
+      </ThemedText.HeadlineSmall>
     </ButtonError>
   )
 }

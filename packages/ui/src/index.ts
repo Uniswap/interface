@@ -10,23 +10,24 @@ export {
   Anchor,
   AnimatePresence,
   Circle,
-  getToken,
-  getTokenValue,
   Image,
   Input,
   ListItem,
   Popover,
+  Portal,
   ScrollView,
   Sheet,
   Square,
-  styled,
   Switch,
   Tabs,
   TamaguiProvider,
   Theme,
+  YGroup,
+  getToken,
+  getTokenValue,
+  styled,
   useMedia,
   usePropsAndStyle,
-  YGroup,
 } from 'tamagui'
 export type {
   Adapt,
@@ -45,6 +46,11 @@ export {
   AnimatedBottomSheetFlashList,
   AnimatedFlashList,
 } from './components/AnimatedFlashList/AnimatedFlashList'
+export * from './components/Unicon'
+export * from './components/Unicon/Container'
+export * from './components/Unicon/Emblem'
+export * from './components/Unicon/types'
+export * from './components/Unicon/utils'
 export { Button } from './components/button/Button'
 export { withAnimated } from './components/factories/animated'
 export type { GeneratedIcon, IconProps } from './components/factories/createIcon'
@@ -54,19 +60,14 @@ export * from './components/input/utils'
 export {
   AnimatedFlex,
   Flex,
-  flexStyles,
   Inset,
   Separator,
+  flexStyles,
   type FlexProps,
 } from './components/layout'
 export * as Logos from './components/logos'
 export * from './components/text'
 export * from './components/touchable'
-export * from './components/Unicon'
-export * from './components/Unicon/Container'
-export * from './components/Unicon/Emblem'
-export * from './components/Unicon/types'
-export * from './components/Unicon/utils'
 export { useDeviceDimensions } from './hooks/useDeviceDimensions'
 export { useDeviceInsets } from './hooks/useDeviceInsets'
 export { useIsDarkMode } from './hooks/useIsDarkMode'

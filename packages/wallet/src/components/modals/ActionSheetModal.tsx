@@ -26,7 +26,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps): JS
 
   return (
     <Flex gap="$spacing12" justifyContent="flex-end">
-      <Flex centered bg="$surface2" borderRadius="$rounded16" overflow="hidden">
+      <Flex centered backgroundColor="$surface2" borderRadius="$rounded16" overflow="hidden">
         {typeof header === 'string' ? (
           <Flex centered gap="$spacing4" py="$spacing16">
             <Text variant="buttonLabel2">{header}</Text>
@@ -47,9 +47,9 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps): JS
           </ScrollView>
         </Flex>
       </Flex>
-      <Flex bg="$surface2" borderRadius="$rounded12">
+      <Flex backgroundColor="$surface2" borderRadius="$rounded12">
         <TouchableArea hapticFeedback onPress={onClose}>
-          <Flex centered bg="$surface2" borderRadius="$rounded12" py="$spacing16">
+          <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" py="$spacing16">
             <Text color="$neutral1" variant="buttonLabel2">
               {closeButtonLabel}
             </Text>

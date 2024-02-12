@@ -1,9 +1,10 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
+import Tooltip, { TooltipSize } from 'components/Tooltip'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
 import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
@@ -87,11 +88,8 @@ interface PoolDetailsLinkProps {
 
 export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetailsLinkProps) {
   const theme = useTheme()
-  const currencies = [
-    useCurrency(tokens[0]?.id, chainId) ?? undefined,
-    useCurrency(tokens[1]?.id, chainId) ?? undefined,
-  ]
-  const [, setCopied] = useCopyClipboard()
+  const currencies = [useCurrency(tokens[0]?.id, chainId), useCurrency(tokens[1]?.id, chainId)]
+  const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
     address && setCopied(address)
   }, [address, setCopied])
@@ -144,10 +142,12 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
         </SymbolText>
       </TokenTextWrapper>
       <ButtonsRow>
-        <CopyAddress data-testid={`copy-address-${address}`} onClick={copy}>
-          {shortenAddress(address)}
-          <StyledCopyIcon />
-        </CopyAddress>
+        <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t`Copied`}>
+          <CopyAddress data-testid={`copy-address-${address}`} onClick={copy}>
+            {shortenAddress(address)}
+            <StyledCopyIcon />
+          </CopyAddress>
+        </Tooltip>
         {explorerUrl && (
           <ExternalLink href={explorerUrl} data-testid={`explorer-url-${explorerUrl}`}>
             <ExplorerWrapper>

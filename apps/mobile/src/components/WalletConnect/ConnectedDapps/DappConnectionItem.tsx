@@ -10,7 +10,7 @@ import { useAppDispatch } from 'src/app/hooks'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { NetworkLogos } from 'src/components/WalletConnect/NetworkLogos'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
-import { removeSession, WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
+import { WalletConnectSession, removeSession } from 'src/features/walletConnect/walletConnectSlice'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { AnimatedTouchableArea, Flex, Text, TouchableArea } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -70,7 +70,7 @@ export function DappConnectionItem({
     <ContextMenu actions={menuActions} style={styles.container} onPress={onPress}>
       <Flex
         grow
-        bg="$surface2"
+        backgroundColor="$surface2"
         borderRadius="$rounded16"
         gap="$spacing12"
         justifyContent="space-between"

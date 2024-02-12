@@ -1,7 +1,7 @@
 import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
-import { ChainId, CHAIN_INFO, RPCType } from 'wallet/src/constants/chains'
+import { CHAIN_INFO, ChainId, RPCType } from 'wallet/src/constants/chains'
 import { transactionActions } from 'wallet/src/features/transactions/slice'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import {
@@ -23,7 +23,7 @@ import { WalletEventName } from 'wallet/src/telemetry/constants'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 
 export interface SendTransactionParams {
-  // internal id used for tracking transactions before theyre submitted
+  // internal id used for tracking transactions before they're submitted
   // this is optional as an override in txDetail.id calculation
   txId?: string
   chainId: ChainId

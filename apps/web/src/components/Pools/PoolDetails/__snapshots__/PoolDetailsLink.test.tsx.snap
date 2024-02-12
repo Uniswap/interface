@@ -50,7 +50,7 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c13 {
+.c14 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -61,12 +61,17 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   font-weight: 500;
 }
 
-.c13:hover {
+.c14:hover {
   opacity: 0.6;
 }
 
-.c13:active {
+.c14:active {
   opacity: 0.4;
+}
+
+.c11 {
+  display: inline-block;
+  height: inherit;
 }
 
 .c4 {
@@ -129,7 +134,7 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   text-overflow: ellipsis;
 }
 
-.c11 {
+.c12 {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
@@ -150,15 +155,15 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   transition-duration: 125ms;
 }
 
-.c11:hover {
+.c12:hover {
   opacity: 0.6;
 }
 
-.c11:active {
+.c12:active {
   opacity: 0.4;
 }
 
-.c12 {
+.c13 {
   width: 16px;
   height: 16px;
   color: #7D7D7D;
@@ -167,7 +172,7 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   flex-shrink: 0;
 }
 
-.c14 {
+.c15 {
   padding: 8px;
   border-radius: 20px;
   background-color: #22222212;
@@ -182,11 +187,11 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   transition-duration: 125ms;
 }
 
-.c14:hover {
+.c15:hover {
   opacity: 0.6;
 }
 
-.c14:active {
+.c15:active {
   opacity: 0.4;
 }
 
@@ -253,44 +258,48 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
       class="c0 c2 c10"
     >
       <div
-        class="c0 c2 c11"
-        data-testid="copy-address-0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
+        class="c11"
       >
-        0x88e6...5640
-        <svg
-          class="c12"
-          fill="none"
-          height="24"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="24"
-          xmlns="http://www.w3.org/2000/svg"
+        <div
+          class="c0 c2 c12"
+          data-testid="copy-address-0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
         >
-          <rect
-            height="13"
-            rx="2"
-            ry="2"
-            width="13"
-            x="9"
-            y="9"
-          />
-          <path
-            d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-          />
-        </svg>
+          0x88e6...5640
+          <svg
+            class="c13"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              height="13"
+              rx="2"
+              ry="2"
+              width="13"
+              x="9"
+              y="9"
+            />
+            <path
+              d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+            />
+          </svg>
+        </div>
       </div>
       <a
-        class="c13"
+        class="c14"
         data-testid="explorer-url-https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
         href="https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
         rel="noopener noreferrer"
         target="_blank"
       >
         <div
-          class="c14"
+          class="c15"
         >
           <svg
             fill="#7D7D7D"
@@ -384,7 +393,7 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c14 {
+.c15 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -395,11 +404,11 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
   font-weight: 500;
 }
 
-.c14:hover {
+.c15:hover {
   opacity: 0.6;
 }
 
-.c14:active {
+.c15:active {
   opacity: 0.4;
 }
 
@@ -429,6 +438,11 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+}
+
+.c12 {
+  display: inline-block;
+  height: inherit;
 }
 
 .c8 {
@@ -465,7 +479,7 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
   text-overflow: ellipsis;
 }
 
-.c12 {
+.c13 {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
@@ -486,15 +500,15 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
   transition-duration: 125ms;
 }
 
-.c12:hover {
+.c13:hover {
   opacity: 0.6;
 }
 
-.c12:active {
+.c13:active {
   opacity: 0.4;
 }
 
-.c13 {
+.c14 {
   width: 16px;
   height: 16px;
   color: #7D7D7D;
@@ -503,7 +517,7 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
   flex-shrink: 0;
 }
 
-.c15 {
+.c16 {
   padding: 8px;
   border-radius: 20px;
   background-color: #22222212;
@@ -518,11 +532,11 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
   transition-duration: 125ms;
 }
 
-.c15:hover {
+.c16:hover {
   opacity: 0.6;
 }
 
-.c15:active {
+.c16:active {
   opacity: 0.4;
 }
 
@@ -602,44 +616,48 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
       class="c0 c2 c11"
     >
       <div
-        class="c0 c2 c12"
-        data-testid="copy-address-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+        class="c12"
       >
-        0xA0b8...eB48
-        <svg
-          class="c13"
-          fill="none"
-          height="24"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="24"
-          xmlns="http://www.w3.org/2000/svg"
+        <div
+          class="c0 c2 c13"
+          data-testid="copy-address-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
         >
-          <rect
-            height="13"
-            rx="2"
-            ry="2"
-            width="13"
-            x="9"
-            y="9"
-          />
-          <path
-            d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-          />
-        </svg>
+          0xA0b8...eB48
+          <svg
+            class="c14"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect
+              height="13"
+              rx="2"
+              ry="2"
+              width="13"
+              x="9"
+              y="9"
+            />
+            <path
+              d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+            />
+          </svg>
+        </div>
       </div>
       <a
-        class="c14"
+        class="c15"
         data-testid="explorer-url-https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
         href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
         rel="noopener noreferrer"
         target="_blank"
       >
         <div
-          class="c15"
+          class="c16"
         >
           <svg
             fill="#7D7D7D"

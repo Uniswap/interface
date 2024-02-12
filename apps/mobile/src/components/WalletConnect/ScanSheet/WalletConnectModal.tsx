@@ -18,7 +18,7 @@ import {
   URIType,
   UWULINK_PREFIX,
 } from 'src/components/WalletConnect/ScanSheet/util'
-import { openModal } from 'src/features/modals/modalSlice'
+import { closeAllModals, openModal } from 'src/features/modals/modalSlice'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { addRequest } from 'src/features/walletConnect/walletConnectSlice'
@@ -141,16 +141,14 @@ export function WalletConnectModal({
       }
 
       if (supportedURI.type === URIType.Scantastic) {
-        const { pubKey, uuid, vendor, model, browser, expiry } = parseScantasticParams(
-          supportedURI.value
-        )
+        const { pubKey, uuid, vendor, model, browser } = parseScantasticParams(supportedURI.value)
 
         setShouldFreezeCamera(true)
+        dispatch(closeAllModals())
         dispatch(
           openModal({
             name: ModalName.Scantastic,
             initialState: {
-              expiry,
               pubKey,
               uuid,
               vendor,

@@ -208,7 +208,7 @@ function NFTItemScreenContents({
                 imageUri={imageUrl}
               />
             ) : (
-              <Flex bg="$surface2" style={StyleSheet.absoluteFill} />
+              <Flex backgroundColor="$surface2" style={StyleSheet.absoluteFill} />
             )}
             <HeaderScrollScreen
               backButtonColor="$neutral1"
@@ -233,7 +233,7 @@ function NFTItemScreenContents({
               rightElement={rightElement}>
               {/* Content wrapper */}
               <Flex
-                bg="$transparent"
+                backgroundColor="$transparent"
                 gap="$spacing24"
                 mb="$spacing48"
                 mt="$spacing8"

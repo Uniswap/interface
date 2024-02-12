@@ -4,7 +4,7 @@ import { TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
 export const getTokenPageTitle = (tokenQuery: TokenQuery) => {
   const tokenName = tokenQuery?.token?.name
   const tokenSymbol = tokenQuery?.token?.symbol
-  const baseTitle = t`Buy, Sell, and Trade on Uniswap`
+  const baseTitle = t`Buy, sell, and trade on Uniswap`
   if (!tokenName && !tokenSymbol) {
     return baseTitle
   }

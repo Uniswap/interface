@@ -1,15 +1,20 @@
 import { Trans } from '@lingui/macro'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId, Percent } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { ClickableHeaderRow, HeaderArrow } from 'components/Table/styled'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { BIPS_BASE } from 'constants/misc'
-import { chainIdToBackendName, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
-import { TablePool, useTopPools } from 'graphql/thegraph/TopPools'
-import { OrderDirection, Pool_OrderBy, Token } from 'graphql/thegraph/__generated__/types-and-hooks'
+import { ProtocolVersion, Token } from 'graphql/data/__generated__/types-and-hooks'
+import { PoolSortFields, PoolTableSortState, TablePool, useTopPools } from 'graphql/data/pools/useTopPools'
+import {
+  OrderDirection,
+  chainIdToBackendName,
+  supportedChainIdFromGQLChain,
+  validateUrlChainParam,
+} from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { ReactElement, useCallback, useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -24,9 +29,10 @@ const TableWrapper = styled.div`
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
 `
 
-const FeeTier = styled(ThemedText.LabelMicro)`
+const Badge = styled(ThemedText.LabelMicro)`
   padding: 2px 6px;
   background: ${({ theme }) => theme.surface2};
+  border-radius: 5px;
 `
 
 interface PoolTableValues {
@@ -36,7 +42,7 @@ interface PoolTableValues {
   tvl: number
   volume24h: number
   volumeWeek: number
-  turnover: number
+  turnover: Percent
   link: string
 }
 
@@ -55,40 +61,38 @@ function PoolDescription({
   token1,
   feeTier,
   chainId,
+  protocolVersion = ProtocolVersion.V3,
 }: {
   token0: Token
   token1: Token
   feeTier: number
   chainId: ChainId
+  protocolVersion: ProtocolVersion
 }) {
-  const currencies = [useCurrency(token0.id, chainId), useCurrency(token1.id, chainId)]
+  const currencies = [useCurrency(token0.address, chainId), useCurrency(token1.address, chainId)]
   return (
     <Row gap="sm">
       <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={28} />
       <ThemedText.BodyPrimary>
         {token0.symbol}/{token1.symbol}
       </ThemedText.BodyPrimary>
-      <FeeTier>{feeTier / BIPS_BASE}%</FeeTier>
+      {protocolVersion === ProtocolVersion.V2 && <Badge>{protocolVersion.toLowerCase()}</Badge>}
+      <Badge>{feeTier / BIPS_BASE}%</Badge>
     </Row>
   )
-}
-
-export type PoolTableSortState = {
-  sortBy: Pool_OrderBy
-  sortDirection: OrderDirection
 }
 
 export function TopPoolTable() {
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   const chainId = supportedChainIdFromGQLChain(chainName)
   const [sortState, setSortMethod] = useState<PoolTableSortState>({
-    sortBy: Pool_OrderBy.TotalValueLockedUsd,
+    sortBy: PoolSortFields.TVL,
     sortDirection: OrderDirection.Desc,
   })
-  const { topPools, loading, error } = useTopPools(chainId, sortState.sortBy, sortState.sortDirection)
+  const { topPools, loading, error } = useTopPools(sortState, chainId)
 
   const handleHeaderClick = useCallback(
-    (newSortMethod: Pool_OrderBy) => {
+    (newSortMethod: PoolSortFields) => {
       if (sortState.sortBy === newSortMethod) {
         setSortMethod({
           sortBy: newSortMethod,
@@ -142,18 +146,24 @@ export function PoolsTable({
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
   chainId: ChainId
   sortState: PoolTableSortState
-  handleHeaderClick: (newSortMethod: Pool_OrderBy) => void
+  handleHeaderClick: (newSortMethod: PoolSortFields) => void
   maxHeight?: number
   hiddenColumns?: PoolTableColumns[]
 }) {
-  const { formatNumber } = useFormatter()
+  const { formatNumber, formatPercent } = useFormatter()
   const poolTableValues: PoolTableValues[] | undefined = useMemo(
     () =>
       pools?.map((pool, index) => {
         return {
           index: index + 1,
           poolDescription: (
-            <PoolDescription token0={pool.token0} token1={pool.token1} feeTier={pool.feeTier} chainId={chainId} />
+            <PoolDescription
+              token0={pool.token0}
+              token1={pool.token1}
+              feeTier={pool.feeTier}
+              chainId={chainId}
+              protocolVersion={pool.protocolVersion}
+            />
           ),
           txCount: pool.txCount,
           tvl: pool.tvl,
@@ -206,8 +216,8 @@ export function PoolsTable({
             id: 'transactions',
             header: () => (
               <Cell justifyContent="flex-end" minWidth={120} grow>
-                <ClickableHeaderRow $justify="flex-end" onClick={() => handleHeaderClick(Pool_OrderBy.TxCount)}>
-                  {sortState.sortBy === Pool_OrderBy.TxCount && <HeaderArrow direction={sortState.sortDirection} />}
+                <ClickableHeaderRow $justify="flex-end" onClick={() => handleHeaderClick(PoolSortFields.TxCount)}>
+                  {sortState.sortBy === PoolSortFields.TxCount && <HeaderArrow direction={sortState.sortDirection} />}
                   <ThemedText.BodySecondary>
                     <Trans>Transactions</Trans>
                   </ThemedText.BodySecondary>
@@ -228,13 +238,8 @@ export function PoolsTable({
             id: 'tvl',
             header: () => (
               <Cell minWidth={120} grow>
-                <ClickableHeaderRow
-                  $justify="flex-end"
-                  onClick={() => handleHeaderClick(Pool_OrderBy.TotalValueLockedUsd)}
-                >
-                  {sortState.sortBy === Pool_OrderBy.TotalValueLockedUsd && (
-                    <HeaderArrow direction={sortState.sortDirection} />
-                  )}
+                <ClickableHeaderRow $justify="flex-end" onClick={() => handleHeaderClick(PoolSortFields.TVL)}>
+                  {sortState.sortBy === PoolSortFields.TVL && <HeaderArrow direction={sortState.sortDirection} />}
                   <ThemedText.BodySecondary>
                     <Trans>TVL</Trans>
                   </ThemedText.BodySecondary>
@@ -255,9 +260,12 @@ export function PoolsTable({
             id: 'volume24h',
             header: () => (
               <Cell minWidth={120} grow>
-                <ThemedText.BodySecondary>
-                  <Trans>1 day volume</Trans>
-                </ThemedText.BodySecondary>
+                <ClickableHeaderRow $justify="flex-end" onClick={() => handleHeaderClick(PoolSortFields.Volume24h)}>
+                  {sortState.sortBy === PoolSortFields.Volume24h && <HeaderArrow direction={sortState.sortDirection} />}
+                  <ThemedText.BodySecondary>
+                    <Trans>1 day volume</Trans>
+                  </ThemedText.BodySecondary>
+                </ClickableHeaderRow>
               </Cell>
             ),
             cell: (volume24h) => (
@@ -274,9 +282,14 @@ export function PoolsTable({
             id: 'volumeWeek',
             header: () => (
               <Cell minWidth={120} grow>
-                <ThemedText.BodySecondary>
-                  <Trans>7 day volume</Trans>
-                </ThemedText.BodySecondary>
+                <ClickableHeaderRow $justify="flex-end" onClick={() => handleHeaderClick(PoolSortFields.VolumeWeek)}>
+                  {sortState.sortBy === PoolSortFields.VolumeWeek && (
+                    <HeaderArrow direction={sortState.sortDirection} />
+                  )}
+                  <ThemedText.BodySecondary>
+                    <Trans>7 day volume</Trans>
+                  </ThemedText.BodySecondary>
+                </ClickableHeaderRow>
               </Cell>
             ),
             cell: (volumeWeek) => (
@@ -292,22 +305,33 @@ export function PoolsTable({
         ? columnHelper.accessor((row) => row.turnover, {
             id: 'turnover',
             header: () => (
-              <Cell minWidth={84} grow>
-                <ThemedText.BodySecondary>
-                  <Trans>Turnover</Trans>
-                </ThemedText.BodySecondary>
+              <Cell minWidth={100} grow>
+                <ClickableHeaderRow $justify="flex-end" onClick={() => handleHeaderClick(PoolSortFields.Turnover)}>
+                  {sortState.sortBy === PoolSortFields.Turnover && <HeaderArrow direction={sortState.sortDirection} />}
+                  <ThemedText.BodySecondary>
+                    <Trans>Turnover</Trans>
+                  </ThemedText.BodySecondary>
+                </ClickableHeaderRow>
               </Cell>
             ),
             cell: (turnover) => (
-              <Cell minWidth={84} loading={loading} grow>
-                <ThemedText.BodySecondary>{formatNumber({ input: turnover.getValue?.() })}</ThemedText.BodySecondary>
+              <Cell minWidth={100} loading={loading} grow>
+                <ThemedText.BodySecondary>{formatPercent(turnover.getValue?.())}</ThemedText.BodySecondary>
               </Cell>
             ),
           })
         : null,
       // Filter out null values
     ].filter(Boolean) as ColumnDef<PoolTableValues, any>[]
-  }, [formatNumber, handleHeaderClick, hiddenColumns, loading, sortState.sortBy, sortState.sortDirection])
+  }, [
+    formatNumber,
+    formatPercent,
+    handleHeaderClick,
+    hiddenColumns,
+    loading,
+    sortState.sortBy,
+    sortState.sortDirection,
+  ])
 
   return <Table columns={columns} data={poolTableValues} loading={loading} loadMore={loadMore} maxHeight={maxHeight} />
 }

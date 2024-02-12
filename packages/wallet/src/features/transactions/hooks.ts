@@ -14,10 +14,10 @@ import {
 } from 'wallet/src/features/transactions/swap/createSwapFormFromTxDetails'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import {
-  isFinalizedTx,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
+  isFinalizedTx,
 } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'

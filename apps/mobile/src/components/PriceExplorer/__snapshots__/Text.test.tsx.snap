@@ -32,7 +32,6 @@ exports[`PriceText renders loading state 1`] = `
 <View
   style={
     {
-      "alignItems": "stretch",
       "flexDirection": "row",
     }
   }
@@ -71,7 +70,6 @@ exports[`PriceText renders without error 1`] = `
 <View
   style={
     {
-      "alignItems": "stretch",
       "flexDirection": "row",
     }
   }
@@ -137,7 +135,6 @@ exports[`PriceText renders without error less than a dollar 1`] = `
 <View
   style={
     {
-      "alignItems": "stretch",
       "flexDirection": "row",
     }
   }
@@ -203,7 +200,6 @@ exports[`RelativeChangeText renders loading state 1`] = `
 <View
   style={
     {
-      "alignItems": "stretch",
       "flexDirection": "column",
       "marginTop": 2,
     }
@@ -213,7 +209,6 @@ exports[`RelativeChangeText renders loading state 1`] = `
     onLayout={[Function]}
     style={
       {
-        "alignItems": "stretch",
         "flexDirection": "column",
         "opacity": 0,
       }
@@ -245,7 +240,6 @@ exports[`RelativeChangeText renders loading state 1`] = `
           <View
             style={
               {
-                "alignItems": "stretch",
                 "flexDirection": "row",
               }
             }
@@ -298,7 +292,6 @@ exports[`RelativeChangeText renders loading state 1`] = `
         <View
           style={
             {
-              "alignItems": "stretch",
               "backgroundColor": "#F9F9F9",
               "borderBottomLeftRadius": 4,
               "borderBottomRightRadius": 4,

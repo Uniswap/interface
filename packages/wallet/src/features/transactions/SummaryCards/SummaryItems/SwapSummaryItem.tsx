@@ -62,13 +62,13 @@ export function SwapSummaryItem({
   }, [inputCurrencyInfo, outputCurrencyInfo, formatter, typeInfo])
 
   // For retrying failed, locally submitted swaps
-  const swapFormState = swapCallbacks?.getSwapFormTransactionState(
+  const swapFormState = swapCallbacks?.useSwapFormTransactionState(
     transaction.from,
     transaction.chainId,
     transaction.id
   )
 
-  const latestSwapTx = swapCallbacks?.getLatestSwapTransaction(transaction.from)
+  const latestSwapTx = swapCallbacks?.useLatestSwapTransaction(transaction.from)
   const isTheLatestSwap = latestSwapTx && latestSwapTx.id === transaction.id
   // if this is the latest tx or it was added within the last 15 minutes, show the retry button
   const shouldShowRetry =

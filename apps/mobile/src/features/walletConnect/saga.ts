@@ -25,7 +25,7 @@ import {
 import { call, fork, put, take } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { config } from 'wallet/src/config'
-import { ALL_SUPPORTED_CHAIN_IDS, ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
 import { selectAccounts, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { EthEvent, EthMethod } from 'wallet/src/features/walletConnect/types'
 import i18n from 'wallet/src/i18n/i18n'

@@ -66,7 +66,7 @@ export default function GasEstimateTooltip({ trade, loading }: { trade?: Submitt
                 </div>
               )}
 
-              {isUniswapXTrade(trade) && (
+              {isUniswapXTrade(trade) && (trade.classicGasUseEstimateUSD ?? 0) > 0 && (
                 <div>
                   <s>
                     {formatNumber({

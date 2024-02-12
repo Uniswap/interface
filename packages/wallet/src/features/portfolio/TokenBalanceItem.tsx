@@ -45,7 +45,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
     <TouchableArea
       hapticFeedback
       alignItems="flex-start"
-      bg="$surface1"
+      backgroundColor="$surface1"
       borderRadius="$rounded16"
       flexDirection="row"
       hapticStyle={ImpactFeedbackStyle.Light}
@@ -73,7 +73,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
           </Flex>
         </Flex>
       </Flex>
-      <Flex justifyContent="space-between" pos="relative">
+      <Flex justifyContent="space-between" position="relative">
         <Shine disabled={!isLoading}>
           {!portfolioBalance.balanceUSD ? (
             <Flex centered fill>

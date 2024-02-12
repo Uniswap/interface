@@ -26,13 +26,21 @@ const Char = motion(styled.div<{ color: string }>`
   font-weight: 500;
   color: ${({ color }) => color};
   line-height: 52px;
-  @media (max-width: 1024px) {
+  @media (max-width: 1280px) {
     font-size: 40px;
     line-height: 40px;
   }
-  @media (max-width: 768px) {
+  @media (max-width: 1050px) {
     font-size: 32px;
     line-height: 32px;
+  }
+  @media (max-width: 850px) {
+    font-size: 28px;
+    line-height: 28px;
+  }
+  @media (max-width: 396px) {
+    font-size: 22px;
+    line-height: 22px;
   }
 `)
 const Container = styled.div<{ live?: boolean }>`

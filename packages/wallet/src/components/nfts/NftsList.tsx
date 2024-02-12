@@ -15,9 +15,9 @@ import {
 import NoNFTsIcon from 'ui/src/assets/icons/empty-state-picture.svg'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { HiddenNftsRowLeft, HiddenNftsRowRight } from 'wallet/src/components/nfts/NFTHiddenRow'
+import { useNftsTabQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { useNftsTabQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   EMPTY_NFT_ITEM,
   ESTIMATED_NFT_LIST_ITEM_SIZE,
@@ -31,6 +31,7 @@ import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { WalletEventName } from 'wallet/src/telemetry/constants'
 
 export const NFTS_TAB_DATA_DEPENDENCIES = [GQLQueries.NftsTab]
+export const NUM_FIRST_NFTS = 30
 
 const PREFETCH_ITEMS_THRESHOLD = 0.5
 const LOADING_ITEM = 'loading'
@@ -84,7 +85,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
   const [hiddenNftsExpanded, setHiddenNftsExpanded] = useState(false)
 
   const { data, fetchMore, refetch, networkStatus } = useNftsTabQuery({
-    variables: { ownerAddress: owner, first: 30, filter: { filterSpam: false } },
+    variables: { ownerAddress: owner, first: NUM_FIRST_NFTS, filter: { filterSpam: false } },
     notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
     errorPolicy: 'all', // Suppress non-null image.url fields from backend
   })

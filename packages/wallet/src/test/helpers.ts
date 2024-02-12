@@ -13,7 +13,7 @@ import {
   TokenProject,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-import { dayMs, historyDurationMs, MAX_FIXTURE_TIMESTAMP } from 'wallet/src/test/fixtures'
+import { MAX_FIXTURE_TIMESTAMP, dayMs, historyDurationMs } from 'wallet/src/test/fixtures'
 import { Amounts, EthToken } from 'wallet/src/test/gqlFixtures'
 
 export const mockTokenPriceHistory = (

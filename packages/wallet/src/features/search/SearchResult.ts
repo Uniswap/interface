@@ -8,7 +8,8 @@ export type SearchResult =
   | NFTCollectionSearchResult
 
 export enum SearchResultType {
-  Wallet,
+  ENSAddress,
+  Unitag,
   Token,
   Etherscan,
   NFTCollection,
@@ -19,11 +20,19 @@ export interface SearchResultBase {
   searchId?: string
 }
 
-export interface WalletSearchResult extends SearchResultBase {
-  type: SearchResultType.Wallet
+export type WalletSearchResult = ENSAddressSearchResult | UnitagSearchResult
+
+export interface ENSAddressSearchResult extends SearchResultBase {
+  type: SearchResultType.ENSAddress
   address: Address
   ensName?: string
   primaryENSName?: string
+}
+
+export interface UnitagSearchResult extends SearchResultBase {
+  type: SearchResultType.Unitag
+  address: Address
+  unitag: string
 }
 
 export interface TokenSearchResult extends SearchResultBase {

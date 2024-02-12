@@ -1,19 +1,20 @@
 import Column from 'components/Column'
 import FilterButton from 'components/DropdownSelector/FilterButton'
 import { MOBILE_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useRef } from 'react'
+import React, { useRef } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
-import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import styled, { css } from 'styled-components'
+import { dropdownSlideDown } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 
 export const InternalMenuItem = styled.div<{ disabled?: boolean }>`
   display: flex;
   flex: 1;
   padding: 12px 8px;
+  gap: 12px;
   color: ${({ theme }) => theme.neutral1};
   align-items: center;
   justify-content: space-between;
@@ -45,6 +46,8 @@ const MenuFlyout = styled(Column)<{ isInfoExplorePageEnabled: boolean; menuFlyou
   top: 48px;
   z-index: ${Z_INDEX.dropdown};
 
+  ${dropdownSlideDown}
+
   scrollbar-width: thin;
   scrollbar-color: ${({ theme }) => `${theme.surface3} transparent`};
 
@@ -68,6 +71,7 @@ const StyledMenu = styled.div<{ isInfoExplorePageEnabled: boolean }>`
   position: relative;
   border: none;
   text-align: left;
+  width: 100%;
   ${({ isInfoExplorePageEnabled }) =>
     !isInfoExplorePageEnabled &&
     css`
@@ -96,51 +100,61 @@ const StyledFilterButton = styled(FilterButton)<{ isInfoExplorePageEnabled: bool
 `
 
 interface DropdownSelectorProps {
-  modal: ApplicationModal
+  isOpen: boolean
+  toggleOpen: React.DispatchWithoutAction
   menuLabel: JSX.Element
   internalMenuItems: JSX.Element
   dataTestId?: string
+  tooltipText?: string
   buttonCss?: any
   menuFlyoutCss?: any
 }
 
 export function DropdownSelector({
-  modal,
+  isOpen,
+  toggleOpen,
   menuLabel,
   internalMenuItems,
   dataTestId,
+  tooltipText,
   buttonCss,
   menuFlyoutCss,
 }: DropdownSelectorProps) {
   const node = useRef<HTMLDivElement | null>(null)
-  const open = useModalIsOpen(modal)
-  const toggleMenu = useToggleModal(modal)
-  useOnClickOutside(node, open ? toggleMenu : undefined)
+  useOnClickOutside(node, isOpen ? toggleOpen : undefined)
 
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
   return (
     <StyledMenu isInfoExplorePageEnabled={isInfoExplorePageEnabled} ref={node}>
-      <StyledFilterButton
-        isInfoExplorePageEnabled={isInfoExplorePageEnabled}
-        onClick={toggleMenu}
-        active={open}
-        aria-label={dataTestId}
-        data-testid={dataTestId}
-        buttonCss={buttonCss}
+      <MouseoverTooltip
+        disabled={!tooltipText}
+        text={tooltipText}
+        size={TooltipSize.Max}
+        placement="top"
+        style={{ width: '100%' }}
       >
-        <StyledMenuContent isInfoExplorePageEnabled={isInfoExplorePageEnabled}>
-          {menuLabel}
-          <Chevron open={open}>
-            {open ? (
-              <ChevronUp width={20} height={15} viewBox="0 0 24 20" />
-            ) : (
-              <ChevronDown width={20} height={15} viewBox="0 0 24 20" />
-            )}
-          </Chevron>
-        </StyledMenuContent>
-      </StyledFilterButton>
-      {open && (
+        <StyledFilterButton
+          isInfoExplorePageEnabled={isInfoExplorePageEnabled}
+          onClick={toggleOpen}
+          active={isOpen}
+          aria-label={dataTestId}
+          data-testid={dataTestId}
+          buttonCss={buttonCss}
+        >
+          <StyledMenuContent isInfoExplorePageEnabled={isInfoExplorePageEnabled}>
+            {menuLabel}
+            <Chevron open={isOpen}>
+              {isOpen ? (
+                <ChevronUp width={20} height={15} viewBox="0 0 24 20" />
+              ) : (
+                <ChevronDown width={20} height={15} viewBox="0 0 24 20" />
+              )}
+            </Chevron>
+          </StyledMenuContent>
+        </StyledFilterButton>
+      </MouseoverTooltip>
+      {isOpen && (
         <MenuFlyout isInfoExplorePageEnabled={isInfoExplorePageEnabled} menuFlyoutCss={menuFlyoutCss}>
           {internalMenuItems}
         </MenuFlyout>

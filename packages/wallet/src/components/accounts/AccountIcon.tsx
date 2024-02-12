@@ -39,7 +39,7 @@ export function AccountIcon({
   const { gradientEnd: uniconColor } = useUniconColors(address)
 
   const uniconImage = (
-    <Flex centered borderRadius="$roundedFull" height={size} padding={uniconPadding} width={size}>
+    <Flex centered borderRadius="$roundedFull" height={size} p={uniconPadding} width={size}>
       <Unicon address={address} size={uniconSize} />
       {showBackground ? <UniconGradient color={uniconColor} size={size} /> : null}
     </Flex>
@@ -57,6 +57,7 @@ export function AccountIcon({
           borderRadius={size}
           fallback={uniconImage}
           height={size}
+          resizeMode="cover"
           uri={avatarUri}
           width={size}
         />

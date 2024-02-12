@@ -4,5 +4,4 @@ export interface ScantasticModalState {
   vendor: string
   model: string
   browser: string
-  expiry: string // unix timestamp when the uuid should expire
 }

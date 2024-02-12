@@ -38,7 +38,7 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
-import { useUnitag } from 'wallet/src/features/unitags/hooks'
+import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
 import {
   EditAccountAction,
   editAccountActions,
@@ -69,6 +69,8 @@ export function SettingsWallet({
     notificationsEnabledOnFirebase
   )
   const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+
+  const showEditProfile = unitagsFeatureFlagEnabled && !readonly
 
   useEffect(() => {
     // If the user deletes the account while on this screen, go back
@@ -134,7 +136,7 @@ export function SettingsWallet({
     {
       subTitle: t('Wallet preferences'),
       data: [
-        ...(unitagsFeatureFlagEnabled ? [] : [editNicknameSectionOption]),
+        ...(showEditProfile ? [] : [editNicknameSectionOption]),
         {
           action: (
             <Switch
@@ -198,13 +200,13 @@ export function SettingsWallet({
           <SectionList
             ItemSeparatorComponent={renderItemSeparator}
             ListHeaderComponent={
-              unitagsFeatureFlagEnabled ? <AddressDisplayHeader address={address} /> : undefined
+              showEditProfile ? <AddressDisplayHeader address={address} /> : undefined
             }
             keyExtractor={(_item, index): string => 'wallet_settings' + index}
             renderItem={renderItem}
             renderSectionFooter={(): JSX.Element => <Flex pt="$spacing24" />}
             renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
-              <Flex bg="$surface1" pb="$spacing12">
+              <Flex backgroundColor="$surface1" pb="$spacing12">
                 <Text color="$neutral2" variant="body1">
                   {subTitle}
                 </Text>
@@ -228,7 +230,7 @@ const renderItemSeparator = (): JSX.Element => <Flex pt="$spacing8" />
 function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
   const ensName = useENS(ChainId.Mainnet, address)?.name
-  const { unitag } = useUnitag(address)
+  const { unitag } = useUnitagByAddress(address)
 
   const onPressEditProfile = (): void => {
     if (unitag?.username) {
@@ -264,7 +266,7 @@ function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
           size="medium"
           theme="tertiary"
           onPress={onPressEditProfile}>
-          {unitag ? t('Edit profile') : t('Edit label')}
+          {unitag?.username ? t('Edit profile') : t('Edit label')}
         </Button>
       )}
     </Flex>

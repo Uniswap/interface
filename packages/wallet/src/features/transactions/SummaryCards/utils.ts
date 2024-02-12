@@ -5,10 +5,10 @@ import { iconSizes } from 'ui/src/theme'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
 import {
-  isLoadingItem,
-  isSectionHeader,
   LoadingItem,
   SectionHeader,
+  isLoadingItem,
+  isSectionHeader,
 } from 'wallet/src/features/activity/utils'
 import {
   FORMAT_DATE_MONTH_DAY,
@@ -38,13 +38,16 @@ export const TXN_HISTORY_ICON_SIZE = TXN_HISTORY_LOADER_ICON_SIZE
 export const TXN_STATUS_ICON_SIZE = iconSizes.icon16
 
 export type ActivityItem = TransactionDetails | SectionHeader | LoadingItem
-type ActivityItemRenderer = ({ item }: { item: ActivityItem }) => JSX.Element
+export type ActivityItemRenderer = ({ item }: { item: ActivityItem }) => JSX.Element
 
 export function generateActivityItemRenderer(
   layoutElement: React.FunctionComponent<TransactionSummaryLayoutProps>,
   loadingItem: JSX.Element,
   sectionHeaderElement: React.FunctionComponent<{ title: string }>,
-  swapCallbacks?: SwapSummaryCallbacks
+  swapCallbacks: SwapSummaryCallbacks | undefined,
+  authTrigger:
+    | ((args: { successCallback: () => void; failureCallback: () => void }) => Promise<void>)
+    | undefined
 ): ActivityItemRenderer {
   return function ActivityItemComponent({ item }: { item: ActivityItem }): JSX.Element {
     // if it's a loading item, render the loading placeholder
@@ -93,6 +96,7 @@ export function generateActivityItemRenderer(
     }
 
     return createElement(SummaryItem as React.FunctionComponent<SummaryItemProps>, {
+      authTrigger,
       transaction: item,
       layoutElement,
       swapCallbacks,

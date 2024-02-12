@@ -1,22 +1,47 @@
-import { Trans } from '@lingui/macro'
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { t, Trans } from '@lingui/macro'
+import { ChainId, Currency, Percent } from '@uniswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
-import { ReverseArrow } from 'components/Icons/ReverseArrow'
+import Column from 'components/Column'
+import { EtherscanLogo } from 'components/Icons/Etherscan'
+import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
+import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
+import { StyledExternalLink } from 'components/Tokens/TokenDetails/TokenDetailsHeader'
 import { BIPS_BASE } from 'constants/misc'
 import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
+import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useCurrency } from 'hooks/Tokens'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
-import React from 'react'
-import { ChevronRight } from 'react-feather'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { useScreenSize } from 'hooks/useScreenSize'
+import React, { useReducer, useRef } from 'react'
+import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
-import { ClickableStyle, ThemedText } from 'theme/components'
+import styled, { useTheme } from 'styled-components'
+import { ClickableStyle, EllipsisStyle, ThemedText } from 'theme/components'
+import { textFadeIn } from 'theme/styles'
+import { opacify } from 'theme/utils'
+import { Z_INDEX } from 'theme/zIndex'
+import { shortenAddress } from 'utils'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
+import { ReverseArrow } from 'components/Icons/ReverseArrow'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { useFormatter } from 'utils/formatNumbers'
 import { DetailBubble } from './shared'
+
+const HeaderContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: 'flex-start';
+  width: 100%;
+  ${textFadeIn};
+  animation-duration: ${({ theme }) => theme.transition.duration.medium};
+`
 
 const FeeTier = styled(ThemedText.LabelMicro)`
   background: ${({ theme }) => theme.surface2};
@@ -34,11 +59,6 @@ const IconBubble = styled(LoadingBubble)`
   height: 32px;
   border-radius: 50%;
 `
-
-interface Token {
-  id: string
-  symbol: string
-}
 
 interface PoolDetailsBreadcrumbProps {
   chainId?: number
@@ -61,60 +81,42 @@ export function PoolDetailsBreadcrumb({ chainId, poolAddress, token0, token1, lo
       <BreadcrumbNavLink to={poolsOrigin}>
         <Trans>Pools</Trans> <ChevronRight size={14} />
       </BreadcrumbNavLink>
-      {loading || !chainId || !poolAddress ? (
+      {loading || !poolAddress ? (
         <DetailBubble $width={200} />
       ) : (
-        <CurrentPageBreadcrumb
-          address={poolAddress}
-          poolName={`${token0?.symbol} / ${token1?.symbol}`}
-          chainId={chainId}
-        />
+        <CurrentPageBreadcrumb address={poolAddress} poolName={`${token0?.symbol} / ${token1?.symbol}`} />
       )}
     </BreadcrumbNavContainer>
   )
 }
 
-const StyledLink = styled(Link)`
-  color: ${({ theme }) => theme.neutral1};
-  text-decoration: none;
-  ${ClickableStyle}
+const StyledPoolDetailsTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  width: max-content;
+  align-items: center;
 `
 
-interface PoolDetailsHeaderProps {
-  chainId?: number
-  token0?: Token
-  token1?: Token
-  feeTier?: number
-  toggleReversed: React.DispatchWithoutAction
-  loading?: boolean
-}
-
-export function PoolDetailsHeader({
-  chainId,
+const PoolDetailsTitle = ({
   token0,
   token1,
+  chainId,
   feeTier,
   toggleReversed,
-  loading,
-}: PoolDetailsHeaderProps) {
-  const currencies = [useCurrency(token0?.id, chainId) ?? undefined, useCurrency(token1?.id, chainId) ?? undefined]
-
-  if (loading) {
-    return (
-      <Row gap="8px" data-testid="pdp-header-loading-skeleton">
-        <IconBubble />
-        <DetailBubble $width={137} />
-      </Row>
-    )
-  }
-
+}: {
+  token0?: Token
+  token1?: Token
+  chainId?: number
+  feeTier?: number
+  toggleReversed: React.DispatchWithoutAction
+}) => {
+  const { formatPercent } = useFormatter()
+  const feePercent = feeTier && formatPercent(new Percent(feeTier, BIPS_BASE * 100))
   return (
-    <Row gap="18px">
-      <Row gap="8px" width="max-content">
-        {chainId && (
-          <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
-        )}
-        <ThemedText.HeadlineSmall>
+    <StyledPoolDetailsTitle>
+      <div>
+        <ThemedText.HeadlineMedium>
           <StyledLink
             to={getTokenDetailsURL({
               address: token0?.id,
@@ -134,11 +136,245 @@ export function PoolDetailsHeader({
           >
             {token1?.symbol}
           </StyledLink>
-        </ThemedText.HeadlineSmall>
-      </Row>
-      {!!feeTier && <FeeTier>{feeTier / BIPS_BASE}%</FeeTier>}
+        </ThemedText.HeadlineMedium>
+      </div>
+      {!!feePercent && <FeeTier>{feePercent}</FeeTier>}
       <ToggleReverseArrows data-testid="toggle-tokens-reverse-arrows" onClick={toggleReversed} />
+    </StyledPoolDetailsTitle>
+  )
+}
+
+const ContractsModalContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
+
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    min-width: 235px;
+    padding: 8px;
+    border-radius: 16px;
+    z-index: ${Z_INDEX.dropdown};
+    background: ${({ theme }) => theme.surface1};
+    ${EllipsisStyle}
+  }
+
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: ${({ theme }) => theme.surface2};
+    border-radius: 12px;
+    border: ${({ theme }) => `1px solid ${theme.surface3}`};
+    z-index: ${Z_INDEX.modal};
+  }
+`
+
+const ContractsDropdownRowContainer = styled(Row)`
+  align-items: center;
+  text-decoration: none;
+  cursor: pointer;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: 8px;
+  &:hover {
+    background: ${({ theme }) => theme.surface3};
+  }
+`
+
+const ContractsDropdownRow = ({
+  address,
+  chainId,
+  tokens,
+}: {
+  address?: string
+  chainId?: number
+  tokens: (Token | undefined)[]
+}) => {
+  const theme = useTheme()
+  const currencies = [useCurrency(tokens[0]?.id, chainId), useCurrency(tokens[1]?.id, chainId)]
+
+  const isPool = tokens.length === 2
+  const explorerUrl =
+    chainId && address && getExplorerLink(chainId, address, isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN)
+
+  if (!chainId || !explorerUrl) {
+    return (
+      <ContractsDropdownRowContainer>
+        <DetailBubble $width={117} />
+      </ContractsDropdownRowContainer>
+    )
+  }
+
+  return (
+    <StyledExternalLink href={explorerUrl}>
+      <ContractsDropdownRowContainer>
+        <Row gap="sm">
+          {isPool ? (
+            <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={24} />
+          ) : (
+            <CurrencyLogo currency={currencies[0]} size="24px" />
+          )}
+          <ThemedText.BodyPrimary>{isPool ? <Trans>Pool</Trans> : tokens[0]?.symbol}</ThemedText.BodyPrimary>
+          <ThemedText.BodySecondary>{shortenAddress(address)}</ThemedText.BodySecondary>
+        </Row>
+        <ExternalLinkIcon size="16px" stroke={theme.neutral2} />
+      </ContractsDropdownRowContainer>
+    </StyledExternalLink>
+  )
+}
+
+const ActionButton = styled(Row)`
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  color: ${({ theme }) => theme.neutral1};
+  background-color: ${({ theme }) => opacify(12, theme.neutral1)};
+  width: max-content;
+  ${ClickableStyle}
+`
+
+const PoolDetailsHeaderActions = ({
+  chainId,
+  poolAddress,
+  poolName,
+  token0,
+  token1,
+}: {
+  chainId?: number
+  poolAddress?: string
+  poolName: string
+  token0?: Token
+  token1?: Token
+}) => {
+  const theme = useTheme()
+
+  const [contractsModalIsOpen, toggleContractsModal] = useReducer((s) => !s, false)
+  const contractsRef = useRef<HTMLDivElement>(null)
+  useOnClickOutside(contractsRef, contractsModalIsOpen ? toggleContractsModal : undefined)
+
+  return (
+    <Row justify="flex-end" gap="sm">
+      <div style={{ position: 'relative' }} ref={contractsRef}>
+        <MouseoverTooltip text={t`Explorers`} placement="bottom" size={TooltipSize.Max}>
+          <ActionButton onClick={toggleContractsModal}>
+            {chainId === ChainId.MAINNET ? (
+              <EtherscanLogo width="18px" height="18px" fill={theme.neutral1} />
+            ) : (
+              <ExplorerIcon width="18px" height="18px" stroke={theme.darkMode ? 'none' : theme.neutral1} />
+            )}
+          </ActionButton>
+        </MouseoverTooltip>
+        {contractsModalIsOpen && (
+          <ContractsModalContainer>
+            <ContractsDropdownRow address={poolAddress} chainId={chainId} tokens={[token0, token1]} />
+            <ContractsDropdownRow address={token0?.id} chainId={chainId} tokens={[token0]} />
+            <ContractsDropdownRow address={token1?.id} chainId={chainId} tokens={[token1]} />
+          </ContractsModalContainer>
+        )}
+      </div>
+      <MouseoverTooltip text={t`Share`} placement="bottom" size={TooltipSize.Max}>
+        <ShareButton name={poolName} />
+      </MouseoverTooltip>
     </Row>
+  )
+}
+
+const StyledLink = styled(Link)`
+  color: ${({ theme }) => theme.neutral1};
+  text-decoration: none;
+  ${ClickableStyle}
+`
+
+interface PoolDetailsHeaderProps {
+  chainId?: number
+  poolAddress?: string
+  token0?: Token
+  token1?: Token
+  feeTier?: number
+  toggleReversed: React.DispatchWithoutAction
+  loading?: boolean
+}
+
+export function PoolDetailsHeader({
+  chainId,
+  poolAddress,
+  token0,
+  token1,
+  feeTier,
+  toggleReversed,
+  loading,
+}: PoolDetailsHeaderProps) {
+  const currencies = [useCurrency(token0?.id, chainId), useCurrency(token1?.id, chainId)]
+
+  const screenSize = useScreenSize()
+  const shouldColumnBreak = !screenSize['sm']
+  const poolName = `${token0?.symbol} / ${token1?.symbol}`
+
+  if (loading) {
+    return (
+      <HeaderContainer data-testid="pdp-header-loading-skeleton">
+        {shouldColumnBreak ? (
+          <Column gap="sm" style={{ width: '100%' }}>
+            <IconBubble />
+            <DetailBubble $height={40} $width={137} />
+          </Column>
+        ) : (
+          <Row gap="sm">
+            <IconBubble />
+            <DetailBubble $height={40} $width={137} />
+          </Row>
+        )}
+      </HeaderContainer>
+    )
+  }
+  return (
+    <HeaderContainer>
+      {shouldColumnBreak ? (
+        <Column gap="sm" style={{ width: '100%' }}>
+          <Row gap="md" justify="space-between">
+            {chainId && (
+              <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
+            )}
+            <PoolDetailsHeaderActions
+              chainId={chainId}
+              poolAddress={poolAddress}
+              poolName={poolName}
+              token0={token0}
+              token1={token1}
+            />
+          </Row>
+          <PoolDetailsTitle
+            token0={token0}
+            token1={token1}
+            chainId={chainId}
+            feeTier={feeTier}
+            toggleReversed={toggleReversed}
+          />
+        </Column>
+      ) : (
+        <>
+          <Row gap="md">
+            {chainId && (
+              <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
+            )}
+            <PoolDetailsTitle token0={token0} token1={token1} feeTier={feeTier} toggleReversed={toggleReversed} />
+          </Row>
+          <PoolDetailsHeaderActions
+            chainId={chainId}
+            poolAddress={poolAddress}
+            poolName={poolName}
+            token0={token0}
+            token1={token1}
+          />
+        </>
+      )}
+    </HeaderContainer>
   )
 }
 

@@ -15,6 +15,7 @@ import { WalletConnectModals } from 'src/components/WalletConnect/WalletConnectM
 import { LockScreenModal } from 'src/features/authentication/LockScreenModal'
 import { FiatOnRampModal } from 'src/features/fiatOnRamp/FiatOnRampModal'
 import { ScantasticModal } from 'src/features/scantastic/ScantasticModal'
+import { ReceiveCryptoModal } from 'src/screens/ReceiveCryptoModal'
 import { SettingsFiatCurrencyModal } from 'src/screens/SettingsFiatCurrencyModal'
 import { SettingsLanguageModal } from 'src/screens/SettingsLanguageModal'
 import { ModalName } from 'wallet/src/telemetry/constants'
@@ -32,6 +33,10 @@ export function AppModals(): JSX.Element {
 
       <LazyModalRenderer name={ModalName.FiatOnRampAggregator}>
         <FiatOnRampAggregatorModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.ReceiveCryptoModal}>
+        <ReceiveCryptoModal />
       </LazyModalRenderer>
 
       <LazyModalRenderer name={ModalName.Explore}>

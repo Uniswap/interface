@@ -76,7 +76,6 @@ exports[`renders collection preview card 1`] = `
       <View
         style={
           {
-            "alignItems": "stretch",
             "borderBottomLeftRadius": 999999,
             "borderBottomRightRadius": 999999,
             "borderTopLeftRadius": 999999,
@@ -122,7 +121,6 @@ exports[`renders collection preview card 1`] = `
       <View
         style={
           {
-            "alignItems": "stretch",
             "flexDirection": "column",
             "flexShrink": 1,
           }
@@ -141,7 +139,6 @@ exports[`renders collection preview card 1`] = `
           <View
             style={
               {
-                "alignItems": "stretch",
                 "flexDirection": "column",
                 "flexShrink": 1,
               }

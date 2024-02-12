@@ -3,12 +3,12 @@ import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
 import { SharedValue } from 'react-native-reanimated'
 import { TLineChartData } from 'react-native-wagmi-charts'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import {
   HistoryDuration,
   TimestampedAmount,
   useTokenPriceHistoryQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
+import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'

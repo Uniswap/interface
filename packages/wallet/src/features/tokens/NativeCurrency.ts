@@ -1,7 +1,7 @@
 // adapted from https://github.com/Uniswap/interface/src/constants/tokens.ts
 import { Currency, NativeCurrency as NativeCurrencyClass, Token } from '@uniswap/sdk-core'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
-import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
 import { wrappedNativeCurrency } from 'wallet/src/constants/tokens'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 

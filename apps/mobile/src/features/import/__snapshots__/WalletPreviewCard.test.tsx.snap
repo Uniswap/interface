@@ -81,7 +81,6 @@ exports[`renders wallet preview card 1`] = `
       <View
         style={
           {
-            "alignItems": "stretch",
             "flexDirection": "column",
             "height": 32,
             "width": 32,
@@ -91,7 +90,6 @@ exports[`renders wallet preview card 1`] = `
         <View
           style={
             {
-              "alignItems": "stretch",
               "flexDirection": "column",
               "height": 32,
               "width": 32,
@@ -239,7 +237,7 @@ exports[`renders wallet preview card 1`] = `
             {
               "alignItems": "center",
               "flexDirection": "row",
-              "gap": 4,
+              "gap": 2,
               "justifyContent": "center",
             }
           }

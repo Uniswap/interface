@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import {
-  filterStringAtom,
+  exploreSearchStringAtom,
   filterTimeAtom,
   sortAscendingAtom,
   sortMethodAtom,
@@ -11,6 +11,12 @@ import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 
 import {
+  Chain,
+  TopTokens100Query,
+  useTopTokens100Query,
+  useTopTokensSparklineQuery,
+} from './__generated__/types-and-hooks'
+import {
   isPricePoint,
   PollingInterval,
   PricePoint,
@@ -19,12 +25,6 @@ import {
   unwrapToken,
   usePollQueryWhileMounted,
 } from './util'
-import {
-  Chain,
-  TopTokens100Query,
-  useTopTokens100Query,
-  useTopTokensSparklineQuery,
-} from './__generated__/types-and-hooks'
 
 gql`
   query TopTokens100($duration: HistoryDuration!, $chain: Chain!) {
@@ -133,7 +133,7 @@ function useSortedTokens(tokens: TopTokens100Query['topTokens']) {
 }
 
 function useFilteredTokens(tokens: TopTokens100Query['topTokens']) {
-  const filterString = useAtomValue(filterStringAtom)
+  const filterString = useAtomValue(exploreSearchStringAtom)
 
   const lowercaseFilterString = useMemo(() => filterString.toLowerCase(), [filterString])
 

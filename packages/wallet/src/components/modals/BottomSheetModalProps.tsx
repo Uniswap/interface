@@ -1,17 +1,14 @@
 import { BottomSheetModal as BaseModal } from '@gorhom/bottom-sheet'
 import { ComponentProps, PropsWithChildren } from 'react'
-import { LayoutChangeEvent } from 'react-native'
-import Animated from 'react-native-reanimated'
+import { SharedValue } from 'react-native-reanimated'
 import { DynamicColor } from 'ui/src'
 import { ModalNameType } from 'wallet/src/telemetry/constants'
 
 export type BottomSheetModalProps = PropsWithChildren<{
-  animatedPosition?: Animated.SharedValue<number>
+  animatedPosition?: SharedValue<number>
   hideHandlebar?: boolean
   name: ModalNameType
-  // TODO MOB-2526 refactor BottomSheetModal to more platform-agnostic
-  // Currently only used for web
-  isModalOpen?: boolean
+  enableDynamicSizing?: boolean
   onClose?: () => void
   snapPoints?: Array<string | number>
   stackBehavior?: ComponentProps<typeof BaseModal>['stackBehavior']
@@ -29,8 +26,9 @@ export type BottomSheetModalProps = PropsWithChildren<{
   hideKeyboardOnSwipeDown?: boolean
   // extend the sheet to its maximum snap point when keyboard is visible
   extendOnKeyboardVisible?: boolean
-}>
 
-export type BottomSheetModalRef = {
-  handleContentLayout: (event: LayoutChangeEvent) => void
-}
+  // TODO MOB-2526 refactor BottomSheetModal to more platform-agnostic
+  // Currently only used for web
+  isModalOpen?: boolean
+  isCentered?: boolean
+}>

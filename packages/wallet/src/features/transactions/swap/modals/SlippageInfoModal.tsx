@@ -8,7 +8,7 @@ import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { Trade } from 'wallet/src/features/transactions/swap/useTrade'
+import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { slippageToleranceToPercent } from 'wallet/src/features/transactions/swap/utils'
 import { ModalName } from 'wallet/src/telemetry/constants'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
@@ -68,7 +68,7 @@ export function SlippageInfoModal({
         </Text>
         <Flex
           fill
-          bg="$surface2"
+          backgroundColor="$surface2"
           borderRadius="$rounded20"
           gap="$spacing8"
           px="$spacing16"
@@ -80,7 +80,11 @@ export function SlippageInfoModal({
             </Text>
             <Flex row gap="$spacing8">
               {!isCustomSlippage ? (
-                <Flex centered bg="$accent2" borderRadius="$roundedFull" px="$spacing8">
+                <Flex
+                  centered
+                  backgroundColor="$accent2"
+                  borderRadius="$roundedFull"
+                  px="$spacing8">
                   <Text color="$accent1" variant="buttonLabel4">
                     {t('Auto')}
                   </Text>

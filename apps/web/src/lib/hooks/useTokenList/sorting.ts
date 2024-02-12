@@ -1,9 +1,9 @@
 import { ChainId, Token } from '@uniswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 import { nativeOnChain } from 'constants/tokens'
-import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { PortfolioTokenBalancePartsFragment } from 'graphql/data/__generated__/types-and-hooks'
-import { splitHiddenTokens, SplitOptions } from 'utils/splitHiddenTokens'
+import { supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { SplitOptions, splitHiddenTokens } from 'utils/splitHiddenTokens'
 
 /** Sorts currency amounts (descending). */
 function balanceComparator(a?: number, b?: number) {

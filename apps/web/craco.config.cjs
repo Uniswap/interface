@@ -143,6 +143,11 @@ module.exports = {
           rule.loader = 'swc-loader'
           // our .swcrc wasn't being picked up in the monorepo, this is a hacky but working fix
           rule.options = JSON.parse(readFileSync('./.swcrc', 'utf-8'))
+
+          rule.include = (inPath) => {
+            // if not a node_module we parse with SWC (so other packages in monorepo are importable)
+            return inPath.indexOf('node_modules') === -1
+          }
         }
         return rule
       })

@@ -43,7 +43,6 @@ export function Pill({
       {...rest}>
       {icon ?? null}
       {label ? (
-        // eslint-disable-next-line react-native/no-inline-styles
         <Text style={{ color: foregroundColor, paddingTop: 1 }} variant={textVariant}>
           {label}
         </Text>

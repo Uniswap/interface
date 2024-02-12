@@ -5,23 +5,41 @@ import { StyledNumericalInput } from 'components/NumericalInput'
 import Row from 'components/Row'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useLimitContext, useLimitPrice } from 'state/limit/LimitContext'
 import { useSwapAndLimitContext } from 'state/swap/SwapContext'
 import styled from 'styled-components'
-import { ThemedText } from 'theme/components'
+import { ClickableStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
+import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { ReversedArrowsIcon } from 'nft/components/icons'
+import { LIMIT_FORM_CURRENCY_SEARCH_FILTERS } from 'pages/Swap/Limit/LimitForm'
 import { formatCurrencySymbol } from '../utils'
 import { LimitCustomMarketPriceButton, LimitPresetPriceButton } from './LimitPriceButton'
-import { LimitPriceIncrementButtons } from './LimitPriceIncrementButtons'
 import { LimitPriceInputLabel } from './LimitPriceInputLabel'
 
-const OutputCurrencyContainer = styled(Row)`
+const ReverseIconContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  ${ClickableStyle}
+`
+
+const OutputCurrencyContainer = styled(PrefetchBalancesWrapper)`
+  display: flex;
+  align-items: center;
+`
+
+const OutputCurrencyButton = styled.button`
   user-select: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  background-color: transparent;
+  border: none;
+  display: flex;
+  ${ClickableStyle}
 `
 
 const TextInputRow = styled.div`
@@ -31,15 +49,25 @@ const TextInputRow = styled.div`
 
 const PRICE_ADJUSTMENT_PRESETS = [1, 5, 10]
 
-export function LimitPriceInputPanel() {
-  const { limitPrice, setLimitPrice } = useLimitPrice()
+interface LimitPriceInputPanelProps {
+  onCurrencySelect: (newCurrency: Currency) => void
+}
+
+export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelProps) {
+  const [currencySelectModalOpen, setCurrencySelectModalOpen] = useState(false)
+  const { limitPrice, setLimitPrice, limitPriceInverted } = useLimitPrice()
   const {
-    derivedLimitInfo: { parsedLimitPrice, marketPrice },
+    derivedLimitInfo: { parsedLimitPrice, marketPrice: tradeMarketPrice },
+    setLimitState,
   } = useLimitContext()
 
   const {
-    currencyState: { inputCurrency, outputCurrency },
+    currencyState: { inputCurrency: tradeInputCurrency, outputCurrency: tradeOutputCurrency },
   } = useSwapAndLimitContext()
+
+  const [inputCurrency, outputCurrency, marketPrice] = limitPriceInverted
+    ? [tradeOutputCurrency, tradeInputCurrency, tradeMarketPrice?.invert()]
+    : [tradeInputCurrency, tradeOutputCurrency, tradeMarketPrice]
 
   const { formatCurrencyAmount } = useFormatter()
 
@@ -83,12 +111,6 @@ export function LimitPriceInputPanel() {
     }
   }, [marketPrice, inputCurrency, oneUnitOfInputCurrency, outputCurrency])
 
-  const onePercentOfMarketPrice: CurrencyAmount<Currency> | undefined = useMemo(() => {
-    if (!marketPrice || !oneUnitOfInputCurrency || !outputCurrency) return undefined
-    const marketQuote = marketPrice.quote(oneUnitOfInputCurrency).quotient
-    return CurrencyAmount.fromRawAmount(outputCurrency, JSBI.divide(marketQuote, JSBI.BigInt(100)))
-  }, [oneUnitOfInputCurrency, marketPrice, outputCurrency])
-
   const currentPriceAdjustment: number | undefined = useMemo(() => {
     if (!parsedLimitPrice || !marketPrice || !oneUnitOfInputCurrency || !outputCurrency) return undefined
     const marketQuote = marketPrice.quote(oneUnitOfInputCurrency).quotient
@@ -96,7 +118,7 @@ export function LimitPriceInputPanel() {
     const difference = JSBI.subtract(parsedPriceQuote, marketQuote)
     const percentageChange = new Fraction(difference, marketQuote)
 
-    return Number(percentageChange.multiply(100).toFixed(2))
+    return Math.floor(Number(percentageChange.multiply(100).toFixed(2)))
   }, [oneUnitOfInputCurrency, outputCurrency, marketPrice, parsedLimitPrice])
 
   const onSelectLimitPrice = useCallback(
@@ -110,13 +132,39 @@ export function LimitPriceInputPanel() {
           placeholder: limitPrice,
         })
       )
+      setLimitState((prev) => ({ ...prev, limitPriceEdited: true }))
     },
-    [formatCurrencyAmount, limitPrice, oneUnitOfInputCurrency, setLimitPrice]
+    [formatCurrencyAmount, limitPrice, oneUnitOfInputCurrency, setLimitPrice, setLimitState]
   )
 
   return (
     <InputPanel>
-      <LimitPriceInputLabel currency={inputCurrency} showCurrencyMessage={!!formattedLimitPriceOutputAmount} />
+      <Row justify="space-between">
+        <LimitPriceInputLabel currency={inputCurrency} showCurrencyMessage={!!formattedLimitPriceOutputAmount} />
+        <ReverseIconContainer
+          onClick={() => {
+            if (oneUnitOfInputCurrency && marketPrice && outputCurrency) {
+              setLimitPrice(
+                formatCurrencyAmount({
+                  amount: marketPrice
+                    .invert()
+                    .quote(
+                      CurrencyAmount.fromRawAmount(
+                        outputCurrency,
+                        JSBI.BigInt(parseUnits('1', outputCurrency?.decimals))
+                      )
+                    ),
+                  type: NumberType.SwapTradeAmount,
+                  placeholder: '',
+                })
+              )
+            }
+            setLimitState((prev) => ({ ...prev, limitPriceInverted: !prev.limitPriceInverted }))
+          }}
+        >
+          <ReversedArrowsIcon size="16px" />
+        </ReverseIconContainer>
+      </Row>
       <TextInputRow>
         <StyledNumericalInput
           disabled={!(inputCurrency && outputCurrency)}
@@ -126,11 +174,15 @@ export function LimitPriceInputPanel() {
           $loading={false}
         />
         {outputCurrency && (
-          <OutputCurrencyContainer gap="xs" width="unset">
-            <CurrencyLogo currency={outputCurrency} size="16px" />
-            <ThemedText.BodyPrimary className="token-symbol-container">
-              {formatCurrencySymbol(outputCurrency)}
-            </ThemedText.BodyPrimary>
+          <OutputCurrencyContainer shouldFetchOnAccountUpdate={currencySelectModalOpen}>
+            <OutputCurrencyButton onClick={() => setCurrencySelectModalOpen(true)}>
+              <Row gap="xs" width="unset">
+                <CurrencyLogo currency={outputCurrency} size="16px" />
+                <ThemedText.BodyPrimary className="token-symbol-container">
+                  {formatCurrencySymbol(outputCurrency)}
+                </ThemedText.BodyPrimary>
+              </Row>
+            </OutputCurrencyButton>
           </OutputCurrencyContainer>
         )}
       </TextInputRow>
@@ -158,36 +210,21 @@ export function LimitPriceInputPanel() {
                 key={`limit-price-${adjustmentPercentage}`}
                 priceAdjustmentPercentage={adjustmentPercentage}
                 disabled={!inputCurrency || !outputCurrency || !marketPrice}
-                // TODO (WEB-3416): give this equality check some small +- threshold
                 selected={currentPriceAdjustment === adjustmentPercentage}
                 onSelect={() => onSelectLimitPrice(adjustedPrice)}
               />
             )
           })}
         </Row>
-        {parsedLimitPrice && onePercentOfMarketPrice && oneUnitOfInputCurrency && (
-          <LimitPriceIncrementButtons
-            onIncrement={() => {
-              setLimitPrice(
-                formatCurrencyAmount({
-                  amount: parsedLimitPrice?.quote(oneUnitOfInputCurrency).add(onePercentOfMarketPrice),
-                  type: NumberType.SwapTradeAmount,
-                  placeholder: limitPrice,
-                })
-              )
-            }}
-            onDecrement={() => {
-              setLimitPrice(
-                formatCurrencyAmount({
-                  amount: parsedLimitPrice?.quote(oneUnitOfInputCurrency).subtract(onePercentOfMarketPrice),
-                  type: NumberType.SwapTradeAmount,
-                  placeholder: limitPrice,
-                })
-              )
-            }}
-          />
-        )}
       </Row>
+      <CurrencySearchModal
+        isOpen={currencySelectModalOpen}
+        onDismiss={() => setCurrencySelectModalOpen(false)}
+        onCurrencySelect={onCurrencySelect}
+        selectedCurrency={outputCurrency}
+        otherSelectedCurrency={inputCurrency}
+        currencySearchFilters={LIMIT_FORM_CURRENCY_SEARCH_FILTERS}
+      />
     </InputPanel>
   )
 }

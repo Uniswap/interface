@@ -1,6 +1,6 @@
 import { OpacityHoverState } from 'components/Common'
-import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
+import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { useNativeUsdPrice } from 'nft/hooks'
 import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft/types'
 import { useMemo, useState } from 'react'

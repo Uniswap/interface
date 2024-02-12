@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { getLocalCurrencyIcon, SupportedLocalCurrency, SUPPORTED_LOCAL_CURRENCIES } from 'constants/localCurrencies'
+import { getLocalCurrencyIcon, SUPPORTED_LOCAL_CURRENCIES, SupportedLocalCurrency } from 'constants/localCurrencies'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useLocalCurrencyLinkProps } from 'hooks/useLocalCurrencyLinkProps'
 import { useMemo } from 'react'

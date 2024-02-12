@@ -1,5 +1,6 @@
-import { Stack, StackProps, styled } from 'tamagui'
-import { withAnimated } from 'ui/src/components/factories/animated'
+import { Insets } from 'react-native'
+import Animated from 'react-native-reanimated'
+import { SizeTokens, Stack, StackProps, styled } from 'tamagui'
 
 export const flexStyles = {
   fill: { flex: 1 },
@@ -15,10 +16,29 @@ export type FlexProps = StackProps & {
   centered?: boolean
 }
 
+type SizeOrNumber = number | SizeTokens
+
+type SizedInset = {
+  top: SizeOrNumber
+  left: SizeOrNumber
+  right: SizeOrNumber
+  bottom: SizeOrNumber
+}
+
+const getInset = (val: SizeOrNumber): SizedInset => ({
+  top: val,
+  right: val,
+  bottom: val,
+  left: val,
+})
+
 export const Flex = styled(Stack, {
   flexDirection: 'column',
 
   variants: {
+    inset: (size: SizeOrNumber | Insets) =>
+      size && typeof size === 'object' ? size : getInset(size),
+
     row: {
       true: {
         flexDirection: 'row',
@@ -52,4 +72,12 @@ export const Flex = styled(Stack, {
   } as const,
 })
 
-export const AnimatedFlex = withAnimated(Flex)
+/**
+ * @deprecated  Prefer <Flex animation="" />
+ *
+ *    See: https://tamagui.dev/docs/core/animations
+ *
+ * TODO(MOB-1948): Remove this
+ */
+export const AnimatedFlex = Animated.createAnimatedComponent(Flex)
+AnimatedFlex.displayName = 'AnimatedFlex'

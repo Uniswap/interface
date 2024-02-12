@@ -1,15 +1,15 @@
 import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Price, Rounding, Token } from '@uniswap/sdk-core'
 import {
-  encodeSqrtRatioX96,
   FeeAmount,
-  nearestUsableTick,
   Pool,
   Position,
-  priceToClosestTick,
-  TickMath,
-  tickToPrice,
   TICK_SPACINGS,
+  TickMath,
+  encodeSqrtRatioX96,
+  nearestUsableTick,
+  priceToClosestTick,
+  tickToPrice,
 } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from 'hooks/usePools'

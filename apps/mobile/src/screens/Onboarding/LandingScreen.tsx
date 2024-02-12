@@ -1,20 +1,21 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { selectionAsync } from 'expo-haptics'
-import React from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import React, { useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
-import { navigate } from 'src/app/navigation/rootNavigation'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { LandingBackground } from 'src/components/gradients/LandingBackground'
 import { Screen } from 'src/components/layout/Screen'
 import Trace from 'src/components/Trace/Trace'
 import { openModal } from 'src/features/modals/modalSlice'
-import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
+import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
+import { OnboardingScreens, UnitagScreens } from 'src/screens/Screens'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { isDevBuild } from 'src/utils/version'
 import { Button, Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { useTimeout } from 'utilities/src/time/timing'
-import { uniswapUrls } from 'wallet/src/constants/urls'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
@@ -23,7 +24,6 @@ import {
   pendingAccountActions,
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
-import { openUri } from 'wallet/src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
 
@@ -31,25 +31,34 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
-  const canClaimUnitag = useCanAddressClaimUnitag()
 
-  const onPressCreateWallet = (): void => {
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+  const { canClaimUnitag } = useCanAddressClaimUnitag()
+
+  const onPressCreateWallet = useCallback((): void => {
     dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
     dispatch(createAccountActions.trigger())
-    if (canClaimUnitag) {
-      navigate(Screens.OnboardingStack, {
-        screen: UnitagScreens.ClaimUnitag,
-        params: {
+
+    if (unitagsFeatureFlagEnabled) {
+      if (canClaimUnitag) {
+        navigation.navigate(UnitagScreens.ClaimUnitag, {
           entryPoint: OnboardingScreens.Landing,
-        },
-      })
+        })
+      } else {
+        // If can't claim, go direct to welcome screen
+        navigation.navigate(OnboardingScreens.WelcomeWallet, {
+          importType: ImportType.CreateNew,
+          entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
+        })
+      }
     } else {
+      // use edit nickname screen still before launch of unitags
       navigation.navigate(OnboardingScreens.EditName, {
         importType: ImportType.CreateNew,
         entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
       })
     }
-  }
+  }, [canClaimUnitag, dispatch, navigation, unitagsFeatureFlagEnabled])
 
   const onPressImportWallet = (): void => {
     navigation.navigate(OnboardingScreens.ImportMethod, {
@@ -64,7 +73,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   return (
     // TODO(blocked by MOB-1082): delete bg prop
     // dark mode onboarding asset needs to be re-exported with #131313 (surface1) as background color
-    <Screen bg={isDarkMode ? '$sporeBlack' : '$surface1'} edges={['bottom']}>
+    <Screen backgroundColor={isDarkMode ? '$sporeBlack' : '$surface1'} edges={['bottom']}>
       <Flex fill gap="$spacing8">
         <Flex shrink height="100%" width="100%">
           <LandingBackground />
@@ -106,25 +115,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
               </TouchableArea>
             </Trace>
             <Flex $short={{ py: '$none', mx: '$spacing12' }} mx="$spacing24" py="$spacing12">
-              <Text color="$neutral2" mx="$spacing4" textAlign="center" variant="buttonLabel4">
-                <Trans t={t}>
-                  By continuing, I agree to the{' '}
-                  <Text
-                    color="$accent1"
-                    variant="buttonLabel4"
-                    onPress={(): Promise<void> => openUri(uniswapUrls.termsOfServiceUrl)}>
-                    Terms of Service
-                  </Text>{' '}
-                  and consent to the{' '}
-                  <Text
-                    color="$accent1"
-                    variant="buttonLabel4"
-                    onPress={(): Promise<void> => openUri(uniswapUrls.privacyPolicyUrl)}>
-                    Privacy Policy
-                  </Text>
-                  .
-                </Trans>
-              </Text>
+              <TermsOfService />
             </Flex>
           </Flex>
         </Flex>

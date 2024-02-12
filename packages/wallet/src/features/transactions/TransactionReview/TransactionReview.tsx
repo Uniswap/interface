@@ -2,21 +2,14 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInUp, FadeOut } from 'react-native-reanimated'
-import {
-  AnimatedFlex,
-  Button,
-  Flex,
-  Text,
-  useDeviceDimensions,
-  useMedia,
-  useSporeColors,
-} from 'ui/src'
+import { isWeb } from 'tamagui'
+import { AnimatedFlex, Button, Flex, Text, useDeviceDimensions, useMedia } from 'ui/src'
+import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { TransferArrowButton } from 'wallet/src/components/buttons/TransferArrowButton'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
-import { Arrow } from 'wallet/src/components/icons/Arrow'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
 import { RecipientPrevTransfers } from 'wallet/src/components/input/RecipientInputPanel'
 import { TextInputProps } from 'wallet/src/components/input/TextInput'
@@ -76,7 +69,6 @@ export function TransactionReview({
   usdTokenEquivalentAmount,
   onPrev,
 }: TransactionReviewProps): JSX.Element {
-  const colors = useSporeColors()
   const media = useMedia()
   const { fullHeight } = useDeviceDimensions()
   const { t } = useTranslation()
@@ -118,7 +110,8 @@ export function TransactionReview({
         grow
         $short={{ gap: '$none' }}
         entering={FadeInUp}
-        exiting={FadeOut}
+        // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
+        exiting={isWeb ? undefined : FadeOut}
         gap="$spacing4">
         {currencyInInfo ? (
           <Flex centered gap={innerGap}>
@@ -164,9 +157,9 @@ export function TransactionReview({
         ) : null}
         <TransferArrowButton
           disabled
-          bg="$transparent"
+          backgroundColor="$transparent"
           borderColor="$transparent"
-          padding={arrowPadding}
+          p={arrowPadding}
         />
         {currencyOutInfo && formattedAmountOut ? (
           <Flex centered $short={{ pb: '$spacing4' }} gap={innerGap} pb="$none">
@@ -212,17 +205,13 @@ export function TransactionReview({
       </AnimatedFlex>
       <AnimatedFlex
         entering={FadeInUp}
-        exiting={FadeOut}
+        // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
+        exiting={isWeb ? undefined : FadeOut}
         gap="$spacing12"
         justifyContent="flex-end">
         {transactionDetails}
         <Flex row gap="$spacing8">
-          <Button
-            icon={<Arrow color={colors.neutral1.val} direction="w" size={iconSizes.icon24} />}
-            size="large"
-            theme="tertiary"
-            onPress={onPrev}
-          />
+          <Button icon={<BackArrow />} size="large" theme="tertiary" onPress={onPrev} />
           <Button
             fill
             disabled={actionButtonProps.disabled}

@@ -45,8 +45,8 @@ import { EditNameScreen } from 'src/screens/Onboarding/EditNameScreen'
 import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
 import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
-import { QRAnimationScreen } from 'src/screens/Onboarding/QRAnimationScreen'
 import { SecuritySetupScreen } from 'src/screens/Onboarding/SecuritySetupScreen'
+import { WelcomeWalletScreen } from 'src/screens/Onboarding/WelcomeWalletScreen'
 import { FiatOnRampScreens, OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { SettingsAppearanceScreen } from 'src/screens/SettingsAppearanceScreen'
 import { SettingsBiometricAuthScreen } from 'src/screens/SettingsBiometricAuthScreen'
@@ -208,7 +208,6 @@ export function FiatOnRampStackNavigator(): JSX.Element {
   )
 }
 
-const renderEmptyBackImage = (): JSX.Element => <></>
 const renderHeaderBackImage = (): JSX.Element => (
   <Icons.RotatableChevron color="$neutral2" height={28} width={28} />
 )
@@ -259,18 +258,8 @@ export function OnboardingStackNavigator(): JSX.Element {
           name={OnboardingScreens.BackupManual}
         />
         <OnboardingStack.Screen
-          component={QRAnimationScreen}
-          name={OnboardingScreens.QRAnimation}
-          // There should be no header shown on this screen but if headerShown: false and the user is adding a wallet from the
-          // sidebar then when this screen is navigated away from the header will reappear on the home screen on top of the account
-          // header.
-          // To fix this the header is shown but the backImage is hidden so it appears as if there is no header. This is v hacky but
-          // I think it's a react navigation bug and I couldn't find a better solution. Feel free to debug if you're bored.
-          options={{
-            headerShown: true,
-            gestureEnabled: false,
-            headerBackImage: renderEmptyBackImage,
-          }}
+          component={WelcomeWalletScreen}
+          name={OnboardingScreens.WelcomeWallet}
         />
         <OnboardingStack.Screen
           component={CloudBackupProcessingScreen}
@@ -345,6 +334,7 @@ export function UnitagStackNavigator(): JSX.Element {
         <UnitagStack.Screen
           component={UnitagConfirmationScreen}
           name={UnitagScreens.UnitagConfirmation}
+          options={{ ...navOptions.noHeader, gestureEnabled: false }}
         />
         <UnitagStack.Screen component={EditUnitagProfileScreen} name={UnitagScreens.EditProfile} />
       </UnitagStack.Group>

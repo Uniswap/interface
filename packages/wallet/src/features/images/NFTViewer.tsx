@@ -49,7 +49,12 @@ export function NFTViewer(props: Props): JSX.Element {
 
   const fallback = useMemo(
     () => (
-      <Flex centered aspectRatio={1} bg="$surface2" maxHeight={maxHeight ?? '100%'} width="100%">
+      <Flex
+        centered
+        aspectRatio={1}
+        backgroundColor="$surface2"
+        maxHeight={maxHeight ?? '100%'}
+        width="100%">
         <Text color="$neutral2" flex={0} variant="subheading2">
           {placeholderContent || t('Content not available')}
         </Text>

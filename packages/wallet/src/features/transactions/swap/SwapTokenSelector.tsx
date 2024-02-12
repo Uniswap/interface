@@ -1,8 +1,11 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
+import { isWeb } from 'tamagui'
 import { flowToModalName } from 'wallet/src/components/TokenSelector/flowToModalName'
 import {
+  TokenSelector,
   TokenSelectorModal,
+  TokenSelectorProps,
   TokenSelectorVariation,
 } from 'wallet/src/components/TokenSelector/TokenSelector'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
@@ -80,19 +83,17 @@ export function SwapTokenSelector(): JSX.Element {
     [onHideTokenSelector, swapContext, updateSwapForm]
   )
 
-  return (
-    <TokenSelectorModal
-      // we need to filter tokens using the chainId of the *other* currency
-      chainId={selectingCurrencyField === CurrencyField.INPUT ? output?.chainId : input?.chainId}
-      currencyField={selectingCurrencyField}
-      flow={TokenSelectorFlow.Swap}
-      variation={
-        selectingCurrencyField === CurrencyField.INPUT
-          ? TokenSelectorVariation.BalancesAndPopular
-          : TokenSelectorVariation.SuggestedAndFavoritesAndPopular
-      }
-      onClose={onHideTokenSelector}
-      onSelectCurrency={onSelectCurrency}
-    />
-  )
+  const props: TokenSelectorProps = {
+    // we need to filter tokens using the chainId of the *other* currency
+    chainId: selectingCurrencyField === CurrencyField.INPUT ? output?.chainId : input?.chainId,
+    currencyField: selectingCurrencyField,
+    flow: TokenSelectorFlow.Swap,
+    variation:
+      selectingCurrencyField === CurrencyField.INPUT
+        ? TokenSelectorVariation.BalancesAndPopular
+        : TokenSelectorVariation.SuggestedAndFavoritesAndPopular,
+    onClose: onHideTokenSelector,
+    onSelectCurrency,
+  }
+  return isWeb ? <TokenSelector {...props} /> : <TokenSelectorModal {...props} />
 }

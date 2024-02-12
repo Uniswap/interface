@@ -58,7 +58,7 @@ export function ViewOnlyExplainerModal(): JSX.Element {
           <Button
             alignSelf="center"
             borderRadius="$rounded20"
-            paddingHorizontal={40}
+            px={40}
             theme="primary"
             onPress={onPressImportWallet}>
             {t('Import wallet')}
@@ -68,7 +68,7 @@ export function ViewOnlyExplainerModal(): JSX.Element {
             backgroundColor={undefined}
             borderRadius="$rounded20"
             color="$neutral2"
-            paddingHorizontal={40}
+            px={40}
             theme="secondary"
             onPress={onClose}>
             {t('Maybe later')}

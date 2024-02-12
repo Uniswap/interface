@@ -24,7 +24,7 @@ import {
   StyledXButton,
   TextContainer,
   Thumbnail,
-} from './styled'
+} from '../shared/styled'
 
 export default function WalletAppPromoBanner() {
   const [hideAppPromoBanner, toggleHideAppPromoBanner] = useHideAppPromoBanner()

@@ -311,8 +311,8 @@ export const CurrencyInputPanel = memo(
             height={spacing.spacing36}
             justifyContent="space-between"
             left={spacing.spacing16}
-            paddingTop="$spacing16"
             position="absolute"
+            pt="$spacing16"
             right={spacing.spacing16}
             style={animatedInfoRowStyle}>
             {/* Keep the animated parent container so animation styles are always mounted  */}

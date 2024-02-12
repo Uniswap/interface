@@ -15,3 +15,7 @@ export function normalizeTextInput(input: string, toLowerCase = true): string {
 export function escapeRegExp(string: string): string {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
+
+export function normalizeTwitterUsername(input: string): string {
+  return input.replace(/[^a-zA-Z0-9_]/g, '') // must be alphanumeric or an underscore
+}

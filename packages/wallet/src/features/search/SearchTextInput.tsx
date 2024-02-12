@@ -7,6 +7,7 @@ import {
   TextInput as NativeTextInput,
   TextInputFocusEventData,
 } from 'react-native'
+import { isWeb } from 'tamagui'
 import {
   AnimatePresence,
   Button,
@@ -19,7 +20,7 @@ import {
   TouchableArea,
   useDeviceDimensions,
 } from 'ui/src'
-import { fonts, spacing } from 'ui/src/theme'
+import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { SHADOW_OFFSET_SMALL } from 'wallet/src/components/BaseCard/BaseCard'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { WalletEventName } from 'wallet/src/telemetry/constants'
@@ -35,12 +36,13 @@ export const springConfig = {
 
 export type SearchTextInputProps = InputProps & {
   onCancel?: () => void
+  onClose?: () => void
   clearIcon?: JSX.Element
   disableClearable?: boolean
   endAdornment?: JSX.Element | null
-  showCancelButton?: boolean
   showShadow?: boolean
   py?: SpaceTokens
+  px?: SpaceTokens
 }
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>(
@@ -49,20 +51,23 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     const { t } = useTranslation()
     const {
       autoFocus,
-      backgroundColor,
+      backgroundColor = '$surface2',
       clearIcon,
-      disableClearable,
+      disableClearable = isWeb,
       endAdornment,
       onCancel,
+      onClose,
       onChangeText,
       onFocus,
       placeholder,
       py = '$spacing12',
-      showCancelButton,
+      px = '$spacing16',
       showShadow,
       value = '',
     } = props
 
+    const showCancelButton = !!onCancel
+    const showCloseButton = !!onClose
     const [isFocus, setIsFocus] = useState(false)
     const [cancelButtonWidth, setCancelButtonWidth] = useState(showCancelButton ? 40 : 0)
     const [showClearButton, setShowClearButton] = useState(value.length > 0 && !disableClearable)
@@ -97,9 +102,9 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     const onChangeTextInput = useCallback(
       (text: string) => {
         onChangeText?.(text)
-        setShowClearButton(text.length > 0)
+        setShowClearButton(text.length > 0 && !disableClearable)
       },
-      [onChangeText]
+      [disableClearable, onChangeText]
     )
 
     return (
@@ -111,12 +116,12 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           alignItems="center"
           animateOnly={['marginRight']}
           animation="quick"
-          backgroundColor={backgroundColor ?? '$surface2'}
+          backgroundColor={backgroundColor}
           borderRadius="$roundedFull"
           gap="$spacing8"
-          marginRight={showCancelButton && isFocus ? cancelButtonWidth + spacing.spacing12 : 0}
           minHeight={48}
-          px="$spacing16"
+          mr={showCancelButton && isFocus ? cancelButtonWidth + spacing.spacing12 : 0}
+          px={px}
           py={py}
           {...(showShadow && {
             shadowColor: '$DEP_brandedAccentSoft',
@@ -167,11 +172,9 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 animation="quick"
                 backgroundColor="$surface3"
                 borderRadius="$roundedFull"
-                // eslint-disable-next-line react-native/no-inline-styles
-                enterStyle={{ o: 0, scale: 0 }}
-                // eslint-disable-next-line react-native/no-inline-styles
-                exitStyle={{ o: 0, scale: 0 }}
-                icon={clearIcon ?? <Icons.X color="$neutral2" size="$icon.16" />}
+                enterStyle={{ opacity: 0, scale: 0 }}
+                exitStyle={{ opacity: 0, scale: 0 }}
+                icon={clearIcon ?? <Icons.X color="$neutral3" size="$icon.16" />}
                 p="$spacing4"
                 theme="secondary"
                 onPress={onClear}
@@ -185,14 +188,35 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
               </Flex>
             ) : null}
           </AnimatePresence>
+          <AnimatePresence>
+            {showCloseButton && (
+              <Button
+                animation="quick"
+                backgroundColor={backgroundColor}
+                enterStyle={{ opacity: 0, scale: 0 }}
+                exitStyle={{ opacity: 0, scale: 0 }}
+                icon={
+                  <Icons.RotatableChevron
+                    color="$neutral3"
+                    direction="up"
+                    height={iconSizes.icon20}
+                    width={iconSizes.icon20}
+                  />
+                }
+                p="$none"
+                theme="secondary"
+                onPress={onClose}
+              />
+            )}
+          </AnimatePresence>
         </Flex>
 
         {showCancelButton && (
           <Flex
             animation="200ms"
-            o={isFocus ? 1 : 0}
-            pos="absolute"
-            r={0}
+            opacity={isFocus ? 1 : 0}
+            position="absolute"
+            right={0}
             scale={isFocus ? 1 : 0}
             x={isFocus ? 0 : dimensions.fullWidth}
             onLayout={onCancelButtonLayout}>

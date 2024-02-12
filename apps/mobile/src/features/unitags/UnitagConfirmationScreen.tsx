@@ -1,10 +1,9 @@
-import { useHeaderHeight } from '@react-navigation/elements'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { AnimateInOrder } from 'src/components/animation/AnimateInOrder'
-import { Screen, SHORT_SCREEN_HEADER_HEIGHT_RATIO } from 'src/components/layout/Screen'
+import { Screen } from 'src/components/layout/Screen'
 import { UnitagWithProfilePicture } from 'src/components/unitags/UnitagWithProfilePicture'
 import {
   EmojiElement,
@@ -26,7 +25,6 @@ export function UnitagConfirmationScreen({
   route,
 }: UnitagStackScreenProp<UnitagScreens.UnitagConfirmation>): JSX.Element {
   const { unitag, address, profilePictureUri } = route.params
-  const headerHeight = useHeaderHeight()
   const dimensions = useDeviceDimensions()
   const insets = useDeviceInsets()
   const { t } = useTranslation()
@@ -64,18 +62,13 @@ export function UnitagConfirmationScreen({
   )
 
   return (
-    <Screen
-      $short={{ pt: headerHeight * SHORT_SCREEN_HEADER_HEIGHT_RATIO }}
-      edges={['right', 'left', 'bottom']}
-      pt={headerHeight}>
+    <Screen edges={['right', 'left', 'bottom']} pt="$spacing60">
       <Flex grow gap="$spacing16" justifyContent="space-between" pb="$spacing16" px="$spacing16">
         <Flex centered grow>
           <AnimatePresence exitBeforeEnter>
             <AnimateInOrder
-              // eslint-disable-next-line react-native/no-inline-styles
-              enterStyle={{ o: 0, scale: 0.5 }}
-              // eslint-disable-next-line react-native/no-inline-styles
-              exitStyle={{ o: 0, scale: 0.5 }}
+              enterStyle={{ opacity: 0, scale: 0.5 }}
+              exitStyle={{ opacity: 0, scale: 0.5 }}
               index={1}
               position="absolute">
               <Flex
@@ -87,10 +80,8 @@ export function UnitagConfirmationScreen({
               />
             </AnimateInOrder>
             <AnimateInOrder
-              // eslint-disable-next-line react-native/no-inline-styles
-              enterStyle={{ o: 0, scale: 0.5 }}
-              // eslint-disable-next-line react-native/no-inline-styles
-              exitStyle={{ o: 0, scale: 0.5 }}
+              enterStyle={{ opacity: 0, scale: 0.5 }}
+              exitStyle={{ opacity: 0, scale: 0.5 }}
               index={2}
               position="absolute">
               <Flex

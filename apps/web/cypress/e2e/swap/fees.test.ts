@@ -4,13 +4,13 @@ import { FeatureFlag } from 'featureFlags'
 import { USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
-describe.skip('Swap with fees', () => {
+describe('Swap with fees', () => {
   describe('Classic swaps', () => {
     beforeEach(() => {
       cy.visit('/swap', { featureFlags: [{ name: FeatureFlag.feesEnabled, value: true }] })
 
       // Store trade quote into alias
-      cy.intercept({ url: 'https://api.uniswap.org/v2/quote' }, (req) => {
+      cy.intercept({ url: 'https://interface.gateway.uniswap.org/v2/quote' }, (req) => {
         // Avoid tracking stablecoin pricing fetches
         if (JSON.parse(req.body).intent !== 'pricing') req.alias = 'quoteFetch'
       })
@@ -124,7 +124,7 @@ describe.skip('Swap with fees', () => {
       })
 
       // Intercept the trade quote
-      cy.intercept({ url: 'https://api.uniswap.org/v2/quote' }, (req) => {
+      cy.intercept({ url: 'https://interface.gateway.uniswap.org/v2/quote' }, (req) => {
         // Avoid intercepting stablecoin pricing fetches
         if (JSON.parse(req.body).intent !== 'pricing') {
           req.reply({ fixture: 'uniswapx/feeQuote.json' })

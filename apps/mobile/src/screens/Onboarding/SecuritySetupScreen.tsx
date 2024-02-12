@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { BlurView } from 'expo-blur'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Alert, Image, Platform, StyleSheet } from 'react-native'
+import { ActivityIndicator, Alert, Image, Platform, StyleSheet } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
@@ -18,8 +18,8 @@ import {
   useDeviceSupportsBiometricAuth,
 } from 'src/features/biometrics/hooks'
 import { setRequiredForTransactions } from 'src/features/biometrics/slice'
-import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { Button, Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/src/assets'
@@ -40,16 +40,20 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
   const dispatch = useAppDispatch()
   const isDarkMode = useIsDarkMode()
 
+  const [isLoadingAccount, setIsLoadingAccount] = useState(false)
   const [showWarningModal, setShowWarningModal] = useState(false)
   const { touchId: isTouchIdDevice } = useDeviceSupportsBiometricAuth()
   const authenticationTypeName = useBiometricName(isTouchIdDevice)
 
-  const onCompleteOnboarding = useCompleteOnboardingCallback(params.entryPoint, params.importType)
+  const onCompleteOnboarding = useCompleteOnboardingCallback(params)
 
   const onPressNext = useCallback(async () => {
-    setShowWarningModal(false)
-    await onCompleteOnboarding()
-  }, [onCompleteOnboarding])
+    if (!isLoadingAccount) {
+      setShowWarningModal(false)
+      setIsLoadingAccount(true)
+      await onCompleteOnboarding()
+    }
+  }, [isLoadingAccount, onCompleteOnboarding])
 
   const onMaybeLaterPressed = useCallback(async () => {
     if (params?.importType === ImportType.Watch) {
@@ -102,6 +106,17 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
           onClose={onCloseModal}
           onConfirm={onPressNext}
         />
+      )}
+      {isLoadingAccount && (
+        <Flex
+          centered
+          mt="$spacing60"
+          position="absolute"
+          pt="$spacing36"
+          width="100%"
+          zIndex={100}>
+          <ActivityIndicator color={colors.sporeWhite.val} />
+        </Flex>
       )}
       <OnboardingScreen
         childrenGap="$none"

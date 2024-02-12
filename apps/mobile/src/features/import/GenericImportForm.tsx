@@ -3,8 +3,8 @@ import {
   Keyboard,
   LayoutChangeEvent,
   LayoutRectangle,
-  StyleSheet,
   TextInput as NativeTextInput,
+  StyleSheet,
 } from 'react-native'
 import Trace from 'src/components/Trace/Trace'
 import InputWithSuffix from 'src/features/import/InputWithSuffix'

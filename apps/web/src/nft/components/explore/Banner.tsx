@@ -1,5 +1,5 @@
-import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
+import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { calculateCardIndex } from 'nft/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'

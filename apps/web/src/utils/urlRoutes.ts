@@ -1,9 +1,17 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 
 export function getCurrentPageFromLocation(locationPathname: string): InterfacePageName | undefined {
   switch (true) {
     case locationPathname.startsWith('/swap'):
       return InterfacePageName.SWAP_PAGE
+    case locationPathname.startsWith('/explore/tokens') &&
+      (locationPathname.includes('0x') || locationPathname.includes(NATIVE_CHAIN_ID)):
+      return InterfacePageName.TOKEN_DETAILS_PAGE
+    case locationPathname.startsWith('/explore/pools') && locationPathname.includes('0x'):
+      return InterfacePageName.POOL_DETAILS_PAGE
+    case locationPathname.startsWith('/explore'):
+      return InterfacePageName.EXPLORE_PAGE
     case locationPathname.startsWith('/vote'):
       return InterfacePageName.VOTE_PAGE
     case locationPathname.startsWith('/pools'):

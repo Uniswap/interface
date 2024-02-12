@@ -59,7 +59,7 @@ export function HiddenNftsRowRight({
         <Flex
           row
           alignItems="center"
-          bg="$surface2"
+          backgroundColor="$surface2"
           borderRadius="$roundedFull"
           pl="$spacing12"
           pr="$spacing8"

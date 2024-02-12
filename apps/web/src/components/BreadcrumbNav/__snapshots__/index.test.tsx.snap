@@ -33,7 +33,7 @@ exports[`BreadcrumbNav does not display address hover for native tokens 1`] = `
   font-weight: inherit;
   font-size: inherit;
   line-height: inherit;
-  color: inherit;
+  color: #222222;
   white-space: nowrap;
   margin: 0;
 }
@@ -78,6 +78,11 @@ exports[`BreadcrumbNav renders hover components correctly 1`] = `
   justify-content: flex-start;
 }
 
+.c5 {
+  display: inline-block;
+  height: inherit;
+}
+
 .c2 {
   gap: 6px;
 }
@@ -86,7 +91,7 @@ exports[`BreadcrumbNav renders hover components correctly 1`] = `
   font-weight: inherit;
   font-size: inherit;
   line-height: inherit;
-  color: inherit;
+  color: #222222;
   white-space: nowrap;
   margin: 0;
 }
@@ -112,7 +117,11 @@ exports[`BreadcrumbNav renders hover components correctly 1`] = `
       class="c0 c1 c4"
       data-testid="breadcrumb-token-address"
     >
-      ( 0x2260...C599 )
+      <div
+        class="c5"
+      >
+        0x2260...C599
+      </div>
     </div>
   </div>
 </DocumentFragment>

@@ -4,7 +4,6 @@ const inProduction = NODE_ENV === 'production'
 
 module.exports = function (api) {
   api.cache.using(() => process.env.NODE_ENV)
-
   var plugins = [
     [
       'module:react-native-dotenv',

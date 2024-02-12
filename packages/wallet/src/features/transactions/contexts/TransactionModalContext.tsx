@@ -1,17 +1,14 @@
 import { createContext, ReactNode, useContext, useMemo } from 'react'
-import { LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native'
+import { StyleProp, ViewStyle } from 'react-native'
+import { AuthTrigger } from 'wallet/src/features/auth/types'
 
 export type TransactionModalContextState = {
   bottomSheetViewStyles: StyleProp<ViewStyle>
-  handleContentLayout: (event: LayoutChangeEvent) => void
   openWalletRestoreModal?: () => void
   walletNeedsRestore?: boolean
   onClose: () => void
   BiometricsIcon?: JSX.Element | null
-  authTrigger?: (args: {
-    successCallback: () => void
-    failureCallback: () => void
-  }) => Promise<void>
+  authTrigger?: AuthTrigger
 }
 
 export const TransactionModalContext = createContext<TransactionModalContextState | undefined>(
@@ -23,7 +20,6 @@ export function TransactionModalContextProvider({
   BiometricsIcon,
   authTrigger,
   bottomSheetViewStyles,
-  handleContentLayout,
   onClose,
   openWalletRestoreModal,
   walletNeedsRestore,
@@ -32,7 +28,6 @@ export function TransactionModalContextProvider({
   BiometricsIcon?: TransactionModalContextState['BiometricsIcon']
   authTrigger?: TransactionModalContextState['authTrigger']
   bottomSheetViewStyles: TransactionModalContextState['bottomSheetViewStyles']
-  handleContentLayout: TransactionModalContextState['handleContentLayout']
   onClose: () => void
   openWalletRestoreModal?: TransactionModalContextState['openWalletRestoreModal']
   walletNeedsRestore?: TransactionModalContextState['walletNeedsRestore']
@@ -42,7 +37,6 @@ export function TransactionModalContextProvider({
       BiometricsIcon,
       authTrigger,
       bottomSheetViewStyles,
-      handleContentLayout,
       onClose,
       openWalletRestoreModal,
       walletNeedsRestore,
@@ -51,7 +45,6 @@ export function TransactionModalContextProvider({
       BiometricsIcon,
       authTrigger,
       bottomSheetViewStyles,
-      handleContentLayout,
       onClose,
       openWalletRestoreModal,
       walletNeedsRestore,

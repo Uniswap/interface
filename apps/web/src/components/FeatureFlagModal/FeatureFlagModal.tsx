@@ -11,15 +11,22 @@ import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
 import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
 import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
 import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
-import { useLandingPageV2Flag } from 'featureFlags/flags/landingPageV2'
+import { useExitAnimationFlag, useLandingPageV2Flag } from 'featureFlags/flags/landingPageV2'
 import { useLimitsEnabledFlag } from 'featureFlags/flags/limits'
+import { useLimitsFeeesEnabledFlag } from 'featureFlags/flags/limitsFees'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
+import {
+  useOutageBannerArbitrum,
+  useOutageBannerOptimism,
+  useOutageBannerPolygon,
+} from 'featureFlags/flags/outageBanner'
 import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
 import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
 import { useSendEnabledFlag } from 'featureFlags/flags/send'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useFeesEnabledFlag } from 'featureFlags/flags/useFees'
+import { useV2EverywhereFlag } from 'featureFlags/flags/v2Everywhere'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
@@ -307,6 +314,12 @@ export default function FeatureFlagModal() {
         />
         <FeatureFlagOption
           variant={BaseVariant}
+          value={useLimitsFeeesEnabledFlag()}
+          featureFlag={FeatureFlag.limitsFees}
+          label="Enable Limits fees"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
           value={useFallbackProviderEnabledFlag()}
           featureFlag={FeatureFlag.fallbackProvider}
           label="Enable fallback provider"
@@ -334,6 +347,18 @@ export default function FeatureFlagModal() {
           value={useLandingPageV2Flag()}
           featureFlag={FeatureFlag.landingPageV2}
           label="Refreshed landing page"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useExitAnimationFlag()}
+          featureFlag={FeatureFlag.exitAnimation}
+          label="Landing page exit animation"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useV2EverywhereFlag()}
+          featureFlag={FeatureFlag.v2Everywhere}
+          label="Enable V2 Everywhere"
         />
         <FeatureFlagGroup name="Quick routes">
           <FeatureFlagOption
@@ -382,6 +407,26 @@ export default function FeatureFlagModal() {
             value={useInfoLiveViewsFlag()}
             featureFlag={FeatureFlag.infoLiveViews}
             label="Info site migration - Support live view graphs"
+          />
+        </FeatureFlagGroup>
+        <FeatureFlagGroup name="Outage Banners">
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useOutageBannerArbitrum()}
+            featureFlag={FeatureFlag.outageBannerArbitrum}
+            label="Outage Banner for Arbitrum"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useOutageBannerPolygon()}
+            featureFlag={FeatureFlag.outageBannerPolygon}
+            label="Outage Banner for Polygon"
+          />
+          <FeatureFlagOption
+            variant={BaseVariant}
+            value={useOutageBannerOptimism()}
+            featureFlag={FeatureFlag.outageBannerOptimism}
+            label="Outage Banner for Optimism"
           />
         </FeatureFlagGroup>
         <FeatureFlagGroup name="Debug">

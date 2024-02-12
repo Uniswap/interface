@@ -2,8 +2,8 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import {
   FormatterRule,
   StandardCurrency,
-  TwoDecimalsCurrency,
   TYPE_TO_FORMATTER_RULES,
+  TwoDecimalsCurrency,
 } from 'utilities/src/format/localeBasedFormats'
 import { NumberType } from 'utilities/src/format/types'
 

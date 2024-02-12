@@ -110,20 +110,13 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/explore',
     getTitle: getExploreTitle,
-    nestedPaths: [':tab', ':chainName'],
+    nestedPaths: [':tab', ':chainName', ':tab/:chainName'],
     getElement: () => <RedirectExplore />,
     enabled: (args) => Boolean(args.infoExplorePageEnabled),
   }),
   createRouteDefinition({
-    path: '/explore',
-    getTitle: getExploreTitle,
-    nestedPaths: [':tab/:chainName'],
-    getElement: () => <Explore />,
-    enabled: (args) => Boolean(args.infoExplorePageEnabled),
-  }),
-  createRouteDefinition({
     path: '/explore/tokens/:chainName/:tokenAddress',
-    getTitle: () => t`Buy & Sell on Uniswap`,
+    getTitle: () => t`Buy & sell on Uniswap`,
     getElement: () => <TokenDetails />,
     enabled: (args) => Boolean(args.infoExplorePageEnabled),
   }),
@@ -150,7 +143,7 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/explore/pools/:chainName/:poolAddress',
-    getTitle: () => t`Explore Pools on Uniswap`,
+    getTitle: () => t`Explore pools on Uniswap`,
     getElement: () => (
       <Suspense fallback={null}>
         <PoolDetails />
@@ -160,7 +153,7 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/vote/*',
-    getTitle: () => t`Vote on Governance Proposals on Uniswap`,
+    getTitle: () => t`Vote on governance proposals on Uniswap`,
     getElement: () => (
       <Suspense fallback={<LazyLoadSpinner />}>
         <Vote />
@@ -169,7 +162,7 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/create-proposal',
-    getTitle: () => t`Create a new Governance Proposal on Uniswap`,
+    getTitle: () => t`Create a new governance proposal on Uniswap`,
     getElement: () => <Navigate to="/vote/create-proposal" replace />,
   }),
   createRouteDefinition({
@@ -179,49 +172,49 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/swap',
     getElement: () => <Swap />,
-    getTitle: () => t`Buy, Sell & Trade Ethereum and Other Top Tokens on Uniswap`,
+    getTitle: () => t`Buy, sell & trade Ethereum and other top tokens on Uniswap`,
   }),
   createRouteDefinition({
     path: '/pool/v2/find',
     getElement: () => <PoolFinder />,
-    getTitle: () => t`Explore Top Liquidity Pools (v2) on Uniswap`,
+    getTitle: () => t`Explore top liquidity pools (v2) on Uniswap`,
   }),
   createRouteDefinition({
     path: '/pool/v2',
     getElement: () => <PoolV2 />,
-    getTitle: () => t`Provide Liquidity to Pools (v2) on Uniswap`,
+    getTitle: () => t`Provide liquidity to pools (v2) on Uniswap`,
   }),
   createRouteDefinition({ path: '/pool', getElement: () => <Pool /> }),
   createRouteDefinition({
     path: '/pool/:tokenId',
     getElement: () => <PositionPage />,
-    getTitle: () => t`Manage Pool Liquidity on Uniswap`,
+    getTitle: () => t`Manage pool liquidity on Uniswap`,
   }),
   createRouteDefinition({
     path: '/pools/v2/find',
     getElement: () => <PoolFinder />,
-    getTitle: () => t`Explore Top Liquidity Pools (v2) on Uniswap`,
+    getTitle: () => t`Explore top liquidity pools (v2) on Uniswap`,
   }),
   createRouteDefinition({
     path: '/pools/v2',
     getElement: () => <PoolV2 />,
-    getTitle: () => t`Manage & Provide v2 Pool Liquidity on Uniswap`,
+    getTitle: () => t`Manage & provide v2 pool liquidity on Uniswap`,
   }),
   createRouteDefinition({
     path: '/pools',
     getElement: () => <Pool />,
-    getTitle: () => t`Manage & Provide Pool Liquidity on Uniswap`,
+    getTitle: () => t`Manage & provide pool liquidity on Uniswap`,
   }),
   createRouteDefinition({
     path: '/pools/:tokenId',
     getElement: () => <PositionPage />,
-    getTitle: () => t`Manage Pool Liquidity on Uniswap`,
+    getTitle: () => t`Manage pool liquidity on Uniswap`,
   }),
   createRouteDefinition({
     path: '/add/v2',
     nestedPaths: [':currencyIdA', ':currencyIdA/:currencyIdB'],
     getElement: () => <AddLiquidityV2WithTokenRedirects />,
-    getTitle: () => t`Provide Liquidity to Pools (v2) on Uniswap`,
+    getTitle: () => t`Provide liquidity to pools (v2) on Uniswap`,
   }),
   createRouteDefinition({
     path: '/add',
@@ -232,27 +225,27 @@ export const routes: RouteDefinition[] = [
       ':currencyIdA/:currencyIdB/:feeAmount/:tokenId',
     ],
     getElement: () => <AddLiquidityWithTokenRedirects />,
-    getTitle: () => t`Provide Liquidity to Pools on Uniswap`,
+    getTitle: () => t`Provide liquidity to pools on Uniswap`,
   }),
   createRouteDefinition({
     path: '/remove/v2/:currencyIdA/:currencyIdB',
     getElement: () => <RemoveLiquidity />,
-    getTitle: () => t`Manage v2 Pool Liquidity on Uniswap`,
+    getTitle: () => t`Manage v2 pool liquidity on Uniswap`,
   }),
   createRouteDefinition({
     path: '/remove/:tokenId',
     getElement: () => <RemoveLiquidityV3 />,
-    getTitle: () => t`Manage Pool Liquidity on Uniswap`,
+    getTitle: () => t`Manage pool liquidity on Uniswap`,
   }),
   createRouteDefinition({
     path: '/migrate/v2',
     getElement: () => <MigrateV2 />,
-    getTitle: () => t`Migrate v2 Pool Liquidity to Uniswap v3`,
+    getTitle: () => t`Migrate v2 pool liquidity to Uniswap v3`,
   }),
   createRouteDefinition({
     path: '/migrate/v2/:address',
     getElement: () => <MigrateV2Pair />,
-    getTitle: () => t`Migrate v2 Pool Liquidity to Uniswap v3`,
+    getTitle: () => t`Migrate v2 pool liquidity to Uniswap v3`,
   }),
   createRouteDefinition({
     path: '/nfts',
@@ -262,7 +255,7 @@ export const routes: RouteDefinition[] = [
       </Suspense>
     ),
     enabled: (args) => !args.shouldDisableNFTRoutes,
-    getTitle: () => t`Trade NFTs Across OpenSea & Other Top Marketplaces on Uniswap`,
+    getTitle: () => t`Trade NFTs across OpenSea & other top marketplaces on Uniswap`,
   }),
   createRouteDefinition({
     path: '/nfts/asset/:contractAddress/:tokenId',

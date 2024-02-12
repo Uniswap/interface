@@ -9,13 +9,13 @@ import { getAlertColor } from 'wallet/src/components/modals/WarningModal/Warning
 import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
 import { ChainId } from 'wallet/src/constants/chains'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
-import { SwapFeeInfo } from 'wallet/src/features/routing/types'
 import { FeeOnTransferInfo } from 'wallet/src/features/transactions/TransactionDetails/FeeOnTransferInfo'
 import {
   OnShowSwapFeeInfo,
   SwapFee,
 } from 'wallet/src/features/transactions/TransactionDetails/SwapFee'
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
+import { SwapFeeInfo } from 'wallet/src/features/transactions/swap/trade/types'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 
 interface TransactionDetailsProps {
@@ -88,7 +88,11 @@ export function TransactionDetails({
         </TouchableArea>
       )}
       {gasFee.error && (
-        <Flex bg="$DEP_accentCriticalSoft" borderRadius="$rounded16" mb="$spacing12" p="$spacing12">
+        <Flex
+          backgroundColor="$DEP_accentCriticalSoft"
+          borderRadius="$rounded16"
+          mb="$spacing12"
+          p="$spacing12">
           <Text color="$statusCritical">{t('This transaction is expected to fail')}</Text>
         </Flex>
       )}

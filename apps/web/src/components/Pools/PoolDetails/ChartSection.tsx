@@ -1,46 +1,68 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart } from 'components/Charts/ChartModel'
-import { mockCandlestickData, PriceChartDelta, PriceChartModel } from 'components/Charts/PriceChart'
-import TimePeriodSelector from 'components/Charts/TimeSelector'
-import { ChartType, PriceChartType } from 'components/Charts/utils'
+import { PriceChartDelta, PriceChartModel, mockCandlestickData } from 'components/Charts/PriceChart'
+import { refitChartContentAtom } from 'components/Charts/TimeSelector'
 import { VolumeChart } from 'components/Charts/VolumeChart'
-import { ChartContainer, usePriceHistory } from 'components/Tokens/TokenDetails/ChartSection'
+import { ChartType, PriceChartType } from 'components/Charts/utils'
+import PillMultiToggle from 'components/Toggle/PillMultiToggle'
+import {
+  ChartActionsContainer,
+  ChartContainer,
+  DEFAULT_PILL_TIME_SELECTOR_OPTIONS,
+  usePriceHistory,
+} from 'components/Tokens/TokenDetails/ChartSection'
+import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartTypeSelectors/ChartTypeSelector'
 import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
-import { TimePeriod, toContractInput, toHistoryDuration } from 'graphql/data/util'
+import { DISPLAYS, TimePeriodDisplay, getTimePeriodFromDisplay } from 'components/Tokens/TokenTable/TimeSelector'
 import { useTokenPriceQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { TimePeriod, toContractInput, toHistoryDuration } from 'graphql/data/util'
 import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useCurrency } from 'hooks/Tokens'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
+import { useAtomValue } from 'jotai/utils'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { Z_INDEX } from 'theme/zIndex'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-const PDP_CHART_HEIGHT_PX = 380
-export const PDP_CHART_SELECTOR_OPTIONS = [ChartType.PRICE, ChartType.VOLUME, ChartType.LIQUIDITY] as const
+const PDP_CHART_HEIGHT_PX = 356
+const PDP_CHART_SELECTOR_OPTIONS = [ChartType.PRICE, ChartType.VOLUME, ChartType.LIQUIDITY] as const
 export type PoolsDetailsChartType = (typeof PDP_CHART_SELECTOR_OPTIONS)[number]
 
 const TimePeriodSelectorContainer = styled.div`
-  position: absolute;
-  top: 4px;
-  right: 72px;
-  z-index: ${Z_INDEX.active};
-  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
-    position: static;
-    margin-top: 4px;
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    width: 100%;
   }
-  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
+`
+const ChartTypeSelectorContainer = styled.div`
+  display: flex;
+  gap: 8px;
+
+  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
     width: 100%;
   }
 `
 
+const PDPChartTypeSelector = ({
+  chartType,
+  onChartTypeChange,
+}: {
+  chartType: PoolsDetailsChartType
+  onChartTypeChange: (c: PoolsDetailsChartType) => void
+}) => (
+  <ChartTypeSelectorContainer>
+    <ChartTypeDropdown
+      options={PDP_CHART_SELECTOR_OPTIONS}
+      currentChartType={chartType}
+      onSelectOption={onChartTypeChange}
+    />
+  </ChartTypeSelectorContainer>
+)
+
 interface ChartSectionProps {
   token0?: Token
   token1?: Token
-  chartType: PoolsDetailsChartType
-  priceChartType: PriceChartType
   feeTier?: number
   loading: boolean
 }
@@ -55,6 +77,10 @@ export default function ChartSection(props: ChartSectionProps) {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const [currencyA, currencyB] = [useCurrency(props.token0?.id), useCurrency(props.token1?.id)]
 
+  const [chartType, setChartType] = useState<PoolsDetailsChartType>(ChartType.PRICE)
+
+  const refitChartContent = useAtomValue(refitChartContentAtom)
+
   const mockVolumes = useMemo(
     () => [...Array(20).keys()].map((i) => ({ value: Math.random() * 10e4 + 500, timestamp: 100123131 + i * 1000 })),
     // Mock data refresh on timePeriod change
@@ -66,7 +92,7 @@ export default function ChartSection(props: ChartSectionProps) {
     return <LoadingChart />
   }
 
-  const SelectedChart = CHART_TYPE_COMPONENT_MAP[props.chartType]
+  const SelectedChart = CHART_TYPE_COMPONENT_MAP[chartType]
   const selectedChartProps = {
     ...props,
     height: PDP_CHART_HEIGHT_PX,
@@ -79,9 +105,23 @@ export default function ChartSection(props: ChartSectionProps) {
   return (
     <ChartContainer isInfoTDPEnabled data-testid="pdp-chart-container">
       <SelectedChart {...selectedChartProps} />
-      <TimePeriodSelectorContainer>
-        <TimePeriodSelector timePeriod={timePeriod} onChangeTimePeriod={setTimePeriod} />
-      </TimePeriodSelectorContainer>
+      <ChartActionsContainer>
+        <TimePeriodSelectorContainer>
+          <PillMultiToggle
+            options={DEFAULT_PILL_TIME_SELECTOR_OPTIONS}
+            currentSelected={DISPLAYS[timePeriod]}
+            onSelectOption={(option) => {
+              const time = getTimePeriodFromDisplay(option as TimePeriodDisplay)
+              if (time === timePeriod) {
+                refitChartContent?.()
+              } else {
+                setTimePeriod(time)
+              }
+            }}
+          />
+        </TimePeriodSelectorContainer>
+        <PDPChartTypeSelector chartType={chartType} onChartTypeChange={setChartType} />
+      </ChartActionsContainer>
     </ChartContainer>
   )
 }
@@ -93,7 +133,7 @@ interface SelectedChartProps extends ChartSectionProps {
   height: number
 }
 
-function PriceChart({ currencyA, currencyB, timePeriod, height, priceChartType }: SelectedChartProps) {
+function PriceChart({ currencyA, currencyB, timePeriod, height }: SelectedChartProps) {
   const { formatCurrencyAmount, formatPrice } = useFormatter()
   // TODO(info): Update to use subgraph data
   const priceQuery = useTokenPriceQuery({
@@ -102,7 +142,7 @@ function PriceChart({ currencyA, currencyB, timePeriod, height, priceChartType }
   const prices = usePriceHistory(priceQuery.data)
 
   const mockedPrices = useMemo(() => mockCandlestickData(prices), [prices])
-  const params = useMemo(() => ({ data: mockedPrices, type: priceChartType }), [mockedPrices, priceChartType])
+  const params = useMemo(() => ({ data: mockedPrices, type: PriceChartType.LINE }), [mockedPrices])
 
   const stablecoinPrice = useStablecoinPrice(currencyA)
 

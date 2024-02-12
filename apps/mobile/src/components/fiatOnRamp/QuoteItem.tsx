@@ -2,13 +2,13 @@ import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
-import { useMeldLogoUrl } from 'src/components/fiatOnRamp/hooks'
+import { useFiatOnRampLogoUrl } from 'src/components/fiatOnRamp/hooks'
 import { Loader } from 'src/components/loading'
 import { useFormatExactCurrencyAmount } from 'src/features/fiatOnRamp/hooks'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { MeldQuote, MeldServiceProvider } from 'wallet/src/features/fiatOnRamp/meld'
+import { FORQuote, FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
@@ -23,8 +23,8 @@ export function FORQuoteItem({
   showCarret,
   active,
 }: {
-  quote: MeldQuote | undefined
-  serviceProvider: MeldServiceProvider | undefined
+  quote: FORQuote | undefined
+  serviceProvider: FORServiceProvider | undefined
   currency: Maybe<Currency>
   loading: boolean
   baseCurrency: FiatCurrencyInfo
@@ -41,12 +41,12 @@ export function FORQuoteItem({
   )
 
   const quoteEquivalentInSourceCurrencyAmount = addFiatSymbolToNumber({
-    value: quote?.sourceAmountWithoutFees || 0,
+    value: quote?.sourceAmount || 0,
     currencyCode: baseCurrency.code,
     currencySymbol: baseCurrency.symbol,
   })
 
-  const logoUrl = useMeldLogoUrl(serviceProvider?.logos)
+  const logoUrl = useFiatOnRampLogoUrl(serviceProvider?.logos)
 
   return (
     <TouchableArea onPress={onPress}>

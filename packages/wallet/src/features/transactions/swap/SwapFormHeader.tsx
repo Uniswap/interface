@@ -71,7 +71,7 @@ export function SwapFormHeader(): JSX.Element {
             <Flex
               centered
               row
-              bg="$surface2"
+              backgroundColor="$surface2"
               borderRadius="$roundedFull"
               px="$spacing4"
               py="$spacing4">
@@ -91,7 +91,7 @@ export function SwapFormHeader(): JSX.Element {
         <Flex row gap="$spacing4">
           {isViewOnlyWallet && (
             <TouchableArea
-              bg="$surface2"
+              backgroundColor="$surface2"
               borderRadius="$rounded12"
               justifyContent="center"
               px="$spacing8"
@@ -118,7 +118,7 @@ export function SwapFormHeader(): JSX.Element {
               <Flex
                 centered
                 row
-                bg={customSlippageTolerance || isWeb ? '$surface2' : '$transparent'}
+                backgroundColor={customSlippageTolerance || isWeb ? '$surface2' : '$transparent'}
                 borderRadius="$roundedFull"
                 gap="$spacing4"
                 px={customSlippageTolerance ? '$spacing8' : '$spacing4'}

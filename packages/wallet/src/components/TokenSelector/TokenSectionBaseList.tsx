@@ -13,17 +13,21 @@ export interface TokenSectionBaseListRef {
   scrollToLocation: (params: { itemIndex: number; sectionIndex: number; animated: boolean }) => void
 }
 
-export type TokenSectionBaseListProps = {
+export type SectionRowInfo = { section: SectionHeaderProps }
+
+export interface ItemRowInfo {
+  item: TokenOption | TokenOption[]
+  section: SuggestedTokenSection | TokenSection
+  index: number
+}
+
+export interface TokenSectionBaseListProps {
   sectionListRef?: MutableRefObject<TokenSectionBaseListRef | undefined>
   ListEmptyComponent?: JSX.Element
   focusHook?: (callback: EffectCallback) => void
   keyExtractor?: (item: TokenOption | TokenOption[], index: number) => string
-  renderItem: (info: {
-    item: TokenOption | TokenOption[]
-    section: SuggestedTokenSection | TokenSection
-    index: number
-  }) => JSX.Element | null
-  renderSectionHeader?: (info: { section: SectionHeaderProps }) => JSX.Element
+  renderItem: (info: ItemRowInfo) => JSX.Element | null
+  renderSectionHeader?: (info: SectionRowInfo) => JSX.Element
   sections: TokenSelectorListSections
 }
 

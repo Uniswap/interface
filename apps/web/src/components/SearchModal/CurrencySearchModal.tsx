@@ -6,7 +6,7 @@ import { useUserAddedTokens } from 'state/user/hooks'
 import useLast from '../../hooks/useLast'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import Modal from '../Modal'
-import { CurrencySearch } from './CurrencySearch'
+import { CurrencySearch, CurrencySearchFilters } from './CurrencySearch'
 
 interface CurrencySearchModalProps {
   isOpen: boolean
@@ -14,10 +14,8 @@ interface CurrencySearchModalProps {
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
-  showCommonBases?: boolean
   showCurrencyAmount?: boolean
-  disableNonToken?: boolean
-  onlyShowCurrenciesWithBalance?: boolean
+  currencySearchFilters?: CurrencySearchFilters
 }
 
 enum CurrencyModalView {
@@ -32,10 +30,8 @@ export default memo(function CurrencySearchModal({
   onCurrencySelect,
   selectedCurrency,
   otherSelectedCurrency,
-  showCommonBases = false,
   showCurrencyAmount = true,
-  disableNonToken = false,
-  onlyShowCurrenciesWithBalance = false,
+  currencySearchFilters,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
   const lastOpen = useLast(isOpen)
@@ -83,10 +79,8 @@ export default memo(function CurrencySearchModal({
           onCurrencySelect={handleCurrencySelect}
           selectedCurrency={selectedCurrency}
           otherSelectedCurrency={otherSelectedCurrency}
-          showCommonBases={showCommonBases}
           showCurrencyAmount={showCurrencyAmount}
-          disableNonToken={disableNonToken}
-          onlyShowCurrenciesWithBalance={onlyShowCurrenciesWithBalance}
+          filters={currencySearchFilters}
         />
       )
       break

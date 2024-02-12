@@ -1,11 +1,10 @@
 import { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
+import { isWeb } from 'tamagui'
 import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
-import { SwapRewriteVariant } from 'wallet/src/features/experiments/constants'
-import { useSwapRewriteVariant } from 'wallet/src/features/experiments/hooks'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
@@ -35,11 +34,8 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
   const gasFeeUSD = useUSDValue(chainId, gasFee?.value)
   const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
 
-  const swapRewriteVariant = useSwapRewriteVariant()
-  const hideGasInfoForTest = swapRewriteVariant === SwapRewriteVariant.RewriteNoGas
-
-  // only show the gas fee icon and price if we have a valid fee, and not hidden by experiment variant
-  const showGasFee = Boolean(gasFeeUSD && !hideGasInfoForTest)
+  // only show the gas fee icon and price if we have a valid fee
+  const showGasFee = Boolean(gasFeeUSD)
 
   const onSwapWarningClick = useCallback(() => {
     if (!formScreenWarning?.warning.message) {
@@ -99,7 +95,8 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
               centered
               row
               entering={FadeIn}
-              exiting={FadeOut}
+              // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
+              exiting={isWeb ? undefined : FadeOut}
               gap="$spacing8"
               px="$spacing24">
               {formScreenWarning.Icon && (

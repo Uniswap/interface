@@ -44,6 +44,7 @@ export enum TransactionType {
   REPAY,
   DEPLOY,
   CANCEL,
+  LIMIT,
 }
 
 interface BaseTransactionInfo {

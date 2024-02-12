@@ -1,5 +1,6 @@
 import { NftView } from 'src/components/NFT/NftView'
-import { Flex, useSporeColors } from 'ui/src'
+import { useDeviceInsets, useSporeColors } from 'ui/src'
+import { spacing } from 'ui/src/theme'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
 import { NFTItem } from 'wallet/src/features/nfts/types'
@@ -13,6 +14,7 @@ type ChooseNftProps = {
 
 export const ChooseNftModal = ({ address, setPhotoUri, onClose }: ChooseNftProps): JSX.Element => {
   const colors = useSporeColors()
+  const insets = useDeviceInsets()
 
   const renderNFT = (item: NFTItem): JSX.Element => {
     const onPressNft = (): void => {
@@ -24,14 +26,22 @@ export const ChooseNftModal = ({ address, setPhotoUri, onClose }: ChooseNftProps
 
   return (
     <BottomSheetModal
+      overrideInnerContainer
       backgroundColor={colors.surface1.get()}
       hideHandlebar={false}
       isDismissible={true}
       name={ModalName.NftCollection}
       onClose={onClose}>
-      <Flex grow pb="$spacing36" pt="$spacing16" px="$spacing12">
-        <NftsList renderedInModal owner={address} renderNFTItem={renderNFT} />
-      </Flex>
+      <NftsList
+        renderedInModal
+        contentContainerStyle={{
+          paddingBottom: insets.bottom + spacing.spacing12,
+          paddingTop: spacing.spacing12,
+          paddingHorizontal: spacing.spacing12,
+        }}
+        owner={address}
+        renderNFTItem={renderNFT}
+      />
     </BottomSheetModal>
   )
 }

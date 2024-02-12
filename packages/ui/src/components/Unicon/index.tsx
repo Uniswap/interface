@@ -168,10 +168,8 @@ function _Unicon({ address, size = 24, randomSeed = 0, mobile }: Props): JSX.Ele
   }
 
   return (
-    // eslint-disable-next-line react-native/no-inline-styles
     <div style={{ height: size, width: size, position: 'relative' }}>
       <div
-        // eslint-disable-next-line react-native/no-inline-styles
         style={{
           height: size,
           width: size,

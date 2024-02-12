@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { NumberType } from 'utilities/src/format/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { SwapFeeInfo } from 'wallet/src/features/routing/types'
+import { SwapFeeInfo } from 'wallet/src/features/transactions/swap/trade/types'
 
 export type OnShowSwapFeeInfo = (noFee: boolean) => void
 

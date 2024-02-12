@@ -601,6 +601,78 @@ exports[`OrderContent should render without error, open order 1`] = `
   background-color: #22222212;
 }
 
+.c25 {
+  background-color: transparent;
+  bottom: 0;
+  border-radius: inherit;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-transition: 150ms ease background-color;
+  transition: 150ms ease background-color;
+  width: 100%;
+}
+
+.c22 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #FF5F521f;
+  border-radius: 16px;
+  border: 0;
+  color: #FF5F52;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  font-size: 20px;
+  font-weight: 535;
+  gap: 12px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  line-height: 24px;
+  padding: 16px;
+  position: relative;
+  -webkit-transition: 150ms ease opacity;
+  transition: 150ms ease opacity;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c22:active .c24 {
+  background-color: #B8C0DC3d;
+}
+
+.c22:focus .c24 {
+  background-color: #B8C0DC3d;
+}
+
+.c22:hover .c24 {
+  background-color: #98A1C014;
+}
+
+.c22:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.c22:disabled:active .c24,
+.c22:disabled:focus .c24,
+.c22:disabled:hover .c24 {
+  background-color: transparent;
+}
+
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -768,6 +840,10 @@ exports[`OrderContent should render without error, open order 1`] = `
 
 .c9 {
   margin: 28px 0;
+}
+
+.c23 {
+  margin-top: 16px;
 }
 
 <div>
@@ -978,6 +1054,15 @@ exports[`OrderContent should render without error, open order 1`] = `
         </div>
       </div>
     </div>
+    <button
+      class="c22 c23"
+      size="2"
+    >
+      <div
+        class="c24 c25"
+      />
+      Cancel
+    </button>
   </div>
 </div>
 `;

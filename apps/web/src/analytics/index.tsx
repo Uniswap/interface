@@ -1,17 +1,17 @@
 import {
-  sendAnalyticsEvent as sendAnalyticsTraceEvent,
-  Trace as AnalyticsTrace,
   TraceEvent as AnalyticsEvent,
+  Trace as AnalyticsTrace,
+  sendAnalyticsEvent as sendAnalyticsTraceEvent,
 } from '@uniswap/analytics'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { memo } from 'react'
 
 export {
+  OriginApplication,
   getDeviceId,
   initializeAnalytics,
-  OriginApplication,
-  user,
   useTrace,
+  user,
   type ITraceContext,
 } from '@uniswap/analytics'
 

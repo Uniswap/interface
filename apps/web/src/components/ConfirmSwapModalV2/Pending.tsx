@@ -4,6 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import Column, { ColumnCenter } from 'components/Column'
 import Row from 'components/Row'
+import { getTitle } from 'components/swap/PendingModalContent'
 import { SupportArticleURL } from 'constants/supportArticles'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { SwapResult } from 'hooks/useSwapCallback'
@@ -130,7 +131,7 @@ export default function Pending({
         <AnimationWrapper>
           <StepTitleAnimationContainer gap="md" ref={currentStepContainerRef} disableEntranceAnimation>
             <ThemedText.SubHeader width="100%" textAlign="center" data-testid="pending-modal-content-title">
-              {swapPending ? t`Swap submitted` : swapConfirmed ? t`Swap success` : t`Confirm Swap`}
+              {getTitle({ trade, swapPending, swapConfirmed })}
             </ThemedText.SubHeader>
             {trade && (
               <ThemedText.LabelSmall textAlign="center">

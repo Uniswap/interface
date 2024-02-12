@@ -15,7 +15,9 @@ describe('Token details', () => {
 
   it('should have a single h1 tag on smaller screen size', () => {
     cy.viewport(800, 600)
-    cy.visit(`/tokens/ethereum/${UNI_ADDRESS}`, { featureFlags: [{ name: FeatureFlag.infoTDP, value: false }] })
+    cy.visit(`/tokens/ethereum/${UNI_ADDRESS}`, {
+      featureFlags: [{ name: FeatureFlag.infoTDP, value: false }],
+    })
     cy.get('h1').should('have.length', 1)
   })
 
@@ -76,7 +78,12 @@ describe('Token details', () => {
 
   it('token with warning and low trading volume should have all information populated', () => {
     // Null token created for this test, 0 trading volume and has warning modal
-    cy.visit('/tokens/ethereum/0x1eFBB78C8b917f67986BcE54cE575069c0143681')
+    cy.visit('/tokens/ethereum/0x1eFBB78C8b917f67986BcE54cE575069c0143681', {
+      featureFlags: [
+        { name: FeatureFlag.infoTDP, value: false },
+        { name: FeatureFlag.infoExplore, value: false },
+      ],
+    })
 
     // Should have missing price chart when price unavailable (expected for this token)
     if (cy.get('[data-cy="chart-header"]').contains('Price unavailable')) {
@@ -113,7 +120,12 @@ describe('Token details', () => {
     beforeEach(() => {
       // On mobile widths, we just link back to /swap instead of rendering the swap component.
       cy.viewport(1200, 800)
-      cy.visit(`/tokens/ethereum/${UNI_MAINNET.address}`).then(() => {
+      cy.visit(`/tokens/ethereum/${UNI_MAINNET.address}`, {
+        featureFlags: [
+          { name: FeatureFlag.infoTDP, value: false },
+          { name: FeatureFlag.infoExplore, value: false },
+        ],
+      }).then(() => {
         cy.wait('@eth_blockNumber')
         cy.scrollTo('top')
       })
@@ -137,7 +149,12 @@ describe('Token details', () => {
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
       cy.get(`#swap-currency-input .open-currency-select-button`).click()
       cy.contains('WETH').click()
-      cy.visit('/swap')
+      cy.visit('/swap', {
+        featureFlags: [
+          { name: FeatureFlag.infoTDP, value: false },
+          { name: FeatureFlag.infoExplore, value: false },
+        ],
+      })
       cy.contains('UNI').should('not.exist')
       cy.contains('WETH').should('not.exist')
     })
@@ -162,8 +179,13 @@ describe('Token details', () => {
       cy.get('#swap-currency-output .token-amount-input').clear().type('0.0').should('have.value', '0.0')
     })
 
-    it.skip('should show a L2 token even if the user is connected to a different network', () => {
-      cy.visit('/tokens')
+    it('should show a L2 token even if the user is connected to a different network', () => {
+      cy.visit('/tokens', {
+        featureFlags: [
+          { name: FeatureFlag.infoTDP, value: false },
+          { name: FeatureFlag.infoExplore, value: false },
+        ],
+      })
       cy.get(getTestSelector('tokens-network-filter-selected')).click()
       cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
       cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Arbitrum')

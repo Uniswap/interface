@@ -65,7 +65,6 @@
     "@sentry/node": "7.45.0",
     "@sentry/types": "7.45.0",
     "@sentry/tracing": "7.45.0",
-    "typescript": "4.9.4",
     "xml2js": "0.5.0",
     "yaml": "2.2.2",
     "@shopify/flash-list@1.4.3": "patch:@shopify/flash-list@npm%3A1.4.3#./.yarn/patches/@shopify-flash-list-npm-1.4.3-dc03c28fdd.patch",
@@ -90,7 +89,6 @@
     "g:run-fast-checks": "turbo run typecheck lint build --parallel --filter=\"[HEAD]\"",
     "g:run-all-checks": "turbo run typecheck lint test build check:circular --parallel",
     "g:test": "turbo run test --parallel",
-    "g:test:changed": "./scripts/turbo-changed.sh test",
     "g:test:coverage": "turbo run test --parallel -- --collectCoverage=true",
     "g:snapshots": "turbo run snapshots --parallel",
     "g:typecheck": "turbo run typecheck --parallel",
@@ -108,7 +106,8 @@
     "postinstall": "husky install && yarn patch-package && yarn g:prepare",
     "stretch": "yarn workspace @uniswap/stretch",
     "ui:build:icons": "yarn workspace ui build:icons",
-    "upgrade:tamagui": "manypkg upgrade tamagui && manypkg upgrade @tamagui && manypkg upgrade tamagui-loader",
+    "upgrade:tamagui": "yarn up '*tamagui*' '@tamagui/*'",
+    "upgrade:tamagui:canary": "yarn up '*tamagui*'@canary '@tamagui/*'@canary",
     "web": "yarn workspace @uniswap/interface"
   },
   "workspaces": [

@@ -8,13 +8,13 @@ import { NoTokens } from 'src/components/icons/NoTokens'
 import { TabContentProps, TabProps } from 'src/components/layout/TabHelpers'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
-import { TokenBalanceListRow } from 'src/components/TokenBalanceList/TokenBalanceListContext'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Screens } from 'src/screens/Screens'
 import { Flex } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'wallet/src/data/queries'
+import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 import { ModalName } from 'wallet/src/telemetry/constants'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
@@ -82,7 +82,7 @@ export const TokensTab = memo(
       }, [isExternalProfile, onPressAction, t])
 
       return (
-        <Flex grow bg="$surface1">
+        <Flex grow backgroundColor="$surface1">
           <TokenBalanceList
             ref={ref}
             containerProps={formattedContainerProps}

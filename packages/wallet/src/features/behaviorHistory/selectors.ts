@@ -5,3 +5,6 @@ export const selectHasViewedReviewScreen = (state: SharedState): boolean =>
 
 export const selectHasSubmittedHoldToSwap = (state: SharedState): boolean =>
   state.behaviorHistory.hasSubmittedHoldToSwap
+
+export const selectHasSkippedUnitagPrompt = (state: SharedState): boolean =>
+  state.behaviorHistory.hasSkippedUnitagPrompt

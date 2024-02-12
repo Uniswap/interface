@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { waitFor } from '@testing-library/react-native'
 import { act } from 'react-test-renderer'
 import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
@@ -9,15 +8,15 @@ import {
   TokenMarket as TokenMarketType,
   TokenProject as TokenProjectType,
 } from 'wallet/src/data/__generated__/types-and-hooks'
-import { faker, SAMPLE_CURRENCY_ID_1 } from 'wallet/src/test/fixtures'
+import { SAMPLE_CURRENCY_ID_1, faker } from 'wallet/src/test/fixtures'
 import {
   EthToken,
   TokenDayPriceHistory,
   TokenMarket,
   TokenProjectDay,
-  TokenProjects,
   TokenProjectWeek,
   TokenProjectYear,
+  TokenProjects,
   TokenWeekPriceHistory,
   TokenYearPriceHistory,
 } from 'wallet/src/test/gqlFixtures'

@@ -1,10 +1,9 @@
 import { gql } from '@apollo/client'
 import { ChainId } from '@uniswap/sdk-core'
 import { useCallback, useMemo, useRef } from 'react'
-import { countSignificantFigures } from 'utils'
 
+import { OrderDirection, Token, Transaction_OrderBy, usePoolTransactionsQuery } from './__generated__/types-and-hooks'
 import { chainToApolloClient } from './apollo'
-import { OrderDirection, Transaction_OrderBy, usePoolTransactionsQuery } from './__generated__/types-and-hooks'
 
 // TODO(WEB-3236): once GQL BE Transaction query is supported add usd, token0 amount, and token1 amount sort support
 gql`
@@ -127,8 +126,9 @@ export interface PoolTransaction {
   amount1: number
   amountUSD: string
   type: PoolTransactionType
-  isExactIn?: boolean
 }
+
+const PoolTransactionDefaultQuerySize = 25
 
 export function usePoolTransactions(
   address: string,
@@ -141,7 +141,8 @@ export function usePoolTransactions(
     PoolTransactionType.BURN,
     PoolTransactionType.MINT,
   ],
-  first = 25,
+  token0?: Token,
+  first = PoolTransactionDefaultQuerySize,
   skip?: number
 ) {
   const apolloClient = chainToApolloClient[chainId || ChainId.MAINNET]
@@ -156,6 +157,7 @@ export function usePoolTransactions(
     client: apolloClient,
   })
   const loadingMore = useRef(false)
+  const sizeRef = useRef(PoolTransactionDefaultQuerySize)
   const loadMore = useCallback(
     ({ onComplete }: { onComplete?: () => void }) => {
       if (loadingMore.current) {
@@ -169,6 +171,7 @@ export function usePoolTransactions(
         updateQuery: (prev, { fetchMoreResult }: any) => {
           if (!fetchMoreResult) return prev
           onComplete?.()
+          sizeRef.current += PoolTransactionDefaultQuerySize
           const mergedData = {
             mints: [...prev.mints, ...fetchMoreResult.mints],
             swaps: [...prev.swaps, ...fetchMoreResult.swaps],
@@ -185,13 +188,13 @@ export function usePoolTransactions(
   const transactions = useMemo(() => {
     const mints = filter.includes(PoolTransactionType.MINT)
       ? data?.mints.map((tx) => {
-          return { ...tx, type: PoolTransactionType.MINT, isExactIn: undefined }
+          return { ...tx, type: PoolTransactionType.MINT }
         })
       : []
     const burns = filter.includes(PoolTransactionType.BURN)
       ? data?.burns
           .map((tx) => {
-            return { ...tx, type: PoolTransactionType.BURN, isExactIn: undefined }
+            return { ...tx, type: PoolTransactionType.BURN }
           })
           .filter((tx) => tx.amount0 !== '0' && tx.amount1 !== '0') // filter out collecting fees
       : []
@@ -200,17 +203,12 @@ export function usePoolTransactions(
         ? data?.swaps
             .map((tx) => {
               const tokenIn = tx.amount0 > 0 ? tx.pool.token0 : tx.pool.token1
-              // Determine if swap is exact in vs exact out based on which amount has fewer sig figs
-              const token0SigFigs = countSignificantFigures(tx.amount0)
-              const token1SigFigs = countSignificantFigures(tx.amount1)
-              const isExactIn =
-                tokenIn.id.toLowerCase() === tx.pool.token0?.id.toLowerCase()
-                  ? token0SigFigs < token1SigFigs
-                  : token1SigFigs < token0SigFigs
-              if (isExactIn && filter.includes(PoolTransactionType.SELL))
-                return { ...tx, type: PoolTransactionType.SELL, isExactIn }
-              else if (!isExactIn && filter.includes(PoolTransactionType.BUY))
-                return { ...tx, type: PoolTransactionType.BUY, isExactIn }
+              const isSell = tokenIn.id.toLowerCase() === token0?.id.toLowerCase()
+              if (isSell && filter.includes(PoolTransactionType.SELL)) {
+                return { ...tx, type: PoolTransactionType.SELL }
+              } else if (!isSell && filter.includes(PoolTransactionType.BUY)) {
+                return { ...tx, type: PoolTransactionType.BUY }
+              }
               return undefined
             })
             .filter((tx) => tx !== undefined)
@@ -236,10 +234,10 @@ export function usePoolTransactions(
           amount1: tx?.amount1,
           amountUSD: tx?.amountUSD,
           type: tx?.type,
-          isExactIn: tx?.isExactIn,
         } as PoolTransaction
       })
-  }, [data?.burns, data?.mints, data?.swaps, filter])
+      .slice(0, sizeRef.current)
+  }, [data?.burns, data?.mints, data?.swaps, filter, token0?.id])
 
   return useMemo(() => {
     return {

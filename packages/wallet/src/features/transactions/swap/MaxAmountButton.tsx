@@ -53,8 +53,8 @@ export function MaxAmountButton({
         borderRadius="$rounded8"
         disabled={disableMaxButton}
         opacity={disableMaxButton ? 0.5 : 1}
-        paddingHorizontal="$spacing4"
-        paddingVertical="$spacing2"
+        px="$spacing4"
+        py="$spacing2"
         style={style}
         onPress={onPress}>
         <Text color="$accent1" variant="buttonLabel4">

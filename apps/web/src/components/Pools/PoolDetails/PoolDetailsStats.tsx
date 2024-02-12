@@ -3,20 +3,18 @@ import { Currency } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
-import { LoadingBubble } from 'components/Tokens/loading'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
 import { PoolData } from 'graphql/thegraph/PoolData'
 import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useCurrency } from 'hooks/Tokens'
-import { useColor } from 'hooks/useColor'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { ReactNode, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
-import { colors } from 'theme/colors'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -121,7 +119,6 @@ const StatHeaderBubble = styled(LoadingBubble)`
 type TokenFullData = Token & {
   price: number
   tvl: number
-  color: string
   percent: number
   currency?: Currency
 }
@@ -167,14 +164,8 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
   const screenIsNotLarge = isScreenSize['lg']
   const theme = useTheme()
 
-  const currency0 = useCurrency(poolData?.token0?.id, chainId) ?? undefined
-  const currency1 = useCurrency(poolData?.token1?.id, chainId) ?? undefined
-
-  const color0 = useColor(currency0, theme.surface2, theme.darkMode)
-  let color1 = useColor(currency1, theme.surface2, theme.darkMode)
-  if (color0 === color1 && color0 === theme.accent1) {
-    color1 = colors.blue400
-  }
+  const currency0 = useCurrency(poolData?.token0?.id, chainId)
+  const currency1 = useCurrency(poolData?.token1?.id, chainId)
 
   const [token0, token1] = useMemo(() => {
     if (poolData) {
@@ -183,7 +174,6 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
         ...poolData?.token0,
         price: poolData?.token0Price,
         tvl: poolData?.tvlToken0,
-        color: color0,
         percent: poolData?.tvlToken0 / poolData?.token0Price / fullWidth,
         currency: currency0,
       }
@@ -191,7 +181,6 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
         ...poolData?.token1,
         price: poolData?.token1Price,
         tvl: poolData?.tvlToken1,
-        color: color1,
         percent: poolData?.tvlToken1 / fullWidth,
         currency: currency1,
       }
@@ -199,7 +188,7 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
     } else {
       return [undefined, undefined]
     }
-  }, [color0, color1, currency0, currency1, isReversed, poolData])
+  }, [currency0, currency1, isReversed, poolData])
 
   if (loading || !token0 || !token1 || !poolData) {
     return (
@@ -232,8 +221,8 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
         </PoolBalanceSymbols>
         {screenIsNotLarge && (
           <Row data-testid="pool-balance-chart">
-            {token0.color && <BalanceChartSide percent={token0.percent} $color={token0.color} isLeft={true} />}
-            {token1.color && <BalanceChartSide percent={token1.percent} $color={token1.color} isLeft={false} />}
+            <BalanceChartSide percent={token0.percent} $color={theme.token0} isLeft={true} />
+            <BalanceChartSide percent={token1.percent} $color={theme.token1} isLeft={false} />
           </Row>
         )}
       </StatItemColumn>

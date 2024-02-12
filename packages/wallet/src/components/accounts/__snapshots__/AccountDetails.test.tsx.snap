@@ -15,7 +15,6 @@ exports[`AccountDetails renders without error 1`] = `
   <View
     style={
       {
-        "alignItems": "stretch",
         "flex": 1,
         "flexDirection": "row",
         "flexShrink": 1,
@@ -34,7 +33,6 @@ exports[`AccountDetails renders without error 1`] = `
       <View
         style={
           {
-            "alignItems": "stretch",
             "backgroundColor": "transparent",
             "borderBottomColor": "transparent",
             "borderBottomLeftRadius": 999999,
@@ -276,7 +274,7 @@ exports[`AccountDetails renders without error 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
-                "gap": 4,
+                "gap": 2,
                 "justifyContent": "center",
               }
             }
@@ -351,7 +349,6 @@ exports[`AccountDetails renders without error with chevron 1`] = `
   <View
     style={
       {
-        "alignItems": "stretch",
         "flex": 1,
         "flexDirection": "row",
         "flexShrink": 1,
@@ -370,7 +367,6 @@ exports[`AccountDetails renders without error with chevron 1`] = `
       <View
         style={
           {
-            "alignItems": "stretch",
             "backgroundColor": "transparent",
             "borderBottomColor": "transparent",
             "borderBottomLeftRadius": 999999,
@@ -612,7 +608,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
-                "gap": 4,
+                "gap": 2,
                 "justifyContent": "center",
               }
             }

@@ -34,11 +34,9 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedSwapWarnings'
 import { HOLD_TO_SWAP_TIMEOUT } from 'wallet/src/features/transactions/swap/HoldToSwapProgressCircle'
-import {
-  useAcceptedTrade,
-  useSwapCallback,
-  useWrapCallback,
-} from 'wallet/src/features/transactions/swap/hooks'
+import { useAcceptedTrade } from 'wallet/src/features/transactions/swap/trade/hooks/useAcceptedTrade'
+import { useSwapCallback } from 'wallet/src/features/transactions/swap/trade/hooks/useSwapCallback'
+import { useWrapCallback } from 'wallet/src/features/transactions/swap/trade/hooks/useWrapCallback'
 import { TransactionAmountsReview } from 'wallet/src/features/transactions/swap/TransactionAmountsReview'
 import { getActionName, isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
@@ -62,7 +60,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
 
-  const { handleContentLayout, bottomSheetViewStyles, onClose, BiometricsIcon, authTrigger } =
+  const { bottomSheetViewStyles, onClose, BiometricsIcon, authTrigger } =
     useTransactionModalContext()
 
   const { screen, screenRef, setScreen } = useSwapScreenContext()
@@ -352,8 +350,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     <>
       <TransactionModalInnerContainer
         bottomSheetViewStyles={bottomSheetViewStyles}
-        fullscreen={false}
-        onLayout={handleContentLayout}>
+        fullscreen={false}>
         {showWarningModal && reviewScreenWarning?.warning.title && (
           <WarningModal
             caption={reviewScreenWarning.warning.message}
@@ -374,6 +371,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
               <TransactionAmountsReview
                 acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
                 newTradeRequiresAcceptance={newTradeRequiresAcceptance}
+                onClose={onPrev}
               />
 
               <Separator mb="$spacing24" mt="$spacing16" />
@@ -406,6 +404,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
               <TransactionAmountsReview
                 acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
                 newTradeRequiresAcceptance={newTradeRequiresAcceptance}
+                onClose={onPrev}
               />
 
               {isWrap ? (
@@ -443,7 +442,9 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
       {screen !== SwapScreen.SwapReviewHoldingToSwap && (
         <TransactionModalFooterContainer>
           <Flex row gap="$spacing8">
-            <Button icon={<BackArrow />} size="large" theme="tertiary" onPress={onPrev} />
+            {!isWeb && (
+              <Button icon={<BackArrow />} size="large" theme="tertiary" onPress={onPrev} />
+            )}
 
             <Button
               fill

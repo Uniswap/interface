@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { I18nManager, StyleSheet, View } from 'react-native'
 import {
-  interpolateColor,
   SharedValue,
+  interpolateColor,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
@@ -77,7 +77,7 @@ export function TimeRangeGroup({
     <Flex row alignSelf="center" width={chartWidth}>
       <View style={StyleSheet.absoluteFill}>
         <AnimatedFlex
-          bg="$surface3"
+          backgroundColor="$surface3"
           borderRadius="$rounded20"
           style={[StyleSheet.absoluteFillObject, sliderStyle]}
           width={adjustedLabelWidth}

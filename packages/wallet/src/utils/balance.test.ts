@@ -3,11 +3,11 @@ import JSBI from 'jsbi'
 import { DAI } from 'wallet/src/constants/tokens'
 import { ArbitrumEth, MainnetEth, OptimismEth, PolygonMatic } from 'wallet/src/test/fixtures'
 import {
-  maxAmountSpend,
   MIN_ARBITRUM_FOR_GAS,
   MIN_ETH_FOR_GAS,
   MIN_OPTIMISM_FOR_GAS,
   MIN_POLYGON_FOR_GAS,
+  maxAmountSpend,
 } from 'wallet/src/utils/balance'
 
 describe(maxAmountSpend, () => {

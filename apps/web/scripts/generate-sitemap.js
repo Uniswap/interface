@@ -100,7 +100,7 @@ fs.readFile('./public/nfts-sitemap.xml', 'utf8', async (err, data) => {
       })
     }
 
-    const nftResponse = await fetch('https://api.uniswap.org/v1/graphql', {
+    const nftResponse = await fetch('https://interface.gateway.uniswap.org/v1/graphql', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -6,7 +6,7 @@ import {
   SwapOrderStatus,
   TransactionStatus,
 } from 'wallet/src/data/__generated__/types-and-hooks'
-import { faker, FAKER_SEED } from 'wallet/src/test/fixtures'
+import { FAKER_SEED, faker } from 'wallet/src/test/fixtures'
 
 faker.seed(FAKER_SEED)
 

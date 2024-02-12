@@ -4,6 +4,7 @@ import { ExactInputSwapTransactionInfo, ExactOutputSwapTransactionInfo } from '.
 
 export enum SignatureType {
   SIGN_UNISWAPX_ORDER = 'signUniswapXOrder',
+  SIGN_LIMIT = 'signLimit',
 }
 
 interface BaseSignatureFields {
@@ -16,7 +17,7 @@ interface BaseSignatureFields {
 }
 
 export interface UniswapXOrderDetails extends BaseSignatureFields {
-  type: SignatureType.SIGN_UNISWAPX_ORDER
+  type: SignatureType
   orderHash: string
   status: UniswapXOrderStatus
   swapInfo: (ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo) & { isUniswapXOrder: true }

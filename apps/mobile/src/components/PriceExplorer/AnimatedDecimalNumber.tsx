@@ -3,7 +3,7 @@ import { useWindowDimensions } from 'react-native'
 import { useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { AnimatedText } from 'src/components/text/AnimatedText'
 import { Flex, useDeviceDimensions, useSporeColors } from 'ui/src'
-import { fonts, TextVariantTokens } from 'ui/src/theme'
+import { TextVariantTokens, fonts } from 'ui/src/theme'
 import { ValueAndFormatted } from './usePrice'
 
 type AnimatedDecimalNumberProps = {
@@ -17,6 +17,13 @@ type AnimatedDecimalNumberProps = {
   maxWidth?: number
   maxCharPixelWidth?: number
 }
+
+/**
+ * TODO(MOB-1948): AnimatePresence should be able to do this:
+ *
+ *   Example: https://gist.github.com/natew/e773fa3bdc99f75a3b28f21db168a449
+ *
+ */
 
 // Utility component to display decimal numbers where the decimal part
 // is dimmed using AnimatedText

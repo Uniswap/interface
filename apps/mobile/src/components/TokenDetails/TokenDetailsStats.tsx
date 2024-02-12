@@ -163,7 +163,11 @@ export function TokenDetailsStats({
             <TouchableArea
               hapticFeedback
               onPress={(): void => setShowTranslation(!showTranslation)}>
-              <Flex alignItems="center" backgroundColor="$surface3" br="$rounded12" p="$spacing12">
+              <Flex
+                alignItems="center"
+                backgroundColor="$surface3"
+                borderRadius="$rounded12"
+                p="$spacing12">
                 {showTranslation ? (
                   <Flex row alignItems="center" gap="$spacing12" width="100%">
                     <Flex fill row alignItems="center" gap="$spacing12">

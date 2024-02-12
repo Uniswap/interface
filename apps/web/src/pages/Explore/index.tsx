@@ -4,7 +4,7 @@ import { Trace, TraceEvent } from 'analytics'
 import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { AutoRow } from 'components/Row'
 import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { filterStringAtom } from 'components/Tokens/state'
+import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { TopTokensTable } from 'components/Tokens/TokenTable'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import OldTokenTable from 'components/Tokens/TokenTable/OldTokenTable'
@@ -14,11 +14,13 @@ import { MouseoverTooltip } from 'components/Tooltip'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useResetAtom } from 'jotai/utils'
 import { ExploreChartsSection } from 'pages/Explore/charts/ExploreChartsSection'
-import { useEffect, useMemo, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import styled, { css } from 'styled-components'
-import { ThemedText } from 'theme/components'
+import { StyledInternalLink, ThemedText } from 'theme/components'
 
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
+import { validateUrlChainParam } from 'graphql/data/util'
 import { useExploreParams } from './redirects'
 import RecentTransactions from './tables/RecentTransactions'
 
@@ -162,20 +164,33 @@ const Pages: Array<Page> = [
 ]
 
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
-  const resetFilterString = useResetAtom(filterStringAtom)
+  const resetFilterString = useResetAtom(exploreSearchStringAtom)
   const location = useLocation()
-  const navigate = useNavigate()
+  const tabNavRef = useRef<HTMLDivElement>(null)
 
   const initialKey: number = useMemo(() => {
     const key = initialTab && Pages.findIndex((page) => page.key === initialTab)
+
     if (!key || key === -1) return 0
     return key
   }, [initialTab])
+
+  useEffect(() => {
+    if (tabNavRef.current && initialTab) {
+      const offsetTop = tabNavRef.current.getBoundingClientRect().top + window.scrollY
+      window.scrollTo({ top: offsetTop - 90, behavior: 'smooth' })
+    }
+    // scroll to tab navbar on initial page mount only
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   const [currentTab, setCurrentTab] = useState(initialKey)
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
   // to allow backward navigation between tabs
-  const { tab, chainName } = useExploreParams()
+  const { tab: tabName, chainName } = useExploreParams()
+  const tab = tabName ?? ExploreTab.Tokens
+  const chain = validateUrlChainParam(chainName)
   useEffect(() => {
     const tabIndex = Pages.findIndex((page) => page.key === tab)
     if (tabIndex !== -1) {
@@ -184,8 +199,10 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   }, [tab])
 
   useEffect(() => {
-    resetFilterString()
-  }, [location, resetFilterString])
+    if (!isInfoExplorePageEnabled) {
+      resetFilterString()
+    }
+  }, [isInfoExplorePageEnabled, location, resetFilterString])
 
   const { component: Page, key: currentKey } = Pages[currentTab]
 
@@ -209,14 +226,10 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
             </MouseoverTooltip>
           </TitleContainer>
         )}
-        <NavWrapper isInfoExplorePageEnabled={isInfoExplorePageEnabled}>
+        <NavWrapper isInfoExplorePageEnabled={isInfoExplorePageEnabled} ref={tabNavRef}>
           {isInfoExplorePageEnabled && (
             <TabBar data-testid="explore-navbar">
               {Pages.map(({ title, loggingElementName, key }, index) => {
-                const handleNavItemClick = () => {
-                  setCurrentTab(index)
-                  navigate(`/explore/${key}` + (chainName ? `/${chainName}` : ''))
-                }
                 return (
                   <TraceEvent
                     events={[BrowserEvent.onClick]}
@@ -224,9 +237,13 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                     element={loggingElementName}
                     key={index}
                   >
-                    <TabItem onClick={handleNavItemClick} active={currentTab === index} key={key}>
-                      {title}
-                    </TabItem>
+                    <StyledInternalLink
+                      to={`/explore/${key}` + (chain !== Chain.Ethereum ? `/${chain.toLowerCase()}` : '')}
+                    >
+                      <TabItem onClick={() => setCurrentTab(index)} active={currentTab === index} key={key}>
+                        {title}
+                      </TabItem>
+                    </StyledInternalLink>
                   </TraceEvent>
                 )
               })}

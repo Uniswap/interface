@@ -70,10 +70,10 @@ export function _RecipientSelect({
       <AnimatedFlex
         entering={FadeIn}
         exiting={FadeOut}
+        flex={1}
         gap="$spacing12"
         mt="$spacing16"
-        px="$spacing24"
-        width="100%">
+        px="$spacing24">
         <Flex row>
           <Text variant="subheading1">{t('Send')}</Text>
         </Flex>
@@ -97,6 +97,7 @@ export function _RecipientSelect({
           // Show either suggested recipients or filtered sections based on query
           isSheetReady && (
             <RecipientList
+              renderedInModal
               sections={filteredSections.length === 0 ? sections : filteredSections}
               onPress={onSelectRecipient}
             />

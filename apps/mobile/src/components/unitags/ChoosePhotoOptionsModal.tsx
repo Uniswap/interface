@@ -1,25 +1,15 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-picker'
+import { selectPhotoFromLibrary } from 'src/components/unitags/AvatarSelection'
 import { ChooseNftModal } from 'src/components/unitags/ChooseNftModal'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
-// Selected image will be shrunk to max width/height
-// URI will then be for an image of those dimensions
-const IMAGE_OPTIONS: ImageLibraryOptions = {
-  mediaType: 'photo',
-  maxWidth: 500,
-  maxHeight: 500,
-  quality: 1, // best quality
-  includeBase64: false,
-  selectionLimit: 1,
-}
-
 type ChoosePhotoOptionsProps = {
   address: Maybe<Address>
+  hasNFTs: boolean
   setPhotoUri: (uri?: string) => void
   onClose: () => void
   showRemoveOption: boolean
@@ -27,6 +17,7 @@ type ChoosePhotoOptionsProps = {
 
 export const ChoosePhotoOptionsModal = ({
   address,
+  hasNFTs,
   setPhotoUri,
   onClose,
   showRemoveOption,
@@ -35,7 +26,7 @@ export const ChoosePhotoOptionsModal = ({
   const { t } = useTranslation()
   const [showNftsList, setShowNftsList] = useState(false)
 
-  const onPressNftsList = (): void => {
+  const onPressNftsList = async (): Promise<void> => {
     setShowNftsList(true)
   }
 
@@ -44,30 +35,42 @@ export const ChoosePhotoOptionsModal = ({
     onClose()
   }
 
-  const onRemovePhoto = (): void => {
+  const onRemovePhoto = async (): Promise<void> => {
     setPhotoUri(undefined)
-  }
-
-  const onPressCameraRoll = async (): Promise<void> => {
-    const response = await launchImageLibrary(IMAGE_OPTIONS)
-    if (!response.didCancel && !response.errorCode && response.assets) {
-      setPhotoUri(response.assets[0]?.uri)
-    }
-
     onClose()
   }
 
-  const cameraRollOption = {
-    key: `${ElementName.OpenCameraRoll}`,
-    onPress: onPressCameraRoll,
-    render: () => <ChoosePhotoOption type={PhotoAction.BrowseCameraRoll} />,
+  const onPressCameraRoll = async (): Promise<void> => {
+    const selectedPhoto = await selectPhotoFromLibrary()
+    if (selectedPhoto) {
+      setPhotoUri(selectedPhoto)
+    }
+    onClose()
   }
-  const nftsOption = {
-    key: `${ElementName.OpenNftsList}`,
-    onPress: onPressNftsList,
-    render: () => <ChoosePhotoOption type={PhotoAction.BrowseNftsList} />,
+
+  const options = [
+    {
+      key: `${ElementName.OpenCameraRoll}`,
+      onPress: onPressCameraRoll,
+      item: <ChoosePhotoOption type={PhotoAction.BrowseCameraRoll} />,
+    },
+  ]
+
+  if (hasNFTs) {
+    options.push({
+      key: `${ElementName.OpenNftsList}`,
+      onPress: onPressNftsList,
+      item: <ChoosePhotoOption type={PhotoAction.BrowseNftsList} />,
+    })
   }
-  const options = address ? [cameraRollOption, nftsOption] : [cameraRollOption]
+
+  if (showRemoveOption) {
+    options.push({
+      key: `${ElementName.Remove}`,
+      onPress: onRemovePhoto,
+      item: <ChoosePhotoOption type={PhotoAction.RemovePhoto} />,
+    })
+  }
 
   return (
     <>
@@ -81,14 +84,9 @@ export const ChoosePhotoOptionsModal = ({
           <Flex gap="$spacing12" width="100%">
             {options.map((option) => (
               <Flex key={option.key} onPress={option.onPress}>
-                {option.render()}
+                {option.item}
               </Flex>
             ))}
-            {showRemoveOption && (
-              <Flex onPress={onRemovePhoto}>
-                <ChoosePhotoOption type={PhotoAction.RemovePhoto} />
-              </Flex>
-            )}
           </Flex>
           <Flex centered row>
             <Button

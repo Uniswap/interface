@@ -2,7 +2,7 @@ import { TickMarkType, UTCTimestamp } from 'lightweight-charts'
 
 /** Compatible with ISeriesApi<'Area' | 'Candlestick'> */
 export enum PriceChartType {
-  LINE = 'Area',
+  LINE = 'Line chart',
   CANDLESTICK = 'Candlestick',
 }
 

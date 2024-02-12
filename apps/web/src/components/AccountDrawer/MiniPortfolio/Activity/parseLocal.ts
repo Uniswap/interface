@@ -27,7 +27,7 @@ import {
 import { isAddress } from 'utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { CancelledTransactionTitleTable, getActivityTitle, OrderTextTable } from '../constants'
+import { CancelledTransactionTitleTable, getActivityTitle, LimitOrderTextTable, OrderTextTable } from '../constants'
 import { Activity, ActivityMap } from './types'
 
 type FormatNumberFunctionType = ReturnType<typeof useFormatter>['formatNumber']
@@ -268,11 +268,15 @@ export function signatureToActivity(
   formatNumber: FormatNumberFunctionType
 ): Activity | undefined {
   switch (signature.type) {
-    case SignatureType.SIGN_UNISWAPX_ORDER: {
+    case SignatureType.SIGN_UNISWAPX_ORDER:
+    case SignatureType.SIGN_LIMIT: {
       // Only returns Activity items for orders that don't have an on-chain counterpart
       if (isOnChainOrder(signature.status)) return undefined
 
-      const { title, statusMessage, status } = OrderTextTable[signature.status]
+      const { title, statusMessage, status } =
+        signature.type === SignatureType.SIGN_LIMIT
+          ? LimitOrderTextTable[signature.status]
+          : OrderTextTable[signature.status]
 
       return {
         hash: signature.orderHash,
@@ -285,11 +289,13 @@ export function signatureToActivity(
           offerer: signature.offerer,
           txHash: signature.txHash,
           chainId: signature.chainId,
-          type: SignatureType.SIGN_UNISWAPX_ORDER,
+          type:
+            signature.type === SignatureType.SIGN_LIMIT ? SignatureType.SIGN_LIMIT : SignatureType.SIGN_UNISWAPX_ORDER,
           status: signature.status,
           swapInfo: signature.swapInfo,
           addedTime: signature.addedTime,
           encodedOrder: signature.encodedOrder,
+          expiry: signature.expiry,
         },
         timestamp: signature.addedTime / 1000,
         from: signature.offerer,

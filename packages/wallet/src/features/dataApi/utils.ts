@@ -12,8 +12,8 @@ import {
 import { fromGraphQLChain, toGraphQLChain } from 'wallet/src/features/chains/utils'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import {
-  currencyId,
   CurrencyId,
+  currencyId,
   currencyIdToChain,
   currencyIdToGraphQLAddress,
   isNativeCurrencyAddress,

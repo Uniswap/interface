@@ -56,6 +56,7 @@ import {
   v54Schema,
   v55Schema,
   v56Schema,
+  v57Schema,
   v5Schema,
   v6Schema,
   v7Schema,
@@ -1290,5 +1291,12 @@ describe('Redux state migrations', () => {
     expect(v57.wallet.settings.hideSpamTokens).toBe(true)
     expect(v57.wallet.accounts[0].showSpamTokens).toBeUndefined()
     expect(v57.wallet.accounts[0].showSmallBalances).toBeUndefined()
+  })
+
+  it('migrates from v57 to 58', () => {
+    const v57Stub = { ...v57Schema }
+    const v58 = migrations[58](v57Stub)
+
+    expect(v58.behaviorHistory.hasSkippedUnitagPrompt).toBe(false)
   })
 })

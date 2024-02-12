@@ -16,11 +16,25 @@ const Container = styled.div`
   @media (max-width: 1024px) {
     gap: 80px;
   }
-  margin-top: -100px;
+  margin-top: -72px;
+  min-width: 100%;
   max-width: 1280px;
+  z-index: 1;
 `
 
-function LandingV2() {
+const Grain = styled.div`
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url(/images/noise-color.png);
+  opacity: 0.018;
+  z-index: 0;
+`
+
+function LandingV2({ transition }: { transition?: boolean }) {
   const scrollAnchor = useRef<HTMLDivElement | null>(null)
   const scrollToRef = () => {
     if (scrollAnchor.current) {
@@ -32,15 +46,18 @@ function LandingV2() {
   }
 
   return (
-    <Container>
-      <Hero scrollToRef={scrollToRef} />
-      <div ref={scrollAnchor}>
-        <DirectToDefi />
-      </div>
-      <Stats />
-      <NewsletterEtc />
-      <Footer />
-    </Container>
+    <>
+      <Grain />
+      <Container data-testid="landing-page">
+        <Hero scrollToRef={scrollToRef} transition={transition} />
+        <div ref={scrollAnchor}>
+          <DirectToDefi />
+        </div>
+        <Stats />
+        <NewsletterEtc />
+        <Footer />
+      </Container>
+    </>
   )
 }
 

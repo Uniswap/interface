@@ -8,9 +8,9 @@ import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import {
   Language,
   Locale,
+  SUPPORTED_LANGUAGES,
   mapDeviceLanguageToLanguage,
   mapLocaleToLanguage,
-  SUPPORTED_LANGUAGES,
 } from 'wallet/src/features/language/constants'
 import { getLocale } from 'wallet/src/features/language/hooks'
 import {

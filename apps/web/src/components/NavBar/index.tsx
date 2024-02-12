@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { UniIcon } from 'components/Logo/UniIcon'
 import Web3Status from 'components/Web3Status'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
@@ -19,6 +18,8 @@ import { ReactNode, useCallback } from 'react'
 import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { useIsNavSearchInputVisible } from '../../nft/hooks/useIsNavSearchInputVisible'
 import { Bag } from './Bag'
 import Blur from './Blur'
@@ -75,7 +76,10 @@ export const PageTabs = () => {
         <Trans>Swap</Trans>
       </MenuItem>
       {infoExplorePageEnabled ? (
-        <MenuItem href="/explore" isActive={pathname.startsWith('/explore')}>
+        <MenuItem
+          href={'/explore' + (chainName !== Chain.Ethereum ? `/${chainName.toLowerCase()}` : '')}
+          isActive={pathname.startsWith('/explore')}
+        >
           <Trans>Explore</Trans>
         </MenuItem>
       ) : (
@@ -112,9 +116,12 @@ const Navbar = ({ blur }: { blur: boolean }) => {
   const navigate = useNavigate()
   const isNavSearchInputVisible = useIsNavSearchInputVisible()
 
+  const { account } = useWeb3React()
   const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
-
   const handleUniIconClick = useCallback(() => {
+    if (account) {
+      return
+    }
     if (accountDrawerOpen) {
       toggleAccountDrawer()
     }
@@ -122,7 +129,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
       pathname: '/',
       search: '?intro=true',
     })
-  }, [accountDrawerOpen, navigate, toggleAccountDrawer])
+  }, [account, accountDrawerOpen, navigate, toggleAccountDrawer])
 
   return (
     <>
@@ -136,6 +143,7 @@ const Navbar = ({ blur }: { blur: boolean }) => {
                 height="48"
                 data-testid="uniswap-logo"
                 className={styles.logo}
+                clickable={!account}
                 onClick={handleUniIconClick}
               />
             </Box>

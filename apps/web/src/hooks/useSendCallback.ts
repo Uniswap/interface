@@ -5,7 +5,7 @@ import { useCallback } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { SendTransactionInfo, TransactionType } from 'state/transactions/types'
 import { currencyId } from 'utils/currencyId'
-import { toReadableError, UserRejectedRequestError } from 'utils/errors'
+import { UserRejectedRequestError, toReadableError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 export function useSendCallback({

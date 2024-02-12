@@ -10,20 +10,22 @@ import ProtocolBanner from 'components/About/ProtocolBanner'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { BaseButton } from 'components/Button'
 import { getRecentConnectionMeta } from 'connection/meta'
-import { useNewLandingPage } from 'featureFlags/flags/landingPageV2'
+import { useExitAnimation, useNewLandingPage } from 'featureFlags/flags/landingPageV2'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import usePrevious from 'hooks/usePrevious'
 import Swap from 'pages/Swap'
 import { parse } from 'qs'
-import { useEffect, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Link as NativeLink, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import { getDownloadAppLinkProps } from 'utils/openDownloadApp'
 
+import { useAppDispatch } from 'state/hooks'
+import { setRecentConnectionDisconnected } from 'state/user/reducer'
+import { TRANSITION_DURATIONS } from 'theme/styles'
 import LandingV2 from './LandingV2'
 
 const PageContainer = styled.div`
@@ -282,9 +284,6 @@ const LinkCss = css`
 `
 const LandingSwap = styled(Swap)`
   ${SwapCss}
-  &:hover {
-    border: 1px solid ${({ theme }) => theme.accent1};
-  }
 `
 const Link = styled(NativeLink)`
   ${LinkCss}
@@ -292,8 +291,14 @@ const Link = styled(NativeLink)`
 export default function Landing() {
   const isDarkMode = useIsDarkMode()
   const cardsRef = useRef<HTMLDivElement>(null)
-  const { account } = useWeb3React()
+  const { account, connector } = useWeb3React()
   const recentConnectionMeta = getRecentConnectionMeta()
+  const dispatch = useAppDispatch()
+  const disconnect = useCallback(() => {
+    connector.deactivate?.()
+    connector.resetState()
+    dispatch(setRecentConnectionDisconnected())
+  }, [connector, dispatch])
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const cards = useMemo(
@@ -302,7 +307,8 @@ export default function Landing() {
   )
 
   const isNewLandingPageEnabled = useNewLandingPage()
-
+  const isExitAnimationEnabled = useExitAnimation()
+  const [transition, setTransition] = useState(false)
   const location = useLocation()
   const queryParams = useMemo(() => parse(location.search, { ignoreQueryPrefix: true }), [location])
   const navigate = useNavigate()
@@ -313,14 +319,29 @@ export default function Landing() {
   useEffect(() => {
     if (accountDrawerOpen && account && !prevAccount) {
       redirectOnConnect.current = true
+      setTransition(true)
     }
-    const timeoutId = setTimeout(() => {
-      if (redirectOnConnect.current) {
-        navigate('/swap')
-      }
-    }, TRANSITION_DURATIONS.fast)
+    const timeoutId = setTimeout(
+      () => {
+        if (redirectOnConnect.current) {
+          navigate('/swap')
+        } else if (account && queryParams.intro) {
+          disconnect()
+        }
+      },
+      isExitAnimationEnabled ? TRANSITION_DURATIONS.slow : TRANSITION_DURATIONS.fast
+    )
     return () => clearTimeout(timeoutId)
-  }, [account, prevAccount, accountDrawerOpen, navigate])
+  }, [
+    account,
+    prevAccount,
+    accountDrawerOpen,
+    navigate,
+    queryParams.intro,
+    connector,
+    disconnect,
+    isExitAnimationEnabled,
+  ])
 
   // Redirect to swap page if user is connected or has been recently
   // The intro query parameter can be used to override this
@@ -329,7 +350,11 @@ export default function Landing() {
   }
 
   if (isNewLandingPageEnabled) {
-    return <LandingV2 />
+    return (
+      <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
+        <LandingV2 transition={isExitAnimationEnabled && transition} />
+      </Trace>
+    )
   }
 
   return (

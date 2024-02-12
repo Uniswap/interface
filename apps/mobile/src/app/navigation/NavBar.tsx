@@ -214,11 +214,11 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
 
   const contentProps: FlexProps = isIOS
     ? {
-        bg: '$surface2',
+        backgroundColor: '$surface2',
         opacity: isDarkMode ? 0.6 : 0.8,
       }
     : {
-        bg: '$surface1',
+        backgroundColor: '$surface1',
         style: {
           borderWidth: 1,
           borderColor: colors.surface3.val,

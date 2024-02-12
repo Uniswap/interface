@@ -4,7 +4,6 @@ exports[`LongMarkdownText renders without error 1`] = `
 <View
   style={
     {
-      "alignItems": "stretch",
       "flexDirection": "column",
       "gap": 8,
     }
@@ -14,7 +13,6 @@ exports[`LongMarkdownText renders without error 1`] = `
     onLayout={[Function]}
     style={
       {
-        "alignItems": "stretch",
         "flexDirection": "column",
       }
     }
@@ -25,7 +23,6 @@ exports[`LongMarkdownText renders without error 1`] = `
       pointerEvents="none"
       style={
         {
-          "alignItems": "stretch",
           "flexDirection": "column",
           "opacity": 0,
           "position": "absolute",

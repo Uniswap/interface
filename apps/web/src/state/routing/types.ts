@@ -277,7 +277,7 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   }
 }
 
-enum OffchainOrderType {
+export enum OffchainOrderType {
   DUTCH_AUCTION = 'dutch_auction',
   LIMIT_ORDER = 'limit_order',
 }
@@ -510,6 +510,22 @@ export class LimitOrderTrade {
     nonce: BigNumber
     swapper: string
   }): IDutchOrderTrade<Currency, Currency, TradeType> {
+    const swapperOutput = {
+      token: this.amountOut.currency.isNative ? AddressZero : this.amountOut.currency.address,
+      recipient: options?.swapper ?? this.swapper,
+      startAmount: BigNumber.from(this.amountOut.quotient.toString()),
+      endAmount: BigNumber.from(this.amountOut.quotient.toString()),
+    }
+
+    const swapFee = this.swapFee && {
+      token: this.amountOut.currency.isNative ? AddressZero : this.amountOut.currency.address,
+      recipient: this.swapFee.recipient,
+      startAmount: BigNumber.from(this.amountOut.multiply(this.swapFee.percent).quotient.toString()),
+      endAmount: BigNumber.from(this.amountOut.multiply(this.swapFee.percent).quotient.toString()),
+    }
+
+    const outputs = swapFee ? [swapperOutput, swapFee] : [swapperOutput]
+
     const nowSecs = Math.floor(Date.now() / 1000)
     return new IDutchOrderTrade({
       currencyIn: this.amountIn.currency,
@@ -531,14 +547,7 @@ export class LimitOrderTrade {
           startAmount: BigNumber.from(this.amountIn.quotient.toString()),
           endAmount: BigNumber.from(this.amountIn.quotient.toString()),
         },
-        outputs: [
-          {
-            token: this.amountOut.currency.isNative ? AddressZero : this.amountOut.currency.address,
-            recipient: options?.swapper ?? this.swapper,
-            startAmount: BigNumber.from(this.amountOut.quotient.toString()),
-            endAmount: BigNumber.from(this.amountOut.quotient.toString()),
-          },
-        ],
+        outputs,
       },
       tradeType: this.tradeType,
     })

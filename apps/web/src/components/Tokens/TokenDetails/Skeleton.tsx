@@ -73,15 +73,15 @@ const LoadingChartContainer = styled.div<{ isInfoTDPEnabled?: boolean }>`
 export const TokenInfoContainer = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
   justify-content: space-between;
-  align-items: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? 'flex-start' : 'center')};
-  margin-bottom: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '12' : '4')}px;
+  align-items: center;
+  margin-bottom: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '20' : '4')}px;
   gap: 20px;
   ${textFadeIn};
   animation-duration: ${({ theme }) => theme.transition.duration.medium};
 `
 export const TokenNameCell = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
-  gap: 8px;
+  gap: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '12' : '8')}px;
   font-size: 20px;
   line-height: 28px;
   align-items: center;
@@ -114,12 +114,14 @@ const TokenLogoBubble = styled(DetailBubble)`
   height: 32px;
   border-radius: 50%;
 `
-const TitleBubble = styled(DetailBubble)`
+const TitleBubble = styled(DetailBubble)<{ $isInfoTDPEnabled?: boolean }>`
+  ${({ $isInfoTDPEnabled }) => $isInfoTDPEnabled && 'height: 40px;'}
   width: 136px;
 `
 const PriceBubble = styled(SquaredBubble)`
   margin-top: 4px;
   height: 40px;
+  width: 162px;
 `
 
 const SectionBubble = styled(SquaredBubble)`
@@ -335,7 +337,7 @@ export default function TokenDetailsSkeleton() {
       <TokenInfoContainer>
         <TokenNameCell>
           <TokenLogoBubble />
-          <TitleBubble />
+          <TitleBubble $isInfoTDPEnabled={isInfoTDPEnabled} />
         </TokenNameCell>
       </TokenInfoContainer>
       <LoadingChart />

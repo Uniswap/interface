@@ -12,9 +12,9 @@ import { NumberType } from 'utilities/src/format/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
-import { isClassicQuote } from 'wallet/src/features/transactions/swap/tradingApi/utils'
+import { isClassicQuote } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
+import { QuoteData, Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
-import { QuoteData, Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import {
   CurrencyField,
   TransactionState,
@@ -30,9 +30,9 @@ import { ElementName, ElementNameType } from 'wallet/src/telemetry/constants'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import {
+  CurrencyId,
   areCurrencyIdsEqual,
   buildWrappedNativeCurrencyId,
-  CurrencyId,
   currencyId,
   currencyIdToAddress,
   currencyIdToChain,

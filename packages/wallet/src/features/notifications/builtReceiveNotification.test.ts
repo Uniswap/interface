@@ -8,7 +8,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { account, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
+import { SAMPLE_SEED_ADDRESS_1, account } from 'wallet/src/test/fixtures'
 
 const receiveCurrencyTypeInfo: ReceiveTokenTransactionInfo = {
   type: TransactionType.Receive,

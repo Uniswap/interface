@@ -1,11 +1,11 @@
 import { Price, Token } from '@uniswap/sdk-core'
 import {
-  encodeSqrtRatioX96,
   FeeAmount,
+  TICK_SPACINGS,
+  TickMath,
+  encodeSqrtRatioX96,
   nearestUsableTick,
   priceToClosestTick,
-  TickMath,
-  TICK_SPACINGS,
 } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 

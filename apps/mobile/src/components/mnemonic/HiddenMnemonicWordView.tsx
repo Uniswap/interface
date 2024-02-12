@@ -8,7 +8,7 @@ export function HiddenMnemonicWordView(): JSX.Element {
     <Flex
       row
       alignItems="stretch"
-      bg="$surface1"
+      backgroundColor="$surface1"
       gap="$spacing24"
       height="50%"
       justifyContent="space-evenly"
@@ -37,7 +37,7 @@ function HiddenWordViewColumn({ indexes }: { indexes: number[] }): JSX.Element {
           px="$spacing12"
           py="$spacing16">
           <Text color="$neutral2">{value}</Text>
-          <Flex fill bg="$neutral3" borderRadius="$rounded20" height={9} />
+          <Flex fill backgroundColor="$neutral3" borderRadius="$rounded20" height={9} />
         </Flex>
       ))}
     </>

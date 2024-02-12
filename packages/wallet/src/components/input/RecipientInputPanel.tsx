@@ -26,12 +26,7 @@ export function RecipientInputPanel({
       onPress={onToggleShowRecipientSelector}>
       <Flex gap="$spacing8" py="$spacing24">
         <Flex centered row gap="$spacing4">
-          <AddressDisplay
-            hideAddressInSubtitle
-            includeUnitagSuffix
-            address={recipientAddress}
-            variant="heading3"
-          />
+          <AddressDisplay hideAddressInSubtitle address={recipientAddress} variant="heading3" />
           <Icons.RotatableChevron color="$neutral1" direction="end" />
         </Flex>
 

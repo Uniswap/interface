@@ -4,8 +4,8 @@ import {
   KEYBOARD_STATE,
   useBottomSheetInternal,
 } from '@gorhom/bottom-sheet'
-import { useCallback, useMemo, useRef } from 'react'
-import { LayoutChangeEvent, StyleProp, TouchableWithoutFeedback, ViewStyle } from 'react-native'
+import { useMemo } from 'react'
+import { StyleProp, TouchableWithoutFeedback, ViewStyle } from 'react-native'
 import {
   Extrapolate,
   FadeIn,
@@ -24,7 +24,6 @@ import {
 } from 'ui/src'
 import { borderRadii, opacify } from 'ui/src/theme'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { BottomSheetModalRef } from 'wallet/src/components/modals/BottomSheetModalProps'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { TransactionModalContextProvider } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import {
@@ -45,8 +44,6 @@ export function TransactionModal({
   const colors = useSporeColors()
   const insets = useDeviceInsets()
   const dimensions = useDeviceDimensions()
-
-  const bottomSheetModalRef = useRef<BottomSheetModalRef>(null)
 
   const backgroundColorValue = colors.surface1.get()
 
@@ -78,14 +75,9 @@ export function TransactionModal({
     [animatedBorderRadius, backgroundColorValue, fullContentHeight, fullscreen]
   )
 
-  const handleContentLayout = useCallback(
-    (event: LayoutChangeEvent): void => bottomSheetModalRef.current?.handleContentLayout(event),
-    []
-  )
-
   return (
     <BottomSheetModal
-      ref={bottomSheetModalRef}
+      enableDynamicSizing
       hideKeyboardOnDismiss
       overrideInnerContainer
       renderBehindTopInset
@@ -97,7 +89,6 @@ export function TransactionModal({
       onClose={onClose}>
       <TransactionModalContextProvider
         bottomSheetViewStyles={bottomSheetViewStyles}
-        handleContentLayout={handleContentLayout}
         onClose={onClose}
         {...transactionContextProps}>
         {children}
@@ -108,7 +99,6 @@ export function TransactionModal({
 
 export function TransactionModalInnerContainer({
   bottomSheetViewStyles,
-  onLayout,
   fullscreen,
   children,
 }: TransactionModalInnerContainerProps): JSX.Element {
@@ -121,7 +111,7 @@ export function TransactionModalInnerContainer({
   })
 
   return (
-    <BottomSheetView style={[bottomSheetViewStyles]} onLayout={onLayout}>
+    <BottomSheetView style={[bottomSheetViewStyles]}>
       <TouchableWithoutFeedback>
         <Flex mt={fullscreen ? insets.top : '$spacing8'}>
           {fullscreen && <HandleBar backgroundColor="none" />}

@@ -1,19 +1,17 @@
-import { ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
+import { selectionAsync } from 'expo-haptics'
 import { useCallback, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Keyboard, LayoutAnimation, StyleSheet, VirtualizedList } from 'react-native'
+import { LayoutAnimation, StyleSheet, VirtualizedList } from 'react-native'
 import { isWeb } from 'tamagui'
-import { Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Flex, Icons } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { colors, iconSizes } from 'ui/src/theme'
 import {
-  NetworkLogo,
   SQUARE_BORDER_RADIUS as NETWORK_LOGO_SQUARE_BORDER_RADIUS,
+  NetworkLogo,
 } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
-import { ActionSheetModal } from 'wallet/src/components/modals/ActionSheetModal'
+import { ActionSheetDropdown } from 'wallet/src/components/dropdowns/ActionSheetDropdown'
 import { useNetworkOptions } from 'wallet/src/components/network/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 const ELLIPSIS = 'ellipsis'
 const NETWORK_ICON_SIZE = iconSizes.icon20
@@ -101,8 +99,6 @@ export function NetworkFilter({
   includeAllNetworks,
   showEllipsisInitially,
 }: NetworkFilterProps): JSX.Element {
-  const { t } = useTranslation()
-  const [showModal, setShowModal] = useState(false)
   // TODO: remove the comment below once we add it to the main swap screen
   // we would need this later, when we add it to the main swap screen
   const [showEllipsisIcon, setShowEllipsisIcon] = useState(showEllipsisInitially ?? false)
@@ -113,7 +109,6 @@ export function NetworkFilter({
       if (!isWeb) {
         await selectionAsync()
       }
-      setShowModal(false)
       if (showEllipsisIcon && chainId !== selectedChain) {
         setShowEllipsisIcon(false)
       }
@@ -129,43 +124,22 @@ export function NetworkFilter({
   }, [selectedChain])
 
   return (
-    <>
-      <TouchableArea
-        hapticFeedback
-        hapticStyle={ImpactFeedbackStyle.Light}
-        py="$spacing8"
-        onPress={(): void => {
-          Keyboard.dismiss()
-          setShowModal(true)
-        }}>
-        <Flex centered row gap="$spacing4" py="$spacing8">
-          <NetworksInSeries
-            // show ellipsis as the last item when all networks is selected
-            ellipsisPosition={!selectedChain ? 'end' : undefined}
-            // show specific network or all
-            networks={networks}
-          />
-          <Icons.RotatableChevron
-            color="$neutral3"
-            direction="down"
-            height={iconSizes.icon20}
-            width={iconSizes.icon20}
-          />
-        </Flex>
-      </TouchableArea>
-
-      <ActionSheetModal
-        header={
-          <Flex centered gap="$spacing4" py="$spacing16">
-            <Text variant="buttonLabel2">{t('Switch Network')}</Text>
-          </Flex>
-        }
-        isVisible={showModal}
-        name={ModalName.NetworkSelector}
-        options={networkOptions}
-        onClose={(): void => setShowModal(false)}
-      />
-    </>
+    <ActionSheetDropdown alignment="right" options={networkOptions}>
+      <Flex centered row gap="$spacing4" py="$spacing8">
+        <NetworksInSeries
+          // show ellipsis as the last item when all networks is selected
+          ellipsisPosition={!selectedChain ? 'end' : undefined}
+          // show specific network or all
+          networks={networks}
+        />
+        <Icons.RotatableChevron
+          color="$neutral3"
+          direction="down"
+          height={iconSizes.icon20}
+          width={iconSizes.icon20}
+        />
+      </Flex>
+    </ActionSheetDropdown>
   )
 }
 

@@ -9,11 +9,11 @@ import {
   supportedChainIdFromGQLChain,
   validateUrlChainParam,
 } from 'graphql/data/util'
+import { ExploreTab } from 'pages/Explore'
 import { useExploreParams } from 'pages/Explore/redirects'
+import { useReducer } from 'react'
 import { Check } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import styled, { css, useTheme } from 'styled-components'
 import { EllipsisStyle } from 'theme/components'
 
@@ -52,22 +52,24 @@ const StyledMenuFlyout = css<{ isInfoExplorePageEnabled: boolean }>`
 `
 export default function NetworkFilter() {
   const theme = useTheme()
-  const toggleMenu = useToggleModal(ApplicationModal.NETWORK_FILTER)
   const navigate = useNavigate()
-  const { tab } = useExploreParams()
-
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+  const [isMenuOpen, toggleMenu] = useReducer((s) => !s, false)
 
-  const currentChainName = validateUrlChainParam(useParams().chainName)
+  const params = useParams()
+  const exploreParams = useExploreParams()
+  const tab = exploreParams.tab
+  const currentChainName = validateUrlChainParam((isInfoExplorePageEnabled ? exploreParams : params).chainName)
   const chainId = supportedChainIdFromGQLChain(currentChainName)
 
   const chainInfo = getChainInfo(chainId)
 
   return (
     <DropdownSelector
-      modal={ApplicationModal.NETWORK_FILTER}
+      isOpen={isMenuOpen}
+      toggleOpen={toggleMenu}
       menuLabel={
-        <NetworkLabel>
+        <NetworkLabel data-testid="tokens-network-filter-selected">
           <ChainLogo chainId={chainId} size={20} /> {!isInfoExplorePageEnabled && chainInfo.label}
         </NetworkLabel>
       }
@@ -82,7 +84,7 @@ export default function NetworkFilter() {
                 data-testid={`tokens-network-filter-option-${network.toLowerCase()}`}
                 onClick={() => {
                   isInfoExplorePageEnabled
-                    ? navigate(`/explore/${tab}/${network.toLowerCase()}`)
+                    ? navigate(`/explore/${tab ?? ExploreTab.Tokens}/${network.toLowerCase()}`)
                     : navigate(`/tokens/${network.toLowerCase()}`)
                   toggleMenu()
                 }}

@@ -10,7 +10,7 @@ import { getConnection } from 'connection'
 import { useGatewayDNSUpdateAllEnabled } from 'featureFlags/flags/gatewayDNSUpdate'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
-import { DutchOrderTrade, LimitOrderTrade, TradeFillType } from 'state/routing/types'
+import { DutchOrderTrade, LimitOrderTrade, OffchainOrderType, TradeFillType } from 'state/routing/types'
 import { trace } from 'tracing/trace'
 import { SignatureExpiredError, UserRejectedRequestError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
@@ -41,9 +41,10 @@ async function getUpdatedNonce(
 ): Promise<BigNumber | null> {
   const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
   try {
-    const res = await fetch(`${baseURL}/nonce?address=${swapper}&chainId=${chainId}`)
+    // endpoint fetches current nonce
+    const res = await fetch(`${baseURL}/nonce?address=${swapper.toLowerCase()}&chainId=${chainId}`)
     const { nonce } = await res.json()
-    return BigNumber.from(nonce)
+    return BigNumber.from(nonce).add(1)
   } catch (e) {
     Sentry.withScope(function (scope) {
       scope.setTag('method', 'getUpdatedNonce')
@@ -148,9 +149,10 @@ export function useUniswapXSwapCallback({
         })
 
         const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
+        const endpoint = trade.offchainOrderType === OffchainOrderType.LIMIT_ORDER ? 'limit-order' : 'order'
         const encodedOrder = updatedOrder.serialize()
 
-        const res = await fetch(`${baseURL}/order`, {
+        const res = await fetch(`${baseURL}/${endpoint}`, {
           method: 'POST',
           body: JSON.stringify({
             encodedOrder,

@@ -204,7 +204,7 @@ export function QRAnimation({
                 </AnimatedFlex>
                 <AnimatedFlex entering={qrScaleIn}>
                   <Flex
-                    bg="$surface1"
+                    backgroundColor="$surface1"
                     borderColor="$surface3"
                     borderRadius="$rounded20"
                     borderWidth={2}
@@ -280,17 +280,17 @@ export function QRAnimation({
           </Flex>
           <AnimatedFlex entering={textSlideUpAtEnd} pt="$spacing4" style={[styles.textContainer]}>
             <Text
-              $short={{ variant: 'subheading2', maxFontSizeMultiplier: 1.1 }}
-              maxFontSizeMultiplier={fonts.heading3.maxFontSizeMultiplier}
+              $short={{ variant: 'subheading2' }}
+              maxFontSizeMultiplier={media.short ? 1.1 : fonts.heading3.maxFontSizeMultiplier}
               pb="$spacing12"
               textAlign="center"
               variant="subheading1">
               {t('Welcome to your new wallet')}
             </Text>
             <Text
-              $short={{ variant: 'body3', maxFontSizeMultiplier: 1.1 }}
+              $short={{ variant: 'body3' }}
               color="$neutral2"
-              maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
+              maxFontSizeMultiplier={media.short ? 1.1 : fonts.body1.maxFontSizeMultiplier}
               textAlign="center"
               variant="body2">
               {isNewWallet

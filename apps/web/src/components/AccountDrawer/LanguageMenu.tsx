@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { LOCALE_LABEL, SupportedLocale, SUPPORTED_LOCALES } from 'constants/locales'
+import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 

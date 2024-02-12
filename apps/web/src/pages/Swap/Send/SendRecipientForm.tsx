@@ -35,7 +35,7 @@ const RecipientWrapper = styled(Column)<{ $disabled?: boolean }>`
   position: relative;
   background-color: ${({ theme }) => theme.surface2};
   border-radius: 16px;
-  padding: 12px;
+  padding: 12px 16px;
   gap: 4px;
   opacity: ${({ $disabled }) => (!$disabled ? 1 : 0.4)};
   pointer-events: ${({ $disabled }) => (!$disabled ? 'initial' : 'none')};
@@ -279,9 +279,9 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
     <RecipientWrapper $disabled={disabled}>
       {showInputField ? (
         <>
-          <ThemedText.BodySecondary lineHeight="24px">
+          <ThemedText.SubHeaderSmall lineHeight="24px">
             <Trans>To</Trans>
-          </ThemedText.BodySecondary>
+          </ThemedText.SubHeaderSmall>
           <StyledRecipientInputRow justify="space-between">
             <Row ref={inputWrapperNode}>
               <StyledRecipientInput
@@ -291,7 +291,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
                 autoCorrect="off"
                 autoCapitalize="off"
                 spellCheck="false"
-                placeholder={recipientData ? '' : t`Wallet Address or ENS name`}
+                placeholder={recipientData ? '' : t`Wallet address or ENS name`}
                 pattern="^(0x[a-fA-F0-9]{40})$"
                 onChange={handleInput}
                 onFocus={() => handleFocus(true)}

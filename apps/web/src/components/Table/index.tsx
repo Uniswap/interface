@@ -10,9 +10,9 @@ import {
   CellContainer,
   DataRow,
   HeaderRow,
+  LOAD_MORE_BOTTOM_OFFSET,
   LoadingIndicator,
   LoadingIndicatorContainer,
-  LOAD_MORE_BOTTOM_OFFSET,
   ReturnButton,
   ReturnButtonContainer,
   ReturnIcon,
@@ -151,8 +151,9 @@ export function Table<Data extends RowData>({
                         </CellContainer>
                       ))
                     const rowOriginal = row.original as any
+                    const linkState = rowOriginal.linkState // optional data passed to linked page, accessible via useLocation().state
                     return 'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
-                      <TableRowLink to={rowOriginal.link} key={row.id}>
+                      <TableRowLink to={rowOriginal.link} key={row.id} state={linkState}>
                         <DataRow>{cells}</DataRow>
                       </TableRowLink>
                     ) : (

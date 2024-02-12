@@ -128,7 +128,7 @@ export default function AddressInputPanel({
               autoCorrect="off"
               autoCapitalize="off"
               spellCheck="false"
-              placeholder={placeholder ?? t`Wallet Address or ENS name`}
+              placeholder={placeholder ?? t`Wallet address or ENS name`}
               error={error}
               pattern="^(0x[a-fA-F0-9]{40})$"
               onChange={handleInput}

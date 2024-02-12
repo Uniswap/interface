@@ -13,7 +13,12 @@ export function NFTTraitCard({
 }): JSX.Element {
   const colors = useSporeColors()
   return (
-    <Flex bg="$surface3" borderRadius="$rounded16" gap="$spacing4" px="$spacing16" py="$spacing12">
+    <Flex
+      backgroundColor="$surface3"
+      borderRadius="$rounded16"
+      gap="$spacing4"
+      px="$spacing16"
+      py="$spacing12">
       <Text
         fontSize={14}
         style={{ color: titleTextColor ?? colors.neutral2.get() }}

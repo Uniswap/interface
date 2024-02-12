@@ -11,6 +11,7 @@ import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
 import { CustomVolumeChartModel, CustomVolumeChartModelParams } from './CustomVolumeChartModel'
 import { SingleHistogramData } from './renderer'
 
@@ -41,8 +42,23 @@ class VolumeChartModel extends CustomVolumeChartModel<SingleHistogramData> {
   }
 }
 
-export function getTimePeriodDisplay(timePeriod: TimePeriod) {
-  return t`Past ${toHistoryDuration(timePeriod).toLowerCase()}`
+export function formatHistoryDuration(duration: HistoryDuration): string {
+  switch (duration) {
+    case HistoryDuration.FiveMinute:
+      return t`Past five minutes`
+    case HistoryDuration.Hour:
+      return t`Past hour`
+    case HistoryDuration.Day:
+      return t`Past day`
+    case HistoryDuration.Week:
+      return t`Past week`
+    case HistoryDuration.Month:
+      return t`Past month`
+    case HistoryDuration.Year:
+      return t`Past year`
+    case HistoryDuration.Max:
+      return t`All time`
+  }
 }
 
 function VolumeChartHeader({
@@ -102,7 +118,7 @@ function VolumeChartHeader({
         )
       }
       time={crosshairData?.time}
-      timePlaceholder={getTimePeriodDisplay(timePeriod)}
+      timePlaceholder={formatHistoryDuration(toHistoryDuration(timePeriod))}
     />
   )
 }
@@ -112,10 +128,9 @@ interface VolumeChartProps {
   volumes?: PricePoint[]
   feeTier?: number
   timePeriod: TimePeriod
-  color?: string
 }
 
-export function VolumeChart({ height, volumes, feeTier, timePeriod, color }: VolumeChartProps) {
+export function VolumeChart({ height, volumes, feeTier, timePeriod }: VolumeChartProps) {
   const theme = useTheme()
 
   const data: SingleHistogramData[] = useMemo(
@@ -127,13 +142,10 @@ export function VolumeChart({ height, volumes, feeTier, timePeriod, color }: Vol
   )
 
   const noFeesData = feeTier === undefined // i.e. if is token volume chart
-  const params = useMemo(() => {
-    return {
-      data,
-      colors: [color ?? theme.accent1],
-      headerHeight: noFeesData ? 75 : 90,
-    }
-  }, [data, theme, color, noFeesData])
+  const params = useMemo(
+    () => ({ data, colors: [theme.accent1], headerHeight: noFeesData ? 75 : 90 }),
+    [data, theme.accent1, noFeesData]
+  )
 
   return (
     <Chart Model={VolumeChartModel} params={params} height={height}>

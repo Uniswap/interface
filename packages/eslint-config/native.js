@@ -48,6 +48,8 @@ module.exports = {
   ],
   rules: {
     ...complexityRules,
+    // tamagui encourages inline styles and makes them fast
+    'react-native/no-inline-styles': 'off',
     'guard-for-in': 'error',
     'no-eval': 'error',
     'no-extra-boolean-cast': 'error',
@@ -249,11 +251,14 @@ module.exports = {
       },
     },
     {
-      // enable the rule specifically for TypeScript files
+      // TypeScript rules for non-test files (can be a bit more strict)
       files: ['*.ts', '*.mts', '*.cts', '*.tsx'],
       excludedFiles: ['migrations.ts', './**/*.test.ts', './**/*.test.tsx', './test/**'],
       rules: {
         '@typescript-eslint/no-unsafe-return': 'error',
+        '@typescript-eslint/no-non-null-assertion': 'error',
+        '@typescript-eslint/explicit-function-return-type': 'warn',
+        '@typescript-eslint/no-empty-interface': 'warn',
       },
     },
     // ignore return type in saga files given return types are unwieldy and tied

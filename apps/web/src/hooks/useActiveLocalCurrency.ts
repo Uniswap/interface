@@ -1,4 +1,4 @@
-import { DEFAULT_LOCAL_CURRENCY, SupportedLocalCurrency, SUPPORTED_LOCAL_CURRENCIES } from 'constants/localCurrencies'
+import { DEFAULT_LOCAL_CURRENCY, SUPPORTED_LOCAL_CURRENCIES, SupportedLocalCurrency } from 'constants/localCurrencies'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { getFiatCurrencyComponents } from 'utils/formatNumbers'

@@ -1,11 +1,11 @@
 import { Chain, ExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
-import { searchResultId } from 'wallet/src/features/search/searchHistorySlice'
 import {
   NFTCollectionSearchResult,
   SearchResultType,
   TokenSearchResult,
 } from 'wallet/src/features/search/SearchResult'
+import { searchResultId } from 'wallet/src/features/search/searchHistorySlice'
 import { SEARCH_RESULT_HEADER_KEY } from './constants'
 import { SearchResultOrHeader } from './types'
 

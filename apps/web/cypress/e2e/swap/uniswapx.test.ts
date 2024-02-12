@@ -1,20 +1,22 @@
 import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
 import { CyHttpMessages } from 'cypress/types/net-stubbing'
 
+import { FeatureFlag } from 'featureFlags'
 import { DAI, nativeOnChain, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getTestSelector } from '../../utils'
 
 const QuoteWhereUniswapXIsBetter = 'uniswapx/quote1.json'
 const QuoteWithEthInput = 'uniswapx/quote2.json'
+const PricingQuoteUSDC = 'uniswapx/pricingQuoteUSDC.json'
+const PricingQuoteDAI = 'uniswapx/pricingQuoteDAI.json'
 
-const QuoteEndpoint = 'https://api.uniswap.org/v2/quote'
-const OrderSubmissionEndpoint = 'https://api.uniswap.org/v2/order'
+const QuoteEndpoint = 'https://interface.gateway.uniswap.org/v2/quote'
+const OrderSubmissionEndpoint = 'https://interface.gateway.uniswap.org/v2/order'
 const OrderStatusEndpoint =
-  'https://api.uniswap.org/v2/orders?swapper=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266&orderHashes=0xa9dd6f05ad6d6c79bee654c31ede4d0d2392862711be0f3bc4a9124af24a6a19'
+  'https://interface.gateway.uniswap.org/v2/orders?swapper=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266&orderHashes=0xa9dd6f05ad6d6c79bee654c31ede4d0d2392862711be0f3bc4a9124af24a6a19'
 
 /**
  * Stubs quote to return a quote for non-price requests
- * Price quotes are blocked with 409, as the backend would not accept them regardless
  */
 function stubNonPriceQuoteWith(fixture: string) {
   cy.intercept(QuoteEndpoint, (req: CyHttpMessages.IncomingHttpRequest) => {
@@ -23,7 +25,8 @@ function stubNonPriceQuoteWith(fixture: string) {
       body = JSON.parse(body)
     }
     if (body.intent === 'pricing') {
-      req.reply({ statusCode: 409 })
+      const pricingFixture = body.tokenIn === USDC_MAINNET.address ? PricingQuoteUSDC : PricingQuoteDAI
+      req.reply({ fixture: pricingFixture })
     } else {
       req.reply({ fixture })
     }
@@ -41,10 +44,7 @@ function stubSwapTxReceipt() {
   })
 }
 
-// TODO: FIX THESE TESTS where we should NOT stub for pricing requests
-// TODO: add test case for cancelling a uniswapx order
-
-describe.only('UniswapX Toggle', () => {
+describe('UniswapX Toggle', () => {
   beforeEach(() => {
     stubNonPriceQuoteWith(QuoteWhereUniswapXIsBetter)
     cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
@@ -69,7 +69,9 @@ describe('UniswapX Orders', () => {
     stubSwapTxReceipt()
 
     cy.hardhat().then((hardhat) => hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8)))
-    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
+      featureFlags: [{ name: FeatureFlag.gatewayDNSUpdate, value: false }],
+    })
   })
 
   it('can swap exact-in trades using uniswapX', () => {
@@ -140,6 +142,38 @@ describe('UniswapX Orders', () => {
 
     // Verify swap failure message
     cy.contains('Insufficient funds')
+  })
+
+  it('cancels a pending uniswapx order', () => {
+    // Setup a swap
+    cy.get('#swap-currency-input .token-amount-input').type('300')
+    cy.wait('@quote')
+
+    // Submit uniswapx order signature
+    cy.get('#swap-button').click()
+    cy.contains('Confirm swap').click()
+
+    cy.wait('@eth_signTypedData_v4')
+    cy.get(getTestSelector('confirmation-close-icon')).click()
+
+    // Open mini portfolio and navigate to activity history
+    cy.get(getTestSelector('web3-status-connected')).click()
+    cy.intercept(/graphql/, { fixture: 'mini-portfolio/empty_activity.json' })
+    cy.get(getTestSelector('mini-portfolio-navbar')).contains('Activity').click()
+
+    // Open pending order modal
+    cy.contains('Swapping').click()
+    cy.get(getTestSelector('offchain-activity-modal')).contains('Transaction details')
+
+    // Cancel order
+    cy.get(getTestSelector('offchain-activity-modal')).contains('Cancel').click()
+    cy.contains('Proceed').click()
+
+    // Return cancelled order status from uniswapx api
+    cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/cancelledStatusResponse.json' })
+
+    // Verify swap failure message
+    cy.contains('Swap cancelled')
   })
 })
 
@@ -248,16 +282,16 @@ describe('UniswapX Eth Input', () => {
 
 describe('UniswapX activity history', () => {
   beforeEach(() => {
-    cy.intercept(QuoteEndpoint, { fixture: QuoteWhereUniswapXIsBetter })
+    stubNonPriceQuoteWith(QuoteWhereUniswapXIsBetter)
     cy.intercept(OrderSubmissionEndpoint, { fixture: 'uniswapx/orderResponse.json' })
     cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/openStatusResponse.json' })
 
     stubSwapTxReceipt()
 
-    cy.hardhat().then(async (hardhat) => {
-      await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8))
+    cy.hardhat().then((hardhat) => hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8)))
+    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
+      featureFlags: [{ name: FeatureFlag.gatewayDNSUpdate, value: false }],
     })
-    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
   })
 
   it('can view UniswapX order status progress in activity', () => {
@@ -277,14 +311,14 @@ describe('UniswapX activity history', () => {
 
     // Open pending order modal
     cy.contains('Swapping').click()
-    cy.get(getTestSelector('offchain-activity-modal')).contains('Swapping')
-    cy.get(getTestSelector('offchain-activity-modal')).contains('Learn more about swapping with UniswapX')
+    cy.get(getTestSelector('offchain-activity-modal')).contains('Transaction details')
+    cy.get(getTestSelector('offchain-activity-modal')).contains('Order pending')
 
     // Return filled order status from uniswapx api
     cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
 
-    cy.get(getTestSelector('offchain-activity-modal')).contains('Swapped')
-    cy.get(getTestSelector('offchain-activity-modal')).contains('View on Explorer')
+    cy.get(getTestSelector('offchain-activity-modal')).contains('Order executed')
+    cy.get(getTestSelector('offchain-activity-modal')).contains('Transaction ID')
   })
 
   it('can view UniswapX order status progress in activity upon expiry', () => {
@@ -304,13 +338,13 @@ describe('UniswapX activity history', () => {
 
     // Open pending order modal
     cy.contains('Swapping').click()
-    cy.get(getTestSelector('offchain-activity-modal')).contains('Swapping')
+    cy.get(getTestSelector('offchain-activity-modal')).contains('Transaction details')
+    cy.get(getTestSelector('offchain-activity-modal')).contains('Order pending')
 
     // Return filled order status from uniswapx api
     cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/expiredStatusResponse.json' })
 
-    cy.get(getTestSelector('offchain-activity-modal')).contains('Swap expired')
-    cy.get(getTestSelector('offchain-activity-modal')).contains('learn more')
+    cy.get(getTestSelector('offchain-activity-modal')).contains('Order expired')
   })
 
   it('deduplicates remote vs local uniswapx orders', () => {

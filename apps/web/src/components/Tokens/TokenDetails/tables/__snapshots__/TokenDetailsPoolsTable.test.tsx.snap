@@ -223,6 +223,13 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   justify-content: flex-end;
 }
 
+.c7:first-child {
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+}
+
 .c16 {
   color: none;
   -webkit-text-decoration: none;
@@ -329,7 +336,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
 }
 
 .c14 {
-  min-width: 84px;
+  min-width: 100px;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -392,6 +399,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
 .c23 {
   padding: 2px 6px;
   background: #F9F9F9;
+  border-radius: 5px;
 }
 
 <div
@@ -480,9 +488,13 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c3 c4 c12"
                 >
-                  1 day volume
+                  <div
+                    class="c9 css-1urox24"
+                  >
+                    1 day volume
+                  </div>
                 </div>
               </div>
             </div>
@@ -493,9 +505,13 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c3 c4 c12"
                 >
-                  7 day volume
+                  <div
+                    class="c9 css-1urox24"
+                  >
+                    7 day volume
+                  </div>
                 </div>
               </div>
             </div>
@@ -506,9 +522,13 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                 class="c14"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c3 c4 c12"
                 >
-                  Turnover
+                  <div
+                    class="c9 css-1urox24"
+                  >
+                    Turnover
+                  </div>
                 </div>
               </div>
             </div>
@@ -561,7 +581,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                         <img
                           class="c21"
                           size="28"
-                          src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                          src="blank_token.svg"
                         />
                       </div>
                     </div>
@@ -626,7 +646,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                   <div
                     class="c9 css-1urox24"
                   >
-                    600.00
+                    6%
                   </div>
                 </div>
               </div>
@@ -877,6 +897,13 @@ exports[`TDPPoolTable renders loading state 1`] = `
   justify-content: flex-end;
 }
 
+.c7:first-child {
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+}
+
 .c12 {
   -webkit-box-pack: end;
   -webkit-justify-content: flex-end;
@@ -991,7 +1018,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
 }
 
 .c14 {
-  min-width: 84px;
+  min-width: 100px;
   -webkit-flex: 1;
   -ms-flex: 1;
   flex: 1;
@@ -1103,9 +1130,13 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c3 c4 c12"
                 >
-                  1 day volume
+                  <div
+                    class="c9 css-1urox24"
+                  >
+                    1 day volume
+                  </div>
                 </div>
               </div>
             </div>
@@ -1116,9 +1147,13 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c11"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c3 c4 c12"
                 >
-                  7 day volume
+                  <div
+                    class="c9 css-1urox24"
+                  >
+                    7 day volume
+                  </div>
                 </div>
               </div>
             </div>
@@ -1129,9 +1164,13 @@ exports[`TDPPoolTable renders loading state 1`] = `
                 class="c14"
               >
                 <div
-                  class="c9 css-1urox24"
+                  class="c3 c4 c12"
                 >
-                  Turnover
+                  <div
+                    class="c9 css-1urox24"
+                  >
+                    Turnover
+                  </div>
                 </div>
               </div>
             </div>

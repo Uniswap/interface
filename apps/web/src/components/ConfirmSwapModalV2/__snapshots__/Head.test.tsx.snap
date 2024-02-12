@@ -208,7 +208,7 @@ exports[`ConfirmSwapModalV2/Head should render correctly for a Limit order 1`] =
               fill="#9B9B9B"
             />
           </svg>
-          Get Help
+          Get help
         </div>
       </a>
       <svg
@@ -450,7 +450,7 @@ exports[`ConfirmSwapModalV2/Head should render correctly for a classic swap 1`] 
               fill="#9B9B9B"
             />
           </svg>
-          Get Help
+          Get help
         </div>
       </a>
       <svg

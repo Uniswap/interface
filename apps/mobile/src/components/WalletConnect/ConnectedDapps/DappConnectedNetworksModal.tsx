@@ -84,7 +84,7 @@ export function DappConnectedNetworkModal({
                 </Text>
                 <Flex centered height={iconSizes.icon24} width={iconSizes.icon24}>
                   <Flex
-                    bg="$statusSuccess"
+                    backgroundColor="$statusSuccess"
                     borderRadius="$roundedFull"
                     height={iconSizes.icon8}
                     width={iconSizes.icon8}

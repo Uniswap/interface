@@ -6,14 +6,14 @@ const ICON_SIZE = 20
 
 type ArrowDownButtonProps = Pick<
   ComponentProps<typeof TouchableArea>,
-  'disabled' | 'onPress' | 'borderColor' | 'bg' | 'padding'
+  'disabled' | 'onPress' | 'borderColor' | 'backgroundColor' | 'p'
 >
 
 export function TransferArrowButton({
   onPress,
   disabled,
-  bg = '$surface2',
-  padding = '$spacing12',
+  backgroundColor = '$surface2',
+  p = '$spacing12',
   ...rest
 }: ArrowDownButtonProps): JSX.Element {
   const colors = useSporeColors()
@@ -21,14 +21,14 @@ export function TransferArrowButton({
     <TouchableArea
       alignItems="center"
       alignSelf="center"
-      bg={bg}
+      backgroundColor={backgroundColor}
       borderColor="$surface1"
       borderRadius="$rounded16"
       borderWidth={4}
       disabled={disabled}
       justifyContent="center"
       // border width applies inside the element so add more padding to account for it
-      p={padding}
+      p={p}
       onPress={onPress}
       {...rest}>
       <Flex centered p="$spacing2">

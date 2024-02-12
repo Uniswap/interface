@@ -25,7 +25,6 @@ export function Shine({ children, disabled }: ShineProps): JSX.Element {
   return (
     <Flex
       height={layout.height}
-      // eslint-disable-next-line react-native/no-inline-styles
       style={{
         WebkitMaskImage: `linear-gradient(-75deg, rgba(0,0,0,0.5) 30%, #000 50%, rgba(0,0,0,0.5) 70%)`,
         WebkitMaskSize: '200%',

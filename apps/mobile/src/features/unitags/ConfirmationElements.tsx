@@ -8,7 +8,7 @@ import { Arrow } from 'wallet/src/components/icons/Arrow'
 export const FroggyElement = (): JSX.Element => {
   return (
     <Flex
-      bg="$surface3"
+      backgroundColor="$surface3"
       borderRadius="$rounded12"
       p="$spacing8"
       transform={[{ rotateZ: '-10deg' }]}>
@@ -24,7 +24,7 @@ export const FroggyElement = (): JSX.Element => {
 
 export const OpenseaElement = (): JSX.Element => {
   return (
-    <Flex bg="$blue400" borderRadius="$roundedFull" p="$spacing4">
+    <Flex backgroundColor="$blue400" borderRadius="$roundedFull" p="$spacing4">
       <Image
         height={imageSizes.image32}
         resizeMode="contain"
@@ -151,7 +151,7 @@ export const HeartElement = (): JSX.Element => {
 export const TextElement = ({ text }: { text: string }): JSX.Element => {
   return (
     <Flex
-      bg="$surface2"
+      backgroundColor="$surface2"
       borderRadius="$rounded12"
       p="$spacing12"
       transform={[{ rotateZ: '18deg' }]}>

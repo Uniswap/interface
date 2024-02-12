@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, Share } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { openModal } from 'src/features/modals/modalSlice'
 import { useNavigateToSend } from 'src/features/send/hooks'
 import { useNavigateToSwap } from 'src/features/swap/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
@@ -15,12 +17,12 @@ import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { toggleTokenVisibility } from 'wallet/src/features/favorites/slice'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { useCopyTokenAddressCallback } from 'wallet/src/features/tokens/hooks'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import {
-  areCurrencyIdsEqual,
   CurrencyId,
+  areCurrencyIdsEqual,
   currencyIdToAddress,
   currencyIdToChain,
 } from 'wallet/src/utils/currencyId'
@@ -54,20 +56,26 @@ export function useTokenContextMenu({
   const currencyAddress = currencyIdToAddress(currencyId)
   const currencyChainId = currencyIdToChain(currencyId) ?? ChainId.Mainnet
 
-  const onPressCopyContractAddress = useCopyTokenAddressCallback(currencyAddress)
+  const onPressSend = useCallback(() => {
+    // Do not show warning modal speed-bump if user is trying to send tokens they own
+    navigateToSend(currencyAddress, currencyChainId)
+  }, [currencyAddress, currencyChainId, navigateToSend])
+
+  const onPressReceive = useCallback(
+    () =>
+      dispatch(
+        openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+      ),
+    [dispatch]
+  )
 
   const onPressSwap = useCallback(
     (currencyField: CurrencyField) => {
-      // Do not show warning modal speedbump if user is trying to swap tokens they own
+      // Do not show warning modal speed-bump if user is trying to swap tokens they own
       navigateToSwap(currencyField, currencyAddress, currencyChainId)
     },
     [currencyAddress, currencyChainId, navigateToSwap]
   )
-
-  const onPressSend = useCallback(() => {
-    // Do not show warning modal speedbump if user is trying to send tokens they own
-    navigateToSend(currencyAddress, currencyChainId)
-  }, [currencyAddress, currencyChainId, navigateToSend])
 
   const onPressShare = useCallback(async () => {
     const tokenUrl = getTokenUrl(currencyId)
@@ -143,14 +151,14 @@ export function useTokenContextMenu({
         onPress: onPressSend,
       },
       {
+        title: t('Receive'),
+        systemIcon: 'qrcode',
+        onPress: onPressReceive,
+      },
+      {
         title: t('Share'),
         systemIcon: 'square.and.arrow.up',
         onPress: onPressShare,
-      },
-      {
-        title: t('Copy contract address'),
-        systemIcon: 'doc.on.doc',
-        onPress: onPressCopyContractAddress,
       },
       ...(activeAccountHoldsToken
         ? [
@@ -166,7 +174,7 @@ export function useTokenContextMenu({
     [
       t,
       onPressSend,
-      onPressCopyContractAddress,
+      onPressReceive,
       onPressShare,
       activeAccountHoldsToken,
       isHidden,

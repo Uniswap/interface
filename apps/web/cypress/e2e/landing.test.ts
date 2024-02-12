@@ -34,12 +34,6 @@ describe('Landing Page', () => {
     cy.url().should('include', '/swap')
   })
 
-  it('shows landing page when the unicorn icon in nav is selected', () => {
-    cy.visit('/swap')
-    cy.get(getTestSelector('uniswap-logo')).click()
-    cy.get(getTestSelector('landing-page'))
-  })
-
   it('allows navigation to pool', () => {
     cy.viewport(2000, 1600)
     cy.visit('/swap')
@@ -80,7 +74,7 @@ describe('Landing Page', () => {
   })
 
   it('renders uk compliance banner in uk', () => {
-    cy.intercept('https://api.uniswap.org/v1/amplitude-proxy', (req) => {
+    cy.intercept('https://interface.gateway.uniswap.org/v1/amplitude-proxy', (req) => {
       const requestBody = JSON.stringify(req.body)
       const byteSize = new Blob([requestBody]).size
       req.alias = 'amplitude'

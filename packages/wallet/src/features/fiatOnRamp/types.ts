@@ -160,3 +160,162 @@ export type MoonpayTransactionResponseItem = MoonpayQuote & {
     actions: 'complete_bank_transfer' | 'retry_kyc' | 'verify_card_by_code' | 'verify_card_by_file'
   }>
 }
+
+// /supported-countries
+
+export type FORSupportedCountry = {
+  countryCode: string
+  displayName: string
+}
+
+export type FORSupportedCountriesResponse = {
+  supportedCountries: FORSupportedCountry[]
+}
+
+// /quote
+
+export type FORQuoteRequest = {
+  countryCode: string
+  destinationCurrencyCode: string
+  sourceAmount: number
+  sourceCurrencyCode: string
+}
+
+export type FORQuote = {
+  countryCode: string | null
+  sourceAmount: number
+  sourceCurrencyCode: string
+  destinationAmount: number
+  destinationCurrencyCode: string
+  serviceProvider: string
+}
+
+export type FORQuoteResponse = {
+  quotes: Maybe<FORQuote[]>
+  message: string | null
+  error: string | null
+}
+
+// /service-providers
+
+export type FORLogo = {
+  darkLogo: string
+  lightLogo: string
+}
+
+export type FORServiceProvider = {
+  serviceProvider: string
+  name: string
+  url: string
+  logos: FORLogo
+}
+
+export type FORServiceProvidersResponse = {
+  serviceProviders: FORServiceProvider[]
+}
+
+// /supported-tokens
+
+export type FORSupportedTokensRequest = {
+  fiatCurrency: string
+  countryCode: string
+}
+
+export type FORSupportedToken = {
+  cryptoCurrencyCode: string
+  displayName: string
+  address: string
+  cryptoCurrencyChain: string
+  chainId: string
+  symbol: string
+}
+
+export type FORSupportedTokensResponse = {
+  supportedTokens: FORSupportedToken[]
+}
+
+// /transfer-institutions
+
+export type FORTransferInstitutionsRequest = {
+  countryCode: string
+}
+
+export type FORTransferInstitution = {
+  domain: string
+  id: string
+  icon: string
+  key: string
+  name: string
+  rank: number
+  subName: string
+}
+
+export type FORTransferInstitutionsResponse = {
+  institutions: FORTransferInstitution[]
+}
+
+// /widget-url
+
+export type FORWidgetUrlRequest = {
+  sourceAmount: number
+  sourceCurrencyCode: string
+  destinationCurrencyCode: string
+  countryCode: string
+  serviceProvider: string
+  walletAddress: string
+  externalSessionId: string
+}
+
+export type FORWidgetUrlResponse = {
+  id: string
+  widgetUrl: string
+  token: string
+}
+
+// /transactions
+
+export type FORCryptoPurchaseDetails = {
+  destinationCurrencyCode: string
+  destinationAmount: number
+  walletAddress: string
+  networkFee: number
+  transactionFee: number
+  partnerFee: number | null
+  totalFee: number
+  networkFeeInUsd: number | null
+  transactionFeeInUsd: number | null
+  partnerFeeInUsd: number | null
+  totalFeeInUsd: number | null
+  blockchainTransactionId: string
+  institution: string | null
+}
+
+export type FORTransaction = {
+  key: string
+  id: string
+  paymentMethod: string | null
+  transactionType: string
+  status: string
+  sourceAmount: number
+  sourceCurrencyCode: string
+  destinationAmount: number
+  destinationCurrencyCode: string
+  paymentMethodType: string
+  serviceProvider: string
+  description: string | null
+  cryptoPurchaseDetails: FORCryptoPurchaseDetails
+  createdAt: string
+  updatedAt: string
+  countryCode: string
+  externalSessionId: string | null
+  sourceAmountInUsd: number
+}
+
+export type FORTransactionsResponse = {
+  transactions: FORTransaction[]
+  count: number
+  remaining: number
+  totalCount: number
+  message: string | null
+  error: string | null
+}

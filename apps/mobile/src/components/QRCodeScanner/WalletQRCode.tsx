@@ -10,6 +10,7 @@ import {
   Flex,
   Icons,
   Text,
+  TouchableArea,
   useIsDarkMode,
   useMedia,
   useSporeColors,
@@ -65,6 +66,7 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
         mx="$spacing60"
         py="$spacing24">
         <AddressDisplay
+          includeUnitagSuffix
           showCopy
           showCopyWrapperButton
           address={address}
@@ -86,16 +88,17 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
         <Text color="$neutral2" lineHeight={20} textAlign="center" variant="body3">
           {t('You can send tokens on all of our supported networks to this address.')}
         </Text>
-        <Flex row gap="$spacing4">
-          <NetworkLogos negativeGap chains={ALL_SUPPORTED_CHAIN_IDS} />
-          <Icons.RotatableChevron
-            color="$neutral3"
-            direction="down"
-            height={iconSizes.icon20}
-            width={iconSizes.icon20}
-            onPress={(): void => setShowModal(true)}
-          />
-        </Flex>
+        <TouchableArea onPress={(): void => setShowModal(true)}>
+          <Flex row gap="$spacing4">
+            <NetworkLogos negativeGap chains={ALL_SUPPORTED_CHAIN_IDS} />
+            <Icons.RotatableChevron
+              color="$neutral3"
+              direction="down"
+              height={iconSizes.icon20}
+              width={iconSizes.icon20}
+            />
+          </Flex>
+        </TouchableArea>
       </AnimatedFlex>
       {showModal && (
         <WarningModal

@@ -5,7 +5,6 @@ import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
-import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import {
   AssetActivityPartsFragment,
   Currency as GQLCurrency,
@@ -20,6 +19,7 @@ import {
   TransactionDetailsPartsFragment,
   TransactionType,
 } from 'graphql/data/__generated__/types-and-hooks'
+import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import ms from 'ms'
@@ -512,6 +512,7 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
     statusMessage,
     offchainOrderDetails: {
       id: details.id,
+      // TODO(limits): check type from backend and use SignatureType.SIGN_LIMIT here if necessary
       type: SignatureType.SIGN_UNISWAPX_ORDER,
       txHash: details.hash,
       orderHash: details.hash,
@@ -523,12 +524,12 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
         isUniswapXOrder: true,
         type: LocalTransactionType.SWAP,
         tradeType: TradeType.EXACT_INPUT,
-        inputCurrencyId: inputToken.id,
-        outputCurrencyId: outputToken.id,
-        inputCurrencyAmountRaw: inputTokenQuantity,
-        expectedOutputCurrencyAmountRaw: outputTokenQuantity,
-        minimumOutputCurrencyAmountRaw: outputTokenQuantity,
-        settledOutputCurrencyAmountRaw: outputTokenQuantity,
+        inputCurrencyId: inputToken.address ?? '',
+        outputCurrencyId: outputToken.address ?? '',
+        inputCurrencyAmountRaw: parseUnits(inputTokenQuantity, inputToken.decimals).toString(),
+        expectedOutputCurrencyAmountRaw: parseUnits(outputTokenQuantity, outputToken.decimals).toString(),
+        minimumOutputCurrencyAmountRaw: parseUnits(outputTokenQuantity, outputToken.decimals).toString(),
+        settledOutputCurrencyAmountRaw: parseUnits(outputTokenQuantity, outputToken.decimals).toString(),
       },
     },
     timestamp,

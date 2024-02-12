@@ -30,9 +30,11 @@ export function getValidAddress(
     return null
   }
 
+  const addressWith0x = ensureLeading0x(address)
+
   if (withChecksum) {
     try {
-      return utils.getAddress(address)
+      return utils.getAddress(addressWith0x)
     } catch (error) {
       if (log) {
         logger.warn('utils/addresses', 'getValidAddress', `Invalid address at checksum: ${address}`)
@@ -41,14 +43,14 @@ export function getValidAddress(
     }
   }
 
-  if (address.length !== 42 || !address.startsWith('0x')) {
+  if (addressWith0x.length !== 42) {
     if (log) {
       logger.warn('utils/addresses', 'getValidAddress', `Address has an invalid format: ${address}`)
     }
     return null
   }
 
-  return normalizeAddress(address, AddressStringFormat.Lowercase)
+  return normalizeAddress(addressWith0x, AddressStringFormat.Lowercase)
 }
 
 /**

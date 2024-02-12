@@ -17,13 +17,14 @@ export interface ModalsState {
   [ModalName.FiatCurrencySelector]: AppModalState<undefined>
   [ModalName.FiatOnRamp]: AppModalState<undefined>
   [ModalName.FiatOnRampAggregator]: AppModalState<undefined>
+  [ModalName.ReceiveCryptoModal]: AppModalState<undefined>
   [ModalName.LanguageSelector]: AppModalState<undefined>
   [ModalName.RemoveWallet]: AppModalState<RemoveWalletModalState>
   [ModalName.RestoreWallet]: AppModalState<undefined>
   [ModalName.Scantastic]: AppModalState<ScantasticModalState>
   [ModalName.Send]: AppModalState<TransactionState>
   [ModalName.Swap]: AppModalState<TransactionState>
-  [ModalName.UnitagsIntro]: AppModalState<undefined>
+  [ModalName.UnitagsIntro]: AppModalState<{ address: Address }>
   [ModalName.ViewOnlyExplainer]: AppModalState<undefined>
   [ModalName.WalletConnectScan]: AppModalState<ScannerModalState>
 }

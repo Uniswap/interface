@@ -782,4 +782,15 @@ export const migrations = {
 
     return newState
   },
+
+  58: function addSkippedUnitagBoolean(state: any) {
+    const newState = { ...state }
+
+    newState.behaviorHistory = {
+      ...state.behaviorHistory,
+      hasSkippedUnitagPrompt: false,
+    }
+
+    return newState
+  },
 }

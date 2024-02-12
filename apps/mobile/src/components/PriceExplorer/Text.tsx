@@ -71,7 +71,6 @@ export function RelativeChangeText({ loading }: { loading: boolean }): JSX.Eleme
         style={[
           caretStyle,
           // fix vertical centering
-          // eslint-disable-next-line react-native/no-inline-styles
           { translateY: relativeChange.value.value > 0 ? -1 : 1 },
         ]}
       />

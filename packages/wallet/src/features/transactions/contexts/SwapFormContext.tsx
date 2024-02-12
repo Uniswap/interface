@@ -12,7 +12,7 @@ import {
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
-import { useDerivedSwapInfo } from 'wallet/src/features/transactions/swap/hooks'
+import { useDerivedSwapInfo } from 'wallet/src/features/transactions/swap/trade/hooks/useDerivedSwapInfo'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 export type SwapFormState = {

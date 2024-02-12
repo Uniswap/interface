@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useContext, useMemo } from 'react'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import { useSwapTxAndGasInfoLegacy } from 'wallet/src/features/transactions/swap/hooks'
-import { useSwapTxAndGasInfoTradingApi } from 'wallet/src/features/transactions/swap/tradingApiHooks/useSwapTxAndGasInfoTradingApi'
+import { useSwapTxAndGasInfoLegacy } from 'wallet/src/features/transactions/swap/trade/legacy/hooks'
+import { useSwapTxAndGasInfoTradingApi } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useSwapTxAndGasInfoTradingApi'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 type SwapTxContextState = {

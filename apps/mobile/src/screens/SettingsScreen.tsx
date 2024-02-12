@@ -106,11 +106,11 @@ export function SettingsScreen(): JSX.Element {
     dispatch(setHideSpamTokens(!hideSpamTokens))
   }, [dispatch, hideSpamTokens])
 
-  // Signer account info
   const signerAccount = useSignerAccounts()[0]
+  // If no mnemonicId that means there are no signer accounts imported yet
+  const mnemonicId = signerAccount?.mnemonicId
   // We sync backup state across all accounts under the same mnemonic, so can check status with any account.
   const hasCloudBackup = signerAccount?.backups?.includes(BackupType.Cloud)
-  const noSignerAccountImported = !signerAccount
   const { walletNeedsRestore } = useWalletRestore()
 
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
@@ -184,7 +184,7 @@ export function SettingsScreen(): JSX.Element {
       },
       {
         subTitle: t('Security'),
-        isHidden: noSignerAccountImported,
+        isHidden: !mnemonicId,
         data: [
           ...(deviceSupportsBiometrics
             ? [
@@ -204,8 +204,8 @@ export function SettingsScreen(): JSX.Element {
             screen: Screens.SettingsViewSeedPhrase,
             text: t('Recovery phrase'),
             icon: <Icons.Key {...iconProps} />,
-            screenProps: { address: signerAccount?.address ?? '', walletNeedsRestore },
-            isHidden: noSignerAccountImported,
+            screenProps: { address: mnemonicId ?? '', walletNeedsRestore },
+            isHidden: !mnemonicId,
           },
           {
             screen: walletNeedsRestore
@@ -221,10 +221,10 @@ export function SettingsScreen(): JSX.Element {
                     importType: ImportType.Restore,
                   },
                 }
-              : { address: signerAccount?.address ?? '' },
+              : { address: mnemonicId ?? '' },
             text: isAndroid ? t('Google Drive backup') : t('iCloud backup'),
             icon: <Icons.OSDynamicCloudIcon color="$neutral2" size="$icon.24" />,
-            isHidden: noSignerAccountImported,
+            isHidden: !mnemonicId,
           },
         ],
       },
@@ -303,9 +303,8 @@ export function SettingsScreen(): JSX.Element {
     isFaceIdSupported,
     authenticationTypeName,
     walletNeedsRestore,
-    noSignerAccountImported,
     hasCloudBackup,
-    signerAccount?.address,
+    mnemonicId,
   ])
 
   const renderItem = ({
@@ -336,7 +335,7 @@ export function SettingsScreen(): JSX.Element {
           renderItem={renderItem}
           renderSectionFooter={(): JSX.Element => <Flex pt="$spacing24" />}
           renderSectionHeader={({ section: { subTitle } }): JSX.Element => (
-            <Flex bg="$surface1" py="$spacing12">
+            <Flex backgroundColor="$surface1" py="$spacing12">
               <Text color="$neutral2" variant="body1">
                 {subTitle}
               </Text>

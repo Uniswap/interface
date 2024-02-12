@@ -1,10 +1,14 @@
 import { useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Icons, Text } from 'ui/src'
+import { logger } from 'utilities/src/logger/logger'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { deleteUnitag } from 'wallet/src/features/unitags/api'
+import { useUnitagUpdater } from 'wallet/src/features/unitags/context'
+import { useWalletSigners } from 'wallet/src/features/wallet/context'
+import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
@@ -20,6 +24,9 @@ export function DeleteUnitagModal({
   const { t } = useTranslation()
   const navigation = useNavigation()
   const dispatch = useAppDispatch()
+  const { triggerRefetchUnitags } = useUnitagUpdater()
+  const account = useAccount(address)
+  const signerManager = useWalletSigners()
 
   const handleDeleteError = (): void => {
     dispatch(
@@ -33,13 +40,18 @@ export function DeleteUnitagModal({
 
   const onDelete = async (): Promise<void> => {
     try {
-      const { data: deleteResponse } = await deleteUnitag(unitag, address)
+      const { data: deleteResponse } = await deleteUnitag({
+        username: unitag,
+        account,
+        signerManager,
+      })
       if (!deleteResponse?.success) {
         handleDeleteError()
         return
       }
 
       if (deleteResponse?.success) {
+        triggerRefetchUnitags()
         dispatch(
           pushNotification({
             type: AppNotificationType.Success,
@@ -50,6 +62,9 @@ export function DeleteUnitagModal({
         onClose()
       }
     } catch (e) {
+      logger.error(e, {
+        tags: { file: 'DeleteUnitagModal', function: 'onDelete' },
+      })
       handleDeleteError()
     }
   }

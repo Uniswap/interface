@@ -13,7 +13,7 @@ import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
-import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 export function useDerivedTransferInfo(state: TransactionState): DerivedTransferInfo {
   const {

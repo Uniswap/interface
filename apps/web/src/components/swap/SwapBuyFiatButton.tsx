@@ -3,15 +3,14 @@ import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/an
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import { useAccountDrawer, useSetShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonText } from 'components/Button'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
 import { isPathBlocked } from 'utils/blockedPaths'
 
 import { useFiatOnrampAvailability, useOpenModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
+import { SwapHeaderTabButton } from './styled'
 
 export const MOONPAY_REGION_AVAILABILITY_ARTICLE =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'
@@ -24,24 +23,6 @@ enum BuyFiatFlowState {
   // Buy fiat flow is active, feature is available in user's region & needs wallet connection.
   ACTIVE_NEEDS_ACCOUNT,
 }
-
-const StyledTextButton = styled(ButtonText)`
-  color: ${({ theme }) => theme.neutral2};
-  gap: 4px;
-  font-weight: 485;
-  transition-duration: ${({ theme }) => theme.transition.duration.fast};
-  transition-timing-function: ease-in-out;
-  transition-property: opacity, color, background-color;
-  &:focus {
-    text-decoration: none;
-  }
-  &:active {
-    text-decoration: none;
-  }
-  :hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
-  }
-`
 
 export default function SwapBuyFiatButton() {
   const { account } = useWeb3React()
@@ -137,9 +118,14 @@ export default function SwapBuyFiatButton() {
         element={InterfaceElementName.FIAT_ON_RAMP_BUY_BUTTON}
         properties={{ account_connected: !!account }}
       >
-        <StyledTextButton onClick={handleBuyCrypto} disabled={buyCryptoButtonDisabled} data-testid="buy-fiat-button">
+        <SwapHeaderTabButton
+          $isActive={false}
+          onClick={handleBuyCrypto}
+          disabled={buyCryptoButtonDisabled}
+          data-testid="buy-fiat-button"
+        >
           <Trans>Buy</Trans>
-        </StyledTextButton>
+        </SwapHeaderTabButton>
       </TraceEvent>
     </MouseoverTooltip>
   )

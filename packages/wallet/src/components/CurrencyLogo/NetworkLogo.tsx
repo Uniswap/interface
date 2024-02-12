@@ -2,7 +2,7 @@ import React from 'react'
 import { Image, ImageResizeMode, StyleSheet } from 'react-native'
 import { Flex, FlexProps } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
 
 type NetworkLogoProps = FlexProps & {
   chainId: ChainId

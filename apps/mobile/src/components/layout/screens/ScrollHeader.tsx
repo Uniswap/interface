@@ -3,8 +3,8 @@ import React, { ReactElement, useMemo } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
 import Animated, {
   Extrapolate,
-  interpolate,
   SharedValue,
+  interpolate,
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import { BackButton } from 'src/components/buttons/BackButton'
@@ -117,11 +117,11 @@ function HeaderWrapper({
   backgroundColor?: ColorTokens
 }): JSX.Element {
   if (!fullScreen) {
-    return <Flex bg={backgroundColor}>{children}</Flex>
+    return <Flex backgroundColor={backgroundColor}>{children}</Flex>
   }
   return (
     <AnimatedFlex
-      bg={backgroundColor}
+      backgroundColor={backgroundColor}
       left={0}
       opacity={0}
       position="absolute"

@@ -3,7 +3,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { parseEther } from '@ethersproject/units'
-import { addressesByNetwork, MakerOrder, signMakerOrder, SupportedChainId } from '@looksrare/sdk'
+import { MakerOrder, SupportedChainId, addressesByNetwork, signMakerOrder } from '@looksrare/sdk'
 import { Seaport } from '@opensea/seaport-js'
 import { ItemType } from '@opensea/seaport-js/lib/constants'
 import { ConsiderationInputItem } from '@opensea/seaport-js/lib/types'
@@ -24,7 +24,7 @@ import ERC1155 from 'wallet/src/abis/erc1155.json'
 import ERC721 from 'wallet/src/abis/erc721.json'
 
 import { ListingMarket, ListingStatus, WalletAsset } from '../types'
-import { createSellOrder, encodeOrder, OfferItem, OrderPayload, signOrderData } from './x2y2'
+import { OfferItem, OrderPayload, createSellOrder, encodeOrder, signOrderData } from './x2y2'
 
 export const LOOKS_RARE_CREATOR_BASIS_POINTS = 50
 

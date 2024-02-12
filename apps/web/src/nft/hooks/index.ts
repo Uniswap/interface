@@ -1,9 +1,9 @@
 export { useBag } from './useBag'
 export {
-  initialCollectionFilterState,
   SortBy,
   SortByPointers,
   SortByQueries,
+  initialCollectionFilterState,
   useCollectionFilters,
 } from './useCollectionFilters'
 export type { CollectionFilters, Trait } from './useCollectionFilters'

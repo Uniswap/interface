@@ -209,7 +209,6 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
       sentry-label="SpinningLoader"
       style={
         {
-          "alignItems": "stretch",
           "flexDirection": "column",
           "transform": [
             {

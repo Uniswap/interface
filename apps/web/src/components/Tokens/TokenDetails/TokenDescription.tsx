@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
@@ -7,16 +7,15 @@ import { TwitterXLogo } from 'components/Icons/TwitterX'
 import Row from 'components/Row'
 import { FOTTooltipContent } from 'components/swap/SwapLineItem'
 import { NoInfoAvailable, truncateDescription, TruncateDescriptionButton } from 'components/Tokens/TokenDetails/shared'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { chainIdToBackendName } from 'graphql/data/util'
+import Tooltip, { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useTokenProjectQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { chainIdToBackendName } from 'graphql/data/util'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { useCallback, useReducer } from 'react'
 import { Copy } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
-import { opacify } from 'theme/utils'
 import { shortenAddress } from 'utils'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -47,12 +46,12 @@ const TokenButtonRow = styled(TokenNameRow)`
   flex-wrap: wrap;
 `
 
-const TokenInfoButton = styled(Row)<{ tokenColor: string }>`
+const TokenInfoButton = styled(Row)`
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
-  color: ${({ tokenColor }) => tokenColor};
-  background-color: ${({ tokenColor }) => opacify(12, tokenColor)};
+  color: ${({ theme }) => theme.neutral1};
+  background-color: ${({ theme }) => theme.surface3};
   font-size: 14px;
   font-weight: 535;
   line-height: 16px;
@@ -85,7 +84,7 @@ export function TokenDescription({
   isNative?: boolean
   characterCount?: number
 }) {
-  const color = useTheme().neutral1
+  const { neutral2 } = useTheme()
   const chainName = chainIdToBackendName(chainId)
   const { data: tokenQuery } = useTokenProjectQuery({
     variables: {
@@ -102,7 +101,7 @@ export function TokenDescription({
     isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN
   )
 
-  const [, setCopied] = useCopyClipboard()
+  const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
     setCopied(tokenAddress)
   }, [tokenAddress, setCopied])
@@ -127,29 +126,31 @@ export function TokenDescription({
       </InfoSectionHeader>
       <TokenButtonRow>
         {!isNative && (
-          <TokenInfoButton tokenColor={color} onClick={copy}>
-            <Copy width="18px" height="18px" color={color} />
-            {shortenAddress(tokenAddress)}
-          </TokenInfoButton>
+          <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t`Copied`}>
+            <TokenInfoButton onClick={copy}>
+              <Copy width="18px" height="18px" color={neutral2} />
+              {shortenAddress(tokenAddress)}
+            </TokenInfoButton>
+          </Tooltip>
         )}
         <ExternalLink href={explorerUrl}>
-          <TokenInfoButton tokenColor={color}>
-            <EtherscanLogo width="18px" height="18px" fill={color} />
+          <TokenInfoButton>
+            <EtherscanLogo width="18px" height="18px" fill={neutral2} />
             {chainId === ChainId.MAINNET ? <Trans>Etherscan</Trans> : <Trans>Explorer</Trans>}
           </TokenInfoButton>
         </ExternalLink>
         {!!tokenProject?.homepageUrl && (
           <ExternalLink href={tokenProject.homepageUrl}>
-            <TokenInfoButton tokenColor={color}>
-              <Globe width="18px" height="18px" fill={color} />
+            <TokenInfoButton>
+              <Globe width="18px" height="18px" fill={neutral2} />
               <Trans>Website</Trans>
             </TokenInfoButton>
           </ExternalLink>
         )}
         {!!tokenProject?.twitterName && (
           <ExternalLink href={`https://x.com/${tokenProject.twitterName}`}>
-            <TokenInfoButton tokenColor={color}>
-              <TwitterXLogo width="18px" height="18px" fill={color} />
+            <TokenInfoButton>
+              <TwitterXLogo width="18px" height="18px" fill={neutral2} />
               <Trans>Twitter</Trans>
             </TokenInfoButton>
           </ExternalLink>

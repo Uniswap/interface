@@ -1,6 +1,5 @@
-import { Flex, FlexProps, Text, TextProps } from 'ui/src'
-import Unitag from 'ui/src/assets/graphics/unitag.svg'
-import { iconSizes, IconSizeTokens } from 'ui/src/theme'
+import { Flex, FlexProps, Icons, Text, TextProps } from 'ui/src'
+import { IconSizeTokens } from 'ui/src/theme'
 import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type DisplayNameProps = {
@@ -11,24 +10,20 @@ type DisplayNameProps = {
 
 export function DisplayNameText({
   displayName,
-  unitagIconSize = iconSizes.icon24,
+  unitagIconSize = '$icon.24',
   textProps,
   ...rest
 }: DisplayNameProps): JSX.Element {
   const isUnitag = displayName?.type === DisplayNameType.Unitag
 
   return (
-    <Flex centered row gap="$spacing4" {...rest}>
-      <Text
-        {...textProps}
-        color={isUnitag ? '$accent1' : textProps?.color ?? '$neutral1'}
-        flexShrink={1}
-        numberOfLines={1}>
+    <Flex centered row gap="$spacing2" {...rest}>
+      <Text {...textProps} color={textProps?.color ?? '$neutral1'} flexShrink={1} numberOfLines={1}>
         {displayName?.name}
       </Text>
       {isUnitag ? (
-        <Flex mt={-4}>
-          <Unitag height={unitagIconSize} width={unitagIconSize} />
+        <Flex>
+          <Icons.Unitag size={unitagIconSize} />
         </Flex>
       ) : null}
     </Flex>

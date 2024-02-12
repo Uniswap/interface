@@ -52,7 +52,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   const hasSeedPhrase = useNativeAccountExists()
   const { deviceSupportsBiometrics } = useBiometricContext()
 
-  const onCompleteOnboarding = useCompleteOnboardingCallback(params.entryPoint, params.importType)
+  const onCompleteOnboarding = useCompleteOnboardingCallback(params)
 
   const renderBackButton = useCallback(
     (nav: OnboardingScreens): JSX.Element => (

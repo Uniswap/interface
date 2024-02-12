@@ -7,8 +7,10 @@ export function searchResultId(searchResult: SearchResult): string {
   switch (searchResult.type) {
     case SearchResultType.Token:
       return `token-${searchResult.chainId}-${searchResult.address}`
-    case SearchResultType.Wallet:
+    case SearchResultType.ENSAddress:
       return `wallet-${searchResult.address}`
+    case SearchResultType.Unitag:
+      return `unitag-${searchResult.address}`
     case SearchResultType.Etherscan:
       return `etherscan-${searchResult.address}`
     case SearchResultType.NFTCollection:

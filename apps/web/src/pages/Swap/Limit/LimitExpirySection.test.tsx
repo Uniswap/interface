@@ -7,6 +7,8 @@ const mockLimitContextValue = {
   limitState: {
     inputAmount: '',
     limitPrice: '100',
+    limitPriceEdited: false,
+    limitPriceInverted: false,
     outputAmount: '',
     expiry: Expiry.Day,
     isInputAmountFixed: true,

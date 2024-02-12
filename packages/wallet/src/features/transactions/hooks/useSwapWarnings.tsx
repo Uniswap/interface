@@ -4,12 +4,11 @@ import _ from 'lodash'
 import { TFunction } from 'react-i18next'
 import { formatPriceImpact } from 'utilities/src/format/formatPriceImpact'
 import { useMemoCompare } from 'utilities/src/react/hooks'
-import { useSwapRewriteEnabled } from 'wallet/src/features/experiments/hooks'
 import {
   API_RATE_LIMIT_ERROR,
   NO_QUOTE_DATA,
   SWAP_QUOTE_ERROR,
-} from 'wallet/src/features/routing/api'
+} from 'wallet/src/features/transactions/swap/trade/legacy/api'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { isOffline } from 'wallet/src/features/transactions/utils'
@@ -27,8 +26,7 @@ const PRICE_IMPACT_THRESHOLD_HIGH = new Percent(5, 100) // 5%
 export function getSwapWarnings(
   t: TFunction,
   derivedSwapInfo: DerivedSwapInfo,
-  offline: boolean,
-  isSwapRewriteFeatureEnabled?: boolean
+  offline: boolean
 ): Warning[] {
   const warnings: Warning[] = []
 
@@ -47,13 +45,9 @@ export function getSwapWarnings(
       type: WarningLabel.InsufficientFunds,
       severity: WarningSeverity.None,
       action: WarningAction.DisableReview,
-      title: isSwapRewriteFeatureEnabled
-        ? t('You don’t have enough {{ symbol }}', {
-            symbol: currencyAmountIn.currency?.symbol,
-          })
-        : t('Insufficient {{ symbol }} balance', {
-            symbol: currencyAmountIn.currency?.symbol,
-          }),
+      title: t('You don’t have enough {{ symbol }}', {
+        symbol: currencyAmountIn.currency?.symbol,
+      }),
     })
   }
 
@@ -113,13 +107,9 @@ export function getSwapWarnings(
       type: highImpact ? WarningLabel.PriceImpactHigh : WarningLabel.PriceImpactMedium,
       severity: highImpact ? WarningSeverity.High : WarningSeverity.Medium,
       action: WarningAction.WarnBeforeSubmit,
-      title: isSwapRewriteFeatureEnabled
-        ? t('High price impact ({{ swapSize }})', {
-            swapSize: formatPriceImpact(priceImpact),
-          })
-        : t('Rate impacted by swap size ({{ swapSize }})', {
-            swapSize: formatPriceImpact(priceImpact),
-          }),
+      title: t('High price impact ({{ swapSize }})', {
+        swapSize: formatPriceImpact(priceImpact),
+      }),
       message: t(
         'Due to the amount of {{ currencyOut }} liquidity currently available, the more {{ currencyIn }} you try to swap, the less {{ currencyOut }} you will receive.',
         {
@@ -142,12 +132,7 @@ export function useSwapWarnings(t: TFunction, derivedSwapInfo: DerivedSwapInfo):
   // See for more here: https://github.com/react-native-netinfo/react-native-netinfo/pull/444
   const offline = isOffline(networkStatus)
 
-  const isSwapRewriteFeatureEnabled = useSwapRewriteEnabled()
-
-  return useMemoCompare(
-    () => getSwapWarnings(t, derivedSwapInfo, offline, isSwapRewriteFeatureEnabled),
-    _.isEqual
-  )
+  return useMemoCompare(() => getSwapWarnings(t, derivedSwapInfo, offline), _.isEqual)
 }
 
 const formIncomplete = (derivedSwapInfo: DerivedSwapInfo): boolean => {

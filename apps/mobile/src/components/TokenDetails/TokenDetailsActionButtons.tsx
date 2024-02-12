@@ -23,13 +23,12 @@ function CTAButton({
         fill
         hapticFeedback
         color={tokenColor ? getContrastPassingTextColor(tokenColor) : '$sporeWhite'}
-        // eslint-disable-next-line react-native/no-inline-styles
         pressStyle={{ opacity: 0.6 }}
         // idk why this eslint warning is coming up because it auto-sorts it back on format to invalid order
         // eslint-disable-next-line react/jsx-sort-props
         onPress={onPress}
         size="large"
-        bg={validColor(tokenColor) ?? '$accent1'}>
+        backgroundColor={validColor(tokenColor) ?? '$accent1'}>
         {title}
       </Button>
     </Trace>
@@ -50,7 +49,7 @@ export function TokenDetailsActionButtons({
   return (
     <Flex
       row
-      bg="$surface1"
+      backgroundColor="$surface1"
       borderTopColor="$surface3"
       borderTopWidth={1}
       gap="$spacing8"

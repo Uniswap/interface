@@ -7,11 +7,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 export interface BehaviorHistoryState {
   hasViewedReviewScreen: boolean // used for hold to swap tip on swap UI
   hasSubmittedHoldToSwap: boolean
+  hasSkippedUnitagPrompt: boolean
 }
 
 export const initialBehaviorHistoryState: BehaviorHistoryState = {
   hasViewedReviewScreen: false,
   hasSubmittedHoldToSwap: false,
+  hasSkippedUnitagPrompt: false,
 }
 
 const slice = createSlice({
@@ -24,9 +26,13 @@ const slice = createSlice({
     setHasSubmittedHoldToSwap: (state, action: PayloadAction<boolean>) => {
       state.hasSubmittedHoldToSwap = action.payload
     },
+    setHasSkippedUnitagPrompt: (state, action: PayloadAction<boolean>) => {
+      state.hasSkippedUnitagPrompt = action.payload
+    },
   },
 })
 
-export const { setHasViewedReviewScreen, setHasSubmittedHoldToSwap } = slice.actions
+export const { setHasViewedReviewScreen, setHasSubmittedHoldToSwap, setHasSkippedUnitagPrompt } =
+  slice.actions
 
 export const behaviorHistoryReducer = slice.reducer

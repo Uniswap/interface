@@ -1,6 +1,7 @@
-import { Trans } from '@lingui/macro'
-import { createRef, useLayoutEffect, useMemo, useState } from 'react'
+import { t } from '@lingui/macro'
+import { createRef, useMemo, useState } from 'react'
 import styled from 'styled-components'
+import { Z_INDEX } from 'theme/zIndex'
 
 const togglePadding = 4
 
@@ -13,14 +14,8 @@ const OptionsSelector = styled.div`
   border-radius: 20px;
   height: 40px;
   padding: ${togglePadding}px;
-  width: fit-content;
+  width: 100%;
 `
-
-interface ActivePillStyle {
-  left?: string
-  width?: string
-  transition?: string
-}
 
 const ActivePill = styled.div`
   position: absolute;
@@ -44,12 +39,13 @@ const OptionButton = styled.button<{ active: boolean }>`
   cursor: pointer;
   color: ${({ theme, active }) => (active ? theme.neutral1 : theme.neutral2)};
   transition-duration: ${({ theme }) => theme.transition.duration.fast};
+  z-index: ${Z_INDEX.active};
   :hover {
     ${({ active, theme }) => !active && `opacity: ${theme.opacity.hover};`}
   }
 `
 
-interface PillMultiToggleOption {
+export interface PillMultiToggleOption {
   value: string // Value to be selected/stored, used as default display value
   display?: JSX.Element // Optional custom display element
 }
@@ -71,29 +67,34 @@ export default function PillMultiToggle({
   onSelectOption: (option: string) => void
 }) {
   const buttonRefs = useMemo(() => options.map(() => createRef<HTMLButtonElement>()), [options])
-  const [buttonSizing, setButtonSizing] = useState<{ [option: string]: ActivePillStyle }>({})
 
-  // Do active pill width/left calculations
-  useLayoutEffect(() => {
-    const sizeMap = buttonRefs.reduce((acc, ref, index) => {
-      const current = ref.current
-      const { value } = getPillMultiToggleOption(options[index])
-
-      acc[value] = { width: (current?.offsetWidth ?? 0) + 'px', left: (current?.offsetLeft ?? 0) + 'px' }
-      return acc
-    }, {} as { [option: string]: ActivePillStyle })
-    setButtonSizing(sizeMap)
-  }, [options, buttonRefs])
+  const [activeIndex, setActiveIndex] = useState(
+    options.map((o) => getPillMultiToggleOption(o).value).indexOf(currentSelected)
+  )
 
   return (
     <OptionsSelector>
-      <ActivePill style={buttonSizing[currentSelected]} />
+      <ActivePill
+        style={{
+          width: buttonRefs[activeIndex].current?.offsetWidth,
+          left: buttonRefs[activeIndex].current?.offsetLeft,
+        }}
+      />
       {options.map((option, i) => {
         const { value, display } = getPillMultiToggleOption(option)
         const ref = buttonRefs[i]
+
         return (
-          <OptionButton ref={ref} key={value} active={currentSelected === value} onClick={() => onSelectOption(value)}>
-            {display ?? <Trans>{value}</Trans>}
+          <OptionButton
+            ref={ref}
+            key={value}
+            active={currentSelected === value}
+            onClick={() => {
+              setActiveIndex(i)
+              onSelectOption(value)
+            }}
+          >
+            {display ?? <>{t`${value}`}</>}
           </OptionButton>
         )
       })}

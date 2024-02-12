@@ -1,13 +1,10 @@
 import { pick } from 'lodash'
-import { ComponentProps, forwardRef } from 'react'
-import { Flex, Sheet } from 'ui/src'
+import { ComponentProps } from 'react'
+import { Flex, Sheet, useSporeColors } from 'ui/src'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { BottomSheetContextProvider } from 'wallet/src/components/modals/BottomSheetContext'
-import {
-  BottomSheetModalProps,
-  BottomSheetModalRef,
-} from 'wallet/src/components/modals/BottomSheetModalProps'
+import { BottomSheetModalProps } from 'wallet/src/components/modals/BottomSheetModalProps'
 
 export type WebBottomSheetProps = Pick<
   BottomSheetModalProps,
@@ -16,25 +13,25 @@ export type WebBottomSheetProps = Pick<
   | 'onClose'
   | 'fullScreen'
   | 'backgroundColor'
-  | 'isModalOpen'
   | 'isDismissible'
+  | 'isModalOpen'
+  | 'isCentered'
 >
 
-export const BottomSheetModal = forwardRef<BottomSheetModalRef, BottomSheetModalProps>(
-  function _BottomSheetModal(props: BottomSheetModalProps): JSX.Element {
-    const supportedProps = pick(props, [
-      'name',
-      'onClose',
-      'fullScreen',
-      'backgroundColor',
-      'isModalOpen',
-      'children',
-      'isDismissible',
-    ])
+export function BottomSheetModal(props: BottomSheetModalProps): JSX.Element {
+  const supportedProps = pick(props, [
+    'name',
+    'onClose',
+    'fullScreen',
+    'backgroundColor',
+    'children',
+    'isDismissible',
+    'isModalOpen',
+    'isCentered',
+  ])
 
-    return <WebBottomSheetModal {...supportedProps} />
-  }
-)
+  return <WebBottomSheetModal {...supportedProps} />
+}
 
 // No detached mode necessary yet in web
 export function BottomSheetDetachedModal(props: BottomSheetModalProps): JSX.Element {
@@ -46,6 +43,7 @@ export function BottomSheetDetachedModal(props: BottomSheetModalProps): JSX.Elem
     'isModalOpen',
     'children',
     'isDismissible',
+    'isCentered',
   ])
 
   return <WebBottomSheetModal {...supportedProps} />
@@ -54,12 +52,15 @@ export function BottomSheetDetachedModal(props: BottomSheetModalProps): JSX.Elem
 function WebBottomSheetModal({
   children,
   name,
-  isModalOpen = true,
   onClose,
   fullScreen,
   backgroundColor,
   isDismissible = true,
+  isModalOpen = true,
+  isCentered = true,
 }: WebBottomSheetProps): JSX.Element {
+  const colors = useSporeColors()
+
   return (
     <Trace logImpression={isModalOpen} modal={name}>
       <BottomSheetContextProvider isSheetReady={true}>
@@ -70,15 +71,15 @@ function WebBottomSheetModal({
           dismissOnOverlayPress={false}
           dismissOnSnapToBottom={false}
           open={isModalOpen}
+          snapPoints={fullScreen || isCentered ? [100] : undefined}
           onOpenChange={(open: boolean): void => {
             !open && onClose?.()
           }}>
           <Sheet.Overlay
             animation="lazy"
-            backgroundColor="$transparent"
+            backgroundColor="$black"
             height="100%"
-            // eslint-disable-next-line react-native/no-inline-styles
-            style={{ backdropFilter: 'blur(6px)' }}
+            opacity={0.6}
             onPress={(): void => {
               isDismissible && onClose?.()
             }}
@@ -86,16 +87,13 @@ function WebBottomSheetModal({
           <Sheet.Frame
             backgroundColor="$transparent"
             flex={1}
-            justifyContent="flex-end"
+            height={fullScreen || isCentered ? '100%' : undefined}
+            justifyContent={isCentered ? 'center' : 'flex-end'}
             padding="$spacing12">
             <Flex
               borderRadius="$rounded24"
-              height={fullScreen ? '100%' : undefined}
               p="$spacing12"
-              shadowColor="$neutral3"
-              shadowOpacity={0.04}
-              shadowRadius="$spacing12"
-              style={{ backgroundColor }}
+              style={{ backgroundColor: backgroundColor ?? colors.surface1.val }}
               width="100%">
               {children}
             </Flex>

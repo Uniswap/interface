@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
-import { getTokenValue, Tokens } from 'ui/src'
+import { Tokens, getTokenValue } from 'ui/src'
 
 function _UniconThemedGradient({
   gradientStartColor,

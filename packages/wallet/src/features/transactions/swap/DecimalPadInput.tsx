@@ -82,6 +82,7 @@ export const DecimalPadInput = memo(
           // Prevent unnecessary re-renders and return the same value
           // if no key was updated (react state won't be updated if value is the
           // same as the previous one in terms of referential equality)
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           return isUpdated ? newDisabledKeys : prevDisabledKeys
         })
       },

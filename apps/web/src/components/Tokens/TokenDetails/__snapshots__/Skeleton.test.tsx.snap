@@ -15,7 +15,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  color: #222222;
+  color: #7D7D7D;
   font-size: 14px;
   line-height: 20px;
   -webkit-align-items: center;
@@ -23,7 +23,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   -ms-flex-align: center;
   align-items: center;
   gap: 4px;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -217,7 +217,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   -ms-flex-direction: column;
   flex-direction: column;
   height: 436px;
-  margin-bottom: :24px;
+  margin-bottom: 24px;
   -webkit-align-items: flex-start;
   -webkit-box-align: flex-start;
   -ms-flex-align: flex-start;
@@ -367,6 +367,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
 .c13 {
   margin-top: 4px;
   height: 40px;
+  width: 162px;
 }
 
 .c19 {

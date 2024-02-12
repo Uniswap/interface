@@ -1,11 +1,11 @@
 import { gql } from '@apollo/client'
 import { ChainId } from '@uniswap/sdk-core'
-import { chainToApolloClient } from 'graphql/thegraph/apollo'
 import {
   OrderDirection,
   Transaction_OrderBy,
   useTransactionsQuery,
 } from 'graphql/thegraph/__generated__/types-and-hooks'
+import { chainToApolloClient } from 'graphql/thegraph/apollo'
 import { useCallback, useMemo, useRef } from 'react'
 
 gql`
@@ -152,7 +152,7 @@ export function useRecentTransactions(
   filter: TransactionType[] = [TransactionType.SWAP, TransactionType.MINT, TransactionType.BURN]
 ) {
   const apolloClient = chainToApolloClient[chainId || ChainId.MAINNET]
-  const { data, loading, fetchMore } = useTransactionsQuery({
+  const { data, loading, fetchMore, error } = useTransactionsQuery({
     variables: {
       first: 20,
       skip: 0,
@@ -252,7 +252,8 @@ export function useRecentTransactions(
       transactions,
       loading,
       loadMore,
+      error,
     }),
-    [transactions, loading, loadMore]
+    [transactions, loading, loadMore, error]
   )
 }

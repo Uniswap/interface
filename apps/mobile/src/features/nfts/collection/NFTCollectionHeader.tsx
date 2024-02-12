@@ -107,7 +107,7 @@ export function NFTCollectionHeader({
         <Flex px="$spacing24" style={profileImageWrapperStyle}>
           <Flex
             alignItems="center"
-            bg="$surface1"
+            backgroundColor="$surface1"
             borderRadius="$roundedFull"
             height={PROFILE_IMAGE_WRAPPER_SIZE}
             justifyContent="center"
@@ -137,7 +137,7 @@ export function NFTCollectionHeader({
           pt="$spacing12"
           px="$spacing24"
           style={{ marginTop: PROFILE_IMAGE_WRAPPER_SIZE }}>
-          <Flex row ai="center" gap="$spacing8" mt="$spacing16">
+          <Flex row alignItems="center" gap="$spacing8" mt="$spacing16">
             <Text loading={loading} loadingPlaceholderText="Collection Name" variant="subheading1">
               {data?.name ?? '-'}
             </Text>

@@ -25,7 +25,7 @@ export function TransactionLoader({ opacity }: TransactionLoaderProps): JSX.Elem
           justifyContent="flex-start">
           <Flex
             centered
-            bg="$neutral3"
+            backgroundColor="$neutral3"
             borderRadius="$roundedFull"
             height={TXN_HISTORY_ICON_SIZE}
             width={TXN_HISTORY_ICON_SIZE}

@@ -170,6 +170,5 @@ export function parseScantasticParams(uri: string): ScantasticModalState {
   const vendor = new URLSearchParams(uri).get('vendor') || ''
   const model = new URLSearchParams(uri).get('model') || ''
   const browser = new URLSearchParams(uri).get('browser') || ''
-  const expiry = new URLSearchParams(uri).get('expiry') || ''
-  return { pubKey, uuid, expiry, vendor, model, browser }
+  return { pubKey, uuid, vendor, model, browser }
 }

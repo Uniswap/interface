@@ -16,11 +16,11 @@ import {
   validateUrlChainParam,
 } from 'graphql/data/util'
 import { ReactElement, useMemo } from 'react'
-import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { useExploreParams } from 'pages/Explore/redirects'
 import { DeltaArrow, DeltaText } from '../TokenDetails/Delta'
 
 const TableWrapper = styled.div`
@@ -47,6 +47,8 @@ interface TokenTableValues {
   volume: number
   sparkline: ReactElement
   link: string
+  /** Used for pre-loading TDP with logo to extract color from */
+  linkState: { preloadedLogoSrc?: string }
 }
 
 function TokenDescription({ token }: { token: TopToken }) {
@@ -60,7 +62,7 @@ function TokenDescription({ token }: { token: TopToken }) {
 }
 
 export function TopTokensTable() {
-  const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
+  const chainName = validateUrlChainParam(useExploreParams().chainName)
   const chainId = supportedChainIdFromGQLChain(chainName)
   const { tokens, tokenSortRank, loadingTokens, sparklines, error } = useTopTokens(chainName)
 
@@ -149,6 +151,7 @@ function TokenTable({
             chain: chainIdToBackendName(chainId),
             isInfoExplorePageEnabled: true,
           }),
+          linkState: { preloadedLogoSrc: token.project?.logoUrl },
         }
       }) ?? [],
     [chainId, formatDelta, sparklines, tokenSortRank, tokens]

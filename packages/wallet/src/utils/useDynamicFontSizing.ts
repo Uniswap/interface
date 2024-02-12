@@ -26,7 +26,8 @@ export function useDynamicFontSizing(
     (amount: string) => {
       const stringWidth = getStringWidth(amount, maxCharWidthAtMaxFontSize, fontSize, maxFontSize)
       const scaledSize = fontSize * (textInputElementWidthRef.current / stringWidth)
-      const scaledSizeWithMin = Math.max(scaledSize, minFontSize)
+      // If scaledSize = 0 then onLayout hasn't triggered yet and we should default to the largest size
+      const scaledSizeWithMin = scaledSize ? Math.max(scaledSize, minFontSize) : maxFontSize
       const newFontSize = Math.round(Math.min(maxFontSize, scaledSizeWithMin))
       setFontSize(newFontSize)
     },

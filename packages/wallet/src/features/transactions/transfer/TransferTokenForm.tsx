@@ -19,32 +19,32 @@ import {
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { usePrevious } from 'utilities/src/react/hooks'
+import { NFTTransfer } from 'wallet/src/components/NFT/NFTTransfer'
 import { TransferArrowButton } from 'wallet/src/components/buttons/TransferArrowButton'
 import { RecipientInputPanel } from 'wallet/src/components/input/RecipientInputPanel'
 import { TextInputProps } from 'wallet/src/components/input/TextInput'
 import { CurrencyInputPanelLegacy } from 'wallet/src/components/legacy/CurrencyInputPanelLegacy'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
-import { getAlertColor, WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { NFTTransfer } from 'wallet/src/components/NFT/NFTTransfer'
-import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
+import { WarningModal, getAlertColor } from 'wallet/src/components/modals/WarningModal/WarningModal'
+import {
+  Warning,
+  WarningAction,
+  WarningSeverity,
+} from 'wallet/src/features/transactions/WarningModal/types'
 import { useTokenFormActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenFormActionHandlers'
 import { useTokenSelectorActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenSelectorActionHandlers'
-import { useUSDTokenUpdater } from 'wallet/src/features/transactions/swap/hooks'
+import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
+import { useUSDTokenUpdater } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDTokenUpdater'
 import { transactionStateActions } from 'wallet/src/features/transactions/transactionState/transactionState'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { useOnToggleShowRecipientSelector } from 'wallet/src/features/transactions/transfer/hooks/useOnToggleShowRecipientSelector'
 import { TransferFormSpeedbumps } from 'wallet/src/features/transactions/transfer/TransferFormWarnings'
+import { useOnToggleShowRecipientSelector } from 'wallet/src/features/transactions/transfer/hooks/useOnToggleShowRecipientSelector'
 import {
   DerivedTransferInfo,
   TokenSelectorFlow,
   TransferSpeedbump,
 } from 'wallet/src/features/transactions/transfer/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
-import {
-  Warning,
-  WarningAction,
-  WarningSeverity,
-} from 'wallet/src/features/transactions/WarningModal/types'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
@@ -255,7 +255,8 @@ export function TransferTokenForm({
       <Flex grow gap="$spacing8" justifyContent="space-between">
         <AnimatedFlex
           entering={FadeIn}
-          exiting={FadeOut}
+          // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
+          exiting={isWeb ? undefined : FadeOut}
           gap="$spacing2"
           onLayout={onInputPanelLayout}>
           {nftIn ? (
@@ -304,7 +305,7 @@ export function TransferTokenForm({
                 alignItems="center"
                 bottom={TRANSFER_DIRECTION_BUTTON_SIZE / 2}
                 position="absolute">
-                <TransferArrowButton disabled bg="$surface2" padding="$spacing8" />
+                <TransferArrowButton disabled backgroundColor="$surface2" p="$spacing8" />
               </Flex>
             </Flex>
           </Flex>
@@ -395,7 +396,8 @@ export function TransferTokenForm({
 
         <AnimatedFlex
           bottom={0}
-          exiting={FadeOutDown}
+          // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
+          exiting={isWeb ? undefined : FadeOutDown}
           gap="$spacing8"
           left={0}
           opacity={isLayoutPending ? 0 : 1}

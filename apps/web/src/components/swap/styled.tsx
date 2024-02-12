@@ -4,6 +4,7 @@ import { AlertTriangle } from 'react-feather'
 import styled, { css } from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
+import { ButtonText } from 'theme/components'
 import { AutoColumn } from '../Column'
 
 export const PageWrapper = styled.div`
@@ -134,7 +135,6 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   color: ${({ theme }) => theme.accent1};
   padding: 12px;
   border-radius: 12px;
-  margin-top: 8px;
 `
 
 export const SwapSection = styled.div`
@@ -178,4 +178,19 @@ export const ArrowContainer = styled.div`
   justify-content: center;
   width: 100%;
   height: 100%;
+`
+
+export const SwapHeaderTabButton = styled(ButtonText)<{ $isActive: boolean }>`
+  color: ${({ theme, $isActive }) => ($isActive ? theme.neutral1 : theme.neutral2)};
+  background-color: ${({ theme, $isActive }) => $isActive && theme.surface2};
+  padding: 8px 16px;
+  border-radius: 20px;
+  gap: 4px;
+  font-weight: 485;
+  &:focus {
+    text-decoration: none;
+  }
+  &:active {
+    text-decoration: none;
+  }
 `

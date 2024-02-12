@@ -14,12 +14,14 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
   const navigateToAccountTokenList = useNavigateToHomepageTab(HomeScreenTabIndex.Tokens)
   const navigateToAccountActivityList = useNavigateToHomepageTab(HomeScreenTabIndex.Activity)
   const navigateToSwapFlow = useNavigateToSwapFlow()
+  const navigateToTokenDetails = useNavigateToTokenDetails()
 
   return (
     <WalletNavigationProvider
       navigateToAccountActivityList={navigateToAccountActivityList}
       navigateToAccountTokenList={navigateToAccountTokenList}
-      navigateToSwapFlow={navigateToSwapFlow}>
+      navigateToSwapFlow={navigateToSwapFlow}
+      navigateToTokenDetails={navigateToTokenDetails}>
       {children}
     </WalletNavigationProvider>
   )
@@ -44,5 +46,16 @@ function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
       dispatch(openModal({ name: ModalName.Swap, initialState }))
     },
     [dispatch]
+  )
+}
+
+function useNavigateToTokenDetails(): (currencyId: string) => void {
+  const navigation = useAppStackNavigation()
+
+  return useCallback(
+    (currencyId: string): void => {
+      navigation.navigate(Screens.TokenDetails, { currencyId })
+    },
+    [navigation]
   )
 }

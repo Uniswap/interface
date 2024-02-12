@@ -9,8 +9,6 @@ import {
 
 export function TransactionModal({
   children,
-  // fullscreen,
-  // modalName,
   onClose,
   openWalletRestoreModal,
   walletNeedsRestore,
@@ -19,7 +17,6 @@ export function TransactionModal({
     <Flex fill justifyContent="flex-end">
       <TransactionModalContextProvider
         bottomSheetViewStyles={{}}
-        handleContentLayout={(): void => undefined}
         openWalletRestoreModal={openWalletRestoreModal}
         walletNeedsRestore={walletNeedsRestore}
         onClose={onClose}>
@@ -30,16 +27,10 @@ export function TransactionModal({
 }
 
 export function TransactionModalInnerContainer({
-  // bottomSheetViewStyles,
-  onLayout,
   fullscreen,
   children,
 }: TransactionModalInnerContainerProps): JSX.Element {
-  return (
-    <Flex fill={fullscreen} onLayout={onLayout}>
-      {children}
-    </Flex>
-  )
+  return <Flex fill={fullscreen}>{children}</Flex>
 }
 
 export function TransactionModalFooterContainer({

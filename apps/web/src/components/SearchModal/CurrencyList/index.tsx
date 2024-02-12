@@ -20,15 +20,20 @@ import { TokenFromList } from '../../../state/lists/tokenFromList'
 import Column, { AutoColumn } from '../../Column'
 import CurrencyLogo from '../../Logo/CurrencyLogo'
 import Row, { RowFixed } from '../../Row'
-import { MouseoverTooltip } from '../../Tooltip'
+import { MouseoverTooltip, TooltipSize } from '../../Tooltip'
 import { LoadingRows, MenuItem } from '../styled'
 import { scrollbarStyle } from './index.css'
 
-function currencyKey(currency: Currency | CurrencyListSectionTitle): string {
-  if (currency instanceof CurrencyListSectionTitle) {
-    return currency.label
+function currencyKey(data: Currency | CurrencyListRow): string {
+  if (data instanceof CurrencyListSectionTitle) {
+    return data.label
   }
-  return currency.isToken ? currency.address : 'ETHER'
+
+  if (data instanceof CurrencyListRow) {
+    return data.currency?.isToken ? data.currency.address : 'ETHER'
+  }
+
+  return data.isToken ? data.address : 'ETHER'
 }
 
 const ROW_ITEM_SIZE = 56
@@ -126,6 +131,8 @@ export function CurrencyRow({
   showCurrencyAmount,
   eventProperties,
   balance,
+  disabled,
+  tooltip,
 }: {
   currency: Currency
   onSelect: (hasWarning: boolean) => void
@@ -135,6 +142,8 @@ export function CurrencyRow({
   showCurrencyAmount?: boolean
   eventProperties: Record<string, unknown>
   balance?: CurrencyAmount<Currency>
+  disabled?: boolean
+  tooltip?: string
 }) {
   const { account } = useWeb3React()
   const key = currencyKey(currency)
@@ -145,6 +154,8 @@ export function CurrencyRow({
   const { data } = useCachedPortfolioBalancesQuery({ account })
   const portfolioBalanceUsd = data?.portfolios?.[0].tokensTotalDenominatedValue?.value
 
+  const Wrapper = tooltip ? MouseoverTooltip : Row
+
   // only show add or remove buttons if not on selected list
   return (
     <TraceEvent
@@ -153,48 +164,54 @@ export function CurrencyRow({
       properties={{ is_imported_by_user: customAdded, ...eventProperties, total_balances_usd: portfolioBalanceUsd }}
       element={InterfaceElementName.TOKEN_SELECTOR_ROW}
     >
-      <MenuItem
-        tabIndex={0}
+      <Wrapper
         style={style}
-        className={`token-item-${key}`}
-        onKeyPress={(e) => (e.key === 'Enter' ? onSelect(!!warning) : null)}
-        onClick={() => onSelect(!!warning)}
-        selected={otherSelected || isSelected}
-        dim={isBlockedToken}
+        text={<ThemedText.Caption textAlign="center">{tooltip}</ThemedText.Caption>}
+        size={TooltipSize.ExtraSmall}
       >
-        <Column>
-          <CurrencyLogo
-            currency={currency}
-            size="36px"
-            style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}
-          />
-        </Column>
-        <AutoColumn style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}>
-          <Row>
-            <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
-            <WarningContainer>
-              <TokenSafetyIcon warning={warning} />
-            </WarningContainer>
-          </Row>
-          <ThemedText.LabelMicro ml="0px">{currency.symbol}</ThemedText.LabelMicro>
-        </AutoColumn>
-        <Column>
-          <RowFixed style={{ justifySelf: 'flex-end' }}>
-            <TokenTags currency={currency} />
-          </RowFixed>
-        </Column>
-        {showCurrencyAmount && (
-          <RowFixed style={{ justifySelf: 'flex-end' }}>
-            {account ? balance ? <Balance balance={balance} /> : <Loader /> : null}
-          </RowFixed>
-        )}
-      </MenuItem>
+        <MenuItem
+          tabIndex={0}
+          className={`token-item-${key}`}
+          onKeyPress={(e) => (e.key === 'Enter' ? onSelect(!!warning) : null)}
+          onClick={() => onSelect(!!warning)}
+          selected={otherSelected || isSelected}
+          dim={isBlockedToken}
+          disabled={disabled}
+        >
+          <Column>
+            <CurrencyLogo
+              currency={currency}
+              size="36px"
+              style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}
+            />
+          </Column>
+          <AutoColumn style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}>
+            <Row>
+              <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
+              <WarningContainer>
+                <TokenSafetyIcon warning={warning} />
+              </WarningContainer>
+            </Row>
+            <ThemedText.LabelMicro ml="0px">{currency.symbol}</ThemedText.LabelMicro>
+          </AutoColumn>
+          <Column>
+            <RowFixed style={{ justifySelf: 'flex-end' }}>
+              <TokenTags currency={currency} />
+            </RowFixed>
+          </Column>
+          {showCurrencyAmount && (
+            <RowFixed style={{ justifySelf: 'flex-end' }}>
+              {account ? balance ? <Balance balance={balance} /> : <Loader /> : null}
+            </RowFixed>
+          )}
+        </MenuItem>
+      </Wrapper>
     </TraceEvent>
   )
 }
 
 interface TokenRowProps {
-  data: Array<Currency>
+  data: Array<CurrencyListRow>
   index: number
   style: CSSProperties
 }
@@ -227,17 +244,23 @@ const LoadingRow = () => (
 )
 
 /**
+ * This is used to display disabled currencies in the list.
+ */
+export class CurrencyListRow {
+  constructor(
+    public readonly currency: Currency | undefined,
+    public readonly disabled: boolean,
+    public readonly tooltip?: string
+  ) {}
+}
+
+/**
  * This is used to intersperse section titles into the list without needing to break up the data array
  * and render multiple lists.
  */
-export class CurrencyListSectionTitle {
-  private _label: string
-  constructor(label: string) {
-    this._label = label
-  }
-
-  get label(): string {
-    return this._label
+export class CurrencyListSectionTitle extends CurrencyListRow {
+  constructor(public readonly label: string) {
+    super(undefined, false)
   }
 }
 
@@ -255,7 +278,7 @@ export default function CurrencyList({
   balances,
 }: {
   height: number
-  currencies: Array<Currency | CurrencyListSectionTitle>
+  currencies: Array<CurrencyListRow>
   selectedCurrency?: Currency | null
   onCurrencySelect: (currency: Currency, hasWarning?: boolean) => void
   otherCurrency?: Currency | null
@@ -265,19 +288,25 @@ export default function CurrencyList({
   searchQuery: string
   isAddressSearch: string | false
   balances: TokenBalances
+  disabled?: boolean
 }) {
   const Row = useCallback(
     function TokenRow({ data, index, style }: TokenRowProps) {
-      const row: Currency = data[index]
-      const currency = row
+      const row: CurrencyListRow = data[index]
 
-      if (currency instanceof CurrencyListSectionTitle) {
+      if (row instanceof CurrencyListSectionTitle) {
         return (
           <LabelContainer style={style}>
-            <ThemedText.BodySecondary>{currency.label}</ThemedText.BodySecondary>
+            <ThemedText.BodySecondary>{row.label}</ThemedText.BodySecondary>
           </LabelContainer>
         )
       }
+
+      if (!row.currency) {
+        return null
+      }
+
+      const currency: Currency = row.currency
 
       const balance =
         tryParseCurrencyAmount(
@@ -304,6 +333,8 @@ export default function CurrencyList({
             showCurrencyAmount={showCurrencyAmount && balance.greaterThan(0)}
             eventProperties={formatAnalyticsEventProperties(token, index, data, searchQuery, isAddressSearch)}
             balance={balance}
+            disabled={row.disabled}
+            tooltip={row.tooltip}
           />
         )
       } else {

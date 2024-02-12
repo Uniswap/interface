@@ -11,19 +11,19 @@ const PriceContainer = styled(motion.div)`
   flex-direction: column;
   justify-content: center;
 `
-const TickerText = styled(motion.div)<{ tickerPosition: TickerPosition }>`
+const TickerText = styled(motion.div)<{ $tickerPosition: TickerPosition }>`
   font-size: 14px;
   font-weight: 500;
   color: ${(props) => `${props.color}`};
-  text-align: ${({ tickerPosition }) => (tickerPosition === TickerPosition.RIGHT ? 'left' : 'right')};
+  text-align: ${({ $tickerPosition }) => ($tickerPosition === TickerPosition.RIGHT ? 'left' : 'right')};
 `
-const TickerContainer = styled(motion.div)<{ tickerPosition: TickerPosition; size: number }>`
+const TickerContainer = styled(motion.div)<{ $tickerPosition: TickerPosition; size: number }>`
   pointer-events: none;
   position: absolute;
   display: flex;
   flex-direction: row;
-  ${({ tickerPosition, size }) =>
-    tickerPosition === TickerPosition.RIGHT ? `left: ${size * 1.25}px` : `right: ${size * 0.6}px`};
+  ${({ $tickerPosition, size }) =>
+    $tickerPosition === TickerPosition.RIGHT ? `left: ${size * 1.25}px` : `right: ${size * 0.6}px`};
   gap: 20px;
 `
 const PricePercentChange = styled(motion.div)`
@@ -50,11 +50,11 @@ export function Ticker(props: {
       initial="rest"
       variants={priceVariants}
       animate={props.animate}
-      tickerPosition={props.tickerPosition}
+      $tickerPosition={props.tickerPosition}
       size={props.size}
     >
       <PriceContainer>
-        <TickerText color={props.color} tickerPosition={props.tickerPosition}>
+        <TickerText color={props.color} $tickerPosition={props.tickerPosition}>
           {props.ticker}
         </TickerText>
         <PricePercentChange>

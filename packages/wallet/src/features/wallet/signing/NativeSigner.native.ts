@@ -1,6 +1,6 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { _TypedDataEncoder } from '@ethersproject/hash'
-import { Bytes, providers, Signer, UnsignedTransaction, utils } from 'ethers'
+import { Bytes, Signer, UnsignedTransaction, providers, utils } from 'ethers'
 import { hexlify } from 'ethers/lib/utils'
 import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'

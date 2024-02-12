@@ -6,14 +6,14 @@ import {
   LocalizationContextState,
   useLocalizationContext,
 } from 'wallet/src/features/language/LocalizationContext'
+import { QuoteData, Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
-import { QuoteData, Trade } from 'wallet/src/features/transactions/swap/useTrade'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { SwapTradeBaseProperties } from 'wallet/src/telemetry/types'
 import { currencyAddress, getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
-import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 // hook-based analytics because this one is data-lifecycle dependent
 export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {

@@ -63,7 +63,7 @@ export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): J
     ) : (
       <Flex
         centered
-        bg="$surface2"
+        backgroundColor="$surface2"
         borderRadius="$rounded4"
         height={size}
         overflow="hidden"

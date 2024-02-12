@@ -58,7 +58,7 @@ const SitePermissions = (): JSX.Element => {
 
   return (
     <Flex
-      bg="$surface2"
+      backgroundColor="$surface2"
       borderTopLeftRadius="$rounded16"
       borderTopRightRadius="$rounded16"
       gap="$spacing12"
@@ -115,7 +115,7 @@ const NetworksRow = ({ chains }: { chains: ChainId[] }): JSX.Element => {
       row
       shrink
       alignItems="center"
-      bg="$surface2"
+      backgroundColor="$surface2"
       justifyContent="space-between"
       px="$spacing16"
       py="$spacing12">
@@ -146,7 +146,7 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps):
 
   return (
     <TouchableArea
-      bg="$surface2"
+      backgroundColor="$surface2"
       borderBottomLeftRadius="$rounded16"
       borderBottomRightRadius="$rounded16"
       disabled={!accountIsSwitchable}
@@ -243,14 +243,13 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
   return (
     <BottomSheetModal name={ModalName.WCPendingConnection} onClose={onClose}>
       <AnimatedFlex
-        fill
         backgroundColor="$surface1"
         borderRadius="$rounded12"
         gap="$spacing16"
         overflow="hidden"
         pb="$spacing12"
         pt="$spacing32">
-        <Flex fill alignItems="center" gap="$spacing16" justifyContent="flex-end">
+        <Flex alignItems="center" gap="$spacing16" justifyContent="flex-end">
           <DappHeaderIcon dapp={pendingSession.dapp} />
           <Text
             $short={{ variant: 'subheading2' }}

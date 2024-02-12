@@ -427,6 +427,14 @@ export const v57Schema = {
   },
 }
 
+export const v58Schema = {
+  ...v57Schema,
+  behaviorHistory: {
+    ...v57Schema.behaviorHistory,
+    hasSkippedUnitagPrompt: false,
+  },
+}
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
 export const getSchema = (): typeof v57Schema => v57Schema

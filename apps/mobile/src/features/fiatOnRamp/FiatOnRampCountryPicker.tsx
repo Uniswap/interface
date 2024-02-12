@@ -3,7 +3,7 @@ import { SvgUri } from 'react-native-svg'
 import Trace from 'src/components/Trace/Trace'
 import { Flex, Icons, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { getCountryFlagSvgUrl } from 'wallet/src/features/fiatOnRamp/meld'
+import { getCountryFlagSvgUrl } from 'wallet/src/features/fiatOnRamp/utils'
 import { ElementName } from 'wallet/src/telemetry/constants'
 
 const ICON_SIZE = iconSizes.icon16

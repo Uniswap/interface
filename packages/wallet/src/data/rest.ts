@@ -13,7 +13,7 @@ import {
 } from '@apollo/client'
 import { useEffect, useMemo } from 'react'
 import { GqlResult } from 'wallet/src/features/dataApi/types'
-import { ROUTING_API_PATH } from 'wallet/src/features/routing/api'
+import { ROUTING_API_PATH } from 'wallet/src/features/transactions/swap/trade/legacy/api'
 
 /** Wrapper around Apollo client `useQuery` that calls REST APIs */
 export function useRestQuery<

@@ -2,8 +2,7 @@ import { impactAsync } from 'expo-haptics'
 import { useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { AnimatePresence, Flex, Icons, Text, TouchableArea } from 'ui/src'
-import Unitag from 'ui/src/assets/graphics/unitag.svg'
-import { iconSizes, IconSizeTokens, spacing } from 'ui/src/theme'
+import { IconSizeTokens } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
@@ -20,7 +19,7 @@ type AnimatedUnitagDisplayNameProps = {
 
 export function AnimatedUnitagDisplayName({
   displayName,
-  unitagIconSize = iconSizes.icon24,
+  unitagIconSize = '$icon.24',
   address,
 }: AnimatedUnitagDisplayNameProps): JSX.Element {
   const dispatch = useAppDispatch()
@@ -54,14 +53,14 @@ export function AnimatedUnitagDisplayName({
   return (
     <Flex onPress={isUnitag ? onPressUnitag : undefined}>
       <Flex row>
-        <Text color={isUnitag ? '$accent1' : '$neutral1'} variant="subheading1">
+        <Text color="$neutral1" variant="subheading1">
           {displayName.name}
         </Text>
         <AnimatePresence>
-          <Flex row animation="quick" marginLeft={-textWidth} x={showUnitagSuffix ? textWidth : 0}>
+          <Flex row animation="semiBouncy" ml={-textWidth} x={showUnitagSuffix ? textWidth : 0}>
             <Flex onLayout={onTextLayout}>
               <Text
-                animation="quick"
+                animation="semiBouncy"
                 color="$neutral3"
                 opacity={showUnitagSuffix ? 1 : 0}
                 variant="subheading1">
@@ -69,8 +68,8 @@ export function AnimatedUnitagDisplayName({
               </Text>
             </Flex>
             {isUnitag ? (
-              <Flex animation="quick" mt={-spacing.spacing2} pl="$spacing2">
-                <Unitag height={unitagIconSize} width={unitagIconSize} />
+              <Flex animation="semiBouncy" pl="$spacing2">
+                <Icons.Unitag size={unitagIconSize} />
               </Flex>
             ) : null}
             {address && (

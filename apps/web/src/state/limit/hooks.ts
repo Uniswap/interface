@@ -8,11 +8,12 @@ import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import ms from 'ms'
 import { useEffect, useMemo, useState } from 'react'
 import { getWrapInfo } from 'state/routing/gas'
-import { LimitOrderTrade, RouterPreference, SubmittableTrade, WrapInfo } from 'state/routing/types'
+import { LimitOrderTrade, RouterPreference, SubmittableTrade, SwapFeeInfo, WrapInfo } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getUSDCostPerGas, isClassicTrade } from 'state/routing/utils'
 import { useSwapAndLimitContext } from 'state/swap/SwapContext'
 
+import { useLimitsFeesEnabled } from 'featureFlags/flags/limitsFees'
 import { Expiry, LimitState } from './LimitContext'
 
 export type LimitInfo = {
@@ -21,6 +22,7 @@ export type LimitInfo = {
   parsedLimitPrice?: Price<Currency, Currency>
   limitOrderTrade?: LimitOrderTrade
   marketPrice?: Price<Currency, Currency>
+  fee?: SwapFeeInfo
 }
 
 const DAY_SECS = ms('1d') / 1000
@@ -40,7 +42,7 @@ export function expiryToDeadlineSeconds(expiry: Expiry): number {
 
 export function useDerivedLimitInfo(state: LimitState): LimitInfo {
   const { account } = useWeb3React()
-  const { inputAmount, outputAmount } = state
+  const { inputAmount, outputAmount, limitPriceInverted } = state
   const {
     currencyState: { inputCurrency, outputCurrency },
   } = useSwapAndLimitContext()
@@ -63,41 +65,64 @@ export function useDerivedLimitInfo(state: LimitState): LimitInfo {
       return undefined
     }
 
-    const parsedLimitPriceOutputAmount = tryParseCurrencyAmount(state.limitPrice, outputCurrency)
-    if (!parsedLimitPriceOutputAmount) {
-      return undefined
-    }
+    if (limitPriceInverted) {
+      const parsedLimitPriceInputAmount = tryParseCurrencyAmount(state.limitPrice, inputCurrency)
+      if (!parsedLimitPriceInputAmount) {
+        return undefined
+      }
 
-    return new Price(
-      inputCurrency,
-      outputCurrency,
-      JSBI.BigInt(10 ** inputCurrency.decimals),
-      parsedLimitPriceOutputAmount.quotient
-    )
-  }, [inputCurrency, outputCurrency, state.limitPrice])
+      return new Price(
+        outputCurrency,
+        inputCurrency,
+        JSBI.BigInt(10 ** outputCurrency.decimals),
+        parsedLimitPriceInputAmount.quotient
+      )
+    } else {
+      const parsedLimitPriceOutputAmount = tryParseCurrencyAmount(state.limitPrice, outputCurrency)
+      if (!parsedLimitPriceOutputAmount) {
+        return undefined
+      }
+
+      return new Price(
+        inputCurrency,
+        outputCurrency,
+        JSBI.BigInt(10 ** inputCurrency.decimals),
+        parsedLimitPriceOutputAmount.quotient
+      )
+    }
+  }, [inputCurrency, limitPriceInverted, outputCurrency, state.limitPrice])
 
   const parsedAmounts = useMemo(() => {
     let parsedInputAmount
     let parsedOutputAmount
+    const limitPrice = limitPriceInverted ? parsedLimitPrice?.invert() : parsedLimitPrice
     if (state.isInputAmountFixed) {
       parsedInputAmount = tryParseCurrencyAmount(inputAmount, inputCurrency)
-      parsedOutputAmount = !parsedLimitPrice
+      parsedOutputAmount = !limitPrice
         ? tryParseCurrencyAmount(outputAmount, outputCurrency)
-        : parsedInputAmount && parsedLimitPrice.quote(parsedInputAmount)
+        : parsedInputAmount && limitPrice.quote(parsedInputAmount)
     } else {
       parsedOutputAmount = tryParseCurrencyAmount(outputAmount, outputCurrency)
-      parsedInputAmount = !parsedLimitPrice
+      parsedInputAmount = !limitPrice
         ? tryParseCurrencyAmount(inputAmount, inputCurrency)
-        : parsedOutputAmount && parsedLimitPrice.invert().quote(parsedOutputAmount)
+        : parsedOutputAmount && limitPrice.invert().quote(parsedOutputAmount)
     }
 
     return {
       [Field.INPUT]: parsedInputAmount,
       [Field.OUTPUT]: parsedOutputAmount,
     }
-  }, [inputAmount, inputCurrency, outputAmount, outputCurrency, parsedLimitPrice, state.isInputAmountFixed])
+  }, [
+    inputAmount,
+    inputCurrency,
+    limitPriceInverted,
+    outputAmount,
+    outputCurrency,
+    parsedLimitPrice,
+    state.isInputAmountFixed,
+  ])
 
-  const marketPrice = useMarketPrice(inputCurrency, outputCurrency)
+  const { marketPrice, fee: swapFee } = useMarketPriceAndFee(inputCurrency, outputCurrency)
 
   const skip = !(inputCurrency && outputCurrency)
 
@@ -115,9 +140,16 @@ export function useDerivedLimitInfo(state: LimitState): LimitInfo {
     outputAmount: parsedAmounts[Field.OUTPUT],
     trade,
     state,
+    swapFee,
   })
 
-  return { currencyBalances, parsedAmounts, parsedLimitPrice, limitOrderTrade, marketPrice }
+  return {
+    currencyBalances,
+    parsedAmounts,
+    parsedLimitPrice,
+    limitOrderTrade,
+    marketPrice,
+  }
 }
 
 function useLimitOrderTrade({
@@ -126,12 +158,14 @@ function useLimitOrderTrade({
   inputCurrency,
   parsedAmounts,
   outputAmount,
+  swapFee,
 }: {
   state: LimitState
   trade?: SubmittableTrade
   inputCurrency?: Currency
   parsedAmounts: { [field in Field]?: CurrencyAmount<Currency> }
   outputAmount?: CurrencyAmount<Currency>
+  swapFee?: SwapFeeInfo
 }) {
   const { account } = useWeb3React()
   const [wrapInfo, setWrapInfo] = useState<WrapInfo>()
@@ -172,8 +206,9 @@ function useLimitOrderTrade({
       approveInfo: { needsApprove: false },
       swapper: account,
       deadlineBufferSecs: expiryToDeadlineSeconds(state.expiry),
+      swapFee,
     })
-  }, [account, outputAmount, inputCurrency, parsedAmounts, state.expiry, wrapInfo])
+  }, [account, outputAmount, inputCurrency, parsedAmounts, state.expiry, wrapInfo, swapFee])
 
   return limitOrderTrade
 }
@@ -182,10 +217,10 @@ function isNativeOrWrappedNative(currency: Currency) {
   return currency.isNative || nativeOnChain(currency.chainId).wrapped.equals(currency)
 }
 
-function useMarketPrice(
+function useMarketPriceAndFee(
   inputCurrency: Currency | undefined,
   outputCurrency: Currency | undefined
-): Price<Currency, Currency> | undefined {
+): { marketPrice?: Price<Currency, Currency>; fee?: SwapFeeInfo } {
   const skip = !(inputCurrency && outputCurrency)
   // TODO(limits): update amount for MATIC and CELO once Limits are supported on those chains
   const baseCurrencyAmount =
@@ -206,12 +241,12 @@ function useMarketPrice(
     RouterPreference.API
   )
 
-  return useMemo(() => {
+  const marketPrice: Price<Currency, Currency> | undefined = useMemo(() => {
     if (skip) return undefined
 
     // if one of the currencies is ETH or WETH, just use the spot price from one of the Trade objects
     if (isNativeOrWrappedNative(inputCurrency)) {
-      if (!tradeB?.outputAmount.currency.equals(outputCurrency) || !isClassicTrade(tradeB)) return
+      if (!tradeB?.outputAmount.currency.equals(outputCurrency) || !isClassicTrade(tradeB)) return undefined
 
       const referencePrice = tradeB.routes[0]?.midPrice
       // reconstruct Price object using correct currency between ETH or WETH
@@ -220,7 +255,7 @@ function useMarketPrice(
 
     // same thing but for output currency being ETH or WETH
     if (isNativeOrWrappedNative(outputCurrency)) {
-      if (!tradeA?.inputAmount.currency.equals(inputCurrency) || !isClassicTrade(tradeA)) return
+      if (!tradeA?.inputAmount.currency.equals(inputCurrency) || !isClassicTrade(tradeA)) return undefined
 
       const referencePrice = tradeA.routes[0]?.midPrice
       return new Price(inputCurrency, outputCurrency, referencePrice.denominator, referencePrice.numerator)
@@ -240,4 +275,29 @@ function useMarketPrice(
     // Combine spot prices of A -> ETH and ETH -> B to get a price for A -> B
     return priceA.multiply(priceB)
   }, [inputCurrency, outputCurrency, skip, tradeA, tradeB])
+
+  const feesEnabled = useLimitsFeesEnabled()
+  const fee = useMemo(() => {
+    if (!marketPrice || !inputCurrency || !outputCurrency || !feesEnabled) return undefined
+
+    if (isNativeOrWrappedNative(inputCurrency)) {
+      if (!tradeB?.outputAmount.currency.equals(outputCurrency) || !isClassicTrade(tradeB)) return undefined
+
+      return tradeB.swapFee
+    }
+
+    if (isNativeOrWrappedNative(outputCurrency)) {
+      if (!tradeA?.inputAmount.currency.equals(inputCurrency) || !isClassicTrade(tradeA)) return undefined
+
+      return tradeA.swapFee
+    }
+
+    if (!tradeA || !tradeB) return undefined
+
+    // This currency pair is only eligible for fees iff both tradeA and tradeB are eligible for fees
+    const canTakeFees = tradeA.swapFee?.percent.greaterThan(0) && tradeB.swapFee?.percent.greaterThan(0)
+    return canTakeFees ? tradeB.swapFee : undefined
+  }, [inputCurrency, outputCurrency, marketPrice, tradeA, tradeB, feesEnabled])
+
+  return useMemo(() => ({ marketPrice, fee }), [marketPrice, fee])
 }

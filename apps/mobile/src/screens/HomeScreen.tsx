@@ -8,9 +8,9 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, StyleProp, View, ViewProps, ViewStyle } from 'react-native'
 import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-gesture-handler'
 import Animated, {
-  cancelAnimation,
   FadeIn,
   FadeOut,
+  cancelAnimation,
   interpolateColor,
   runOnJS,
   useAnimatedGestureHandler,
@@ -25,27 +25,26 @@ import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { AppStackScreenProp } from 'src/app/navigation/types'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import Trace from 'src/components/Trace/Trace'
+import TraceTabView from 'src/components/Trace/TraceTabView'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { pulseAnimation } from 'src/components/buttons/utils'
-import { ActivityTab, ACTIVITY_TAB_DATA_DEPENDENCIES } from 'src/components/home/ActivityTab'
-import { FeedTab, FEED_TAB_DATA_DEPENDENCIES } from 'src/components/home/FeedTab'
-import { NftsTab, NFTS_TAB_DATA_DEPENDENCIES } from 'src/components/home/NftsTab'
-import { TokensTab, TOKENS_TAB_DATA_DEPENDENCIES } from 'src/components/home/TokensTab'
+import { ACTIVITY_TAB_DATA_DEPENDENCIES, ActivityTab } from 'src/components/home/ActivityTab'
+import { FEED_TAB_DATA_DEPENDENCIES, FeedTab } from 'src/components/home/FeedTab'
+import { NFTS_TAB_DATA_DEPENDENCIES, NftsTab } from 'src/components/home/NftsTab'
+import { TOKENS_TAB_DATA_DEPENDENCIES, TokensTab } from 'src/components/home/TokensTab'
 import { Screen } from 'src/components/layout/Screen'
 import {
   HeaderConfig,
-  renderTabLabel,
   ScrollPair,
-  TabContentProps,
   TAB_BAR_HEIGHT,
   TAB_STYLES,
   TAB_VIEW_SCROLL_THROTTLE,
+  TabContentProps,
+  renderTabLabel,
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
-import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
-import { TokenBalanceListRow } from 'src/components/TokenBalanceList/TokenBalanceListContext'
-import Trace from 'src/components/Trace/Trace'
-import TraceTabView from 'src/components/Trace/TraceTabView'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
@@ -74,10 +73,13 @@ import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval, useTimeout } from 'utilities/src/time/timing'
+import { selectHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/selectors'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
+import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
+import { useUnitagUpdater } from 'wallet/src/features/unitags/context'
 import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -108,6 +110,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const isFocused = useIsFocused()
   const isModalOpen = useAppSelector(selectSomeModalOpen)
   const isHomeScreenBlur = !isFocused || isModalOpen
+
+  const hasSkippedUnitagPrompt = useAppSelector(selectHasSkippedUnitagPrompt)
 
   const showFeedTab = useFeatureFlag(FEATURE_FLAGS.FeedTab)
   // opens the wallet restore modal if recovery phrase is missing after the app is opened
@@ -314,13 +318,15 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     )
   }, [dispatch])
   const onPressSend = useCallback(() => dispatch(openModal({ name: ModalName.Send })), [dispatch])
-  const onPressReceive = useCallback(
-    () =>
+  const onPressReceive = useCallback(() => {
+    if (forAggregatorEnabled) {
+      dispatch(openModal({ name: ModalName.ReceiveCryptoModal }))
+    } else {
       dispatch(
         openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
-      ),
-    [dispatch]
-  )
+      )
+    }
+  }, [dispatch, forAggregatorEnabled])
   const onPressViewOnlyLabel = useCallback(
     () => dispatch(openModal({ name: ModalName.ViewOnlyExplainer })),
     [dispatch]
@@ -380,11 +386,22 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     ]
   )
 
-  const hasClaimEligibility = useCanActiveAddressClaimUnitag()
+  const { refetchUnitagsCounter } = useUnitagUpdater()
+  const { canClaimUnitag, refetch: refetchCanActiveAddressClaimUnitag } =
+    useCanActiveAddressClaimUnitag()
+
+  // Force refetch of canClaimUnitag if refetchUnitagsCounter changes
+  useEffect(() => {
+    refetchCanActiveAddressClaimUnitag?.()
+  }, [refetchUnitagsCounter, refetchCanActiveAddressClaimUnitag])
+
+  const shouldPromptUnitag =
+    activeAccount.type === AccountType.SignerMnemonic && !hasSkippedUnitagPrompt && canClaimUnitag
+
   const viewOnlyLabel = t('This is a view-only wallet')
   const contentHeader = useMemo(() => {
     return (
-      <Flex bg="$surface1" gap="$spacing8" pb="$spacing16" px="$spacing24">
+      <Flex backgroundColor="$surface1" gap="$spacing8" pb="$spacing16" px="$spacing24">
         <AccountHeader />
         <Flex pb="$spacing8">
           <PortfolioBalance owner={activeAccount.address} />
@@ -393,16 +410,22 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
           <QuickActions actions={actions} sentry-label="QuickActions" />
         ) : (
           <TouchableArea hapticFeedback mt="$spacing16" onPress={onPressViewOnlyLabel}>
-            <Flex centered row bg="$surface2" br="$rounded12" minHeight={40} p="$spacing8">
+            <Flex
+              centered
+              row
+              backgroundColor="$surface2"
+              borderRadius="$rounded12"
+              minHeight={40}
+              p="$spacing8">
               <Text allowFontScaling={false} color="$neutral2" variant="body2">
                 {viewOnlyLabel}
               </Text>
             </Flex>
           </TouchableArea>
         )}
-        {hasClaimEligibility && (
+        {shouldPromptUnitag && (
           <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-            <UnitagBanner />
+            <UnitagBanner address={activeAccount.address} />
           </AnimatedFlex>
         )}
       </Flex>
@@ -410,10 +433,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   }, [
     activeAccount.address,
     isSignerAccount,
-    viewOnlyLabel,
     actions,
-    hasClaimEligibility,
     onPressViewOnlyLabel,
+    viewOnlyLabel,
+    shouldPromptUnitag,
   ])
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(

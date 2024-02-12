@@ -27,7 +27,7 @@ import {
 } from '../constants'
 import { LoadingBubble } from '../loading'
 import {
-  filterStringAtom,
+  exploreSearchStringAtom,
   filterTimeAtom,
   sortAscendingAtom,
   sortMethodAtom,
@@ -450,7 +450,7 @@ export const LoadedRow = forwardRef((props: LoadedRowProps, ref: ForwardedRef<HT
   const { formatFiatPrice, formatNumber, formatDelta } = useFormatter()
 
   const { tokenListIndex, tokenListLength, token, sortRank } = props
-  const filterString = useAtomValue(filterStringAtom)
+  const filterString = useAtomValue(exploreSearchStringAtom)
 
   const filterNetwork = validateUrlChainParam(useParams<{ chainName?: string }>().chainName?.toUpperCase())
   const chainId = supportedChainIdFromGQLChain(filterNetwork)

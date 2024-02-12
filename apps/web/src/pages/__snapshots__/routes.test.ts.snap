@@ -16,14 +16,6 @@ Array [
     "nestedPaths": Array [
       ":tab",
       ":chainName",
-    ],
-    "path": "/explore",
-  },
-  Object {
-    "enabled": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": Array [
       ":tab/:chainName",
     ],
     "path": "/explore",

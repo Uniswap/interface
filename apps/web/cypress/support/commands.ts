@@ -20,7 +20,7 @@ declare global {
        * @param {number} timeout - The maximum amount of time (in ms) to wait for the event.
        * @returns {Chainable<Subject>}
        */
-      waitForAmplitudeEvent(eventName: string, timeout?: number): Chainable<Subject>
+      waitForAmplitudeEvent(eventName: string, requiredProperties?: string[]): Chainable<Subject>
     }
     interface VisitOptions {
       serviceWorker?: true
@@ -74,18 +74,25 @@ Cypress.Commands.overwrite(
   }
 )
 
-Cypress.Commands.add('waitForAmplitudeEvent', (eventName) => {
-  function checkRequest() {
-    return cy.wait('@amplitude').then((interception) => {
-      const events = interception.request.body.events
-      const event = events.find((event: any) => event.event_type === eventName)
-
-      if (event) {
-        return cy.wrap(event)
-      } else {
-        return checkRequest()
+Cypress.Commands.add('waitForAmplitudeEvent', (eventName, requiredProperties) => {
+  function findAndDiscardEventsUpToTarget() {
+    const events = Cypress.env('amplitudeEventCache')
+    const targetEventIndex = events.findIndex((event) => {
+      if (event.event_type !== eventName) return false
+      if (requiredProperties) {
+        return requiredProperties.every((prop) => event.event_properties[prop])
       }
+      return true
     })
+
+    if (targetEventIndex !== -1) {
+      const event = events[targetEventIndex]
+      Cypress.env('amplitudeEventCache', events.slice(targetEventIndex + 1))
+      return cy.wrap(event)
+    } else {
+      // If not found, retry after waiting for more events to be sent.
+      return cy.wait('@amplitude').then(findAndDiscardEventsUpToTarget)
+    }
   }
-  return checkRequest()
+  return findAndDiscardEventsUpToTarget()
 })

@@ -53,9 +53,11 @@ export function DocumentationCard(props: WebappCardProps) {
       backgroundColor={{ dark: 'rgba(0, 195, 160, 0.08);', light: 'rgba(0, 195, 160, 0.06);' }}
       isDarkMode={props.isDarkMode}
       textColor={primary}
-      button={<PillButton color={primary} label="Developer docs" icon={<CodeBrackets size="24px" fill={primary} />} />}
+      button={
+        <PillButton color={primary} label={t`Developer docs`} icon={<CodeBrackets size="24px" fill={primary} />} />
+      }
       titleText={t`Build the next generation of open applications and tools.`}
-      paddingRight={screenIsXLarge ? '12.5%' : '0%'}
+      paddingRight={screenIsXLarge ? '16%' : '0%'}
       alignTextToBottom
     >
       <Contents>

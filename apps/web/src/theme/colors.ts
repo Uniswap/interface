@@ -164,6 +164,7 @@ export const darkTheme = {
   neutral1: colors.neutral1_dark,
   neutral2: colors.neutral2_dark,
   neutral3: colors.neutral3_dark,
+  neutralContrast: colors.white,
 
   surface1: colors.surface1_dark,
   surface2: colors.surface2_dark,
@@ -174,9 +175,15 @@ export const darkTheme = {
   accent1: colors.accent1_dark,
   accent2: colors.accent2_dark,
   accent3: colors.accent3_dark,
+
+  token0: colors.accent1_dark,
+  token1: colors.accent3_dark,
+
   success: colors.success,
   critical: colors.critical,
   scrim: colors.scrim,
+
+  warning2: colors.gold200,
 }
 
 export const lightTheme: ThemeColors = {
@@ -187,6 +194,7 @@ export const lightTheme: ThemeColors = {
   neutral1: colors.neutral1_light,
   neutral2: colors.neutral2_light,
   neutral3: colors.neutral3_light,
+  neutralContrast: colors.white,
 
   surface1: colors.surface1_light,
   surface2: colors.surface2_light,
@@ -198,7 +206,12 @@ export const lightTheme: ThemeColors = {
   accent2: colors.accent2_light,
   accent3: colors.accent3_light,
 
+  token0: colors.accent1_light,
+  token1: colors.accent3_light,
+
   success: colors.success,
   critical: colors.critical,
   scrim: colors.scrim,
+
+  warning2: colors.gold200,
 }

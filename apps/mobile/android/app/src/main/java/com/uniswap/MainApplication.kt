@@ -9,6 +9,7 @@ import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader
 import androidx.multidex.MultiDexApplication;
 import com.shopify.reactnativeperformance.ReactNativePerformance
+import com.uniswap.onboarding.scantastic.ScantasticEncryptionModule
 
 class MainApplication : MultiDexApplication(), ReactApplication {
   private val mReactNativeHost: ReactNativeHost =
@@ -23,6 +24,7 @@ class MainApplication : MultiDexApplication(), ReactApplication {
           // packages.add(new MyReactNativePackage());
           add(UniswapPackage())
           add(RNCloudStorageBackupsManagerModule())
+          add(ScantasticEncryptionModule())
         }
 
       override fun getJSMainModuleName(): String {

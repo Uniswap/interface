@@ -3,20 +3,20 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { useAdaptiveFooter } from 'src/components/home/hooks'
-import { NoTransactions } from 'src/components/icons/NoTransactions'
-import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
-import { TabProps, TAB_BAR_HEIGHT } from 'src/components/layout/TabHelpers'
-import { Loader } from 'src/components/loading'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
+import { useAdaptiveFooter } from 'src/components/home/hooks'
+import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
+import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
+import { Loader } from 'src/components/loading'
 import { openModal } from 'src/features/modals/modalSlice'
-import TransactionSummaryLayout from 'src/features/transactions/SummaryCards/TransactionSummaryLayout'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
+import { NoTransactions } from 'ui/src/components/icons/NoTransactions'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { useFormattedTransactionDataForFeed } from 'wallet/src/features/activity/hooks'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
+import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
 import { ModalName } from 'wallet/src/telemetry/constants'
@@ -56,7 +56,9 @@ export const FeedTab = memo(
       return generateActivityItemRenderer(
         TransactionSummaryLayout,
         <Loader.Transaction />,
-        SectionTitle
+        SectionTitle,
+        undefined,
+        undefined
       )
     }, [])
 

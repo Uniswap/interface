@@ -102,7 +102,8 @@ export function useSwapCallback(
         chainId,
         result.response.deadline,
         swapInfo as UniswapXOrderDetails['swapInfo'],
-        result.response.encodedOrder
+        result.response.encodedOrder,
+        isUniswapXTrade(trade) ? trade.offchainOrderType : undefined
       )
     } else {
       addTransaction(result.response, swapInfo, deadline?.toNumber())

@@ -1,5 +1,7 @@
 import { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react'
+import { isWeb } from 'tamagui'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import {
@@ -69,6 +71,30 @@ function CurrentScreen({
   useEffect(() => {
     setScreen(contextScreen)
   }, [contextScreen, contextScreenRef, setScreen])
+
+  if (isWeb) {
+    switch (screen) {
+      case SwapScreen.SwapForm:
+      case SwapScreen.SwapReview:
+        return (
+          <>
+            <Trace logImpression section={SectionName.SwapForm}>
+              <SwapFormScreenDelayedRender />
+            </Trace>
+            <BottomSheetModal
+              isCentered={false}
+              isModalOpen={screen === SwapScreen.SwapReview}
+              name={ModalName.SwapReview}>
+              <Trace logImpression section={SectionName.SwapReview}>
+                <SwapReviewScreenDelayedRender />
+              </Trace>
+            </BottomSheetModal>
+          </>
+        )
+      default:
+        throw new Error(`Unknown screen: ${screen}`)
+    }
+  }
 
   switch (screen) {
     case SwapScreen.SwapForm:

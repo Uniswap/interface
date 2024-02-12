@@ -8,17 +8,17 @@ import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningM
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useUSDCValue } from 'wallet/src/features/routing/useUSDCPrice'
-import { NetworkFeeInfoModal } from 'wallet/src/features/transactions/swap/modals/NetworkFeeInfoModal'
 import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
 import { TransactionReview } from 'wallet/src/features/transactions/TransactionReview/TransactionReview'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
 import {
   Warning,
   WarningAction,
   WarningSeverity,
 } from 'wallet/src/features/transactions/WarningModal/types'
+import { NetworkFeeInfoModal } from 'wallet/src/features/transactions/swap/modals/NetworkFeeInfoModal'
+import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import {
   useActiveAccountAddressWithThrow,

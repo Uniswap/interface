@@ -2,29 +2,37 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
-import { Button, Flex, Image, Text, useDeviceDimensions } from 'ui/src'
-import { UNITAGS_BANNER_VERTICAL } from 'ui/src/assets'
+import { Button, Flex, Image, Text, useDeviceDimensions, useIsDarkMode } from 'ui/src'
+import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/src/assets'
+import { setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 const IMAGE_ASPECT_RATIO = 0.4
 const IMAGE_SCREEN_WIDTH_PROPORTION = 0.2
 const COMPACT_IMAGE_SCREEN_WIDTH_PROPORTION = 0.16
 
-export function UnitagBanner({ compact }: { compact?: boolean }): JSX.Element {
+export function UnitagBanner({
+  address,
+  compact,
+}: {
+  address: Address
+  compact?: boolean
+}): JSX.Element {
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const { fullWidth } = useDeviceDimensions()
+  const isDarkMode = useIsDarkMode()
   const imageWidth = compact
     ? COMPACT_IMAGE_SCREEN_WIDTH_PROPORTION * fullWidth
     : IMAGE_SCREEN_WIDTH_PROPORTION * fullWidth
   const imageHeight = imageWidth / IMAGE_ASPECT_RATIO
 
   const onPressClaimNow = (): void => {
-    dispatch(openModal({ name: ModalName.UnitagsIntro }))
+    dispatch(openModal({ name: ModalName.UnitagsIntro, initialState: { address } }))
   }
 
   const onPressMaybeLater = (): void => {
-    // TODO (MOB-1554): set a flag in redux to not show this again
+    dispatch(setHasSkippedUnitagPrompt(true))
   }
 
   return (
@@ -62,9 +70,7 @@ export function UnitagBanner({ compact }: { compact?: boolean }): JSX.Element {
           <Flex gap="$spacing8">
             <Text variant="subheading2">{t('Claim your Uniswap username')}</Text>
             <Text color="$neutral2" variant="body3">
-              {t(
-                'Get a free username and personalized profile so people can find your across web3'
-              )}
+              {t('Sharing your address and connecting with friends has never been easier.')}
             </Text>
           </Flex>
           <Flex row gap="$spacing8">
@@ -77,8 +83,9 @@ export function UnitagBanner({ compact }: { compact?: boolean }): JSX.Element {
               {t('Claim now')}
             </Button>
             <Button
+              backgroundless
               borderRadius="$rounded24"
-              color="$neutral2"
+              color="$neutral3"
               fontSize="$small"
               testID={ElementName.Cancel}
               theme="secondary"
@@ -88,7 +95,7 @@ export function UnitagBanner({ compact }: { compact?: boolean }): JSX.Element {
           </Flex>
         </Flex>
       )}
-      <Flex centered width={imageWidth}>
+      <Flex justifyContent={compact ? 'flex-start' : 'center'} width={imageWidth}>
         <Image
           alignSelf="center"
           position="absolute"
@@ -96,7 +103,7 @@ export function UnitagBanner({ compact }: { compact?: boolean }): JSX.Element {
           source={{
             width: imageWidth,
             height: imageHeight,
-            uri: UNITAGS_BANNER_VERTICAL,
+            uri: isDarkMode ? UNITAGS_BANNER_VERTICAL_DARK : UNITAGS_BANNER_VERTICAL_LIGHT,
           }}
         />
       </Flex>

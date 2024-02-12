@@ -18,6 +18,8 @@ export function Shadow({ children, ...rest }: FlexProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
   const colors = useSporeColors()
 
+  const hasBackgroundColor = Boolean(rest.backgroundColor)
+
   return (
     <Flex
       borderRadius="$rounded16"
@@ -26,7 +28,11 @@ export function Shadow({ children, ...rest }: FlexProps): JSX.Element {
       shadowOffset={SHADOW_OFFSET_SMALL}
       shadowOpacity={0.0075}
       shadowRadius={10}
-      style={{ backgroundColor: opacify(isDarkMode ? 10 : 100, colors.sporeWhite.val) }}
+      style={
+        hasBackgroundColor
+          ? undefined
+          : { backgroundColor: opacify(isDarkMode ? 10 : 100, colors.sporeWhite.val) }
+      }
       {...rest}>
       {children}
     </Flex>
@@ -97,8 +103,8 @@ function EmptyState({
   icon,
 }: EmptyStateProps): JSX.Element {
   return (
-    <Flex centered gap="$spacing24" p="$spacing12" width="100%">
-      <Flex centered gap="$spacing16">
+    <Flex centered gap="$spacing16" width="100%">
+      <Flex centered gap="$spacing4">
         {icon}
         <Flex centered gap="$spacing8">
           {title && (
@@ -192,7 +198,7 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
       grow
       row
       alignItems="center"
-      bg={backgroundColor}
+      backgroundColor={backgroundColor}
       borderRadius="$rounded16"
       gap="$spacing24"
       justifyContent="space-between"

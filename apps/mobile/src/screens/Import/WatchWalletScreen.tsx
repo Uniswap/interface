@@ -103,7 +103,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   })
   const isValidSmartContract = isSmartContractAddress && !!balancesById
 
-  const onCompleteOnboarding = useCompleteOnboardingCallback(params.entryPoint, params.importType)
+  const onCompleteOnboarding = useCompleteOnboardingCallback(params)
 
   // Form validation.
   const walletExists =

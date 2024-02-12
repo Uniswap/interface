@@ -17,7 +17,7 @@ import {
   BottomSheetTextInput,
 } from 'wallet/src/components/modals/BottomSheetModal'
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
-import { ChainId, CHAIN_INFO } from 'wallet/src/constants/chains'
+import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
 import {
   MAX_AUTO_SLIPPAGE_TOLERANCE,
   MAX_CUSTOM_SLIPPAGE_TOLERANCE,
@@ -31,7 +31,7 @@ import { SwapProtectionInfoModal } from 'wallet/src/features/transactions/swap/m
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { slippageToleranceToPercent } from 'wallet/src/features/transactions/swap/utils'
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
-import { setSwapProtectionSetting, SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
+import { SwapProtectionSetting, setSwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { useAppDispatch } from 'wallet/src/state'
 import { ModalName } from 'wallet/src/telemetry/constants'
 import { errorShakeAnimation } from 'wallet/src/utils/animations'
@@ -106,6 +106,7 @@ export function SwapSettingsModal({
   return (
     <BottomSheetModal
       backgroundColor={colors.surface1.get()}
+      isCentered={isWeb}
       name={ModalName.SwapSettings}
       onClose={onClose}>
       <Flex gap="$spacing16" px="$spacing24" py="$spacing12">
@@ -149,15 +150,15 @@ function SwapSettingsOptions({
   const isMevBlockerFeatureEnabled = useFeatureFlag(FEATURE_FLAGS.MevBlocker)
 
   return (
-    <Flex fill gap="$spacing16" py="$spacing12">
-      <Flex fill row justifyContent="space-between">
+    <Flex gap="$spacing16" py="$spacing12">
+      <Flex row justifyContent="space-between">
         <Text color="$neutral1" variant="subheading2">
           {t('Max slippage')}
         </Text>
         <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Slippage)}>
           <Flex row gap="$spacing8">
             {!isCustomSlippage ? (
-              <Flex centered bg="$accent2" borderRadius="$roundedFull" px="$spacing8">
+              <Flex centered backgroundColor="$accent2" borderRadius="$roundedFull" px="$spacing8">
                 <Text color="$accent1" variant="buttonLabel4">
                   {t('Auto')}
                 </Text>
@@ -205,9 +206,9 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Eleme
   return (
     <>
       {showInfoModal && <SwapProtectionInfoModal onClose={(): void => setShowInfoModal(false)} />}
-      <Flex fill gap="$spacing16">
-        <Flex fill bg="$surface3" height={1} />
-        <Flex fill row justifyContent="space-between">
+      <Flex gap="$spacing16">
+        <Flex backgroundColor="$surface3" height={1} />
+        <Flex row justifyContent="space-between">
           <TouchableArea onPress={(): void => setShowInfoModal(true)}>
             <Flex gap="$spacing4">
               <Flex row alignItems="center" gap="$spacing4">
@@ -400,7 +401,7 @@ function SlippageSettings({
           <AnimatedFlex
             row
             alignItems="center"
-            bg={isEditingSlippage ? '$surface2' : '$surface1'}
+            backgroundColor={isEditingSlippage ? '$surface2' : '$surface1'}
             borderColor="$surface3"
             borderRadius="$roundedFull"
             borderWidth={1}

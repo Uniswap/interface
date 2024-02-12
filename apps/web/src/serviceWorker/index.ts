@@ -3,7 +3,7 @@ import 'workbox-precaching' // defines __WB_MANIFEST
 import { cacheNames, clientsClaim } from 'workbox-core'
 import { ExpirationPlugin } from 'workbox-expiration'
 import { precacheAndRoute } from 'workbox-precaching'
-import { registerRoute, Route } from 'workbox-routing'
+import { Route, registerRoute } from 'workbox-routing'
 import { CacheFirst } from 'workbox-strategies'
 
 import { DocumentRoute } from './document'

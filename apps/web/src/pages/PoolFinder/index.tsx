@@ -12,6 +12,7 @@ import { useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 
+import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { ButtonDropdownLight } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -36,6 +37,10 @@ enum Fields {
 
 function useQuery() {
   return new URLSearchParams(useLocation().search)
+}
+
+const POOLFINDER_CURRENCY_SEARCH_FILTERS: CurrencySearchFilters = {
+  showCommonBases: true,
 }
 
 export default function PoolFinder() {
@@ -229,8 +234,8 @@ export default function PoolFinder() {
             isOpen={showSearch}
             onCurrencySelect={handleCurrencySelect}
             onDismiss={handleSearchDismiss}
-            showCommonBases
             selectedCurrency={(activeField === Fields.TOKEN0 ? currency1 : currency0) ?? undefined}
+            currencySearchFilters={POOLFINDER_CURRENCY_SEARCH_FILTERS}
           />
         </AppBody>
         <SwitchLocaleLink />

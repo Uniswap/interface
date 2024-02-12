@@ -2,13 +2,13 @@ import styled from 'styled-components'
 import { Gap } from 'theme'
 
 export const Column = styled.div<{
-  gap?: Gap
+  gap?: Gap | string
   flex?: string
 }>`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: ${({ gap, theme }) => gap && theme.grids[gap]};
+  gap: ${({ gap, theme }) => (gap && theme.grids[gap as Gap]) || gap};
   ${({ flex }) => flex && `flex: ${flex};`}
 `
 export const ColumnCenter = styled(Column)`

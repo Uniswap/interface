@@ -2,7 +2,7 @@ import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { getCandlestickPriceBounds } from 'components/Charts/PriceChart/utils'
 import { PriceChartType } from 'components/Charts/utils'
-import { calculateDelta, DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
+import { DeltaArrow, calculateDelta } from 'components/Tokens/TokenDetails/Delta'
 import { PricePoint } from 'graphql/data/util'
 import {
   AreaData,

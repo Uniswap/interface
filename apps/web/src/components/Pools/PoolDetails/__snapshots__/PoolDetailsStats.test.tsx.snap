@@ -608,7 +608,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
 .c13 {
   height: 8px;
   width: 40.698463777008904%;
-  background: #0066d9;
+  background: #FC72FF;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   border-right: 1px solid #F9F9F9;
@@ -617,7 +617,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
 .c14 {
   height: 8px;
   width: 59.3015362229911%;
-  background: #FC72FF;
+  background: #4C82FB;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   border-left: 1px solid #F9F9F9;

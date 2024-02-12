@@ -58,7 +58,7 @@ const SendModalHeader = ({
           {subheader}
         </ThemedText.BodySmall>
       </Column>
-      {image}
+      <div style={{ height: '36px' }}>{image}</div>
     </Row>
   )
 }
@@ -86,13 +86,19 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
     type: NumberType.PortfolioBalance,
   })
 
+  const currencySymbolAmount = `${formattedInputAmount} ${inputCurrency?.symbol ?? inputCurrency?.name}`
+
+  const [primaryInputView, secondaryInputView] = inputInFiat
+    ? [formattedFiatInputAmount, currencySymbolAmount]
+    : [currencySymbolAmount, formattedFiatInputAmount]
+
   return (
     <Modal $scrollOverlay isOpen onDismiss={onDismiss} maxHeight={90}>
-      <ModalWrapper gap="md">
+      <ModalWrapper data-testid="send-review-modal" gap="md">
         <Row width="100%" padding="8px 12px 4px" align="center">
           <Row justify="left">
             <ThemedText.SubHeader>
-              <Trans>Review swap</Trans>
+              <Trans>Review send</Trans>
             </ThemedText.SubHeader>
           </Row>
           <Row justify="right" gap="10px">
@@ -104,8 +110,8 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
           <Column gap="lg">
             <SendModalHeader
               label={<Trans>You&apos;re sending</Trans>}
-              header={formattedFiatInputAmount}
-              subheader={formattedInputAmount + ' ' + inputCurrency?.symbol}
+              header={primaryInputView}
+              subheader={secondaryInputView}
               image={<PortfolioLogo currencies={[inputCurrency]} size="36px" chainId={chainId ?? ChainId.MAINNET} />}
             />
             <SendModalHeader
@@ -138,7 +144,9 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
             </Row>
           </Row>
         </ReviewContentContainer>
-        <ButtonPrimary onClick={onConfirm}>Confirm send</ButtonPrimary>
+        <ButtonPrimary onClick={onConfirm}>
+          <Trans>Confirm send</Trans>
+        </ButtonPrimary>
       </ModalWrapper>
     </Modal>
   )

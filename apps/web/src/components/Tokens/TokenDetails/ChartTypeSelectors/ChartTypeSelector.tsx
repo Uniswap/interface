@@ -1,42 +1,61 @@
-import { Trans } from '@lingui/macro'
-import { ChartType } from 'components/Charts/utils'
+import { Trans, t } from '@lingui/macro'
+import { ChartType, PriceChartType } from 'components/Charts/utils'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
-import PillMultiToggle from 'components/Toggle/PillMultiToggle'
-import { useScreenSize } from 'hooks/useScreenSize'
+import { useReducer } from 'react'
 import { Check } from 'react-feather'
-import { useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import { css, useTheme } from 'styled-components'
 
 const StyledDropdownButton = css`
   border-radius: 20px;
-  min-width: 93px;
+  width: 100%;
   height: 40px;
 `
 const StyledMenuFlyout = css`
   min-width: 130px;
   border-radius: 16px;
-  right: 20px;
+  right: 0px;
 `
-function ChartTypeDropdown<T extends ChartType>({
+
+interface ChartTypeSelectorOption<T extends ChartType | PriceChartType> {
+  value: T // Value to be selected/stored, used as default display value
+  display?: JSX.Element // Optional custom display element
+}
+
+function getChartTypeSelectorOption<T extends ChartType | PriceChartType>(
+  option: ChartTypeSelectorOption<T> | T
+): ChartTypeSelectorOption<T> {
+  if (typeof option === 'string') {
+    return { value: option }
+  }
+  return option
+}
+
+export function ChartTypeDropdown<T extends ChartType | PriceChartType>({
   options,
+  menuLabel,
   currentChartType,
   onSelectOption,
+  tooltipText,
 }: {
-  options: readonly T[]
+  options: readonly (ChartTypeSelectorOption<T> | T)[]
+  menuLabel?: JSX.Element
   currentChartType: T
   onSelectOption: (option: T) => void
+  tooltipText?: string
 }) {
   const theme = useTheme()
-  const toggleMenu = useToggleModal(ApplicationModal.TDP_CHART_TYPE_SELECTOR)
+  const [isMenuOpen, toggleMenu] = useReducer((s) => !s, false)
 
   return (
     <DropdownSelector
-      modal={ApplicationModal.TDP_CHART_TYPE_SELECTOR}
-      menuLabel={<>{currentChartType}</>}
+      isOpen={isMenuOpen}
+      toggleOpen={toggleMenu}
+      menuLabel={menuLabel ?? <>{t`${currentChartType}`}</>}
       internalMenuItems={
         <>
-          {options.map((chartType) => {
+          {options.map((option) => {
+            const { value: chartType, display } = getChartTypeSelectorOption(option)
+
             return (
               <InternalMenuItem
                 key={chartType}
@@ -45,41 +64,16 @@ function ChartTypeDropdown<T extends ChartType>({
                   toggleMenu()
                 }}
               >
-                <Trans>{chartType}</Trans>
-                {chartType === currentChartType && <Check size={16} color={theme.accent1} />}
+                {display ?? <Trans>{chartType}</Trans>}
+                {chartType === currentChartType && <Check size={20} color={theme.accent1} />}
               </InternalMenuItem>
             )
           })}
         </>
       }
+      tooltipText={tooltipText}
       buttonCss={StyledDropdownButton}
       menuFlyoutCss={StyledMenuFlyout}
     />
   )
-}
-
-export default function ChartTypeSelector<T extends ChartType>({
-  options,
-  currentChartType,
-  onChartTypeChange,
-}: {
-  options: readonly T[]
-  currentChartType: T
-  onChartTypeChange: (c: T) => void
-}) {
-  const screenSize = useScreenSize()
-
-  if (!screenSize['sm']) {
-    return (
-      <ChartTypeDropdown options={options} currentChartType={currentChartType} onSelectOption={onChartTypeChange} />
-    )
-  } else {
-    return (
-      <PillMultiToggle
-        options={options}
-        currentSelected={currentChartType}
-        onSelectOption={onChartTypeChange as (c: string) => void}
-      />
-    )
-  }
 }

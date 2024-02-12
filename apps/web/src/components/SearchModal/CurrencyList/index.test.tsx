@@ -6,7 +6,7 @@ import * as mockJSBI from 'jsbi'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
 
-import CurrencyList from '.'
+import CurrencyList, { CurrencyListRow } from '.'
 
 const noOp = function () {
   // do nothing
@@ -55,7 +55,7 @@ it('renders currency rows correctly when currencies list is non-empty', () => {
   render(
     <CurrencyList
       height={10}
-      currencies={[DAI, USDC_MAINNET, WBTC]}
+      currencies={[DAI, USDC_MAINNET, WBTC].map((token) => new CurrencyListRow(token, false))}
       onCurrencySelect={noOp}
       isLoading={false}
       searchQuery=""
@@ -76,7 +76,7 @@ it('renders currency rows correctly with balances', () => {
   render(
     <CurrencyList
       height={10}
-      currencies={[DAI, USDC_MAINNET, WBTC]}
+      currencies={[DAI, USDC_MAINNET, WBTC].map((token) => new CurrencyListRow(token, false))}
       onCurrencySelect={noOp}
       isLoading={false}
       searchQuery=""

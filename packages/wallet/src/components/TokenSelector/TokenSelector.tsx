@@ -3,6 +3,7 @@ import { hasStringAsync } from 'expo-clipboard'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
+import { isWeb } from 'tamagui'
 import { Flex, useSporeColors } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
@@ -42,6 +43,7 @@ interface BaseTokenSelectorProps {
   currencyField: CurrencyField
   flow: TokenSelectorFlow
   chainId?: ChainId
+  isSurfaceReady?: boolean
   onClose: () => void
   onSelectCurrency: (
     currency: Currency,
@@ -50,7 +52,7 @@ interface BaseTokenSelectorProps {
   ) => void
 }
 
-type TokenSelectorProps = BaseTokenSelectorProps &
+export type TokenSelectorProps = BaseTokenSelectorProps &
   (
     | {
         onSendEmptyActionPress: () => void
@@ -72,9 +74,8 @@ function TokenSelectorContent({
   onClose,
   onSendEmptyActionPress,
   variation,
+  isSurfaceReady = true,
 }: TokenSelectorProps): JSX.Element {
-  const { isSheetReady } = useBottomSheetContext()
-
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter } = useFilterCallbacks(
     chainId ?? null,
     flow
@@ -144,6 +145,15 @@ function TokenSelectorContent({
     onSendEmptyActionPress()
   }, [onClose, onSendEmptyActionPress])
 
+  function onCancel(): void {
+    setSearchInFocus(false)
+  }
+  function onFocus(): void {
+    if (!isWeb) {
+      setSearchInFocus(true)
+    }
+  }
+
   const tokenSelector = useMemo(() => {
     if (searchInFocus && !searchFilter) {
       return <TokenSelectorEmptySearchList onSelectCurrency={onSelectCurrencyCallback} />
@@ -197,20 +207,25 @@ function TokenSelectorContent({
 
   return (
     <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
-      <Flex grow gap="$spacing16" px="$spacing16">
-        <SearchTextInput
-          showCancelButton
-          backgroundColor="$surface2"
-          endAdornment={hasClipboardString ? <PasteButton inline onPress={handlePaste} /> : null}
-          placeholder={t('Search tokens')}
-          py="$spacing8"
-          value={searchFilter ?? ''}
-          onCancel={(): void => setSearchInFocus(false)}
-          onChangeText={onChangeText}
-          onFocus={(): void => setSearchInFocus(true)}
-        />
-
-        {isSheetReady && (
+      <Flex grow gap={isWeb ? '$spacing4' : '$spacing16'} px="$spacing16">
+        <Flex
+          borderBottomColor={isWeb ? '$surface3' : undefined}
+          borderBottomWidth={isWeb ? '$spacing1' : undefined}
+          py="$spacing8">
+          <SearchTextInput
+            backgroundColor={isWeb ? '$surface1' : '$surface2'}
+            endAdornment={hasClipboardString ? <PasteButton inline onPress={handlePaste} /> : null}
+            placeholder={t('Search tokens')}
+            px={isWeb ? '$none' : '$spacing16'}
+            py="$none"
+            value={searchFilter ?? ''}
+            onCancel={isWeb ? undefined : onCancel}
+            onChangeText={onChangeText}
+            onClose={isWeb ? onClose : undefined}
+            onFocus={isWeb ? undefined : onFocus}
+          />
+        </Flex>
+        {isSurfaceReady && (
           <Flex grow>
             {tokenSelector}
 
@@ -228,6 +243,12 @@ function TokenSelectorContent({
       </Flex>
     </Trace>
   )
+}
+
+function TokenSelectorModalContent(props: TokenSelectorProps): JSX.Element {
+  const { isSheetReady } = useBottomSheetContext()
+
+  return <TokenSelectorContent {...props} isSurfaceReady={isSheetReady} />
 }
 
 function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
@@ -249,9 +270,17 @@ function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
       name={ModalName.TokenSelector}
       snapPoints={['65%', '100%']}
       onClose={props.onClose}>
-      <TokenSelectorContent {...props} />
+      <TokenSelectorModalContent {...props} />
     </BottomSheetModal>
   )
 }
 
 export const TokenSelectorModal = memo(_TokenSelectorModal)
+
+export function TokenSelector(props: TokenSelectorProps): JSX.Element {
+  return (
+    <Flex shrink backgroundColor="$surface1" height="100%" pt="$spacing8">
+      <TokenSelectorContent {...props} />
+    </Flex>
+  )
+}

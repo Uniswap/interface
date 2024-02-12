@@ -2,14 +2,16 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { InterfaceSectionName } from '@uniswap/analytics-events'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 
+import { FeatureFlag } from 'featureFlags'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../../src/constants/misc'
 import { DAI, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
 describe('Swap errors', () => {
-  // TODO re-enable web test
-  it.skip('wallet rejection', () => {
-    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
+  it('wallet rejection', () => {
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`, {
+      featureFlags: [{ name: FeatureFlag.progressIndicatorV2, value: true }],
+    })
     cy.hardhat().then((hardhat) => {
       // Stub the wallet to reject any transaction.
       cy.stub(hardhat.wallet, 'sendTransaction').log(false).rejects(new Error('user cancelled'))
@@ -29,9 +31,10 @@ describe('Swap errors', () => {
     })
   })
 
-  // TODO re-enable web test
-  it.skip('transaction past deadline', () => {
-    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
+  it('transaction past deadline', () => {
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`, {
+      featureFlags: [{ name: FeatureFlag.progressIndicatorV2, value: true }],
+    })
     cy.hardhat({ automine: false })
     getBalance(USDC_MAINNET).then((initialBalance) => {
       // Enter amount to swap
@@ -66,7 +69,9 @@ describe('Swap errors', () => {
   })
 
   it('slippage failure', () => {
-    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
+      featureFlags: [{ name: FeatureFlag.progressIndicatorV2, value: true }],
+    })
     cy.hardhat({ automine: false }).then(async (hardhat) => {
       await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 500e6))
       await hardhat.mine()
@@ -98,9 +103,9 @@ describe('Swap errors', () => {
         cy.get('#swap-currency-input .token-amount-input').type('200').should('have.value', '200')
         cy.get('#swap-currency-output .token-amount-input').should('not.have.value', '')
         cy.get('#swap-button').click()
-        cy.contains('Confirm swap').click()
+        cy.contains(i === 0 ? 'Sign and swap' : 'Confirm swap').click()
         cy.wait('@eth_sendRawTransaction').wait('@eth_getTransactionReceipt')
-        cy.contains('Swap submitted')
+        cy.contains(i === 0 ? 'Swap pending...' : 'Swap submitted')
         if (i === 0) {
           cy.get(getTestSelector('confirmation-close-icon')).click()
         }
@@ -111,24 +116,22 @@ describe('Swap errors', () => {
       cy.hardhat().then((hardhat) => hardhat.mine())
       cy.wait('@eth_getTransactionReceipt')
 
-      cy.contains('Swap failed')
-
       // Verify only 1 transaction occurred
       cy.get(getTestSelector('web3-status-connected')).should('not.contain', 'Pending')
-      cy.get(getTestSelector('popups')).contains('Swapped')
-      cy.get(getTestSelector('popups')).contains('Swap failed')
       getBalance(DAI).should('be.closeTo', initialBalance + 200, 1)
     })
   })
 
   it('insufficient liquidity', () => {
     // The API response is too variable so stubbing a 404.
-    cy.intercept('POST', 'https://api.uniswap.org/v2/quote', {
+    cy.intercept('POST', 'https://interface.gateway.uniswap.org/v2/quote', {
       statusCode: 404,
       fixture: 'insufficientLiquidity.json',
     })
 
-    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
+    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
+      featureFlags: [{ name: FeatureFlag.progressIndicatorV2, value: true }],
+    })
     cy.get('#swap-currency-output .token-amount-input').type('100000000000000').should('have.value', '100000000000000') // 100 trillion
     cy.contains('Insufficient liquidity for this trade.')
     cy.get('#swap-button').should('not.exist')

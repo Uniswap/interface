@@ -1,24 +1,22 @@
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import React, { useCallback, useEffect, useState } from 'react'
-
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
-import { Loader } from 'src/components/loading'
-import { useTimeout } from 'utilities/src/time/timing'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-
-import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { FiatOnRampStackParamList } from 'src/app/navigation/types'
+import { Loader } from 'src/components/loading'
 import {
   FiatOnRampConnectingView,
   SERVICE_PROVIDER_ICON_SIZE,
 } from 'src/features/fiatOnRamp/FiatOnRampConnecting'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
-import { getServiceProviderForQuote } from 'src/features/fiatOnRamp/meldUtils'
+import { getServiceProviderForQuote } from 'src/features/fiatOnRamp/utils'
 import { FiatOnRampScreens } from 'src/screens/Screens'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useTimeout } from 'utilities/src/time/timing'
 import { useFiatOnRampAggregatorWidgetQuery } from 'wallet/src/features/fiatOnRamp/api'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -65,7 +63,6 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
           sourceAmount: amount,
           sourceCurrencyCode: baseCurrencyInfo.code,
           walletAddress: activeAccountAddress,
-          externalCustomerId: activeAccountAddress,
           externalSessionId: externalTransactionId,
         }
       : skipToken

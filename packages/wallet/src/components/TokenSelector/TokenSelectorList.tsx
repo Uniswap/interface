@@ -1,10 +1,10 @@
 import { memo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, FlexLoader, Skeleton, Text } from 'ui/src'
+import { isWeb } from 'tamagui'
+import { AnimatedFlex, Flex, Loader, Skeleton, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { TokenLoader } from 'wallet/src/components/loading/TokenLoader'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
 import { renderSuggestedTokenItem } from 'wallet/src/components/TokenSelector/renderSuggestedTokenItem'
 import { suggestedTokensKeyExtractor } from 'wallet/src/components/TokenSelector/suggestedTokensKeyExtractor'
@@ -171,16 +171,17 @@ function _TokenSelectorList({
       <Flex grow>
         <Flex py="$spacing16" width={80}>
           <Skeleton>
-            <FlexLoader height={fonts.subheading2.lineHeight} />
+            <Loader.Box height={fonts.subheading2.lineHeight} />
           </Skeleton>
         </Flex>
-        <TokenLoader repeat={5} />
+        <Loader.Token repeat={5} />
       </Flex>
     )
   }
 
   return (
-    <AnimatedFlex grow entering={FadeIn} exiting={FadeOut}>
+    // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
+    <AnimatedFlex grow entering={FadeIn} exiting={isWeb ? undefined : FadeOut}>
       <TokenSectionBaseList
         ListEmptyComponent={emptyElement}
         focusHook={useBottomSheetFocusHook}

@@ -1,7 +1,7 @@
 import { Interface } from '@ethersproject/abi'
 import { BigintIsh, Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
-import { computePoolAddress, FeeAmount, Pool } from '@uniswap/v3-sdk'
+import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'

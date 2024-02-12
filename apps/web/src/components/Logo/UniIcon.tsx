@@ -8,10 +8,11 @@ export type SVGProps = React.SVGProps<SVGSVGElement> & {
   height?: string | number
   width?: string | number
   gradientId?: string
+  clickable?: boolean
 }
 
-export const UniIcon = (props: SVGProps) => (
-  <Container>
+export const UniIcon = ({ clickable, ...props }: SVGProps) => (
+  <Container clickable={clickable}>
     {HolidayUniIcon(props) !== null ? (
       <HolidayUniIcon {...props} />
     ) : (
@@ -27,6 +28,7 @@ export const UniIcon = (props: SVGProps) => (
   </Container>
 )
 
-const Container = styled.div`
+const Container = styled.div<{ clickable?: boolean }>`
   position: relative;
+  cursor: ${({ clickable }) => (clickable ? 'pointer' : 'auto')};
 `

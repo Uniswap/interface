@@ -15,7 +15,7 @@ export const MAIN_CARDS = [
     to: '/swap',
     title: 'Swap tokens',
     description: 'Buy, sell, and explore tokens on Ethereum, Polygon, Optimism, and more.',
-    cta: 'Trade Tokens',
+    cta: 'Trade tokens',
     darkBackgroundImgSrc: swapCardImgSrc,
     lightBackgroundImgSrc: swapCardImgSrc,
     elementName: InterfaceElementName.ABOUT_PAGE_SWAP_CARD,

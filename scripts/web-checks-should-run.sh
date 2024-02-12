@@ -13,8 +13,8 @@ echo "" # separate from the turbo output
 
 if [[ "$exit_status" == 1 ]] ; then
   echo "✅ - Proceed"
-  exit 0;
+  echo "CONCLUSION=success" >> "$GITHUB_OUTPUT"
 else
   echo "🛑 - Cancel"
-  exit 1;
+  echo "CONCLUSION=fail" >> "$GITHUB_OUTPUT"
 fi

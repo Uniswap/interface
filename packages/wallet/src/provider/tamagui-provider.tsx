@@ -1,4 +1,4 @@
-import { tamaguiConfig, TamaguiProvider as OGTamaguiProvider, TamaguiProviderProps } from 'ui/src'
+import { TamaguiProvider as OGTamaguiProvider, TamaguiProviderProps, tamaguiConfig } from 'ui/src'
 import { useSelectedColorScheme } from 'wallet/src/features/appearance/hooks'
 
 // without <NavigationProvider>

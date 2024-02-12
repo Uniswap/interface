@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Resolvers } from '@apollo/client'
 import { waitFor } from '@testing-library/react-native'
 import { useTokenProjects } from 'wallet/src/features/dataApi/tokenProjects'

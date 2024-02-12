@@ -4,7 +4,6 @@ exports[`AccountHeader renders without error 1`] = `
 <View
   style={
     {
-      "alignItems": "stretch",
       "flexDirection": "column",
       "gap": 12,
       "overflow": "scroll",
@@ -27,7 +26,6 @@ exports[`AccountHeader renders without error 1`] = `
     <View
       style={
         {
-          "alignItems": "stretch",
           "flexDirection": "row",
           "justifyContent": "space-between",
           "width": "100%",
@@ -75,7 +73,6 @@ exports[`AccountHeader renders without error 1`] = `
         <View
           style={
             {
-              "alignItems": "stretch",
               "backgroundColor": "#FFFFFF",
               "borderBottomColor": "transparent",
               "borderBottomLeftRadius": 999999,
@@ -117,7 +114,6 @@ exports[`AccountHeader renders without error 1`] = `
             <View
               style={
                 {
-                  "alignItems": "stretch",
                   "flexDirection": "column",
                   "height": 28,
                   "width": 28,
@@ -127,7 +123,6 @@ exports[`AccountHeader renders without error 1`] = `
               <View
                 style={
                   {
-                    "alignItems": "stretch",
                     "flexDirection": "column",
                     "height": 28,
                     "width": 28,
@@ -483,7 +478,6 @@ exports[`AccountHeader renders without error 1`] = `
         <View
           style={
             {
-              "alignItems": "stretch",
               "flexDirection": "column",
             }
           }
@@ -491,7 +485,6 @@ exports[`AccountHeader renders without error 1`] = `
           <View
             style={
               {
-                "alignItems": "stretch",
                 "flexDirection": "row",
               }
             }
@@ -527,7 +520,6 @@ exports[`AccountHeader renders without error 1`] = `
               forwardedRef={[Function]}
               style={
                 {
-                  "alignItems": "stretch",
                   "flexDirection": "row",
                   "marginLeft": -0,
                   "transform": [
@@ -542,7 +534,6 @@ exports[`AccountHeader renders without error 1`] = `
                 onLayout={[Function]}
                 style={
                   {
-                    "alignItems": "stretch",
                     "flexDirection": "column",
                   }
                 }
@@ -570,7 +561,7 @@ exports[`AccountHeader renders without error 1`] = `
                   }
                   suppressHighlighting={true}
                 >
-                  .uni.eth
+                  .cantswim.eth
                 </Text>
               </View>
               <View

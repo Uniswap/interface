@@ -9,20 +9,20 @@ import { BackButton } from 'src/components/buttons/BackButton'
 import { FORQuoteItem } from 'src/components/fiatOnRamp/QuoteItem'
 import { Screen } from 'src/components/layout/Screen'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
-import { getServiceProviderForQuote } from 'src/features/fiatOnRamp/meldUtils'
 import { InitialQuoteSelection } from 'src/features/fiatOnRamp/types'
+import { getServiceProviderForQuote } from 'src/features/fiatOnRamp/utils'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { FiatOnRampScreens } from 'src/screens/Screens'
 import { AnimatedFlex, Button, Flex, Icons, Inset, Separator, Text } from 'ui/src'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
-import { MeldQuote } from 'wallet/src/features/fiatOnRamp/meld'
+import { FORQuote } from 'wallet/src/features/fiatOnRamp/types'
 import { ElementName } from 'wallet/src/telemetry/constants'
 
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.ServiceProviders>
 
-const key = (item: MeldQuote): string => item.serviceProvider
+const key = (item: FORQuote): string => item.serviceProvider
 
 export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
@@ -35,7 +35,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
     serviceProviders,
   } = useFiatOnRampContext()
 
-  const renderItem = ({ item }: ListRenderItemInfo<MeldQuote>): JSX.Element => {
+  const renderItem = ({ item }: ListRenderItemInfo<FORQuote>): JSX.Element => {
     return (
       <Flex px="$spacing12" py="$spacing8">
         {baseCurrencyInfo && (
@@ -58,7 +58,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
   const renderSectionHeader = ({
     section: { type },
   }: {
-    section: SectionListData<MeldQuote, { type?: InitialQuoteSelection }>
+    section: SectionListData<FORQuote, { type?: InitialQuoteSelection }>
   }): JSX.Element => {
     return (
       <Flex px="$spacing12">

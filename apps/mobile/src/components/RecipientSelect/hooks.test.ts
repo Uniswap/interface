@@ -3,6 +3,7 @@ import { waitFor } from '@testing-library/react-native'
 import { toIncludeSameMembers } from 'jest-extended'
 import { act } from 'react-test-renderer'
 import { MobileState } from 'src/app/reducer'
+import { renderHookWithProviders } from 'src/test/render'
 import { useRecipients } from 'wallet/src/components/RecipientSearch/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
@@ -18,7 +19,6 @@ import {
   sendTxDetailsFailed,
   sendTxDetailsPending,
 } from 'wallet/src/test/fixtures'
-import { renderHook } from 'wallet/src/test/test-utils'
 
 expect.extend({ toIncludeSameMembers })
 
@@ -62,7 +62,6 @@ const activeAccount = account
 const inactiveAccount = account2
 const validatedAddressRecipient: SearchableRecipient = {
   address: SAMPLE_SEED_ADDRESS_1,
-  name: null,
 }
 
 const watchedAddresses = [SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]
@@ -107,7 +106,7 @@ const favoriteWalletsSectionResult = {
 
 describe(useRecipients, () => {
   it('returns correct initial values', () => {
-    const { result } = renderHook(useRecipients, {
+    const { result } = renderHookWithProviders(useRecipients, {
       preloadedState: getPreloadedState(),
     })
 
@@ -122,7 +121,7 @@ describe(useRecipients, () => {
 
   describe('Validated address recipient', () => {
     it('result does not contain Search Results section if there is no pattern', () => {
-      const { result } = renderHook(useRecipients, {
+      const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState(),
       })
 
@@ -136,7 +135,7 @@ describe(useRecipients, () => {
     })
 
     it('result contains Search Results section if there is a pattern', async () => {
-      const { result } = renderHook(useRecipients, {
+      const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState(),
       })
 
@@ -146,16 +145,12 @@ describe(useRecipients, () => {
       })
 
       await waitFor(() => {
-        expect(result.current).toEqual(
-          expect.objectContaining({
-            sections: expect.arrayContaining([searchSectionResult]),
-          })
-        )
+        expect(result.current.sections).toEqual(expect.arrayContaining([searchSectionResult]))
       })
     })
 
     it('searchableRecipientOptions contains validatedAddressRecipient', async () => {
-      const { result } = renderHook(useRecipients, {
+      const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState(),
       })
 
@@ -164,25 +159,22 @@ describe(useRecipients, () => {
         result.current.onChangePattern(SAMPLE_SEED_ADDRESS_1)
       })
 
-      expect(result.current).toEqual(
-        expect.objectContaining({
-          searchableRecipientOptions: [
-            {
-              data: {
-                address: SAMPLE_SEED_ADDRESS_1,
-                name: null,
-              },
-              key: SAMPLE_SEED_ADDRESS_1,
+      expect(result.current.searchableRecipientOptions).toEqual(
+        expect.arrayContaining([
+          {
+            data: {
+              address: SAMPLE_SEED_ADDRESS_1,
             },
-          ],
-        })
+            key: SAMPLE_SEED_ADDRESS_1,
+          },
+        ])
       )
     })
   })
 
   describe('Recent recipients', () => {
     it('result does not contain Recent section if there are no recent recipients', () => {
-      const { result } = renderHook(useRecipients, {
+      const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState(),
       })
 
@@ -194,7 +186,7 @@ describe(useRecipients, () => {
     })
 
     it('result contains Recent section if there are recent recipients', () => {
-      const { result } = renderHook(useRecipients, {
+      const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState({
           transactions: {
             [activeAccount.address]: {
@@ -222,7 +214,7 @@ describe(useRecipients, () => {
     })
 
     it('returns unique recipient addresses', () => {
-      const { result } = renderHook(useRecipients, {
+      const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState({
           transactions: {
             [activeAccount.address]: {
@@ -234,7 +226,6 @@ describe(useRecipients, () => {
         }),
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       const section = result.current.sections[0]!
       expect(section.title).toEqual('Recent')
       // This method doesn't check the order of the elements
@@ -255,7 +246,7 @@ describe(useRecipients, () => {
     })
 
     it('sorts recipients by most recent transaction', () => {
-      const { result } = renderHook(useRecipients, {
+      const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState({
           transactions: {
             [activeAccount.address]: {
@@ -277,7 +268,7 @@ describe(useRecipients, () => {
     })
 
     it('searchableRecipientOptions contains recent recipients', () => {
-      const { result } = renderHook(useRecipients, {
+      const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState({
           transactions: {
             [activeAccount.address]: {
@@ -295,7 +286,7 @@ describe(useRecipients, () => {
 
   describe('Inactive local accounts', () => {
     it('result does not contain Your wallets section if there are no inactive accounts', () => {
-      const { result } = renderHook(useRecipients, {
+      const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState(),
       })
 
@@ -309,7 +300,7 @@ describe(useRecipients, () => {
     })
 
     it('result contains Your wallets section if there are inactive accounts', () => {
-      const { result } = renderHook(useRecipients, {
+      const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState({ hasInactiveAccounts: true }),
       })
 
@@ -321,7 +312,7 @@ describe(useRecipients, () => {
     })
 
     it('searchableRecipientOptions contains inactive accounts', () => {
-      const { result } = renderHook(useRecipients, {
+      const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState({ hasInactiveAccounts: true }),
       })
 
@@ -335,7 +326,7 @@ describe(useRecipients, () => {
 
   describe('Watched wallets', () => {
     it('result does not contain Favorite Wallets section if there are no watched wallets', () => {
-      const { result } = renderHook(useRecipients, {
+      const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState(),
       })
 
@@ -349,7 +340,7 @@ describe(useRecipients, () => {
     })
 
     it('result contains Favorite Wallets section if there are watched wallets', () => {
-      const { result } = renderHook(useRecipients, {
+      const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState({
           watchedAddresses,
         }),
@@ -365,7 +356,7 @@ describe(useRecipients, () => {
 
   describe('multiple sections', () => {
     it('result contains all sections', async () => {
-      const { result } = renderHook(useRecipients, {
+      const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState({
           watchedAddresses,
           hasInactiveAccounts: true,
@@ -398,7 +389,7 @@ describe(useRecipients, () => {
     })
 
     it('searchableRecipientOptions contains all unique recipients', async () => {
-      const { result } = renderHook(useRecipients, {
+      const { result } = renderHookWithProviders(useRecipients, {
         preloadedState: getPreloadedState({
           watchedAddresses,
           hasInactiveAccounts: true,

@@ -8,7 +8,7 @@ export type {
   TokenRarity,
   UniformAspectRatio,
 } from './collection'
-export { DetailsOrigin, isPooledMarket, Markets, TokenType } from './common'
+export { DetailsOrigin, Markets, TokenType, isPooledMarket } from './common'
 export type { DropDownOption, GenieAsset, GenieCollection, PriceInfo, Rarity, Trait } from './common'
 export { Denomination, TimePeriod } from './discover'
 export type { CollectionTableColumn, TrendingCollection, VolumeType } from './discover'

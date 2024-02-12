@@ -15,10 +15,10 @@ import 'react-native-reanimated'
 import { Flex, flexStyles } from 'ui/src/components/layout'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import {
-  blurs,
   UniconAttributeData,
   UniconAttributes,
   UniconAttributesToIndices,
+  blurs,
 } from './types.native'
 import { deriveUniconAttributeIndices, getUniconAttributeData, isEthAddress } from './utils.native'
 

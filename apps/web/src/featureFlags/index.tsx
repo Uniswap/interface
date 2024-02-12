@@ -1,13 +1,14 @@
+import useParsedQueryString from 'hooks/useParsedQueryString'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { createContext, ReactNode, useCallback, useContext } from 'react'
+import { ReactNode, createContext, useCallback, useContext, useEffect, useMemo } from 'react'
 import { useGate } from 'statsig-react'
+import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
 /**
  * The value here must match the value in the statsig dashboard, if you plan to use statsig.
  */
 export enum FeatureFlag {
   traceJsonRpc = 'traceJsonRpc',
-  debounceSwapQuote = 'debounce_swap_quote',
   fallbackProvider = 'fallback_provider',
   uniswapXSyntheticQuote = 'uniswapx_synthetic_quote',
   multichainUX = 'multichain_ux',
@@ -25,6 +26,13 @@ export enum FeatureFlag {
   sendEnabled = 'swap_send',
   gatewayDNSUpdateAll = 'gateway_dns_update_all',
   landingPageV2 = 'landing_page_v2',
+  limitsFees = 'limits_fees',
+  exitAnimation = 'exit_animation',
+  v2Everywhere = 'v2_everywhere',
+  // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
+  outageBannerOptimism = 'outage_banner_feb_2024_optimism',
+  outageBannerArbitrum = 'outage_banner_feb_2024_arbitrum',
+  outageBannerPolygon = 'outage_banner_feb_2024_polygon',
 }
 
 interface FeatureFlagsContextType {
@@ -112,4 +120,30 @@ export function useBaseFlag(flag: string, defaultValue = BaseVariant.Control): B
     default:
       return defaultValue
   }
+}
+
+export function useFeatureFlagURLOverrides() {
+  const parsedQs = useParsedQueryString()
+  const setFeatureFlags = useUpdateAtom(featureFlagSettings)
+
+  const newFeatureFlagObj = useMemo(() => {
+    const featureFlagOverrides =
+      typeof parsedQs.featureFlagOverride === 'string' ? parsedQs.featureFlagOverride.split(',') : []
+    return featureFlagOverrides.reduce(
+      (prev, current) => ({
+        ...prev,
+        [current]: BaseVariant.Enabled,
+      }),
+      {}
+    )
+  }, [parsedQs])
+
+  useEffect(() => {
+    if (!isDevelopmentEnv() && !isStagingEnv()) return
+
+    setFeatureFlags((prev) => ({
+      ...prev,
+      ...newFeatureFlagObj,
+    }))
+  }, [newFeatureFlagObj, setFeatureFlags])
 }

@@ -190,7 +190,7 @@ export default function StatsSection(props: StatsSectionProps) {
         <Header isInfoTDPEnabled={isInfoTDPEnabled}>
           <Trans>Stats</Trans>
         </Header>
-        <ThemedText.BodySecondary paddingTop="12px">
+        <ThemedText.BodySecondary pt="12px">
           <Trans>
             Token stats and charts for {label} are available on{' '}
             <ExternalLink color="currentColor" href={`${infoLink}tokens/${address}`}>

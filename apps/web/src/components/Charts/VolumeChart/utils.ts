@@ -47,7 +47,7 @@ export function positionsBox(position1Media: number, position2Media: number, pix
   const scaledPosition2 = Math.round(pixelRatio * position2Media)
   return {
     position: Math.min(scaledPosition1, scaledPosition2),
-    length: Math.abs(scaledPosition2 - scaledPosition1) + 1,
+    length: Math.abs(scaledPosition2 - scaledPosition1),
   }
 }
 

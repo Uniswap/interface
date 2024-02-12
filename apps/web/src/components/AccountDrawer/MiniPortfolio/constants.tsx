@@ -137,6 +137,11 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Confirmed]: t`Submitted proposal`,
     [TransactionStatus.Failed]: t`Submit proposal failed`,
   },
+  [TransactionType.LIMIT]: {
+    [TransactionStatus.Pending]: t`Limit opened`,
+    [TransactionStatus.Confirmed]: t`Limit executed`,
+    [TransactionStatus.Failed]: t`Limit failed`,
+  },
 }
 
 export const CancelledTransactionTitleTable: { [key in TransactionType]: string } = {
@@ -166,6 +171,7 @@ export const CancelledTransactionTitleTable: { [key in TransactionType]: string 
   [TransactionType.ADD_LIQUIDITY_V2_POOL]: t`Add V2 liquidity cancelled`,
   [TransactionType.MIGRATE_LIQUIDITY_V3]: t`Migrate liquidity cancelled`,
   [TransactionType.SUBMIT_PROPOSAL]: t`Submit proposal cancelled`,
+  [TransactionType.LIMIT]: t`Limit cancelled`,
 }
 
 const AlternateTransactionTitleTable: { [key in TransactionType]?: { [state in TransactionStatus]: string } } = {
@@ -211,12 +217,44 @@ export const OrderTextTable: {
     status: TransactionStatus.Failed,
   },
   [UniswapXOrderStatus.INSUFFICIENT_FUNDS]: {
-    title: SwapTitleTable.FAILED,
+    title: t`Insufficient funds`,
     statusMessage: t`Your account had insufficent funds to complete this swap.`,
     status: TransactionStatus.Failed,
   },
   [UniswapXOrderStatus.CANCELLED]: {
     title: t`Swap cancelled`,
+    status: TransactionStatus.Failed,
+  },
+}
+
+const LimitTitleTable = TransactionTitleTable[TransactionType.LIMIT]
+export const LimitOrderTextTable: {
+  [status in UniswapXOrderStatus]: { title: string; status: TransactionStatus; statusMessage?: string }
+} = {
+  [UniswapXOrderStatus.OPEN]: {
+    title: LimitTitleTable.PENDING,
+    status: TransactionStatus.Pending,
+  },
+  [UniswapXOrderStatus.FILLED]: {
+    title: LimitTitleTable.CONFIRMED,
+    status: TransactionStatus.Confirmed,
+  },
+  [UniswapXOrderStatus.EXPIRED]: {
+    title: t`Limit expired`,
+    statusMessage: t`Your limit could not be fulfilled at this time. Please try again.`,
+    status: TransactionStatus.Failed,
+  },
+  [UniswapXOrderStatus.ERROR]: {
+    title: LimitTitleTable.FAILED,
+    status: TransactionStatus.Failed,
+  },
+  [UniswapXOrderStatus.INSUFFICIENT_FUNDS]: {
+    title: LimitTitleTable.FAILED,
+    statusMessage: t`Your account had insufficent funds to complete this swap.`,
+    status: TransactionStatus.Failed,
+  },
+  [UniswapXOrderStatus.CANCELLED]: {
+    title: t`Limit cancelled`,
     status: TransactionStatus.Failed,
   },
 }
@@ -235,4 +273,5 @@ export const OrderStatusTable: { [key in SwapOrderStatus]: UniswapXOrderStatus }
   [SwapOrderStatus.Expired]: UniswapXOrderStatus.EXPIRED,
   [SwapOrderStatus.Error]: UniswapXOrderStatus.ERROR,
   [SwapOrderStatus.InsufficientFunds]: UniswapXOrderStatus.INSUFFICIENT_FUNDS,
+  [SwapOrderStatus.Filled]: UniswapXOrderStatus.FILLED,
 }

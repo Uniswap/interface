@@ -2,8 +2,8 @@ import React, { useCallback } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { TransferFlow as TransferFlowRewrite } from 'src/features/transactions/swapRewrite/transfer/TransferFlow'
 import { TransferFlow } from 'src/features/transactions/transfer/TransferFlow'
+import { TransferFlow as TransferFlowRewrite } from 'src/features/transactions/transfer/transferRewrite/TransferFlow'
 import { useSporeColors } from 'ui/src'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
@@ -28,6 +28,7 @@ export function TransferTokenModal(): JSX.Element {
       fullScreen
       hideHandlebar
       hideKeyboardOnDismiss
+      overrideInnerContainer
       renderBehindTopInset
       backgroundColor={colors.surface1.get()}
       name={ModalName.Send}

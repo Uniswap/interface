@@ -137,7 +137,7 @@ export const TextPlaceholder = ({ children }: PropsWithChildren<unknown>): JSX.E
       <Flex row alignItems="center" position="relative">
         <HiddenFromScreenReaders>{children}</HiddenFromScreenReaders>
         <Flex
-          bg="$surface2"
+          backgroundColor="$surface2"
           borderRadius="$rounded4"
           bottom="5%"
           left={0}

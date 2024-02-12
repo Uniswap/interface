@@ -1,47 +1,16 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
-"""
-Tells the service this field/object has access authorized by a Cognito User Pools token.
-"""
-directive @aws_cognito_user_pools(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an OIDC token.
-"""
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
-"""Tells the service which mutation triggers this subscription."""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
-) on FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Lambda Authorizer.
-"""
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
-
 """Directs the schema to enforce authorization on a field"""
 directive @aws_auth(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
 ) on FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service which subscriptions will be published to when this mutation is
@@ -55,6 +24,37 @@ directive @aws_publish(
 ) on FIELD_DEFINITION
 
 """
+Tells the service this field/object has access authorized by sigv4 signing.
+"""
+directive @aws_iam on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Cognito User Pools token.
+"""
+directive @aws_cognito_user_pools(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Lambda Authorizer.
+"""
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
+
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
+) on FIELD_DEFINITION
+
+"""
   Types, unions, and inputs (alphabetized):
  These are colocated to highlight the relationship between some types and their inputs.
 """
@@ -62,6 +62,7 @@ union ActivityDetails = TransactionDetails | SwapOrderDetails
 
 input ActivityDetailsInput {
   transactionDetails: TransactionDetailsInput
+  swapOrderDetails: SwapOrderDetailsInput
 }
 
 """
@@ -835,14 +836,16 @@ type PushNotification {
 }
 
 type Query {
-  historicalProtocolVolume(chain: Chain!, version: ProtocolVersion!, duration: HistoryDuration): [TimestampedAmount!]
+  historicalProtocolVolume(chain: Chain!, version: ProtocolVersion!, duration: HistoryDuration!): [TimestampedAmount!]
   dailyProtocolTvl(chain: Chain!, version: ProtocolVersion!): [TimestampedAmount!]
 
   """  returns top v3 pools sorted by total value locked in desc order"""
   topV3Pools(chain: Chain!, first: Int!, tvlCursor: Float, tokenFilter: String): [V3Pool!]
+  v3Pool(chain: Chain!, address: String!): V3Pool
 
   """  returns top v2 pairs sorted by total value locked in desc order"""
   topV2Pairs(chain: Chain!, first: Int!, tvlCursor: Float, tokenFilter: String): [V2Pair!]
+  v2Pair(chain: Chain!, address: String!): V2Pair
   convert(fromAmount: CurrencyAmountInput!, toCurrency: Currency!): Amount
   tokens(contracts: [ContractInput!]!): [Token]
 
@@ -898,11 +901,24 @@ type SwapOrderDetails {
   expiry: Int!
 }
 
+input SwapOrderDetailsInput {
+  offerer: String!
+  hash: String!
+  status: SwapOrderStatus
+  swapOrderStatus: SwapOrderStatus!
+  inputToken: TokenAssetInput!
+  inputAmount: String!
+  outputToken: TokenAssetInput!
+  outputAmount: String!
+  expiry: Int!
+}
+
 enum SwapOrderStatus {
   OPEN
   EXPIRED
   ERROR
   INSUFFICIENT_FUNDS
+  FILLED
 }
 
 type TimestampedAmount implements IAmount {
@@ -910,6 +926,13 @@ type TimestampedAmount implements IAmount {
   currency: Currency
   value: Float!
   timestamp: Int!
+}
+
+type TimestampedPoolPrice {
+  id: ID!
+  timestamp: Int!
+  token0Price: Float!
+  token1Price: Float!
 }
 
 type Token implements IContract {
@@ -956,7 +979,7 @@ input TokenApprovalInput {
 input TokenAssetInput {
   chain: Chain!
   address: String
-  standard: TokenStandard
+  standard: TokenStandard!
   decimals: Int
   name: String
   symbol: String
@@ -1179,7 +1202,7 @@ type V2Pair {
   token1: Token
   token1Supply: Float
   txCount: Int
-  cumulativeVolume(duration: HistoryDuration): Amount
+  cumulativeVolume(duration: HistoryDuration!): Amount
 }
 
 type V3Pool {
@@ -1195,6 +1218,16 @@ type V3Pool {
   token1: Token
   token1Supply: Float
   txCount: Int
-  cumulativeVolume(duration: HistoryDuration): Amount
+  cumulativeVolume(duration: HistoryDuration!): Amount
+  historicalVolume(duration: HistoryDuration!): [TimestampedAmount]
+  priceHistory(duration: HistoryDuration!): [TimestampedPoolPrice]
+  ticks(first: Int!, tickIdxCursor: Int): [V3PoolTick]
+}
+
+type V3PoolTick {
+  id: ID!
+  tickIdx: Int
+  liquidityGross: String
+  liquidityNet: String
 }
 

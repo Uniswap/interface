@@ -6,6 +6,7 @@ import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { selectRecipientsByRecency } from 'wallet/src/features/transactions/selectors'
+import { useUnitagByName } from 'wallet/src/features/unitags/hooks'
 import { selectInactiveAccounts } from 'wallet/src/features/wallet/selectors'
 import { useAppSelector } from 'wallet/src/state'
 import { getValidAddress } from 'wallet/src/utils/addresses'
@@ -18,17 +19,51 @@ type RecipientSection = {
 }
 
 function useValidatedSearchedAddress(searchTerm: string | null): {
-  recipient: SearchableRecipient[]
+  recipients: SearchableRecipient[]
   loading: boolean
 } {
-  const { loading, address: ensAddress, name } = useENS(ChainId.Mainnet, searchTerm, true)
+  // Check ENS and Unitag
+  const {
+    loading: ensLoading,
+    address: ensAddress,
+    name: ensName,
+  } = useENS(ChainId.Mainnet, searchTerm, true)
+  const { loading: unitagLoading, unitag } = useUnitagByName(searchTerm ?? undefined)
+
   return useMemo(() => {
-    const address =
-      getValidAddress(searchTerm, true, false) || getValidAddress(ensAddress, true, false)
-    const validatedRecipient = address ? { address, name } : null
-    const recipient = validatedRecipient ? [validatedRecipient] : []
-    return { recipient, loading }
-  }, [name, loading, searchTerm, ensAddress])
+    // Check for a valid unitag, ENS address, or literal address
+    const unitagValidatedAddress = getValidAddress(unitag?.address?.address, true, false)
+    const ensValidatedAddress = getValidAddress(ensAddress, true, false)
+    const literalValidatedAddress = getValidAddress(searchTerm, true, false)
+
+    const recipients = []
+
+    // Add unitag result if available
+    if (unitagValidatedAddress) {
+      recipients.push({
+        address: unitagValidatedAddress,
+        name: unitag?.username,
+      })
+    }
+
+    // Add ENS result if different than unitag result
+    if (ensName && ensValidatedAddress && unitagValidatedAddress !== ensValidatedAddress) {
+      recipients.push({
+        address: ensValidatedAddress,
+        name: ensName,
+      })
+    }
+
+    // Add literal address if validated
+    if (literalValidatedAddress) {
+      recipients.push({ address: literalValidatedAddress })
+    }
+
+    return {
+      recipients,
+      loading: ensLoading || unitagLoading,
+    }
+  }, [unitag, ensAddress, searchTerm, ensLoading, unitagLoading, ensName])
 }
 
 export function useRecipients(): {
@@ -48,7 +83,7 @@ export function useRecipients(): {
   const inactiveLocalAccounts = useAppSelector(selectInactiveAccounts)
   const recentRecipients = useAppSelector(selectRecipientsByRecency).slice(0, MAX_RECENT_RECIPIENTS)
 
-  const { recipient: validatedAddressRecipient, loading } = useValidatedSearchedAddress(pattern)
+  const { recipients: validatedAddressRecipient, loading } = useValidatedSearchedAddress(pattern)
   const watchedWallets = useAppSelector(selectWatchedAddressSet)
 
   const sections = useMemo(() => {

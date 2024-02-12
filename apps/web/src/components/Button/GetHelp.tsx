@@ -29,7 +29,7 @@ export default function GetHelp() {
     <StyledExternalLink href={SupportArticleURL.HOME}>
       <Row gap="4px">
         <EnvelopeHeartIcon />
-        <Trans>Get Help</Trans>
+        <Trans>Get help</Trans>
       </Row>
     </StyledExternalLink>
   )

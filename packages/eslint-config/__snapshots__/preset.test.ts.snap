@@ -30,9 +30,6 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "@babel/semi": [
       "off",
     ],
-    "@typescript-eslint/adjacent-overload-signatures": [
-      "error",
-    ],
     "@typescript-eslint/ban-ts-comment": [
       "off",
     ],
@@ -81,10 +78,7 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "@typescript-eslint/no-array-constructor": [
       "error",
     ],
-    "@typescript-eslint/no-empty-function": [
-      "error",
-    ],
-    "@typescript-eslint/no-empty-interface": [
+    "@typescript-eslint/no-duplicate-enum-values": [
       "error",
     ],
     "@typescript-eslint/no-explicit-any": [
@@ -99,9 +93,6 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "@typescript-eslint/no-extra-semi": [
       "off",
     ],
-    "@typescript-eslint/no-inferrable-types": [
-      "error",
-    ],
     "@typescript-eslint/no-loss-of-precision": [
       "error",
     ],
@@ -113,9 +104,6 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     ],
     "@typescript-eslint/no-non-null-asserted-optional-chain": [
       "error",
-    ],
-    "@typescript-eslint/no-non-null-assertion": [
-      "warn",
     ],
     "@typescript-eslint/no-restricted-imports": [
       "error",
@@ -142,8 +130,11 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "@typescript-eslint/no-unnecessary-type-constraint": [
       "error",
     ],
+    "@typescript-eslint/no-unsafe-declaration-merging": [
+      "error",
+    ],
     "@typescript-eslint/no-unused-vars": [
-      "warn",
+      "error",
     ],
     "@typescript-eslint/no-var-requires": [
       "error",
@@ -152,9 +143,6 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
       "off",
     ],
     "@typescript-eslint/prefer-as-const": [
-      "error",
-    ],
-    "@typescript-eslint/prefer-namespace-keyword": [
       "error",
     ],
     "@typescript-eslint/quotes": [
@@ -411,9 +399,6 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     ],
     "no-empty-character-class": [
       "error",
-    ],
-    "no-empty-function": [
-      "off",
     ],
     "no-empty-pattern": [
       "error",
@@ -755,7 +740,7 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
       "error",
     ],
     "valid-typeof": [
-      "off",
+      "error",
     ],
     "vue/array-bracket-newline": [
       "off",
@@ -949,9 +934,6 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "@babel/semi": [
       "off",
     ],
-    "@typescript-eslint/adjacent-overload-signatures": [
-      "error",
-    ],
     "@typescript-eslint/ban-ts-comment": [
       "off",
     ],
@@ -1000,10 +982,7 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "@typescript-eslint/no-array-constructor": [
       "error",
     ],
-    "@typescript-eslint/no-empty-function": [
-      "error",
-    ],
-    "@typescript-eslint/no-empty-interface": [
+    "@typescript-eslint/no-duplicate-enum-values": [
       "error",
     ],
     "@typescript-eslint/no-explicit-any": [
@@ -1018,9 +997,6 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "@typescript-eslint/no-extra-semi": [
       "off",
     ],
-    "@typescript-eslint/no-inferrable-types": [
-      "error",
-    ],
     "@typescript-eslint/no-loss-of-precision": [
       "error",
     ],
@@ -1032,9 +1008,6 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     ],
     "@typescript-eslint/no-non-null-asserted-optional-chain": [
       "error",
-    ],
-    "@typescript-eslint/no-non-null-assertion": [
-      "warn",
     ],
     "@typescript-eslint/no-restricted-imports": [
       "error",
@@ -1061,8 +1034,11 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "@typescript-eslint/no-unnecessary-type-constraint": [
       "error",
     ],
+    "@typescript-eslint/no-unsafe-declaration-merging": [
+      "error",
+    ],
     "@typescript-eslint/no-unused-vars": [
-      "warn",
+      "error",
     ],
     "@typescript-eslint/no-var-requires": [
       "error",
@@ -1071,9 +1047,6 @@ exports[`should have a correct configuration for a Jest file 1`] = `
       "off",
     ],
     "@typescript-eslint/prefer-as-const": [
-      "error",
-    ],
-    "@typescript-eslint/prefer-namespace-keyword": [
       "error",
     ],
     "@typescript-eslint/quotes": [
@@ -1376,9 +1349,6 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "no-empty-character-class": [
       "error",
     ],
-    "no-empty-function": [
-      "off",
-    ],
     "no-empty-pattern": [
       "error",
     ],
@@ -1719,7 +1689,7 @@ exports[`should have a correct configuration for a Jest file 1`] = `
       "error",
     ],
     "valid-typeof": [
-      "off",
+      "error",
     ],
     "vue/array-bracket-newline": [
       "off",
@@ -1918,9 +1888,6 @@ exports[`should have a correct configuration for a React file 1`] = `
     "@babel/semi": [
       "off",
     ],
-    "@typescript-eslint/adjacent-overload-signatures": [
-      "error",
-    ],
     "@typescript-eslint/ban-ts-comment": [
       "off",
     ],
@@ -1969,10 +1936,7 @@ exports[`should have a correct configuration for a React file 1`] = `
     "@typescript-eslint/no-array-constructor": [
       "error",
     ],
-    "@typescript-eslint/no-empty-function": [
-      "error",
-    ],
-    "@typescript-eslint/no-empty-interface": [
+    "@typescript-eslint/no-duplicate-enum-values": [
       "error",
     ],
     "@typescript-eslint/no-explicit-any": [
@@ -1987,9 +1951,6 @@ exports[`should have a correct configuration for a React file 1`] = `
     "@typescript-eslint/no-extra-semi": [
       "off",
     ],
-    "@typescript-eslint/no-inferrable-types": [
-      "error",
-    ],
     "@typescript-eslint/no-loss-of-precision": [
       "error",
     ],
@@ -2001,9 +1962,6 @@ exports[`should have a correct configuration for a React file 1`] = `
     ],
     "@typescript-eslint/no-non-null-asserted-optional-chain": [
       "error",
-    ],
-    "@typescript-eslint/no-non-null-assertion": [
-      "warn",
     ],
     "@typescript-eslint/no-restricted-imports": [
       "error",
@@ -2034,8 +1992,11 @@ exports[`should have a correct configuration for a React file 1`] = `
     "@typescript-eslint/no-unnecessary-type-constraint": [
       "error",
     ],
+    "@typescript-eslint/no-unsafe-declaration-merging": [
+      "error",
+    ],
     "@typescript-eslint/no-unused-vars": [
-      "warn",
+      "error",
     ],
     "@typescript-eslint/no-var-requires": [
       "error",
@@ -2044,9 +2005,6 @@ exports[`should have a correct configuration for a React file 1`] = `
       "off",
     ],
     "@typescript-eslint/prefer-as-const": [
-      "error",
-    ],
-    "@typescript-eslint/prefer-namespace-keyword": [
       "error",
     ],
     "@typescript-eslint/quotes": [
@@ -2291,9 +2249,6 @@ exports[`should have a correct configuration for a React file 1`] = `
     ],
     "no-empty-character-class": [
       "error",
-    ],
-    "no-empty-function": [
-      "off",
     ],
     "no-empty-pattern": [
       "error",
@@ -2714,7 +2669,7 @@ exports[`should have a correct configuration for a React file 1`] = `
       "error",
     ],
     "valid-typeof": [
-      "off",
+      "error",
     ],
     "vue/array-bracket-newline": [
       "off",
@@ -2908,9 +2863,6 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "@babel/semi": [
       "off",
     ],
-    "@typescript-eslint/adjacent-overload-signatures": [
-      "error",
-    ],
     "@typescript-eslint/ban-ts-comment": [
       "off",
     ],
@@ -2959,10 +2911,7 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "@typescript-eslint/no-array-constructor": [
       "error",
     ],
-    "@typescript-eslint/no-empty-function": [
-      "error",
-    ],
-    "@typescript-eslint/no-empty-interface": [
+    "@typescript-eslint/no-duplicate-enum-values": [
       "error",
     ],
     "@typescript-eslint/no-explicit-any": [
@@ -2977,9 +2926,6 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "@typescript-eslint/no-extra-semi": [
       "off",
     ],
-    "@typescript-eslint/no-inferrable-types": [
-      "error",
-    ],
     "@typescript-eslint/no-loss-of-precision": [
       "error",
     ],
@@ -2991,9 +2937,6 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     ],
     "@typescript-eslint/no-non-null-asserted-optional-chain": [
       "error",
-    ],
-    "@typescript-eslint/no-non-null-assertion": [
-      "warn",
     ],
     "@typescript-eslint/no-restricted-imports": [
       "error",
@@ -3020,8 +2963,11 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "@typescript-eslint/no-unnecessary-type-constraint": [
       "error",
     ],
+    "@typescript-eslint/no-unsafe-declaration-merging": [
+      "error",
+    ],
     "@typescript-eslint/no-unused-vars": [
-      "warn",
+      "error",
     ],
     "@typescript-eslint/no-var-requires": [
       "error",
@@ -3030,9 +2976,6 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
       "off",
     ],
     "@typescript-eslint/prefer-as-const": [
-      "error",
-    ],
-    "@typescript-eslint/prefer-namespace-keyword": [
       "error",
     ],
     "@typescript-eslint/quotes": [
@@ -3277,9 +3220,6 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     ],
     "no-empty-character-class": [
       "error",
-    ],
-    "no-empty-function": [
-      "off",
     ],
     "no-empty-pattern": [
       "error",
@@ -3621,7 +3561,7 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
       "error",
     ],
     "valid-typeof": [
-      "off",
+      "error",
     ],
     "vue/array-bracket-newline": [
       "off",

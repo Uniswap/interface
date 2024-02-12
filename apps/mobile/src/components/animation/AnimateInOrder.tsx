@@ -6,8 +6,8 @@ export const AnimateInOrder = ({
   children,
   index,
   animation = 'bouncy',
-  enterStyle = { o: 0, scale: 0.8 },
-  exitStyle = { o: 0, scale: 0.8 },
+  enterStyle = { opacity: 0, scale: 0.8 },
+  exitStyle = { opacity: 0, scale: 0.8 },
   delayMs = 150,
   hapticOnEnter,
   ...rest

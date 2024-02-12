@@ -1,10 +1,13 @@
 import { useEffect } from 'react'
 import { NumberType } from 'utilities/src/format/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'wallet/src/features/routing/useUSDCPrice'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
+import {
+  STABLECOIN_AMOUNT_OUT,
+  useUSDCPrice,
+} from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import { currencyIdToChain } from 'wallet/src/utils/currencyId'
-import { getCurrencyAmount, ValueType } from 'wallet/src/utils/getCurrencyAmount'
+import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 // Used for rounding in conversion math
 const NUM_DECIMALS_FIAT_ROUNDING = 2

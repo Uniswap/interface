@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react'
-import { LayoutChangeEvent, StyleProp, ViewStyle } from 'react-native'
+import { StyleProp, ViewStyle } from 'react-native'
 import { TransactionModalContextState } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { ModalNameType } from 'wallet/src/telemetry/constants'
 
@@ -15,7 +15,6 @@ export type TransactionModalProps = PropsWithChildren<{
 
 export type TransactionModalInnerContainerProps = PropsWithChildren<{
   bottomSheetViewStyles: StyleProp<ViewStyle>
-  onLayout: (event: LayoutChangeEvent) => void
   fullscreen: boolean
 }>
 

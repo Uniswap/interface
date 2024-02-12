@@ -8,7 +8,6 @@ import { TransactionListQuery } from 'wallet/src/data/__generated__/types-and-ho
 import { AssetType } from 'wallet/src/entities/assets'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
-import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
 import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
@@ -300,14 +299,13 @@ export enum TransactionStep {
   SUBMITTED,
 }
 
-export interface TransactionFlowProps {
+export interface TransferFlowProps {
   dispatch: Dispatch<AnyAction>
   showRecipientSelector?: boolean
   recipientSelector?: JSX.Element
   flowName: string
-  derivedInfo: DerivedTransferInfo | DerivedSwapInfo
+  derivedInfo: DerivedTransferInfo
   onClose: () => void
-  approveTxRequest?: providers.TransactionRequest
   txRequest?: providers.TransactionRequest
   gasFee: GasFeeResult
   step: TransactionStep

@@ -3,7 +3,7 @@ import { trimToLength } from 'utilities/src/primitives/string'
 import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
-import { useUnitag } from 'wallet/src/features/unitags/hooks'
+import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
@@ -43,8 +43,8 @@ export function usePendingAccounts(): AddressTo<Account> {
   return useAppSelector<AddressTo<Account>>(selectPendingAccounts)
 }
 
-export function useSignerAccounts(): Account[] {
-  return useAppSelector<Account[]>(selectSignerMnemonicAccounts)
+export function useSignerAccounts(): SignerMnemonicAccount[] {
+  return useAppSelector<SignerMnemonicAccount[]>(selectSignerMnemonicAccounts)
 }
 
 export function useNonPendingSignerAccounts(): SignerMnemonicAccount[] {
@@ -142,7 +142,7 @@ export function useDisplayName(
 
   const validated = getValidAddress(address)
   const ens = useENSName(validated ?? undefined)
-  const { unitag } = useUnitag(validated ?? undefined)
+  const { unitag } = useUnitagByAddress(validated ?? undefined)
 
   // Need to account for pending accounts for use within onboarding
   const maybeLocalName = useAccounts()[address ?? '']?.name
@@ -171,7 +171,10 @@ export function useDisplayName(
     return { name: localName, type: DisplayNameType.Local }
   }
 
-  return { name: `${sanitizeAddressText(shortenAddress(address))}`, type: DisplayNameType.Address }
+  return {
+    name: `${sanitizeAddressText(shortenAddress(address))}`,
+    type: DisplayNameType.Address,
+  }
 }
 
 /*
@@ -186,14 +189,14 @@ export function useAvatar(address: Maybe<string>): {
   loading: boolean
 } {
   const { data: avatar } = useENSAvatar(address)
-  const { unitag, loading } = useUnitag(address || undefined)
+  const { unitag, loading } = useUnitagByAddress(address || undefined)
 
   if (loading) {
     return { avatar: undefined, loading }
   }
 
   if (unitag?.metadata?.avatar) {
-    return { avatar: unitag.metadata?.avatar, loading: false }
+    return { avatar: unitag.metadata.avatar, loading: false }
   }
 
   return { avatar, loading: false }

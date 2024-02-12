@@ -17,3 +17,8 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
     useSelectedColorScheme: () => 'light',
   }
 })
+
+jest.mock('react-native-safe-area-context', () => ({
+  useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),
+  SafeAreaProvider: jest.fn(({ children }) => children),
+}))

@@ -56,8 +56,8 @@ export function AccountHeader(): JSX.Element {
   return (
     <Flex gap="$spacing12" overflow="scroll" pt="$spacing8" testID="account-header" width="100%">
       {activeAddress && (
-        <Flex ai="flex-start" gap="$spacing12" width="100%">
-          <Flex row jc="space-between" width="100%">
+        <Flex alignItems="flex-start" gap="$spacing12" width="100%">
+          <Flex row justifyContent="space-between" width="100%">
             <TouchableArea
               hapticFeedback
               alignItems="center"
@@ -85,7 +85,7 @@ export function AccountHeader(): JSX.Element {
             </TouchableArea>
           </Flex>
           {walletHasName ? (
-            <Flex row ai="center" gap="$spacing8" justifyContent="space-between">
+            <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between">
               <TouchableArea
                 hapticFeedback
                 flexShrink={1}

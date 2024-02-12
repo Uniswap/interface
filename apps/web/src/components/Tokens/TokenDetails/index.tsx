@@ -3,10 +3,7 @@ import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
-import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
-import ShareButton from 'components/BreadcrumbNav/ShareButton'
-import { ChartType, PriceChartType } from 'components/Charts/utils'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { AboutSection } from 'components/Tokens/TokenDetails/About'
 import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
@@ -16,15 +13,20 @@ import TokenDetailsSkeleton, {
   RightPanel,
   TokenDetailsLayout,
   TokenInfoContainer,
-  TokenNameCell,
 } from 'components/Tokens/TokenDetails/Skeleton'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
-import { nativeOnChain, NATIVE_CHAIN_ID } from 'constants/tokens'
+import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { checkWarning } from 'constants/tokenSafety'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
+import {
+  Chain,
+  PortfolioTokenBalancePartsFragment,
+  TokenPriceQuery,
+  TokenQuery,
+} from 'graphql/data/__generated__/types-and-hooks'
 import { TokenQueryData } from 'graphql/data/Token'
 import {
   getTokenDetailsURL,
@@ -33,14 +35,8 @@ import {
   supportedChainIdFromGQLChain,
   TimePeriod,
 } from 'graphql/data/util'
-import {
-  Chain,
-  PortfolioTokenBalancePartsFragment,
-  TokenPriceQuery,
-  TokenQuery,
-} from 'graphql/data/__generated__/types-and-hooks'
 import { useCurrency } from 'hooks/Tokens'
-import { useColor } from 'hooks/useColor'
+import { getInitialUrl } from 'hooks/useAssetLogoSource'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { UNKNOWN_TOKEN_SYMBOL, useTokenFromActiveNetwork } from 'lib/hooks/useCurrency'
@@ -49,57 +45,18 @@ import { useCallback, useMemo, useState, useTransition } from 'react'
 import { ArrowLeft, ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/SwapContext'
-import styled, { css, useTheme } from 'styled-components'
-import { EllipsisStyle } from 'theme/components'
+import styled from 'styled-components'
 import { isAddress } from 'utils'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 import { ActivitySection } from './ActivitySection'
 import BalanceSummary from './BalanceSummary'
-import { AdvancedPriceChartToggle } from './ChartTypeSelectors/AdvancedPriceChartToggle'
-import ChartTypeSelector from './ChartTypeSelectors/ChartTypeSelector'
 import InvalidTokenDetails from './InvalidTokenDetails'
 import MobileBalanceSummaryFooter from './MobileBalanceSummaryFooter'
 import { Hr } from './shared'
 import { TokenDescription } from './TokenDescription'
+import { TokenDetailsHeader } from './TokenDetailsHeader'
 
-const TokenSymbol = styled.span<{ isInfoTDPEnabled?: boolean }>`
-  text-transform: uppercase;
-  color: ${({ theme }) => theme.neutral2};
-  margin-left: 8px;
-
-  ${({ isInfoTDPEnabled }) =>
-    isInfoTDPEnabled &&
-    css`
-      @media screen and (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
-        display: none;
-      }
-    `}
-`
-const ChartActions = styled.div`
-  display: flex;
-  gap: 8px;
-  align-items: center;
-`
-const TokenTitle = styled.div<{ isInfoTDPEnabled?: boolean }>`
-  display: flex;
-
-  ${({ isInfoTDPEnabled }) =>
-    isInfoTDPEnabled
-      ? css`
-          overflow: hidden;
-          white-space: nowrap;
-        `
-      : css`
-          @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
-            display: inline;
-          }
-        `}
-`
-const TokenName = styled.span`
-  ${EllipsisStyle}
-  min-width: 40px;
-`
 const DividerLine = styled(Hr)`
   margin-top: 40px;
   margin-bottom: 40px;
@@ -208,8 +165,6 @@ export default function TokenDetails({
   const isBlockedToken = tokenWarning?.canProceed === false
   const navigate = useNavigate()
 
-  const theme = useTheme()
-  const extractedColor = useColor(detailedToken ?? undefined, theme.surface2, theme.darkMode)
   const screenSize = useScreenSize()
   const isLargeScreenSize = screenSize['lg']
 
@@ -252,22 +207,25 @@ export default function TokenDetails({
       }
 
       const newDefaultToken = tokens.outputCurrency ?? tokens.inputCurrency
+
       if (!newDefaultToken) return
 
-      startTokenTransition(() =>
-        navigate(
-          getTokenDetailsURL({
-            // The function falls back to "NATIVE" if the address is null
-            address: newDefaultToken.isNative ? null : newDefaultToken.address,
-            chain,
-            inputAddress:
-              // If only one token was selected before we navigate, then it was the default token and it's being replaced.
-              // On the new page, the *new* default token becomes the output, and we don't have another option to set as the input token.
-              tokens.inputCurrency && tokens.inputCurrency !== newDefaultToken ? inputCurrencyURLAddress : null,
-            isInfoExplorePageEnabled,
-          })
-        )
+      const preloadedLogoSrc = getInitialUrl(
+        newDefaultToken.wrapped.address,
+        newDefaultToken.chainId,
+        newDefaultToken.isNative
       )
+      const url = getTokenDetailsURL({
+        // The function falls back to "NATIVE" if the address is null
+        address: newDefaultToken.isNative ? null : newDefaultToken.address,
+        chain,
+        inputAddress:
+          // If only one token was selected before we navigate, then it was the default token and it's being replaced.
+          // On the new page, the *new* default token becomes the output, and we don't have another option to set as the input token.
+          tokens.inputCurrency && tokens.inputCurrency !== newDefaultToken ? inputCurrencyURLAddress : null,
+        isInfoExplorePageEnabled,
+      })
+      startTokenTransition(() => navigate(url, { state: { preloadedLogoSrc } }))
     },
     [address, chain, isInfoExplorePageEnabled, navigate]
   )
@@ -284,18 +242,10 @@ export default function TokenDetails({
     [continueSwap, setContinueSwap]
   )
 
-  const [chartType, setChartType] = useState<ChartType>(ChartType.PRICE)
-  const [priceChartType, setPriceChartType] = useState<PriceChartType>(PriceChartType.LINE)
-
   // address will never be undefined if token is defined; address is checked here to appease typechecker
   if (detailedToken === undefined || !address) {
     return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!address} />
   }
-  const tokenSymbolName = detailedToken && (detailedToken.symbol ?? <Trans>Symbol not found</Trans>)
-  const twitterShareName =
-    detailedToken && detailedToken.name && detailedToken.symbol
-      ? `${detailedToken.name} (${detailedToken.symbol})`
-      : detailedToken?.name || detailedToken?.symbol || ''
 
   return (
     <Trace
@@ -314,7 +264,7 @@ export default function TokenDetails({
                 <BreadcrumbNavLink to={`/explore/tokens/${chain.toLowerCase()}`}>
                   <Trans>Tokens</Trans> <ChevronRight size={14} />
                 </BreadcrumbNavLink>
-                <CurrentPageBreadcrumb address={address} currency={detailedToken} chainId={detailedToken.chainId} />
+                <CurrentPageBreadcrumb address={address} currency={detailedToken} />
               </BreadcrumbNavContainer>
             ) : (
               <BreadcrumbNavContainer aria-label="breadcrumb-nav">
@@ -324,53 +274,18 @@ export default function TokenDetails({
               </BreadcrumbNavContainer>
             )}
             <TokenInfoContainer isInfoTDPEnabled={isInfoTDPEnabled} data-testid="token-info-container">
-              <TokenNameCell isInfoTDPEnabled={isInfoTDPEnabled}>
-                <PortfolioLogo currencies={[detailedToken]} chainId={detailedToken.chainId} size="32px" />
-                {isInfoTDPEnabled ? (
-                  <TokenTitle isInfoTDPEnabled>
-                    <TokenName>{detailedToken.name ?? <Trans>Name not found</Trans>}</TokenName>
-                    <TokenSymbol isInfoTDPEnabled>{tokenSymbolName}</TokenSymbol>
-                  </TokenTitle>
-                ) : (
-                  <TokenTitle>
-                    {detailedToken.name ?? <Trans>Name not found</Trans>}
-                    <TokenSymbol>{tokenSymbolName}</TokenSymbol>
-                  </TokenTitle>
-                )}
-              </TokenNameCell>
-              <ChartActions>
-                {isInfoTDPEnabled ? (
-                  <>
-                    {chartType === ChartType.PRICE && (
-                      <AdvancedPriceChartToggle
-                        currentChartType={priceChartType}
-                        onChartTypeChange={setPriceChartType}
-                      />
-                    )}
-
-                    <ChartTypeSelector
-                      options={[ChartType.PRICE, ChartType.VOLUME, ChartType.TVL]}
-                      currentChartType={chartType}
-                      onChartTypeChange={(c: ChartType) => {
-                        setChartType(c)
-                        if (c === ChartType.PRICE) setPriceChartType(PriceChartType.LINE)
-                      }}
-                    />
-                  </>
-                ) : (
-                  <ShareButton name={twitterShareName} />
-                )}
-              </ChartActions>
+              <TokenDetailsHeader
+                token={detailedToken}
+                tokenQueryData={tokenQueryData}
+                address={address}
+                chainId={pageChainId}
+              />
             </TokenInfoContainer>
             <ChartSection
-              chartType={chartType}
-              priceChartType={priceChartType}
               timePeriod={timePeriod}
               onChangeTimePeriod={onChangeTimePeriod}
               tokenPriceQuery={tokenPriceQuery}
-              extractedColor={extractedColor}
             />
-
             <StatsSection chainId={pageChainId} address={address} tokenQueryData={tokenQueryData} />
             {!isInfoTDPEnabled && (
               <>

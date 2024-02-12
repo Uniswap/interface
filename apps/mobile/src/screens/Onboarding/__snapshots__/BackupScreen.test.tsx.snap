@@ -5,7 +5,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
   sentry-label="Screen"
   style={
     {
-      "alignItems": "stretch",
       "backgroundColor": "#FFFFFF",
       "flex": 1,
       "flexDirection": "column",
@@ -45,7 +44,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
       exiting={[Function]}
       style={
         {
-          "alignItems": "stretch",
           "flexDirection": "column",
           "flexGrow": 1,
           "gap": 16,
@@ -106,7 +104,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
       <View
         style={
           {
-            "alignItems": "stretch",
             "flex": 1,
             "flexDirection": "column",
             "flexGrow": 1,
@@ -117,7 +114,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
         <View
           style={
             {
-              "alignItems": "stretch",
               "flexDirection": "column",
               "flexGrow": 1,
               "justifyContent": "space-between",
@@ -127,7 +123,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
           <View
             style={
               {
-                "alignItems": "stretch",
                 "flexDirection": "column",
                 "gap": 24,
               }
@@ -136,7 +131,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
             <View
               style={
                 {
-                  "alignItems": "stretch",
                   "flexDirection": "column",
                   "gap": 12,
                   "shadowColor": "rgb(34,34,34)",
@@ -319,7 +313,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       <View
                         style={
                           {
-                            "alignItems": "stretch",
                             "flexDirection": "row",
                             "gap": 8,
                           }
@@ -478,7 +471,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       <View
                         style={
                           {
-                            "alignItems": "stretch",
                             "flexDirection": "row",
                             "gap": 8,
                           }
@@ -524,7 +516,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
           <View
             style={
               {
-                "alignItems": "stretch",
                 "flexDirection": "column",
                 "gap": 12,
                 "justifyContent": "flex-end",
@@ -732,7 +723,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
   sentry-label="Screen"
   style={
     {
-      "alignItems": "stretch",
       "backgroundColor": "#FFFFFF",
       "flex": 1,
       "flexDirection": "column",
@@ -772,7 +762,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
       exiting={[Function]}
       style={
         {
-          "alignItems": "stretch",
           "flexDirection": "column",
           "flexGrow": 1,
           "gap": 16,
@@ -833,7 +822,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
       <View
         style={
           {
-            "alignItems": "stretch",
             "flex": 1,
             "flexDirection": "column",
             "flexGrow": 1,
@@ -844,7 +832,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
         <View
           style={
             {
-              "alignItems": "stretch",
               "flexDirection": "column",
               "flexGrow": 1,
               "justifyContent": "space-between",
@@ -854,7 +841,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
           <View
             style={
               {
-                "alignItems": "stretch",
                 "flexDirection": "column",
                 "gap": 24,
               }
@@ -863,7 +849,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             <View
               style={
                 {
-                  "alignItems": "stretch",
                   "flexDirection": "column",
                   "gap": 12,
                   "shadowColor": "rgb(34,34,34)",
@@ -1046,7 +1031,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       <View
                         style={
                           {
-                            "alignItems": "stretch",
                             "flexDirection": "row",
                             "gap": 8,
                           }
@@ -1205,7 +1189,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       <View
                         style={
                           {
-                            "alignItems": "stretch",
                             "flexDirection": "row",
                             "gap": 8,
                           }
@@ -1251,7 +1234,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
           <View
             style={
               {
-                "alignItems": "stretch",
                 "flexDirection": "column",
                 "gap": 12,
                 "justifyContent": "flex-end",

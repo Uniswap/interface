@@ -2,21 +2,26 @@ import { ApolloClient, from } from '@apollo/client'
 import { RetryLink } from '@apollo/client/link/retry'
 import { RestLink } from 'apollo-link-rest'
 import axios from 'axios'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { createNewInMemoryCache } from 'wallet/src/data/cache'
-import { useRestMutation, useRestQuery } from 'wallet/src/data/rest'
+import { useRestQuery } from 'wallet/src/data/rest'
+import { createSignedRequestBody, createSignedRequestParams } from 'wallet/src/data/utils'
 import {
+  ProfileMetadata,
   UnitagAddressResponse,
+  UnitagChangeUsernameRequestBody,
   UnitagClaimEligibilityParams,
   UnitagClaimEligibilityResponse,
   UnitagClaimUsernameRequestBody,
+  UnitagDeleteUsernameRequestBody,
   UnitagGetAvatarUploadUrlResponse,
   UnitagResponse,
   UnitagUpdateMetadataRequestBody,
   UnitagUpdateMetadataResponse,
   UnitagUsernameResponse,
 } from 'wallet/src/features/unitags/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 
 const restLink = new RestLink({
   uri: `${uniswapUrls.unitagsApiUrl}`,
@@ -56,7 +61,7 @@ export function useUnitagQuery(
   return useRestQuery<UnitagUsernameResponse, Record<string, never>>(
     addQueryParamsToEndpoint('/username', { username }),
     {},
-    ['available', 'requiresEnsMatch', 'metadata', 'address'], // return all fields
+    ['available', 'requiresEnsMatch', 'username', 'metadata', 'address'], // return all fields
     {
       skip: !username, // skip if username is not provided
       fetchPolicy: 'no-cache',
@@ -82,41 +87,16 @@ export function useUnitagByAddressQuery(
   )
 }
 
-export function useClaimUnitagMutation(): ReturnType<
-  typeof useRestMutation<UnitagResponse, UnitagClaimUsernameRequestBody>
-> {
-  return useRestMutation<UnitagResponse, UnitagClaimUsernameRequestBody>(
-    '/username',
-    ['success', 'errorCode'], // return all fields
-    {},
-    'POST',
-    apolloClient
-  )
-}
-
-export function useUnitagUpdateMetadataMutation(
-  unitag: string
-): ReturnType<
-  typeof useRestMutation<UnitagUpdateMetadataResponse, UnitagUpdateMetadataRequestBody>
-> {
-  return useRestMutation<UnitagUpdateMetadataResponse, UnitagUpdateMetadataRequestBody>(
-    `/username/${unitag}/metadata`,
-    ['success', 'metadata'], // return all fields
-    {},
-    'PUT',
-    apolloClient
-  )
-}
-
 export function useUnitagClaimEligibilityQuery({
   address,
   deviceId,
+  isUsernameChange,
   skip,
 }: UnitagClaimEligibilityParams & { skip?: boolean }): ReturnType<
   typeof useRestQuery<UnitagClaimEligibilityResponse>
 > {
   return useRestQuery<UnitagClaimEligibilityResponse, Record<string, never>>(
-    addQueryParamsToEndpoint('/claim/eligibility', address ? { address, deviceId } : { deviceId }),
+    addQueryParamsToEndpoint('/claim/eligibility', { address, deviceId, isUsernameChange }),
     {},
     ['canClaim', 'errorCode', 'message'], // return all fields
     { skip, fetchPolicy: 'no-cache' },
@@ -125,37 +105,126 @@ export function useUnitagClaimEligibilityQuery({
   )
 }
 
-export function useUnitagGetAvatarUploadUrlQuery({
-  username,
-  skip,
-}: {
-  username?: string
-  skip?: boolean
-}): ReturnType<typeof useRestQuery<UnitagGetAvatarUploadUrlResponse>> {
-  return useRestQuery<UnitagGetAvatarUploadUrlResponse, Record<string, never>>(
-    addQueryParamsToEndpoint('/username/avatar-upload-url', { username }),
-    {},
-    ['success', 'avatarUrl', 'preSignedUrl', 's3UploadFields'], // return all fields
-    { skip: !username || skip, ttlMs: ONE_SECOND_MS * 110 },
-    'GET',
-    apolloClient
-  )
-}
+// Axios requests with signature authentication
 
-// TODO (MOB-1791): add signature authentication in headers
-export async function getUnitagAvatarUploadUrl(
+export async function getUnitagAvatarUploadUrl({
+  username,
+  account,
+  signerManager,
+}: {
   username: string
-): ReturnType<typeof axios.get<UnitagGetAvatarUploadUrlResponse>> {
+  account: Account
+  signerManager: SignerManager
+}): ReturnType<typeof axios.get<UnitagGetAvatarUploadUrlResponse>> {
   const avatarUploadUrl = `${uniswapUrls.unitagsApiUrl}/username/avatar-upload-url`
+  const { requestParams, signature } = await createSignedRequestParams<{ username: string }>(
+    { username },
+    account,
+    signerManager
+  )
   return await axios.get<UnitagGetAvatarUploadUrlResponse>(avatarUploadUrl, {
-    params: { username },
+    params: requestParams,
+    headers: { 'x-uni-sig': signature },
   })
 }
 
-export async function deleteUnitag(
-  username: string,
-  address: Address
-): ReturnType<typeof axios.delete<UnitagResponse>> {
+export async function deleteUnitag({
+  username,
+  account,
+  signerManager,
+}: {
+  username: string
+  account: Account
+  signerManager: SignerManager
+}): ReturnType<typeof axios.delete<UnitagResponse>> {
   const avatarUploadUrl = `${uniswapUrls.unitagsApiUrl}/username`
-  return await axios.delete<UnitagResponse>(avatarUploadUrl, { data: { username, address } })
+  const { requestBody, signature } = await createSignedRequestBody<UnitagDeleteUsernameRequestBody>(
+    { username },
+    account,
+    signerManager
+  )
+  return await axios.delete<UnitagResponse>(avatarUploadUrl, {
+    data: requestBody,
+    headers: { 'x-uni-sig': signature },
+  })
+}
+
+export async function updateUnitagMetadata({
+  username,
+  metadata,
+  clearAvatar,
+  account,
+  signerManager,
+}: {
+  username: string
+  metadata: ProfileMetadata
+  clearAvatar: boolean
+  account: Account
+  signerManager: SignerManager
+}): ReturnType<typeof axios.put<UnitagUpdateMetadataResponse>> {
+  const updateMetadataUrl = `${uniswapUrls.unitagsApiUrl}/username/${username}/metadata`
+  const { requestBody, signature } = await createSignedRequestBody<UnitagUpdateMetadataRequestBody>(
+    {
+      metadata,
+      clearAvatar,
+    },
+    account,
+    signerManager
+  )
+  return await axios.put<UnitagUpdateMetadataResponse>(updateMetadataUrl, requestBody, {
+    headers: { 'x-uni-sig': signature },
+  })
+}
+
+export async function claimUnitag({
+  username,
+  deviceId,
+  metadata,
+  account,
+  signerManager,
+}: {
+  username: string
+  deviceId: string
+  metadata: ProfileMetadata
+  account: Account
+  signerManager: SignerManager
+}): ReturnType<typeof axios.post<UnitagResponse>> {
+  const claimUnitagUrl = `${uniswapUrls.unitagsApiUrl}/username`
+  const { requestBody, signature } = await createSignedRequestBody<UnitagClaimUsernameRequestBody>(
+    {
+      username,
+      deviceId,
+      metadata,
+    },
+    account,
+    signerManager
+  )
+  return await axios.post<UnitagResponse>(claimUnitagUrl, requestBody, {
+    headers: { 'x-uni-sig': signature },
+  })
+}
+
+export async function changeUnitag({
+  username,
+  deviceId,
+  account,
+  signerManager,
+}: {
+  username: string
+  deviceId: string
+  account: Account
+  signerManager: SignerManager
+}): ReturnType<typeof axios.post<UnitagResponse>> {
+  const changeUnitagUrl = `${uniswapUrls.unitagsApiUrl}/username/change`
+  const { requestBody, signature } = await createSignedRequestBody<UnitagChangeUsernameRequestBody>(
+    {
+      username,
+      deviceId,
+    },
+    account,
+    signerManager
+  )
+  return await axios.post<UnitagResponse>(changeUnitagUrl, requestBody, {
+    headers: { 'x-uni-sig': signature },
+  })
 }

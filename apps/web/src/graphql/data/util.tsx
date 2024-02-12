@@ -2,7 +2,7 @@ import { OperationVariables, QueryResult } from '@apollo/client'
 import * as Sentry from '@sentry/react'
 import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
-import { nativeOnChain, NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'constants/tokens'
 import ms from 'ms'
 import { useEffect } from 'react'
 import { DefaultTheme } from 'styled-components'
@@ -148,6 +148,15 @@ export function getValidUrlChainName(chainName: string | undefined): Chain | und
 }
 
 /**
+ * @param chainName parsed in chain name from the url query parameter
+ * @returns if chainName is a valid chain name, returns the ChainId, otherwise returns undefined
+ */
+export function getValidUrlChainId(chainName: string | undefined): ChainId | undefined {
+  const validChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
+  return validChainName ? supportedChainIdFromGQLChain(validChainName) : undefined
+}
+
+/**
  * @param chainName parsed in chain name from url query parameter
  * @returns if chainName is a valid chain name supported by the backend, returns the backend chain name, otherwise returns Chain.Ethereum
  */
@@ -258,4 +267,9 @@ export function getProtocolColor(priceSource: PriceSource, theme: DefaultTheme):
 
 export function getProtocolName(priceSource: PriceSource): string {
   return PROTOCOL_META[priceSource].name
+}
+
+export enum OrderDirection {
+  Asc = 'asc',
+  Desc = 'desc',
 }

@@ -8,7 +8,9 @@ import { AccountList } from 'src/components/accounts/AccountList'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
+import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
+import { useSagaStatus } from 'src/utils/useSagaStatus'
 import {
   Button,
   Flex,
@@ -23,9 +25,14 @@ import { spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { ActionSheetModal, MenuItemProp } from 'wallet/src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
+import {
+  createAccountActions,
+  createAccountSagaName,
+} from 'wallet/src/features/wallet/create/createAccountSaga'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -46,7 +53,7 @@ export function AccountSwitcherModal(): JSX.Element {
       backgroundColor={colors.surface1.get()}
       name={ModalName.AccountSwitcher}
       onClose={(): Action => dispatch(closeModal({ name: ModalName.AccountSwitcher }))}>
-      <Flex bg="$surface1">
+      <Flex backgroundColor="$surface1">
         <AccountSwitcher
           onClose={(): void => {
             dispatch(closeModal({ name: ModalName.AccountSwitcher }))
@@ -69,8 +76,14 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const dispatch = useAppDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
   const modalState = useAppSelector(selectModalState(ModalName.AccountSwitcher))
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+  const onCompleteOnboarding = useCompleteOnboardingCallback({
+    entryPoint: OnboardingEntryPoint.Sidebar,
+    importType: hasImportedSeedPhrase ? ImportType.CreateAdditional : ImportType.CreateNew,
+  })
 
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
+  const [createdAdditionalAccount, setCreatedAdditionalAccount] = useState(false)
 
   const accounts = useAppSelector(selectAllAccountsSorted)
 
@@ -105,19 +118,43 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     })
   }
 
-  const addWalletOptions = useMemo<MenuItemProp[]>(() => {
-    const onPressCreateNewWallet = (): void => {
-      // Clear any existing pending accounts first.
-      dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
-      dispatch(createAccountActions.trigger())
+  // Pick up account creation and activate
+  useSagaStatus(createAccountSagaName, async () => {
+    if (createdAdditionalAccount) {
+      setCreatedAdditionalAccount(false)
+      await onCompleteOnboarding()
+    }
+  })
 
-      navigate(Screens.OnboardingStack, {
-        screen: OnboardingScreens.EditName,
-        params: {
-          importType: hasImportedSeedPhrase ? ImportType.CreateAdditional : ImportType.CreateNew,
-          entryPoint: OnboardingEntryPoint.Sidebar,
-        },
-      })
+  const addWalletOptions = useMemo<MenuItemProp[]>(() => {
+    const onPressCreateNewWallet = async (): Promise<void> => {
+      // Ensure no pending accounts
+      await dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
+      await dispatch(createAccountActions.trigger())
+
+      if (unitagsFeatureFlagEnabled) {
+        if (hasImportedSeedPhrase) {
+          setCreatedAdditionalAccount(true)
+        } else {
+          // create pending account and place into welcome flow
+          navigate(Screens.OnboardingStack, {
+            screen: OnboardingScreens.WelcomeWallet,
+            params: {
+              importType: ImportType.CreateNew,
+              entryPoint: OnboardingEntryPoint.Sidebar,
+            },
+          })
+        }
+      } else {
+        navigate(Screens.OnboardingStack, {
+          screen: OnboardingScreens.EditName,
+          params: {
+            entryPoint: OnboardingEntryPoint.Sidebar,
+            importType: hasImportedSeedPhrase ? ImportType.CreateAdditional : ImportType.CreateNew,
+          },
+        })
+      }
+
       setShowAddWalletModal(false)
       onClose()
     }
@@ -226,7 +263,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     return options
-  }, [activeAccountAddress, dispatch, hasImportedSeedPhrase, onClose, t])
+  }, [activeAccountAddress, dispatch, hasImportedSeedPhrase, onClose, t, unitagsFeatureFlagEnabled])
 
   const accountsWithoutActive = accounts.filter((a) => a.address !== activeAccountAddress)
 

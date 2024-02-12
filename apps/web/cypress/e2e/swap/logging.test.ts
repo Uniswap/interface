@@ -4,8 +4,7 @@ import { USDC_MAINNET } from '../../../src/constants/tokens'
 import { getTestSelector } from '../../utils'
 
 describe('swap flow logging', () => {
-  // TODO re-enable web test
-  it.skip('completes two swaps and verifies the TTS logging for the first, plus all intermediate steps along the way', () => {
+  it('completes two swaps and verifies the TTS logging for the first, plus all intermediate steps along the way', () => {
     cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
     cy.hardhat()
 
@@ -22,14 +21,12 @@ describe('swap flow logging', () => {
     })
 
     // Verify Swap Quote
-    cy.waitForAmplitudeEvent(SwapEventName.SWAP_QUOTE_FETCH).then((event: any) => {
+    cy.waitForAmplitudeEvent(SwapEventName.SWAP_QUOTE_FETCH, ['time_to_first_quote_request']).then((event: any) => {
       // Price quotes don't include these values, so we only verify the types if they exist
-      if (event.event_properties.time_to_first_quote_request) {
-        cy.wrap(event.event_properties.time_to_first_quote_request).should('be.a', 'number')
-        cy.wrap(event.event_properties.time_to_first_quote_request).should('be.gte', 0)
-        cy.wrap(event.event_properties.time_to_first_quote_request_since_first_input).should('be.a', 'number')
-        cy.wrap(event.event_properties.time_to_first_quote_request_since_first_input).should('be.gte', 0)
-      }
+      cy.wrap(event.event_properties.time_to_first_quote_request).should('be.a', 'number')
+      cy.wrap(event.event_properties.time_to_first_quote_request).should('be.gte', 0)
+      cy.wrap(event.event_properties.time_to_first_quote_request_since_first_input).should('be.a', 'number')
+      cy.wrap(event.event_properties.time_to_first_quote_request_since_first_input).should('be.gte', 0)
     })
 
     // Submit transaction

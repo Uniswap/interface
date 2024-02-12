@@ -57,7 +57,10 @@ export function HeaderScrollScreen({
   })
 
   return (
-    <Screen bg={backgroundColor} edges={['top', 'left', 'right']} noInsets={fullScreen}>
+    <Screen
+      backgroundColor={backgroundColor}
+      edges={['top', 'left', 'right']}
+      noInsets={fullScreen}>
       {showHandleBar ? <HandleBar backgroundColor={colors.surface1.get()} /> : null}
       <ScrollHeader
         alwaysShowCenterElement={alwaysShowCenterElement}

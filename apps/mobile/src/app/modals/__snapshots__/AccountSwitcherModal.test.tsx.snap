@@ -4,7 +4,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
 <View
   style={
     {
-      "alignItems": "stretch",
       "flexDirection": "column",
       "maxHeight": NaN,
       "paddingBottom": 12,
@@ -14,7 +13,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
   <View
     style={
       {
-        "alignItems": "stretch",
         "flexDirection": "column",
         "gap": 16,
         "paddingBottom": 16,
@@ -34,7 +32,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
       <View
         style={
           {
-            "alignItems": "stretch",
             "backgroundColor": "transparent",
             "borderBottomColor": "transparent",
             "borderBottomLeftRadius": 999999,
@@ -76,7 +73,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
           <View
             style={
               {
-                "alignItems": "stretch",
                 "flexDirection": "column",
                 "height": 56,
                 "width": 56,
@@ -86,7 +82,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
             <View
               style={
                 {
-                  "alignItems": "stretch",
                   "flexDirection": "column",
                   "height": 56,
                   "width": 56,
@@ -248,7 +243,7 @@ exports[`AccountSwitcher renders correctly 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
-                "gap": 4,
+                "gap": 2,
                 "justifyContent": "center",
               }
             }
@@ -409,7 +404,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
     <View
       style={
         {
-          "alignItems": "stretch",
           "flexDirection": "column",
           "paddingLeft": 24,
           "paddingRight": 24,
@@ -478,7 +472,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
   <View
     style={
       {
-        "alignItems": "stretch",
         "flexDirection": "column",
         "flexShrink": 1,
       }
@@ -581,7 +574,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
       <View
         style={
           {
-            "alignItems": "stretch",
             "borderBottomColor": "#2222220D",
             "borderBottomLeftRadius": 999999,
             "borderBottomRightRadius": 999999,

@@ -11,4 +11,7 @@ export const zIndices = {
   modal: 1060,
   popover: 1070,
   tooltip: 1080,
+  // Custom value needed to properly display components
+  // above modals (e.g. in the extension app)
+  overlay: 100001,
 }
