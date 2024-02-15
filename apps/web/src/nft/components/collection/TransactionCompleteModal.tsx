@@ -296,7 +296,7 @@ const TxCompleteModal = () => {
                         } no longer available. Uniswap instantly refunded you for this incomplete transaction. `}
                       {formatNumberOrString({ input: txFeeFiat, type: NumberType.FiatNFTToken })} was used for gas in
                       attempt to complete this transaction. For support, please visit our{' '}
-                      <a href="https://discord.gg/FCfyBSbCU5">Discord</a>
+                      <a href="https://discord.gg/Uniswap">Discord</a>
                     </p>
                     <Box className={styles.allUnavailableAssets}>
                       {nftsNotPurchased.length >= 3 && (

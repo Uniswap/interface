@@ -227,7 +227,7 @@ export const MenuDropdown = () => {
                 )}
               </Box>
               <IconRow>
-                <Icon href="https://discord.com/invite/FCfyBSbCU5">
+                <Icon href="https://discord.gg/Uniswap">
                   <DiscordIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
                 <Icon href="https://twitter.com/Uniswap">
