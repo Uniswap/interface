@@ -7,4 +7,5 @@ export enum SupportArticleURL {
   APPROVALS_EXPLAINER = 'https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction',
   TRANSACTION_FAILURE = 'https://support.uniswap.org/hc/en-us/articles/8643975058829-Why-did-my-transaction-fail-',
   UNISWAP_X_FAILURE = 'https://support.uniswap.org/hc/en-us/articles/17515489874189-Why-can-my-swap-not-be-filled-',
+  MOONPAY_REGIONAL_AVAILABILITY = 'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-',
 }

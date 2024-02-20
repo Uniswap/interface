@@ -9,7 +9,12 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { ImportType } from 'wallet/src/features/onboarding/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { QuoteType } from 'wallet/src/features/transactions/utils'
-import { WalletAppsFlyerEvents, WalletEventName } from 'wallet/src/telemetry/constants'
+import { UnitagClaimContext } from 'wallet/src/features/unitags/types'
+import {
+  UnitagEventName,
+  WalletAppsFlyerEvents,
+  WalletEventName,
+} from 'wallet/src/telemetry/constants'
 
 export type SwapTradeBaseProperties = {
   allowed_slippage_basis_points?: number
@@ -91,6 +96,9 @@ export type WalletEventProperties = {
     freshnessLag: number
     updatedCurrencies: string[]
   }
+  [WalletEventName.SendRecipientSelected]: {
+    domain: string
+  }
   [WalletEventName.SwapSubmitted]: {
     transaction_hash: string
   } & SwapTradeBaseProperties
@@ -116,6 +124,9 @@ export type WalletEventProperties = {
     error?: ApolloError | FetchBaseQueryError | SerializedError | Error | string
     txRequest?: providers.TransactionRequest
   } & SwapTradeBaseProperties
+  [SharedEventName.TERMS_OF_SERVICE_ACCEPTED]: {
+    address: string
+  }
   [WalletEventName.TokenSelected]: TraceProps &
     AssetDetailsBaseProperties &
     SearchResultContextProperties & {
@@ -123,6 +134,24 @@ export type WalletEventProperties = {
     }
   [WalletEventName.TransferSubmitted]: TransferProperties
   [WalletEventName.TransferCompleted]: TransferProperties
+  [UnitagEventName.UnitagBannerActionTaken]: {
+    action: 'claim' | 'dismiss'
+    entryPoint: 'home' | 'settings'
+  }
+  [UnitagEventName.UnitagOnboardingActionTaken]: {
+    action: 'select' | 'later'
+  }
+  [UnitagEventName.UnitagChanged]: undefined
+  [UnitagEventName.UnitagClaimAvailabilityDisplayed]: {
+    result: 'unavailable' | 'restricted' | 'available'
+  }
+  [UnitagEventName.UnitagClaimed]: UnitagClaimContext
+  [UnitagEventName.UnitagMetadataUpdated]: {
+    avatar: boolean
+    description: boolean
+    twitter: boolean
+  }
+  [UnitagEventName.UnitagRemoved]: undefined
 }
 
 export type WalletAppsFlyerEventProperties = {

@@ -15,7 +15,7 @@ import { ReactNode } from 'react'
 import { useSendContext } from 'state/send/SendContext'
 import styled from 'styled-components'
 import { ClickableStyle, CloseIcon, Separator, ThemedText } from 'theme/components'
-import { shortenAddress } from 'utils'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const ModalWrapper = styled(ColumnCenter)`

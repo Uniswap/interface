@@ -6,6 +6,7 @@ ignores: [
     "@tamagui/theme-base",
     ## Internal packages / workspaces
     "ui",
+    "utilities",
     "tsconfig",
     "utilities",
   ]

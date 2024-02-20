@@ -4,11 +4,12 @@ import { iconSizes } from 'ui/src/theme'
 
 interface TokenLoaderProps {
   opacity: number
+  withPrice?: boolean
 }
 
 const TOKEN_BALANCE_ITEM_HEIGHT = 56
 
-export function TokenLoader({ opacity }: TokenLoaderProps): JSX.Element {
+export function TokenLoader({ opacity, withPrice = false }: TokenLoaderProps): JSX.Element {
   return (
     <Flex
       alignItems="flex-start"
@@ -17,14 +18,15 @@ export function TokenLoader({ opacity }: TokenLoaderProps): JSX.Element {
       minHeight={TOKEN_BALANCE_ITEM_HEIGHT}
       opacity={opacity}
       py="$spacing8">
-      <Flex row shrink alignItems="center" gap="$spacing12" overflow="hidden">
+      <Flex grow row alignItems="center" gap="$spacing12" overflow="hidden">
         <Flex
           backgroundColor="$neutral3"
           borderRadius="$roundedFull"
           minHeight={iconSizes.icon40}
           minWidth={iconSizes.icon40}
         />
-        <Flex shrink alignItems="flex-start">
+
+        <Flex grow alignItems="flex-start">
           <Text
             loading="no-shimmer"
             loadingPlaceholderText="Token Full Name"
@@ -40,6 +42,25 @@ export function TokenLoader({ opacity }: TokenLoaderProps): JSX.Element {
             />
           </Flex>
         </Flex>
+
+        {withPrice && (
+          <Flex alignItems="flex-end">
+            <Text
+              loading="no-shimmer"
+              loadingPlaceholderText="$XX.XX"
+              numberOfLines={1}
+              variant="body1"
+            />
+            <Flex row alignItems="center" gap="$spacing8" minHeight={20}>
+              <Text
+                loading="no-shimmer"
+                loadingPlaceholderText="X.XX%"
+                numberOfLines={1}
+                variant="subheading2"
+              />
+            </Flex>
+          </Flex>
+        )}
       </Flex>
     </Flex>
   )

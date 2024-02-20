@@ -2,74 +2,52 @@
 // Custom matric renderer from: https://github.com/awesomejerry/react-native-qrcode-svg/pull/139/files
 
 import React, { useMemo } from 'react'
-import Svg, { ClipPath, Defs, G, Image, LinearGradient, Path, Rect, Stop } from 'react-native-svg'
+import Svg, { Defs, G, LinearGradient, Path, Rect, Stop } from 'react-native-svg'
 import genMatrix from 'src/components/QRCodeScanner/custom-qr-code-generator/src/genMatrix.js'
 import transformMatrixIntoPath from 'src/components/QRCodeScanner/custom-qr-code-generator/src/transformMatrixIntoCirclePath.js'
+import { useMedia } from 'ui/src'
 
-const renderLogo = ({
-  size,
-  logo,
-  logoBackgroundColor,
-  logoSize,
-  logoMargin,
-  logoBorderRadius,
-}) => {
-  const logoPosition = (size - logoSize - logoMargin * 2) / 2
-  const logoBackgroundSize = logoSize + logoMargin * 2
-  const logoBackgroundBorderRadius = logoBorderRadius + (logoMargin / logoSize) * logoBorderRadius
+const QREyes = ({ x = -1, y = -1, fillColor, size }) => (
+  <G transform={`scale(${size / 120})`} x={x} y={y}>
+    <Path
+      clip-rule="evenodd"
+      d="M0 12C0 5.37258 5.37258 0 12 0H28C34.6274 0 40 5.37258 40 12V28C40 34.6274 34.6274 40 28 40H12C5.37258 40 0 34.6274 0 28V12ZM28 6.27451H12C8.8379 6.27451 6.27451 8.8379 6.27451 12V28C6.27451 31.1621 8.8379 33.7255 12 33.7255H28C31.1621 33.7255 33.7255 31.1621 33.7255 28V12C33.7255 8.8379 31.1621 6.27451 28 6.27451Z"
+      fill={fillColor}
+      fill-rule="evenodd"
+    />
+    <Path
+      d="M11 17C11 13.6863 13.6863 11 17 11H23C26.3137 11 29 13.6863 29 17V23C29 26.3137 26.3137 29 23 29H17C13.6863 29 11 26.3137 11 23V17Z"
+      fill={fillColor}
+    />
+  </G>
+)
 
-  return (
-    <G x={logoPosition} y={logoPosition}>
-      <Defs>
-        <ClipPath id="clip-logo-background">
-          <Rect
-            height={logoBackgroundSize}
-            rx={logoBackgroundBorderRadius}
-            ry={logoBackgroundBorderRadius}
-            width={logoBackgroundSize}
-          />
-        </ClipPath>
-        <ClipPath id="clip-logo">
-          <Rect height={logoSize} rx={logoBorderRadius} ry={logoBorderRadius} width={logoSize} />
-        </ClipPath>
-      </Defs>
-      <G>
-        <Rect
-          clipPath="url(#clip-logo-background)"
-          fill={logoBackgroundColor}
-          height={logoBackgroundSize}
-          width={logoBackgroundSize}
-        />
-      </G>
-      <G x={logoMargin} y={logoMargin}>
-        <Image
-          clipPath="url(#clip-logo)"
-          height={logoSize}
-          href={logo}
-          preserveAspectRatio="xMidYMid slice"
-          width={logoSize}
-        />
-      </G>
-    </G>
-  )
-}
+const QREyeBG = ({ x = -1, y = -1, size, backgroundColor }) => (
+  <G transform={`scale(${size / 120})`} x={x} y={y}>
+    <Path d="M0 0H40V40H0V0Z" fill={backgroundColor} />
+  </G>
+)
+
+const QREyeWrapper = ({ x = 0, y = 0, backgroundColor, overlayColor, fillColor, size }) => (
+  <>
+    <QREyeBG backgroundColor={backgroundColor} size={size} x={x} y={y} />
+    <QREyes fillColor={fillColor} size={size} x={x} y={y} />
+    <QREyes fillColor={overlayColor} size={size} x={x} y={y} />
+  </>
+)
 
 const QRCode = ({
-  value = 'this is a QR code',
-  size = 100,
-  color = 'sporeBlack',
-  backgroundColor = 'sporeWhite',
+  value = 'Wallet QR code',
+  size = 190,
+  color,
+  backgroundColor,
+  overlayColor = '#FFFFFF',
   borderRadius = 24,
-  logo,
-  logoSize = size * 0.2,
-  logoBackgroundColor = 'transparent',
-  logoMargin = -2,
-  logoBorderRadius = 0,
-  quietZone = 4,
+  quietZone = 8,
   enableLinearGradient = false,
   gradientDirection = ['0%', '0%', '100%', '100%'],
-  linearGradient = ['rgb(255,0,0)', 'rgb(0,255,255)'],
-  ecl = 'M',
+  linearGradient = ['rgb(255,255,255)', 'rgb(0,255,255)'],
+  ecl = 'H',
   getRef,
   onError,
 }) => {
@@ -86,11 +64,14 @@ const QRCode = ({
     }
   }, [value, size, ecl, onError])
 
+  const media = useMedia()
   if (!result) {
     return null
   }
 
   const { path } = result
+
+  const eyeSize = media.short ? 126 : 138
 
   return (
     <Svg
@@ -104,9 +85,9 @@ const QRCode = ({
           id="grad"
           x1={gradientDirection[0]}
           x2={gradientDirection[2]}
-          y1={gradientDirection[1]}
-          y2={gradientDirection[3]}>
-          <Stop offset="0" stopColor={linearGradient[0]} stopOpacity="1" />
+          y1={gradientDirection[0]}
+          y2={gradientDirection[2]}>
+          <Stop offset="0" stopColor={color} stopOpacity="1" />
           <Stop offset="1" stopColor={linearGradient[1]} stopOpacity="1" />
           <Stop offset="1" stopColor={linearGradient[2]} stopOpacity="1" />
         </LinearGradient>
@@ -123,16 +104,28 @@ const QRCode = ({
       </G>
       <G>
         <Path d={path} fill={enableLinearGradient ? 'url(#grad)' : color} />
+        <Path d={path} fill={enableLinearGradient ? overlayColor + '66' : overlayColor + '2D'} />
+        <QREyeWrapper
+          backgroundColor={backgroundColor}
+          fillColor={color}
+          overlayColor={overlayColor + '2D'}
+          size={eyeSize}
+        />
+        <QREyeWrapper
+          backgroundColor={backgroundColor}
+          fillColor={color}
+          overlayColor={overlayColor + '2D'}
+          size={eyeSize}
+          y={size - eyeSize / 3}
+        />
+        <QREyeWrapper
+          backgroundColor={backgroundColor}
+          fillColor={color}
+          overlayColor={overlayColor + '2D'}
+          size={eyeSize}
+          x={size - eyeSize / 3}
+        />
       </G>
-      {logo &&
-        renderLogo({
-          size,
-          logo,
-          logoSize,
-          logoBackgroundColor,
-          logoMargin,
-          logoBorderRadius,
-        })}
     </Svg>
   )
 }

@@ -46,6 +46,7 @@ import {
   useMedia,
   useSporeColors,
   useUniconColors,
+  useUniconV2Colors,
 } from 'ui/src'
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'ui/src/assets'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
@@ -53,6 +54,8 @@ import { AnimatedFlex, flexStyles } from 'ui/src/components/layout'
 import { fonts, iconSizes, opacify, spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { ElementName } from 'wallet/src/telemetry/constants'
 
 export function QRAnimation({
@@ -161,13 +164,18 @@ export function QRAnimation({
     opacity: isPlayingVideo.value ? 1 : 0,
   }))
 
-  const uniconColors = useUniconColors(activeAddress)
-
   // used throughout the page the get the size of the QR code container
   // setting as a constant so that it doesn't get defined by padding and screen size and give us less design control
   const QR_CONTAINER_SIZE = media.short ? 175 : 242
   const QR_CODE_SIZE = media.short ? 140 : 190
   const UNICON_SIZE = 64
+
+  const uniconV1Colors = useUniconColors(activeAddress)
+  const { color: uniconV2Color } = useUniconV2Colors(activeAddress)
+  const isUniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
+  const uniconColors = isUniconsV2Enabled
+    ? { gradientStart: uniconV2Color, gradientEnd: uniconV2Color, glow: uniconV2Color }
+    : uniconV1Colors
 
   return (
     <>
@@ -216,9 +224,9 @@ export function QRAnimation({
                         hideOutline
                         address={activeAddress}
                         backgroundColor="$surface1"
+                        color={isUniconsV2Enabled ? uniconV2Color : undefined}
                         containerBackgroundColor="$surface1"
                         logoSize={UNICON_SIZE}
-                        overlayOpacityPercent={10}
                         safeAreaColor="$surface1"
                         size={QR_CODE_SIZE}
                       />
@@ -244,7 +252,7 @@ export function QRAnimation({
                           { translateY: QR_CONTAINER_SIZE / 2 - 40 },
                         ]}>
                         <Oval
-                          color={uniconColors.gradientStart}
+                          color={uniconColors.glow}
                           height={80}
                           opacity={preglowBlurOpacity}
                           width={80}
@@ -257,7 +265,9 @@ export function QRAnimation({
                     <Flex
                       borderRadius="$rounded20"
                       height="100%"
-                      style={{ backgroundColor: uniconColors.glow }}
+                      style={{
+                        backgroundColor: uniconColors.glow,
+                      }}
                       width="100%"
                     />
                   </AnimatedFlex>

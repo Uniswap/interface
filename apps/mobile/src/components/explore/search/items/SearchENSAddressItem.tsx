@@ -23,8 +23,11 @@ export function SearchENSAddressItem({
 
   // Use `savedPrimaryEnsName` for WalletSearchResults that are stored in the search history
   // so that we don't have to do an additional ENS fetch when loading search history
-  const { address, ensName, primaryENSName: savedPrimaryENSName } = searchResult
+  const { address, ensName, primaryENSName: savedPrimaryENSName, isRawName } = searchResult
   const formattedAddress = sanitizeAddressText(shortenAddress(address))
+
+  // Get the completed name if it's not a raw name
+  const completedENSName = isRawName ? ensName : getCompletedENSName(ensName ?? null)
 
   /*
    * Fetch primary ENS associated with `address` since it may resolve to an
@@ -32,14 +35,16 @@ export function SearchENSAddressItem({
    * ex. if searching `uni.eth` resolves to 0x123, and the primary ENS for 0x123
    * is `uniswap.eth`, then we should show "uni.eth | owned by uniswap.eth"
    */
-  const completedENSName = getCompletedENSName(ensName ?? null)
   const { data: fetchedPrimaryENSName, loading: isFetchingPrimaryENSName } = useENSName(
     savedPrimaryENSName ? undefined : address
   )
 
   const primaryENSName = savedPrimaryENSName ?? fetchedPrimaryENSName
   const isPrimaryENSName = completedENSName === primaryENSName
-  const showOwnedBy = !isFetchingPrimaryENSName && !isPrimaryENSName
+
+  const showAddress = searchResult.isRawName
+  const showOwnedBy = !isFetchingPrimaryENSName && !isPrimaryENSName && !showAddress
+  const showSecondLine = showAddress || showOwnedBy
 
   const { data: avatar } = useENSAvatar(address)
 
@@ -55,11 +60,13 @@ export function SearchENSAddressItem({
             variant="body1">
             {completedENSName || formattedAddress}
           </Text>
-          {showOwnedBy ? (
+          {showSecondLine ? (
             <Text color="$neutral2" ellipsizeMode="tail" numberOfLines={1} variant="subheading2">
-              {t('Owned by {{owner}}', {
-                owner: primaryENSName || formattedAddress,
-              })}
+              {showOwnedBy &&
+                t('Owned by {{owner}}', {
+                  owner: primaryENSName || formattedAddress,
+                })}
+              {showAddress && formattedAddress}
             </Text>
           ) : null}
         </Flex>

@@ -18,7 +18,7 @@ import { isAndroid, isIOS } from 'wallet/src/utils/platform'
 
 const REST_API_URL = uniswapUrls.apiBaseUrl
 
-const requestSource = isIOS ? 'uniswap-ios' : isAndroid ? 'uniswap-android' : 'uniswap-web'
+export const REQUEST_SOURCE = isIOS ? 'uniswap-ios' : isAndroid ? 'uniswap-android' : 'uniswap-web'
 
 // mapping from endpoint to custom fetcher, when needed
 function getCustomFetcherMap(
@@ -59,7 +59,7 @@ export const getRestLink = (customRestUri?: string): ApolloLink => {
     headers: {
       'Content-Type': 'application/json',
       'X-API-KEY': config.uniswapApiKey,
-      'x-request-source': requestSource,
+      'x-request-source': REQUEST_SOURCE,
       Origin: config.uniswapAppUrl,
     },
   })
@@ -76,7 +76,7 @@ export const getCustomGraphqlHttpLink = (endpoint: CustomEndpoint): ApolloLink =
     headers: {
       'Content-Type': 'application/json',
       'X-API-KEY': endpoint.key,
-      'x-request-source': requestSource,
+      'x-request-source': REQUEST_SOURCE,
       // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
       Origin: uniswapUrls.apiBaseUrl,
     },
@@ -88,7 +88,7 @@ export const getGraphqlHttpLink = (): ApolloLink =>
     headers: {
       'Content-Type': 'application/json',
       'X-API-KEY': config.uniswapApiKey,
-      'x-request-source': requestSource,
+      'x-request-source': REQUEST_SOURCE,
       // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
       Origin: uniswapUrls.apiBaseUrl,
     },

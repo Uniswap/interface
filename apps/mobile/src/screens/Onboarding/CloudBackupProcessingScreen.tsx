@@ -14,13 +14,13 @@ type Props = NativeStackScreenProps<
 export function CloudBackupProcessingScreen({
   navigation,
   route: {
-    params: { password, importType, entryPoint, address },
+    params: { password, importType, entryPoint, address, unitagClaim },
   },
 }: Props): JSX.Element | null {
   const onBackupComplete = (): void => {
     navigation.navigate({
       name: OnboardingScreens.Notifications,
-      params: { importType, entryPoint },
+      params: { importType, entryPoint, unitagClaim },
       merge: true,
     })
   }
@@ -28,7 +28,7 @@ export function CloudBackupProcessingScreen({
   const onErrorPress = (): void => {
     navigation.navigate({
       name: OnboardingScreens.Backup,
-      params: { importType, entryPoint },
+      params: { importType, entryPoint, unitagClaim },
       merge: true,
     })
   }

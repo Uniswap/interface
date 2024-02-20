@@ -60,6 +60,7 @@ module.exports = {
         transformIgnorePatterns: ['d3-array'],
         moduleNameMapper: {
           'd3-array': 'd3-array/dist/d3-array.min.js',
+          '^react-native$': 'react-native-web',
         },
       })
     },
@@ -150,6 +151,36 @@ module.exports = {
           }
         }
         return rule
+      })
+
+      // since wallet package uses react-native-dotenv and that needs a babel plugin
+      // adding this before the swc loader
+      webpackConfig.module.rules[1].oneOf.unshift({
+        loader: 'babel-loader',
+        include: (path) => /wallet\/src.*\.(js|ts)x?$/.test(path),
+        options: {
+          presets: ['module:metro-react-native-babel-preset'],
+          plugins: [
+            [
+              'module:react-native-dotenv',
+              {
+                // ideally use envName here to add a mobile namespace but this doesn't work when sharing with dotenv-webpack
+                moduleName: 'react-native-dotenv',
+                path: '../../.env.defaults', // must use this path so this file can be shared with web since dotenv-webpack is less flexible
+                safe: true,
+                allowUndefined: false,
+              },
+            ],
+          ],
+        },
+      })
+
+      // TODO(WEB-3632): Tamagui linear gradient isn't fully-specified, temporary
+      webpackConfig.module.rules.unshift({
+        test: /\.m?js$/,
+        resolve: {
+          fullySpecified: false,
+        },
       })
 
       // Run terser compression on node_modules before tree-shaking, so that tree-shaking is more effective.

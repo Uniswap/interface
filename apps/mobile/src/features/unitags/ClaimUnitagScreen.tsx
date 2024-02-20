@@ -8,6 +8,7 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackParamList } from 'src/app/navigation/types'
 import Trace from 'src/components/Trace/Trace'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
+import { UnitagName } from 'src/features/unitags/UnitagName'
 import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import {
@@ -16,22 +17,27 @@ import {
   Button,
   Flex,
   Icons,
+  Image,
   Text,
   TouchableArea,
   useSporeColors,
 } from 'ui/src'
+import { ENS_LOGO } from 'ui/src/assets'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
+import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { Pill } from 'wallet/src/components/text/Pill'
+import { uniswapUrls } from 'wallet/src/constants/urls'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
-import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
+import { UNITAG_SUFFIX, UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/constants'
 import { useCanClaimUnitagName } from 'wallet/src/features/unitags/hooks'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { ElementName, ModalName, UnitagEventName } from 'wallet/src/telemetry/constants'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
@@ -41,12 +47,14 @@ const MAX_INPUT_FONT_SIZE = 36
 const MIN_INPUT_FONT_SIZE = 22
 const MAX_CHAR_PIXEL_WIDTH = 20
 
+const FIXED_INFO_PILL_WIDTH = 128
+
 // Used in dynamic font size width calculation to ignore `.` characters
 const UNITAG_SUFFIX_CHARS_ONLY = UNITAG_SUFFIX.replaceAll('.', '')
 const TEXT_INPUT_PLACEHOLDER = 'yourname'
 
 // Accounts for height of image, gap between image and name, and spacing from top of titles
-const UNITAG_NAME_ANIMATE_DISTANCE_Y = imageSizes.image100 + spacing.spacing36 + spacing.spacing48
+const UNITAG_NAME_ANIMATE_DISTANCE_Y = imageSizes.image100 + spacing.spacing48 + spacing.spacing24
 
 type Props = NativeStackScreenProps<UnitagStackParamList, UnitagScreens.ClaimUnitag>
 
@@ -63,9 +71,12 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
   const unitagAddress = address || pendingAccountAddress
 
   const [showInfoModal, setShowInfoModal] = useState(false)
+  const [showClaimPeriodInfoModal, setShowClaimPeriodInfoModal] = useState(false)
+
   const [showTextInputView, setShowTextInputView] = useState(true)
   const [unitagInputValue, setUnitagInputValue] = useState<string | undefined>(undefined)
   const [isCheckingUnitag, setIsCheckingUnitag] = useState(false)
+  const [shouldBlockContinue, setShouldBlockContinue] = useState(false)
   const [unitagToCheck, setUnitagToCheck] = useState<string | undefined>(undefined)
 
   const addressViewOpacity = useSharedValue(1)
@@ -76,8 +87,11 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
     }
   })
 
-  const { error: canClaimUnitagNameError, loading: loadingUnitagErrorCheck } =
-    useCanClaimUnitagName(unitagAddress, unitagToCheck)
+  const {
+    error: canClaimUnitagNameError,
+    loading: loadingUnitagErrorCheck,
+    requiresENSMatch,
+  } = useCanClaimUnitagName(unitagAddress, unitagToCheck)
 
   const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
     MAX_CHAR_PIXEL_WIDTH,
@@ -103,7 +117,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
       )
       setTimeout(() => {
         setShowTextInputView(true)
-        addressViewOpacity.value = withTiming(1, { duration: 500 })
+        addressViewOpacity.value = withTiming(1, { duration: ONE_SECOND_MS / 2 })
       }, ONE_SECOND_MS)
     })
 
@@ -118,6 +132,8 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
 
   const onChangeTextInput = useCallback(
     (text: string): void => {
+      setShouldBlockContinue(false)
+
       if (text.length > MAX_UNITAG_CHAR_LENGTH) {
         return
       }
@@ -128,7 +144,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
         onSetFontSize(text + UNITAG_SUFFIX_CHARS_ONLY)
       }
 
-      setUnitagInputValue(text?.trim())
+      setUnitagInputValue(text?.trim().toLowerCase())
     },
     [onSetFontSize, setUnitagInputValue]
   )
@@ -139,6 +155,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
   }
 
   const onPressMaybeLater = (): void => {
+    sendWalletAnalyticsEvent(UnitagEventName.UnitagOnboardingActionTaken, { action: 'later' })
     // Navigate to next screen if in onboarding
     navigate(Screens.OnboardingStack, {
       screen: OnboardingScreens.WelcomeWallet,
@@ -159,28 +176,38 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
         throw err
       }
 
+      // Log claim display and action taken
+      sendWalletAnalyticsEvent(UnitagEventName.UnitagClaimAvailabilityDisplayed, {
+        result: 'available',
+      })
+      sendWalletAnalyticsEvent(UnitagEventName.UnitagOnboardingActionTaken, { action: 'select' })
+
       // Animate the Unitag logo in and text input out
       setShowTextInputView(false)
-      addressViewOpacity.value = withTiming(0, { duration: 500 })
+
+      const initialDelay = ONE_SECOND_MS
+      const translateYDuration = ONE_SECOND_MS / 2
+
+      addressViewOpacity.value = withTiming(0, { duration: ONE_SECOND_MS / 2 })
       // Intentionally delay 1s to allow enter/exit animations to finish
       unitagInputContainerTranslateY.value = withDelay(
-        ONE_SECOND_MS,
+        initialDelay,
         withTiming(unitagInputContainerTranslateY.value + UNITAG_NAME_ANIMATE_DISTANCE_Y, {
-          duration: ONE_SECOND_MS / 2,
+          duration: translateYDuration,
         })
       )
-      // Navigate to ChooseProfilePicture screen after 1s delay to allow animations to finish
+      // Navigate to ChooseProfilePicture screen after initial delay + translation to allow animations to finish
       setTimeout(() => {
         navigate(
           entryPoint === OnboardingScreens.Landing ? Screens.OnboardingStack : Screens.UnitagStack,
           {
             screen: UnitagScreens.ChooseProfilePicture,
-            params: { unitag, entryPoint, address: unitagAddress },
+            params: { unitag, entryPoint, address: unitagAddress, unitagFontSize: fontSize },
           }
         )
-      }, ONE_SECOND_MS)
+      }, initialDelay + translateYDuration)
     },
-    [addressViewOpacity, entryPoint, unitagAddress, unitagInputContainerTranslateY]
+    [addressViewOpacity, entryPoint, unitagAddress, unitagInputContainerTranslateY, fontSize]
   )
 
   // Handle when useUnitagError completes loading and returns a result after onPressContinue is called
@@ -190,6 +217,11 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
       // If unitagError is defined, it's rendered in UI
       if (!canClaimUnitagNameError) {
         navigateWithAnimation(unitagToCheck)
+      } else {
+        sendWalletAnalyticsEvent(UnitagEventName.UnitagClaimAvailabilityDisplayed, {
+          result: requiresENSMatch ? 'restricted' : 'unavailable',
+        })
+        setShouldBlockContinue(true)
       }
     }
   }, [
@@ -198,6 +230,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
     unitagToCheck,
     isCheckingUnitag,
     navigateWithAnimation,
+    requiresENSMatch,
   ])
 
   const onPressContinue = (): void => {
@@ -207,11 +240,16 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
     }
   }
 
+  const onPressClaimPeriodLearnMore = (): void => {
+    Keyboard.dismiss()
+    setShowClaimPeriodInfoModal(true)
+  }
+
   const title = entryPoint === Screens.Home ? t('Claim your username') : t('Choose your username')
 
   return (
     <SafeKeyboardOnboardingScreen
-      subtitle={t('This is your personalized address that people can send crypto to.')}
+      subtitle={t('This is your unique name that anyone can send crypto to.')}
       title={title}>
       <Flex
         centered
@@ -226,33 +264,13 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
           height={fonts.heading2.lineHeight}
           style={{ transform: [{ translateY: unitagInputContainerTranslateY }] }}>
           {!showTextInputView && (
-            <Flex
-              row
-              alignSelf="center"
-              animation="lazy"
-              enterStyle={{ opacity: 0 }}
-              exitStyle={{ opacity: 0 }}
-              gap="$spacing20"
-              opacity={showTextInputView ? 0 : 1}
-              position="absolute">
-              <Text
-                color="$neutral1"
-                fontFamily="$heading"
+            <Flex position="absolute">
+              <UnitagName
+                animateIcon
                 fontSize={fontSize}
-                fontWeight={fonts.heading2.fontWeight}
-                lineHeight={fonts.heading2.lineHeight}>
-                {unitagInputValue}
-              </Text>
-              <Flex
-                row
-                animation="lazy"
-                enterStyle={{ opacity: 0, scale: 0.8, x: 20 }}
-                exitStyle={{ opacity: 0, scale: 0.8, x: -20 }}
-                position="absolute"
-                right={-iconSizes.icon8}
-                top={-iconSizes.icon8}>
-                <Icons.Unitag size="$icon.24" />
-              </Flex>
+                name={unitagInputValue}
+                opacity={showTextInputView ? 0 : 1}
+              />
             </Flex>
           )}
           <AnimatePresence>
@@ -316,9 +334,18 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
           </TouchableArea>
         </AnimatedFlex>
         {canClaimUnitagNameError && unitagToCheck === unitagInputValue && (
-          <Flex centered row gap="$spacing8">
-            <Text color="$statusCritical" variant="body2">
-              {canClaimUnitagNameError}
+          <Flex row gap="$spacing8">
+            <Text
+              color={requiresENSMatch ? '$neutral2' : '$statusCritical'}
+              textAlign="center"
+              variant="body2">
+              {canClaimUnitagNameError} {requiresENSMatch && t('Learn more about our')}{' '}
+              {requiresENSMatch && (
+                <Text color="$DEP_blue300" onPress={onPressClaimPeriodLearnMore}>
+                  {t('claim period')}
+                </Text>
+              )}
+              {requiresENSMatch && '.'}
             </Text>
           </Flex>
         )}
@@ -334,7 +361,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
           </Trace>
         )}
         <Button
-          disabled={!unitagInputValue || isCheckingUnitag}
+          disabled={!unitagInputValue || isCheckingUnitag || shouldBlockContinue}
           size="medium"
           theme="primary"
           onPress={onPressContinue}>
@@ -349,6 +376,12 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
       </Flex>
       {showInfoModal && (
         <InfoModal unitagAddress={unitagAddress} onClose={(): void => setShowInfoModal(false)} />
+      )}
+      {showClaimPeriodInfoModal && (
+        <ClaimPeriodInfoModal
+          username={unitagToCheck ?? ''}
+          onClose={(): void => setShowClaimPeriodInfoModal(false)}
+        />
       )}
     </SafeKeyboardOnboardingScreen>
   )
@@ -368,7 +401,8 @@ const InfoModal = ({
     <WarningModal
       backgroundIconColor={colors.surface1.get()}
       caption={t(
-        `Usernames are free, readable names that map to your 0x address. They’re easier to remember and share than a typical crypto address.`
+        `Usernames transform complex 0x addresses into readable names. By claiming a {{unitagSuffix}} username, you can easily send and receive crypto and build out a public web3 profile.`,
+        { unitagSuffix: UNITAG_SUFFIX_NO_LEADING_DOT }
       )}
       closeText={t('Close')}
       icon={
@@ -382,9 +416,10 @@ const InfoModal = ({
             shadowOpacity={0.4}
             shadowRadius="$spacing4"
             textVariant="buttonLabel4"
+            width={FIXED_INFO_PILL_WIDTH}
           />
           <Flex p="$spacing2" shadowColor="$accent1" shadowOpacity={1} shadowRadius="$spacing16">
-            <Icons.LinkHorizontalAlt color={colors.neutral2.get()} size={iconSizes.icon24} />
+            <Icons.LinkHorizontalAlt color={colors.neutral3.get()} size={iconSizes.icon24} />
           </Flex>
           <Pill
             customBackgroundColor={colors.surface1.val}
@@ -406,5 +441,39 @@ const InfoModal = ({
       title={t('A simplified address')}
       onClose={onClose}
     />
+  )
+}
+
+const ClaimPeriodInfoModal = ({
+  onClose,
+  username,
+}: {
+  onClose: () => void
+  username: string
+}): JSX.Element => {
+  const colors = useSporeColors()
+  const { t } = useTranslation()
+
+  return (
+    <WarningModal
+      backgroundIconColor={colors.surface1.get()}
+      caption={t(
+        `For a limited time, the username {{username}} is reserved. Import the wallet that owns {{username}}.eth ENS to claim this username or try again after the claim period.`,
+        { username }
+      )}
+      closeText={t('Close')}
+      icon={
+        <Image
+          height={imageSizes.image48}
+          resizeMode="contain"
+          source={ENS_LOGO}
+          width={imageSizes.image48}
+        />
+      }
+      modalName={ModalName.ENSClaimPeriod}
+      title={t('ENS claim period')}
+      onClose={onClose}>
+      <LearnMoreLink url={uniswapUrls.helpArticleUrls.unitagClaimPeriod} />
+    </WarningModal>
   )
 }

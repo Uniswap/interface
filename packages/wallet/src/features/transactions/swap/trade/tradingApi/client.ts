@@ -4,7 +4,7 @@ import { config } from 'wallet/src/config'
 import { createNewInMemoryCache } from 'wallet/src/data/cache'
 
 const restLink = new RestLink({
-  uri: config.uniswapApiBaseUrl,
+  uri: config.tradingApiUrl,
   headers: {
     'Content-Type': 'application/json',
     'X-API-KEY': config.tradingApiKey,

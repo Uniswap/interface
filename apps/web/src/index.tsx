@@ -19,6 +19,7 @@ import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/Them
 import { isBrowserRouterEnabled } from 'utils/env'
 import { getCanonicalUrl } from 'utils/urlRoutes'
 
+import { TamaguiProvider } from 'theme/tamaguiProvider'
 import Web3Provider from './components/Web3Provider'
 import { LanguageProvider } from './i18n'
 import App from './pages/App'
@@ -75,8 +76,10 @@ createRoot(container).render(
                   <BlockNumberProvider>
                     <Updaters />
                     <ThemeProvider>
-                      <ThemedGlobalStyle />
-                      <App />
+                      <TamaguiProvider>
+                        <ThemedGlobalStyle />
+                        <App />
+                      </TamaguiProvider>
                     </ThemeProvider>
                   </BlockNumberProvider>
                 </ApolloProvider>

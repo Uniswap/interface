@@ -3,16 +3,15 @@ import React, { memo, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
-import { Flex, Icons, Inset, Loader, Text, TouchableArea } from 'ui/src'
+import { Flex, Inset, Loader } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenOptionItem } from 'wallet/src/components/TokenSelector/TokenOptionItem'
+import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
-import { ElementName } from 'wallet/src/telemetry/constants'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 interface Props {
   onSelectCurrency: (currency: FiatOnRampCurrency) => void
-  onBack: () => void
   onRetry: () => void
   error: boolean
   loading: boolean
@@ -52,7 +51,6 @@ function TokenOptionItemWrapper({
 
 function _TokenFiatOnRampList({
   onSelectCurrency,
-  onBack,
   error,
   onRetry,
   list,
@@ -71,57 +69,34 @@ function _TokenFiatOnRampList({
 
   if (error) {
     return (
-      <>
-        <Header onBack={onBack} />
-        <Flex centered grow>
-          <BaseCard.ErrorState
-            retryButtonLabel="Retry"
-            title={t('Couldn’t load tokens to buy')}
-            onRetry={onRetry}
-          />
-        </Flex>
-      </>
-    )
-  }
-
-  if (loading) {
-    return (
-      <Flex>
-        <Header onBack={onBack} />
-        <Loader.Token repeat={5} />
+      <Flex centered grow>
+        <BaseCard.ErrorState
+          retryButtonLabel="Retry"
+          title={t('Couldn’t load tokens to buy')}
+          onRetry={onRetry}
+        />
       </Flex>
     )
   }
 
-  return (
-    <Flex grow>
-      <Header onBack={onBack} />
-      <BottomSheetFlatList
-        ref={flatListRef}
-        ListEmptyComponent={<Flex />}
-        ListFooterComponent={<Inset all="$spacing36" />}
-        data={list}
-        keyExtractor={key}
-        keyboardDismissMode="on-drag"
-        keyboardShouldPersistTaps="always"
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-        windowSize={5}
-      />
-    </Flex>
-  )
-}
+  if (loading) {
+    return <Loader.Token repeat={5} />
+  }
 
-function Header({ onBack }: { onBack: () => void }): JSX.Element {
-  const { t } = useTranslation()
   return (
-    <Flex row justifyContent="space-between" my="$spacing16">
-      <TouchableArea testID={ElementName.Back} onPress={onBack}>
-        <Icons.RotatableChevron color="$neutral1" />
-      </TouchableArea>
-      <Text variant="body1">{t('Select a token to buy')}</Text>
-      <Flex width={24} />
-    </Flex>
+    <BottomSheetFlatList
+      ref={flatListRef}
+      ListEmptyComponent={<Flex />}
+      ListFooterComponent={<Inset all="$spacing36" />}
+      data={list}
+      focusHook={useBottomSheetFocusHook}
+      keyExtractor={key}
+      keyboardDismissMode="on-drag"
+      keyboardShouldPersistTaps="always"
+      renderItem={renderItem}
+      showsVerticalScrollIndicator={false}
+      windowSize={5}
+    />
   )
 }
 

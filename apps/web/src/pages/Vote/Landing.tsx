@@ -24,7 +24,7 @@ import { useTokenBalance } from 'state/connection/hooks'
 import { ProposalData, ProposalState, useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { shortenAddress } from 'utils'
+import { shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { ZERO_ADDRESS } from '../../constants/misc'

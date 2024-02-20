@@ -2,21 +2,23 @@ import React from 'react'
 import { Flex, useSporeColors } from 'ui/src'
 import { isSVGUri } from 'utilities/src/format/urls'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
+import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
-import { RemoteSvg } from 'wallet/src/features/images/RemoteSvg'
+import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
 export function UnitagProfilePicture({
   address,
-  profilePictureUri,
+  unitagAvatarUri,
   size,
 }: {
   address: Address
   size: number
-  profilePictureUri?: string
+  unitagAvatarUri?: string
 }): JSX.Element {
   const colors = useSporeColors()
+  const { data: ensAvatar } = useENSAvatar(address)
 
-  return profilePictureUri ? (
+  return unitagAvatarUri ? (
     <Flex
       shrink
       backgroundColor="$surface1"
@@ -27,22 +29,23 @@ export function UnitagProfilePicture({
       shadowOpacity={0.4}
       shadowRadius="$spacing4"
       width={size}>
-      {isSVGUri(profilePictureUri) ? (
-        <RemoteSvg
+      {isSVGUri(unitagAvatarUri) ? (
+        <RemoteImage
           backgroundColor={colors.surface1.val}
           height={size}
-          imageHttpUrl={profilePictureUri}
+          uri={unitagAvatarUri}
           width={size}
         />
       ) : (
-        <ImageUri resizeMode="cover" uri={profilePictureUri} />
+        <ImageUri resizeMode="cover" uri={unitagAvatarUri} />
       )}
     </Flex>
   ) : (
     <AccountIcon
       address={address}
-      avatarUri={profilePictureUri}
+      avatarUri={ensAvatar}
       showBackground={true}
+      showBorder={true}
       size={size}
     />
   )

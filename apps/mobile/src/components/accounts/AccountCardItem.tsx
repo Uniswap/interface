@@ -56,9 +56,9 @@ function PortfolioValue({
 
   return (
     <Text color="$neutral2" loading={isLoading} variant="subheading2">
-      {portfolioValue
-        ? convertFiatAmountFormatted(portfolioValue, NumberType.PortfolioBalance)
-        : t('N/A')}
+      {portfolioValue === undefined
+        ? t('N/A')
+        : convertFiatAmountFormatted(portfolioValue, NumberType.PortfolioBalance)}
     </Text>
   )
 }

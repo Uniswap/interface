@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `Qmf6XKUvbFPHvKbi1atVQVyMwr4iVxCSpLHffiTio8Hw2h`
-- CIDv1: `bafybeihy7ayma2n3ltw6zn2aewegv4eyvxo4f52n2ixpnxgyx47xidce5i`
+- CIDv0: `QmeAaU5F67PX1jZemajRJjA6sDvJ1X6ddvgjjqDHfTePx7`
+- CIDv1: `bafybeihlezropz7qe2rutxp4solf46m3hgpl7c53fevxscbltlz2fo6exq`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,54 +10,41 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeihy7ayma2n3ltw6zn2aewegv4eyvxo4f52n2ixpnxgyx47xidce5i.ipfs.dweb.link/
-- https://bafybeihy7ayma2n3ltw6zn2aewegv4eyvxo4f52n2ixpnxgyx47xidce5i.ipfs.cf-ipfs.com/
-- [ipfs://Qmf6XKUvbFPHvKbi1atVQVyMwr4iVxCSpLHffiTio8Hw2h/](ipfs://Qmf6XKUvbFPHvKbi1atVQVyMwr4iVxCSpLHffiTio8Hw2h/)
+- https://bafybeihlezropz7qe2rutxp4solf46m3hgpl7c53fevxscbltlz2fo6exq.ipfs.dweb.link/
+- https://bafybeihlezropz7qe2rutxp4solf46m3hgpl7c53fevxscbltlz2fo6exq.ipfs.cf-ipfs.com/
+- [ipfs://QmeAaU5F67PX1jZemajRJjA6sDvJ1X6ddvgjjqDHfTePx7/](ipfs://QmeAaU5F67PX1jZemajRJjA6sDvJ1X6ddvgjjqDHfTePx7/)
 
-## 5.9.0 (2024-02-12)
+## 5.10.0 (2024-02-20)
 
 
 ### Features
 
-* **web:** [info] fix TDP/PDP header mobile responsiveness (#5636) 64edb1a
-* **web:** [info] move chart type selector and time selector to below chart (#5880) 524734a
-* **web:** add copy tooltip behavior (#5919) aed3633
-* **web:** add limit price inversion (#6198) de2d048
-* **web:** Allow feature flag overriding through URL parameters (#6182) 01181cf
-* **web:** change output currency from limit price panel (#6192) 8651e59
-* **web:** deploy v2 everywhere feature flag (#6161) dfa90e7
-* **web:** do not reset scroll between tabs (#6090) 4d0d682
-* **web:** explore/tokens and /explore should not be interchangeable (#6088) f4ca806
-* **web:** Make limit price section first and auto-fill with USDC if no output currency selected (#6013) b8ecb58
-* **web:** more dns gateway updates (#5964) 5051029
-* **web:** outage banner for arbitrum, optimism, polygon (#6218) 30af199
-* **web:** remove increment buttons from Limit Price Input (#6189) b27d874
-* **web:** Update submission endpoint for limits (#6236) 35c1e29
-* **web:** use pill toggle for TDP/PDP chart times (#6002) f3631b4
-* **web:** use protocol stats for explore charts (#6030) d42aa99
+* **web:** [info] active liquidity chart (#6237) 1133601
+* **web:** [info] add p0 info analytics (#6338) fdaade8
+* **web:** [info] dot grids (#6327) e4e8720
+* **web:** [uni-tags] add accept / reject to banners (#6309) 34a5aa7
+* **web:** [uni-tags] add banner to account drawer (#6209) 995722d
+* **web:** [uni-tags] add banner to swap page (#6234) b41f304
+* **web:** add tables error states (#6228) 262f8a0
+* **web:** fix PDP in-chart price headers (#6211) a6070ae
+* **web:** implement TDP TVL chart gql queries (#6190) dabe043
+* **web:** implement TDP volumes chart gql queries (#6188) d044d6b
+* **web:** pool protocol switcher (#6339) f81cc26
+* **web:** replace account drawer header buttons with action tiles (#6240) fba32e9
+* **web:** v2 everywhere (#6164) 5c8ec8d
 
 
 ### Bug Fixes
 
-* **web:** [landing-page] add missing translations, improve layout responsiveness, update brand assets (#6166) 38e9e47
-* **web:** de-flake swap flow logging test (#6150) 0f7214e
-* **web:** de-flake TDP cypress test (#6147) c999070
-* **web:** fix and re-enable swap e2e tests (#6143) 6922d5b
-* **web:** followup fixes for outage banner (#6229) a6db458
-* **web:** left aligned input send (#6144) cd926ae
-* **web:** make new landing page enabled by default (#6287) ce952ad
-* **web:** re-enable some cypress tests (#6122) 0aaecb1
-* **web:** send currency logos in send review are extending too far on safari (#6137) b6eecf2
-* **web:** send numbers cutoff on safari (#6136) eed1540
-* **web:** swap out OP for LDO on homepage (#6206) ea0ea23
-* **web:** update gql schema (#6246) 07432fe
-* **web:** use sentence casing (#6046) d2958ee
-
-
-### Tests
-
-* **web:** add e2e test for cancelling X order (#6146) 131aedc
-* **web:** update permit2 tests to use new ConfirmSwapModalV2 (#6165) 02c6883
-* **web:** use ConfirmSwapModalV2 in swap errors e2e tests (#6167) 25e4bad
+* **web:** [info] fix pool table description ellipsis width (#6148) b83c2a3
+* **web:** avoid re-rendering the App constantly (#6296) 45de35c
+* **web:** disable statsig metrics (#6368) f554c79
+* **web:** fix e2e tests (#6365) 4343ae9
+* **web:** fix importing some wallet paths causing errors due to react-native-dotenv (#6255) 6b7fc53
+* **web:** import v2 pool goes to add v3 pool (#6273) 8f52943
+* **web:** Keep base/quote tokens stable if user has edited the limit price value (#6284) 1dfe744
+* **web:** make new landing page enabled by default (#6285) a09d8fe
+* **web:** use chainId instead of chainName for analytics (#6390) 81dc15b
+* **web:** using correct favicon url (#6298) 46d76a8
 
 

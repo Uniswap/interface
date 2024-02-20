@@ -1,17 +1,19 @@
-import { t, Trans } from '@lingui/macro'
+import { QueryResult } from '@apollo/client'
+import { Trans, t } from '@lingui/macro'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartModelParams } from 'components/Charts/ChartModel'
+import { getCumulativeVolume } from 'components/Charts/VolumeChart/utils'
 import { useHeaderDateFormatter } from 'components/Charts/hooks'
 import Column from 'components/Column'
 import { BIPS_BASE } from 'constants/misc'
-import { PricePoint, TimePeriod, toHistoryDuration } from 'graphql/data/util'
+import { Chain, Exact, HistoryDuration, TokenHistoricalVolumesQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo } from 'react'
 import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
 import { CustomVolumeChartModel, CustomVolumeChartModelParams } from './CustomVolumeChartModel'
 import { SingleHistogramData } from './renderer'
 
@@ -63,11 +65,13 @@ export function formatHistoryDuration(duration: HistoryDuration): string {
 
 function VolumeChartHeader({
   crosshairData,
+  volumes,
   timePeriod,
   feeTier,
   noFeesData,
 }: {
   crosshairData?: SingleHistogramData
+  volumes: SingleHistogramData[]
   timePeriod: TimePeriod
   feeTier?: number
   noFeesData: boolean
@@ -76,7 +80,7 @@ function VolumeChartHeader({
   const headerDateFormatter = useHeaderDateFormatter()
 
   const display = useMemo(() => {
-    const mockDisplay = {
+    const displayValues = {
       volume: '-',
       fees: '-',
       time: '-',
@@ -84,22 +88,21 @@ function VolumeChartHeader({
     const priceFormatter = (price?: number) =>
       formatFiatPrice({
         price,
-        type: NumberType.FiatTokenStatChartHeader,
+        type: NumberType.ChartFiatValue,
       })
-    if (!crosshairData) {
-      // TODO: use timePeriod to get cumulative data
-      const mockCumulativeVolume = Math.random() * 1e10
-      mockDisplay.volume = priceFormatter(mockCumulativeVolume)
-      mockDisplay.fees = priceFormatter(mockCumulativeVolume * ((feeTier ?? 0) / BIPS_BASE / 100))
-      mockDisplay.time = t`Past ${toHistoryDuration(timePeriod).toLowerCase()}`
+    if (crosshairData === undefined) {
+      const cumulativeVolume = getCumulativeVolume(volumes)
+      displayValues.volume = priceFormatter(cumulativeVolume)
+      displayValues.fees = priceFormatter(cumulativeVolume * ((feeTier ?? 0) / BIPS_BASE / 100))
+      displayValues.time = formatHistoryDuration(toHistoryDuration(timePeriod))
     } else {
-      mockDisplay.volume = priceFormatter(crosshairData.value)
+      displayValues.volume = priceFormatter(crosshairData.value)
       const fees = crosshairData.value * ((feeTier ?? 0) / BIPS_BASE / 100)
-      mockDisplay.fees = priceFormatter(fees)
-      mockDisplay.time = headerDateFormatter(crosshairData.time)
+      displayValues.fees = priceFormatter(fees)
+      displayValues.time = headerDateFormatter(crosshairData.time)
     }
-    return mockDisplay
-  }, [crosshairData, feeTier, formatFiatPrice, headerDateFormatter, timePeriod])
+    return displayValues
+  }, [crosshairData, feeTier, formatFiatPrice, headerDateFormatter, timePeriod, volumes])
 
   return (
     <ChartHeader
@@ -125,13 +128,23 @@ function VolumeChartHeader({
 
 interface VolumeChartProps {
   height: number
-  volumes?: PricePoint[]
+  volumeQueryResult: QueryResult<
+    TokenHistoricalVolumesQuery,
+    Exact<{
+      chain: Chain
+      address?: string
+      duration: HistoryDuration
+    }>
+  >
   feeTier?: number
   timePeriod: TimePeriod
 }
 
-export function VolumeChart({ height, volumes, feeTier, timePeriod }: VolumeChartProps) {
+export function VolumeChart({ height, volumeQueryResult, feeTier, timePeriod }: VolumeChartProps) {
   const theme = useTheme()
+
+  const { data: queryData } = volumeQueryResult
+  const volumes = queryData?.token?.market?.historicalVolume
 
   const data: SingleHistogramData[] = useMemo(
     () =>
@@ -152,6 +165,7 @@ export function VolumeChart({ height, volumes, feeTier, timePeriod }: VolumeChar
       {(crosshairData) => (
         <VolumeChartHeader
           crosshairData={crosshairData}
+          volumes={data}
           timePeriod={timePeriod}
           feeTier={feeTier}
           noFeesData={noFeesData}

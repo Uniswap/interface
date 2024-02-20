@@ -8,11 +8,11 @@ import {
   AnimatedBottomSheetFlashList,
   AnimatedFlashList,
   Flex,
+  Icons,
   Loader,
   useDeviceDimensions,
   useSporeColors,
 } from 'ui/src'
-import NoNFTsIcon from 'ui/src/assets/icons/empty-state-picture.svg'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { HiddenNftsRowLeft, HiddenNftsRowRight } from 'wallet/src/components/nfts/NFTHiddenRow'
 import { useNftsTabQuery } from 'wallet/src/data/__generated__/types-and-hooks'
@@ -187,7 +187,11 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
                   ? t('When this wallet buys or receives NFTs, they’ll appear here.')
                   : t('Transfer NFTs from another wallet to get started.')
               }
-              icon={<NoNFTsIcon color={colors.neutral3.get()} />}
+              icon={
+                <Flex pb="$spacing12">
+                  <Icons.EmptyStatePicture color={colors.neutral3.get()} size="$icon.70" />
+                </Flex>
+              }
               title={t('No NFTs yet')}
               onPress={onPressEmptyState}
             />
@@ -196,12 +200,10 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
       }
       // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
       ListFooterComponent={
-        ListFooterComponent ? (
-          <>
-            {networkStatus === NetworkStatus.fetchMore && <Loader.NFT repeat={6} />}
-            {ListFooterComponent}
-          </>
-        ) : undefined
+        <>
+          {networkStatus === NetworkStatus.fetchMore && <Loader.NFT repeat={6} />}
+          {ListFooterComponent}
+        </>
       }
       data={shouldAddInLoadingItem ? [...nfts, LOADING_ITEM] : nfts}
       estimatedItemSize={ESTIMATED_NFT_LIST_ITEM_SIZE}

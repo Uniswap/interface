@@ -23,7 +23,7 @@ import { updateRecentConnectionMeta } from 'state/user/reducer'
 import styled from 'styled-components'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
-import { shortenAddress } from 'utils'
+import { shortenAddress } from 'utilities/src/addresses'
 
 import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'

@@ -49,7 +49,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
             {
               "alignItems": "center",
               "flexDirection": "row",
-              "flexShrink": 1,
+              "flexGrow": 1,
               "gap": 12,
               "overflow": "hidden",
             }
@@ -74,7 +74,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
               {
                 "alignItems": "flex-start",
                 "flexDirection": "column",
-                "flexShrink": 1,
+                "flexGrow": 1,
               }
             }
           >
@@ -228,7 +228,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
             {
               "alignItems": "center",
               "flexDirection": "row",
-              "flexShrink": 1,
+              "flexGrow": 1,
               "gap": 12,
               "overflow": "hidden",
             }
@@ -253,7 +253,7 @@ exports[`SearchPopularTokens renders without error 1`] = `
               {
                 "alignItems": "flex-start",
                 "flexDirection": "column",
-                "flexShrink": 1,
+                "flexGrow": 1,
               }
             }
           >
@@ -405,7 +405,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
         "name": "Ethereum",
         "safetyLevel": "VERIFIED",
         "symbol": "ETH",
-        "type": 2,
+        "type": 1,
       },
       {
         "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
@@ -414,7 +414,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
         "name": "USD Coin",
         "safetyLevel": "VERIFIED",
         "symbol": "USDC",
-        "type": 2,
+        "type": 1,
       },
     ]
   }
@@ -468,44 +468,27 @@ exports[`SearchPopularTokens renders without error 2`] = `
         onPress={[Function]}
       >
         <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
+          cancelable={true}
           focusable={true}
-          hitSlop={
-            {
-              "bottom": 5,
-              "left": 5,
-              "right": 5,
-              "top": 5,
-            }
-          }
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
+          hitSlop={[Function]}
+          minPressDuration={0}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onLongPress={[Function]}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
+          onPress={[Function]}
+          onPressIn={[Function]}
+          onPressOut={[Function]}
           style={
             {
+              "flexDirection": "column",
               "opacity": 1,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
             }
           }
           testID="search-token-item"
@@ -667,44 +650,27 @@ exports[`SearchPopularTokens renders without error 2`] = `
         onPress={[Function]}
       >
         <View
-          accessibilityState={
-            {
-              "busy": undefined,
-              "checked": undefined,
-              "disabled": undefined,
-              "expanded": undefined,
-              "selected": undefined,
-            }
-          }
-          accessibilityValue={
-            {
-              "max": undefined,
-              "min": undefined,
-              "now": undefined,
-              "text": undefined,
-            }
-          }
-          accessible={true}
-          collapsable={false}
+          cancelable={true}
           focusable={true}
-          hitSlop={
-            {
-              "bottom": 5,
-              "left": 5,
-              "right": 5,
-              "top": 5,
-            }
-          }
-          onClick={[Function]}
-          onResponderGrant={[Function]}
-          onResponderMove={[Function]}
-          onResponderRelease={[Function]}
-          onResponderTerminate={[Function]}
-          onResponderTerminationRequest={[Function]}
-          onStartShouldSetResponder={[Function]}
+          hitSlop={[Function]}
+          minPressDuration={0}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onLongPress={[Function]}
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
+          onPress={[Function]}
+          onPressIn={[Function]}
+          onPressOut={[Function]}
           style={
             {
+              "flexDirection": "column",
               "opacity": 1,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
             }
           }
           testID="search-token-item"

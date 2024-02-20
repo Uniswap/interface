@@ -2,10 +2,11 @@ import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { getCandlestickPriceBounds } from 'components/Charts/PriceChart/utils'
 import { PriceChartType } from 'components/Charts/utils'
-import { DeltaArrow, calculateDelta } from 'components/Tokens/TokenDetails/Delta'
+import { DeltaArrow, DeltaText, calculateDelta } from 'components/Tokens/TokenDetails/Delta'
 import { PricePoint } from 'graphql/data/util'
 import {
   AreaData,
+  BarPrice,
   CandlestickData,
   IPriceLine,
   ISeriesApi,
@@ -25,48 +26,103 @@ interface PriceChartModelParams extends ChartModelParams<PriceChartData> {
   type: PriceChartType
 }
 
+const LOW_PRICE_RANGE_THRESHOLD = 0.2
+const LOW_PRICE_RANGE_SCALE_FACTOR = 1000000000
+
 export class PriceChartModel extends ChartModel<PriceChartData> {
   protected series: ISeriesApi<'Area' | 'Candlestick'>
+  private originalData: PriceChartData[]
+  private lowPriceRangeScaleFactor = 1
   private type: PriceChartType
-  private minPriceLine: IPriceLine
-  private maxPriceLine: IPriceLine
+  private minPriceLine: IPriceLine | undefined
+  private maxPriceLine: IPriceLine | undefined
+  private priceLineOptions: Partial<PriceLineOptions> | undefined
+  private min: number
+  private max: number
 
   constructor(chartDiv: HTMLDivElement, params: PriceChartModelParams) {
     super(chartDiv, params)
+    this.originalData = this.data
+
+    const { adjustedData, lowPriceRangeScaleFactor, min, max } = PriceChartModel.getAdjustedPrices(params.data)
+    this.data = adjustedData
+    this.lowPriceRangeScaleFactor = lowPriceRangeScaleFactor
+    this.min = min
+    this.max = max
 
     this.type = params.type
     this.series = this.type === PriceChartType.LINE ? this.api.addAreaSeries() : this.api.addCandlestickSeries()
     this.series.setData(this.data)
-    this.minPriceLine = this.series.createPriceLine({ price: 0 })
-    this.maxPriceLine = this.series.createPriceLine({ price: 0 })
     this.updateOptions(params)
     this.fitContent()
   }
 
+  private static applyPriceScaleFactor(data: PriceChartData, scaleFactor: number): PriceChartData {
+    return {
+      time: data.time,
+      value: (data.value || data.close) * scaleFactor,
+      open: data.open * scaleFactor,
+      close: data.close * scaleFactor,
+      high: data.high * scaleFactor,
+      low: data.low * scaleFactor,
+    }
+  }
+
+  private static getAdjustedPrices(data: PriceChartData[]) {
+    let lowPriceRangeScaleFactor = 1
+    let adjustedData = data
+    let { min, max } = getCandlestickPriceBounds(data)
+
+    // Lightweight-charts shows few price-axis points for low-value/volatility tokens,
+    // so we workaround by "scaling" the prices, causing more price-axis points to be shown
+    if (max - min < LOW_PRICE_RANGE_THRESHOLD) {
+      lowPriceRangeScaleFactor = LOW_PRICE_RANGE_SCALE_FACTOR
+      adjustedData = data.map((point) => this.applyPriceScaleFactor(point, lowPriceRangeScaleFactor))
+      min = min * lowPriceRangeScaleFactor
+      max = max * lowPriceRangeScaleFactor
+    }
+
+    return { adjustedData, lowPriceRangeScaleFactor, min, max }
+  }
+
   updateOptions(params: PriceChartModelParams) {
-    super.updateOptions(params) // applies default options for all charts
-    const { data, theme, type } = params
+    const { data, theme, type, locale, format } = params
+    super.updateOptions(params, {
+      localization: {
+        locale,
+        priceFormatter: (price: BarPrice) => {
+          return format.formatFiatPrice({
+            // Transform price back to original value if it was scaled
+            price: Number(price) / this.lowPriceRangeScaleFactor,
+            type: NumberType.ChartFiatValue,
+          })
+        },
+      },
+      grid: {
+        vertLines: { style: LineStyle.CustomDotGrid, visible: true },
+        horzLines: { style: LineStyle.CustomDotGrid, visible: true },
+      },
+    })
 
     // Handles changing between line/candlestick view
     if (this.type !== type) {
       this.type = params.type
       this.api.removeSeries(this.series)
       this.series = this.type === PriceChartType.LINE ? this.api.addAreaSeries() : this.api.addCandlestickSeries()
-      this.series.setData(data)
-
-      // Removing the series removes pricelines as well; new ones are initialized here and configured further below
-      this.minPriceLine = this.series.createPriceLine({ price: 0 })
-      this.maxPriceLine = this.series.createPriceLine({ price: 0 })
+      this.series.setData(this.data)
     }
-
     // Handles changes in data, e.g. time period selection
-    if (this.data !== data) {
-      this.data = data
-      this.series.setData(data)
+    if (this.originalData !== data) {
+      this.originalData = data
+      const { adjustedData, lowPriceRangeScaleFactor, min, max } = PriceChartModel.getAdjustedPrices(data)
+      this.data = adjustedData
+      this.lowPriceRangeScaleFactor = lowPriceRangeScaleFactor
+      this.min = min
+      this.max = max
+
+      this.series.setData(this.data)
       this.fitContent()
     }
-
-    const { min, max } = getCandlestickPriceBounds(data)
 
     this.series.applyOptions({
       priceLineVisible: false,
@@ -90,24 +146,41 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
       borderVisible: false,
     })
 
-    const priceLineOptions: Partial<PriceLineOptions> = {
+    this.priceLineOptions = {
       color: theme.surface3,
       lineWidth: 2,
       lineStyle: LineStyle.Dashed,
       axisLabelColor: theme.neutral3,
       axisLabelTextColor: theme.neutral2,
     }
+    this.minPriceLine?.applyOptions({ price: this.min, ...this.priceLineOptions })
+    this.maxPriceLine?.applyOptions({ price: this.max, ...this.priceLineOptions })
+  }
 
-    this.minPriceLine.applyOptions({ price: min, ...priceLineOptions })
-    this.maxPriceLine.applyOptions({ price: max, ...priceLineOptions })
+  override onSeriesHover(data: PriceChartData | undefined, index: number | undefined) {
+    // Use original data point for hover functionality rather than scaled data
+    super.onSeriesHover(index !== undefined ? this.originalData[index] : undefined, index)
+
+    // Hide/display price lines based on hover
+    if (data === undefined) {
+      if (this.minPriceLine && this.maxPriceLine) {
+        this.series.removePriceLine(this.minPriceLine)
+        this.series.removePriceLine(this.maxPriceLine)
+        this.minPriceLine = undefined
+        this.maxPriceLine = undefined
+      }
+    } else if (!this.minPriceLine && !this.maxPriceLine && this.min && this.max) {
+      this.minPriceLine = this.series.createPriceLine({ price: this.min, ...this.priceLineOptions })
+      this.maxPriceLine = this.series.createPriceLine({ price: this.max, ...this.priceLineOptions })
+    }
   }
 }
 
 const DeltaContainer = styled.div`
-  height: 16px;
+  font-size: 16px;
+  line-height: 24px;
   display: flex;
   align-items: center;
-  color: ${({ theme }) => theme.neutral2};
   gap: 4px;
 `
 
@@ -153,7 +226,7 @@ export function PriceChartDelta({ startingPrice, endingPrice, noColor }: PriceCh
   return (
     <DeltaContainer>
       <DeltaArrow delta={delta} noColor={noColor} />
-      {formatDelta(delta)}
+      <DeltaText delta={delta}>{formatDelta(delta)}</DeltaText>
     </DeltaContainer>
   )
 }

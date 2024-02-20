@@ -427,7 +427,15 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
 <body>
   <div
     aria-hidden="true"
-  />
+  >
+    <span
+      class="t_light is_inversed _dsp_contents"
+    >
+      <span
+        class=" t_light _dsp_contents is_Theme"
+      />
+    </span>
+  </div>
   <reach-portal>
     <div
       data-focus-guard="true"

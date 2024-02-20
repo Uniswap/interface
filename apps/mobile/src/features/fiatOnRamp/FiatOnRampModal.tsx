@@ -1,14 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet, TextInput } from 'react-native'
-import {
-  FadeIn,
-  FadeOut,
-  FadeOutDown,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated'
+import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch, useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { FiatOnRampCtaButton } from 'src/components/fiatOnRamp/CtaButton'
 import { FiatOnRampAmountSection } from 'src/features/fiatOnRamp/FiatOnRampAmountSection'
@@ -16,14 +9,13 @@ import {
   FiatOnRampConnectingView,
   SERVICE_PROVIDER_ICON_SIZE,
 } from 'src/features/fiatOnRamp/FiatOnRampConnecting'
-import { FiatOnRampTokenSelector } from 'src/features/fiatOnRamp/FiatOnRampTokenSelector'
-import { useMoonpayFiatOnRamp } from 'src/features/fiatOnRamp/hooks'
+import { useMoonpayFiatOnRamp, useMoonpaySupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { MobileEventProperties } from 'src/features/telemetry/types'
-import { AnimatedFlex, Flex, Text, useDeviceDimensions, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
 import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'
 import { NumberType } from 'utilities/src/format/types'
 import { useTimeout } from 'utilities/src/time/timing'
@@ -31,15 +23,16 @@ import { TextInputProps } from 'wallet/src/components/input/TextInput'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
 import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useMoonpayFiatCurrencySupportInfo } from 'wallet/src/features/fiatOnRamp/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { ANIMATE_SPRING_CONFIG } from 'wallet/src/features/transactions/utils'
 import { ModalName } from 'wallet/src/telemetry/constants'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { openUri } from 'wallet/src/utils/linking'
+import { FiatOnRampTokenSelectorModal } from './FiatOnRampTokenSelector'
 
 const MOONPAY_UNSUPPORTED_REGION_HELP_URL =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'
@@ -59,7 +52,9 @@ export function FiatOnRampModal(): JSX.Element {
   return (
     <BottomSheetModal
       fullScreen
+      hideHandlebar
       hideKeyboardOnDismiss
+      renderBehindTopInset
       backgroundColor={colors.surface1.get()}
       name={ModalName.FiatOnRamp}
       onClose={onClose}>
@@ -70,7 +65,6 @@ export function FiatOnRampModal(): JSX.Element {
 
 function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   const { t } = useTranslation()
-  const { fullWidth } = useDeviceDimensions()
   const { formatNumberOrString } = useLocalizationContext()
   const inputRef = useRef<TextInput>(null)
 
@@ -170,25 +164,21 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
     }
   }, [showNativeKeyboard, eligible, showTokenSelector])
 
-  const hideInnerContentRouter = showTokenSelector
-  const screenXOffset = useSharedValue(hideInnerContentRouter ? -fullWidth : 0)
-
-  useEffect(() => {
-    const screenOffset = showTokenSelector ? 1 : 0
-    screenXOffset.value = withSpring(-(fullWidth * screenOffset), ANIMATE_SPRING_CONFIG)
-  }, [screenXOffset, showTokenSelector, fullWidth])
-
-  const wrapperStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: screenXOffset.value }],
-  }))
-
-  // we only show loading when there is no error text and value is not empty
   const selectTokenLoading = quoteCurrencyAmountLoading && !errorText && !!value
 
+  const {
+    list: supportedTokensList,
+    loading: supportedTokensLoading,
+    error: supportedTokensError,
+    refetch: supportedTokensRefetch,
+  } = useMoonpaySupportedTokens()
+
+  const insets = useDeviceInsets()
+
   return (
-    <>
+    <Flex grow pt={showConnectingToMoonpayScreen ? undefined : insets.top}>
       {!showConnectingToMoonpayScreen && (
-        <AnimatedFlex row height="100%" pb="$spacing12" style={wrapperStyle}>
+        <AnimatedFlex row height="100%" pb="$spacing12">
           {isSheetReady && (
             <AnimatedFlex
               entering={FadeIn}
@@ -197,6 +187,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
               pb="$spacing16"
               px="$spacing24"
               width="100%">
+              <HandleBar backgroundColor="none" />
               <Text variant="subheading1">{t('Buy')}</Text>
               <FiatOnRampAmountSection
                 appFiatCurrencySupported={appFiatCurrencySupportedInMoonpay}
@@ -259,8 +250,12 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
             </AnimatedFlex>
           )}
           {showTokenSelector && (
-            <FiatOnRampTokenSelector
-              onBack={(): void => setShowTokenSelector(false)}
+            <FiatOnRampTokenSelectorModal
+              error={supportedTokensError}
+              list={supportedTokensList}
+              loading={supportedTokensLoading}
+              onClose={(): void => setShowTokenSelector(false)}
+              onRetry={supportedTokensRefetch}
               onSelectCurrency={(newCurrency: FiatOnRampCurrency): void => {
                 setCurrency(newCurrency)
                 setShowTokenSelector(false)
@@ -291,7 +286,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
           serviceProviderName="MoonPay"
         />
       )}
-    </>
+    </Flex>
   )
 }
 

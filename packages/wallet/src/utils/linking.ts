@@ -76,7 +76,7 @@ export async function openTransactionLink(
 }
 
 export async function openUniswapHelpLink(): Promise<void> {
-  return openUri(`${uniswapUrls.helpUrl}/hc/en-us/requests/new`)
+  return openUri(`${uniswapUrls.helpRequestUrl}`)
 }
 
 export async function openMoonpayTransactionLink(info: FiatPurchaseTransactionInfo): Promise<void> {

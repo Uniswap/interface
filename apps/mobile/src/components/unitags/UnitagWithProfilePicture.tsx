@@ -16,15 +16,15 @@ export const UnitagWithProfilePicture = ({
     <Flex centered gap={-spacing.spacing24}>
       <UnitagProfilePicture
         address={address}
-        profilePictureUri={profilePictureUri}
         size={imageSizes.image100}
+        unitagAvatarUri={profilePictureUri}
       />
       <Flex
         row
         backgroundColor="$surface1"
         borderRadius="$rounded32"
         px="$spacing12"
-        py="$spacing8"
+        py="$spacing16"
         shadowColor="$neutral3"
         shadowOpacity={0.4}
         shadowRadius="$spacing4"

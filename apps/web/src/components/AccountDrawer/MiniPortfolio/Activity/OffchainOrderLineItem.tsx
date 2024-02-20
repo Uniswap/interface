@@ -4,7 +4,7 @@ import { DetailLineItem, LineItemData } from 'components/swap/DetailLineItem'
 import TradePrice from 'components/swap/TradePrice'
 import { UniswapXOrderDetails } from 'state/signatures/types'
 import { ExternalLink } from 'theme/components'
-import { ellipseMiddle } from 'utils/addresses'
+import { ellipseMiddle } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { formatTimestamp } from '../formatTimestamp'

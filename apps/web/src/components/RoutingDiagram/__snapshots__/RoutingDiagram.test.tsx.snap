@@ -85,7 +85,7 @@ exports[`renders multi route 1`] = `
   background: #F9F9F9;
   border: unset;
   border-radius: 0.5rem;
-  color: #000;
+  color: #7D7D7D;
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -174,100 +174,108 @@ exports[`renders multi route 1`] = `
   word-break: normal;
 }
 
-<div
-    class="c0 css-vurnku"
+<span
+    class=" _dsp_contents"
   >
-    <div
-      class="c1 c2 c3"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      CurrencyLogo currency=USDC
       <div
-        class="c1 c2 c4"
+        class="c0 css-vurnku"
       >
         <div
-          class="c5"
+          class="c1 c2 c3"
         >
-          <svg
-            class="c6"
-          >
-            dot_line.svg
-          </svg>
-        </div>
-        <div
-          class="c7 c8"
-        >
+          CurrencyLogo currency=USDC
           <div
-            class="c7 c9"
+            class="c1 c2 c4"
           >
             <div
-              class="c10 c11 css-1m65e73"
+              class="c5"
             >
-              V2
+              <svg
+                class="c6"
+              >
+                dot_line.svg
+              </svg>
+            </div>
+            <div
+              class="c7 c8"
+            >
+              <div
+                class="c7 c9"
+              >
+                <div
+                  class="c10 c11 css-1m65e73"
+                >
+                  V2
+                </div>
+              </div>
+              <div
+                class="c12 c11 css-1m65e73"
+                style="min-width: auto;"
+              >
+                75%
+              </div>
+            </div>
+            <div
+              class="c13 c14 c15"
+              style="justify-content: space-evenly; z-index: 2;"
+              width="100%"
+            >
+              Popover
             </div>
           </div>
+          CurrencyLogo currency=DAI
+        </div>
+        <div
+          class="c1 c2 c3"
+        >
+          CurrencyLogo currency=USDC
           <div
-            class="c12 c11 css-1m65e73"
-            style="min-width: auto;"
-          >
-            75%
-          </div>
-        </div>
-        <div
-          class="c13 c14 c15"
-          style="justify-content: space-evenly; z-index: 2;"
-          width="100%"
-        >
-          Popover
-        </div>
-      </div>
-      CurrencyLogo currency=DAI
-    </div>
-    <div
-      class="c1 c2 c3"
-    >
-      CurrencyLogo currency=USDC
-      <div
-        class="c1 c2 c4"
-      >
-        <div
-          class="c5"
-        >
-          <svg
-            class="c6"
-          >
-            dot_line.svg
-          </svg>
-        </div>
-        <div
-          class="c7 c8"
-        >
-          <div
-            class="c7 c9"
+            class="c1 c2 c4"
           >
             <div
-              class="c10 c11 css-1m65e73"
+              class="c5"
             >
-              V3
+              <svg
+                class="c6"
+              >
+                dot_line.svg
+              </svg>
+            </div>
+            <div
+              class="c7 c8"
+            >
+              <div
+                class="c7 c9"
+              >
+                <div
+                  class="c10 c11 css-1m65e73"
+                >
+                  V3
+                </div>
+              </div>
+              <div
+                class="c12 c11 css-1m65e73"
+                style="min-width: auto;"
+              >
+                25%
+              </div>
+            </div>
+            <div
+              class="c13 c14 c15"
+              style="justify-content: space-evenly; z-index: 2;"
+              width="100%"
+            >
+              PopoverPopover
             </div>
           </div>
-          <div
-            class="c12 c11 css-1m65e73"
-            style="min-width: auto;"
-          >
-            25%
-          </div>
-        </div>
-        <div
-          class="c13 c14 c15"
-          style="justify-content: space-evenly; z-index: 2;"
-          width="100%"
-        >
-          PopoverPopover
+          CurrencyLogo currency=DAI
         </div>
       </div>
-      CurrencyLogo currency=DAI
-    </div>
-  </div>
+    </span>
+  </span>
 </DocumentFragment>
 `;
 
@@ -356,7 +364,7 @@ exports[`renders single route 1`] = `
   background: #F9F9F9;
   border: unset;
   border-radius: 0.5rem;
-  color: #000;
+  color: #7D7D7D;
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -445,55 +453,63 @@ exports[`renders single route 1`] = `
   word-break: normal;
 }
 
-<div
-    class="c0 css-vurnku"
+<span
+    class=" _dsp_contents"
   >
-    <div
-      class="c1 c2 c3"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      CurrencyLogo currency=USDC
       <div
-        class="c1 c2 c4"
+        class="c0 css-vurnku"
       >
         <div
-          class="c5"
+          class="c1 c2 c3"
         >
-          <svg
-            class="c6"
-          >
-            dot_line.svg
-          </svg>
-        </div>
-        <div
-          class="c7 c8"
-        >
+          CurrencyLogo currency=USDC
           <div
-            class="c7 c9"
+            class="c1 c2 c4"
           >
             <div
-              class="c10 c11 css-1m65e73"
+              class="c5"
             >
-              V3
+              <svg
+                class="c6"
+              >
+                dot_line.svg
+              </svg>
+            </div>
+            <div
+              class="c7 c8"
+            >
+              <div
+                class="c7 c9"
+              >
+                <div
+                  class="c10 c11 css-1m65e73"
+                >
+                  V3
+                </div>
+              </div>
+              <div
+                class="c12 c11 css-1m65e73"
+                style="min-width: auto;"
+              >
+                100%
+              </div>
+            </div>
+            <div
+              class="c13 c14 c15"
+              style="justify-content: space-evenly; z-index: 2;"
+              width="100%"
+            >
+              Popover
             </div>
           </div>
-          <div
-            class="c12 c11 css-1m65e73"
-            style="min-width: auto;"
-          >
-            100%
-          </div>
-        </div>
-        <div
-          class="c13 c14 c15"
-          style="justify-content: space-evenly; z-index: 2;"
-          width="100%"
-        >
-          Popover
+          CurrencyLogo currency=DAI
         </div>
       </div>
-      CurrencyLogo currency=DAI
-    </div>
-  </div>
+    </span>
+  </span>
 </DocumentFragment>
 `;
 
@@ -507,8 +523,16 @@ exports[`renders when no routes are provided 1`] = `
   width: 100%;
 }
 
-<div
-    class="c0 css-vurnku"
-  />
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 css-vurnku"
+      />
+    </span>
+  </span>
 </DocumentFragment>
 `;

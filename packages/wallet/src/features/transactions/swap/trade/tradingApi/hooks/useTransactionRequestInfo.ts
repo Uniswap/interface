@@ -16,7 +16,10 @@ import { useLocalizationContext } from 'wallet/src/features/language/Localizatio
 import { getBaseTradeAnalyticsPropertiesFromSwapInfo } from 'wallet/src/features/transactions/swap/analytics'
 import { useWrapTransactionRequest } from 'wallet/src/features/transactions/swap/trade/legacy/hooks'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
-import { isClassicQuote } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
+import {
+  getClassicQuoteFromResponse,
+  isClassicQuote,
+} from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { usePermit2SignatureWithData } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -80,7 +83,6 @@ export function useTransactionRequestInfo({
       quote: quote.quote,
       permitData: quote.permitData ?? undefined,
       signature: signatureInfo.signature,
-      includeGasInfo: true,
     }
   }, [quote, requiresPermit2Sig, signatureInfo.signature, tradeWithStatus.trade?.slippageTolerance])
 
@@ -106,15 +108,21 @@ export function useTransactionRequestInfo({
     TradingApiApolloClient
   )
 
+  // We use the gasFee estimate from quote, as its more accurate
+  const swapQuote = getClassicQuoteFromResponse(trade?.quoteData)
+  const swapGasFee = swapQuote?.gasFee
+
   // This is a case where simulation fails on backend, meaning txn is expected to fail
-  const simulationError = data?.txFailureReasons?.includes(TransactionFailureReason.SimulationError)
+  const simulationError = swapQuote?.txFailureReasons?.includes(
+    TransactionFailureReason.SimulationError
+  )
   const gasEstimateError = useMemo(
     () => (simulationError ? new Error(UNKNOWN_SIM_ERROR) : error),
     [simulationError, error]
   )
 
   const gasFeeResult = {
-    value: isWrapApplicable ? wrapGasFee.value : data?.gasFee,
+    value: isWrapApplicable ? wrapGasFee.value : swapGasFee,
     loading: isWrapApplicable ? wrapGasFee.loading : loading,
     error: isWrapApplicable ? wrapGasFee.error : gasEstimateError,
   }

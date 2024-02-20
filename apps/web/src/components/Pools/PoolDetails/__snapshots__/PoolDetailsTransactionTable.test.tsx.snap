@@ -33,7 +33,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c27 {
+.c28 {
   color: #40B66B;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -41,7 +41,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c28 {
+.c29 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -49,7 +49,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c16 {
+.c17 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -60,15 +60,15 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   font-weight: 500;
 }
 
-.c16:hover {
+.c17:hover {
   opacity: 0.6;
 }
 
-.c16:active {
+.c17:active {
   opacity: 0.4;
 }
 
-.c20 {
+.c21 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -79,26 +79,26 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   font-weight: 500;
 }
 
-.c20:hover {
+.c21:hover {
   opacity: 0.6;
 }
 
-.c20:active {
+.c21:active {
   opacity: 0.4;
 }
 
-.c32 {
+.c33 {
   height: 16px;
   width: 16px;
 }
 
-.c32 path {
+.c33 path {
   stroke: #FC72FF;
   background: #7D7D7D;
   fill: none;
 }
 
-.c33 {
+.c34 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
 }
@@ -117,7 +117,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   justify-content: flex-start;
 }
 
-.c24 {
+.c25 {
   display: inline-block;
   height: inherit;
 }
@@ -138,721 +138,6 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
 
 .c2 {
   width: 100%;
-  height: 72px;
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  background: #FFFFFF;
-}
-
-.c18 {
-  width: 100%;
-  position: relative;
-  overflow-x: auto;
-  overscroll-behavior-x: none;
-  border-right: 1px solid #22222212;
-  border-bottom: 1px solid #22222212;
-  border-left: 1px solid #22222212;
-  border-bottom-right-radius: 20px;
-  border-bottom-left-radius: 20px;
-  -ms-overflow-style: none;
-  -webkit-scrollbar-width: none;
-  -moz-scrollbar-width: none;
-  -ms-scrollbar-width: none;
-  scrollbar-width: none;
-}
-
-.c18::-webkit-scrollbar {
-  display: none;
-}
-
-.c30 {
-  position: -webkit-sticky;
-  position: sticky;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  margin-top: -48px;
-  visibility: hidden;
-}
-
-.c31 {
-  background: #FFEFFF;
-  border-radius: 8px;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  padding: 8px;
-  color: #FC72FF;
-  font-size: 16px;
-  font-weight: 535;
-  gap: 8px;
-  height: 34px;
-  z-index: 990;
-}
-
-.c5 {
-  padding: 0px 12px;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  min-width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  min-height: 64px;
-}
-
-.c19:hover {
-  background: #22222212;
-}
-
-.c6 {
-  border: 1px solid #22222212;
-  border-top-right-radius: 20px;
-  border-top-left-radius: 20px;
-  overflow: auto;
-  width: unset;
-  min-height: 52px;
-  background: #F9F9F9;
-  -ms-overflow-style: none;
-  -webkit-scrollbar-width: none;
-  -moz-scrollbar-width: none;
-  -ms-scrollbar-width: none;
-  scrollbar-width: none;
-  overscroll-behavior: none;
-}
-
-.c6::-webkit-scrollbar {
-  display: none;
-}
-
-.c7 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-}
-
-.c7:last-child {
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-}
-
-.c7:first-child {
-  -webkit-box-flex: 0;
-  -webkit-flex-grow: 0;
-  -ms-flex-positive: 0;
-  flex-grow: 0;
-}
-
-.c22 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #222222;
-}
-
-.c22:hover {
-  opacity: 0.6;
-}
-
-.c22:active {
-  opacity: 0.4;
-}
-
-.c9 {
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  cursor: pointer;
-  width: 100%;
-  gap: 4px;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c9:hover {
-  opacity: 0.6;
-}
-
-.c9:active {
-  opacity: 0.4;
-}
-
-.c10 {
-  height: 16px;
-  width: 16px;
-  color: #7D7D7D;
-  -webkit-transform: rotate(0deg);
-  -ms-transform: rotate(0deg);
-  transform: rotate(0deg);
-}
-
-.c13 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  gap: 4px;
-}
-
-.c13:hover {
-  opacity: 0.6;
-}
-
-.c13:active {
-  opacity: 0.4;
-}
-
-.c23 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-}
-
-.c26 {
-  display: none;
-  height: 16px;
-  width: 16px;
-  color: #7D7D7D;
-}
-
-.c21:hover .c25 {
-  display: block;
-}
-
-.c8 {
-  min-width: 164px;
-  -webkit-flex: 0;
-  -ms-flex: 0;
-  flex: 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c12 {
-  min-width: 100px;
-  -webkit-flex: 0;
-  -ms-flex: 0;
-  flex: 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c15 {
-  min-width: 125px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c17 {
-  min-width: 100px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c14 {
-  position: relative;
-}
-
-.c29 {
-  color: #7D7D7D;
-  stroke: #7D7D7D;
-}
-
-<div
-    data-testid="pool-details-transactions-table"
-  >
-    <div>
-      <div
-        class="c0 c1"
-      >
-        <div
-          class="c2"
-        >
-          <div
-            class="c3 c4 c5 c6"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c3 c4 c9"
-                >
-                  <svg
-                    class="c10"
-                    direction="desc"
-                    fill="none"
-                    height="24"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <line
-                      x1="12"
-                      x2="12"
-                      y1="5"
-                      y2="19"
-                    />
-                    <polyline
-                      points="19 12 12 19 5 12"
-                    />
-                  </svg>
-                  <div
-                    class="c11 css-1urox24"
-                  >
-                    Time
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c3 c4 c13"
-                >
-                  <svg
-                    class="c14"
-                    fill="none"
-                    height="17"
-                    viewBox="0 0 16 17"
-                    width="16"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M7.99954 13.1667C7.82887 13.1667 7.65818 13.1014 7.52818 12.9714L4.86152 10.3047C4.60085 10.044 4.60085 9.62267 4.86152 9.362C5.12218 9.10134 5.54356 9.10134 5.80422 9.362L7.99954 11.5573L10.1948 9.362C10.4555 9.10134 10.8769 9.10134 11.1376 9.362C11.3982 9.62267 11.3982 10.044 11.1376 10.3047L8.47089 12.9714C8.34089 13.1014 8.1702 13.1667 7.99954 13.1667Z"
-                      fill="#9B9B9B"
-                    />
-                    <path
-                      d="M10.6662 7.83336C10.4955 7.83336 10.3248 7.76805 10.1948 7.63805L7.99954 5.44274L5.80422 7.63805C5.54356 7.89872 5.12218 7.89872 4.86152 7.63805C4.60085 7.37738 4.60085 6.95601 4.86152 6.69534L7.52818 4.02868C7.78885 3.76801 8.21022 3.76801 8.47089 4.02868L11.1376 6.69534C11.3982 6.95601 11.3982 7.37738 11.1376 7.63805C11.0076 7.76805 10.8369 7.83336 10.6662 7.83336Z"
-                      fill="#9B9B9B"
-                    />
-                  </svg>
-                  <div
-                    class="c11 css-1urox24"
-                  >
-                    Type
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c11 css-1urox24"
-                >
-                  USD
-                </div>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <a
-                  class="c16"
-                  href="/explore/tokens/ethereum/undefined"
-                >
-                  <div
-                    class="c11 css-1urox24"
-                  />
-                </a>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <a
-                  class="c16"
-                  href="/explore/tokens/ethereum/undefined"
-                >
-                  <div
-                    class="c11 css-1urox24"
-                  />
-                </a>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c17"
-              >
-                <div
-                  class="c11 css-1urox24"
-                >
-                  Wallet
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="c0 c18"
-        >
-          <div
-            class="c3 c4 c5 c19"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <a
-                  class="c20 c21 c22 c23"
-                  href="https://etherscan.io/tx/0x123"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <div
-                    class="c24"
-                  >
-                    <div>
-                      <div
-                        class="c11 css-1urox24"
-                      >
-                        01/12, 05:46am
-                      </div>
-                    </div>
-                  </div>
-                  <svg
-                    class="c25 c26"
-                    fill="none"
-                    height="24"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
-                    />
-                    <polyline
-                      points="15 3 21 3 21 9"
-                    />
-                    <line
-                      x1="10"
-                      x2="21"
-                      y1="14"
-                      y2="3"
-                    />
-                  </svg>
-                </a>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c27 css-1urox24"
-                >
-                  <span>
-                    Buy 
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c28 css-1urox24"
-                >
-                  $400.00
-                </div>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c28 css-1urox24"
-                >
-                  300
-                </div>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c28 css-1urox24"
-                >
-                  200
-                </div>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c17"
-              >
-                <a
-                  class="c20 c29"
-                  href="https://etherscan.io/address/0xabc"
-                  rel="noopener noreferrer"
-                  target="_blank"
-                >
-                  <div
-                    class="c28 css-1urox24"
-                  />
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="c3 c4 c30"
-        >
-          <div
-            class="c3 c4 c31"
-          >
-            <svg
-              class="c32 c33"
-              fill="none"
-              stroke="#FC72FF"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2.5"
-              />
-            </svg>
-            Loading
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</DocumentFragment>
-`;
-
-exports[`PoolDetailsTransactionsTable renders error state 1`] = `
-<DocumentFragment>
-  Error fetching Pool Transactions
-</DocumentFragment>
-`;
-
-exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
-<DocumentFragment>
-  .c3 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c4 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c11 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c23 {
-  height: 16px;
-  width: 16px;
-}
-
-.c23 path {
-  stroke: #FC72FF;
-  background: #7D7D7D;
-  fill: none;
-}
-
-.c24 {
-  -webkit-animation: 2s fvtopB linear infinite;
-  animation: 2s fvtopB linear infinite;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c1 {
-  max-width: 1200px;
-  max-height: 600px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  margin: 0px auto 24px auto;
-}
-
-.c2 {
-  width: 100%;
-  height: 72px;
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -889,7 +174,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   display: none;
 }
 
-.c21 {
+.c31 {
   position: -webkit-sticky;
   position: sticky;
   -webkit-box-pack: center;
@@ -900,7 +185,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   visibility: hidden;
 }
 
-.c22 {
+.c32 {
   background: #FFEFFF;
   border-radius: 8px;
   width: -webkit-fit-content;
@@ -977,6 +262,25 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   flex-grow: 0;
 }
 
+.c23 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #222222;
+}
+
+.c23:hover {
+  opacity: 0.6;
+}
+
+.c23:active {
+  opacity: 0.4;
+}
+
 .c9 {
   -webkit-box-pack: start;
   -webkit-justify-content: flex-start;
@@ -1003,13 +307,17 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
 .c10 {
   height: 16px;
   width: 16px;
-  color: #7D7D7D;
+  color: #222222;
   -webkit-transform: rotate(0deg);
   -ms-transform: rotate(0deg);
   transform: rotate(0deg);
 }
 
-.c13 {
+.c12 {
+  color: #222222;
+}
+
+.c14 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -1023,27 +331,39 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   gap: 4px;
 }
 
-.c13:hover {
+.c14:hover {
   opacity: 0.6;
 }
 
-.c13:active {
+.c14:active {
   opacity: 0.4;
 }
 
-.c16 {
-  border-radius: 12px;
-  border-radius: 12px;
-  height: 24px;
-  width: 50%;
-  width: 50%;
-  -webkit-animation: fAQEyV 1.5s infinite;
-  animation: fAQEyV 1.5s infinite;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
-  will-change: background-position;
-  background-size: 400%;
+.c24 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.c27 {
+  display: none;
+  height: 16px;
+  width: 16px;
+  color: #7D7D7D;
+}
+
+.c22:hover .c26 {
+  display: block;
 }
 
 .c8 {
@@ -1068,7 +388,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   padding: 12px 8px;
 }
 
-.c12 {
+.c13 {
   min-width: 100px;
   -webkit-flex: 0;
   -ms-flex: 0;
@@ -1090,7 +410,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   padding: 12px 8px;
 }
 
-.c15 {
+.c16 {
   min-width: 125px;
   -webkit-flex: 1;
   -ms-flex: 1;
@@ -1134,2083 +454,2583 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   padding: 12px 8px;
 }
 
+.c15 {
+  position: relative;
+}
+
+.c30 {
+  color: #7D7D7D;
+  stroke: #7D7D7D;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        data-testid="pool-details-transactions-table"
+      >
+        <div>
+          <div
+            class="c0 c1"
+          >
+            <div
+              class="c2"
+            >
+              <div
+                class="c3 c4 c5 c6"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c3 c4 c9"
+                    >
+                      <svg
+                        class="c10"
+                        direction="desc"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <line
+                          x1="12"
+                          x2="12"
+                          y1="5"
+                          y2="19"
+                        />
+                        <polyline
+                          points="19 12 12 19 5 12"
+                        />
+                      </svg>
+                      <div
+                        class="c11 c12 css-1urox24"
+                      >
+                        Time
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c3 c4 c14"
+                    >
+                      <svg
+                        class="c15"
+                        fill="none"
+                        height="17"
+                        viewBox="0 0 16 17"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7.99954 13.1667C7.82887 13.1667 7.65818 13.1014 7.52818 12.9714L4.86152 10.3047C4.60085 10.044 4.60085 9.62267 4.86152 9.362C5.12218 9.10134 5.54356 9.10134 5.80422 9.362L7.99954 11.5573L10.1948 9.362C10.4555 9.10134 10.8769 9.10134 11.1376 9.362C11.3982 9.62267 11.3982 10.044 11.1376 10.3047L8.47089 12.9714C8.34089 13.1014 8.1702 13.1667 7.99954 13.1667Z"
+                          fill="#9B9B9B"
+                        />
+                        <path
+                          d="M10.6662 7.83336C10.4955 7.83336 10.3248 7.76805 10.1948 7.63805L7.99954 5.44274L5.80422 7.63805C5.54356 7.89872 5.12218 7.89872 4.86152 7.63805C4.60085 7.37738 4.60085 6.95601 4.86152 6.69534L7.52818 4.02868C7.78885 3.76801 8.21022 3.76801 8.47089 4.02868L11.1376 6.69534C11.3982 6.95601 11.3982 7.37738 11.1376 7.63805C11.0076 7.76805 10.8369 7.83336 10.6662 7.83336Z"
+                          fill="#9B9B9B"
+                        />
+                      </svg>
+                      <div
+                        class="c11 css-1urox24"
+                      >
+                        Type
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c11 css-1urox24"
+                    >
+                      USD
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <a
+                      class="c17"
+                      href="/explore/tokens/ethereum/undefined"
+                    >
+                      <div
+                        class="c11 css-1urox24"
+                      />
+                    </a>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <a
+                      class="c17"
+                      href="/explore/tokens/ethereum/undefined"
+                    >
+                      <div
+                        class="c11 css-1urox24"
+                      />
+                    </a>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c18"
+                  >
+                    <div
+                      class="c11 css-1urox24"
+                    >
+                      Wallet
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c0 c19"
+            >
+              <div
+                class="c3 c4 c5 c20"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <a
+                      class="c21 c22 c23 c24"
+                      href="https://etherscan.io/tx/0x123"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <div
+                        class="c25"
+                      >
+                        <div>
+                          <div
+                            class="c11 css-1urox24"
+                          >
+                            01/12, 05:46am
+                          </div>
+                        </div>
+                      </div>
+                      <svg
+                        class="c26 c27"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                        />
+                        <polyline
+                          points="15 3 21 3 21 9"
+                        />
+                        <line
+                          x1="10"
+                          x2="21"
+                          y1="14"
+                          y2="3"
+                        />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c28 css-1urox24"
+                    >
+                      <span>
+                        Buy 
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c29 css-1urox24"
+                    >
+                      $400.00
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c29 css-1urox24"
+                    >
+                      300
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c29 css-1urox24"
+                    >
+                      200
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c18"
+                  >
+                    <a
+                      class="c21 c30"
+                      href="https://etherscan.io/address/0xabc"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      <div
+                        class="c29 css-1urox24"
+                      />
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c3 c4 c31"
+            >
+              <div
+                class="c3 c4 c32"
+              >
+                <svg
+                  class="c33 c34"
+                  fill="none"
+                  stroke="#FC72FF"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2.5"
+                  />
+                </svg>
+                Loading
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`PoolDetailsTransactionsTable renders error state 1`] = `
+<DocumentFragment>
+  .c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c11 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c23 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c26 {
+  height: 16px;
+  width: 16px;
+}
+
+.c26 path {
+  stroke: #FC72FF;
+  background: #7D7D7D;
+  fill: none;
+}
+
+.c27 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c22 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+  width: 320px;
+  padding: 12px;
+  gap: 12px;
+  background-color: #00000004;
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border: 1px #22222212 solid;
+  border-radius: 20px;
+}
+
+.c1 {
+  max-width: 1200px;
+  max-height: 600px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin: 0px auto 24px auto;
+}
+
+.c2 {
+  width: 100%;
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  background: #FFFFFF;
+}
+
+.c20 {
+  width: 100%;
+  position: relative;
+  overflow-x: auto;
+  overscroll-behavior-x: none;
+  border-right: 1px solid #22222212;
+  border-bottom: 1px solid #22222212;
+  border-left: 1px solid #22222212;
+  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  -ms-overflow-style: none;
+  -webkit-scrollbar-width: none;
+  -moz-scrollbar-width: none;
+  -ms-scrollbar-width: none;
+  scrollbar-width: none;
+}
+
+.c20::-webkit-scrollbar {
+  display: none;
+}
+
+.c24 {
+  position: -webkit-sticky;
+  position: sticky;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  margin-top: -48px;
+  visibility: hidden;
+}
+
+.c25 {
+  background: #FFEFFF;
+  border-radius: 8px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 8px;
+  color: #FC72FF;
+  font-size: 16px;
+  font-weight: 535;
+  gap: 8px;
+  height: 34px;
+  z-index: 990;
+}
+
+.c5 {
+  padding: 0px 12px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  min-width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  min-height: 64px;
+}
+
+.c21:hover {
+  background: #22222212;
+}
+
+.c6 {
+  border: 1px solid #22222212;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  overflow: auto;
+  width: unset;
+  min-height: 52px;
+  background: #F9F9F9;
+  -ms-overflow-style: none;
+  -webkit-scrollbar-width: none;
+  -moz-scrollbar-width: none;
+  -ms-scrollbar-width: none;
+  scrollbar-width: none;
+  overscroll-behavior: none;
+  opacity: 0.4;
+}
+
+.c6::-webkit-scrollbar {
+  display: none;
+}
+
+.c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.c7:last-child {
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+.c7:first-child {
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+}
+
+.c9 {
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  cursor: pointer;
+  width: 100%;
+  gap: 4px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c9:hover {
+  opacity: 0.6;
+}
+
+.c9:active {
+  opacity: 0.4;
+}
+
+.c10 {
+  height: 16px;
+  width: 16px;
+  color: #222222;
+  -webkit-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
+.c12 {
+  color: #222222;
+}
+
+.c14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  gap: 4px;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
+}
+
 .c17 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c8 {
+  min-width: 164px;
+  -webkit-flex: 0;
+  -ms-flex: 0;
+  flex: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c13 {
+  min-width: 100px;
+  -webkit-flex: 0;
+  -ms-flex: 0;
+  flex: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c16 {
+  min-width: 125px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c19 {
+  min-width: 100px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c18 {
   width: 75%;
   height: 16px;
 }
 
-.c14 {
+.c15 {
   position: relative;
 }
 
-<div
-    data-testid="pool-details-transactions-table"
+<span
+    class=" _dsp_contents"
   >
-    <div>
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
       <div
-        class="c0 c1"
+        data-testid="pool-details-transactions-table"
       >
-        <div
-          class="c2"
-        >
+        <div>
           <div
-            class="c3 c4 c5 c6"
+            class="c0 c1"
           >
             <div
-              class="c7"
+              class="c2"
             >
               <div
-                class="c8"
+                class="c3 c4 c5 c6"
               >
                 <div
-                  class="c3 c4 c9"
+                  class="c7"
                 >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c3 c4 c9"
+                    >
+                      <svg
+                        class="c10"
+                        direction="desc"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <line
+                          x1="12"
+                          x2="12"
+                          y1="5"
+                          y2="19"
+                        />
+                        <polyline
+                          points="19 12 12 19 5 12"
+                        />
+                      </svg>
+                      <div
+                        class="c11 c12 css-1urox24"
+                      >
+                        Time
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c3 c4 c14"
+                    >
+                      <svg
+                        class="c15"
+                        fill="none"
+                        height="17"
+                        viewBox="0 0 16 17"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7.99954 13.1667C7.82887 13.1667 7.65818 13.1014 7.52818 12.9714L4.86152 10.3047C4.60085 10.044 4.60085 9.62267 4.86152 9.362C5.12218 9.10134 5.54356 9.10134 5.80422 9.362L7.99954 11.5573L10.1948 9.362C10.4555 9.10134 10.8769 9.10134 11.1376 9.362C11.3982 9.62267 11.3982 10.044 11.1376 10.3047L8.47089 12.9714C8.34089 13.1014 8.1702 13.1667 7.99954 13.1667Z"
+                          fill="#9B9B9B"
+                        />
+                        <path
+                          d="M10.6662 7.83336C10.4955 7.83336 10.3248 7.76805 10.1948 7.63805L7.99954 5.44274L5.80422 7.63805C5.54356 7.89872 5.12218 7.89872 4.86152 7.63805C4.60085 7.37738 4.60085 6.95601 4.86152 6.69534L7.52818 4.02868C7.78885 3.76801 8.21022 3.76801 8.47089 4.02868L11.1376 6.69534C11.3982 6.95601 11.3982 7.37738 11.1376 7.63805C11.0076 7.76805 10.8369 7.83336 10.6662 7.83336Z"
+                          fill="#9B9B9B"
+                        />
+                      </svg>
+                      <div
+                        class="c11 css-1urox24"
+                      >
+                        Type
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c11 css-1urox24"
+                    >
+                      USD
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c11 css-1urox24"
+                    >
+                      Wallet
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c0 c20"
+            >
+              <div
+                class="c3 c4 c5 c21"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c3 c4 c5 c21"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c3 c4 c5 c21"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c3 c4 c5 c21"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c3 c4 c5 c21"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c3 c4 c5 c21"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c3 c4 c5 c21"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c22"
+                data-testid="table-error-modal"
+              >
+                <div>
                   <svg
-                    class="c10"
-                    direction="desc"
                     fill="none"
-                    height="24"
-                    stroke="currentColor"
+                    height="40"
+                    viewBox="0 0 40 40"
+                    width="40"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      fill="#fff"
+                      fill-opacity=".12"
+                      height="40"
+                      rx="12"
+                      width="40"
+                    />
+                    <path
+                      clip-rule="evenodd"
+                      d="m19.5833 27.5h.8334c.8333 0 1.25-.4167 1.25-1.25v-2.2203l-3.3326 2.2802c.0197.7934.4361 1.1901 1.2492 1.1901zm-1.25-8.4596v-5.2904c0-.8333.4167-1.25 1.25-1.25h.8334c.8333 0 1.25.4167 1.25 1.25v3.0097zm5.8334 3.2788 3.3333-2.2807v6.2115c0 .8333-.4167 1.25-1.25 1.25h-.8333c-.8334 0-1.25-.4167-1.25-1.25zm-8.3866-1.5318-3.2801 2.2443v-1.7817c0-.8333.4167-1.25 1.25-1.25h.8333c.6614 0 1.0603.2625 1.1968.7874zm-2.862 6.4904-.3496-.511c.0672.2197.1837.39.3496.511z"
+                      fill="#9b9b9b"
+                      fill-rule="evenodd"
+                    />
+                    <path
+                      d="m12.5 26.6667 15.8333-10.8333"
+                      stroke="#9b9b9b"
+                      stroke-linecap="round"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class="c0"
+                >
+                  <div
+                    class="c23 css-n8z49y"
+                  >
+                    Error loading data
+                  </div>
+                  <div
+                    class="c11 css-142zc9n"
+                  >
+                    Data is unavailable at the moment; we're working on a fix
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c3 c4 c24"
+            >
+              <div
+                class="c3 c4 c25"
+              >
+                <svg
+                  class="c26 c27"
+                  fill="none"
+                  stroke="#FC72FF"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
                     stroke-linecap="round"
                     stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    width="24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <line
-                      x1="12"
-                      x2="12"
-                      y1="5"
-                      y2="19"
-                    />
-                    <polyline
-                      points="19 12 12 19 5 12"
-                    />
-                  </svg>
-                  <div
-                    class="c11 css-1urox24"
-                  >
-                    Time
-                  </div>
-                </div>
+                    stroke-width="2.5"
+                  />
+                </svg>
+                Loading
               </div>
             </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c3 c4 c13"
-                >
-                  <svg
-                    class="c14"
-                    fill="none"
-                    height="17"
-                    viewBox="0 0 16 17"
-                    width="16"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M7.99954 13.1667C7.82887 13.1667 7.65818 13.1014 7.52818 12.9714L4.86152 10.3047C4.60085 10.044 4.60085 9.62267 4.86152 9.362C5.12218 9.10134 5.54356 9.10134 5.80422 9.362L7.99954 11.5573L10.1948 9.362C10.4555 9.10134 10.8769 9.10134 11.1376 9.362C11.3982 9.62267 11.3982 10.044 11.1376 10.3047L8.47089 12.9714C8.34089 13.1014 8.1702 13.1667 7.99954 13.1667Z"
-                      fill="#9B9B9B"
-                    />
-                    <path
-                      d="M10.6662 7.83336C10.4955 7.83336 10.3248 7.76805 10.1948 7.63805L7.99954 5.44274L5.80422 7.63805C5.54356 7.89872 5.12218 7.89872 4.86152 7.63805C4.60085 7.37738 4.60085 6.95601 4.86152 6.69534L7.52818 4.02868C7.78885 3.76801 8.21022 3.76801 8.47089 4.02868L11.1376 6.69534C11.3982 6.95601 11.3982 7.37738 11.1376 7.63805C11.0076 7.76805 10.8369 7.83336 10.6662 7.83336Z"
-                      fill="#9B9B9B"
-                    />
-                  </svg>
-                  <div
-                    class="c11 css-1urox24"
-                  >
-                    Type
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c11 css-1urox24"
-                >
-                  USD
-                </div>
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c11 css-1urox24"
-                >
-                  Wallet
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="c0 c19"
-        >
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4 c5 c20"
-          >
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c15"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c18"
-              >
-                <div
-                  class="c16 c17"
-                  data-testid="cell-loading-bubble"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="c3 c4 c21"
-        >
-          <div
-            class="c3 c4 c22"
-          >
-            <svg
-              class="c23 c24"
-              fill="none"
-              stroke="#FC72FF"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2.5"
-              />
-            </svg>
-            Loading
           </div>
         </div>
       </div>
-    </div>
-  </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
+<DocumentFragment>
+  .c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c11 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c24 {
+  height: 16px;
+  width: 16px;
+}
+
+.c24 path {
+  stroke: #FC72FF;
+  background: #7D7D7D;
+  fill: none;
+}
+
+.c25 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c1 {
+  max-width: 1200px;
+  max-height: 600px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  margin: 0px auto 24px auto;
+}
+
+.c2 {
+  width: 100%;
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  background: #FFFFFF;
+}
+
+.c20 {
+  width: 100%;
+  position: relative;
+  overflow-x: auto;
+  overscroll-behavior-x: none;
+  border-right: 1px solid #22222212;
+  border-bottom: 1px solid #22222212;
+  border-left: 1px solid #22222212;
+  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 20px;
+  -ms-overflow-style: none;
+  -webkit-scrollbar-width: none;
+  -moz-scrollbar-width: none;
+  -ms-scrollbar-width: none;
+  scrollbar-width: none;
+}
+
+.c20::-webkit-scrollbar {
+  display: none;
+}
+
+.c22 {
+  position: -webkit-sticky;
+  position: sticky;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  margin-top: -48px;
+  visibility: hidden;
+}
+
+.c23 {
+  background: #FFEFFF;
+  border-radius: 8px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  padding: 8px;
+  color: #FC72FF;
+  font-size: 16px;
+  font-weight: 535;
+  gap: 8px;
+  height: 34px;
+  z-index: 990;
+}
+
+.c5 {
+  padding: 0px 12px;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  min-width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  min-height: 64px;
+}
+
+.c21:hover {
+  background: #22222212;
+}
+
+.c6 {
+  border: 1px solid #22222212;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+  overflow: auto;
+  width: unset;
+  min-height: 52px;
+  background: #F9F9F9;
+  -ms-overflow-style: none;
+  -webkit-scrollbar-width: none;
+  -moz-scrollbar-width: none;
+  -ms-scrollbar-width: none;
+  scrollbar-width: none;
+  overscroll-behavior: none;
+}
+
+.c6::-webkit-scrollbar {
+  display: none;
+}
+
+.c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.c7:last-child {
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+.c7:first-child {
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+}
+
+.c9 {
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  cursor: pointer;
+  width: 100%;
+  gap: 4px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c9:hover {
+  opacity: 0.6;
+}
+
+.c9:active {
+  opacity: 0.4;
+}
+
+.c10 {
+  height: 16px;
+  width: 16px;
+  color: #222222;
+  -webkit-transform: rotate(0deg);
+  -ms-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
+.c12 {
+  color: #222222;
+}
+
+.c14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  gap: 4px;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
+}
+
+.c17 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c8 {
+  min-width: 164px;
+  -webkit-flex: 0;
+  -ms-flex: 0;
+  flex: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c13 {
+  min-width: 100px;
+  -webkit-flex: 0;
+  -ms-flex: 0;
+  flex: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c16 {
+  min-width: 125px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c19 {
+  min-width: 100px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-variant-numeric: lining-nums tabular-nums;
+  overflow: hidden;
+  padding: 12px 8px;
+}
+
+.c18 {
+  width: 75%;
+  height: 16px;
+}
+
+.c15 {
+  position: relative;
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        data-testid="pool-details-transactions-table"
+      >
+        <div>
+          <div
+            class="c0 c1"
+          >
+            <div
+              class="c2"
+            >
+              <div
+                class="c3 c4 c5 c6"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c3 c4 c9"
+                    >
+                      <svg
+                        class="c10"
+                        direction="desc"
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="24"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <line
+                          x1="12"
+                          x2="12"
+                          y1="5"
+                          y2="19"
+                        />
+                        <polyline
+                          points="19 12 12 19 5 12"
+                        />
+                      </svg>
+                      <div
+                        class="c11 c12 css-1urox24"
+                      >
+                        Time
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c3 c4 c14"
+                    >
+                      <svg
+                        class="c15"
+                        fill="none"
+                        height="17"
+                        viewBox="0 0 16 17"
+                        width="16"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M7.99954 13.1667C7.82887 13.1667 7.65818 13.1014 7.52818 12.9714L4.86152 10.3047C4.60085 10.044 4.60085 9.62267 4.86152 9.362C5.12218 9.10134 5.54356 9.10134 5.80422 9.362L7.99954 11.5573L10.1948 9.362C10.4555 9.10134 10.8769 9.10134 11.1376 9.362C11.3982 9.62267 11.3982 10.044 11.1376 10.3047L8.47089 12.9714C8.34089 13.1014 8.1702 13.1667 7.99954 13.1667Z"
+                          fill="#9B9B9B"
+                        />
+                        <path
+                          d="M10.6662 7.83336C10.4955 7.83336 10.3248 7.76805 10.1948 7.63805L7.99954 5.44274L5.80422 7.63805C5.54356 7.89872 5.12218 7.89872 4.86152 7.63805C4.60085 7.37738 4.60085 6.95601 4.86152 6.69534L7.52818 4.02868C7.78885 3.76801 8.21022 3.76801 8.47089 4.02868L11.1376 6.69534C11.3982 6.95601 11.3982 7.37738 11.1376 7.63805C11.0076 7.76805 10.8369 7.83336 10.6662 7.83336Z"
+                          fill="#9B9B9B"
+                        />
+                      </svg>
+                      <div
+                        class="c11 css-1urox24"
+                      >
+                        Type
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c11 css-1urox24"
+                    >
+                      USD
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c11 css-1urox24"
+                    >
+                      Wallet
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c0 c20"
+            >
+              <div
+                class="c3 c4 c5 c21"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c3 c4 c5 c21"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c3 c4 c5 c21"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c3 c4 c5 c21"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c3 c4 c5 c21"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c3 c4 c5 c21"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c3 c4 c5 c21"
+              >
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c13"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c16"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+                <div
+                  class="c7"
+                >
+                  <div
+                    class="c19"
+                  >
+                    <div
+                      class="c17 c18"
+                      data-testid="cell-loading-bubble"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="c3 c4 c22"
+            >
+              <div
+                class="c3 c4 c23"
+              >
+                <svg
+                  class="c24 c25"
+                  fill="none"
+                  stroke="#FC72FF"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2.5"
+                  />
+                </svg>
+                Loading
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
 </DocumentFragment>
 `;

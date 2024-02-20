@@ -40,7 +40,7 @@ describe('PoolTable', () => {
     })
 
     const { asFragment } = render(<TopPoolTable />)
-    expect(screen.getByText('Error loading Top Pools')).not.toBeNull()
+    expect(screen.getByTestId('table-error-modal')).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
   })
 

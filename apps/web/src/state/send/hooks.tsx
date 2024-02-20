@@ -11,7 +11,7 @@ import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
 import { SendState } from 'state/send/SendContext'
-import { isAddress } from 'utils'
+import { isAddress } from 'utilities/src/addresses'
 import { useCreateTransferTransaction } from 'utils/transfer'
 
 export interface RecipientData {

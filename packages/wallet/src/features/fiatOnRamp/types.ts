@@ -272,6 +272,17 @@ export type FORWidgetUrlResponse = {
   token: string
 }
 
+// /transfer-widget-url
+
+export type FORTransferWidgetUrlRequest = {
+  sourceAmount: number
+  sourceCurrencyCode: string
+  countryCode: string
+  institutionId: string
+  walletAddress: string
+  externalSessionId: string
+}
+
 // /transactions
 
 export type FORCryptoPurchaseDetails = {

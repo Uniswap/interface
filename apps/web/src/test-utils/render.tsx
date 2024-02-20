@@ -13,6 +13,7 @@ import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import store from 'state'
 import { ThemeProvider } from 'theme'
+import { TamaguiProvider } from 'theme/tamaguiProvider'
 
 i18n.load({
   [DEFAULT_LOCALE]: catalog.messages,
@@ -37,7 +38,9 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
              */}
             <MockedProvider showWarnings={false}>
               <BlockNumberProvider>
-                <ThemeProvider>{children}</ThemeProvider>
+                <ThemeProvider>
+                  <TamaguiProvider>{children}</TamaguiProvider>
+                </ThemeProvider>
               </BlockNumberProvider>
             </MockedProvider>
           </BrowserRouter>

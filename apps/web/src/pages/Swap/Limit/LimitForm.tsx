@@ -108,17 +108,21 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       setLimitState((prev) => ({
         ...prev,
         [type]: newValue,
-        limitPriceEdited: type === 'limitPrice',
+        limitPriceEdited: type === 'limitPrice' ? true : prev.limitPriceEdited,
         isInputAmountFixed: type !== 'outputAmount',
       }))
     },
     [setLimitState]
   )
 
+  const switchTokens = () => {
+    onSwitchTokens({ newOutputHasTax: false, previouslyEstimatedOutput: limitState.outputAmount })
+    setLimitState((prev) => ({ ...prev, limitPriceInverted: prev.limitPriceEdited ? !prev.limitPriceInverted : false }))
+  }
+
   const onSelectCurrency = (type: keyof CurrencyState) => (newCurrency: Currency) => {
     if ((type === 'inputCurrency' ? outputCurrency : inputCurrency)?.equals(newCurrency)) {
-      onSwitchTokens({ newOutputHasTax: false, previouslyEstimatedOutput: limitState.outputAmount })
-      return
+      return switchTokens()
     }
     const [newInput, newOutput] =
       type === 'inputCurrency' ? [newCurrency, outputCurrency] : [inputCurrency, newCurrency]
@@ -242,13 +246,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           name={SwapEventName.SWAP_TOKENS_REVERSED}
           element={InterfaceElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
         >
-          <ArrowContainer
-            data-testid="swap-currency-button"
-            onClick={() => {
-              onSwitchTokens({ newOutputHasTax: false, previouslyEstimatedOutput: limitState.outputAmount })
-            }}
-            color={theme.neutral1}
-          >
+          <ArrowContainer data-testid="swap-currency-button" onClick={switchTokens} color={theme.neutral1}>
             <ArrowDown size="16" color={theme.neutral1} />
           </ArrowContainer>
         </TraceEvent>

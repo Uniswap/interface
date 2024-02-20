@@ -22,17 +22,25 @@ function useValidatedSearchedAddress(searchTerm: string | null): {
   recipients: SearchableRecipient[]
   loading: boolean
 } {
-  // Check ENS and Unitag
+  // Check ENS (.eth and any direct subdomain) and Unitag
+  const {
+    loading: dotEthLoading,
+    address: dotEthAddress,
+    name: dotEthName,
+  } = useENS(ChainId.Mainnet, searchTerm, true)
+
   const {
     loading: ensLoading,
     address: ensAddress,
     name: ensName,
-  } = useENS(ChainId.Mainnet, searchTerm, true)
+  } = useENS(ChainId.Mainnet, searchTerm, false)
+
   const { loading: unitagLoading, unitag } = useUnitagByName(searchTerm ?? undefined)
 
   return useMemo(() => {
     // Check for a valid unitag, ENS address, or literal address
     const unitagValidatedAddress = getValidAddress(unitag?.address?.address, true, false)
+    const dotEthValidatedAddress = getValidAddress(dotEthAddress, true, false)
     const ensValidatedAddress = getValidAddress(ensAddress, true, false)
     const literalValidatedAddress = getValidAddress(searchTerm, true, false)
 
@@ -43,14 +51,29 @@ function useValidatedSearchedAddress(searchTerm: string | null): {
       recipients.push({
         address: unitagValidatedAddress,
         name: unitag?.username,
+        isUnitag: true,
       })
     }
 
-    // Add ENS result if different than unitag result
-    if (ensName && ensValidatedAddress && unitagValidatedAddress !== ensValidatedAddress) {
+    // Add raw ENS result if available
+    if (!literalValidatedAddress && ensValidatedAddress && ensName) {
       recipients.push({
         address: ensValidatedAddress,
         name: ensName,
+      })
+    }
+
+    // Add ENS result if different than unitag and raw ENS result
+    if (
+      !literalValidatedAddress &&
+      dotEthName &&
+      dotEthValidatedAddress &&
+      unitagValidatedAddress !== dotEthValidatedAddress &&
+      ensValidatedAddress !== dotEthValidatedAddress
+    ) {
+      recipients.push({
+        address: dotEthValidatedAddress,
+        name: dotEthName,
       })
     }
 
@@ -61,9 +84,20 @@ function useValidatedSearchedAddress(searchTerm: string | null): {
 
     return {
       recipients,
-      loading: ensLoading || unitagLoading,
+      loading: ensLoading || dotEthLoading || unitagLoading,
     }
-  }, [unitag, ensAddress, searchTerm, ensLoading, unitagLoading, ensName])
+  }, [
+    unitag?.address?.address,
+    unitag?.username,
+    dotEthAddress,
+    ensAddress,
+    searchTerm,
+    dotEthName,
+    ensLoading,
+    dotEthLoading,
+    unitagLoading,
+    ensName,
+  ])
 }
 
 export function useRecipients(): {
@@ -83,16 +117,16 @@ export function useRecipients(): {
   const inactiveLocalAccounts = useAppSelector(selectInactiveAccounts)
   const recentRecipients = useAppSelector(selectRecipientsByRecency).slice(0, MAX_RECENT_RECIPIENTS)
 
-  const { recipients: validatedAddressRecipient, loading } = useValidatedSearchedAddress(pattern)
+  const { recipients: validatedAddressRecipients, loading } = useValidatedSearchedAddress(pattern)
   const watchedWallets = useAppSelector(selectWatchedAddressSet)
 
   const sections = useMemo(() => {
     const sectionsArr = []
 
-    if (validatedAddressRecipient.length) {
+    if (validatedAddressRecipients.length) {
       sectionsArr.push({
         title: t('Search results'),
-        data: validatedAddressRecipient,
+        data: validatedAddressRecipients,
       })
     }
 
@@ -123,16 +157,16 @@ export function useRecipients(): {
     }
 
     return sectionsArr
-  }, [validatedAddressRecipient, recentRecipients, t, inactiveLocalAccounts, watchedWallets])
+  }, [validatedAddressRecipients, recentRecipients, t, inactiveLocalAccounts, watchedWallets])
 
   const searchableRecipientOptions = useMemo(
     () =>
       uniqueAddressesOnly([
-        ...validatedAddressRecipient,
+        ...validatedAddressRecipients,
         ...inactiveLocalAccounts,
         ...recentRecipients,
       ]).map((item) => ({ data: item, key: item.address })),
-    [recentRecipients, validatedAddressRecipient, inactiveLocalAccounts]
+    [recentRecipients, validatedAddressRecipients, inactiveLocalAccounts]
   )
 
   const onChangePattern = useCallback((newPattern: string | null) => setPattern(newPattern), [])

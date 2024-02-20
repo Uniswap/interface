@@ -6,9 +6,9 @@ import { Check } from 'react-feather'
 import { css, useTheme } from 'styled-components'
 
 const StyledDropdownButton = css`
-  border-radius: 20px;
+  border-radius: 16px;
   width: 100%;
-  height: 40px;
+  height: 32px;
 `
 const StyledMenuFlyout = css`
   min-width: 130px;

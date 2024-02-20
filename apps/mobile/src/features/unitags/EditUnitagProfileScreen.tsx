@@ -1,7 +1,9 @@
+/* eslint-disable max-lines */
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
@@ -19,32 +21,36 @@ import {
   LinearGradient,
   ScrollView,
   Text,
+  useIsDarkMode,
   useSporeColors,
   useUniconColors,
+  useUniconV2Colors,
 } from 'ui/src'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { normalizeTwitterUsername } from 'utilities/src/primitives/string'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { getUnitagAvatarUploadUrl, updateUnitagMetadata } from 'wallet/src/features/unitags/api'
+import { updateUnitagMetadata } from 'wallet/src/features/unitags/api'
 import { tryUploadAvatar } from 'wallet/src/features/unitags/avatars'
-import { AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS } from 'wallet/src/features/unitags/constants'
 import { useUnitagUpdater } from 'wallet/src/features/unitags/context'
-import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
 import {
-  ProfileMetadata,
-  UnitagGetAvatarUploadUrlResponse,
-} from 'wallet/src/features/unitags/types'
+  useAvatarUploadCredsWithRefresh,
+  useUnitagByAddress,
+} from 'wallet/src/features/unitags/hooks'
+import { ProfileMetadata } from 'wallet/src/features/unitags/types'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 import { useAppDispatch } from 'wallet/src/state'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { UnitagEventName } from 'wallet/src/telemetry/constants'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 import { useExtractedColors } from 'wallet/src/utils/colors'
 import { isIOS } from 'wallet/src/utils/platform'
@@ -81,6 +87,7 @@ export function EditUnitagProfileScreen({
   const { address, unitag, entryPoint } = route.params
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const isDarkMode = useIsDarkMode()
   const dispatch = useAppDispatch()
   const account = useAccount(address)
   const signerManager = useWalletSigners()
@@ -97,9 +104,11 @@ export function EditUnitagProfileScreen({
   const [showDeleteUnitagModal, setShowDeleteUnitagModal] = useState(false)
   const [showChangeUnitagModal, setShowChangeUnitagModal] = useState(false)
   const [updateResponseLoading, setUpdateResponseLoading] = useState(false)
-  const [avatarUploadUrlLoading, setAvatarUploadUrlLoading] = useState(false)
-  const [avatarUploadUrlResponse, setAvatarUploadUrlResponse] =
-    useState<UnitagGetAvatarUploadUrlResponse>()
+  const { avatarUploadUrlResponse, avatarUploadUrlLoading } = useAvatarUploadCredsWithRefresh({
+    unitag,
+    account,
+    signerManager,
+  })
 
   const onSetTwitterInput = (input: string): void => {
     const normalizedInput = normalizeTwitterUsername(input)
@@ -128,46 +137,17 @@ export function EditUnitagProfileScreen({
     }
   }, [unitagMetadata])
 
-  // Re-fetch the avatar upload pre-signed URL every 110 seconds to ensure it's always fresh
-  useEffect(() => {
-    const fetchAvatarUploadUrl = async (): Promise<void> => {
-      try {
-        setAvatarUploadUrlLoading(true)
-        const { data } = await getUnitagAvatarUploadUrl({
-          username: unitag, // Assuming unitag is the username you're working with
-          account,
-          signerManager,
-        })
-        setAvatarUploadUrlResponse(data)
-      } catch (e) {
-        logger.error(e, {
-          tags: { file: 'EditUnitagProfileScreen', function: 'fetchAvatarUploadUrl' },
-        })
-      } finally {
-        setAvatarUploadUrlLoading(false)
-      }
-    }
-
-    // Call immediately on component mount
-    fetchAvatarUploadUrl().catch((e) => {
-      logger.error(e, {
-        tags: { file: 'EditUnitagProfileScreen', function: 'fetchAvatarUploadUrl' },
-      })
-    })
-
-    // Set up the interval to refetch creds 10 seconds before expiry
-    const intervalId = setInterval(
-      fetchAvatarUploadUrl,
-      (AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS - 10) * ONE_SECOND_MS
-    )
-
-    // Clear the interval on component unmount
-    return () => clearInterval(intervalId)
-  }, [unitag, account, signerManager])
-
   const { colors: avatarColors } = useExtractedColors(avatarImageUri)
-  const { gradientStart: uniconGradientStart, gradientEnd: uniconGradientEnd } =
-    useUniconColors(address)
+
+  const uniconV1Colors = useUniconColors(address)
+  const { color: uniconV2Color } = useUniconV2Colors(address)
+  const isUniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
+  const uniconColors = isUniconsV2Enabled
+    ? { gradientStart: uniconV2Color, gradientEnd: uniconV2Color, glow: uniconV2Color }
+    : uniconV1Colors
+
+  const uniconGradientStart = uniconColors.gradientStart
+  const uniconGradientEnd = uniconColors.gradientEnd
 
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
   const fixedGradientColors = useMemo(() => {
@@ -181,6 +161,7 @@ export function EditUnitagProfileScreen({
   }, [avatarColors, avatarImageUri, uniconGradientEnd, uniconGradientStart, colors.surface1.val])
 
   const openAvatarModal = (): void => {
+    Keyboard.dismiss()
     setShowAvatarModal(true)
   }
 
@@ -248,6 +229,13 @@ export function EditUnitagProfileScreen({
       return
     }
 
+    // Log changed metadata
+    sendWalletAnalyticsEvent(UnitagEventName.UnitagMetadataUpdated, {
+      avatar: uploadedNewAvatar,
+      description: isFieldEdited(unitagMetadata?.description, updatedMetadata.description),
+      twitter: isFieldEdited(unitagMetadata?.twitter, updatedMetadata.twitter),
+    })
+
     dispatch(
       pushNotification({
         type: AppNotificationType.Success,
@@ -257,6 +245,11 @@ export function EditUnitagProfileScreen({
     triggerRefetchUnitags()
     if (uploadedNewAvatar) {
       setAvatarImageUri(avatarUploadUrlResponse?.avatarUrl)
+    }
+
+    // If entered from claim flow confirmation screen, navigate back to home on update success
+    if (entryPoint === UnitagScreens.UnitagConfirmation) {
+      navigate(Screens.Home)
     }
   }
 
@@ -285,11 +278,11 @@ export function EditUnitagProfileScreen({
         // Disable the keyboard avoiding view when the modals are open, otherwise background elements will shift up when the user is editing their username
         enabled={!showDeleteUnitagModal && !showChangeUnitagModal}
         style={styles.base}>
-        {/* Necessary to handle different header configuration when navigating from SettingsStack vs. UnitagsStack */}
-        {entryPoint === Screens.SettingsWallet ? (
-          <BackHeader
-            alignment="center"
-            endAdornment={
+        <BackHeader
+          alignment="center"
+          endAdornment={
+            // Only show options to delete and edit username if editing from settings
+            entryPoint === Screens.SettingsWallet ? (
               <ContextMenu
                 dropdownMenuMode
                 actions={menuActions}
@@ -309,18 +302,22 @@ export function EditUnitagProfileScreen({
                   <Icons.TripleDots color="$neutral2" size={iconSizes.icon24} />
                 </Flex>
               </ContextMenu>
-            }
-            p="$spacing16">
-            <Text variant="body1">{t('Edit profile')}</Text>
-          </BackHeader>
-        ) : (
-          <Flex backgroundColor="$surface1" pb="$spacing12" pt="$spacing20" px="$spacing24">
-            <Text textAlign="center" variant="body1">
-              {t('Edit profile')}
-            </Text>
-          </Flex>
-        )}
-        <ScrollView keyboardShouldPersistTaps="handled" px="$spacing24">
+            ) : undefined
+          }
+          p="$spacing16"
+          onPressBack={
+            // If entering from confirmation screen, back btn navigates to home
+            entryPoint === UnitagScreens.UnitagConfirmation
+              ? (): void => navigate(Screens.Home)
+              : undefined
+          }>
+          <Text variant="body1">{t('Edit profile')}</Text>
+        </BackHeader>
+        <ScrollView
+          contentContainerStyle={{ paddingBottom: spacing.spacing24 }}
+          keyboardShouldPersistTaps="handled"
+          px="$spacing24"
+          showsVerticalScrollIndicator={false}>
           <Flex grow gap="$spacing36">
             <Flex fill justifyContent="space-between">
               <Flex pb="$spacing48">
@@ -341,7 +338,12 @@ export function EditUnitagProfileScreen({
                     style={styles.headerGradient}
                   />
                   {avatarImageUri && avatarColors?.primary ? (
-                    <HeaderRadial borderRadius={spacing.spacing20} color={avatarColors.primary} />
+                    <HeaderRadial
+                      borderRadius={spacing.spacing20}
+                      color={avatarColors.primary}
+                      maxOpacity={0.1}
+                      minOpacity={0.1}
+                    />
                   ) : null}
                 </Flex>
                 <Flex
@@ -349,20 +351,28 @@ export function EditUnitagProfileScreen({
                   mx="$spacing16"
                   position="absolute"
                   onPress={avatarSelectionHandler}>
-                  <UnitagProfilePicture
-                    address={address}
-                    profilePictureUri={avatarImageUri}
-                    size={imageSizes.image64}
-                  />
+                  <Flex backgroundColor="$surface1" borderRadius="$roundedFull" p="$spacing2">
+                    <UnitagProfilePicture
+                      address={address}
+                      size={iconSizes.icon70}
+                      unitagAvatarUri={avatarImageUri}
+                    />
+                  </Flex>
                   <Flex
                     backgroundColor="$surface1"
                     borderRadius="$roundedFull"
-                    bottom={-spacing.spacing4}
-                    p="$spacing4"
+                    bottom={-spacing.spacing2}
+                    p="$spacing2"
                     position="absolute"
-                    right={-spacing.spacing4}>
-                    <Flex backgroundColor="$neutral2" borderRadius="$roundedFull" p="$spacing8">
-                      <Icons.Edit color="$surface1" size={iconSizes.icon12} />
+                    right={-spacing.spacing2}>
+                    <Flex
+                      backgroundColor={isDarkMode ? '$neutral3' : '$neutral2'}
+                      borderRadius="$roundedFull"
+                      p={6}>
+                      <Icons.Pen
+                        color={isDarkMode ? '$neutral1' : '$surface1'}
+                        size={iconSizes.icon12}
+                      />
                     </Flex>
                   </Flex>
                 </Flex>
@@ -444,6 +454,7 @@ export function EditUnitagProfileScreen({
         </ScrollView>
         <Button
           disabled={!profileMetadataEdited}
+          mb="$spacing12"
           mx="$spacing24"
           size="medium"
           theme="primary"

@@ -68,14 +68,17 @@ export type OnboardingStackBaseParams = {
   unitagClaim?: UnitagClaim
 }
 
+export type UnitagEntryPoint = OnboardingScreens.Landing | Screens.Home | Screens.Settings
+
 export type SharedUnitagScreenParams = {
   [UnitagScreens.ClaimUnitag]: {
-    entryPoint: OnboardingScreens.Landing | Screens.Home
+    entryPoint: UnitagEntryPoint
     address?: Address
   }
   [UnitagScreens.ChooseProfilePicture]: {
-    entryPoint: OnboardingScreens.Landing | Screens.Home
+    entryPoint: UnitagEntryPoint
     unitag: string
+    unitagFontSize: number
     address: Address
   }
 }

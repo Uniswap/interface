@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { selectPhotoFromLibrary } from 'src/components/unitags/AvatarSelection'
 import { ChooseNftModal } from 'src/components/unitags/ChooseNftModal'
-import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
@@ -23,7 +23,6 @@ export const ChoosePhotoOptionsModal = ({
   showRemoveOption,
 }: ChoosePhotoOptionsProps): JSX.Element => {
   const colors = useSporeColors()
-  const { t } = useTranslation()
   const [showNftsList, setShowNftsList] = useState(false)
 
   const onPressNftsList = async (): Promise<void> => {
@@ -42,10 +41,11 @@ export const ChoosePhotoOptionsModal = ({
 
   const onPressCameraRoll = async (): Promise<void> => {
     const selectedPhoto = await selectPhotoFromLibrary()
+    // Close needs to happen before setting the photo, otherwise the handler can get cut short
+    onClose()
     if (selectedPhoto) {
       setPhotoUri(selectedPhoto)
     }
-    onClose()
   }
 
   const options = [
@@ -87,16 +87,6 @@ export const ChoosePhotoOptionsModal = ({
                 {option.item}
               </Flex>
             ))}
-          </Flex>
-          <Flex centered row>
-            <Button
-              fill
-              backgroundColor="$surface1"
-              color="$accent1"
-              theme="secondary"
-              onPress={onClose}>
-              {t('Close')}
-            </Button>
           </Flex>
         </Flex>
       </BottomSheetModal>

@@ -2,10 +2,13 @@ import { ApolloClient, from } from '@apollo/client'
 import { RetryLink } from '@apollo/client/link/retry'
 import { RestLink } from 'apollo-link-rest'
 import axios from 'axios'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { createNewInMemoryCache } from 'wallet/src/data/cache'
+import { REQUEST_SOURCE } from 'wallet/src/data/links'
 import { useRestQuery } from 'wallet/src/data/rest'
 import { createSignedRequestBody, createSignedRequestParams } from 'wallet/src/data/utils'
+import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck'
 import {
   ProfileMetadata,
   UnitagAddressResponse,
@@ -25,6 +28,10 @@ import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 
 const restLink = new RestLink({
   uri: `${uniswapUrls.unitagsApiUrl}`,
+  headers: {
+    'x-request-source': REQUEST_SOURCE,
+    Origin: uniswapUrls.apiBaseUrl,
+  },
 })
 
 const retryLink = new RetryLink()
@@ -36,10 +43,21 @@ const apolloClient = new ApolloClient({
     watchQuery: {
       // ensures query is returning data even if some fields errored out
       errorPolicy: 'all',
-      fetchPolicy: 'cache-and-network',
+      fetchPolicy: 'cache-first',
     },
   },
 })
+
+const generateAxiosHeaders = async (signature: string): Promise<Record<string, string>> => {
+  const firebaseAppCheckToken = await getFirebaseAppCheckToken()
+
+  return {
+    'x-uni-sig': signature,
+    'x-request-source': REQUEST_SOURCE,
+    'x-firebase-app-check': firebaseAppCheckToken,
+    Origin: uniswapUrls.apiBaseUrl,
+  }
+}
 
 export function addQueryParamsToEndpoint(
   endpoint: string,
@@ -58,13 +76,13 @@ export function addQueryParamsToEndpoint(
 export function useUnitagQuery(
   username?: string
 ): ReturnType<typeof useRestQuery<UnitagUsernameResponse>> {
-  return useRestQuery<UnitagUsernameResponse, Record<string, never>>(
+  return useRestQuery<UnitagUsernameResponse, Record<string, unknown>>(
     addQueryParamsToEndpoint('/username', { username }),
-    {},
+    { username }, // dummy body so that cache key is unique per query params
     ['available', 'requiresEnsMatch', 'username', 'metadata', 'address'], // return all fields
     {
       skip: !username, // skip if username is not provided
-      fetchPolicy: 'no-cache',
+      ttlMs: ONE_MINUTE_MS * 2,
     },
     'GET',
     apolloClient
@@ -74,13 +92,13 @@ export function useUnitagQuery(
 export function useUnitagByAddressQuery(
   address?: Address
 ): ReturnType<typeof useRestQuery<UnitagAddressResponse>> {
-  return useRestQuery<UnitagAddressResponse, Record<string, never>>(
+  return useRestQuery<UnitagAddressResponse, Record<string, unknown>>(
     addQueryParamsToEndpoint('/address', { address }),
-    {},
+    { address }, // dummy body so that cache key is unique per query params
     ['username', 'metadata'], // return all fields
     {
       skip: !address, // skip if address is not provided
-      fetchPolicy: 'no-cache',
+      ttlMs: ONE_MINUTE_MS * 2,
     },
     'GET',
     apolloClient
@@ -95,11 +113,11 @@ export function useUnitagClaimEligibilityQuery({
 }: UnitagClaimEligibilityParams & { skip?: boolean }): ReturnType<
   typeof useRestQuery<UnitagClaimEligibilityResponse>
 > {
-  return useRestQuery<UnitagClaimEligibilityResponse, Record<string, never>>(
+  return useRestQuery<UnitagClaimEligibilityResponse, Record<string, unknown>>(
     addQueryParamsToEndpoint('/claim/eligibility', { address, deviceId, isUsernameChange }),
-    {},
+    { address, deviceId, isUsernameChange }, // dummy body so that cache key is unique per query params
     ['canClaim', 'errorCode', 'message'], // return all fields
-    { skip, fetchPolicy: 'no-cache' },
+    { skip, ttlMs: ONE_MINUTE_MS * 2 },
     'GET',
     apolloClient
   )
@@ -122,9 +140,10 @@ export async function getUnitagAvatarUploadUrl({
     account,
     signerManager
   )
+  const headers = await generateAxiosHeaders(signature)
   return await axios.get<UnitagGetAvatarUploadUrlResponse>(avatarUploadUrl, {
     params: requestParams,
-    headers: { 'x-uni-sig': signature },
+    headers,
   })
 }
 
@@ -143,9 +162,10 @@ export async function deleteUnitag({
     account,
     signerManager
   )
+  const headers = await generateAxiosHeaders(signature)
   return await axios.delete<UnitagResponse>(avatarUploadUrl, {
     data: requestBody,
-    headers: { 'x-uni-sig': signature },
+    headers,
   })
 }
 
@@ -171,8 +191,9 @@ export async function updateUnitagMetadata({
     account,
     signerManager
   )
+  const headers = await generateAxiosHeaders(signature)
   return await axios.put<UnitagUpdateMetadataResponse>(updateMetadataUrl, requestBody, {
-    headers: { 'x-uni-sig': signature },
+    headers,
   })
 }
 
@@ -199,8 +220,9 @@ export async function claimUnitag({
     account,
     signerManager
   )
+  const headers = await generateAxiosHeaders(signature)
   return await axios.post<UnitagResponse>(claimUnitagUrl, requestBody, {
-    headers: { 'x-uni-sig': signature },
+    headers,
   })
 }
 
@@ -224,7 +246,8 @@ export async function changeUnitag({
     account,
     signerManager
   )
+  const headers = await generateAxiosHeaders(signature)
   return await axios.post<UnitagResponse>(changeUnitagUrl, requestBody, {
-    headers: { 'x-uni-sig': signature },
+    headers,
   })
 }

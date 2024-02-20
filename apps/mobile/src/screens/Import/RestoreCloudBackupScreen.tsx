@@ -10,8 +10,10 @@ import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Flex, Icons, Text, TouchableArea, Unicon, useIsDarkMode } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea, Unicon, UniconV2, useIsDarkMode } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import {
   PendingAccountActions,
   pendingAccountActions,
@@ -28,6 +30,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
   // const backups = useMockCloudBackups(4) // returns 4 mock backups with random mnemonicIds and createdAt dates
   const backups = useCloudBackups()
   const sortedBackups = backups.slice().sort((a, b) => b.createdAt - a.createdAt)
+  const isUniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
 
   const onPressRestoreBackup = async (backup: CloudStorageMnemonicBackup): Promise<void> => {
     // Clear any existing pending accounts
@@ -67,7 +70,11 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                 onPress={(): Promise<void> => onPressRestoreBackup(backup)}>
                 <Flex row alignItems="center" justifyContent="space-between">
                   <Flex centered row gap="$spacing12">
-                    <Unicon address={mnemonicId} size={32} />
+                    {isUniconsV2Enabled ? (
+                      <UniconV2 address={mnemonicId} size={32} />
+                    ) : (
+                      <Unicon address={mnemonicId} size={32} />
+                    )}
                     <Flex>
                       <Text adjustsFontSizeToFit variant="subheading1">
                         {sanitizeAddressText(shortenAddress(mnemonicId))}

@@ -20,7 +20,8 @@ import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { ElementName, ModalName, UnitagEventName } from 'wallet/src/telemetry/constants'
 import { isIOS } from 'wallet/src/utils/platform'
 
 export function ChangeUnitagModal({
@@ -121,6 +122,7 @@ export function ChangeUnitagModal({
 
       // If change succeeded, exit the modal and display a success message
       if (changeResponse.success) {
+        sendWalletAnalyticsEvent(UnitagEventName.UnitagChanged)
         triggerRefetchUnitags()
         dispatch(
           pushNotification({
@@ -230,7 +232,7 @@ export function ChangeUnitagModal({
               returnKeyType="done"
               value={newUnitag}
               width="100%"
-              onChangeText={setNewUnitag}
+              onChangeText={(text: string) => setNewUnitag(text.trim().toLowerCase())}
               onSubmitEditing={onFinishEditing}
             />
             <Flex position="absolute" right="$spacing20" top="$spacing20">
@@ -259,7 +261,7 @@ export function ChangeUnitagModal({
               width="100%">
               <Text color="$neutral2" variant="body3">
                 {t(
-                  'Once you change your username, you never claim it again. You can only change it 2 times.'
+                  'Once you change your username, you can never claim it again. You can only change it 2 times.'
                 )}
               </Text>
             </Flex>

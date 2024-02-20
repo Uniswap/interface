@@ -13,7 +13,7 @@ describe('MarketplaceContainer', () => {
   it('should render null without list price or marketplace', () => {
     const result = render(<MarketplaceContainer isSelected={false} listedPrice="10" hidePrice={true} />)
     expect(result.queryByText('10 ETH')).toBeFalsy()
-    expect(result.container.children.length).toEqual(0)
+    expect(result.container.children.length).toEqual(1)
     expect(result.container).toMatchSnapshot()
   })
 

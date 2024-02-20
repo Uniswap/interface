@@ -4,7 +4,7 @@ import { checkWarning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { chainIdToNetworkName, getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useCallback, useMemo, useReducer } from 'react'
-import { isAddress } from 'utils'
+import { isAddress } from 'utilities/src/addresses'
 
 import celoLogo from '../assets/svg/celo_logo.svg'
 

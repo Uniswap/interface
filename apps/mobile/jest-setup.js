@@ -95,6 +95,14 @@ jest.mock('@react-native-firebase/auth', () => () => ({
   signInAnonymously: jest.fn(),
 }))
 
+jest.mock('@react-native-firebase/app-check', () => () => ({
+  appCheck: jest.fn(),
+  newReactNativeFirebaseAppCheckProvider: jest.fn(() => ({
+    configure: jest.fn(),
+  })),
+  initializeAppCheck: jest.fn().mockReturnValue(Promise.resolve()), // Return a resolved Promise
+}))
+
 jest.mock('react-native/Libraries/Linking/Linking', () => ({
   openURL: jest.fn(),
   addEventListener: jest.fn(),

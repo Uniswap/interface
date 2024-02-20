@@ -127,7 +127,7 @@ export function FiatOnRampAmountSection({
   const debouncedErrorText = useDebounce(errorText, DEFAULT_DELAY / 2)
 
   return (
-    <Flex gap="$spacing16" onLayout={onInputPanelLayout}>
+    <Flex onLayout={onInputPanelLayout}>
       <Flex
         grow
         alignItems="center"
@@ -137,7 +137,7 @@ export function FiatOnRampAmountSection({
         <AnimatedFlex
           height={spacing.spacing24}
           /* We want to reserve the space here, so when error occurs - layout does not jump */
-          mt="$spacing48">
+          mt={appFiatCurrencySupported ? '$spacing48' : '$spacing24'}>
           {debouncedErrorText && errorColor && (
             <Text color={errorColor} textAlign="center" variant="buttonLabel4">
               {debouncedErrorText}

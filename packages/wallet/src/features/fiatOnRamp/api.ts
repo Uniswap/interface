@@ -15,6 +15,7 @@ import {
   FORTransactionsResponse,
   FORTransferInstitutionsRequest,
   FORTransferInstitutionsResponse,
+  FORTransferWidgetUrlRequest,
   FORWidgetUrlRequest,
   FORWidgetUrlResponse,
   FiatOnRampWidgetUrlQueryParameters,
@@ -248,6 +249,16 @@ export const fiatOnRampAggregatorApi = createApi({
         method: 'POST',
       }),
     }),
+    fiatOnRampAggregatorTransferWidget: builder.query<
+      FORWidgetUrlResponse,
+      FORTransferWidgetUrlRequest
+    >({
+      query: (request) => ({
+        url: '/transfer-widget-url',
+        body: request,
+        method: 'POST',
+      }),
+    }),
     fiatOnRampAggregatorTransactions: builder.query<
       FORTransactionsResponse,
       AuthenticatedRequestParams
@@ -285,6 +296,7 @@ export const {
   useFiatOnRampAggregatorSupportedTokensQuery,
   useFiatOnRampAggregatorTransferInstitutionsQuery,
   useFiatOnRampAggregatorWidgetQuery,
+  useFiatOnRampAggregatorTransferWidgetQuery,
   useFiatOnRampAggregatorTransactionsQuery,
 } = fiatOnRampAggregatorApi
 

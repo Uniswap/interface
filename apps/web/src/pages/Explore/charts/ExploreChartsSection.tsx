@@ -71,9 +71,9 @@ const SectionTitle = styled(ThemedText.SubHeader)`
   color: ${({ theme }) => theme.neutral2};
   white-space: nowrap;
 `
-const StyledChart = styled(Chart)`
+const StyledChart: typeof Chart = styled(Chart)`
   height: ${EXPLORE_CHART_HEIGHT_PX}px;
-` /* cast preserves generic Chart props that the `styled` return type looses: */ as typeof Chart
+`
 
 function VolumeChartSection({ chainId }: { chainId: number }) {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
@@ -199,7 +199,7 @@ function MinimalStatDisplay({ title, value, time }: { title: ReactNode; value: n
     <SectionContainer>
       <SectionTitle color="neutral2">{title}</SectionTitle>
       <ThemedText.HeadlineSmall fontSize="24px" lineHeight="32px">
-        {formatFiatPrice({ price: value, type: NumberType.FiatTokenStatChartHeader })}
+        {formatFiatPrice({ price: value, type: NumberType.ChartFiatValue })}
       </ThemedText.HeadlineSmall>
       {time && <ThemedText.Caption color="neutral2">{time}</ThemedText.Caption>}
     </SectionContainer>

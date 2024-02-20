@@ -10,7 +10,8 @@ import { useUnitagUpdater } from 'wallet/src/features/unitags/context'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { ElementName, ModalName, UnitagEventName } from 'wallet/src/telemetry/constants'
 
 export function DeleteUnitagModal({
   unitag,
@@ -51,6 +52,7 @@ export function DeleteUnitagModal({
       }
 
       if (deleteResponse?.success) {
+        sendWalletAnalyticsEvent(UnitagEventName.UnitagRemoved)
         triggerRefetchUnitags()
         dispatch(
           pushNotification({

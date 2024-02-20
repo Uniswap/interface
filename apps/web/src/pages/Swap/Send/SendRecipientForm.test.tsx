@@ -3,7 +3,7 @@ import { DAI } from 'constants/tokens'
 import { SendContext, SendContextType } from 'state/send/SendContext'
 import { SwapAndLimitContext } from 'state/swap/SwapContext'
 import { render, screen } from 'test-utils/render'
-import { shortenAddress } from 'utils'
+import { shortenAddress } from 'utilities/src/addresses'
 import { SendRecipientForm } from './SendRecipientForm'
 
 const mockSwapAndLimitContextValue = {

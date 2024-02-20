@@ -49,7 +49,7 @@ export function SearchEmptySection(): JSX.Element {
       searchHistory.map((historyItem: SearchResult) => {
         if (!unitagFeatureFlagEnabled && historyItem.type === SearchResultType.Unitag) {
           return {
-            type: SearchResultType.ENSAddress,
+            type: SearchResultType.WalletByAddress,
             address: historyItem.address,
             searchId: historyItem.searchId,
           }

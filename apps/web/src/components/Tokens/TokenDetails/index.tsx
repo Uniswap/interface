@@ -46,7 +46,7 @@ import { ArrowLeft, ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/SwapContext'
 import styled from 'styled-components'
-import { isAddress } from 'utils'
+import { isAddress } from 'utilities/src/addresses'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 
 import { ActivitySection } from './ActivitySection'
@@ -129,7 +129,7 @@ export default function TokenDetails({
   onChangeTimePeriod,
 }: TokenDetailsProps) {
   if (!urlAddress) {
-    throw new Error('Invalid token details route: tokenAddress param is undefined')
+    throw new Error('Invalid token details route: token address URL param is undefined')
   }
   const address = useMemo(
     () => (urlAddress === NATIVE_CHAIN_ID ? urlAddress : isAddress(urlAddress) || undefined),
@@ -250,7 +250,12 @@ export default function TokenDetails({
   return (
     <Trace
       page={InterfacePageName.TOKEN_DETAILS_PAGE}
-      properties={{ tokenAddress: address, tokenName: detailedToken?.name }}
+      properties={{
+        tokenAddress: address,
+        tokenSymbol: detailedToken?.symbol,
+        tokenName: detailedToken?.name,
+        chainId: pageChainId,
+      }}
       shouldLogImpression
     >
       <TokenDetailsLayout>

@@ -188,7 +188,7 @@ export default function PoolFinder() {
                       <Text textAlign="center">
                         <Trans>You don’t have liquidity in this pool yet.</Trans>
                       </Text>
-                      <StyledInternalLink to={`/add/${currencyId(currency0)}/${currencyId(currency1)}`}>
+                      <StyledInternalLink to={`/add/v2/${currencyId(currency0)}/${currencyId(currency1)}`}>
                         <Text textAlign="center">
                           <Trans>Add liquidity.</Trans>
                         </Text>

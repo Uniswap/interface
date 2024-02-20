@@ -2,7 +2,7 @@ import { NEVER_RELOAD, useMainnetSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 import { safeNamehash } from 'utils/safeNamehash'
 
-import { isAddress } from '../utils'
+import { isAddress } from 'utilities/src/addresses'
 import isZero from '../utils/isZero'
 import { useENSRegistrarContract, useENSResolverContract } from './useContract'
 import useDebounce from './useDebounce'

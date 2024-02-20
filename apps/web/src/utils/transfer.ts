@@ -4,10 +4,9 @@ import { ChainId, Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useAsyncData } from 'hooks/useAsyncData'
 import { useCallback } from 'react'
+import { getContract } from 'utilities/src/contracts/getContract'
 import ERC20_ABI from 'wallet/src/abis/erc20.json'
 import { Erc20 } from 'wallet/src/abis/types'
-
-import { getContract } from './getContract'
 
 interface TransferInfo {
   provider?: Web3Provider

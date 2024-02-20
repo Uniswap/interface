@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
-import { shortenAddress } from 'utils'
+import { shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { DoubleCurrencyAndChainLogo } from './PoolDetailsHeader'

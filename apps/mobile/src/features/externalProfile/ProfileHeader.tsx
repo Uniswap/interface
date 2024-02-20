@@ -22,11 +22,14 @@ import {
   useIsDarkMode,
   useSporeColors,
   useUniconColors,
+  useUniconV2Colors,
 } from 'ui/src'
 import { ENS_LOGO } from 'ui/src/assets'
 import { iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useENSDescription, useENSName, useENSTwitterUsername } from 'wallet/src/features/ens/api'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -67,21 +70,29 @@ export const ProfileHeader = memo(function ProfileHeader({
   const showENSName = primaryENSName && primaryENSName !== displayName?.name
 
   const { colors: avatarColors } = useExtractedColors(avatar)
+  const isUniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
+
   const hasAvatar = !!avatar && !avatarLoading
 
   // Unicon colors
   const { gradientStart: uniconGradientStart, gradientEnd: uniconGradientEnd } =
     useUniconColors(address)
 
+  // UniconV2 colors
+  const { color } = useUniconV2Colors(address)
+
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
-  const fixedGradientColors = useMemo(() => {
+  const fixedGradientColors: [string, string] = useMemo(() => {
     if (avatarLoading || (hasAvatar && !avatarColors)) {
       return [colors.surface1.val, colors.surface1.val]
     }
     if (hasAvatar && avatarColors && avatarColors.base) {
       return [avatarColors.base, avatarColors.base]
     }
-    return [uniconGradientStart, uniconGradientEnd]
+    return [
+      isUniconsV2Enabled ? color : uniconGradientStart,
+      isUniconsV2Enabled ? color : uniconGradientEnd,
+    ]
   }, [
     avatarColors,
     hasAvatar,
@@ -89,6 +100,8 @@ export const ProfileHeader = memo(function ProfileHeader({
     colors.surface1,
     uniconGradientEnd,
     uniconGradientStart,
+    color,
+    isUniconsV2Enabled,
   ])
 
   const onPressFavorite = useToggleWatchedWalletCallback(address)
@@ -153,7 +166,11 @@ export const ProfileHeader = memo(function ProfileHeader({
             style={StyleSheet.absoluteFill}
           />
         </Flex>
-        {hasAvatar && avatarColors?.primary ? <HeaderRadial color={avatarColors.primary} /> : null}
+        {hasAvatar && avatarColors?.primary ? (
+          <HeaderRadial color={avatarColors.primary} />
+        ) : (
+          <HeaderRadial color={isUniconsV2Enabled ? color : uniconGradientStart} />
+        )}
       </AnimatedFlex>
 
       {/* header row */}
@@ -270,9 +287,13 @@ export const ProfileHeader = memo(function ProfileHeader({
 export const HeaderRadial = memo(function HeaderRadial({
   color,
   borderRadius,
+  minOpacity,
+  maxOpacity,
 }: {
   color: string
   borderRadius?: number
+  minOpacity?: number
+  maxOpacity?: number
 }): JSX.Element {
   return (
     <Svg height="100%" width="100%">
@@ -281,8 +302,8 @@ export const HeaderRadial = memo(function HeaderRadial({
           <Rect height="100%" rx={borderRadius} width="100%" />
         </ClipPath>
         <RadialGradient cy="-0.1" id="background" rx="0.8" ry="1.1">
-          <Stop offset="0" stopColor={color} stopOpacity="0.6" />
-          <Stop offset="1" stopColor={color} stopOpacity="0" />
+          <Stop offset="0" stopColor={color} stopOpacity={maxOpacity ?? '0.6'} />
+          <Stop offset="1" stopColor={color} stopOpacity={minOpacity ?? '0'} />
         </RadialGradient>
       </Defs>
       <Rect

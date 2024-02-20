@@ -2,14 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { ComponentProps, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextInput, TextInputProps } from 'react-native'
-import {
-  FadeIn,
-  FadeOut,
-  FadeOutDown,
-  useAnimatedStyle,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated'
+import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch, useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { FiatOnRampStackParamList } from 'src/app/navigation/types'
 import { FiatOnRampCtaButton } from 'src/components/fiatOnRamp/CtaButton'
@@ -19,17 +12,18 @@ import {
   useMeldFiatCurrencySupportInfo,
   useParseFiatOnRampError,
 } from 'src/features/fiatOnRamp/aggregatorHooks'
-import { FiatOnRampAggregatorTokenSelector } from 'src/features/fiatOnRamp/FiatOnRampAggregatorTokenSelector'
 import { FiatOnRampAmountSection } from 'src/features/fiatOnRamp/FiatOnRampAmountSection'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { FiatOnRampCountryListModal } from 'src/features/fiatOnRamp/FiatOnRampCountryListModal'
 import { FiatOnRampCountryPicker } from 'src/features/fiatOnRamp/FiatOnRampCountryPicker'
+import { FiatOnRampTokenSelectorModal } from 'src/features/fiatOnRamp/FiatOnRampTokenSelector'
+import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { FiatOnRampCurrency, InitialQuoteSelection } from 'src/features/fiatOnRamp/types'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { MobileEventProperties } from 'src/features/telemetry/types'
 import { FiatOnRampScreens } from 'src/screens/Screens'
-import { AnimatedFlex, Flex, Text, useDeviceDimensions } from 'ui/src'
+import { AnimatedFlex, Flex, Text } from 'ui/src'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
 import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
@@ -38,7 +32,6 @@ import { useFiatOnRampAggregatorServiceProvidersQuery } from 'wallet/src/feature
 import { FORQuote } from 'wallet/src/features/fiatOnRamp/types'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { ANIMATE_SPRING_CONFIG } from 'wallet/src/features/transactions/utils'
 
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.AmountInput>
 
@@ -67,7 +60,6 @@ function selectInitialQuote(
 export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
-  const { fullWidth } = useDeviceDimensions()
   const [selection, setSelection] = useState<TextInputProps['selection']>()
   const [value, setValue] = useState('')
   const [showTokenSelector, setShowTokenSelector] = useState(false)
@@ -186,15 +178,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     !!quotesError ||
     !selectedQuote?.destinationAmount
 
-  const screenXOffset = useSharedValue(showTokenSelector ? -fullWidth : 0)
-  useEffect(() => {
-    const screenOffset = showTokenSelector ? 1 : 0
-    screenXOffset.value = withSpring(-(fullWidth * screenOffset), ANIMATE_SPRING_CONFIG)
-  }, [screenXOffset, showTokenSelector, fullWidth])
-  const wrapperStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: screenXOffset.value }],
-  }))
-
   const onContinue = (): void => {
     if (
       quotes &&
@@ -208,10 +191,20 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     }
   }
 
+  const {
+    list: supportedTokensList,
+    loading: supportedTokensLoading,
+    error: supportedTokensError,
+    refetch: supportedTokensRefetch,
+  } = useFiatOnRampSupportedTokens({
+    sourceCurrencyCode: meldSupportedFiatCurrency.code,
+    countryCode,
+  })
+
   return (
     <Screen edges={['top']}>
       <HandleBar backgroundColor="none" />
-      <AnimatedFlex row height="100%" pt="$spacing12" style={wrapperStyle}>
+      <AnimatedFlex row height="100%" pt="$spacing12">
         {isSheetReady && (
           <AnimatedFlex
             entering={FadeIn}
@@ -278,25 +271,27 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
             </AnimatedFlex>
           </AnimatedFlex>
         )}
-        {showTokenSelector && countryCode && (
-          <FiatOnRampAggregatorTokenSelector
-            countryCode={countryCode}
-            sourceCurrencyCode={meldSupportedFiatCurrency.code}
-            onBack={(): void => setShowTokenSelector(false)}
-            onSelectCurrency={(newCurrency: FiatOnRampCurrency): void => {
-              setQuoteCurrency(newCurrency)
-              setShowTokenSelector(false)
-            }}
-          />
-        )}
       </AnimatedFlex>
-      {Boolean(selectingCountry) && countryCode && (
+      {selectingCountry && countryCode && (
         <FiatOnRampCountryListModal
           countryCode={countryCode}
           onClose={(): void => {
             setSelectingCountry(false)
           }}
           onSelectCountry={onSelectCountry}
+        />
+      )}
+      {showTokenSelector && countryCode && (
+        <FiatOnRampTokenSelectorModal
+          error={supportedTokensError}
+          list={supportedTokensList}
+          loading={supportedTokensLoading}
+          onClose={(): void => setShowTokenSelector(false)}
+          onRetry={supportedTokensRefetch}
+          onSelectCurrency={(newCurrency: FiatOnRampCurrency): void => {
+            setQuoteCurrency(newCurrency)
+            setShowTokenSelector(false)
+          }}
         />
       )}
     </Screen>

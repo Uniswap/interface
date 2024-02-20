@@ -82,31 +82,39 @@ exports[`OffchainOrderLineItem should render type EXCHANGE_RATE 1`] = `
   user-select: text;
 }
 
-<div
-    class="c0 c1 c2"
+<span
+    class="t_light is_inversed _dsp_contents"
   >
-    <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      Rate
-    </div>
-    <div
-      class="c3 c5 css-142zc9n"
-    >
-      <button
-        class="c6"
-        title="1 USDC = <0.00001 DAI "
+      <div
+        class="c0 c1 c2"
       >
         <div
-          class="c3 css-142zc9n"
+          class="c3 c4 css-142zc9n"
+          data-testid="swap-li-label"
         >
-          1 USDC = &lt;0.00001 DAI 
+          Rate
         </div>
-         
-      </button>
-    </div>
-  </div>
+        <div
+          class="c3 c5 css-142zc9n"
+        >
+          <button
+            class="c6"
+            title="1 USDC = <0.00001 DAI "
+          >
+            <div
+              class="c3 css-142zc9n"
+            >
+              1 USDC = &lt;0.00001 DAI 
+            </div>
+             
+          </button>
+        </div>
+      </div>
+    </span>
+  </span>
 </DocumentFragment>
 `;
 
@@ -160,23 +168,31 @@ exports[`OffchainOrderLineItem should render type NETWORK_COST 1`] = `
   overflow-wrap: break-word;
 }
 
-<div
-    class="c0 c1 c2"
+<span
+    class=" _dsp_contents"
   >
-    <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      Network cost
-    </div>
-    <div
-      class="c3 c5 css-142zc9n"
-    >
-      <span>
-        $0
-      </span>
-    </div>
-  </div>
+      <div
+        class="c0 c1 c2"
+      >
+        <div
+          class="c3 c4 css-142zc9n"
+          data-testid="swap-li-label"
+        >
+          Network cost
+        </div>
+        <div
+          class="c3 c5 css-142zc9n"
+        >
+          <span>
+            $0
+          </span>
+        </div>
+      </div>
+    </span>
+  </span>
 </DocumentFragment>
 `;
 
@@ -249,27 +265,35 @@ exports[`OffchainOrderLineItem should render type TRANSACTION_ID 1`] = `
   overflow-wrap: break-word;
 }
 
-<div
-    class="c0 c1 c2"
+<span
+    class=" _dsp_contents"
   >
-    <div
-      class="c3 c4 css-142zc9n"
-      data-testid="swap-li-label"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      Transaction ID
-    </div>
-    <div
-      class="c3 c5 css-142zc9n"
-    >
-      <a
-        class="c6"
-        href="https://etherscan.io/tx/0x123"
-        rel="noopener noreferrer"
-        target="_blank"
+      <div
+        class="c0 c1 c2"
       >
-        0x12...x123
-      </a>
-    </div>
-  </div>
+        <div
+          class="c3 c4 css-142zc9n"
+          data-testid="swap-li-label"
+        >
+          Transaction ID
+        </div>
+        <div
+          class="c3 c5 css-142zc9n"
+        >
+          <a
+            class="c6"
+            href="https://etherscan.io/tx/0x123"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            0x12...x123
+          </a>
+        </div>
+      </div>
+    </span>
+  </span>
 </DocumentFragment>
 `;

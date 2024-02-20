@@ -2,24 +2,42 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { UnitagStackScreenProp } from 'src/app/navigation/types'
+import { UnitagEntryPoint, UnitagStackScreenProp } from 'src/app/navigation/types'
 import { useAvatarSelectionHandler } from 'src/components/unitags/AvatarSelection'
 import { ChoosePhotoOptionsModal } from 'src/components/unitags/ChoosePhotoOptionsModal'
 import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePicture'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
+import { UnitagName } from 'src/features/unitags/UnitagName'
 import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
-import { AnimatedFlex, Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
+import { ChainId } from 'wallet/src/constants/chains'
+import { useENSName } from 'wallet/src/features/ens/api'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useClaimUnitag } from 'wallet/src/features/unitags/hooks'
+import { UnitagClaimSource } from 'wallet/src/features/unitags/types'
+
+function convertEntryPointToAnalyticsSource(entryPoint: UnitagEntryPoint): UnitagClaimSource {
+  switch (entryPoint) {
+    case Screens.Home:
+      return 'home'
+    case Screens.Settings:
+      return 'settings'
+    case OnboardingScreens.Landing:
+      return 'onboarding'
+    default:
+      throw new Error(`unhandled entryPoint for ChooseProfilePictureScreen: ${entryPoint}`)
+  }
+}
 
 export function ChooseProfilePictureScreen({
   route,
 }: UnitagStackScreenProp<UnitagScreens.ChooseProfilePicture>): JSX.Element {
-  const { entryPoint, unitag, address } = route.params
+  const { entryPoint, unitag, unitagFontSize, address } = route.params
 
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const { data: ensName } = useENSName(address, ChainId.Mainnet)
   const claimUnitag = useClaimUnitag()
 
   const [imageUri, setImageUri] = useState<string>()
@@ -64,11 +82,18 @@ export function ChooseProfilePictureScreen({
 
   const attemptClaimUnitag = async (): Promise<void> => {
     setIsClaiming(true)
-    const { claimError: attemptClaimError } = await claimUnitag({
-      address,
-      username: unitag,
-      avatarUri: imageUri,
-    })
+    const source = convertEntryPointToAnalyticsSource(entryPoint)
+    const { claimError: attemptClaimError } = await claimUnitag(
+      {
+        address,
+        username: unitag,
+        avatarUri: imageUri,
+      },
+      {
+        source,
+        hasENSAddress: !!ensName,
+      }
+    )
     setIsClaiming(false)
     setClaimError(attemptClaimError)
 
@@ -112,19 +137,7 @@ export function ChooseProfilePictureScreen({
             </Flex>
           </Flex>
         </Flex>
-        <AnimatedFlex
-          row
-          alignSelf="center"
-          animation="lazy"
-          enterStyle={{ opacity: 0 }}
-          gap="$spacing20">
-          <Text color="$neutral1" variant="heading2">
-            {unitag}
-          </Text>
-          <Flex row position="absolute" right={-spacing.spacing8} top={-spacing.spacing8}>
-            <Icons.Unitag size="$icon.28" />
-          </Flex>
-        </AnimatedFlex>
+        <UnitagName fontSize={unitagFontSize} name={unitag} />
         {!!claimError && (
           <Text color="$statusCritical" variant="body2">
             {claimError}
@@ -168,8 +181,8 @@ function ProfilePicture({
     return (
       <UnitagProfilePicture
         address={address}
-        profilePictureUri={imageUri}
         size={imageSizes.image100}
+        unitagAvatarUri={imageUri}
       />
     )
   }

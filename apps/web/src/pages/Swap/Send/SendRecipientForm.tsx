@@ -15,7 +15,7 @@ import { useSendContext } from 'state/send/SendContext'
 import styled, { css, keyframes } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
-import { shortenAddress } from 'utils'
+import { shortenAddress } from 'utilities/src/addresses'
 
 const StyledConfirmedRecipientRow = styled(Row)`
   padding: 6px 0px;

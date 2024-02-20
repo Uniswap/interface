@@ -24,6 +24,7 @@ import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicator
 import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
 import { useSendEnabledFlag } from 'featureFlags/flags/send'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
+import { useUniTagsFlag } from 'featureFlags/flags/uniTags'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useFeesEnabledFlag } from 'featureFlags/flags/useFees'
 import { useV2EverywhereFlag } from 'featureFlags/flags/v2Everywhere'
@@ -359,6 +360,12 @@ export default function FeatureFlagModal() {
           value={useV2EverywhereFlag()}
           featureFlag={FeatureFlag.v2Everywhere}
           label="Enable V2 Everywhere"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useUniTagsFlag()}
+          featureFlag={FeatureFlag.uniTags}
+          label="UniTags support"
         />
         <FeatureFlagGroup name="Quick routes">
           <FeatureFlagOption

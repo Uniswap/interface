@@ -1,7 +1,7 @@
 import { ChainId } from '@uniswap/sdk-core'
 import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
-import { isAddress } from 'utils'
+import { isAddress } from 'utilities/src/addresses'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import AvaxLogo from '../../assets/svg/avax_logo.svg'

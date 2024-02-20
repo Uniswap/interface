@@ -20,4 +20,6 @@ declare module 'react-native-dotenv' {
   export const QUICKNODE_BNB_RPC_URL: string
   export const UNITAGS_API_URL: string
   export const TRADING_API_KEY: string
+  export const TRADING_API_URL: string
+  export const FIREBASE_APP_CHECK_DEBUG_TOKEN: string
 }

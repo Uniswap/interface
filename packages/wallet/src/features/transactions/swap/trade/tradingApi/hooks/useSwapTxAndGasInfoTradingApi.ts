@@ -20,13 +20,19 @@ export function useSwapTxAndGasInfoTradingApi({
 }: {
   derivedSwapInfo: DerivedSwapInfo
 }): SwapTxAndGasInfo {
-  const { chainId, wrapType, currencyAmounts } = derivedSwapInfo
+  const {
+    chainId,
+    wrapType,
+    currencyAmounts,
+    trade: { trade },
+  } = derivedSwapInfo
 
   const tokenApprovalInfo = useTokenApprovalInfo({
     chainId,
     wrapType,
     currencyInAmount: currencyAmounts[CurrencyField.INPUT],
-    skip: derivedSwapInfo?.trade.trade?.quoteData?.quoteType === QuoteType.RoutingApi,
+    // TODO: MOB-2773 https://linear.app/uniswap/issue/MOB-2773/deprecate-legacy-routing
+    skip: trade?.quoteData?.quoteType === QuoteType.RoutingApi,
   })
 
   const transactionRequestInfo = useTransactionRequestInfo({

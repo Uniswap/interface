@@ -1,15 +1,17 @@
 import { TFunction } from 'i18next'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getUniqueId } from 'react-native-device-info'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import {
   claimUnitag,
+  getUnitagAvatarUploadUrl,
   useUnitagByAddressQuery,
   useUnitagClaimEligibilityQuery,
   useUnitagQuery,
@@ -18,21 +20,30 @@ import {
   isLocalFileUri,
   uploadAndUpdateAvatarAfterClaim,
 } from 'wallet/src/features/unitags/avatars'
-import { UNITAG_VALID_REGEX } from 'wallet/src/features/unitags/constants'
+import {
+  AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS,
+  UNITAG_VALID_REGEX,
+} from 'wallet/src/features/unitags/constants'
 import { useUnitagUpdater } from 'wallet/src/features/unitags/context'
 import {
   UnitagAddressResponse,
   UnitagClaim,
+  UnitagClaimContext,
   UnitagErrorCodes,
+  UnitagGetAvatarUploadUrlResponse,
   UnitagUsernameResponse,
 } from 'wallet/src/features/unitags/types'
 import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import {
   useAccounts,
   useActiveAccountAddressWithThrow,
   usePendingAccounts,
 } from 'wallet/src/features/wallet/hooks'
+import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { UnitagEventName } from 'wallet/src/telemetry/constants'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 const MIN_UNITAG_LENGTH = 3
@@ -40,32 +51,51 @@ const MAX_UNITAG_LENGTH = 20
 
 export const useCanActiveAddressClaimUnitag = (): {
   canClaimUnitag: boolean
-  refetch: (() => void) | undefined
 } => {
   const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
   const activeAddress = useActiveAccountAddressWithThrow()
   const { data: deviceId } = useAsyncData(getUniqueId)
+  const { refetchUnitagsCounter } = useUnitagUpdater()
+  const skip = !unitagsFeatureFlagEnabled || !deviceId
+
   const { loading, data, refetch } = useUnitagClaimEligibilityQuery({
     address: activeAddress,
     deviceId: deviceId ?? '', // this is fine since we skip if deviceId is undefined
-    skip: !unitagsFeatureFlagEnabled || !deviceId,
+    skip,
   })
-  return { canClaimUnitag: !loading && !!data?.canClaim, refetch }
+
+  // Force refetch of canClaimUnitag if refetchUnitagsCounter changes
+  useEffect(() => {
+    if (skip || loading) {
+      return
+    }
+
+    refetch?.()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refetchUnitagsCounter])
+
+  return {
+    canClaimUnitag: !loading && !!data?.canClaim,
+  }
 }
 
 export const useCanAddressClaimUnitag = (
   address?: Address,
   isUsernameChange?: boolean
-): { canClaimUnitag: boolean; errorCode?: UnitagErrorCodes; refetch: (() => void) | undefined } => {
+): { canClaimUnitag: boolean; errorCode?: UnitagErrorCodes } => {
   const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
   const { data: deviceId } = useAsyncData(getUniqueId)
-  const { loading, data, refetch } = useUnitagClaimEligibilityQuery({
+  const skip = !unitagsFeatureFlagEnabled || !deviceId
+  const { loading, data } = useUnitagClaimEligibilityQuery({
     address,
     deviceId: deviceId ?? '', // this is fine since we skip if deviceId is undefined
     isUsernameChange,
-    skip: !unitagsFeatureFlagEnabled || !deviceId,
+    skip,
   })
-  return { canClaimUnitag: !loading && !!data?.canClaim, errorCode: data?.errorCode, refetch }
+  return {
+    canClaimUnitag: !loading && !!data?.canClaim,
+    errorCode: data?.errorCode,
+  }
 }
 
 export const useUnitagByAddress = (
@@ -79,8 +109,13 @@ export const useUnitagByAddress = (
   // Force refetch if counter changes
   const { refetchUnitagsCounter } = useUnitagUpdater()
   useEffect(() => {
+    if (!unitagsFeatureFlagEnabled || loading) {
+      return
+    }
+
     refetch?.()
-  }, [refetchUnitagsCounter, refetch])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refetchUnitagsCounter])
 
   return { unitag: data, loading }
 }
@@ -94,8 +129,13 @@ export const useUnitagByName = (
   // Force refetch if counter changes
   const { refetchUnitagsCounter } = useUnitagUpdater()
   useEffect(() => {
+    if (!unitagsFeatureFlagEnabled || loading) {
+      return
+    }
+
     refetch?.()
-  }, [refetchUnitagsCounter, refetch])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refetchUnitagsCounter])
 
   return { unitag: data, loading }
 }
@@ -119,7 +159,7 @@ export const getUnitagFormatError = (unitag: string, t: TFunction): string | und
 export const useCanClaimUnitagName = (
   unitagAddress: Address | undefined,
   unitag: string | undefined
-): { error: string | undefined; loading: boolean } => {
+): { error: string | undefined; loading: boolean; requiresENSMatch: boolean } => {
   const { t } = useTranslation()
 
   // Check for length and alphanumeric characters
@@ -138,12 +178,15 @@ export const useCanClaimUnitagName = (
     error = t('This username is not available')
   }
   if (dataLoaded && data.requiresEnsMatch && !ensAddressMatchesUnitagAddress) {
-    error = t('To claim this username you must own the {{ unitag }}.eth ENS', { unitag })
+    error = t('This username is not currently available.')
   }
-  return { error, loading }
+  return { error, loading, requiresENSMatch: data?.requiresEnsMatch ?? false }
 }
 
-export const useClaimUnitag = (): ((claim: UnitagClaim) => Promise<{ claimError?: string }>) => {
+export const useClaimUnitag = (): ((
+  claim: UnitagClaim,
+  context: UnitagClaimContext
+) => Promise<{ claimError?: string }>) => {
   const { t } = useTranslation()
   const { data: deviceId } = useAsyncData(getUniqueId)
   const accounts = useAccounts()
@@ -151,7 +194,7 @@ export const useClaimUnitag = (): ((claim: UnitagClaim) => Promise<{ claimError?
   const signerManager = useWalletSigners()
   const { triggerRefetchUnitags } = useUnitagUpdater()
 
-  return async (claim: UnitagClaim) => {
+  return async (claim: UnitagClaim, context: UnitagClaimContext) => {
     const claimAccount = pendingAccounts[claim.address] || accounts[claim.address]
     if (!claimAccount || !deviceId) {
       return { claimError: t('Could not claim username. Try again later.') }
@@ -175,6 +218,8 @@ export const useClaimUnitag = (): ((claim: UnitagClaim) => Promise<{ claimError?
       triggerRefetchUnitags()
 
       if (claimResponse.success) {
+        // Log claim success
+        sendWalletAnalyticsEvent(UnitagEventName.UnitagClaimed, context)
         if (claim.avatarUri && isLocalFileUri(claim.avatarUri)) {
           const { success: uploadUpdateAvatarSuccess } = await uploadAndUpdateAvatarAfterClaim({
             username: claim.username,
@@ -198,4 +243,60 @@ export const useClaimUnitag = (): ((claim: UnitagClaim) => Promise<{ claimError?
       return { claimError: t('Could not claim username. Try again later.') }
     }
   }
+}
+
+export const useAvatarUploadCredsWithRefresh = ({
+  unitag,
+  account,
+  signerManager,
+}: {
+  unitag: string
+  account: Account
+  signerManager: SignerManager
+}): {
+  avatarUploadUrlLoading: boolean
+  avatarUploadUrlResponse?: UnitagGetAvatarUploadUrlResponse
+} => {
+  const [avatarUploadUrlLoading, setAvatarUploadUrlLoading] = useState(false)
+  const [avatarUploadUrlResponse, setAvatarUploadUrlResponse] =
+    useState<UnitagGetAvatarUploadUrlResponse>()
+
+  // Re-fetch the avatar upload pre-signed URL every 110 seconds to ensure it's always fresh
+  useEffect(() => {
+    const fetchAvatarUploadUrl = async (): Promise<void> => {
+      try {
+        setAvatarUploadUrlLoading(true)
+        const { data } = await getUnitagAvatarUploadUrl({
+          username: unitag, // Assuming unitag is the username you're working with
+          account,
+          signerManager,
+        })
+        setAvatarUploadUrlResponse(data)
+      } catch (e) {
+        logger.error(e, {
+          tags: { file: 'EditUnitagProfileScreen', function: 'fetchAvatarUploadUrl' },
+        })
+      } finally {
+        setAvatarUploadUrlLoading(false)
+      }
+    }
+
+    // Call immediately on component mount
+    fetchAvatarUploadUrl().catch((e) => {
+      logger.error(e, {
+        tags: { file: 'EditUnitagProfileScreen', function: 'fetchAvatarUploadUrl' },
+      })
+    })
+
+    // Set up the interval to refetch creds 10 seconds before expiry
+    const intervalId = setInterval(
+      fetchAvatarUploadUrl,
+      (AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS - 10) * ONE_SECOND_MS
+    )
+
+    // Clear the interval on component unmount
+    return () => clearInterval(intervalId)
+  }, [unitag, account, signerManager])
+
+  return { avatarUploadUrlLoading, avatarUploadUrlResponse }
 }

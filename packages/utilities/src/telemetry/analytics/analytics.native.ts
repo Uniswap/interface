@@ -7,13 +7,13 @@ import {
   track,
 } from '@amplitude/analytics-react-native'
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
-import { SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 import { getUniqueId } from 'react-native-device-info'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 import { Analytics, UserPropertyValue } from './analytics'
 import {
   AMPLITUDE_NATIVE_TRACKING_OPTIONS,
   AMPLITUDE_SHARED_TRACKING_OPTIONS,
+  ANONYMOUS_EVENT_NAMES,
   DUMMY_KEY,
 } from './constants'
 import { generateAnalyticsLoggers } from './logging'
@@ -21,11 +21,6 @@ import { generateAnalyticsLoggers } from './logging'
 const loggers = generateAnalyticsLoggers('telemetry/analytics.native')
 
 let allowAnalytics: Maybe<boolean>
-
-const ANONYMOUS_EVENT_NAMES: string[] = [
-  SharedEventName.HEARTBEAT.valueOf(),
-  SwapEventName.SWAP_TRANSACTION_COMPLETED.valueOf(),
-]
 
 export const analytics: Analytics = {
   async init(transportProvider: ApplicationTransport, allowed: boolean): Promise<void> {

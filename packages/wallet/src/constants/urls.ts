@@ -3,12 +3,13 @@ import { isAndroid } from 'wallet/src/utils/platform'
 
 export const UNISWAP_APP_HOSTNAME = 'app.uniswap.org'
 
-const TRADING_API_BASE_PATH = '/v2/trade'
+const TRADING_API_BASE_PATH = '/v1'
 
 const helpUrl = 'https://support.uniswap.org'
 
 export const uniswapUrls = {
   helpUrl,
+  helpRequestUrl: `${helpUrl}/hc/en-us/requests/new`,
   helpArticleUrls: {
     feeOnTransferHelp: `${helpUrl}/hc/en-us/articles/18673568523789-What-is-a-token-fee-`,
     moonpayHelp: `${helpUrl}/hc/en-us/articles/11306574799117-How-to-use-Moon-Pay-on-the-Uniswap-web-app-`,
@@ -19,6 +20,7 @@ export const uniswapUrls = {
     swapProtection: `${helpUrl}/hc/en-us/articles/18814993155853`,
     supportedNetworks: `${helpUrl}/hc/en-us/articles/14569415293325`,
     tokenWarning: `${helpUrl}/hc/en-us/articles/8723118437133-What-are-token-warnings-`,
+    unitagClaimPeriod: `${helpUrl}/hc/en-us/articles/24009960408589`,
     walletHelp: `${helpUrl}/hc/en-us/categories/11301970439565-Uniswap-Wallet`,
   },
   apiBaseUrl: getUniswapApiBaseUrl(),
@@ -33,9 +35,10 @@ export const uniswapUrls = {
   statsigProxyUrl: getUniswapStatsigProxyUrl(),
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
-  reportUnitagUrl: 'https://support.uniswap.org/hc/en-us/requests/new',
   appUrl: `https://${UNISWAP_APP_HOSTNAME}`,
   interfaceUrl: `https://${UNISWAP_APP_HOSTNAME}/#/swap`,
+  extensionFeedbackFormUrl: 'https://forms.gle/RGFhKnABUjdPiYQH6', // TODO(EXT-668): Remove this after F&F launch
+  interfaceTokensUrl: `https://${UNISWAP_APP_HOSTNAME}/tokens`,
   unitagsApiUrl: getUnitagsApiUrl(),
   tradingApiPaths: {
     quote: getTradingApiQuotePath(),

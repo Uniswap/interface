@@ -1,2 +1,2 @@
 export * from './TouchableArea'
-export { TouchableAreaProps } from './types'
+export type { TouchableAreaProps } from './types'

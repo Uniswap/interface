@@ -50,17 +50,25 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
   text-decoration: none;
 }
 
-<div
-    class="c0"
+<span
+    class="t_light is_inversed _dsp_contents"
   >
-    <div>
-      <button
-        class="c1 c2"
-        data-testid="buy-fiat-button"
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
       >
-        Buy
-      </button>
-    </div>
-  </div>
+        <div>
+          <button
+            class="c1 c2"
+            data-testid="buy-fiat-button"
+          >
+            Buy
+          </button>
+        </div>
+      </div>
+    </span>
+  </span>
 </DocumentFragment>
 `;

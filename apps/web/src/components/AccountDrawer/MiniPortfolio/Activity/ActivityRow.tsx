@@ -10,7 +10,7 @@ import { useCallback } from 'react'
 import { SignatureType } from 'state/signatures/types'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
-import { shortenAddress } from 'utils'
+import { shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { PortfolioLogo } from '../PortfolioLogo'

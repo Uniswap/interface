@@ -10,10 +10,6 @@ import { iconSizes } from 'ui/src/theme'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import {
-  SwapScreen,
-  useSwapScreenContext,
-} from 'wallet/src/features/transactions/contexts/SwapScreenContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { SwapSettingsModal } from 'wallet/src/features/transactions/swap/modals/SwapSettingsModal'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
@@ -27,7 +23,6 @@ export function SwapFormHeader(): JSX.Element {
   const colors = useSporeColors()
   const account = useActiveAccountWithThrow()
 
-  const { screen } = useSwapScreenContext()
   const { onClose } = useTransactionModalContext()
   const { updateSwapForm, customSlippageTolerance, derivedSwapInfo } = useSwapFormContext()
 
@@ -110,7 +105,7 @@ export function SwapFormHeader(): JSX.Element {
             </TouchableArea>
           )}
 
-          {screen === SwapScreen.SwapForm && !isViewOnlyWallet && (
+          {!isViewOnlyWallet && (
             <TouchableArea
               hapticFeedback
               testID={ElementName.SwapSettings}

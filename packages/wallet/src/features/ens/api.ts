@@ -91,7 +91,7 @@ function useEnsQuery(
   nameOrAddress?: string | null,
   chainId: ChainId = ChainId.Mainnet
 ) {
-  const result = useRestQuery<{ data?: string; timestamp: number }, EnsLookupParams>(
+  const result = useRestQuery<{ data: Maybe<string>; timestamp: number }, EnsLookupParams>(
     STUB_ONCHAIN_ENS_ENDPOINT, // will invoke `getOnChainEnsFetch`
     // the query is skipped if this is not defined so the assertion is okay
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

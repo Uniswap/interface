@@ -16,6 +16,7 @@ import { setClipboard } from 'wallet/src/utils/clipboard'
 
 type AddressDisplayProps = {
   address: string
+  overrideDisplayName?: string
   allowFontScaling?: boolean
   hideAddressInSubtitle?: boolean
   size?: number
@@ -76,6 +77,7 @@ function getLineHeightForAdjustedFontSize(nameLength: number): number {
 
 export function AddressDisplay({
   allowFontScaling = true,
+  overrideDisplayName,
   address,
   size = 24,
   variant = 'body1',
@@ -98,7 +100,7 @@ export function AddressDisplay({
   gapBetweenLines = '$none',
 }: AddressDisplayProps): JSX.Element {
   const dispatch = useAppDispatch()
-  const displayName = useDisplayName(address, { includeUnitagSuffix })
+  const displayName = useDisplayName(address, { includeUnitagSuffix, overrideDisplayName })
   const { avatar } = useAvatar(address)
 
   const showAddressAsSubtitle =
@@ -213,7 +215,7 @@ const AddressSubtitle = ({
     <Flex
       centered
       row
-      backgroundColor={showCopyWrapperButton ? '$DEP_backgroundOverlay' : '$transparent'}
+      backgroundColor={showCopyWrapperButton ? '$surface2' : '$transparent'}
       borderRadius="$roundedFull"
       gap="$spacing4"
       mt={showCopyWrapperButton ? '$spacing8' : '$none'}

@@ -244,7 +244,6 @@ export function ScantasticModal(): JSX.Element | null {
           borderColor="$surface3"
           borderRadius="$rounded20"
           borderWidth={1}
-          flex={1}
           gap="$spacing12"
           p="$spacing16"
           width="100%">

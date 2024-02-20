@@ -13,6 +13,8 @@ export interface QRCodeProps {
   color?: string
   /* the color of the background */
   backgroundColor?: string
+  /* the color of the background */
+  overlayColor?: string
   /* an image source object. example {uri: 'base64string'} or {require('pathToImage')} */
   logo?: ImageSourcePropType
   /* logo size in pixels */

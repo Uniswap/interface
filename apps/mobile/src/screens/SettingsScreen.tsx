@@ -106,11 +106,11 @@ export function SettingsScreen(): JSX.Element {
     dispatch(setHideSpamTokens(!hideSpamTokens))
   }, [dispatch, hideSpamTokens])
 
+  // Signer account info
   const signerAccount = useSignerAccounts()[0]
-  // If no mnemonicId that means there are no signer accounts imported yet
-  const mnemonicId = signerAccount?.mnemonicId
   // We sync backup state across all accounts under the same mnemonic, so can check status with any account.
   const hasCloudBackup = signerAccount?.backups?.includes(BackupType.Cloud)
+  const noSignerAccountImported = !signerAccount
   const { walletNeedsRestore } = useWalletRestore()
 
   const sections: SettingsSection[] = useMemo((): SettingsSection[] => {
@@ -184,7 +184,7 @@ export function SettingsScreen(): JSX.Element {
       },
       {
         subTitle: t('Security'),
-        isHidden: !mnemonicId,
+        isHidden: noSignerAccountImported,
         data: [
           ...(deviceSupportsBiometrics
             ? [
@@ -204,8 +204,8 @@ export function SettingsScreen(): JSX.Element {
             screen: Screens.SettingsViewSeedPhrase,
             text: t('Recovery phrase'),
             icon: <Icons.Key {...iconProps} />,
-            screenProps: { address: mnemonicId ?? '', walletNeedsRestore },
-            isHidden: !mnemonicId,
+            screenProps: { address: signerAccount?.address ?? '', walletNeedsRestore },
+            isHidden: noSignerAccountImported,
           },
           {
             screen: walletNeedsRestore
@@ -221,10 +221,10 @@ export function SettingsScreen(): JSX.Element {
                     importType: ImportType.Restore,
                   },
                 }
-              : { address: mnemonicId ?? '' },
+              : { address: signerAccount?.address ?? '' },
             text: isAndroid ? t('Google Drive backup') : t('iCloud backup'),
             icon: <Icons.OSDynamicCloudIcon color="$neutral2" size="$icon.24" />,
-            isHidden: !mnemonicId,
+            isHidden: noSignerAccountImported,
           },
         ],
       },
@@ -303,8 +303,9 @@ export function SettingsScreen(): JSX.Element {
     isFaceIdSupported,
     authenticationTypeName,
     walletNeedsRestore,
+    noSignerAccountImported,
     hasCloudBackup,
-    mnemonicId,
+    signerAccount?.address,
   ])
 
   const renderItem = ({
@@ -433,6 +434,8 @@ function WalletSettings(): JSX.Element {
                 <AddressDisplay
                   address={account.address}
                   captionVariant="subheading2"
+                  showIconBackground={true}
+                  showViewOnlyBadge={account.type === AccountType.Readonly}
                   size={iconSizes.icon40}
                   variant="body1"
                 />

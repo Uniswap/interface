@@ -37,7 +37,6 @@ const StickyStyles = css`
 `
 export const TableHead = styled.div<{ $isSticky?: boolean }>`
   width: 100%;
-  height: 72px;
   position: relative;
   ${({ $isSticky }) => ($isSticky ? StickyStyles : '')}
   // Place header at bottom of container (top of container used to add distance from nav / hide rows)
@@ -47,7 +46,7 @@ export const TableHead = styled.div<{ $isSticky?: boolean }>`
   // Solid background that matches surface, in order to hide rows as they scroll behind header
   background: ${({ theme }) => theme.surface1};
 `
-export const TableBody = styled(Column)`
+export const TableBodyContainer = styled(Column)`
   width: 100%;
   position: relative;
   overflow-x: auto;
@@ -106,7 +105,11 @@ export const DataRow = styled(TableRow)`
     background: ${({ theme }) => theme.surface3};
   }
 `
-export const HeaderRow = styled(TableRow)`
+export const NoDataFoundTableRow = styled(TableRow)`
+  justify-content: center;
+`
+
+export const HeaderRow = styled(TableRow)<{ $dimmed?: boolean }>`
   border: 1px solid ${({ theme }) => theme.surface3};
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
@@ -116,6 +119,8 @@ export const HeaderRow = styled(TableRow)`
   background: ${({ theme }) => theme.surface2};
   ${HideScrollBarStyles}
   overscroll-behavior: none;
+
+  ${({ $dimmed }) => $dimmed && 'opacity: 0.4;'}
 `
 export const CellContainer = styled.div`
   display: flex;
@@ -156,9 +161,13 @@ export const ClickableHeaderRow = styled(Row)<{ $justify?: string }>`
 export const HeaderArrow = styled(ArrowDown)<{ direction: OrderDirection | TheGraphOrderDirection }>`
   height: 16px;
   width: 16px;
-  color: ${({ theme }) => theme.neutral2};
+  color: ${({ theme }) => theme.neutral1};
   transform: ${({ direction }) => (direction === 'asc' ? 'rotate(180deg)' : 'rotate(0deg)')};
 `
+export const HeaderSortText = styled(ThemedText.BodySecondary)<{ $active?: boolean }>`
+  ${({ $active, theme }) => $active && `color: ${theme.neutral1};`}
+`
+
 export const FilterHeaderRow = styled(Row)<{ modalOpen?: boolean }>`
   ${({ modalOpen }) => !modalOpen && ClickableStyle}
   cursor: pointer;

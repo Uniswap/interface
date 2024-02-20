@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { isWeb } from 'tamagui'
 import { Flex, useSporeColors } from 'ui/src'
-import { logger } from 'utilities/src/logger/logger'
+import { zIndices } from 'ui/src/theme'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { useDebounce } from 'utilities/src/time/timing'
 import PasteButton from 'wallet/src/components/buttons/PasteButton'
@@ -20,6 +20,7 @@ import { TokenSelectorSwapInputList } from 'wallet/src/components/TokenSelector/
 import { TokenSelectorSwapOutputList } from 'wallet/src/components/TokenSelector/TokenSelectorSwapOutputList'
 import { SuggestedTokenSection, TokenSection } from 'wallet/src/components/TokenSelector/types'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
@@ -39,7 +40,7 @@ export enum TokenSelectorVariation {
   SuggestedAndFavoritesAndPopular = 'suggested-and-favorites-and-popular',
 }
 
-interface BaseTokenSelectorProps {
+export interface TokenSelectorProps {
   currencyField: CurrencyField
   flow: TokenSelectorFlow
   chainId?: ChainId
@@ -50,21 +51,8 @@ interface BaseTokenSelectorProps {
     currencyField: CurrencyField,
     context: SearchContext
   ) => void
+  variation: TokenSelectorVariation
 }
-
-export type TokenSelectorProps = BaseTokenSelectorProps &
-  (
-    | {
-        onSendEmptyActionPress: () => void
-        variation: TokenSelectorVariation.BalancesOnly
-      }
-    | {
-        onSendEmptyActionPress?: never
-        variation:
-          | TokenSelectorVariation.BalancesAndPopular
-          | TokenSelectorVariation.SuggestedAndFavoritesAndPopular
-      }
-  )
 
 function TokenSelectorContent({
   currencyField,
@@ -72,10 +60,11 @@ function TokenSelectorContent({
   onSelectCurrency,
   chainId,
   onClose,
-  onSendEmptyActionPress,
   variation,
   isSurfaceReady = true,
 }: TokenSelectorProps): JSX.Element {
+  const { navigateToBuyOrReceiveWithEmptyWallet } = useWalletNavigation()
+
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter } = useFilterCallbacks(
     chainId ?? null,
     flow
@@ -131,19 +120,10 @@ function TokenSelectorContent({
 
   const [searchInFocus, setSearchInFocus] = useState(false)
 
-  const onSendEmptyActionPressWithClose = useCallback(() => {
+  const onSendEmptyActionPress = useCallback(() => {
     onClose()
-    if (!onSendEmptyActionPress) {
-      logger.error(
-        new Error(
-          'Invalid call to `onSendEmptyActionPressWithClose` with missing `onSendEmptyActionPress`'
-        ),
-        { tags: { file: 'TokenSelector.tsx', function: 'onSendEmptyActionPressWithClose' } }
-      )
-      return
-    }
-    onSendEmptyActionPress()
-  }, [onClose, onSendEmptyActionPress])
+    navigateToBuyOrReceiveWithEmptyWallet()
+  }, [navigateToBuyOrReceiveWithEmptyWallet, onClose])
 
   function onCancel(): void {
     setSearchInFocus(false)
@@ -176,7 +156,7 @@ function TokenSelectorContent({
         return (
           <TokenSelectorSendList
             chainFilter={chainFilter}
-            onEmptyActionPress={onSendEmptyActionPressWithClose}
+            onEmptyActionPress={onSendEmptyActionPress}
             onSelectCurrency={onSelectCurrencyCallback}
           />
         )
@@ -202,7 +182,7 @@ function TokenSelectorContent({
     onSelectCurrencyCallback,
     chainFilter,
     debouncedSearchFilter,
-    onSendEmptyActionPressWithClose,
+    onSendEmptyActionPress,
   ])
 
   return (
@@ -230,7 +210,7 @@ function TokenSelectorContent({
             {tokenSelector}
 
             {(!searchInFocus || searchFilter) && (
-              <Flex position="absolute" right={0}>
+              <Flex position="absolute" right={0} zIndex={zIndices.fixed}>
                 <NetworkFilter
                   includeAllNetworks
                   selectedChain={chainFilter}

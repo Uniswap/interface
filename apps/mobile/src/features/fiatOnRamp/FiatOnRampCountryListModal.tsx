@@ -20,12 +20,12 @@ import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { bubbleToTop } from 'utilities/src/primitives/array'
 import { useDebounce } from 'utilities/src/time/timing'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
 import { useFiatOnRampAggregatorCountryListQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { FORSupportedCountry } from 'wallet/src/features/fiatOnRamp/types'
 import { getCountryFlagSvgUrl } from 'wallet/src/features/fiatOnRamp/utils'
 import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
 import { ModalName } from 'wallet/src/telemetry/constants'
-import { isIOS } from 'wallet/src/utils/platform'
 
 const ICON_SIZE = 32 // design prefers a custom value here
 
@@ -95,7 +95,7 @@ function CountrySelectorContent({
   )
 
   return (
-    <Flex grow gap="$spacing16" pb={isIOS ? '$spacing16' : '$none'} px="$spacing16">
+    <Flex grow gap="$spacing16" px="$spacing16">
       <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">
         {t('Select your region')}
       </Text>
@@ -106,28 +106,27 @@ function CountrySelectorContent({
         value={searchText}
         onChangeText={setSearchText}
       />
-      {true && (
-        <Flex grow>
-          <AnimatedFlex grow entering={FadeIn} exiting={FadeOut}>
-            {isLoading ? (
-              <CountryListPlaceholder itemsCount={10} />
-            ) : (
-              <BottomSheetFlatList
-                ListEmptyComponent={<Flex />}
-                bounces={true}
-                contentContainerStyle={{ paddingBottom: insets.bottom + spacing.spacing12 }}
-                data={filteredData}
-                keyExtractor={key}
-                keyboardDismissMode="on-drag"
-                keyboardShouldPersistTaps="always"
-                renderItem={renderItem}
-                showsVerticalScrollIndicator={false}
-                windowSize={5}
-              />
-            )}
-          </AnimatedFlex>
-        </Flex>
-      )}
+      <Flex grow>
+        <AnimatedFlex grow entering={FadeIn} exiting={FadeOut}>
+          {isLoading ? (
+            <CountryListPlaceholder itemsCount={10} />
+          ) : (
+            <BottomSheetFlatList
+              ListEmptyComponent={<Flex />}
+              bounces={true}
+              contentContainerStyle={{ paddingBottom: insets.bottom + spacing.spacing12 }}
+              data={filteredData}
+              focusHook={useBottomSheetFocusHook}
+              keyExtractor={key}
+              keyboardDismissMode="on-drag"
+              keyboardShouldPersistTaps="always"
+              renderItem={renderItem}
+              showsVerticalScrollIndicator={false}
+              windowSize={5}
+            />
+          )}
+        </AnimatedFlex>
+      </Flex>
     </Flex>
   )
 }
@@ -165,6 +164,7 @@ export function FiatOnRampCountryListModal({
       fullScreen
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
+      renderBehindBottomInset
       backgroundColor={colors.surface1.get()}
       name={ModalName.FiatOnRampCountryList}
       snapPoints={FOR_MODAL_SNAP_POINTS}

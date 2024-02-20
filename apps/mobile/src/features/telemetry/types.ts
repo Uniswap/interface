@@ -15,6 +15,7 @@ export type MoonpayTransactionEventProperties = TraceProps &
 
 export type AssetDetailsBaseProperties = {
   name?: string
+  domain?: string
   address: string
   chain?: number
 }

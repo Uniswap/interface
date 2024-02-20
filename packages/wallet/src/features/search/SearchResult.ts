@@ -7,12 +7,23 @@ export type SearchResult =
   | EtherscanSearchResult
   | NFTCollectionSearchResult
 
+// Retain original ordering as these are saved to storage and loaded back out
 export enum SearchResultType {
   ENSAddress,
-  Unitag,
   Token,
   Etherscan,
   NFTCollection,
+  Unitag,
+  WalletByAddress,
+}
+
+export function extractDomain(walletName: string, type: SearchResultType): string {
+  const index = walletName.indexOf('.')
+  if (index === -1 || index === walletName.length - 1) {
+    return type === SearchResultType.Unitag ? '.uni.eth' : '.eth'
+  }
+
+  return walletName.substring(index + 1)
 }
 
 export interface SearchResultBase {
@@ -20,12 +31,21 @@ export interface SearchResultBase {
   searchId?: string
 }
 
-export type WalletSearchResult = ENSAddressSearchResult | UnitagSearchResult
+export type WalletSearchResult =
+  | ENSAddressSearchResult
+  | UnitagSearchResult
+  | WalletByAddressSearchResult
+
+export interface WalletByAddressSearchResult extends SearchResultBase {
+  type: SearchResultType.WalletByAddress
+  address: Address
+}
 
 export interface ENSAddressSearchResult extends SearchResultBase {
   type: SearchResultType.ENSAddress
   address: Address
-  ensName?: string
+  isRawName?: boolean
+  ensName: string
   primaryENSName?: string
 }
 

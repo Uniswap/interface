@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import 'react-native-reanimated'
@@ -11,26 +12,35 @@ import { Button, Flex, GeneratedIcon, Icons, Image, Text, useIsDarkMode } from '
 import { UNITAGS_INTRO_BANNER_DARK, UNITAGS_INTRO_BANNER_LIGHT } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function UnitagsIntroModal(): JSX.Element {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
   const appDispatch = useAppDispatch()
-  const address = useAppSelector(selectModalState(ModalName.UnitagsIntro)).initialState?.address
+  const modalState = useAppSelector(selectModalState(ModalName.UnitagsIntro)).initialState
+  const address = modalState?.address
+  const entryPoint = modalState?.entryPoint
 
   const onClose = (): void => {
     appDispatch(closeModal({ name: ModalName.UnitagsIntro }))
   }
 
   const onPressClaimOneNow = (): void => {
+    if (!entryPoint) {
+      throw new Error('Missing entry point in UnitagsIntroModal')
+    }
     navigate(Screens.UnitagStack, {
       screen: UnitagScreens.ClaimUnitag,
       params: {
-        entryPoint: Screens.Home,
+        entryPoint,
         address,
       },
     })
+    if (address) {
+      sendWalletAnalyticsEvent(SharedEventName.TERMS_OF_SERVICE_ACCEPTED, { address })
+    }
     onClose()
   }
 
@@ -38,10 +48,10 @@ export function UnitagsIntroModal(): JSX.Element {
     <BottomSheetModal name={ModalName.UnitagsIntro} onClose={onClose}>
       <Flex gap="$spacing24" px="$spacing24" py="$spacing16">
         <Flex alignItems="center" gap="$spacing12">
-          <Text variant="subheading1">{t('Introducing Usernames')}</Text>
+          <Text variant="subheading1">{t('Introducing usernames')}</Text>
           <Text color="$neutral2" textAlign="center" variant="body3">
             {t(
-              'Say goodbye to 0x addresses. Usernames are readable addresses that make it easier to receive crypto and connect with friends.'
+              'Say goodbye to 0x addresses. Usernames are readable names that make it easier to send and receive crypto.'
             )}
           </Text>
         </Flex>
@@ -57,7 +67,7 @@ export function UnitagsIntroModal(): JSX.Element {
           <BodyItem Icon={Icons.Ticket} title={t('Free to claim')} />
           <BodyItem Icon={Icons.Lightning} title={t('Powered by ENS subdomains')} />
         </Flex>
-        <Flex gap="$spacing8" mt="$spacing16">
+        <Flex gap="$spacing8">
           <Button size="medium" theme="primary" onPress={onPressClaimOneNow}>
             {t('Continue')}
           </Button>

@@ -67,7 +67,7 @@ export function SettingsCloudBackupStatus({
         })
       )
       setShowBackupDeleteWarning(false)
-      navigation.navigate(Screens.SettingsWallet, { address })
+      navigation.navigate(Screens.Settings)
     } catch (error) {
       setShowBackupDeleteWarning(false)
       logger.error(error, { tags: { file: 'SettingsCloudBackupStatus', function: 'deleteBackup' } })

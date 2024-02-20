@@ -2,18 +2,11 @@ import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo, useCallback } from 'react'
 import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import {
-  FadeIn,
-  SharedValue,
-  interpolate,
-  useAnimatedReaction,
-  useAnimatedStyle,
-  useSharedValue,
-} from 'react-native-reanimated'
+import { FadeIn, SharedValue } from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
-import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
+import { useAnimatedCardDragStyle, useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { Loader } from 'src/components/loading'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
@@ -55,8 +48,6 @@ function FavoriteTokenCard({
   const dispatch = useAppDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const dragAnimationProgress = useSharedValue(0)
-  const wasTouched = useSharedValue(false)
 
   const { data, networkStatus, startPolling, stopPolling } = useFavoriteTokenCardQuery({
     variables: currencyIdToContractInput(currencyId),
@@ -103,45 +94,14 @@ function FavoriteTokenCard({
     tokenDetailsNavigation.navigate(currencyId)
   }
 
-  useAnimatedReaction(
-    () => dragActivationProgress.value,
-    (activationProgress, prev) => {
-      const prevActivationProgress = prev ?? 0
-      // If the activation progress is increasing (the user is touching one of the cards)
-      if (activationProgress > prevActivationProgress) {
-        if (isTouched.value) {
-          // If the current card is the one being touched, reset the animation progress
-          wasTouched.value = true
-          dragAnimationProgress.value = 0
-        } else {
-          // Otherwise, animate the card
-          wasTouched.value = false
-          dragAnimationProgress.value = activationProgress
-        }
-      }
-      // If the activation progress is decreasing (the user is no longer touching one of the cards)
-      else {
-        if (isTouched.value || wasTouched.value) {
-          // If the current card is the one that was being touched, reset the animation progress
-          dragAnimationProgress.value = 0
-        } else {
-          // Otherwise, animate the card
-          dragAnimationProgress.value = activationProgress
-        }
-      }
-    }
-  )
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: interpolate(dragAnimationProgress.value, [0, 1], [1, 0.5]),
-  }))
+  const animatedDragStyle = useAnimatedCardDragStyle(isTouched, dragActivationProgress)
 
   if (isNonPollingRequestInFlight(networkStatus)) {
     return <Loader.Favorite height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
   }
 
   return (
-    <AnimatedFlex style={animatedStyle}>
+    <AnimatedFlex style={animatedDragStyle}>
       <ContextMenu
         actions={menuActions}
         disabled={isEditing}

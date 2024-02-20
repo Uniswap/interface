@@ -16,6 +16,7 @@ export enum FEATURE_FLAGS {
   SeedPhraseRefactorNative = 'refactor-seed-phrase-native',
   SendRewrite = 'send-rewrite',
   Unitags = 'unitags',
+  UniconsV2 = 'unicons-v2',
   TradingApi = 'trading-api',
 }
 

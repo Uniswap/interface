@@ -120,63 +120,71 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
   overflow: hidden;
 }
 
-<a
-    class="c0"
-    href="/explore/tokens/polygon/NATIVE"
+<span
+    class=" _dsp_contents"
   >
-    <div
-      class="c1 c2"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      <div
-        class="c3"
+      <a
+        class="c0"
+        href="/explore/tokens/polygon/NATIVE"
       >
         <div
-          class="c4"
+          class="c1 c2"
         >
-          USD
-        </div>
-        <div
-          class="c5"
-        >
-          <svg
-            aria-labelledby="titleID"
-            height="100%"
-            style="width: 100%; height: 100%;"
-            width="100%"
+          <div
+            class="c3"
           >
-            <title
-              id="titleID"
+            <div
+              class="c4"
             >
-              Polygon logo
-            </title>
-            <rect
-              fill="#F9F9F9"
-              height="100%"
-              rx="2"
-              width="100%"
-            />
-            <rect
-              fill="#9558FF33"
-              height="100%"
-              rx="2"
-              width="100%"
-            />
-            <svg
-              height="100%"
-              width="100%"
+              USD
+            </div>
+            <div
+              class="c5"
             >
-              polygon.svg
-            </svg>
-          </svg>
+              <svg
+                aria-labelledby="titleID"
+                height="100%"
+                style="width: 100%; height: 100%;"
+                width="100%"
+              >
+                <title
+                  id="titleID"
+                >
+                  Polygon logo
+                </title>
+                <rect
+                  fill="#F9F9F9"
+                  height="100%"
+                  rx="2"
+                  width="100%"
+                />
+                <rect
+                  fill="#9558FF33"
+                  height="100%"
+                  rx="2"
+                  width="100%"
+                />
+                <svg
+                  height="100%"
+                  width="100%"
+                >
+                  polygon.svg
+                </svg>
+              </svg>
+            </div>
+          </div>
+          <div
+            class="c6 c7 css-1urox24"
+          >
+            USDC
+          </div>
         </div>
-      </div>
-      <div
-        class="c6 c7 css-1urox24"
-      >
-        USDC
-      </div>
-    </div>
-  </a>
+      </a>
+    </span>
+  </span>
 </DocumentFragment>
 `;
 
@@ -278,29 +286,37 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
   overflow: hidden;
 }
 
-<a
-    class="c0"
-    href="/explore/tokens/ethereum/NATIVE"
+<span
+    class=" _dsp_contents"
   >
-    <div
-      class="c1 c2"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      <div
-        class="c3"
+      <a
+        class="c0"
+        href="/explore/tokens/ethereum/NATIVE"
       >
         <div
-          class="c4"
+          class="c1 c2"
         >
-          USD
+          <div
+            class="c3"
+          >
+            <div
+              class="c4"
+            >
+              USD
+            </div>
+          </div>
+          <div
+            class="c5 c6 css-1urox24"
+          >
+            USDC
+          </div>
         </div>
-      </div>
-      <div
-        class="c5 c6 css-1urox24"
-      >
-        USDC
-      </div>
-    </div>
-  </a>
+      </a>
+    </span>
+  </span>
 </DocumentFragment>
 `;
 
@@ -402,26 +418,34 @@ exports[`TokenLinkCell renders unknown token 1`] = `
   overflow: hidden;
 }
 
-<a
-    class="c0"
-    href="/explore/tokens/ethereum/unknown"
+<span
+    class="t_light is_inversed _dsp_contents"
   >
-    <div
-      class="c1 c2"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      <div
-        class="c3"
+      <a
+        class="c0"
+        href="/explore/tokens/ethereum/unknown"
       >
         <div
-          class="c4"
-        />
-      </div>
-      <div
-        class="c5 c6 css-1urox24"
-      >
-        UNKNOWN
-      </div>
-    </div>
-  </a>
+          class="c1 c2"
+        >
+          <div
+            class="c3"
+          >
+            <div
+              class="c4"
+            />
+          </div>
+          <div
+            class="c5 c6 css-1urox24"
+          >
+            UNKNOWN
+          </div>
+        </div>
+      </a>
+    </span>
+  </span>
 </DocumentFragment>
 `;

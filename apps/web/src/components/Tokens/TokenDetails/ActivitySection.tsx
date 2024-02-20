@@ -30,7 +30,7 @@ export function ActivitySection({ chainId, referenceToken }: { chainId: ChainId;
   }
   return (
     <Container>
-      <Row gap="24px" marginBottom="12px" id="activity-header">
+      <Row gap="24px" marginBottom="24px" id="activity-header">
         <Tab isActive={activityInView === ActivityTab.Pools} onClick={() => setActivityInView(ActivityTab.Pools)}>
           <Trans>Pools</Trans>
         </Tab>

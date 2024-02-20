@@ -17,6 +17,7 @@ import { Screens } from 'src/screens/Screens'
 import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { DisplayNameType } from 'wallet/src/features/wallet/types'
 import { SectionName, SectionNameType } from 'wallet/src/telemetry/constants'
 
 type Props = NativeStackScreenProps<AppStackParamList, Screens.ExternalProfile> & {
@@ -141,8 +142,12 @@ export function ExternalProfileScreen({
   )
 
   const traceProperties = useMemo(
-    () => ({ address, walletName: displayName?.name }),
-    [address, displayName?.name]
+    () => ({
+      address,
+      walletName: displayName?.name,
+      displayNameType: displayName?.type ? DisplayNameType[displayName.type] : undefined,
+    }),
+    [address, displayName?.name, displayName?.type]
   )
 
   return (

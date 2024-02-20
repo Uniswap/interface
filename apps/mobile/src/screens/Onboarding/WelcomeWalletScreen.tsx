@@ -74,8 +74,8 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
           {params.unitagClaim?.avatarUri ? (
             <UnitagProfilePicture
               address={activeAddress ?? ''}
-              profilePictureUri={params.unitagClaim?.avatarUri}
               size={iconSizes.icon64}
+              unitagAvatarUri={params.unitagClaim?.avatarUri}
             />
           ) : (
             <AccountIcon

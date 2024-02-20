@@ -174,9 +174,7 @@ export function SwapDetails({
           <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>
             <Text adjustsFontSizeToFit numberOfLines={1} variant="body3">
               {latestRate}
-              <Text color="$neutral2" variant="body3">
-                {latestUSDPrice && ` (${latestFiatPriceFormatted})`}
-              </Text>
+              <Text variant="body3">{latestUSDPrice && ` (${latestFiatPriceFormatted})`}</Text>
             </Text>
           </TouchableOpacity>
         </Flex>
@@ -257,25 +255,25 @@ function AcceptNewQuoteRow({
       pl="$spacing12"
       pr="$spacing8"
       py="$spacing8">
-      <Flex centered row>
+      <Flex fill>
         <Text color="$neutral2" variant="body3">
           {derivedSwapInfo.exactCurrencyField === CurrencyField.INPUT
             ? t('New output')
             : t('New input')}
         </Text>
+        <Flex row alignItems="center">
+          <Text
+            adjustsFontSizeToFit
+            color="$neutral1"
+            numberOfLines={1}
+            textAlign="center"
+            variant="body3">
+            {formattedDerivedAmount} {derivedSymbol}{' '}
+            <Text color="$neutral2">({percentageDifference}%)</Text>
+          </Text>
+        </Flex>
       </Flex>
-      <Flex fill row shrink flexBasis="100%" justifyContent="flex-end">
-        <Text
-          adjustsFontSizeToFit
-          color="$neutral1"
-          numberOfLines={1}
-          textAlign="center"
-          variant="body3">
-          {formattedDerivedAmount} {derivedSymbol}{' '}
-          <Text color="$neutral2">({percentageDifference}%)</Text>
-        </Text>
-      </Flex>
-      <Flex centered row>
+      <Flex>
         <Trace logPress element={ElementName.AcceptNewRate}>
           <TouchableArea
             backgroundColor="$accentSoft"

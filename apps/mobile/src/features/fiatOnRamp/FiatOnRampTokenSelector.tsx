@@ -1,120 +1,64 @@
-import React, { memo, useMemo } from 'react'
+import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { TokenFiatOnRampList } from 'src/components/TokenSelector/TokenFiatOnRampList'
 import Trace from 'src/components/Trace/Trace'
-import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
+import { FOR_MODAL_SNAP_POINTS } from 'src/features/fiatOnRamp/constants'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
-import { AnimatedFlex } from 'ui/src'
-import { SectionName } from 'wallet/src/telemetry/constants'
-
-import { useAllCommonBaseCurrencies } from 'wallet/src/components/TokenSelector/hooks'
-import { fromMoonpayNetwork } from 'wallet/src/features/chains/utils'
-import { CurrencyInfo, GqlResult } from 'wallet/src/features/dataApi/types'
-import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
-import { ElementName } from 'wallet/src/telemetry/constants'
+import { AnimatedFlex, Flex, Text, useSporeColors } from 'ui/src'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { ElementName, ModalName, SectionName } from 'wallet/src/telemetry/constants'
 
 interface Props {
-  onBack: () => void
   onSelectCurrency: (currency: FiatOnRampCurrency) => void
+  onRetry: () => void
+  onClose: () => void
+  error: boolean
+  loading: boolean
+  list: FiatOnRampCurrency[] | undefined
 }
 
-const findTokenOptionForMoonpayCurrency = (
-  commonBaseCurrencies: CurrencyInfo[] | undefined,
-  moonpayCurrency: MoonpayCurrency
-): Maybe<CurrencyInfo> => {
-  return (commonBaseCurrencies || []).find((item) => {
-    const [code, network] = moonpayCurrency.code.split('_') ?? [undefined, undefined]
-    const chainId = fromMoonpayNetwork(network)
-    return (
-      item &&
-      code &&
-      code === item.currency.symbol?.toLowerCase() &&
-      chainId === item.currency.chainId
-    )
-  })
-}
-
-function useFiatOnRampTokenList(
-  supportedTokens: MoonpayCurrency[] | undefined
-): GqlResult<FiatOnRampCurrency[]> {
-  const {
-    data: commonBaseCurrencies,
-    error: commonBaseCurrenciesError,
-    loading: commonBaseCurrenciesLoading,
-    refetch: refetchCommonBaseCurrencies,
-  } = useAllCommonBaseCurrencies()
-
-  const data = useMemo(
-    () =>
-      (supportedTokens || [])
-        .map((moonpayCurrency) => ({
-          currencyInfo: findTokenOptionForMoonpayCurrency(commonBaseCurrencies, moonpayCurrency),
-          moonpayCurrencyCode: moonpayCurrency.code,
-        }))
-        .filter((item) => !!item.currencyInfo),
-    [commonBaseCurrencies, supportedTokens]
-  )
-
-  return useMemo(
-    () => ({
-      data,
-      loading: commonBaseCurrenciesLoading,
-      error: commonBaseCurrenciesError,
-      refetch: refetchCommonBaseCurrencies,
-    }),
-    [commonBaseCurrenciesError, commonBaseCurrenciesLoading, data, refetchCommonBaseCurrencies]
-  )
-}
-
-function _FiatOnRampTokenSelector({ onSelectCurrency, onBack }: Props): JSX.Element {
-  const {
-    data: supportedTokens,
-    isLoading: supportedTokensLoading,
-    isError: supportedTokensQueryError,
-    refetch: supportedTokensQueryRefetch,
-  } = useFiatOnRampSupportedTokens()
-
-  const {
-    data: tokenList,
-    loading: tokenListLoading,
-    error: tokenListError,
-    refetch: tokenListRefetch,
-  } = useFiatOnRampTokenList(supportedTokens)
-
-  const loading = supportedTokensLoading || tokenListLoading
-  const error = Boolean(supportedTokensQueryError || tokenListError)
-  const onRetry = (): void => {
-    if (supportedTokensQueryError) {
-      supportedTokensQueryRefetch?.()
-    }
-    if (tokenListError) {
-      tokenListRefetch?.()
-    }
-  }
+export function FiatOnRampTokenSelectorModal({
+  error,
+  list,
+  loading,
+  onClose,
+  onRetry,
+  onSelectCurrency,
+}: { onClose: () => void } & Props): JSX.Element {
+  const { t } = useTranslation()
+  const colors = useSporeColors()
 
   return (
-    <Trace
-      logImpression
-      element={ElementName.FiatOnRampTokenSelector}
-      section={SectionName.TokenSelector}>
-      <AnimatedFlex
-        entering={FadeIn}
-        exiting={FadeOut}
-        gap="$spacing12"
-        overflow="hidden"
-        px="$spacing16"
-        width="100%">
-        <TokenFiatOnRampList
-          error={error}
-          list={tokenList}
-          loading={loading}
-          onBack={onBack}
-          onRetry={onRetry}
-          onSelectCurrency={onSelectCurrency}
-        />
-      </AnimatedFlex>
-    </Trace>
+    <BottomSheetModal
+      extendOnKeyboardVisible
+      fullScreen
+      hideKeyboardOnDismiss
+      hideKeyboardOnSwipeDown
+      renderBehindBottomInset
+      backgroundColor={colors.surface1.get()}
+      name={ModalName.FiatOnRampCountryList}
+      snapPoints={FOR_MODAL_SNAP_POINTS}
+      onClose={onClose}>
+      <Trace
+        logImpression
+        element={ElementName.FiatOnRampTokenSelector}
+        section={SectionName.TokenSelector}>
+        <Flex grow gap="$spacing16" px="$spacing16">
+          <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">
+            {t('Choose a token')}
+          </Text>
+          <AnimatedFlex grow entering={FadeIn} exiting={FadeOut}>
+            <TokenFiatOnRampList
+              error={error}
+              list={list}
+              loading={loading}
+              onRetry={onRetry}
+              onSelectCurrency={onSelectCurrency}
+            />
+          </AnimatedFlex>
+        </Flex>
+      </Trace>
+    </BottomSheetModal>
   )
 }
-
-export const FiatOnRampTokenSelector = memo(_FiatOnRampTokenSelector)

@@ -17,7 +17,7 @@ export function DisplayNameText({
   const isUnitag = displayName?.type === DisplayNameType.Unitag
 
   return (
-    <Flex centered row gap="$spacing2" {...rest}>
+    <Flex centered row {...rest}>
       <Text {...textProps} color={textProps?.color ?? '$neutral1'} flexShrink={1} numberOfLines={1}>
         {displayName?.name}
       </Text>

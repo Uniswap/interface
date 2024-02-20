@@ -1,6 +1,6 @@
 import { forwardRef } from 'react'
 import { TextInput as TextInputBase } from 'react-native'
-import { Input, InputProps, useSporeColors } from 'ui/src'
+import { Input, InputProps } from 'ui/src'
 
 export type TextInputProps = InputProps
 
@@ -10,7 +10,6 @@ export const TextInput = forwardRef<TextInputBase, TextInputProps>(function _Tex
   { onChangeText, onBlur, ...rest },
   ref
 ) {
-  const colors = useSporeColors()
   return (
     <Input
       ref={ref}
@@ -22,7 +21,7 @@ export const TextInput = forwardRef<TextInputBase, TextInputProps>(function _Tex
       placeholderTextColor="$neutral3"
       px="$spacing16"
       py="$spacing12"
-      selectionColor={colors.neutral3.get()}
+      selectionColor="$neutral3"
       onBlur={onBlur}
       onChangeText={onChangeText}
       {...rest}

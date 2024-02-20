@@ -12,7 +12,11 @@ import { TouchableArea } from 'ui/src'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
-import { SearchResultType, WalletSearchResult } from 'wallet/src/features/search/SearchResult'
+import {
+  extractDomain,
+  SearchResultType,
+  WalletSearchResult,
+} from 'wallet/src/features/search/SearchResult'
 
 type SearchWalletItemBaseProps = {
   searchResult: WalletSearchResult
@@ -33,31 +37,37 @@ export function SearchWalletItemBase({
   const onPress = (): void => {
     navigate(address)
     if (searchContext) {
+      const walletName =
+        type === SearchResultType.Unitag
+          ? searchResult.unitag
+          : type === SearchResultType.ENSAddress
+          ? searchResult.ensName
+          : undefined
       sendMobileAnalyticsEvent(MobileEventName.ExploreSearchResultClicked, {
         query: searchContext.query,
-        name:
-          type === SearchResultType.Unitag ? searchResult.unitag : searchResult.ensName ?? address,
+        name: walletName,
         address,
         type: 'address',
+        domain: walletName ? extractDomain(walletName, type) : undefined,
         suggestion_count: searchContext.suggestionCount,
         position: searchContext.position,
         isHistory: searchContext.isHistory,
       })
     }
 
-    if (type === SearchResultType.Unitag) {
+    if (type === SearchResultType.ENSAddress) {
       dispatch(
         addToSearchHistory({
-          searchResult,
+          searchResult: {
+            ...searchResult,
+            primaryENSName: searchResult.primaryENSName,
+          },
         })
       )
     } else {
       dispatch(
         addToSearchHistory({
-          searchResult: {
-            ...searchResult,
-            primaryENSName: searchResult.primaryENSName ?? undefined,
-          },
+          searchResult,
         })
       )
     }

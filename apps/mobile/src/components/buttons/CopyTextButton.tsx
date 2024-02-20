@@ -42,7 +42,7 @@ export function CopyTextButton({ copyText }: Props): JSX.Element {
 
   return (
     <Button icon={isCopied ? copiedIcon : copyIcon} theme="tertiary" onPress={onPress}>
-      {isCopied ? t`Copied` : t`Copy`}
+      {isCopied ? t`Copied!` : t`Copy`}
     </Button>
   )
 }

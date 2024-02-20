@@ -43,8 +43,8 @@ export function usePendingAccounts(): AddressTo<Account> {
   return useAppSelector<AddressTo<Account>>(selectPendingAccounts)
 }
 
-export function useSignerAccounts(): SignerMnemonicAccount[] {
-  return useAppSelector<SignerMnemonicAccount[]>(selectSignerMnemonicAccounts)
+export function useSignerAccounts(): Account[] {
+  return useAppSelector<Account[]>(selectSignerMnemonicAccounts)
 }
 
 export function useNonPendingSignerAccounts(): SignerMnemonicAccount[] {
@@ -126,6 +126,7 @@ type DisplayNameOptions = {
   showShortenedEns?: boolean
   includeUnitagSuffix?: boolean
   showLocalName?: boolean
+  overrideDisplayName?: string
 }
 
 export function useDisplayName(
@@ -138,7 +139,7 @@ export function useDisplayName(
     showLocalName: true,
   }
   const hookOptions = { ...defaultOptions, ...options }
-  const { showShortenedEns, includeUnitagSuffix, showLocalName } = hookOptions
+  const { showShortenedEns, includeUnitagSuffix, showLocalName, overrideDisplayName } = hookOptions
 
   const validated = getValidAddress(address)
   const ens = useENSName(validated ?? undefined)
@@ -151,6 +152,15 @@ export function useDisplayName(
 
   if (!address) {
     return
+  }
+
+  if (overrideDisplayName) {
+    return {
+      name: showShortenedEns
+        ? trimToLength(overrideDisplayName, ENS_TRIM_LENGTH)
+        : overrideDisplayName,
+      type: DisplayNameType.ENS,
+    }
   }
 
   if (unitag?.username) {
@@ -185,7 +195,7 @@ export function useDisplayName(
  *  there is more latency because it has to go to the contract via CCIP-read first.
  */
 export function useAvatar(address: Maybe<string>): {
-  avatar: string | undefined
+  avatar: Maybe<string>
   loading: boolean
 } {
   const { data: avatar } = useENSAvatar(address)

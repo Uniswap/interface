@@ -31,7 +31,7 @@ import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { Switch } from 'wallet/src/components/buttons/Switch'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -49,6 +49,9 @@ import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWallet>
 
+// Specific design request not in standard sizing type
+const UNICON_ICON_SIZE = 56
+
 export function SettingsWallet({
   route: {
     params: { address },
@@ -60,6 +63,7 @@ export function SettingsWallet({
   const addressToAccount = useAccounts()
   const currentAccount = addressToAccount[address]
   const ensName = useENS(ChainId.Mainnet, address)?.name
+  const { unitag } = useUnitagByAddress(address)
   const readonly = currentAccount?.type === AccountType.Readonly
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
 
@@ -129,7 +133,7 @@ export function SettingsWallet({
     text: t('Nickname'),
     icon: <TextEditIcon fill={colors.neutral2.get()} {...iconProps} />,
     screenProps: { address },
-    isHidden: !!ensName,
+    isHidden: !!ensName || !!unitag?.username,
   }
 
   const sections: SettingsSection[] = [
@@ -250,12 +254,14 @@ function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
   }
 
   return (
-    <Flex gap="$spacing12" justifyContent="flex-start" pb="$spacing16">
+    <Flex gap="$spacing12" justifyContent="flex-start" pb="$spacing24">
       <Flex shrink>
         <AddressDisplay
           address={address}
           captionVariant="subheading2"
-          size={iconSizes.icon40}
+          gapBetweenLines={spacing.spacing4}
+          showIconBackground={true}
+          size={UNICON_ICON_SIZE}
           variant="body1"
         />
       </Flex>
@@ -264,7 +270,7 @@ function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
           color="$neutral1"
           fontSize="$small"
           size="medium"
-          theme="tertiary"
+          theme="secondary_Button"
           onPress={onPressEditProfile}>
           {unitag?.username ? t('Edit profile') : t('Edit label')}
         </Button>

@@ -2,7 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ExploreModalState } from 'src/app/modals/ExploreModalState'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
+import { ExchangeTransferModalState } from 'src/features/fiatOnRamp/ExchangeTransferModalState'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
+import { Screens } from 'src/screens/Screens'
 import { getKeys } from 'utilities/src/primitives/objects'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { ModalName } from 'wallet/src/telemetry/constants'
@@ -11,6 +13,11 @@ import { ModalsState } from './ModalsState'
 type AccountSwitcherModalParams = {
   name: typeof ModalName.AccountSwitcher
   initialState?: undefined
+}
+
+type ExchangeTransferModalParams = {
+  name: typeof ModalName.ExchangeTransferModal
+  initialState?: ExchangeTransferModalState
 }
 
 type ExperimentsModalParams = { name: typeof ModalName.Experiments; initialState?: undefined }
@@ -65,7 +72,7 @@ type SendModalParams = { name: typeof ModalName.Send; initialState?: Transaction
 
 type UnitagsIntroParams = {
   name: typeof ModalName.UnitagsIntro
-  initialState?: { address: Address }
+  initialState?: { address: Address; entryPoint: Screens.Home | Screens.Settings }
 }
 
 type ViewOnlyExplainerParams = {
@@ -75,6 +82,7 @@ type ViewOnlyExplainerParams = {
 
 export type OpenModalParams =
   | AccountSwitcherModalParams
+  | ExchangeTransferModalParams
   | ExperimentsModalParams
   | ExploreModalParams
   | FiatCurrencySelectorParams
@@ -94,6 +102,10 @@ export type OpenModalParams =
 export type CloseModalParams = { name: keyof ModalsState }
 
 export const initialModalState: ModalsState = {
+  [ModalName.ExchangeTransferModal]: {
+    isOpen: false,
+    initialState: undefined,
+  },
   [ModalName.FiatOnRamp]: {
     isOpen: false,
     initialState: undefined,

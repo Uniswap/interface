@@ -199,7 +199,7 @@ export const TokenBalanceListInner = forwardRef<
       {!balancesById ? (
         isNonPollingRequestInFlight(networkStatus) ? (
           <Flex px="$spacing24" style={containerProps?.loadingContainerStyle}>
-            <Loader.Token repeat={6} />
+            <Loader.Token withPrice repeat={6} />
           </Flex>
         ) : (
           <Flex fill grow justifyContent="center" style={containerProps?.emptyContainerStyle}>

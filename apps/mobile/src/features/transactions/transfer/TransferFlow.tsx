@@ -8,7 +8,6 @@ import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
 import Trace from 'src/components/Trace/Trace'
 import { Screen } from 'src/components/layout/Screen'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
-import { useOnSendEmptyActionPress } from 'src/features/transactions/hooks/useOnSendEmptyActionPress'
 import { TransferHeader } from 'src/features/transactions/transfer/TransferHeader'
 import { TransferStatus } from 'src/features/transactions/transfer/TransferStatus'
 import { useWalletRestore } from 'src/features/wallet/hooks'
@@ -107,7 +106,6 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
     dispatch,
     TokenSelectorFlow.Transfer
   )
-  const onSendEmptyActionPress = useOnSendEmptyActionPress()
 
   // optimization for not rendering InnerContent initially,
   // when modal is opened with recipient or token selector presented
@@ -211,7 +209,6 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
           variation={TokenSelectorVariation.BalancesOnly}
           onClose={onHideTokenSelector}
           onSelectCurrency={onSelectCurrency}
-          onSendEmptyActionPress={onSendEmptyActionPress}
         />
       )}
     </>

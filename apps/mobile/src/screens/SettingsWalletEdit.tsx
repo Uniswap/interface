@@ -142,7 +142,9 @@ export function SettingsWalletEdit({
                 </Text>
               </Flex>
             )}
-            {showUnitagBanner && <UnitagBanner compact address={address} />}
+            {showUnitagBanner && (
+              <UnitagBanner compact address={address} entryPoint={Screens.Settings} />
+            )}
           </Flex>
           <Button
             hapticFeedback

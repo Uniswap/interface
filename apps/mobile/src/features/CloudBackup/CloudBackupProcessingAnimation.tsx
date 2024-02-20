@@ -17,7 +17,7 @@ import {
   EditAccountAction,
   editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { isAndroid } from 'wallet/src/utils/platform'
 
@@ -44,6 +44,11 @@ export function CloudBackupProcessingAnimation({
   const colors = useSporeColors()
 
   const account = useAccount(accountAddress)
+  if (account.type !== AccountType.SignerMnemonic) {
+    throw new Error('Account is not mnemonic account')
+  }
+  const mnemonicId = account?.mnemonicId
+
   const [processing, doneProcessing] = useReducer(() => false, true)
 
   // Handle finished backing up to Cloud
@@ -60,7 +65,7 @@ export function CloudBackupProcessingAnimation({
   const backup = useCallback(async () => {
     try {
       // Ensure processing state is shown for at least 1s
-      await promiseMinDelay(backupMnemonicToCloudStorage(accountAddress, password), ONE_SECOND_MS)
+      await promiseMinDelay(backupMnemonicToCloudStorage(mnemonicId, password), ONE_SECOND_MS)
 
       dispatch(
         editAccountActions.trigger({
@@ -92,7 +97,7 @@ export function CloudBackupProcessingAnimation({
         ]
       )
     }
-  }, [accountAddress, dispatch, onErrorPress, password, t])
+  }, [accountAddress, dispatch, mnemonicId, onErrorPress, password, t])
 
   /**
    * Delays cloud backup to avoid android oauth consent screen blocking navigation transition

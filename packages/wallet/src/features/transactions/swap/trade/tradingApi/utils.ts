@@ -14,7 +14,7 @@ import {
   V3PoolInRoute as TradingApiV3PoolInRoute,
 } from 'wallet/src/data/tradingApi/__generated__/api'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-import { SwapFee, Trade } from 'wallet/src/features/transactions/swap/trade/types'
+import { QuoteData, SwapFee, Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
@@ -226,13 +226,6 @@ export function getTokenAddressForApiRequest(currency: Maybe<Currency>): string 
   return currency.isNative ? NATIVE_ADDRESS_FOR_TRADING_API : currency.address
 }
 
-export function isClassicQuote(quote?: Quote): quote is ClassicQuote {
-  if (!quote) {
-    return false
-  }
-  return 'route' in quote
-}
-
 const SUPPORTED_TRADING_API_CHAIN_IDS: number[] = Object.values(TradingApiChainId).map((c) => c)
 
 // Parse any chain id to check if its supported by the API ChainId type
@@ -250,4 +243,23 @@ export function toTradingApiSupportedChainId(
     return undefined
   }
   return chainId
+}
+
+// Classic quote is a non-uniswap x quote. Forces the type on api responses.
+// `route` field doesnt exist on uniswap x quote response, so can be used as the custom type gaurd.
+// TODO:tradingapi MOB-2438 https://linear.app/uniswap/issue/MOB-2438/uniswap-x-clean-forced-types-for-classic-quotes
+export function isClassicQuote(quote?: Quote): quote is ClassicQuote {
+  if (!quote) {
+    return false
+  }
+  return 'route' in quote
+}
+
+// TODO:tradingapi MOB-2438 https://linear.app/uniswap/issue/MOB-2438/uniswap-x-clean-forced-types-for-classic-quotes
+// Check for trading api type data, then type check for classic quote (non uniswap x quote)
+export function getClassicQuoteFromResponse(quoteData?: QuoteData): ClassicQuote | undefined {
+  if (!quoteData || quoteData.quoteType === QuoteType.RoutingApi) {
+    return undefined
+  }
+  return isClassicQuote(quoteData.quote?.quote) ? quoteData?.quote.quote : undefined
 }

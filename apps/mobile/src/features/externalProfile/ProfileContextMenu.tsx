@@ -40,10 +40,14 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
   }, [address])
 
   const onReportProfile = useCallback(async () => {
-    openUri(uniswapUrls.reportUnitagUrl).catch((e) =>
+    const params = new URLSearchParams()
+    params.append('tf_11041337007757', address) // Wallet Address
+    params.append('tf_7005922218125', 'report_unitag') // Report Type Dropdown
+    const prefilledRequestUrl = uniswapUrls.helpRequestUrl + '?' + params.toString()
+    openUri(prefilledRequestUrl).catch((e) =>
       logger.error(e, { tags: { file: 'ProfileContextMenu', function: 'reportProfileLink' } })
     )
-  }, [])
+  }, [address])
 
   const onPressShare = useCallback(async () => {
     if (!address) {

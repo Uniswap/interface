@@ -702,6 +702,9 @@ PODS:
     - React-Core (= 0.71.13)
     - React-jsi (= 0.71.13)
     - ReactCommon/turbomodule/core (= 0.71.13)
+  - Firebase/AppCheck (10.15.0):
+    - Firebase/CoreOnly
+    - FirebaseAppCheck (~> 10.15.0)
   - Firebase/Auth (10.15.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 10.15.0)
@@ -710,6 +713,10 @@ PODS:
   - Firebase/Firestore (10.15.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 10.15.0)
+  - FirebaseAppCheck (10.15.0):
+    - FirebaseCore (~> 10.0)
+    - GoogleUtilities/Environment (~> 7.8)
+    - PromisesObjC (~> 2.1)
   - FirebaseAppCheckInterop (10.15.0)
   - FirebaseAuth (10.15.0):
     - FirebaseAppCheckInterop (~> 10.0)
@@ -1263,6 +1270,10 @@ PODS:
   - RNFBApp (18.4.0):
     - Firebase/CoreOnly (= 10.15.0)
     - React-Core
+  - RNFBAppCheck (18.4.0):
+    - Firebase/AppCheck (= 10.15.0)
+    - React-Core
+    - RNFBApp
   - RNFBAuth (18.4.0):
     - Firebase/Auth (= 10.15.0)
     - React-Core
@@ -1423,6 +1434,7 @@ DEPENDENCIES:
   - RNDeviceInfo (from `../../../node_modules/react-native-device-info`)
   - RNFastImage (from `../../../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../../../node_modules/@react-native-firebase/app`)"
+  - "RNFBAppCheck (from `../../../node_modules/@react-native-firebase/app-check`)"
   - "RNFBAuth (from `../../../node_modules/@react-native-firebase/auth`)"
   - "RNFBFirestore (from `../../../node_modules/@react-native-firebase/firestore`)"
   - "RNFlashList (from `../../../node_modules/@shopify/flash-list`)"
@@ -1445,6 +1457,7 @@ SPEC REPOS:
     - Argon2Swift
     - BoringSSL-GRPC
     - Firebase
+    - FirebaseAppCheck
     - FirebaseAppCheckInterop
     - FirebaseAuth
     - FirebaseCore
@@ -1629,6 +1642,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native-fast-image"
   RNFBApp:
     :path: "../../../node_modules/@react-native-firebase/app"
+  RNFBAppCheck:
+    :path: "../../../node_modules/@react-native-firebase/app-check"
   RNFBAuth:
     :path: "../../../node_modules/@react-native-firebase/auth"
   RNFBFirestore:
@@ -1686,6 +1701,7 @@ SPEC CHECKSUMS:
   FBLazyVector: 24e08bf294faea0abc0278abb2fcad7f3e446f6f
   FBReactNativeSpec: cc06081bbc8420e1c0580008ff6d7af324f32f31
   Firebase: 66043bd4579e5b73811f96829c694c7af8d67435
+  FirebaseAppCheck: 66eea1c882cddd1bce9d92a0a7efd596f7204782
   FirebaseAppCheckInterop: a8c555b1c2db1d9445e6c3a08a848167ddb7eb51
   FirebaseAuth: a55ec5f7f8a5b1c2dd750235c1bb419bfb642445
   FirebaseCore: 2cec518b43635f96afe7ac3a9c513e47558abd2e
@@ -1758,6 +1774,7 @@ SPEC CHECKSUMS:
   RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae
   RNFastImage: 246de6b52d7642992cfd01e2005dda36d00a6660
   RNFBApp: a3026bdd951dd7a3a88e8e6518b53ddd2f8b3809
+  RNFBAppCheck: c5363a0be62f961edfcdf82ed353c69bc37a39f4
   RNFBAuth: 553c6e66d3c70e086799104dad4a554c2663c337
   RNFBFirestore: a60e6005e071b31360a5bf651eb403b36c7db7de
   RNFlashList: 4b4b6b093afc0df60ae08f9cbf6ccd4c836c667a

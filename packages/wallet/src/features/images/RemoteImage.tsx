@@ -1,7 +1,8 @@
 import { Image, ImageResizeMode } from 'react-native'
+import { ColorTokens, Flex } from 'ui/src'
 import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
-import { RemoteSvg } from './RemoteSvg'
+import { WebSvgUri } from 'wallet/src/features/images/WebSvgUri'
 
 type Props = {
   aspectRatio?: number
@@ -35,13 +36,15 @@ export function RemoteImage({
 
   if (isSVGUri(imageHttpUrl)) {
     return (
-      <RemoteSvg
-        backgroundColor={backgroundColor}
+      <Flex
+        alignItems="center"
+        backgroundColor={backgroundColor as ColorTokens}
         borderRadius={borderRadius}
         height={height}
-        imageHttpUrl={imageHttpUrl}
-        width={width}
-      />
+        overflow="hidden"
+        width={width}>
+        <WebSvgUri autoplay={true} maxHeight={height} uri={imageHttpUrl} />
+      </Flex>
     )
   }
 

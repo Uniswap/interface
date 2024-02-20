@@ -6,7 +6,6 @@ exports[`AccountDetails renders address display name without error 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
-      "gap": 2,
       "justifyContent": "center",
     }
   }
@@ -37,7 +36,6 @@ exports[`AccountDetails renders ens display name without error 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
-      "gap": 2,
       "justifyContent": "center",
     }
   }
@@ -68,7 +66,6 @@ exports[`AccountDetails renders local display name without error 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
-      "gap": 2,
       "justifyContent": "center",
     }
   }
@@ -99,7 +96,6 @@ exports[`AccountDetails renders unitag without error 1`] = `
     {
       "alignItems": "center",
       "flexDirection": "row",
-      "gap": 2,
       "justifyContent": "center",
     }
   }

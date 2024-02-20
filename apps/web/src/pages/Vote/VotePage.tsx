@@ -18,12 +18,13 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
 
+import { isAddress } from 'utilities/src/addresses'
 import { ButtonPrimary } from '../../components/Button'
 import { GrayCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import { CardSection, DataCard } from '../../components/earn/styled'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
+import { CardSection, DataCard } from '../../components/earn/styled'
 import DelegateModal from '../../components/vote/DelegateModal'
 import VoteModal from '../../components/vote/VoteModal'
 import {
@@ -51,7 +52,6 @@ import {
   useUserVotesAsOfBlock,
 } from '../../state/governance/hooks'
 import { VoteOption } from '../../state/governance/types'
-import { isAddress } from '../../utils'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 import { ProposalStatus } from './styled'
 

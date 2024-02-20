@@ -6,14 +6,10 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Freeze } from 'react-freeze'
 import { useTranslation } from 'react-i18next'
 import { FlatList, StyleProp, View, ViewProps, ViewStyle } from 'react-native'
-import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-gesture-handler'
 import Animated, {
   FadeIn,
   FadeOut,
-  cancelAnimation,
   interpolateColor,
-  runOnJS,
-  useAnimatedGestureHandler,
   useAnimatedRef,
   useAnimatedScrollHandler,
   useAnimatedStyle,
@@ -29,7 +25,6 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import Trace from 'src/components/Trace/Trace'
 import TraceTabView from 'src/components/Trace/TraceTabView'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
-import { pulseAnimation } from 'src/components/buttons/utils'
 import { ACTIVITY_TAB_DATA_DEPENDENCIES, ActivityTab } from 'src/components/home/ActivityTab'
 import { FEED_TAB_DATA_DEPENDENCIES, FeedTab } from 'src/components/home/FeedTab'
 import { NFTS_TAB_DATA_DEPENDENCIES, NftsTab } from 'src/components/home/NftsTab'
@@ -79,7 +74,6 @@ import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
-import { useUnitagUpdater } from 'wallet/src/features/unitags/context'
 import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -386,14 +380,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     ]
   )
 
-  const { refetchUnitagsCounter } = useUnitagUpdater()
-  const { canClaimUnitag, refetch: refetchCanActiveAddressClaimUnitag } =
-    useCanActiveAddressClaimUnitag()
-
-  // Force refetch of canClaimUnitag if refetchUnitagsCounter changes
-  useEffect(() => {
-    refetchCanActiveAddressClaimUnitag?.()
-  }, [refetchUnitagsCounter, refetchCanActiveAddressClaimUnitag])
+  const { canClaimUnitag } = useCanActiveAddressClaimUnitag()
 
   const shouldPromptUnitag =
     activeAccount.type === AccountType.SignerMnemonic && !hasSkippedUnitagPrompt && canClaimUnitag
@@ -425,7 +412,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
         )}
         {shouldPromptUnitag && (
           <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-            <UnitagBanner address={activeAccount.address} />
+            <UnitagBanner address={activeAccount.address} entryPoint={Screens.Home} />
           </AnimatedFlex>
         )}
       </Flex>
@@ -737,44 +724,25 @@ function ActionButton({
   iconScale?: number
 }): JSX.Element {
   const colors = useSporeColors()
-  const scale = useSharedValue(1)
-  const animatedStyle = useAnimatedStyle(
-    () => ({
-      transform: [{ scale: scale.value }],
-    }),
-    [scale]
-  )
   const media = useMedia()
   const iconSize = media.short ? iconSizes.icon24 : iconSizes.icon28
-  const onGestureEvent = useAnimatedGestureHandler<TapGestureHandlerGestureEvent>({
-    onStart: () => {
-      cancelAnimation(scale)
-      scale.value = pulseAnimation(activeScale)
-    },
-    onEnd: () => {
-      runOnJS(onPress)()
-    },
-  })
 
   return (
     <Trace logPress element={name} pressEvent={eventName}>
-      <TouchableArea hapticFeedback flex={flex} onPress={onPress}>
-        <TapGestureHandler onGestureEvent={onGestureEvent}>
-          <AnimatedFlex
-            centered
-            fill
-            backgroundColor="$DEP_backgroundActionButton"
-            borderRadius="$rounded20"
-            p="$spacing16"
-            style={animatedStyle}>
-            <Icon
-              color={colors.accent1.get()}
-              height={iconSize * iconScale}
-              strokeWidth={2}
-              width={iconSize * iconScale}
-            />
-          </AnimatedFlex>
-        </TapGestureHandler>
+      <TouchableArea hapticFeedback flex={flex} scaleTo={activeScale} onPress={onPress}>
+        <AnimatedFlex
+          centered
+          fill
+          backgroundColor="$DEP_backgroundActionButton"
+          borderRadius="$rounded20"
+          p="$spacing16">
+          <Icon
+            color={colors.accent1.get()}
+            height={iconSize * iconScale}
+            strokeWidth={2}
+            width={iconSize * iconScale}
+          />
+        </AnimatedFlex>
       </TouchableArea>
     </Trace>
   )

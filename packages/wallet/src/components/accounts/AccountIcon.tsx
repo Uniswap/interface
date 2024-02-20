@@ -1,7 +1,9 @@
 import { StyleSheet } from 'react-native'
 import Svg, { Defs, RadialGradient as RadialGradientSVG, Rect, Stop } from 'react-native-svg'
-import { Flex, Icons, Unicon, useUniconColors } from 'ui/src'
+import { ColorTokens, Flex, Icons, Unicon, UniconV2, useUniconColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
 // Determines view only icon size in relation to Account Icon size
@@ -14,6 +16,8 @@ export interface AccountIconProps {
   avatarUri?: string | null
   showBackground?: boolean // Display images with solid background.
   showBorder?: boolean // Display border stroke around image
+  borderWidth?: number
+  borderColor?: ColorTokens
   backgroundPadding?: number
 }
 
@@ -24,6 +28,8 @@ export function AccountIcon({
   avatarUri,
   showBackground,
   showBorder,
+  borderColor = '$surface1',
+  borderWidth = 2,
   backgroundPadding = spacing.spacing12,
 }: AccountIconProps): JSX.Element {
   // add padding to unicon if background is displayed
@@ -37,20 +43,27 @@ export function AccountIcon({
 
   // Color for gradient background.
   const { gradientEnd: uniconColor } = useUniconColors(address)
+  const isUniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
 
   const uniconImage = (
-    <Flex centered borderRadius="$roundedFull" height={size} p={uniconPadding} width={size}>
-      <Unicon address={address} size={uniconSize} />
-      {showBackground ? <UniconGradient color={uniconColor} size={size} /> : null}
-    </Flex>
+    <>
+      {isUniconsV2Enabled ? (
+        <UniconV2 address={address} size={size} />
+      ) : (
+        <Flex centered borderRadius="$roundedFull" height={size} p={uniconPadding} width={size}>
+          <Unicon address={address} size={uniconSize} />
+          {showBackground ? <UniconGradient color={uniconColor} size={size} /> : null}
+        </Flex>
+      )}
+    </>
   )
 
   return (
     <Flex
       backgroundColor={showBackground ? '$surface1' : '$transparent'}
-      borderColor={showBorder ? '$surface1' : '$transparent'}
+      borderColor={showBorder ? borderColor : '$transparent'}
       borderRadius="$roundedFull"
-      borderWidth={showBorder ? 2 : 0}
+      borderWidth={showBorder ? borderWidth : 0}
       position="relative">
       {avatarUri ? (
         <RemoteImage

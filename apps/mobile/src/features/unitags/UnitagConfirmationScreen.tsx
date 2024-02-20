@@ -117,7 +117,7 @@ export function UnitagConfirmationScreen({
           </Text>
           <Text color="$neutral2" textAlign="center" variant="subheading2">
             {t(
-              '{{unitag}}{{unitagSuffix}} is ready to send and receive crypto. Continue to build out your wallet by customizing your profile',
+              '{{unitag}}{{unitagSuffix}} is ready to send and receive crypto. Continue to build out your wallet by customizing your web3 profile.',
               { unitag, unitagSuffix: UNITAG_SUFFIX }
             )}
           </Text>

@@ -2,6 +2,7 @@ import {
   APPSFLYER_API_KEY,
   APPSFLYER_APP_ID,
   FIAT_ON_RAMP_API_URL,
+  FIREBASE_APP_CHECK_DEBUG_TOKEN,
   INFURA_PROJECT_ID,
   MOONPAY_API_KEY,
   MOONPAY_API_URL,
@@ -13,6 +14,7 @@ import {
   SIMPLEHASH_API_URL,
   STATSIG_PROXY_URL,
   TRADING_API_KEY,
+  TRADING_API_URL,
   UNISWAP_API_BASE_URL,
   UNISWAP_API_KEY,
   UNISWAP_APP_URL,
@@ -41,6 +43,8 @@ export interface Config {
   quicknodeBnbRpcUrl: string
   unitagsApiUrl: string
   tradingApiKey: string
+  tradingApiUrl: string
+  firebaseAppCheckDebugToken: string
 }
 
 const _config: Config = {
@@ -63,6 +67,9 @@ const _config: Config = {
   quicknodeBnbRpcUrl: process.env.QUICKNODE_BNB_RPC_URL || QUICKNODE_BNB_RPC_URL,
   unitagsApiUrl: process.env.UNITAGS_API_URL || UNITAGS_API_URL,
   tradingApiKey: process.env.TRADING_API_KEY || TRADING_API_KEY,
+  tradingApiUrl: process.env.TRADING_API_URL || TRADING_API_URL,
+  firebaseAppCheckDebugToken:
+    process.env.FIREBASE_APP_CHECK_DEBUG_TOKEN || FIREBASE_APP_CHECK_DEBUG_TOKEN,
 }
 
 export const config = Object.freeze(_config)

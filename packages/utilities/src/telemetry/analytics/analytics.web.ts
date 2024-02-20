@@ -2,7 +2,7 @@ import { flush, Identify, identify, init, setDeviceId, track } from '@amplitude/
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 import { Analytics, UserPropertyValue } from './analytics'
-import { AMPLITUDE_SHARED_TRACKING_OPTIONS, DUMMY_KEY } from './constants'
+import { AMPLITUDE_SHARED_TRACKING_OPTIONS, ANONYMOUS_EVENT_NAMES, DUMMY_KEY } from './constants'
 import { generateAnalyticsLoggers } from './logging'
 
 const loggers = generateAnalyticsLoggers('telemetry/analytics.web')
@@ -37,7 +37,7 @@ export const analytics: Analytics = {
     }
   },
   sendEvent(eventName: string, eventProperties?: Record<string, unknown>): void {
-    if (!allowAnalytics) {
+    if (!allowAnalytics && !ANONYMOUS_EVENT_NAMES.includes(eventName)) {
       return
     }
     loggers.sendEvent(eventName, eventProperties)

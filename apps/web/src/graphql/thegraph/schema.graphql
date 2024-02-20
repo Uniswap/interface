@@ -51,6 +51,11 @@ enum _SubgraphErrorPolicy_ {
   deny
 }
 
+enum Aggregation_interval {
+  hour
+  day
+}
+
 scalar BigDecimal
 
 scalar BigInt

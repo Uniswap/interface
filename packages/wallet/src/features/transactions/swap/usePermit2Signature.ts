@@ -105,6 +105,7 @@ async function getPermit2PermitSignature(
     }
   } catch (error) {
     logger.error(error, { tags: { file: 'usePermit2Signature', function: 'getPermit2Signature' } })
+    return
   }
 }
 

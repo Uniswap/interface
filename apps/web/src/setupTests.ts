@@ -7,6 +7,7 @@ import type { createPopper } from '@popperjs/core'
 import { useWeb3React } from '@web3-react/core'
 import failOnConsole from 'jest-fail-on-console'
 import { disableNetConnect, restore as restoreNetConnect } from 'nock'
+import React from 'react'
 import { Readable } from 'stream'
 import { toBeVisible } from 'test-utils/matchers'
 import { mocked } from 'test-utils/mocked'
@@ -25,11 +26,14 @@ if (typeof globalThis.TextEncoder === 'undefined') {
 // This prevents each test file from needing to set this manually.
 globalThis.origin = 'https://app.uniswap.org'
 
+globalThis.React = React
+
 globalThis.matchMedia =
   globalThis.matchMedia ||
   (() => {
     return {
       matches: false,
+      addListener: jest.fn(),
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
     }

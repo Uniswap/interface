@@ -179,7 +179,7 @@ export function useFormattedTransactionDataForActivity(
 
   const hasTransactions = transactions && transactions.length > 0
 
-  const hasData = !!data?.portfolios?.[0]?.assetActivities
+  const hasData = !!data?.portfolios?.[0]?.assetActivities?.length
   const isLoading = isNonPollingRequestInFlight(networkStatus)
   const isError = usePersistedError(requestLoading, requestError)
 

@@ -49,7 +49,7 @@ function ProtocolLegend({ protocolData }: { protocolData?: ChartHeaderProtocolIn
       {protocolData
         ?.map(({ value, protocol }) => {
           const display = value
-            ? formatFiatPrice({ price: value, type: NumberType.FiatTokenStatChartHeader })
+            ? formatFiatPrice({ price: value, type: NumberType.ChartFiatValue })
             : getProtocolName(protocol)
           return (
             <Row gap="6px" justify="flex-end" key={protocol + '_blip'}>
@@ -66,14 +66,11 @@ function ProtocolLegend({ protocolData }: { protocolData?: ChartHeaderProtocolIn
 interface HeaderValueDisplayProps {
   /** The number to be formatted and displayed, or the ReactElement to be displayed */
   value?: number | ReactElement
-  /** Used to override default format NumberType (FiatTokenStatChartHeader) */
+  /** Used to override default format NumberType (ChartFiatValue) */
   valueFormatterType?: NumberType
 }
 
-function HeaderValueDisplay({
-  value,
-  valueFormatterType = NumberType.FiatTokenStatChartHeader,
-}: HeaderValueDisplayProps) {
+function HeaderValueDisplay({ value, valueFormatterType = NumberType.ChartFiatValue }: HeaderValueDisplayProps) {
   const { formatFiatPrice } = useFormatter()
 
   if (typeof value !== 'number' && typeof value !== 'undefined') {
@@ -93,7 +90,9 @@ interface HeaderTimeDisplayProps {
 
 function HeaderTimeDisplay({ time, timePlaceholder }: HeaderTimeDisplayProps) {
   const headerDateFormatter = useHeaderDateFormatter()
-  return <ThemedText.Caption color="neutral2">{time ? headerDateFormatter(time) : timePlaceholder}</ThemedText.Caption>
+  return (
+    <ThemedText.SubHeader color="neutral2">{time ? headerDateFormatter(time) : timePlaceholder}</ThemedText.SubHeader>
+  )
 }
 
 interface ChartHeaderProps extends HeaderValueDisplayProps, HeaderTimeDisplayProps {
@@ -113,8 +112,10 @@ export function ChartHeader({
     <ChartHeaderWrapper>
       <ChartHeaderLeftDisplay>
         <HeaderValueDisplay value={value} valueFormatterType={valueFormatterType} />
-        {additionalFields}
-        <HeaderTimeDisplay time={time} timePlaceholder={timePlaceholder} />
+        <Row gap="sm">
+          {additionalFields}
+          <HeaderTimeDisplay time={time} timePlaceholder={timePlaceholder} />
+        </Row>
       </ChartHeaderLeftDisplay>
       <ProtocolLegend protocolData={protocolData} />
     </ChartHeaderWrapper>

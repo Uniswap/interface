@@ -336,7 +336,11 @@ export function UnitagStackNavigator(): JSX.Element {
           name={UnitagScreens.UnitagConfirmation}
           options={{ ...navOptions.noHeader, gestureEnabled: false }}
         />
-        <UnitagStack.Screen component={EditUnitagProfileScreen} name={UnitagScreens.EditProfile} />
+        <UnitagStack.Screen
+          component={EditUnitagProfileScreen}
+          name={UnitagScreens.EditProfile}
+          options={{ ...navOptions.noHeader, gestureEnabled: false }}
+        />
       </UnitagStack.Group>
     </UnitagStack.Navigator>
   )

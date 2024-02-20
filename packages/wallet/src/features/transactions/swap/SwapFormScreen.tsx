@@ -488,7 +488,7 @@ function SwapFormContent(): JSX.Element {
                     onToggleIsFiatMode={onToggleIsFiatMode}
                   />
                 )}
-                {walletNeedsRestore && (
+                {walletNeedsRestore && !showWebOutputTokenSelector && (
                   <TouchableArea onPress={onRestorePress}>
                     <Flex
                       grow
@@ -516,9 +516,13 @@ function SwapFormContent(): JSX.Element {
               </AnimatedFlex>
             </Trace>
 
-            <Flex $short={{ mt: '$spacing8' }} mt="$spacing24">
-              <GasAndWarningRows renderEmptyRows />
-            </Flex>
+            {!showWebOutputTokenSelector ? (
+              <Flex $short={{ mt: '$spacing8' }} mt="$spacing24">
+                <GasAndWarningRows renderEmptyRows />
+              </Flex>
+            ) : (
+              <Flex mt="$spacing48" />
+            )}
           </>
         ) : (
           <Flex mt="$spacing48" />

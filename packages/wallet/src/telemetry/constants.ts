@@ -4,9 +4,21 @@ export enum WalletEventName {
   NFTsLoaded = 'NFTs Loaded',
   PortfolioBalanceFreshnessLag = 'Portfolio Balance Freshness Lag',
   SwapSubmitted = 'Swap Submitted to Provider',
+  SendRecipientSelected = 'Send Recipient Selected',
   TransferSubmitted = 'Transfer Submitted',
   TransferCompleted = 'Transfer Completed',
   TokenSelected = 'Token Selected',
+}
+
+// MOB-2816: move these to analytics-events package
+export enum UnitagEventName {
+  UnitagBannerActionTaken = 'Unitag Banner Action Taken',
+  UnitagOnboardingActionTaken = 'Unitag Onboarding Action Taken',
+  UnitagClaimAvailabilityDisplayed = 'Unitag Claim Availability Displayed',
+  UnitagClaimed = 'Unitag Claimed',
+  UnitagMetadataUpdated = 'Unitag Metadata Updated',
+  UnitagChanged = 'Unitag Changed',
+  UnitagRemoved = 'Unitag Removed',
 }
 
 export enum WalletAppsFlyerEvents {
@@ -22,6 +34,8 @@ export const ModalName = {
   BlockedAddress: 'blocked-address',
   ChooseProfilePhoto: 'choose-profile-photo-modal',
   CloudBackupInfo: 'cloud-backup-info-modal',
+  ENSClaimPeriod: 'ens-claim-period',
+  ExchangeTransferModal: 'exchange-transfer-modal',
   Experiments: 'experiments',
   Explore: 'explore-modal',
   FaceIDWarning: 'face-id-warning',
@@ -30,7 +44,7 @@ export const ModalName = {
   FiatOnRamp: 'fiat-on-ramp',
   FiatOnRampAggregator: 'fiat-on-ramp-aggregator',
   FiatOnRampCountryList: 'fiat-on-ramp-country-list',
-  ReceiveCryptoModal: 'receive-crypto-modal',
+  FiatOnRampTokenSelector: 'fiat-on-ramp-token-selector',
   ForceUpgradeModal: 'force-upgrade-modal',
   ForgotPassword: 'forgot-password',
   LanguageSelector: 'language-selector-modal',
@@ -40,6 +54,7 @@ export const ModalName = {
   OtpInputExpired: 'otp-input-expired',
   OtpScanInput: 'otp-scan-input',
   QRCodeNetworkInfo: 'qr-code-network-info',
+  ReceiveCryptoModal: 'receive-crypto-modal',
   RemoveWallet: 'remove-wallet-modal',
   RestoreWallet: 'restore-wallet-modal',
   RemoveSeedPhraseWarningModal: 'remove-seed-phrase-warning-modal',
@@ -99,7 +114,6 @@ export const ElementName = {
   EtherscanView: 'etherscan-view',
   Favorite: 'favorite',
   FiatOnRampTokenSelector: 'fiat-on-ramp-token-selector',
-  FiatOnRampAggregatorTokenSelector: 'fiat-on-ramp-aggregator-token-selector',
   FiatOnRampWidgetButton: 'fiat-on-ramp-widget-button',
   FiatOnRampCountryPicker: 'fiat-on-ramp-country-picker',
   GetHelp: 'get-help',

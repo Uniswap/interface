@@ -6,6 +6,9 @@ import { AnimatedFlex, Text, TouchableArea, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
+import { SearchResultType, extractDomain } from 'wallet/src/features/search/SearchResult'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { WalletEventName } from 'wallet/src/telemetry/constants'
 
 interface RecipientListProps {
   renderedInModal?: boolean
@@ -72,9 +75,31 @@ interface RecipientProps {
 }
 
 export function RecipientRow({ recipient, onPress }: RecipientProps): JSX.Element {
+  const domain = recipient.name
+    ? extractDomain(
+        recipient.name,
+        recipient.isUnitag ? SearchResultType.Unitag : SearchResultType.ENSAddress
+      )
+    : undefined
+
+  const onPressWithAnalytics = (): void => {
+    if (domain) {
+      sendWalletAnalyticsEvent(WalletEventName.SendRecipientSelected, {
+        domain,
+      })
+    }
+    onPress(recipient.address)
+  }
+
+  const isNonUnitagSubdomain = !recipient.isUnitag && domain !== undefined && domain !== '.eth'
+
   return (
-    <TouchableArea hapticFeedback onPress={(): void => onPress(recipient.address)}>
-      <AddressDisplay address={recipient.address} size={35} />
+    <TouchableArea hapticFeedback onPress={onPressWithAnalytics}>
+      <AddressDisplay
+        address={recipient.address}
+        overrideDisplayName={isNonUnitagSubdomain && recipient.name ? recipient.name : undefined}
+        size={35}
+      />
     </TouchableArea>
   )
 }

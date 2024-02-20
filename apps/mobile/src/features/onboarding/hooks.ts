@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
@@ -18,7 +19,7 @@ import {
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
-import { sendWalletAppsFlyerEvent } from 'wallet/src/telemetry'
+import { sendWalletAnalyticsEvent, sendWalletAppsFlyerEvent } from 'wallet/src/telemetry'
 import { WalletAppsFlyerEvents } from 'wallet/src/telemetry/constants'
 
 export type OnboardingCompleteProps = OnboardingStackBaseParams
@@ -58,9 +59,19 @@ export function useCompleteOnboardingCallback({
       }
     )
 
+    // Log TOS acceptance for new wallets before they are activated
+    if (entryPoint === OnboardingEntryPoint.FreshInstallOrReplace) {
+      pendingWalletAddresses.forEach((address: string) => {
+        sendWalletAnalyticsEvent(SharedEventName.TERMS_OF_SERVICE_ACCEPTED, { address })
+      })
+    }
+
     // Claim unitag if there's a claim to process
     if (unitagClaim) {
-      const { claimError } = await claimUnitag(unitagClaim)
+      const { claimError } = await claimUnitag(unitagClaim, {
+        source: 'onboarding',
+        hasENSAddress: false,
+      })
       if (claimError) {
         dispatch(
           pushNotification({

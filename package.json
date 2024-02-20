@@ -39,7 +39,7 @@
     "immer": "9.0.21",
     "@uniswap/v2-sdk": "4.1.0",
     "@apollo/client": "3.7.11",
-    "@uniswap/sdk-core": "4.0.7",
+    "@uniswap/sdk-core": "4.1.2",
     "@react-navigation/routers": "6.1.9",
     "@react-navigation/core": "6.2.2",
     "@sideway/formula": "3.0.1",

@@ -108,48 +108,31 @@ exports[`AccountList renders without error 1`] = `
           onPress={[Function]}
         >
           <View
-            accessibilityState={
-              {
-                "busy": undefined,
-                "checked": undefined,
-                "disabled": undefined,
-                "expanded": undefined,
-                "selected": undefined,
-              }
-            }
-            accessibilityValue={
-              {
-                "max": undefined,
-                "min": undefined,
-                "now": undefined,
-                "text": undefined,
-              }
-            }
-            accessible={true}
-            collapsable={false}
+            cancelable={true}
             focusable={true}
-            hitSlop={
-              {
-                "bottom": 5,
-                "left": 5,
-                "right": 5,
-                "top": 5,
-              }
-            }
-            onClick={[Function]}
-            onResponderGrant={[Function]}
-            onResponderMove={[Function]}
-            onResponderRelease={[Function]}
-            onResponderTerminate={[Function]}
-            onResponderTerminationRequest={[Function]}
-            onStartShouldSetResponder={[Function]}
+            hitSlop={[Function]}
+            minPressDuration={0}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onLongPress={[Function]}
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+            onPress={[Function]}
+            onPressIn={[Function]}
+            onPressOut={[Function]}
             style={
               {
+                "flexDirection": "column",
                 "opacity": 1,
                 "paddingBottom": 12,
                 "paddingLeft": 24,
                 "paddingRight": 24,
                 "paddingTop": 8,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
               }
             }
           >
@@ -403,7 +386,6 @@ exports[`AccountList renders without error 1`] = `
                           {
                             "alignItems": "center",
                             "flexDirection": "row",
-                            "gap": 2,
                             "justifyContent": "center",
                           }
                         }
