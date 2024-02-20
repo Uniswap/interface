@@ -10,6 +10,7 @@ type ExtraProps = {
   ignoreDragEvents?: boolean
   scaleTo?: number
   disabled?: boolean
+  hoverable?: boolean
 }
 
 export type TouchableAreaProps = Omit<StackProps, keyof ExtraProps> & ExtraProps

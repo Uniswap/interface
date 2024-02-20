@@ -14,6 +14,7 @@ import { BrowserRouter } from 'react-router-dom'
 import store from 'state'
 import { ThemeProvider } from 'theme'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
+import { UnitagUpdaterContextProvider } from 'wallet/src/features/unitags/context'
 
 i18n.load({
   [DEFAULT_LOCALE]: catalog.messages,
@@ -38,9 +39,11 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
              */}
             <MockedProvider showWarnings={false}>
               <BlockNumberProvider>
-                <ThemeProvider>
-                  <TamaguiProvider>{children}</TamaguiProvider>
-                </ThemeProvider>
+                <UnitagUpdaterContextProvider>
+                  <ThemeProvider>
+                    <TamaguiProvider>{children}</TamaguiProvider>
+                  </ThemeProvider>
+                </UnitagUpdaterContextProvider>
               </BlockNumberProvider>
             </MockedProvider>
           </BrowserRouter>

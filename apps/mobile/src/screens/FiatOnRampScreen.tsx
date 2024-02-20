@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { ComponentProps, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextInput, TextInputProps } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch, useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { FiatOnRampStackParamList } from 'src/app/navigation/types'
@@ -19,17 +20,18 @@ import { FiatOnRampCountryPicker } from 'src/features/fiatOnRamp/FiatOnRampCount
 import { FiatOnRampTokenSelectorModal } from 'src/features/fiatOnRamp/FiatOnRampTokenSelector'
 import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { FiatOnRampCurrency, InitialQuoteSelection } from 'src/features/fiatOnRamp/types'
+import { getServiceProviderLogo } from 'src/features/fiatOnRamp/utils'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { MobileEventProperties } from 'src/features/telemetry/types'
 import { FiatOnRampScreens } from 'src/screens/Screens'
-import { AnimatedFlex, Flex, Text } from 'ui/src'
+import { AnimatedFlex, Flex, Text, useIsDarkMode } from 'ui/src'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
 import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { useFiatOnRampAggregatorServiceProvidersQuery } from 'wallet/src/features/fiatOnRamp/api'
-import { FORQuote } from 'wallet/src/features/fiatOnRamp/types'
+import { FORQuote, FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 
@@ -57,9 +59,21 @@ function selectInitialQuote(
   return { quote: undefined, type: undefined }
 }
 
+function preloadServiceProviderLogos(
+  serviceProviders: FORServiceProvider[],
+  isDarkMode: boolean
+): void {
+  FastImage.preload(
+    serviceProviders
+      .map((sp) => ({ uri: getServiceProviderLogo(sp.logos, isDarkMode) }))
+      .filter((sp) => !!sp.uri)
+  )
+}
+
 export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+  const isDarkMode = useIsDarkMode()
   const [selection, setSelection] = useState<TextInputProps['selection']>()
   const [value, setValue] = useState('')
   const [showTokenSelector, setShowTokenSelector] = useState(false)
@@ -108,6 +122,17 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     isFetching: serviceProvidersLoading,
     error: serviceProvidersError,
   } = useFiatOnRampAggregatorServiceProvidersQuery()
+
+  // preload service provider logos for given quotes for the next screen
+  useEffect(() => {
+    if (serviceProvidersResponse?.serviceProviders && quotes) {
+      const quotesServiceProviderNames = quotes.map((q) => q.serviceProvider)
+      const serviceProviders = serviceProvidersResponse.serviceProviders.filter(
+        (sp) => quotesServiceProviderNames.indexOf(sp.serviceProvider) !== -1
+      )
+      preloadServiceProviderLogos(serviceProviders, isDarkMode)
+    }
+  }, [serviceProvidersResponse, quotes, isDarkMode])
 
   const { errorText, errorColor } = useParseFiatOnRampError(
     quotesError || serviceProvidersError,

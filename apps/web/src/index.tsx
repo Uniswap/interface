@@ -16,10 +16,10 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
 import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
+import { TamaguiProvider } from 'theme/tamaguiProvider'
 import { isBrowserRouterEnabled } from 'utils/env'
 import { getCanonicalUrl } from 'utils/urlRoutes'
-
-import { TamaguiProvider } from 'theme/tamaguiProvider'
+import { UnitagUpdaterContextProvider } from 'wallet/src/features/unitags/context'
 import Web3Provider from './components/Web3Provider'
 import { LanguageProvider } from './i18n'
 import App from './pages/App'
@@ -30,7 +30,7 @@ import ListsUpdater from './state/lists/updater'
 import LogsUpdater from './state/logs/updater'
 import OrderUpdater from './state/signatures/updater'
 import TransactionUpdater from './state/transactions/updater'
-import { ThemedGlobalStyle, ThemeProvider } from './theme'
+import { ThemeProvider, ThemedGlobalStyle } from './theme'
 import RadialGradientByChainUpdater from './theme/components/RadialGradientByChainUpdater'
 
 if (window.ethereum) {
@@ -74,13 +74,15 @@ createRoot(container).render(
               <Web3Provider>
                 <ApolloProvider client={apolloClient}>
                   <BlockNumberProvider>
-                    <Updaters />
-                    <ThemeProvider>
-                      <TamaguiProvider>
-                        <ThemedGlobalStyle />
-                        <App />
-                      </TamaguiProvider>
-                    </ThemeProvider>
+                    <UnitagUpdaterContextProvider>
+                      <Updaters />
+                      <ThemeProvider>
+                        <TamaguiProvider>
+                          <ThemedGlobalStyle />
+                          <App />
+                        </TamaguiProvider>
+                      </ThemeProvider>
+                    </UnitagUpdaterContextProvider>
                   </BlockNumberProvider>
                 </ApolloProvider>
               </Web3Provider>

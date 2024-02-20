@@ -42,6 +42,13 @@ export function useAsyncData<T>(
 
     async function runCallback(): Promise<void> {
       isPending = true
+      setState((prevState) => {
+        if (!prevState.error) {
+          // Return the same state to avoid an unneeded re-render.
+          return prevState
+        }
+        return { ...prevState, error: undefined }
+      })
       const data = await asyncCallback()
       if (isPending) {
         lastCompletedAsyncCallbackRef.current = asyncCallback

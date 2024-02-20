@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmeAaU5F67PX1jZemajRJjA6sDvJ1X6ddvgjjqDHfTePx7`
-- CIDv1: `bafybeihlezropz7qe2rutxp4solf46m3hgpl7c53fevxscbltlz2fo6exq`
+- CIDv0: `QmVUZGU9EBHPpn3BZRhKTQB5VZuDtv2PUetyHxxpfmzcp9`
+- CIDv1: `bafybeidkbbgtppk3euej56wgoxllerdoggnsz3fgkirnhrgvlbmff4reii`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,41 +10,21 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeihlezropz7qe2rutxp4solf46m3hgpl7c53fevxscbltlz2fo6exq.ipfs.dweb.link/
-- https://bafybeihlezropz7qe2rutxp4solf46m3hgpl7c53fevxscbltlz2fo6exq.ipfs.cf-ipfs.com/
-- [ipfs://QmeAaU5F67PX1jZemajRJjA6sDvJ1X6ddvgjjqDHfTePx7/](ipfs://QmeAaU5F67PX1jZemajRJjA6sDvJ1X6ddvgjjqDHfTePx7/)
+- https://bafybeidkbbgtppk3euej56wgoxllerdoggnsz3fgkirnhrgvlbmff4reii.ipfs.dweb.link/
+- https://bafybeidkbbgtppk3euej56wgoxllerdoggnsz3fgkirnhrgvlbmff4reii.ipfs.cf-ipfs.com/
+- [ipfs://QmVUZGU9EBHPpn3BZRhKTQB5VZuDtv2PUetyHxxpfmzcp9/](ipfs://QmVUZGU9EBHPpn3BZRhKTQB5VZuDtv2PUetyHxxpfmzcp9/)
 
-## 5.10.0 (2024-02-20)
+## 5.11.0 (2024-02-20)
 
 
 ### Features
 
-* **web:** [info] active liquidity chart (#6237) 1133601
-* **web:** [info] add p0 info analytics (#6338) fdaade8
-* **web:** [info] dot grids (#6327) e4e8720
-* **web:** [uni-tags] add accept / reject to banners (#6309) 34a5aa7
-* **web:** [uni-tags] add banner to account drawer (#6209) 995722d
-* **web:** [uni-tags] add banner to swap page (#6234) b41f304
-* **web:** add tables error states (#6228) 262f8a0
-* **web:** fix PDP in-chart price headers (#6211) a6070ae
-* **web:** implement TDP TVL chart gql queries (#6190) dabe043
-* **web:** implement TDP volumes chart gql queries (#6188) d044d6b
-* **web:** pool protocol switcher (#6339) f81cc26
-* **web:** replace account drawer header buttons with action tiles (#6240) fba32e9
-* **web:** v2 everywhere (#6164) 5c8ec8d
+* **web:** [uni-tags] show username in header (#6353) 28fbb53
+* **web:** move PDP in-chart fees display to tooltip (#6288) eaad394
 
 
 ### Bug Fixes
 
-* **web:** [info] fix pool table description ellipsis width (#6148) b83c2a3
-* **web:** avoid re-rendering the App constantly (#6296) 45de35c
-* **web:** disable statsig metrics (#6368) f554c79
-* **web:** fix e2e tests (#6365) 4343ae9
-* **web:** fix importing some wallet paths causing errors due to react-native-dotenv (#6255) 6b7fc53
-* **web:** import v2 pool goes to add v3 pool (#6273) 8f52943
-* **web:** Keep base/quote tokens stable if user has edited the limit price value (#6284) 1dfe744
-* **web:** make new landing page enabled by default (#6285) a09d8fe
-* **web:** use chainId instead of chainName for analytics (#6390) 81dc15b
-* **web:** using correct favicon url (#6298) 46d76a8
+* **web:** swap e2e tests (#6412) d5a637e
 
 

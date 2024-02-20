@@ -25,6 +25,9 @@ import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
 import { shortenAddress } from 'utilities/src/addresses'
 
+import { useUniTagsEnabled } from 'featureFlags/flags/uniTags'
+import { Icons } from 'ui/src'
+import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
 import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import { RowBetween } from '../Row'
@@ -143,6 +146,7 @@ function Web3StatusInner() {
   const activeWeb3 = useWeb3React()
   const lastWeb3 = useLast(useWeb3React(), ignoreWhileSwitchingChain)
   const { account, connector } = useMemo(() => (activeWeb3.account ? activeWeb3 : lastWeb3), [activeWeb3, lastWeb3])
+  const { unitag } = useUnitagByAddress(account, useUniTagsEnabled() && Boolean(account))
   const { ENSName, loading: ENSLoading } = useENSName(account)
   const connection = getConnection(connector)
   const dispatch = useAppDispatch()
@@ -222,7 +226,8 @@ function Web3StatusInner() {
             </RowBetween>
           ) : (
             <AddressAndChevronContainer>
-              <Text>{ENSName ?? shortenAddress(account)}</Text>
+              <Text>{unitag?.username ?? ENSName ?? shortenAddress(account)}</Text>
+              {unitag?.username && <Icons.Unitag size={24} />}
             </AddressAndChevronContainer>
           )}
         </Web3StatusConnected>

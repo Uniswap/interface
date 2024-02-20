@@ -236,7 +236,7 @@ const FadeInSubheader = styled(ThemedText.SubHeader)`
   ${textFadeIn}
 `
 
-const LiquidityTooltipDisplayWrapper = styled.div`
+export const ChartHoverTooltipWrapper = styled.div`
   width: 100%;
   background-color: ${({ theme }) => theme.surface1};
   border-radius: 8px;
@@ -276,10 +276,10 @@ function LiquidityTooltipDisplay({
       : 0
 
   return (
-    <LiquidityTooltipDisplayWrapper>
+    <ChartHoverTooltipWrapper>
       <ThemedText.BodySmall>{t`${tokenADescriptor} locked: ${displayValue0}`}</ThemedText.BodySmall>
       <ThemedText.BodySmall>{t`${tokenBDescriptor} locked: ${displayValue1}`}</ThemedText.BodySmall>
-    </LiquidityTooltipDisplayWrapper>
+    </ChartHoverTooltipWrapper>
   )
 }
 

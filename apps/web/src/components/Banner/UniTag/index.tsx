@@ -4,12 +4,10 @@ import Column, { ColumnCenter } from 'components/Column'
 import Row from 'components/Row'
 import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { Icons } from 'ui/src'
 import pfp1 from './assets/pfp1.png'
 import pfp2 from './assets/pfp2.png'
 import pfp3 from './assets/pfp3.png'
-import unigramDark from './assets/unigramDark.png'
-import unigramLight from './assets/unigramLight.png'
 import { useUniTagBanner } from './useUniTagBanner'
 
 const Container = styled(Row)`
@@ -61,12 +59,6 @@ const Subtitle = styled.div<{ large?: boolean }>`
         line-height: 16px;
       }
     `}
-`
-const UniTagIcon = styled.img`
-  height: 20px;
-  width: 20px;
-  margin: 4px;
-  image-rendering: optimizeQuality;
 `
 const ButtonStyles = css<{ large?: boolean }>`
   height: ${({ large }) => (large ? '40px' : '32px')};
@@ -134,14 +126,13 @@ const UserName = styled.div<{ $color: string; $rotation: number }>`
   margin-top: -8px;
 `
 export function Copy({ large }: { large?: boolean }) {
-  const isDarkMode = useIsDarkMode()
   return (
     <Column gap="4px">
-      <Row>
+      <Row gap="4px">
         <Title large={large}>
           <Trans>Claim your Uniswap username</Trans>
         </Title>
-        {large && <UniTagIcon src={isDarkMode ? unigramDark : unigramLight} alt="uniTagIcon" />}
+        {large && <Icons.Unitag size={24} />}
       </Row>
       <Subtitle large={large}>
         <Trans>Sharing your address has never been easier. Claim now in the mobile app!</Trans>

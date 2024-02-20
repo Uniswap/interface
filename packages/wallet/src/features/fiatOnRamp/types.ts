@@ -179,6 +179,7 @@ export type FORQuoteRequest = {
   destinationCurrencyCode: string
   sourceAmount: number
   sourceCurrencyCode: string
+  walletAddress: string
 }
 
 export type FORQuote = {

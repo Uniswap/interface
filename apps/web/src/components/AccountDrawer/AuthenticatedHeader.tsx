@@ -27,9 +27,11 @@ import { useAppDispatch } from 'state/hooks'
 import { setRecentConnectionDisconnected } from 'state/user/reducer'
 import styled from 'styled-components'
 import { CopyHelper, ThemedText } from 'theme/components'
+import { Icons } from 'ui/src'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isPathBlocked } from 'utils/blockedPaths'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
 import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
@@ -200,6 +202,7 @@ export default function AuthenticatedHeader({
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
 
   const isUniTagsEnabled = useUniTagsEnabled()
+  const { unitag } = useUnitagByAddress(account, isUniTagsEnabled && Boolean(account))
 
   return (
     <AuthenticatedHeaderWrapper>
@@ -209,10 +212,14 @@ export default function AuthenticatedHeader({
           {account && (
             <AccountNamesWrapper>
               <ThemedText.SubHeader>
-                <CopyText toCopy={ENSName ?? account}>{ENSName ?? shortenAddress(account)}</CopyText>
+                <CopyText toCopy={unitag?.username ?? ENSName ?? account}>
+                  <Row gap="xs">
+                    {unitag?.username ?? ENSName ?? shortenAddress(account)}
+                    {unitag?.username && <Icons.Unitag size={24} />}
+                  </Row>
+                </CopyText>
               </ThemedText.SubHeader>
-              {/* Displays smaller view of account if ENS name was rendered above */}
-              {ENSName && (
+              {(unitag || ENSName) && (
                 <ThemedText.BodySmall color="neutral2">
                   <CopyText toCopy={account}>{shortenAddress(account)}</CopyText>
                 </ThemedText.BodySmall>

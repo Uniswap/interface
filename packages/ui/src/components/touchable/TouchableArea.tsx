@@ -21,6 +21,7 @@ export const TouchableArea = forwardRef<TamaguiElement, TouchableAreaProps>(func
     scaleTo,
     onPress,
     children,
+    hoverable,
     activeOpacity = 0.75,
     ...restProps
   },
@@ -84,6 +85,12 @@ export const TouchableArea = forwardRef<TamaguiElement, TouchableAreaProps>(func
         scale: scaleTo ?? 1,
         ...restProps.pressStyle,
       }}
+      {...(hoverable && {
+        hoverStyle: {
+          backgroundColor: '$backgroundHover',
+          ...restProps.hoverStyle,
+        },
+      })}
       onPress={onPressHandler}
       onPressIn={onPressInHandler}>
       {children}

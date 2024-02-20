@@ -13411,12 +13411,12 @@ __metadata:
     "@uniswap/merkle-distributor": 1.0.1
     "@uniswap/permit2-sdk": 1.2.0
     "@uniswap/redux-multicall": 1.1.8
-    "@uniswap/router-sdk": 1.7.1
+    "@uniswap/router-sdk": 1.8.0
     "@uniswap/sdk-core": 4.1.2
     "@uniswap/smart-order-router": 3.17.3
     "@uniswap/token-lists": 1.0.0-beta.33
     "@uniswap/uniswapx-sdk": 1.4.1
-    "@uniswap/universal-router-sdk": 1.5.8
+    "@uniswap/universal-router-sdk": 1.7.1
     "@uniswap/v2-core": 1.0.1
     "@uniswap/v2-periphery": 1.1.0-beta.0
     "@uniswap/v2-sdk": 4.1.0
@@ -13764,16 +13764,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/router-sdk@npm:1.7.1, @uniswap/router-sdk@npm:^1.6.0":
-  version: 1.7.1
-  resolution: "@uniswap/router-sdk@npm:1.7.1"
+"@uniswap/router-sdk@npm:1.8.0, @uniswap/router-sdk@npm:^1.6.0, @uniswap/router-sdk@npm:^1.8.0":
+  version: 1.8.0
+  resolution: "@uniswap/router-sdk@npm:1.8.0"
   dependencies:
     "@ethersproject/abi": ^5.5.0
     "@uniswap/sdk-core": ^4.0.7
     "@uniswap/swap-router-contracts": ^1.1.0
-    "@uniswap/v2-sdk": ^3.2.0
-    "@uniswap/v3-sdk": ^3.10.0
-  checksum: 9d93a454da8badad038afe10563fb7556d74b99cd23b2aff10faf58f927e284bc0be21bbb3a569b90f339057bb3ecc698aea85a38c42960632978eca1669bb0f
+    "@uniswap/v2-sdk": ^4.1.0
+    "@uniswap/v3-sdk": ^3.10.1
+  checksum: c885e4a2e42f62768a7fa1f7c5561d205b260975c728fb027537d5af4b08fea37435c6705d7bf2ae8242e25385afda876fce98de9afc689825ed60504a3a5550
   languageName: node
   linkType: hard
 
@@ -13844,7 +13844,7 @@ __metadata:
     "@types/redux-logger": 3.0.9
     "@types/uuid": 9.0.1
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/universal-router-sdk": 1.5.8
+    "@uniswap/universal-router-sdk": 1.7.1
     "@uniswap/v3-sdk": 3.10.2
     clean-webpack-plugin: ^4.0.0
     copy-webpack-plugin: ^11.0.0
@@ -13871,10 +13871,11 @@ __metadata:
     react-router-dom: 6.10.0
     redux: 4.2.1
     redux-logger: 3.0.6
-    redux-persist: 6.0.0
     redux-saga: 1.2.2
+    reduxed-chrome-storage: 3.0.10
     serve: ^14.2.0
     swc-loader: ^0.2.3
+    symbol-observable: 4.0.0
     typed-redux-saga: 1.5.0
     typescript: 5.3.3
     ua-parser-js: 1.0.37
@@ -13882,7 +13883,6 @@ __metadata:
     utilities: "workspace:^"
     uuid: 9.0.0
     wallet: "workspace:^"
-    webext-redux: ^2.1.9
     webpack: 5.89.0
     webpack-cli: ^5.0.1
     webpack-dev-server: ^4.13.1
@@ -13923,41 +13923,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/universal-router-sdk@npm:1.5.8, @uniswap/universal-router-sdk@npm:^1.5.4, @uniswap/universal-router-sdk@npm:^1.5.8":
-  version: 1.5.8
-  resolution: "@uniswap/universal-router-sdk@npm:1.5.8"
+"@uniswap/universal-router-sdk@npm:1.7.1, @uniswap/universal-router-sdk@npm:^1.5.4, @uniswap/universal-router-sdk@npm:^1.5.8":
+  version: 1.7.1
+  resolution: "@uniswap/universal-router-sdk@npm:1.7.1"
   dependencies:
     "@uniswap/permit2-sdk": ^1.2.0
-    "@uniswap/router-sdk": ^1.6.0
-    "@uniswap/sdk-core": ^4.0.0
-    "@uniswap/universal-router": 1.4.3
-    "@uniswap/v2-sdk": ^3.2.0
-    "@uniswap/v3-sdk": ^3.10.0
+    "@uniswap/router-sdk": ^1.8.0
+    "@uniswap/sdk-core": ^4.0.7
+    "@uniswap/universal-router": 1.6.0
+    "@uniswap/v2-sdk": ^4.1.0
+    "@uniswap/v3-sdk": ^3.10.1
     bignumber.js: ^9.0.2
     ethers: ^5.3.1
-  checksum: c6a4dd4c087405d02f3dadf9ae5a32636e3c7f363d3c2cbac2313cbcb2851a3e2d949427251b423882cc529f8deb6ff93586db6987e141c8460a911c6a0995f3
+  checksum: 4b2036ac4f320c7b8aa107f5b4fad17c8e6bf3b56d22e0297085ad8742bd7277573250701d834fb5d79c5571f60b160f6895d22856cf616142b19a74469cd9ca
   languageName: node
   linkType: hard
 
-"@uniswap/universal-router@npm:1.4.3":
-  version: 1.4.3
-  resolution: "@uniswap/universal-router@npm:1.4.3"
+"@uniswap/universal-router@npm:1.6.0, @uniswap/universal-router@npm:^1.0.1":
+  version: 1.6.0
+  resolution: "@uniswap/universal-router@npm:1.6.0"
   dependencies:
     "@openzeppelin/contracts": 4.7.0
     "@uniswap/v2-core": 1.0.1
     "@uniswap/v3-core": 1.0.0
-  checksum: f5b86a1c7c083f28ff7d64770437a3a9474c2b923b78652c2b43e1ee8f5514c40479ce0d210ce31338e8d4fdc4c9c728c7e2d1a1959a24deb31e8649b3df0a37
-  languageName: node
-  linkType: hard
-
-"@uniswap/universal-router@npm:^1.0.1":
-  version: 1.5.1
-  resolution: "@uniswap/universal-router@npm:1.5.1"
-  dependencies:
-    "@openzeppelin/contracts": 4.7.0
-    "@uniswap/v2-core": 1.0.1
-    "@uniswap/v3-core": 1.0.0
-  checksum: e5b05c7b8d544fce33b8b944aee2e6638b52b3b31b83205bf648109a24bc84cf2f3ac43b8e0416463a22c8d9c587bc285bf04712012e7d1a14f2bd803fd71e1c
+  checksum: c91e4a248f983378f806b2d7b1e2c9cdac5996d7ab46c323c35147f6f8e32a67ca330916ac0692275525236b557b5d39230fadf88ab2af7ba7c814cd81ed903b
   languageName: node
   linkType: hard
 
@@ -14025,7 +14014,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/v3-sdk@npm:3.10.2, @uniswap/v3-sdk@npm:^3.10.0":
+"@uniswap/v3-sdk@npm:3.10.2, @uniswap/v3-sdk@npm:^3.10.0, @uniswap/v3-sdk@npm:^3.10.1":
   version: 3.10.2
   resolution: "@uniswap/v3-sdk@npm:3.10.2"
   dependencies:
@@ -30883,13 +30872,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.assignin@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "lodash.assignin@npm:4.2.0"
-  checksum: 4b55bc1d65ccd7648fdba8a4316d10546929bf0beb5950830d86c559948cf170f0e65b77c95e66b45b511b85a31161714de8b2008d2537627ef3c7759afe36a6
-  languageName: node
-  linkType: hard
-
 "lodash.camelcase@npm:^4.3.0":
   version: 4.3.0
   resolution: "lodash.camelcase@npm:4.3.0"
@@ -30901,13 +30883,6 @@ __metadata:
   version: 4.2.1
   resolution: "lodash.capitalize@npm:4.2.1"
   checksum: d9195f31d48c105206f1099946d8bbc8ab71435bc1c8708296992a31a992bb901baf120fdcadd773098ac96e62a79e6b023ee7d26a2deb0d6c6aada930e6ad0a
-  languageName: node
-  linkType: hard
-
-"lodash.clonedeep@npm:^4.5.0":
-  version: 4.5.0
-  resolution: "lodash.clonedeep@npm:4.5.0"
-  checksum: 92c46f094b064e876a23c97f57f81fbffd5d760bf2d8a1c61d85db6d1e488c66b0384c943abee4f6af7debf5ad4e4282e74ff83177c9e63d8ff081a4837c3489
   languageName: node
   linkType: hard
 
@@ -38609,6 +38584,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"reduxed-chrome-storage@npm:3.0.10":
+  version: 3.0.10
+  resolution: "reduxed-chrome-storage@npm:3.0.10"
+  dependencies:
+    uuid: ^8.3
+  peerDependencies:
+    redux: ^4
+  checksum: 11e5de8322db373e57dcf212fbef7365637dd008752348958fe7fbc2e8ec536ca453a629d0aba0be94c05d509d77136ee05574f3c08d127e094f88560e88a45c
+  languageName: node
+  linkType: hard
+
 "reflect-metadata@npm:0.1.13":
   version: 0.1.13
   resolution: "reflect-metadata@npm:0.1.13"
@@ -41782,7 +41768,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"symbol-observable@npm:^4.0.0":
+"symbol-observable@npm:4.0.0, symbol-observable@npm:^4.0.0":
   version: 4.0.0
   resolution: "symbol-observable@npm:4.0.0"
   checksum: 212c7edce6186634d671336a88c0e0bbd626c2ab51ed57498dc90698cce541839a261b969c2a1e8dd43762133d47672e8b62e0b1ce9cf4157934ba45fd172ba8
@@ -44136,7 +44122,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:^8.0.0, uuid@npm:^8.3.2":
+"uuid@npm:^8.0.0, uuid@npm:^8.3, uuid@npm:^8.3.2":
   version: 8.3.2
   resolution: "uuid@npm:8.3.2"
   bin:
@@ -44604,9 +44590,9 @@ __metadata:
     "@uniswap/analytics-events": 2.31.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/permit2-sdk": 1.2.0
-    "@uniswap/router-sdk": 1.7.1
+    "@uniswap/router-sdk": 1.8.0
     "@uniswap/sdk-core": 4.1.2
-    "@uniswap/universal-router-sdk": 1.5.8
+    "@uniswap/universal-router-sdk": 1.7.1
     "@uniswap/v2-sdk": 4.1.0
     "@uniswap/v3-sdk": 3.10.2
     apollo-link-rest: 0.9.0
@@ -44764,18 +44750,6 @@ __metadata:
     pvtsutils: ^1.3.2
     tslib: ^2.4.0
   checksum: f6e529ca5c1175b8ccead3547f60efa7a1f8e247aaeab3bd4f096eb9fda11cfc8e6b6fb574bbc5696f608958c491a27e9682c89204412f73fb430e5fcbe9ebac
-  languageName: node
-  linkType: hard
-
-"webext-redux@npm:^2.1.9":
-  version: 2.1.9
-  resolution: "webext-redux@npm:2.1.9"
-  dependencies:
-    lodash.assignin: ^4.2.0
-    lodash.clonedeep: ^4.5.0
-  peerDependencies:
-    redux: ">= 3 <= 4"
-  checksum: 0cc64d1420d8494380fbab9db7f8d9cdd43487bb52452c38d229f639635cdbf3115d04f5496aa867069dbb8c12683da49acc80961686b0751a3beec117e50f56
   languageName: node
   linkType: hard
 
