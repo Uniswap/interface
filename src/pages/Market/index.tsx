@@ -457,8 +457,6 @@ export default function Market({ history }: RouteComponentProps) {
 
   // mark when a user has submitted an approval, reset onTokenSelection for input field
   useEffect(() => {
-    console.log('Approvalchanged')
-    console.log(approvalState)
     if (approvalState === ApprovalState.PENDING) {
       setApprovalSubmitted(true)
     }
@@ -469,10 +467,6 @@ export default function Market({ history }: RouteComponentProps) {
       setApprovalLoading(true)
     } else setApprovalLoading(false)
   }, [allowedSlippage, trade, approvalState])
-
-  useEffect(() => {
-    console.log(approvalState)
-  })
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
