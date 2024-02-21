@@ -3,12 +3,12 @@ import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { SwapTransaction } from 'state/validator/types'
 
 import { LIMIT_ORDER_MANAGER_ADDRESSES } from '../constants/addresses'
 import { TransactionType } from '../state/transactions/actions'
-import { useHasPendingApproval, useTransactionAdder } from '../state/transactions/hooks'
+import { useHasPendingApproval, useIsTransactionConfirmed, useTransactionAdder } from '../state/transactions/hooks'
 import { calculateGasMargin } from '../utils/calculateGasMargin'
 import { useTokenContract } from './useContract'
 import { useTokenAllowance } from './useTokenAllowance'
@@ -26,25 +26,34 @@ export function useApproveCallback(
   amountToApprove?: CurrencyAmount<Currency>,
   spender?: string
 ): [ApprovalState, () => Promise<void>] {
+  const [approvalTxHash, setApprovalTxHash] = useState<string | undefined>()
+
   const { account, chainId } = useActiveWeb3React()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
+  const hasPendingApproval = useHasPendingApproval(token?.address, spender)
+  const isApprovalConfirmed = useIsTransactionConfirmed(approvalTxHash)
   const currentAllowance = useTokenAllowance(token, account ?? undefined, spender)
-  const pendingApproval = useHasPendingApproval(token?.address, spender)
+
+  useEffect(() => {
+    setApprovalTxHash(undefined)
+  }, [amountToApprove?.currency.symbol])
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
     if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
     if (amountToApprove.currency.isNative) return ApprovalState.APPROVED
+    if (isApprovalConfirmed === true) return ApprovalState.APPROVED
+
     // we might not have enough data to know whether or not we need to approve
     if (!currentAllowance) return ApprovalState.UNKNOWN
 
     // amountToApprove will be defined if currentAllowance is
     return currentAllowance.lessThan(amountToApprove)
-      ? pendingApproval
+      ? hasPendingApproval
         ? ApprovalState.PENDING
         : ApprovalState.NOT_APPROVED
       : ApprovalState.APPROVED
-  }, [amountToApprove, currentAllowance, pendingApproval, spender])
+  }, [amountToApprove, currentAllowance, isApprovalConfirmed, hasPendingApproval, spender])
 
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
@@ -91,6 +100,7 @@ export function useApproveCallback(
         gasLimit: calculateGasMargin(chainId, estimatedGas),
       })
       .then((response: TransactionResponse) => {
+        setApprovalTxHash(response.hash)
         addTransaction(response, { type: TransactionType.APPROVAL, tokenAddress: token.address, spender })
       })
       .catch((error: Error) => {
