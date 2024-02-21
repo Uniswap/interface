@@ -422,7 +422,7 @@ export default function Market({ history }: RouteComponentProps) {
   )
 
   // check whether the user has approved the router on the input token
-  // @dev: default value =  DefaultState.UNKNOWN
+  // @dev: default value =  ApprovalState.UNKNOWN
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage, swapTransaction)
   const {
     state: signatureState,
@@ -636,6 +636,10 @@ export default function Market({ history }: RouteComponentProps) {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
   }, [maxInputAmount, onUserInput])
 
+  const handleHalfInput = useCallback(() => {
+    maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.divide(2).toExact())
+  }, [maxInputAmount, onUserInput])
+
   const handleOutputSelect = useCallback(
     (outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
     [onCurrencySelection]
@@ -716,6 +720,7 @@ export default function Market({ history }: RouteComponentProps) {
                         currency={currencies[Field.INPUT]}
                         onUserInput={handleTypeInput}
                         onMax={handleMaxInput}
+                        onHalf={handleHalfInput}
                         fiatValue={fiatValueInput ?? undefined}
                         onCurrencySelect={handleInputSelect}
                         otherCurrency={currencies[Field.OUTPUT]}
@@ -1266,6 +1271,7 @@ export default function Market({ history }: RouteComponentProps) {
                   currency={currencies[Field.INPUT]}
                   onUserInput={handleTypeInput}
                   onMax={handleMaxInput}
+                  onHalf={handleHalfInput}
                   fiatValue={fiatValueInput ?? undefined}
                   onCurrencySelect={handleInputSelect}
                   otherCurrency={currencies[Field.OUTPUT]}
