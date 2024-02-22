@@ -116,12 +116,12 @@ const AddressAndChevronContainer = styled.div<{ $loading?: boolean }>`
   }
 `
 
-const Text = styled.p`
+const Text = styled.span`
   flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin: 0 0.25rem 0 0.25rem;
+  margin: 0 2px;
   font-size: 1rem;
   width: fit-content;
   font-weight: 485;

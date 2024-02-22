@@ -12,21 +12,40 @@ import { useUniTagBanner } from './useUniTagBanner'
 
 const Container = styled(Row)`
   width: 100%;
-  max-height: 140px;
+  height: 100%;
+  position: relative;
   overflow: hidden;
-  padding: 16px;
-  gap: 16px;
   background: ${({ theme }) => theme.surface1};
   border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 20px;
   margin-top: 12px;
   box-shadow: 0px 0px 10px 0px rgba(34, 34, 34, 0.04);
-  @media screen and (max-width: 1440px) {
-    padding-right: 2px;
-    gap: 6px;
-  }
   @media screen and (max-width: 310px) {
     display: none;
+  }
+`
+const ContentContainer = styled(Column)`
+  padding: 16px;
+  padding-right: 0px;
+  gap: 16px;
+  max-width: 290px;
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) and (max-width: 1440px) {
+    max-width: 205px;
+  }
+`
+const GraphicsContainer = styled.div`
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  height: 100%;
+  overflow: hidden;
+  padding: 0px 8px;
+`
+const GraphicsInner = styled(Column)`
+  gap: 8px;
+  margin-top: -14px;
+  @media screen and (min-width: ${BREAKPOINTS.sm}px) and (max-width: 1440px) {
+    margin-top: -6px;
   }
 `
 const Title = styled.div<{ large?: boolean }>`
@@ -124,18 +143,22 @@ const UserName = styled.div<{ $color: string; $rotation: number }>`
   font-weight: 535;
   line-height: 14px;
   margin-top: -8px;
+  box-shadow: 0px 0px 10.178px 0px rgba(0, 0, 0, 0.09);
 `
 export function Copy({ large }: { large?: boolean }) {
   return (
     <Column gap="4px">
       <Row gap="4px">
         <Title large={large}>
-          <Trans>Claim your Uniswap username</Trans>
+          <Trans>Introducing uni.eth usernames</Trans>
         </Title>
         {large && <Icons.Unitag size={24} />}
       </Row>
       <Subtitle large={large}>
-        <Trans>Sharing your address has never been easier. Claim now in the mobile app!</Trans>
+        <Trans>
+          Build a personalized web3 profile and easily share your address with friends. Get yours now in the Uniswap
+          mobile app.
+        </Trans>
       </Subtitle>
     </Column>
   )
@@ -151,7 +174,7 @@ export function Buttons({
   onReject?: () => void
 }) {
   return (
-    <Row gap={large ? '12px' : '4px'}>
+    <Row gap={large ? '12px' : '8px'}>
       <AcceptButton
         data-testid="unitag-banner-accept-button"
         size={ButtonSize.medium}
@@ -208,15 +231,17 @@ export function UniTagBanner() {
 
   return (
     <Container justify="space-between">
-      <Column gap="16px">
+      <ContentContainer gap="16px">
         <Copy />
         <Buttons onAccept={handleAccept} onReject={handleReject} />
-      </Column>
-      <Column gap="8px">
-        <Profile pfp={pfp1} name="maggie" color="#67bcff" rotation={-2} />
-        <Profile pfp={pfp2} name="hayden" color="#8CD698" rotation={3} />
-        <Profile pfp={pfp3} name="unicorn" color="#E89DE5" rotation={-2} />
-      </Column>
+      </ContentContainer>
+      <GraphicsContainer>
+        <GraphicsInner>
+          <Profile pfp={pfp1} name="maggie" color="#67bcff" rotation={-2} />
+          <Profile pfp={pfp2} name="hayden" color="#8CD698" rotation={3} />
+          <Profile pfp={pfp3} name="unicorn" color="#E89DE5" rotation={-2} />
+        </GraphicsInner>
+      </GraphicsContainer>
     </Container>
   )
 }

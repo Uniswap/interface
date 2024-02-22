@@ -62,6 +62,28 @@ const mockedSendContextWithVerifiedRecipientInput: SendContextType = {
   setSendState: jest.fn(),
 }
 
+const mockedSendContextWithUnitag: SendContextType = {
+  sendState: {
+    exactAmountToken: '1',
+    exactAmountFiat: undefined,
+    recipient: 'hayden.eth',
+    inputCurrency: DAI,
+    inputInFiat: false,
+    validatedRecipientData: {
+      address: '0x9984b4b4E408e8D618A879e5315BD30952c89103',
+      ensName: 'hayden.eth',
+    },
+  },
+  derivedSendInfo: {
+    recipientData: {
+      address: '0x9984b4b4E408e8D618A879e5315BD30952c89103',
+      ensName: 'hayden.eth',
+      unitag: 'hayden',
+    },
+  },
+  setSendState: jest.fn(),
+}
+
 describe('SendCurrencyInputform', () => {
   it('should render placeholder values', () => {
     const { container } = render(
@@ -96,6 +118,19 @@ describe('SendCurrencyInputform', () => {
       </SwapAndLimitContext.Provider>
     )
     expect(screen.getByText('hayden.eth')).toBeVisible()
+    expect(screen.getByText(shortenAddress('0x9984b4b4E408e8D618A879e5315BD30952c89103'))).toBeVisible()
+    expect(container.firstChild).toMatchSnapshot()
+  })
+
+  it('should render correctly with unitag', () => {
+    const { container } = render(
+      <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
+        <SendContext.Provider value={mockedSendContextWithUnitag}>
+          <SendRecipientForm />
+        </SendContext.Provider>
+      </SwapAndLimitContext.Provider>
+    )
+    expect(screen.getByText('hayden')).toBeVisible()
     expect(screen.getByText(shortenAddress('0x9984b4b4E408e8D618A879e5315BD30952c89103'))).toBeVisible()
     expect(container.firstChild).toMatchSnapshot()
   })

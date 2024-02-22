@@ -4,6 +4,8 @@ import Column, { AutoColumn } from 'components/Column'
 import Identicon from 'components/Identicon'
 import Row from 'components/Row'
 import { Unicon } from 'components/Unicon'
+import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
+import { useUniTagsEnabled } from 'featureFlags/flags/uniTags'
 import useENSName from 'hooks/useENSName'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -15,7 +17,9 @@ import { useSendContext } from 'state/send/SendContext'
 import styled, { css, keyframes } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
+import { Icons } from 'ui/src'
 import { shortenAddress } from 'utilities/src/addresses'
+import { useUnitagByAddress, useUnitagByName } from 'wallet/src/features/unitags/hooks'
 
 const StyledConfirmedRecipientRow = styled(Row)`
   padding: 6px 0px;
@@ -115,6 +119,7 @@ const AutocompleteRow = ({
   selectRecipient: (recipient: RecipientData) => void
 }) => {
   const { account } = useWeb3React()
+  const { unitag } = useUnitagByAddress(address, useUniTagsEnabled() && Boolean(address))
   const { ENSName } = useENSName(address)
   const cachedEnsName = ENSName || validatedEnsName
   const formattedAddress = shortenAddress(address)
@@ -123,17 +128,31 @@ const AutocompleteRow = ({
       selectRecipient({
         address,
         ensName: cachedEnsName,
+        unitag: unitag?.username,
       }),
-    [address, cachedEnsName, selectRecipient]
+    [address, cachedEnsName, selectRecipient, unitag?.username]
   )
 
   return (
     <StyledAutocompleteRow justify="space-between" padding="8px 0px" onClick={boundSelectRecipient}>
       <Row gap="sm">
-        {cachedEnsName ? <Identicon account={address} size={36} /> : <Unicon address={address} size={36} />}
+        {unitag?.metadata?.avatar ? (
+          <UniTagProfilePicture account={address} size={36} />
+        ) : cachedEnsName ? (
+          <Identicon account={address} size={36} />
+        ) : (
+          <Unicon address={address} size={36} />
+        )}
         <Column>
-          <ThemedText.BodyPrimary lineHeight="24px">{cachedEnsName ?? formattedAddress}</ThemedText.BodyPrimary>
-          {cachedEnsName && <ThemedText.LabelSmall lineHeight="20px">{formattedAddress}</ThemedText.LabelSmall>}
+          <Row gap="xs">
+            <ThemedText.BodyPrimary lineHeight="24px">
+              {unitag?.username ?? cachedEnsName ?? formattedAddress}
+            </ThemedText.BodyPrimary>
+            {unitag?.username && <Icons.Unitag size={24} />}
+          </Row>
+          {(unitag || cachedEnsName) && (
+            <ThemedText.LabelSmall lineHeight="20px">{formattedAddress}</ThemedText.LabelSmall>
+          )}
         </Column>
       </Row>
       {account && (
@@ -198,6 +217,8 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
   const { recipient } = sendState
   const { recipientData } = derivedSendInfo
 
+  const unitagMetadata = useUnitagByName(recipientData?.unitag, useUniTagsEnabled() && Boolean(recipientData?.unitag))
+    .unitag?.metadata
   const { transfers: recentTransfers } = useGroupedRecentTransfers(account)
 
   const [[isFocusing, isForcingFocus], setFocus] = useState([false, false])
@@ -313,15 +334,20 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
       ) : (
         <StyledConfirmedRecipientRow>
           <StyledConfirmedRecipientDisplayRow gap="md" onClick={editValidatedRecipient}>
-            {recipientData.ensName ? (
+            {unitagMetadata?.avatar ? (
+              <UniTagProfilePicture account={recipientData.address} size={36} />
+            ) : recipientData.ensName ? (
               <Identicon account={recipientData.address} size={36} />
             ) : (
               <Unicon address={recipientData.address} size={36} />
             )}
             <Column>
-              <ThemedText.BodyPrimary lineHeight="24px">
-                {recipientData.ensName ?? shortenAddress(recipientData.address)}
-              </ThemedText.BodyPrimary>
+              <Row gap="xs">
+                <ThemedText.BodyPrimary lineHeight="24px">
+                  {recipientData.unitag ?? recipientData.ensName ?? shortenAddress(recipientData.address)}
+                </ThemedText.BodyPrimary>
+                {recipientData.unitag && <Icons.Unitag size={24} />}
+              </Row>
               {Boolean(recipientData.ensName) && (
                 <ThemedText.LabelMicro lineHeight="16px">{shortenAddress(recipientData.address)}</ThemedText.LabelMicro>
               )}

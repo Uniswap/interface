@@ -26,22 +26,20 @@ import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { setRecentConnectionDisconnected } from 'state/user/reducer'
 import styled from 'styled-components'
-import { CopyHelper, ThemedText } from 'theme/components'
-import { Icons } from 'ui/src'
-import { shortenAddress } from 'utilities/src/addresses'
+import { ThemedText } from 'theme/components'
 import { isPathBlocked } from 'utils/blockedPaths'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
 import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
-import StatusIcon from '../Identicon/StatusIcon'
 import { useCachedPortfolioBalancesQuery } from '../PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { ActionTile } from './ActionTile'
 import IconButton, { IconHoverText, IconWithConfirmTextButton } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
 import { useToggleAccountDrawer } from './MiniPortfolio/hooks'
 import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
+import { Status } from './Status'
 
 const AuthenticatedHeaderWrapper = styled.div`
   padding: 20px 16px;
@@ -85,35 +83,12 @@ const IconContainer = styled.div`
   }
 `
 
-const StatusWrapper = styled.div`
-  display: inline-block;
-  width: 70%;
-  max-width: 70%;
-  padding-right: 8px;
-  display: inline-flex;
-`
-
-const AccountNamesWrapper = styled.div`
-  overflow: hidden;
-  white-space: nowrap;
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  justify-content: center;
-  margin-left: 8px;
-`
-
 const HeaderWrapper = styled.div`
   margin-bottom: 20px;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 `
-
-const CopyText = styled(CopyHelper).attrs({
-  iconSize: 14,
-  iconPosition: 'right',
-})``
 
 const FadeInColumn = styled(Column)`
   ${portfolioFadeInAnimation}
@@ -207,26 +182,7 @@ export default function AuthenticatedHeader({
   return (
     <AuthenticatedHeaderWrapper>
       <HeaderWrapper>
-        <StatusWrapper>
-          <StatusIcon account={account} connection={connection} size={40} />
-          {account && (
-            <AccountNamesWrapper>
-              <ThemedText.SubHeader>
-                <CopyText toCopy={unitag?.username ?? ENSName ?? account}>
-                  <Row gap="xs">
-                    {unitag?.username ?? ENSName ?? shortenAddress(account)}
-                    {unitag?.username && <Icons.Unitag size={24} />}
-                  </Row>
-                </CopyText>
-              </ThemedText.SubHeader>
-              {(unitag || ENSName) && (
-                <ThemedText.BodySmall color="neutral2">
-                  <CopyText toCopy={account}>{shortenAddress(account)}</CopyText>
-                </ThemedText.BodySmall>
-              )}
-            </AccountNamesWrapper>
-          )}
-        </StatusWrapper>
+        <Status account={account} ensUsername={ENSName} uniswapUsername={unitag?.username} connection={connection} />
         <IconContainer>
           <IconButton
             hideHorizontal={showDisconnectConfirm}
