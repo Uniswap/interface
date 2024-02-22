@@ -40,6 +40,13 @@ export const USDC_ARBITRUM_GOERLI = new Token(
   'USDC',
   'USD//C'
 )
+export const USDC_ARBITRUM_SEPOLIA= new Token(
+  ChainId.ARBITRUM_SEPOLIA,
+  '0x75faf114eafb1BDbe2F0316DF893fd58CE46AA4d',
+  6,
+  'USDC',
+  'USD//C'
+)
 export const USDC_POLYGON = new Token(
   ChainId.POLYGON,
   '0x3c499c542cef5e3811e1192ce70d8cc03d5c3359',
@@ -297,6 +304,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WETH',
     'Wrapped Ether'
   ),
+  [ChainId.ARBITRUM_SEPOLIA]: new Token(
+    ChainId.ARBITRUM_SEPOLIA,
+    '0x980B62Da83eFf3D4576C647993b0c1D7faf17c73',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
   [ChainId.SEPOLIA]: new Token(
     ChainId.SEPOLIA,
     '0xfFf9976782d46CC05630D1f6eBAb18b2324d6B14',
@@ -460,6 +474,7 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in ChainId]?: s
     [ChainId.MAINNET]: USDC_MAINNET.address,
     [ChainId.ARBITRUM_ONE]: USDC_ARBITRUM.address,
     [ChainId.ARBITRUM_GOERLI]: USDC_ARBITRUM_GOERLI.address,
+    [ChainId.ARBITRUM_SEPOLIA]: USDC_ARBITRUM_SEPOLIA.address,
     [ChainId.OPTIMISM]: USDC_OPTIMISM.address,
     [ChainId.OPTIMISM_GOERLI]: USDC_OPTIMISM_GOERLI.address,
     [ChainId.POLYGON]: USDC_POLYGON.address,

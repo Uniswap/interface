@@ -10,6 +10,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.CELO_ALFAJORES]: 'celo_alfajores',
   [ChainId.ARBITRUM_ONE]: 'arbitrum',
   [ChainId.ARBITRUM_GOERLI]: 'arbitrum_goerli',
+  [ChainId.ARBITRUM_SEPOLIA]: 'arbitrum_sepolia',
   [ChainId.OPTIMISM]: 'optimism',
   [ChainId.OPTIMISM_GOERLI]: 'optimism_goerli',
   [ChainId.BNB]: 'bnb',
@@ -27,7 +28,7 @@ const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = [
 // TODO: include BASE_GOERLI, OPTIMISM_SEPOLIA, or ARBITRUM_SEPOLIA when routing is implemented
 export type SupportedInterfaceChain = Exclude<
   SupportedChainsType,
-  ChainId.BASE_GOERLI | ChainId.ARBITRUM_SEPOLIA | ChainId.OPTIMISM_SEPOLIA
+  ChainId.BASE_GOERLI | ChainId.OPTIMISM_SEPOLIA
 >
 
 export function isSupportedChain(
@@ -73,6 +74,7 @@ export const TESTNET_CHAIN_IDS = [
   ChainId.SEPOLIA,
   ChainId.POLYGON_MUMBAI,
   ChainId.ARBITRUM_GOERLI,
+  ChainId.ARBITRUM_SEPOLIA,
   ChainId.OPTIMISM_GOERLI,
   ChainId.CELO_ALFAJORES,
 ] as const
@@ -101,6 +103,7 @@ export type SupportedL1ChainId = (typeof L1_CHAIN_IDS)[number]
 export const L2_CHAIN_IDS = [
   ChainId.ARBITRUM_ONE,
   ChainId.ARBITRUM_GOERLI,
+  ChainId.ARBITRUM_SEPOLIA,
   ChainId.OPTIMISM,
   ChainId.OPTIMISM_GOERLI,
   ChainId.BASE,
@@ -121,6 +124,7 @@ export function getChainPriority(chainId: ChainId): number {
       return 0
     case ChainId.ARBITRUM_ONE:
     case ChainId.ARBITRUM_GOERLI:
+    case ChainId.ARBITRUM_SEPOLIA:
       return 1
     case ChainId.OPTIMISM:
     case ChainId.OPTIMISM_GOERLI:

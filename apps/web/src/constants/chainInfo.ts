@@ -141,6 +141,19 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Goerli Arbitrum Ether', symbol: 'goerliArbETH', decimals: 18 },
     color: darkTheme.chain_421613,
   },
+  [ChainId.ARBITRUM_SEPOLIA]: {
+    networkType: NetworkType.L2,
+    blockWaitMsBeforeWarning: ms(`10m`),
+    bridge: 'https://bridge.arbitrum.io/',
+    docs: 'https://offchainlabs.com/',
+    explorer: 'https://sepolia.arbiscan.io/',
+    infoLink: 'https://info.uniswap.org/#/arbitrum/',
+    label: 'Arbitrum Sepolia',
+    defaultListUrl: ARBITRUM_LIST, // TODO: use arbitrum sepolia token list
+    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
+    nativeCurrency: { name: 'Sepolia Arbitrum Ether', symbol: 'sepoliaArbETH', decimals: 18 },
+    color: darkTheme.chain_421614,
+  },
   [ChainId.POLYGON]: {
     networkType: NetworkType.L1,
     blockWaitMsBeforeWarning: ms(`10m`),
