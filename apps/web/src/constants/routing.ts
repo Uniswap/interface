@@ -26,7 +26,8 @@ import {
   USDC_AVALANCHE,
   USDC_BASE,
   USDC_BSC,
-  USDC_CELO,
+  USDC_CELO_ALFAJ0RES_NATIVE,
+  USDC_CELO_NATIVE,
   USDC_MAINNET,
   USDC_OPTIMISM,
   USDC_OPTIMISM_GOERLI,
@@ -142,13 +143,16 @@ export const COMMON_BASES: ChainCurrencyList = {
     WETH_POLYGON_MUMBAI,
   ].map(buildCurrencyInfo),
 
-  [ChainId.CELO]: [nativeOnChain(ChainId.CELO), CEUR_CELO, CUSD_CELO, PORTAL_ETH_CELO, USDC_CELO, WBTC_CELO].map(
+  [ChainId.CELO]: [nativeOnChain(ChainId.CELO), CEUR_CELO, CUSD_CELO, PORTAL_ETH_CELO, USDC_CELO_NATIVE, WBTC_CELO].map(
     buildCurrencyInfo
   ),
 
-  [ChainId.CELO_ALFAJORES]: [nativeOnChain(ChainId.CELO_ALFAJORES), CUSD_CELO_ALFAJORES, CEUR_CELO_ALFAJORES].map(
-    buildCurrencyInfo
-  ),
+  [ChainId.CELO_ALFAJORES]: [
+    nativeOnChain(ChainId.CELO_ALFAJORES),
+    CUSD_CELO_ALFAJORES,
+    CEUR_CELO_ALFAJORES,
+    USDC_CELO_ALFAJ0RES_NATIVE,
+  ].map(buildCurrencyInfo),
 
   [ChainId.BNB]: [nativeOnChain(ChainId.BNB), DAI_BSC, USDC_BSC, USDT_BSC, ETH_BSC, BTC_BSC, BUSD_BSC].map(
     buildCurrencyInfo
