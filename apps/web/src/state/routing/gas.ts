@@ -28,7 +28,7 @@ export async function getApproveInfo(
 
   // routing-api under estimates gas for Arbitrum swaps so it inflates cost per gas by a lot
   // so disable showing approves for Arbitrum until routing-api gives more accurate gas estimates
-  if (currency.chainId === ChainId.ARBITRUM_ONE || currency.chainId === ChainId.ARBITRUM_GOERLI || currency.chainId === ChainId.ARBITRUM_SEPOLIA) {
+  if (currency.chainId === ChainId.ARBITRUM_ONE || currency.chainId === ChainId.ARBITRUM_GOERLI) {
     return { needsApprove: false }
   }
 

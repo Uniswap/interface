@@ -54,8 +54,7 @@ export default function RadialGradientByChainUpdater(): null {
 
     switch (chainId) {
       case ChainId.ARBITRUM_ONE:
-      case ChainId.ARBITRUM_GOERLI:
-      case ChainId.ARBITRUM_SEPOLIA: {
+      case ChainId.ARBITRUM_GOERLI: {
         setBackground(backgroundResetStyles)
         const arbitrumLightGradient =
           'radial-gradient(100% 100% at 50% 0%, rgba(205, 232, 251, 0) 0%, rgba(252, 243, 249, 0) 49.48%, rgba(255, 255, 255, 0) 100%), #FFFFFF'

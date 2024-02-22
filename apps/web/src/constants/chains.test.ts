@@ -9,7 +9,6 @@ const chainPriorityTestCases: [ChainId, number][] = [
   [ChainId.SEPOLIA, 0],
   [ChainId.ARBITRUM_ONE, 1],
   [ChainId.ARBITRUM_GOERLI, 1],
-  [ChainId.ARBITRUM_SEPOLIA, 1],
   [ChainId.OPTIMISM, 2],
   [ChainId.OPTIMISM_GOERLI, 2],
   [ChainId.POLYGON, 3],
