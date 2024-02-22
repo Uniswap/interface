@@ -15,7 +15,7 @@ import { Helmet } from 'react-helmet'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
-import { shortenAddress } from 'utilities/src/addresses'
+import { shortenAddress } from 'utils'
 
 import { LIST_PAGE_MARGIN, LIST_PAGE_MARGIN_MOBILE } from './shared'
 

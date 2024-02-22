@@ -35,7 +35,7 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   background-color: ${({ theme }) => theme.surface1};
   box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
-  border: 1px solid ${({ theme }) => theme.surface3};
+  border: 1px solid ${({ theme }) => theme.surface1};
   border-radius: 12px;
   padding: 0.5rem;
   display: flex;
@@ -87,7 +87,6 @@ const InternalMenuItem = styled(Link)`
 `
 
 interface MenuProps {
-  modal: ApplicationModal
   flyoutAlignment?: FlyoutAlignment
   ToggleUI?: FunctionComponent<PropsWithChildren<unknown>>
   menuItems: {
@@ -102,18 +101,17 @@ const ExternalMenuItem = styled(MenuItem)`
   text-decoration: none;
 `
 
-export const Menu = ({ modal, flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, menuItems, ...rest }: MenuProps) => {
+export const Menu = ({ flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, menuItems, ...rest }: MenuProps) => {
   const node = useRef<HTMLDivElement>()
-  const open = useModalIsOpen(modal)
-  const toggle = useToggleModal(modal)
+  const open = useModalIsOpen(ApplicationModal.POOL_OVERVIEW_OPTIONS)
+  const toggle = useToggleModal(ApplicationModal.POOL_OVERVIEW_OPTIONS)
   useOnClickOutside(node, open ? toggle : undefined)
   const ToggleElement = ToggleUI || StyledMenuIcon
-
   return (
     <StyledMenu ref={node as any} {...rest}>
       <ToggleElement onClick={toggle} />
       {open && (
-        <MenuFlyout flyoutAlignment={flyoutAlignment} onClick={toggle}>
+        <MenuFlyout flyoutAlignment={flyoutAlignment}>
           {menuItems.map(({ content, link, external }, i) =>
             external ? (
               <ExternalMenuItem href={link} key={i}>

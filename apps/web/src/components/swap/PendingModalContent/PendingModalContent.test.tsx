@@ -20,7 +20,7 @@ describe('PendingModalContent', () => {
 
   it('renders null for invalid content', () => {
     const result = render(<PendingModalContent steps={[]} currentStep={ConfirmModalState.APPROVING_TOKEN} />)
-    expect(result.container.firstChild?.firstChild?.firstChild).toBeNull()
+    expect(result.container).toBeEmptyDOMElement()
   })
 
   it('renders correctly with only one step', () => {

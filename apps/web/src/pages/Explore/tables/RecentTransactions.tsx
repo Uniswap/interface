@@ -9,7 +9,6 @@ import {
   ClickableHeaderRow,
   FilterHeaderRow,
   HeaderArrow,
-  HeaderSortText,
   StyledExternalLink,
   TimestampCell,
   TokenLinkCell,
@@ -21,7 +20,7 @@ import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useCallback, useMemo, useReducer, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
-import { shortenAddress } from 'utilities/src/addresses'
+import { shortenAddress } from 'utils/addresses'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -69,8 +68,6 @@ export default function RecentTransactions() {
     },
     [sortState.sortBy, sortState.sortDirection]
   )
-
-  const showLoadingSkeleton = loading || !!error
   // TODO(WEB-3236): once GQL BE Transaction query is supported add usd, token0 amount, and token1 amount sort support
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<Transaction>()
@@ -83,14 +80,14 @@ export default function RecentTransactions() {
               {sortState.sortBy === Transaction_OrderBy.Timestamp && (
                 <HeaderArrow direction={sortState.sortDirection} />
               )}
-              <HeaderSortText $active={sortState.sortBy === Transaction_OrderBy.Timestamp}>
+              <ThemedText.BodySecondary>
                 <Trans>Time</Trans>
-              </HeaderSortText>
+              </ThemedText.BodySecondary>
             </ClickableHeaderRow>
           </Cell>
         ),
         cell: (transaction) => (
-          <Cell loading={showLoadingSkeleton} minWidth={164} justifyContent="flex-start" grow>
+          <Cell loading={loading} minWidth={164} justifyContent="flex-start" grow>
             <TimestampCell
               timestamp={Number(transaction.getValue?.().timestamp)}
               link={getExplorerLink(chainId, transaction.getValue?.().hash, ExplorerDataType.TRANSACTION)}
@@ -118,7 +115,7 @@ export default function RecentTransactions() {
           </Cell>
         ),
         cell: (transaction) => (
-          <Cell loading={showLoadingSkeleton} minWidth={300} justifyContent="flex-start" grow>
+          <Cell loading={loading} minWidth={300} justifyContent="flex-start" grow>
             <Row gap="8px">
               <ThemedText.BodySecondary>{transaction.getValue?.().type}</ThemedText.BodySecondary>
               <TokenLinkCell chainId={chainId} tokenAddress={transaction.getValue?.().token0Address} />
@@ -138,7 +135,7 @@ export default function RecentTransactions() {
           </Cell>
         ),
         cell: (fiat) => (
-          <Cell loading={showLoadingSkeleton} minWidth={125}>
+          <Cell loading={loading} minWidth={125}>
             <ThemedText.BodyPrimary>{formatFiatPrice({ price: fiat.getValue?.() })}</ThemedText.BodyPrimary>
           </Cell>
         ),
@@ -153,7 +150,7 @@ export default function RecentTransactions() {
           </Cell>
         ),
         cell: (transaction) => (
-          <Cell loading={showLoadingSkeleton} minWidth={200}>
+          <Cell loading={loading} minWidth={200}>
             <Row gap="8px" justify="flex-end">
               <ThemedText.BodyPrimary>
                 {formatNumber({
@@ -175,7 +172,7 @@ export default function RecentTransactions() {
           </Cell>
         ),
         cell: (transaction) => (
-          <Cell loading={showLoadingSkeleton} minWidth={200}>
+          <Cell loading={loading} minWidth={200}>
             <Row gap="8px" justify="flex-end">
               <ThemedText.BodyPrimary>
                 {formatNumber({
@@ -197,7 +194,7 @@ export default function RecentTransactions() {
           </Cell>
         ),
         cell: (makerAddress) => (
-          <Cell loading={showLoadingSkeleton} minWidth={125}>
+          <Cell loading={loading} minWidth={125}>
             <StyledExternalLink href={getExplorerLink(chainId, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}>
               {shortenAddress(makerAddress.getValue?.(), 0)}
             </StyledExternalLink>
@@ -213,10 +210,18 @@ export default function RecentTransactions() {
     formatFiatPrice,
     formatNumber,
     handleHeaderClick,
-    showLoadingSkeleton,
+    loading,
     sortState.sortBy,
     sortState.sortDirection,
   ])
 
-  return <Table columns={columns} data={transactions} loading={loading} error={error} loadMore={loadMore} />
+  if (error) {
+    return (
+      <ThemedText.BodyPrimary>
+        <Trans>Error loading transactions</Trans>
+      </ThemedText.BodyPrimary>
+    )
+  }
+
+  return <Table columns={columns} data={transactions} loading={loading} loadMore={loadMore} />
 }

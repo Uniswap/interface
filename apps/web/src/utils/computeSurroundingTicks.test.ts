@@ -1,4 +1,4 @@
-import { Price, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { TickData } from 'graphql/thegraph/AllV3TicksQuery'
 import { TickProcessed } from 'hooks/usePoolTickData'
@@ -24,7 +24,6 @@ describe('#computeSurroundingTicks', () => {
       liquidityActive: JSBI.BigInt(300),
       liquidityNet: JSBI.BigInt(100),
       price0: '100',
-      sdkPrice: new Price(token0, token1, '1', '100'),
     }
     const pivot = 3
     const ascending = true

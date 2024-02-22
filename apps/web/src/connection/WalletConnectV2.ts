@@ -34,7 +34,7 @@ export class WalletConnectV2 extends WalletConnect {
           name: 'Uniswap',
           description: 'Uniswap Interface',
           url: 'https://app.uniswap.org',
-          icons: ['https://app.uniswap.org/favicon.png'],
+          icons: ['https://app.uniswap.org/favicon.ico'],
         },
         optionalChains: [...L1_CHAIN_IDS, ...L2_CHAIN_IDS],
         showQrModal: qrcode,

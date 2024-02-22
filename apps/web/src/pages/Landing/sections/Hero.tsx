@@ -12,9 +12,11 @@ import { Box, H1, Subheading } from '../components/Generics'
 import { TokenCloud } from '../components/TokenCloud/index'
 import { Hover, RiseIn, RiseInText } from '../components/animations'
 
-const Container = styled(Box)`
+const Container = styled(Box)<{ translateY: number; opacityY: number }>`
   min-width: 100%;
   padding-top: 72px;
+  transform: translate(0px, ${({ translateY }) => translateY}px);
+  opacity: ${({ opacityY }) => opacityY};
 `
 const LandingSwapContainer = styled(Box)`
   width: 480px;
@@ -54,9 +56,11 @@ const shrinkAndFade = keyframes`
     opacity: 0;
   }
 `
-const Center = styled(Box)<{ transition?: boolean }>`
+const Center = styled(Box)<{ translateY?: number; opacityY: number; transition?: boolean }>`
   width: unset;
   pointer-events: none;
+  transform: translate(0px, ${({ translateY }) => translateY}px);
+  opacity: ${({ opacityY }) => opacityY};
   padding: 48px 0px;
   @media (max-width: 464px), (max-height: 700px) {
     padding: 0px;
@@ -103,19 +107,15 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
   const opacityY = 1 - scrollPosition / 1000
 
   return (
-    <Container
-      position="relative"
-      height="100vh"
-      justify="center"
-      style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
-    >
+    <Container position="relative" height="100vh" justify="center" translateY={translateY} opacityY={opacityY}>
       <TokenCloud transition={transition} />
       <Center
         direction="column"
         align="center"
         maxWidth="75vw"
+        translateY={translateY}
+        opacityY={opacityY}
         transition={transition}
-        style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
       >
         <Box direction="column" align="center">
           <StyledH1>

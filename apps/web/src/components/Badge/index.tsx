@@ -66,7 +66,7 @@ function pickFontColor(variant: BadgeVariant | undefined, theme: DefaultTheme): 
     case BadgeVariant.WARNING_OUTLINE:
       return theme.deprecated_accentWarning
     default:
-      return theme.neutral2
+      return readableColor(theme.neutral2)
   }
 }
 

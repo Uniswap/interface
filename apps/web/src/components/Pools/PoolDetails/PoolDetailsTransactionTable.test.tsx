@@ -42,7 +42,7 @@ describe('PoolDetailsTransactionsTable', () => {
     })
 
     const { asFragment } = render(<PoolDetailsTransactionsTable poolAddress={usdcWethPoolAddress} />)
-    expect(screen.getByTestId('table-error-modal')).not.toBeNull()
+    expect(screen.getByText('Error fetching Pool Transactions')).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
   })
 

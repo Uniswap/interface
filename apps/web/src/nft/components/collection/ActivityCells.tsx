@@ -30,7 +30,7 @@ import { getTimeDifference } from 'nft/utils/date'
 import { MouseEvent, ReactNode, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
-import { shortenAddress } from 'utilities/src/addresses'
+import { shortenAddress } from 'utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 

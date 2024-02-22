@@ -24,13 +24,11 @@ export default function computeSurroundingTicks(
   let processedTicks: TickProcessed[] = []
   for (let i = pivot + (ascending ? 1 : -1); ascending ? i < sortedTickData.length : i >= 0; ascending ? i++ : i--) {
     const tick = Number(sortedTickData[i].tick)
-    const sdkPrice = tickToPrice(token0, token1, tick)
     const currentTickProcessed: TickProcessed = {
       liquidityActive: previousTickProcessed.liquidityActive,
       tick,
       liquidityNet: JSBI.BigInt(sortedTickData[i].liquidityNet),
-      price0: sdkPrice.toFixed(PRICE_FIXED_DIGITS),
-      sdkPrice,
+      price0: tickToPrice(token0, token1, tick).toFixed(PRICE_FIXED_DIGITS),
     }
 
     // Update the active liquidity.

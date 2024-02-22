@@ -179,7 +179,6 @@ export type FORQuoteRequest = {
   destinationCurrencyCode: string
   sourceAmount: number
   sourceCurrencyCode: string
-  walletAddress: string
 }
 
 export type FORQuote = {
@@ -271,17 +270,6 @@ export type FORWidgetUrlResponse = {
   id: string
   widgetUrl: string
   token: string
-}
-
-// /transfer-widget-url
-
-export type FORTransferWidgetUrlRequest = {
-  sourceAmount: number
-  sourceCurrencyCode: string
-  countryCode: string
-  institutionId: string
-  walletAddress: string
-  externalSessionId: string
 }
 
 // /transactions

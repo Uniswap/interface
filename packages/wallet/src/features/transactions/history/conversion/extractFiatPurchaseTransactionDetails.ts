@@ -133,6 +133,5 @@ export function extractFiatOnRampTransactionDetails(
         function: 'extractFiatOnRampTransactionDetails',
       },
     })
-    return
   }
 }

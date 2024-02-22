@@ -286,7 +286,9 @@ function L2Content({
             )}
           </ThemedText.SubHeaderSmall>
           <ButtonPrimary onClick={onDismiss} style={{ margin: '4px 0 0 0' }}>
-            {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
+            <ThemedText.SubHeaderLarge>
+              {inline ? <Trans>Return</Trans> : <Trans>Close</Trans>}
+            </ThemedText.SubHeaderLarge>
           </ButtonPrimary>
         </AutoColumn>
       </AutoColumn>

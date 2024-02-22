@@ -165,15 +165,15 @@ export default function FeeSelector({
                   <ThemedText.DeprecatedLabel className="selected-fee-label">
                     <Trans>{formatDelta(parseFloat(FEE_AMOUNT_DETAIL[feeAmount].label))} fee tier</Trans>
                   </ThemedText.DeprecatedLabel>
-                  {distributions && (
-                    <Box style={{ width: 'fit-content', marginTop: '8px' }} className="selected-fee-percentage">
+                  <Box style={{ width: 'fit-content', marginTop: '8px' }} className="selected-fee-percentage">
+                    {distributions && (
                       <FeeTierPercentageBadge
                         distributions={distributions}
                         feeAmount={feeAmount}
                         poolState={poolsByFeeTier[feeAmount]}
                       />
-                    </Box>
-                  )}
+                    )}
+                  </Box>
                 </>
               )}
             </AutoColumn>

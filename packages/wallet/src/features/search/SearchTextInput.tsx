@@ -5,7 +5,6 @@ import {
   LayoutChangeEvent,
   NativeSyntheticEvent,
   TextInput as NativeTextInput,
-  Platform,
   TextInputFocusEventData,
 } from 'react-native'
 import { isWeb } from 'tamagui'
@@ -47,7 +46,6 @@ export type SearchTextInputProps = InputProps & {
 }
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>(
-  // eslint-disable-next-line complexity
   function _SearchTextInput(props, ref) {
     const dimensions = useDeviceDimensions()
     const { t } = useTranslation()
@@ -65,22 +63,20 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       py = '$spacing12',
       px = '$spacing16',
       showShadow,
-      value,
+      value = '',
     } = props
 
     const showCancelButton = !!onCancel
     const showCloseButton = !!onClose
     const [isFocus, setIsFocus] = useState(false)
     const [cancelButtonWidth, setCancelButtonWidth] = useState(showCancelButton ? 40 : 0)
-    const [showClearButton, setShowClearButton] = useState(
-      value && value.length > 0 && !disableClearable
-    )
+    const [showClearButton, setShowClearButton] = useState(value.length > 0 && !disableClearable)
 
     const onPressCancel = (): void => {
       setIsFocus(false)
       setShowClearButton(false)
       Keyboard.dismiss()
-      sendWalletAnalyticsEvent(WalletEventName.ExploreSearchCancel, { query: value || '' })
+      sendWalletAnalyticsEvent(WalletEventName.ExploreSearchCancel, { query: value })
       onChangeText?.('')
       onCancel?.()
     }
@@ -144,6 +140,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           <Flex grow alignSelf="stretch" mr="$spacing8" overflow="hidden">
             <Input
               ref={ref}
+              ellipse
               autoCapitalize="none"
               autoCorrect={false}
               autoFocus={autoFocus}
@@ -154,24 +151,15 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
               maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
               p="$none"
               placeholder={placeholder}
-              placeholderTextColor="$neutral3"
+              placeholderTextColor="$neutral2"
               position="absolute"
               returnKeyType="done"
               textContentType="none"
               top={0}
-              // fix horizontal text wobble on iOS
-              {...(Platform.OS === 'ios' && {
-                width: '100%',
-              })}
-              // avoid turning into a controlled input if not wanting to
-              {...(typeof value !== 'undefined' && {
-                value,
-              })}
-              // fix Android TextInput issue when the width is changed
+              value={value}
+              // This fixes Android TextInput issue when the width is changed
               // (the placeholder text was wrapping in 2 lines when the width was changed)
-              {...(Platform.OS === 'android' && {
-                width: value ? undefined : 9999,
-              })}
+              width={value ? undefined : 9999}
               onChangeText={onChangeTextInput}
               onFocus={onTextInputFocus}
               onSubmitEditing={onTextInputSubmitEditing}

@@ -1,12 +1,12 @@
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { Select, Trans } from '@lingui/macro'
+import { Trans } from '@lingui/macro'
 import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
-import Badge from 'components/Badge'
+import Badge, { BadgeVariant } from 'components/Badge'
 import { ButtonConfirmed } from 'components/Button'
 import { BlueCard, DarkGrayCard, LightCard, YellowCard } from 'components/Card'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
@@ -37,7 +37,6 @@ import { useTheme } from 'styled-components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
-import { isAddress } from 'utilities/src/addresses'
 import { MigrateHeader } from '.'
 import { AutoColumn } from '../../components/Column'
 import FormattedCurrencyAmount from '../../components/FormattedCurrencyAmount'
@@ -51,6 +50,7 @@ import { useTotalSupply } from '../../hooks/useTotalSupply'
 import { useTokenBalance } from '../../state/connection/hooks'
 import { TransactionType } from '../../state/transactions/types'
 import { BackArrowLink, ExternalLink, ThemedText } from '../../theme/components'
+import { isAddress } from '../../utils'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { currencyId } from '../../utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
@@ -393,11 +393,11 @@ function V2PairMigration({
 
   return (
     <AutoColumn gap="20px">
-      <ThemedText.DeprecatedBody my={9} style={{ fontWeight: 485, textAlign: 'center' }}>
+      <ThemedText.DeprecatedBody my={9} style={{ fontWeight: 485 }}>
         <Trans>
-          This tool will safely migrate your <Select value={isNotUniswap} _true="SushiSwap" _false="V2" other="V2" />{' '}
-          liquidity to V3. The process is completely trustless thanks to the
-        </Trans>{' '}
+          This tool will safely migrate your {isNotUniswap ? 'SushiSwap' : 'V2'} liquidity to V3. The process is
+          completely trustless thanks to the{' '}
+        </Trans>
         {chainId && migrator && (
           <ExternalLink href={getExplorerLink(chainId, migrator.address, ExplorerDataType.ADDRESS)}>
             <ThemedText.DeprecatedBlue display="inline">
@@ -419,7 +419,7 @@ function V2PairMigration({
                 </Trans>
               </ThemedText.DeprecatedMediumHeader>
             </RowFixed>
-            <Badge>{isNotUniswap ? 'Sushi' : 'V2'}</Badge>
+            <Badge variant={BadgeVariant.WARNING}>{isNotUniswap ? 'Sushi' : 'V2'}</Badge>
           </RowBetween>
           <LiquidityInfo token0Amount={token0Value} token1Amount={token1Value} />
         </AutoColumn>
@@ -440,7 +440,7 @@ function V2PairMigration({
                 </Trans>
               </ThemedText.DeprecatedMediumHeader>
             </RowFixed>
-            <Badge>V3</Badge>
+            <Badge variant={BadgeVariant.PRIMARY}>V3</Badge>
           </RowBetween>
 
           <FeeSelector feeAmount={feeAmount} handleFeePoolSelect={setFeeAmount} />
@@ -618,6 +618,7 @@ function V2PairMigration({
             {!isSuccessfullyMigrated && !isMigrationPending ? (
               <AutoColumn gap="md" style={{ flex: '1' }}>
                 <ButtonConfirmed
+                  confirmed={approval === ApprovalState.APPROVED || signatureData !== null}
                   disabled={
                     approval !== ApprovalState.NOT_APPROVED ||
                     signatureData !== null ||

@@ -29,7 +29,7 @@ export default function TokenDetailsPage() {
   const chain = validateUrlChainParam(chainName)
   const isNative = tokenAddress === NATIVE_CHAIN_ID
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
-  const [tokenDBAddress, duration] = useMemo(
+  const [detailedTokenAddress, duration] = useMemo(
     // tokenAddress will always be defined in the path for for this page to render, but useParams will always
     // return optional arguments; nullish coalescing operator is present here to appease typechecker
     () => [isNative ? getNativeTokenDBAddress(chain) : tokenAddress ?? '', toHistoryDuration(timePeriod)],
@@ -46,7 +46,7 @@ export default function TokenDetailsPage() {
 
   const { data: tokenQuery } = useTokenQuery({
     variables: {
-      address: tokenDBAddress,
+      address: detailedTokenAddress,
       chain,
     },
     errorPolicy: 'all',
@@ -54,7 +54,7 @@ export default function TokenDetailsPage() {
 
   const { data: tokenPriceQuery } = useTokenPriceQuery({
     variables: {
-      address: tokenDBAddress,
+      address: detailedTokenAddress,
       chain,
       duration,
     },

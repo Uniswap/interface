@@ -6,7 +6,7 @@ import {
   ENS_REGISTRAR_ADDRESSES,
   MULTICALL_ADDRESSES,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
-  V2_ROUTER_ADDRESSES,
+  V2_ROUTER_ADDRESS,
   V3_MIGRATOR_ADDRESSES,
 } from '@uniswap/sdk-core'
 import IUniswapV2PairJson from '@uniswap/v2-core/build/IUniswapV2Pair.json'
@@ -20,7 +20,7 @@ import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
 import { useEffect, useMemo } from 'react'
-import { getContract } from 'utilities/src/contracts/getContract'
+import { getContract } from 'utils'
 import ARGENT_WALLET_DETECTOR_ABI from 'wallet/src/abis/argent-wallet-detector.json'
 import EIP_2612 from 'wallet/src/abis/eip_2612.json'
 import ENS_PUBLIC_RESOLVER_ABI from 'wallet/src/abis/ens-public-resolver.json'
@@ -140,8 +140,7 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 }
 
 export function useV2RouterContract(): Contract | null {
-  const { chainId } = useWeb3React()
-  return useContract(chainId ? V2_ROUTER_ADDRESSES[chainId] : undefined, IUniswapV2Router02ABI, true)
+  return useContract(V2_ROUTER_ADDRESS, IUniswapV2Router02ABI, true)
 }
 
 export function useInterfaceMulticall() {

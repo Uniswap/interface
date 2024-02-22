@@ -2,16 +2,13 @@ import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
 
-import { useNewLandingPage } from 'featureFlags/flags/landingPageV2'
 import Landing from '.'
 
 jest.mock('hooks/useDisableNFTRoutes')
-jest.mock('featureFlags/flags/landingPageV2')
 
 describe('disable nft on landing page', () => {
   it('renders nft information and card', () => {
     mocked(useDisableNFTRoutes).mockReturnValue(false)
-    mocked(useNewLandingPage).mockReturnValue(false)
     const { container } = render(<Landing />)
     expect(container).toMatchSnapshot()
     expect(container).toHaveTextContent('NFTs')
@@ -24,7 +21,6 @@ describe('disable nft on landing page', () => {
 
   it('does not render nft information and card', () => {
     mocked(useDisableNFTRoutes).mockReturnValue(true)
-    mocked(useNewLandingPage).mockReturnValue(false)
     const { container } = render(<Landing />)
     expect(container).toMatchSnapshot()
     expect(container).not.toHaveTextContent('NFTs')
@@ -41,7 +37,6 @@ describe('disable nft on landing page', () => {
 
 describe('Uniswap wallet app download link', () => {
   it('renders onelink app download', () => {
-    mocked(useNewLandingPage).mockReturnValue(false)
     const { container } = render(<Landing />)
     expect(container.innerHTML.includes('https://uniswapwallet.onelink.me/8q3y/79gveilz')).toBeTruthy()
   })

@@ -5,14 +5,11 @@ import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
 import { getCountry } from 'react-native-localize'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppDispatch } from 'src/app/hooks'
-import { openModal } from 'src/features/modals/modalSlice'
 import { AnimatedFlex, Flex, Loader, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useFiatOnRampAggregatorTransferInstitutionsQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { FORTransferInstitution } from 'wallet/src/features/fiatOnRamp/types'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
-import { ModalName } from 'wallet/src/telemetry/constants'
 
 function key(item: FORTransferInstitution): string {
   return item.id as string
@@ -64,24 +61,15 @@ function CEXItemWrapper({
   )
 }
 
-export function TransferInstitutionSelector({ onClose }: { onClose: () => void }): JSX.Element {
-  const dispatch = useAppDispatch()
+export function TransferInstitutionSelector(): JSX.Element {
   const { data, isLoading } = useFiatOnRampAggregatorTransferInstitutionsQuery({
     countryCode: getCountry(),
   })
 
-  const onSelectTransferInstitution = useCallback(
-    (transferInstitution: FORTransferInstitution) => {
-      dispatch(
-        openModal({
-          name: ModalName.ExchangeTransferModal,
-          initialState: { serviceProvider: transferInstitution },
-        })
-      )
-      onClose()
-    },
-    [dispatch, onClose]
-  )
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const onSelectTransferInstitution = useCallback((transferInstitution: FORTransferInstitution) => {
+    //TODO(MOB-2603): fetch widget and launch transfer flow
+  }, [])
 
   const renderItem = useCallback(
     ({ item: institution }: ListRenderItemInfo<FORTransferInstitution>) => (

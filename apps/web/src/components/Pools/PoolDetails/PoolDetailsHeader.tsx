@@ -26,7 +26,7 @@ import { ClickableStyle, EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
-import { shortenAddress } from 'utilities/src/addresses'
+import { shortenAddress } from 'utils'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { ReverseArrow } from 'components/Icons/ReverseArrow'
@@ -98,15 +98,6 @@ const StyledPoolDetailsTitle = styled.div`
   align-items: center;
 `
 
-const PoolName = styled(ThemedText.HeadlineMedium)`
-  font-size: 24px !important;
-
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
-    font-size: 18px !important;
-    line-height: 24px !important;
-  }
-`
-
 const PoolDetailsTitle = ({
   token0,
   token1,
@@ -125,7 +116,7 @@ const PoolDetailsTitle = ({
   return (
     <StyledPoolDetailsTitle>
       <div>
-        <PoolName>
+        <ThemedText.HeadlineMedium>
           <StyledLink
             to={getTokenDetailsURL({
               address: token0?.id,
@@ -145,7 +136,7 @@ const PoolDetailsTitle = ({
           >
             {token1?.symbol}
           </StyledLink>
-        </PoolName>
+        </ThemedText.HeadlineMedium>
       </div>
       {!!feePercent && <FeeTier>{feePercent}</FeeTier>}
       <ToggleReverseArrows data-testid="toggle-tokens-reverse-arrows" onClick={toggleReversed} />
@@ -268,7 +259,7 @@ const PoolDetailsHeaderActions = ({
   useOnClickOutside(contractsRef, contractsModalIsOpen ? toggleContractsModal : undefined)
 
   return (
-    <Row width="max-content" justify="flex-end" gap="sm">
+    <Row justify="flex-end" gap="sm">
       <div style={{ position: 'relative' }} ref={contractsRef}>
         <MouseoverTooltip text={t`Explorers`} placement="bottom" size={TooltipSize.Max}>
           <ActionButton onClick={toggleContractsModal}>

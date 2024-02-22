@@ -59,7 +59,10 @@ export const Scrim = (props: ScrimBackgroundProps) => {
 }
 
 const AccountDrawerScrollWrapper = styled.div`
-  overflow-y: auto;
+  overflow: hidden;
+  &:hover {
+    overflow-y: auto;
+  }
 
   ${ScrollBarStyles}
 

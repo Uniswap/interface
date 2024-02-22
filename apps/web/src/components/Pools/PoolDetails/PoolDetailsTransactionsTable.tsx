@@ -3,13 +3,7 @@ import { createColumnHelper } from '@tanstack/react-table'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
-import {
-  ClickableHeaderRow,
-  FilterHeaderRow,
-  HeaderArrow,
-  HeaderSortText,
-  TimestampCell,
-} from 'components/Table/styled'
+import { ClickableHeaderRow, FilterHeaderRow, HeaderArrow, TimestampCell } from 'components/Table/styled'
 import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { PoolTransaction, PoolTransactionType, usePoolTransactions } from 'graphql/thegraph/PoolTransactions'
 import { OrderDirection, Token, Transaction_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
@@ -18,7 +12,7 @@ import { useCallback, useMemo, useReducer, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
-import { shortenAddress } from 'utilities/src/addresses'
+import { shortenAddress } from 'utils/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -101,7 +95,6 @@ export function PoolDetailsTransactionsTable({
     [sortState.sortBy, sortState.sortDirection]
   )
 
-  const showLoadingSkeleton = loading || !!error
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolTransaction>()
     return [
@@ -113,15 +106,15 @@ export function PoolDetailsTransactionsTable({
               {sortState.sortBy === Transaction_OrderBy.Timestamp && (
                 <HeaderArrow direction={sortState.sortDirection} />
               )}
-              <HeaderSortText $active={sortState.sortBy === Transaction_OrderBy.Timestamp}>
+              <ThemedText.BodySecondary>
                 <Trans>Time</Trans>
-              </HeaderSortText>
+              </ThemedText.BodySecondary>
             </ClickableHeaderRow>
           </Cell>
         ),
         cell: (row) => (
           <Cell
-            loading={showLoadingSkeleton}
+            loading={loading}
             minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.Timestamp]}
             justifyContent="flex-start"
           >
@@ -175,7 +168,7 @@ export function PoolDetailsTransactionsTable({
           ),
           cell: (poolTransactionType) => (
             <Cell
-              loading={showLoadingSkeleton}
+              loading={loading}
               minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.Type]}
               justifyContent="flex-start"
             >
@@ -195,7 +188,7 @@ export function PoolDetailsTransactionsTable({
         ),
         cell: (fiat) => (
           <Cell
-            loading={showLoadingSkeleton}
+            loading={loading}
             minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.FiatValue]}
             justifyContent="flex-end"
             grow
@@ -210,7 +203,7 @@ export function PoolDetailsTransactionsTable({
           id: 'input-amount',
           header: () => (
             <Cell
-              loading={showLoadingSkeleton}
+              loading={loading}
               minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount]}
               justifyContent="flex-end"
               grow
@@ -222,7 +215,7 @@ export function PoolDetailsTransactionsTable({
           ),
           cell: (inputTokenAmount) => (
             <Cell
-              loading={showLoadingSkeleton}
+              loading={loading}
               minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount]}
               justifyContent="flex-end"
               grow
@@ -240,7 +233,7 @@ export function PoolDetailsTransactionsTable({
           id: 'output-amount',
           header: () => (
             <Cell
-              loading={showLoadingSkeleton}
+              loading={loading}
               minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount]}
               justifyContent="flex-end"
               grow
@@ -252,7 +245,7 @@ export function PoolDetailsTransactionsTable({
           ),
           cell: (outputTokenAmount) => (
             <Cell
-              loading={showLoadingSkeleton}
+              loading={loading}
               minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount]}
               justifyContent="flex-end"
               grow
@@ -279,7 +272,7 @@ export function PoolDetailsTransactionsTable({
         ),
         cell: (makerAddress) => (
           <Cell
-            loading={showLoadingSkeleton}
+            loading={loading}
             minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.MakerAddress]}
             justifyContent="flex-end"
             grow
@@ -300,7 +293,7 @@ export function PoolDetailsTransactionsTable({
     formatFiatPrice,
     formatNumber,
     handleHeaderClick,
-    showLoadingSkeleton,
+    loading,
     sortState.sortBy,
     sortState.sortDirection,
     token0?.id,
@@ -309,16 +302,13 @@ export function PoolDetailsTransactionsTable({
     token1?.symbol,
   ])
 
+  if (error) {
+    return <Trans>Error fetching Pool Transactions</Trans>
+  }
+
   return (
     <div data-testid="pool-details-transactions-table">
-      <Table
-        columns={columns}
-        data={transactions}
-        loading={loading}
-        error={error}
-        loadMore={loadMore}
-        maxHeight={600}
-      />
+      <Table columns={columns} data={transactions} loading={loading} loadMore={loadMore} maxHeight={600} />
     </div>
   )
 }

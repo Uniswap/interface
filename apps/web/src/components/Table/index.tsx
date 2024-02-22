@@ -1,21 +1,11 @@
-import { ApolloError } from '@apollo/client'
 import { Trans } from '@lingui/macro'
-import {
-  CellContext,
-  ColumnDef,
-  RowData,
-  Table as TanstackTable,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
+import { CellContext, ColumnDef, flexRender, getCoreRowModel, RowData, useReactTable } from '@tanstack/react-table'
 import Loader from 'components/Icons/LoadingSpinner'
-import { ErrorModal } from 'components/Table/ErrorBox'
 import useDebounce from 'hooks/useDebounce'
 import { useEffect, useRef, useState } from 'react'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
-import { ThemedText } from 'theme/components'
 import { FadePresence } from 'theme/components/FadePresence'
+
 import {
   CellContainer,
   DataRow,
@@ -23,95 +13,26 @@ import {
   LOAD_MORE_BOTTOM_OFFSET,
   LoadingIndicator,
   LoadingIndicatorContainer,
-  NoDataFoundTableRow,
   ReturnButton,
   ReturnButtonContainer,
   ReturnIcon,
   SHOW_RETURN_TO_TOP_OFFSET,
-  TableBodyContainer,
+  TableBody,
   TableContainer,
   TableHead,
   TableRowLink,
 } from './styled'
 
-function TableBody<Data extends RowData>({
-  table,
-  loading,
-  error,
-}: {
-  table: TanstackTable<Data>
-  loading?: boolean
-  error?: ApolloError
-}) {
-  if (loading || error) {
-    // loading and error states
-    return (
-      <>
-        {Array.from({ length: 7 }, (_, rowIndex) => (
-          <DataRow key={`skeleton-row-${rowIndex}`}>
-            {table.getAllColumns().map((column, columnIndex) => (
-              <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>
-                {flexRender(column.columnDef.cell, {} as CellContext<Data, any>)}
-              </CellContainer>
-            ))}
-          </DataRow>
-        ))}
-        {error && (
-          <ErrorModal
-            header={<Trans>Error loading data</Trans>}
-            subtitle={<Trans>Data is unavailable at the moment; we&apos;re working on a fix</Trans>}
-          />
-        )}
-      </>
-    )
-  }
-
-  if (!table.getRowModel()?.rows.length) {
-    // no errors, but no data round
-    return (
-      <NoDataFoundTableRow>
-        <ThemedText.BodySecondary>
-          <Trans>No data found</Trans>
-        </ThemedText.BodySecondary>
-      </NoDataFoundTableRow>
-    )
-  }
-
-  return (
-    // data found
-    <>
-      {table.getRowModel().rows.map((row) => {
-        const cells = row
-          .getVisibleCells()
-          .map((cell) => (
-            <CellContainer key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</CellContainer>
-          ))
-        const rowOriginal = row.original as any
-        const linkState = rowOriginal.linkState // optional data passed to linked page, accessible via useLocation().state
-        return 'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
-          <TableRowLink to={rowOriginal.link} key={row.id} state={linkState}>
-            <DataRow>{cells}</DataRow>
-          </TableRowLink>
-        ) : (
-          <DataRow key={row.id}>{cells}</DataRow>
-        )
-      })}
-    </>
-  )
-}
-
 export function Table<Data extends RowData>({
   columns,
   data,
   loading,
-  error,
   loadMore,
   maxHeight,
 }: {
   columns: ColumnDef<Data, any>[]
   data: Data[]
   loading?: boolean
-  error?: ApolloError
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
   maxHeight?: number
 }) {
@@ -152,8 +73,8 @@ export function Table<Data extends RowData>({
   }, [loadMore, maxHeight, loadingMore])
 
   useEffect(() => {
-    setShowReturn(!loading && !error && distanceFromTop >= SHOW_RETURN_TO_TOP_OFFSET)
-    if (distanceToBottom < LOAD_MORE_BOTTOM_OFFSET && !loadingMore && loadMore && !error) {
+    setShowReturn(distanceFromTop >= SHOW_RETURN_TO_TOP_OFFSET)
+    if (distanceToBottom < LOAD_MORE_BOTTOM_OFFSET && !loadingMore && loadMore) {
       setLoadingMore(true)
       // Manually update scroll position to prevent re-triggering
       setScrollPosition({
@@ -166,7 +87,7 @@ export function Table<Data extends RowData>({
         },
       })
     }
-  }, [distanceFromTop, distanceToBottom, error, loadMore, loading, loadingMore])
+  }, [distanceFromTop, distanceToBottom, loadMore, loadingMore])
 
   const table = useReactTable({
     columns,
@@ -180,7 +101,7 @@ export function Table<Data extends RowData>({
         <TableContainer $maxHeight={maxHeight}>
           <TableHead $isSticky={!maxHeight}>
             <ScrollSyncPane>
-              <HeaderRow $dimmed={!!error}>
+              <HeaderRow>
                 {table.getFlatHeaders().map((header) => (
                   <CellContainer key={header.id}>
                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -210,9 +131,36 @@ export function Table<Data extends RowData>({
             )}
           </TableHead>
           <ScrollSyncPane innerRef={tableBodyRef}>
-            <TableBodyContainer>
-              <TableBody loading={loading} error={error} table={table} />
-            </TableBodyContainer>
+            <TableBody>
+              {loading || !table.getRowModel()?.rows
+                ? Array.from({ length: 25 }, (_, rowIndex) => (
+                    <DataRow key={`skeleton-row-${rowIndex}`}>
+                      {table.getAllColumns().map((column, columnIndex) => (
+                        <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>
+                          {flexRender(column.columnDef.cell, {} as CellContext<Data, any>)}
+                        </CellContainer>
+                      ))}
+                    </DataRow>
+                  ))
+                : table.getRowModel().rows.map((row) => {
+                    const cells = row
+                      .getVisibleCells()
+                      .map((cell) => (
+                        <CellContainer key={cell.id}>
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </CellContainer>
+                      ))
+                    const rowOriginal = row.original as any
+                    const linkState = rowOriginal.linkState // optional data passed to linked page, accessible via useLocation().state
+                    return 'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
+                      <TableRowLink to={rowOriginal.link} key={row.id} state={linkState}>
+                        <DataRow>{cells}</DataRow>
+                      </TableRowLink>
+                    ) : (
+                      <DataRow key={row.id}>{cells}</DataRow>
+                    )
+                  })}
+            </TableBody>
           </ScrollSyncPane>
           <LoadingIndicatorContainer show={loadingMore}>
             <LoadingIndicator>

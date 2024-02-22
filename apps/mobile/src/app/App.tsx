@@ -47,7 +47,7 @@ import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { config } from 'wallet/src/config'
 import { uniswapUrls } from 'wallet/src/constants/urls'
-import { initFirebaseAppCheck } from 'wallet/src/features/appCheck'
+import { initFirebaseAppCheck } from 'wallet/src/features/appCheck/utils'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { EXPERIMENT_NAMES, FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
@@ -125,8 +125,6 @@ function App(): JSX.Element | null {
         tier: getStatsigEnvironmentTier(),
       },
       api: uniswapUrls.statsigProxyUrl,
-      disableAutoMetricsLogging: true,
-      disableErrorLogging: true,
     },
     sdkKey: DUMMY_STATSIG_SDK_KEY,
     user: deviceId ? { userID: deviceId } : {},

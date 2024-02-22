@@ -48,7 +48,7 @@ function LandingV2({ transition }: { transition?: boolean }) {
   return (
     <>
       <Grain />
-      <Container data-testid="landing-page">
+      <Container>
         <Hero scrollToRef={scrollToRef} transition={transition} />
         <div ref={scrollAnchor}>
           <DirectToDefi />

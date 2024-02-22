@@ -1,13 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Bag.tsx matches base snapshot 1`] = `
-<DocumentFragment>
-  <span
-    class="t_light is_inversed _dsp_contents"
-  >
-    <span
-      class=" t_light _dsp_contents is_Theme"
-    />
-  </span>
-</DocumentFragment>
-`;
+exports[`Bag.tsx matches base snapshot 1`] = `<DocumentFragment />`;

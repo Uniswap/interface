@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
-import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
+import { InlineNetworkPill } from 'wallet/src/components/network/NetworkPill'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
@@ -36,7 +36,7 @@ export function NetworkFee({
         </Flex>
       </TouchableArea>
       <Flex row alignItems="center" gap="$spacing8">
-        <NetworkLogo chainId={chainId} shape="square" size={iconSizes.icon16} />
+        <InlineNetworkPill chainId={chainId} />
         {gasFee.loading ? (
           <SpinningLoader size={iconSizes.icon16} />
         ) : gasFee.error ? (

@@ -159,7 +159,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
                 })
               )
             }
-            setLimitState((prev) => ({ ...prev, limitPriceInverted: !prev.limitPriceInverted, limitPriceEdited: true }))
+            setLimitState((prev) => ({ ...prev, limitPriceInverted: !prev.limitPriceInverted }))
           }}
         >
           <ReversedArrowsIcon size="16px" />

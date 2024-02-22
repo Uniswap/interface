@@ -1,13 +1,13 @@
 import { ParentSize } from '@visx/responsive'
 import { PriceChart } from 'components/Charts/PriceChart'
-import { LineChart } from 'components/Charts/StackedLineChart'
+import { StackedLineChart } from 'components/Charts/StackedLineChart'
 import TimePeriodSelector, { refitChartContentAtom } from 'components/Charts/TimeSelector'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
 import { VolumeChart } from 'components/Charts/VolumeChart'
 import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenPriceQuery } from 'graphql/data/TokenPrice'
-import { isPricePoint, PricePoint, TimePeriod, toHistoryDuration } from 'graphql/data/util'
+import { isPricePoint, PricePoint, TimePeriod } from 'graphql/data/util'
 import { Suspense, useMemo, useState } from 'react'
 import styled from 'styled-components'
 
@@ -18,11 +18,6 @@ import {
   ORDERED_TIMES,
   TimePeriodDisplay,
 } from 'components/Tokens/TokenTable/TimeSelector'
-import {
-  Chain,
-  useTokenHistoricalTvlsQuery,
-  useTokenHistoricalVolumesQuery,
-} from 'graphql/data/__generated__/types-and-hooks'
 import { useAtomValue } from 'jotai/utils'
 import { PriceChart as OldPriceChart } from '../../Charts/PriceChart/OldPriceChart'
 import { AdvancedPriceChartToggle } from './ChartTypeSelectors/AdvancedPriceChartToggle'
@@ -47,8 +42,9 @@ export const ChartContainer = styled.div<{ isInfoTDPEnabled: boolean }>`
 `
 export const ChartActionsContainer = styled.div`
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   width: 100%;
+  height: 32px;
   justify-content: space-between;
   align-items: center;
 
@@ -120,19 +116,6 @@ export default function ChartSection({
         />
         {isInfoTDPEnabled ? (
           <ChartActionsContainer>
-            <ChartTypeSelectorContainer>
-              {chartType === ChartType.PRICE && (
-                <AdvancedPriceChartToggle currentChartType={priceChartType} onChartTypeChange={setPriceChartType} />
-              )}
-              <ChartTypeDropdown
-                options={TDP_CHART_SELECTOR_OPTIONS}
-                currentChartType={chartType}
-                onSelectOption={(c: ChartType) => {
-                  setChartType(c)
-                  if (c === ChartType.PRICE) setPriceChartType(PriceChartType.LINE)
-                }}
-              />
-            </ChartTypeSelectorContainer>
             <TimePeriodSelectorContainer>
               <PillMultiToggle
                 options={DEFAULT_PILL_TIME_SELECTOR_OPTIONS}
@@ -147,6 +130,19 @@ export default function ChartSection({
                 }}
               />
             </TimePeriodSelectorContainer>
+            <ChartTypeSelectorContainer>
+              {chartType === ChartType.PRICE && (
+                <AdvancedPriceChartToggle currentChartType={priceChartType} onChartTypeChange={setPriceChartType} />
+              )}
+              <ChartTypeDropdown
+                options={TDP_CHART_SELECTOR_OPTIONS}
+                currentChartType={chartType}
+                onSelectOption={(c: ChartType) => {
+                  setChartType(c)
+                  if (c === ChartType.PRICE) setPriceChartType(PriceChartType.LINE)
+                }}
+              />
+            </ChartTypeSelectorContainer>
           </ChartActionsContainer>
         ) : (
           <TimePeriodSelector timePeriod={timePeriod} onChangeTimePeriod={onChangeTimePeriod} />
@@ -169,20 +165,6 @@ function Chart({
 }) {
   const prices = usePriceHistory(tokenPriceQuery)
 
-  const address = tokenPriceQuery.token?.address
-  const chain = tokenPriceQuery.token?.chain ?? Chain.Ethereum
-  const duration = toHistoryDuration(timePeriod)
-
-  const volumeQueryResult = useTokenHistoricalVolumesQuery({
-    variables: { chain, address, duration },
-    skip: chartType !== ChartType.VOLUME, // only query if volume chart is selected
-  })
-
-  const tvlsQueryResult = useTokenHistoricalTvlsQuery({
-    variables: { chain, address, duration },
-    skip: chartType !== ChartType.TVL, // only query if tvl chart is selected
-  })
-
   const isInfoTDPEnabled = useInfoTDPEnabled()
   if (!isInfoTDPEnabled) {
     return (
@@ -198,9 +180,9 @@ function Chart({
     case ChartType.PRICE:
       return <PriceChart prices={prices} height={TDP_CHART_HEIGHT_PX} type={priceChartType} />
     case ChartType.VOLUME:
-      return <VolumeChart volumeQueryResult={volumeQueryResult} height={TDP_CHART_HEIGHT_PX} timePeriod={timePeriod} />
+      return <VolumeChart volumes={prices} height={TDP_CHART_HEIGHT_PX} timePeriod={timePeriod} />
     case ChartType.TVL:
-      return <LineChart tvlsQueryResult={tvlsQueryResult} height={TDP_CHART_HEIGHT_PX} />
+      return <StackedLineChart height={TDP_CHART_HEIGHT_PX} />
     default:
       return null
   }

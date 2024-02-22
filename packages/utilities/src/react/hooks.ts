@@ -23,16 +23,13 @@ export function useAsyncData<T>(
 ): {
   isLoading: boolean
   data: T | undefined
-  error?: Error
 } {
   const [state, setState] = useState<{
     data: T | undefined
     isLoading: boolean
-    error?: Error
   }>({
     data: undefined,
     isLoading: true,
-    error: undefined,
   })
   const onCancelRef = useRef(onCancel)
   const lastCompletedAsyncCallbackRef = useRef(asyncCallback)
@@ -42,13 +39,6 @@ export function useAsyncData<T>(
 
     async function runCallback(): Promise<void> {
       isPending = true
-      setState((prevState) => {
-        if (!prevState.error) {
-          // Return the same state to avoid an unneeded re-render.
-          return prevState
-        }
-        return { ...prevState, error: undefined }
-      })
       const data = await asyncCallback()
       if (isPending) {
         lastCompletedAsyncCallbackRef.current = asyncCallback
@@ -57,8 +47,7 @@ export function useAsyncData<T>(
     }
 
     runCallback()
-      .catch((error) => {
-        setState((prevState) => ({ ...prevState, error }))
+      .catch(() => {
         if (isPending) {
           lastCompletedAsyncCallbackRef.current = asyncCallback
           setState((prevState) => ({ ...prevState, isLoading: false }))

@@ -4,10 +4,8 @@ import { TransactionState } from 'wallet/src/features/transactions/transactionSt
 export type NavigateToSwapFlowArgs = { initialState: TransactionState } | undefined
 
 export type WalletNavigationContextState = {
-  navigateToAccountActivityList: () => void
   navigateToAccountTokenList: () => void
-  // Action that should be taken when the user presses the "Buy crypto" or "Receive tokens" button when they open the Send flow with an empty wallet.
-  navigateToBuyOrReceiveWithEmptyWallet: () => void
+  navigateToAccountActivityList: () => void
   navigateToSwapFlow: (args: NavigateToSwapFlowArgs) => void
   navigateToTokenDetails: (currencyId: string) => void
 }

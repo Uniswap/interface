@@ -9,7 +9,7 @@ import { Copy } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
 import { ClickableStyle } from 'theme/components'
-import { shortenAddress } from 'utilities/src/addresses'
+import { shortenAddress } from 'utils/addresses'
 
 export const BreadcrumbNavContainer = styled.nav<{ isInfoTDPEnabled?: boolean; isInfoPDPEnabled?: boolean }>`
   display: flex;

@@ -19,7 +19,7 @@ const ACCOUNT_IMAGE_SIZE = 52
 const ICON_SIZE = 32
 const ICON_BORDER_RADIUS = 100
 
-function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
+function AccountCardItem(): JSX.Element {
   const dispatch = useAppDispatch()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
@@ -35,7 +35,7 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
   }
 
   const onPressShowWalletQr = (): void => {
-    onClose()
+    dispatch(closeModal({ name: ModalName.ReceiveCryptoModal }))
     dispatch(
       openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
     )
@@ -122,7 +122,7 @@ export function ReceiveCryptoModal(): JSX.Element {
             {t('Deposit funds from another wallet or an account')}
           </Text>
         </Flex>
-        <AccountCardItem onClose={onClose} />
+        <AccountCardItem />
         <Flex centered row shrink gap="$spacing12" py="$spacing8">
           <Separator />
           <Text color="$neutral2" textAlign="center" variant="body3">
@@ -130,7 +130,7 @@ export function ReceiveCryptoModal(): JSX.Element {
           </Text>
           <Separator />
         </Flex>
-        <TransferInstitutionSelector onClose={onClose} />
+        <TransferInstitutionSelector />
       </Flex>
     </BottomSheetModal>
   )

@@ -1,10 +1,7 @@
 import { getAddress } from '@ethersproject/address'
 
 // returns the checksummed address if the address is valid, otherwise returns false
-export function isAddress(value?: string | null | undefined): string | false {
-  if (!value) {
-    return false
-  }
+export function isAddress(value: any): string | false {
   try {
     // Alphabetical letters must be made lowercase for getAddress to work.
     // See documentation here: https://docs.ethers.io/v5/api/utils/address/
@@ -14,16 +11,14 @@ export function isAddress(value?: string | null | undefined): string | false {
   }
 }
 
-export function isSameAddress(a?: string, b?: string): boolean {
+export function isSameAddress(a?: string, b?: string) {
   return a === b || a?.toLowerCase() === b?.toLowerCase() // Lazy-lowercases the addresses
 }
 
 // Shortens an Ethereum address
 export function shortenAddress(address = '', charsStart = 4, charsEnd = 4): string {
   const parsed = isAddress(address)
-  if (!parsed) {
-    return ''
-  }
+  if (!parsed) return ''
   return ellipseAddressAdd0x(parsed, charsStart, charsEnd)
 }
 

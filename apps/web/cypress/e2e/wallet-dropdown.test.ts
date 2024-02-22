@@ -163,7 +163,7 @@ describe('Wallet Dropdown', () => {
     it('should dismiss the wallet bottom sheet when clicking buy crypto', () => {
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-buy-crypto')).click()
-      cy.get(getTestSelector('wallet-settings')).should('not.be.visible')
+      cy.contains('Buy crypto').should('not.be.visible')
     })
 
     it('should use a bottom sheet and dismiss when on a mobile screen size', () => {

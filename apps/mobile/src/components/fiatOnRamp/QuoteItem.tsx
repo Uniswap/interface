@@ -2,22 +2,16 @@ import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
+import { useFiatOnRampLogoUrl } from 'src/components/fiatOnRamp/hooks'
 import { Loader } from 'src/components/loading'
 import { useFormatExactCurrencyAmount } from 'src/features/fiatOnRamp/hooks'
-import { getServiceProviderLogo } from 'src/features/fiatOnRamp/utils'
-import { Flex, Icons, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { FORQuote, FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
-
-function LogoLoader(): JSX.Element {
-  return (
-    <Loader.Box borderRadius="$roundedFull" height={iconSizes.icon40} width={iconSizes.icon40} />
-  )
-}
 
 export function FORQuoteItem({
   quote,
@@ -52,8 +46,7 @@ export function FORQuoteItem({
     currencySymbol: baseCurrency.symbol,
   })
 
-  const isDarkMode = useIsDarkMode()
-  const logoUrl = getServiceProviderLogo(serviceProvider?.logos, isDarkMode)
+  const logoUrl = useFiatOnRampLogoUrl(serviceProvider?.logos)
 
   return (
     <TouchableArea onPress={onPress}>
@@ -69,17 +62,11 @@ export function FORQuoteItem({
           <QuoteLoader showCarret={showCarret} />
         ) : (
           <Flex row alignItems="center" gap="$spacing12">
-            <Flex>
-              {logoUrl ? (
-                <ImageUri
-                  fallback={<LogoLoader />}
-                  imageStyle={ServiceProviderLogoStyles.icon}
-                  uri={logoUrl}
-                />
-              ) : (
-                <LogoLoader />
-              )}
-            </Flex>
+            <Loader.Box
+              borderRadius="$roundedFull"
+              height={iconSizes.icon40}
+              width={iconSizes.icon40}
+            />
             <Flex shrink gap="$spacing4">
               <Text color="$neutral1" variant="subheading2">
                 {serviceProvider?.name}
@@ -109,6 +96,23 @@ export function FORQuoteItem({
                 <Flex />
               )}
             </Flex>
+            {
+              // TODO: Enable once https://linear.app/uniswap/issue/MOB-2565/implement-service-providers-logo-once-meld-has-added-them-on-their is unblocked
+              false && logoUrl && (
+                <ImageUri
+                  fallback={
+                    <Loader.Box
+                      borderRadius="$roundedFull"
+                      height={iconSizes.icon40}
+                      width={iconSizes.icon40}
+                    />
+                  }
+                  imageStyle={ServiceProviderLogoStyles.icon}
+                  resizeMode="contain"
+                  uri={logoUrl}
+                />
+              )
+            }
           </Flex>
         )}
       </Flex>

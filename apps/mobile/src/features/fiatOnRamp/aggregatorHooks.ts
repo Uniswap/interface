@@ -19,7 +19,6 @@ import {
   isInvalidRequestAmountTooLow,
 } from 'wallet/src/features/fiatOnRamp/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 // TODO: https://linear.app/uniswap/issue/MOB-2532/implement-fetching-of-available-fiat-currencies-from-meld
 const MELD_FIAT_CURRENCY_CODES = ['usd', 'eur']
@@ -61,7 +60,6 @@ export function useFiatOnRampQuotes({
   quotes: FORQuote[] | undefined
 } {
   const debouncedBaseCurrencyAmount = useDebounce(baseCurrencyAmount, Delay.Short)
-  const walletAddress = useActiveAccountAddress()
 
   const {
     currentData: quotesResponse,
@@ -74,7 +72,6 @@ export function useFiatOnRampQuotes({
           sourceCurrencyCode: baseCurrencyCode,
           destinationCurrencyCode: quoteCurrencyCode,
           countryCode,
-          walletAddress: walletAddress ?? '',
         }
       : skipToken,
     {

@@ -13,16 +13,14 @@ import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 
-import { ProtocolVersion } from 'graphql/data/__generated__/types-and-hooks'
-import { PoolVersionMenu } from 'pages/Pool/shared'
 import { ButtonOutlined, ButtonPrimary, ButtonSecondary } from '../../components/Button'
 import Card from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
-import FullPositionCard from '../../components/PositionCard'
-import Row, { RowBetween, RowFixed } from '../../components/Row'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/earn/styled'
+import FullPositionCard from '../../components/PositionCard'
+import { RowBetween, RowFixed } from '../../components/Row'
 import { Dots } from '../../components/swap/styled'
+import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { BIG_INT_ZERO } from '../../constants/misc'
 import { useV2Pairs } from '../../hooks/useV2Pairs'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/connection/hooks'
@@ -42,6 +40,15 @@ const LPFeeExplainer = styled(DataCard)`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #27ae60 0%, #000000 100%);
   margin: 0 0 16px 0;
   overflow: hidden;
+`
+
+const TitleRow = styled(RowBetween)`
+  ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+    flex-direction: column-reverse;
+  `};
 `
 
 const ButtonRow = styled(RowFixed)`
@@ -180,15 +187,12 @@ export default function Pool() {
           ) : (
             <AutoColumn gap="lg" justify="center">
               <AutoColumn gap="md" style={{ width: '100%' }}>
-                <Row gap="md" justify="space-between" style={{ marginTop: '1rem' }} padding="0">
-                  <Row gap="md" width="content">
-                    <HideSmall>
-                      <Header>
-                        <Trans>Your V2 liquidity</Trans>
-                      </Header>
-                    </HideSmall>
-                    <PoolVersionMenu protocolVersion={ProtocolVersion.V2} />
-                  </Row>
+                <TitleRow style={{ marginTop: '1rem' }} padding="0">
+                  <HideSmall>
+                    <Header>
+                      <Trans>Your V2 liquidity</Trans>
+                    </Header>
+                  </HideSmall>
                   <ButtonRow>
                     <ResponsiveButtonSecondary as={Link} padding="6px 8px" to="/add/v2/ETH">
                       <Trans>Create a pair</Trans>
@@ -204,7 +208,7 @@ export default function Pool() {
                       </Text>
                     </ResponsiveButtonPrimary>
                   </ButtonRow>
-                </Row>
+                </TitleRow>
 
                 {!account ? (
                   <Card padding="40px">

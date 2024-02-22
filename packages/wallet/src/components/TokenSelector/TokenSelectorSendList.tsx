@@ -1,7 +1,5 @@
-import { skipToken } from '@reduxjs/toolkit/dist/query'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { isWeb } from 'tamagui'
 import { Flex } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
@@ -50,11 +48,7 @@ function useTokenSectionsForSend(chainFilter: ChainId | null): GqlResult<TokenSe
 
 function EmptyList({ onEmptyActionPress }: { onEmptyActionPress: () => void }): JSX.Element {
   const { t } = useTranslation()
-
-  const { data: ipAddressData, isLoading } = useFiatOnRampIpAddressQuery(
-    // TODO(EXT-669): re-enable this once we have an onramp for the Extension.
-    isWeb ? skipToken : undefined
-  )
+  const { data: ipAddressData, isLoading } = useFiatOnRampIpAddressQuery()
 
   const fiatOnRampEligible = Boolean(ipAddressData?.isBuyAllowed)
 

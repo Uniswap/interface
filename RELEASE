@@ -1,24 +1,10 @@
-IPFS hash of the deployment:
-- CIDv0: `QmNxB7dgMsLA6wASBs8xCSjKa4XAkeZNiiaf7uAG7KxPme`
-- CIDv1: `bafybeiajdg2uit3dy2c5dbxclr7w6subg6t4fxnegfifpiskay2qlyys5u`
+We are back with another (small) round of updates. Check out what is new below:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Token Details Page Improvements — We took a pass at simplifying the core flows of token detail pages. We clarified the language around contract addresses and made it simpler than ever to copy them to your clipboard. In addition, we added a quick and easy route to our ‘receive’ flow from any given token details page. Share (and send) tokens easier than ever with our app!
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Other notable changes:
 
-IPFS gateways:
-- https://bafybeiajdg2uit3dy2c5dbxclr7w6subg6t4fxnegfifpiskay2qlyys5u.ipfs.dweb.link/
-- https://bafybeiajdg2uit3dy2c5dbxclr7w6subg6t4fxnegfifpiskay2qlyys5u.ipfs.cf-ipfs.com/
-- [ipfs://QmNxB7dgMsLA6wASBs8xCSjKa4XAkeZNiiaf7uAG7KxPme/](ipfs://QmNxB7dgMsLA6wASBs8xCSjKa4XAkeZNiiaf7uAG7KxPme/)
-
-## 5.12.0 (2024-02-22)
-
-
-### Features
-
-* **web:** hotfix to prod for unitags launch (#6465) e22ab94
-
-
+- Gas estimation and approval bug fix
+- Updated Twitter icons to ‘X’
+- Unsupported language bug fix
+- Android bug fixes

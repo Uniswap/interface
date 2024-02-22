@@ -6,7 +6,7 @@ import uriToHttp from 'lib/utils/uriToHttp'
 import { useEffect, useMemo, useState } from 'react'
 import { safeNamehash } from 'utils/safeNamehash'
 
-import { isAddress } from 'utilities/src/addresses'
+import { isAddress } from '../utils'
 import isZero from '../utils/isZero'
 import { useENSRegistrarContract, useENSResolverContract, useERC1155Contract, useERC721Contract } from './useContract'
 import useDebounce from './useDebounce'

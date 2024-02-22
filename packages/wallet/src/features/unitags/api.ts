@@ -8,7 +8,7 @@ import { createNewInMemoryCache } from 'wallet/src/data/cache'
 import { REQUEST_SOURCE } from 'wallet/src/data/links'
 import { useRestQuery } from 'wallet/src/data/rest'
 import { createSignedRequestBody, createSignedRequestParams } from 'wallet/src/data/utils'
-import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck'
+import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck/utils'
 import {
   ProfileMetadata,
   UnitagAddressResponse,

@@ -1,10 +1,9 @@
 import React, { ErrorInfo, PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Image, StyleSheet } from 'react-native'
 import RNRestart from 'react-native-restart'
 import { useAppDispatch } from 'src/app/hooks'
 import { Button, Flex, Text } from 'ui/src'
-import { DEAD_LUNI } from 'ui/src/assets'
+import DeadLuni from 'ui/src/assets/graphics/dead-luni.svg'
 import { logger } from 'utilities/src/logger/logger'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
@@ -62,15 +61,9 @@ function ErrorScreen({ error }: { error: Error }): JSX.Element {
   }
 
   return (
-    <Flex
-      centered
-      fill
-      backgroundColor="$surface1"
-      gap="$spacing16"
-      px="$spacing16"
-      py="$spacing48">
+    <Flex centered fill gap="$spacing16" px="$spacing16" py="$spacing48">
       <Flex centered grow gap="$spacing36">
-        <Image source={DEAD_LUNI} style={styles.errorImage} />
+        <DeadLuni />
         <Flex centered gap="$spacing8">
           <Text variant="subheading1">{t('Uh oh!')}</Text>
           <Text variant="body2">{t('Something crashed.')}</Text>
@@ -88,11 +81,3 @@ function ErrorScreen({ error }: { error: Error }): JSX.Element {
     </Flex>
   )
 }
-
-const styles = StyleSheet.create({
-  errorImage: {
-    height: 150,
-    resizeMode: 'contain',
-    width: 150,
-  },
-})

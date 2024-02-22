@@ -18,6 +18,7 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
+  margin-right: 4px;
 }
 
 .c0 > img,
@@ -79,12 +80,6 @@ exports[`StatusIcon with account renders children in correct order 1`] = `
 .c2 {
   width: 16px;
   height: 16px;
-}
-
-@media only screen and (min-width:1100px) {
-  .c0 {
-    margin-right: 4px;
-  }
 }
 
 @media (max-width:960px) {
@@ -151,6 +146,7 @@ exports[`StatusIcon with no account renders children in correct order 1`] = `
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
+  margin-right: 4px;
 }
 
 .c0 > img,
@@ -212,12 +208,6 @@ exports[`StatusIcon with no account renders children in correct order 1`] = `
 .c2 {
   width: 16px;
   height: 16px;
-}
-
-@media only screen and (min-width:1100px) {
-  .c0 {
-    margin-right: 4px;
-  }
 }
 
 @media (max-width:960px) {

@@ -1,9 +1,8 @@
-import { CSSProperties, Key, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { CSSProperties, Key, useCallback, useEffect, useMemo, useRef } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList as List } from 'react-window'
 import { useWindowDimensions } from 'tamagui'
 import { Flex } from 'ui/src'
-import { zIndices } from 'ui/src/theme'
 import {
   ItemRowInfo,
   SectionRowInfo,
@@ -40,7 +39,6 @@ export function TokenSectionBaseList({
 }: TokenSectionBaseListProps): JSX.Element {
   const ref = useRef<List>(null)
   const rowHeightMap = useRef<{ [key: number]: number }>({})
-  const [firstVisibleIndex, setFirstVisibleIndex] = useState(-1)
   const { width: windowWidth } = useWindowDimensions()
 
   useEffect(() => {
@@ -84,10 +82,6 @@ export function TokenSectionBaseList({
     }, [])
   }, [sections, keyExtractor, renderSectionHeader, renderItem])
 
-  const activeSessionIndex = useMemo(() => {
-    return items.slice(0, firstVisibleIndex + 1).findLastIndex((item) => isSectionHeader(item))
-  }, [firstVisibleIndex, items])
-
   useEffect(() => {
     rowHeightMap.current = {}
   }, [items])
@@ -120,39 +114,23 @@ export function TokenSectionBaseList({
       <AutoSizer disableWidth>
         {({ height }: { height: number }): JSX.Element => {
           return (
-            <Flex style={{ position: 'relative' }}>
-              <Flex
-                backgroundColor="$surface1"
-                style={{ position: 'absolute', top: 0, zIndex: zIndices.sticky, width: '100%' }}>
-                {activeSessionIndex >= 0 && (
-                  <TokenSectionBaseListRow
-                    data={items}
-                    index={activeSessionIndex}
-                    windowWidth={windowWidth}
-                  />
-                )}
-              </Flex>
-              <List
-                ref={ref}
-                height={height}
-                itemCount={items.length}
-                itemData={items}
-                itemSize={getRowHeight}
-                width="100%"
-                onItemsRendered={({ visibleStartIndex }): void => {
-                  setFirstVisibleIndex(visibleStartIndex)
-                }}>
-                {({ data, index, style }) => (
-                  <TokenSectionBaseListRow
-                    data={data}
-                    index={index}
-                    style={style}
-                    updateRowHeight={updateRowHeight}
-                    windowWidth={windowWidth}
-                  />
-                )}
-              </List>
-            </Flex>
+            <List
+              ref={ref}
+              height={height}
+              itemCount={items.length}
+              itemData={items}
+              itemSize={getRowHeight}
+              width="100%">
+              {({ data, index, style }) => (
+                <TokenSectionBaseListRow
+                  data={data}
+                  index={index}
+                  style={style}
+                  updateRowHeight={updateRowHeight}
+                  windowWidth={windowWidth}
+                />
+              )}
+            </List>
           )
         }}
       </AutoSizer>
@@ -169,45 +147,16 @@ function TokenSectionBaseListRow({
 }: {
   index: number
   data: BaseListData
-  style?: CSSProperties
+  style: CSSProperties
   windowWidth: number
-  updateRowHeight?: (index: number, height: number) => void
-}): JSX.Element {
-  const itemData = data[index]
-
-  return (
-    <>
-      {itemData && (
-        <Row
-          index={index}
-          itemData={itemData}
-          style={style}
-          updateRowHeight={updateRowHeight}
-          windowWidth={windowWidth}
-        />
-      )}
-    </>
-  )
-}
-
-function _Row({
-  index,
-  itemData,
-  style,
-  windowWidth,
-  updateRowHeight,
-}: {
-  index: number
-  itemData: BaseListItemRowInfo | BaseListSectionRowInfo
-  style?: CSSProperties
-  windowWidth: number
-  updateRowHeight?: (index: number, height: number) => void
+  updateRowHeight: (index: number, height: number) => void
 }): JSX.Element {
   const rowRef = useRef<HTMLElement>(null)
+  const itemData = data[index]
 
   useEffect(() => {
     const height = rowRef.current?.getBoundingClientRect().height
-    if (height && updateRowHeight) {
+    if (height) {
       updateRowHeight(index, height)
     }
   }, [updateRowHeight, index, windowWidth])
@@ -223,5 +172,3 @@ function _Row({
     </Flex>
   )
 }
-
-const Row = memo(_Row)

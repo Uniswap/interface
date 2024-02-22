@@ -74,64 +74,56 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
 }
 
 <div>
-  <span
-    class=" _dsp_contents"
+  <div
+    class="c0"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="c1"
     >
-      <div
-        class="c0"
+      <img
+        class="c2"
+        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1/logo.png"
+      />
+      <img
+        class="c2"
+        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xaf88d065e77c8cC2239327C5EDb3A432268e5831/logo.png"
+      />
+    </div>
+    <div
+      class="c3"
+    >
+      <svg
+        aria-labelledby="titleID"
+        height="100%"
+        style="width: 100%; height: 100%;"
+        width="100%"
       >
-        <div
-          class="c1"
+        <title
+          id="titleID"
         >
-          <img
-            class="c2"
-            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1/logo.png"
-          />
-          <img
-            class="c2"
-            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xaf88d065e77c8cC2239327C5EDb3A432268e5831/logo.png"
-          />
-        </div>
-        <div
-          class="c3"
+          Arbitrum logo
+        </title>
+        <rect
+          fill="#F9F9F9"
+          height="100%"
+          rx="2"
+          width="100%"
+        />
+        <rect
+          fill="#00A3FF33"
+          height="100%"
+          rx="2"
+          width="100%"
+        />
+        <svg
+          height="100%"
+          width="100%"
         >
-          <svg
-            aria-labelledby="titleID"
-            height="100%"
-            style="width: 100%; height: 100%;"
-            width="100%"
-          >
-            <title
-              id="titleID"
-            >
-              Arbitrum logo
-            </title>
-            <rect
-              fill="#F9F9F9"
-              height="100%"
-              rx="2"
-              width="100%"
-            />
-            <rect
-              fill="#00A3FF33"
-              height="100%"
-              rx="2"
-              width="100%"
-            />
-            <svg
-              height="100%"
-              width="100%"
-            >
-              arbitrum.svg
-            </svg>
-          </svg>
-        </div>
-      </div>
-    </span>
-  </span>
+          arbitrum.svg
+        </svg>
+      </svg>
+    </div>
+  </div>
 </div>
 `;
 
@@ -187,29 +179,21 @@ exports[`PortfolioLogo renders without L2 icon 1`] = `
 }
 
 <div>
-  <span
-    class="t_light is_inversed _dsp_contents"
+  <div
+    class="c0"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <div
+      class="c1"
     >
-      <div
-        class="c0"
-      >
-        <div
-          class="c1"
-        >
-          <img
-            class="c2"
-            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-          />
-          <img
-            class="c2"
-            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-          />
-        </div>
-      </div>
-    </span>
-  </span>
+      <img
+        class="c2"
+        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+      />
+      <img
+        class="c2"
+        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+      />
+    </div>
+  </div>
 </div>
 `;

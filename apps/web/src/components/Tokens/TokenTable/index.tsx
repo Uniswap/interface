@@ -20,7 +20,6 @@ import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { ApolloError } from '@apollo/client'
 import { useExploreParams } from 'pages/Explore/redirects'
 import { DeltaArrow, DeltaText } from '../TokenDetails/Delta'
 
@@ -67,6 +66,16 @@ export function TopTokensTable() {
   const chainId = supportedChainIdFromGQLChain(chainName)
   const { tokens, tokenSortRank, loadingTokens, sparklines, error } = useTopTokens(chainName)
 
+  if (error) {
+    return (
+      <TableWrapper>
+        <ThemedText.BodyPrimary>
+          <Trans>Error loading Top Tokens</Trans>
+        </ThemedText.BodyPrimary>
+      </TableWrapper>
+    )
+  }
+
   return (
     <TableWrapper data-testid="top-tokens-explore-table">
       <TokenTable
@@ -74,7 +83,6 @@ export function TopTokensTable() {
         tokenSortRank={tokenSortRank}
         sparklines={sparklines}
         loading={loadingTokens}
-        error={error}
         chainId={chainId}
       />
     </TableWrapper>
@@ -86,7 +94,6 @@ function TokenTable({
   tokenSortRank,
   sparklines,
   loading,
-  error,
   loadMore,
   chainId,
 }: {
@@ -94,7 +101,6 @@ function TokenTable({
   tokenSortRank: Record<string, number>
   sparklines: SparklineMap
   loading: boolean
-  error?: ApolloError
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
   chainId: ChainId
 }) {
@@ -151,7 +157,6 @@ function TokenTable({
     [chainId, formatDelta, sparklines, tokenSortRank, tokens]
   )
 
-  const showLoadingSkeleton = loading || !!error
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<TokenTableValues>()
     return [
@@ -163,7 +168,7 @@ function TokenTable({
           </Cell>
         ),
         cell: (index) => (
-          <Cell justifyContent="center" loading={showLoadingSkeleton} minWidth={44}>
+          <Cell justifyContent="center" loading={loading} minWidth={44}>
             <ThemedText.BodySecondary>{index.getValue?.()}</ThemedText.BodySecondary>
           </Cell>
         ),
@@ -178,7 +183,7 @@ function TokenTable({
           </Cell>
         ),
         cell: (tokenDescription) => (
-          <Cell justifyContent="flex-start" width={240} loading={showLoadingSkeleton} grow>
+          <Cell justifyContent="flex-start" width={240} loading={loading} grow>
             {tokenDescription.getValue?.()}
           </Cell>
         ),
@@ -193,7 +198,7 @@ function TokenTable({
           </Cell>
         ),
         cell: (price) => (
-          <Cell loading={showLoadingSkeleton} minWidth={133} grow>
+          <Cell loading={loading} minWidth={133} grow>
             <ThemedText.BodySecondary>
               {/* A simple 0 price indicates the price is not currently available from the api */}
               {price.getValue?.() === 0
@@ -213,7 +218,7 @@ function TokenTable({
           </Cell>
         ),
         cell: (percentChange1hr) => (
-          <Cell loading={showLoadingSkeleton} minWidth={133} grow>
+          <Cell loading={loading} minWidth={133} grow>
             {percentChange1hr.getValue?.()}
           </Cell>
         ),
@@ -228,7 +233,7 @@ function TokenTable({
           </Cell>
         ),
         cell: (percentChange1d) => (
-          <Cell loading={showLoadingSkeleton} minWidth={133} grow>
+          <Cell loading={loading} minWidth={133} grow>
             {percentChange1d.getValue?.()}
           </Cell>
         ),
@@ -243,7 +248,7 @@ function TokenTable({
           </Cell>
         ),
         cell: (fdv) => (
-          <Cell loading={showLoadingSkeleton} minWidth={133} grow>
+          <Cell loading={loading} minWidth={133} grow>
             <ThemedText.BodySecondary>
               {formatNumber({ input: fdv.getValue?.(), type: NumberType.FiatTokenStats })}
             </ThemedText.BodySecondary>
@@ -260,7 +265,7 @@ function TokenTable({
           </Cell>
         ),
         cell: (volume) => (
-          <Cell minWidth={133} loading={showLoadingSkeleton} grow>
+          <Cell minWidth={133} loading={loading} grow>
             <ThemedText.BodySecondary>
               {formatNumber({ input: volume.getValue?.(), type: NumberType.FiatTokenStats })}
             </ThemedText.BodySecondary>
@@ -271,13 +276,13 @@ function TokenTable({
         id: 'sparkline',
         header: () => <Cell minWidth={172} />,
         cell: (sparkline) => (
-          <Cell minWidth={172} loading={showLoadingSkeleton}>
+          <Cell minWidth={172} loading={loading}>
             {sparkline.getValue?.()}
           </Cell>
         ),
       }),
     ]
-  }, [formatFiatPrice, formatNumber, showLoadingSkeleton])
+  }, [formatFiatPrice, formatNumber, loading])
 
-  return <Table columns={columns} data={tokenTableValues} loading={loading} error={error} loadMore={loadMore} />
+  return <Table columns={columns} data={tokenTableValues} loading={loading} loadMore={loadMore} />
 }

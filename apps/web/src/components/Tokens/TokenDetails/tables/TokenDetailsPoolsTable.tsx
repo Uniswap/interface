@@ -1,9 +1,11 @@
+import { Trans } from '@lingui/macro'
 import { ChainId, Token } from '@uniswap/sdk-core'
 import { PoolTableColumns, PoolsTable } from 'components/Pools/PoolTable/PoolTable'
 import { usePoolsFromTokenAddress } from 'graphql/data/pools/usePoolsFromTokenAddress'
 import { PoolSortFields, PoolTableSortState } from 'graphql/data/pools/useTopPools'
 import { OrderDirection } from 'graphql/data/util'
 import { useCallback, useState } from 'react'
+import { ThemedText } from 'theme/components'
 
 const HIDDEN_COLUMNS = [PoolTableColumns.Transactions]
 
@@ -31,12 +33,19 @@ export function TokenDetailsPoolsTable({ chainId, referenceToken }: { chainId: C
     [sortState.sortBy, sortState.sortDirection]
   )
 
+  if (error) {
+    return (
+      <ThemedText.BodyPrimary>
+        <Trans>Error loading Top Pools</Trans>
+      </ThemedText.BodyPrimary>
+    )
+  }
+
   return (
     <div data-testid={`tdp-pools-table-${referenceToken.address.toLowerCase()}`}>
       <PoolsTable
         pools={pools}
         loading={loading}
-        error={error}
         chainId={chainId}
         maxHeight={600}
         hiddenColumns={HIDDEN_COLUMNS}

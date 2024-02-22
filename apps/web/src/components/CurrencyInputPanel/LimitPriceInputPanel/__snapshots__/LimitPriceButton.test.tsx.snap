@@ -110,57 +110,49 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly 1`] = 
   opacity: 0.4;
 }
 
-<span
-  class=" _dsp_contents"
+<div
+  class="c0 c1"
+  width="unset"
 >
-  <span
-    class=" t_light _dsp_contents is_Theme"
+  <button
+    class="c2"
   >
     <div
-      class="c0 c1"
-      width="unset"
+      class="c3 css-142zc9n"
     >
-      <button
-        class="c2"
-      >
-        <div
-          class="c3 css-142zc9n"
-        >
-          +
-          10%
-        </div>
-      </button>
-      <button
-        class="c4"
-      >
-        <svg
-          fill="none"
-          height="12"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="12"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <line
-            x1="18"
-            x2="6"
-            y1="6"
-            y2="18"
-          />
-          <line
-            x1="6"
-            x2="18"
-            y1="6"
-            y2="18"
-          />
-        </svg>
-      </button>
+      +
+      10%
     </div>
-  </span>
-</span>
+  </button>
+  <button
+    class="c4"
+  >
+    <svg
+      fill="none"
+      height="12"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="12"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <line
+        x1="18"
+        x2="6"
+        y1="6"
+        y2="18"
+      />
+      <line
+        x1="6"
+        x2="18"
+        y1="6"
+        y2="18"
+      />
+    </svg>
+  </button>
+</div>
 `;
 
 exports[`LimitCustomMarketPriceButton renders the custom amount correctly, negative change 1`] = `
@@ -273,56 +265,48 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly, negat
   opacity: 0.4;
 }
 
-<span
-  class=" _dsp_contents"
+<div
+  class="c0 c1"
+  width="unset"
 >
-  <span
-    class=" t_light _dsp_contents is_Theme"
+  <button
+    class="c2"
   >
     <div
-      class="c0 c1"
-      width="unset"
+      class="c3 css-142zc9n"
     >
-      <button
-        class="c2"
-      >
-        <div
-          class="c3 css-142zc9n"
-        >
-          -10%
-        </div>
-      </button>
-      <button
-        class="c4"
-      >
-        <svg
-          fill="none"
-          height="12"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="12"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <line
-            x1="18"
-            x2="6"
-            y1="6"
-            y2="18"
-          />
-          <line
-            x1="6"
-            x2="18"
-            y1="6"
-            y2="18"
-          />
-        </svg>
-      </button>
+      -10%
     </div>
-  </span>
-</span>
+  </button>
+  <button
+    class="c4"
+  >
+    <svg
+      fill="none"
+      height="12"
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      viewBox="0 0 24 24"
+      width="12"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <line
+        x1="18"
+        x2="6"
+        y1="6"
+        y2="18"
+      />
+      <line
+        x1="6"
+        x2="18"
+        y1="6"
+        y2="18"
+      />
+    </svg>
+  </button>
+</div>
 `;
 
 exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected false 1`] = `
@@ -361,19 +345,11 @@ exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected
   opacity: 0.4;
 }
 
-<span
-  class="t_light is_inversed _dsp_contents"
+<button
+  class="c0"
 >
-  <span
-    class=" t_light _dsp_contents is_Theme"
-  >
-    <button
-      class="c0"
-    >
-      Current
-    </button>
-  </span>
-</span>
+  Current
+</button>
 `;
 
 exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected true 1`] = `
@@ -412,19 +388,11 @@ exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected
   opacity: 0.4;
 }
 
-<span
-  class=" _dsp_contents"
+<button
+  class="c0"
 >
-  <span
-    class=" t_light _dsp_contents is_Theme"
-  >
-    <button
-      class="c0"
-    >
-      Current
-    </button>
-  </span>
-</span>
+  Current
+</button>
 `;
 
 exports[`LimitPresetPriceButton renders 0 correctly, disabled true and selected false 1`] = `
@@ -450,19 +418,11 @@ exports[`LimitPresetPriceButton renders 0 correctly, disabled true and selected 
   border: 1px solid #22222212;
 }
 
-<span
-  class=" _dsp_contents"
+<button
+  class="c0"
 >
-  <span
-    class=" t_light _dsp_contents is_Theme"
-  >
-    <button
-      class="c0"
-    >
-      Current
-    </button>
-  </span>
-</span>
+  Current
+</button>
 `;
 
 exports[`LimitPresetPriceButton renders 5 correctly, disabled false and selected true 1`] = `
@@ -509,24 +469,16 @@ exports[`LimitPresetPriceButton renders 5 correctly, disabled false and selected
   opacity: 0.4;
 }
 
-<span
-  class=" _dsp_contents"
+<button
+  class="c0"
 >
-  <span
-    class=" t_light _dsp_contents is_Theme"
+  <div
+    class="c1 css-142zc9n"
   >
-    <button
-      class="c0"
-    >
-      <div
-        class="c1 css-142zc9n"
-      >
-        +
-        5%
-      </div>
-    </button>
-  </span>
-</span>
+    +
+    5%
+  </div>
+</button>
 `;
 
 exports[`LimitPresetPriceButton renders 5 correctly, disabled true and selected false 1`] = `
@@ -560,24 +512,16 @@ exports[`LimitPresetPriceButton renders 5 correctly, disabled true and selected 
   border: 1px solid #22222212;
 }
 
-<span
-  class=" _dsp_contents"
+<button
+  class="c0"
 >
-  <span
-    class=" t_light _dsp_contents is_Theme"
+  <div
+    class="c1 css-142zc9n"
   >
-    <button
-      class="c0"
-    >
-      <div
-        class="c1 css-142zc9n"
-      >
-        +
-        5%
-      </div>
-    </button>
-  </span>
-</span>
+    +
+    5%
+  </div>
+</button>
 `;
 
 exports[`LimitPresetPriceButton renders 10 correctly, disabled false and selected true 1`] = `
@@ -624,22 +568,14 @@ exports[`LimitPresetPriceButton renders 10 correctly, disabled false and selecte
   opacity: 0.4;
 }
 
-<span
-  class=" _dsp_contents"
+<button
+  class="c0"
 >
-  <span
-    class=" t_light _dsp_contents is_Theme"
+  <div
+    class="c1 css-142zc9n"
   >
-    <button
-      class="c0"
-    >
-      <div
-        class="c1 css-142zc9n"
-      >
-        +
-        10%
-      </div>
-    </button>
-  </span>
-</span>
+    +
+    10%
+  </div>
+</button>
 `;

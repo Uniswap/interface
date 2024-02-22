@@ -1,37 +1,16 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
-"""
-Tells the service this field/object has access authorized by a Cognito User Pools token.
-"""
-directive @aws_cognito_user_pools(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by sigv4 signing.
-"""
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
 """Directs the schema to enforce authorization on a field"""
 directive @aws_auth(
   """List of cognito user pool groups which have access on this field"""
   cognito_groups: [String]
 ) on FIELD_DEFINITION
 
-"""Tells the service which mutation triggers this subscription."""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
-) on FIELD_DEFINITION
+"""
+Tells the service this field/object has access authorized by an OIDC token.
+"""
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service which subscriptions will be published to when this mutation is
@@ -45,14 +24,35 @@ directive @aws_publish(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by an OIDC token.
+Tells the service this field/object has access authorized by sigv4 signing.
 """
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
+directive @aws_iam on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Cognito User Pools token.
+"""
+directive @aws_cognito_user_pools(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
 directive @aws_lambda on OBJECT | FIELD_DEFINITION
+
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
+) on FIELD_DEFINITION
 
 """
   Types, unions, and inputs (alphabetized):
@@ -795,27 +795,6 @@ input PoolInput {
   tickCurrent: String!
 }
 
-type PoolTransaction {
-  id: ID!
-  chain: Chain!
-  protocolVersion: ProtocolVersion!
-  type: PoolTransactionType!
-  hash: String!
-  timestamp: Int!
-  usdValue: Amount!
-  account: String!
-  token0: Token!
-  token0Quantity: String!
-  token1: Token!
-  token1Quantity: String!
-}
-
-enum PoolTransactionType {
-  SWAP
-  ADD
-  REMOVE
-}
-
 type Portfolio {
   id: ID!
   ownerAddress: String!
@@ -863,12 +842,10 @@ type Query {
   """  returns top v3 pools sorted by total value locked in desc order"""
   topV3Pools(chain: Chain!, first: Int!, tvlCursor: Float, tokenFilter: String): [V3Pool!]
   v3Pool(chain: Chain!, address: String!): V3Pool
-  v3Transactions(chain: Chain!, first: Int!, timestampCursor: Int): [PoolTransaction!]
 
   """  returns top v2 pairs sorted by total value locked in desc order"""
   topV2Pairs(chain: Chain!, first: Int!, tvlCursor: Float, tokenFilter: String): [V2Pair!]
   v2Pair(chain: Chain!, address: String!): V2Pair
-  v2Transactions(chain: Chain!, first: Int!, timestampCursor: Int): [PoolTransaction]
   convert(fromAmount: CurrencyAmountInput!, toCurrency: Currency!): Amount
   tokens(contracts: [ContractInput!]!): [Token]
 
@@ -951,15 +928,6 @@ type TimestampedAmount implements IAmount {
   timestamp: Int!
 }
 
-type TimestampedOhlc {
-  id: ID!
-  timestamp: Int!
-  open: Amount!
-  high: Amount!
-  low: Amount!
-  close: Amount!
-}
-
 type TimestampedPoolPrice {
   id: ID!
   timestamp: Int!
@@ -978,8 +946,6 @@ type Token implements IContract {
   project: TokenProject
   market(currency: Currency): TokenMarket
   feeData: FeeData
-  v3Transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
-  v2Transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
 }
 
 type TokenAmount {
@@ -1048,7 +1014,6 @@ type TokenMarket {
   historicalVolume(duration: HistoryDuration!): [TimestampedAmount]
   historicalTvl(duration: HistoryDuration!): [TimestampedAmount]
   priceHistory(duration: HistoryDuration!): [TimestampedAmount]
-  ohlc(duration: HistoryDuration!): [TimestampedOhlc]
 
   """  this volume is cumulative volume over the specified duration"""
   volume(duration: HistoryDuration!): Amount
@@ -1238,9 +1203,6 @@ type V2Pair {
   token1Supply: Float
   txCount: Int
   cumulativeVolume(duration: HistoryDuration!): Amount
-  historicalVolume(duration: HistoryDuration!): [TimestampedAmount]
-  priceHistory(duration: HistoryDuration!): [TimestampedPoolPrice]
-  transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
 }
 
 type V3Pool {
@@ -1260,7 +1222,6 @@ type V3Pool {
   historicalVolume(duration: HistoryDuration!): [TimestampedAmount]
   priceHistory(duration: HistoryDuration!): [TimestampedPoolPrice]
   ticks(first: Int!, tickIdxCursor: Int): [V3PoolTick]
-  transactions(first: Int!, timestampCursor: Int): [PoolTransaction]
 }
 
 type V3PoolTick {

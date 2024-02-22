@@ -155,27 +155,19 @@ exports[`UnsupportedCurrencyFooter.tsx with unsupported tokens renders 1`] = `
   text-decoration: none;
 }
 
-<span
-    class="t_light is_inversed _dsp_contents"
+<div
+    class="c0"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <button
+      class="c1 c2 c3 c4"
+      data-testid="read-more-button"
     >
       <div
-        class="c0"
+        class="c5 css-1aulwug"
       >
-        <button
-          class="c1 c2 c3 c4"
-          data-testid="read-more-button"
-        >
-          <div
-            class="c5 css-1aulwug"
-          >
-            Read more about unsupported assets
-          </div>
-        </button>
+        Read more about unsupported assets
       </div>
-    </span>
-  </span>
+    </button>
+  </div>
 </DocumentFragment>
 `;

@@ -60,7 +60,6 @@ module.exports = {
         transformIgnorePatterns: ['d3-array'],
         moduleNameMapper: {
           'd3-array': 'd3-array/dist/d3-array.min.js',
-          '^react-native$': 'react-native-web',
         },
       })
     },

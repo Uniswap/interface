@@ -327,110 +327,74 @@ exports[`LoadedRow.tsx renders a row 1`] = `
   }
 }
 
-<span
-    class="t_light is_inversed _dsp_contents"
+<div
+    data-testid="token-table-row-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <a
+      class="c0"
+      href="/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
     >
       <div
-        data-testid="token-table-row-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+        class="c1"
       >
-        <a
-          class="c0"
-          href="/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+        <div
+          class="c2 c3"
+        >
+          2
+        </div>
+        <div
+          class="c2 c4"
+          data-testid="name-cell"
         >
           <div
-            class="c1"
+            class="c5 c6"
           >
             <div
-              class="c2 c3"
+              class="c7"
             >
-              2
+              <img
+                class="c8"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+              />
             </div>
             <div
-              class="c2 c4"
-              data-testid="name-cell"
+              class="c2 c9"
             >
               <div
-                class="c5 c6"
+                class="c10"
+                data-cy="token-name"
               >
-                <div
-                  class="c7"
-                >
-                  <img
-                    class="c8"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                  />
-                </div>
-                <div
-                  class="c2 c9"
-                >
-                  <div
-                    class="c10"
-                    data-cy="token-name"
-                  >
-                    USD Coin
-                  </div>
-                  <div
-                    class="c2 c11"
-                  >
-                    USDC
-                  </div>
-                </div>
+                USD Coin
+              </div>
+              <div
+                class="c2 c11"
+              >
+                USDC
               </div>
             </div>
+          </div>
+        </div>
+        <div
+          class="c2 c12 c13"
+          data-testid="price-cell"
+        >
+          <div
+            class="c5"
+          >
             <div
-              class="c2 c12 c13"
-              data-testid="price-cell"
+              class="c2 c14"
             >
+              $1.00
               <div
-                class="c5"
-              >
-                <div
-                  class="c2 c14"
-                >
-                  $1.00
-                  <div
-                    class="c2 c15"
-                  >
-                    <svg
-                      aria-label="up"
-                      class="c16"
-                      fill="none"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      width="14"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
-                        fill="currentColor"
-                      />
-                    </svg>
-                    <span
-                      class="c17"
-                    >
-                      0.00%
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c2 c12 c18"
-              data-testid="percent-change-cell"
-            >
-              <div
-                class="c19"
+                class="c2 c15"
               >
                 <svg
                   aria-label="up"
                   class="c16"
                   fill="none"
-                  height="16"
+                  height="14"
                   viewBox="0 0 24 24"
-                  width="16"
+                  width="14"
                   xmlns="http://www.w3.org/2000/svg"
                 >
                   <path
@@ -445,60 +409,88 @@ exports[`LoadedRow.tsx renders a row 1`] = `
                 </span>
               </div>
             </div>
-            <div
-              class="c2 c12 c20"
-              data-testid="tvl-cell"
+          </div>
+        </div>
+        <div
+          class="c2 c12 c18"
+          data-testid="percent-change-cell"
+        >
+          <div
+            class="c19"
+          >
+            <svg
+              aria-label="up"
+              class="c16"
+              fill="none"
+              height="16"
+              viewBox="0 0 24 24"
+              width="16"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <div
-                class="c5"
-              >
-                $674.7M
-              </div>
-            </div>
-            <div
-              class="c2 c12 c21"
-              data-testid="volume-cell"
+              <path
+                d="M13.3021 7.7547L17.6821 14.2475C18.4182 15.3388 17.7942 17 16.6482 17L7.3518 17C6.2058 17 5.5818 15.3376 6.3179 14.2475L10.6979 7.7547C11.377 6.7484 12.623 6.7484 13.3021 7.7547Z"
+                fill="currentColor"
+              />
+            </svg>
+            <span
+              class="c17"
             >
-              <div
-                class="c5"
-              >
-                $444.7M
-              </div>
-            </div>
+              0.00%
+            </span>
+          </div>
+        </div>
+        <div
+          class="c2 c12 c20"
+          data-testid="tvl-cell"
+        >
+          <div
+            class="c5"
+          >
+            $674.7M
+          </div>
+        </div>
+        <div
+          class="c2 c12 c21"
+          data-testid="volume-cell"
+        >
+          <div
+            class="c5"
+          >
+            $444.7M
+          </div>
+        </div>
+        <div
+          class="c2 c22"
+        >
+          <div
+            class="c2 c23"
+          >
             <div
-              class="c2 c22"
+              style="width: 100%; height: 100%;"
             >
-              <div
-                class="c2 c23"
+              <svg
+                height="0"
+                width="0"
               >
-                <div
-                  style="width: 100%; height: 100%;"
+                <g
+                  class="visx-group"
+                  transform="translate(0, 5)"
                 >
-                  <svg
-                    height="0"
-                    width="0"
-                  >
-                    <g
-                      class="visx-group"
-                      transform="translate(0, 5)"
-                    >
-                      <path
-                        class="visx-linepath"
-                        d="M0,0C0,0,53.166666666666664,11.310946288825667,55,11.810946288825667C56.833333333333336,12.310946288825667,110,30,110,30"
-                        fill="transparent"
-                        stroke="#40B66B"
-                        stroke-linecap="round"
-                        stroke-width="1.5"
-                      />
-                    </g>
-                  </svg>
-                </div>
-              </div>
+                  <path
+                    class="visx-linepath"
+                    d="M0,0C0,0,53.166666666666664,11.310946288825667,55,11.810946288825667C56.833333333333336,12.310946288825667,110,30,110,30"
+                    fill="transparent"
+                    stroke="#40B66B"
+                    stroke-linecap="round"
+                    stroke-width="1.5"
+                  />
+                </g>
+              </svg>
             </div>
           </div>
-        </a>
+        </div>
       </div>
-    </span>
-  </span>
+    </a>
+  </div>
 </DocumentFragment>
 `;

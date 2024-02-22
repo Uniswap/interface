@@ -20,7 +20,7 @@ import { useFormatter } from 'utils/formatNumbers'
 
 import { refitChartContentAtom } from './TimeSelector'
 
-export type SeriesDataItemType = SeriesDataItemTypeMap<Time>[keyof SeriesOptionsMap]
+type SeriesDataItemType = SeriesDataItemTypeMap<Time>[keyof SeriesOptionsMap]
 
 interface ChartUtilParams<TDataType extends SeriesDataItemType> {
   locale: string
@@ -43,8 +43,7 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
   protected abstract series: ISeriesApi<any>
   protected data: TDataType[]
   protected chartDiv: HTMLDivElement
-  protected onCrosshairMove?: (data: TDataType | undefined, index: number | undefined) => void
-  private _hoveredItem?: TDataType | undefined
+  protected onCrosshairMove?: (data: TDataType | undefined) => void
 
   constructor(chartDiv: HTMLDivElement, params: ChartModelParams<TDataType>) {
     this.chartDiv = chartDiv
@@ -54,38 +53,21 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
     this.api = createChart(chartDiv)
 
     this.api.subscribeCrosshairMove((param) => {
-      let hoveredItem: TDataType | undefined = undefined
-      const logical = param.logical
       if (
         param === undefined ||
         param.time === undefined ||
-        logical === undefined ||
         (param && param.point && param.point.x < 0) ||
         (param && param.point && param.point.x > this.chartDiv.clientWidth) ||
         (param && param.point && param.point.y < 0) ||
         (param && param.point && param.point.y > this.chartDiv.clientHeight)
       ) {
         // reset values
-        hoveredItem = undefined
+        this.onCrosshairMove?.(undefined)
       } else if (param) {
-        hoveredItem = param.seriesData.get(this.series) as TDataType
-      }
-
-      if (hoveredItem?.time !== this._hoveredItem?.time) {
-        this._hoveredItem = hoveredItem
         // Dynamically accesses this.onCrosshairMove rather than params.onCrosshairMove so we only ever have to make one subscribeCrosshairMove call
-        this.onSeriesHover?.(hoveredItem, logical)
+        this.onCrosshairMove?.(param.seriesData.get(this.series) as TDataType)
       }
     })
-  }
-
-  /**
-   * Updates React state with the current crosshair data.
-   * This method should be overridden in subclasses to provide specific hover functionality.
-   * When overriding, call `super.onSeriesHover(data)` to maintain base functionality.
-   */
-  protected onSeriesHover(item: TDataType | undefined, index?: number) {
-    this.onCrosshairMove?.(item, index)
   }
 
   /** Updates the chart without re-creating it or resetting pan/zoom. */

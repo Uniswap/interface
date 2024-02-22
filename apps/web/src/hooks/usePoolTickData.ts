@@ -1,4 +1,4 @@
-import { Currency, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { Currency, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TickData, Ticks } from 'graphql/thegraph/AllV3TicksQuery'
@@ -19,7 +19,6 @@ export interface TickProcessed {
   liquidityActive: JSBI
   liquidityNet: JSBI
   price0: string
-  sdkPrice: Price<Token, Token>
 }
 
 const getActiveTick = (tickCurrent: number | undefined, feeAmount: FeeAmount | undefined) =>
@@ -89,19 +88,13 @@ export function usePoolActiveLiquidity(
 ): {
   isLoading: boolean
   error: any
-  currentTick?: number
   activeTick?: number
-  liquidity?: JSBI
-  sqrtPriceX96?: JSBI
   data?: TickProcessed[]
 } {
   const pool = usePool(currencyA, currencyB, feeAmount)
-  const liquidity = pool[1]?.liquidity
-  const sqrtPriceX96 = pool[1]?.sqrtRatioX96
 
-  const currentTick = pool[1]?.tickCurrent
   // Find nearest valid tick for pool in case tick is not initialized.
-  const activeTick = useMemo(() => getActiveTick(currentTick, feeAmount), [currentTick, feeAmount])
+  const activeTick = useMemo(() => getActiveTick(pool[1]?.tickCurrent, feeAmount), [pool, feeAmount])
 
   const { isLoading, error, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount)
 
@@ -142,13 +135,11 @@ export function usePoolActiveLiquidity(
       }
     }
 
-    const sdkPrice = tickToPrice(token0, token1, activeTick)
     const activeTickProcessed: TickProcessed = {
       liquidityActive: JSBI.BigInt(pool[1]?.liquidity ?? 0),
       tick: activeTick,
       liquidityNet: Number(ticks[pivot].tick) === activeTick ? JSBI.BigInt(ticks[pivot].liquidityNet) : JSBI.BigInt(0),
-      price0: sdkPrice.toFixed(PRICE_FIXED_DIGITS),
-      sdkPrice,
+      price0: tickToPrice(token0, token1, activeTick).toFixed(PRICE_FIXED_DIGITS),
     }
 
     const subsequentTicks = computeSurroundingTicks(token0, token1, activeTickProcessed, ticks, pivot, true)
@@ -160,11 +151,8 @@ export function usePoolActiveLiquidity(
     return {
       isLoading,
       error,
-      currentTick,
       activeTick,
-      liquidity,
-      sqrtPriceX96,
       data: ticksProcessed,
     }
-  }, [currencyA, currencyB, activeTick, pool, ticks, isLoading, error, currentTick, liquidity, sqrtPriceX96])
+  }, [currencyA, currencyB, activeTick, pool, ticks, isLoading, error])
 }

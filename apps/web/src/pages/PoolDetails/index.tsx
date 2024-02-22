@@ -1,6 +1,4 @@
 import { Trans } from '@lingui/macro'
-import { InterfacePageName } from '@uniswap/analytics-events'
-import { Trace } from 'analytics'
 import Column from 'components/Column'
 import ChartSection from 'components/Pools/PoolDetails/ChartSection'
 import { PoolDetailsBreadcrumb, PoolDetailsHeader } from 'components/Pools/PoolDetails/PoolDetailsHeader'
@@ -19,7 +17,7 @@ import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS, ThemeProvider } from 'theme'
-import { isAddress } from 'utilities/src/addresses'
+import { isAddress } from 'utils'
 
 const PageWrapper = styled(Row)`
   padding: 48px;
@@ -122,69 +120,53 @@ export default function PoolDetailsPage() {
   if (poolNotFound) return <NotFound />
   return (
     <ThemeProvider token0={color0 !== accent1 ? color0 : undefined} token1={color1 !== accent1 ? color1 : undefined}>
-      <Trace
-        page={InterfacePageName.POOL_DETAILS_PAGE}
-        properties={{
-          poolAddress,
-          chainId,
-          feeTier: poolData?.feeTier,
-          token0Address: poolData?.token0.id,
-          token1Address: poolData?.token1.id,
-          token0Symbol: poolData?.token0.symbol,
-          token1Symbol: poolData?.token1.symbol,
-          token0Name: poolData?.token0.name,
-          token1Name: poolData?.token1.name,
-        }}
-        shouldLogImpression={!loading}
-      >
-        <PageWrapper>
-          <LeftColumn>
-            <Column gap="20px">
-              <Column>
-                <PoolDetailsBreadcrumb
-                  chainId={chainId}
-                  poolAddress={poolAddress}
-                  token0={token0}
-                  token1={token1}
-                  loading={loading}
-                />
-                <PoolDetailsHeader
-                  chainId={chainId}
-                  poolAddress={poolAddress}
-                  token0={token0}
-                  token1={token1}
-                  feeTier={poolData?.feeTier}
-                  toggleReversed={toggleReversed}
-                  loading={loading}
-                />
-              </Column>
-              <ChartSection poolData={poolData} loading={loading} isReversed={isReversed} />
+      <PageWrapper>
+        <LeftColumn>
+          <Column gap="20px">
+            <Column>
+              <PoolDetailsBreadcrumb
+                chainId={chainId}
+                poolAddress={poolAddress}
+                token0={token0}
+                token1={token1}
+                loading={loading}
+              />
+              <PoolDetailsHeader
+                chainId={chainId}
+                poolAddress={poolAddress}
+                token0={token0}
+                token1={token1}
+                feeTier={poolData?.feeTier}
+                toggleReversed={toggleReversed}
+                loading={loading}
+              />
             </Column>
-            <HR />
-            <PoolDetailsTableTab poolAddress={poolAddress} token0={token0} token1={token1} />
-          </LeftColumn>
-          <RightColumn>
-            <PoolDetailsStatsButtons
-              chainId={chainId}
-              token0={token0}
-              token1={token1}
-              feeTier={poolData?.feeTier}
-              loading={loading}
-            />
-            <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} loading={loading} />
-            <TokenDetailsWrapper>
-              <TokenDetailsHeader>
-                <Trans>Links</Trans>
-              </TokenDetailsHeader>
-              <LinksContainer>
-                <PoolDetailsLink address={poolAddress} chainId={chainId} tokens={[token0, token1]} loading={loading} />
-                <PoolDetailsLink address={token0?.id} chainId={chainId} tokens={[token0]} loading={loading} />
-                <PoolDetailsLink address={token1?.id} chainId={chainId} tokens={[token1]} loading={loading} />
-              </LinksContainer>
-            </TokenDetailsWrapper>
-          </RightColumn>
-        </PageWrapper>
-      </Trace>
+            <ChartSection token0={token0} token1={token1} feeTier={poolData?.feeTier} loading={loading} />
+          </Column>
+          <HR />
+          <PoolDetailsTableTab poolAddress={poolAddress} token0={token0} token1={token1} />
+        </LeftColumn>
+        <RightColumn>
+          <PoolDetailsStatsButtons
+            chainId={chainId}
+            token0={token0}
+            token1={token1}
+            feeTier={poolData?.feeTier}
+            loading={loading}
+          />
+          <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainId} loading={loading} />
+          <TokenDetailsWrapper>
+            <TokenDetailsHeader>
+              <Trans>Links</Trans>
+            </TokenDetailsHeader>
+            <LinksContainer>
+              <PoolDetailsLink address={poolAddress} chainId={chainId} tokens={[token0, token1]} loading={loading} />
+              <PoolDetailsLink address={token0?.id} chainId={chainId} tokens={[token0]} loading={loading} />
+              <PoolDetailsLink address={token1?.id} chainId={chainId} tokens={[token1]} loading={loading} />
+            </LinksContainer>
+          </TokenDetailsWrapper>
+        </RightColumn>
+      </PageWrapper>
     </ThemeProvider>
   )
 }

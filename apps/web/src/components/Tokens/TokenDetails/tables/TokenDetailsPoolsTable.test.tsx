@@ -43,7 +43,7 @@ describe('TDPPoolTable', () => {
     })
 
     const { asFragment } = render(<TokenDetailsPoolsTable chainId={ChainId.MAINNET} referenceToken={mockToken} />)
-    expect(screen.getByTestId('table-error-modal')).not.toBeNull()
+    expect(screen.getByText('Error loading Top Pools')).not.toBeNull()
     expect(asFragment()).toMatchSnapshot()
   })
 

@@ -1,3 +1,4 @@
+import React from 'react'
 import { Flex, Icons, Text, TouchableArea, Unicon, UniconV2 } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'

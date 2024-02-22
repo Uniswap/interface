@@ -99,10 +99,9 @@ export const useCanAddressClaimUnitag = (
 }
 
 export const useUnitagByAddress = (
-  address?: Address,
-  forceEnable?: boolean
+  address?: Address
 ): { unitag?: UnitagAddressResponse; loading: boolean } => {
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags) || forceEnable
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
   const { data, loading, refetch } = useUnitagByAddressQuery(
     unitagsFeatureFlagEnabled ? address : undefined
   )
@@ -122,10 +121,9 @@ export const useUnitagByAddress = (
 }
 
 export const useUnitagByName = (
-  name?: string,
-  forceEnable?: boolean
+  name?: string
 ): { unitag?: UnitagUsernameResponse; loading: boolean } => {
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags) || forceEnable
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
   const { data, loading, refetch } = useUnitagQuery(unitagsFeatureFlagEnabled ? name : undefined)
 
   // Force refetch if counter changes

@@ -9,15 +9,13 @@ import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import Modal from 'components/Modal'
 import Row from 'components/Row'
-import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
 import { Unicon } from 'components/Unicon'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { ReactNode } from 'react'
 import { useSendContext } from 'state/send/SendContext'
 import styled from 'styled-components'
 import { ClickableStyle, CloseIcon, Separator, ThemedText } from 'theme/components'
-import { Icons } from 'ui/src'
-import { shortenAddress } from 'utilities/src/addresses'
+import { shortenAddress } from 'utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const ModalWrapper = styled(ColumnCenter)`
@@ -119,20 +117,15 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
             <SendModalHeader
               label={<Trans>To</Trans>}
               header={
-                recipientData?.unitag || recipientData?.ensName ? (
-                  <Row gap="sm">
-                    <ThemedText.HeadlineLarge>{recipientData.unitag ?? recipientData.ensName}</ThemedText.HeadlineLarge>
-                    {recipientData?.unitag && <Icons.Unitag size={36} />}
-                  </Row>
+                recipientData?.ensName ? (
+                  <ThemedText.HeadlineLarge>{recipientData.ensName}</ThemedText.HeadlineLarge>
                 ) : (
                   shortenAddress(recipientData?.address)
                 )
               }
-              subheader={(recipientData?.unitag || recipientData?.ensName) && shortenAddress(recipientData.address)}
+              subheader={recipientData?.ensName && shortenAddress(recipientData.address)}
               image={
-                recipientData?.unitag ? (
-                  <UniTagProfilePicture account={recipientData.address} size={36} />
-                ) : recipientData?.ensName ? (
+                recipientData?.ensName ? (
                   <Identicon account={recipientData.address} size={36} />
                 ) : (
                   <Unicon address={recipientData?.address ?? ''} size={36} />

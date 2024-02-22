@@ -1,5 +1,4 @@
-import { Flex, getTokenValue, Icons, Shine, Skeleton, Text, useSporeColors } from 'ui/src'
-import { isWarmLoadingStatus } from 'wallet/src/data/utils'
+import { Flex, getTokenValue, Icons, Text, useSporeColors } from 'ui/src'
 import { usePortfolioTotalValue } from 'wallet/src/features/dataApi/balances'
 
 type WalletBalanceProps = {
@@ -7,7 +6,7 @@ type WalletBalanceProps = {
 }
 
 export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
-  const { data, loading, error, networkStatus } = usePortfolioTotalValue({ address })
+  const { data, loading, error } = usePortfolioTotalValue({ address })
   const { balanceUSD, percentChange } = data || {}
 
   // TODO (EXT-297): encapsulate to share better
@@ -20,47 +19,35 @@ export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
   const formattedChange = change !== undefined ? `${Math.abs(change).toFixed(2)}%` : '-'
   return (
     <Flex>
-      {!data && loading ? (
+      {loading ? (
         <Flex>
-          <Skeleton>
-            <Text
-              loading="no-shimmer"
-              loadingPlaceholderText="$-,---.--"
-              numberOfLines={1}
-              variant="heading1"
-            />
-          </Skeleton>
-
-          <Text
-            loading="no-shimmer"
-            loadingPlaceholderText="--%"
-            numberOfLines={1}
-            variant="body1"
-          />
+          <Text color="$neutral3" fontWeight="600" variant="heading1">
+            $-,---.--
+          </Text>
+          <Text color="$neutral3" variant="body1">
+            --%
+          </Text>
         </Flex>
       ) : error ? (
         <Text color="$statusCritical" variant="body1">
-          {/* TODO(EXT-626): add proper error state */}
           Error: {JSON.stringify(error)}
         </Text>
       ) : (
         <Flex gap="$spacing12">
-          <Shine disabled={!isWarmLoadingStatus(networkStatus)}>
-            <Flex>
-              <Text variant="heading1">${balanceUSD?.toFixed(2)}</Text>
-              <Flex row alignItems="center">
-                <Icons.ArrowChange
-                  color={arrowColor.get()}
-                  rotation={isPositiveChange ? 180 : 0}
-                  size={getTokenValue('$icon.20')}
-                />
-                <Text color="$neutral2" variant="body1">
-                  {/* TODO(EXT-298): add absolute change here too, share from mobile */}
-                  {formattedChange}
-                </Text>
-              </Flex>
+          <Flex>
+            <Text variant="heading1">${balanceUSD?.toFixed(2)}</Text>
+            <Flex row alignItems="center">
+              <Icons.ArrowChange
+                color={arrowColor.get()}
+                rotation={isPositiveChange ? 180 : 0}
+                size={getTokenValue('$icon.20')}
+              />
+              <Text color="$neutral2" variant="body1">
+                {/* TODO(EXT-298): add absolute change here too, share from mobile */}
+                {formattedChange}
+              </Text>
             </Flex>
-          </Shine>
+          </Flex>
         </Flex>
       )}
     </Flex>

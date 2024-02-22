@@ -112,12 +112,6 @@ export const slice = createSlice({
       }
       state.watchedAddresses = newWatched
     },
-    setFavoriteWallets: (
-      state,
-      { payload: { addresses } }: PayloadAction<{ addresses: Address[] }>
-    ) => {
-      state.watchedAddresses = addresses
-    },
     // if user has ever toggled token visibility manually, record it here
     // and use it instead of dynamic visibility filtering
     toggleTokenVisibility: (
@@ -192,6 +186,5 @@ export const {
   removeWatchedAddress,
   toggleNftVisibility,
   toggleTokenVisibility,
-  setFavoriteWallets,
 } = slice.actions
 export const { reducer: favoritesReducer } = slice

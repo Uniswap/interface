@@ -93,11 +93,11 @@ const ActionButton = styled(Row)`
 
 const TokenTitle = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
-  gap: 8px;
 
   ${({ isInfoTDPEnabled }) =>
     isInfoTDPEnabled
       ? css`
+          gap: 8px;
           overflow: hidden;
           white-space: nowrap;
         `
@@ -110,13 +110,14 @@ const TokenTitle = styled.div<{ isInfoTDPEnabled?: boolean }>`
 
 const TokenSymbol = styled.h1<{ isInfoTDPEnabled?: boolean }>`
   font-weight: 485;
-  font-size: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '24px' : 'inherit')};
+  font-size: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '28px' : 'inherit')};
   line-height: inherit;
   margin-top: 0;
   margin-bottom: 0;
 
   text-transform: uppercase;
   color: ${({ theme }) => theme.neutral2};
+  margin-left: 8px;
 
   ${({ isInfoTDPEnabled }) =>
     isInfoTDPEnabled &&
@@ -129,7 +130,6 @@ const TokenSymbol = styled.h1<{ isInfoTDPEnabled?: boolean }>`
 
 const TokenName = styled(ThemedText.HeadlineMedium)`
   ${EllipsisStyle}
-  font-size: 24px !important;
   min-width: 40px;
 `
 

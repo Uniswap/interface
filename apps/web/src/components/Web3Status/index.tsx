@@ -23,11 +23,8 @@ import { updateRecentConnectionMeta } from 'state/user/reducer'
 import styled from 'styled-components'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
-import { shortenAddress } from 'utilities/src/addresses'
+import { shortenAddress } from 'utils'
 
-import { useUniTagsEnabled } from 'featureFlags/flags/uniTags'
-import { Icons } from 'ui/src'
-import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
 import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import { RowBetween } from '../Row'
@@ -116,12 +113,12 @@ const AddressAndChevronContainer = styled.div<{ $loading?: boolean }>`
   }
 `
 
-const Text = styled.span`
+const Text = styled.p`
   flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin: 0 2px;
+  margin: 0 0.25rem 0 0.25rem;
   font-size: 1rem;
   width: fit-content;
   font-weight: 485;
@@ -146,7 +143,6 @@ function Web3StatusInner() {
   const activeWeb3 = useWeb3React()
   const lastWeb3 = useLast(useWeb3React(), ignoreWhileSwitchingChain)
   const { account, connector } = useMemo(() => (activeWeb3.account ? activeWeb3 : lastWeb3), [activeWeb3, lastWeb3])
-  const { unitag } = useUnitagByAddress(account, useUniTagsEnabled() && Boolean(account))
   const { ENSName, loading: ENSLoading } = useENSName(account)
   const connection = getConnection(connector)
   const dispatch = useAppDispatch()
@@ -226,8 +222,7 @@ function Web3StatusInner() {
             </RowBetween>
           ) : (
             <AddressAndChevronContainer>
-              <Text>{unitag?.username ?? ENSName ?? shortenAddress(account)}</Text>
-              {unitag?.username && <Icons.Unitag size={24} />}
+              <Text>{ENSName ?? shortenAddress(account)}</Text>
             </AddressAndChevronContainer>
           )}
         </Web3StatusConnected>

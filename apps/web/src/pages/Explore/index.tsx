@@ -209,7 +209,6 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   return (
     <Trace
       page={isInfoExplorePageEnabled ? InterfacePageName.EXPLORE_PAGE : InterfacePageName.TOKENS_PAGE}
-      properties={{ chainName: chain }}
       shouldLogImpression
     >
       <ExploreContainer isInfoExplorePageEnabled={isInfoExplorePageEnabled}>

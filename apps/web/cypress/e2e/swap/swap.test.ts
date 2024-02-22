@@ -53,7 +53,6 @@ describe('Swap', () => {
     })
 
     it('swaps ETH for USDC', () => {
-      cy.interceptGraphqlOperation('Activity', 'mini-portfolio/empty_activity.json')
       cy.visit('/swap')
       cy.hardhat({ automine: false })
       getBalance(USDC_MAINNET).then((initialBalance) => {

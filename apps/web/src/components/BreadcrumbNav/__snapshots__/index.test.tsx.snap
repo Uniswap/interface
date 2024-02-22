@@ -38,26 +38,18 @@ exports[`BreadcrumbNav does not display address hover for native tokens 1`] = `
   margin: 0;
 }
 
-<span
-    class=" _dsp_contents"
+<div
+    aria-current="page"
+    class="c0 c1 c2"
+    data-testid="current-breadcrumb"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <h1
+      class="c3"
     >
-      <div
-        aria-current="page"
-        class="c0 c1 c2"
-        data-testid="current-breadcrumb"
-      >
-        <h1
-          class="c3"
-        >
-          ETH
-        </h1>
-         
-      </div>
-    </span>
-  </span>
+      ETH
+    </h1>
+     
+  </div>
 </DocumentFragment>
 `;
 
@@ -110,35 +102,27 @@ exports[`BreadcrumbNav renders hover components correctly 1`] = `
   white-space: nowrap;
 }
 
-<span
-    class="t_light is_inversed _dsp_contents"
+<div
+    aria-current="page"
+    class="c0 c1 c2"
+    data-testid="current-breadcrumb"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
+    <h1
+      class="c3"
+    >
+      WBTC
+    </h1>
+     
+    <div
+      class="c0 c1 c4"
+      data-testid="breadcrumb-token-address"
     >
       <div
-        aria-current="page"
-        class="c0 c1 c2"
-        data-testid="current-breadcrumb"
+        class="c5"
       >
-        <h1
-          class="c3"
-        >
-          WBTC
-        </h1>
-         
-        <div
-          class="c0 c1 c4"
-          data-testid="breadcrumb-token-address"
-        >
-          <div
-            class="c5"
-          >
-            0x2260...C599
-          </div>
-        </div>
+        0x2260...C599
       </div>
-    </span>
-  </span>
+    </div>
+  </div>
 </DocumentFragment>
 `;

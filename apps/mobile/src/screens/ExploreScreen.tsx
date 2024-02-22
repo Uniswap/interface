@@ -50,7 +50,7 @@ export function ExploreScreen(): JSX.Element {
   const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
   const textInputRef = useRef<TextInput>(null)
 
-  const onSearchChangeText = (newSearchFilter: string): void => {
+  const onChangeSearchFilter = (newSearchFilter: string): void => {
     setSearchQuery(newSearchFilter)
   }
 
@@ -83,8 +83,9 @@ export function ExploreScreen(): JSX.Element {
           backgroundColor={isSearchMode ? contrastBackgroundColor : searchBarBackgroundColor}
           placeholder={t('Search tokens and wallets')}
           showShadow={!isSearchMode}
+          value={searchQuery}
           onCancel={onSearchCancel}
-          onChangeText={onSearchChangeText}
+          onChangeText={onChangeSearchFilter}
           onFocus={onSearchFocus}
         />
       </Flex>

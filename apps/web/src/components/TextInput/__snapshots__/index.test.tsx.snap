@@ -49,26 +49,18 @@ exports[`ResizableTextArea renders correctly 1`] = `
   color: #7D7D7D;
 }
 
-<span
-    class=" _dsp_contents"
+<textarea
+    autocapitalize="off"
+    autocomplete="off"
+    autocorrect="off"
+    class="c0 testing"
+    font-size="12"
+    placeholder="Test Placeholder"
+    spellcheck="false"
+    style="height: auto; min-height: 535px;"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
-    >
-      <textarea
-        autocapitalize="off"
-        autocomplete="off"
-        autocorrect="off"
-        class="c0 testing"
-        font-size="12"
-        placeholder="Test Placeholder"
-        spellcheck="false"
-        style="height: auto; min-height: 535px;"
-      >
-        My test input
-      </textarea>
-    </span>
-  </span>
+    My test input
+  </textarea>
 </DocumentFragment>
 `;
 
@@ -119,28 +111,20 @@ exports[`TextInput renders correctly 1`] = `
   color: #CECECE;
 }
 
-<span
-    class="t_light is_inversed _dsp_contents"
+<div
+    class="testing"
   >
-    <span
-      class=" t_light _dsp_contents is_Theme"
-    >
-      <div
-        class="testing"
-      >
-        <input
-          autocapitalize="off"
-          autocomplete="off"
-          autocorrect="off"
-          class="c0"
-          font-size="12"
-          placeholder="Test Placeholder"
-          spellcheck="false"
-          type="text"
-          value="My test input"
-        />
-      </div>
-    </span>
-  </span>
+    <input
+      autocapitalize="off"
+      autocomplete="off"
+      autocorrect="off"
+      class="c0"
+      font-size="12"
+      placeholder="Test Placeholder"
+      spellcheck="false"
+      type="text"
+      value="My test input"
+    />
+  </div>
 </DocumentFragment>
 `;

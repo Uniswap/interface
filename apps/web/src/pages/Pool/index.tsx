@@ -7,7 +7,7 @@ import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { FlyoutAlignment, Menu } from 'components/Menu'
 import PositionList from 'components/PositionList'
-import Row, { RowBetween, RowFixed } from 'components/Row'
+import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
@@ -21,9 +21,6 @@ import styled, { css, useTheme } from 'styled-components'
 import { HideSmall, ThemedText } from 'theme/components'
 import { PositionDetails } from 'types/position'
 
-import { ProtocolVersion } from 'graphql/data/__generated__/types-and-hooks'
-import { PoolVersionMenu } from 'pages/Pool/shared'
-import { ApplicationModal } from 'state/application/reducer'
 import CTACards from './CTACards'
 import { LoadingRows } from './styled'
 
@@ -260,16 +257,12 @@ export default function Pool() {
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
             <TitleRow padding="0">
-              <Row gap="md" width="min-content">
-                <ThemedText.LargeHeader>
-                  <Trans>Pools</Trans>
-                </ThemedText.LargeHeader>
-                <PoolVersionMenu protocolVersion={ProtocolVersion.V3} />
-              </Row>
+              <ThemedText.LargeHeader>
+                <Trans>Pools</Trans>
+              </ThemedText.LargeHeader>
               <ButtonRow>
                 {networkSupportsV2 && (
                   <PoolMenu
-                    modal={ApplicationModal.POOL_OVERVIEW_OPTIONS}
                     menuItems={menuItems}
                     flyoutAlignment={FlyoutAlignment.LEFT}
                     ToggleUI={(props: any) => (

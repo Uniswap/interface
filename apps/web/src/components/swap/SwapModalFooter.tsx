@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
-import { TraceEvent, useTrace } from 'analytics'
+import { TraceEvent } from 'analytics'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
 import SpinningLoader from 'components/Loader/SpinningLoader'
@@ -134,8 +134,6 @@ export default function SwapModalFooter({
   const [showMore, setShowMore] = useState(false)
   const isNewSwapFlowEnabled = useNewSwapFlow()
 
-  const analyticsContext = useTrace()
-
   const lineItemProps = { trade, allowedSlippage, syncing: false }
 
   const callToAction: CallToAction = useMemo(() => {
@@ -189,20 +187,17 @@ export default function SwapModalFooter({
             events={[BrowserEvent.onClick]}
             element={InterfaceElementName.CONFIRM_SWAP_BUTTON}
             name={SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED}
-            properties={{
-              ...formatSwapButtonClickEventProperties({
-                trade,
-                swapResult,
-                allowedSlippage,
-                transactionDeadlineSecondsSinceEpoch,
-                isAutoSlippage,
-                isAutoRouterApi: routerPreference === RouterPreference.API,
-                routes,
-                fiatValueInput: fiatValueInput.data,
-                fiatValueOutput: fiatValueOutput.data,
-              }),
-              ...analyticsContext,
-            }}
+            properties={formatSwapButtonClickEventProperties({
+              trade,
+              swapResult,
+              allowedSlippage,
+              transactionDeadlineSecondsSinceEpoch,
+              isAutoSlippage,
+              isAutoRouterApi: routerPreference === RouterPreference.API,
+              routes,
+              fiatValueInput: fiatValueInput.data,
+              fiatValueOutput: fiatValueOutput.data,
+            })}
           >
             <ConfirmButton
               data-testid="confirm-swap-button"

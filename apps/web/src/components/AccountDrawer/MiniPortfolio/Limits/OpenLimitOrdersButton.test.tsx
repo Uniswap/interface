@@ -22,7 +22,7 @@ describe('OpenLimitOrdersButton', () => {
   it('should not render if there are no open limit orders', () => {
     mocked(useOpenLimitOrders).mockReturnValue({ openLimitOrders: [], loading: false, refetch: jest.fn() })
     const { container } = render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={jest.fn()} />)
-    expect(container.firstChild?.firstChild?.firstChild).toBeNull()
+    expect(container.firstChild).toBeNull()
   })
   it('should render if there are open limit orders', () => {
     mocked(useOpenLimitOrders).mockReturnValue({
@@ -43,7 +43,7 @@ describe('OpenLimitOrdersButton', () => {
     const clickCallback = jest.fn()
     const { container } = render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={clickCallback} />)
     act(() => {
-      fireEvent.click(container.firstChild?.firstChild?.firstChild as HTMLElement)
+      fireEvent.click(container.firstChild as HTMLElement)
     })
     expect(clickCallback).toHaveBeenCalled()
   })

@@ -41,13 +41,21 @@ export class CustomVolumeChartModel<TDataType extends CustomHistogramData> exten
       localization: {
         locale: params.locale,
         priceFormatter: (price: BarPrice) =>
-          params.format.formatFiatPrice({ price, type: NumberType.ChartVolumePriceScale }),
+          params.format.formatFiatPrice({ price, type: NumberType.FiatTokenChartStatsScale }),
       },
       rightPriceScale: {
         visible: false,
       },
       handleScale: false,
       handleScroll: false,
+      grid: {
+        vertLines: {
+          visible: false,
+        },
+        horzLines: {
+          visible: false,
+        },
+      },
       crosshair: {
         horzLine: {
           visible: false,

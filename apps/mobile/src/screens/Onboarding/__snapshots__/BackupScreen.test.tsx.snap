@@ -144,44 +144,59 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
               }
             >
               <View
-                cancelable={true}
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
                 focusable={true}
-                hitSlop={[Function]}
-                minPressDuration={0}
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseEnter={[Function]}
-                onMouseLeave={[Function]}
-                onPress={[Function]}
-                onPressIn={[Function]}
-                onPressOut={[Function]}
+                hitSlop={
+                  {
+                    "bottom": 5,
+                    "left": 5,
+                    "right": 5,
+                    "top": 5,
+                  }
+                }
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
                   {
                     "backgroundColor": "#FFFFFF",
                     "borderBottomColor": "#2222220D",
                     "borderBottomLeftRadius": 20,
                     "borderBottomRightRadius": 20,
-                    "borderBottomWidth": 1,
                     "borderLeftColor": "#2222220D",
-                    "borderLeftWidth": 1,
                     "borderRightColor": "#2222220D",
-                    "borderRightWidth": 1,
                     "borderStyle": "solid",
                     "borderTopColor": "#2222220D",
                     "borderTopLeftRadius": 20,
                     "borderTopRightRadius": 20,
-                    "borderTopWidth": 1,
-                    "flexDirection": "column",
+                    "borderWidth": 1,
                     "opacity": 1,
                     "paddingBottom": 16,
                     "paddingLeft": 16,
                     "paddingRight": 16,
                     "paddingTop": 16,
-                    "transform": [
-                      {
-                        "scale": 1,
-                      },
-                    ],
                   }
                 }
                 testID="add-cloud-backup"
@@ -339,44 +354,59 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 </View>
               </View>
               <View
-                cancelable={true}
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
                 focusable={true}
-                hitSlop={[Function]}
-                minPressDuration={0}
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseEnter={[Function]}
-                onMouseLeave={[Function]}
-                onPress={[Function]}
-                onPressIn={[Function]}
-                onPressOut={[Function]}
+                hitSlop={
+                  {
+                    "bottom": 5,
+                    "left": 5,
+                    "right": 5,
+                    "top": 5,
+                  }
+                }
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
                   {
                     "backgroundColor": "#FFFFFF",
                     "borderBottomColor": "#2222220D",
                     "borderBottomLeftRadius": 20,
                     "borderBottomRightRadius": 20,
-                    "borderBottomWidth": 1,
                     "borderLeftColor": "#2222220D",
-                    "borderLeftWidth": 1,
                     "borderRightColor": "#2222220D",
-                    "borderRightWidth": 1,
                     "borderStyle": "solid",
                     "borderTopColor": "#2222220D",
                     "borderTopLeftRadius": 20,
                     "borderTopRightRadius": 20,
-                    "borderTopWidth": 1,
-                    "flexDirection": "column",
+                    "borderWidth": 1,
                     "opacity": 1,
                     "paddingBottom": 16,
                     "paddingLeft": 16,
                     "paddingRight": 16,
                     "paddingTop": 16,
-                    "transform": [
-                      {
-                        "scale": 1,
-                      },
-                    ],
                   }
                 }
                 testID="add-manual-backup"
@@ -493,17 +523,41 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
             }
           >
             <View
-              cancelable={true}
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
               focusable={true}
-              hitSlop={[Function]}
-              minPressDuration={0}
-              onBlur={[Function]}
-              onFocus={[Function]}
-              onMouseEnter={[Function]}
-              onMouseLeave={[Function]}
-              onPress={[Function]}
-              onPressIn={[Function]}
-              onPressOut={[Function]}
+              hitSlop={
+                {
+                  "bottom": 5,
+                  "left": 5,
+                  "right": 5,
+                  "top": 5,
+                }
+              }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 {
                   "alignItems": "center",
@@ -513,11 +567,6 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                   "opacity": 1,
                   "paddingBottom": 8,
                   "paddingTop": 8,
-                  "transform": [
-                    {
-                      "scale": 1,
-                    },
-                  ],
                 }
               }
             >
@@ -813,6 +862,26 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
               }
             >
               <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": true,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
                 hitSlop={
                   {
                     "bottom": 5,
@@ -821,33 +890,31 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     "top": 5,
                   }
                 }
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
                   {
                     "backgroundColor": "#FFFFFF",
                     "borderBottomColor": "#2222220D",
                     "borderBottomLeftRadius": 20,
                     "borderBottomRightRadius": 20,
-                    "borderBottomWidth": 1,
                     "borderLeftColor": "#2222220D",
-                    "borderLeftWidth": 1,
                     "borderRightColor": "#2222220D",
-                    "borderRightWidth": 1,
                     "borderStyle": "solid",
                     "borderTopColor": "#2222220D",
                     "borderTopLeftRadius": 20,
                     "borderTopRightRadius": 20,
-                    "borderTopWidth": 1,
-                    "flexDirection": "column",
+                    "borderWidth": 1,
                     "opacity": 0.5,
                     "paddingBottom": 16,
                     "paddingLeft": 16,
                     "paddingRight": 16,
                     "paddingTop": 16,
-                    "transform": [
-                      {
-                        "scale": 1,
-                      },
-                    ],
                   }
                 }
                 testID="add-cloud-backup"
@@ -1005,45 +1072,59 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 </View>
               </View>
               <View
-                cancelable={true}
-                disabled={false}
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": false,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
                 focusable={true}
-                hitSlop={[Function]}
-                minPressDuration={0}
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseEnter={[Function]}
-                onMouseLeave={[Function]}
-                onPress={[Function]}
-                onPressIn={[Function]}
-                onPressOut={[Function]}
+                hitSlop={
+                  {
+                    "bottom": 5,
+                    "left": 5,
+                    "right": 5,
+                    "top": 5,
+                  }
+                }
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
                 style={
                   {
                     "backgroundColor": "#FFFFFF",
                     "borderBottomColor": "#2222220D",
                     "borderBottomLeftRadius": 20,
                     "borderBottomRightRadius": 20,
-                    "borderBottomWidth": 1,
                     "borderLeftColor": "#2222220D",
-                    "borderLeftWidth": 1,
                     "borderRightColor": "#2222220D",
-                    "borderRightWidth": 1,
                     "borderStyle": "solid",
                     "borderTopColor": "#2222220D",
                     "borderTopLeftRadius": 20,
                     "borderTopRightRadius": 20,
-                    "borderTopWidth": 1,
-                    "flexDirection": "column",
+                    "borderWidth": 1,
                     "opacity": 1,
                     "paddingBottom": 16,
                     "paddingLeft": 16,
                     "paddingRight": 16,
                     "paddingTop": 16,
-                    "transform": [
-                      {
-                        "scale": 1,
-                      },
-                    ],
                   }
                 }
                 testID="add-manual-backup"
@@ -1160,17 +1241,41 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
             }
           >
             <View
-              cancelable={true}
+              accessibilityState={
+                {
+                  "busy": undefined,
+                  "checked": undefined,
+                  "disabled": undefined,
+                  "expanded": undefined,
+                  "selected": undefined,
+                }
+              }
+              accessibilityValue={
+                {
+                  "max": undefined,
+                  "min": undefined,
+                  "now": undefined,
+                  "text": undefined,
+                }
+              }
+              accessible={true}
+              collapsable={false}
               focusable={true}
-              hitSlop={[Function]}
-              minPressDuration={0}
-              onBlur={[Function]}
-              onFocus={[Function]}
-              onMouseEnter={[Function]}
-              onMouseLeave={[Function]}
-              onPress={[Function]}
-              onPressIn={[Function]}
-              onPressOut={[Function]}
+              hitSlop={
+                {
+                  "bottom": 5,
+                  "left": 5,
+                  "right": 5,
+                  "top": 5,
+                }
+              }
+              onClick={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               style={
                 {
                   "alignItems": "center",
@@ -1180,11 +1285,6 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                   "opacity": 1,
                   "paddingBottom": 8,
                   "paddingTop": 8,
-                  "transform": [
-                    {
-                      "scale": 1,
-                    },
-                  ],
                 }
               }
             >

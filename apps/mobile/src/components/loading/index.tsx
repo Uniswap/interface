@@ -1,5 +1,6 @@
 import React, { memo } from 'react'
 import { TransactionLoader } from 'src/components/loading/TransactionLoader'
+import { WalletLoader } from 'src/components/loading/WalletLoader'
 import { WaveLoader } from 'src/components/loading/WaveLoader'
 import { Flex, FlexLoader, FlexLoaderProps, getToken, Skeleton } from 'ui/src'
 
@@ -7,6 +8,20 @@ function Graph(): JSX.Element {
   return (
     <Skeleton>
       <WaveLoader />
+    </Skeleton>
+  )
+}
+
+function Wallets({ repeat = 1 }: { repeat?: number }): JSX.Element {
+  return (
+    <Skeleton>
+      <Flex gap="$spacing12">
+        {new Array(repeat).fill(null).map((_, i, { length }) => (
+          <React.Fragment key={i}>
+            <WalletLoader opacity={(length - i) / length} />
+          </React.Fragment>
+        ))}
+      </Flex>
     </Skeleton>
   )
 }
@@ -57,6 +72,7 @@ function Favorite({ height, contrast }: { height?: number; contrast?: boolean })
 export const Loader = {
   Box,
   Transaction,
+  Wallets,
   Graph,
   Image,
   Favorite,

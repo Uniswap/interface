@@ -21,12 +21,6 @@ declare global {
        * @returns {Chainable<Subject>}
        */
       waitForAmplitudeEvent(eventName: string, requiredProperties?: string[]): Chainable<Subject>
-      /**
-       * Intercepts a specific graphql operation and responds with the given fixture.
-       * @param {string} operationName - The name of the graphql operation to intercept.
-       * @param {string} fixturePath - The path to the fixture to respond with.
-       */
-      interceptGraphqlOperation(operationName: string, fixturePath: string): Chainable<Subject>
     }
     interface VisitOptions {
       serviceWorker?: true
@@ -101,14 +95,4 @@ Cypress.Commands.add('waitForAmplitudeEvent', (eventName, requiredProperties) =>
     }
   }
   return findAndDiscardEventsUpToTarget()
-})
-
-Cypress.Commands.add('interceptGraphqlOperation', (operationName, fixturePath) => {
-  return cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v1\/graphql/, (req) => {
-    if (req.body.operationName === operationName) {
-      req.reply({ fixture: fixturePath })
-    } else {
-      req.continue()
-    }
-  })
 })

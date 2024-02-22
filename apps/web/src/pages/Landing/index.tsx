@@ -352,7 +352,7 @@ export default function Landing() {
   if (isNewLandingPageEnabled) {
     return (
       <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
-        <LandingV2 transition={isExitAnimationEnabled && transition} />
+        <LandingV2 data-testid="landing-page" transition={isExitAnimationEnabled && transition} />
       </Trace>
     )
   }

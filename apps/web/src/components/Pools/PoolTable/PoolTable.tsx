@@ -1,12 +1,10 @@
-import { ApolloError } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { ChainId, Percent } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
-import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Table/styled'
-import { NameText } from 'components/Tokens/TokenTable'
+import { ClickableHeaderRow, HeaderArrow } from 'components/Table/styled'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { BIPS_BASE } from 'constants/misc'
 import { ProtocolVersion, Token } from 'graphql/data/__generated__/types-and-hooks'
@@ -23,6 +21,8 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+
+import { NameText } from 'components/Tokens/TokenTable'
 import { DoubleCurrencyAndChainLogo } from '../PoolDetails/PoolDetailsHeader'
 
 const TableWrapper = styled.div`
@@ -109,12 +109,21 @@ export function TopPoolTable() {
     [sortState.sortBy, sortState.sortDirection]
   )
 
+  if (error) {
+    return (
+      <TableWrapper>
+        <ThemedText.BodyPrimary>
+          <Trans>Error loading Top Pools</Trans>
+        </ThemedText.BodyPrimary>
+      </TableWrapper>
+    )
+  }
+
   return (
     <TableWrapper data-testid="top-pools-explore-table">
       <PoolsTable
         pools={topPools}
         loading={loading}
-        error={error}
         chainId={chainId}
         sortState={sortState}
         handleHeaderClick={handleHeaderClick}
@@ -126,7 +135,6 @@ export function TopPoolTable() {
 export function PoolsTable({
   pools,
   loading,
-  error,
   loadMore,
   chainId,
   sortState,
@@ -136,7 +144,6 @@ export function PoolsTable({
 }: {
   pools?: TablePool[]
   loading: boolean
-  error?: ApolloError
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
   chainId: ChainId
   sortState: PoolTableSortState
@@ -169,8 +176,6 @@ export function PoolsTable({
       }) ?? [],
     [chainId, pools]
   )
-
-  const showLoadingSkeleton = loading || !!error
   // TODO(WEB-3236): once GQL BE Pool query add 1 day, 7 day, turnover sort support
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolTableValues>()
@@ -184,7 +189,7 @@ export function PoolsTable({
               </Cell>
             ),
             cell: (index) => (
-              <Cell justifyContent="center" loading={showLoadingSkeleton} minWidth={44}>
+              <Cell justifyContent="center" loading={loading} minWidth={44}>
                 <ThemedText.BodySecondary>{index.getValue?.()}</ThemedText.BodySecondary>
               </Cell>
             ),
@@ -201,7 +206,7 @@ export function PoolsTable({
               </Cell>
             ),
             cell: (poolDescription) => (
-              <Cell justifyContent="flex-start" loading={showLoadingSkeleton} width={240} grow>
+              <Cell justifyContent="flex-start" loading={loading} width={240} grow>
                 {poolDescription.getValue?.()}
               </Cell>
             ),
@@ -214,14 +219,14 @@ export function PoolsTable({
               <Cell justifyContent="flex-end" minWidth={120} grow>
                 <ClickableHeaderRow $justify="flex-end" onClick={() => handleHeaderClick(PoolSortFields.TxCount)}>
                   {sortState.sortBy === PoolSortFields.TxCount && <HeaderArrow direction={sortState.sortDirection} />}
-                  <HeaderSortText $active={sortState.sortBy === PoolSortFields.TxCount}>
+                  <ThemedText.BodySecondary>
                     <Trans>Transactions</Trans>
-                  </HeaderSortText>
+                  </ThemedText.BodySecondary>
                 </ClickableHeaderRow>
               </Cell>
             ),
             cell: (txCount) => (
-              <Cell justifyContent="flex-end" loading={showLoadingSkeleton} minWidth={120} grow>
+              <Cell justifyContent="flex-end" loading={loading} minWidth={120} grow>
                 <ThemedText.BodySecondary>
                   {formatNumber({ input: txCount.getValue?.(), type: NumberType.NFTCollectionStats })}
                 </ThemedText.BodySecondary>
@@ -236,14 +241,14 @@ export function PoolsTable({
               <Cell minWidth={120} grow>
                 <ClickableHeaderRow $justify="flex-end" onClick={() => handleHeaderClick(PoolSortFields.TVL)}>
                   {sortState.sortBy === PoolSortFields.TVL && <HeaderArrow direction={sortState.sortDirection} />}
-                  <HeaderSortText $active={sortState.sortBy === PoolSortFields.TVL}>
+                  <ThemedText.BodySecondary>
                     <Trans>TVL</Trans>
-                  </HeaderSortText>
+                  </ThemedText.BodySecondary>
                 </ClickableHeaderRow>
               </Cell>
             ),
             cell: (tvl) => (
-              <Cell loading={showLoadingSkeleton} minWidth={120} grow>
+              <Cell loading={loading} minWidth={120} grow>
                 <ThemedText.BodySecondary>
                   {formatNumber({ input: tvl.getValue?.(), type: NumberType.FiatTokenStats })}
                 </ThemedText.BodySecondary>
@@ -258,14 +263,14 @@ export function PoolsTable({
               <Cell minWidth={120} grow>
                 <ClickableHeaderRow $justify="flex-end" onClick={() => handleHeaderClick(PoolSortFields.Volume24h)}>
                   {sortState.sortBy === PoolSortFields.Volume24h && <HeaderArrow direction={sortState.sortDirection} />}
-                  <HeaderSortText $active={sortState.sortBy === PoolSortFields.Volume24h}>
+                  <ThemedText.BodySecondary>
                     <Trans>1 day volume</Trans>
-                  </HeaderSortText>
+                  </ThemedText.BodySecondary>
                 </ClickableHeaderRow>
               </Cell>
             ),
             cell: (volume24h) => (
-              <Cell minWidth={120} loading={showLoadingSkeleton} grow>
+              <Cell minWidth={120} loading={loading} grow>
                 <ThemedText.BodySecondary>
                   {formatNumber({ input: volume24h.getValue?.(), type: NumberType.FiatTokenStats })}
                 </ThemedText.BodySecondary>
@@ -282,14 +287,14 @@ export function PoolsTable({
                   {sortState.sortBy === PoolSortFields.VolumeWeek && (
                     <HeaderArrow direction={sortState.sortDirection} />
                   )}
-                  <HeaderSortText $active={sortState.sortBy === PoolSortFields.VolumeWeek}>
+                  <ThemedText.BodySecondary>
                     <Trans>7 day volume</Trans>
-                  </HeaderSortText>
+                  </ThemedText.BodySecondary>
                 </ClickableHeaderRow>
               </Cell>
             ),
             cell: (volumeWeek) => (
-              <Cell minWidth={120} loading={showLoadingSkeleton} grow>
+              <Cell minWidth={120} loading={loading} grow>
                 <ThemedText.BodySecondary>
                   {formatNumber({ input: volumeWeek.getValue?.(), type: NumberType.FiatTokenStats })}
                 </ThemedText.BodySecondary>
@@ -304,14 +309,14 @@ export function PoolsTable({
               <Cell minWidth={100} grow>
                 <ClickableHeaderRow $justify="flex-end" onClick={() => handleHeaderClick(PoolSortFields.Turnover)}>
                   {sortState.sortBy === PoolSortFields.Turnover && <HeaderArrow direction={sortState.sortDirection} />}
-                  <HeaderSortText $active={sortState.sortBy === PoolSortFields.Turnover}>
+                  <ThemedText.BodySecondary>
                     <Trans>Turnover</Trans>
-                  </HeaderSortText>
+                  </ThemedText.BodySecondary>
                 </ClickableHeaderRow>
               </Cell>
             ),
             cell: (turnover) => (
-              <Cell minWidth={100} loading={showLoadingSkeleton} grow>
+              <Cell minWidth={100} loading={loading} grow>
                 <ThemedText.BodySecondary>{formatPercent(turnover.getValue?.())}</ThemedText.BodySecondary>
               </Cell>
             ),
@@ -324,19 +329,10 @@ export function PoolsTable({
     formatPercent,
     handleHeaderClick,
     hiddenColumns,
-    showLoadingSkeleton,
+    loading,
     sortState.sortBy,
     sortState.sortDirection,
   ])
 
-  return (
-    <Table
-      columns={columns}
-      data={poolTableValues}
-      loading={loading}
-      error={error}
-      loadMore={loadMore}
-      maxHeight={maxHeight}
-    />
-  )
+  return <Table columns={columns} data={poolTableValues} loading={loading} loadMore={loadMore} maxHeight={maxHeight} />
 }

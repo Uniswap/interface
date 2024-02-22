@@ -1,11 +1,10 @@
-import { Flex } from 'ui/src/components/layout/Flex'
-import { Text } from 'ui/src/components/text/Text'
+import React from 'react'
+import { ADDRESS_WRAPPER_HEIGHT } from 'src/features/import/WalletPreviewCard'
+import { Flex, Text } from 'ui/src'
 
 interface Props {
   opacity: number
 }
-
-export const ADDRESS_WRAPPER_HEIGHT = 36
 
 export function WalletLoader({ opacity }: Props): JSX.Element {
   return (

@@ -70,6 +70,7 @@ export function TransactionDetails({
       {showWarning && warning && onShowWarning && (
         <TouchableArea mb="$spacing8" onPress={onShowWarning}>
           <Flex
+            grow
             row
             alignItems="center"
             backgroundColor={warningColor.background}
@@ -78,7 +79,7 @@ export function TransactionDetails({
             px="$spacing16"
             py="$spacing8">
             <Icons.AlertTriangle color={warningColor?.text} size="$icon.16" />
-            <Flex fill py="$spacing2">
+            <Flex grow py="$spacing2">
               <Text color={warningColor.text} variant="body3">
                 {warning.title}
               </Text>
