@@ -7,13 +7,6 @@ fragment PoolToken on Token {
   decimals
   project {
     id
-    markets(currencies: [USD]) {
-      id
-      price {
-        id
-        value
-      }
-    }
     logo {
       id
       url
@@ -29,10 +22,38 @@ query V3Pool($chain: Chain!, $address: String!) {
     feeTier
     token0 {
       ...PoolToken
+      project {
+    id
+    markets(currencies: [USD]) {
+      id
+      price {
+        id
+        value
+      }
+    }
+    logo {
+      id
+      url
+    }
+  }
     }
     token0Supply
     token1 {
       ...PoolToken
+      project {
+        id
+        markets(currencies: [USD]) {
+          id
+          price {
+            id
+            value
+          }
+        }
+        logo {
+          id
+          url
+        }
+      }
     }
     token1Supply
     txCount
@@ -99,10 +120,38 @@ query V2Pair($address: String!) {
     address
     token0 {
       ...PoolToken
+      project {
+        id
+        markets(currencies: [USD]) {
+          id
+          price {
+            id
+            value
+          }
+        }
+        logo {
+          id
+          url
+        }
+      }
     }
     token0Supply
     token1 {
       ...PoolToken
+      project {
+    id
+    markets(currencies: [USD]) {
+      id
+      price {
+        id
+        value
+      }
+    }
+    logo {
+      id
+      url
+    }
+  }
     }
     token1Supply
     txCount
