@@ -16,6 +16,7 @@ import { CurrencyState, useSwapAndLimitContext } from 'state/swap/SwapContext'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { useIsSmartContractAddress } from 'utils/transfer'
 
+import { Trace } from 'analytics'
 import { NewAddressSpeedBumpModal } from './NewAddressSpeedBump'
 import SendCurrencyInputForm from './SendCurrencyInputForm'
 import { SendRecipientForm } from './SendRecipientForm'
@@ -245,8 +246,10 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
 
 export function SendForm(props: SendFormProps) {
   return (
-    <SendContextProvider>
-      <SendFormInner {...props} />
-    </SendContextProvider>
+    <Trace page="send-page">
+      <SendContextProvider>
+        <SendFormInner {...props} />
+      </SendContextProvider>
+    </Trace>
   )
 }

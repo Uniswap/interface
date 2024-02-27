@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmSyV4dNhjeqsxaKHkFZyqyLKGaqBUkgr5fb1FDZN24yY5`
-- CIDv1: `bafybeice3zkknbq42szpbonaebytodvjc7rddzz3v5rc4hd6wjts6t2usi`
+- CIDv0: `QmQHEMPoqZQfpohtZc8Hr7pbyDqNemG73Hk1nPXBkGUBPH`
+- CIDv1: `bafybeia424ltwwetxbd2mydhblgldh6dg5iporjoopqisd45ng47hfwj7q`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,21 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeice3zkknbq42szpbonaebytodvjc7rddzz3v5rc4hd6wjts6t2usi.ipfs.dweb.link/
-- https://bafybeice3zkknbq42szpbonaebytodvjc7rddzz3v5rc4hd6wjts6t2usi.ipfs.cf-ipfs.com/
-- [ipfs://QmSyV4dNhjeqsxaKHkFZyqyLKGaqBUkgr5fb1FDZN24yY5/](ipfs://QmSyV4dNhjeqsxaKHkFZyqyLKGaqBUkgr5fb1FDZN24yY5/)
+- https://bafybeia424ltwwetxbd2mydhblgldh6dg5iporjoopqisd45ng47hfwj7q.ipfs.dweb.link/
+- https://bafybeia424ltwwetxbd2mydhblgldh6dg5iporjoopqisd45ng47hfwj7q.ipfs.cf-ipfs.com/
+- [ipfs://QmQHEMPoqZQfpohtZc8Hr7pbyDqNemG73Hk1nPXBkGUBPH/](ipfs://QmQHEMPoqZQfpohtZc8Hr7pbyDqNemG73Hk1nPXBkGUBPH/)
 
-## 5.14.0 (2024-02-27)
-
-
-### Features
-
-* **web:** add disclaimer to limits review modal (#6597) f1cb196
+### 5.14.1 (2024-02-27)
 
 
 ### Bug Fixes
 
-* **web:** fix expiry line item (#6596) 7225ae9
-* **web:** use page chain for liquidity chart (#6582) 4e89b28
+* **web:** analytics fix for limits [hotfix for prod] (#6602) f1133af
 
 

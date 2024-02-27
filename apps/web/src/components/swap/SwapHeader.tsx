@@ -59,17 +59,9 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
     setCurrentTab(SwapTab.Swap)
   }
 
-  const onClickTab = (tab: SwapTab) => (e: React.KeyboardEvent<HTMLHeadingElement | HTMLButtonElement>) => {
-    if (e.key === 'Enter' || e.key === 'Space') {
-      e.preventDefault()
-      setCurrentTab(tab)
-    }
-
-    sendAnalyticsEvent('Swap Tab Clicked', { tab })
-  }
-
   const onTab = useCallback(
     (tab: SwapTab) => {
+      sendAnalyticsEvent('Swap Tab Clicked', { tab })
       if (syncTabToUrl) {
         navigate(`/${tab}`, { replace: true })
       } else {
@@ -90,7 +82,6 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
           onClick={() => {
             onTab(SwapTab.Swap)
           }}
-          onKeyDown={onClickTab(SwapTab.Swap)}
         >
           <Trans>Swap</Trans>
         </SwapHeaderTabButton>

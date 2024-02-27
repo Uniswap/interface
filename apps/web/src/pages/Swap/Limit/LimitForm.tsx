@@ -421,8 +421,10 @@ function SubmitOrderButton({
 
 export function LimitFormWrapper(props: LimitFormProps) {
   return (
-    <LimitContextProvider>
-      <LimitForm {...props} />
-    </LimitContextProvider>
+    <Trace page="limit-page">
+      <LimitContextProvider>
+        <LimitForm {...props} />
+      </LimitContextProvider>
+    </Trace>
   )
 }
