@@ -36,6 +36,7 @@ interface AmountProps {
   label: ReactNode
   amount: CurrencyAmount<Currency>
   usdAmount?: number
+  headerTextProps?: TextProps
   // The currency used here can be different than the currency denoted in the `amount` prop
   // For UniswapX ETH input trades, the trade object will have WETH as the amount.currency, but
   // the user's real input currency is ETH, so show ETH instead
@@ -50,6 +51,7 @@ export function SwapModalHeaderAmount({
   field,
   currency,
   isLoading,
+  headerTextProps,
 }: AmountProps) {
   const { formatNumber, formatReviewSwapCurrencyAmount } = useFormatter()
 
@@ -64,7 +66,11 @@ export function SwapModalHeaderAmount({
           </ThemedText.BodySecondary>
         )}
         <Column gap="xs">
-          <ResponsiveHeadline data-testid={`${field}-amount`} color={isLoading ? 'neutral2' : undefined}>
+          <ResponsiveHeadline
+            data-testid={`${field}-amount`}
+            color={isLoading ? 'neutral2' : undefined}
+            {...headerTextProps}
+          >
             {formatReviewSwapCurrencyAmount(amount)} {currency?.symbol}
           </ResponsiveHeadline>
           <ThemedText.BodySmall color="neutral2">

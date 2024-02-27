@@ -38,14 +38,14 @@ describe('Landing Page', () => {
     cy.viewport(2000, 1600)
     cy.visit('/swap')
     cy.get(getTestSelector('pool-nav-link')).first().click()
-    cy.url().should('include', '/pools')
+    cy.url().should('include', '/pool')
   })
 
   it('allows navigation to pool on mobile', () => {
     cy.viewport('iphone-6')
     cy.visit('/swap')
     cy.get(getTestSelector('pool-nav-link')).last().click()
-    cy.url().should('include', '/pools')
+    cy.url().should('include', '/pool')
   })
 
   it('does not render landing page when / path is blocked', () => {

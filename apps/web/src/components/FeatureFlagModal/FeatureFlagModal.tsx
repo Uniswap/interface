@@ -35,6 +35,7 @@ import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
+import { Z_INDEX } from 'theme/zIndex'
 
 const StyledModal = styled.div`
   position: fixed;
@@ -50,7 +51,7 @@ const StyledModal = styled.div`
   background-color: ${({ theme }) => theme.surface2};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.surface3};
-  z-index: 100;
+  z-index: ${Z_INDEX.modal};
   flex-direction: column;
   gap: 8px;
   border: 1px solid ${({ theme }) => theme.surface3};

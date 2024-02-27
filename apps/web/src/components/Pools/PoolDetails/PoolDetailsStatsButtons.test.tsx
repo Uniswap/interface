@@ -3,7 +3,7 @@ import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools
 import store from 'state'
 import { addSerializedToken } from 'state/user/reducer'
 import { mocked } from 'test-utils/mocked'
-import { useMultiChainPositionsReturnValue, validPoolToken0, validPoolToken1 } from 'test-utils/pools/fixtures'
+import { useMultiChainPositionsReturnValue, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
 
 import { PoolDetailsStatsButtons } from './PoolDetailsStatsButtons'
@@ -13,15 +13,15 @@ jest.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
 describe('PoolDetailsStatsButton', () => {
   const mockProps = {
     chainId: 1,
-    token0: validPoolToken0,
-    token1: validPoolToken1,
+    token0: validBEPoolToken0,
+    token1: validBEPoolToken1,
     feeTier: 500,
   }
 
   const mockPropsTokensReversed = {
     ...mockProps,
-    token0: validPoolToken1,
-    token1: validPoolToken0,
+    token0: validBEPoolToken1,
+    token1: validBEPoolToken0,
   }
 
   beforeEach(() => {

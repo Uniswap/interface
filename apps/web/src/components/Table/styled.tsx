@@ -6,11 +6,10 @@ import Column from 'components/Column'
 import { HideScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { getLocaleTimeString } from 'components/Table/utils'
-import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { OrderDirection, chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
+import { Token } from 'graphql/data/__generated__/types-and-hooks'
+import { OrderDirection, getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { OrderDirection as TheGraphOrderDirection } from 'graphql/thegraph/__generated__/types-and-hooks'
-import { useCurrency } from 'hooks/Tokens'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ArrowDown, CornerLeftUp, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Link } from 'react-router-dom'
@@ -21,8 +20,8 @@ import { Z_INDEX } from 'theme/zIndex'
 export const SHOW_RETURN_TO_TOP_OFFSET = 500
 export const LOAD_MORE_BOTTOM_OFFSET = 50
 
-export const TableContainer = styled(Column)<{ $maxHeight?: number }>`
-  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
+export const TableContainer = styled(Column)<{ $maxWidth?: number; $maxHeight?: number }>`
+  max-width: ${({ $maxWidth }) => $maxWidth}px;
   max-height: ${({ $maxHeight }) => $maxHeight}px;
   // Center layout
   justify-content: center;
@@ -37,7 +36,6 @@ const StickyStyles = css`
 `
 export const TableHead = styled.div<{ $isSticky?: boolean }>`
   width: 100%;
-  height: 72px;
   position: relative;
   ${({ $isSticky }) => ($isSticky ? StickyStyles : '')}
   // Place header at bottom of container (top of container used to add distance from nav / hide rows)
@@ -47,7 +45,7 @@ export const TableHead = styled.div<{ $isSticky?: boolean }>`
   // Solid background that matches surface, in order to hide rows as they scroll behind header
   background: ${({ theme }) => theme.surface1};
 `
-export const TableBody = styled(Column)`
+export const TableBodyContainer = styled(Column)`
   width: 100%;
   position: relative;
   overflow-x: auto;
@@ -74,6 +72,9 @@ export const ReturnButtonContainer = styled(Row)<{ $top?: number }>`
   position: absolute;
   justify-content: center;
   top: ${({ $top }) => $top}px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
 `
 export const LoadingIndicatorContainer = styled(Row)<{ show: boolean }>`
   position: sticky;
@@ -102,11 +103,17 @@ const TableRow = styled(Row)`
   min-height: 64px;
 `
 export const DataRow = styled(TableRow)`
-  :hover {
-    background: ${({ theme }) => theme.surface3};
+  @media not all and (hover: none) {
+    :hover {
+      background: ${({ theme }) => theme.surface3};
+    }
   }
 `
-export const HeaderRow = styled(TableRow)`
+export const NoDataFoundTableRow = styled(TableRow)`
+  justify-content: center;
+`
+
+export const HeaderRow = styled(TableRow)<{ $dimmed?: boolean }>`
   border: 1px solid ${({ theme }) => theme.surface3};
   border-top-right-radius: 20px;
   border-top-left-radius: 20px;
@@ -116,6 +123,8 @@ export const HeaderRow = styled(TableRow)`
   background: ${({ theme }) => theme.surface2};
   ${HideScrollBarStyles}
   overscroll-behavior: none;
+
+  ${({ $dimmed }) => $dimmed && 'opacity: 0.4;'}
 `
 export const CellContainer = styled.div`
   display: flex;
@@ -156,9 +165,13 @@ export const ClickableHeaderRow = styled(Row)<{ $justify?: string }>`
 export const HeaderArrow = styled(ArrowDown)<{ direction: OrderDirection | TheGraphOrderDirection }>`
   height: 16px;
   width: 16px;
-  color: ${({ theme }) => theme.neutral2};
+  color: ${({ theme }) => theme.neutral1};
   transform: ${({ direction }) => (direction === 'asc' ? 'rotate(180deg)' : 'rotate(0deg)')};
 `
+export const HeaderSortText = styled(ThemedText.BodySecondary)<{ $active?: boolean }>`
+  ${({ $active, theme }) => $active && `color: ${theme.neutral1};`}
+`
+
 export const FilterHeaderRow = styled(Row)<{ modalOpen?: boolean }>`
   ${({ modalOpen }) => !modalOpen && ClickableStyle}
   cursor: pointer;
@@ -219,24 +232,26 @@ const TokenSymbolText = styled(ThemedText.BodyPrimary)`
   overflow: hidden;
 `
 /**
- * Given a token address and chain displays the Token's Logo and Symbol with a link to its TDP
- * @param tokenAddress: token address
- * @param chainId: chainId of the token
+ * Given a token displays the Token's Logo and Symbol with a link to its TDP
+ * @param token
  * @returns JSX.Element showing the Token's Logo, Chain logo if non-mainnet, and Token Symbol
  */
-export const TokenLinkCell = ({ tokenAddress, chainId }: { tokenAddress: string; chainId: ChainId }) => {
-  const currency = useCurrency(tokenAddress, chainId)
+export const TokenLinkCell = ({ token }: { token: Token }) => {
   return (
     <StyledInternalLink
       to={getTokenDetailsURL({
-        address: tokenAddress,
-        chain: chainIdToBackendName(chainId),
+        address: token.address,
+        chain: token.chain,
         isInfoExplorePageEnabled: true,
       })}
     >
       <Row gap="4px" maxWidth="68px">
-        <PortfolioLogo currencies={[currency]} chainId={chainId} size="16px" />
-        <TokenSymbolText>{currency?.symbol ?? <Trans>UNKNOWN</Trans>}</TokenSymbolText>
+        <PortfolioLogo
+          chainId={supportedChainIdFromGQLChain(token.chain) ?? ChainId.MAINNET}
+          size="16px"
+          images={[token.project?.logo?.url]}
+        />
+        <TokenSymbolText>{token?.symbol ?? <Trans>UNKNOWN</Trans>}</TokenSymbolText>
       </Row>
     </StyledInternalLink>
   )

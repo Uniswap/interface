@@ -153,13 +153,12 @@ export const colors = {
   slate800: '#181B18',
   slate900: '#0F120E',
   slateVibrant: '#7E887D',
-  networkLightEthereum: '#393939',
-  networkDarkEthereum: '#e6e6e6',
-  networkOptimism: '#FA2B39',
-  networkPolygon: '#a26af3',
+  networkEthereum: '#627EEA',
+  networkOptimism: '#FF0420',
+  networkPolygon: '#A457FF',
   networkArbitrum: '#28A0F0',
-  networkBase: '#2151F5',
-  networkBnb: '#F0B90B',
+  networkBsc: '#F0B90B',
+  networkBase: '#0052FF',
   fiatOnRampBanner: '#FB36D0',
 }
 
@@ -265,7 +264,7 @@ export const colorsLight = {
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
-  chain_1: colors.networkLightEthereum,
+  chain_1: colors.networkEthereum,
   chain_3: colors.yellow400,
   chain_4: colors.pink400,
   chain_5: colors.green400,
@@ -274,7 +273,7 @@ export const colorsLight = {
   chain_42161: colors.networkArbitrum,
   chain_80001: colors.networkPolygon,
   chain_8453: colors.networkBase,
-  chain_56: colors.networkBnb,
+  chain_56: colors.networkBsc,
 }
 
 export type ColorKeys = keyof typeof colorsLight
@@ -327,7 +326,7 @@ export const colorsDark = {
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
-  chain_1: colors.networkDarkEthereum,
+  chain_1: colors.networkEthereum,
   chain_3: colors.yellow400,
   chain_4: colors.pink400,
   chain_5: colors.green400,
@@ -336,5 +335,5 @@ export const colorsDark = {
   chain_42161: colors.networkArbitrum,
   chain_80001: colors.networkPolygon,
   chain_8453: colors.networkBase,
-  chain_56: colors.networkBnb,
+  chain_56: colors.networkBsc,
 }

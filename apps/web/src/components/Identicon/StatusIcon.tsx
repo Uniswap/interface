@@ -7,6 +7,9 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap } from 'theme/styles'
 import { getWalletMeta } from 'utils/walletMeta'
 
+import { useUniTagsEnabled } from 'featureFlags/flags/uniTags'
+import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
+import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
 import sockImg from '../../assets/svg/socks.svg'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import Identicon from '../Identicon'
@@ -16,7 +19,9 @@ export const IconWrapper = styled.div<{ size?: number }>`
   ${flexColumnNoWrap};
   align-items: center;
   justify-content: center;
-  margin-right: 4px;
+  @media only screen and (min-width: ${navSearchInputVisibleSize}px) {
+    margin-right: 4px;
+  }
   & > img,
   span {
     height: ${({ size }) => (size ? size + 'px' : '32px')};
@@ -44,6 +49,21 @@ const MiniIconContainer = styled.div<{ side: 'left' | 'right' }>`
   @supports (overflow: clip) {
     overflow: clip;
   }
+`
+
+const UnigramContainer = styled.div<{ $iconSize: number }>`
+  height: ${({ $iconSize: iconSize }) => `${iconSize}px`};
+  width: ${({ $iconSize: iconSize }) => `${iconSize}px`};
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.surface3};
+  font-size: initial;
+`
+
+const Unigram = styled.img`
+  height: inherit;
+  width: inherit;
+  border-radius: inherit;
+  object-fit: cover;
 `
 
 const MiniImg = styled.img`
@@ -76,12 +96,20 @@ const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'l
 }
 
 const MainWalletIcon = ({ account, connection, size }: { account: string; connection: Connection; size: number }) => {
+  const { unitag } = useUnitagByAddress(account, useUniTagsEnabled() && Boolean(account))
   const { avatar } = useENSAvatar(account ?? undefined)
 
   if (!account) return null
 
-  const hasIdenticon = avatar || connection.getProviderInfo().name === 'MetaMask'
+  if (unitag && unitag.metadata?.avatar) {
+    return (
+      <UnigramContainer $iconSize={size}>
+        <Unigram alt={unitag.username} src={unitag.metadata.avatar} />
+      </UnigramContainer>
+    )
+  }
 
+  const hasIdenticon = avatar || connection.getProviderInfo().name === 'MetaMask'
   return hasIdenticon ? <Identicon account={account} size={size} /> : <Unicon address={account} size={size} />
 }
 

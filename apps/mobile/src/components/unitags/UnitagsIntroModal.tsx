@@ -49,15 +49,15 @@ export function UnitagsIntroModal(): JSX.Element {
       <Flex gap="$spacing24" px="$spacing24" py="$spacing16">
         <Flex alignItems="center" gap="$spacing12">
           <Text variant="subheading1">{t('Introducing usernames')}</Text>
-          <Text color="$neutral2" textAlign="center" variant="body3">
+          <Text color="$neutral2" textAlign="center" variant="body2">
             {t(
               'Say goodbye to 0x addresses. Usernames are readable names that make it easier to send and receive crypto.'
             )}
           </Text>
         </Flex>
-        <Flex alignItems="center" maxHeight={100}>
+        <Flex alignItems="center" maxHeight={105}>
           <Image
-            maxHeight={100}
+            maxHeight={105}
             resizeMode="contain"
             source={isDarkMode ? UNITAGS_INTRO_BANNER_DARK : UNITAGS_INTRO_BANNER_LIGHT}
           />

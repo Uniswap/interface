@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { ComponentProps, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextInput, TextInputProps } from 'react-native'
+import FastImage from 'react-native-fast-image'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch, useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { FiatOnRampStackParamList } from 'src/app/navigation/types'
@@ -23,13 +24,17 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { MobileEventProperties } from 'src/features/telemetry/types'
 import { FiatOnRampScreens } from 'src/screens/Screens'
-import { AnimatedFlex, Flex, Text } from 'ui/src'
+import { AnimatedFlex, Flex, Text, useIsDarkMode } from 'ui/src'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
 import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'
-import { useFiatOnRampAggregatorServiceProvidersQuery } from 'wallet/src/features/fiatOnRamp/api'
-import { FORQuote } from 'wallet/src/features/fiatOnRamp/types'
+import {
+  useFiatOnRampAggregatorServiceProvidersQuery,
+  useFiatOnRampAggregatorTransactionsQuery,
+} from 'wallet/src/features/fiatOnRamp/api'
+import { FORQuote, FORServiceProvider, FORTransaction } from 'wallet/src/features/fiatOnRamp/types'
+import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 
@@ -37,29 +42,45 @@ type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.
 
 function selectInitialQuote(
   quotes: FORQuote[] | undefined,
-  lastTransaction: undefined
+  lastTransaction: FORTransaction | undefined
 ): { quote: FORQuote | undefined; type: InitialQuoteSelection | undefined } {
-  if (lastTransaction) {
-    // setting "Recently used"
-    // TODO:https://linear.app/uniswap/issue/MOB-2533/implement-recently-used-logic
-  } else {
-    // setting "Best overall"
-    const initialQuote = quotes && quotes.length && quotes[0]
-    if (initialQuote) {
+  const lastUsedServiceProvider = lastTransaction?.serviceProvider
+  if (lastUsedServiceProvider) {
+    const quote = quotes?.filter((q) => q.serviceProvider === lastUsedServiceProvider)[0]
+    if (quote) {
       return {
-        quote: quotes.reduce<FORQuote>((prev, curr) => {
-          return curr.destinationAmount > prev.destinationAmount ? curr : prev
-        }, initialQuote),
-        type: InitialQuoteSelection.Best,
+        quote,
+        type: InitialQuoteSelection.MostRecent,
       }
+    }
+  }
+  const bestQuote = quotes && quotes.length && quotes[0]
+  if (bestQuote) {
+    return {
+      quote: quotes.reduce<FORQuote>((prev, curr) => {
+        return curr.destinationAmount > prev.destinationAmount ? curr : prev
+      }, bestQuote),
+      type: InitialQuoteSelection.Best,
     }
   }
   return { quote: undefined, type: undefined }
 }
 
+function preloadServiceProviderLogos(
+  serviceProviders: FORServiceProvider[],
+  isDarkMode: boolean
+): void {
+  FastImage.preload(
+    serviceProviders
+      .map((sp) => ({ uri: getServiceProviderLogo(sp.logos, isDarkMode) }))
+      .filter((sp) => !!sp.uri)
+  )
+}
+
 export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+  const isDarkMode = useIsDarkMode()
   const [selection, setSelection] = useState<TextInputProps['selection']>()
   const [value, setValue] = useState('')
   const [showTokenSelector, setShowTokenSelector] = useState(false)
@@ -109,6 +130,21 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     error: serviceProvidersError,
   } = useFiatOnRampAggregatorServiceProvidersQuery()
 
+  // preload service provider logos for given quotes for the next screen
+  useEffect(() => {
+    if (serviceProvidersResponse?.serviceProviders && quotes) {
+      const quotesServiceProviderNames = quotes.map((q) => q.serviceProvider)
+      const serviceProviders = serviceProvidersResponse.serviceProviders.filter(
+        (sp) => quotesServiceProviderNames.indexOf(sp.serviceProvider) !== -1
+      )
+      preloadServiceProviderLogos(serviceProviders, isDarkMode)
+    }
+  }, [serviceProvidersResponse, quotes, isDarkMode])
+
+  const { currentData: transactionsResponse } = useFiatOnRampAggregatorTransactionsQuery({
+    limit: 1,
+  })
+
   const { errorText, errorColor } = useParseFiatOnRampError(
     quotesError || serviceProvidersError,
     meldSupportedFiatCurrency.code
@@ -117,7 +153,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const prevQuotes = usePrevious(quotes)
   useEffect(() => {
     if (quotes && (!selectedQuote || prevQuotes !== quotes)) {
-      const { quote, type } = selectInitialQuote(quotes, undefined)
+      const { quote, type } = selectInitialQuote(quotes, transactionsResponse?.transactions[0])
       if (!quote) {
         return
       }
@@ -128,7 +164,15 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
       ])
       setSelectedQuote(quote)
     }
-  }, [prevQuotes, quotes, selectedQuote, setQuotesSections, setSelectedQuote, t])
+  }, [
+    prevQuotes,
+    quotes,
+    selectedQuote,
+    setQuotesSections,
+    setSelectedQuote,
+    t,
+    transactionsResponse?.transactions,
+  ])
 
   useEffect(() => {
     if (!quotes && (quotesError || serviceProvidersError || !amount)) {

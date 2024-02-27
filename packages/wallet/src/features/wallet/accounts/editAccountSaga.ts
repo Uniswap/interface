@@ -1,10 +1,12 @@
 import { all, call, put } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 import { unique } from 'utilities/src/primitives/array'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import {
   editAccount as editInStore,
+  removeAccounts as removeAccountsInStore,
   removeAccount as removeInStore,
 } from 'wallet/src/features/wallet/slice'
 import { appSelect } from 'wallet/src/state'
@@ -15,6 +17,7 @@ export enum EditAccountAction {
   RemoveBackupMethod = 'RemoveBackupMethod',
   Rename = 'Rename',
   Remove = 'Remove',
+  RemoveBulk = 'RemoveBulk',
   TogglePushNotification = 'TogglePushNotification',
   ToggleTestnetSettings = 'ToggleTestnetSettings',
   UpdateLanguage = 'UpdateLanguage',
@@ -31,6 +34,11 @@ interface RenameParams extends EditParamsBase {
 interface RemoveParams extends EditParamsBase {
   type: EditAccountAction.Remove
   notificationsEnabled: boolean
+}
+
+interface RemoveBulkParams extends EditParamsBase {
+  type: EditAccountAction.RemoveBulk
+  addresses: Address[]
 }
 
 interface AddBackupMethodParams extends EditParamsBase {
@@ -63,6 +71,7 @@ export type EditAccountParams =
   | RemoveBackupMethodParams
   | RenameParams
   | RemoveParams
+  | RemoveBulkParams
   | TogglePushNotificationParams
   | ToggleTestnetSettingsParams
   | UpdateLanguageParams
@@ -83,6 +92,9 @@ function* editAccount(params: EditAccountParams) {
       break
     case EditAccountAction.Remove:
       yield* call(removeAccount, params)
+      break
+    case EditAccountAction.RemoveBulk:
+      yield* call(removeAccounts, params)
       break
     case EditAccountAction.AddBackupMethod:
       yield* call(addBackupMethod, params, account)
@@ -116,6 +128,14 @@ function* removeAccount(params: RemoveParams) {
   logger.debug('editAccountSaga', 'removeAccount', 'Removing account', address)
   // TODO [MOB-243] cleanup account artifacts in native-land (i.e. keystore)
   yield* put(removeInStore(address))
+  yield* call([Keyring, Keyring.removePrivateKey], address)
+}
+
+function* removeAccounts(params: RemoveBulkParams) {
+  const { addresses } = params
+  logger.debug('editAccountSaga', 'removeAccounts', 'Removing accounts', addresses)
+  yield* put(removeAccountsInStore(addresses))
+  yield* all(addresses.map((address) => call([Keyring, Keyring.removePrivateKey], address)))
 }
 
 // Adds the backup to all accounts that share the same seed phrase

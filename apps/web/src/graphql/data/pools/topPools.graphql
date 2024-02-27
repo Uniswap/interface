@@ -1,3 +1,5 @@
+
+
 query TopV3Pools($chain: Chain!, $first: Int!, $cursor: Float, $tokenAddress: String) {
   topV3Pools(first: $first, chain: $chain, tokenFilter: $tokenAddress, tvlCursor: $cursor) {
     id
@@ -8,18 +10,10 @@ query TopV3Pools($chain: Chain!, $first: Int!, $cursor: Float, $tokenAddress: St
     }
     feeTier
     token0 {
-      id
-      address
-      name
-      symbol
-      chain
+      ...PoolToken
     }
     token1 {
-      id
-      address
-      name
-      symbol
-      chain
+      ...PoolToken
     }
     txCount
     volume24h: cumulativeVolume(duration: DAY) {
@@ -40,18 +34,10 @@ query TopV2Pairs($first: Int!, $cursor: Float, $tokenAddress: String) {
       value
     }
     token0 {
-      id
-      address
-      name
-      symbol
-      chain
+      ...PoolToken
     }
     token1 {
-      id
-      address
-      name
-      symbol
-      chain
+      ...PoolToken
     }
     txCount
     volume24h: cumulativeVolume(duration: DAY) {

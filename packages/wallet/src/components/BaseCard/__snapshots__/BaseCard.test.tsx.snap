@@ -128,51 +128,33 @@ exports[`ErrorState renders without error 1`] = `
 
 exports[`Header renders without error 1`] = `
 <View
-  accessibilityState={
-    {
-      "busy": undefined,
-      "checked": undefined,
-      "disabled": undefined,
-      "expanded": undefined,
-      "selected": undefined,
-    }
-  }
-  accessibilityValue={
-    {
-      "max": undefined,
-      "min": undefined,
-      "now": undefined,
-      "text": undefined,
-    }
-  }
-  accessible={true}
-  collapsable={false}
+  cancelable={true}
   focusable={true}
-  hitSlop={
-    {
-      "bottom": 5,
-      "left": 5,
-      "right": 5,
-      "top": 5,
-    }
-  }
-  onClick={[Function]}
-  onResponderGrant={[Function]}
-  onResponderMove={[Function]}
-  onResponderRelease={[Function]}
-  onResponderTerminate={[Function]}
-  onResponderTerminationRequest={[Function]}
-  onStartShouldSetResponder={[Function]}
+  hitSlop={[Function]}
+  minPressDuration={0}
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+  onPress={[Function]}
+  onPressIn={[Function]}
+  onPressOut={[Function]}
   style={
     {
       "borderBottomColor": "#2222220D",
       "borderBottomWidth": 0.25,
       "borderStyle": "solid",
+      "flexDirection": "column",
       "opacity": 1,
       "paddingBottom": 12,
       "paddingLeft": 16,
       "paddingRight": 16,
       "paddingTop": 12,
+      "transform": [
+        {
+          "scale": 1,
+        },
+      ],
     }
   }
 >

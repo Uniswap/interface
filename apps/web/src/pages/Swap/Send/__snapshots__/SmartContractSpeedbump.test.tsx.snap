@@ -52,7 +52,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   gap: 4px;
 }
 
-.c21 {
+.c20 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -70,7 +70,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   gap: 12px;
 }
 
-.c17 {
+.c16 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -78,7 +78,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c19 {
+.c18 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -89,6 +89,19 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
 .c11 {
   color: #222222;
   cursor: pointer;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c11:hover {
+  opacity: 0.6;
+}
+
+.c11:active {
+  opacity: 0.4;
 }
 
 .c7 {
@@ -110,7 +123,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   opacity: 0.4;
 }
 
-.c25 {
+.c24 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -124,7 +137,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   width: 100%;
 }
 
-.c22 {
+.c21 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -159,26 +172,26 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   user-select: none;
 }
 
-.c22:active .c24 {
+.c21:active .c23 {
   background-color: #B8C0DC3d;
 }
 
-.c22:focus .c24 {
+.c21:focus .c23 {
   background-color: #B8C0DC3d;
 }
 
-.c22:hover .c24 {
+.c21:hover .c23 {
   background-color: #98A1C014;
 }
 
-.c22:disabled {
+.c21:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c22:disabled:active .c24,
-.c22:disabled:focus .c24,
-.c22:disabled:hover .c24 {
+.c21:disabled:active .c23,
+.c21:disabled:focus .c23,
+.c21:disabled:hover .c23 {
   background-color: transparent;
 }
 
@@ -221,7 +234,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   gap: 24px;
 }
 
-.c13 {
+.c12 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -295,7 +308,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   width: 100%;
 }
 
-.c14 {
+.c13 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -314,14 +327,14 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   border-radius: 12px;
 }
 
-.c18 {
+.c17 {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
   font-weight: 500;
 }
 
-.c20 {
+.c19 {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -332,7 +345,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   text-align: center;
 }
 
-.c23 {
+.c22 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -342,35 +355,20 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   -ms-flex-positive: 1;
   flex-grow: 1;
   height: 40px;
+  border-radius: 12px;
 }
 
-.c12 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c12:hover {
-  opacity: 0.6;
-}
-
-.c12:active {
-  opacity: 0.4;
-}
-
-.c15 {
+.c14 {
   height: 28px;
   width: 28px;
 }
 
-.c15 path {
+.c14 path {
   background: #7D7D7D;
   fill: #EEB317;
 }
 
-.c16 path {
+.c15 path {
   fill: #7D7D7D;
 }
 
@@ -402,7 +400,15 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
 <body>
   <div
     aria-hidden="true"
-  />
+  >
+    <span
+      class="t_light is_inversed _dsp_contents"
+    >
+      <span
+        class=" t_light _dsp_contents is_Theme"
+      />
+    </span>
+  </div>
   <reach-portal>
     <div
       data-focus-guard="true"
@@ -458,7 +464,7 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
                   </div>
                 </a>
                 <svg
-                  class="c11 c12"
+                  class="c11"
                   data-testid="Dialog-closeButton"
                   fill="none"
                   height="24"
@@ -485,13 +491,13 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
                 </svg>
               </div>
               <div
-                class="c13 c3"
+                class="c12 c3"
               >
                 <div
-                  class="c14"
+                  class="c13"
                 >
                   <svg
-                    class="c15 c16"
+                    class="c14 c15"
                     fill="#EEB317"
                     viewBox="0 0 16 16"
                     xmlns="http://www.w3.org/2000/svg"
@@ -502,32 +508,32 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
                   </svg>
                 </div>
                 <div
-                  class="c17 c18 css-4kpdx7"
+                  class="c16 c17 css-4kpdx7"
                 >
                   Is this a wallet address?
                 </div>
                 <div
-                  class="c19 c20 css-1urox24"
+                  class="c18 c19 css-1urox24"
                 >
                   You're about to send tokens to a special type of address - a smart contract. Double-check it's the address you intended to send to. If it's wrong, your tokens could be lost forever.
                 </div>
               </div>
               <div
-                class="c9 c21"
+                class="c9 c20"
               >
                 <button
-                  class="c22 c23"
+                  class="c21 c22"
                 >
                   <div
-                    class="c24 c25"
+                    class="c23 c24"
                   />
                   Cancel
                 </button>
                 <button
-                  class="c22 c23"
+                  class="c21 c22"
                 >
                   <div
-                    class="c24 c25"
+                    class="c23 c24"
                   />
                   Continue
                 </button>

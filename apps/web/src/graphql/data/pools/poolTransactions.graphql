@@ -1,0 +1,61 @@
+fragment PoolTransactionToken on Token {
+  id
+  address
+  symbol
+  chain
+  decimals
+  project {
+    id
+    name
+    logo {
+      id
+      url
+    }
+  }
+}
+
+query V3PoolTransactions($chain: Chain!, $address: String!, $first: Int!, $cursor: Int) {
+  v3Pool(chain: $chain, address: $address) {
+    id
+    transactions(first: $first, timestampCursor: $cursor) {
+      timestamp
+      hash
+      account
+      token0 {
+        ...PoolTransactionToken
+      }
+      token0Quantity
+      token1 {
+        ...PoolTransactionToken
+      }
+      token1Quantity
+      usdValue {
+        value
+      }
+      type
+    }
+  }
+}
+
+query V2PairTransactions($address: String!, $first: Int!, $cursor: Int) {
+  v2Pair(chain: ETHEREUM, address: $address) {
+    id
+    transactions(first: $first, timestampCursor: $cursor) {
+      timestamp
+      hash
+      account
+      token0 {
+        ...PoolTransactionToken
+      }
+      token0Quantity
+      token1 {
+        ...PoolTransactionToken
+      }
+      token1Quantity
+      usdValue {
+        value
+      }
+      type
+    }
+  }
+}

@@ -1,6 +1,7 @@
-import { ApolloError } from '@apollo/client'
 import { StackedLineData } from 'components/Charts/StackedLineChart'
 import { StackedHistogramData } from 'components/Charts/VolumeChart/renderer'
+import { ChartType } from 'components/Charts/utils'
+import { ChartQueryResult, checkDataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import gql from 'graphql-tag'
 import {
   Chain,
@@ -64,23 +65,15 @@ function mapDataByTimestamp(
 export function useHistoricalProtocolVolume(
   chain: Chain,
   duration: HistoryDuration
-): {
-  data: StackedHistogramData[]
-  loading: boolean
-  error?: ApolloError
-} {
-  const {
-    data: queryData,
-    loading,
-    error,
-  } = useHistoricalProtocolVolumeQuery({
+): ChartQueryResult<StackedHistogramData, ChartType.VOLUME> {
+  const { data: queryData, loading } = useHistoricalProtocolVolumeQuery({
     variables: { chain, duration },
   })
 
-  const data = useMemo(() => {
+  return useMemo(() => {
     const dataByTime = mapDataByTimestamp(queryData?.v2HistoricalProtocolVolume, queryData?.v3HistoricalProtocolVolume)
 
-    return Object.entries(dataByTime).reduce((acc, [timestamp, values]) => {
+    const entries = Object.entries(dataByTime).reduce((acc, [timestamp, values]) => {
       acc.push({
         time: Number(timestamp) as UTCTimestamp,
         values: {
@@ -90,31 +83,25 @@ export function useHistoricalProtocolVolume(
       })
       return acc
     }, [] as StackedHistogramData[])
-  }, [queryData?.v2HistoricalProtocolVolume, queryData?.v3HistoricalProtocolVolume])
 
-  return { data, loading, error }
+    const dataQuality = checkDataQuality(entries, ChartType.VOLUME, duration)
+    return { chartType: ChartType.VOLUME, entries, loading, dataQuality }
+  }, [duration, loading, queryData?.v2HistoricalProtocolVolume, queryData?.v3HistoricalProtocolVolume])
 }
 
-export function useDailyProtocolTVL(chain: Chain): {
-  data: StackedLineData[]
-  loading: boolean
-  error?: ApolloError
-} {
-  const {
-    data: queryData,
-    loading,
-    error,
-  } = useDailyProtocolTvlQuery({
+export function useDailyProtocolTVL(chain: Chain): ChartQueryResult<StackedLineData, ChartType.TVL> {
+  const { data: queryData, loading } = useDailyProtocolTvlQuery({
     variables: { chain },
   })
 
-  const data = useMemo(() => {
+  return useMemo(() => {
     const dataByTime = mapDataByTimestamp(queryData?.v2DailyProtocolTvl, queryData?.v3DailyProtocolTvl)
-    return Object.entries(dataByTime).map(([timestamp, values]) => ({
+    const entries = Object.entries(dataByTime).map(([timestamp, values]) => ({
       time: Number(timestamp),
       values: [values[ProtocolVersion.V2], values[ProtocolVersion.V3]],
     })) as StackedLineData[]
-  }, [queryData?.v2DailyProtocolTvl, queryData?.v3DailyProtocolTvl])
 
-  return { data, loading, error }
+    const dataQuality = checkDataQuality(entries, ChartType.TVL, HistoryDuration.Year)
+    return { chartType: ChartType.TVL, entries, loading, dataQuality }
+  }, [loading, queryData?.v2DailyProtocolTvl, queryData?.v3DailyProtocolTvl])
 }

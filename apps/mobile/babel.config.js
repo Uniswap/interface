@@ -5,6 +5,16 @@ const inProduction = NODE_ENV === 'production'
 module.exports = function (api) {
   api.cache.using(() => process.env.NODE_ENV)
   var plugins = [
+    // disable for now as its causing ci to hang
+    // process.env.NODE_ENV === 'test'
+    //   ? null
+    //   : [
+    //       '@tamagui/babel-plugin',
+    //       {
+    //         components: ['ui'],
+    //         config: '../../packages/ui/src/tamagui.config.ts',
+    //       },
+    //     ],
     [
       'module:react-native-dotenv',
       {
@@ -30,7 +40,7 @@ module.exports = function (api) {
     '@babel/plugin-proposal-numeric-separator',
     // automatically require React when using JSX
     'react-require',
-  ]
+  ].filter(Boolean)
 
   if (inProduction) {
     // Remove all console statements in production
@@ -38,6 +48,10 @@ module.exports = function (api) {
   }
 
   return {
+    ignore: [
+      // speeds up compile
+      '**/@tamagui/**/dist/**',
+    ],
     presets: ['module:metro-react-native-babel-preset'],
     plugins,
   }

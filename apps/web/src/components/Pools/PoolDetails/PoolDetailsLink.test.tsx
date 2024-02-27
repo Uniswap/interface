@@ -2,7 +2,7 @@ import { ChainId } from '@uniswap/sdk-core'
 import { USDC_MAINNET } from 'constants/tokens'
 import store from 'state'
 import { addSerializedToken } from 'state/user/reducer'
-import { usdcWethPoolAddress, validPoolToken0, validPoolToken1 } from 'test-utils/pools/fixtures'
+import { usdcWethPoolAddress, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
 
 import { PoolDetailsLink } from './PoolDetailsLink'
@@ -38,7 +38,7 @@ describe('PoolDetailsHeader', () => {
       <PoolDetailsLink
         address={usdcWethPoolAddress}
         chainId={ChainId.MAINNET}
-        tokens={[validPoolToken0, validPoolToken1]}
+        tokens={[validBEPoolToken0, validBEPoolToken1]}
       />
     )
     expect(asFragment()).toMatchSnapshot()
@@ -51,7 +51,7 @@ describe('PoolDetailsHeader', () => {
 
   it('renders link for token address', async () => {
     const { asFragment } = render(
-      <PoolDetailsLink address={USDC_MAINNET.address} chainId={ChainId.MAINNET} tokens={[validPoolToken0]} />
+      <PoolDetailsLink address={USDC_MAINNET.address} chainId={ChainId.MAINNET} tokens={[validBEPoolToken0]} />
     )
     expect(asFragment()).toMatchSnapshot()
 

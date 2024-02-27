@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro'
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { ChainId } from '@uniswap/sdk-core'
 import { ReactComponent as MenuIcon } from 'assets/images/menu.svg'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { CheckMark } from 'components/Icons/CheckMark'
@@ -10,8 +10,9 @@ import { Share as ShareIcon } from 'components/Icons/Share'
 import { TwitterXLogo } from 'components/Icons/TwitterX'
 import Row from 'components/Row'
 import ShareButton, { openShareTweetWindow } from 'components/Tokens/TokenDetails/ShareButton'
+import { ActionButtonStyle } from 'components/Tokens/TokenDetails/shared'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
-import { TokenQueryData } from 'graphql/data/Token'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useScreenSize } from 'hooks/useScreenSize'
@@ -23,28 +24,24 @@ import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { TokenNameCell } from './Skeleton'
 
 const HeaderActionsContainer = styled.div`
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
+  display: flex;
+  gap: 8px;
+  align-items: center;
 
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
-    display: flex;
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
     flex-direction: column;
     position: fixed;
     bottom: 0;
     left: 0;
+    align-items: unset;
     width: 100vw;
     padding: 8px;
-    border-radius: 12px;
     background: ${({ theme }) => theme.surface2};
-    gap: 8px;
-    border-radius: 12px;
+    border-radius: 12px 12px 0 0;
     border: ${({ theme }) => `1px solid ${theme.surface3}`};
     box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
     opacity: 1 !important;
@@ -68,17 +65,13 @@ const StyledMenuIcon = styled(MenuIcon)`
 `
 
 const ActionButton = styled(Row)`
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
-    gap: 8px;
-    padding: 8px 12px;
-    border-radius: 20px;
-    color: ${({ theme }) => theme.neutral1};
-    background-color: ${({ theme }) => opacify(12, theme.neutral1)};
-    width: max-content;
-    ${ClickableStyle}
-  }
+  ${ActionButtonStyle}
 
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
+    color: unset;
+    background-color: unset;
+    width: unset;
+
     align-items: center;
     text-decoration: none;
     cursor: pointer;
@@ -87,17 +80,18 @@ const ActionButton = styled(Row)`
     border-radius: 8px;
     &:hover {
       background: ${({ theme }) => theme.surface3};
+      opacity: 1;
     }
   }
 `
 
 const TokenTitle = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
+  gap: 8px;
 
   ${({ isInfoTDPEnabled }) =>
     isInfoTDPEnabled
       ? css`
-          gap: 8px;
           overflow: hidden;
           white-space: nowrap;
         `
@@ -110,14 +104,13 @@ const TokenTitle = styled.div<{ isInfoTDPEnabled?: boolean }>`
 
 const TokenSymbol = styled.h1<{ isInfoTDPEnabled?: boolean }>`
   font-weight: 485;
-  font-size: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '28px' : 'inherit')};
+  font-size: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '24px' : 'inherit')};
   line-height: inherit;
   margin-top: 0;
   margin-bottom: 0;
 
   text-transform: uppercase;
   color: ${({ theme }) => theme.neutral2};
-  margin-left: 8px;
 
   ${({ isInfoTDPEnabled }) =>
     isInfoTDPEnabled &&
@@ -130,6 +123,7 @@ const TokenSymbol = styled.h1<{ isInfoTDPEnabled?: boolean }>`
 
 const TokenName = styled(ThemedText.HeadlineMedium)`
   ${EllipsisStyle}
+  font-size: 24px !important;
   min-width: 40px;
 `
 
@@ -139,23 +133,13 @@ export const StyledExternalLink = styled(ExternalLink)`
     opacity: 1;
   }
 `
+export const TokenDetailsHeader = () => {
+  const { address, currency, tokenQuery } = useTDPContext()
 
-// eslint-disable-next-line import/no-unused-modules
-export const TokenDetailsHeader = ({
-  token,
-  tokenQueryData,
-  address,
-  chainId,
-}: {
-  token: Currency
-  tokenQueryData?: TokenQueryData
-  address: string
-  chainId: ChainId
-}) => {
   const isInfoTDPEnabled = useInfoTDPEnabled()
   const theme = useTheme()
   const screenSize = useScreenSize()
-  const isMobileScreen = !screenSize['sm']
+  const isMobileScreen = !screenSize['xs']
 
   const [actionsModalIsOpen, toggleActionsModal] = useReducer((s) => !s, false)
   const actionsRef = useRef<HTMLDivElement>(null)
@@ -165,35 +149,38 @@ export const TokenDetailsHeader = ({
   const shareMenuRef = useRef<HTMLDivElement>(null)
   useOnClickOutside(shareMenuRef, isShareModalOpen ? toggleShareModal : undefined)
 
-  const tokenSymbolName = token && (token.symbol ?? <Trans>Symbol not found</Trans>)
+  const tokenSymbolName = currency.symbol ?? <Trans>Symbol not found</Trans>
 
   const explorerUrl = getExplorerLink(
-    chainId,
+    currency.chainId,
     address,
-    token.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN
+    currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN
   )
-  const websiteUrl = tokenQueryData?.project?.homepageUrl
-  const projTwitterName = tokenQueryData?.project?.twitterName
-  const projTwitterUrl = projTwitterName && `https://x.com/${projTwitterName}`
+
+  const { homepageUrl, twitterName } = tokenQuery.data?.token?.project ?? {}
+  const twitterUrl = twitterName && `https://x.com/${twitterName}`
+
   const currentLocation = window.location.href
 
   const twitterShareName =
-    token && token.name && token.symbol ? `${token.name} (${token.symbol})` : token?.name || token?.symbol || ''
+    currency.name && currency.symbol
+      ? `${currency.name} (${currency.symbol})`
+      : currency?.name || currency?.symbol || ''
 
   const [isCopied, setCopied] = useCopyClipboard()
 
   return (
     <>
       <TokenNameCell isInfoTDPEnabled={isInfoTDPEnabled}>
-        <PortfolioLogo currencies={[token]} chainId={token.chainId} size="32px" />
+        <PortfolioLogo currencies={[currency]} chainId={currency.chainId} size="32px" />
         {isInfoTDPEnabled ? (
           <TokenTitle isInfoTDPEnabled>
-            <TokenName>{token.name ?? <Trans>Name not found</Trans>}</TokenName>
+            <TokenName>{currency.name ?? <Trans>Name not found</Trans>}</TokenName>
             <TokenSymbol isInfoTDPEnabled>{tokenSymbolName}</TokenSymbol>
           </TokenTitle>
         ) : (
           <TokenTitle>
-            {token.name ?? <Trans>Name not found</Trans>}
+            {currency.name ?? <Trans>Name not found</Trans>}
             <TokenSymbol>{tokenSymbolName}</TokenSymbol>
           </TokenTitle>
         )}
@@ -204,18 +191,13 @@ export const TokenDetailsHeader = ({
           {!isMobileScreen || (isMobileScreen && actionsModalIsOpen) ? (
             <HeaderActionsContainer>
               {explorerUrl && (
-                <MouseoverTooltip
-                  text={t`Explorer`}
-                  placement="bottom"
-                  size={TooltipSize.Max}
-                  disabled={isMobileScreen}
-                >
+                <MouseoverTooltip text={t`Explorer`} placement="top" size={TooltipSize.Max} disabled={isMobileScreen}>
                   <StyledExternalLink href={explorerUrl}>
                     <ActionButton>
-                      {chainId === ChainId.MAINNET ? (
+                      {currency.chainId === ChainId.MAINNET ? (
                         <EtherscanLogo width="18px" height="18px" fill={theme.neutral1} />
                       ) : (
-                        <ExplorerIcon width="18px" height="18px" stroke={theme.darkMode ? 'none' : theme.neutral1} />
+                        <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />
                       )}
                       {isMobileScreen && (
                         <ThemedText.BodyPrimary>
@@ -226,9 +208,9 @@ export const TokenDetailsHeader = ({
                   </StyledExternalLink>
                 </MouseoverTooltip>
               )}
-              {websiteUrl && (
-                <MouseoverTooltip text={t`Website`} placement="bottom" size={TooltipSize.Max} disabled={isMobileScreen}>
-                  <StyledExternalLink href={websiteUrl}>
+              {homepageUrl && (
+                <MouseoverTooltip text={t`Website`} placement="top" size={TooltipSize.Max} disabled={isMobileScreen}>
+                  <StyledExternalLink href={homepageUrl}>
                     <ActionButton>
                       <Globe width="18px" height="18px" fill={theme.neutral1} />
                       {isMobileScreen && (
@@ -240,9 +222,9 @@ export const TokenDetailsHeader = ({
                   </StyledExternalLink>
                 </MouseoverTooltip>
               )}
-              {projTwitterUrl && (
-                <MouseoverTooltip text={t`Twitter`} placement="bottom" size={TooltipSize.Max} disabled={isMobileScreen}>
-                  <StyledExternalLink href={projTwitterUrl}>
+              {twitterUrl && (
+                <MouseoverTooltip text={t`Twitter`} placement="top" size={TooltipSize.Max} disabled={isMobileScreen}>
+                  <StyledExternalLink href={twitterUrl}>
                     <ActionButton>
                       <TwitterXLogo width="18px" height="18px" fill={theme.neutral1} />
                       {isMobileScreen && (
@@ -279,9 +261,7 @@ export const TokenDetailsHeader = ({
                   </ActionButton>
                 </>
               ) : (
-                <MouseoverTooltip text={t`Share`} placement="bottom" size={TooltipSize.Max}>
-                  <ShareButton name={twitterShareName} />
-                </MouseoverTooltip>
+                <ShareButton name={twitterShareName} />
               )}
             </HeaderActionsContainer>
           ) : null}

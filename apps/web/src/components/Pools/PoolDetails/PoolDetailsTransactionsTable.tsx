@@ -1,24 +1,34 @@
 import { Trans } from '@lingui/macro'
 import { createColumnHelper } from '@tanstack/react-table'
+import Row from 'components/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
-import { ClickableHeaderRow, FilterHeaderRow, HeaderArrow, TimestampCell } from 'components/Table/styled'
+import { FilterHeaderRow, HeaderArrow, HeaderSortText, TimestampCell } from 'components/Table/styled'
+import { ProtocolVersion, Token } from 'graphql/data/__generated__/types-and-hooks'
+import {
+  PoolTableTransaction,
+  PoolTableTransactionType,
+  usePoolTransactions,
+} from 'graphql/data/pools/usePoolTransactions'
 import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
-import { PoolTransaction, PoolTransactionType, usePoolTransactions } from 'graphql/thegraph/PoolTransactions'
-import { OrderDirection, Token, Transaction_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
+import { OrderDirection, Transaction_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useCallback, useMemo, useReducer, useState } from 'react'
+import { useMemo, useReducer, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
-import { shortenAddress } from 'utils/addresses'
+import { ExternalLink, ThemedText } from 'theme/components'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const StyledExternalLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.neutral2};
   stroke: ${({ theme }) => theme.neutral2};
+`
+
+const TableWrapper = styled.div`
+  min-height: 256px;
 `
 
 type PoolTxTableSortState = {
@@ -48,73 +58,56 @@ export function PoolDetailsTransactionsTable({
   poolAddress,
   token0,
   token1,
+  protocolVersion,
 }: {
   poolAddress: string
   token0?: Token
   token1?: Token
+  protocolVersion?: ProtocolVersion
 }) {
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   const chainId = supportedChainIdFromGQLChain(chainName)
   const activeLocalCurrency = useActiveLocalCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
-  const [filter, setFilters] = useState<PoolTransactionType[]>([
-    PoolTransactionType.BUY,
-    PoolTransactionType.SELL,
-    PoolTransactionType.BURN,
-    PoolTransactionType.MINT,
+  const [filter, setFilters] = useState<PoolTableTransactionType[]>([
+    PoolTableTransactionType.BUY,
+    PoolTableTransactionType.SELL,
+    PoolTableTransactionType.BURN,
+    PoolTableTransactionType.MINT,
   ])
 
-  const [sortState, setSortMethod] = useState<PoolTxTableSortState>({
+  const [sortState] = useState<PoolTxTableSortState>({
     sortBy: Transaction_OrderBy.Timestamp,
     sortDirection: OrderDirection.Desc,
   })
   const { transactions, loading, loadMore, error } = usePoolTransactions(
     poolAddress,
     chainId,
-    sortState.sortBy,
-    sortState.sortDirection,
     filter,
-    token0
+    token0,
+    protocolVersion
   )
 
-  const handleHeaderClick = useCallback(
-    (newSortMethod: Transaction_OrderBy) => {
-      if (sortState.sortBy === newSortMethod) {
-        setSortMethod({
-          sortBy: newSortMethod,
-          sortDirection: sortState.sortDirection === OrderDirection.Asc ? OrderDirection.Desc : OrderDirection.Asc,
-        })
-      } else {
-        setSortMethod({
-          sortBy: newSortMethod,
-          sortDirection: OrderDirection.Desc,
-        })
-      }
-    },
-    [sortState.sortBy, sortState.sortDirection]
-  )
-
+  const showLoadingSkeleton = loading || !!error
   const columns = useMemo(() => {
-    const columnHelper = createColumnHelper<PoolTransaction>()
+    const columnHelper = createColumnHelper<PoolTableTransaction>()
     return [
       columnHelper.accessor((row) => row, {
         id: 'timestamp',
         header: () => (
           <Cell minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.Timestamp]} justifyContent="flex-start">
-            <ClickableHeaderRow $justify="flex-start" onClick={() => handleHeaderClick(Transaction_OrderBy.Timestamp)}>
-              {sortState.sortBy === Transaction_OrderBy.Timestamp && (
-                <HeaderArrow direction={sortState.sortDirection} />
-              )}
-              <ThemedText.BodySecondary>
+            <Row gap="4px">
+              {sortState.sortBy === Transaction_OrderBy.Timestamp && <HeaderArrow direction={OrderDirection.Desc} />}
+              <HeaderSortText $active={sortState.sortBy === Transaction_OrderBy.Timestamp}>
                 <Trans>Time</Trans>
-              </ThemedText.BodySecondary>
-            </ClickableHeaderRow>
+              </HeaderSortText>
+            </Row>
           </Cell>
         ),
         cell: (row) => (
           <Cell
-            loading={loading}
+            loading={showLoadingSkeleton}
             minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.Timestamp]}
             justifyContent="flex-start"
           >
@@ -128,14 +121,14 @@ export function PoolDetailsTransactionsTable({
       columnHelper.accessor(
         (row) => {
           let color, text
-          if (row.type === PoolTransactionType.BUY) {
+          if (row.type === PoolTableTransactionType.BUY) {
             color = 'success'
             text = (
               <span>
                 <Trans>Buy</Trans>&nbsp;{token0?.symbol}
               </span>
             )
-          } else if (row.type === PoolTransactionType.SELL) {
+          } else if (row.type === PoolTableTransactionType.SELL) {
             color = 'critical'
             text = (
               <span>
@@ -143,8 +136,8 @@ export function PoolDetailsTransactionsTable({
               </span>
             )
           } else {
-            color = row.type === PoolTransactionType.MINT ? 'success' : 'critical'
-            text = row.type === PoolTransactionType.MINT ? <Trans>Add</Trans> : <Trans>Remove</Trans>
+            color = row.type === PoolTableTransactionType.MINT ? 'success' : 'critical'
+            text = row.type === PoolTableTransactionType.MINT ? <Trans>Add</Trans> : <Trans>Remove</Trans>
           }
           return <ThemedText.BodyPrimary color={color}>{text}</ThemedText.BodyPrimary>
         },
@@ -154,7 +147,7 @@ export function PoolDetailsTransactionsTable({
             <Cell minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.Type]} justifyContent="flex-start">
               <FilterHeaderRow modalOpen={filterModalIsOpen} onClick={() => toggleFilterModal()}>
                 <Filter
-                  allFilters={Object.values(PoolTransactionType)}
+                  allFilters={Object.values(PoolTableTransactionType)}
                   activeFilter={filter}
                   setFilters={setFilters}
                   isOpen={filterModalIsOpen}
@@ -166,13 +159,13 @@ export function PoolDetailsTransactionsTable({
               </FilterHeaderRow>
             </Cell>
           ),
-          cell: (poolTransactionType) => (
+          cell: (PoolTransactionTableType) => (
             <Cell
-              loading={loading}
+              loading={showLoadingSkeleton}
               minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.Type]}
               justifyContent="flex-start"
             >
-              {poolTransactionType.getValue?.()}
+              {PoolTransactionTableType.getValue?.()}
             </Cell>
           ),
         }
@@ -188,7 +181,7 @@ export function PoolDetailsTransactionsTable({
         ),
         cell: (fiat) => (
           <Cell
-            loading={loading}
+            loading={showLoadingSkeleton}
             minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.FiatValue]}
             justifyContent="flex-end"
             grow
@@ -203,19 +196,17 @@ export function PoolDetailsTransactionsTable({
           id: 'input-amount',
           header: () => (
             <Cell
-              loading={loading}
+              loading={showLoadingSkeleton}
               minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount]}
               justifyContent="flex-end"
               grow
             >
-              <StyledInternalLink to={`/explore/tokens/${chainName.toLowerCase()}/${token0?.id}`}>
-                <ThemedText.BodySecondary>{token0?.symbol}</ThemedText.BodySecondary>
-              </StyledInternalLink>
+              <ThemedText.BodySecondary>{token0?.symbol}</ThemedText.BodySecondary>
             </Cell>
           ),
           cell: (inputTokenAmount) => (
             <Cell
-              loading={loading}
+              loading={showLoadingSkeleton}
               minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount]}
               justifyContent="flex-end"
               grow
@@ -233,19 +224,17 @@ export function PoolDetailsTransactionsTable({
           id: 'output-amount',
           header: () => (
             <Cell
-              loading={loading}
+              loading={showLoadingSkeleton}
               minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount]}
               justifyContent="flex-end"
               grow
             >
-              <StyledInternalLink to={`/explore/tokens/${chainName.toLowerCase()}/${token1?.id}`}>
-                <ThemedText.BodySecondary>{token1?.symbol}</ThemedText.BodySecondary>
-              </StyledInternalLink>
+              <ThemedText.BodySecondary>{token1?.symbol}</ThemedText.BodySecondary>
             </Cell>
           ),
           cell: (outputTokenAmount) => (
             <Cell
-              loading={loading}
+              loading={showLoadingSkeleton}
               minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount]}
               justifyContent="flex-end"
               grow
@@ -272,7 +261,7 @@ export function PoolDetailsTransactionsTable({
         ),
         cell: (makerAddress) => (
           <Cell
-            loading={loading}
+            loading={showLoadingSkeleton}
             minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.MakerAddress]}
             justifyContent="flex-end"
             grow
@@ -287,28 +276,27 @@ export function PoolDetailsTransactionsTable({
   }, [
     activeLocalCurrency,
     chainId,
-    chainName,
     filter,
     filterModalIsOpen,
     formatFiatPrice,
     formatNumber,
-    handleHeaderClick,
-    loading,
+    showLoadingSkeleton,
     sortState.sortBy,
-    sortState.sortDirection,
     token0?.id,
     token0?.symbol,
-    token1?.id,
     token1?.symbol,
   ])
 
-  if (error) {
-    return <Trans>Error fetching Pool Transactions</Trans>
-  }
-
   return (
-    <div data-testid="pool-details-transactions-table">
-      <Table columns={columns} data={transactions} loading={loading} loadMore={loadMore} maxHeight={600} />
-    </div>
+    <TableWrapper data-testid="pool-details-transactions-table">
+      <Table
+        columns={columns}
+        data={transactions}
+        loading={loading}
+        error={error}
+        loadMore={loadMore}
+        maxHeight={600}
+      />
+    </TableWrapper>
   )
 }

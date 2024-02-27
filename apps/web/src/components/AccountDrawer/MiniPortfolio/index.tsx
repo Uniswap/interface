@@ -11,12 +11,15 @@ import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 
+import { atom, useAtom } from 'jotai'
 import { ActivityTab } from './Activity'
 import { usePendingActivity } from './Activity/hooks'
 import NFTs from './NFTs'
 import Pools from './Pools'
 import { PortfolioRowWrapper } from './PortfolioRow'
 import Tokens from './Tokens'
+
+const lastPageAtom = atom(0)
 
 const Wrapper = styled(Column)`
   margin-top: 28px;
@@ -96,9 +99,13 @@ const Pages: Array<Page> = [
 ]
 
 export default function MiniPortfolio({ account }: { account: string }) {
-  const isNftPage = useIsNftPage()
   const theme = useTheme()
-  const [currentPage, setCurrentPage] = useState(isNftPage ? 1 : 0)
+  const isNftPage = useIsNftPage()
+  const [lastPage, setLastPage] = useAtom(lastPageAtom)
+  // Resumes at the last viewed page, unless you are on an NFT page
+  const [currentPage, setCurrentPage] = useState(isNftPage ? 1 : lastPage)
+  useEffect(() => void setLastPage(currentPage), [currentPage, setLastPage])
+
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const [activityUnread, setActivityUnread] = useState(false)
 

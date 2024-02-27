@@ -24,6 +24,7 @@ import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { useFormatter } from 'utils/formatNumbers'
 
+import { PriceChartData } from '.'
 import { calculateDelta, DeltaArrow } from '../../Tokens/TokenDetails/Delta'
 import { getTimestampFormatter, TimestampFormatterType } from './format'
 
@@ -291,7 +292,7 @@ function MissingPriceChart({ chart }: { chart: ErroredChartModel }) {
 interface PriceChartProps {
   width: number
   height: number
-  prices?: PricePoint[]
+  prices?: PriceChartData[]
   timePeriod: TimePeriod
 }
 
@@ -300,7 +301,7 @@ export function PriceChart({ width, height, prices, timePeriod }: PriceChartProp
     () =>
       buildChartModel({
         dimensions: { width, height, marginBottom: CHART_MARGIN.bottom, marginTop: CHART_MARGIN.top },
-        prices,
+        prices: prices?.map((p) => ({ value: p.value, timestamp: p.time })),
       }),
     [width, height, prices]
   )

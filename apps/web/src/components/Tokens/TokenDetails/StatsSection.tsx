@@ -121,7 +121,7 @@ export default function StatsSection(props: StatsSectionProps) {
                 <Stat
                   dataCy="tvl"
                   value={TVL}
-                  description={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]}
+                  description={HEADER_DESCRIPTIONS[TokenSortMethod.DEPRECATE_TOTAL_VALUE_LOCKED]}
                   title={<Trans>TVL</Trans>}
                 />
                 <Stat
@@ -161,7 +161,7 @@ export default function StatsSection(props: StatsSectionProps) {
                 <Stat
                   dataCy="tvl"
                   value={TVL}
-                  description={HEADER_DESCRIPTIONS[TokenSortMethod.TOTAL_VALUE_LOCKED]}
+                  description={HEADER_DESCRIPTIONS[TokenSortMethod.DEPRECATE_TOTAL_VALUE_LOCKED]}
                   title={<Trans>TVL</Trans>}
                 />
                 <Stat

@@ -1,4 +1,5 @@
 import { t, Trans } from '@lingui/macro'
+import { sendAnalyticsEvent } from 'analytics'
 import Row from 'components/Row'
 import { Expiry, useLimitContext } from 'state/limit/LimitContext'
 import styled from 'styled-components'
@@ -17,13 +18,11 @@ const LimitExpiryButton = styled.button<{ $selected: boolean }>`
   align-items: center;
   gap: 4px;
   border: 1px solid ${({ theme }) => theme.surface3};
+  height: 28px;
   border-radius: 999px;
   background-color: ${({ theme, $selected }) => ($selected ? theme.surface3 : 'unset')};
+  color: ${({ theme, $selected }) => ($selected ? theme.neutral1 : theme.neutral2)};
   ${ClickableStyle}
-`
-
-const ExpiryButtonLabel = styled(ThemedText.LabelSmall)`
-  color: ${({ theme }) => theme.neutral1};
 `
 
 const EXPIRY_OPTIONS = [Expiry.Day, Expiry.Week, Expiry.Month, Expiry.Year]
@@ -31,13 +30,13 @@ const EXPIRY_OPTIONS = [Expiry.Day, Expiry.Week, Expiry.Month, Expiry.Year]
 function getExpiryLabelText(expiry: Expiry) {
   switch (expiry) {
     case Expiry.Day:
-      return t`1 Day`
+      return t`1 day`
     case Expiry.Week:
-      return t`1 Week`
+      return t`1 week`
     case Expiry.Month:
-      return t`1 Month`
+      return t`1 month`
     case Expiry.Year:
-      return t`1 Year`
+      return t`1 year`
   }
 }
 
@@ -56,13 +55,18 @@ export function LimitExpirySection() {
             $selected={expiry === limitState.expiry}
             onClick={() => {
               if (expiry === limitState.expiry) return
+              sendAnalyticsEvent('Limit Expiry Selected', {
+                value: expiry,
+              })
               setLimitState((prev) => ({
                 ...prev,
                 expiry,
               }))
             }}
           >
-            <ExpiryButtonLabel>{getExpiryLabelText(expiry)}</ExpiryButtonLabel>
+            <ThemedText.LabelSmall color="inherit" fontWeight={535}>
+              {getExpiryLabelText(expiry)}
+            </ThemedText.LabelSmall>
           </LimitExpiryButton>
         ))}
       </Row>

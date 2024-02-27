@@ -368,8 +368,8 @@ export function PositionPageUnsupportedContent() {
         <ThemedText.BodyPrimary style={{ marginBottom: '32px' }}>
           <Trans>To view a position, you must be connected to the network it belongs to.</Trans>
         </ThemedText.BodyPrimary>
-        <PositionPageButtonPrimary as={Link} to="/pools" width="fit-content">
-          <Trans>Back to Pools</Trans>
+        <PositionPageButtonPrimary as={Link} to="/pool" width="fit-content">
+          <Trans>Back to Pool</Trans>
         </PositionPageButtonPrimary>
       </div>
     </PageWrapper>
@@ -692,10 +692,10 @@ function PositionPageContent() {
               <Link
                 data-cy="visit-pool"
                 style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }}
-                to="/pools"
+                to="/pool"
               >
                 <HoverText>
-                  <Trans>← Back to Pools</Trans>
+                  <Trans>← Back to Pool</Trans>
                 </HoverText>
               </Link>
               <ResponsiveRow>

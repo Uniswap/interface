@@ -3,11 +3,6 @@ import invariant from 'tiny-invariant'
 
 export const NATIVE_CHAIN_ID = 'NATIVE'
 
-// When decimals are not specified for an ERC20 token
-// use default ERC20 token decimals as specified here:
-// https://docs.openzeppelin.com/contracts/3.x/erc20
-export const DEFAULT_ERC20_DECIMALS = 18
-
 export const USDC_MAINNET = new Token(
   ChainId.MAINNET,
   '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
@@ -477,4 +472,32 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in ChainId]?: s
     [ChainId.SEPOLIA]: USDC_SEPOLIA.address,
     [ChainId.AVALANCHE]: USDC_AVALANCHE.address,
   },
+}
+
+const STABLECOINS: { [chainId in ChainId]: Token[] } = {
+  [ChainId.MAINNET]: [USDC_MAINNET, DAI, USDT],
+  [ChainId.ARBITRUM_ONE]: [USDC_ARBITRUM, DAI_ARBITRUM_ONE],
+  [ChainId.ARBITRUM_GOERLI]: [USDC_ARBITRUM_GOERLI],
+  [ChainId.OPTIMISM]: [USDC_OPTIMISM, DAI_OPTIMISM],
+  [ChainId.OPTIMISM_GOERLI]: [USDC_OPTIMISM_GOERLI],
+  [ChainId.POLYGON]: [USDC_POLYGON, DAI_POLYGON],
+  [ChainId.POLYGON_MUMBAI]: [USDC_POLYGON_MUMBAI],
+  [ChainId.BNB]: [USDC_BSC],
+  [ChainId.BASE]: [USDC_BASE],
+  [ChainId.CELO]: [PORTAL_USDC_CELO],
+  [ChainId.CELO_ALFAJORES]: [PORTAL_USDC_CELO],
+  [ChainId.GOERLI]: [USDC_GOERLI],
+  [ChainId.SEPOLIA]: [USDC_SEPOLIA],
+  [ChainId.AVALANCHE]: [USDC_AVALANCHE],
+  [ChainId.GNOSIS]: [],
+  [ChainId.MOONBEAM]: [],
+  [ChainId.BASE_GOERLI]: [],
+  [ChainId.OPTIMISM_SEPOLIA]: [USDC_SEPOLIA],
+  [ChainId.ARBITRUM_SEPOLIA]: [],
+}
+
+export function isStablecoin(currency?: Currency): boolean {
+  if (!currency) return false
+
+  return STABLECOINS[currency.chainId as ChainId].some((stablecoin) => stablecoin.equals(currency))
 }

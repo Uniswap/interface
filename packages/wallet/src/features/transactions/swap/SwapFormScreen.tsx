@@ -445,7 +445,7 @@ function SwapFormContent(): JSX.Element {
             )}
           </AnimatedFlex>
         </Trace>
-        {!showWebInputTokenSelector ? (
+        {!showWebInputTokenSelector && (
           <>
             <SwitchCurrenciesButton onSwitchCurrencies={onSwitchCurrencies} />
 
@@ -488,7 +488,7 @@ function SwapFormContent(): JSX.Element {
                     onToggleIsFiatMode={onToggleIsFiatMode}
                   />
                 )}
-                {walletNeedsRestore && (
+                {walletNeedsRestore && !showWebOutputTokenSelector && (
                   <TouchableArea onPress={onRestorePress}>
                     <Flex
                       grow
@@ -516,13 +516,16 @@ function SwapFormContent(): JSX.Element {
               </AnimatedFlex>
             </Trace>
 
-            <Flex $short={{ mt: '$spacing8' }} mt="$spacing24">
-              <GasAndWarningRows renderEmptyRows />
-            </Flex>
+            {!showWebOutputTokenSelector && (
+              <>
+                <Flex fill={isWeb} mt="$spacing8">
+                  <GasAndWarningRows renderEmptyRows />
+                </Flex>
+              </>
+            )}
           </>
-        ) : (
-          <Flex mt="$spacing48" />
         )}
+        {isWeb && <Flex mt="$spacing48" />}
       </AnimatedFlex>
       {!isWeb && (
         <>
@@ -533,7 +536,6 @@ function SwapFormContent(): JSX.Element {
           is automatically resizing to find the right size for the screen.
           */}
           <Flex fill mt="$spacing8" onLayout={onBottomScreenLayout} />
-
           <AnimatedFlex
             $short={{ gap: '$none' }}
             bottom={0}

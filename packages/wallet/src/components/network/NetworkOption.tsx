@@ -1,8 +1,7 @@
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Icons, Text, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
-import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'wallet/src/components/CurrencyLogo/NetworkLogo'
 import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
@@ -31,11 +30,7 @@ export function NetworkOption({
           borderRadius={6}
           height={NETWORK_OPTION_ICON_SIZE}
           width={NETWORK_OPTION_ICON_SIZE}>
-          <EllipsisIcon
-            color={colors.sporeWhite.val}
-            height={iconSizes.icon12}
-            width={iconSizes.icon12}
-          />
+          <Icons.Ellipsis color={colors.sporeWhite.val} size="$icon.16" />
         </Flex>
         <Text color="$neutral1" variant="body2">
           {t('All networks')}

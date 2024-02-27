@@ -264,7 +264,7 @@ function FavoritesSection(props: FavoritesSectionProps): JSX.Element | null {
       px="$spacing12"
       zIndex={1}>
       {hasFavoritedTokens && <FavoriteTokensGrid {...props} />}
-      {hasFavoritedWallets && <FavoriteWalletsGrid showLoading={props.showLoading} />}
+      {hasFavoritedWallets && <FavoriteWalletsGrid {...props} />}
     </Flex>
   )
 }

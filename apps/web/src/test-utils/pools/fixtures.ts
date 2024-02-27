@@ -1,11 +1,10 @@
-import { QueryResult } from '@apollo/client'
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, Currency, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position } from '@uniswap/v3-sdk'
 import { USDC_MAINNET } from 'constants/tokens'
-import { Token as BEToken, Chain, Exact, TokenProjectQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { Token as BEToken } from 'graphql/data/__generated__/types-and-hooks'
+import { PoolData } from 'graphql/data/pools/usePoolData'
 import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
-import { PoolData } from 'graphql/thegraph/PoolData'
 
 export const validParams = { poolAddress: '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640', chainName: 'ethereum' }
 
@@ -17,7 +16,12 @@ export const validPoolToken0 = {
   derivedETH: '0.0006240873011635544626425964678706127',
   __typename: 'Token',
 } as Token
-export const validBEPoolToken0 = { ...validPoolToken0, chain: 'ETHEREUM' } as BEToken
+export const validBEPoolToken0 = {
+  ...validPoolToken0,
+  address: validPoolToken0.id,
+  chain: 'ETHEREUM',
+  decimals: 6,
+} as BEToken
 
 export const validUSDCCurrency = {
   isNative: false,
@@ -34,7 +38,7 @@ export const validUSDCCurrency = {
   wrapped: validPoolToken0,
 } as unknown as Currency
 
-export const validPoolToken1 = {
+const validPoolToken1 = {
   id: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   symbol: 'WETH',
   name: 'Wrapped Ether',
@@ -42,7 +46,12 @@ export const validPoolToken1 = {
   derivedETH: '1',
   __typename: 'Token',
 } as Token
-export const validBEPoolToken1 = { ...validPoolToken1, chain: 'ETHEREUM' } as BEToken
+export const validBEPoolToken1 = {
+  ...validPoolToken1,
+  address: validPoolToken1.id,
+  chain: 'ETHEREUM',
+  decimals: 18,
+} as BEToken
 
 export const owner = '0xf5b6bb25f5beaea03dd014c6ef9fa9f3926bf36c'
 
@@ -95,27 +104,15 @@ export const usdcWethPoolAddress = '0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640'
 
 export const validPoolDataResponse = {
   data: {
-    id: usdcWethPoolAddress,
     feeTier: 500,
-    liquidity: parseFloat('26414803986874770777'),
-    sqrtPrice: parseFloat('1977320351696380862605029898750440'),
-    tick: 202508,
-    token0: validPoolToken0,
-    token1: validPoolToken1,
+    token0: validBEPoolToken0,
+    token1: validBEPoolToken1,
     token0Price: 1605.481,
     token1Price: 0.000622,
-    volumeUSD: 233379442.64648438,
-    volumeToken0: '397309311915.656392',
-    volumeToken1: '192461624.767400825529358443',
-    txCount: '5456494',
-    totalValueLockedToken0: '190258041.714605',
-    totalValueLockedToken1: '130641.89297715763283183',
-    totalValueLockedUSD: '399590762.8476702153638342035105795',
-    __typename: 'Pool',
+    txCount: 5456494,
     address: usdcWethPoolAddress,
-    volumeUSDChange: -17.753809465717136,
+    volumeUSD24HChange: -17.753809465717136,
     volumeUSD24H: 194273059.265625,
-    volumeUSDWeek: 1359911419.265625,
     tvlUSD: 223166198.4690675,
     tvlUSDChange: -0.3657085465786977,
     tvlToken0: 90930713.7356909,
@@ -124,28 +121,3 @@ export const validPoolDataResponse = {
   loading: false,
   error: false,
 }
-
-export const validTokenProjectResponse = {
-  data: {
-    token: {
-      id: 'VG9rZW46RVRIRVJFVU1fMHhBMGI4Njk5MWM2MjE4YjM2YzFkMTlENGEyZTlFYjBjRTM2MDZlQjQ4',
-      decimals: 6,
-      name: 'USD Coin',
-      chain: 'ETHEREUM',
-      address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
-      symbol: 'USDC',
-      standard: 'ERC20',
-      project: {
-        id: 'VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4YTBiODY5OTFjNjIxOGIzNmMxZDE5ZDRhMmU5ZWIwY2UzNjA2ZWI0OF9VU0RD',
-        description:
-          'USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value between people, businesses and financial institutions just like email between mail services and texts between SMS providers. We believe by removing artificial economic borders, we can create a more inclusive global economy.',
-        homepageUrl: 'https://www.circle.com/en/usdc',
-        twitterName: 'circle',
-        logoUrl:
-          'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
-        __typename: 'TokenProject',
-      },
-      __typename: 'Token',
-    },
-  },
-} as unknown as QueryResult<TokenProjectQuery, Exact<{ chain: Chain; address?: string }>>

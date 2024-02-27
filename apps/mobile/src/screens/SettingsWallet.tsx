@@ -25,6 +25,8 @@ import {
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
 import { Screens, UnitagScreens } from 'src/screens/Screens'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
@@ -96,6 +98,7 @@ export function SettingsWallet({
   )
 
   const onChangeNotificationSettings = (enabled: boolean): void => {
+    sendMobileAnalyticsEvent(MobileEventName.NotificationsToggled, { enabled })
     if (notificationOSPermission === NotificationPermission.Enabled) {
       dispatch(
         editAccountActions.trigger({

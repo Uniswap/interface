@@ -1,26 +1,26 @@
 import { Trans } from '@lingui/macro'
 import { createColumnHelper } from '@tanstack/react-table'
-import { ChainId } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
 import {
-  ClickableHeaderRow,
   FilterHeaderRow,
   HeaderArrow,
+  HeaderSortText,
   StyledExternalLink,
   TimestampCell,
   TokenLinkCell,
 } from 'components/Table/styled'
+import { PoolTransaction, PoolTransactionType } from 'graphql/data/__generated__/types-and-hooks'
+import { TransactionType, useAllTransactions } from 'graphql/data/useAllTransactions'
 import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
-import { Transaction, TransactionType, useRecentTransactions } from 'graphql/thegraph/Transactions'
 import { OrderDirection, Transaction_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useCallback, useMemo, useReducer, useState } from 'react'
+import { useMemo, useReducer, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
-import { shortenAddress } from 'utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -41,53 +41,33 @@ export default function RecentTransactions() {
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
   const chainId = supportedChainIdFromGQLChain(chainName)
 
-  const [sortState, setSortMethod] = useState<ExploreTxTableSortState>({
+  const [sortState] = useState<ExploreTxTableSortState>({
     sortBy: Transaction_OrderBy.Timestamp,
     sortDirection: OrderDirection.Desc,
   })
-  const { transactions, loading, loadMore, error } = useRecentTransactions(
-    chainId ?? ChainId.MAINNET,
-    sortState.sortBy,
-    sortState.sortDirection,
-    filter
-  )
+  const { transactions, loading, loadMore, error } = useAllTransactions(chainName, filter)
 
-  const handleHeaderClick = useCallback(
-    (newSortMethod: Transaction_OrderBy) => {
-      if (sortState.sortBy === newSortMethod) {
-        setSortMethod({
-          sortBy: newSortMethod,
-          sortDirection: sortState.sortDirection === OrderDirection.Asc ? OrderDirection.Desc : OrderDirection.Asc,
-        })
-      } else {
-        setSortMethod({
-          sortBy: newSortMethod,
-          sortDirection: OrderDirection.Desc,
-        })
-      }
-    },
-    [sortState.sortBy, sortState.sortDirection]
-  )
+  const showLoadingSkeleton = loading || !!error
   // TODO(WEB-3236): once GQL BE Transaction query is supported add usd, token0 amount, and token1 amount sort support
   const columns = useMemo(() => {
-    const columnHelper = createColumnHelper<Transaction>()
+    const columnHelper = createColumnHelper<PoolTransaction>()
     return [
       columnHelper.accessor((transaction) => transaction, {
         id: 'timestamp',
         header: () => (
           <Cell minWidth={164} justifyContent="flex-start" grow>
-            <ClickableHeaderRow $justify="flex-start" onClick={() => handleHeaderClick(Transaction_OrderBy.Timestamp)}>
+            <Row gap="4px">
               {sortState.sortBy === Transaction_OrderBy.Timestamp && (
                 <HeaderArrow direction={sortState.sortDirection} />
               )}
-              <ThemedText.BodySecondary>
+              <HeaderSortText $active={sortState.sortBy === Transaction_OrderBy.Timestamp}>
                 <Trans>Time</Trans>
-              </ThemedText.BodySecondary>
-            </ClickableHeaderRow>
+              </HeaderSortText>
+            </Row>
           </Cell>
         ),
         cell: (transaction) => (
-          <Cell loading={loading} minWidth={164} justifyContent="flex-start" grow>
+          <Cell loading={showLoadingSkeleton} minWidth={164} justifyContent="flex-start" grow>
             <TimestampCell
               timestamp={Number(transaction.getValue?.().timestamp)}
               link={getExplorerLink(chainId, transaction.getValue?.().hash, ExplorerDataType.TRANSACTION)}
@@ -115,19 +95,19 @@ export default function RecentTransactions() {
           </Cell>
         ),
         cell: (transaction) => (
-          <Cell loading={loading} minWidth={300} justifyContent="flex-start" grow>
+          <Cell loading={showLoadingSkeleton} minWidth={300} justifyContent="flex-start" grow>
             <Row gap="8px">
               <ThemedText.BodySecondary>{transaction.getValue?.().type}</ThemedText.BodySecondary>
-              <TokenLinkCell chainId={chainId} tokenAddress={transaction.getValue?.().token0Address} />
+              <TokenLinkCell token={transaction.getValue?.().token0} />
               <ThemedText.BodySecondary>
-                {transaction.getValue?.().type === TransactionType.SWAP ? <Trans>for</Trans> : <Trans>and</Trans>}
+                {transaction.getValue?.().type === PoolTransactionType.Swap ? <Trans>for</Trans> : <Trans>and</Trans>}
               </ThemedText.BodySecondary>
-              <TokenLinkCell chainId={chainId} tokenAddress={transaction.getValue?.().token1Address} />
+              <TokenLinkCell token={transaction.getValue?.().token1} />
             </Row>
           </Cell>
         ),
       }),
-      columnHelper.accessor((transaction) => transaction.amountUSD, {
+      columnHelper.accessor((transaction) => transaction.usdValue.value, {
         id: 'fiat-value',
         header: () => (
           <Cell minWidth={125}>
@@ -135,7 +115,7 @@ export default function RecentTransactions() {
           </Cell>
         ),
         cell: (fiat) => (
-          <Cell loading={loading} minWidth={125}>
+          <Cell loading={showLoadingSkeleton} minWidth={125}>
             <ThemedText.BodyPrimary>{formatFiatPrice({ price: fiat.getValue?.() })}</ThemedText.BodyPrimary>
           </Cell>
         ),
@@ -150,14 +130,14 @@ export default function RecentTransactions() {
           </Cell>
         ),
         cell: (transaction) => (
-          <Cell loading={loading} minWidth={200}>
+          <Cell loading={showLoadingSkeleton} minWidth={200}>
             <Row gap="8px" justify="flex-end">
               <ThemedText.BodyPrimary>
                 {formatNumber({
-                  input: Math.abs(transaction.getValue?.().amountToken0) || 0,
+                  input: Math.abs(parseFloat(transaction.getValue?.().token0Quantity)) || 0,
                 })}
               </ThemedText.BodyPrimary>
-              <TokenLinkCell chainId={chainId} tokenAddress={transaction.getValue?.().token0Address} />
+              <TokenLinkCell token={transaction.getValue?.().token0} />
             </Row>
           </Cell>
         ),
@@ -172,19 +152,19 @@ export default function RecentTransactions() {
           </Cell>
         ),
         cell: (transaction) => (
-          <Cell loading={loading} minWidth={200}>
+          <Cell loading={showLoadingSkeleton} minWidth={200}>
             <Row gap="8px" justify="flex-end">
               <ThemedText.BodyPrimary>
                 {formatNumber({
-                  input: Math.abs(transaction.getValue?.().amountToken1) || 0,
+                  input: Math.abs(parseFloat(transaction.getValue?.().token1Quantity)) || 0,
                 })}
               </ThemedText.BodyPrimary>
-              <TokenLinkCell chainId={chainId} tokenAddress={transaction.getValue?.().token1Address} />
+              <TokenLinkCell token={transaction.getValue?.().token1} />
             </Row>
           </Cell>
         ),
       }),
-      columnHelper.accessor((transaction) => transaction.sender, {
+      columnHelper.accessor((transaction) => transaction.account, {
         id: 'maker-address',
         header: () => (
           <Cell minWidth={125}>
@@ -194,7 +174,7 @@ export default function RecentTransactions() {
           </Cell>
         ),
         cell: (makerAddress) => (
-          <Cell loading={loading} minWidth={125}>
+          <Cell loading={showLoadingSkeleton} minWidth={125}>
             <StyledExternalLink href={getExplorerLink(chainId, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}>
               {shortenAddress(makerAddress.getValue?.(), 0)}
             </StyledExternalLink>
@@ -209,19 +189,12 @@ export default function RecentTransactions() {
     filterModalIsOpen,
     formatFiatPrice,
     formatNumber,
-    handleHeaderClick,
-    loading,
+    showLoadingSkeleton,
     sortState.sortBy,
     sortState.sortDirection,
   ])
 
-  if (error) {
-    return (
-      <ThemedText.BodyPrimary>
-        <Trans>Error loading transactions</Trans>
-      </ThemedText.BodyPrimary>
-    )
-  }
-
-  return <Table columns={columns} data={transactions} loading={loading} loadMore={loadMore} />
+  return (
+    <Table columns={columns} data={transactions} loading={loading} error={error} loadMore={loadMore} maxWidth={1200} />
+  )
 }

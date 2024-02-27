@@ -18,7 +18,7 @@ import { TextInput } from 'wallet/src/components/input/TextInput'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
-import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
+import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import {
   EditAccountAction,
   editAccountActions,
@@ -43,7 +43,7 @@ export function SettingsWalletEdit({
   const [nickname, setNickname] = useState(displayName?.name)
   const [showEditButton, setShowEditButton] = useState(true)
   const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
-  const { canClaimUnitag } = useCanActiveAddressClaimUnitag()
+  const { canClaimUnitag } = useCanAddressClaimUnitag(address)
   const showUnitagBanner =
     unitagsFeatureFlagEnabled &&
     activeAccount?.type === AccountType.SignerMnemonic &&

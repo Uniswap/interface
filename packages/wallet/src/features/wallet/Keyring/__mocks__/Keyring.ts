@@ -25,6 +25,10 @@ class MockKeyring implements IKeyring {
     return Promise.resolve(true)
   }
 
+  removePassword(): Promise<boolean> {
+    return Promise.resolve(true)
+  }
+
   getMnemonicIds(): Promise<string[]> {
     return Promise.resolve(Object.keys(mnemonics))
   }
@@ -34,6 +38,11 @@ class MockKeyring implements IKeyring {
     const wallet = Wallet.fromMnemonic(mnemonic)
     mnemonics[wallet.address] = mnemonic
     return Promise.resolve(wallet.address)
+  }
+
+  removeMnemonic(mnemonicId: string): Promise<boolean> {
+    delete mnemonics[mnemonicId]
+    return Promise.resolve(true)
   }
 
   retrieveMnemonicUnlocked(address: string): Promise<string | undefined> {
@@ -66,6 +75,11 @@ class MockKeyring implements IKeyring {
     const wallet = Wallet.fromMnemonic(mnemonic, pathFromIndex(derivationIndex))
     privateKeys[wallet.address] = wallet.privateKey
     return Promise.resolve(wallet.address)
+  }
+
+  removePrivateKey(address: string): Promise<boolean> {
+    delete privateKeys[address]
+    return Promise.resolve(true)
   }
 
   async signTransactionForAddress(

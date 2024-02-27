@@ -26,6 +26,20 @@ exports[`PoolDetailsStatsButton loading skeleton shown correctly 1`] = `
 }
 
 .c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c5 {
   border-radius: 12px;
   border-radius: 12px;
   height: 24px;
@@ -45,29 +59,80 @@ exports[`PoolDetailsStatsButton loading skeleton shown correctly 1`] = `
   z-index: 1;
 }
 
-.c4 {
+.c6 {
   height: 44px;
   width: 175px;
   border-radius: 900px;
 }
 
-@media (max-width:1023px) {
+.c4 {
+  gap: 2px;
+  display: none;
+}
+
+@media (max-width:1024px) {
   .c2 {
-    display: none;
+    gap: 8px;
+    position: fixed;
+    bottom: 0px;
+    left: 0;
+    margin: 8px;
+    width: calc(100% - 16px);
+    background: #FFFFFF;
+    padding: 12px 32px;
+    border: 1px solid #22222212;
+    border-radius: 20px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    z-index: 1020;
+  }
+
+  .c2 > :first-child {
+    margin-right: auto;
   }
 }
 
-<div
-    class="c0 c1 c2"
-    data-testid="pdp-buttons-loading-skeleton"
+@media (max-width:768px) {
+  .c2 {
+    bottom: 56px;
+  }
+}
+
+@media (max-width:1024px) {
+  .c4 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
   >
-    <div
-      class="c3 c4"
-    />
-    <div
-      class="c3 c4"
-    />
-  </div>
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1 c2"
+        data-testid="pdp-buttons-loading-skeleton"
+      >
+        <div
+          class="c3 c4"
+        >
+          <div
+            class="c5 c6"
+          />
+        </div>
+        <div
+          class="c5 c6"
+        />
+        <div
+          class="c5 c6"
+        />
+      </div>
+    </span>
+  </span>
 </DocumentFragment>
 `;
 
@@ -79,7 +144,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   min-width: 0;
 }
 
-.c30 {
+.c32 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -102,7 +167,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   border-radius: 4px;
 }
 
-.c47 {
+.c50 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -143,27 +208,27 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   justify-content: flex-start;
 }
 
-.c11 {
+.c12 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
 }
 
-.c13 {
+.c14 {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
 }
 
-.c6 {
+.c5 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
-.c26 {
+.c28 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -171,7 +236,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c15 {
+.c17 {
   outline: none;
   border: none;
   font-size: inherit;
@@ -187,13 +252,32 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   transition-property: opacity,color,background-color;
 }
 
-.c15:hover {
+.c17:hover {
   opacity: 0.6;
 }
 
-.c15:focus {
+.c17:focus {
   -webkit-text-decoration: underline;
   text-decoration: underline;
+}
+
+.c58 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c58:hover {
+  opacity: 0.6;
+}
+
+.c58:active {
+  opacity: 0.4;
 }
 
 .c0 {
@@ -211,148 +295,27 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   gap: 24px;
 }
 
-.c45 {
+.c7 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c48 {
   display: grid;
   grid-auto-rows: auto;
   grid-row-gap: 4px;
 }
 
-.c9 {
-  position: relative;
-  z-index: 1;
-  -webkit-transition: -webkit-transform 250ms ease;
-  -webkit-transition: transform 250ms ease;
-  transition: transform 250ms ease;
-  border-radius: 24px;
-}
-
-.c10 {
-  border-radius: 24px;
-  z-index: -1;
-  padding-top: 12px;
-}
-
-.c43 {
-  border-radius: 12px;
-  height: 40px;
-  width: 40px;
-  position: relative;
-  margin-top: -18px;
-  margin-bottom: -18px;
-  margin-left: auto;
-  margin-right: auto;
-  background-color: #F9F9F9;
-  border: 4px solid;
-  border-color: #FFFFFF;
-  z-index: 2;
-}
-
-.c43:hover {
-  cursor: pointer;
-  opacity: 0.8;
-}
-
-.c23 {
-  background-color: #F9F9F9;
-  border-radius: 16px;
-  color: #7D7D7D;
-  font-size: 14px;
-  font-weight: 500;
-  height: 120px;
-  line-height: 20px;
-  padding: 16px;
-  position: relative;
-}
-
-.c23:before {
-  box-sizing: border-box;
-  background-size: 100%;
-  border-radius: inherit;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  content: '';
-  border: 1px solid #F9F9F9;
-}
-
-.c23:hover:before {
-  border-color: #98A1C014;
-}
-
-.c23:focus-within:before {
-  border-color: #B8C0DC3d;
-}
-
-.c46 {
-  border-bottom: 1px solid #FFFFFF;
-}
-
-.c44 {
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-}
-
-.c16 {
-  color: #222222;
-  background-color: #F9F9F9;
-  padding: 8px 16px;
-  border-radius: 20px;
-  gap: 4px;
-  font-weight: 485;
-}
-
-.c16:focus {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c16:active {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c18 {
-  color: #7D7D7D;
-  padding: 8px 16px;
-  border-radius: 20px;
-  gap: 4px;
-  font-weight: 485;
-}
-
-.c18:focus {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c18:active {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-}
-
-.c42 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c50 {
+.c53 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -366,7 +329,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   width: 100%;
 }
 
-.c31 {
+.c34 {
   padding: 16px;
   width: 100%;
   line-height: 24px;
@@ -405,58 +368,58 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   transform: perspective(1px) translateZ(0);
 }
 
-.c31:disabled {
+.c34:disabled {
   opacity: 50%;
   cursor: auto;
   pointer-events: none;
 }
 
-.c31 > * {
+.c34 > * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.c31 > a {
+.c34 > a {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c48 {
+.c51 {
   background-color: #FFEFFF;
   color: #FC72FF;
   font-size: 20px;
   font-weight: 535;
 }
 
-.c48:focus {
+.c51:focus {
   box-shadow: 0 0 0 1pt #FFEFFF;
   background-color: #FFEFFF;
 }
 
-.c48:hover {
+.c51:hover {
   background-color: #FFEFFF;
 }
 
-.c48:active {
+.c51:active {
   box-shadow: 0 0 0 1pt #FFEFFF;
   background-color: #FFEFFF;
 }
 
-.c48:hover .c49 {
+.c51:hover .c52 {
   background-color: #98A1C014;
 }
 
-.c48:active .c49 {
+.c51:active .c52 {
   background-color: #B8C0DC3d;
 }
 
-.c48:disabled {
+.c51:disabled {
   opacity: 0.4;
 }
 
-.c48:disabled:hover {
+.c51:disabled:hover {
   cursor: auto;
   background-color: transparent;
   box-shadow: none;
@@ -464,7 +427,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   outline: none;
 }
 
-.c32 {
+.c35 {
   background-color: #FFFFFF;
   color: #7D7D7D;
   border: 1px solid #22222212;
@@ -472,15 +435,28 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   font-weight: 535;
 }
 
-.c32:hover {
+.c35:hover {
   background-color: #ececec;
 }
 
-.c32:active {
+.c35:active {
   background-color: #e0e0e0;
 }
 
-.c36 {
+.c45 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c19 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c39 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -494,13 +470,13 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   left: 0;
 }
 
-.c37 {
+.c40 {
   width: 24px;
   height: 24px;
   border-radius: 50%;
 }
 
-.c35 {
+.c38 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
@@ -508,53 +484,20 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   display: flex;
 }
 
-.c17 {
-  display: inline-block;
-  height: inherit;
+.c60 {
+  z-index: 1020;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.60);
+  opacity: 0;
+  pointer-events: none;
 }
 
-.c22 {
-  height: 24px;
-  width: 24px;
-}
-
-.c22 > * {
-  fill: #7D7D7D;
-}
-
-.c20 {
-  border: none;
-  background-color: transparent;
-  margin: 0;
-  padding: 0;
-  cursor: pointer;
-  outline: none;
-}
-
-.c20:not([disabled]):hover {
-  opacity: 0.7;
-}
-
-.c21 {
-  padding: 6px 12px;
-  border-radius: 16px;
-}
-
-.c19 {
-  position: relative;
-}
-
-.c12 {
-  margin-bottom: 4px;
-  color: #7D7D7D;
-}
-
-.c14 {
-  gap: 16px;
-  padding-bottom: 8px;
-}
-
-.c28 {
+.c30 {
   color: #222222;
   pointer-events: auto;
   width: 0;
@@ -575,36 +518,36 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   text-align: right;
 }
 
-.c28::-webkit-search-decoration {
+.c30::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-.c28 [type='number'] {
+.c30 [type='number'] {
   -moz-appearance: textfield;
 }
 
-.c28::-webkit-outer-spin-button,
-.c28::-webkit-inner-spin-button {
+.c30::-webkit-outer-spin-button,
+.c30::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-.c28::-webkit-input-placeholder {
+.c30::-webkit-input-placeholder {
   color: #CECECE;
 }
 
-.c28::-moz-placeholder {
+.c30::-moz-placeholder {
   color: #CECECE;
 }
 
-.c28:-ms-input-placeholder {
+.c30:-ms-input-placeholder {
   color: #CECECE;
 }
 
-.c28::placeholder {
+.c30::placeholder {
   color: #CECECE;
 }
 
-.c29 {
+.c31 {
   -webkit-filter: none;
   filter: none;
   opacity: 1;
@@ -616,7 +559,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   max-height: 44px;
 }
 
-.c24 {
+.c26 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -633,13 +576,13 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   will-change: height;
 }
 
-.c25 {
+.c27 {
   min-height: 44px;
   border-radius: 20px;
   width: initial;
 }
 
-.c33 {
+.c36 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -672,12 +615,12 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   animation: none;
 }
 
-.c33:hover,
-.c33:active {
+.c36:hover,
+.c36:active {
   background-color: #F9F9F9;
 }
 
-.c33:before {
+.c36:before {
   background-size: 100%;
   border-radius: inherit;
   position: absolute;
@@ -688,15 +631,15 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   content: '';
 }
 
-.c33:hover:before {
+.c36:hover:before {
   background-color: #98A1C014;
 }
 
-.c33:active:before {
+.c36:active:before {
   background-color: #B8C0DC3d;
 }
 
-.c27 {
+.c29 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -714,7 +657,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   justify-content: space-between;
 }
 
-.c40 {
+.c43 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -731,12 +674,12 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   line-height: 1rem;
 }
 
-.c40 span:hover {
+.c43 span:hover {
   cursor: pointer;
   color: #4a4a4a;
 }
 
-.c41 {
+.c44 {
   -webkit-box-pack: end;
   -webkit-justify-content: flex-end;
   -ms-flex-pack: end;
@@ -745,7 +688,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   padding: 8px 0px 0px 0px;
 }
 
-.c34 {
+.c37 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -761,21 +704,232 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   width: 100%;
 }
 
-.c39 {
+.c42 {
   margin: 0 0.25rem 0 0.35rem;
   height: 35%;
   margin-left: 8px;
 }
 
-.c39 path {
+.c42 path {
   stroke: #222222;
   stroke-width: 2px;
 }
 
-.c38 {
+.c41 {
   margin: 0 0.25rem 0 0.25rem;
   font-size: 20px;
   font-weight: 535;
+}
+
+.c10 {
+  position: relative;
+  z-index: 1;
+  -webkit-transition: -webkit-transform 250ms ease;
+  -webkit-transition: transform 250ms ease;
+  transition: transform 250ms ease;
+  border-radius: 24px;
+}
+
+.c11 {
+  border-radius: 24px;
+  z-index: -1;
+}
+
+.c46 {
+  border-radius: 12px;
+  height: 40px;
+  width: 40px;
+  position: relative;
+  margin-top: -18px;
+  margin-bottom: -18px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #F9F9F9;
+  border: 4px solid;
+  border-color: #FFFFFF;
+  z-index: 2;
+}
+
+.c46:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.c25 {
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  color: #7D7D7D;
+  font-size: 14px;
+  font-weight: 500;
+  height: 120px;
+  line-height: 20px;
+  padding: 16px;
+  position: relative;
+}
+
+.c25:before {
+  box-sizing: border-box;
+  background-size: 100%;
+  border-radius: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  content: '';
+  border: 1px solid #F9F9F9;
+}
+
+.c25:hover:before {
+  border-color: #98A1C014;
+}
+
+.c25:focus-within:before {
+  border-color: #B8C0DC3d;
+}
+
+.c49 {
+  border-bottom: 1px solid #FFFFFF;
+}
+
+.c47 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.c18 {
+  color: #222222;
+  background-color: #22222212;
+  padding: 8px 16px;
+  border-radius: 20px;
+  gap: 4px;
+  font-weight: 485;
+}
+
+.c18:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c18:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c20 {
+  color: #7D7D7D;
+  padding: 8px 16px;
+  border-radius: 20px;
+  gap: 4px;
+  font-weight: 485;
+}
+
+.c20:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c20:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c54 {
+  width: 100%;
+  padding: 12px 20px 16px;
+  background-color: #FF5F521f;
+  border-radius: 16px;
+  border: 1px solid #22222212;
+  color: #FF5F52;
+}
+
+.c55 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-weight: 535;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
+
+.c56 {
+  font-weight: 535;
+  font-size: 16px;
+  line-height: 24px;
+  margin-left: 7px;
+}
+
+.c57 {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 16px;
+  color: #7D7D7D;
+}
+
+.c59 {
+  color: #FC72FF;
+  font-weight: 535;
+}
+
+.c24 {
+  height: 24px;
+  width: 24px;
+}
+
+.c24 > * {
+  fill: #7D7D7D;
+}
+
+.c22 {
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.c22:not([disabled]):hover {
+  opacity: 0.7;
+}
+
+.c23 {
+  padding: 6px 12px;
+  border-radius: 16px;
+}
+
+.c21 {
+  position: relative;
+}
+
+.c13 {
+  margin-bottom: 12px;
+  padding-right: 4px;
+  color: #7D7D7D;
+}
+
+.c15 {
+  gap: 0px;
+}
+
+.c15 .c16 {
+  padding: 8px 12px;
 }
 
 .c3 {
@@ -819,411 +973,531 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   opacity: 0.4;
 }
 
-.c5 {
-  fill: #FC72FF;
-  rotate: 90deg;
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  padding: 12px 16px 12px 12px;
+  border: unset;
+  border-radius: 900px;
+  width: 50%;
+  gap: 8px;
+  color: #FC72FF;
+  background-color: #FC72FF1f;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-transition: width 250ms ease-in-out;
+  transition: width 250ms ease-in-out;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
 }
 
-.c7 {
+.c6:hover {
+  opacity: 0.6;
+}
+
+.c6:active {
+  opacity: 0.4;
+}
+
+.c8 {
   z-index: 0;
+  gap: 24px;
+  visibility: hidden;
+  opacity: 0;
   max-height: 0;
   -webkit-transition: max-height 250ms ease;
   transition: max-height 250ms ease;
   padding-bottom: 0;
 }
 
-.c7 .c8:before {
+.c8 .c9:before {
   background-color: unset;
 }
 
-@media (max-width:1023px) {
+.c8 .c33 {
+  visibility: hidden;
+}
+
+@media only screen and (max-width:1024px) {
+  .c60 {
+    opacity: 0;
+    pointer-events: none;
+    -webkit-transition: opacity 250ms ease-in-out;
+    transition: opacity 250ms ease-in-out;
+  }
+}
+
+@media (max-width:1024px) {
   .c3 {
-    display: none;
+    gap: 8px;
+    position: fixed;
+    bottom: 0px;
+    left: 0;
+    margin: 8px;
+    width: calc(100% - 16px);
+    background: #FFFFFF;
+    padding: 12px 32px;
+    border: 1px solid #22222212;
+    border-radius: 20px;
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    z-index: 1020;
+  }
+
+  .c3 > :first-child {
+    margin-right: auto;
   }
 }
 
-@media (max-width:1023px) {
-  .c7 {
-    display: none;
+@media (max-width:768px) {
+  .c3 {
+    bottom: 56px;
   }
 }
 
-<div
-    class="c0"
+@media (max-width:1024px) {
+
+}
+
+@media (max-width:1024px) {
+
+}
+
+@media (max-width:1024px) {
+  .c8 {
+    position: fixed;
+    width: calc(100% - 16px);
+    padding: 0px 12px 12px;
+    border-radius: 24px;
+    max-width: 480px;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    z-index: 1030;
+    background: #FFFFFF;
+    -webkit-transition: opacity 250ms ease;
+    transition: opacity 250ms ease;
+  }
+}
+
+<span
+    class=" _dsp_contents"
   >
-    <div
-      class="c1 c2 c3"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      <button
-        class="c4"
-        data-testid="pool-details-swap-button"
-      >
-        <svg
-          class="c5"
-          fill="none"
-          height="20"
-          viewBox="0 0 20 20"
-          width="20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M2.05836 6.27468C2.00086 6.21718 1.95514 6.14789 1.92348 6.07123C1.86014 5.91873 1.86014 5.74623 1.92348 5.59373C1.95514 5.51706 2.00086 5.44798 2.05836 5.39048L5.3917 2.05715C5.63586 1.81298 6.03173 1.81298 6.27589 2.05715C6.52006 2.30132 6.52006 2.69718 6.27589 2.94134L4.00925 5.20799H14.1667C14.5117 5.20799 14.7917 5.48799 14.7917 5.83299C14.7917 6.17799 14.5117 6.45799 14.1667 6.45799H4.00925L6.27589 8.72463C6.52006 8.9688 6.52006 9.36466 6.27589 9.60882C6.15423 9.73049 5.9942 9.79213 5.8342 9.79213C5.6742 9.79213 5.51418 9.73132 5.39251 9.60882L2.05836 6.27468ZM18.0766 13.9271C18.045 13.8504 17.9992 13.7813 17.9417 13.7238L14.6084 10.3905C14.3642 10.1463 13.9684 10.1463 13.7242 10.3905C13.4801 10.6346 13.4801 11.0305 13.7242 11.2747L15.9909 13.5413H5.83339C5.48839 13.5413 5.20839 13.8213 5.20839 14.1663C5.20839 14.5113 5.48839 14.7913 5.83339 14.7913H15.9909L13.7242 17.058C13.4801 17.3021 13.4801 17.698 13.7242 17.9422C13.8459 18.0638 14.0059 18.1255 14.1659 18.1255C14.3259 18.1255 14.4859 18.0647 14.6076 17.9422L17.9409 14.6088C17.9984 14.5513 18.0442 14.4822 18.0758 14.4056C18.14 14.2522 18.14 14.0804 18.0766 13.9271Z"
-          />
-        </svg>
-        <div
-          class="c6 css-1guhfcl"
-        >
-          Swap
-        </div>
-      </button>
-      <button
-        class="c4"
-        data-testid="pool-details-add-liquidity-button"
-      >
-        <svg
-          fill="none"
-          height="20"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="20"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <line
-            x1="12"
-            x2="12"
-            y1="5"
-            y2="19"
-          />
-          <line
-            x1="5"
-            x2="19"
-            y1="12"
-            y2="12"
-          />
-        </svg>
-        <div
-          class="c6 css-1guhfcl"
-        >
-          Add liquidity
-        </div>
-      </button>
-    </div>
-    <div
-      class="c7"
-      data-testid="pool-details-swap-modal"
-    >
-      <main
-        class="c8 c9"
-        id="swap-page"
+      <div
+        class="c0"
       >
         <div
-          class="c10"
+          class="c1 c2 c3"
         >
-          <div
-            class="c1 c2 c11 c12"
+          <button
+            class="c4"
+            data-testid="pool-details-swap-button"
           >
             <div
-              class="c1 c2 c13 c14"
+              class="c5 css-1guhfcl"
             >
-              <button
-                class="c15 c16"
-                role="button"
-                tabindex="0"
-              >
-                Swap
-              </button>
-              <div
-                class="c17"
-              >
-                <div>
-                  <button
-                    class="c15 c18"
-                    data-testid="buy-fiat-button"
-                  >
-                    Buy
-                  </button>
-                </div>
-              </div>
+              Swap
             </div>
+          </button>
+          <button
+            class="c6"
+            data-testid="pool-details-add-liquidity-button"
+          >
             <div
-              class="c1 c2 c13"
+              class="c5 css-1guhfcl"
+            >
+              Add liquidity
+            </div>
+          </button>
+        </div>
+        <div
+          class="c7 c8"
+          data-testid="pool-details-swap-modal"
+        >
+          <main
+            class="c9 c10"
+            id="swap-page"
+          >
+            <div
+              class="c11"
             >
               <div
-                class="c19"
+                class="c1 c2 c12 c13"
               >
-                <button
-                  aria-label="Transaction Settings"
-                  class="c20"
-                  data-testid="open-settings-dialog-button"
-                  id="open-settings-dialog-button"
+                <div
+                  class="c1 c2 c14 c15"
+                >
+                  <button
+                    class="c16 c17 c18"
+                    role="button"
+                    tabindex="0"
+                  >
+                    Swap
+                  </button>
+                  <div
+                    class="c19"
+                  >
+                    <div>
+                      <button
+                        class="c16 c17 c20"
+                        data-testid="buy-fiat-button"
+                      >
+                        Buy
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c1 c2 c14"
                 >
                   <div
-                    class="c1 c2 c21"
+                    class="c21"
                   >
-                    <svg
+                    <button
+                      aria-label="Transaction Settings"
                       class="c22"
-                      fill="none"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      width="24"
-                      xmlns="http://www.w3.org/2000/svg"
+                      data-testid="open-settings-dialog-button"
+                      id="open-settings-dialog-button"
                     >
-                      <path
-                        d="M20.83 14.6C19.9 14.06 19.33 13.07 19.33 12C19.33 10.93 19.9 9.93999 20.83 9.39999C20.99 9.29999 21.05 9.1 20.95 8.94L19.28 6.06C19.22 5.95 19.11 5.89001 19 5.89001C18.94 5.89001 18.88 5.91 18.83 5.94C18.37 6.2 17.85 6.34 17.33 6.34C16.8 6.34 16.28 6.19999 15.81 5.92999C14.88 5.38999 14.31 4.41 14.31 3.34C14.31 3.15 14.16 3 13.98 3H10.02C9.83999 3 9.69 3.15 9.69 3.34C9.69 4.41 9.12 5.38999 8.19 5.92999C7.72 6.19999 7.20001 6.34 6.67001 6.34C6.15001 6.34 5.63001 6.2 5.17001 5.94C5.01001 5.84 4.81 5.9 4.72 6.06L3.04001 8.94C3.01001 8.99 3 9.05001 3 9.10001C3 9.22001 3.06001 9.32999 3.17001 9.39999C4.10001 9.93999 4.67001 10.92 4.67001 11.99C4.67001 13.07 4.09999 14.06 3.17999 14.6H3.17001C3.01001 14.7 2.94999 14.9 3.04999 15.06L4.72 17.94C4.78 18.05 4.89 18.11 5 18.11C5.06 18.11 5.12001 18.09 5.17001 18.06C6.11001 17.53 7.26 17.53 8.19 18.07C9.11 18.61 9.67999 19.59 9.67999 20.66C9.67999 20.85 9.82999 21 10.02 21H13.98C14.16 21 14.31 20.85 14.31 20.66C14.31 19.59 14.88 18.61 15.81 18.07C16.28 17.8 16.8 17.66 17.33 17.66C17.85 17.66 18.37 17.8 18.83 18.06C18.99 18.16 19.19 18.1 19.28 17.94L20.96 15.06C20.99 15.01 21 14.95 21 14.9C21 14.78 20.94 14.67 20.83 14.6ZM12 15C10.34 15 9 13.66 9 12C9 10.34 10.34 9 12 9C13.66 9 15 10.34 15 12C15 13.66 13.66 15 12 15Z"
-                        fill="currentColor"
-                      />
-                    </svg>
+                      <div
+                        class="c1 c2 c23"
+                      >
+                        <svg
+                          class="c24"
+                          fill="none"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          width="24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M20.83 14.6C19.9 14.06 19.33 13.07 19.33 12C19.33 10.93 19.9 9.93999 20.83 9.39999C20.99 9.29999 21.05 9.1 20.95 8.94L19.28 6.06C19.22 5.95 19.11 5.89001 19 5.89001C18.94 5.89001 18.88 5.91 18.83 5.94C18.37 6.2 17.85 6.34 17.33 6.34C16.8 6.34 16.28 6.19999 15.81 5.92999C14.88 5.38999 14.31 4.41 14.31 3.34C14.31 3.15 14.16 3 13.98 3H10.02C9.83999 3 9.69 3.15 9.69 3.34C9.69 4.41 9.12 5.38999 8.19 5.92999C7.72 6.19999 7.20001 6.34 6.67001 6.34C6.15001 6.34 5.63001 6.2 5.17001 5.94C5.01001 5.84 4.81 5.9 4.72 6.06L3.04001 8.94C3.01001 8.99 3 9.05001 3 9.10001C3 9.22001 3.06001 9.32999 3.17001 9.39999C4.10001 9.93999 4.67001 10.92 4.67001 11.99C4.67001 13.07 4.09999 14.06 3.17999 14.6H3.17001C3.01001 14.7 2.94999 14.9 3.04999 15.06L4.72 17.94C4.78 18.05 4.89 18.11 5 18.11C5.06 18.11 5.12001 18.09 5.17001 18.06C6.11001 17.53 7.26 17.53 8.19 18.07C9.11 18.61 9.67999 19.59 9.67999 20.66C9.67999 20.85 9.82999 21 10.02 21H13.98C14.16 21 14.31 20.85 14.31 20.66C14.31 19.59 14.88 18.61 15.81 18.07C16.28 17.8 16.8 17.66 17.33 17.66C17.85 17.66 18.37 17.8 18.83 18.06C18.99 18.16 19.19 18.1 19.28 17.94L20.96 15.06C20.99 15.01 21 14.95 21 14.9C21 14.78 20.94 14.67 20.83 14.6ZM12 15C10.34 15 9 13.66 9 12C9 10.34 10.34 9 12 9C13.66 9 15 10.34 15 12C15 13.66 13.66 15 12 15Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                    </button>
                   </div>
-                </button>
+                </div>
               </div>
-            </div>
-          </div>
-          <div
-            style="display: relative;"
-          >
-            <div
-              class="c23"
-            >
               <div
-                class="c24"
-                id="swap-currency-input"
+                style="display: relative;"
               >
                 <div
                   class="c25"
                 >
                   <div
-                    class="c26 css-142zc9n"
-                    style="user-select: none;"
+                    class="c26"
+                    id="swap-currency-input"
                   >
-                    You pay
-                  </div>
-                  <div
-                    class="c27"
-                  >
-                    <div
-                      style="display: flex; flex-grow: 1;"
-                    >
-                      <input
-                        autocomplete="off"
-                        autocorrect="off"
-                        class="c28 c29 token-amount-input"
-                        id="swap-currency-input"
-                        inputmode="decimal"
-                        maxlength="79"
-                        minlength="1"
-                        pattern="^[0-9]*[.,]?[0-9]*$"
-                        placeholder="0"
-                        spellcheck="false"
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <div>
-                      <div
-                        class="c17"
-                      >
-                        <button
-                          class="c30 c31 c32 c33 open-currency-select-button"
-                        >
-                          <span
-                            class="c34"
-                          >
-                            <div
-                              class="c1 c2 c13"
-                            >
-                              <div
-                                class="c35"
-                                style="height: 24px; width: 24px; margin-right: 2px;"
-                              >
-                                <div
-                                  class="c36"
-                                >
-                                  <img
-                                    class="c37"
-                                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                                  />
-                                </div>
-                              </div>
-                              <span
-                                class="c38 token-symbol-container"
-                              >
-                                USDC
-                              </span>
-                            </div>
-                            <svg
-                              class="c39"
-                            >
-                              dropdown.svg
-                            </svg>
-                          </span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="c40 c41"
-                  >
-                    <div
-                      class="c1 c2 c11"
-                    >
-                      <div
-                        class="c42"
-                      />
-                      <span />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c43"
-            >
-              <div
-                class="c44"
-                color="#222222"
-                data-testid="swap-currency-button"
-              >
-                <svg
-                  fill="none"
-                  height="16"
-                  stroke="#222222"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="16"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line
-                    x1="12"
-                    x2="12"
-                    y1="5"
-                    y2="19"
-                  />
-                  <polyline
-                    points="19 12 12 19 5 12"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c45"
-          >
-            <div>
-              <div
-                class="c23 c46"
-              >
-                <div
-                  class="c24"
-                  id="swap-currency-output"
-                >
-                  <div
-                    class="c25"
-                  >
-                    <div
-                      class="c26 css-142zc9n"
-                      style="user-select: none;"
-                    >
-                      You receive
-                    </div>
                     <div
                       class="c27"
                     >
                       <div
-                        style="display: flex; flex-grow: 1;"
+                        class="c28 css-142zc9n"
+                        style="user-select: none;"
                       >
-                        <input
-                          autocomplete="off"
-                          autocorrect="off"
-                          class="c28 c29 token-amount-input"
-                          id="swap-currency-output"
-                          inputmode="decimal"
-                          maxlength="79"
-                          minlength="1"
-                          pattern="^[0-9]*[.,]?[0-9]*$"
-                          placeholder="0"
-                          spellcheck="false"
-                          type="text"
-                          value=""
-                        />
+                        You pay
                       </div>
-                      <div>
+                      <div
+                        class="c29"
+                      >
                         <div
-                          class="c17"
+                          style="display: flex; flex-grow: 1;"
                         >
-                          <button
-                            class="c30 c31 c32 c33 open-currency-select-button"
+                          <input
+                            autocomplete="off"
+                            autocorrect="off"
+                            class="c30 c31 token-amount-input"
+                            id="swap-currency-input"
+                            inputmode="decimal"
+                            maxlength="79"
+                            minlength="1"
+                            pattern="^[0-9]*[.,]?[0-9]*$"
+                            placeholder="0"
+                            spellcheck="false"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                        <div>
+                          <div
+                            class="c19"
                           >
-                            <span
-                              class="c34"
+                            <button
+                              class="c32 c33 c34 c35 c36 open-currency-select-button"
                             >
-                              <div
-                                class="c1 c2 c13"
+                              <span
+                                class="c37"
                               >
                                 <div
-                                  class="c35"
-                                  style="height: 24px; width: 24px; margin-right: 2px;"
+                                  class="c1 c2 c14"
                                 >
                                   <div
-                                    class="c36"
+                                    class="c38"
+                                    style="height: 24px; width: 24px; margin-right: 2px;"
                                   >
-                                    <img
-                                      class="c37"
-                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                                    />
+                                    <div
+                                      class="c39"
+                                    >
+                                      <img
+                                        class="c40"
+                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                                      />
+                                    </div>
                                   </div>
+                                  <span
+                                    class="c41 token-symbol-container"
+                                  >
+                                    USDC
+                                  </span>
                                 </div>
-                                <span
-                                  class="c38 token-symbol-container"
+                                <svg
+                                  class="c42"
                                 >
-                                  WETH
-                                </span>
-                              </div>
-                              <svg
-                                class="c39"
-                              >
-                                dropdown.svg
-                              </svg>
-                            </span>
-                          </button>
+                                  dropdown.svg
+                                </svg>
+                              </span>
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div
-                      class="c40 c41"
-                    >
                       <div
-                        class="c1 c2 c11"
+                        class="c43 c44"
                       >
                         <div
-                          class="c42"
-                        />
-                        <span />
+                          class="c1 c2 c12"
+                        >
+                          <div
+                            class="c45"
+                          />
+                          <span />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
+                <div
+                  class="c46"
+                >
+                  <div
+                    class="c47"
+                    color="#222222"
+                    data-testid="swap-currency-button"
+                  >
+                    <svg
+                      fill="none"
+                      height="16"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="16"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <line
+                        x1="12"
+                        x2="12"
+                        y1="5"
+                        y2="19"
+                      />
+                      <polyline
+                        points="19 12 12 19 5 12"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c48"
+              >
+                <div>
+                  <div
+                    class="c25 c49"
+                  >
+                    <div
+                      class="c26"
+                      id="swap-currency-output"
+                    >
+                      <div
+                        class="c27"
+                      >
+                        <div
+                          class="c28 css-142zc9n"
+                          style="user-select: none;"
+                        >
+                          You receive
+                        </div>
+                        <div
+                          class="c29"
+                        >
+                          <div
+                            style="display: flex; flex-grow: 1;"
+                          >
+                            <input
+                              autocomplete="off"
+                              autocorrect="off"
+                              class="c30 c31 token-amount-input"
+                              id="swap-currency-output"
+                              inputmode="decimal"
+                              maxlength="79"
+                              minlength="1"
+                              pattern="^[0-9]*[.,]?[0-9]*$"
+                              placeholder="0"
+                              spellcheck="false"
+                              type="text"
+                              value=""
+                            />
+                          </div>
+                          <div>
+                            <div
+                              class="c19"
+                            >
+                              <button
+                                class="c32 c33 c34 c35 c36 open-currency-select-button"
+                              >
+                                <span
+                                  class="c37"
+                                >
+                                  <div
+                                    class="c1 c2 c14"
+                                  >
+                                    <div
+                                      class="c38"
+                                      style="height: 24px; width: 24px; margin-right: 2px;"
+                                    >
+                                      <div
+                                        class="c39"
+                                      >
+                                        <img
+                                          class="c40"
+                                          src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                                        />
+                                      </div>
+                                    </div>
+                                    <span
+                                      class="c41 token-symbol-container"
+                                    >
+                                      WETH
+                                    </span>
+                                  </div>
+                                  <svg
+                                    class="c42"
+                                  >
+                                    dropdown.svg
+                                  </svg>
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="c43 c44"
+                        >
+                          <div
+                            class="c1 c2 c12"
+                          >
+                            <div
+                              class="c45"
+                            />
+                            <span />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <button
+                    class="c50 c34 c51"
+                    font-weight="535"
+                  >
+                    <div
+                      class="c52 c53"
+                    />
+                    Connect wallet
+                  </button>
+                </div>
               </div>
             </div>
-            <div>
-              <button
-                class="c47 c31 c48"
-                font-weight="535"
+          </main>
+          <div
+            class="c54"
+            color="#FF5F52"
+            data-cy="token-safety-message"
+          >
+            <div
+              class="c55"
+            >
+              <svg
+                fill="none"
+                height="16px"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="16px"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <div
-                  class="c49 c50"
+                <path
+                  d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
                 />
-                Connect wallet
-              </button>
+                <line
+                  x1="12"
+                  x2="12"
+                  y1="9"
+                  y2="13"
+                />
+                <line
+                  x1="12"
+                  x2="12.01"
+                  y1="17"
+                  y2="17"
+                />
+              </svg>
+              <div
+                class="c56 css-7o920z"
+              >
+                Warning
+              </div>
+            </div>
+            <div
+              class="c57"
+            >
+              These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap. Always conduct your own research before trading. 
+              <a
+                class="c58 c59"
+                href="https://support.uniswap.org/hc/en-us/articles/8723118437133"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
             </div>
           </div>
         </div>
-      </main>
-    </div>
-  </div>
+        <div
+          class="c60"
+        />
+      </div>
+    </span>
+  </span>
 </DocumentFragment>
 `;

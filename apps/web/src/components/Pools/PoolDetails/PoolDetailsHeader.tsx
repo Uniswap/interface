@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro'
-import { ChainId, Currency, Percent } from '@uniswap/sdk-core'
+import { ChainId, Percent } from '@uniswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import Column from 'components/Column'
@@ -12,25 +12,23 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import { StyledExternalLink } from 'components/Tokens/TokenDetails/TokenDetailsHeader'
 import { BIPS_BASE } from 'constants/misc'
-import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
-import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
-import { useCurrency } from 'hooks/Tokens'
+import { ProtocolVersion, Token } from 'graphql/data/__generated__/types-and-hooks'
+import { chainIdToBackendName, getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useScreenSize } from 'hooks/useScreenSize'
 import React, { useReducer, useRef } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Link } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { ClickableStyle, EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
-import { opacify } from 'theme/utils'
-import { Z_INDEX } from 'theme/zIndex'
-import { shortenAddress } from 'utils'
+import { shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
+import { DropdownSelector } from 'components/DropdownSelector'
 import { ReverseArrow } from 'components/Icons/ReverseArrow'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/TokenDetails/shared'
 import { useFormatter } from 'utils/formatNumbers'
 import { DetailBubble } from './shared'
 
@@ -43,7 +41,7 @@ const HeaderContainer = styled.div`
   animation-duration: ${({ theme }) => theme.transition.duration.medium};
 `
 
-const FeeTier = styled(ThemedText.LabelMicro)`
+const Badge = styled(ThemedText.LabelMicro)`
   background: ${({ theme }) => theme.surface2};
   padding: 2px 6px;
   border-radius: 4px;
@@ -98,17 +96,28 @@ const StyledPoolDetailsTitle = styled.div`
   align-items: center;
 `
 
+const PoolName = styled(ThemedText.HeadlineMedium)`
+  font-size: 24px !important;
+
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    font-size: 18px !important;
+    line-height: 24px !important;
+  }
+`
+
 const PoolDetailsTitle = ({
   token0,
   token1,
   chainId,
   feeTier,
+  protocolVersion,
   toggleReversed,
 }: {
   token0?: Token
   token1?: Token
   chainId?: number
   feeTier?: number
+  protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
 }) => {
   const { formatPercent } = useFormatter()
@@ -116,10 +125,10 @@ const PoolDetailsTitle = ({
   return (
     <StyledPoolDetailsTitle>
       <div>
-        <ThemedText.HeadlineMedium>
+        <PoolName>
           <StyledLink
             to={getTokenDetailsURL({
-              address: token0?.id,
+              address: token0?.address,
               chain: chainIdToBackendName(chainId),
               isInfoExplorePageEnabled: true,
             })}
@@ -129,51 +138,21 @@ const PoolDetailsTitle = ({
           &nbsp;/&nbsp;
           <StyledLink
             to={getTokenDetailsURL({
-              address: token1?.id,
+              address: token1?.address,
               chain: chainIdToBackendName(chainId),
               isInfoExplorePageEnabled: true,
             })}
           >
             {token1?.symbol}
           </StyledLink>
-        </ThemedText.HeadlineMedium>
+        </PoolName>
       </div>
-      {!!feePercent && <FeeTier>{feePercent}</FeeTier>}
+      {protocolVersion === ProtocolVersion.V2 && <Badge>v2</Badge>}
+      {!!feePercent && <Badge>{feePercent}</Badge>}
       <ToggleReverseArrows data-testid="toggle-tokens-reverse-arrows" onClick={toggleReversed} />
     </StyledPoolDetailsTitle>
   )
 }
-
-const ContractsModalContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
-
-  @media screen and (min-width: ${({ theme }) => theme.breakpoint.sm}px) {
-    position: absolute;
-    top: 40px;
-    right: 0;
-    min-width: 235px;
-    padding: 8px;
-    border-radius: 16px;
-    z-index: ${Z_INDEX.dropdown};
-    background: ${({ theme }) => theme.surface1};
-    ${EllipsisStyle}
-  }
-
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    padding: 12px 16px;
-    border-radius: 12px;
-    background: ${({ theme }) => theme.surface2};
-    border-radius: 12px;
-    border: ${({ theme }) => `1px solid ${theme.surface3}`};
-    z-index: ${Z_INDEX.modal};
-  }
-`
 
 const ContractsDropdownRowContainer = styled(Row)`
   align-items: center;
@@ -197,8 +176,7 @@ const ContractsDropdownRow = ({
   tokens: (Token | undefined)[]
 }) => {
   const theme = useTheme()
-  const currencies = [useCurrency(tokens[0]?.id, chainId), useCurrency(tokens[1]?.id, chainId)]
-
+  const currency = tokens[0] && gqlToCurrency(tokens[0])
   const isPool = tokens.length === 2
   const explorerUrl =
     chainId && address && getExplorerLink(chainId, address, isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN)
@@ -216,9 +194,9 @@ const ContractsDropdownRow = ({
       <ContractsDropdownRowContainer>
         <Row gap="sm">
           {isPool ? (
-            <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={24} />
+            <DoubleTokenAndChainLogo chainId={chainId} tokens={tokens} size={24} />
           ) : (
-            <CurrencyLogo currency={currencies[0]} size="24px" />
+            <CurrencyLogo currency={currency} size="24px" />
           )}
           <ThemedText.BodyPrimary>{isPool ? <Trans>Pool</Trans> : tokens[0]?.symbol}</ThemedText.BodyPrimary>
           <ThemedText.BodySecondary>{shortenAddress(address)}</ThemedText.BodySecondary>
@@ -229,14 +207,11 @@ const ContractsDropdownRow = ({
   )
 }
 
-const ActionButton = styled(Row)`
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 20px;
-  color: ${({ theme }) => theme.neutral1};
-  background-color: ${({ theme }) => opacify(12, theme.neutral1)};
-  width: max-content;
-  ${ClickableStyle}
+const ContractsModalContainer = css`
+  ${ActionMenuFlyoutStyle}
+  min-width: 235px;
+  border-radius: 16px;
+  ${EllipsisStyle}
 `
 
 const PoolDetailsHeaderActions = ({
@@ -259,28 +234,32 @@ const PoolDetailsHeaderActions = ({
   useOnClickOutside(contractsRef, contractsModalIsOpen ? toggleContractsModal : undefined)
 
   return (
-    <Row justify="flex-end" gap="sm">
+    <Row width="max-content" justify="flex-end" gap="sm">
       <div style={{ position: 'relative' }} ref={contractsRef}>
-        <MouseoverTooltip text={t`Explorers`} placement="bottom" size={TooltipSize.Max}>
-          <ActionButton onClick={toggleContractsModal}>
-            {chainId === ChainId.MAINNET ? (
+        <DropdownSelector
+          isOpen={contractsModalIsOpen}
+          toggleOpen={toggleContractsModal}
+          menuLabel={
+            chainId === ChainId.MAINNET ? (
               <EtherscanLogo width="18px" height="18px" fill={theme.neutral1} />
             ) : (
-              <ExplorerIcon width="18px" height="18px" stroke={theme.darkMode ? 'none' : theme.neutral1} />
-            )}
-          </ActionButton>
-        </MouseoverTooltip>
-        {contractsModalIsOpen && (
-          <ContractsModalContainer>
-            <ContractsDropdownRow address={poolAddress} chainId={chainId} tokens={[token0, token1]} />
-            <ContractsDropdownRow address={token0?.id} chainId={chainId} tokens={[token0]} />
-            <ContractsDropdownRow address={token1?.id} chainId={chainId} tokens={[token1]} />
-          </ContractsModalContainer>
-        )}
+              <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />
+            )
+          }
+          internalMenuItems={
+            <>
+              <ContractsDropdownRow address={poolAddress} chainId={chainId} tokens={[token0, token1]} />
+              <ContractsDropdownRow address={token0?.address} chainId={chainId} tokens={[token0]} />
+              <ContractsDropdownRow address={token1?.address} chainId={chainId} tokens={[token1]} />
+            </>
+          }
+          tooltipText={t`Explorers`}
+          hideChevron
+          buttonCss={ActionButtonStyle}
+          menuFlyoutCss={ContractsModalContainer}
+        />
       </div>
-      <MouseoverTooltip text={t`Share`} placement="bottom" size={TooltipSize.Max}>
-        <ShareButton name={poolName} />
-      </MouseoverTooltip>
+      <ShareButton name={poolName} />
     </Row>
   )
 }
@@ -297,6 +276,7 @@ interface PoolDetailsHeaderProps {
   token0?: Token
   token1?: Token
   feeTier?: number
+  protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
   loading?: boolean
 }
@@ -307,14 +287,14 @@ export function PoolDetailsHeader({
   token0,
   token1,
   feeTier,
+  protocolVersion,
   toggleReversed,
   loading,
 }: PoolDetailsHeaderProps) {
-  const currencies = [useCurrency(token0?.id, chainId), useCurrency(token1?.id, chainId)]
-
   const screenSize = useScreenSize()
   const shouldColumnBreak = !screenSize['sm']
   const poolName = `${token0?.symbol} / ${token1?.symbol}`
+  const tokens = [token0, token1]
 
   if (loading) {
     return (
@@ -338,9 +318,7 @@ export function PoolDetailsHeader({
       {shouldColumnBreak ? (
         <Column gap="sm" style={{ width: '100%' }}>
           <Row gap="md" justify="space-between">
-            {chainId && (
-              <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
-            )}
+            {chainId && <DoubleTokenAndChainLogo data-testid="double-token-logo" chainId={chainId} tokens={tokens} />}
             <PoolDetailsHeaderActions
               chainId={chainId}
               poolAddress={poolAddress}
@@ -354,16 +332,22 @@ export function PoolDetailsHeader({
             token1={token1}
             chainId={chainId}
             feeTier={feeTier}
+            protocolVersion={protocolVersion}
             toggleReversed={toggleReversed}
           />
         </Column>
       ) : (
         <>
           <Row gap="md">
-            {chainId && (
-              <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
-            )}
-            <PoolDetailsTitle token0={token0} token1={token1} feeTier={feeTier} toggleReversed={toggleReversed} />
+            {chainId && <DoubleTokenAndChainLogo data-testid="double-token-logo" chainId={chainId} tokens={tokens} />}
+            <PoolDetailsTitle
+              token0={token0}
+              token1={token1}
+              chainId={chainId}
+              feeTier={feeTier}
+              protocolVersion={protocolVersion}
+              toggleReversed={toggleReversed}
+            />
           </Row>
           <PoolDetailsHeaderActions
             chainId={chainId}
@@ -383,18 +367,18 @@ const StyledLogoParentContainer = styled.div`
   top: 0;
   left: 0;
 `
-export function DoubleCurrencyAndChainLogo({
+export function DoubleTokenAndChainLogo({
   chainId,
-  currencies,
+  tokens,
   size = 32,
 }: {
   chainId: number
-  currencies: Array<Currency | undefined>
+  tokens: Array<Token | undefined>
   size?: number
 }) {
   return (
     <StyledLogoParentContainer>
-      <DoubleCurrencyLogo chainId={chainId} currencies={currencies} size={size} />
+      <DoubleTokenLogo chainId={chainId} tokens={tokens} size={size} />
       <SquareL2Logo chainId={chainId} size={size} />
     </StyledLogoParentContainer>
   )
@@ -426,17 +410,25 @@ function SquareL2Logo({ chainId, size }: { chainId: ChainId; size: number }) {
   )
 }
 
-export function DoubleCurrencyLogo({
+export function DoubleTokenLogo({
   chainId,
-  currencies,
+  tokens,
   size = 32,
 }: {
   chainId: number
-  currencies: Array<Currency | undefined>
+  tokens: Array<Token | undefined>
   size?: number
 }) {
-  const [src, nextSrc] = useTokenLogoSource(currencies?.[0]?.wrapped.address, chainId, currencies?.[0]?.isNative)
-  const [src2, nextSrc2] = useTokenLogoSource(currencies?.[1]?.wrapped.address, chainId, currencies?.[1]?.isNative)
+  const [src, nextSrc] = useTokenLogoSource({
+    address: tokens?.[0]?.address,
+    chainId,
+    primaryImg: tokens?.[0]?.project?.logo?.url,
+  })
+  const [src2, nextSrc2] = useTokenLogoSource({
+    address: tokens?.[1]?.address,
+    chainId,
+    primaryImg: tokens?.[1]?.project?.logo?.url,
+  })
 
   return <DoubleLogo logo1={src} onError1={nextSrc} logo2={src2} onError2={nextSrc2} size={size} />
 }

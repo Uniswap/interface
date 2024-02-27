@@ -100,6 +100,7 @@ export function TransactionAmountsReview({
         {isWeb && (
           <Button
             backgroundColor="$transparent"
+            color="$neutral2"
             icon={<Icons.X size="$icon.20" />}
             p="$none"
             theme="secondary"

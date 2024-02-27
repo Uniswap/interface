@@ -13,6 +13,7 @@ import {
   NftTransferPartsFragment,
   SwapOrderDetailsPartsFragment,
   SwapOrderStatus,
+  SwapOrderType,
   TokenApprovalPartsFragment,
   TokenAssetPartsFragment,
   TokenTransferPartsFragment,
@@ -21,15 +22,13 @@ import {
 } from 'graphql/data/__generated__/types-and-hooks'
 import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
-import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import store from 'state'
 import { addSignature } from 'state/signatures/reducer'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { TransactionType as LocalTransactionType } from 'state/transactions/types'
-import { isAddress } from 'utils'
-import { isSameAddress } from 'utils/addresses'
+import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { currencyId } from 'utils/currencyId'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -273,8 +272,6 @@ function parseSwapOrder(
   }
 }
 
-// exported for testing
-// eslint-disable-next-line import/no-unused-modules
 export function offchainOrderDetailsFromGraphQLTransactionActivity(
   activity: AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment },
   changes: TransactionChanges,
@@ -453,6 +450,16 @@ function getLogoSrcs(changes: TransactionChanges): Array<string | undefined> {
   return Array.from(logoSet)
 }
 
+function swapOrderTypeToSignatureType(swapOrderType: SwapOrderType): SignatureType {
+  switch (swapOrderType) {
+    case SwapOrderType.Limit:
+      return SignatureType.SIGN_LIMIT
+    case SwapOrderType.Dutch:
+    default:
+      return SignatureType.SIGN_UNISWAPX_ORDER
+  }
+}
+
 function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activity | undefined {
   const supportedChain = supportedChainIdFromGQLChain(chain)
   if (!supportedChain) {
@@ -463,17 +470,28 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
     return undefined
   }
 
+  // If the order is open, maybe add it to our local records (if it was initiated on this device, this will be a no-op).
   if (details.orderStatus === SwapOrderStatus.Open) {
     const inputCurrency = gqlToCurrency(details.inputToken)
     const outputCurrency = gqlToCurrency(details.outputToken)
+
+    const inputTokenQuantity = parseUnits(details.inputTokenQuantity, details.inputToken.decimals).toString()
+    const outputTokenQuantity = parseUnits(details.outputTokenQuantity, details.outputToken.decimals).toString()
+
+    if (inputTokenQuantity === '0' || outputTokenQuantity === '0') {
+      // TODO(WEB-3765): This is a temporary mitigation for a bug where the backend sends "0.000000" for small amounts.
+      throw new Error('Invalid activity received from GQL')
+    }
+
     store.dispatch(
       addSignature({
-        type: SignatureType.SIGN_UNISWAPX_ORDER,
+        type: swapOrderTypeToSignatureType(details.swapOrderType),
         offerer: details.offerer,
         id: details.hash,
         chainId: supportedChain,
         orderHash: details.hash,
         expiry: details.expiry,
+        encodedOrder: details.encodedOrder,
         swapInfo: {
           type: LocalTransactionType.SWAP,
           inputCurrencyId: currencyId(inputCurrency),
@@ -481,20 +499,18 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
           isUniswapXOrder: true,
           // This doesn't affect the display, but we don't know this value from the remote activity.
           tradeType: TradeType.EXACT_INPUT,
-          inputCurrencyAmountRaw:
-            tryParseCurrencyAmount(details.inputTokenQuantity, inputCurrency)?.quotient.toString() ?? '0',
-          expectedOutputCurrencyAmountRaw:
-            tryParseCurrencyAmount(details.outputTokenQuantity, outputCurrency)?.quotient.toString() ?? '0',
-          minimumOutputCurrencyAmountRaw:
-            tryParseCurrencyAmount(details.outputTokenQuantity, outputCurrency)?.quotient.toString() ?? '0',
+          inputCurrencyAmountRaw: inputTokenQuantity,
+          expectedOutputCurrencyAmountRaw: outputTokenQuantity,
+          minimumOutputCurrencyAmountRaw: outputTokenQuantity,
         },
         status: UniswapXOrderStatus.OPEN,
-        addedTime: timestamp,
+        addedTime: timestamp * 1000,
       })
     )
     return undefined
   }
 
+  // If the order is not open, render it like any other remote activity.
   const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity, orderStatus } = details
   const uniswapXOrderStatus = OrderStatusTable[orderStatus]
   const { status, statusMessage, title } = OrderTextTable[uniswapXOrderStatus]

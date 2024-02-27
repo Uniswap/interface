@@ -62,7 +62,9 @@ export const makeSelectAddressTransactions = (): Selector<
         const duplicate = self.find(
           (tx2) =>
             tx2.id !== tx.id &&
+            tx2.options.request.chainId &&
             tx2.options.request.chainId === tx.options.request.chainId &&
+            tx.options.request.nonce &&
             tx2.options.request.nonce === tx.options.request.nonce
         )
         if (duplicate) {
@@ -190,7 +192,10 @@ export const selectIncompleteTransactions = (state: RootState): TransactionDetai
   const transactionsByChainId = flattenObjectOfObjects(state.transactions)
   return transactionsByChainId.reduce<TransactionDetails[]>((accum, transactions) => {
     const pendingTxs = Object.values(transactions).filter(
-      (tx) => Boolean(!tx.receipt) && tx.status !== TransactionStatus.Failed
+      (tx) =>
+        Boolean(!tx.receipt) &&
+        tx.status !== TransactionStatus.Failed &&
+        tx.status !== TransactionStatus.Success
     )
     return [...accum, ...pendingTxs]
   }, [])

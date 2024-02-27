@@ -8,6 +8,7 @@ import { Skeleton } from 'ui/src/loading/Skeleton'
 import { TokenLoader } from 'ui/src/loading/TokenLoader'
 import { fonts } from 'ui/src/theme'
 import { TransactionLoader } from './TransactionLoader'
+import { WalletLoader } from './WalletLoader'
 
 const Transaction = memo(function _Transaction({ repeat = 1 }: { repeat?: number }): JSX.Element {
   return (
@@ -124,6 +125,20 @@ function Image(): JSX.Element {
   )
 }
 
+function Wallets({ repeat = 1 }: { repeat?: number }): JSX.Element {
+  return (
+    <Skeleton>
+      <Flex gap="$spacing12">
+        {new Array(repeat).fill(null).map((_, i, { length }) => (
+          <React.Fragment key={i}>
+            <WalletLoader opacity={(length - i) / length} />
+          </React.Fragment>
+        ))}
+      </Flex>
+    </Skeleton>
+  )
+}
+
 export const Loader = {
   Box,
   NFT,
@@ -131,4 +146,5 @@ export const Loader = {
   Token,
   TransferInstitution,
   Transaction,
+  Wallets,
 }

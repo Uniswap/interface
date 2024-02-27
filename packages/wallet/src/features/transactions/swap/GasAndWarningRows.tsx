@@ -11,6 +11,8 @@ import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/Sw
 import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
 import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedSwapWarnings'
 import { NetworkFeeInfoModal } from 'wallet/src/features/transactions/swap/modals/NetworkFeeInfoModal'
+import { SwapBuyTokenRow } from 'wallet/src/features/transactions/swap/SwapBuyTokenRow'
+import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRatio'
 import { SwapWarningModal } from 'wallet/src/features/transactions/swap/SwapWarningModal'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
@@ -22,7 +24,7 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
   const { gasFee } = useSwapTxContext()
   const { derivedSwapInfo } = useSwapFormContext()
 
-  const { chainId } = derivedSwapInfo
+  const { chainId, trade } = derivedSwapInfo
 
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [showGasInfoModal, setShowGasInfoModal] = useState(false)
@@ -30,6 +32,7 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
   const { isBlocked } = useIsBlockedActiveAddress()
 
   const { formScreenWarning } = useParsedSwapWarnings()
+  const showFormWarning = formScreenWarning && formScreenWarning.displayedInline && !isBlocked
 
   const gasFeeUSD = useUSDValue(chainId, gasFee?.value)
   const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
@@ -62,7 +65,7 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
         Do not add any margins directly to this container, as this component is used in 2 different places.
         Adjust the margin in the parent component instead.
       */}
-      <Flex $short={{ gap: '$spacing8' }} gap="$spacing16">
+      <Flex $short={{ gap: '$spacing8' }} fill={isWeb} gap="$spacing16">
         {isBlocked && (
           // TODO: review design of this warning.
           <BlockedAddressWarning
@@ -78,18 +81,23 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
           />
         )}
 
-        {showGasFee && (
-          <TouchableArea hapticFeedback onPress={(): void => setShowGasInfoModal(true)}>
-            <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
-              <Icons.Gas color={colors.neutral2.val} size="$icon.16" />
-              <Text color="$neutral2" variant="body3">
-                {gasFeeFormatted}
-              </Text>
-            </AnimatedFlex>
-          </TouchableArea>
-        )}
+        <Flex centered row>
+          <Flex fill>
+            <SwapRateRatio initialInverse={true} styling="secondary" trade={trade.trade} />
+          </Flex>
+          {showGasFee && (
+            <TouchableArea hapticFeedback onPress={(): void => setShowGasInfoModal(true)}>
+              <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
+                <Icons.Gas color={colors.neutral2.val} size="$icon.16" />
+                <Text color="$neutral2" variant="body4">
+                  {gasFeeFormatted}
+                </Text>
+              </AnimatedFlex>
+            </TouchableArea>
+          )}
+        </Flex>
 
-        {formScreenWarning && !isBlocked && (
+        {showFormWarning && (
           <TouchableArea onPress={onSwapWarningClick}>
             <AnimatedFlex
               centered
@@ -123,6 +131,12 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
 
         {!gasFeeUSD && renderEmptyRows && <EmptyRow />}
         {!formScreenWarning && renderEmptyRows && <EmptyRow />}
+        {isWeb && (
+          <>
+            <Flex fill />
+            <SwapBuyTokenRow />
+          </>
+        )}
       </Flex>
     </>
   )

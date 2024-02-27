@@ -12,8 +12,8 @@ import { SwapResult } from 'hooks/useSwapCallback'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useEffect, useMemo, useState } from 'react'
-import { InterfaceTrade, TradeFillType } from 'state/routing/types'
-import { isUniswapXTrade } from 'state/routing/utils'
+import { InterfaceTrade, OffchainOrderType, TradeFillType } from 'state/routing/types'
+import { isLimitTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useOrder } from 'state/signatures/hooks'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components'
@@ -157,20 +157,22 @@ export default function ProgressIndicator({
       [ConfirmModalState.PENDING_CONFIRMATION]: {
         icon: <Swap />,
         rippleColor: colors.blue400,
-        previewTitle: t`Confirm swap`,
-        actionRequiredTitle: t`Confirm swap in wallet`,
-        inProgressTitle: t`Swap pending...`,
+        previewTitle: isLimitTrade(trade) ? t`Confirm` : t`Confirm swap`,
+        actionRequiredTitle: isLimitTrade(trade) ? t`Confirm in wallet` : t`Confirm swap in wallet`,
+        inProgressTitle: isLimitTrade(trade) ? t`Pending...` : t`Swap pending...`,
         timeToEnd: estimatedTransactionTime,
         delayedEndTitle: t`Longer than expected...`,
-        ...(isUniswapXTrade(trade)
+        ...(isUniswapXTrade(trade) && trade.offchainOrderType === OffchainOrderType.DUTCH_AUCTION
           ? {
               timeToStart: trade.asDutchOrderTrade().order.info.deadline - Math.floor(Date.now() / 1000),
               delayedStartTitle: t`Confirmation timed out. Please retry.`,
               timeToEnd: 60, // TODO: dynamically update UniswapX estimated fill time
             }
           : {}),
-        learnMoreLinkText: t`Learn more about swaps`,
-        learnMoreLinkHref: SupportArticleURL.HOW_TO_SWAP_TOKENS,
+        learnMoreLinkText: isLimitTrade(trade) ? t`Learn more about limits` : t`Learn more about swaps`,
+        learnMoreLinkHref: isLimitTrade(trade)
+          ? SupportArticleURL.LEARN_ABOUT_LIMITS
+          : SupportArticleURL.HOW_TO_SWAP_TOKENS,
       },
     }),
     [inputTokenColor, nativeCurrency.symbol, trade, estimatedTransactionTime, theme.accent1]

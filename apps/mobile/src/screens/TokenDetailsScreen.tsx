@@ -105,11 +105,10 @@ function HeaderTitleElement({
 
 export function TokenDetailsScreen({
   route,
-  navigation,
 }: AppStackScreenProp<Screens.TokenDetails>): JSX.Element {
   const { currencyId: _currencyId } = route.params
   // Potentially delays loading of perf-heavy content to speed up navigation
-  const showSkeleton = useSkeletonLoading(navigation)
+  const showSkeleton = useSkeletonLoading()
   const language = useCurrentLanguage()
 
   // Token details screen query

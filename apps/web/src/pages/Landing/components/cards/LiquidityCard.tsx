@@ -47,7 +47,7 @@ export function LiquidityCard(props: LiquidityCardProps) {
 
   return (
     <ValuePropCard
-      to="/pools"
+      to="/pool"
       tagText={t`Provide Liquidity`}
       height={screenIsLarge ? '340px' : '240px'}
       isDarkMode={props.isDarkMode}

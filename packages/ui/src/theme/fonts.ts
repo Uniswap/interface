@@ -95,6 +95,13 @@ export const fonts = {
     fontWeight: '400',
     maxFontSizeMultiplier: 1.4,
   },
+  body4: {
+    family: platformFontFamily('medium'),
+    fontSize: adjustedSize(12),
+    lineHeight: 16,
+    fontWeight: '500',
+    maxFontSizeMultiplier: 1.4,
+  },
   buttonLabel1: {
     family: platformFontFamily('medium'),
     fontSize: adjustedSize(20),

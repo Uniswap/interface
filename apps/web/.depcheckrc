@@ -43,6 +43,7 @@ ignores: [
     ## Internal packages / workspaces
     "wallet",
     "utilities",
+    "ui",
     ## Top level local file paths
     "abis",
     "analytics",

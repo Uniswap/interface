@@ -106,6 +106,9 @@ export default function ConfirmSwapModalV2({
   const swapConfirmed =
     swapStatus === TransactionStatus.Confirmed || uniswapXOrder?.status === UniswapXOrderStatus.FILLED
 
+  // Has a limit order been submitted?
+  const limitPlaced = isLimitTrade(trade) && uniswapXOrder?.status === UniswapXOrderStatus.OPEN
+
   // Has the transaction failed locally (i.e. before network or submission), or has it been reverted onchain?
   const localSwapFailure = Boolean(swapError) && !didUserReject(swapError)
   const swapReverted = swapStatus === TransactionStatus.Failed
@@ -125,7 +128,7 @@ export default function ConfirmSwapModalV2({
       if (errorType) {
         // When any type of error is encountered (except for SignatureExpiredError, which has special retry logic)
         showError = true
-      } else if (swapConfirmed) {
+      } else if (swapConfirmed || limitPlaced) {
         showSuccess = true
       } else if (confirmModalState === ConfirmModalState.REVIEWING || showAcceptChanges) {
         // When swap is in review, either initially or to accept changes, show the swap details
@@ -148,7 +151,7 @@ export default function ConfirmSwapModalV2({
         showSuccess,
         showError,
       }
-    }, [confirmModalState, doesTradeDiffer, errorType, pendingModalSteps.length, swapConfirmed])
+    }, [confirmModalState, doesTradeDiffer, errorType, limitPlaced, pendingModalSteps.length, swapConfirmed])
 
   // Reset modal state if user rejects the swap
   useEffect(() => {

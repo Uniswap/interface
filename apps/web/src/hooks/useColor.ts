@@ -65,7 +65,11 @@ type ContrastSettings = { backgroundColor: string; darkMode: boolean }
 
 export function useColor(currency?: Currency, contrastSettings?: ContrastSettings) {
   const theme = useTheme()
-  const [src] = useTokenLogoSource(currency?.wrapped.address, currency?.chainId, currency?.isNative)
+  const [src] = useTokenLogoSource({
+    address: currency?.wrapped.address,
+    chainId: currency?.chainId,
+    isNative: currency?.isNative,
+  })
 
   const srcs = useMemo(() => {
     const backupSrcs = getBackupCurrencySrcs(currency)

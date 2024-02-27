@@ -30,6 +30,9 @@ export function useAnimatedZIndex(renderIndex: number): SharedValue<number> {
       previousActiveIndex: previousActiveIndexValue.value,
     }),
     ({ touchedIndex, previousActiveIndex }) => {
+      if (touchedIndex === null) {
+        return null
+      }
       if (renderIndex === touchedIndex) {
         // Display the currently touched item on top of all other items
         zIndexValue.value = 10000

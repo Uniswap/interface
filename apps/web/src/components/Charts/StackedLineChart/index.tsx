@@ -1,11 +1,18 @@
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
-import { HARDCODED_TVL_DATA } from 'components/Charts/StackedLineChart/mockData'
 import { StackedAreaSeriesOptions } from 'components/Charts/StackedLineChart/stacked-area-series/options'
 import { StackedAreaSeries } from 'components/Charts/StackedLineChart/stacked-area-series/stacked-area-series'
 import { PriceSource } from 'graphql/data/__generated__/types-and-hooks'
 import { getProtocolColor } from 'graphql/data/util'
-import { CustomStyleOptions, DeepPartial, ISeriesApi, Logical, UTCTimestamp, WhitespaceData } from 'lightweight-charts'
+import {
+  CustomStyleOptions,
+  DeepPartial,
+  ISeriesApi,
+  LineStyle,
+  Logical,
+  UTCTimestamp,
+  WhitespaceData,
+} from 'lightweight-charts'
 import { useMemo } from 'react'
 import { useTheme } from 'styled-components'
 
@@ -42,11 +49,17 @@ export class TVLChartModel extends ChartModel<StackedLineData> {
   }
 
   updateOptions(params: TVLChartParams) {
+    const isSingleLineChart = params.colors.length === 1
+
+    const gridSettings = isSingleLineChart
+      ? { grid: { vertLines: { style: LineStyle.CustomDotGrid }, horzLines: { style: LineStyle.CustomDotGrid } } }
+      : {}
+
     super.updateOptions(params, {
       handleScale: false,
       handleScroll: false,
       rightPriceScale: {
-        visible: params.colors.length == 1, // Hide pricescale on multi-line charts
+        visible: isSingleLineChart, // Hide pricescale on multi-line charts
         borderVisible: false,
         scaleMargins: {
           top: 0.25,
@@ -54,6 +67,7 @@ export class TVLChartModel extends ChartModel<StackedLineData> {
         },
         autoScale: true,
       },
+      ...gridSettings,
     })
     const { data, colors } = params
 
@@ -73,24 +87,22 @@ export class TVLChartModel extends ChartModel<StackedLineData> {
   }
 }
 
-interface StackedLineChartProps {
+interface LineChartProps {
   height: number
-  data?: StackedLineData[]
   sources?: PriceSource[]
+  data: StackedLineData[]
+  stale: boolean
 }
 
-export function StackedLineChart({ height, data = HARDCODED_TVL_DATA, sources }: StackedLineChartProps) {
+export function LineChart({ height, data, sources, stale }: LineChartProps) {
   const theme = useTheme()
+
   const params = useMemo(() => {
     const colors = sources?.map((source) => getProtocolColor(source, theme)) ?? [theme.accent1]
-    return { data, colors }
-  }, [data, theme, sources])
+    return { data, colors, stale }
+  }, [data, theme, sources, stale])
 
   const lastEntry = data[data.length - 1]
-
-  // TODO(WEB-3430): Add error state for lack of data
-  if (!lastEntry) return null
-
   return (
     <Chart Model={TVLChartModel} params={params} height={height}>
       {(crosshairData: StackedLineData | undefined) => (

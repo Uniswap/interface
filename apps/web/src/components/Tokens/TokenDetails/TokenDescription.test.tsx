@@ -1,21 +1,13 @@
-import { QueryResult } from '@apollo/client'
 import userEvent from '@testing-library/user-event'
 import { USDC_MAINNET } from 'constants/tokens'
-import { Chain, Exact, TokenProjectQuery, useTokenProjectQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { useCurrency } from 'hooks/Tokens'
+import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { mocked } from 'test-utils/mocked'
-import { validTokenProjectResponse, validUSDCCurrency } from 'test-utils/pools/fixtures'
+import { validUSDCCurrency } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
-
+import { validTokenProjectResponse } from 'test-utils/tokens/fixtures'
 import { TokenDescription } from './TokenDescription'
-
-jest.mock('graphql/data/__generated__/types-and-hooks', () => {
-  const originalModule = jest.requireActual('graphql/data/__generated__/types-and-hooks')
-  return {
-    ...originalModule,
-    useTokenProjectQuery: jest.fn(),
-  }
-})
 
 jest.mock('hooks/Tokens', () => {
   const originalModule = jest.requireActual('hooks/Tokens')
@@ -24,17 +16,23 @@ jest.mock('hooks/Tokens', () => {
     useCurrency: jest.fn(),
   }
 })
-
-const tokenAddress = USDC_MAINNET.address
+jest.mock('pages/TokenDetails/TDPContext', () => ({
+  useTDPContext: jest.fn(),
+}))
 
 describe('TokenDescription', () => {
   beforeEach(() => {
-    mocked(useTokenProjectQuery).mockReturnValue(validTokenProjectResponse)
     mocked(useCurrency).mockReturnValue(validUSDCCurrency)
   })
 
   it('renders token information correctly with defaults', () => {
-    const { asFragment } = render(<TokenDescription tokenAddress={tokenAddress} />)
+    mocked(useTDPContext).mockReturnValue({
+      address: USDC_MAINNET.address,
+      currency: USDC_MAINNET,
+      currencyChainName: Chain.Ethereum,
+      tokenQuery: validTokenProjectResponse,
+    } as any)
+    const { asFragment } = render(<TokenDescription />)
     expect(asFragment()).toMatchSnapshot()
 
     expect(screen.getByText('Info')).toBeVisible()
@@ -45,7 +43,13 @@ describe('TokenDescription', () => {
   })
 
   it('truncates description and shows more', async () => {
-    const { asFragment } = render(<TokenDescription tokenAddress={tokenAddress} />)
+    mocked(useTDPContext).mockReturnValue({
+      address: USDC_MAINNET.address,
+      currency: USDC_MAINNET,
+      currencyChainName: Chain.Ethereum,
+      tokenQuery: validTokenProjectResponse,
+    } as any)
+    const { asFragment } = render(<TokenDescription />)
 
     expect(asFragment()).toMatchSnapshot()
     const truncatedDescription = screen.getByTestId('token-description-truncated')
@@ -61,11 +65,13 @@ describe('TokenDescription', () => {
   })
 
   it('no description or social buttons shown when not available', async () => {
-    mocked(useTokenProjectQuery).mockReturnValue({ data: undefined } as unknown as QueryResult<
-      TokenProjectQuery,
-      Exact<{ chain: Chain; address?: string }>
-    >)
-    const { asFragment } = render(<TokenDescription tokenAddress={tokenAddress} />)
+    mocked(useTDPContext).mockReturnValue({
+      address: USDC_MAINNET.address,
+      currency: USDC_MAINNET,
+      currencyChainName: Chain.Ethereum,
+      tokenQuery: { data: undefined, loading: false, error: undefined },
+    } as any)
+    const { asFragment } = render(<TokenDescription />)
     expect(asFragment()).toMatchSnapshot()
 
     expect(screen.getByText('No token information available')).toBeVisible()

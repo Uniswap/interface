@@ -7,6 +7,7 @@ import { useReducer } from 'react'
 import { Check } from 'react-feather'
 import { css, useTheme } from 'styled-components'
 
+import { useScreenSize } from 'hooks/useScreenSize'
 import { SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
 
@@ -70,44 +71,52 @@ export default function TimeSelector() {
 
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
+  const screenSize = useScreenSize()
+  const isLargeScreen = screenSize['lg']
+
   return (
-    <DropdownSelector
-      isOpen={isMenuOpen}
-      toggleOpen={toggleMenu}
-      menuLabel={
-        isInfoExplorePageEnabled ? (
+    <div>
+      <DropdownSelector
+        isOpen={isMenuOpen}
+        toggleOpen={toggleMenu}
+        menuLabel={
+          isInfoExplorePageEnabled ? (
+            <>
+              {DISPLAYS[activeTime]} {isLargeScreen && <Trans>volume</Trans>}
+            </>
+          ) : (
+            <>{DISPLAYS[activeTime]}</>
+          )
+        }
+        internalMenuItems={
           <>
-            {DISPLAYS[activeTime]} <Trans>volume</Trans>
+            {ORDERED_TIMES.map((time) => (
+              <InternalMenuItem
+                key={DISPLAYS[time]}
+                data-testid={DISPLAYS[time]}
+                onClick={() => {
+                  setTime(time)
+                  toggleMenu()
+                }}
+              >
+                {isInfoExplorePageEnabled ? (
+                  <div>
+                    {DISPLAYS[time]} <Trans>volume</Trans>
+                  </div>
+                ) : (
+                  <div>{DISPLAYS[time]}</div>
+                )}
+                {time === activeTime && <Check color={theme.accent1} size={16} />}
+              </InternalMenuItem>
+            ))}
           </>
-        ) : (
-          <>{DISPLAYS[activeTime]}</>
-        )
-      }
-      internalMenuItems={
-        <>
-          {ORDERED_TIMES.map((time) => (
-            <InternalMenuItem
-              key={DISPLAYS[time]}
-              data-testid={DISPLAYS[time]}
-              onClick={() => {
-                setTime(time)
-                toggleMenu()
-              }}
-            >
-              {isInfoExplorePageEnabled ? (
-                <div>
-                  {DISPLAYS[time]} <Trans>volume</Trans>
-                </div>
-              ) : (
-                <div>{DISPLAYS[time]}</div>
-              )}
-              {time === activeTime && <Check color={theme.accent1} size={16} />}
-            </InternalMenuItem>
-          ))}
-        </>
-      }
-      dataTestId="time-selector"
-      menuFlyoutCss={StyledMenuFlyout}
-    />
+        }
+        dataTestId="time-selector"
+        buttonCss={css`
+          height: 40px;
+        `}
+        menuFlyoutCss={StyledMenuFlyout}
+      />
+    </div>
   )
 }

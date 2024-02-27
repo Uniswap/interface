@@ -16,7 +16,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { MultiChainMap } from '.'
+import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 
 const BalancesCard = styled.div<{ isInfoTDPEnabled?: boolean }>`
   color: ${({ theme }) => theme.neutral1};
@@ -216,25 +216,18 @@ const OtherChainsBalanceSummary = ({
   )
 }
 
-export default function BalanceSummary({
-  currency,
-  chain,
-  multiChainMap,
-}: {
-  currency: Currency
-  chain: Chain
-  multiChainMap: MultiChainMap
-}) {
+export default function BalanceSummary() {
   const { account } = useWeb3React()
+  const { currency, currencyChain, multiChainMap } = useTDPContext()
 
   const isInfoTDPEnabled = useInfoTDPEnabled()
 
   const connectedChainBalance = useCurrencyBalance(account, currency)
 
-  const pageChainBalance = multiChainMap[chain].balance
+  const pageChainBalance = multiChainMap[currencyChain]?.balance
   const otherChainBalances: PortfolioTokenBalancePartsFragment[] = []
   for (const [key, value] of Object.entries(multiChainMap)) {
-    if (key !== chain && value.balance !== undefined) {
+    if (key !== currencyChain && value?.balance !== undefined) {
       otherChainBalances.push(value.balance)
     }
   }

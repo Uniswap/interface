@@ -1,39 +1,26 @@
-import { Chain, TokenQuery } from 'graphql/data/__generated__/types-and-hooks'
-
+import { Token } from '@uniswap/sdk-core'
+import { ZERO_ADDRESS } from 'constants/misc'
 import { getTokenPageTitle } from './utils'
-
-function getMockTokenQuery(name: string | undefined, symbol: string | undefined): TokenQuery {
-  return {
-    __typename: 'Query',
-    token: {
-      __typename: 'Token',
-      id: '0x123',
-      name,
-      symbol,
-      chain: Chain.Ethereum,
-    },
-  }
-}
 
 describe('pages/TokenDetails/util', () => {
   describe('getTokenPageTitle', () => {
     it('should return the correct title when tokenName and tokenSymbol are undefined', () => {
-      const result = getTokenPageTitle(getMockTokenQuery(undefined, undefined))
+      const result = getTokenPageTitle(new Token(1, ZERO_ADDRESS, 18))
       expect(result).toBe('Buy, sell, and trade on Uniswap')
     })
 
     it('should return the correct title when only tokenName is defined', () => {
-      const result = getTokenPageTitle(getMockTokenQuery('Baby Doge Token', undefined))
+      const result = getTokenPageTitle(new Token(1, ZERO_ADDRESS, 18, undefined, 'Baby Doge Token'))
       expect(result).toBe('Baby Doge Token: Buy, sell, and trade on Uniswap')
     })
 
     it('should return the correct title when only tokenSymbol is defined', () => {
-      const result = getTokenPageTitle(getMockTokenQuery(undefined, 'BDT'))
+      const result = getTokenPageTitle(new Token(1, ZERO_ADDRESS, 18, 'BDT', undefined))
       expect(result).toBe('BDT: Buy, sell, and trade on Uniswap')
     })
 
     it('should return the correct title when tokenName and tokenSymbol are defined', () => {
-      const result = getTokenPageTitle(getMockTokenQuery('Baby Doge Token', 'BDT'))
+      const result = getTokenPageTitle(new Token(1, ZERO_ADDRESS, 18, 'BDT', 'Baby Doge Token'))
       expect(result).toBe('Baby Doge Token (BDT): Buy, sell, and trade on Uniswap')
     })
   })

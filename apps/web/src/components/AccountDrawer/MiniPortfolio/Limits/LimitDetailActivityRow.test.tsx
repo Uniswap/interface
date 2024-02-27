@@ -9,6 +9,7 @@ import { render, screen } from 'test-utils/render'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => {
   return {
+    ...jest.requireActual('components/AccountDrawer/MiniPortfolio/formatTimestamp'),
     formatTimestamp: () => 'Expires January 1, 1970 at 12:00 AM',
   }
 })
@@ -70,7 +71,7 @@ describe('LimitDetailActivityRow', () => {
         selected={false}
       />
     )
-    expect(container.firstChild).toBeNull()
+    expect(container.firstChild?.firstChild?.firstChild).toBeNull()
   })
 
   it('should not render with invalid amounts', () => {
@@ -81,7 +82,7 @@ describe('LimitDetailActivityRow', () => {
         order={{ ...mockOrder, offchainOrderDetails: { ...mockOrderDetails, swapInfo: undefined as any } }}
       />
     )
-    expect(container.firstChild).toBeNull()
+    expect(container.firstChild?.firstChild?.firstChild).toBeNull()
   })
 
   it('should render with valid details', () => {

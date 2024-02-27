@@ -32,7 +32,7 @@ function centreOffset(lineBitmapWidth: number): number {
  * @param desiredWidthMedia - desired width (in media coordinates)
  * @returns Position of of the start point and length dimension.
  */
-function positionsLine(
+export function positionsLine(
   positionMedia: number,
   pixelRatio: number,
   desiredWidthMedia = 1,

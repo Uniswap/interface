@@ -18,7 +18,7 @@ export const menuContent: MenuSection[] = [
   {
     title: t`App`,
     items: [
-      { label: t`Pools`, href: '/pools', internal: true, overflow: true },
+      { label: t`Pool`, href: '/pool', internal: true, overflow: true },
       { label: t`Vote`, href: '/vote', internal: true },
       { label: t`Analytics`, href: 'https://info.uniswap.org/' },
     ],

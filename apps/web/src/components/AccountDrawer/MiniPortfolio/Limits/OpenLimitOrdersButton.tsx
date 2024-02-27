@@ -9,7 +9,7 @@ import { ClickableStyle, ThemedText } from 'theme/components'
 
 const Container = styled.button`
   border-radius: 16px;
-  border: 1px solid ${({ theme }) => theme.surface3};
+  border: none;
   background: ${({ theme }) => theme.surface2};
   padding: 12px 16px;
   margin-top: 8px;
@@ -26,17 +26,19 @@ export function OpenLimitOrdersButton({
   openLimitsMenu,
   account,
   disabled,
+  className,
 }: {
   account: string
   openLimitsMenu: () => void
   disabled?: boolean
+  className?: string
 }) {
   const { openLimitOrders } = useOpenLimitOrders(account)
   const theme = useTheme()
   const extraWarning = getExtraWarning(openLimitOrders)
   if (!openLimitOrders || openLimitOrders.length < 1) return null
   return (
-    <Container onClick={openLimitsMenu} disabled={disabled}>
+    <Container onClick={openLimitsMenu} disabled={disabled} className={className}>
       <Row justify="space-between" align="center">
         <Row gap="md">
           <TimeForwardIcon />

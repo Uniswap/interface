@@ -17,11 +17,13 @@ import { textFadeIn } from 'theme/styles'
 import { capitalize } from 'tsafe'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
+import { ChartSkeleton } from 'components/Charts/LoadingState'
+import { ChartType } from 'components/Charts/utils'
 import { LoadingBubble } from '../loading'
 import { AboutContainer, AboutHeader } from './About'
-import { ChartContainer } from './ChartSection'
+import { OldChartContainer, TDP_CHART_HEIGHT_PX } from './ChartSection'
+import { StatPair, StatWrapper, StatsWrapper } from './StatsSection'
 import { Hr } from './shared'
-import { StatPair, StatsWrapper, StatWrapper } from './StatsSection'
 
 const SWAP_COMPONENT_WIDTH = 360
 
@@ -52,6 +54,7 @@ export const LeftPanel = styled.div`
 `
 export const RightPanel = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
+  padding-top: 53px;
   flex-direction: column;
   gap: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? 40 : 20)}px;
   width: ${SWAP_COMPONENT_WIDTH}px;
@@ -74,6 +77,7 @@ export const TokenInfoContainer = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding-top: ${({ isInfoTDPEnabled }) => isInfoTDPEnabled && '8px'};
   margin-bottom: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '20' : '4')}px;
   gap: 20px;
   ${textFadeIn};
@@ -115,7 +119,7 @@ const TokenLogoBubble = styled(DetailBubble)`
   border-radius: 50%;
 `
 const TitleBubble = styled(DetailBubble)<{ $isInfoTDPEnabled?: boolean }>`
-  ${({ $isInfoTDPEnabled }) => $isInfoTDPEnabled && 'height: 40px;'}
+  ${({ $isInfoTDPEnabled }) => $isInfoTDPEnabled && 'height: 36px;'}
   width: 136px;
 `
 const PriceBubble = styled(SquaredBubble)`
@@ -254,8 +258,12 @@ function Wave() {
 
 export function LoadingChart() {
   const isInfoTDPEnabled = useInfoTDPEnabled()
+
+  if (isInfoTDPEnabled) {
+    return <ChartSkeleton dim type={ChartType.PRICE} height={TDP_CHART_HEIGHT_PX} />
+  }
   return (
-    <ChartContainer isInfoTDPEnabled={isInfoTDPEnabled}>
+    <OldChartContainer>
       <ThemedText.HeadlineLarge>
         <PriceBubble />
       </ThemedText.HeadlineLarge>
@@ -271,7 +279,7 @@ export function LoadingChart() {
           </ChartAnimation>
         </div>
       </LoadingChartContainer>
-    </ChartContainer>
+    </OldChartContainer>
   )
 }
 
@@ -306,7 +314,7 @@ function LoadingStats() {
 }
 
 /* Loading State: row component with loading bubbles */
-export default function TokenDetailsSkeleton() {
+function TokenDetailsSkeleton() {
   const { chainName, tokenAddress } = useParams<{ chainName?: string; tokenAddress?: string }>()
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
   const isInfoTDPEnabled = useInfoTDPEnabled()
@@ -334,7 +342,7 @@ export default function TokenDetailsSkeleton() {
           </BreadcrumbNavLink>
         </BreadcrumbNavContainer>
       )}
-      <TokenInfoContainer>
+      <TokenInfoContainer isInfoTDPEnabled={isInfoTDPEnabled}>
         <TokenNameCell>
           <TokenLogoBubble />
           <TitleBubble $isInfoTDPEnabled={isInfoTDPEnabled} />

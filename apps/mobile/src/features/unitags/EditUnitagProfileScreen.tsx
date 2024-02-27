@@ -12,7 +12,7 @@ import { ChangeUnitagModal } from 'src/components/unitags/ChangeUnitagModal'
 import { ChoosePhotoOptionsModal } from 'src/components/unitags/ChoosePhotoOptionsModal'
 import { DeleteUnitagModal } from 'src/components/unitags/DeleteUnitagModal'
 import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePicture'
-import { HeaderRadial } from 'src/features/externalProfile/ProfileHeader'
+import { HeaderRadial, solidHeaderProps } from 'src/features/externalProfile/ProfileHeader'
 import { Screens, UnitagScreens } from 'src/screens/Screens'
 import {
   Button,
@@ -341,8 +341,7 @@ export function EditUnitagProfileScreen({
                     <HeaderRadial
                       borderRadius={spacing.spacing20}
                       color={avatarColors.primary}
-                      maxOpacity={0.1}
-                      minOpacity={0.1}
+                      {...solidHeaderProps}
                     />
                   ) : null}
                 </Flex>

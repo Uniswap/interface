@@ -47,7 +47,7 @@ const IconContainerWithSlippage = styled(IconContainer)<{ displayWarning?: boole
     displayWarning ? theme.deprecated_accentWarningSoft : theme.surface2};
 `
 
-const ButtonContent = ({ trade }: { trade?: InterfaceTrade }) => {
+const ButtonContent = ({ trade, compact }: { trade?: InterfaceTrade; compact: boolean }) => {
   const [userSlippageTolerance] = useUserSlippageTolerance()
   const { formatPercent } = useFormatter()
 
@@ -63,9 +63,13 @@ const ButtonContent = ({ trade }: { trade?: InterfaceTrade }) => {
 
   return (
     <IconContainerWithSlippage data-testid="settings-icon-with-slippage" gap="sm" displayWarning={isInvalidSlippage}>
-      <ThemedText.BodySmall>
-        <Trans>{formatPercent(userSlippageTolerance)} slippage</Trans>
-      </ThemedText.BodySmall>
+      <ThemedText.Caption>
+        {compact ? (
+          formatPercent(userSlippageTolerance)
+        ) : (
+          <Trans>{formatPercent(userSlippageTolerance)} slippage</Trans>
+        )}
+      </ThemedText.Caption>
       <Icon />
     </IconContainerWithSlippage>
   )
@@ -75,11 +79,13 @@ export default function MenuButton({
   disabled,
   onClick,
   isActive,
+  compact,
   trade,
 }: {
   disabled: boolean
   onClick: () => void
   isActive: boolean
+  compact: boolean
   trade?: InterfaceTrade
 }) {
   return (
@@ -91,7 +97,7 @@ export default function MenuButton({
       data-testid="open-settings-dialog-button"
       aria-label={t`Transaction Settings`}
     >
-      <ButtonContent trade={trade} />
+      <ButtonContent trade={trade} compact={compact} />
     </Button>
   )
 }

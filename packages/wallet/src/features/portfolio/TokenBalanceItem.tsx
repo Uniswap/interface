@@ -1,6 +1,7 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { isWeb } from 'tamagui'
 import { Flex, Shine, Text, TouchableArea } from 'ui/src'
 import { NumberType } from 'utilities/src/format/types'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
@@ -63,11 +64,11 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
           url={currencyInfo.logoUrl ?? undefined}
         />
         <Flex shrink alignItems="flex-start">
-          <Text ellipsizeMode="tail" numberOfLines={1} variant="body1">
+          <Text ellipsizeMode="tail" numberOfLines={1} variant={isWeb ? 'body2' : 'body1'}>
             {currency.name ?? shortenedSymbol}
           </Text>
           <Flex row alignItems="center" gap="$spacing8" minHeight={20}>
-            <Text color="$neutral2" numberOfLines={1} variant="subheading2">
+            <Text color="$neutral2" numberOfLines={1} variant={isWeb ? 'body3' : 'body2'}>
               {`${formatNumberOrString({ value: quantity })}`} {shortenedSymbol}
             </Text>
           </Flex>
@@ -81,7 +82,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
             </Flex>
           ) : (
             <Flex alignItems="flex-end" pl="$spacing8">
-              <Text color="$neutral1" numberOfLines={1} variant="body1">
+              <Text color="$neutral1" numberOfLines={1} variant={isWeb ? 'body2' : 'body1'}>
                 {balance}
               </Text>
               <RelativeChange
@@ -89,7 +90,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
                 change={relativeChange24 ?? undefined}
                 negativeChangeColor="$statusCritical"
                 positiveChangeColor="$statusSuccess"
-                variant="body2"
+                variant={isWeb ? 'body3' : 'body2'}
               />
             </Flex>
           )}

@@ -1,0 +1,70 @@
+fragment TransactionToken on Token {
+  id
+  address
+  symbol
+  chain
+  decimals
+  project {
+    id
+    name
+    tokens {
+      id
+      address
+      symbol
+      chain
+    }
+    logo {
+      id
+      url
+    }
+  }
+}
+
+query V3Transactions($chain: Chain!, $first: Int!, $cursor: Int) {
+  v3Transactions(chain: $chain, first: $first, timestampCursor: $cursor) {
+    id
+    chain
+    protocolVersion
+    timestamp
+    hash
+    account
+    token0 {
+      ...TransactionToken
+    }
+    token0Quantity
+    token1 {
+      ...TransactionToken
+    }
+    token1Quantity
+    usdValue {
+      id
+      value
+    }
+    type
+  }
+}
+
+query V2Transactions($first: Int!, $cursor: Int) {
+  v2Transactions(chain: ETHEREUM, first: $first, timestampCursor: $cursor) {
+    id
+    chain
+    protocolVersion
+    timestamp
+    hash
+    account
+    token0 {
+      ...TransactionToken
+    }
+    token0Quantity
+    token1 {
+      ...TransactionToken
+    }
+    token1Quantity
+    usdValue {
+      id
+      value
+    }
+    type
+  }
+}
+

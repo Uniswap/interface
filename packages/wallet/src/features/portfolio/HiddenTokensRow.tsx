@@ -1,8 +1,6 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
-import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { AnimatePresence, Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 export function HiddenTokensRow({
@@ -18,25 +16,8 @@ export function HiddenTokensRow({
 }): JSX.Element {
   const { t } = useTranslation()
 
-  // TODO (EXT-482): make chevron rotation work with Tamagui animation
-  const chevronRotate = useSharedValue(isExpanded ? 180 : 0)
-
-  const chevronAnimatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ rotateZ: `${chevronRotate.value}deg` }],
-    }
-  }, [])
-
-  const onPressRow = useCallback(() => {
-    chevronRotate.value = withTiming(chevronRotate.value === 0 ? 180 : 0, {
-      duration: 150,
-      easing: Easing.ease,
-    })
-    onPress()
-  }, [chevronRotate, onPress])
-
   return (
-    <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} onPress={onPressRow}>
+    <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} onPress={onPress}>
       <Flex
         row
         alignItems="center"
@@ -51,20 +32,41 @@ export function HiddenTokensRow({
           alignItems="center"
           backgroundColor="$surface2"
           borderRadius="$roundedFull"
+          gap="$spacing2"
+          justifyContent="center"
           pl="$spacing12"
           pr="$spacing8"
-          py="$spacing8">
-          <Text color="$neutral2" variant="buttonLabel3">
-            {isExpanded ? t('Hide') : t('Show')}
-          </Text>
-          <AnimatedFlex style={chevronAnimatedStyle}>
-            <Icons.RotatableChevron
+          py="$spacing8"
+          // set width because otherwise the Text/Frame move as they animate
+          width={93}>
+          <AnimatePresence exitBeforeEnter initial={false}>
+            <Text
+              key={isExpanded ? 0 : 1}
+              animation="100ms"
               color="$neutral2"
-              direction="down"
-              height={iconSizes.icon20}
-              width={iconSizes.icon20}
-            />
-          </AnimatedFlex>
+              enterStyle={{
+                y: -5,
+                opacity: 0,
+              }}
+              exitStyle={{
+                y: 5,
+                opacity: 0,
+              }}
+              textAlign="center"
+              userSelect="none"
+              variant="buttonLabel3"
+              width={45}>
+              {isExpanded ? t('Hide') : t('Show')}
+            </Text>
+          </AnimatePresence>
+          <Icons.RotatableChevron
+            animation="semiBouncy"
+            color="$neutral2"
+            direction="down"
+            height={iconSizes.icon20}
+            rotate={`${isExpanded ? -90 : 0}deg`}
+            width={iconSizes.icon20}
+          />
         </Flex>
       </Flex>
     </TouchableArea>

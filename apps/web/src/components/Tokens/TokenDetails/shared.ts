@@ -1,5 +1,34 @@
 import { darken } from 'polished'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
+import { ClickableStyle } from 'theme/components'
+import { opacify } from 'theme/utils'
+
+export const ActionButtonStyle = css`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: none;
+  background-color: ${({ theme }) => theme.surface2};
+  width: max-content;
+  ${ClickableStyle}
+
+  // Override FilterButton background-color
+  :hover {
+    background-color: ${({ theme }) => opacify(12, theme.neutral1)};
+  }
+  :focus {
+    background-color: ${({ theme }) => opacify(12, theme.neutral1)};
+  }
+`
+
+export const ActionMenuFlyoutStyle = css`
+  width: 200px;
+  top: 40px;
+  right: 0px;
+  overflow: auto;
+`
 
 export const Hr = styled.hr`
   background-color: ${({ theme }) => theme.surface3};

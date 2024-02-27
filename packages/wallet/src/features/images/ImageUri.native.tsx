@@ -4,9 +4,6 @@ import FastImage, { OnLoadEvent } from 'react-native-fast-image'
 import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { Flex, Loader } from 'ui/src'
 import { ImageUriProps } from 'wallet/src/features/images/ImageUri'
-import { UNITAG_BUCKET_NAME } from 'wallet/src/features/unitags/constants'
-
-const AWS_DOMAIN = 'amazonaws.com'
 
 export function ImageUri({
   maxHeight,
@@ -65,10 +62,7 @@ export function ImageUri({
         resizeMode={resizeMode ?? FastImage.resizeMode.contain}
         source={{
           uri,
-          cache:
-            uri.includes(UNITAG_BUCKET_NAME) && uri.includes(AWS_DOMAIN)
-              ? FastImage.cacheControl.web
-              : FastImage.cacheControl.immutable,
+          cache: FastImage.cacheControl.immutable,
         }}
         style={[
           styles.image,

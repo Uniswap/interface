@@ -1,4 +1,4 @@
-import { ChainId, SUPPORTED_CHAINS, SupportedChainsType } from '@uniswap/sdk-core'
+import { ChainId, SUPPORTED_CHAINS, SupportedChainsType, V2_ROUTER_ADDRESSES } from '@uniswap/sdk-core'
 
 export const CHAIN_IDS_TO_NAMES = {
   [ChainId.MAINNET]: 'mainnet',
@@ -18,10 +18,17 @@ export const CHAIN_IDS_TO_NAMES = {
 } as const
 
 // Include ChainIds in this array if they are not supported by the UX yet, but are already in the SDK.
-const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = [ChainId.BASE_GOERLI]
+const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = [
+  ChainId.BASE_GOERLI,
+  ChainId.ARBITRUM_SEPOLIA,
+  ChainId.OPTIMISM_SEPOLIA,
+]
 
-// TODO: include BASE_GOERLI when routing is implemented
-export type SupportedInterfaceChain = Exclude<SupportedChainsType, ChainId.BASE_GOERLI>
+// TODO: include BASE_GOERLI, OPTIMISM_SEPOLIA, or ARBITRUM_SEPOLIA when routing is implemented
+export type SupportedInterfaceChain = Exclude<
+  SupportedChainsType,
+  ChainId.BASE_GOERLI | ChainId.ARBITRUM_SEPOLIA | ChainId.OPTIMISM_SEPOLIA
+>
 
 export function isSupportedChain(
   chainId: number | null | undefined | ChainId,
@@ -56,9 +63,10 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
 ] as const
 
 /**
- * Supported networks for V2 pool behavior.
+ * @deprecated when v2 pools are enabled on chains supported through sdk-core
  */
-export const SUPPORTED_V2POOL_CHAIN_IDS = [ChainId.MAINNET, ChainId.GOERLI] as const
+export const SUPPORTED_V2POOL_CHAIN_IDS_DEPRECATED = [ChainId.MAINNET, ChainId.GOERLI] as const
+export const SUPPORTED_V2POOL_CHAIN_IDS = Object.keys(V2_ROUTER_ADDRESSES).map((chainId) => parseInt(chainId))
 
 export const TESTNET_CHAIN_IDS = [
   ChainId.GOERLI,

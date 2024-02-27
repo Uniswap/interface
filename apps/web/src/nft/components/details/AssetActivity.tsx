@@ -7,7 +7,7 @@ import { getMarketplaceIcon } from 'nft/utils'
 import { getTimeDifference } from 'nft/utils/date'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
-import { shortenAddress } from 'utils'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const TR = styled.tr`

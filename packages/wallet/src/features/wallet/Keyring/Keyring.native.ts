@@ -14,6 +14,25 @@ const { RNEthersRS } = NativeModules
  * Simple wrapper around RNEthersRS
  */
 class NativeKeyring implements IKeyring {
+  removeMnemonic(_mnemonicId: string): Promise<boolean> {
+    // On mobile we don't currently handle this cleanup because it lives
+    // in secure enclave and is hard to handle when app is uninstalled
+    throw new Error('Method not implemented.')
+  }
+
+  removePrivateKey(_address: string): Promise<boolean> {
+    // On mobile we don't currently handle this cleanup because it lives
+    // in secure enclave and is hard to handle when app is uninstalled
+
+    // TODO (MOB-243): Cleanup account artifacts in native-land (i.e. keystore). Resolve to false for now
+    return Promise.resolve(false)
+  }
+
+  removePassword(): Promise<boolean> {
+    // n/a on mobile
+    throw new Error('Method not implemented.')
+  }
+
   unlock(): Promise<boolean> {
     return Promise.resolve(true)
   }

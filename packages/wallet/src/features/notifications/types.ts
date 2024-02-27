@@ -16,6 +16,7 @@ export enum AppNotificationType {
   Transaction,
   Favorites,
   Copied,
+  CopyFailed,
   Success,
   SwapNetwork,
   ChooseCountry,
@@ -143,6 +144,11 @@ export interface CopyNotification extends AppNotificationBase {
   copyType: CopyNotificationType
 }
 
+export interface CopyFailedNotification extends AppNotificationBase {
+  type: AppNotificationType.CopyFailed
+  copyType: CopyNotificationType
+}
+
 export interface SuccessNotification extends AppNotificationBase {
   type: AppNotificationType.Success
   title: string
@@ -185,6 +191,7 @@ export type AppNotification =
   | SwapPendingNotification
   | TransferCurrencyPendingNotification
   | CopyNotification
+  | CopyFailedNotification
   | WalletConnectNotification
   | TransactionNotification
   | SwapNetworkNotification

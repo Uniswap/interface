@@ -24,6 +24,7 @@ import { FORSupportedToken, MoonpayCurrency } from 'wallet/src/features/fiatOnRa
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { addTransaction } from 'wallet/src/features/transactions/slice'
 import {
+  FiatPurchaseTransactionInfo,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
@@ -58,7 +59,10 @@ export function useFormatExactCurrencyAmount(
 }
 
 /** Returns a new externalTransactionId and a callback to store the transaction. */
-export function useFiatOnRampTransactionCreator(ownerAddress: string): {
+export function useFiatOnRampTransactionCreator(
+  ownerAddress: string,
+  initialTypeInfo?: Partial<FiatPurchaseTransactionInfo>
+): {
   externalTransactionId: string
   dispatchAddTransaction: () => void
 } {
@@ -73,7 +77,11 @@ export function useFiatOnRampTransactionCreator(ownerAddress: string): {
       chainId: ChainId.Mainnet,
       id: externalTransactionId.current,
       from: ownerAddress,
-      typeInfo: { type: TransactionType.FiatPurchase, syncedWithBackend: false },
+      typeInfo: {
+        ...initialTypeInfo,
+        type: TransactionType.FiatPurchase,
+        syncedWithBackend: false,
+      },
       status: TransactionStatus.Pending,
       addedTime: Date.now(),
       hash: '',
@@ -81,7 +89,7 @@ export function useFiatOnRampTransactionCreator(ownerAddress: string): {
     }
     // use addTransaction action so transactionWatcher picks it up
     dispatch(addTransaction(transactionDetail))
-  }, [dispatch, externalTransactionId, ownerAddress])
+  }, [dispatch, ownerAddress, initialTypeInfo])
 
   return { externalTransactionId: externalTransactionId.current, dispatchAddTransaction }
 }

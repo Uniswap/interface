@@ -1,3 +1,7 @@
+//! tamagui-ignore
+// TODO(EXT-732): there's some sort of encoding bug that just popped up here in
+// the tamagui optimizer disabling optimization for now on this file
+
 import { useCallback, useEffect } from 'react'
 import {
   Directions,

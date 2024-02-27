@@ -1,6 +1,7 @@
 import { FunctionComponent, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SvgProps } from 'react-native-svg'
+import { isWeb } from 'tamagui'
 import { Icons } from 'ui/src'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
@@ -18,6 +19,7 @@ type WarningWithStyle = {
   warning: Warning
   color: WarningColor
   Icon: FunctionComponent<SvgProps> | typeof Icons.AlertTriangle | null
+  displayedInline: boolean
 }
 
 export type ParsedWarnings = {
@@ -72,7 +74,7 @@ function getReviewScreenWarning(
     return undefined
   }
 
-  return getWarningWithStyle(swapWarning)
+  return getWarningWithStyle(swapWarning, true)
 }
 
 // This function decides which warning to show when there is more than one.
@@ -88,6 +90,7 @@ function getFormScreenWarning(
       warning: insufficientBalanceWarning,
       color: getAlertColor(WarningSeverity.Medium),
       Icon: null,
+      displayedInline: !isWeb,
     }
   }
 
@@ -100,7 +103,10 @@ function getFormScreenWarning(
     return undefined
   }
 
-  return getWarningWithStyle(formWarning)
+  return getWarningWithStyle(
+    formWarning,
+    !isWeb || formWarning.type !== WarningLabel.InsufficientGasFunds
+  )
 }
 
 function getAlertColor(severity?: WarningSeverity): WarningColor {
@@ -138,9 +144,10 @@ function getAlertColor(severity?: WarningSeverity): WarningColor {
   }
 }
 
-function getWarningWithStyle(warning: Warning): WarningWithStyle {
+function getWarningWithStyle(warning: Warning, displayedInline: boolean): WarningWithStyle {
   return {
     warning,
+    displayedInline,
     color: getAlertColor(warning.severity),
     Icon: warning.icon ?? null,
   }

@@ -199,6 +199,7 @@ describe('Permit2', () => {
       cy.contains('Approve and swap').click()
 
       // Verify token approval
+      cy.wait('@eth_sendRawTransaction')
       cy.hardhat().then((hardhat) => hardhat.mine())
       expectTokenAllowanceForPermit2ToBeMax(DAI)
 
@@ -231,7 +232,6 @@ describe('Permit2', () => {
   })
 
   it('prompts signature when existing permit approval is expired', () => {
-    setupInputs(DAI, USDC_MAINNET)
     const expiredAllowance = { expiration: Math.floor((Date.now() - 1) / 1000) }
     cy.hardhat()
       .then(({ approval, wallet }) =>
@@ -241,7 +241,8 @@ describe('Permit2', () => {
         ])
       )
       .then(() => {
-        initiateSwap('Approve and swap')
+        setupInputs(DAI, USDC_MAINNET)
+        initiateSwap('Sign and swap')
       })
 
     // Verify permit2 approval
@@ -251,7 +252,6 @@ describe('Permit2', () => {
   })
 
   it('prompts signature when existing permit approval amount is too low', () => {
-    setupInputs(DAI, USDC_MAINNET)
     const smallAllowance = { amount: 1 }
     cy.hardhat()
       .then(({ approval, wallet }) =>
@@ -261,7 +261,8 @@ describe('Permit2', () => {
         ])
       )
       .then(() => {
-        initiateSwap('Approve and swap')
+        setupInputs(DAI, USDC_MAINNET)
+        initiateSwap('Sign and swap')
       })
 
     // Verify permit2 approval

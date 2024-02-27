@@ -20,6 +20,7 @@ import { AnimationType } from 'theme/components/FadePresence'
 import { ThemedText } from 'theme/components/text'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
+import { isLimitTrade } from 'state/routing/utils'
 import { slideInAnimation, slideOutAnimation } from '../swap/PendingModalContent/animations'
 import {
   AnimatedEntranceConfirmationIcon,
@@ -81,6 +82,7 @@ export default function Pending({
   const swapStatus = useSwapTransactionStatus(swapResult)
   const uniswapXOrder = useOrder(swapResult?.type === TradeFillType.UniswapX ? swapResult.response.orderHash : '')
 
+  const limitPlaced = isLimitTrade(trade) && uniswapXOrder?.status === UniswapXOrderStatus.OPEN
   const swapConfirmed =
     swapStatus === TransactionStatus.Confirmed || uniswapXOrder?.status === UniswapXOrderStatus.FILLED
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
@@ -127,7 +129,7 @@ export default function Pending({
         {/* On the last step, appears while waiting for the transaction to be signed too */}
         {!showSuccess && !showSubmitted && <LoadingIndicatorOverlay />}
       </LogoContainer>
-      <HeaderContainer gap="md" $disabled={transactionPending}>
+      <HeaderContainer gap="md" $disabled={transactionPending && !limitPlaced}>
         <AnimationWrapper>
           <StepTitleAnimationContainer gap="md" ref={currentStepContainerRef} disableEntranceAnimation>
             <ThemedText.SubHeader width="100%" textAlign="center" data-testid="pending-modal-content-title">
@@ -150,8 +152,14 @@ export default function Pending({
         {uniswapXOrder && uniswapXOrder.status === UniswapXOrderStatus.OPEN && (
           <Row justify="center" marginTop="32px" minHeight="24px">
             <ThemedText.BodySmall color="neutral2">
-              <ExternalLink href={SupportArticleURL.WHAT_IS_UNISWAP_X}>
-                <Trans>Learn more about swapping with UniswapX</Trans>
+              <ExternalLink
+                href={isLimitTrade(trade) ? SupportArticleURL.LEARN_ABOUT_LIMITS : SupportArticleURL.WHAT_IS_UNISWAP_X}
+              >
+                {isLimitTrade(trade) ? (
+                  <Trans>Learn more about limits</Trans>
+                ) : (
+                  <Trans>Learn more about swapping with UniswapX</Trans>
+                )}
               </ExternalLink>
             </ThemedText.BodySmall>
           </Row>

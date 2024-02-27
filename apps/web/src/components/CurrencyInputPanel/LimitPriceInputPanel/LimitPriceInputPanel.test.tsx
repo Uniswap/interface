@@ -1,6 +1,6 @@
 import { SwapTab } from 'components/swap/constants'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
-import { LimitContext } from 'state/limit/LimitContext'
+import { Expiry, LimitContext } from 'state/limit/LimitContext'
 import { SwapAndLimitContext } from 'state/swap/SwapContext'
 import { render, screen } from 'test-utils/render'
 
@@ -22,7 +22,7 @@ const mockLimitContextValue = {
     inputAmount: '',
     limitPrice: '100',
     outputAmount: '',
-    expiry: 1,
+    expiry: Expiry.Day,
     isInputAmountFixed: true,
     limitPriceEdited: false,
     limitPriceInverted: false,
@@ -40,7 +40,7 @@ describe('LimitPriceInputPanel', () => {
     const { container } = render(<LimitPriceInputPanel onCurrencySelect={onCurrencySelect} />)
     expect(screen.getByText('Limit price')).toBeVisible()
     expect(screen.getByPlaceholderText('0')).toBeVisible()
-    expect(screen.getByText('Current')).toBeVisible()
+    expect(screen.getByText('Market')).toBeVisible()
     expect(screen.getByText('+1%')).toBeVisible()
     expect(screen.getByText('+5%')).toBeVisible()
     expect(screen.getByText('+10%')).toBeVisible()

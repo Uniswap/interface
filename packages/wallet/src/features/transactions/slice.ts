@@ -5,6 +5,7 @@ import { providers } from 'ethers'
 import { assert } from 'utilities/src/errors'
 import {
   ChainIdToTxIdToDetails,
+  FiatPurchaseTransactionInfo,
   FinalizedTransactionDetails,
   TransactionDetails,
   TransactionId,
@@ -97,35 +98,27 @@ const slice = createSlice({
     },
     resetTransactions: () => initialTransactionsState,
     // fiat onramp transactions re-use this slice to store (off-chain) pending txs
-    // this action removes the transaction from store
     upsertFiatOnRampTransaction: (
       state,
-      { payload: transaction }: PayloadAction<TransactionDetails>
+      {
+        payload: transaction,
+      }: PayloadAction<TransactionDetails & { typeInfo: FiatPurchaseTransactionInfo }>
     ) => {
       const {
         chainId,
         id,
         from,
-        status,
         typeInfo: { type },
       } = transaction
 
       assert(type === TransactionType.FiatPurchase, `only fiat purchases can be upserted`)
 
-      switch (status) {
-        case TransactionStatus.Success:
-        case TransactionStatus.Unknown:
-          // treat canceled as tx never sent to Moonpay
-          // on success, tx should be reflected on chain
-          // in both cases, safe to stop tracking this tx
-          delete state[from]?.[chainId]?.[id]
-          break
-        case TransactionStatus.Failed:
-        case TransactionStatus.Pending:
-          state[from] ??= {}
-          state[from]![chainId] ??= {}
-          state[from]![chainId]![id] = transaction
-          break
+      state[from] ??= {}
+      state[from]![chainId] ??= {}
+      const oldTypeInfo = state[from]![chainId]![id]?.typeInfo
+      state[from]![chainId]![id] = {
+        ...transaction,
+        ...{ typeInfo: { ...oldTypeInfo, ...transaction.typeInfo } },
       }
     },
   },

@@ -12,6 +12,7 @@ import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIco
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+import { MELD_ICON_SIZE_MULTIPLIER } from 'wallet/src/features/fiatOnRamp/utils'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
@@ -22,7 +23,7 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { WalletConnectEvent } from 'wallet/src/features/walletConnect/types'
 
-interface LogoWithTxStatusProps {
+interface LogoWithTxStatusBaseProps {
   assetType: AssetType
   txType: TransactionType
   txStatus: TransactionStatus
@@ -38,39 +39,65 @@ interface DappLogoWithTxStatusProps {
   dappName: string
 }
 
-interface CurrencyStatusProps extends LogoWithTxStatusProps {
+interface CurrencyStatusProps extends LogoWithTxStatusBaseProps {
   assetType: AssetType.Currency
   currencyInfo?: CurrencyInfo | null
 }
 
-interface NFTStatusProps extends LogoWithTxStatusProps {
+interface NFTStatusProps extends LogoWithTxStatusBaseProps {
   assetType: AssetType.ERC721 | AssetType.ERC1155
   nftImageUrl?: string
   nftTradeType?: NFTTradeType
 }
 
-export function LogoWithTxStatus(props: CurrencyStatusProps | NFTStatusProps): JSX.Element {
+type LogoWithTxStatusProps = (CurrencyStatusProps | NFTStatusProps) & {
+  serviceProviderLogoUrl?: string
+  institutionLogoUrl?: string
+}
+
+function getLogo(props: LogoWithTxStatusProps): JSX.Element {
+  const { assetType, txType, size, serviceProviderLogoUrl, institutionLogoUrl } = props
+
+  if (txType === TransactionType.FiatPurchase) {
+    if (institutionLogoUrl) {
+      return <ImageUri imageStyle={{ height: size, width: size }} uri={institutionLogoUrl} />
+    }
+    if (serviceProviderLogoUrl) {
+      return (
+        <ImageUri
+          imageStyle={{
+            height: size * MELD_ICON_SIZE_MULTIPLIER,
+            width: size * MELD_ICON_SIZE_MULTIPLIER,
+          }}
+          uri={serviceProviderLogoUrl}
+        />
+      )
+    }
+    return <MoonpayLogo height={size} width={size} />
+  }
+
+  return assetType === AssetType.Currency ? (
+    <CurrencyLogo hideNetworkLogo currencyInfo={props.currencyInfo} size={size} />
+  ) : (
+    <Flex
+      centered
+      backgroundColor="$surface2"
+      borderRadius="$rounded4"
+      height={size}
+      overflow="hidden"
+      width={size}>
+      {props.nftImageUrl && <NFTViewer uri={props.nftImageUrl} />}
+    </Flex>
+  )
+}
+
+export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
   const { assetType, txType, txStatus, size, chainId } = props
   const colors = useSporeColors()
 
   const statusSize = size / 2
 
-  const logo =
-    txType === TransactionType.FiatPurchase ? (
-      <MoonpayLogo height={size} width={size} />
-    ) : assetType === AssetType.Currency ? (
-      <CurrencyLogo hideNetworkLogo currencyInfo={props.currencyInfo} size={size} />
-    ) : (
-      <Flex
-        centered
-        backgroundColor="$surface2"
-        borderRadius="$rounded4"
-        height={size}
-        overflow="hidden"
-        width={size}>
-        {props.nftImageUrl && <NFTViewer uri={props.nftImageUrl} />}
-      </Flex>
-    )
+  const logo = getLogo(props)
 
   const fill = txStatus === TransactionStatus.Success ? colors.statusSuccess : colors.neutral2
   const color = colors.surface2

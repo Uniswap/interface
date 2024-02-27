@@ -1,0 +1,45 @@
+query V3TokenTransactions($chain: Chain!, $address: String!, $first: Int!, $cursor: Int) {
+  token(chain: $chain, address: $address) {
+    ...TransactionToken
+    v3Transactions(first: $first, timestampCursor: $cursor) {
+      timestamp
+      hash
+      account
+      token0 {
+        ...TransactionToken
+      }
+      token0Quantity
+      token1 {
+        ...TransactionToken
+      }
+      token1Quantity
+      usdValue {
+        value
+      }
+      type
+    }
+  }
+}
+
+query V2TokenTransactions($address: String!, $first: Int!, $cursor: Int) {
+  token(chain: ETHEREUM, address: $address) {
+    ...TransactionToken
+    v2Transactions(first: $first, timestampCursor: $cursor) {
+      timestamp
+      hash
+      account
+      token0 {
+        ...TransactionToken
+      }
+      token0Quantity
+      token1 {
+        ...TransactionToken
+      }
+      token1Quantity
+      usdValue {
+        value
+      }
+      type
+    }
+  }
+}

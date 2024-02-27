@@ -16,6 +16,8 @@ export function getCurrentPageFromLocation(locationPathname: string): InterfaceP
       return InterfacePageName.VOTE_PAGE
     case locationPathname.startsWith('/pools'):
     case locationPathname.startsWith('/pool'):
+    case locationPathname.startsWith('/add'):
+    case locationPathname.startsWith('/remove'):
       return InterfacePageName.POOL_PAGE
     case locationPathname.startsWith('/tokens'):
       return InterfacePageName.TOKENS_PAGE

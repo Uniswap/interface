@@ -7,9 +7,9 @@ import { useMemo } from 'react'
 import ERC20ABI from 'wallet/src/abis/erc20.json'
 import { Erc20Interface } from 'wallet/src/abis/types/Erc20'
 
+import { isAddress } from 'utilities/src/addresses'
 import { nativeOnChain } from '../../constants/tokens'
 import { useInterfaceMulticall } from '../../hooks/useContract'
-import { isAddress } from '../../utils'
 
 /**
  * Returns a map of the given addresses to their eventually consistent ETH balances.

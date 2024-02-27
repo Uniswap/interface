@@ -1,7 +1,6 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { NumberType } from 'utilities/src/format/types'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
@@ -12,10 +11,9 @@ import { FeeOnTransferInfo } from 'wallet/src/features/transactions/TransactionD
 import { OnShowSwapFeeInfo } from 'wallet/src/features/transactions/TransactionDetails/SwapFee'
 import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
-import { useUSDCPrice } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
+import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRatio'
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
-import { getRateToDisplay } from 'wallet/src/features/transactions/swap/utils'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { ElementName } from 'wallet/src/telemetry/constants'
 import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'wallet/src/utils/currency'
@@ -78,10 +76,9 @@ export function SwapDetails({
   onShowFOTInfo,
 }: SwapDetailsProps): JSX.Element {
   const { t } = useTranslation()
-  const [showInverseRate, setShowInverseRate] = useState(false)
 
   const formatter = useLocalizationContext()
-  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const { convertFiatAmountFormatted, formatPercent } = formatter
 
   const trade = derivedSwapInfo.trade.trade
   const acceptedTrade = acceptedDerivedSwapInfo.trade.trade
@@ -94,23 +91,13 @@ export function SwapDetails({
     throw new Error('Invalid render of `SwapDetails` with no `acceptedTrade`')
   }
 
-  const latestPrice = trade.executionPrice
-  const latestUSDPrice = useUSDCPrice(
-    showInverseRate ? latestPrice.quoteCurrency : latestPrice.baseCurrency
-  )
-  const latestFiatPriceFormatted = convertFiatAmountFormatted(
-    latestUSDPrice?.toSignificant(),
-    NumberType.FiatTokenPrice
-  )
-  const latestRate = getRateToDisplay(formatter, trade, showInverseRate)
-
   const swapFeeUsd = getFeeAmountUsd(trade, outputCurrencyPricePerUnitExact)
   const swapFeeFiatFormatted = convertFiatAmountFormatted(swapFeeUsd, NumberType.FiatGasPrice)
 
   const swapFeeInfo = trade.swapFee
     ? {
         noFeeCharged: trade.swapFee.percent.equalTo(0),
-        formattedPercent: formatter.formatPercent(trade.swapFee.percent.toFixed()),
+        formattedPercent: formatPercent(trade.swapFee.percent.toFixed()),
         formattedAmount:
           getFormattedCurrencyAmount(trade.outputAmount.currency, trade.swapFee.amount, formatter) +
           getSymbolDisplayText(trade.outputAmount.currency.symbol),
@@ -171,14 +158,7 @@ export function SwapDetails({
           {t('Rate')}
         </Text>
         <Flex row shrink justifyContent="flex-end">
-          <TouchableOpacity onPress={(): void => setShowInverseRate(!showInverseRate)}>
-            <Text adjustsFontSizeToFit numberOfLines={1} variant="body3">
-              {latestRate}
-              <Text color="$neutral2" variant="body3">
-                {latestUSDPrice && ` (${latestFiatPriceFormatted})`}
-              </Text>
-            </Text>
-          </TouchableOpacity>
+          <SwapRateRatio trade={trade} />
         </Flex>
       </Flex>
       <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
@@ -205,7 +185,7 @@ export function SwapDetails({
             </Flex>
           ) : null}
           <Text color={showSlippageWarning ? '$DEP_accentWarning' : '$neutral1'} variant="body3">
-            {formatter.formatPercent(acceptedTrade.slippageTolerance)}
+            {formatPercent(acceptedTrade.slippageTolerance)}
           </Text>
         </Flex>
       </Flex>
@@ -257,25 +237,25 @@ function AcceptNewQuoteRow({
       pl="$spacing12"
       pr="$spacing8"
       py="$spacing8">
-      <Flex centered row>
+      <Flex fill>
         <Text color="$neutral2" variant="body3">
           {derivedSwapInfo.exactCurrencyField === CurrencyField.INPUT
             ? t('New output')
             : t('New input')}
         </Text>
+        <Flex row alignItems="center">
+          <Text
+            adjustsFontSizeToFit
+            color="$neutral1"
+            numberOfLines={1}
+            textAlign="center"
+            variant="body3">
+            {formattedDerivedAmount} {derivedSymbol}{' '}
+            <Text color="$neutral2">({percentageDifference}%)</Text>
+          </Text>
+        </Flex>
       </Flex>
-      <Flex fill row shrink flexBasis="100%" justifyContent="flex-end">
-        <Text
-          adjustsFontSizeToFit
-          color="$neutral1"
-          numberOfLines={1}
-          textAlign="center"
-          variant="body3">
-          {formattedDerivedAmount} {derivedSymbol}{' '}
-          <Text color="$neutral2">({percentageDifference}%)</Text>
-        </Text>
-      </Flex>
-      <Flex centered row>
+      <Flex>
         <Trace logPress element={ElementName.AcceptNewRate}>
           <TouchableArea
             backgroundColor="$accentSoft"

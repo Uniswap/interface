@@ -3,7 +3,7 @@ import { ReactComponent as PapersIcon } from 'assets/svg/papers-text.svg'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import styled, { css, useTheme } from 'styled-components'
-import { FadePresence } from 'theme/components/FadePresence'
+import { FadePresence, FadePresenceAnimationType } from 'theme/components/FadePresence'
 
 export const LogoContainer = styled.div`
   height: 64px;
@@ -77,10 +77,10 @@ export function LoadingIndicatorOverlay() {
   )
 }
 
-function ConfirmedIcon({ className }: { className?: string }) {
+export function ConfirmedIcon({ className }: { className?: string }) {
   const theme = useTheme()
   return (
-    <FadePresence $scale>
+    <FadePresence animationType={FadePresenceAnimationType.FadeAndScale}>
       <svg
         data-testid="confirmed-icon"
         width="54"
@@ -99,10 +99,10 @@ function ConfirmedIcon({ className }: { className?: string }) {
   )
 }
 
-function SubmittedIcon({ className }: { className?: string }) {
+export function SubmittedIcon({ className }: { className?: string }) {
   const theme = useTheme()
   return (
-    <FadePresence $scale>
+    <FadePresence animationType={FadePresenceAnimationType.FadeAndScale}>
       <svg
         data-testid="submitted-icon"
         width="54"

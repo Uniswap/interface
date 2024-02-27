@@ -139,7 +139,7 @@ export function useMergeLocalAndRemoteTransactions(
     }
 
     const txHashes = new Set<string>()
-    const fiatOnRampTxs: TransactionDetails[] = []
+    const offChainFiatOnRampTxs: TransactionDetails[] = []
 
     const remoteTxMap: Map<string, TransactionDetails> = new Map()
     remoteTransactions.forEach((tx) => {
@@ -148,7 +148,7 @@ export function useMergeLocalAndRemoteTransactions(
         remoteTxMap.set(txHash, tx)
         txHashes.add(txHash)
       } else {
-        fiatOnRampTxs.push(tx)
+        offChainFiatOnRampTxs.push(tx)
       }
     })
 
@@ -159,16 +159,15 @@ export function useMergeLocalAndRemoteTransactions(
         localTxMap.set(txHash, tx)
         txHashes.add(txHash)
       } else {
-        fiatOnRampTxs.push(tx)
+        offChainFiatOnRampTxs.push(tx)
       }
     })
 
-    const deDupedTxs: TransactionDetails[] = [...fiatOnRampTxs]
+    const deDupedTxs: TransactionDetails[] = [...offChainFiatOnRampTxs]
 
     for (const txHash of [...txHashes]) {
       const remoteTx = remoteTxMap.get(txHash)
       const localTx = localTxMap.get(txHash)
-
       if (!localTx) {
         if (!remoteTx) {
           throw new Error('No local or remote tx, which is not possible')
@@ -203,6 +202,12 @@ export function useMergeLocalAndRemoteTransactions(
         const externalDappInfo = { ...localTx.typeInfo.dapp }
         const mergedTx = { ...remoteTx, typeInfo: { ...remoteTx.typeInfo, externalDappInfo } }
         deDupedTxs.push(mergedTx)
+        continue
+      }
+
+      // If the tx is FiatPurchase and it's already on-chain, then use locally stored data, which comes from FOR provider API
+      if (localTx.typeInfo.type === TransactionType.FiatPurchase) {
+        deDupedTxs.push(localTx)
         continue
       }
 

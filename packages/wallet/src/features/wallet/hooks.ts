@@ -198,16 +198,18 @@ export function useAvatar(address: Maybe<string>): {
   avatar: Maybe<string>
   loading: boolean
 } {
-  const { data: avatar } = useENSAvatar(address)
-  const { unitag, loading } = useUnitagByAddress(address || undefined)
+  const { data: ensAvatar, loading: ensLoading } = useENSAvatar(address)
+  const { unitag, loading: unitagLoading } = useUnitagByAddress(address || undefined)
 
-  if (loading) {
-    return { avatar: undefined, loading }
+  const unitagAvatar = unitag?.metadata?.avatar
+
+  if (unitagAvatar) {
+    return { avatar: unitagAvatar, loading: false }
   }
 
-  if (unitag?.metadata?.avatar) {
-    return { avatar: unitag.metadata.avatar, loading: false }
+  if (ensAvatar) {
+    return { avatar: ensAvatar, loading: false }
   }
 
-  return { avatar, loading: false }
+  return { avatar: undefined, loading: ensLoading || unitagLoading }
 }

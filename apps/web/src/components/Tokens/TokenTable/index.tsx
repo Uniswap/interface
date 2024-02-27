@@ -10,16 +10,23 @@ import { Cell } from 'components/Table/Cell'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { SparklineMap, TopToken, useTopTokens } from 'graphql/data/TopTokens'
 import {
+  OrderDirection,
   chainIdToBackendName,
   getTokenDetailsURL,
   supportedChainIdFromGQLChain,
   validateUrlChainParam,
 } from 'graphql/data/util'
-import { ReactElement, useMemo } from 'react'
+import { ReactElement, ReactNode, useMemo } from 'react'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { ApolloError } from '@apollo/client'
+import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Table/styled'
+import { HEADER_DESCRIPTIONS } from 'components/Tokens/TokenTable/TokenRow'
+import { TokenSortMethod, sortAscendingAtom, sortMethodAtom, useSetSortMethod } from 'components/Tokens/state'
+import { MouseoverTooltip } from 'components/Tooltip'
+import { useAtomValue } from 'jotai/utils'
 import { useExploreParams } from 'pages/Explore/redirects'
 import { DeltaArrow, DeltaText } from '../TokenDetails/Delta'
 
@@ -29,6 +36,9 @@ const TableWrapper = styled.div`
 `
 
 export const NameText = styled(ThemedText.BodyPrimary)`
+  ${EllipsisStyle}
+`
+const ValueText = styled(ThemedText.BodyPrimary)`
   ${EllipsisStyle}
 `
 
@@ -56,7 +66,7 @@ function TokenDescription({ token }: { token: TopToken }) {
     <Row gap="sm">
       <QueryTokenLogo token={token} size="28px" />
       <NameText>{token.name}</NameText>
-      <ThemedText.BodySecondary>{token.symbol}</ThemedText.BodySecondary>
+      <ThemedText.BodySecondary style={{ minWidth: 'fit-content' }}>{token.symbol}</ThemedText.BodySecondary>
     </Row>
   )
 }
@@ -66,16 +76,6 @@ export function TopTokensTable() {
   const chainId = supportedChainIdFromGQLChain(chainName)
   const { tokens, tokenSortRank, loadingTokens, sparklines, error } = useTopTokens(chainName)
 
-  if (error) {
-    return (
-      <TableWrapper>
-        <ThemedText.BodyPrimary>
-          <Trans>Error loading Top Tokens</Trans>
-        </ThemedText.BodyPrimary>
-      </TableWrapper>
-    )
-  }
-
   return (
     <TableWrapper data-testid="top-tokens-explore-table">
       <TokenTable
@@ -83,9 +83,40 @@ export function TopTokensTable() {
         tokenSortRank={tokenSortRank}
         sparklines={sparklines}
         loading={loadingTokens}
+        error={error}
         chainId={chainId}
       />
     </TableWrapper>
+  )
+}
+
+const HEADER_TEXT: Record<TokenSortMethod, ReactNode> = {
+  [TokenSortMethod.FULLY_DILUTED_VALUATION]: <Trans>FDV</Trans>,
+  [TokenSortMethod.PRICE]: <Trans>Price</Trans>,
+  [TokenSortMethod.VOLUME]: <Trans>Volume</Trans>,
+  [TokenSortMethod.HOUR_CHANGE]: <Trans>1 hour</Trans>,
+  [TokenSortMethod.DAY_CHANGE]: <Trans>1 day</Trans>,
+  [TokenSortMethod.DEPRECATE_PERCENT_CHANGE]: <Trans>Change</Trans>,
+  [TokenSortMethod.DEPRECATE_TOTAL_VALUE_LOCKED]: <Trans>TVL</Trans>,
+}
+
+function TokenTableHeader({
+  category,
+  isCurrentSortMethod,
+  direction,
+}: {
+  category: TokenSortMethod
+  isCurrentSortMethod: boolean
+  direction: OrderDirection
+}) {
+  const handleSortCategory = useSetSortMethod(category)
+  return (
+    <MouseoverTooltip text={HEADER_DESCRIPTIONS[category]} placement="top">
+      <ClickableHeaderRow $justify="flex-end" onClick={handleSortCategory}>
+        {isCurrentSortMethod && <HeaderArrow direction={direction} />}
+        <HeaderSortText $active={isCurrentSortMethod}>{HEADER_TEXT[category]}</HeaderSortText>
+      </ClickableHeaderRow>
+    </MouseoverTooltip>
   )
 }
 
@@ -94,6 +125,7 @@ function TokenTable({
   tokenSortRank,
   sparklines,
   loading,
+  error,
   loadMore,
   chainId,
 }: {
@@ -101,10 +133,14 @@ function TokenTable({
   tokenSortRank: Record<string, number>
   sparklines: SparklineMap
   loading: boolean
+  error?: ApolloError
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
   chainId: ChainId
 }) {
   const { formatFiatPrice, formatNumber, formatDelta } = useFormatter()
+  const sortAscending = useAtomValue(sortAscendingAtom)
+  const orderDirection = sortAscending ? OrderDirection.Asc : OrderDirection.Desc
+  const sortMethod = useAtomValue(sortMethodAtom)
 
   const tokenTableValues: TokenTableValues[] | undefined = useMemo(
     () =>
@@ -157,6 +193,7 @@ function TokenTable({
     [chainId, formatDelta, sparklines, tokenSortRank, tokens]
   )
 
+  const showLoadingSkeleton = loading || !!error
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<TokenTableValues>()
     return [
@@ -168,7 +205,7 @@ function TokenTable({
           </Cell>
         ),
         cell: (index) => (
-          <Cell justifyContent="center" loading={loading} minWidth={44}>
+          <Cell justifyContent="center" loading={showLoadingSkeleton} minWidth={44}>
             <ThemedText.BodySecondary>{index.getValue?.()}</ThemedText.BodySecondary>
           </Cell>
         ),
@@ -183,7 +220,7 @@ function TokenTable({
           </Cell>
         ),
         cell: (tokenDescription) => (
-          <Cell justifyContent="flex-start" width={240} loading={loading} grow>
+          <Cell justifyContent="flex-start" width={240} loading={showLoadingSkeleton} grow>
             {tokenDescription.getValue?.()}
           </Cell>
         ),
@@ -192,19 +229,21 @@ function TokenTable({
         id: 'price',
         header: () => (
           <Cell minWidth={133} grow>
-            <ThemedText.BodySecondary>
-              <Trans>Price</Trans>
-            </ThemedText.BodySecondary>
+            <TokenTableHeader
+              category={TokenSortMethod.PRICE}
+              isCurrentSortMethod={sortMethod === TokenSortMethod.PRICE}
+              direction={orderDirection}
+            />
           </Cell>
         ),
         cell: (price) => (
-          <Cell loading={loading} minWidth={133} grow>
-            <ThemedText.BodySecondary>
+          <Cell loading={showLoadingSkeleton} minWidth={133} grow>
+            <ThemedText.BodyPrimary>
               {/* A simple 0 price indicates the price is not currently available from the api */}
               {price.getValue?.() === 0
                 ? '-'
                 : formatFiatPrice({ price: price.getValue?.(), type: NumberType.FiatTokenPrice })}
-            </ThemedText.BodySecondary>
+            </ThemedText.BodyPrimary>
           </Cell>
         ),
       }),
@@ -212,13 +251,15 @@ function TokenTable({
         id: 'percentChange1hr',
         header: () => (
           <Cell minWidth={133} grow>
-            <ThemedText.BodySecondary>
-              <Trans>1 hour</Trans>
-            </ThemedText.BodySecondary>
+            <TokenTableHeader
+              category={TokenSortMethod.HOUR_CHANGE}
+              isCurrentSortMethod={sortMethod === TokenSortMethod.HOUR_CHANGE}
+              direction={orderDirection}
+            />
           </Cell>
         ),
         cell: (percentChange1hr) => (
-          <Cell loading={loading} minWidth={133} grow>
+          <Cell loading={showLoadingSkeleton} minWidth={133} grow>
             {percentChange1hr.getValue?.()}
           </Cell>
         ),
@@ -227,13 +268,15 @@ function TokenTable({
         id: 'percentChange1d',
         header: () => (
           <Cell minWidth={133} grow>
-            <ThemedText.BodySecondary>
-              <Trans>1 day</Trans>
-            </ThemedText.BodySecondary>
+            <TokenTableHeader
+              category={TokenSortMethod.DAY_CHANGE}
+              isCurrentSortMethod={sortMethod === TokenSortMethod.DAY_CHANGE}
+              direction={orderDirection}
+            />
           </Cell>
         ),
         cell: (percentChange1d) => (
-          <Cell loading={loading} minWidth={133} grow>
+          <Cell loading={showLoadingSkeleton} minWidth={133} grow>
             {percentChange1d.getValue?.()}
           </Cell>
         ),
@@ -241,34 +284,34 @@ function TokenTable({
       columnHelper.accessor((row) => row.fdv, {
         id: 'fdv',
         header: () => (
-          <Cell minWidth={133} grow>
-            <ThemedText.BodySecondary>
-              <Trans>FDV</Trans>
-            </ThemedText.BodySecondary>
+          <Cell width={133} grow>
+            <TokenTableHeader
+              category={TokenSortMethod.FULLY_DILUTED_VALUATION}
+              isCurrentSortMethod={sortMethod === TokenSortMethod.FULLY_DILUTED_VALUATION}
+              direction={orderDirection}
+            />
           </Cell>
         ),
         cell: (fdv) => (
-          <Cell loading={loading} minWidth={133} grow>
-            <ThemedText.BodySecondary>
-              {formatNumber({ input: fdv.getValue?.(), type: NumberType.FiatTokenStats })}
-            </ThemedText.BodySecondary>
+          <Cell loading={showLoadingSkeleton} width={133} grow>
+            <ValueText>{formatNumber({ input: fdv.getValue?.(), type: NumberType.FiatTokenStats })}</ValueText>
           </Cell>
         ),
       }),
       columnHelper.accessor((row) => row.volume, {
         id: 'volume',
         header: () => (
-          <Cell minWidth={133} grow>
-            <ThemedText.BodySecondary>
-              <Trans>Volume</Trans>
-            </ThemedText.BodySecondary>
+          <Cell width={133} grow>
+            <TokenTableHeader
+              category={TokenSortMethod.VOLUME}
+              isCurrentSortMethod={sortMethod === TokenSortMethod.VOLUME}
+              direction={orderDirection}
+            />
           </Cell>
         ),
         cell: (volume) => (
-          <Cell minWidth={133} loading={loading} grow>
-            <ThemedText.BodySecondary>
-              {formatNumber({ input: volume.getValue?.(), type: NumberType.FiatTokenStats })}
-            </ThemedText.BodySecondary>
+          <Cell width={133} loading={showLoadingSkeleton} grow>
+            <ValueText>{formatNumber({ input: volume.getValue?.(), type: NumberType.FiatTokenStats })}</ValueText>
           </Cell>
         ),
       }),
@@ -276,13 +319,22 @@ function TokenTable({
         id: 'sparkline',
         header: () => <Cell minWidth={172} />,
         cell: (sparkline) => (
-          <Cell minWidth={172} loading={loading}>
+          <Cell minWidth={172} loading={showLoadingSkeleton}>
             {sparkline.getValue?.()}
           </Cell>
         ),
       }),
     ]
-  }, [formatFiatPrice, formatNumber, loading])
+  }, [formatFiatPrice, formatNumber, orderDirection, showLoadingSkeleton, sortMethod])
 
-  return <Table columns={columns} data={tokenTableValues} loading={loading} loadMore={loadMore} />
+  return (
+    <Table
+      columns={columns}
+      data={tokenTableValues}
+      loading={loading}
+      error={error}
+      loadMore={loadMore}
+      maxWidth={1200}
+    />
+  )
 }

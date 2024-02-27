@@ -1,3 +1,4 @@
+import { Currency } from '@uniswap/sdk-core'
 import { FunctionComponent } from 'react'
 import { SvgProps } from 'react-native-svg'
 import { ColorTokens } from 'ui/src'
@@ -55,6 +56,8 @@ export interface Warning {
   severity: WarningSeverity
   action: WarningAction
   title?: string
+  buttonText?: string
   message?: string
   icon?: FunctionComponent<SvgProps>
+  currency?: Currency
 }

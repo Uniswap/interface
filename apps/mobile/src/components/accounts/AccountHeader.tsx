@@ -1,8 +1,10 @@
 import { impactAsync, ImpactFeedbackStyle, selectionAsync } from 'expo-haptics'
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
+import { setUserProperty } from 'src/features/telemetry'
+import { UserPropertyName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { isDevBuild } from 'src/utils/version'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
@@ -28,6 +30,20 @@ export function AccountHeader(): JSX.Element {
 
   const { avatar } = useAvatar(activeAddress)
   const displayName = useDisplayName(activeAddress)
+
+  // Log ENS and Unitag ownership for user usage stats
+  useEffect(() => {
+    switch (displayName?.type) {
+      case DisplayNameType.ENS:
+        setUserProperty(UserPropertyName.HasLoadedENS, true)
+        return
+      case DisplayNameType.Unitag:
+        setUserProperty(UserPropertyName.HasLoadedUnitag, true)
+        return
+      default:
+        return
+    }
+  }, [displayName?.type])
 
   const onPressAccountHeader = useCallback(() => {
     dispatch(openModal({ name: ModalName.AccountSwitcher }))

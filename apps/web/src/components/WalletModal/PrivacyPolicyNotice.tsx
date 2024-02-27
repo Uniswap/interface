@@ -11,7 +11,7 @@ const LastUpdatedText = styled.span`
   color: ${({ theme }) => theme.neutral3};
 `
 
-const LAST_UPDATED_DATE = '6.7.23'
+const LAST_UPDATED_DATE = '2.16.24'
 
 export default function PrivacyPolicyNotice() {
   return (

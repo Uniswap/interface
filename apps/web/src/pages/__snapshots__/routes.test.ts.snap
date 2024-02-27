@@ -81,6 +81,20 @@ Array [
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
+    "path": "/limits",
+  },
+  Object {
+    "enabled": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": Array [],
+    "path": "/limit",
+  },
+  Object {
+    "enabled": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": Array [],
     "path": "/swap",
   },
   Object {

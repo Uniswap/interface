@@ -24,7 +24,7 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'state/transactions/types'
-import { isAddress } from 'utils'
+import { isAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { CancelledTransactionTitleTable, getActivityTitle, LimitOrderTextTable, OrderTextTable } from '../constants'

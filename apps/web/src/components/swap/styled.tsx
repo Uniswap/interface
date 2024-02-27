@@ -40,7 +40,6 @@ export const SwapWrapper = (props: React.ComponentProps<typeof SwapWrapperOuter>
 const SwapWrapperInner = styled.div`
   border-radius: 24px;
   z-index: -1;
-  padding-top: 12px;
 `
 
 export const ArrowWrapper = styled.div<{ clickable: boolean }>`
@@ -182,7 +181,7 @@ export const ArrowContainer = styled.div`
 
 export const SwapHeaderTabButton = styled(ButtonText)<{ $isActive: boolean }>`
   color: ${({ theme, $isActive }) => ($isActive ? theme.neutral1 : theme.neutral2)};
-  background-color: ${({ theme, $isActive }) => $isActive && theme.surface2};
+  background-color: ${({ theme, $isActive }) => $isActive && theme.surface3};
   padding: 8px 16px;
   border-radius: 20px;
   gap: 4px;

@@ -4,7 +4,7 @@ import { checkWarning, WARNING_LEVEL } from 'constants/tokenSafety'
 import { chainIdToNetworkName, getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useCallback, useMemo, useReducer } from 'react'
-import { isAddress } from 'utils'
+import { isAddress } from 'utilities/src/addresses'
 
 import celoLogo from '../assets/svg/celo_logo.svg'
 
@@ -60,25 +60,34 @@ export function getInitialUrl(
   }
 }
 
-export default function useAssetLogoSource(
-  address?: string | null,
-  chainId?: number | null,
-  isNative?: boolean,
+export default function useAssetLogoSource({
+  address,
+  chainId,
+  isNative,
+  backupImg,
+  primaryImg,
+}: {
+  address?: string | null
+  chainId?: number | null
+  isNative?: boolean
   backupImg?: string | null
-): [string | undefined, () => void] {
+  primaryImg?: string | null
+}): [string | undefined, () => void] {
   const hideLogo = Boolean(address && checkWarning(address, chainId)?.level === WARNING_LEVEL.BLOCKED)
   const [srcIndex, incrementSrcIndex] = useReducer((n: number) => n + 1, 0)
 
   const current = useMemo(() => {
     if (hideLogo) return undefined
-
+    const initialUrl = getInitialUrl(address, chainId, isNative, backupImg)
     if (srcIndex === 0) {
-      return getInitialUrl(address, chainId, isNative, backupImg)
+      return primaryImg ?? initialUrl
+    } else if (srcIndex === 1 && primaryImg && initialUrl) {
+      return initialUrl
     }
     const uris = tokenLogoLookup.getIcons(address, chainId) ?? []
     const fallbackSrcs = prioritizeLogoSources(parseLogoSources(uris))
     return fallbackSrcs.find((src) => !BAD_SRCS[src])
-  }, [address, backupImg, chainId, hideLogo, isNative, srcIndex])
+  }, [address, backupImg, chainId, hideLogo, isNative, primaryImg, srcIndex])
 
   const nextSrc = useCallback(() => {
     if (current) BAD_SRCS[current] = true

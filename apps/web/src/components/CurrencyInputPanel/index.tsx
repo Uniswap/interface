@@ -238,6 +238,7 @@ export default function CurrencyInputPanel({
                   onUserInput={onUserInput}
                   disabled={!chainAllowed}
                   $loading={loading}
+                  maxDecimals={currency?.decimals}
                 />
               )}
 

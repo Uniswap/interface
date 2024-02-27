@@ -1,14 +1,17 @@
 import { TimePeriod } from 'graphql/data/util'
 import { atom, useAtom } from 'jotai'
-import { atomWithReset } from 'jotai/utils'
+import { atomWithReset, useUpdateAtom } from 'jotai/utils'
 import { useCallback } from 'react'
 
 export enum TokenSortMethod {
   FULLY_DILUTED_VALUATION = 'FDV',
   PRICE = 'Price',
-  PERCENT_CHANGE = 'Change',
-  TOTAL_VALUE_LOCKED = 'TVL',
   VOLUME = 'Volume',
+  HOUR_CHANGE = '1 hour',
+  DAY_CHANGE = '1 day',
+  // TODO(WEB-3726): Deprecate with launch of info_explore flag
+  DEPRECATE_PERCENT_CHANGE = 'Change',
+  DEPRECATE_TOTAL_VALUE_LOCKED = 'TVL',
 }
 
 export const exploreSearchStringAtom = atomWithReset<string>('')
@@ -19,14 +22,14 @@ export const sortAscendingAtom = atom<boolean>(false)
 /* keep track of sort category for token table */
 export function useSetSortMethod(newSortMethod: TokenSortMethod) {
   const [sortMethod, setSortMethod] = useAtom(sortMethodAtom)
-  const [sortAscending, setSortAscending] = useAtom(sortAscendingAtom)
+  const setSortAscending = useUpdateAtom(sortAscendingAtom)
 
   return useCallback(() => {
     if (sortMethod === newSortMethod) {
-      setSortAscending(!sortAscending)
+      setSortAscending((sortAscending) => !sortAscending)
     } else {
       setSortMethod(newSortMethod)
       setSortAscending(false)
     }
-  }, [sortMethod, setSortMethod, setSortAscending, sortAscending, newSortMethod])
+  }, [sortMethod, setSortMethod, setSortAscending, newSortMethod])
 }

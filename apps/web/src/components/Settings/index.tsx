@@ -101,11 +101,13 @@ export default function SettingsTab({
   autoSlippage,
   chainId,
   trade,
+  compact = false,
   hideRoutingSettings = false,
 }: {
   autoSlippage: Percent
   chainId?: number
   trade?: InterfaceTrade
+  compact?: boolean
   hideRoutingSettings?: boolean
 }) {
   const { chainId: connectedChainId } = useWeb3React()
@@ -158,6 +160,7 @@ export default function SettingsTab({
       <MenuButton
         disabled={!isChainSupported || chainId !== connectedChainId}
         isActive={isOpen}
+        compact={compact}
         onClick={toggleMenu}
         trade={trade}
       />

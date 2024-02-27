@@ -1,4 +1,4 @@
-const defaultUrls = ['http://127.0.0.1:3000/', 'http://127.0.0.1:3000/swap', 'http://127.0.0.1:3000/pools']
+const defaultUrls = ['http://127.0.0.1:3000/', 'http://127.0.0.1:3000/swap', 'http://127.0.0.1:3000/pool']
 
 test.each(defaultUrls)('should inject metadata for valid collections', async (defaultUrl) => {
   const body = await fetch(new Request(defaultUrl)).then((res) => res.text())

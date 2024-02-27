@@ -10,8 +10,8 @@ import MenuButton from '.'
 
 jest.mock('state/user/hooks')
 
-const renderButton = () => {
-  render(<MenuButton disabled={false} onClick={noop} isActive={false} />)
+const renderButton = (compact = false) => {
+  render(<MenuButton compact={compact} disabled={false} onClick={noop} isActive={false} />)
 }
 
 describe('MenuButton', () => {
@@ -24,6 +24,12 @@ describe('MenuButton', () => {
     mocked(useUserSlippageTolerance).mockReturnValue([new Percent(5, 10_000), noop])
     renderButton()
     expect(screen.queryByText('0.05% slippage')).toBeInTheDocument()
+  })
+  it('should render without "slippage" with a custom slippage value and compact', () => {
+    mocked(useUserSlippageTolerance).mockReturnValue([new Percent(5, 10_000), noop])
+    renderButton(/* compact= */ true)
+    expect(screen.queryByText('0.05%')).toBeInTheDocument()
+    expect(screen.queryByText('slippage')).not.toBeInTheDocument()
   })
   it('should render an icon with a custom slippage and a warning when value is out of bounds', () => {
     mocked(useUserSlippageTolerance).mockReturnValue([new Percent(1, 10_000), noop])

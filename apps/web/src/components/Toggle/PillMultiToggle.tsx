@@ -12,16 +12,17 @@ const OptionsSelector = styled.div`
   gap: 12px;
   border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 20px;
-  height: 40px;
+  height: 36px;
   padding: ${togglePadding}px;
   width: 100%;
 `
 
 const ActivePill = styled.div`
   position: absolute;
-  height: 30px;
+  height: 28px;
+  top: 3px;
   background-color: ${({ theme }) => theme.surface3};
-  border-radius: 15px;
+  border-radius: 16px;
   transition: left 0.3s ease, width 0.3s ease;
 `
 const OptionButton = styled.button<{ active: boolean }>`

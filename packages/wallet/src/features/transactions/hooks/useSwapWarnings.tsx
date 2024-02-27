@@ -2,6 +2,7 @@ import { useNetInfo } from '@react-native-community/netinfo'
 import { Percent } from '@uniswap/sdk-core'
 import _ from 'lodash'
 import { TFunction } from 'react-i18next'
+import { isWeb } from 'tamagui'
 import { formatPriceImpact } from 'utilities/src/format/formatPriceImpact'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import {
@@ -48,6 +49,12 @@ export function getSwapWarnings(
       title: t('You don’t have enough {{ symbol }}', {
         symbol: currencyAmountIn.currency?.symbol,
       }),
+      buttonText: isWeb
+        ? t('Not enough {{ currencySymbol }}', {
+            currencySymbol: currencyAmountIn.currency?.symbol,
+          })
+        : undefined,
+      currency: currencyAmountIn.currency,
     })
   }
 

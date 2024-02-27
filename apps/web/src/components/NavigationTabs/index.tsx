@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import SettingsTab from 'components/Settings'
 import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Box } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
 import { resetMintState } from 'state/mint/actions'
@@ -68,13 +68,11 @@ export function AddRemoveTabs({
   adding,
   creating,
   autoSlippage,
-  positionID,
   children,
 }: {
   adding: boolean
   creating: boolean
   autoSlippage: Percent
-  positionID?: string
   showBackLink?: boolean
   children?: ReactNode
 }) {
@@ -82,19 +80,17 @@ export function AddRemoveTabs({
   const theme = useTheme()
   // reset states on back
   const dispatch = useAppDispatch()
-  const location = useLocation()
-
-  // detect if back should redirect to v3 or v2 pool page
-  const poolLink = location.pathname.includes('add/v2')
-    ? '/pools/v2'
-    : '/pools' + (positionID ? `/${positionID.toString()}` : '')
+  const navigate = useNavigate()
 
   return (
     <Tabs>
       <RowBetween style={{ padding: '1rem 1rem 0 1rem' }} align="center">
         <StyledLink
-          to={poolLink}
-          onClick={() => {
+          to=".."
+          onClick={(e) => {
+            e.preventDefault()
+            navigate(-1)
+
             if (adding) {
               // not 100% sure both of these are needed
               dispatch(resetMintState())

@@ -52,7 +52,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   gap: 4px;
 }
 
-.c19 {
+.c18 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -70,7 +70,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   gap: 12px;
 }
 
-.c15 {
+.c14 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -78,7 +78,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c17 {
+.c16 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -89,6 +89,19 @@ exports[`<Dialog /> renders different button types 1`] = `
 .c11 {
   color: #222222;
   cursor: pointer;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c11:hover {
+  opacity: 0.6;
+}
+
+.c11:active {
+  opacity: 0.4;
 }
 
 .c7 {
@@ -110,7 +123,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   opacity: 0.4;
 }
 
-.c23 {
+.c22 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -124,7 +137,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   width: 100%;
 }
 
-.c20 {
+.c19 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -159,30 +172,30 @@ exports[`<Dialog /> renders different button types 1`] = `
   user-select: none;
 }
 
-.c20:active .c22 {
+.c19:active .c21 {
   background-color: #B8C0DC3d;
 }
 
-.c20:focus .c22 {
+.c19:focus .c21 {
   background-color: #B8C0DC3d;
 }
 
-.c20:hover .c22 {
+.c19:hover .c21 {
   background-color: #98A1C014;
 }
 
-.c20:disabled {
+.c19:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c20:disabled:active .c22,
-.c20:disabled:focus .c22,
-.c20:disabled:hover .c22 {
+.c19:disabled:active .c21,
+.c19:disabled:focus .c21,
+.c19:disabled:hover .c21 {
   background-color: transparent;
 }
 
-.c24 {
+.c23 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -217,26 +230,26 @@ exports[`<Dialog /> renders different button types 1`] = `
   user-select: none;
 }
 
-.c24:active .c22 {
+.c23:active .c21 {
   background-color: #B8C0DC3d;
 }
 
-.c24:focus .c22 {
+.c23:focus .c21 {
   background-color: #B8C0DC3d;
 }
 
-.c24:hover .c22 {
+.c23:hover .c21 {
   background-color: #98A1C014;
 }
 
-.c24:disabled {
+.c23:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c24:disabled:active .c22,
-.c24:disabled:focus .c22,
-.c24:disabled:hover .c22 {
+.c23:disabled:active .c21,
+.c23:disabled:focus .c21,
+.c23:disabled:hover .c21 {
   background-color: transparent;
 }
 
@@ -279,7 +292,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   gap: 24px;
 }
 
-.c13 {
+.c12 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -353,7 +366,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   width: 100%;
 }
 
-.c14 {
+.c13 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -372,14 +385,14 @@ exports[`<Dialog /> renders different button types 1`] = `
   border-radius: 12px;
 }
 
-.c16 {
+.c15 {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
   font-weight: 500;
 }
 
-.c18 {
+.c17 {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -390,7 +403,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   text-align: center;
 }
 
-.c21 {
+.c20 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -400,22 +413,7 @@ exports[`<Dialog /> renders different button types 1`] = `
   -ms-flex-positive: 1;
   flex-grow: 1;
   height: 40px;
-}
-
-.c12 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c12:hover {
-  opacity: 0.6;
-}
-
-.c12:active {
-  opacity: 0.4;
+  border-radius: 12px;
 }
 
 @media screen and (max-width:640px) {
@@ -446,7 +444,15 @@ exports[`<Dialog /> renders different button types 1`] = `
 <body>
   <div
     aria-hidden="true"
-  />
+  >
+    <span
+      class=" _dsp_contents"
+    >
+      <span
+        class=" t_light _dsp_contents is_Theme"
+      />
+    </span>
+  </div>
   <reach-portal>
     <div
       data-focus-guard="true"
@@ -502,7 +508,7 @@ exports[`<Dialog /> renders different button types 1`] = `
                   </div>
                 </a>
                 <svg
-                  class="c11 c12"
+                  class="c11"
                   data-testid="Dialog-closeButton"
                   fill="none"
                   height="24"
@@ -529,24 +535,24 @@ exports[`<Dialog /> renders different button types 1`] = `
                 </svg>
               </div>
               <div
-                class="c13 c3"
+                class="c12 c3"
               >
                 <div
-                  class="c14"
+                  class="c13"
                 >
                   <div>
                     Mock Icon
                   </div>
                 </div>
                 <div
-                  class="c15 c16 css-4kpdx7"
+                  class="c14 c15 css-4kpdx7"
                 >
                   <div>
                     Mock Title
                   </div>
                 </div>
                 <div
-                  class="c17 c18 css-1urox24"
+                  class="c16 c17 css-1urox24"
                 >
                   <div>
                     Mock Description
@@ -557,24 +563,24 @@ exports[`<Dialog /> renders different button types 1`] = `
                 </div>
               </div>
               <div
-                class="c9 c19"
+                class="c9 c18"
               >
                 <button
-                  class="c20 c21"
+                  class="c19 c20"
                   disabled=""
                 >
                   <div
-                    class="c22 c23"
+                    class="c21 c22"
                   />
                   <div>
                     Left Button
                   </div>
                 </button>
                 <button
-                  class="c24 c21"
+                  class="c23 c20"
                 >
                   <div
-                    class="c22 c23"
+                    class="c21 c22"
                   />
                   <div>
                     Right Button
@@ -647,7 +653,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   gap: 4px;
 }
 
-.c19 {
+.c18 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -665,7 +671,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   gap: 12px;
 }
 
-.c15 {
+.c14 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -673,7 +679,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c17 {
+.c16 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -684,6 +690,19 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
 .c11 {
   color: #222222;
   cursor: pointer;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c11:hover {
+  opacity: 0.6;
+}
+
+.c11:active {
+  opacity: 0.4;
 }
 
 .c7 {
@@ -705,7 +724,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   opacity: 0.4;
 }
 
-.c23 {
+.c22 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -719,7 +738,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   width: 100%;
 }
 
-.c20 {
+.c19 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -754,26 +773,26 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   user-select: none;
 }
 
-.c20:active .c22 {
+.c19:active .c21 {
   background-color: #B8C0DC3d;
 }
 
-.c20:focus .c22 {
+.c19:focus .c21 {
   background-color: #B8C0DC3d;
 }
 
-.c20:hover .c22 {
+.c19:hover .c21 {
   background-color: #98A1C014;
 }
 
-.c20:disabled {
+.c19:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c20:disabled:active .c22,
-.c20:disabled:focus .c22,
-.c20:disabled:hover .c22 {
+.c19:disabled:active .c21,
+.c19:disabled:focus .c21,
+.c19:disabled:hover .c21 {
   background-color: transparent;
 }
 
@@ -816,7 +835,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   gap: 24px;
 }
 
-.c13 {
+.c12 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -890,7 +909,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   width: 100%;
 }
 
-.c14 {
+.c13 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -909,14 +928,14 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   border-radius: 12px;
 }
 
-.c16 {
+.c15 {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
   font-weight: 500;
 }
 
-.c18 {
+.c17 {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -927,7 +946,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   text-align: center;
 }
 
-.c21 {
+.c20 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -937,22 +956,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   -ms-flex-positive: 1;
   flex-grow: 1;
   height: 40px;
-}
-
-.c12 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c12:hover {
-  opacity: 0.6;
-}
-
-.c12:active {
-  opacity: 0.4;
+  border-radius: 12px;
 }
 
 @media screen and (max-width:640px) {
@@ -983,7 +987,15 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
 <body>
   <div
     aria-hidden="true"
-  />
+  >
+    <span
+      class="t_light is_inversed _dsp_contents"
+    >
+      <span
+        class=" t_light _dsp_contents is_Theme"
+      />
+    </span>
+  </div>
   <reach-portal>
     <div
       data-focus-guard="true"
@@ -1039,7 +1051,7 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
                   </div>
                 </a>
                 <svg
-                  class="c11 c12"
+                  class="c11"
                   data-testid="Dialog-closeButton"
                   fill="none"
                   height="24"
@@ -1066,24 +1078,24 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
                 </svg>
               </div>
               <div
-                class="c13 c3"
+                class="c12 c3"
               >
                 <div
-                  class="c14"
+                  class="c13"
                 >
                   <div>
                     Mock Icon
                   </div>
                 </div>
                 <div
-                  class="c15 c16 css-4kpdx7"
+                  class="c14 c15 css-4kpdx7"
                 >
                   <div>
                     Mock Title
                   </div>
                 </div>
                 <div
-                  class="c17 c18 css-1urox24"
+                  class="c16 c17 css-1urox24"
                 >
                   <div>
                     Mock Description
@@ -1094,23 +1106,23 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
                 </div>
               </div>
               <div
-                class="c9 c19"
+                class="c9 c18"
               >
                 <button
-                  class="c20 c21"
+                  class="c19 c20"
                 >
                   <div
-                    class="c22 c23"
+                    class="c21 c22"
                   />
                   <div>
                     Left Button
                   </div>
                 </button>
                 <button
-                  class="c20 c21"
+                  class="c19 c20"
                 >
                   <div
-                    class="c22 c23"
+                    class="c21 c22"
                   />
                   <div>
                     Right Button

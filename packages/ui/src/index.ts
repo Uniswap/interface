@@ -1,11 +1,4 @@
 export {
-  Toast,
-  ToastProvider,
-  ToastViewport,
-  useToastController,
-  useToastState,
-} from '@tamagui/toast'
-export {
   Accordion,
   Anchor,
   AnimatePresence,
@@ -69,6 +62,7 @@ export {
 } from './components/layout'
 export * as Logos from './components/logos'
 export * from './components/text'
+export { Tooltip } from './components/tooltip/Tooltip'
 export * from './components/touchable'
 export { useDeviceDimensions } from './hooks/useDeviceDimensions'
 export { useDeviceInsets } from './hooks/useDeviceInsets'

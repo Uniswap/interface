@@ -23,8 +23,11 @@ import { updateRecentConnectionMeta } from 'state/user/reducer'
 import styled from 'styled-components'
 import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
-import { shortenAddress } from 'utils'
+import { shortenAddress } from 'utilities/src/addresses'
 
+import { useUniTagsEnabled } from 'featureFlags/flags/uniTags'
+import { Icons } from 'ui/src'
+import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
 import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import { RowBetween } from '../Row'
@@ -107,18 +110,19 @@ const Web3StatusConnecting = styled(Web3StatusConnected)`
 const AddressAndChevronContainer = styled.div<{ $loading?: boolean }>`
   display: flex;
   opacity: ${({ $loading, theme }) => $loading && theme.opacity.disabled};
+  align-items: center;
 
   @media only screen and (max-width: ${navSearchInputVisibleSize}px) {
     display: none;
   }
 `
 
-const Text = styled.p`
+const Text = styled.span`
   flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin: 0 0.25rem 0 0.25rem;
+  margin: 0 2px;
   font-size: 1rem;
   width: fit-content;
   font-weight: 485;
@@ -143,6 +147,7 @@ function Web3StatusInner() {
   const activeWeb3 = useWeb3React()
   const lastWeb3 = useLast(useWeb3React(), ignoreWhileSwitchingChain)
   const { account, connector } = useMemo(() => (activeWeb3.account ? activeWeb3 : lastWeb3), [activeWeb3, lastWeb3])
+  const { unitag } = useUnitagByAddress(account, useUniTagsEnabled() && Boolean(account))
   const { ENSName, loading: ENSLoading } = useENSName(account)
   const connection = getConnection(connector)
   const dispatch = useAppDispatch()
@@ -222,7 +227,8 @@ function Web3StatusInner() {
             </RowBetween>
           ) : (
             <AddressAndChevronContainer>
-              <Text>{ENSName ?? shortenAddress(account)}</Text>
+              <Text>{unitag?.username ?? ENSName ?? shortenAddress(account)}</Text>
+              {unitag?.username && <Icons.Unitag size={18} />}
             </AddressAndChevronContainer>
           )}
         </Web3StatusConnected>

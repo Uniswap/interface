@@ -1,7 +1,7 @@
 import { t, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
-import { TraceEvent } from 'analytics'
+import { TraceEvent, useTrace } from 'analytics'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column from 'components/Column'
 import SpinningLoader from 'components/Loader/SpinningLoader'
@@ -31,7 +31,7 @@ import { SwapCallbackError, SwapShowAcceptChanges } from './styled'
 import SwapLineItem, { SwapLineItemProps, SwapLineItemType } from './SwapLineItem'
 
 const DetailsContainer = styled(Column)<{ isNewSwapFlowEnabled?: boolean }>`
-  ${({ isNewSwapFlowEnabled }) => (isNewSwapFlowEnabled ? 'padding: 0px 16px 8px 16px' : 'padding-bottom: 8px')};
+  ${({ isNewSwapFlowEnabled }) => (isNewSwapFlowEnabled ? 'padding: 0px 12px 8px' : 'padding-bottom: 8px')};
 `
 
 const StyledAlertTriangle = styled(AlertTriangle)`
@@ -134,12 +134,14 @@ export default function SwapModalFooter({
   const [showMore, setShowMore] = useState(false)
   const isNewSwapFlowEnabled = useNewSwapFlow()
 
+  const analyticsContext = useTrace()
+
   const lineItemProps = { trade, allowedSlippage, syncing: false }
 
   const callToAction: CallToAction = useMemo(() => {
     if (allowance && allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
       return {
-        buttonText: t`Approve and swap`,
+        buttonText: isLimitTrade(trade) ? t`Approve and submit` : t`Approve and swap`,
       }
     } else if (allowance && allowance.state === AllowanceState.REQUIRED && allowance.needsPermitSignature) {
       return {
@@ -187,17 +189,20 @@ export default function SwapModalFooter({
             events={[BrowserEvent.onClick]}
             element={InterfaceElementName.CONFIRM_SWAP_BUTTON}
             name={SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED}
-            properties={formatSwapButtonClickEventProperties({
-              trade,
-              swapResult,
-              allowedSlippage,
-              transactionDeadlineSecondsSinceEpoch,
-              isAutoSlippage,
-              isAutoRouterApi: routerPreference === RouterPreference.API,
-              routes,
-              fiatValueInput: fiatValueInput.data,
-              fiatValueOutput: fiatValueOutput.data,
-            })}
+            properties={{
+              ...formatSwapButtonClickEventProperties({
+                trade,
+                swapResult,
+                allowedSlippage,
+                transactionDeadlineSecondsSinceEpoch,
+                isAutoSlippage,
+                isAutoRouterApi: routerPreference === RouterPreference.API,
+                routes,
+                fiatValueInput: fiatValueInput.data,
+                fiatValueOutput: fiatValueOutput.data,
+              }),
+              ...analyticsContext,
+            }}
           >
             <ConfirmButton
               data-testid="confirm-swap-button"

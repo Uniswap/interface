@@ -3,24 +3,25 @@ import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName 
 import { Trace, TraceEvent } from 'analytics'
 import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { AutoRow } from 'components/Row'
-import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { TopTokensTable } from 'components/Tokens/TokenTable'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import OldTokenTable from 'components/Tokens/TokenTable/OldTokenTable'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
+import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useResetAtom } from 'jotai/utils'
 import { ExploreChartsSection } from 'pages/Explore/charts/ExploreChartsSection'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 
 import { Chain } from 'graphql/data/__generated__/types-and-hooks'
-import { validateUrlChainParam } from 'graphql/data/util'
+import { getTokenExploreURL, isBackendSupportedChain, validateUrlChainParam } from 'graphql/data/util'
+import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useExploreParams } from './redirects'
 import RecentTransactions from './tables/RecentTransactions'
 
@@ -65,19 +66,21 @@ const NavWrapper = styled.div<{ isInfoExplorePageEnabled: boolean }>`
   color: ${({ theme }) => theme.neutral3};
   flex-direction: row;
 
-  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    flex-direction: column;
-    gap: 8px;
-  }
-
   ${({ isInfoExplorePageEnabled }) =>
-    isInfoExplorePageEnabled &&
-    css`
-      @media screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
-        flex-direction: column;
-        gap: 16px;
-      }
-    `};
+    isInfoExplorePageEnabled
+      ? css`
+          justify-content: space-between;
+          @media screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+            flex-direction: column;
+            gap: 16px;
+          }
+        `
+      : css`
+          @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
+            flex-direction: column;
+            gap: 8px;
+          }
+        `};
 `
 const TabBar = styled(AutoRow)`
   gap: 24px;
@@ -90,44 +93,30 @@ const TabItem = styled(ThemedText.HeadlineMedium)<{ active?: boolean }>`
   color: ${({ theme, active }) => (active ? theme.neutral1 : theme.neutral2)};
   cursor: pointer;
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} color`};
+
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
+    font-size: 24px !important;
+    line-height: 32px !important;
+  }
 `
 const FiltersContainer = styled.div<{ isInfoExplorePageEnabled: boolean }>`
   display: flex;
   gap: 8px;
   height: 40px;
+  justify-content: flex-start;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    ${({ isInfoExplorePageEnabled }) => !isInfoExplorePageEnabled && 'order: 2;'}
+    ${({ isInfoExplorePageEnabled }) => !isInfoExplorePageEnabled && 'order: 2; justify-content: space-between;'}
   }
+`
 
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
-    ${({ isInfoExplorePageEnabled }) => isInfoExplorePageEnabled && 'justify-content: space-between;'}
-  }
-`
-const DropdownFilterContainer = styled(FiltersContainer)<{ isInfoExplorePageEnabled: boolean }>`
-  ${({ isInfoExplorePageEnabled }) =>
-    isInfoExplorePageEnabled
-      ? css`
-          @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
-            justify-content: flex-start;
-          }
-        `
-      : css`
-          @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-            justify-content: flex-start;
-          }
-        `};
-`
-const SearchContainer = styled(FiltersContainer)<{ isInfoExplorePageEnabled: boolean }>`
-  ${({ isInfoExplorePageEnabled }) => !isInfoExplorePageEnabled && 'margin-left: 8px;'}
+const SearchContainer = styled(FiltersContainer)`
+  margin-left: 8px;
   width: 100%;
 
   @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    ${({ isInfoExplorePageEnabled }) => !isInfoExplorePageEnabled && 'order: 1; margin: 0px;'}
-  }
-
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
-    ${({ isInfoExplorePageEnabled }) => isInfoExplorePageEnabled && 'justify-content: flex-end;'}
+    order: 1;
+    margin: 0px;
   }
 `
 export enum ExploreTab {
@@ -206,9 +195,23 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
 
   const { component: Page, key: currentKey } = Pages[currentTab]
 
+  // Automatically trigger a navigation when the app chain changes
+  const navigate = useNavigate()
+  useOnGlobalChainSwitch(
+    useCallback(
+      (_chainId, chain) => {
+        if (chain && isBackendSupportedChain(chain)) {
+          navigate(getTokenExploreURL({ tab, chain }, isInfoExplorePageEnabled))
+        }
+      },
+      [isInfoExplorePageEnabled, navigate, tab]
+    )
+  )
+
   return (
     <Trace
       page={isInfoExplorePageEnabled ? InterfacePageName.EXPLORE_PAGE : InterfacePageName.TOKENS_PAGE}
+      properties={{ chainName: chain }}
       shouldLogImpression
     >
       <ExploreContainer isInfoExplorePageEnabled={isInfoExplorePageEnabled}>
@@ -251,13 +254,9 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
           )}
           {isInfoExplorePageEnabled ? (
             <FiltersContainer isInfoExplorePageEnabled>
-              <DropdownFilterContainer isInfoExplorePageEnabled>
-                <NetworkFilter />
-                {currentKey === ExploreTab.Tokens && <TimeSelector />}
-              </DropdownFilterContainer>
-              <SearchContainer isInfoExplorePageEnabled>
-                {currentKey !== ExploreTab.Transactions && <SearchBar tab={currentKey} />}
-              </SearchContainer>
+              <NetworkFilter />
+              {currentKey === ExploreTab.Tokens && <TimeSelector />}
+              {currentKey !== ExploreTab.Transactions && <SearchBar tab={currentKey} />}
             </FiltersContainer>
           ) : (
             <>

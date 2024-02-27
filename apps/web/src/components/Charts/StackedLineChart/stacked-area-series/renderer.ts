@@ -102,18 +102,19 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
     ctx.lineWidth = options.lineWidth * renderingScope.verticalPixelRatio
     ctx.lineJoin = 'round'
 
-    linesMeshed.forEach((linePath, index) => {
-      // Bottom line is just the x-axis, which should not be drawn
-      if (index === 0) return
-
-      const color = (ctx.strokeStyle = options.colors[(index - 1) % colorsCount])
+    linesMeshed.toReversed().forEach((linePath, index) => {
+      const unreversedIndex = linesMeshed.length - index
+      const color = options.colors[unreversedIndex % colorsCount]
       ctx.strokeStyle = color
       ctx.fillStyle = color
 
-      // Line rendering:
-      ctx.beginPath()
-      ctx.strokeStyle = color
-      ctx.stroke(linePath.path)
+      // Bottom line is just the x-axis, which should not be drawn
+      if (index !== linesMeshed.length - 1) {
+        // Line rendering:
+        ctx.beginPath()
+        ctx.strokeStyle = color
+        ctx.stroke(linePath.path)
+      }
 
       // Modification: Draws a glyph where lines intersect with the crosshair
       const hoverY = hoverInfo.points[index - 1]
@@ -206,6 +207,7 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
         if (index % 2 === 0) {
           return // only doing even at the moment
         }
+
         const x = stack.x * horizontalPixelRatio
         const y = yMedia * verticalPixelRatio
 

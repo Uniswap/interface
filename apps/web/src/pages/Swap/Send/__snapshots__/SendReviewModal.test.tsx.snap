@@ -181,6 +181,19 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
 .c12 {
   color: #222222;
   cursor: pointer;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c12:hover {
+  opacity: 0.6;
+}
+
+.c12:active {
+  opacity: 0.4;
 }
 
 .c9 {
@@ -584,9 +597,13 @@ exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
             class="c7 css-15popx1"
           >
             <div
-              class="c7 css-15popx1"
+              class="c5 c11"
             >
-              hayden.eth
+              <div
+                class="c7 css-15popx1"
+              >
+                hayden.eth
+              </div>
             </div>
           </div>
           <div
@@ -885,6 +902,19 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
 .c12 {
   color: #222222;
   cursor: pointer;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c12:hover {
+  opacity: 0.6;
+}
+
+.c12:active {
+  opacity: 0.4;
 }
 
 .c9 {
@@ -1288,9 +1318,13 @@ exports[`SendCurrencyInputform should render input in token amount correctly 1`]
             class="c7 css-15popx1"
           >
             <div
-              class="c7 css-15popx1"
+              class="c5 c11"
             >
-              hayden.eth
+              <div
+                class="c7 css-15popx1"
+              >
+                hayden.eth
+              </div>
             </div>
           </div>
           <div

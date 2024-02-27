@@ -9,14 +9,18 @@ import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import Modal from 'components/Modal'
 import Row from 'components/Row'
+import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
 import { Unicon } from 'components/Unicon'
+import { useUniTagsEnabled } from 'featureFlags/flags/uniTags'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { ReactNode } from 'react'
 import { useSendContext } from 'state/send/SendContext'
 import styled from 'styled-components'
 import { ClickableStyle, CloseIcon, Separator, ThemedText } from 'theme/components'
-import { shortenAddress } from 'utils'
+import { Icons } from 'ui/src'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useUnitagByName } from 'wallet/src/features/unitags/hooks'
 
 const ModalWrapper = styled(ColumnCenter)`
   background-color: ${({ theme }) => theme.surface1};
@@ -69,6 +73,10 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
     sendState: { inputCurrency, inputInFiat, exactAmountFiat },
     derivedSendInfo: { parsedTokenAmount, exactAmountOut, gasFeeCurrencyAmount, recipientData },
   } = useSendContext()
+  const { unitag: recipientUnitag } = useUnitagByName(
+    recipientData?.unitag,
+    useUniTagsEnabled() && Boolean(recipientData?.unitag)
+  )
 
   const { formatConvertedFiatNumberOrString, formatCurrencyAmount } = useFormatter()
   const formattedInputAmount = formatCurrencyAmount({
@@ -117,16 +125,21 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
             <SendModalHeader
               label={<Trans>To</Trans>}
               header={
-                recipientData?.ensName ? (
-                  <ThemedText.HeadlineLarge>{recipientData.ensName}</ThemedText.HeadlineLarge>
+                recipientData?.unitag || recipientData?.ensName ? (
+                  <Row gap="xs">
+                    <ThemedText.HeadlineLarge>{recipientData.unitag ?? recipientData.ensName}</ThemedText.HeadlineLarge>
+                    {recipientData?.unitag && <Icons.Unitag size={18} />}
+                  </Row>
                 ) : (
                   shortenAddress(recipientData?.address)
                 )
               }
-              subheader={recipientData?.ensName && shortenAddress(recipientData.address)}
+              subheader={(recipientData?.unitag || recipientData?.ensName) && shortenAddress(recipientData.address)}
               image={
-                recipientData?.ensName ? (
-                  <Identicon account={recipientData.address} size={36} />
+                recipientUnitag?.metadata?.avatar ? (
+                  <UniTagProfilePicture account={recipientData?.address ?? ''} size={36} />
+                ) : recipientData?.ensName ? (
+                  <Identicon account={recipientData?.address ?? ''} size={36} />
                 ) : (
                   <Unicon address={recipientData?.address ?? ''} size={36} />
                 )

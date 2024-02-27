@@ -122,6 +122,10 @@ function TokenTags({ currency }: { currency: Currency }) {
   )
 }
 
+const RowWrapper = styled(Row)`
+  height: 56px;
+`
+
 export function CurrencyRow({
   currency,
   onSelect,
@@ -154,7 +158,7 @@ export function CurrencyRow({
   const { data } = useCachedPortfolioBalancesQuery({ account })
   const portfolioBalanceUsd = data?.portfolios?.[0].tokensTotalDenominatedValue?.value
 
-  const Wrapper = tooltip ? MouseoverTooltip : Row
+  const Wrapper = tooltip ? MouseoverTooltip : RowWrapper
 
   // only show add or remove buttons if not on selected list
   return (

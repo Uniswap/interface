@@ -5,6 +5,7 @@ import WalletModal from 'components/WalletModal'
 import { useCallback, useEffect, useMemo } from 'react'
 import styled from 'styled-components'
 
+import { sendAnalyticsEvent } from 'analytics'
 import { atom, useAtom } from 'jotai'
 import AuthenticatedHeader from './AuthenticatedHeader'
 import LanguageMenu from './LanguageMenu'
@@ -17,11 +18,11 @@ const DefaultMenuWrap = styled(Column)`
 `
 
 export enum MenuState {
-  DEFAULT,
-  SETTINGS,
-  LANGUAGE_SETTINGS,
-  LOCAL_CURRENCY_SETTINGS,
-  LIMITS,
+  DEFAULT = 'default',
+  SETTINGS = 'settings',
+  LANGUAGE_SETTINGS = 'language_settings',
+  LOCAL_CURRENCY_SETTINGS = 'local_currency_settings',
+  LIMITS = 'limits',
 }
 
 export const miniPortfolioMenuStateAtom = atom(MenuState.DEFAULT)
@@ -35,7 +36,6 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
   const closeSettings = useCallback(() => setMenu(MenuState.DEFAULT), [setMenu])
   const openLanguageSettings = useCallback(() => setMenu(MenuState.LANGUAGE_SETTINGS), [setMenu])
   const openLocalCurrencySettings = useCallback(() => setMenu(MenuState.LOCAL_CURRENCY_SETTINGS), [setMenu])
-  const openLimitsMenu = useCallback(() => setMenu(MenuState.LIMITS), [setMenu])
   const closeLimitsMenu = useCallback(() => setMenu(MenuState.DEFAULT), [setMenu])
 
   useEffect(() => {
@@ -49,11 +49,17 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
     return
   }, [drawerOpen, menu, closeSettings])
 
+  useEffect(() => {
+    if (menu === MenuState.DEFAULT) return // menu is closed, don't log
+
+    sendAnalyticsEvent('Portfolio Menu Opened', { name: menu })
+  }, [menu])
+
   const SubMenu = useMemo(() => {
     switch (menu) {
       case MenuState.DEFAULT:
         return isAuthenticated ? (
-          <AuthenticatedHeader account={account} openSettings={openSettings} openLimitsMenu={openLimitsMenu} />
+          <AuthenticatedHeader account={account} openSettings={openSettings} />
         ) : (
           <WalletModal openSettings={openSettings} />
         )
@@ -79,7 +85,6 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
     isAuthenticated,
     menu,
     openLanguageSettings,
-    openLimitsMenu,
     openLocalCurrencySettings,
     openSettings,
   ])

@@ -16,7 +16,7 @@ import { useCallback, useMemo, useReducer, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Link as RouterLink } from 'react-router-dom'
 import styled from 'styled-components'
-import { shortenAddress } from 'utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import AssetActivity, { LoadingAssetActivity } from './AssetActivity'

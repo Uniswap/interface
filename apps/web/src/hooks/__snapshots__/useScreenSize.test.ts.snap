@@ -3,7 +3,7 @@
 exports[`useScreenSize returns the right initial value based on breakpoints 1`] = `
 Object {
   "current": Object {
-    "lg": true,
+    "lg": false,
     "md": true,
     "navSearchInputVisible": false,
     "sm": true,

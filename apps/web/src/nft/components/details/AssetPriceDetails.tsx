@@ -12,7 +12,7 @@ import { useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { shortenAddress } from 'utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const TWITTER_WIDTH = 560

@@ -1,26 +1,28 @@
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartModelParams } from 'components/Charts/ChartModel'
+import { getCumulativeVolume } from 'components/Charts/VolumeChart/utils'
 import { useHeaderDateFormatter } from 'components/Charts/hooks'
-import Column from 'components/Column'
 import { BIPS_BASE } from 'constants/misc'
-import { PricePoint, TimePeriod, toHistoryDuration } from 'graphql/data/util'
-import { UTCTimestamp } from 'lightweight-charts'
+import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
+import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
 import { useMemo } from 'react'
 import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
 import { CustomVolumeChartModel, CustomVolumeChartModelParams } from './CustomVolumeChartModel'
 import { SingleHistogramData } from './renderer'
 
+interface VolumeChartModelParams extends ChartModelParams<SingleHistogramData>, CustomVolumeChartModelParams {
+  TooltipBody?: React.FunctionComponent<{ data: SingleHistogramData }>
+}
+
 class VolumeChartModel extends CustomVolumeChartModel<SingleHistogramData> {
-  constructor(chartDiv: HTMLDivElement, params: ChartModelParams<SingleHistogramData> & CustomVolumeChartModelParams) {
+  constructor(chartDiv: HTMLDivElement, params: VolumeChartModelParams) {
     super(chartDiv, params)
   }
 
-  updateOptions(params: ChartModelParams<SingleHistogramData> & CustomVolumeChartModelParams) {
+  updateOptions(params: VolumeChartModelParams) {
     const volumeChartOptions = {
       autoSize: true,
       rightPriceScale: {
@@ -63,100 +65,89 @@ export function formatHistoryDuration(duration: HistoryDuration): string {
 
 function VolumeChartHeader({
   crosshairData,
+  volumes,
   timePeriod,
-  feeTier,
-  noFeesData,
 }: {
   crosshairData?: SingleHistogramData
+  volumes: SingleHistogramData[]
   timePeriod: TimePeriod
-  feeTier?: number
-  noFeesData: boolean
 }) {
   const { formatFiatPrice } = useFormatter()
   const headerDateFormatter = useHeaderDateFormatter()
 
   const display = useMemo(() => {
-    const mockDisplay = {
+    const displayValues = {
       volume: '-',
-      fees: '-',
       time: '-',
     }
     const priceFormatter = (price?: number) =>
       formatFiatPrice({
         price,
-        type: NumberType.FiatTokenStatChartHeader,
+        type: NumberType.ChartFiatValue,
       })
-    if (!crosshairData) {
-      // TODO: use timePeriod to get cumulative data
-      const mockCumulativeVolume = Math.random() * 1e10
-      mockDisplay.volume = priceFormatter(mockCumulativeVolume)
-      mockDisplay.fees = priceFormatter(mockCumulativeVolume * ((feeTier ?? 0) / BIPS_BASE / 100))
-      mockDisplay.time = t`Past ${toHistoryDuration(timePeriod).toLowerCase()}`
+    if (crosshairData === undefined) {
+      const cumulativeVolume = getCumulativeVolume(volumes)
+      displayValues.volume = priceFormatter(cumulativeVolume)
+      displayValues.time = formatHistoryDuration(toHistoryDuration(timePeriod))
     } else {
-      mockDisplay.volume = priceFormatter(crosshairData.value)
-      const fees = crosshairData.value * ((feeTier ?? 0) / BIPS_BASE / 100)
-      mockDisplay.fees = priceFormatter(fees)
-      mockDisplay.time = headerDateFormatter(crosshairData.time)
+      displayValues.volume = priceFormatter(crosshairData.value)
+      displayValues.time = headerDateFormatter(crosshairData.time)
     }
-    return mockDisplay
-  }, [crosshairData, feeTier, formatFiatPrice, headerDateFormatter, timePeriod])
+    return displayValues
+  }, [crosshairData, formatFiatPrice, headerDateFormatter, timePeriod, volumes])
 
   return (
     <ChartHeader
-      value={
-        noFeesData ? (
-          <ThemedText.HeadlineLarge color="inherit">{display.volume}</ThemedText.HeadlineLarge>
-        ) : (
-          <Column>
-            <ThemedText.HeadlineSmall color="inherit">
-              {display.volume} <Trans>volume</Trans>
-            </ThemedText.HeadlineSmall>
-            <ThemedText.HeadlineSmall color="inherit">
-              {display.fees} <Trans>fees</Trans>
-            </ThemedText.HeadlineSmall>
-          </Column>
-        )
-      }
+      value={<ThemedText.HeadlineLarge color="inherit">{display.volume}</ThemedText.HeadlineLarge>}
       time={crosshairData?.time}
       timePlaceholder={formatHistoryDuration(toHistoryDuration(timePeriod))}
     />
   )
 }
 
-interface VolumeChartProps {
-  height: number
-  volumes?: PricePoint[]
-  feeTier?: number
-  timePeriod: TimePeriod
+function FeesTooltipDisplay({ data, feeTier }: { data: SingleHistogramData; feeTier?: number }) {
+  const { formatFiatPrice } = useFormatter()
+  const fees = data.value * ((feeTier ?? 0) / BIPS_BASE / 100)
+
+  return (
+    <>
+      <ThemedText.BodySmall>{t`Fees: ${formatFiatPrice({
+        price: fees,
+        type: NumberType.ChartFiatValue,
+      })}`}</ThemedText.BodySmall>
+    </>
+  )
 }
 
-export function VolumeChart({ height, volumes, feeTier, timePeriod }: VolumeChartProps) {
+interface VolumeChartProps {
+  height: number
+  data: SingleHistogramData[]
+  feeTier?: number
+  timePeriod: TimePeriod
+  TooltipBody?: React.FunctionComponent<{ data: SingleHistogramData }>
+  stale: boolean
+}
+
+export function VolumeChart({ height, data, feeTier, timePeriod, stale }: VolumeChartProps) {
   const theme = useTheme()
 
-  const data: SingleHistogramData[] = useMemo(
-    () =>
-      volumes?.map((volumePoint) => {
-        return { value: volumePoint.value, time: volumePoint.timestamp as UTCTimestamp }
-      }) ?? [],
-    [volumes]
-  )
-
-  const noFeesData = feeTier === undefined // i.e. if is token volume chart
   const params = useMemo(
-    () => ({ data, colors: [theme.accent1], headerHeight: noFeesData ? 75 : 90 }),
-    [data, theme.accent1, noFeesData]
+    () => ({ data, colors: [theme.accent1], headerHeight: 75, stale }),
+    [data, stale, theme.accent1]
   )
 
   return (
-    <Chart Model={VolumeChartModel} params={params} height={height}>
-      {(crosshairData) => (
-        <VolumeChartHeader
-          crosshairData={crosshairData}
-          timePeriod={timePeriod}
-          feeTier={feeTier}
-          noFeesData={noFeesData}
-        />
-      )}
+    <Chart
+      Model={VolumeChartModel}
+      params={params}
+      height={height}
+      TooltipBody={
+        feeTier === undefined // i.e. if is token volume chart
+          ? undefined
+          : ({ data }: { data: SingleHistogramData }) => <FeesTooltipDisplay data={data} feeTier={feeTier} />
+      }
+    >
+      {(crosshairData) => <VolumeChartHeader crosshairData={crosshairData} volumes={data} timePeriod={timePeriod} />}
     </Chart>
   )
 }

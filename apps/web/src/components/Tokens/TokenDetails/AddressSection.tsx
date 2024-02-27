@@ -1,7 +1,9 @@
 import { Trans } from '@lingui/macro'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import styled from 'styled-components'
 import { CopyContractAddress, ThemedText } from 'theme/components'
-import { shortenAddress } from 'utils/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
 
 const ContractAddressSection = styled.div`
   display: flex;
@@ -23,7 +25,11 @@ const ContractAddress = styled.button`
   padding: 0px;
 `
 
-export default function AddressSection({ address }: { address: string }) {
+export default function AddressSection() {
+  const { address } = useTDPContext()
+
+  if (address === NATIVE_CHAIN_ID) return null
+
   return (
     <ContractAddressSection>
       <ThemedText.SubHeaderSmall>

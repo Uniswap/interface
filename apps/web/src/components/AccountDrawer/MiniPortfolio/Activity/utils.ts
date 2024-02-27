@@ -1,13 +1,20 @@
+import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Web3Provider } from '@ethersproject/providers'
 import { t } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
-import { DutchOrder, getCancelSingleParams } from '@uniswap/uniswapx-sdk'
+import { DutchOrder } from '@uniswap/uniswapx-sdk'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import PERMIT2_ABI from 'wallet/src/abis/permit2.json'
 import { Permit2 } from 'wallet/src/abis/types'
 
-import { BigNumber } from 'ethers/lib/ethers'
+import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
+import { BigNumber, ContractTransaction } from 'ethers/lib/ethers'
+import { useAsyncData } from 'hooks/useAsyncData'
+import { useContract } from 'hooks/useContract'
+import { useCallback } from 'react'
+import { SignatureType } from 'state/signatures/types'
 import { Activity } from './types'
 
 interface ActivityGroup {
@@ -17,8 +24,8 @@ interface ActivityGroup {
 
 const sortActivities = (a: Activity, b: Activity) => b.timestamp - a.timestamp
 
-export const createGroups = (activities?: Array<Activity>) => {
-  if (!activities) return undefined
+export const createGroups = (activities: Array<Activity> = [], hideSpam = false) => {
+  if (activities.length === 0) return []
   const now = Date.now()
 
   const pending: Array<Activity> = []
@@ -30,13 +37,20 @@ export const createGroups = (activities?: Array<Activity>) => {
 
   // TODO(cartcrom): create different time bucket system for activities to fall in based on design wants
   activities.forEach((activity) => {
-    if (activity.status === TransactionStatus.Pending) {
-      pending.push(activity)
+    if (hideSpam && activity.isSpam) {
       return
     }
-    const addedTime = activity.timestamp * 1000
 
-    if (isSameDay(now, addedTime)) {
+    const addedTime = activity.timestamp * 1000
+    if (activity.status === TransactionStatus.Pending) {
+      switch (activity.offchainOrderDetails?.type) {
+        case SignatureType.SIGN_LIMIT:
+          // limit orders are only displayed in their own pane
+          break
+        default:
+          pending.push(activity)
+      }
+    } else if (isSameDay(now, addedTime)) {
       today.push(activity)
     } else if (isSameWeek(addedTime, now)) {
       currentWeek.push(activity)
@@ -67,29 +81,7 @@ export const createGroups = (activities?: Array<Activity>) => {
     ...sortedYears,
   ]
 
-  return transactionGroups.filter((transactionInformation) => transactionInformation.transactions.length > 0)
-}
-
-export async function cancelUniswapXOrder({
-  encodedOrder,
-  chainId,
-  permit2,
-  provider,
-}: {
-  encodedOrder: string
-  chainId: ChainId
-  permit2: Permit2 | null
-  provider?: Web3Provider
-}) {
-  const parsedOrder = DutchOrder.parse(encodedOrder, chainId)
-  const invalidateNonceInput = getCancelSingleParams(parsedOrder.info.nonce)
-  if (!permit2 || !provider) return
-  try {
-    return await permit2.invalidateUnorderedNonces(invalidateNonceInput.word, invalidateNonceInput.mask)
-  } catch (error) {
-    if (!didUserReject(error)) console.error(error)
-    return undefined
-  }
+  return transactionGroups.filter(({ transactions }) => transactions.length > 0)
 }
 
 // TODO(WEB-3594): just use the uniswapx-sdk when getCancelMultipleParams is available
@@ -129,6 +121,13 @@ function getCancelMultipleParams(noncesToCancel: BigNumber[]): {
   })
 }
 
+function getCancelMultipleUniswapXOrdersParams(encodedOrders: string[], chainId: ChainId) {
+  const nonces = encodedOrders
+    .map((encodedOrder) => DutchOrder.parse(encodedOrder, chainId))
+    .map((order) => order.info.nonce)
+  return getCancelMultipleParams(nonces)
+}
+
 export async function cancelMultipleUniswapXOrders({
   encodedOrders,
   chainId,
@@ -140,17 +139,52 @@ export async function cancelMultipleUniswapXOrders({
   permit2: Permit2 | null
   provider?: Web3Provider
 }) {
-  const parsedOrders = encodedOrders.map((encodedOrder) => DutchOrder.parse(encodedOrder, chainId))
-  const nonces: BigNumber[] = parsedOrders.map((order) => order.info.nonce)
-  const cancelParams = getCancelMultipleParams(nonces)
+  const cancelParams = getCancelMultipleUniswapXOrdersParams(encodedOrders, chainId)
   if (!permit2 || !provider) return
   try {
+    const transactions: ContractTransaction[] = []
     for (const params of cancelParams) {
-      await permit2.invalidateUnorderedNonces(params.word, params.mask)
+      const tx = await permit2.invalidateUnorderedNonces(params.word, params.mask)
+      transactions.push(tx)
     }
-    return true
+    return transactions
   } catch (error) {
     if (!didUserReject(error)) console.error(error)
     return undefined
   }
+}
+
+async function getCancelMultipleUniswapXOrdersTransaction(
+  encodedOrders: string[],
+  chainId: ChainId,
+  permit2: Permit2
+): Promise<TransactionRequest | undefined> {
+  const cancelParams = getCancelMultipleUniswapXOrdersParams(encodedOrders, chainId)
+  if (!permit2 || cancelParams.length === 0) return
+  try {
+    const tx = await permit2.populateTransaction.invalidateUnorderedNonces(cancelParams[0].word, cancelParams[0].mask)
+    return {
+      ...tx,
+      chainId,
+    }
+  } catch (error) {
+    console.error('could not populate cancel transaction')
+    return undefined
+  }
+}
+
+export function useCreateCancelTransactionRequest({
+  encodedOrders,
+  chainId,
+}: {
+  encodedOrders?: string[]
+  chainId: ChainId
+}): TransactionRequest | undefined {
+  const permit2 = useContract<Permit2>(PERMIT2_ADDRESS, PERMIT2_ABI, true)
+  const transactionFetcher = useCallback(() => {
+    if (!encodedOrders || encodedOrders.filter(Boolean).length === 0 || !permit2) return
+    return getCancelMultipleUniswapXOrdersTransaction(encodedOrders, chainId, permit2)
+  }, [encodedOrders, chainId, permit2])
+
+  return useAsyncData(transactionFetcher).data
 }

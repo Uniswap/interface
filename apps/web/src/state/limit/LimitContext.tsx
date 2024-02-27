@@ -3,10 +3,10 @@ import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext,
 import { LimitInfo, useDerivedLimitInfo } from './hooks'
 
 export enum Expiry {
-  Day = 1,
-  Week,
-  Month,
-  Year,
+  Day = 'Day',
+  Week = 'Week',
+  Month = 'Month',
+  Year = 'Year',
 }
 
 export interface LimitState {
@@ -58,7 +58,7 @@ export function useLimitContext() {
 export function LimitContextProvider({ children }: PropsWithChildren) {
   const [limitState, setLimitState] = useState<LimitState>(DEFAULT_LIMIT_STATE)
 
-  const derivedLimitInfo = useDerivedLimitInfo(limitState)
+  const derivedLimitInfo = useDerivedLimitInfo(limitState, setLimitState)
 
   return (
     <LimitContext.Provider value={{ limitState, setLimitState, derivedLimitInfo }}>{children}</LimitContext.Provider>

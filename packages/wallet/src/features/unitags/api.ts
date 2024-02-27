@@ -8,7 +8,6 @@ import { createNewInMemoryCache } from 'wallet/src/data/cache'
 import { REQUEST_SOURCE } from 'wallet/src/data/links'
 import { useRestQuery } from 'wallet/src/data/rest'
 import { createSignedRequestBody, createSignedRequestParams } from 'wallet/src/data/utils'
-import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck/utils'
 import {
   ProfileMetadata,
   UnitagAddressResponse,
@@ -48,14 +47,15 @@ const apolloClient = new ApolloClient({
   },
 })
 
-const generateAxiosHeaders = async (signature: string): Promise<Record<string, string>> => {
-  const firebaseAppCheckToken = await getFirebaseAppCheckToken()
-
+const generateAxiosHeaders = async (
+  signature: string,
+  firebaseAppCheckToken?: string
+): Promise<Record<string, string>> => {
   return {
     'x-uni-sig': signature,
     'x-request-source': REQUEST_SOURCE,
-    'x-firebase-app-check': firebaseAppCheckToken,
     Origin: uniswapUrls.apiBaseUrl,
+    ...(firebaseAppCheckToken && { 'x-firebase-app-check': firebaseAppCheckToken }),
   }
 }
 
@@ -203,12 +203,14 @@ export async function claimUnitag({
   metadata,
   account,
   signerManager,
+  firebaseAppCheckToken,
 }: {
   username: string
   deviceId: string
   metadata: ProfileMetadata
   account: Account
   signerManager: SignerManager
+  firebaseAppCheckToken?: string
 }): ReturnType<typeof axios.post<UnitagResponse>> {
   const claimUnitagUrl = `${uniswapUrls.unitagsApiUrl}/username`
   const { requestBody, signature } = await createSignedRequestBody<UnitagClaimUsernameRequestBody>(
@@ -220,7 +222,7 @@ export async function claimUnitag({
     account,
     signerManager
   )
-  const headers = await generateAxiosHeaders(signature)
+  const headers = await generateAxiosHeaders(signature, firebaseAppCheckToken)
   return await axios.post<UnitagResponse>(claimUnitagUrl, requestBody, {
     headers,
   })

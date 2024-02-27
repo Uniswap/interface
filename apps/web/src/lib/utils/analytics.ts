@@ -66,6 +66,7 @@ export function formatCommonPropertiesForTrade(
     fee_usd: outputFeeFiatValue,
     token_out_detected_tax: formatPercentNumber(trade.outputTax),
     token_in_detected_tax: formatPercentNumber(trade.inputTax),
+    offchain_order_type: isUniswapXTrade(trade) ? trade.offchainOrderType : undefined,
   }
 }
 

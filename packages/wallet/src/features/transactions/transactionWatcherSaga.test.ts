@@ -3,7 +3,7 @@ import { call, delay } from 'redux-saga/effects'
 import { sleep } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
+import { fetchMoonpayTransaction } from 'wallet/src/features/fiatOnRamp/api'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import {
   addTransaction,
@@ -118,8 +118,14 @@ describe(watchFiatOnRampTransaction, () => {
     const staleTx = { ...fiatOnRampTxDetailsPending, status: TransactionStatus.Unknown }
     return (
       expectSaga(watchFiatOnRampTransaction, fiatOnRampTxDetailsPending)
-        .provide([[call(fetchFiatOnRampTransaction, fiatOnRampTxDetailsPending), staleTx]])
-        .put(transactionActions.upsertFiatOnRampTransaction(staleTx))
+        .provide([[call(fetchMoonpayTransaction, fiatOnRampTxDetailsPending), staleTx]])
+        .put(
+          transactionActions.deleteTransaction({
+            address: staleTx.from,
+            id: staleTx.id,
+            chainId: staleTx.chainId,
+          })
+        )
         // watcher should stop tracking
         .not.call.fn(sleep)
         .silentRun()
@@ -137,7 +143,7 @@ describe(watchFiatOnRampTransaction, () => {
         .provide([
           {
             call(effect): TransactionDetails | undefined {
-              if (effect.fn === fetchFiatOnRampTransaction) {
+              if (effect.fn === fetchMoonpayTransaction) {
                 switch (fetchCalledCount++) {
                   case 0:
                   case 1:
@@ -169,7 +175,7 @@ describe(watchFiatOnRampTransaction, () => {
         .provide([
           {
             call(effect): TransactionDetails | undefined {
-              if (effect.fn === fetchFiatOnRampTransaction) {
+              if (effect.fn === fetchMoonpayTransaction) {
                 switch (fetchCalledCount++) {
                   case 0:
                   case 1:
@@ -194,7 +200,7 @@ describe(watchFiatOnRampTransaction, () => {
   it('updates a transactions on success network request', () => {
     const confirmedTx = { ...fiatOnRampTxDetailsPending, status: TransactionStatus.Success }
     return expectSaga(watchFiatOnRampTransaction, fiatOnRampTxDetailsPending)
-      .provide([[call(fetchFiatOnRampTransaction, fiatOnRampTxDetailsPending), confirmedTx]])
+      .provide([[call(fetchMoonpayTransaction, fiatOnRampTxDetailsPending), confirmedTx]])
       .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
       .not.call.fn(sleep)
       .run()

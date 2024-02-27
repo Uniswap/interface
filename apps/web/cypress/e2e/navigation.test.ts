@@ -30,11 +30,11 @@ describe('Navigation', () => {
     cy.url().should('include', '/nfts')
   })
 
-  it('displays Pools tab', () => {
+  it('displays Pool tab', () => {
     cy.get('nav').within(() => {
-      cy.contains('Pools').should('be.visible').click()
+      cy.contains('Pool').should('be.visible').click()
     })
-    cy.url().should('include', '/pools')
+    cy.url().should('include', '/pool')
   })
 
   describe('More Menu', () => {
@@ -50,11 +50,11 @@ describe('Navigation', () => {
         featureFlags: [{ name: FeatureFlag.landingPageV2, value: true }],
       })
       cy.get('nav').within(() => {
-        cy.contains('Pools').should('not.be.visible')
+        cy.contains('Pool').should('not.be.visible')
         cy.get(getTestSelector('nav-more-button')).should('be.visible').click()
         cy.get(getTestSelector('nav-more-menu')).within(() => {
-          cy.contains('Pools').should('be.visible').click()
-          cy.url().should('include', '/pools')
+          cy.contains('Pool').should('be.visible').click()
+          cy.url().should('include', '/pool')
         })
       })
     })

@@ -24,11 +24,6 @@ import { anonymizeLink } from '../../utils/anonymizeLink'
 
 export { ThemedText } from './text'
 
-export const CloseIcon = styled(X)<{ onClick: () => void }>`
-  color: ${({ theme }) => theme.neutral1};
-  cursor: pointer;
-`
-
 export const ButtonText = styled.button`
   outline: none;
   border: none;
@@ -67,6 +62,12 @@ export const ClickableStyle = css`
   :active {
     opacity: ${({ theme }) => theme.opacity.click};
   }
+`
+
+export const CloseIcon = styled(X)<{ onClick: () => void }>`
+  color: ${({ theme }) => theme.neutral1};
+  cursor: pointer;
+  ${ClickableStyle}
 `
 
 const LinkStyle = css`
@@ -185,7 +186,7 @@ function Tooltip({ isCopyContractTooltip, tooltipX }: { isCopyContractTooltip: b
   return (
     <ToolTipWrapper isCopyContractTooltip={isCopyContractTooltip} tooltipX={tooltipX}>
       <StyledTooltipTriangle />
-      <CopiedTooltip isCopyContractTooltip={isCopyContractTooltip}>Copied!</CopiedTooltip>
+      <CopiedTooltip isCopyContractTooltip={isCopyContractTooltip}>Copied</CopiedTooltip>
     </ToolTipWrapper>
   )
 }

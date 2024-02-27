@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { useCallback, useMemo } from 'react'
 import { TFunction, useTranslation } from 'react-i18next'
 import { isWeb } from 'tamagui'
@@ -92,6 +93,15 @@ export function SwapFormButton(): JSX.Element {
 
   const holdButtonText = useMemo(() => getHoldButtonActionText(wrapType, t), [t, wrapType])
 
+  const hasButtonWarning = !!blockingWarning?.buttonText
+  const buttonText = blockingWarning?.buttonText ?? t('Review')
+  const buttonTextColor = hasButtonWarning ? '$neutral2' : '$white'
+  const buttonBgColor = hasButtonWarning
+    ? '$surface3'
+    : isHoldToSwapPressed
+    ? '$accent2'
+    : '$accent1'
+
   return (
     <Flex alignItems="center" gap="$spacing16">
       {!isWeb && !isHoldToSwapPressed && showHoldToSwapTip && <HoldToInstantSwapRow />}
@@ -99,7 +109,7 @@ export function SwapFormButton(): JSX.Element {
       <Trace logPress element={ElementName.SwapReview}>
         <Button
           hapticFeedback
-          backgroundColor={isHoldToSwapPressed ? '$accent2' : '$accent1'}
+          backgroundColor={buttonBgColor}
           disabled={reviewButtonDisabled && !isHoldToSwapPressed}
           size="large"
           testID={ElementName.ReviewSwap}
@@ -122,8 +132,8 @@ export function SwapFormButton(): JSX.Element {
               </Text>
             </Flex>
           ) : (
-            <Text color="$white" variant="buttonLabel1">
-              {t('Review')}
+            <Text color={buttonTextColor} variant="buttonLabel1">
+              {buttonText}
             </Text>
           )}
         </Button>

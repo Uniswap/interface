@@ -6,9 +6,12 @@ import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
+import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
   claimUnitag,
   getUnitagAvatarUploadUrl,
@@ -42,6 +45,7 @@ import {
   usePendingAccounts,
 } from 'wallet/src/features/wallet/hooks'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
+import { useAppDispatch } from 'wallet/src/state'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { UnitagEventName } from 'wallet/src/telemetry/constants'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
@@ -99,9 +103,10 @@ export const useCanAddressClaimUnitag = (
 }
 
 export const useUnitagByAddress = (
-  address?: Address
+  address?: Address,
+  forceEnable?: boolean
 ): { unitag?: UnitagAddressResponse; loading: boolean } => {
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags) || forceEnable
   const { data, loading, refetch } = useUnitagByAddressQuery(
     unitagsFeatureFlagEnabled ? address : undefined
   )
@@ -109,7 +114,7 @@ export const useUnitagByAddress = (
   // Force refetch if counter changes
   const { refetchUnitagsCounter } = useUnitagUpdater()
   useEffect(() => {
-    if (!unitagsFeatureFlagEnabled || loading) {
+    if (!unitagsFeatureFlagEnabled || loading || !address) {
       return
     }
 
@@ -121,15 +126,16 @@ export const useUnitagByAddress = (
 }
 
 export const useUnitagByName = (
-  name?: string
+  name?: string,
+  forceEnable?: boolean
 ): { unitag?: UnitagUsernameResponse; loading: boolean } => {
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags) || forceEnable
   const { data, loading, refetch } = useUnitagQuery(unitagsFeatureFlagEnabled ? name : undefined)
 
   // Force refetch if counter changes
   const { refetchUnitagsCounter } = useUnitagUpdater()
   useEffect(() => {
-    if (!unitagsFeatureFlagEnabled || loading) {
+    if (!unitagsFeatureFlagEnabled || loading || !name) {
       return
     }
 
@@ -188,11 +194,13 @@ export const useClaimUnitag = (): ((
   context: UnitagClaimContext
 ) => Promise<{ claimError?: string }>) => {
   const { t } = useTranslation()
+  const dispatch = useAppDispatch()
   const { data: deviceId } = useAsyncData(getUniqueId)
   const accounts = useAccounts()
   const pendingAccounts = usePendingAccounts()
   const signerManager = useWalletSigners()
   const { triggerRefetchUnitags } = useUnitagUpdater()
+  const unitagsDeviceAttestationEnabled = useFeatureFlag(FEATURE_FLAGS.UnitagsDeviceAttestation)
 
   return async (claim: UnitagClaim, context: UnitagClaimContext) => {
     const claimAccount = pendingAccounts[claim.address] || accounts[claim.address]
@@ -201,6 +209,14 @@ export const useClaimUnitag = (): ((
     }
 
     try {
+      let firebaseAppCheckToken
+      if (unitagsDeviceAttestationEnabled) {
+        firebaseAppCheckToken = await getFirebaseAppCheckToken()
+        if (!firebaseAppCheckToken) {
+          return { claimError: t('Could not claim username. Please try again tomorrow.') }
+        }
+      }
+
       const { data: claimResponse } = await claimUnitag({
         username: claim.username,
         deviceId,
@@ -209,6 +225,7 @@ export const useClaimUnitag = (): ((
         },
         account: claimAccount,
         signerManager,
+        firebaseAppCheckToken,
       })
 
       if (claimResponse.errorCode) {
@@ -229,7 +246,13 @@ export const useClaimUnitag = (): ((
           })
 
           if (!uploadUpdateAvatarSuccess) {
-            return { claimError: t('Could not set avatar. Try again later.') }
+            // Don't block claim flow if avatar upload fails, just dispatch a notification for the error
+            dispatch(
+              pushNotification({
+                type: AppNotificationType.Error,
+                errorMessage: t('Could not set avatar. Try again later.'),
+              })
+            )
           }
         }
 

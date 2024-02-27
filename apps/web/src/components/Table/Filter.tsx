@@ -5,7 +5,7 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
 import { Checkbox } from 'nft/components/layout/Checkbox'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { Fragment, useCallback, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
@@ -78,35 +78,33 @@ export function Filter<T extends string>({
     },
     [activeFilter, setFilters]
   )
-
-  const Modal = useMemo(
-    () => (
-      <FilterDropdown isSticky={isSticky} ref={filterModalRef}>
-        {allFilters.map((filter, index) => (
-          <FilterRow
-            key={filter}
-            onClick={(e) => {
-              e.stopPropagation()
-              e.preventDefault()
-              handleFilterOptionClick(filter)
-            }}
-            onMouseEnter={() => setHoveredRow(index)}
-            onMouseLeave={() => setHoveredRow(-1)}
-          >
-            <ThemedText.BodySecondary>{filter}</ThemedText.BodySecondary>
-            <Checkbox checked={activeFilter.includes(filter)} hovered={index === hoveredRow} size={20} />
-          </FilterRow>
-        ))}
-      </FilterDropdown>
-    ),
-    [activeFilter, allFilters, handleFilterOptionClick, hoveredRow, isSticky]
-  )
+  // Need to put the modal in a Portal when on mobile to show over promo banner
+  const Wrapper = isMobile ? Portal : Fragment
 
   return (
     <>
       <StyledDropdownIcon />
-      {/* Need to put the modal in a Portal when on mobile to show over promo banner */}
-      {isOpen && (isMobile ? <Portal>{Modal}</Portal> : <>{Modal}</>)}
+      {isOpen && (
+        <Wrapper>
+          <FilterDropdown isSticky={isSticky} ref={filterModalRef}>
+            {allFilters.map((filter, index) => (
+              <FilterRow
+                key={filter}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  e.preventDefault()
+                  handleFilterOptionClick(filter)
+                }}
+                onMouseEnter={() => setHoveredRow(index)}
+                onMouseLeave={() => setHoveredRow(-1)}
+              >
+                <ThemedText.BodySecondary>{filter}</ThemedText.BodySecondary>
+                <Checkbox checked={activeFilter.includes(filter)} hovered={index === hoveredRow} size={20} />
+              </FilterRow>
+            ))}
+          </FilterDropdown>
+        </Wrapper>
+      )}
     </>
   )
 }

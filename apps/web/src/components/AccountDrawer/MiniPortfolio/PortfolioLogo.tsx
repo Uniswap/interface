@@ -94,18 +94,18 @@ interface DoubleCurrencyLogoProps {
 }
 
 function DoubleCurrencyLogo({ chainId, currencies, backupImages, size }: DoubleCurrencyLogoProps) {
-  const [src, nextSrc] = useTokenLogoSource(
-    currencies?.[0]?.wrapped.address,
+  const [src, nextSrc] = useTokenLogoSource({
+    address: currencies?.[0]?.wrapped.address,
     chainId,
-    currencies?.[0]?.isNative,
-    backupImages?.[0]
-  )
-  const [src2, nextSrc2] = useTokenLogoSource(
-    currencies?.[1]?.wrapped.address,
+    isNative: currencies?.[0]?.isNative,
+    backupImg: backupImages?.[0],
+  })
+  const [src2, nextSrc2] = useTokenLogoSource({
+    address: currencies?.[1]?.wrapped.address,
     chainId,
-    currencies?.[1]?.isNative,
-    backupImages?.[1]
-  )
+    isNative: currencies?.[1]?.isNative,
+    backupImg: backupImages?.[1],
+  })
 
   if (currencies.length === 1 && src) {
     return <CircleLogoImage size={size} src={src} onError={nextSrc} />

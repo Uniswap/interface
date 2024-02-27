@@ -122,6 +122,8 @@ export const colors = {
   accent3_light: '#4C82FB',
   success: '#40B66B',
   critical: '#FF5F52',
+  critical2_dark: '#2E0805',
+  critical2_light: '#FFF2F1',
   scrim: 'rgba(0, 0, 0, 0.60)',
 }
 
@@ -142,6 +144,7 @@ const commonTheme = {
   chain_420: colors.networkOptimism,
   chain_42161: colors.networkArbitrum,
   chain_421613: colors.networkArbitrum,
+  chain_421614: colors.networkArbitrum,
   chain_80001: colors.networkPolygon,
   chain_43114: colors.networkOptimism,
   chain_137_background: colors.purple900,
@@ -181,6 +184,7 @@ export const darkTheme = {
 
   success: colors.success,
   critical: colors.critical,
+  critical2: colors.critical2_dark,
   scrim: colors.scrim,
 
   warning2: colors.gold200,
@@ -211,6 +215,7 @@ export const lightTheme: ThemeColors = {
 
   success: colors.success,
   critical: colors.critical,
+  critical2: colors.critical2_light,
   scrim: colors.scrim,
 
   warning2: colors.gold200,

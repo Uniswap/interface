@@ -1,3 +1,12 @@
+import {
+  FiatPurchaseTransactionInfo,
+  TransactionDetails,
+} from 'wallet/src/features/transactions/types'
+
+export type FiatOnRampTransactionDetails = TransactionDetails & {
+  typeInfo: FiatPurchaseTransactionInfo
+}
+
 export type FiatOnRampWidgetUrlQueryParameters = {
   colorCode: string
   externalTransactionId: string
@@ -179,6 +188,7 @@ export type FORQuoteRequest = {
   destinationCurrencyCode: string
   sourceAmount: number
   sourceCurrencyCode: string
+  walletAddress: string
 }
 
 export type FORQuote = {
@@ -264,19 +274,29 @@ export type FORWidgetUrlRequest = {
   serviceProvider: string
   walletAddress: string
   externalSessionId: string
+  redirectUrl?: string
 }
 
 export type FORWidgetUrlResponse = {
   id: string
   widgetUrl: string
-  token: string
+}
+
+// /transfer-widget-url
+
+export type FORTransferWidgetUrlRequest = {
+  sourceAmount: number
+  sourceCurrencyCode: string
+  countryCode: string
+  institutionId: string
+  walletAddress: string
+  externalSessionId: string
+  redirectURL: string
 }
 
 // /transactions
 
-export type FORCryptoPurchaseDetails = {
-  destinationCurrencyCode: string
-  destinationAmount: number
+export type FORCryptoDetails = {
   walletAddress: string
   networkFee: number
   transactionFee: number
@@ -288,6 +308,7 @@ export type FORCryptoPurchaseDetails = {
   totalFeeInUsd: number | null
   blockchainTransactionId: string
   institution: string | null
+  chainId: string
 }
 
 export type FORTransaction = {
@@ -303,12 +324,16 @@ export type FORTransaction = {
   paymentMethodType: string
   serviceProvider: string
   description: string | null
-  cryptoPurchaseDetails: FORCryptoPurchaseDetails
+  cryptoDetails: FORCryptoDetails
   createdAt: string
   updatedAt: string
   countryCode: string
-  externalSessionId: string | null
+  externalSessionId: string
   sourceAmountInUsd: number
+}
+
+export type FORTransactionsRequest = {
+  limit?: number
 }
 
 export type FORTransactionsResponse = {

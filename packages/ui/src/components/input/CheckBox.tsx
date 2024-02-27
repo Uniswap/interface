@@ -23,15 +23,15 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
       <Flex row gap="$spacing12">
         <Flex
           alignItems="center"
-          backgroundColor={checked ? '$neutral1' : '$surface2'}
+          backgroundColor={checked ? '$neutral1' : '$surface1'}
           borderColor={checked ? '$neutral1' : '$neutral3'}
           borderRadius="$roundedFull"
           borderWidth={1.5}
-          height={iconSizes.icon24}
+          height={iconSizes.icon20}
           justifyContent="center"
           mt="$spacing4"
           p="$spacing2"
-          width={iconSizes.icon24}>
+          width={iconSizes.icon20}>
           {checked ? (
             <Check color={isDarkMode ? '$sporeBlack' : '$sporeWhite'} size="$icon.16" />
           ) : null}

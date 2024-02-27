@@ -284,6 +284,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+  padding-top: 53px;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
@@ -467,343 +468,350 @@ exports[`TDP Skeleton should render correctly 1`] = `
   }
 }
 
-<div
-    class="c0"
+<span
+    class="t_light is_inversed _dsp_contents"
   >
-    <div
-      class="c1"
-    >
-      <nav
-        class="c2"
-      >
-        <a
-          class="c3"
-          href="/tokens"
-        >
-          <svg
-            fill="none"
-            height="14"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="14"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <line
-              x1="19"
-              x2="5"
-              y1="12"
-              y2="12"
-            />
-            <polyline
-              points="12 19 5 12 12 5"
-            />
-          </svg>
-           Tokens
-        </a>
-      </nav>
-      <div
-        class="c4"
-      >
-        <div
-          class="c5"
-        >
-          <div
-            class="c6 c7 c8"
-          />
-          <div
-            class="c6 c7 c9"
-          />
-        </div>
-      </div>
-      <div
-        class="c10"
-      >
-        <div
-          class="c11 css-15popx1"
-        >
-          <div
-            class="c6 c7 c12 c13"
-          />
-        </div>
-        <div
-          class="c14"
-        />
-        <div
-          class="c15"
-        >
-          <div>
-            <div
-              class="c16"
-            >
-              <svg
-                height="160"
-                width="416"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M 0 80 Q 104 10, 208 80 T 416 80"
-                  fill="transparent"
-                  stroke="#22222212"
-                  stroke-width="2"
-                />
-              </svg>
-              <svg
-                height="160"
-                width="416"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M 0 80 Q 104 10, 208 80 T 416 80"
-                  fill="transparent"
-                  stroke="#22222212"
-                  stroke-width="2"
-                />
-              </svg>
-              <svg
-                height="160"
-                width="416"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M 0 80 Q 104 10, 208 80 T 416 80"
-                  fill="transparent"
-                  stroke="#22222212"
-                  stroke-width="2"
-                />
-              </svg>
-              <svg
-                height="160"
-                width="416"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M 0 80 Q 104 10, 208 80 T 416 80"
-                  fill="transparent"
-                  stroke="#22222212"
-                  stroke-width="2"
-                />
-              </svg>
-              <svg
-                height="160"
-                width="416"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M 0 80 Q 104 10, 208 80 T 416 80"
-                  fill="transparent"
-                  stroke="#22222212"
-                  stroke-width="2"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        class="c17"
-      />
-      <div
-        class="c18"
-      >
-        <div
-          class="c6 c7 c12 c19"
-        />
-        <div
-          class="c20"
-        >
-          <div
-            class="c21"
-          >
-            <div
-              class="c22"
-            >
-              <div
-                class="c6 c7 c23"
-              />
-              <div
-                class="c6 c7 c12 c24"
-              />
-            </div>
-            <div
-              class="c22"
-            >
-              <div
-                class="c6 c7 c23"
-              />
-              <div
-                class="c6 c7 c12 c24"
-              />
-            </div>
-          </div>
-          <div
-            class="c21"
-          >
-            <div
-              class="c22"
-            >
-              <div
-                class="c6 c7 c23"
-              />
-              <div
-                class="c6 c7 c12 c24"
-              />
-            </div>
-            <div
-              class="c22"
-            >
-              <div
-                class="c6 c7 c23"
-              />
-              <div
-                class="c6 c7 c12 c24"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr
-        class="c25"
-      />
-      <div
-        class="c26"
-      >
-        <div
-          class="c11 c27 css-1a9hfw6"
-        >
-          <div
-            class="c6 c7 c12 c19"
-          />
-        </div>
-      </div>
-      <div
-        class="c6 c7 c28"
-      />
-      <div
-        class="c6 c7 c28"
-      />
-      <div
-        class="c6 c7 c28 c29"
-        style="margin-bottom: 24px;"
-      />
-      <div
-        class="c30"
-      >
-        <div
-          class="c6 c7 c28 c31"
-        />
-        <div
-          class="c6 c7 c28 c29"
-        />
-      </div>
-      <div
-        class="c30"
-      >
-        <div
-          class="c6 c7 c28 c31"
-        />
-        <div
-          class="c6 c7 c28 c29"
-        />
-      </div>
-    </div>
-    <div
-      class="c32"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c33"
+        class="c0"
       >
         <div
-          class="c34"
+          class="c1"
         >
-          <div
-            class="c11 css-n8z49y"
+          <nav
+            class="c2"
           >
-            Swap
-          </div>
-        </div>
-        <div
-          class="c35"
-        >
-          <div
-            class="c36"
-          >
-            <div
-              class="c37 c38"
-              width="60"
-            />
-            <div
-              class="c39 c38"
-              radius="16"
-              width="100"
-            />
-          </div>
-        </div>
-        <div
-          class="c40"
-        >
-          <div
-            class="c41 c42"
-          >
-            <div
-              class="c43"
+            <a
+              class="c3"
+              href="/tokens"
             >
               <svg
                 fill="none"
-                height="16"
-                stroke="#CECECE"
+                height="14"
+                stroke="currentColor"
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 viewBox="0 0 24 24"
-                width="16"
+                width="14"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <line
-                  x1="12"
-                  x2="12"
-                  y1="5"
-                  y2="19"
+                  x1="19"
+                  x2="5"
+                  y1="12"
+                  y2="12"
                 />
                 <polyline
-                  points="19 12 12 19 5 12"
+                  points="12 19 5 12 12 5"
                 />
               </svg>
+               Tokens
+            </a>
+          </nav>
+          <div
+            class="c4"
+          >
+            <div
+              class="c5"
+            >
+              <div
+                class="c6 c7 c8"
+              />
+              <div
+                class="c6 c7 c9"
+              />
             </div>
           </div>
           <div
-            class="c35"
+            class="c10"
           >
             <div
-              class="c36"
+              class="c11 css-15popx1"
             >
               <div
-                class="c37 c38"
-                width="60"
+                class="c6 c7 c12 c13"
               />
+            </div>
+            <div
+              class="c14"
+            />
+            <div
+              class="c15"
+            >
+              <div>
+                <div
+                  class="c16"
+                >
+                  <svg
+                    height="160"
+                    width="416"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 0 80 Q 104 10, 208 80 T 416 80"
+                      fill="transparent"
+                      stroke="#22222212"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <svg
+                    height="160"
+                    width="416"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 0 80 Q 104 10, 208 80 T 416 80"
+                      fill="transparent"
+                      stroke="#22222212"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <svg
+                    height="160"
+                    width="416"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 0 80 Q 104 10, 208 80 T 416 80"
+                      fill="transparent"
+                      stroke="#22222212"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <svg
+                    height="160"
+                    width="416"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 0 80 Q 104 10, 208 80 T 416 80"
+                      fill="transparent"
+                      stroke="#22222212"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <svg
+                    height="160"
+                    width="416"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 0 80 Q 104 10, 208 80 T 416 80"
+                      fill="transparent"
+                      stroke="#22222212"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c17"
+          />
+          <div
+            class="c18"
+          >
+            <div
+              class="c6 c7 c12 c19"
+            />
+            <div
+              class="c20"
+            >
               <div
-                class="c39 c38"
-                radius="16"
-                width="100"
+                class="c21"
+              >
+                <div
+                  class="c22"
+                >
+                  <div
+                    class="c6 c7 c23"
+                  />
+                  <div
+                    class="c6 c7 c12 c24"
+                  />
+                </div>
+                <div
+                  class="c22"
+                >
+                  <div
+                    class="c6 c7 c23"
+                  />
+                  <div
+                    class="c6 c7 c12 c24"
+                  />
+                </div>
+              </div>
+              <div
+                class="c21"
+              >
+                <div
+                  class="c22"
+                >
+                  <div
+                    class="c6 c7 c23"
+                  />
+                  <div
+                    class="c6 c7 c12 c24"
+                  />
+                </div>
+                <div
+                  class="c22"
+                >
+                  <div
+                    class="c6 c7 c23"
+                  />
+                  <div
+                    class="c6 c7 c12 c24"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr
+            class="c25"
+          />
+          <div
+            class="c26"
+          >
+            <div
+              class="c11 c27 css-1a9hfw6"
+            >
+              <div
+                class="c6 c7 c12 c19"
               />
             </div>
           </div>
+          <div
+            class="c6 c7 c28"
+          />
+          <div
+            class="c6 c7 c28"
+          />
+          <div
+            class="c6 c7 c28 c29"
+            style="margin-bottom: 24px;"
+          />
+          <div
+            class="c30"
+          >
+            <div
+              class="c6 c7 c28 c31"
+            />
+            <div
+              class="c6 c7 c28 c29"
+            />
+          </div>
+          <div
+            class="c30"
+          >
+            <div
+              class="c6 c7 c28 c31"
+            />
+            <div
+              class="c6 c7 c28 c29"
+            />
+          </div>
         </div>
         <div
-          class="c44"
-          radius="16"
-        />
+          class="c32"
+        >
+          <div
+            class="c33"
+          >
+            <div
+              class="c34"
+            >
+              <div
+                class="c11 css-n8z49y"
+              >
+                Swap
+              </div>
+            </div>
+            <div
+              class="c35"
+            >
+              <div
+                class="c36"
+              >
+                <div
+                  class="c37 c38"
+                  width="60"
+                />
+                <div
+                  class="c39 c38"
+                  radius="16"
+                  width="100"
+                />
+              </div>
+            </div>
+            <div
+              class="c40"
+            >
+              <div
+                class="c41 c42"
+              >
+                <div
+                  class="c43"
+                >
+                  <svg
+                    fill="none"
+                    height="16"
+                    stroke="#CECECE"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="16"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="12"
+                      x2="12"
+                      y1="5"
+                      y2="19"
+                    />
+                    <polyline
+                      points="19 12 12 19 5 12"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div
+                class="c35"
+              >
+                <div
+                  class="c36"
+                >
+                  <div
+                    class="c37 c38"
+                    width="60"
+                  />
+                  <div
+                    class="c39 c38"
+                    radius="16"
+                    width="100"
+                  />
+                </div>
+              </div>
+            </div>
+            <div
+              class="c44"
+              radius="16"
+            />
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+    </span>
+  </span>
 </DocumentFragment>
 `;
 
 exports[`getLoadingTitle should return correct title 1`] = `
 <DocumentFragment>
-  token data for 
   .c0 {
   color: #CECECE;
   font-size: 12px;
@@ -826,14 +834,23 @@ exports[`getLoadingTitle should return correct title 1`] = `
   opacity: 0.4;
 }
 
-<a
-    class="c0"
-    href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-    rel="noopener noreferrer"
-    target="_blank"
+<span
+    class=" _dsp_contents"
   >
-    USD//C (USDC)
-  </a>
-   on Ethereum
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      token data for 
+      <a
+        class="c0"
+        href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        USD//C (USDC)
+      </a>
+       on Ethereum
+    </span>
+  </span>
 </DocumentFragment>
 `;

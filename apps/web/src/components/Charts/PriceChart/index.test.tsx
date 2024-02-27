@@ -1,6 +1,7 @@
 import { TimePeriod } from 'graphql/data/util'
 import { render, screen } from 'test-utils/render'
 
+import { PriceChartData } from '.'
 import { PriceChart } from './OldPriceChart'
 
 jest.mock('components/Charts/AnimatedInLineChart', () => ({
@@ -14,10 +15,14 @@ jest.mock('components/Charts/FadeInLineChart', () => ({
 
 describe('PriceChart', () => {
   it('renders correctly with all prices filled', () => {
-    const mockPrices = Array.from({ length: 13 }, (_, i) => ({
-      value: 1,
-      timestamp: i * 3600,
-    }))
+    const mockPrices = Array.from(
+      { length: 13 },
+      (_, i) =>
+        ({
+          value: 1,
+          time: i * 3600,
+        } as PriceChartData)
+    )
 
     const { asFragment } = render(
       <PriceChart prices={mockPrices} width={780} height={392} timePeriod={TimePeriod.HOUR} />
@@ -27,10 +32,14 @@ describe('PriceChart', () => {
     expect(asFragment().textContent).toContain('0.00%')
   })
   it('renders correctly with some prices filled', () => {
-    const mockPrices = Array.from({ length: 13 }, (_, i) => ({
-      value: i < 10 ? 1 : 0,
-      timestamp: i * 3600,
-    }))
+    const mockPrices = Array.from(
+      { length: 13 },
+      (_, i) =>
+        ({
+          value: i < 10 ? 1 : 0,
+          time: i * 3600,
+        } as PriceChartData)
+    )
 
     const { asFragment } = render(
       <PriceChart prices={mockPrices} width={780} height={392} timePeriod={TimePeriod.HOUR} />
@@ -56,12 +65,14 @@ describe('PriceChart', () => {
   it('renders stale UI', () => {
     const { asFragment } = render(
       <PriceChart
-        prices={[
-          { value: 1, timestamp: 1694538836 },
-          { value: 1, timestamp: 1694538840 },
-          { value: 1, timestamp: 1694538844 },
-          { value: 0, timestamp: 1694538900 },
-        ]}
+        prices={
+          [
+            { value: 1, time: 1694538836 },
+            { value: 1, time: 1694538840 },
+            { value: 1, time: 1694538844 },
+            { value: 0, time: 1694538900 },
+          ] as PriceChartData[]
+        }
         width={780}
         height={392}
         timePeriod={TimePeriod.HOUR}

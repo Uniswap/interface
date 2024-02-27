@@ -93,6 +93,7 @@ const NumericalInputMimic = styled.span`
 `
 
 const NumericalInputSymbolContainer = styled.span<{ showPlaceholder: boolean }>`
+  user-select: none;
   ${NumericalInputFontStyle}
   ${({ showPlaceholder }) =>
     showPlaceholder &&
@@ -342,6 +343,7 @@ export default function SendCurrencyInputForm({
             onUserInput={handleUserInput}
             placeholder="0"
             $width={displayValue && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
+            maxDecimals={inputInFiat ? 6 : inputCurrency?.decimals}
           />
           <NumericalInputMimic ref={hiddenObserver.ref}>{displayValue}</NumericalInputMimic>
         </NumericalInputWrapper>

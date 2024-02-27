@@ -14,6 +14,7 @@ jest.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', () => ({
 }))
 
 jest.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => ({
+  ...jest.requireActual('components/AccountDrawer/MiniPortfolio/formatTimestamp'),
   formatTimestamp: () => 'January 26, 2024 at 1:52PM',
 }))
 
@@ -66,38 +67,45 @@ const mockLimitActivity: Activity = {
 }
 
 describe('LimitsMenu', () => {
-  it('should render when there is one open order', () => {
+  it('should render when there is one open order', async () => {
     mocked(useOpenLimitOrders).mockReturnValue({
       openLimitOrders: [mockLimitActivity],
       loading: false,
       refetch: jest.fn(),
     })
-    const { container } = render(<LimitsMenu onClose={jest.fn()} account="0x123" />)
+
+    const { container } = await act(async () => {
+      return render(<LimitsMenu onClose={jest.fn()} account="0x123" />)
+    })
     expect(container).toMatchSnapshot()
     expect(screen.getByText('Open limits')).toBeInTheDocument()
-    expect(screen.getByTestId('LimitsMenuContainer').children.length).toEqual(2) // one order and the cancel button
+    expect(screen.getByTestId('LimitsMenuContainer').children.length).toEqual(1) // one order
   })
 
-  it('should render when there are two open orders', () => {
+  it('should render when there are two open orders', async () => {
     mocked(useOpenLimitOrders).mockReturnValue({
       openLimitOrders: [mockLimitActivity, { ...mockLimitActivity, hash: '0x456' }],
       loading: false,
       refetch: jest.fn(),
     })
-    const { container } = render(<LimitsMenu onClose={jest.fn()} account="0x123" />)
+    const { container } = await act(async () => {
+      return render(<LimitsMenu onClose={jest.fn()} account="0x123" />)
+    })
     expect(container).toMatchSnapshot()
     expect(screen.getByText('Open limits')).toBeInTheDocument()
-    expect(screen.getByTestId('LimitsMenuContainer').children.length).toEqual(3) // two orders and the cancel button
+    expect(screen.getByTestId('LimitsMenuContainer').children.length).toEqual(2) // two orders
   })
 
-  it('should call the close callback', () => {
+  it('should call the close callback', async () => {
     const onClose = jest.fn()
     mocked(useOpenLimitOrders).mockReturnValue({
       openLimitOrders: [mockLimitActivity],
       loading: false,
       refetch: jest.fn(),
     })
-    render(<LimitsMenu onClose={onClose} account="0x123" />)
+    await act(async () => {
+      render(<LimitsMenu onClose={onClose} account="0x123" />)
+    })
     act(() => {
       fireEvent.click(screen.getByTestId('wallet-back'))
     })

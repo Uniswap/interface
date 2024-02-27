@@ -1,17 +1,16 @@
 import { useWeb3React } from '@web3-react/core'
 import { Chain } from 'graphql/data/__generated__/types-and-hooks'
-import { chainIdToBackendName } from 'graphql/data/util'
-import { useEffect, useRef } from 'react'
+import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
+import { useEffect } from 'react'
+import { useAppSelector } from 'state/hooks'
 
-export const useOnGlobalChainSwitch = (callback: (chain: Chain) => void) => {
-  const { chainId: connectedChainId } = useWeb3React()
-  const globalChainName = chainIdToBackendName(connectedChainId)
-  const prevGlobalChainRef = useRef(globalChainName)
+export const useOnGlobalChainSwitch = (callback: (chainId: number, chain?: Chain) => void) => {
+  const { chainId } = useWeb3React()
+  const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   useEffect(() => {
-    if (prevGlobalChainRef.current !== globalChainName) {
-      callback(globalChainName)
+    if (chainId && chainId === switchingChain) {
+      const chainName = CHAIN_ID_TO_BACKEND_NAME[chainId]
+      callback(chainId, chainName)
     }
-    prevGlobalChainRef.current = globalChainName
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [globalChainName])
+  }, [callback, chainId, switchingChain])
 }

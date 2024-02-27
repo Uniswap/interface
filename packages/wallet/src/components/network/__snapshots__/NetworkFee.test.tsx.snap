@@ -12,45 +12,27 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
   }
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
+    cancelable={true}
     focusable={true}
-    hitSlop={
-      {
-        "bottom": 5,
-        "left": 5,
-        "right": 5,
-        "top": 5,
-      }
-    }
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
+    hitSlop={[Function]}
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
     style={
       {
+        "flexDirection": "column",
         "flexShrink": 1,
         "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
       }
     }
   >
@@ -153,45 +135,26 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     <View
       style={
         {
-          "alignItems": "center",
-          "backgroundColor": "#3939391a",
-          "borderBottomLeftRadius": 8,
-          "borderBottomRightRadius": 8,
-          "borderBottomWidth": 1,
-          "borderColor": "transparent",
-          "borderLeftWidth": 1,
-          "borderRightWidth": 1,
-          "borderStyle": "solid",
-          "borderTopLeftRadius": 8,
-          "borderTopRightRadius": 8,
-          "borderTopWidth": 1,
-          "flexDirection": "row",
-          "gap": 8,
-          "justifyContent": "center",
-          "paddingBottom": 0,
-          "paddingLeft": 4,
-          "paddingRight": 4,
-          "paddingTop": 0,
+          "borderRadius": 6,
+          "flexDirection": "column",
+          "overflow": "hidden",
         }
       }
     >
-      <Text
-        allowFontScaling={true}
-        maxFontSizeMultiplier={1.2}
-        style={
+      <Image
+        source={
           {
-            "color": "#393939",
-            "fontFamily": "Basel-Medium",
-            "fontSize": 13,
-            "fontWeight": "500",
-            "lineHeight": 16,
-            "paddingTop": 1,
+            "process": [Function],
           }
         }
-        suppressHighlighting={true}
-      >
-        Ethereum
-      </Text>
+        style={
+          {
+            "height": 16,
+            "resizeMode": "contain",
+            "width": 16,
+          }
+        }
+      />
     </View>
     <View
       animatedStyle={
@@ -302,45 +265,27 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
   }
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
+    cancelable={true}
     focusable={true}
-    hitSlop={
-      {
-        "bottom": 5,
-        "left": 5,
-        "right": 5,
-        "top": 5,
-      }
-    }
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
+    hitSlop={[Function]}
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
     style={
       {
+        "flexDirection": "column",
         "flexShrink": 1,
         "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
       }
     }
   >
@@ -443,45 +388,26 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
     <View
       style={
         {
-          "alignItems": "center",
-          "backgroundColor": "#3939391a",
-          "borderBottomLeftRadius": 8,
-          "borderBottomRightRadius": 8,
-          "borderBottomWidth": 1,
-          "borderColor": "transparent",
-          "borderLeftWidth": 1,
-          "borderRightWidth": 1,
-          "borderStyle": "solid",
-          "borderTopLeftRadius": 8,
-          "borderTopRightRadius": 8,
-          "borderTopWidth": 1,
-          "flexDirection": "row",
-          "gap": 8,
-          "justifyContent": "center",
-          "paddingBottom": 0,
-          "paddingLeft": 4,
-          "paddingRight": 4,
-          "paddingTop": 0,
+          "borderRadius": 6,
+          "flexDirection": "column",
+          "overflow": "hidden",
         }
       }
     >
-      <Text
-        allowFontScaling={true}
-        maxFontSizeMultiplier={1.2}
-        style={
+      <Image
+        source={
           {
-            "color": "#393939",
-            "fontFamily": "Basel-Medium",
-            "fontSize": 13,
-            "fontWeight": "500",
-            "lineHeight": 16,
-            "paddingTop": 1,
+            "process": [Function],
           }
         }
-        suppressHighlighting={true}
-      >
-        Ethereum
-      </Text>
+        style={
+          {
+            "height": 16,
+            "resizeMode": "contain",
+            "width": 16,
+          }
+        }
+      />
     </View>
     <Text
       allowFontScaling={true}
@@ -514,45 +440,27 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
   }
 >
   <View
-    accessibilityState={
-      {
-        "busy": undefined,
-        "checked": undefined,
-        "disabled": undefined,
-        "expanded": undefined,
-        "selected": undefined,
-      }
-    }
-    accessibilityValue={
-      {
-        "max": undefined,
-        "min": undefined,
-        "now": undefined,
-        "text": undefined,
-      }
-    }
-    accessible={true}
-    collapsable={false}
+    cancelable={true}
     focusable={true}
-    hitSlop={
-      {
-        "bottom": 5,
-        "left": 5,
-        "right": 5,
-        "top": 5,
-      }
-    }
-    onClick={[Function]}
-    onResponderGrant={[Function]}
-    onResponderMove={[Function]}
-    onResponderRelease={[Function]}
-    onResponderTerminate={[Function]}
-    onResponderTerminationRequest={[Function]}
-    onStartShouldSetResponder={[Function]}
+    hitSlop={[Function]}
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
     style={
       {
+        "flexDirection": "column",
         "flexShrink": 1,
         "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
       }
     }
   >
@@ -655,45 +563,26 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     <View
       style={
         {
-          "alignItems": "center",
-          "backgroundColor": "#3939391a",
-          "borderBottomLeftRadius": 8,
-          "borderBottomRightRadius": 8,
-          "borderBottomWidth": 1,
-          "borderColor": "transparent",
-          "borderLeftWidth": 1,
-          "borderRightWidth": 1,
-          "borderStyle": "solid",
-          "borderTopLeftRadius": 8,
-          "borderTopRightRadius": 8,
-          "borderTopWidth": 1,
-          "flexDirection": "row",
-          "gap": 8,
-          "justifyContent": "center",
-          "paddingBottom": 0,
-          "paddingLeft": 4,
-          "paddingRight": 4,
-          "paddingTop": 0,
+          "borderRadius": 6,
+          "flexDirection": "column",
+          "overflow": "hidden",
         }
       }
     >
-      <Text
-        allowFontScaling={true}
-        maxFontSizeMultiplier={1.2}
-        style={
+      <Image
+        source={
           {
-            "color": "#393939",
-            "fontFamily": "Basel-Medium",
-            "fontSize": 13,
-            "fontWeight": "500",
-            "lineHeight": 16,
-            "paddingTop": 1,
+            "process": [Function],
           }
         }
-        suppressHighlighting={true}
-      >
-        Ethereum
-      </Text>
+        style={
+          {
+            "height": 16,
+            "resizeMode": "contain",
+            "width": 16,
+          }
+        }
+      />
     </View>
     <Text
       allowFontScaling={true}

@@ -264,10 +264,10 @@ const Numbers = ({
     numberOfDigits.left + numberOfDigits.right + Math.floor((numberOfDigits.left - 1) / 3) + 1,
     (index) => (
       <Animated.View
-        key={`$number_${index - (commaIndex - decimalPlace.value)}`}
+        key={`$number_${index - commaIndex}`}
         style={[{ height: DIGIT_HEIGHT }, AnimatedCharStyles.wrapperStyle]}>
         <RollNumber
-          key={`$number_${index - (commaIndex - decimalPlace.value)}`}
+          key={`$number_${index - commaIndex}`}
           chars={chars}
           commaIndex={commaIndex}
           currency={currency}

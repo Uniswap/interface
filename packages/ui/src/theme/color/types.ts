@@ -151,8 +151,7 @@ export interface GlobalPalette {
   slate800: string
   slate900: string
   slateVibrant: string
-  networkDarkEthereum: string
-  networkLightEthereum: string
+  networkEthereum: string
   networkOptimism: string
   networkPolygon: string
   networkArbitrum: string

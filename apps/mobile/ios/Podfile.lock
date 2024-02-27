@@ -644,10 +644,6 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.24):
     - BoringSSL-GRPC/Interface (= 0.0.24)
   - BoringSSL-GRPC/Interface (0.0.24)
-  - Burnt (0.11.4):
-    - ExpoModulesCore
-    - SPAlert
-    - SPIndicator
   - DoubleConversion (1.1.6)
   - EthersRS (0.0.5)
   - EXApplication (5.1.1):
@@ -1339,8 +1335,6 @@ PODS:
   - Sentry/HybridSDK (8.7.1):
     - SentryPrivate (= 8.7.1)
   - SentryPrivate (8.7.1)
-  - SPAlert (4.2.0)
-  - SPIndicator (1.6.4)
   - UIImageColors (2.1.0)
   - Yoga (1.14.0)
   - ZXingObjC/Core (3.6.5)
@@ -1354,7 +1348,6 @@ DEPENDENCIES:
   - Apollo (= 1.2.1)
   - Argon2Swift (= 1.0.3)
   - boost (from `../../../node_modules/react-native/third-party-podspecs/boost.podspec`)
-  - Burnt (from `../../../node_modules/burnt/ios`)
   - DoubleConversion (from `../../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - "EthersRS (from `../../../node_modules/@uniswap/ethers-rs-mobile`)"
   - EXApplication (from `../../../node_modules/expo-application/ios`)
@@ -1482,8 +1475,6 @@ SPEC REPOS:
     - SDWebImageWebPCoder
     - Sentry
     - SentryPrivate
-    - SPAlert
-    - SPIndicator
     - UIImageColors
     - ZXingObjC
 
@@ -1492,8 +1483,6 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/@amplitude/analytics-react-native"
   boost:
     :podspec: "../../../node_modules/react-native/third-party-podspecs/boost.podspec"
-  Burnt:
-    :path: "../../../node_modules/burnt/ios"
   DoubleConversion:
     :podspec: "../../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EthersRS:
@@ -1677,7 +1666,6 @@ SPEC CHECKSUMS:
   Argon2Swift: 99482c1b8122a03524b61e41c4903a9548e7c33b
   boost: 0a937fbcfdd646fca221c4f1d9750d7ccfdfc2dc
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
-  Burnt: 708556f6283e1b81767e6642e088819d85d1ea08
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EthersRS: 56b70e73d22d4e894b7e762eef1129159bcd3135
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
@@ -1790,8 +1778,6 @@ SPEC CHECKSUMS:
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   Sentry: 11776f6a25a128808d793d0d41bb7ad873b5ae4f
   SentryPrivate: b3c448eacdabe9eab7679a2e0af609c608f91572
-  SPAlert: 735da1f16a887e294719217572ce1f936d8c8782
-  SPIndicator: 93e0a4fb23de51294ac48e874c0f081a5e293e4f
   UIImageColors: d2ef3b0877d203cbb06489eeb78ea8b7788caabe
   Yoga: 135109c9b8c5d1a8af3a58d21cd4c7aa7f3bf555
   ZXingObjC: fdbb269f25dd2032da343e06f10224d62f537bdb

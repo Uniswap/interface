@@ -9,6 +9,7 @@ import { DefaultTheme } from 'styled-components'
 import { ThemeColors } from 'theme/colors'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
+import { ExploreTab } from 'pages/Explore'
 import { Chain, ContractInput, HistoryDuration, PriceSource, TokenStandard } from './__generated__/types-and-hooks'
 
 export enum PollingInterval {
@@ -76,7 +77,7 @@ export const GQL_MAINNET_CHAINS = [
 const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
 
 const UX_SUPPORTED_GQL_CHAINS = [...GQL_MAINNET_CHAINS, ...GQL_TESTNET_CHAINS] as const
-export type InterfaceGqlChain = (typeof UX_SUPPORTED_GQL_CHAINS)[number]
+type InterfaceGqlChain = (typeof UX_SUPPORTED_GQL_CHAINS)[number]
 
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
   [ChainId.MAINNET]: Chain.Ethereum,
@@ -107,6 +108,7 @@ type GqlChainsType = (typeof GQL_CHAINS)[number]
 export function isGqlSupportedChain(chainId: number | undefined): chainId is GqlChainsType {
   return !!chainId && GQL_CHAINS.includes(chainId)
 }
+
 export function toContractInput(currency: Currency): ContractInput {
   const chain = chainIdToBackendName(currency.chainId)
   return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
@@ -216,6 +218,18 @@ export const BACKEND_SUPPORTED_CHAINS = [
   Chain.Celo,
 ] as const
 export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.AVALANCHE] as const
+
+export function isBackendSupportedChain(chain: Chain): chain is InterfaceGqlChain {
+  return (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(chain)
+}
+
+export function getTokenExploreURL(
+  { tab, chain }: { tab: ExploreTab; chain: Chain },
+  isInfoExplorePageEnabled: boolean
+) {
+  const chainName = chain.toLowerCase()
+  return isInfoExplorePageEnabled ? `/explore/${tab}/${chainName}` : `/tokens/${chainName}`
+}
 
 export function getTokenDetailsURL({
   address,

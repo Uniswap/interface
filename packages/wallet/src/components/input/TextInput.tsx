@@ -22,7 +22,7 @@ export const TextInput = forwardRef<TextInputBase, TextInputProps>(function _Tex
       placeholderTextColor="$neutral3"
       px="$spacing16"
       py="$spacing12"
-      selectionColor={colors.neutral3.get()}
+      selectionColor={colors.neutral3.val}
       onBlur={onBlur}
       onChangeText={onChangeText}
       {...rest}

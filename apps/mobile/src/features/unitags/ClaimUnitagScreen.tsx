@@ -51,7 +51,6 @@ const FIXED_INFO_PILL_WIDTH = 128
 
 // Used in dynamic font size width calculation to ignore `.` characters
 const UNITAG_SUFFIX_CHARS_ONLY = UNITAG_SUFFIX.replaceAll('.', '')
-const TEXT_INPUT_PLACEHOLDER = 'yourname'
 
 // Accounts for height of image, gap between image and name, and spacing from top of titles
 const UNITAG_NAME_ANIMATE_DISTANCE_Y = imageSizes.image100 + spacing.spacing48 + spacing.spacing24
@@ -64,6 +63,8 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
   useAddBackButton(navigation)
   const { t } = useTranslation()
   const colors = useSporeColors()
+
+  const inputPlaceholder = t('yourname')
 
   // In onboarding flow, delete pending accounts and create account actions happen right before navigation
   // So pendingAccountAddress must be fetched in this component and can't be passed in params
@@ -139,14 +140,14 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
       }
 
       if (text.length === 0) {
-        onSetFontSize(TEXT_INPUT_PLACEHOLDER + UNITAG_SUFFIX_CHARS_ONLY)
+        onSetFontSize(inputPlaceholder + UNITAG_SUFFIX_CHARS_ONLY)
       } else {
         onSetFontSize(text + UNITAG_SUFFIX_CHARS_ONLY)
       }
 
       setUnitagInputValue(text?.trim().toLowerCase())
     },
-    [onSetFontSize, setUnitagInputValue]
+    [inputPlaceholder, onSetFontSize]
   )
 
   const onPressAddressTooltip = (): void => {
@@ -256,7 +257,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
         gap="$spacing16"
         onLayout={(event): void => {
           onLayout(event)
-          onSetFontSize(TEXT_INPUT_PLACEHOLDER + UNITAG_SUFFIX_CHARS_ONLY)
+          onSetFontSize(inputPlaceholder + UNITAG_SUFFIX_CHARS_ONLY)
         }}>
         {/* Fixed text that animates in when TextInput is animated out */}
         <AnimatedFlex
@@ -293,7 +294,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
                   fontWeight="$large"
                   numberOfLines={1}
                   p="$none"
-                  placeholder={TEXT_INPUT_PLACEHOLDER}
+                  placeholder={inputPlaceholder}
                   placeholderTextColor="$neutral3"
                   returnKeyType="done"
                   textAlign="left"
@@ -396,6 +397,7 @@ const InfoModal = ({
 }): JSX.Element => {
   const colors = useSporeColors()
   const { t } = useTranslation()
+  const usernamePlaceholder = t('yourname')
 
   return (
     <WarningModal
@@ -429,7 +431,7 @@ const InfoModal = ({
             shadowOpacity={0.4}
             shadowRadius="$spacing4">
             <Text color="$accent1" variant="buttonLabel4">
-              {TEXT_INPUT_PLACEHOLDER}
+              {usernamePlaceholder}
               <Text color="$neutral2" variant="buttonLabel4">
                 {UNITAG_SUFFIX}
               </Text>

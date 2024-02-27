@@ -70,7 +70,7 @@ exports[`CancelLimitsDialog should render correctly 1`] = `
   gap: 12px;
 }
 
-.c15 {
+.c14 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -78,7 +78,7 @@ exports[`CancelLimitsDialog should render correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c17 {
+.c16 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -89,6 +89,19 @@ exports[`CancelLimitsDialog should render correctly 1`] = `
 .c11 {
   color: #222222;
   cursor: pointer;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c11:hover {
+  opacity: 0.6;
+}
+
+.c11:active {
+  opacity: 0.4;
 }
 
 .c7 {
@@ -108,6 +121,82 @@ exports[`CancelLimitsDialog should render correctly 1`] = `
 
 .c7:active {
   opacity: 0.4;
+}
+
+.c8 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  border-radius: 16px;
+  padding: 4px 6px;
+  font-size: 14px;
+  font-weight: 485;
+  line-height: 20px;
+  background: #F9F9F9;
+  color: #7D7D7D;
+  stroke: none;
+}
+
+.c8:hover {
+  background: #22222212;
+  color: #222222;
+  opacity: unset;
+}
+
+.c8:hover path {
+  fill: #222222;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c18 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c3 {
+  width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
 }
 
 .c23 {
@@ -240,68 +329,6 @@ exports[`CancelLimitsDialog should render correctly 1`] = `
   background-color: transparent;
 }
 
-.c8 {
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  border-radius: 16px;
-  padding: 4px 6px;
-  font-size: 14px;
-  font-weight: 485;
-  line-height: 20px;
-  background: #F9F9F9;
-  color: #7D7D7D;
-  stroke: none;
-}
-
-.c8:hover {
-  background: #22222212;
-  color: #222222;
-  opacity: unset;
-}
-
-.c8:hover path {
-  fill: #222222;
-}
-
-.c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 24px;
-}
-
-.c13 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c3 {
-  width: 100%;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-}
-
 .c0 {
   will-change: transform,opacity;
 }
@@ -353,7 +380,7 @@ exports[`CancelLimitsDialog should render correctly 1`] = `
   width: 100%;
 }
 
-.c14 {
+.c13 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -372,14 +399,14 @@ exports[`CancelLimitsDialog should render correctly 1`] = `
   border-radius: 12px;
 }
 
-.c16 {
+.c15 {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
   font-weight: 500;
 }
 
-.c18 {
+.c17 {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -400,22 +427,6 @@ exports[`CancelLimitsDialog should render correctly 1`] = `
   -ms-flex-positive: 1;
   flex-grow: 1;
   height: 40px;
-}
-
-.c12 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c12:hover {
-  opacity: 0.6;
-}
-
-.c12:active {
-  opacity: 0.4;
 }
 
 @media screen and (max-width:640px) {
@@ -446,7 +457,15 @@ exports[`CancelLimitsDialog should render correctly 1`] = `
 <body>
   <div
     aria-hidden="true"
-  />
+  >
+    <span
+      class="t_light is_inversed _dsp_contents"
+    >
+      <span
+        class=" t_light _dsp_contents is_Theme"
+      />
+    </span>
+  </div>
   <reach-portal>
     <div
       data-focus-guard="true"
@@ -502,7 +521,7 @@ exports[`CancelLimitsDialog should render correctly 1`] = `
                   </div>
                 </a>
                 <svg
-                  class="c11 c12"
+                  class="c11"
                   data-testid="Dialog-closeButton"
                   fill="none"
                   height="24"
@@ -529,20 +548,20 @@ exports[`CancelLimitsDialog should render correctly 1`] = `
                 </svg>
               </div>
               <div
-                class="c13 c3"
+                class="c12 c3"
               >
                 <div
-                  class="c14"
+                  class="c13"
                 >
                   <svg
                     fill="none"
-                    height="28"
+                    height="24"
                     stroke="currentColor"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                     stroke-width="2"
                     viewBox="0 0 24 24"
-                    width="28"
+                    width="24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <circle
@@ -559,14 +578,18 @@ exports[`CancelLimitsDialog should render correctly 1`] = `
                   </svg>
                 </div>
                 <div
-                  class="c15 c16 css-4kpdx7"
+                  class="c14 c15 css-4kpdx7"
                 >
                   Cancel limit
                 </div>
                 <div
-                  class="c17 c18 css-1urox24"
+                  class="c16 c17 css-1urox24"
                 >
-                  Are you sure you want to cancel your limit before it executes or expires?
+                  <div
+                    class="c18"
+                  >
+                    Your swap could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?
+                  </div>
                 </div>
               </div>
               <div

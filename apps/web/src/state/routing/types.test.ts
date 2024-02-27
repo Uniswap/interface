@@ -16,6 +16,6 @@ describe('LimitOrderTrade', () => {
     expect(trade.totalGasUseEstimateUSD).toEqual(0)
     expect(trade.classicGasUseEstimateUSD).toEqual(0)
     expect(trade.startTimeBufferSecs).toEqual(0)
-    expect(trade.auctionPeriodSecs).toEqual(604800)
+    expect(trade.auctionPeriodSecs).toEqual(0)
   })
 })

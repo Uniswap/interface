@@ -1,10 +1,16 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
-import { TouchableBoxProps } from 'ui/src/components/touchable/TouchableBox'
+import { Insets } from 'react-native'
+import { StackProps } from 'tamagui'
 
-export type TouchableAreaProps = TouchableBoxProps & {
+type ExtraProps = {
+  hitSlop?: Insets | number
+  activeOpacity?: number
   hapticFeedback?: boolean
   hapticStyle?: ImpactFeedbackStyle
   ignoreDragEvents?: boolean
   scaleTo?: number
   disabled?: boolean
+  hoverable?: boolean
 }
+
+export type TouchableAreaProps = Omit<StackProps, keyof ExtraProps> & ExtraProps

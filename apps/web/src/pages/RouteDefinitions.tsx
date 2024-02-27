@@ -99,6 +99,8 @@ function createRouteDefinition(route: Partial<RouteDefinition>): RouteDefinition
   }
 }
 
+const SwapTitle = t`Buy, sell & trade Ethereum and other top tokens on Uniswap`
+
 export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/',
@@ -167,12 +169,22 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/send',
-    getElement: () => <Navigate to={{ ...location, pathname: '/swap' }} replace />,
+    getElement: () => <Swap />,
+    getTitle: () => t`Send tokens on Uniswap`,
+  }),
+  createRouteDefinition({
+    path: '/limits',
+    getElement: () => <Navigate to="/limit" replace />,
+  }),
+  createRouteDefinition({
+    path: '/limit',
+    getElement: () => <Swap />,
+    getTitle: () => SwapTitle,
   }),
   createRouteDefinition({
     path: '/swap',
     getElement: () => <Swap />,
-    getTitle: () => t`Buy, sell & trade Ethereum and other top tokens on Uniswap`,
+    getTitle: () => SwapTitle,
   }),
   createRouteDefinition({
     path: '/pool/v2/find',
@@ -184,7 +196,11 @@ export const routes: RouteDefinition[] = [
     getElement: () => <PoolV2 />,
     getTitle: () => t`Provide liquidity to pools (v2) on Uniswap`,
   }),
-  createRouteDefinition({ path: '/pool', getElement: () => <Pool /> }),
+  createRouteDefinition({
+    path: '/pool',
+    getElement: () => <Pool />,
+    getTitle: () => t`Manage & provide pool liquidity on Uniswap`,
+  }),
   createRouteDefinition({
     path: '/pool/:tokenId',
     getElement: () => <PositionPage />,

@@ -16,7 +16,7 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
   gap: 24px;
 }
 
-.c13 {
+.c12 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -31,7 +31,7 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
   gap: 12px;
 }
 
-.c19 {
+.c18 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -104,7 +104,7 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
   gap: 4px;
 }
 
-.c21 {
+.c20 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -122,7 +122,7 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
   gap: 4px;
 }
 
-.c22 {
+.c21 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -140,7 +140,7 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
   gap: 12px;
 }
 
-.c15 {
+.c14 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -148,7 +148,7 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c17 {
+.c16 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -159,6 +159,19 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
 .c11 {
   color: #222222;
   cursor: pointer;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c11:hover {
+  opacity: 0.6;
+}
+
+.c11:active {
+  opacity: 0.4;
 }
 
 .c7 {
@@ -180,7 +193,7 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
   opacity: 0.4;
 }
 
-.c26 {
+.c25 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -194,7 +207,7 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
   width: 100%;
 }
 
-.c23 {
+.c22 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -229,26 +242,26 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
   user-select: none;
 }
 
-.c23:active .c25 {
+.c22:active .c24 {
   background-color: #B8C0DC3d;
 }
 
-.c23:focus .c25 {
+.c22:focus .c24 {
   background-color: #B8C0DC3d;
 }
 
-.c23:hover .c25 {
+.c22:hover .c24 {
   background-color: #98A1C014;
 }
 
-.c23:disabled {
+.c22:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c23:disabled:active .c25,
-.c23:disabled:focus .c25,
-.c23:disabled:hover .c25 {
+.c22:disabled:active .c24,
+.c22:disabled:focus .c24,
+.c22:disabled:hover .c24 {
   background-color: transparent;
 }
 
@@ -327,7 +340,7 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
   width: 100%;
 }
 
-.c14 {
+.c13 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -346,14 +359,14 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
   border-radius: 12px;
 }
 
-.c16 {
+.c15 {
   font-size: 24px;
   line-height: 32px;
   text-align: center;
   font-weight: 500;
 }
 
-.c18 {
+.c17 {
   font-size: 16px;
   font-weight: 500;
   line-height: 24px;
@@ -364,7 +377,7 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
   text-align: center;
 }
 
-.c24 {
+.c23 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -374,25 +387,10 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
   -ms-flex-positive: 1;
   flex-grow: 1;
   height: 40px;
+  border-radius: 12px;
 }
 
-.c12 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c12:hover {
-  opacity: 0.6;
-}
-
-.c12:active {
-  opacity: 0.4;
-}
-
-.c20 {
+.c19 {
   padding: 20px 16px;
   border: 1px solid #22222212;
   gap: 8px;
@@ -427,7 +425,15 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
 <body>
   <div
     aria-hidden="true"
-  />
+  >
+    <span
+      class="t_light is_inversed _dsp_contents"
+    >
+      <span
+        class=" t_light _dsp_contents is_Theme"
+      />
+    </span>
+  </div>
   <reach-portal>
     <div
       data-focus-guard="true"
@@ -483,7 +489,7 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
                   </div>
                 </a>
                 <svg
-                  class="c11 c12"
+                  class="c11"
                   data-testid="Dialog-closeButton"
                   fill="none"
                   height="24"
@@ -510,10 +516,10 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
                 </svg>
               </div>
               <div
-                class="c13 c3"
+                class="c12 c3"
               >
                 <div
-                  class="c14"
+                  class="c13"
                 >
                   <svg
                     fill="none"
@@ -529,20 +535,20 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
                   </svg>
                 </div>
                 <div
-                  class="c15 c16 css-4kpdx7"
+                  class="c14 c15 css-4kpdx7"
                 >
                   New address
                 </div>
                 <div
-                  class="c17 c18 css-1urox24"
+                  class="c16 c17 css-1urox24"
                 >
                   You haven't transacted with this address before. Make sure it's the correct address before continuing.
                 </div>
                 <div
-                  class="c19 c3 c20"
+                  class="c18 c3 c19"
                 >
                   <div
-                    class="c9 c21"
+                    class="c9 c20"
                   >
                     <div
                       style="height: 16px; width: 16px; position: relative;"
@@ -691,7 +697,7 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
                       </div>
                     </div>
                     <div
-                      class="c15 css-n8z49y"
+                      class="c14 css-n8z49y"
                     >
                       0x9984b4b4E408e8D618A879e5315BD30952c89103
                     </div>
@@ -699,21 +705,21 @@ exports[`NewAddressSpeedBumpModal should render correctly 1`] = `
                 </div>
               </div>
               <div
-                class="c9 c22"
+                class="c9 c21"
               >
                 <button
-                  class="c23 c24"
+                  class="c22 c23"
                 >
                   <div
-                    class="c25 c26"
+                    class="c24 c25"
                   />
                   Cancel
                 </button>
                 <button
-                  class="c23 c24"
+                  class="c22 c23"
                 >
                   <div
-                    class="c25 c26"
+                    class="c24 c25"
                   />
                   Continue
                 </button>

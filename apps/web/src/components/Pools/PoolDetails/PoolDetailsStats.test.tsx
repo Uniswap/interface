@@ -42,6 +42,12 @@ describe('PoolDetailsStats', () => {
   })
 
   it('renders stats text correctly', async () => {
+    Object.defineProperty(window, 'innerWidth', {
+      writable: true,
+      configurable: true,
+      value: BREAKPOINTS.xl,
+    })
+
     const { asFragment } = render(<PoolDetailsStats {...mockProps} />)
     // After the first render, the extracted color is updated to an a11y compliant color
     // This is why we need to wrap the fragment in act(...)
@@ -64,7 +70,7 @@ describe('PoolDetailsStats', () => {
     Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,
-      value: BREAKPOINTS.md,
+      value: BREAKPOINTS.lg,
     })
     const { asFragment } = render(<PoolDetailsStats {...mockProps} />)
     await act(async () => {

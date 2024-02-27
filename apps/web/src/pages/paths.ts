@@ -15,6 +15,8 @@ export const paths = [
   '/create-proposal',
   '/send',
   '/swap',
+  '/limit',
+  '/limits',
   '/pool/v2/find',
   '/pool/v2',
   '/pool',

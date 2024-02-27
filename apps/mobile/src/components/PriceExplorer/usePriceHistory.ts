@@ -1,5 +1,5 @@
 import { maxBy } from 'lodash'
-import { Dispatch, SetStateAction, useCallback, useMemo, useState } from 'react'
+import { Dispatch, SetStateAction, useCallback, useMemo, useRef, useState } from 'react'
 import { SharedValue } from 'react-native-reanimated'
 import { TLineChartData } from 'react-native-wagmi-charts'
 import { PollingInterval } from 'wallet/src/constants/misc'
@@ -42,6 +42,11 @@ export function useTokenPriceHistory(
   error: boolean
   numberOfDigits: PriceNumberOfDigits
 } {
+  const lastPrice = useRef<undefined | number>(undefined)
+  const lastNumberOfDigits = useRef({
+    left: 0,
+    right: 0,
+  })
   const [duration, setDuration] = useState(initialDuration)
   const { convertFiatAmount } = useLocalizationContext()
 
@@ -64,14 +69,15 @@ export function useTokenPriceHistory(
   const offChainData = priceData?.tokenProjects?.[0]?.markets?.[0]
   const onChainData = priceData?.tokenProjects?.[0]?.tokens?.[0]?.market
 
-  const price = offChainData?.price?.value ?? onChainData?.price?.value
+  const price = offChainData?.price?.value ?? onChainData?.price?.value ?? lastPrice.current
+  lastPrice.current = price
   const priceHistory = offChainData?.priceHistory ?? onChainData?.priceHistory
   const pricePercentChange24h =
     offChainData?.pricePercentChange24h?.value ?? onChainData?.pricePercentChange24h?.value ?? 0
 
   const spot = useMemo(
     () =>
-      price
+      price !== undefined
         ? {
             value: { value: price },
             relativeChange: { value: pricePercentChange24h },
@@ -93,16 +99,15 @@ export function useTokenPriceHistory(
     const convertedMaxValue = convertFiatAmount(max?.value).amount
 
     if (max) {
-      return {
+      const newNumberOfDigits = {
         left: String(convertedMaxValue).split('.')[0]?.length || 10,
         right: Number(String(convertedMaxValue.toFixed(10)).split('.')[0]) > 0 ? 2 : 10,
       }
+      lastNumberOfDigits.current = newNumberOfDigits
+      return newNumberOfDigits
     }
 
-    return {
-      left: 0,
-      right: 0,
-    }
+    return lastNumberOfDigits.current
   }, [convertFiatAmount, priceHistory])
 
   const retry = useCallback(async () => {

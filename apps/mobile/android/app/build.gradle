@@ -125,17 +125,17 @@ android {
       dev {
         isDefault(true)
         applicationIdSuffix ".dev"
-        versionName "1.21.1"
+        versionName "1.22"
         dimension "variant"
       }
       beta {
         applicationIdSuffix ".beta"
-        versionName "1.21.1"
+        versionName "1.22"
         dimension "variant"
       }
       prod {
         dimension "variant"
-        versionName "1.21.1"
+        versionName "1.22"
       }
     }
 
@@ -198,6 +198,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle"
 
     implementation 'com.google.android.play:integrity:1.2.0'
+
+    // Firebase App Check: Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:32.7.2"))
+    implementation("com.google.firebase:firebase-appcheck-playintegrity")
 
     // Guava
     implementation "com.google.guava:guava:24.1-jre"

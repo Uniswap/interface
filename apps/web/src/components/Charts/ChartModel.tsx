@@ -1,41 +1,59 @@
+import { Trans } from '@lingui/macro'
 import { formatTickMarks } from 'components/Charts/utils'
+import Row from 'components/Row'
+import { MissingDataBars } from 'components/Table/icons'
 import { useActiveLocale } from 'hooks/useActiveLocale'
+import { useScreenSize } from 'hooks/useScreenSize'
 import { useUpdateAtom } from 'jotai/utils'
 import {
   BarPrice,
-  createChart,
   CrosshairMode,
   DeepPartial,
   IChartApi,
   ISeriesApi,
   LineStyle,
-  SeriesDataItemTypeMap,
-  SeriesOptionsMap,
-  Time,
+  Logical,
   TimeChartOptions,
+  createChart,
 } from 'lightweight-charts'
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
 import styled, { DefaultTheme, useTheme } from 'styled-components'
+import { ThemedText } from 'theme/components'
+import { textFadeIn } from 'theme/styles'
+import { Z_INDEX } from 'theme/zIndex'
 import { useFormatter } from 'utils/formatNumbers'
-
+import { v4 as uuidv4 } from 'uuid'
 import { refitChartContentAtom } from './TimeSelector'
-
-type SeriesDataItemType = SeriesDataItemTypeMap<Time>[keyof SeriesOptionsMap]
+import { SeriesDataItemType } from './types'
 
 interface ChartUtilParams<TDataType extends SeriesDataItemType> {
   locale: string
   theme: DefaultTheme
   format: ReturnType<typeof useFormatter>
+  isLargeScreen: boolean
   onCrosshairMove?: (data: TDataType | undefined) => void
 }
 
 interface ChartDataParams<TDataType extends SeriesDataItemType> {
   color?: string
   data: TDataType[]
+  /** Repesents whether `data` is stale. If true, stale UI will appear */
+  stale?: boolean
 }
 
 export type ChartModelParams<TDataType extends SeriesDataItemType> = ChartUtilParams<TDataType> &
   ChartDataParams<TDataType>
+
+type ChartTooltipBodyComponent<TDataType extends SeriesDataItemType> = React.FunctionComponent<{
+  data: TDataType
+}>
+
+export type ChartHoverData<TDataType extends SeriesDataItemType> = {
+  item: TDataType
+  x: number
+  y: number
+  logicalIndex: Logical
+}
 
 /** Util for managing lightweight-charts' state outside of the React Lifecycle. */
 export abstract class ChartModel<TDataType extends SeriesDataItemType> {
@@ -43,7 +61,11 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
   protected abstract series: ISeriesApi<any>
   protected data: TDataType[]
   protected chartDiv: HTMLDivElement
-  protected onCrosshairMove?: (data: TDataType | undefined) => void
+  protected onCrosshairMove?: (data: TDataType | undefined, index: number | undefined) => void
+  private _hoverData?: ChartHoverData<TDataType> | undefined
+  private _lastTooltipWidth: number | null = null
+
+  public tooltipId = `chart-tooltip-${uuidv4()}`
 
   constructor(chartDiv: HTMLDivElement, params: ChartModelParams<TDataType>) {
     this.chartDiv = chartDiv
@@ -53,26 +75,72 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
     this.api = createChart(chartDiv)
 
     this.api.subscribeCrosshairMove((param) => {
+      let newHoverData: ChartHoverData<TDataType> | undefined = undefined
+      const logical = param.logical
+      const x = param.point?.x
+      const y = param.point?.y
+
       if (
-        param === undefined ||
-        param.time === undefined ||
-        (param && param.point && param.point.x < 0) ||
-        (param && param.point && param.point.x > this.chartDiv.clientWidth) ||
-        (param && param.point && param.point.y < 0) ||
-        (param && param.point && param.point.y > this.chartDiv.clientHeight)
+        x !== undefined &&
+        isBetween(x, 0, this.chartDiv.clientWidth) &&
+        y !== undefined &&
+        isBetween(y, 0, this.chartDiv.clientHeight) &&
+        logical !== undefined
       ) {
-        // reset values
-        this.onCrosshairMove?.(undefined)
-      } else if (param) {
+        const item = param.seriesData.get(this.series) as TDataType | undefined
+        if (item) newHoverData = { item, x, y, logicalIndex: logical }
+      }
+
+      const prevHoverData = this._hoverData
+      if (
+        newHoverData?.item.time !== prevHoverData?.item.time ||
+        newHoverData?.logicalIndex !== prevHoverData?.logicalIndex ||
+        newHoverData?.x !== prevHoverData?.x ||
+        newHoverData?.y !== prevHoverData?.y
+      ) {
+        this._hoverData = newHoverData
         // Dynamically accesses this.onCrosshairMove rather than params.onCrosshairMove so we only ever have to make one subscribeCrosshairMove call
-        this.onCrosshairMove?.(param.seriesData.get(this.series) as TDataType)
+        this.onSeriesHover?.(newHoverData)
       }
     })
   }
 
+  /**
+   * Updates React state with the current crosshair data.
+   * This method should be overridden in subclasses to provide specific hover functionality.
+   * When overriding, call `super.onSeriesHover(data)` to maintain base functionality.
+   */
+  protected onSeriesHover(hoverData?: ChartHoverData<TDataType>) {
+    this.onCrosshairMove?.(hoverData?.item, hoverData?.logicalIndex)
+
+    if (!hoverData) return
+
+    // Tooltip positioning modified from https://github.com/tradingview/lightweight-charts/blob/master/plugin-examples/src/plugins/tooltip/tooltip.ts
+    const x = hoverData.x + this.api.priceScale('left').width() + 10
+    const deadzoneWidth = this._lastTooltipWidth ? Math.ceil(this._lastTooltipWidth) : 45
+    const xAdjusted = Math.min(x, this.api.paneSize().width - deadzoneWidth)
+
+    const transformX = `calc(${xAdjusted}px)`
+
+    const y = hoverData.y
+    const flip = y <= 20 + 100
+    const yPx = y + (flip ? 1 : -1) * 20
+    const yPct = flip ? '' : ' - 100%'
+    const transformY = `calc(${yPx}px${yPct})`
+
+    const tooltip = document.getElementById(this.tooltipId)
+
+    if (tooltip) {
+      tooltip.style.transform = `translate(${transformX}, ${transformY})`
+
+      const tooltipMeasurement = tooltip.getBoundingClientRect()
+      this._lastTooltipWidth = tooltipMeasurement?.width || null
+    }
+  }
+
   /** Updates the chart without re-creating it or resetting pan/zoom. */
   public updateOptions(
-    { locale, theme, format, onCrosshairMove }: ChartModelParams<TDataType>,
+    { locale, theme, format, isLargeScreen, onCrosshairMove }: ChartModelParams<TDataType>,
     nonDefaultChartOptions?: DeepPartial<TimeChartOptions>
   ) {
     this.onCrosshairMove = onCrosshairMove
@@ -95,6 +163,7 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
         fixRightEdge: true,
       },
       rightPriceScale: {
+        visible: isLargeScreen,
         borderVisible: false,
         scaleMargins: {
           top: 0.32,
@@ -143,21 +212,26 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
   }
 }
 
+const isBetween = (num: number, lower: number, upper: number) => num > lower && num < upper
+
 const ChartDiv = styled.div<{ height?: number }>`
   ${({ height }) => height && `height: ${height}px`};
   width: 100%;
   position: relative;
+  ${textFadeIn};
 `
 
 /** Returns a div injected with a lightweight-chart, corresponding to the given Model and params */
 export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType extends SeriesDataItemType>({
   Model,
+  TooltipBody,
   params,
   height,
   children,
   className,
 }: {
   Model: new (chartDiv: HTMLDivElement, params: TParamType & ChartUtilParams<TDataType>) => ChartModel<TDataType>
+  TooltipBody?: ChartTooltipBodyComponent<TDataType>
   params: TParamType
   height?: number
   children?: (crosshair?: TDataType) => ReactElement
@@ -171,9 +245,10 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   const format = useFormatter()
   const theme = useTheme()
   const locale = useActiveLocale()
+  const { md: isLargeScreen } = useScreenSize()
   const modelParams = useMemo(
-    () => ({ ...params, format, theme, locale, onCrosshairMove: setCrosshairData }),
-    [format, locale, params, theme]
+    () => ({ ...params, format, theme, locale, isLargeScreen, onCrosshairMove: setCrosshairData }),
+    [format, isLargeScreen, locale, params, theme]
   )
 
   // Chart model state should not affect React render cycles since the chart canvas is drawn outside of React, so we store via ref
@@ -203,8 +278,60 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   }, [setRefitChartContent])
 
   return (
-    <ChartDiv ref={setChartDivElement} height={height} className={className}>
+    <ChartDiv
+      ref={setChartDivElement}
+      height={height}
+      className={className}
+      // Prevents manipulating the chart with touch so that it doesn't interfere with scrolling the page.
+      onTouchMove={(e) => e.stopPropagation()}
+    >
       {children && children(crosshairData)}
+      {TooltipBody && crosshairData && (
+        <ChartTooltip id={chartModelRef.current?.tooltipId}>
+          <TooltipBody data={crosshairData} />
+        </ChartTooltip>
+      )}
+      {params.stale && <StaleBanner />}
     </ChartDiv>
+  )
+}
+
+const ChartTooltip = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: 0%;
+  top: 0;
+  z-index: ${Z_INDEX.tooltip};
+  background: ${({ theme }) => theme.surface5};
+  backdrop-filter: ${({ theme }) => theme.blur.light};
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.surface3};
+  padding: 8px;
+`
+
+const StaleBannerWrapper = styled(ChartTooltip)`
+  border-radius: 16px;
+  left: unset;
+  top: unset;
+  right: 12px;
+  bottom: 40px;
+  padding: 12px;
+  background: ${({ theme }) => theme.surface4};
+`
+
+function StaleBanner() {
+  const theme = useTheme()
+  // TODO(WEB-3739): Update Chart UI to grayscale when data is stale
+  return (
+    <StaleBannerWrapper>
+      <Row gap="sm">
+        <MissingDataBars color={theme.neutral1} />
+        <ThemedText.BodySmall>
+          <Trans>Data may be outdated</Trans>
+        </ThemedText.BodySmall>
+      </Row>
+    </StaleBannerWrapper>
   )
 }

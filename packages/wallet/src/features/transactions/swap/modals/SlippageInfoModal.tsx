@@ -50,7 +50,7 @@ export function SlippageInfoModal({
       backgroundColor={colors.surface1.get()}
       name={ModalName.SlippageInfo}
       onClose={onClose}>
-      <Flex centered fill gap="$spacing16" px="$spacing24" py="$spacing12">
+      <Flex centered gap="$spacing16" px="$spacing24" py="$spacing12">
         <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
           <Icons.Settings color="$neutral2" size="$icon.28" />
         </Flex>
@@ -67,14 +67,13 @@ export function SlippageInfoModal({
               )}{' '}
         </Text>
         <Flex
-          fill
           backgroundColor="$surface2"
           borderRadius="$rounded20"
           gap="$spacing8"
           px="$spacing16"
           py="$spacing12"
           width="100%">
-          <Flex fill row alignItems="center" gap="$spacing12" justifyContent="space-between">
+          <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
             <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body2">
               {t('Max slippage')}
             </Text>
@@ -97,7 +96,7 @@ export function SlippageInfoModal({
               </Text>
             </Flex>
           </Flex>
-          <Flex fill row alignItems="center" gap="$spacing12" justifyContent="space-between">
+          <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
             <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body2">
               {tradeType === TradeType.EXACT_INPUT ? t('Receive at least') : t('Spend at most')}
             </Text>

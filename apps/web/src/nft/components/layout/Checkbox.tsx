@@ -1,6 +1,7 @@
 import { ApprovedCheckmarkIcon } from 'nft/components/icons'
 import React from 'react'
 import styled from 'styled-components'
+import { ClickableStyle } from 'theme/components'
 
 const CheckboxLabel = styled.label`
   display: flex;
@@ -11,7 +12,7 @@ const CheckboxLabel = styled.label`
   line-height: 1;
 `
 const CheckContainer = styled.span<{ checked?: boolean; hovered?: boolean; size?: number }>`
-  border-color: ${({ checked, hovered, theme }) => (checked || hovered ? theme.accent1 : theme.neutral2)};
+  border-color: ${({ checked, hovered, theme }) => (checked || hovered ? theme.accent1 : theme.surface3)};
   background: ${({ checked, theme }) => (checked ? theme.accent1 : undefined)};
   display: inline-block;
   margin-right: 1px;
@@ -19,8 +20,9 @@ const CheckContainer = styled.span<{ checked?: boolean; hovered?: boolean; size?
   height: ${({ size }) => (size ? `${size}px` : '24px')};
   width: ${({ size }) => (size ? `${size}px` : '24px')};
   border-style: solid;
-  border-width: 2px;
+  border-width: 1.5px;
   position: relative;
+  ${ClickableStyle}
 `
 const Input = styled.input`
   position: absolute;
@@ -45,11 +47,12 @@ const StyledCheck = styled(ApprovedCheckmarkIcon)<{ checked?: boolean; size?: nu
 interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
   hovered: boolean
   children?: React.ReactNode
+  className?: string
 }
 
-export const Checkbox: React.FC<CheckboxProps> = ({ hovered, children, ...props }: CheckboxProps) => {
+export const Checkbox: React.FC<CheckboxProps> = ({ hovered, children, className, ...props }: CheckboxProps) => {
   return (
-    <CheckboxLabel>
+    <CheckboxLabel className={className}>
       {children}
       <CheckContainer
         checked={props.checked}

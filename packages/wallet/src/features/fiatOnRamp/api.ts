@@ -5,6 +5,8 @@ import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { config } from 'wallet/src/config'
 import { createSignedRequestParams, objectToQueryString } from 'wallet/src/data/utils'
+import { walletContextValue } from 'wallet/src/features/wallet/context'
+
 import {
   FORQuoteRequest,
   FORQuoteResponse,
@@ -12,11 +14,14 @@ import {
   FORSupportedCountriesResponse,
   FORSupportedTokensRequest,
   FORSupportedTokensResponse,
+  FORTransactionsRequest,
   FORTransactionsResponse,
   FORTransferInstitutionsRequest,
   FORTransferInstitutionsResponse,
+  FORTransferWidgetUrlRequest,
   FORWidgetUrlRequest,
   FORWidgetUrlResponse,
+  FiatOnRampTransactionDetails,
   FiatOnRampWidgetUrlQueryParameters,
   FiatOnRampWidgetUrlQueryResponse,
   MoonpayBuyQuoteResponse,
@@ -26,11 +31,14 @@ import {
   MoonpayListCurrenciesResponse,
   MoonpayTransactionsResponse,
 } from 'wallet/src/features/fiatOnRamp/types'
-import { extractFiatOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatPurchaseTransactionDetails'
+import { extractFiatOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
+import { extractMoonpayTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractMoonpayTransactionDetails'
 import { serializeQueryParams } from 'wallet/src/features/transactions/swap/utils'
-import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
+import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
+import { RootState } from 'wallet/src/state'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 
 const COMMON_QUERY_PARAMS = serializeQueryParams({ apiKey: config.moonpayApiKey })
@@ -52,11 +60,6 @@ const supportedCurrencyCodes = [
   'usdc_optimism',
   'usdc_polygon',
 ]
-
-export type AuthenticatedRequestParams = {
-  account: Account
-  signerManager: SignerManager
-}
 
 export const fiatOnRampApi = createApi({
   reducerPath: 'fiatOnRampApi',
@@ -248,16 +251,32 @@ export const fiatOnRampAggregatorApi = createApi({
         method: 'POST',
       }),
     }),
+    fiatOnRampAggregatorTransferWidget: builder.query<
+      FORWidgetUrlResponse,
+      FORTransferWidgetUrlRequest
+    >({
+      query: (request) => ({
+        url: '/transfer-widget-url',
+        body: request,
+        method: 'POST',
+      }),
+    }),
     fiatOnRampAggregatorTransactions: builder.query<
       FORTransactionsResponse,
-      AuthenticatedRequestParams
+      FORTransactionsRequest
     >({
-      async queryFn(arg, api, extraOptions, baseQuery) {
+      async queryFn(args, { getState }, _extraOptions, baseQuery) {
         try {
+          const account = selectActiveAccount(getState() as RootState)
+          const signerManager = walletContextValue.signers
+
+          if (!account) {
+            throw new Error('No active account')
+          }
           const { requestParams, signature } = await createSignedRequestParams(
-            undefined,
-            arg.account,
-            arg.signerManager
+            args,
+            account,
+            signerManager
           )
           const result = await baseQuery({
             url: `/transactions?${objectToQueryString(requestParams)}`,
@@ -285,15 +304,16 @@ export const {
   useFiatOnRampAggregatorSupportedTokensQuery,
   useFiatOnRampAggregatorTransferInstitutionsQuery,
   useFiatOnRampAggregatorWidgetQuery,
+  useFiatOnRampAggregatorTransferWidgetQuery,
   useFiatOnRampAggregatorTransactionsQuery,
 } = fiatOnRampAggregatorApi
 
 /**
  * Utility to fetch fiat onramp transactions from moonpay
  */
-export function fetchFiatOnRampTransaction(
-  previousTransactionDetails: TransactionDetails
-): Promise<TransactionDetails | undefined> {
+export function fetchMoonpayTransaction(
+  previousTransactionDetails: FiatOnRampTransactionDetails
+): Promise<FiatOnRampTransactionDetails | undefined> {
   return fetch(
     `${config.moonpayApiUrl}/v1/transactions/ext/${previousTransactionDetails.id}?${COMMON_QUERY_PARAMS}`
   ).then((res) => {
@@ -336,10 +356,69 @@ export function fetchFiatOnRampTransaction(
     }
 
     return res.json().then((transactions: MoonpayTransactionsResponse) =>
-      extractFiatOnRampTransactionDetails(
+      extractMoonpayTransactionDetails(
         // log while we have the full moonpay tx response
         transactions.sort((a, b) => (dayjs(a.createdAt).isAfter(dayjs(b.createdAt)) ? 1 : -1))?.[0]
       )
     )
   })
+}
+
+/**
+ * Utility to fetch fiat onramp transactions
+ */
+export async function fetchFiatOnRampTransaction(
+  previousTransactionDetails: FiatOnRampTransactionDetails,
+  account: Account,
+  signerManager: SignerManager
+): Promise<FiatOnRampTransactionDetails | undefined> {
+  const { requestParams, signature } = await createSignedRequestParams(
+    { externalSessionId: previousTransactionDetails.id },
+    account,
+    signerManager
+  )
+  const res = await fetch(
+    `${config.fiatOnRampApiUrl}/transactions?${objectToQueryString(requestParams)}`,
+    {
+      headers: { 'x-uni-sig': signature },
+    }
+  )
+  const { transactions }: FORTransactionsResponse = await res.json()
+  const transaction = transactions.sort((a, b) =>
+    dayjs(a.createdAt).isAfter(dayjs(b.createdAt)) ? 1 : -1
+  )?.[0]
+  if (!transaction) {
+    const isStale = dayjs(previousTransactionDetails.addedTime).isBefore(
+      dayjs().subtract(FIAT_ONRAMP_STALE_TX_TIMEOUT, 'ms')
+    )
+
+    if (isStale) {
+      logger.debug(
+        'fiatOnRamp/api',
+        'fetchFiatOnRampTransaction',
+        `Transaction with id ${previousTransactionDetails.id} not found.`
+      )
+
+      return {
+        ...previousTransactionDetails,
+        // use `Unknown` status to denote a transaction missing from backend
+        // this transaction will later get deleted
+        status: TransactionStatus.Unknown,
+      }
+    } else {
+      logger.debug(
+        'fiatOnRamp/api',
+        'fetchFiatOnRampTransaction',
+        `Transaction with id ${
+          previousTransactionDetails.id
+        } not found, but not stale yet (${dayjs()
+          .subtract(previousTransactionDetails.addedTime, 'ms')
+          .unix()}s old).`
+      )
+
+      return previousTransactionDetails
+    }
+  }
+
+  return extractFiatOnRampTransactionDetails(transaction)
 }

@@ -76,8 +76,9 @@ function WebBottomSheetModal({
             !open && onClose?.()
           }}>
           <Sheet.Overlay
-            animation="lazy"
             backgroundColor="$black"
+            enterStyle={{ opacity: 0 }}
+            exitStyle={{ opacity: 0 }}
             height="100%"
             opacity={0.6}
             onPress={(): void => {
@@ -95,7 +96,8 @@ function WebBottomSheetModal({
               p="$spacing12"
               style={{ backgroundColor: backgroundColor ?? colors.surface1.val }}
               width="100%">
-              {children}
+              {/* To keep this consistent with how the `BottomSheetModal` works on native mobile, we only mount the children when the modal is open. */}
+              {isModalOpen ? children : null}
             </Flex>
           </Sheet.Frame>
         </Sheet>

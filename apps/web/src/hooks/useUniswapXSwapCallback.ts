@@ -79,6 +79,16 @@ export function useUniswapXSwapCallback({
         if (!trade) throw new Error('missing trade')
 
         const signDutchOrder = async (): Promise<{ signature: string; updatedOrder: DutchOrder }> => {
+          sendAnalyticsEvent('UniswapX Signature Requested', {
+            ...formatSwapSignedAnalyticsEventProperties({
+              trade,
+              allowedSlippage,
+              fiatValues,
+              portfolioBalanceUsd,
+            }),
+            ...analyticsContext,
+          })
+
           try {
             const updatedNonce = await getUpdatedNonce(
               account,
@@ -182,6 +192,15 @@ export function useUniswapXSwapCallback({
           // backend team provides a list of error codes and potential messages
           throw new Error(`${body.errorCode ?? body.detail ?? 'Unknown error'}`)
         }
+
+        sendAnalyticsEvent('UniswapX Order Submitted', {
+          ...formatSwapSignedAnalyticsEventProperties({
+            trade,
+            allowedSlippage,
+            fiatValues,
+            portfolioBalanceUsd,
+          }),
+        })
 
         return {
           type: TradeFillType.UniswapX as const,

@@ -63,6 +63,7 @@ export default function SwapPage({ className }: { className?: string }) {
           disableTokenInputs={supportedChainId === undefined}
           initialInputCurrency={initialInputCurrency}
           initialOutputCurrency={initialOutputCurrency}
+          syncTabToUrl={true}
         />
         <NetworkAlert />
       </PageWrapper>
@@ -85,6 +86,8 @@ export function Swap({
   chainId,
   onCurrencyChange,
   disableTokenInputs = false,
+  compact = false,
+  syncTabToUrl,
 }: {
   className?: string
   chainId?: ChainId
@@ -92,6 +95,8 @@ export function Swap({
   disableTokenInputs?: boolean
   initialInputCurrency?: Currency
   initialOutputCurrency?: Currency
+  compact?: boolean
+  syncTabToUrl: boolean
 }) {
   const isDark = useIsDarkMode()
 
@@ -106,7 +111,7 @@ export function Swap({
         {({ currentTab }) => (
           <SwapContextProvider>
             <SwapWrapper isDark={isDark} className={className} id="swap-page">
-              <SwapHeader />
+              <SwapHeader compact={compact} syncTabToUrl={syncTabToUrl} />
               {currentTab === SwapTab.Swap && (
                 <SwapForm onCurrencyChange={onCurrencyChange} disableTokenInputs={disableTokenInputs} />
               )}

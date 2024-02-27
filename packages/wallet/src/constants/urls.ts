@@ -37,6 +37,8 @@ export const uniswapUrls = {
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
   appUrl: `https://${UNISWAP_APP_HOSTNAME}`,
   interfaceUrl: `https://${UNISWAP_APP_HOSTNAME}/#/swap`,
+  extensionFeedbackFormUrl: 'https://forms.gle/RGFhKnABUjdPiYQH6', // TODO(EXT-668): Remove this after F&F launch
+  interfaceTokensUrl: `https://${UNISWAP_APP_HOSTNAME}/tokens`,
   unitagsApiUrl: getUnitagsApiUrl(),
   tradingApiPaths: {
     quote: getTradingApiQuotePath(),

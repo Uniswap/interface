@@ -1,7 +1,9 @@
-import { Trans } from '@lingui/macro'
+import { Trans, t } from '@lingui/macro'
+import { DropdownSelector } from 'components/DropdownSelector'
 import { CheckMark } from 'components/Icons/CheckMark'
 import { Share as ShareIcon } from 'components/Icons/Share'
 import { TwitterXLogo } from 'components/Icons/TwitterX'
+import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/TokenDetails/shared'
 import { useInfoPoolPageEnabled } from 'featureFlags/flags/infoPoolPage'
 import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import useCopyClipboard from 'hooks/useCopyClipboard'
@@ -26,18 +28,6 @@ const ShareButtonDisplay = styled.div`
   position: relative;
 `
 
-const StyledButton = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 8px 12px;
-  border-radius: 20px;
-  color: ${({ theme }) => theme.neutral1};
-  background-color: ${({ theme }) => opacify(12, theme.neutral1)};
-  width: max-content;
-  ${ClickableStyle}
-`
-
 const Share = styled(ShareIcon)<{ open: boolean }>`
   height: 24px;
   width: 24px;
@@ -49,7 +39,6 @@ const ShareActions = styled.div<{ $isInfoTDPEnabled?: boolean; $isInfoPDPEnabled
   position: absolute;
   z-index: ${Z_INDEX.dropdown};
   width: 200px;
-  top: 36px;
   top: ${({ $isInfoTDPEnabled, $isInfoPDPEnabled }) => ($isInfoTDPEnabled || $isInfoPDPEnabled ? '40px' : '36px')};
   right: 0px;
   justify-content: center;
@@ -107,69 +96,71 @@ export default function ShareButton({ name }: { name: string }) {
   const copyHelperRef = useRef<CopyHelperRefType>(null)
   const [isCopied, setCopied] = useCopyClipboard()
 
-  return (
-    <ShareButtonDisplay ref={node}>
-      {isInfoTDPEnabled || isInfoPDPEnabled ? (
-        <>
-          <StyledButton onClick={toggleShare}>
-            <ShareIcon fill={theme.neutral1} width={18} height={18} />
-          </StyledButton>
-          {open && (
-            <ShareActions $isInfoTDPEnabled $isInfoPDPEnabled>
-              <ShareAction onClick={() => setCopied(currentLocation)}>
-                {isCopied ? (
-                  <CheckMark height={18} width={18} />
-                ) : (
-                  <Link width="18px" height="18px" color={theme.neutral1} />
-                )}
-                <ThemedText.BodyPrimary>
-                  {isCopied ? <Trans>Copied</Trans> : <Trans>Copy link</Trans>}
-                </ThemedText.BodyPrimary>
-              </ShareAction>
-              <ShareAction
-                onClick={() => {
-                  toggleShare()
-                  openShareTweetWindow(name)
-                }}
-              >
-                <TwitterXLogo width="18px" height="18px" fill={theme.neutral1} />
-                <ThemedText.BodyPrimary>
-                  <Trans>Share to Twitter</Trans>
-                </ThemedText.BodyPrimary>
-              </ShareAction>
-            </ShareActions>
-          )}
-        </>
-      ) : (
-        <>
-          <Share onClick={toggleShare} aria-label="ShareOptions" open={open} fill="#9B9B9B" />
-          {open && (
-            <ShareActions>
-              <ShareAction onClick={() => copyHelperRef.current?.forceCopy()}>
-                <CopyHelper
-                  InitialIcon={Link}
-                  color={theme.neutral1}
-                  iconPosition="left"
-                  gap={12}
-                  toCopy={currentLocation}
-                  ref={copyHelperRef}
-                >
-                  <Trans>Copy link</Trans>
-                </CopyHelper>
-              </ShareAction>
-
-              <ShareAction
-                onClick={() => {
-                  toggleShare()
-                  openShareTweetWindow(name)
-                }}
-              >
-                <Twitter color={theme.neutral1} size={20} strokeWidth={1.5} />
+  return isInfoTDPEnabled || isInfoPDPEnabled ? (
+    <div ref={node}>
+      <DropdownSelector
+        isOpen={open}
+        toggleOpen={toggleShare}
+        menuLabel={<ShareIcon fill={theme.neutral1} width={18} height={18} />}
+        tooltipText={t`Share`}
+        internalMenuItems={
+          <>
+            <ShareAction onClick={() => setCopied(currentLocation)}>
+              {isCopied ? (
+                <CheckMark height={18} width={18} />
+              ) : (
+                <Link width="18px" height="18px" color={theme.neutral1} />
+              )}
+              <ThemedText.BodyPrimary>
+                {isCopied ? <Trans>Copied</Trans> : <Trans>Copy link</Trans>}
+              </ThemedText.BodyPrimary>
+            </ShareAction>
+            <ShareAction
+              onClick={() => {
+                toggleShare()
+                openShareTweetWindow(name)
+              }}
+            >
+              <TwitterXLogo width="18px" height="18px" fill={theme.neutral1} />
+              <ThemedText.BodyPrimary>
                 <Trans>Share to Twitter</Trans>
-              </ShareAction>
-            </ShareActions>
-          )}
-        </>
+              </ThemedText.BodyPrimary>
+            </ShareAction>
+          </>
+        }
+        hideChevron
+        buttonCss={ActionButtonStyle}
+        menuFlyoutCss={ActionMenuFlyoutStyle}
+      />
+    </div>
+  ) : (
+    <ShareButtonDisplay ref={node}>
+      <Share onClick={toggleShare} aria-label="ShareOptions" open={open} fill="#9B9B9B" />
+      {open && (
+        <ShareActions>
+          <ShareAction onClick={() => copyHelperRef.current?.forceCopy()}>
+            <CopyHelper
+              InitialIcon={Link}
+              color={theme.neutral1}
+              iconPosition="left"
+              gap={12}
+              toCopy={currentLocation}
+              ref={copyHelperRef}
+            >
+              <Trans>Copy link</Trans>
+            </CopyHelper>
+          </ShareAction>
+
+          <ShareAction
+            onClick={() => {
+              toggleShare()
+              openShareTweetWindow(name)
+            }}
+          >
+            <Twitter color={theme.neutral1} size={20} strokeWidth={1.5} />
+            <Trans>Share to Twitter</Trans>
+          </ShareAction>
+        </ShareActions>
       )}
     </ShareButtonDisplay>
   )

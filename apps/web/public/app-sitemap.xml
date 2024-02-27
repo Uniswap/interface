@@ -19,6 +19,18 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://app.uniswap.org/limit</loc>
+    <lastmod>2024-02-21T20:00:00.976Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/limits</loc>
+    <lastmod>2024-02-21T20:00:00.976Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://app.uniswap.org/swap</loc>
     <lastmod>2023-10-11T19:57:27.976Z</lastmod>
     <changefreq>weekly</changefreq>

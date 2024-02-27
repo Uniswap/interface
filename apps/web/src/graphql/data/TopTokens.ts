@@ -102,31 +102,31 @@ gql`
   }
 `
 
+const TokenSortMethods = {
+  [TokenSortMethod.PRICE]: (a: TopToken, b: TopToken) =>
+    (b?.market?.price?.value ?? 0) - (a?.market?.price?.value ?? 0),
+  [TokenSortMethod.DEPRECATE_PERCENT_CHANGE]: (a: TopToken, b: TopToken) =>
+    (b?.market?.pricePercentChange?.value ?? 0) - (a?.market?.pricePercentChange?.value ?? 0),
+  [TokenSortMethod.DAY_CHANGE]: (a: TopToken, b: TopToken) =>
+    (b?.market?.pricePercentChange?.value ?? 0) - (a?.market?.pricePercentChange?.value ?? 0),
+  [TokenSortMethod.HOUR_CHANGE]: (a: TopToken, b: TopToken) =>
+    (b?.market?.pricePercentChange1Hour?.value ?? 0) - (a?.market?.pricePercentChange1Hour?.value ?? 0),
+  [TokenSortMethod.DEPRECATE_TOTAL_VALUE_LOCKED]: (a: TopToken, b: TopToken) =>
+    (b?.market?.totalValueLocked?.value ?? 0) - (a?.market?.totalValueLocked?.value ?? 0),
+  [TokenSortMethod.VOLUME]: (a: TopToken, b: TopToken) =>
+    (b?.market?.volume?.value ?? 0) - (a?.market?.volume?.value ?? 0),
+  [TokenSortMethod.FULLY_DILUTED_VALUATION]: (a: TopToken, b: TopToken) =>
+    (b?.project?.markets?.[0]?.fullyDilutedValuation?.value ?? 0) -
+    (a?.project?.markets?.[0]?.fullyDilutedValuation?.value ?? 0),
+}
+
 function useSortedTokens(tokens: TopTokens100Query['topTokens']) {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
   return useMemo(() => {
     if (!tokens) return undefined
-    let tokenArray = Array.from(tokens)
-    switch (sortMethod) {
-      case TokenSortMethod.PRICE:
-        tokenArray = tokenArray.sort((a, b) => (b?.market?.price?.value ?? 0) - (a?.market?.price?.value ?? 0))
-        break
-      case TokenSortMethod.PERCENT_CHANGE:
-        tokenArray = tokenArray.sort(
-          (a, b) => (b?.market?.pricePercentChange?.value ?? 0) - (a?.market?.pricePercentChange?.value ?? 0)
-        )
-        break
-      case TokenSortMethod.TOTAL_VALUE_LOCKED:
-        tokenArray = tokenArray.sort(
-          (a, b) => (b?.market?.totalValueLocked?.value ?? 0) - (a?.market?.totalValueLocked?.value ?? 0)
-        )
-        break
-      case TokenSortMethod.VOLUME:
-        tokenArray = tokenArray.sort((a, b) => (b?.market?.volume?.value ?? 0) - (a?.market?.volume?.value ?? 0))
-        break
-    }
+    const tokenArray = Array.from(tokens).sort(TokenSortMethods[sortMethod])
 
     return sortAscending ? tokenArray.reverse() : tokenArray
   }, [tokens, sortMethod, sortAscending])

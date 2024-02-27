@@ -32,6 +32,7 @@ const Tag = styled(Badge)`
   padding: 4px 6px;
 `
 const StyledButton = css<{ isInfoExplorePageEnabled: boolean }>`
+  height: 40px;
   ${({ isInfoExplorePageEnabled }) => !isInfoExplorePageEnabled && `min-width: 156px;`}
 `
 const StyledMenuFlyout = css<{ isInfoExplorePageEnabled: boolean }>`
@@ -65,52 +66,54 @@ export default function NetworkFilter() {
   const chainInfo = getChainInfo(chainId)
 
   return (
-    <DropdownSelector
-      isOpen={isMenuOpen}
-      toggleOpen={toggleMenu}
-      menuLabel={
-        <NetworkLabel data-testid="tokens-network-filter-selected">
-          <ChainLogo chainId={chainId} size={20} /> {!isInfoExplorePageEnabled && chainInfo.label}
-        </NetworkLabel>
-      }
-      internalMenuItems={
-        <>
-          {BACKEND_SUPPORTED_CHAINS.map((network) => {
-            const chainId = supportedChainIdFromGQLChain(network)
-            const chainInfo = getChainInfo(chainId)
-            return (
-              <InternalMenuItem
-                key={network}
-                data-testid={`tokens-network-filter-option-${network.toLowerCase()}`}
-                onClick={() => {
-                  isInfoExplorePageEnabled
-                    ? navigate(`/explore/${tab ?? ExploreTab.Tokens}/${network.toLowerCase()}`)
-                    : navigate(`/tokens/${network.toLowerCase()}`)
-                  toggleMenu()
-                }}
-              >
-                <NetworkLabel>
-                  <ChainLogo chainId={chainId} size={20} /> {chainInfo.label}
-                </NetworkLabel>
-                {network === currentChainName && <Check size={16} color={theme.accent1} />}
-              </InternalMenuItem>
-            )
-          })}
-          {BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.map((network) => {
-            const chainInfo = getChainInfo(network)
-            return (
-              <InternalMenuItem key={network} data-testid={`tokens-network-filter-option-${network}-chain`} disabled>
-                <NetworkLabel>
-                  <ChainLogo chainId={network} size={20} /> {chainInfo.label}
-                </NetworkLabel>
-                <Tag>Coming soon</Tag>
-              </InternalMenuItem>
-            )
-          })}
-        </>
-      }
-      buttonCss={StyledButton}
-      menuFlyoutCss={StyledMenuFlyout}
-    />
+    <div>
+      <DropdownSelector
+        isOpen={isMenuOpen}
+        toggleOpen={toggleMenu}
+        menuLabel={
+          <NetworkLabel data-testid="tokens-network-filter-selected">
+            <ChainLogo chainId={chainId} size={20} /> {!isInfoExplorePageEnabled && chainInfo.label}
+          </NetworkLabel>
+        }
+        internalMenuItems={
+          <>
+            {BACKEND_SUPPORTED_CHAINS.map((network) => {
+              const chainId = supportedChainIdFromGQLChain(network)
+              const chainInfo = getChainInfo(chainId)
+              return (
+                <InternalMenuItem
+                  key={network}
+                  data-testid={`tokens-network-filter-option-${network.toLowerCase()}`}
+                  onClick={() => {
+                    isInfoExplorePageEnabled
+                      ? navigate(`/explore/${tab ?? ExploreTab.Tokens}/${network.toLowerCase()}`)
+                      : navigate(`/tokens/${network.toLowerCase()}`)
+                    toggleMenu()
+                  }}
+                >
+                  <NetworkLabel>
+                    <ChainLogo chainId={chainId} size={20} /> {chainInfo.label}
+                  </NetworkLabel>
+                  {network === currentChainName && <Check size={16} color={theme.accent1} />}
+                </InternalMenuItem>
+              )
+            })}
+            {BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.map((network) => {
+              const chainInfo = getChainInfo(network)
+              return (
+                <InternalMenuItem key={network} data-testid={`tokens-network-filter-option-${network}-chain`} disabled>
+                  <NetworkLabel>
+                    <ChainLogo chainId={network} size={20} /> {chainInfo.label}
+                  </NetworkLabel>
+                  <Tag>Coming soon</Tag>
+                </InternalMenuItem>
+              )
+            })}
+          </>
+        }
+        buttonCss={StyledButton}
+        menuFlyoutCss={StyledMenuFlyout}
+      />
+    </div>
   )
 }

@@ -15,6 +15,7 @@ import { ApplicationModal } from 'state/application/reducer'
 import { useGate } from 'statsig-react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { Z_INDEX } from 'theme/zIndex'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
 const Box = styled.div`
@@ -28,7 +29,7 @@ const Box = styled.div`
   cursor: pointer;
   box-shadow: 0px 0px 10px 0px rgba(34, 34, 34, 0.04);
   user-select: none;
-  z-index: 1000;
+  z-index: ${Z_INDEX.fixed};
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     bottom: 70px;

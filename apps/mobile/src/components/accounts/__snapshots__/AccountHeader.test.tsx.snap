@@ -33,39 +33,28 @@ exports[`AccountHeader renders without error 1`] = `
       }
     >
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
+        cancelable={true}
         focusable={true}
-        hitSlop={20}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
+        hitSlop={[Function]}
+        minPressDuration={0}
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onLongPress={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        onPress={[Function]}
+        onPressIn={[Function]}
+        onPressOut={[Function]}
         style={
           {
             "alignItems": "center",
             "flexDirection": "row",
             "opacity": 1,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
           }
         }
         testID="manage"
@@ -334,37 +323,26 @@ exports[`AccountHeader renders without error 1`] = `
         </View>
       </View>
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
+        cancelable={true}
         focusable={true}
-        hitSlop={20}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
+        hitSlop={[Function]}
+        minPressDuration={0}
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        onPress={[Function]}
+        onPressIn={[Function]}
+        onPressOut={[Function]}
         style={
           {
+            "flexDirection": "column",
             "opacity": 1,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
           }
         }
       >
@@ -440,38 +418,27 @@ exports[`AccountHeader renders without error 1`] = `
       }
     >
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
+        cancelable={true}
         focusable={true}
-        hitSlop={20}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
+        hitSlop={[Function]}
+        minPressDuration={0}
+        onBlur={[Function]}
+        onFocus={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+        onPress={[Function]}
+        onPressIn={[Function]}
+        onPressOut={[Function]}
         style={
           {
+            "flexDirection": "column",
             "flexShrink": 1,
             "opacity": 1,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
           }
         }
       >
@@ -565,38 +532,27 @@ exports[`AccountHeader renders without error 1`] = `
                 </Text>
               </View>
               <View
-                accessibilityState={
-                  {
-                    "busy": undefined,
-                    "checked": undefined,
-                    "disabled": undefined,
-                    "expanded": undefined,
-                    "selected": undefined,
-                  }
-                }
-                accessibilityValue={
-                  {
-                    "max": undefined,
-                    "min": undefined,
-                    "now": undefined,
-                    "text": undefined,
-                  }
-                }
-                accessible={true}
-                collapsable={false}
+                cancelable={true}
                 focusable={true}
-                hitSlop={20}
-                onClick={[Function]}
-                onResponderGrant={[Function]}
-                onResponderMove={[Function]}
-                onResponderRelease={[Function]}
-                onResponderTerminate={[Function]}
-                onResponderTerminationRequest={[Function]}
-                onStartShouldSetResponder={[Function]}
+                hitSlop={[Function]}
+                minPressDuration={0}
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+                onPress={[Function]}
+                onPressIn={[Function]}
+                onPressOut={[Function]}
                 style={
                   {
+                    "flexDirection": "column",
                     "opacity": 1,
                     "paddingLeft": 8,
+                    "transform": [
+                      {
+                        "scale": 1,
+                      },
+                    ],
                   }
                 }
               >

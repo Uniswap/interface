@@ -7,11 +7,13 @@ export function isStackedHistogramData(data: CustomHistogramData): data is Stack
   return (data as StackedHistogramData).values !== undefined
 }
 
+// Get summed value of each bar of data
 export function getCumulativeSum(data: CustomHistogramData): number {
   return isStackedHistogramData(data) ? Object.values(data.values).reduce((sum, curr) => (sum += curr), 0) : data.value
 }
 
-export function getCumulativeVolume(data: StackedHistogramData[]) {
+// Get summed value of all bars of data
+export function getCumulativeVolume(data: CustomHistogramData[]) {
   return data.reduce((sum, curr) => (sum += getCumulativeSum(curr)), 0)
 }
 
@@ -175,10 +177,12 @@ export function calculateColumnPositionsInPlace(
   endIndex: number
 ): void {
   const common = columnCommon(barSpacingMedia, horizontalPixelRatio)
-  let previous: ColumnPosition | undefined = undefined
+  let previous: ColumnPositionItem | undefined = undefined
   for (let i = startIndex; i < Math.min(endIndex, items.length); i++) {
-    items[i].column = calculateColumnPosition(items[i].x, common, previous)
-    previous = items[i].column
+    // Modification fix: is possible for previous column to not be directly behind the current column, i.e. if whitespace in between
+    if (previous?.x && items[i].x - previous?.x > barSpacingMedia) previous = undefined
+    items[i].column = calculateColumnPosition(items[i].x, common, previous?.column)
+    previous = items[i]
   }
   const minColumnWidth = (items as ColumnPositionItem[]).reduce(
     (smallest: number, item: ColumnPositionItem, index: number) => {

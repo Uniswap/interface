@@ -1,5 +1,6 @@
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { isWeb } from 'tamagui'
 import {
   useCommonTokensOptions,
   useFavoriteTokensOptions,
@@ -66,7 +67,8 @@ function useTokenSectionsForSwapOutput(
     return [
       // we draw the pills as a single item of a section list, so `data` is an array of Token[]
       { title: t('Suggested'), data: [commonTokenOptions ?? []] },
-      ...(getTokenOptionsSection(t('Favorites'), favoriteTokenOptions) ?? []),
+      // TODO temporarily hiding favorites from extension until we add favorites functionality
+      ...(isWeb ? [] : getTokenOptionsSection(t('Favorites'), favoriteTokenOptions) ?? []),
       ...(getTokenOptionsSection(t('Popular tokens'), popularTokenOptions) ?? []),
     ]
   }, [commonTokenOptions, favoriteTokenOptions, loading, popularTokenOptions, t])

@@ -60,6 +60,10 @@ const opacities = {
   enabled: 1,
 }
 
+const blurs = {
+  light: 'blur(12px)',
+}
+
 const fonts = {
   code: 'courier, courier new, serif',
 }
@@ -94,6 +98,7 @@ function getSettings(darkMode: boolean) {
     // adding to the theme object
     breakpoint: BREAKPOINTS,
     transition: transitions,
+    blur: blurs,
     opacity: opacities,
     text: {
       heading: {

@@ -38,6 +38,12 @@ export interface IKeyring {
   importMnemonic(mnemonic: string, password?: string): Promise<string>
 
   /**
+   * Removes the mnemonic from storage / keychain.
+   * @param mnemonicId key string associated with mnemonic to remove
+   */
+  removeMnemonic(mnemonicId: string): Promise<boolean>
+
+  /**
    * Generates a new mnemonic and retrieves associated public address. Stores new mnemonic in local storage
    * with the mnemonic ID key as the public address.
    *
@@ -105,6 +111,10 @@ class NullKeyring implements IKeyring {
     throw new NotImplementedError('changePassword')
   }
 
+  removePassword(): Promise<boolean> {
+    throw new NotImplementedError('removePassword')
+  }
+
   getMnemonicIds(): Promise<string[]> {
     throw new NotImplementedError('getMnemonicIds')
   }
@@ -112,6 +122,10 @@ class NullKeyring implements IKeyring {
   // returns the mnemonicId (derived address at index 0) of the imported mnemonic
   importMnemonic(): Promise<string> {
     throw new NotImplementedError('importMnemonic')
+  }
+
+  removeMnemonic(_menemonicId: string): Promise<boolean> {
+    throw new NotImplementedError('removeMnemonic')
   }
 
   retrieveMnemonicUnlocked(_address: string): Promise<string | undefined> {
@@ -135,6 +149,10 @@ class NullKeyring implements IKeyring {
   // returns the address of the generated key
   generateAndStorePrivateKey(_menemonicId: string, _derivationIndex: number): Promise<string> {
     throw new NotImplementedError('generateAndStorePrivateKey')
+  }
+
+  removePrivateKey(_address: string): Promise<boolean> {
+    throw new NotImplementedError('removePrivateKey')
   }
 
   signTransactionHashForAddress(

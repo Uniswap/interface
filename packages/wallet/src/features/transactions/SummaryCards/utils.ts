@@ -56,7 +56,7 @@ export function generateActivityItemRenderer(
     }
     // if it's a section header, render it differently
     if (isSectionHeader(item)) {
-      return createElement(sectionHeaderElement, { title: item.title })
+      return createElement(sectionHeaderElement, { title: item.title, key: item.title })
     }
     // item is a transaction
     let SummaryItem
@@ -96,6 +96,7 @@ export function generateActivityItemRenderer(
     }
 
     return createElement(SummaryItem as React.FunctionComponent<SummaryItemProps>, {
+      key: item.id,
       authTrigger,
       transaction: item,
       layoutElement,
@@ -145,7 +146,11 @@ function getTransactionTypeVerbs(
         return [t('Sold'), t('Selling'), t('sell')]
       }
     case TransactionType.FiatPurchase:
-      return [t('Purchased'), t('Purchasing'), t('purchase')]
+      if (typeInfo.inputSymbol && typeInfo.inputSymbol === typeInfo.outputSymbol) {
+        return [t('Received'), t('Receiving'), t('receive')]
+      } else {
+        return [t('Purchased'), t('Purchasing'), t('purchase')]
+      }
     case TransactionType.Unknown:
     case TransactionType.WCConfirm:
     default:

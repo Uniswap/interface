@@ -26,6 +26,7 @@ import {
   CurrencyInfo,
   PortfolioBalance as PortfolioBalanceType,
 } from 'wallet/src/features/dataApi/types'
+import { FiatOnRampTransactionDetails } from 'wallet/src/features/fiatOnRamp/types'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
@@ -228,19 +229,19 @@ export const txDetailsConfirmed = {
   },
 }
 
-export const fiatOnRampTxDetailsPending: TransactionDetails = {
+export const fiatOnRampTxDetailsPending: FiatOnRampTransactionDetails = {
   chainId: ChainId.Mainnet,
   id: '0',
   from: account.address,
   options: {
     request: txRequest,
   },
-  typeInfo: txTypeInfo,
+  typeInfo: { ...txTypeInfo, syncedWithBackend: false, type: TransactionType.FiatPurchase },
   status: TransactionStatus.Pending,
   addedTime: 1487076708000,
 }
 
-export const fiatOnRampTxDetailsFailed: TransactionDetails & {
+export const fiatOnRampTxDetailsFailed: FiatOnRampTransactionDetails & {
   typeInfo: FiatPurchaseTransactionInfo
 } = {
   chainId: ChainId.Mainnet,

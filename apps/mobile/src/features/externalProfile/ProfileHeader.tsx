@@ -45,6 +45,13 @@ interface ProfileHeaderProps {
   address: Address
 }
 
+const HEADER_SOLID_COLOR_OPACITY = 0.1
+
+export const solidHeaderProps = {
+  minOpacity: HEADER_SOLID_COLOR_OPACITY,
+  maxOpacity: HEADER_SOLID_COLOR_OPACITY,
+}
+
 export const ProfileHeader = memo(function ProfileHeader({
   address,
 }: ProfileHeaderProps): JSX.Element {
@@ -167,9 +174,12 @@ export const ProfileHeader = memo(function ProfileHeader({
           />
         </Flex>
         {hasAvatar && avatarColors?.primary ? (
-          <HeaderRadial color={avatarColors.primary} />
+          <HeaderRadial color={avatarColors.primary} {...solidHeaderProps} />
         ) : (
-          <HeaderRadial color={isUniconsV2Enabled ? color : uniconGradientStart} />
+          <HeaderRadial
+            color={isUniconsV2Enabled ? color : uniconGradientStart}
+            {...solidHeaderProps}
+          />
         )}
       </AnimatedFlex>
 

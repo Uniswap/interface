@@ -152,7 +152,7 @@ export const AboutFooter = () => {
           <TextLink to="/swap">Swap</TextLink>
           <TextLink to="/tokens">Tokens</TextLink>
           {!shouldDisableNFTRoutes && <TextLink to="/nfts">NFTs</TextLink>}
-          <TextLink to="/pools">Pools</TextLink>
+          <TextLink to="/pool">Pool</TextLink>
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Protocol</LinkGroupTitle>

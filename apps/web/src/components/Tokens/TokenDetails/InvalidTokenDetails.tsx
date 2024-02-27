@@ -51,14 +51,14 @@ export default function InvalidTokenDetails({
   const selectChain = useSelectChain()
 
   // if the token's address is valid and the chains match, it's a non-existant token
-  const isNonExistantToken = !isInvalidAddress && pageChainId === chainId
+  const isNonExistentToken = !isInvalidAddress && pageChainId === chainId
 
   const connectedChainLabel = chainId ? getChainInfo(chainId)?.label : undefined
 
   return (
     <InvalidDetailsContainer>
       <EyeIcon />
-      {isInvalidAddress || isNonExistantToken ? (
+      {isInvalidAddress || isNonExistentToken ? (
         <>
           <InvalidDetailsText>
             <Trans>This token doesn&apos;t exist</Trans>

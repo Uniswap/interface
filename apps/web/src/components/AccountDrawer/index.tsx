@@ -22,8 +22,8 @@ const DRAWER_MARGIN = '8px'
 const DRAWER_OFFSET = '10px'
 const DRAWER_TOP_MARGIN_MOBILE_WEB = '24px'
 
-const ScrimBackground = styled.div<{ $open: boolean }>`
-  z-index: ${Z_INDEX.modalBackdrop};
+const ScrimBackground = styled.div<{ $open: boolean; $maxWidth?: number; $zIndex?: number }>`
+  z-index: ${({ $zIndex }) => $zIndex ?? Z_INDEX.modalBackdrop};
   overflow: hidden;
   top: 0;
   left: 0;
@@ -34,7 +34,7 @@ const ScrimBackground = styled.div<{ $open: boolean }>`
 
   opacity: 0;
   pointer-events: none;
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme, $maxWidth }) => `${$maxWidth ?? theme.breakpoint.sm}px`}) {
     opacity: ${({ $open }) => ($open ? 1 : 0)};
     pointer-events: ${({ $open }) => ($open ? 'auto' : 'none')};
     transition: opacity ${({ theme }) => theme.transition.duration.medium} ease-in-out;
@@ -43,6 +43,8 @@ const ScrimBackground = styled.div<{ $open: boolean }>`
 
 interface ScrimBackgroundProps extends React.ComponentPropsWithRef<'div'> {
   $open: boolean
+  $maxWidth?: number
+  $zIndex?: number
 }
 
 export const Scrim = (props: ScrimBackgroundProps) => {
@@ -59,10 +61,7 @@ export const Scrim = (props: ScrimBackgroundProps) => {
 }
 
 const AccountDrawerScrollWrapper = styled.div`
-  overflow: hidden;
-  &:hover {
-    overflow-y: auto;
-  }
+  overflow-y: auto;
 
   ${ScrollBarStyles}
 

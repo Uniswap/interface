@@ -79,14 +79,19 @@ function CurrentScreen({
         return (
           <>
             <Trace logImpression section={SectionName.SwapForm}>
-              <SwapFormScreenDelayedRender />
+              <SwapFormScreen hideContent={false} />
             </Trace>
+
+            {/*
+              We want to render the `BottomSheetModal` from the start to allow the tamagui toast animation to happen once we switch the `isModalOpen` prop to `true`.
+              We only render `SwapReviewScreen` once the user is truly on that step though.
+            */}
             <BottomSheetModal
               isCentered={false}
               isModalOpen={screen === SwapScreen.SwapReview}
               name={ModalName.SwapReview}>
               <Trace logImpression section={SectionName.SwapReview}>
-                <SwapReviewScreenDelayedRender />
+                <SwapReviewScreen hideContent={false} />
               </Trace>
             </BottomSheetModal>
           </>

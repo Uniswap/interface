@@ -99,6 +99,14 @@ const TWO_DECIMALS_CURRENCY: NumberFormatOptions = {
   style: 'currency',
 }
 
+const EIGHT_DECIMALS_CURRENCY: NumberFormatOptions = {
+  notation: 'standard',
+  maximumFractionDigits: 8,
+  minimumFractionDigits: 2,
+  currency: 'USD',
+  style: 'currency',
+}
+
 const SHORTHAND_TWO_DECIMALS: NumberFormatOptions = {
   notation: 'compact',
   minimumFractionDigits: 2,
@@ -275,7 +283,7 @@ const fiatTokenDetailsFormatter: FormatterRule[] = [
   { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_TWO_DECIMALS },
 ]
 
-const fiatTokenChartStatsScaleFormatter: FormatterRule[] = [
+const chartVolumePriceScale: FormatterRule[] = [
   {
     upperBound: 0.001,
     hardCodedInput: { input: 0.001, prefix: '<' },
@@ -286,16 +294,10 @@ const fiatTokenChartStatsScaleFormatter: FormatterRule[] = [
   { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_ONE_DECIMAL },
 ]
 
-const fiatTokenStatChartHeaderFormatter: FormatterRule[] = [
+const chartFiatValueFormatter: FormatterRule[] = [
   // if token stat value is 0, we probably don't have the data for it, so show '-' as a placeholder
   { exact: 0, hardCodedInput: { hardcodedOutput: '-' }, formatterOptions: ONE_SIG_FIG_CURRENCY },
-  {
-    upperBound: 0.00000001,
-    hardCodedInput: { input: 0.00000001, prefix: '<' },
-    formatterOptions: ONE_SIG_FIG_CURRENCY,
-  },
-  { upperBound: 0.1, formatterOptions: THREE_SIG_FIGS_CURRENCY },
-  { upperBound: 1.05, formatterOptions: THREE_DECIMALS_CURRENCY },
+  { upperBound: 1.05, formatterOptions: EIGHT_DECIMALS_CURRENCY },
   { upperBound: 1e6, formatterOptions: TWO_DECIMALS_CURRENCY },
   { upperBound: Infinity, formatterOptions: SHORTHAND_CURRENCY_TWO_DECIMALS },
 ]
@@ -425,14 +427,14 @@ export enum NumberType {
 
   SwapDetailsAmount = 'swap-details-amount',
 
+  // fiat values for price, volume, tvl, etc in a chart header or scale
+  ChartFiatValue = 'chart-fiat-value',
+
+  // fiat values for volume bar chart scales (y axis ticks)
+  ChartVolumePriceScale = 'chart-volume-price-scale',
+
   // fiat prices in any component that belongs in the Token Details flow (except for token stats)
   FiatTokenDetails = 'fiat-token-details',
-
-  // fiat values for market cap, TVL, volume, etc in any chart header
-  FiatTokenStatChartHeader = 'fiat-token-stat-chart-header',
-
-  // fiat prices in any token bar chart scale (volume, fees, etc)
-  FiatTokenChartStatsScale = 'fiat-token-chart-stats-scale',
 
   // fiat prices everywhere except Token Details flow
   FiatTokenPrice = 'fiat-token-price',
@@ -478,8 +480,8 @@ const TYPE_TO_FORMATTER_RULES = {
   [NumberType.SwapDetailsAmount]: swapDetailsAmountFormatter,
   [NumberType.FiatTokenQuantity]: fiatTokenQuantityFormatter,
   [NumberType.FiatTokenDetails]: fiatTokenDetailsFormatter,
-  [NumberType.FiatTokenStatChartHeader]: fiatTokenStatChartHeaderFormatter,
-  [NumberType.FiatTokenChartStatsScale]: fiatTokenChartStatsScaleFormatter,
+  [NumberType.ChartFiatValue]: chartFiatValueFormatter,
+  [NumberType.ChartVolumePriceScale]: chartVolumePriceScale,
   [NumberType.FiatTokenPrice]: fiatTokenPricesFormatter,
   [NumberType.FiatTokenStats]: fiatTokenStatsFormatter,
   [NumberType.FiatGasPrice]: fiatGasPriceFormatter,
@@ -506,7 +508,7 @@ function getFormatterRule(input: number, type: FormatterType, conversionRate?: n
     }
   }
 
-  throw new Error(`formatter for type ${type} not configured correctly`)
+  throw new Error(`formatter for type ${type} not configured correctly for value ${input}`)
 }
 
 interface FormatNumberOptions {

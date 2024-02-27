@@ -60,20 +60,21 @@ export function usePoolsFromTokenAddress(tokenAddress: string, sortState: PoolTa
           return mergedData
         },
       })
-      fetchMoreV2({
-        variables: {
-          cursor: dataV2?.topV2Pairs?.[dataV2.topV2Pairs.length - 1]?.totalLiquidity?.value,
-        },
-        updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult || !prev || !Object.keys(prev).length) return prev
-          !loadingMoreV3.current && onComplete?.()
-          const mergedData = {
-            topV2Pairs: [...(prev.topV2Pairs ?? []).slice(), ...(fetchMoreResult.topV2Pairs ?? []).slice()],
-          }
-          loadingMoreV2.current = false
-          return mergedData
-        },
-      })
+      chainId === ChainId.MAINNET &&
+        fetchMoreV2({
+          variables: {
+            cursor: dataV2?.topV2Pairs?.[dataV2.topV2Pairs.length - 1]?.totalLiquidity?.value,
+          },
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult || !prev || !Object.keys(prev).length) return prev
+            if (!loadingMoreV3.current) onComplete?.()
+            const mergedData = {
+              topV2Pairs: [...(prev.topV2Pairs ?? []).slice(), ...(fetchMoreResult.topV2Pairs ?? []).slice()],
+            }
+            loadingMoreV2.current = false
+            return mergedData
+          },
+        })
     },
     [chainId, dataV2?.topV2Pairs, dataV3?.topV3Pools, fetchMoreV2, fetchMoreV3]
   )

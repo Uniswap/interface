@@ -16,6 +16,7 @@ export enum FEATURE_FLAGS {
   SeedPhraseRefactorNative = 'refactor-seed-phrase-native',
   SendRewrite = 'send-rewrite',
   Unitags = 'unitags',
+  UnitagsDeviceAttestation = 'unitags-device-attestation',
   UniconsV2 = 'unicons-v2',
   TradingApi = 'trading-api',
 }
@@ -26,7 +27,6 @@ export enum FEATURE_FLAGS {
  */
 export enum EXPERIMENT_NAMES {
   OnboardingNewCreateImportFlow = 'onboarding-ab-1',
-  SkeletonLoading = 'skeleton_loading_1',
 }
 
 /**

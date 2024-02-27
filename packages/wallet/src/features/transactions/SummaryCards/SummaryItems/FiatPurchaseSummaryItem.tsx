@@ -1,8 +1,10 @@
 import React, { createElement } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useIsDarkMode } from 'ui/src'
 import { NumberType } from 'utilities/src/format/types'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'wallet/src/entities/assets'
+import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import {
@@ -27,7 +29,16 @@ export function FiatPurchaseSummaryItem({
   const { formatNumberOrString } = useLocalizationContext()
 
   const { chainId, typeInfo } = transaction
-  const { inputCurrency, inputCurrencyAmount, outputCurrency, outputCurrencyAmount } = typeInfo
+  const {
+    inputCurrency,
+    inputCurrencyAmount,
+    outputCurrency,
+    outputCurrencyAmount,
+    inputSymbol,
+    outputSymbol,
+    serviceProviderLogo,
+    institutionLogoUrl,
+  } = typeInfo
 
   const outputCurrencyInfo = useCurrencyInfo(
     outputCurrency?.metadata.contractAddress
@@ -38,24 +49,39 @@ export function FiatPurchaseSummaryItem({
   const fiatPurchaseAmount = formatNumberOrString({
     value: inputCurrencyAmount && inputCurrencyAmount > 0 ? inputCurrencyAmount : undefined,
     type: NumberType.FiatTokenPrice,
-    currencyCode: inputCurrency?.code ?? 'usd',
+    currencyCode: inputSymbol ?? inputCurrency?.code ?? 'usd',
   })
 
-  const symbol = getSymbolDisplayText(outputCurrencyInfo?.currency.symbol) ?? t('unknown token')
+  const cryptoSymbol =
+    outputSymbol ?? getSymbolDisplayText(outputCurrencyInfo?.currency.symbol) ?? t('unknown token')
 
-  return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {
-    caption:
-      outputCurrencyAmount !== undefined && outputCurrencyAmount !== null
-        ? t('{{cryptoAmount}} for {{fiatAmount}}', {
-            cryptoAmount: formatNumberOrString({ value: outputCurrencyAmount }) + ' ' + symbol,
+  const cryptoPurchaseAmount =
+    formatNumberOrString({ value: outputCurrencyAmount }) + ' ' + cryptoSymbol
+
+  const isDarkMode = useIsDarkMode()
+  const serviceProviderLogoUrl = getServiceProviderLogo(serviceProviderLogo, isDarkMode)
+
+  const isTransfer = inputSymbol === outputSymbol
+
+  const caption =
+    outputCurrencyAmount !== undefined && outputCurrencyAmount !== null
+      ? isTransfer
+        ? cryptoPurchaseAmount
+        : t('{{cryptoAmount}} for {{fiatAmount}}', {
+            cryptoAmount: cryptoPurchaseAmount,
             fiatAmount: fiatPurchaseAmount,
           })
-        : fiatPurchaseAmount,
+      : fiatPurchaseAmount
+
+  return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {
+    caption,
     icon: (
       <LogoWithTxStatus
         assetType={AssetType.Currency}
         chainId={transaction.chainId}
         currencyInfo={outputCurrencyInfo}
+        institutionLogoUrl={institutionLogoUrl}
+        serviceProviderLogoUrl={serviceProviderLogoUrl}
         size={TXN_HISTORY_ICON_SIZE}
         txStatus={transaction.status}
         txType={transaction.typeInfo.type}

@@ -20,6 +20,7 @@ import styled from 'styled-components'
 
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Chain } from 'graphql/data/__generated__/types-and-hooks'
+import { Z_INDEX } from 'theme/zIndex'
 import { useIsNavSearchInputVisible } from '../../nft/hooks/useIsNavSearchInputVisible'
 import { Bag } from './Bag'
 import Blur from './Blur'
@@ -33,7 +34,7 @@ const Nav = styled.nav`
   padding: ${({ theme }) => `${theme.navVerticalPad}px 12px`};
   width: 100%;
   height: ${({ theme }) => theme.navHeight}px;
-  z-index: 2;
+  z-index: ${Z_INDEX.sticky};
 `
 
 interface MenuItemProps {
@@ -93,8 +94,8 @@ export const PageTabs = () => {
         </MenuItem>
       )}
       <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
-        <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
-          <Trans>Pools</Trans>
+        <MenuItem href="/pool" dataTestId="pool-nav-link" isActive={isPoolActive}>
+          <Trans>Pool</Trans>
         </MenuItem>
       </Box>
       {isNewLandingPageEnabled ? (

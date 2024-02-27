@@ -13,7 +13,7 @@ import { InitialQuoteSelection } from 'src/features/fiatOnRamp/types'
 import { getServiceProviderForQuote } from 'src/features/fiatOnRamp/utils'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { FiatOnRampScreens } from 'src/screens/Screens'
-import { AnimatedFlex, Button, Flex, Icons, Inset, Separator, Text } from 'ui/src'
+import { AnimatedFlex, Button, Flex, GeneratedIcon, Icons, Inset, Separator, Text } from 'ui/src'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
@@ -23,6 +23,17 @@ import { ElementName } from 'wallet/src/telemetry/constants'
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.ServiceProviders>
 
 const key = (item: FORQuote): string => item.serviceProvider
+
+function SectionHeader({ Icon, title }: { Icon: GeneratedIcon; title: string }): JSX.Element {
+  return (
+    <Flex row alignItems="center" pl="$spacing8">
+      <Icon color="$neutral3" size="$icon.16" />
+      <Text color="$neutral2" pl="$spacing4" variant="body3">
+        {title}
+      </Text>
+    </Flex>
+  )
+}
 
 export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
@@ -59,28 +70,23 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
     section: { type },
   }: {
     section: SectionListData<FORQuote, { type?: InitialQuoteSelection }>
-  }): JSX.Element => {
-    return (
-      <Flex px="$spacing12">
-        {type ? (
-          <Flex row alignItems="center" pl="$spacing8">
-            <Icons.Verified color="$accent1" size="$icon.16" />
-            <Text color="$neutral2" pl="$spacing4" variant="body3">
-              {type === InitialQuoteSelection.Best ? t('Best overall') : t('Recently used')}
-            </Text>
-          </Flex>
-        ) : (
-          <Flex centered row gap="$spacing12" my="$spacing12">
-            <Separator />
-            <Text color="$neutral3" variant="body3">
-              {t('Other options')}
-            </Text>
-            <Separator />
-          </Flex>
-        )}
-      </Flex>
-    )
-  }
+  }): JSX.Element => (
+    <Flex px="$spacing12">
+      {type === InitialQuoteSelection.Best ? (
+        <SectionHeader Icon={Icons.Verified} title={t('Best overall')} />
+      ) : type === InitialQuoteSelection.MostRecent ? (
+        <SectionHeader Icon={Icons.TimePast} title={t('Recently used')} />
+      ) : (
+        <Flex centered row gap="$spacing12" my="$spacing12">
+          <Separator />
+          <Text color="$neutral3" variant="body3">
+            {t('Other options')}
+          </Text>
+          <Separator />
+        </Flex>
+      )}
+    </Flex>
+  )
 
   const onContinue = (): void => {
     const serviceProvider = getServiceProviderForQuote(selectedQuote, serviceProviders)

@@ -22,6 +22,11 @@ export function useCloseAccountDrawer() {
   return useCallback(() => updateAccountDrawerOpen(false), [updateAccountDrawerOpen])
 }
 
+export function useOpenAccountDrawer() {
+  const updateAccountDrawerOpen = useUpdateAtom(accountDrawerOpenAtom)
+  return useCallback(() => updateAccountDrawerOpen(true), [updateAccountDrawerOpen])
+}
+
 export function useAccountDrawer(): [boolean, () => void] {
   const accountDrawerOpen = useAtomValue(accountDrawerOpenAtom)
   return [accountDrawerOpen, useToggleAccountDrawer()]

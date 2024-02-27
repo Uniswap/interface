@@ -57,14 +57,20 @@ interface InputProps extends Omit<React.HTMLProps<HTMLInputElement>, 'ref' | 'on
   fontSize?: string
   align?: 'right' | 'left'
   prependSymbol?: string
+  maxDecimals?: number
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ value, onUserInput, placeholder, prependSymbol, ...rest }: InputProps, ref) => {
+  ({ value, onUserInput, placeholder, prependSymbol, maxDecimals, ...rest }: InputProps, ref) => {
     const { formatterLocale } = useFormatterLocales()
 
     const enforcer = (nextUserInput: string) => {
       if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
+        const decimalGroups = nextUserInput.split('.')
+        if (maxDecimals && decimalGroups.length > 1 && decimalGroups[1].length > maxDecimals) {
+          return
+        }
+
         onUserInput(nextUserInput)
       }
     }

@@ -400,7 +400,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
               <SwapFeeInfoModal noFee={noSwapFee} onClose={onCloseSwapFeeInfo} />
             )}
 
-            <AnimatedFlex entering={FadeIn} gap="$spacing16">
+            <AnimatedFlex entering={FadeIn} gap="$spacing16" pt={isWeb ? '$spacing8' : undefined}>
               <TransactionAmountsReview
                 acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
                 newTradeRequiresAcceptance={newTradeRequiresAcceptance}

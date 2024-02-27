@@ -8,18 +8,16 @@ import Row from 'components/Row'
 import { FOTTooltipContent } from 'components/swap/SwapLineItem'
 import { NoInfoAvailable, truncateDescription, TruncateDescriptionButton } from 'components/Tokens/TokenDetails/shared'
 import Tooltip, { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { useTokenProjectQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { chainIdToBackendName } from 'graphql/data/util'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
+import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useCallback, useReducer } from 'react'
 import { Copy } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
-import { shortenAddress } from 'utils'
+import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 const TokenInfoSection = styled(Column)`
   gap: 16px;
@@ -51,7 +49,7 @@ const TokenInfoButton = styled(Row)`
   padding: 8px 12px;
   border-radius: 20px;
   color: ${({ theme }) => theme.neutral1};
-  background-color: ${({ theme }) => theme.surface3};
+  background-color: ${({ theme }) => theme.surface2};
   font-size: 14px;
   font-weight: 535;
   line-height: 16px;
@@ -71,46 +69,29 @@ const DescriptionVisibilityWrapper = styled.p<{ $visible: boolean }>`
   display: ${({ $visible }) => ($visible ? 'inline' : 'none')};
 `
 
-const TRUNCATE_CHARACTER_COUNT = 75
+const TRUNCATE_CHARACTER_COUNT = 200
 
-export function TokenDescription({
-  tokenAddress,
-  chainId = ChainId.MAINNET,
-  isNative = false,
-  characterCount = TRUNCATE_CHARACTER_COUNT,
-}: {
-  tokenAddress: string
-  chainId?: number
-  isNative?: boolean
-  characterCount?: number
-}) {
+export function TokenDescription() {
+  const { address, currency, tokenQuery } = useTDPContext()
   const { neutral2 } = useTheme()
-  const chainName = chainIdToBackendName(chainId)
-  const { data: tokenQuery } = useTokenProjectQuery({
-    variables: {
-      address: isNative ? getNativeTokenDBAddress(chainName) : tokenAddress,
-      chain: chainName,
-    },
-    errorPolicy: 'all',
-  })
-  const tokenProject = tokenQuery?.token?.project
-  const description = tokenProject?.description
+
+  const { description, homepageUrl, twitterName } = tokenQuery.data?.token?.project ?? {}
   const explorerUrl = getExplorerLink(
-    chainId,
-    tokenAddress,
-    isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN
+    currency.chainId,
+    address,
+    currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN
   )
 
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
-    setCopied(tokenAddress)
-  }, [tokenAddress, setCopied])
+    setCopied(address)
+  }, [address, setCopied])
 
   const [isDescriptionTruncated, toggleIsDescriptionTruncated] = useReducer((x) => !x, true)
-  const truncatedDescription = truncateDescription(description ?? '', characterCount)
-  const shouldTruncate = !!description && description.length > characterCount
+  const truncatedDescription = truncateDescription(description ?? '', TRUNCATE_CHARACTER_COUNT)
+  const shouldTruncate = !!description && description.length > TRUNCATE_CHARACTER_COUNT
   const showTruncatedDescription = shouldTruncate && isDescriptionTruncated
-  const { inputTax: sellFee, outputTax: buyFee } = useSwapTaxes(tokenAddress, tokenAddress)
+  const { inputTax: sellFee, outputTax: buyFee } = useSwapTaxes(address, address)
   const { formatPercent } = useFormatter()
   const { sellFeeString, buyFeeString } = {
     sellFeeString: formatPercent(sellFee),
@@ -125,30 +106,30 @@ export function TokenDescription({
         <Trans>Info</Trans>
       </InfoSectionHeader>
       <TokenButtonRow>
-        {!isNative && (
+        {!currency.isNative && (
           <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t`Copied`}>
             <TokenInfoButton onClick={copy}>
               <Copy width="18px" height="18px" color={neutral2} />
-              {shortenAddress(tokenAddress)}
+              {shortenAddress(currency.address)}
             </TokenInfoButton>
           </Tooltip>
         )}
         <ExternalLink href={explorerUrl}>
           <TokenInfoButton>
             <EtherscanLogo width="18px" height="18px" fill={neutral2} />
-            {chainId === ChainId.MAINNET ? <Trans>Etherscan</Trans> : <Trans>Explorer</Trans>}
+            {currency.chainId === ChainId.MAINNET ? <Trans>Etherscan</Trans> : <Trans>Explorer</Trans>}
           </TokenInfoButton>
         </ExternalLink>
-        {!!tokenProject?.homepageUrl && (
-          <ExternalLink href={tokenProject.homepageUrl}>
+        {homepageUrl && (
+          <ExternalLink href={homepageUrl}>
             <TokenInfoButton>
               <Globe width="18px" height="18px" fill={neutral2} />
               <Trans>Website</Trans>
             </TokenInfoButton>
           </ExternalLink>
         )}
-        {!!tokenProject?.twitterName && (
-          <ExternalLink href={`https://x.com/${tokenProject.twitterName}`}>
+        {twitterName && (
+          <ExternalLink href={`https://x.com/${twitterName}`}>
             <TokenInfoButton>
               <TwitterXLogo width="18px" height="18px" fill={neutral2} />
               <Trans>Twitter</Trans>
@@ -194,17 +175,17 @@ export function TokenDescription({
           <Column gap="sm">
             {sameFee ? (
               <ThemedText.BodyPrimary>
-                {tokenQuery?.token?.symbol}&nbsp;
+                {currency.symbol}&nbsp;
                 <Trans>fee:</Trans>&nbsp;{sellFeeString}
               </ThemedText.BodyPrimary>
             ) : (
               <>
                 <ThemedText.BodyPrimary>
-                  {tokenQuery?.token?.symbol}&nbsp;
+                  {currency.symbol}&nbsp;
                   <Trans>buy fee:</Trans>&nbsp;{buyFeeString}
                 </ThemedText.BodyPrimary>{' '}
                 <ThemedText.BodyPrimary>
-                  {tokenQuery?.token?.symbol}&nbsp;
+                  {currency.symbol}&nbsp;
                   <Trans>sell fee:</Trans>&nbsp;{sellFeeString}
                 </ThemedText.BodyPrimary>{' '}
               </>

@@ -52,7 +52,7 @@ export default function useSyncChainQuery() {
       } else {
         searchParams.delete('chain')
       }
-      setSearchParams(searchParams)
+      setSearchParams(searchParams, { replace: true })
     }
     // If a user has a connected wallet and the chainId matches the query param chain, update the chainIdRef
     else if (isActive && chainId === urlChainId) {

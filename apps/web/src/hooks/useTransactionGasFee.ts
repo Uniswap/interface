@@ -71,7 +71,7 @@ export enum GasSpeed {
 export function useTransactionGasFee(
   tx?: TransactionRequest,
   speed: GasSpeed = GasSpeed.Urgent,
-  skip?: boolean
+  skip: boolean = !tx
 ): GasFeeResult {
   const gasFeeFetcher = useGasFeeQuery(tx, skip)
   const { data, isLoading } = useAsyncData(gasFeeFetcher)
@@ -106,7 +106,7 @@ const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_BASE_API_URL
 const isErrorResponse = (res: Response, gasFee: GasFeeResponse): gasFee is GasFeeResponseError =>
   res.status < 200 || res.status > 202
 
-function useGasFeeQuery(tx?: TransactionRequest, skip?: boolean) {
+function useGasFeeQuery(tx?: TransactionRequest, skip: boolean = !tx) {
   const gasFeeFetcher = useCallback(async () => {
     if (skip) {
       return

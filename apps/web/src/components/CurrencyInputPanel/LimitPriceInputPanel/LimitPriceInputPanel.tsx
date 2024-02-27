@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Fraction, Price } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { InputPanel } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
@@ -7,11 +7,13 @@ import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { useCallback, useMemo, useState } from 'react'
 import { useLimitContext, useLimitPrice } from 'state/limit/LimitContext'
-import { useSwapAndLimitContext } from 'state/swap/SwapContext'
+import { CurrencyState, useSwapAndLimitContext } from 'state/swap/SwapContext'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { sendAnalyticsEvent } from 'analytics'
+import { useCurrentPriceAdjustment } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { ReversedArrowsIcon } from 'nft/components/icons'
@@ -19,6 +21,10 @@ import { LIMIT_FORM_CURRENCY_SEARCH_FILTERS } from 'pages/Swap/Limit/LimitForm'
 import { formatCurrencySymbol } from '../utils'
 import { LimitCustomMarketPriceButton, LimitPresetPriceButton } from './LimitPriceButton'
 import { LimitPriceInputLabel } from './LimitPriceInputLabel'
+
+const Container = styled(InputPanel)`
+  gap: 4px;
+`
 
 const ReverseIconContainer = styled.div`
   display: flex;
@@ -48,13 +54,18 @@ const TextInputRow = styled.div`
 `
 
 const PRICE_ADJUSTMENT_PRESETS = [1, 5, 10]
+const INVERTED_PRICE_ADJUSTMENT_PRESETS = [-1, -5, -10]
+
+function invertCurrencyField(field: keyof CurrencyState): keyof CurrencyState {
+  return field === 'inputCurrency' ? 'outputCurrency' : 'inputCurrency'
+}
 
 interface LimitPriceInputPanelProps {
-  onCurrencySelect: (newCurrency: Currency) => void
+  onCurrencySelect: (field: keyof CurrencyState, newCurrency: Currency) => void
 }
 
 export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelProps) {
-  const [currencySelectModalOpen, setCurrencySelectModalOpen] = useState(false)
+  const [currencySelectModalField, setCurrencySelectModalField] = useState<keyof CurrencyState | undefined>(undefined)
   const { limitPrice, setLimitPrice, limitPriceInverted } = useLimitPrice()
   const {
     derivedLimitInfo: { parsedLimitPrice, marketPrice: tradeMarketPrice },
@@ -62,69 +73,65 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
   } = useLimitContext()
 
   const {
-    currencyState: { inputCurrency: tradeInputCurrency, outputCurrency: tradeOutputCurrency },
+    currencyState: { inputCurrency, outputCurrency },
   } = useSwapAndLimitContext()
 
-  const [inputCurrency, outputCurrency, marketPrice] = limitPriceInverted
-    ? [tradeOutputCurrency, tradeInputCurrency, tradeMarketPrice?.invert()]
-    : [tradeInputCurrency, tradeOutputCurrency, tradeMarketPrice]
+  const [baseCurrency, quoteCurrency, marketPrice] = limitPriceInverted
+    ? [outputCurrency, inputCurrency, tradeMarketPrice?.invert()]
+    : [inputCurrency, outputCurrency, tradeMarketPrice]
 
   const { formatCurrencyAmount } = useFormatter()
-
-  const oneUnitOfInputCurrency: CurrencyAmount<Currency> | undefined = useMemo(() => {
-    if (!inputCurrency) return undefined
-    return CurrencyAmount.fromRawAmount(inputCurrency, JSBI.BigInt(parseUnits('1', inputCurrency?.decimals)))
-  }, [inputCurrency])
 
   const formattedLimitPriceOutputAmount: string = useMemo(() => {
     // If the user has manually typed in a limit price, use that.
     if (limitPrice) return limitPrice
     // Otherwise, use parsedLimitPrice which may have been calculated from input/output amounts.
-    if (!inputCurrency) return ''
+    if (!baseCurrency) return ''
     return formatCurrencyAmount({
-      amount: parsedLimitPrice?.quote(CurrencyAmount.fromRawAmount(inputCurrency, 1)),
+      amount: parsedLimitPrice?.quote(CurrencyAmount.fromRawAmount(baseCurrency, 1)),
       type: NumberType.SwapTradeAmount,
       placeholder: '',
     })
-  }, [limitPrice, inputCurrency, formatCurrencyAmount, parsedLimitPrice])
+  }, [limitPrice, baseCurrency, formatCurrencyAmount, parsedLimitPrice])
 
   const adjustedPrices = useMemo(() => {
-    if (!marketPrice || !inputCurrency || !oneUnitOfInputCurrency || !outputCurrency) return undefined
+    if (!marketPrice || !baseCurrency || !quoteCurrency) return undefined
+    const oneUnitOfBaseCurrency = CurrencyAmount.fromRawAmount(
+      baseCurrency,
+      JSBI.BigInt(parseUnits('1', baseCurrency?.decimals))
+    )
     const getAdjustedPrice = (priceAdjustmentPercentage: number) => {
       return new Price({
         // 100 input token
-        baseAmount: CurrencyAmount.fromRawAmount(inputCurrency, JSBI.BigInt(parseUnits('100', inputCurrency.decimals))),
+        baseAmount: CurrencyAmount.fromRawAmount(baseCurrency, JSBI.BigInt(parseUnits('100', baseCurrency.decimals))),
         // (100 + adjustmentPercentage) times the market quote amount for 1 input token
         quoteAmount: CurrencyAmount.fromRawAmount(
-          outputCurrency,
-          JSBI.multiply(
-            JSBI.BigInt(100 + priceAdjustmentPercentage),
-            marketPrice.quote(oneUnitOfInputCurrency).quotient
-          )
+          quoteCurrency,
+          JSBI.multiply(JSBI.BigInt(100 + priceAdjustmentPercentage), marketPrice.quote(oneUnitOfBaseCurrency).quotient)
         ),
       })
     }
-    return {
-      1: getAdjustedPrice(1),
-      5: getAdjustedPrice(5),
-      10: getAdjustedPrice(10),
-    }
-  }, [marketPrice, inputCurrency, oneUnitOfInputCurrency, outputCurrency])
-
-  const currentPriceAdjustment: number | undefined = useMemo(() => {
-    if (!parsedLimitPrice || !marketPrice || !oneUnitOfInputCurrency || !outputCurrency) return undefined
-    const marketQuote = marketPrice.quote(oneUnitOfInputCurrency).quotient
-    const parsedPriceQuote = parsedLimitPrice.quote(oneUnitOfInputCurrency).quotient
-    const difference = JSBI.subtract(parsedPriceQuote, marketQuote)
-    const percentageChange = new Fraction(difference, marketQuote)
-
-    return Math.floor(Number(percentageChange.multiply(100).toFixed(2)))
-  }, [oneUnitOfInputCurrency, outputCurrency, marketPrice, parsedLimitPrice])
+    return limitPriceInverted
+      ? {
+          [-1]: getAdjustedPrice(-1),
+          [-5]: getAdjustedPrice(-5),
+          [-10]: getAdjustedPrice(-10),
+        }
+      : {
+          1: getAdjustedPrice(1),
+          5: getAdjustedPrice(5),
+          10: getAdjustedPrice(10),
+        }
+  }, [marketPrice, baseCurrency, quoteCurrency, limitPriceInverted])
 
   const onSelectLimitPrice = useCallback(
-    (adjustedPrice: Price<Currency, Currency> | undefined) => {
-      if (!oneUnitOfInputCurrency) return
-      const marketOutputAmount = adjustedPrice?.quote(oneUnitOfInputCurrency)
+    (adjustedPrice: Price<Currency, Currency> | undefined, adjustmentPercentage: number) => {
+      if (!baseCurrency) return
+      const oneUnitOfBaseCurrency = CurrencyAmount.fromRawAmount(
+        baseCurrency,
+        JSBI.BigInt(parseUnits('1', baseCurrency?.decimals))
+      )
+      const marketOutputAmount = adjustedPrice?.quote(oneUnitOfBaseCurrency)
       setLimitPrice(
         formatCurrencyAmount({
           amount: marketOutputAmount,
@@ -133,33 +140,47 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
         })
       )
       setLimitState((prev) => ({ ...prev, limitPriceEdited: true }))
+      sendAnalyticsEvent('Limit Preset Rate Selected', { value: adjustmentPercentage })
     },
-    [formatCurrencyAmount, limitPrice, oneUnitOfInputCurrency, setLimitPrice, setLimitState]
+    [formatCurrencyAmount, baseCurrency, limitPrice, setLimitPrice, setLimitState]
   )
 
+  const { currentPriceAdjustment } = useCurrentPriceAdjustment({
+    parsedLimitPrice,
+    marketPrice,
+    baseCurrency,
+    quoteCurrency,
+    limitPriceInverted,
+  })
+
+  const presets = limitPriceInverted ? INVERTED_PRICE_ADJUSTMENT_PRESETS : PRICE_ADJUSTMENT_PRESETS
+
   return (
-    <InputPanel>
+    <Container>
       <Row justify="space-between">
-        <LimitPriceInputLabel currency={inputCurrency} showCurrencyMessage={!!formattedLimitPriceOutputAmount} />
+        <LimitPriceInputLabel
+          currency={baseCurrency}
+          showCurrencyMessage={!!formattedLimitPriceOutputAmount}
+          currencySearchModalOpen={currencySelectModalField === 'inputCurrency'}
+          openCurrencySearchModal={() => setCurrencySelectModalField('inputCurrency')}
+        />
         <ReverseIconContainer
           onClick={() => {
-            if (oneUnitOfInputCurrency && marketPrice && outputCurrency) {
+            if (baseCurrency && marketPrice && quoteCurrency) {
               setLimitPrice(
                 formatCurrencyAmount({
                   amount: marketPrice
                     .invert()
                     .quote(
-                      CurrencyAmount.fromRawAmount(
-                        outputCurrency,
-                        JSBI.BigInt(parseUnits('1', outputCurrency?.decimals))
-                      )
+                      CurrencyAmount.fromRawAmount(quoteCurrency, JSBI.BigInt(parseUnits('1', quoteCurrency?.decimals)))
                     ),
                   type: NumberType.SwapTradeAmount,
                   placeholder: '',
                 })
               )
             }
-            setLimitState((prev) => ({ ...prev, limitPriceInverted: !prev.limitPriceInverted }))
+            setLimitState((prev) => ({ ...prev, limitPriceInverted: !prev.limitPriceInverted, limitPriceEdited: true }))
+            sendAnalyticsEvent('Limit Price Reversed')
           }}
         >
           <ReversedArrowsIcon size="16px" />
@@ -167,19 +188,19 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
       </Row>
       <TextInputRow>
         <StyledNumericalInput
-          disabled={!(inputCurrency && outputCurrency)}
+          disabled={!(baseCurrency && quoteCurrency)}
           className="limit-price-input"
           value={formattedLimitPriceOutputAmount}
           onUserInput={setLimitPrice}
           $loading={false}
         />
-        {outputCurrency && (
-          <OutputCurrencyContainer shouldFetchOnAccountUpdate={currencySelectModalOpen}>
-            <OutputCurrencyButton onClick={() => setCurrencySelectModalOpen(true)}>
+        {quoteCurrency && (
+          <OutputCurrencyContainer shouldFetchOnAccountUpdate={currencySelectModalField === 'outputCurrency'}>
+            <OutputCurrencyButton onClick={() => setCurrencySelectModalField('outputCurrency')}>
               <Row gap="xs" width="unset">
-                <CurrencyLogo currency={outputCurrency} size="16px" />
+                <CurrencyLogo currency={quoteCurrency} size="16px" />
                 <ThemedText.BodyPrimary className="token-symbol-container">
-                  {formatCurrencySymbol(outputCurrency)}
+                  {formatCurrencySymbol(quoteCurrency)}
                 </ThemedText.BodyPrimary>
               </Row>
             </OutputCurrencyButton>
@@ -190,41 +211,47 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
         <Row gap="sm">
           <LimitCustomMarketPriceButton
             key="limit-price-market"
-            customAdjustmentPercentage={
-              currentPriceAdjustment !== undefined &&
-              currentPriceAdjustment !== 0 &&
-              !PRICE_ADJUSTMENT_PRESETS.includes(currentPriceAdjustment)
-                ? currentPriceAdjustment
-                : undefined
-            }
-            disabled={!inputCurrency || !outputCurrency}
-            selected={Boolean(
-              currentPriceAdjustment !== undefined && !PRICE_ADJUSTMENT_PRESETS.includes(currentPriceAdjustment)
-            )}
-            onSelect={() => onSelectLimitPrice(marketPrice)}
+            customAdjustmentPercentage={(() => {
+              if (!currentPriceAdjustment || currentPriceAdjustment === 0) {
+                return undefined
+              }
+              if (presets.includes(currentPriceAdjustment)) {
+                return undefined
+              }
+              return limitPriceInverted ? -currentPriceAdjustment : currentPriceAdjustment
+            })()}
+            disabled={!baseCurrency || !quoteCurrency}
+            selected={Boolean(currentPriceAdjustment !== undefined && !presets.includes(currentPriceAdjustment))}
+            onSelect={() => onSelectLimitPrice(marketPrice, 0)}
           />
-          {PRICE_ADJUSTMENT_PRESETS.map((adjustmentPercentage) => {
+          {presets.map((adjustmentPercentage) => {
             const adjustedPrice = adjustedPrices?.[adjustmentPercentage as keyof typeof adjustedPrices]
             return (
               <LimitPresetPriceButton
                 key={`limit-price-${adjustmentPercentage}`}
                 priceAdjustmentPercentage={adjustmentPercentage}
-                disabled={!inputCurrency || !outputCurrency || !marketPrice}
+                disabled={!baseCurrency || !quoteCurrency || !marketPrice}
                 selected={currentPriceAdjustment === adjustmentPercentage}
-                onSelect={() => onSelectLimitPrice(adjustedPrice)}
+                onSelect={() => onSelectLimitPrice(adjustedPrice, adjustmentPercentage)}
               />
             )
           })}
         </Row>
       </Row>
       <CurrencySearchModal
-        isOpen={currencySelectModalOpen}
-        onDismiss={() => setCurrencySelectModalOpen(false)}
-        onCurrencySelect={onCurrencySelect}
-        selectedCurrency={outputCurrency}
-        otherSelectedCurrency={inputCurrency}
+        isOpen={Boolean(currencySelectModalField)}
+        onDismiss={() => setCurrencySelectModalField(undefined)}
+        onCurrencySelect={(currency) => {
+          if (!currencySelectModalField) return
+          onCurrencySelect(
+            limitPriceInverted ? invertCurrencyField(currencySelectModalField) : currencySelectModalField,
+            currency
+          )
+        }}
+        selectedCurrency={quoteCurrency}
+        otherSelectedCurrency={baseCurrency}
         currencySearchFilters={LIMIT_FORM_CURRENCY_SEARCH_FILTERS}
       />
-    </InputPanel>
+    </Container>
   )
 }

@@ -16,7 +16,6 @@ const ICON_SIZE = '20px'
 const SearchBarContainer = styled.div<{ isInfoExplorePageEnabled: boolean }>`
   display: flex;
   flex: 1;
-  ${({ isInfoExplorePageEnabled }) => isInfoExplorePageEnabled && 'justify-content: flex-end;'}
 `
 const SearchInput = styled.input<{ isInfoExplorePageEnabled: boolean; isOpen?: boolean }>`
   background: no-repeat scroll 7px 7px;

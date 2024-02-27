@@ -57,7 +57,7 @@ const Container = styled.div<{ hideInput: boolean }>`
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
 `
 
-const CurrencySelect = styled(ButtonGray)<{
+export const CurrencySelect = styled(ButtonGray)<{
   visible: boolean
   selected: boolean
   hideInput?: boolean
@@ -313,6 +313,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                   $loading={loading}
                   id={id}
                   ref={ref}
+                  maxDecimals={currency?.decimals}
                 />
               </div>
             )}

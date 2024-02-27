@@ -1,12 +1,12 @@
 import { useLocalActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { TransactionStatus, useActivityQuery } from 'graphql/data/__generated__/types-and-hooks'
-import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
 import { useEffect, useMemo } from 'react'
 import { usePendingOrders } from 'state/signatures/hooks'
 import { SignatureType } from 'state/signatures/types'
 import { usePendingTransactions, useTransactionCanceller } from 'state/transactions/hooks'
 import { useFormatter } from 'utils/formatNumbers'
 
+import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
 import { parseRemoteActivities } from './parseRemote'
 import { Activity, ActivityMap } from './types'
 
@@ -85,10 +85,7 @@ export function useAllActivities(account: string) {
     })
   }, [account, localMap, remoteMap, updateCancelledTx])
 
-  const combinedActivities = useMemo(
-    () => (remoteMap ? combineActivities(localMap, remoteMap) : undefined),
-    [localMap, remoteMap]
-  )
+  const combinedActivities = useMemo(() => combineActivities(localMap, remoteMap ?? {}), [localMap, remoteMap])
 
   return { loading, activities: combinedActivities, refetch }
 }

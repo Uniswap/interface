@@ -7,7 +7,7 @@ import {
   walletConnectV2Connection,
 } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
-import { SupportedInterfaceChain, isSupportedChain } from 'constants/chains'
+import { CHAIN_IDS_TO_NAMES, SupportedInterfaceChain, isSupportedChain } from 'constants/chains'
 import { FALLBACK_URLS, RPC_URLS } from 'constants/networks'
 import { useCallback } from 'react'
 import { useAppDispatch } from 'state/hooks'
@@ -56,6 +56,17 @@ export function useSwitchChain() {
               blockExplorerUrls: [info.explorer],
             }
             await connector.activate(addChainParameter)
+          }
+          if (isSupportedChain(chainId)) {
+            // Because this is async, react-router-dom's useSearchParam's bugs out, and would cause an add'l navigation.
+            // Instead, we modify the window's history directly to append the SearchParams.
+            try {
+              const url = new URL(window.location.href)
+              url.searchParams.set('chain', CHAIN_IDS_TO_NAMES[chainId])
+              window.history.replaceState(window.history.state, '', url)
+            } catch (error) {
+              console.warn('Failed to set SearchParams', error)
+            }
           }
         } catch (error) {
           // In activating a new chain, the connector passes through a deactivated state.

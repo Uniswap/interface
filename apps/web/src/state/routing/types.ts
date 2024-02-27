@@ -579,8 +579,9 @@ export class LimitOrderTrade {
     return 0
   }
 
+  // no decay auction for limit orders
   public get auctionPeriodSecs(): number {
-    return this.deadlineBufferSecs
+    return 0
   }
 
   public get executionPrice(): Price<Currency, Currency> {

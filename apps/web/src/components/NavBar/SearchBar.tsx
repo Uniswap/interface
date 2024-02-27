@@ -115,7 +115,7 @@ export const SearchBar = () => {
 
   const handleKeyPress = useCallback(
     (event: any) => {
-      if (event.key === '/') {
+      if (event.key === '/' && event.target.tagName !== 'INPUT') {
         event.preventDefault()
         !isOpen && toggleOpen()
       }

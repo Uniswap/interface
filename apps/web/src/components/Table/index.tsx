@@ -1,11 +1,22 @@
+import { ApolloError } from '@apollo/client'
 import { Trans } from '@lingui/macro'
-import { CellContext, ColumnDef, flexRender, getCoreRowModel, RowData, useReactTable } from '@tanstack/react-table'
+import {
+  CellContext,
+  ColumnDef,
+  RowData,
+  Table as TanstackTable,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+} from '@tanstack/react-table'
 import Loader from 'components/Icons/LoadingSpinner'
+import { ErrorModal } from 'components/Table/ErrorBox'
 import useDebounce from 'hooks/useDebounce'
 import { useEffect, useRef, useState } from 'react'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
+import { ThemedText } from 'theme/components'
 import { FadePresence } from 'theme/components/FadePresence'
-
+import { Z_INDEX } from 'theme/zIndex'
 import {
   CellContainer,
   DataRow,
@@ -13,27 +24,98 @@ import {
   LOAD_MORE_BOTTOM_OFFSET,
   LoadingIndicator,
   LoadingIndicatorContainer,
+  NoDataFoundTableRow,
   ReturnButton,
   ReturnButtonContainer,
   ReturnIcon,
   SHOW_RETURN_TO_TOP_OFFSET,
-  TableBody,
+  TableBodyContainer,
   TableContainer,
   TableHead,
   TableRowLink,
 } from './styled'
 
+function TableBody<Data extends RowData>({
+  table,
+  loading,
+  error,
+}: {
+  table: TanstackTable<Data>
+  loading?: boolean
+  error?: ApolloError
+}) {
+  if (loading || error) {
+    // loading and error states
+    return (
+      <>
+        {Array.from({ length: 7 }, (_, rowIndex) => (
+          <DataRow key={`skeleton-row-${rowIndex}`}>
+            {table.getAllColumns().map((column, columnIndex) => (
+              <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>
+                {flexRender(column.columnDef.cell, {} as CellContext<Data, any>)}
+              </CellContainer>
+            ))}
+          </DataRow>
+        ))}
+        {error && (
+          <ErrorModal
+            header={<Trans>Error loading data</Trans>}
+            subtitle={<Trans>Data is unavailable at the moment; we&apos;re working on a fix</Trans>}
+          />
+        )}
+      </>
+    )
+  }
+
+  if (!table.getRowModel()?.rows.length) {
+    // no errors, but no data round
+    return (
+      <NoDataFoundTableRow>
+        <ThemedText.BodySecondary>
+          <Trans>No data found</Trans>
+        </ThemedText.BodySecondary>
+      </NoDataFoundTableRow>
+    )
+  }
+
+  return (
+    // data found
+    <>
+      {table.getRowModel().rows.map((row) => {
+        const cells = row
+          .getVisibleCells()
+          .map((cell) => (
+            <CellContainer key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</CellContainer>
+          ))
+        const rowOriginal = row.original as any
+        const linkState = rowOriginal.linkState // optional data passed to linked page, accessible via useLocation().state
+        return 'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
+          <TableRowLink to={rowOriginal.link} key={row.id} state={linkState}>
+            <DataRow>{cells}</DataRow>
+          </TableRowLink>
+        ) : (
+          <DataRow key={row.id}>{cells}</DataRow>
+        )
+      })}
+    </>
+  )
+}
+
 export function Table<Data extends RowData>({
   columns,
   data,
   loading,
+  error,
   loadMore,
+  maxWidth,
   maxHeight,
 }: {
   columns: ColumnDef<Data, any>[]
   data: Data[]
   loading?: boolean
+  error?: ApolloError
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
+  maxWidth?: number
   maxHeight?: number
 }) {
   const [showReturn, setShowReturn] = useState(false)
@@ -48,6 +130,8 @@ export function Table<Data extends RowData>({
   })
   const { distanceFromTop, distanceToBottom } = useDebounce(scrollPosition, 125)
   const tableBodyRef = useRef<HTMLDivElement>(null)
+  const lastLoadedLengthRef = useRef(data?.length ?? 0)
+  const canLoadMore = useRef(true)
 
   useEffect(() => {
     const scrollableElement = maxHeight ? tableBodyRef.current : window
@@ -73,8 +157,8 @@ export function Table<Data extends RowData>({
   }, [loadMore, maxHeight, loadingMore])
 
   useEffect(() => {
-    setShowReturn(distanceFromTop >= SHOW_RETURN_TO_TOP_OFFSET)
-    if (distanceToBottom < LOAD_MORE_BOTTOM_OFFSET && !loadingMore && loadMore) {
+    setShowReturn(!loading && !error && distanceFromTop >= SHOW_RETURN_TO_TOP_OFFSET)
+    if (distanceToBottom < LOAD_MORE_BOTTOM_OFFSET && !loadingMore && loadMore && canLoadMore.current && !error) {
       setLoadingMore(true)
       // Manually update scroll position to prevent re-triggering
       setScrollPosition({
@@ -84,10 +168,15 @@ export function Table<Data extends RowData>({
       loadMore({
         onComplete: () => {
           setLoadingMore(false)
+          if (data?.length === lastLoadedLengthRef.current) {
+            canLoadMore.current = false
+          } else {
+            lastLoadedLengthRef.current = data?.length ?? 0
+          }
         },
       })
     }
-  }, [distanceFromTop, distanceToBottom, loadMore, loadingMore])
+  }, [data?.length, distanceFromTop, distanceToBottom, error, loadMore, loading, loadingMore])
 
   const table = useReactTable({
     columns,
@@ -98,10 +187,10 @@ export function Table<Data extends RowData>({
   return (
     <div>
       <ScrollSync>
-        <TableContainer $maxHeight={maxHeight}>
+        <TableContainer $maxWidth={maxWidth} $maxHeight={maxHeight}>
           <TableHead $isSticky={!maxHeight}>
             <ScrollSyncPane>
-              <HeaderRow>
+              <HeaderRow $dimmed={!!error}>
                 {table.getFlatHeaders().map((header) => (
                   <CellContainer key={header.id}>
                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -110,7 +199,7 @@ export function Table<Data extends RowData>({
               </HeaderRow>
             </ScrollSyncPane>
             {showReturn && (
-              <FadePresence>
+              <FadePresence $zIndex={Z_INDEX.hover}>
                 <ReturnButtonContainer $top={maxHeight ? 55 : 75}>
                   <ReturnButton
                     height="24px"
@@ -131,36 +220,9 @@ export function Table<Data extends RowData>({
             )}
           </TableHead>
           <ScrollSyncPane innerRef={tableBodyRef}>
-            <TableBody>
-              {loading || !table.getRowModel()?.rows
-                ? Array.from({ length: 25 }, (_, rowIndex) => (
-                    <DataRow key={`skeleton-row-${rowIndex}`}>
-                      {table.getAllColumns().map((column, columnIndex) => (
-                        <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>
-                          {flexRender(column.columnDef.cell, {} as CellContext<Data, any>)}
-                        </CellContainer>
-                      ))}
-                    </DataRow>
-                  ))
-                : table.getRowModel().rows.map((row) => {
-                    const cells = row
-                      .getVisibleCells()
-                      .map((cell) => (
-                        <CellContainer key={cell.id}>
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </CellContainer>
-                      ))
-                    const rowOriginal = row.original as any
-                    const linkState = rowOriginal.linkState // optional data passed to linked page, accessible via useLocation().state
-                    return 'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
-                      <TableRowLink to={rowOriginal.link} key={row.id} state={linkState}>
-                        <DataRow>{cells}</DataRow>
-                      </TableRowLink>
-                    ) : (
-                      <DataRow key={row.id}>{cells}</DataRow>
-                    )
-                  })}
-            </TableBody>
+            <TableBodyContainer>
+              <TableBody loading={loading} error={error} table={table} />
+            </TableBodyContainer>
           </ScrollSyncPane>
           <LoadingIndicatorContainer show={loadingMore}>
             <LoadingIndicator>

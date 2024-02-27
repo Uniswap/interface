@@ -10,8 +10,9 @@ import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useEffect, useMemo } from 'react'
 
-import { DEFAULT_ERC20_DECIMALS, TOKEN_SHORTHANDS } from '../../constants/tokens'
-import { isAddress } from '../../utils'
+import { TOKEN_SHORTHANDS } from 'constants/tokens'
+import { isAddress } from 'utilities/src/addresses'
+import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 
 // parse a name or symbol from a token response
 const BYTES32_REGEX = /^0x[a-fA-F0-9]{64}$/
@@ -33,7 +34,7 @@ const UNKNOWN_TOKEN_NAME = 'Unknown Token'
  * Returns null if token is loading or null was passed.
  * Returns undefined if tokenAddress is invalid or token does not exist.
  */
-export function useTokenFromActiveNetwork(tokenAddress: string | undefined): Token | null | undefined {
+function useTokenFromActiveNetwork(tokenAddress: string | undefined): Token | null | undefined {
   const { chainId } = useWeb3React()
 
   const formattedAddress = isAddress(tokenAddress)

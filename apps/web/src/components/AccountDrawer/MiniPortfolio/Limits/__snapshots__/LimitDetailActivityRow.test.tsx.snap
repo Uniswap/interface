@@ -24,7 +24,7 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
   justify-content: flex-start;
 }
 
-.c9 {
+.c7 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -39,10 +39,10 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-  gap: 8px;
+  gap: 4px;
 }
 
-.c8 {
+.c5 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -65,7 +65,7 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c4 {
+.c6 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -79,31 +79,13 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
   justify-content: flex-start;
 }
 
-.c7 {
+.c4 {
   display: grid;
   grid-auto-rows: auto;
   -webkit-box-flex: 1;
   -webkit-flex-grow: 1;
   -ms-flex-positive: 1;
   flex-grow: 1;
-}
-
-.c6 {
-  color: #7D7D7D;
-}
-
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
 }
 
 .c2 {
@@ -134,19 +116,32 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
   line-height: 1;
 }
 
-.c13 {
-  border-color: #7D7D7D;
+.c14 {
+  border-color: #22222212;
   display: inline-block;
   margin-right: 1px;
   border-radius: 4px;
-  height: 16px;
-  width: 16px;
+  height: 18px;
+  width: 18px;
   border-style: solid;
-  border-width: 2px;
+  border-width: 1.5px;
   position: relative;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
 }
 
-.c14 {
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
+}
+
+.c15 {
   position: absolute;
   top: -24px;
   -webkit-clip: rect(0 0 0 0);
@@ -160,126 +155,150 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
   width: 1px;
 }
 
-.c15 {
+.c16 {
   display: none;
-  height: 16px;
-  width: 16px;
+  height: 18px;
+  width: 18px;
   color: white;
   position: absolute;
   right: 1px;
 }
 
 .c3 {
-  padding: 8px 16px;
+  padding: 8px 0;
   height: unset;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-<div
-  class="c0 c1"
+.c13 {
+  opacity: 0;
+}
+
+.c8 * {
+  max-width: 40%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c9 {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+<span
+  class=" _dsp_contents"
 >
-  <div
-    class="c0 c1 c2 c3"
+  <span
+    class=" t_light _dsp_contents is_Theme"
   >
     <div
-      class="c4"
+      class="c0 c1"
     >
       <div
-        class="c5"
+        class="c0 c1 c2 c3"
       >
+        <div
+          class="c4"
+        >
+          <div
+            class="c5 css-15li2d9"
+          >
+            Expires Expires January 1, 1970 at 12:00 AM
+          </div>
+          <div
+            class="c6"
+          >
+            <div
+              class="c0 c7 c8"
+            >
+              <img
+                class="c9"
+              />
+              <div
+                class="c10 css-n8z49y"
+              >
+                252.074
+                 
+                DAI
+              </div>
+              <svg
+                fill="none"
+                height="12px"
+                stroke="#222222"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="12px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <line
+                  x1="5"
+                  x2="19"
+                  y1="12"
+                  y2="12"
+                />
+                <polyline
+                  points="12 5 19 12 12 19"
+                />
+              </svg>
+              <img
+                class="c9"
+              />
+              <div
+                class="c10 css-n8z49y"
+              >
+                0.10684
+                 
+                WETH
+              </div>
+            </div>
+            <div
+              class="c11 css-142zc9n"
+            >
+              when 0.00042 WETH/DAI
+            </div>
+          </div>
+        </div>
+      </div>
+      <label
+        class="c12 c13"
+      >
+        <span
+          aria-hidden="true"
+          class="c14"
+          size="18"
+        />
+        <input
+          class="c15"
+          size="18"
+          type="checkbox"
+        />
         <svg
-          class="c6"
-          height="40px"
-          width="40px"
+          class="c16"
+          fill="none"
+          height="16"
+          size="18"
+          viewBox="0 0 16 16"
+          width="16"
+          xmlns="http://www.w3.org/2000/svg"
         >
-          contract-interaction.svg
+          <g
+            id="Icon"
+          >
+            <path
+              d="M5.99993 11.3333C5.99927 11.3333 5.9986 11.3333 5.99727 11.3333C5.81927 11.3326 5.64993 11.2613 5.52526 11.1346L2.8586 8.42664C2.59993 8.16397 2.60327 7.74197 2.86594 7.48397C3.1286 7.22597 3.54993 7.22863 3.8086 7.4913L6.00393 9.72063L12.1959 3.5293C12.4566 3.26863 12.8779 3.26863 13.1386 3.5293C13.3993 3.7893 13.3993 4.21197 13.1386 4.47197L6.47193 11.1386C6.34659 11.2633 6.1766 11.3333 5.99993 11.3333Z"
+              fill="white"
+              id="Vector"
+            />
+          </g>
         </svg>
-      </div>
+      </label>
     </div>
-    <div
-      class="c7"
-    >
-      <div
-        class="c8 css-15li2d9"
-      >
-        Expires Expires January 1, 1970 at 12:00 AM
-      </div>
-      <div
-        class="c4"
-      >
-        <div
-          class="c0 c9"
-        >
-          <div
-            class="c10 css-n8z49y"
-          >
-            252.074
-             
-            DAI
-          </div>
-          <svg
-            fill="none"
-            height="12px"
-            stroke="#222222"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="12px"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <line
-              x1="5"
-              x2="19"
-              y1="12"
-              y2="12"
-            />
-            <polyline
-              points="12 5 19 12 12 19"
-            />
-          </svg>
-          <div
-            class="c10 css-n8z49y"
-          >
-            0.10684
-             
-            WETH
-          </div>
-        </div>
-        <div
-          class="c11 css-142zc9n"
-        >
-          when 0.00042 WETH/DAI
-        </div>
-      </div>
-    </div>
-  </div>
-  <label
-    class="c12"
-  >
-    <span
-      aria-hidden="true"
-      class="c13"
-      size="16"
-    />
-    <input
-      class="c14"
-      size="16"
-      type="checkbox"
-    />
-    <svg
-      class="c15"
-      fill="none"
-      height="28"
-      size="16"
-      viewBox="0 0 28 28"
-      width="28"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M13.7464 21.1101C13.3792 21.6796 12.8372 22 12.2076 22C11.5607 22 11.0536 21.733 10.5814 21.1101L6.45464 15.9844C6.15738 15.6107 6 15.2191 6 14.792C6 13.9021 6.66448 13.208 7.52131 13.208C8.0459 13.208 8.46557 13.4038 8.88525 13.9555L12.1377 18.1735L19.0448 6.88988C19.412 6.28476 19.8842 6 20.4087 6C21.2306 6 22 6.58732 22 7.4594C22 7.86874 21.7902 8.29588 21.5628 8.66963L13.7464 21.1101Z"
-        fill="currentColor"
-      />
-    </svg>
-  </label>
-</div>
+  </span>
+</span>
 `;

@@ -3,6 +3,7 @@ import { ApproveNotification } from 'wallet/src/features/notifications/component
 import { ChangeAssetVisibilityNotification } from 'wallet/src/features/notifications/components/ChangeAssetVisibilityNotification'
 import { ChooseCountryNotification } from 'wallet/src/features/notifications/components/ChooseCountryNotification'
 import { CopiedNotification } from 'wallet/src/features/notifications/components/CopiedNotification'
+import { CopyFailedNotification } from 'wallet/src/features/notifications/components/CopyFailedNotification'
 import { DefaultNotification } from 'wallet/src/features/notifications/components/DefaultNotification'
 import { ErrorNotification } from 'wallet/src/features/notifications/components/ErrorNotification'
 import { SuccessNotification } from 'wallet/src/features/notifications/components/SuccessNotification'
@@ -29,6 +30,8 @@ export function SharedNotificationToastRouter({
       return <ChangeAssetVisibilityNotification notification={notification} />
     case AppNotificationType.Copied:
       return <CopiedNotification notification={notification} />
+    case AppNotificationType.CopyFailed:
+      return <CopyFailedNotification notification={notification} />
     case AppNotificationType.Success:
       return <SuccessNotification notification={notification} />
     case AppNotificationType.Error:

@@ -1,57 +1,35 @@
-import { Trans } from '@lingui/macro'
 import { ChainId, Token } from '@uniswap/sdk-core'
-import { PoolTableColumns, PoolsTable } from 'components/Pools/PoolTable/PoolTable'
+import { PoolTableColumns, PoolsTable, sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
 import { usePoolsFromTokenAddress } from 'graphql/data/pools/usePoolsFromTokenAddress'
-import { PoolSortFields, PoolTableSortState } from 'graphql/data/pools/useTopPools'
 import { OrderDirection } from 'graphql/data/util'
-import { useCallback, useState } from 'react'
-import { ThemedText } from 'theme/components'
+import { useAtomValue, useResetAtom } from 'jotai/utils'
+import { useEffect } from 'react'
 
 const HIDDEN_COLUMNS = [PoolTableColumns.Transactions]
 
 export function TokenDetailsPoolsTable({ chainId, referenceToken }: { chainId: ChainId; referenceToken: Token }) {
-  const [sortState, setSortMethod] = useState<PoolTableSortState>({
-    sortBy: PoolSortFields.TVL,
-    sortDirection: OrderDirection.Desc,
-  })
+  const sortMethod = useAtomValue(sortMethodAtom)
+  const sortAscending = useAtomValue(sortAscendingAtom)
+  const sortState = { sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc }
   const { pools, loading, error, loadMore } = usePoolsFromTokenAddress(referenceToken.address, sortState, chainId)
 
-  const handleHeaderClick = useCallback(
-    (newSortMethod: PoolSortFields) => {
-      if (sortState.sortBy === newSortMethod) {
-        setSortMethod({
-          sortBy: newSortMethod,
-          sortDirection: sortState.sortDirection === OrderDirection.Asc ? OrderDirection.Desc : OrderDirection.Asc,
-        })
-      } else {
-        setSortMethod({
-          sortBy: newSortMethod,
-          sortDirection: OrderDirection.Desc,
-        })
-      }
-    },
-    [sortState.sortBy, sortState.sortDirection]
-  )
-
-  if (error) {
-    return (
-      <ThemedText.BodyPrimary>
-        <Trans>Error loading Top Pools</Trans>
-      </ThemedText.BodyPrimary>
-    )
-  }
+  const resetSortMethod = useResetAtom(sortMethodAtom)
+  const resetSortAscending = useResetAtom(sortAscendingAtom)
+  useEffect(() => {
+    resetSortMethod()
+    resetSortAscending()
+  }, [resetSortAscending, resetSortMethod])
 
   return (
     <div data-testid={`tdp-pools-table-${referenceToken.address.toLowerCase()}`}>
       <PoolsTable
         pools={pools}
         loading={loading}
+        error={error}
         chainId={chainId}
         maxHeight={600}
         hiddenColumns={HIDDEN_COLUMNS}
         loadMore={loadMore}
-        sortState={sortState}
-        handleHeaderClick={handleHeaderClick}
       />
     </div>
   )

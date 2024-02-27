@@ -120,8 +120,8 @@ export function Footer() {
                 <StyledInternalLink to="/nfts">
                   <Trans>NFTs</Trans>
                 </StyledInternalLink>
-                <StyledInternalLink to="/pools">
-                  <Trans>Pools</Trans>
+                <StyledInternalLink to="/pool">
+                  <Trans>Pool</Trans>
                 </StyledInternalLink>
               </Box>
               <Box direction="column" gap="10px">

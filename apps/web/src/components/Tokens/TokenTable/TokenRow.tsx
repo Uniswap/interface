@@ -297,16 +297,17 @@ const InfoIconContainer = styled.div`
 
 export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined> = {
   [TokenSortMethod.PRICE]: undefined,
-  [TokenSortMethod.PERCENT_CHANGE]: undefined,
-  [TokenSortMethod.TOTAL_VALUE_LOCKED]: (
+  [TokenSortMethod.DEPRECATE_PERCENT_CHANGE]: undefined,
+  [TokenSortMethod.DAY_CHANGE]: undefined,
+  [TokenSortMethod.HOUR_CHANGE]: undefined,
+  [TokenSortMethod.DEPRECATE_TOTAL_VALUE_LOCKED]: (
     <Trans>
       Total value locked (TVL) is the aggregate amount of the asset available across all Uniswap v3 liquidity pools.
     </Trans>
   ),
   [TokenSortMethod.FULLY_DILUTED_VALUATION]: (
     <Trans>
-      Fully diluted valuation (FDV) is the market capitalization of an asset if maximum token supply were in
-      circulation.
+      Fully diluted valuation (FDV) calculates the total market value assuming all tokens are in circulation.
     </Trans>
   ),
   [TokenSortMethod.VOLUME]: (
@@ -406,8 +407,8 @@ export function HeaderRow() {
       listNumber="#"
       tokenInfo={<Trans>Token name</Trans>}
       price={<HeaderCell category={TokenSortMethod.PRICE} />}
-      percentChange={<HeaderCell category={TokenSortMethod.PERCENT_CHANGE} />}
-      tvl={<HeaderCell category={TokenSortMethod.TOTAL_VALUE_LOCKED} />}
+      percentChange={<HeaderCell category={TokenSortMethod.DEPRECATE_PERCENT_CHANGE} />}
+      tvl={<HeaderCell category={TokenSortMethod.DEPRECATE_TOTAL_VALUE_LOCKED} />}
       volume={<HeaderCell category={TokenSortMethod.VOLUME} />}
       sparkLine={null}
     />

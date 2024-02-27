@@ -57,3 +57,5 @@ export const SECURITY_SCREEN_BACKGROUND_LIGHT = {
   ios: require(`./backgrounds/ios/security-background-light.png`),
   android: require(`./backgrounds/android/security-background-light.png`),
 }
+
+export const DEAD_LUNI = require('./graphics/dead-luni.png')

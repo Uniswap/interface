@@ -64,11 +64,11 @@ export interface TablePool {
 }
 
 export enum PoolSortFields {
-  TVL,
-  Volume24h,
-  VolumeWeek,
-  Turnover,
-  TxCount,
+  TVL = 'TVL',
+  Volume24h = '1 day volume',
+  VolumeWeek = '7 day volume',
+  Turnover = 'Turnover',
+  TxCount = 'Transactions',
 }
 
 export type PoolTableSortState = {
@@ -89,12 +89,15 @@ function useFilteredPools(pools: TablePool[]) {
         const token1IncludesFilterString = pool.token1?.symbol?.toLowerCase().includes(lowercaseFilterString)
         const token0HashIncludesFilterString = pool.token0?.address?.toLowerCase().includes(lowercaseFilterString)
         const token1HashIncludesFilterString = pool.token1?.address?.toLowerCase().includes(lowercaseFilterString)
+        const poolName = `${pool.token0?.symbol}/${pool.token1?.symbol}`.toLowerCase()
+        const poolNameIncludesFilterString = poolName.includes(lowercaseFilterString)
         return (
           token0IncludesFilterString ||
           token1IncludesFilterString ||
           addressIncludesFilterString ||
           token0HashIncludesFilterString ||
-          token1HashIncludesFilterString
+          token1HashIncludesFilterString ||
+          poolNameIncludesFilterString
         )
       }),
     [lowercaseFilterString, pools]

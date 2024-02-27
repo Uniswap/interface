@@ -21,7 +21,7 @@ describe('LimitPresetPriceButton', () => {
         selected={selected}
       />
     )
-    await act(() => userEvent.click(screen.getByText(num > 0 ? `+${num}%` : 'Current')))
+    await act(() => userEvent.click(screen.getByText(num > 0 ? `+${num}%` : 'Market')))
     expect(container.firstChild).toMatchSnapshot()
     expect(onSelect).toHaveBeenCalledTimes(disabled ? 0 : 1)
   })
