@@ -67,6 +67,7 @@ export function UnitagConfirmationScreen({
         <Flex centered grow>
           <AnimatePresence exitBeforeEnter>
             <AnimateInOrder
+              key="outerCircle"
               enterStyle={{ opacity: 0, scale: 0.5 }}
               exitStyle={{ opacity: 0, scale: 0.5 }}
               index={1}
@@ -80,6 +81,7 @@ export function UnitagConfirmationScreen({
               />
             </AnimateInOrder>
             <AnimateInOrder
+              key="innerCircle"
               enterStyle={{ opacity: 0, scale: 0.5 }}
               exitStyle={{ opacity: 0, scale: 0.5 }}
               index={2}
@@ -102,7 +104,7 @@ export function UnitagConfirmationScreen({
                 {element}
               </AnimateInOrder>
             ))}
-            <AnimateInOrder hapticOnEnter index={12}>
+            <AnimateInOrder key="unitag" hapticOnEnter index={12}>
               <UnitagWithProfilePicture
                 address={address}
                 profilePictureUri={profilePictureUri}

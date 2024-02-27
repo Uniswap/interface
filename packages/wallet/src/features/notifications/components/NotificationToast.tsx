@@ -10,8 +10,15 @@ import {
   State,
 } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
-import { isWeb } from 'tamagui'
-import { AnimatedFlex, Flex, Text, TouchableArea, mediumShadowProps, useDeviceInsets } from 'ui/src'
+import {
+  AnimatedFlex,
+  Flex,
+  Text,
+  TouchableArea,
+  isWeb,
+  mediumShadowProps,
+  useDeviceInsets,
+} from 'ui/src'
 import { borderRadii, spacing } from 'ui/src/theme'
 import { useTimeout } from 'utilities/src/time/timing'
 import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'

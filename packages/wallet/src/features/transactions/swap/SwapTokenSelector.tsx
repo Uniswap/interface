@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
-import { isWeb } from 'tamagui'
+import { isWeb } from 'ui/src'
 import { flowToModalName } from 'wallet/src/components/TokenSelector/flowToModalName'
 import {
   TokenSelector,

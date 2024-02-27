@@ -2,8 +2,9 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleProp, ViewStyle } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
-import { Screens } from 'src/screens/Screens'
+import { Screens, UnitagScreens } from 'src/screens/Screens'
 import {
   Flex,
   Image,
@@ -15,8 +16,10 @@ import {
 } from 'ui/src'
 import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/src/assets'
 import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
+import { selectHasCompletedUnitagsIntroModal } from 'wallet/src/features/behaviorHistory/selectors'
 import { setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/constants'
+import { useAppSelector } from 'wallet/src/state'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { ElementName, ModalName, UnitagEventName } from 'wallet/src/telemetry/constants'
 
@@ -38,6 +41,8 @@ export function UnitagBanner({
   const { fullWidth } = useDeviceDimensions()
   const isDarkMode = useIsDarkMode()
   const colors = useSporeColors()
+  const hasCompletedUnitagsIntroModal = useAppSelector(selectHasCompletedUnitagsIntroModal)
+
   const imageWidth = compact
     ? COMPACT_IMAGE_SCREEN_WIDTH_PROPORTION * fullWidth
     : IMAGE_SCREEN_WIDTH_PROPORTION * fullWidth
@@ -50,7 +55,18 @@ export function UnitagBanner({
       action: 'claim',
       entryPoint: analyticsEntryPoint,
     })
-    dispatch(openModal({ name: ModalName.UnitagsIntro, initialState: { address, entryPoint } }))
+
+    if (hasCompletedUnitagsIntroModal) {
+      navigate(Screens.UnitagStack, {
+        screen: UnitagScreens.ClaimUnitag,
+        params: {
+          entryPoint,
+          address,
+        },
+      })
+    } else {
+      dispatch(openModal({ name: ModalName.UnitagsIntro, initialState: { address, entryPoint } }))
+    }
   }
 
   const onPressMaybeLater = (): void => {
@@ -77,12 +93,12 @@ export function UnitagBanner({
       alignContent="space-between"
       backgroundColor={compact ? '$surface2' : '$background'}
       borderColor="$surface3"
-      borderRadius="$rounded16"
+      borderRadius="$rounded20"
       borderWidth={compact ? undefined : '$spacing1'}
       mt="$spacing12"
       overflow="hidden"
       pl="$spacing16"
-      py="$spacing16"
+      py="$spacing12"
       shadowColor="$neutral3"
       shadowOpacity={0.4}
       shadowRadius="$spacing4">
@@ -134,7 +150,7 @@ export function UnitagBanner({
               }}
               testID={ElementName.Cancel}
               onPress={onPressMaybeLater}>
-              <Text color="$neutral3" variant="buttonLabel4">
+              <Text color="$neutral2" variant="buttonLabel4">
                 {t('Maybe later')}
               </Text>
             </TouchableArea>

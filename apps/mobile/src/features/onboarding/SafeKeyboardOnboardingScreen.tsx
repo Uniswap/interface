@@ -13,7 +13,6 @@ type OnboardingScreenProps = {
   subtitle?: string
   title: string
   paddingTop?: SpaceTokens
-  childrenGap?: SpaceTokens
 }
 
 export function SafeKeyboardOnboardingScreen({

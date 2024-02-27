@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native'
 import Svg, { Defs, RadialGradient as RadialGradientSVG, Rect, Stop } from 'react-native-svg'
-import { isWeb } from 'tamagui'
-import { ColorTokens, Flex, Icons, Unicon, UniconV2, useUniconColors } from 'ui/src'
+import { ColorTokens, Flex, Icons, Unicon, UniconV2, isWeb, useUniconColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'

@@ -8,3 +8,6 @@ export const selectHasSubmittedHoldToSwap = (state: SharedState): boolean =>
 
 export const selectHasSkippedUnitagPrompt = (state: SharedState): boolean =>
   state.behaviorHistory.hasSkippedUnitagPrompt
+
+export const selectHasCompletedUnitagsIntroModal = (state: SharedState): boolean =>
+  state.behaviorHistory.hasCompletedUnitagsIntroModal

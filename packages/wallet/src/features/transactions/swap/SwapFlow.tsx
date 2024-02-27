@@ -1,5 +1,5 @@
 import { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react'
-import { isWeb } from 'tamagui'
+import { isWeb } from 'ui/src'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'

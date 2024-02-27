@@ -1,15 +1,15 @@
-import { Currency, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { ChainId, Currency, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TickData, Ticks } from 'graphql/thegraph/AllV3TicksQuery'
 import { useAllV3TicksQuery } from 'graphql/thegraph/__generated__/types-and-hooks'
-import { apolloClient } from 'graphql/thegraph/apollo'
 import JSBI from 'jsbi'
 import ms from 'ms'
 import { useEffect, useMemo, useState } from 'react'
 import computeSurroundingTicks from 'utils/computeSurroundingTicks'
 
-import { PoolState, usePool } from './usePools'
+import { chainToApolloClient } from 'graphql/thegraph/apollo'
+import { PoolState, usePoolMultichain } from './usePools'
 
 const PRICE_FIXED_DIGITS = 8
 
@@ -29,9 +29,10 @@ function useTicksFromSubgraph(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined,
-  skip = 0
+  skip = 0,
+  chainId: ChainId
 ) {
-  const { chainId } = useWeb3React()
+  const apolloClient = chainToApolloClient[chainId]
   const poolAddress =
     currencyA && currencyB && feeAmount
       ? Pool.getAddress(
@@ -56,7 +57,8 @@ const MAX_THE_GRAPH_TICK_FETCH_VALUE = 1000
 function useAllV3Ticks(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
-  feeAmount: FeeAmount | undefined
+  feeAmount: FeeAmount | undefined,
+  chainId: ChainId
 ): {
   isLoading: boolean
   error: unknown
@@ -64,7 +66,7 @@ function useAllV3Ticks(
 } {
   const [skipNumber, setSkipNumber] = useState(0)
   const [subgraphTickData, setSubgraphTickData] = useState<Ticks>([])
-  const { data, error, loading: isLoading } = useTicksFromSubgraph(currencyA, currencyB, feeAmount, skipNumber)
+  const { data, error, loading: isLoading } = useTicksFromSubgraph(currencyA, currencyB, feeAmount, skipNumber, chainId)
 
   useEffect(() => {
     if (data?.ticks.length) {
@@ -85,7 +87,8 @@ function useAllV3Ticks(
 export function usePoolActiveLiquidity(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
-  feeAmount: FeeAmount | undefined
+  feeAmount: FeeAmount | undefined,
+  chainId?: ChainId
 ): {
   isLoading: boolean
   error: any
@@ -95,7 +98,8 @@ export function usePoolActiveLiquidity(
   sqrtPriceX96?: JSBI
   data?: TickProcessed[]
 } {
-  const pool = usePool(currencyA, currencyB, feeAmount)
+  const defaultChainId = useWeb3React().chainId ?? ChainId.MAINNET
+  const pool = usePoolMultichain(currencyA?.wrapped, currencyB?.wrapped, feeAmount, chainId ?? defaultChainId)
   const liquidity = pool[1]?.liquidity
   const sqrtPriceX96 = pool[1]?.sqrtRatioX96
 
@@ -103,7 +107,7 @@ export function usePoolActiveLiquidity(
   // Find nearest valid tick for pool in case tick is not initialized.
   const activeTick = useMemo(() => getActiveTick(currentTick, feeAmount), [currentTick, feeAmount])
 
-  const { isLoading, error, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount)
+  const { isLoading, error, ticks } = useAllV3Ticks(currencyA, currencyB, feeAmount, chainId ?? defaultChainId)
 
   return useMemo(() => {
     if (

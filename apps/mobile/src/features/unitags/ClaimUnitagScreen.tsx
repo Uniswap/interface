@@ -23,7 +23,6 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { ENS_LOGO } from 'ui/src/assets'
-import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -255,6 +254,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
       <Flex
         centered
         gap="$spacing16"
+        mt="$spacing24"
         onLayout={(event): void => {
           onLayout(event)
           onSetFontSize(inputPlaceholder + UNITAG_SUFFIX_CHARS_ONLY)
@@ -331,7 +331,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
               Keyboard.dismiss()
               setShowInfoModal(true)
             }}>
-            <InfoCircle color={colors.neutral2.get()} height={20} width={20} />
+            <Icons.InfoCircleFilled color={colors.neutral3.get()} size="$icon.20" />
           </TouchableArea>
         </AnimatedFlex>
         {canClaimUnitagNameError && unitagToCheck === unitagInputValue && (

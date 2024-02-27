@@ -1,5 +1,5 @@
 import { Flex, Icons, Text } from 'ui/src'
-import { fonts, iconSizes } from 'ui/src/theme'
+import { fonts, spacing } from 'ui/src/theme'
 
 export function UnitagName({
   name,
@@ -35,8 +35,8 @@ export function UnitagName({
         enterStyle={animateIcon ? { opacity: 0, scale: 0.8, x: 20 } : undefined}
         exitStyle={animateIcon ? { opacity: 0, scale: 0.8, x: -20 } : undefined}
         position="absolute"
-        right={-iconSizes.icon8}
-        top={-iconSizes.icon8}>
+        right={-spacing.spacing4}
+        top={-spacing.spacing4}>
         <Icons.Unitag size="$icon.24" />
       </Flex>
     </Flex>

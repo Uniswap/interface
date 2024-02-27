@@ -1,7 +1,7 @@
 import { ChartHoverData, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { ISeriesApi, UTCTimestamp } from 'lightweight-charts'
 
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, TICK_SPACINGS, TickMath, tickToPrice } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers/lib/ethers'
 import { TickProcessed, usePoolActiveLiquidity } from 'hooks/usePoolTickData'
@@ -221,14 +221,16 @@ export function useLiquidityBarData({
   tokenB,
   feeTier,
   isReversed,
+  chainId,
 }: {
   tokenA: Token
   tokenB: Token
   feeTier: FeeAmount
   isReversed: boolean
+  chainId: ChainId
 }) {
   const { formatNumber, formatPrice } = useFormatter()
-  const activePoolData = usePoolActiveLiquidity(tokenA, tokenB, feeTier)
+  const activePoolData = usePoolActiveLiquidity(tokenA, tokenB, feeTier, chainId)
 
   const [tickData, setTickData] = useState<{
     barData: LiquidityBarData[]

@@ -1,5 +1,4 @@
-import { isWeb } from 'tamagui'
-import { Flex, Icons, Shine, Skeleton, Text, useSporeColors } from 'ui/src'
+import { Flex, Icons, Shine, Skeleton, Text, isWeb, useSporeColors } from 'ui/src'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioTotalValue } from 'wallet/src/features/dataApi/balances'
 type WalletBalanceProps = {

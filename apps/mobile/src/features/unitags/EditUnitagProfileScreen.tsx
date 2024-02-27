@@ -350,7 +350,7 @@ export function EditUnitagProfileScreen({
                   mx="$spacing16"
                   position="absolute"
                   onPress={avatarSelectionHandler}>
-                  <Flex backgroundColor="$surface1" borderRadius="$roundedFull" p="$spacing2">
+                  <Flex backgroundColor="$surface1" borderRadius="$roundedFull">
                     <UnitagProfilePicture
                       address={address}
                       size={iconSizes.icon70}
@@ -370,7 +370,7 @@ export function EditUnitagProfileScreen({
                       p={6}>
                       <Icons.Pen
                         color={isDarkMode ? '$neutral1' : '$surface1'}
-                        size={iconSizes.icon12}
+                        size={iconSizes.icon16}
                       />
                     </Flex>
                   </Flex>

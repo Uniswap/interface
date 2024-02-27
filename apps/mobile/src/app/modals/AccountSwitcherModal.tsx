@@ -287,6 +287,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           horizontalGap="$spacing8"
           showViewOnlyBadge={isViewOnly}
           size={spacing.spacing60 - spacing.spacing4}
+          variant="subheading1"
         />
         <Flex px="$spacing24">
           <Button

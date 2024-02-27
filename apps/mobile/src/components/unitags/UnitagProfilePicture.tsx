@@ -22,7 +22,9 @@ export function UnitagProfilePicture({
     <Flex
       shrink
       backgroundColor="$surface1"
+      borderColor="$surface1"
       borderRadius="$roundedFull"
+      borderWidth={2}
       height={size}
       overflow="hidden"
       shadowColor="$neutral3"

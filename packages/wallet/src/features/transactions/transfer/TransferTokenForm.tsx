@@ -5,7 +5,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutChangeEvent, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
-import { isWeb } from 'tamagui'
 import {
   AnimatedFlex,
   Button,
@@ -13,6 +12,7 @@ import {
   Icons,
   Text,
   TouchableArea,
+  isWeb,
   useDeviceDimensions,
   useSporeColors,
 } from 'ui/src'

@@ -1,7 +1,6 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import { memo } from 'react'
-import { isWeb } from 'tamagui'
-import { TouchableArea, useSporeColors } from 'ui/src'
+import { isWeb, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { Pill } from 'wallet/src/components/text/Pill'

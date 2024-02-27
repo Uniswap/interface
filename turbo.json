@@ -109,8 +109,7 @@
         "./apps/next/.next/**"
       ],
       "dependsOn": [
-        "^build",
-        "utilities#typecheck"
+        "^build"
       ]
     },
     "storybook#build": {

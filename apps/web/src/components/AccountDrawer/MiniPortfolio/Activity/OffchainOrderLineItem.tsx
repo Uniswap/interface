@@ -59,7 +59,7 @@ function useLineItem(details: OffchainOrderLineItemProps): LineItemData | undefi
     case OffchainOrderLineItemType.EXPIRY:
       return {
         Label: () => <Trans>Expiry</Trans>,
-        Value: () => <span>{formatTimestamp(details.order.expiry)}</span>,
+        Value: () => <span>{details.order.expiry && formatTimestamp(details.order.expiry * 1000)}</span>,
       }
     case OffchainOrderLineItemType.NETWORK_COST:
       return {

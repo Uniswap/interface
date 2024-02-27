@@ -11,8 +11,7 @@ import {
   useDerivedValue,
   withTiming,
 } from 'react-native-reanimated'
-import { isWeb } from 'tamagui'
-import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Icons, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'

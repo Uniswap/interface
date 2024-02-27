@@ -8,7 +8,6 @@ import {
   Platform,
   TextInputFocusEventData,
 } from 'react-native'
-import { isWeb } from 'tamagui'
 import {
   AnimatePresence,
   Button,
@@ -19,6 +18,7 @@ import {
   SpaceTokens,
   Text,
   TouchableArea,
+  isWeb,
   useDeviceDimensions,
 } from 'ui/src'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'

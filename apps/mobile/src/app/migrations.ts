@@ -793,4 +793,15 @@ export const migrations = {
 
     return newState
   },
+
+  59: function addCompletedUnitagsIntroBoolean(state: any) {
+    const newState = { ...state }
+
+    newState.behaviorHistory = {
+      ...state.behaviorHistory,
+      hasCompletedUnitagsIntroModal: false,
+    }
+
+    return newState
+  },
 }

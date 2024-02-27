@@ -5,8 +5,16 @@ import { impactAsync } from 'expo-haptics'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { isWeb } from 'tamagui'
-import { AnimatedFlex, Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import {
+  AnimatedFlex,
+  Button,
+  Flex,
+  Icons,
+  Text,
+  TouchableArea,
+  isWeb,
+  useSporeColors,
+} from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'

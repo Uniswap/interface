@@ -26,8 +26,7 @@ import {
 import { OnShowSwapFeeInfo } from 'wallet/src/features/transactions/TransactionDetails/SwapFee'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
-import { isWeb } from 'tamagui'
-import { AnimatedFlex, Button, Flex, Separator } from 'ui/src'
+import { AnimatedFlex, Button, Flex, isWeb, Separator } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { iconSizes } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'

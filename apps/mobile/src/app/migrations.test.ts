@@ -57,6 +57,7 @@ import {
   v55Schema,
   v56Schema,
   v57Schema,
+  v58Schema,
   v5Schema,
   v6Schema,
   v7Schema,
@@ -1298,5 +1299,12 @@ describe('Redux state migrations', () => {
     const v58 = migrations[58](v57Stub)
 
     expect(v58.behaviorHistory.hasSkippedUnitagPrompt).toBe(false)
+  })
+
+  it('migrates from v58 to 59', () => {
+    const v58Stub = { ...v58Schema }
+    const v59 = migrations[59](v58Stub)
+
+    expect(v59.behaviorHistory.hasCompletedUnitagsIntroModal).toBe(false)
   })
 })

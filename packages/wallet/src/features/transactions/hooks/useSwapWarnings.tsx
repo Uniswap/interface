@@ -2,7 +2,7 @@ import { useNetInfo } from '@react-native-community/netinfo'
 import { Percent } from '@uniswap/sdk-core'
 import _ from 'lodash'
 import { TFunction } from 'react-i18next'
-import { isWeb } from 'tamagui'
+import { isWeb } from 'ui/src'
 import { formatPriceImpact } from 'utilities/src/format/formatPriceImpact'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import {

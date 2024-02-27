@@ -386,6 +386,7 @@ exports[`AccountList renders without error 1`] = `
                           {
                             "alignItems": "center",
                             "flexDirection": "row",
+                            "gap": 4,
                             "justifyContent": "center",
                           }
                         }

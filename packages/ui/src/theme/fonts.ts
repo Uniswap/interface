@@ -125,7 +125,7 @@ export const fonts = {
   },
   buttonLabel4: {
     family: platformFontFamily('medium'),
-    fontSize: adjustedSize(12),
+    fontSize: adjustedSize(14),
     lineHeight: 16,
     fontWeight: '500',
     maxFontSizeMultiplier: 1.2,

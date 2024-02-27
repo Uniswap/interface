@@ -1,7 +1,7 @@
 import { CurrencyAmount, NativeCurrency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { isWeb } from 'tamagui'
+import { isWeb } from 'ui/src'
 import { useOnChainNativeCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'

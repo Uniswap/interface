@@ -1,6 +1,6 @@
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { isWeb } from 'tamagui'
+import { isWeb } from 'ui/src'
 import {
   useCommonTokensOptions,
   useFavoriteTokensOptions,

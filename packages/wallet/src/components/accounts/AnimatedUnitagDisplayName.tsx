@@ -68,7 +68,7 @@ export function AnimatedUnitagDisplayName({
               </Text>
             </Flex>
             {isUnitag ? (
-              <Flex animation="semiBouncy" pl="$spacing2">
+              <Flex animation="semiBouncy" pl="$spacing4">
                 <Icons.Unitag size={unitagIconSize} />
               </Flex>
             ) : null}

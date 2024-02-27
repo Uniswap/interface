@@ -8,12 +8,14 @@ export interface BehaviorHistoryState {
   hasViewedReviewScreen: boolean // used for hold to swap tip on swap UI
   hasSubmittedHoldToSwap: boolean
   hasSkippedUnitagPrompt: boolean
+  hasCompletedUnitagsIntroModal: boolean
 }
 
 export const initialBehaviorHistoryState: BehaviorHistoryState = {
   hasViewedReviewScreen: false,
   hasSubmittedHoldToSwap: false,
   hasSkippedUnitagPrompt: false,
+  hasCompletedUnitagsIntroModal: false,
 }
 
 const slice = createSlice({
@@ -29,10 +31,17 @@ const slice = createSlice({
     setHasSkippedUnitagPrompt: (state, action: PayloadAction<boolean>) => {
       state.hasSkippedUnitagPrompt = action.payload
     },
+    setHasCompletedUnitagsIntroModal: (state, action: PayloadAction<boolean>) => {
+      state.hasCompletedUnitagsIntroModal = action.payload
+    },
   },
 })
 
-export const { setHasViewedReviewScreen, setHasSubmittedHoldToSwap, setHasSkippedUnitagPrompt } =
-  slice.actions
+export const {
+  setHasViewedReviewScreen,
+  setHasSubmittedHoldToSwap,
+  setHasSkippedUnitagPrompt,
+  setHasCompletedUnitagsIntroModal,
+} = slice.actions
 
 export const behaviorHistoryReducer = slice.reducer

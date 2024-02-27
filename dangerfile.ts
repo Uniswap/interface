@@ -1,8 +1,5 @@
 import { danger, fail, markdown, message, warn } from 'danger'
 
-// Other ideas:
-//  - verify TODO have work items linked
-
 function getIndicesOf(searchStr: string, str: string): number[] {
   var searchStrLen = searchStr.length;
   if (searchStrLen == 0) {
@@ -16,20 +13,34 @@ function getIndicesOf(searchStr: string, str: string): number[] {
   return indices;
 }
 
-async function processAddChanges() {
-  const updatedTsFiles = danger.git.modified_files
-  .concat(danger.git.created_files)
-  .filter((file) => (file.endsWith('.ts') || file.endsWith('.tsx')) && !file.includes('dangerfile.ts'))
-
-  const linesAddedByFile = (await Promise.all(updatedTsFiles.flatMap(async (file) => {
+async function getLinesAddedByFile(files: string[]) {
+  return await Promise.all(files.flatMap(async (file) => {
     const structuredDiff = await danger.git.structuredDiffForFile(file);
 
     return (structuredDiff?.chunks || []).flatMap((chunk) => {
       return chunk.changes.filter((change) => change.type === 'add')
     })
-  })))
+  }))
+}
 
+async function processAddChanges() {
+  const updatedTsFiles = danger.git.modified_files
+  .concat(danger.git.created_files)
+  .filter((file) => (file.endsWith('.ts') || file.endsWith('.tsx')) && !file.includes('dangerfile.ts'))
+
+  const updatedNonUITsFiles = updatedTsFiles.filter((file) => !file.includes('packages/ui'))
+
+  const linesAddedByFile = await getLinesAddedByFile(updatedTsFiles)
   const allLinesAdded = linesAddedByFile.flatMap((x) => x)
+
+  // Check for non-UI package lines for tamagui imports
+  const allNonUILinesAddedByFile = await getLinesAddedByFile(updatedNonUITsFiles)
+  const allNonUILinesAdded = allNonUILinesAddedByFile.flatMap((x) => x)
+  allNonUILinesAdded.forEach((change) => {
+    if (change.content.includes(`from 'tamagui`)) {
+      fail(`Please import any tamagui exports via the ui package. Found an import at ${change.content}`)
+    }
+  })
 
   // Checks for any logging and reminds the developer not to log sensitive data
   if (allLinesAdded.some((change) => change.content.includes('logMessage') || change.content.includes('logger.'))) {

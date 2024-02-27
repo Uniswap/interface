@@ -18,9 +18,11 @@ export {
   YGroup,
   getToken,
   getTokenValue,
+  isWeb,
   styled,
   useMedia,
   usePropsAndStyle,
+  useWindowDimensions,
 } from 'tamagui'
 export type {
   Adapt,

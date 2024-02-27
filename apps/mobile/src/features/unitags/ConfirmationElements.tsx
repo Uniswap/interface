@@ -141,7 +141,7 @@ export const HeartElement = (): JSX.Element => {
     <Flex
       borderRadius="$rounded12"
       p="$spacing8"
-      style={{ backgroundColor: opacify(20, colors.red200) }}
+      style={{ backgroundColor: colors.red50 }}
       transform={[{ rotateZ: '-4deg' }]}>
       <HeartIcon color={colors.red300} height={iconSizes.icon20} width={iconSizes.icon20} />
     </Flex>

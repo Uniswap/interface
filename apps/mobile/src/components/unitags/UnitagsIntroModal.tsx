@@ -12,6 +12,7 @@ import { Button, Flex, GeneratedIcon, Icons, Image, Text, useIsDarkMode } from '
 import { UNITAGS_INTRO_BANNER_DARK, UNITAGS_INTRO_BANNER_LIGHT } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { setHasCompletedUnitagsIntroModal } from 'wallet/src/features/behaviorHistory/slice'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { ModalName } from 'wallet/src/telemetry/constants'
 
@@ -31,6 +32,8 @@ export function UnitagsIntroModal(): JSX.Element {
     if (!entryPoint) {
       throw new Error('Missing entry point in UnitagsIntroModal')
     }
+
+    appDispatch(setHasCompletedUnitagsIntroModal(true))
     navigate(Screens.UnitagStack, {
       screen: UnitagScreens.ClaimUnitag,
       params: {

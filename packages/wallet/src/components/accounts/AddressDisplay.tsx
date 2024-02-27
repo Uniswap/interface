@@ -165,6 +165,8 @@ export function AddressDisplay({
           <Flex centered row gap="$spacing12">
             <DisplayNameText
               displayName={displayName}
+              gap="$spacing4"
+              includeUnitagSuffix={includeUnitagSuffix}
               textProps={{
                 adjustsFontSizeToFit: true,
                 allowFontScaling,

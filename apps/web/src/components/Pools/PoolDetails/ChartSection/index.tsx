@@ -1,5 +1,5 @@
 import { Trans, t } from '@lingui/macro'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart } from 'components/Charts/ChartModel'
@@ -19,7 +19,7 @@ import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import { DISPLAYS, TimePeriodDisplay, getTimePeriodFromDisplay } from 'components/Tokens/TokenTable/TimeSelector'
 import { Chain, ProtocolVersion } from 'graphql/data/__generated__/types-and-hooks'
 import { PoolData } from 'graphql/data/pools/usePoolData'
-import { TimePeriod, gqlToCurrency, toHistoryDuration } from 'graphql/data/util'
+import { TimePeriod, gqlToCurrency, supportedChainIdFromGQLChain, toHistoryDuration } from 'graphql/data/util'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo, useState } from 'react'
@@ -152,7 +152,7 @@ export default function ChartSection(props: ChartSectionProps) {
   const loading = props.loading || (activeQuery.chartType !== ChartType.LIQUIDITY ? activeQuery?.loading : false)
 
   const ChartBody = (() => {
-    if (!currencyA || !currencyB || !props.poolData) {
+    if (!currencyA || !currencyB || !props.poolData || !props.chain) {
       return <ChartSkeleton type={activeQuery.chartType} height={PDP_CHART_HEIGHT_PX} />
     }
 
@@ -163,6 +163,7 @@ export default function ChartSection(props: ChartSectionProps) {
       timePeriod,
       tokenA: currencyA.wrapped,
       tokenB: currencyB.wrapped,
+      chainId: supportedChainIdFromGQLChain(props.chain) ?? ChainId.MAINNET,
     }
 
     // TODO(WEB-3740): Integrate BE tick query, remove special casing for liquidity chart
@@ -328,11 +329,13 @@ function LiquidityChart({
   tokenB,
   feeTier,
   isReversed,
+  chainId,
 }: {
   tokenA: Token
   tokenB: Token
   feeTier: FeeAmount
   isReversed: boolean
+  chainId: ChainId
 }) {
   const tokenADescriptor = tokenA.symbol ?? tokenA.name ?? t`Token A`
   const tokenBDescriptor = tokenB.symbol ?? tokenB.name ?? t`Token B`
@@ -342,6 +345,7 @@ function LiquidityChart({
     tokenB,
     feeTier,
     isReversed,
+    chainId,
   })
 
   const theme = useTheme()

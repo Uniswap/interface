@@ -207,7 +207,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
                 {
                   "color": "#FC72FF",
                   "fontFamily": "Basel-Medium",
-                  "fontSize": 13,
+                  "fontSize": 15,
                   "fontWeight": "500",
                   "lineHeight": 16,
                 }

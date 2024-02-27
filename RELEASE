@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmX4W6sgCHYCcR4SxeJVbZnj5N1GXR2ERPJomoBjVSbZVZ`
-- CIDv1: `bafybeiebsyucxoiaieyyktifwl7glbepaklj4tncplc3rvssq55rpl553a`
+- CIDv0: `QmSyV4dNhjeqsxaKHkFZyqyLKGaqBUkgr5fb1FDZN24yY5`
+- CIDv1: `bafybeice3zkknbq42szpbonaebytodvjc7rddzz3v5rc4hd6wjts6t2usi`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,118 +10,21 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiebsyucxoiaieyyktifwl7glbepaklj4tncplc3rvssq55rpl553a.ipfs.dweb.link/
-- https://bafybeiebsyucxoiaieyyktifwl7glbepaklj4tncplc3rvssq55rpl553a.ipfs.cf-ipfs.com/
-- [ipfs://QmX4W6sgCHYCcR4SxeJVbZnj5N1GXR2ERPJomoBjVSbZVZ/](ipfs://QmX4W6sgCHYCcR4SxeJVbZnj5N1GXR2ERPJomoBjVSbZVZ/)
+- https://bafybeice3zkknbq42szpbonaebytodvjc7rddzz3v5rc4hd6wjts6t2usi.ipfs.dweb.link/
+- https://bafybeice3zkknbq42szpbonaebytodvjc7rddzz3v5rc4hd6wjts6t2usi.ipfs.cf-ipfs.com/
+- [ipfs://QmSyV4dNhjeqsxaKHkFZyqyLKGaqBUkgr5fb1FDZN24yY5/](ipfs://QmSyV4dNhjeqsxaKHkFZyqyLKGaqBUkgr5fb1FDZN24yY5/)
 
-## 5.13.0 (2024-02-27)
+## 5.14.0 (2024-02-27)
 
 
 ### Features
 
-* **web:** [info] Add Bottom Bar to PDP mWeb (#6444) edd221d
-* **web:** [info] add tvl and volume % change to PDP query (#6453) 3054897
-* **web:** [info] add warning label to swap modal on PDP page (#6398) f7bacf9
-* **web:** [info] candlestick data integration and fallback refactor (#6510) 1136e54
-* **web:** [info] candlestick tooltip (#6355) fbb184f
-* **web:** [info] Connect PDP data to our BE (#6357) 45a32d6
-* **web:** [info] Connect PDP Volume Chart to real data (#6455) 3c7fa86
-* **web:** [info] Integrate BE Pool TX queries (#6424) d2df578
-* **web:** [info] Migrate Explore and TDP TX tables to our GQL BE (#6502) b674b85
-* **web:** [info] pdp loading states (#6504) 57c0279
-* **web:** [info] Sortable Token Explore Table Headers (#6435) f0e95d0
-* **web:** [info] TDP chart loading states (#6450) d45a2e7
-* **web:** [info] use custom PDP seo page title (#6422) f2e6552
-* **web:** [info] use dropdown bottom sheet in smaller screens (#6452) 0177aaa
-* **web:** [info] Use real price data for PDP Price Chart (#6457) 9493135
-* **web:** [info] Various mWeb polish (#6549) 97e313e
-* **web:** [uni-tags] adding username to send (#6358) 507bffc
-* **web:** [uni-tags] improve Web3Status and account drawer header (#6454) 0c57325
-* **web:** [uni-tags] update banner copy and responsive styles (#6401) b8445de
-* **web:** add Explore and TDP chart staleness checks (#6458) 71cac56
-* **web:** add gas estimate to limits dialog (#6233) 6689ae4
-* **web:** add more analytics for limits (#6475) 14de73d
-* **web:** Add more limits analytics events (#6496) 1bc5245
-* **web:** Add off chain order type to trade events and swap tab click event (#6417) 3ad9ce0
-* **web:** add price change speedbump to limit form (#6447) 1f855b5
-* **web:** change input currency from LimitPriceInputPanel (#6250) 8313cb9
-* **web:** fix limit status updating (#6363) 727de8b
-* **web:** handle remote open limits (#6407) 519dbb9
-* **web:** invert limit price preset button adjustments (#6518) c93f355
-* **web:** mv limits cta to activity tab (#6532) e34eb1c
-* **web:** pending states for cancelling limits (#6360) 1a3f5b9
-* **web:** redesign limits menu rows (#6575) 11ac692
-* **web:** Set default quote currency in limits price display based on stablecoin (#6456) 4b5a48a
-* **web:** sync url to swap tab (#6432) ffb2d8c
-* **web:** transaction details for insufficient liquidity (#6531) 8d85c98
-* **web:** Update progress indicator step titles for limit orders (#6470) 090248e
-* **web:** update TOS last updated to 2/16/2024 (#6550) 533b087
-* **web:** Use GQL Token Data for Pool Token Logos (#6505) 00e6504
+* **web:** add disclaimer to limits review modal (#6597) f1cb196
 
 
 ### Bug Fixes
 
-* **web:** [info] add tooltip for turnover on token table (#6507) 50ea4f5
-* **web:** [info] block explorer icon not showing dark mode TDP (#6557) f0ca33d
-* **web:** [info] explore table mobile hover  (#6512) 7abb6f7
-* **web:** [info] fix extralong numbers on explore chart section (#6524) db5bbdc
-* **web:** [info] fix translations for chart type selector (#6533) ee54af9
-* **web:** [info] flickering volume bars (#6581) 60582ac
-* **web:** [info] hide chart y-axis on smaller screen (#6506) c64a8f4
-* **web:** [info] knock out a bunch of high-pri polish tasks (#6305) e5d0797
-* **web:** [info] make return to top clickable again (#6559) 6d65932
-* **web:** [info] MOOREE polish (#6486) 0a5b22f
-* **web:** [info] more polish (#6434) 41ca7ea
-* **web:** [info] pdp matching tdp (#6501) fb8ec9d
-* **web:** [info] Prevent infinite loading for fully loaded tables (#6394) 4233a2f
-* **web:** [info] pull decimal data for gql tokens (#6558) 3d9a336
-* **web:** [info] Show explorer icon in PDP Links in darkmode (#6584) 8bd04e5
-* **web:** [info] Show PDP balances on mWeb (#6585) aee363f
-* **web:** [info] Show TDP Bottom Bar at exactly 1024px (#6576) d04dd12
-* **web:** [limits] empty transaction details with ETH (#6519) 8c1532d
-* **web:** [limits] fix transaction details text to match design (#6534) dc4dbd3
-* **web:** [limits] making market button the same as percentage (#6516) 6f417c9
-* **web:** [limits] update order confirmation flow (#6490) 0966070
-* **web:** [uni-tags] inline banner height, icon size, pfp (#6538) 67b10ab
-* **web:** align swap box and action buttons (#6497) 7c846bc
-* **web:** chain switching search params (#6491) 6c88199
-* **web:** chain switching search params (#6491) (#6514) f10d64e
-* **web:** Change auction period secs to 0 (#6589) eab18eb
-* **web:** clear limits form when submitting a limit (#6515) 9bab70b
-* **web:** color code buy/sell on TDP tx table (#6498) eaafcb6
-* **web:** convert backend timestamp from sec to ms for X orders (#6540) 4161221
-* **web:** de-crowd the swap header bar (#6546) b0fd755
-* **web:** disable test and update gql schema (#6517) e3aa751
-* **web:** disable text select on the $ in the send form (#6433) 2a9ba50
-* **web:** division by zero error in limits menu (#6561) 3190502
-* **web:** do not truncate token symbols (#6495) 3f3b28b
-* **web:** enable limits for all tokens (#6485) ee6fd22
-* **web:** fix cancelation confirmation modal for limit orders (#6583) 8565065
-* **web:** fix limit tab breaking after switching to l2s (#6554) 15f2d32
-* **web:** ignore touchmove on charts (#6500) 51c7d32
-* **web:** invert displayed custom price adjustment to match presets (#6560) a9fbe5c
-* **web:** layout bug in token selector (#6484) a4e2de1
-* **web:** limit form styling nits (#6253) ca34460
-* **web:** limiting max decimals in input (#6446) df01d65
-* **web:** limits menu styling nits (#6254) a83faa5
-* **web:** lint error in useCurrentPriceAdjustment (#6492) cd1e011
-* **web:** long pool name overlap (#6503) 78d4d8c
-* **web:** minor design nits for limits (#6522) 450366a
-* **web:** Misc. design fixes to Token Detail Page (#6565) 7146990
-* **web:** open limits menu button bug (#6389) 7cdcc98
-* **web:** revert - clear limits form when submitting a limit (#6515) (#6528) 52ef6fd
-* **web:** setState error from LimitForm (#6249) df2aca3
-* **web:** stacked tvl rendering overlap (#6573) f090a13
-* **web:** styling fixes for limits flow (#6525) 72ed86b
-* **web:** swap header<>url navigation bug (#6513) ad8d8d9
-* **web:** swap z-indexing (#6499) 1573567
-* **web:** truncate currency amount to decimals when parsing (#6586) 2a891d9
-* **web:** Use local activities if GraphQL assetActivities query returns nothing (#6494) 137b253
-
-
-### Code Refactoring
-
-* **web:** [info] tdp provider pattern (#6385) 5c52db7
-* **web:** [info] use tdp context in subcomponents (#6400) 99bbedc
+* **web:** fix expiry line item (#6596) 7225ae9
+* **web:** use page chain for liquidity chart (#6582) 4e89b28
 
 

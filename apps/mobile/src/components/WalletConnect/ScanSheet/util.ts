@@ -154,6 +154,10 @@ function getMetamaskAddress(uri: string): Nullable<string> {
 
 // format is scantastic://<uri>
 function getScantasticAddress(uri: string): Nullable<string> {
+  if (!uri.startsWith('scantastic://')) {
+    return null
+  }
+
   const uriParts = uri.split('://')
 
   if (uriParts.length < 2) {

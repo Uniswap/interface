@@ -274,6 +274,7 @@ exports[`AccountDetails renders without error 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
+                "gap": 4,
                 "justifyContent": "center",
               }
             }
@@ -607,6 +608,7 @@ exports[`AccountDetails renders without error with chevron 1`] = `
               {
                 "alignItems": "center",
                 "flexDirection": "row",
+                "gap": 4,
                 "justifyContent": "center",
               }
             }

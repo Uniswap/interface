@@ -1,7 +1,7 @@
 import { providers } from 'ethers'
 import { Statsig } from 'statsig-react-native'
-import { isWeb } from 'tamagui'
 import { call, select } from 'typed-redux-saga'
+import { isWeb } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { RPCType } from 'wallet/src/constants/chains'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'

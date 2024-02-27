@@ -1,8 +1,7 @@
 /* eslint-disable complexity */
 import { useCallback, useMemo } from 'react'
 import { TFunction, useTranslation } from 'react-i18next'
-import { isWeb } from 'tamagui'
-import { Button, Flex, Icons, Text } from 'ui/src'
+import { Button, Flex, Icons, Text, isWeb } from 'ui/src'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import {
   selectHasSubmittedHoldToSwap,

@@ -44895,7 +44895,6 @@ __metadata:
     redux-saga: 1.2.2
     redux-saga-test-plan: 4.0.4
     statsig-react-native: 4.11.0
-    tamagui: 1.89.26
     typechain: 5.2.0
     typed-redux-saga: 1.5.0
     typescript: 5.3.3

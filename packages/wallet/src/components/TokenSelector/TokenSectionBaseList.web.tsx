@@ -1,8 +1,7 @@
 import { CSSProperties, Key, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList as List } from 'react-window'
-import { useWindowDimensions } from 'tamagui'
-import { Flex } from 'ui/src'
+import { Flex, useWindowDimensions } from 'ui/src'
 import { zIndices } from 'ui/src/theme'
 import {
   ItemRowInfo,

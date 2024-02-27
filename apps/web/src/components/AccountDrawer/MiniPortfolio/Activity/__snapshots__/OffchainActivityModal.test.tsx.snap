@@ -1046,9 +1046,7 @@ exports[`OrderContent should render without error, open order 1`] = `
             <div
               class="c6 c20 css-142zc9n"
             >
-              <span>
-                Mock Date
-              </span>
+              <span />
             </div>
           </div>
           <div

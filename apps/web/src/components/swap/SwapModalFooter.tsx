@@ -327,6 +327,12 @@ function ExpandableLineItems(props: { trade: InterfaceTrade; allowedSlippage: Pe
   )
 }
 
+const StyledInfoIcon = styled(Info)`
+  margin-top: 2px;
+  align-self: flex-start;
+  flex-shrink: 0;
+`
+
 function LimitLineItems({ trade }: { trade: LimitOrderTrade }) {
   return (
     <>
@@ -334,10 +340,16 @@ function LimitLineItems({ trade }: { trade: LimitOrderTrade }) {
       <SwapLineItem trade={trade} type={SwapLineItemType.EXPIRY} />
       <SwapLineItem trade={trade} type={SwapLineItemType.SWAP_FEE} />
       <SwapLineItem trade={trade} type={SwapLineItemType.NETWORK_COST} />
-      <Row gap="xs" justify="center" marginTop="12px">
-        <Info width={16} height={16} />
+      <Row gap="sm" justify="space-between" marginTop="12px">
+        <StyledInfoIcon width={16} height={16} />
         <ThemedText.LabelMicro>
-          <Trans>Canceling a limit will require a small network cost</Trans>
+          <Trans>
+            Please be aware that the execution for this limit order may vary based on real-time market fluctuations and
+            Ethereum network congestion. Canceling a limit has a network cost.{' '}
+            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/24300813697933">
+              <Trans>Learn more</Trans>
+            </ExternalLink>
+          </Trans>
         </ThemedText.LabelMicro>
       </Row>
     </>

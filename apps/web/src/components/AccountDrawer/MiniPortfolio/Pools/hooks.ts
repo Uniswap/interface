@@ -25,7 +25,7 @@ import { PositionInfo } from './cache'
 type ContractMap<T extends BaseContract> = { [key: number]: T }
 
 // Constructs a chain-to-contract map, using the wallet's provider when available
-function useContractMultichain<T extends BaseContract>(
+export function useContractMultichain<T extends BaseContract>(
   addressMap: AddressMap,
   ABI: any,
   chainIds?: ChainId[]

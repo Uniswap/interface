@@ -1,12 +1,14 @@
 import { Interface } from '@ethersproject/abi'
-import { BigintIsh, Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { BigintIsh, ChainId, Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import IUniswapV3PoolStateJSON from '@uniswap/v3-core/artifacts/contracts/interfaces/pool/IUniswapV3PoolState.sol/IUniswapV3PoolState.json'
 import { FeeAmount, Pool, computePoolAddress } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { useContractMultichain } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { IUniswapV3PoolStateInterface } from 'wallet/src/abis/types/v3/IUniswapV3PoolState'
+import { UniswapV3Pool } from 'wallet/src/abis/types/v3/UniswapV3Pool'
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateJSON.abi) as IUniswapV3PoolStateInterface
 
@@ -149,4 +151,42 @@ export function usePool(
   )
 
   return usePools(poolKeys)[0]
+}
+
+export function usePoolMultichain(
+  tokenA: Token | undefined,
+  tokenB: Token | undefined,
+  fee: number | undefined,
+  chainId: ChainId
+): [PoolState, Pool | null] {
+  const [poolData, setPoolData] = useState<[PoolState, Pool | null]>([PoolState.LOADING, null])
+  const poolAddress =
+    tokenA && tokenB && fee
+      ? PoolCache.getPoolAddress(V3_CORE_FACTORY_ADDRESSES[chainId], tokenA, tokenB, fee)
+      : undefined
+
+  const contractMap = useMemo(() => (poolAddress ? { [chainId]: poolAddress } : {}), [chainId, poolAddress])
+  const contract = useContractMultichain<UniswapV3Pool>(contractMap, IUniswapV3PoolStateJSON.abi)[chainId]
+
+  useEffect(() => {
+    async function getPool() {
+      try {
+        if (!tokenA || !tokenB || !fee || !poolAddress || !contract) {
+          setPoolData([PoolState.INVALID, null])
+          return
+        }
+
+        const slot0 = await contract.slot0()
+        const liquidity = await contract.liquidity()
+        setPoolData([PoolState.NOT_EXISTS, null])
+
+        const pool = new Pool(tokenA, tokenB, fee, slot0.sqrtPriceX96.toString(), liquidity.toString(), slot0.tick)
+        setPoolData([PoolState.EXISTS, pool])
+      } catch (e) {
+        setPoolData([PoolState.INVALID, null])
+      }
+    }
+    getPool()
+  }, [contract, fee, poolAddress, tokenA, tokenB])
+  return poolData
 }

@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { isWeb } from 'tamagui'
-import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Icons, Text, isWeb, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'

@@ -24,15 +24,15 @@ export const UnitagWithProfilePicture = ({
         backgroundColor="$surface1"
         borderRadius="$rounded32"
         px="$spacing12"
-        py="$spacing16"
+        py="$spacing8"
         shadowColor="$neutral3"
         shadowOpacity={0.4}
         shadowRadius="$spacing4"
         transform={[{ rotateZ: '-2deg' }]}
         zIndex="$popover">
-        <Text color="$accent1" variant="buttonLabel1">
+        <Text color="$accent1" variant="subheading1">
           {unitag}
-          <Text color="$neutral2" variant="buttonLabel1">
+          <Text color="$neutral3" variant="subheading1">
             {UNITAG_SUFFIX}
           </Text>
         </Text>

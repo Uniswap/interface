@@ -1,8 +1,7 @@
 import { selectionAsync } from 'expo-haptics'
 import { useCallback, useMemo, useState } from 'react'
 import { LayoutAnimation, StyleSheet, VirtualizedList } from 'react-native'
-import { isWeb } from 'tamagui'
-import { Flex, Icons } from 'ui/src'
+import { Flex, Icons, isWeb } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { colors, iconSizes } from 'ui/src/theme'
 import {
