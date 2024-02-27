@@ -200,6 +200,7 @@ interface CurrencyInputPanelProps {
   incrementDisabled?: boolean
   onUserInput: (value: string) => void
   onMax?: () => void
+  onHalf?: () => void
   showMaxButton: boolean
   label?: ReactNode
   onCurrencySelect?: (currency: Currency) => void
@@ -229,6 +230,7 @@ export default function CurrencyInputPanel({
   value,
   onUserInput,
   onMax,
+  onHalf,
   showMaxButton,
   onCurrencySelect,
   currency,
@@ -301,9 +303,43 @@ export default function CurrencyInputPanel({
       )}
       <Container hideInput={hideInput}>
         {actionLabel && (
-          <ActionLabel>
-            <Trans>{actionLabel}</Trans>
-          </ActionLabel>
+          <div className="" style={{ display: 'flex' }}>
+            <ActionLabel style={{ width: '50%' }}>
+              <Trans>{actionLabel}</Trans>
+            </ActionLabel>
+            {actionLabel === 'You sell' && selectedCurrencyBalance && (
+              <ActionLabel
+                style={{
+                  width: '50%',
+                  justifyContent: 'end',
+                  display: 'flex',
+                  gap: '10px',
+                  color: 'white',
+                }}
+              >
+                <>
+                  <TYPE.body
+                    onClick={onHalf}
+                    color={theme.text2}
+                    fontWeight={400}
+                    fontSize={14}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    1/2
+                  </TYPE.body>
+                  <TYPE.body
+                    onClick={onMax}
+                    color={theme.text2}
+                    fontWeight={400}
+                    fontSize={14}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    Max
+                  </TYPE.body>
+                </>
+              </ActionLabel>
+            )}
+          </div>
         )}
         <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}} selected={!onCurrencySelect}>
           {showCurrencySelector ? (
@@ -382,13 +418,7 @@ export default function CurrencyInputPanel({
             <RowBetween>
               {account ? (
                 <RowFixed style={{ height: '17px' }}>
-                  <TYPE.body
-                    onClick={onMax}
-                    color={theme.text2}
-                    fontWeight={400}
-                    fontSize={14}
-                    style={{ display: 'inline', cursor: 'pointer' }}
-                  >
+                  <TYPE.body color={theme.text2} fontWeight={400} fontSize={14} style={{ display: 'inline' }}>
                     {!hideBalance && currency && selectedCurrencyBalance ? (
                       renderBalance ? (
                         renderBalance(selectedCurrencyBalance)
@@ -399,11 +429,6 @@ export default function CurrencyInputPanel({
                       )
                     ) : null}
                   </TYPE.body>
-                  {showMaxButton && selectedCurrencyBalance ? (
-                    <StyledBalanceMax onClick={onMax}>
-                      <Trans>(Max)</Trans>
-                    </StyledBalanceMax>
-                  ) : null}
                 </RowFixed>
               ) : (
                 <FiatRow />

@@ -422,6 +422,7 @@ export default function Market({ history }: RouteComponentProps) {
   )
 
   // check whether the user has approved the router on the input token
+  // @dev: default value =  ApprovalState.UNKNOWN
   const [approvalState, approveCallback] = useApproveCallbackFromTrade(trade, allowedSlippage, swapTransaction)
   const {
     state: signatureState,
@@ -449,6 +450,8 @@ export default function Market({ history }: RouteComponentProps) {
     }
   }, [approveCallback, gatherPermitSignature, signatureState, toggledVersion, trade?.inputAmount.currency.symbol])
 
+  // check if the allowance of the user is still loading (=/= pending)
+  const [approvalLoading, setApprovalLoading] = useState<boolean>(false)
   // check if user has gone through approval process, used to show two step buttons, reset on token change
   const [approvalSubmitted, setApprovalSubmitted] = useState<boolean>(false)
 
@@ -458,6 +461,12 @@ export default function Market({ history }: RouteComponentProps) {
       setApprovalSubmitted(true)
     }
   }, [approvalState, approvalSubmitted])
+
+  useEffect(() => {
+    if (allowedSlippage && trade && approvalState === ApprovalState.UNKNOWN) {
+      setApprovalLoading(true)
+    } else setApprovalLoading(false)
+  }, [allowedSlippage, trade, approvalState])
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
@@ -621,6 +630,10 @@ export default function Market({ history }: RouteComponentProps) {
     maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
   }, [maxInputAmount, onUserInput])
 
+  const handleHalfInput = useCallback(() => {
+    maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.divide(2).toExact())
+  }, [maxInputAmount, onUserInput])
+
   const handleOutputSelect = useCallback(
     (outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
     [onCurrencySelection]
@@ -701,6 +714,7 @@ export default function Market({ history }: RouteComponentProps) {
                         currency={currencies[Field.INPUT]}
                         onUserInput={handleTypeInput}
                         onMax={handleMaxInput}
+                        onHalf={handleHalfInput}
                         fiatValue={fiatValueInput ?? undefined}
                         onCurrencySelect={handleInputSelect}
                         otherCurrency={currencies[Field.OUTPUT]}
@@ -976,7 +990,7 @@ export default function Market({ history }: RouteComponentProps) {
                               <Trans>Unwrap</Trans>
                             ) : null)}
                         </ButtonPrimary>
-                      ) : routeIsSyncing || routeIsLoading ? (
+                      ) : routeIsSyncing || routeIsLoading || approvalLoading ? (
                         <GreyCard style={{ textAlign: 'center' }}>
                           <TYPE.main mb="4px">
                             <Dots>
@@ -1008,19 +1022,35 @@ export default function Market({ history }: RouteComponentProps) {
                               }
                             >
                               <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                                <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
+                                <span
+                                  style={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    whiteSpace: 'break-spaces',
+                                    width: '100%',
+                                  }}
+                                >
                                   <CurrencyLogo
                                     currency={currencies[Field.INPUT]}
                                     size={'20px'}
                                     style={{ marginRight: '8px', flexShrink: 0 }}
                                   />
-                                  {/* we need to shorten this string on mobile */}
-                                  {approvalState === ApprovalState.APPROVED ||
-                                  signatureState === UseERC20PermitState.SIGNED ? (
-                                    <Trans>You can now swap {currencies[Field.INPUT]?.symbol}</Trans>
-                                  ) : (
-                                    <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
-                                  )}
+                                  <div
+                                    style={{
+                                      display: 'flex',
+                                      justifyContent: 'center',
+                                      width: '100%',
+                                    }}
+                                  >
+                                    {/* we need to shorten this string on mobile */}
+                                    {approvalState === ApprovalState.APPROVED ||
+                                    signatureState === UseERC20PermitState.SIGNED ? (
+                                      <Trans>You can now swap {currencies[Field.INPUT]?.symbol}</Trans>
+                                    ) : (
+                                      <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
+                                    )}
+                                  </div>
                                 </span>
                                 {approvalState === ApprovalState.PENDING ? (
                                   <Loader stroke="white" />
@@ -1235,6 +1265,7 @@ export default function Market({ history }: RouteComponentProps) {
                   currency={currencies[Field.INPUT]}
                   onUserInput={handleTypeInput}
                   onMax={handleMaxInput}
+                  onHalf={handleHalfInput}
                   fiatValue={fiatValueInput ?? undefined}
                   onCurrencySelect={handleInputSelect}
                   otherCurrency={currencies[Field.OUTPUT]}
@@ -1503,7 +1534,7 @@ export default function Market({ history }: RouteComponentProps) {
                         <Trans>Unwrap</Trans>
                       ) : null)}
                   </ButtonPrimary>
-                ) : routeIsSyncing || routeIsLoading ? (
+                ) : routeIsSyncing || routeIsLoading || approvalLoading ? (
                   <GreyCard style={{ textAlign: 'center' }}>
                     <TYPE.main mb="4px">
                       <Dots>
@@ -1534,19 +1565,35 @@ export default function Market({ history }: RouteComponentProps) {
                         }
                       >
                         <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                          <span style={{ display: 'flex', alignItems: 'center', whiteSpace: 'break-spaces' }}>
+                          <span
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              whiteSpace: 'break-spaces',
+                              width: '100%',
+                            }}
+                          >
                             <CurrencyLogo
                               currency={currencies[Field.INPUT]}
                               size={'20px'}
                               style={{ marginRight: '8px', flexShrink: 0 }}
                             />
-                            {/* we need to shorten this string on mobile */}
-                            {approvalState === ApprovalState.APPROVED ||
-                            signatureState === UseERC20PermitState.SIGNED ? (
-                              <Trans>You can now swap {currencies[Field.INPUT]?.symbol}</Trans>
-                            ) : (
-                              <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
-                            )}
+                            <div
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                width: '100%',
+                              }}
+                            >
+                              {/* we need to shorten this string on mobile */}
+                              {approvalState === ApprovalState.APPROVED ||
+                              signatureState === UseERC20PermitState.SIGNED ? (
+                                <Trans>You can now swap {currencies[Field.INPUT]?.symbol}</Trans>
+                              ) : (
+                                <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
+                              )}
+                            </div>
                           </span>
                           {approvalState === ApprovalState.PENDING ? (
                             <Loader stroke="white" />
