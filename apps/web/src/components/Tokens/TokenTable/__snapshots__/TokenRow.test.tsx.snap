@@ -338,7 +338,7 @@ exports[`LoadedRow.tsx renders a row 1`] = `
       >
         <a
           class="c0"
-          href="/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+          href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
         >
           <div
             class="c1"
