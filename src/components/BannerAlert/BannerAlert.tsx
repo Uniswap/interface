@@ -127,7 +127,7 @@ export function BannerAlert() {
         darkMode={darkMode}
         logoUrl="https://images.squarespace-cdn.com/content/v1/638a48377c09bb00bbc62b94/019e9ada-f799-47ec-b429-c4b6c5f426ec/coinify_logomark_orange.png?format=1500w"
       >
-        <LinkOutToBridge href="https://mycoinify.com/trade/?targetPage=buy&coin=SYSROLLUX">
+        <LinkOutToBridge href="https://trade.coinify.com/syscoin?cryptoCurrencies=SYSROLLUX,SYSEVM,SYS&defaultCryptoCurrency=SYSROLLUX&targetPage=buy">
           <BodyText color={isRolluxChain ? (darkMode ? textColor : black) : textColor}>
             <L2Icon src="https://images.squarespace-cdn.com/content/v1/638a48377c09bb00bbc62b94/019e9ada-f799-47ec-b429-c4b6c5f426ec/coinify_logomark_orange.png?format=1500w" />
             <AutoRow>
