@@ -92,6 +92,7 @@ export function useGaslessAPITrade(
   tx: SwapTransaction | undefined
   paymentFees: CurrencyAmount<Currency> | undefined
   paymentToken: Token | null | undefined
+  quoteError?: string | undefined
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -113,11 +114,15 @@ export function useGaslessAPITrade(
     signaturePermitData,
   })
 
-  const { isLoading, isError, data } = useGetGaslessQuoteQuery(!skipRequest && queryArgs ? queryArgs : skipToken, {
-    pollingInterval: ms`30s`,
-    refetchOnFocus: true,
-  })
+  const { isLoading, isError, data, error } = useGetGaslessQuoteQuery(
+    !skipRequest && queryArgs ? queryArgs : skipToken,
+    {
+      pollingInterval: ms`30s`,
+      refetchOnFocus: true,
+    }
+  )
 
+  const quoteErrorMessage = (error && (error as any).data) ?? undefined
   const quoteResult = data
 
   const gasAmount = useNetworkGasPrice()
@@ -174,6 +179,7 @@ export function useGaslessAPITrade(
         tx: undefined,
         paymentFees: undefined,
         paymentToken: undefined,
+        quoteError: quoteErrorMessage,
       }
     }
 
@@ -186,6 +192,7 @@ export function useGaslessAPITrade(
           tx: undefined,
           paymentFees: undefined,
           paymentToken: undefined,
+          quoteError: quoteErrorMessage,
         }
       }
       const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult?.sellAmount)
@@ -240,6 +247,7 @@ export function useGaslessAPITrade(
     queryArgs,
     quoteResult,
     tradeType,
+    quoteErrorMessage,
   ])
 }
 
@@ -268,6 +276,7 @@ export function useValidatorAPITrade(
   state: V3TradeState
   trade: TradeV3<Currency, Currency, TradeType> | undefined
   tx: SwapTransaction | undefined
+  quoteError?: string | undefined
 } {
   const [currencyIn, currencyOut]: [Currency | undefined, Currency | undefined] = useMemo(
     () =>
@@ -278,6 +287,7 @@ export function useValidatorAPITrade(
   )
 
   const { account } = useActiveWeb3React()
+
   const queryArgs = useValidatorAPIArguments({
     tokenIn: currencyIn,
     tokenOut: currencyOut,
@@ -289,12 +299,13 @@ export function useValidatorAPITrade(
     signaturePermitData,
   })
 
-  const { isLoading, isError, data } = useGetQuoteQuery(!skipRequest && queryArgs ? queryArgs : skipToken, {
+  const { isLoading, isError, data, error } = useGetQuoteQuery(!skipRequest && queryArgs ? queryArgs : skipToken, {
     pollingInterval: ms`30s`,
     refetchOnFocus: true,
   })
 
   const quoteResult = data
+  const quoteErrorMessage = (error && (error as any).data) ?? undefined
 
   const gasAmount = useNetworkGasPrice()
   const priceGwei =
@@ -337,6 +348,7 @@ export function useValidatorAPITrade(
         state: V3TradeState.NO_ROUTE_FOUND,
         trade: undefined,
         tx: undefined,
+        quoteError: quoteErrorMessage,
       }
     }
 
@@ -347,6 +359,7 @@ export function useValidatorAPITrade(
           state: V3TradeState.INVALID,
           trade: undefined,
           tx: undefined,
+          quoteError: quoteErrorMessage,
         }
       }
       const inputAmount = CurrencyAmount.fromRawAmount(currencyIn, quoteResult.sellAmount)
@@ -385,5 +398,16 @@ export function useValidatorAPITrade(
         uniswapAmount: undefined,
       }
     }
-  }, [account, currencyIn, currencyOut, gasUseEstimateUSD, isError, isLoading, queryArgs, quoteResult, tradeType])
+  }, [
+    account,
+    currencyIn,
+    currencyOut,
+    gasUseEstimateUSD,
+    isError,
+    isLoading,
+    queryArgs,
+    quoteResult,
+    tradeType,
+    quoteErrorMessage,
+  ])
 }

@@ -323,6 +323,7 @@ export default function SwapWidget() {
     feeImpactHigh,
     amountToReceive,
     inputTokenShouldBeWrapped,
+    quoteError,
   } = useDerivedMarketInfo(
     toggledVersion,
     showConfirm,
@@ -657,6 +658,7 @@ export default function SwapWidget() {
                   priceImpactAccepted={priceImpactAccepted}
                   feeImpactAccepted={feeImpactAccepted}
                   routeIsNotFound={routeNotFound}
+                  quoteErrorMessage={quoteError}
                 />
                 <AutoColumn gap={'md'}>
                   <div style={{ display: 'relative' }}>
@@ -1196,6 +1198,7 @@ export default function SwapWidget() {
               priceImpactAccepted={priceImpactAccepted}
               feeImpactAccepted={feeImpactAccepted}
               routeIsNotFound={routeNotFound}
+              quoteErrorMessage={quoteError}
             />
             <AutoColumn gap={'md'}>
               <div style={{ display: 'relative' }}>

@@ -146,6 +146,7 @@ export function useDerivedMarketInfo(
   feeImpactHigh: boolean
   amountToReceive: CurrencyAmount<Currency> | undefined
   inputTokenShouldBeWrapped: boolean
+  quoteError: string | undefined
 } {
   const { account, chainId } = useActiveWeb3React()
   const isGaslessMode =
@@ -307,6 +308,7 @@ export function useDerivedMarketInfo(
     feeImpactHigh,
     amountToReceive,
     inputTokenShouldBeWrapped,
+    quoteError: v2Trade.quoteError ?? undefined,
   }
 }
 
