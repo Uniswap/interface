@@ -232,7 +232,7 @@ function Cards({ inView }: { inView: boolean }) {
       <RightTop>
         <StatCard
           title={t`All time swappers`}
-          value={formatNumber({ input: 9 * 10 ** 7, type: NumberType.NFTToken })}
+          value={formatNumber({ input: 14.9 * 10 ** 6, type: NumberType.TokenQuantityStats })}
           delay={0.2}
           inView={inView}
         />

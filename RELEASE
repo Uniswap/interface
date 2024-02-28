@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmPejsjfiS8N5GaQYKoMirK9GXMJCEhyTbCEsU6mpzooNJ`
-- CIDv1: `bafybeiatpx5zjwrh3bsmjdrt77hlkjuztsnqm63dfzr4mf2nbbit6hwx5m`
+- CIDv0: `QmcQjAHrLBLgoJjyijTRWvPf8aYqyi4ShqfCgPJUt5KE7Q`
+- CIDv1: `bafybeigrb34tm6vzgzksmurnybn2upad75vcuw4lxxcqplzlofjlxbzjo4`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,24 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiatpx5zjwrh3bsmjdrt77hlkjuztsnqm63dfzr4mf2nbbit6hwx5m.ipfs.dweb.link/
-- https://bafybeiatpx5zjwrh3bsmjdrt77hlkjuztsnqm63dfzr4mf2nbbit6hwx5m.ipfs.cf-ipfs.com/
-- [ipfs://QmPejsjfiS8N5GaQYKoMirK9GXMJCEhyTbCEsU6mpzooNJ/](ipfs://QmPejsjfiS8N5GaQYKoMirK9GXMJCEhyTbCEsU6mpzooNJ/)
+- https://bafybeigrb34tm6vzgzksmurnybn2upad75vcuw4lxxcqplzlofjlxbzjo4.ipfs.dweb.link/
+- https://bafybeigrb34tm6vzgzksmurnybn2upad75vcuw4lxxcqplzlofjlxbzjo4.ipfs.cf-ipfs.com/
+- [ipfs://QmcQjAHrLBLgoJjyijTRWvPf8aYqyi4ShqfCgPJUt5KE7Q/](ipfs://QmcQjAHrLBLgoJjyijTRWvPf8aYqyi4ShqfCgPJUt5KE7Q/)
 
-## 5.16.0 (2024-02-28)
-
-
-### Features
-
-* **web:** [info] enable by default (#6623) 0573173
-* **web:** swap smarter banner (#6579) c715d1f
+### 5.16.1 (2024-02-28)
 
 
 ### Bug Fixes
 
-* **web:** [info] remove markets from pool token (#6613) 4fdad80
-* **web:** fix analytics for swap tab clicked and page name (#6600) f018e73
-* **web:** fix math for calculating prices for small decimals (#6612) 59900ff
-* **web:** Landing page style fixes at small heights (#6603) 0975cfa
+* **web:** use correct all-time swappers (#6637) 672ef4e
 
 
