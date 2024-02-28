@@ -21,7 +21,7 @@ export function SelectTokenButton({
   return (
     <TouchableArea
       hapticFeedback
-      backgroundColor={selectedCurrencyInfo ? '$surface2' : '$accent1'}
+      backgroundColor={selectedCurrencyInfo ? '$surface3' : '$accent1'}
       borderRadius="$roundedFull"
       testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
       onPress={onPress}>

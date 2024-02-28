@@ -43,12 +43,26 @@ export function ScantasticModal(): JSX.Element | null {
   )
   const pubKey: JsonWebKey = initialState?.pubKey ? JSON.parse(initialState?.pubKey) : undefined
   const uuid = initialState?.uuid
-  const device = initialState?.vendor + ' ' + initialState?.model || ''
+  const device = (initialState?.vendor + ' ' + initialState?.model || '').trim()
   const browser = initialState?.browser || ''
 
   const [expired, setExpired] = useState(false)
   const [redeemed, setRedeemed] = useState(false)
+  const [error, setError] = useState('')
+
   const [expiryText, setExpiryText] = useState('')
+  const setExpirationText = useCallback(() => {
+    const timeLeft = expirationTimestamp - Date.now()
+    if (timeLeft <= 0) {
+      return setExpiryText(t('Expired'))
+    }
+    return setExpiryText(
+      t('Expires in {{duration}}', {
+        duration: getDurationRemainingString(expirationTimestamp),
+      })
+    )
+  }, [expirationTimestamp, t])
+  useInterval(setExpirationText, ONE_SECOND_MS)
 
   if (redeemed) {
     dispatch(
@@ -63,14 +77,7 @@ export function ScantasticModal(): JSX.Element | null {
   useEffect(() => {
     const interval = setInterval(() => {
       const timeLeft = expirationTimestamp - Date.now()
-      if (timeLeft <= 0) {
-        return setExpiryText(t('Expired'))
-      }
-      return setExpiryText(
-        t('New code in {{duration}}', {
-          duration: getDurationRemainingString(expirationTimestamp),
-        })
-      )
+      setExpired(timeLeft <= 0)
     }, ONE_SECOND_MS)
 
     return () => clearInterval(interval)
@@ -81,16 +88,27 @@ export function ScantasticModal(): JSX.Element | null {
   }, [dispatch])
 
   const onEncryptSeedphrase = async (): Promise<void> => {
+    setError('')
     let encryptedSeedphrase = ''
-
+    const { n, e } = pubKey
     try {
-      if (!pubKey.n || !pubKey.e) {
-        throw new Error(t('Invalid public key'))
+      if (!n || !e) {
+        throw new Error(t('Invalid public key.'))
       }
-      encryptedSeedphrase = await getEncryptedMnemonic(account?.address || '', pubKey.n, pubKey.e)
-    } catch (e) {
-      // TODO(EXT-485): improve error handling
-      logger.error(e, { tags: { file: 'ScantasticModal', function: 'getEncryptedMnemonic' } })
+      encryptedSeedphrase = await getEncryptedMnemonic(account?.address || '', n, e)
+    } catch (err) {
+      setError('Failed to prepare seed phrase.')
+      logger.error(err, {
+        tags: {
+          file: 'ScantasticModal',
+          function: 'onEncryptSeedphrase->getEncryptedMnemonic',
+        },
+        extra: {
+          address: account?.address,
+          n,
+          e,
+        },
+      })
     }
 
     try {
@@ -108,18 +126,24 @@ export function ScantasticModal(): JSX.Element | null {
         }),
       })
       if (!response.ok) {
-        throw new Error(t('Failed to send.'))
+        throw new Error(`Failed to post blob: ${await response.text()}`)
       }
       const data = await response.json()
       if (!data?.otp) {
-        throw new Error(t('OTP unavailable'))
+        throw new Error('OTP unavailable')
       } else {
         setExpirationTimestamp(Date.now() + ONE_MINUTE_MS * 2)
         setOTP(data.otp)
       }
-    } catch (e) {
-      // TODO(EXT-485): improve error handling
-      logger.error(e, { tags: { file: 'ScantasticModal', function: 'fetch' } })
+    } catch (err) {
+      setError(t('No OTP received. Please try again.'))
+      logger.error(err, {
+        tags: {
+          file: 'ScantasticModal',
+          function: `onEncryptSeedphrase->fetch`,
+        },
+        extra: { uuid },
+      })
     }
   }
 
@@ -153,12 +177,12 @@ export function ScantasticModal(): JSX.Element | null {
         }
       )
       if (!response.ok) {
-        return
+        throw new Error(`Failed to check OTP state: ${await response.text()}`)
       }
       const data: OtpStateApiResponse = await response.json()
       const otpState = data.otp
       if (!otpState) {
-        return
+        throw new Error('No OTP state received.')
       }
       if (data.expiresAtInSeconds) {
         setExpirationTimestamp(data.expiresAtInSeconds * ONE_SECOND_MS)
@@ -170,7 +194,13 @@ export function ScantasticModal(): JSX.Element | null {
         setExpired(true)
       }
     } catch (e) {
-      logger.warn('ScanToOnboard.tsx', 'checkOTPState', e as string)
+      logger.error(e, {
+        tags: {
+          file: 'ScantasticModal',
+          function: `checkOTPState`,
+        },
+        extra: { uuid },
+      })
     }
   }, [OTP, uuid])
 
@@ -219,9 +249,37 @@ export function ScantasticModal(): JSX.Element | null {
             <Text variant="heading1">{OTP.substring(0, 3).split('').join(' ')}</Text>
             <Text variant="heading1">{OTP.substring(3).split('').join(' ')}</Text>
           </Flex>
-          <Text color="$neutral3" variant="body3">
+          <Text color="$neutral3" variant="body2">
             {expiryText}
           </Text>
+        </Flex>
+      </BottomSheetModal>
+    )
+  }
+
+  if (error) {
+    return (
+      <BottomSheetModal
+        backgroundColor={colors.surface1.get()}
+        name={ModalName.OtpScanInput}
+        onClose={onClose}>
+        <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
+          <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
+            <Icons.AlertTriangle color="$statusCritical" size={iconSizes.icon24} />
+          </Flex>
+          <Text variant="subheading1">
+            <Trans>Error</Trans>
+          </Text>
+          <Text color="$neutral2" textAlign="center" variant="body3">
+            {error}
+          </Text>
+          <Flex flexDirection="column" gap="$spacing4" mt="$spacing12" width="100%">
+            <Button alignItems="center" theme="secondary" onPress={onClose}>
+              <Text variant="buttonLabel2">
+                <Trans>Close</Trans>
+              </Text>
+            </Button>
+          </Flex>
         </Flex>
       </BottomSheetModal>
     )

@@ -1,6 +1,9 @@
 import { useNavigation } from '@react-navigation/native'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Icons, Text } from 'ui/src'
+import { ActivityIndicator } from 'react-native'
+import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { fonts } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -23,13 +26,16 @@ export function DeleteUnitagModal({
   onClose: () => void
 }): JSX.Element {
   const { t } = useTranslation()
+  const colors = useSporeColors()
   const navigation = useNavigation()
   const dispatch = useAppDispatch()
   const { triggerRefetchUnitags } = useUnitagUpdater()
   const account = useAccount(address)
   const signerManager = useWalletSigners()
+  const [isDeleting, setIsDeleting] = useState(false)
 
   const handleDeleteError = (): void => {
+    setIsDeleting(false)
     dispatch(
       pushNotification({
         type: AppNotificationType.Error,
@@ -41,11 +47,14 @@ export function DeleteUnitagModal({
 
   const onDelete = async (): Promise<void> => {
     try {
+      setIsDeleting(true)
       const { data: deleteResponse } = await deleteUnitag({
         username: unitag,
         account,
         signerManager,
       })
+      setIsDeleting(false)
+
       if (!deleteResponse?.success) {
         handleDeleteError()
         return
@@ -92,8 +101,19 @@ export function DeleteUnitagModal({
           )}
         </Text>
         <Flex centered row gap="$spacing12" pt="$spacing24">
-          <Button fill testID={ElementName.Remove} theme="detrimental" onPress={onDelete}>
-            {t('Delete')}
+          <Button
+            fill
+            disabled={isDeleting}
+            testID={ElementName.Remove}
+            theme="detrimental"
+            onPress={onDelete}>
+            {isDeleting ? (
+              <Flex height={fonts.buttonLabel1.lineHeight}>
+                <ActivityIndicator color={colors.sporeWhite.val} />
+              </Flex>
+            ) : (
+              t('Delete')
+            )}
           </Button>
         </Flex>
       </Flex>

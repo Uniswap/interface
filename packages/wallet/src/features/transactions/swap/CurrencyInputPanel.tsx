@@ -6,10 +6,8 @@ import {
   TextInput,
   TextInputProps,
   TextInputSelectionChangeEventData,
-  ViewStyle,
 } from 'react-native'
 import {
-  AnimatedStyleProp,
   Easing,
   useAnimatedStyle,
   useSharedValue,
@@ -18,7 +16,7 @@ import {
   withTiming,
 } from 'react-native-reanimated'
 import { AnimatedFlex, Flex, FlexProps, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { fonts, spacing } from 'ui/src/theme'
+import { fonts } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { useForwardRef, usePrevious } from 'utilities/src/react/hooks'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
@@ -38,7 +36,6 @@ type CurrentInputPanelProps = {
   currencyField: CurrencyField
   currencyInfo: Maybe<CurrencyInfo>
   isLoading?: boolean
-  isCollapsed: boolean
   focus?: boolean
   isFiatMode?: boolean
   onPressIn?: () => void
@@ -55,7 +52,7 @@ type CurrentInputPanelProps = {
   resetSelection: (args: { start: number; end?: number; currencyField?: CurrencyField }) => void
 } & FlexProps
 
-const MAX_INPUT_FONT_SIZE = 42
+const MAX_INPUT_FONT_SIZE = 36
 const MIN_INPUT_FONT_SIZE = 24
 
 // if font changes from `fontFamily.sansSerif.regular` or `MAX_INPUT_FONT_SIZE`
@@ -73,7 +70,6 @@ export const CurrencyInputPanel = memo(
       currencyField,
       currencyInfo,
       isLoading,
-      isCollapsed,
       focus,
       isFiatMode = false,
       onPressIn,
@@ -170,8 +166,7 @@ export const CurrencyInputPanel = memo(
     // Hide balance if panel is output, and no balance
     const hideCurrencyBalance = isOutput && currencyBalance?.equalTo(0)
 
-    // Only show max button on output if 0 balance, always show on input
-    const showMaxButton = !isOutput || (isOutput && currencyBalance?.equalTo(0))
+    const showMaxButton = !isOutput
 
     // when there is no input value, the color should be lighter to account for $ sign when in fiat input mode
     const emptyColor = !value ? '$neutral3' : '$neutral1'
@@ -217,8 +212,22 @@ export const CurrencyInputPanel = memo(
     const previousValue = usePrevious(value)
     const loadingTextValue = previousValue && previousValue !== '' ? previousValue : '0'
 
-    const { animatedContainerStyle, animatedAmountInputStyle, animatedInfoRowStyle } =
-      useAnimatedContainerStyles(isLoading, isCollapsed)
+    const loadingFlexProgress = useSharedValue(1)
+    loadingFlexProgress.value = withRepeat(
+      withSequence(
+        withTiming(0.4, { duration: 400, easing: Easing.ease }),
+        withTiming(1, { duration: 400, easing: Easing.ease })
+      ),
+      -1,
+      true
+    )
+
+    const loadingStyle = useAnimatedStyle(
+      () => ({
+        opacity: isLoading ? loadingFlexProgress.value : 1,
+      }),
+      [isLoading]
+    )
 
     const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
 
@@ -227,15 +236,13 @@ export const CurrencyInputPanel = memo(
 
     return (
       <TouchableArea hapticFeedback onPress={currencyInfo ? onPressIn : onShowTokenSelector}>
-        <AnimatedFlex {...rest} overflow="hidden" px="$spacing16" style={animatedContainerStyle}>
-          <AnimatedFlex
+        <Flex {...rest} overflow="hidden" px="$spacing16" py="$spacing20">
+          <Flex
             row
             alignItems="center"
             gap="$spacing8"
             justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}
-            // Extra space in case choose token text overlaps swap arrow
-            pb={!isOutput && !currencyInfo ? '$spacing8' : '$none'}
-            pt={isOutput && !currencyInfo ? '$spacing8' : '$none'}>
+            py="$spacing8">
             <AnimatedFlex
               fill
               grow
@@ -243,16 +250,10 @@ export const CurrencyInputPanel = memo(
               alignItems="center"
               height={MAX_INPUT_FONT_SIZE}
               overflow="hidden"
-              style={animatedAmountInputStyle}
+              style={loadingStyle}
               onLayout={onLayout}>
               {isFiatMode && (
-                <Text
-                  allowFontScaling
-                  color={inputColor}
-                  style={{
-                    fontSize: isCollapsed ? MIN_INPUT_FONT_SIZE : fontSize,
-                  }}
-                  variant="heading2">
+                <Text allowFontScaling color={inputColor} fontSize={fontSize} variant="heading2">
                   {fiatCurrencySymbol}
                 </Text>
               )}
@@ -267,7 +268,7 @@ export const CurrencyInputPanel = memo(
                   flex={1}
                   focusable={Boolean(currencyInfo)}
                   fontFamily="$heading"
-                  fontSize={isCollapsed ? MIN_INPUT_FONT_SIZE : fontSize}
+                  fontSize={fontSize}
                   maxDecimals={currencyInfo.currency.decimals}
                   maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
                   // This is a hacky workaround for Android to prevent text from being cut off
@@ -291,7 +292,7 @@ export const CurrencyInputPanel = memo(
                 />
               ) : (
                 <TouchableArea hapticFeedback onPress={onShowTokenSelector}>
-                  <Text color="$neutral3" variant="heading3">
+                  <Text color="$neutral3" fontSize={fontSize} variant="heading2">
                     0
                   </Text>
                 </TouchableArea>
@@ -304,100 +305,37 @@ export const CurrencyInputPanel = memo(
                 onPress={onShowTokenSelector}
               />
             </Flex>
-          </AnimatedFlex>
-          <AnimatedFlex
-            row
-            gap="$spacing8"
-            height={spacing.spacing36}
-            justifyContent="space-between"
-            left={spacing.spacing16}
-            position="absolute"
-            pt="$spacing16"
-            right={spacing.spacing16}
-            style={animatedInfoRowStyle}>
-            {/* Keep the animated parent container so animation styles are always mounted  */}
-            {currencyInfo && (
-              <>
-                <TouchableArea disabled={fiatModeFeatureEnabled} onPress={_onToggleIsFiatMode}>
-                  <Flex centered row shrink gap="$spacing4">
-                    <Text color="$neutral2" numberOfLines={1} variant="body3">
-                      {inputPanelFormattedValue}
-                    </Text>
-                    {Boolean(inputPanelFormattedValue && fiatModeFeatureEnabled) && (
-                      <Icons.ArrowUpDown color="$neutral3" size="$icon.12" />
-                    )}
-                  </Flex>
-                </TouchableArea>
-                <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
-                  {!hideCurrencyBalance && (
-                    <Text color="$neutral2" variant="body3">
-                      {formatCurrencyAmount({
-                        value: currencyBalance,
-                        type: NumberType.TokenNonTx,
-                      })}{' '}
-                      {currencyInfo.currency.symbol}
-                    </Text>
-                  )}
-                  {showMaxButton && onSetMax && (
-                    <MaxAmountButton currencyField={currencyField} onSetMax={onSetMax} />
+          </Flex>
+          {currencyInfo && (
+            <Flex row gap="$spacing8" justifyContent="space-between">
+              <TouchableArea disabled={fiatModeFeatureEnabled} onPress={_onToggleIsFiatMode}>
+                <Flex centered row shrink gap="$spacing4">
+                  <Text color="$neutral2" numberOfLines={1} variant="body3">
+                    {inputPanelFormattedValue}
+                  </Text>
+                  {Boolean(inputPanelFormattedValue && fiatModeFeatureEnabled) && (
+                    <Icons.ArrowUpDown color="$neutral3" size="$icon.12" />
                   )}
                 </Flex>
-              </>
-            )}
-          </AnimatedFlex>
-        </AnimatedFlex>
+              </TouchableArea>
+              <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
+                {!hideCurrencyBalance && (
+                  <Text color="$neutral2" variant="body3">
+                    {formatCurrencyAmount({
+                      value: currencyBalance,
+                      type: NumberType.TokenNonTx,
+                    })}{' '}
+                    {currencyInfo.currency.symbol}
+                  </Text>
+                )}
+                {showMaxButton && onSetMax && (
+                  <MaxAmountButton currencyField={currencyField} onSetMax={onSetMax} />
+                )}
+              </Flex>
+            </Flex>
+          )}
+        </Flex>
       </TouchableArea>
     )
   })
 )
-
-function useAnimatedContainerStyles(
-  isLoading: boolean | undefined,
-  isCollapsed: boolean | undefined
-): {
-  animatedContainerStyle: AnimatedStyleProp<ViewStyle>
-  animatedAmountInputStyle: AnimatedStyleProp<ViewStyle>
-  animatedInfoRowStyle: AnimatedStyleProp<ViewStyle>
-} {
-  const animatedContainerStyle = useAnimatedStyle(() => {
-    return {
-      paddingTop: withTiming(isCollapsed ? spacing.spacing16 : spacing.spacing24, {
-        duration: 300,
-      }),
-      paddingBottom: withTiming(isCollapsed ? spacing.spacing16 : spacing.spacing48, {
-        duration: 300,
-      }),
-    }
-  }, [isCollapsed])
-
-  const loadingFlexProgress = useSharedValue(1)
-  loadingFlexProgress.value = withRepeat(
-    withSequence(
-      withTiming(0.4, { duration: 400, easing: Easing.ease }),
-      withTiming(1, { duration: 400, easing: Easing.ease })
-    ),
-    -1,
-    true
-  )
-
-  const animatedAmountInputStyle = useAnimatedStyle(
-    () => ({
-      opacity: isLoading ? loadingFlexProgress.value : 1,
-    }),
-    [isLoading]
-  )
-
-  const animatedInfoRowStyle = useAnimatedStyle(() => {
-    return {
-      bottom: withTiming(isCollapsed ? -spacing.spacing24 : spacing.spacing16, {
-        duration: 300,
-      }),
-    }
-  }, [isCollapsed])
-
-  return {
-    animatedContainerStyle,
-    animatedAmountInputStyle,
-    animatedInfoRowStyle,
-  }
-}

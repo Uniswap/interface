@@ -427,7 +427,6 @@ function SwapFormContent(): JSX.Element {
                 currencyField={CurrencyField.INPUT}
                 currencyInfo={currencies[CurrencyField.INPUT]}
                 focus={focusOnCurrencyField === CurrencyField.INPUT}
-                isCollapsed={decimalPadControlledField !== CurrencyField.INPUT}
                 isFiatMode={isFiatMode && exactFieldIsInput}
                 isLoading={!exactFieldIsInput && isSwapDataLoading}
                 resetSelection={resetSelection}
@@ -471,7 +470,6 @@ function SwapFormContent(): JSX.Element {
                     currencyField={CurrencyField.OUTPUT}
                     currencyInfo={currencies[CurrencyField.OUTPUT]}
                     focus={focusOnCurrencyField === CurrencyField.OUTPUT}
-                    isCollapsed={decimalPadControlledField !== CurrencyField.OUTPUT}
                     isFiatMode={isFiatMode && exactFieldIsOutput}
                     isLoading={!exactFieldIsOutput && isSwapDataLoading}
                     resetSelection={resetSelection}
@@ -517,7 +515,7 @@ function SwapFormContent(): JSX.Element {
 
             {!showWebOutputTokenSelector && (
               <>
-                <Flex fill={isWeb} mt="$spacing8">
+                <Flex fill={isWeb} mt={isWeb ? '$spacing8' : '$spacing12'}>
                   <GasAndWarningRows renderEmptyRows />
                 </Flex>
               </>

@@ -8,16 +8,16 @@ import { useAppDispatch, useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { FiatOnRampStackParamList } from 'src/app/navigation/types'
 import { FiatOnRampCtaButton } from 'src/components/fiatOnRamp/CtaButton'
 import { Screen } from 'src/components/layout/Screen'
-import {
-  useFiatOnRampQuotes,
-  useMeldFiatCurrencySupportInfo,
-  useParseFiatOnRampError,
-} from 'src/features/fiatOnRamp/aggregatorHooks'
 import { FiatOnRampAmountSection } from 'src/features/fiatOnRamp/FiatOnRampAmountSection'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { FiatOnRampCountryListModal } from 'src/features/fiatOnRamp/FiatOnRampCountryListModal'
 import { FiatOnRampCountryPicker } from 'src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { FiatOnRampTokenSelectorModal } from 'src/features/fiatOnRamp/FiatOnRampTokenSelector'
+import {
+  useFiatOnRampQuotes,
+  useMeldFiatCurrencySupportInfo,
+  useParseFiatOnRampError,
+} from 'src/features/fiatOnRamp/aggregatorHooks'
 import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { FiatOnRampCurrency, InitialQuoteSelection } from 'src/features/fiatOnRamp/types'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
@@ -26,6 +26,7 @@ import { MobileEventProperties } from 'src/features/telemetry/types'
 import { FiatOnRampScreens } from 'src/screens/Screens'
 import { AnimatedFlex, Flex, Text, useIsDarkMode } from 'ui/src'
 import { usePrevious } from 'utilities/src/react/hooks'
+import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
 import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'
@@ -111,18 +112,21 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     useShouldShowNativeKeyboard()
 
   const { appFiatCurrencySupportedInMeld, meldSupportedFiatCurrency } =
-    useMeldFiatCurrencySupportInfo()
+    useMeldFiatCurrencySupportInfo(countryCode)
 
+  const debouncedAmount = useDebounce(amount, DEFAULT_DELAY * 2)
   const {
     error: quotesError,
     loading: quotesLoading,
     quotes,
   } = useFiatOnRampQuotes({
-    baseCurrencyAmount: amount,
+    baseCurrencyAmount: debouncedAmount,
     baseCurrencyCode: meldSupportedFiatCurrency.code,
     quoteCurrencyCode: quoteCurrency.currencyInfo?.currency.symbol,
     countryCode,
   })
+
+  const selectTokenLoading = quotesLoading || amount !== debouncedAmount
 
   const {
     currentData: serviceProvidersResponse,
@@ -218,7 +222,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const buttonDisabled =
     serviceProvidersLoading ||
     !!serviceProvidersError ||
-    quotesLoading ||
+    selectTokenLoading ||
     !!quotesError ||
     !selectedQuote?.destinationAmount
 
@@ -275,7 +279,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               inputRef={inputRef}
               quoteAmount={selectedQuote?.destinationAmount ?? 0}
               quoteCurrencyAmountReady={Boolean(amount && selectedQuote)}
-              selectTokenLoading={quotesLoading}
+              selectTokenLoading={selectTokenLoading}
               setSelection={setSelection}
               showNativeKeyboard={showNativeKeyboard}
               showSoftInputOnFocus={showNativeKeyboard}

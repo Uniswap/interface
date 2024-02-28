@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { BREAKPOINTS } from 'theme'
 
 const H1Styles = css<{ color?: string }>`
   padding: 0;
@@ -73,6 +74,9 @@ export const Subheading = styled.p`
   line-height: 24px; /* 133.333% */
   max-width: 430px;
   letter-spacing: -0.01em;
+  @media (max-height: ${BREAKPOINTS.md}px) {
+    font-size: 16px;
+  }
 `
 
 export type BoxProps = {

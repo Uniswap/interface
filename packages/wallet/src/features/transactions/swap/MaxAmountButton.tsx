@@ -58,7 +58,7 @@ export function MaxAmountButton({
         style={style}
         onPress={onPress}>
         <Text color="$accent1" variant="buttonLabel4">
-          {currencyField === CurrencyField.OUTPUT ? t('Get max') : t('Max')}
+          {t('Max')}
         </Text>
       </TouchableArea>
     </Trace>

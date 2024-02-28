@@ -81,14 +81,16 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
         )}
 
         <Flex centered row>
-          <Flex fill>
-            <SwapRateRatio initialInverse={true} styling="secondary" trade={trade.trade} />
-          </Flex>
+          {isWeb && (
+            <Flex fill>
+              <SwapRateRatio initialInverse={true} styling="secondary" trade={trade.trade} />
+            </Flex>
+          )}
           {showGasFee && (
             <TouchableArea hapticFeedback onPress={(): void => setShowGasInfoModal(true)}>
               <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
                 <Icons.Gas color={colors.neutral2.val} size="$icon.16" />
-                <Text color="$neutral2" variant="body4">
+                <Text color="$neutral2" variant="body3">
                   {gasFeeFormatted}
                 </Text>
               </AnimatedFlex>

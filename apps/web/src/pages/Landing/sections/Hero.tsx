@@ -8,6 +8,7 @@ import styled, { css, keyframes } from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 import { BREAKPOINTS } from 'theme'
+import { heightBreakpoints } from 'ui/src/theme'
 import { Box, H1, Subheading } from '../components/Generics'
 import { TokenCloud } from '../components/TokenCloud/index'
 import { Hover, RiseIn, RiseInText } from '../components/animations'
@@ -43,6 +44,9 @@ const StyledH1 = styled(H1)`
   @media (max-width: 464px) {
     font-size: 36px;
   }
+  @media (max-height: 668px) {
+    font-size: 28px;
+  }
 `
 const shrinkAndFade = keyframes`
   0% {
@@ -59,11 +63,14 @@ const Center = styled(Box)<{ transition?: boolean }>`
   pointer-events: none;
   padding: 48px 0px;
   @media (max-width: 464px), (max-height: 700px) {
-    padding: 0px;
+    padding-top: 24px;
   }
-  gap: 20px;
+  @media (max-width: 464px), (max-height: 668px) {
+    padding-top: 8px;
+  }
+  gap: 24px;
   @media (max-height: 800px) {
-    gap: 0px;
+    gap: 16px;
   }
   ${({ transition }) =>
     transition &&
@@ -75,6 +82,10 @@ const LearnMoreContainer = styled(Box)`
   bottom: 48px;
   @media (max-width: ${BREAKPOINTS.md}px) {
     bottom: 64px;
+  }
+
+  @media (max-height: ${heightBreakpoints.short}px) {
+    display: none;
   }
 `
 
@@ -113,7 +124,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
       <Center
         direction="column"
         align="center"
-        maxWidth="75vw"
+        maxWidth="85vw"
         transition={transition}
         style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
       >
@@ -165,7 +176,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
             <Hover>
               <ColumnCenter>
                 <ThemedText.BodySecondary>
-                  <Trans>Scroll to Learn More</Trans>
+                  <Trans>Scroll to learn more</Trans>
                 </ThemedText.BodySecondary>
                 <ChevronDown />
               </ColumnCenter>

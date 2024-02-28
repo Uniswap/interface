@@ -12,6 +12,8 @@ import {
   FORQuoteResponse,
   FORServiceProvidersResponse,
   FORSupportedCountriesResponse,
+  FORSupportedFiatCurrenciesRequest,
+  FORSupportedFiatCurrenciesResponse,
   FORSupportedTokensRequest,
   FORSupportedTokensResponse,
   FORTransactionsRequest,
@@ -238,6 +240,12 @@ export const fiatOnRampAggregatorApi = createApi({
     >({
       query: (request) => `/supported-tokens?${new URLSearchParams(request).toString()}`,
     }),
+    fiatOnRampAggregatorSupportedFiatCurrencies: builder.query<
+      FORSupportedFiatCurrenciesResponse,
+      FORSupportedFiatCurrenciesRequest
+    >({
+      query: (request) => `/supported-fiat-currencies?${new URLSearchParams(request).toString()}`,
+    }),
     fiatOnRampAggregatorTransferInstitutions: builder.query<
       FORTransferInstitutionsResponse,
       FORTransferInstitutionsRequest
@@ -302,6 +310,7 @@ export const {
   useFiatOnRampAggregatorCryptoQuoteQuery,
   useFiatOnRampAggregatorServiceProvidersQuery,
   useFiatOnRampAggregatorSupportedTokensQuery,
+  useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
   useFiatOnRampAggregatorTransferInstitutionsQuery,
   useFiatOnRampAggregatorWidgetQuery,
   useFiatOnRampAggregatorTransferWidgetQuery,

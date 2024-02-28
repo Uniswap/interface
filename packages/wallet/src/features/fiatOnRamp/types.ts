@@ -198,6 +198,7 @@ export type FORQuote = {
   destinationAmount: number
   destinationCurrencyCode: string
   serviceProvider: string
+  totalFee: number
 }
 
 export type FORQuoteResponse = {
@@ -242,6 +243,22 @@ export type FORSupportedToken = {
 
 export type FORSupportedTokensResponse = {
   supportedTokens: FORSupportedToken[]
+}
+
+// /supported-fiat-currencies
+
+export type FORSupportedFiatCurrenciesRequest = {
+  countryCode: string
+}
+
+export type FORSupportedFiatCurrency = {
+  fiatCurrencyCode: string
+  displayName: string
+  symbol: string
+}
+
+export type FORSupportedFiatCurrenciesResponse = {
+  fiatCurrencies: FORSupportedFiatCurrency[]
 }
 
 // /transfer-institutions
@@ -300,36 +317,23 @@ export type FORCryptoDetails = {
   walletAddress: string
   networkFee: number
   transactionFee: number
-  partnerFee: number | null
   totalFee: number
-  networkFeeInUsd: number | null
-  transactionFeeInUsd: number | null
-  partnerFeeInUsd: number | null
-  totalFeeInUsd: number | null
   blockchainTransactionId: string
-  institution: string | null
   chainId: string
 }
 
 export type FORTransaction = {
-  key: string
   id: string
-  paymentMethod: string | null
-  transactionType: string
   status: string
   sourceAmount: number
   sourceCurrencyCode: string
   destinationAmount: number
   destinationCurrencyCode: string
-  paymentMethodType: string
   serviceProvider: string
-  description: string | null
   cryptoDetails: FORCryptoDetails
   createdAt: string
   updatedAt: string
-  countryCode: string
   externalSessionId: string
-  sourceAmountInUsd: number
 }
 
 export type FORTransactionsRequest = {

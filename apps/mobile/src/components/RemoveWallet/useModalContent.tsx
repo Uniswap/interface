@@ -134,11 +134,15 @@ export const useModalContent = ({
           </Trans>
         ),
         description: (
-          <Trans t={t}>
-            It shares the same recovery phrase as{' '}
-            <Text color="$neutral1">{{ wallets: associatedAccountNames }}</Text>. Your recovery
-            phrase will remain stored until you delete all remaining wallets.
-          </Trans>
+          <Text color="$neutral2" variant="body3">
+            <Trans t={t}>
+              It shares the same recovery phrase as{' '}
+              <Text color="$neutral1" variant="body3">
+                {{ wallets: associatedAccountNames }}
+              </Text>
+              . Your recovery phrase will remain stored until you delete all remaining wallets.
+            </Trans>
+          </Text>
         ),
         Icon: TrashIcon,
         iconColorLabel: 'statusCritical',

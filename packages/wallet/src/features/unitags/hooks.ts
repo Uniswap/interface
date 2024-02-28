@@ -89,13 +89,26 @@ export const useCanAddressClaimUnitag = (
 ): { canClaimUnitag: boolean; errorCode?: UnitagErrorCodes } => {
   const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
   const { data: deviceId } = useAsyncData(getUniqueId)
+  const { refetchUnitagsCounter } = useUnitagUpdater()
   const skip = !unitagsFeatureFlagEnabled || !deviceId
-  const { loading, data } = useUnitagClaimEligibilityQuery({
+  const { loading, data, refetch } = useUnitagClaimEligibilityQuery({
     address,
     deviceId: deviceId ?? '', // this is fine since we skip if deviceId is undefined
     isUsernameChange,
     skip,
   })
+
+  // Force refetch of canClaimUnitag if refetchUnitagsCounter changes
+  useEffect(() => {
+    if (skip || loading) {
+      return
+    }
+
+    refetch?.()
+    // Skip is included in the dependency array here bc of useAsyncData -- on mount deviceId is undefined so refetch would be skipped if not included
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refetchUnitagsCounter, skip])
+
   return {
     canClaimUnitag: !loading && !!data?.canClaim,
     errorCode: data?.errorCode,

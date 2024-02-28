@@ -35,10 +35,15 @@ export function DappConnectedNetworkModal({
   const onDisconnect = async (): Promise<void> => {
     try {
       dispatch(removeSession({ account: address, sessionId: id }))
-      await wcWeb3Wallet.disconnectSession({
-        topic: id,
-        reason: getSdkError('USER_DISCONNECTED'),
-      })
+      // Explicitly verify that WalletConnect has this session id as an active session
+      // It's possible that the session was already disconnected on WC but wasn't updated locally in redux
+      const sessions = wcWeb3Wallet.getActiveSessions()
+      if (sessions[session.id]) {
+        await wcWeb3Wallet.disconnectSession({
+          topic: session.id,
+          reason: getSdkError('USER_DISCONNECTED'),
+        })
+      }
       dispatch(
         pushNotification({
           type: AppNotificationType.WalletConnect,

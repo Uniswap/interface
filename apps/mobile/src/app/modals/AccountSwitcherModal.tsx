@@ -127,10 +127,10 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   })
 
   const addWalletOptions = useMemo<MenuItemProp[]>(() => {
-    const onPressCreateNewWallet = async (): Promise<void> => {
+    const onPressCreateNewWallet = (): void => {
       // Ensure no pending accounts
-      await dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
-      await dispatch(createAccountActions.trigger())
+      dispatch(pendingAccountActions.trigger(PendingAccountActions.ActivateOneAndDelete))
+      dispatch(createAccountActions.trigger())
 
       if (unitagsFeatureFlagEnabled) {
         if (hasImportedSeedPhrase) {

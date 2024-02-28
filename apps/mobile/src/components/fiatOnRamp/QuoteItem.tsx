@@ -6,6 +6,7 @@ import { Loader } from 'src/components/loading'
 import { useFormatExactCurrencyAmount } from 'src/features/fiatOnRamp/hooks'
 import { Flex, Icons, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
+import { NumberType } from 'utilities/src/format/types'
 import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { FORQuote, FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
 import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
@@ -29,7 +30,7 @@ export function FORQuoteItem({
   showCarret,
   active,
 }: {
-  quote: FORQuote | undefined
+  quote: FORQuote
   serviceProvider: FORServiceProvider | undefined
   currency: Maybe<Currency>
   loading: boolean
@@ -39,17 +40,17 @@ export function FORQuoteItem({
   active?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
-  const { addFiatSymbolToNumber } = useLocalizationContext()
+  const { formatNumberOrString } = useLocalizationContext()
 
   const quoteAmount = useFormatExactCurrencyAmount(
     (quote?.destinationAmount || 0).toString(),
     currency
   )
 
-  const quoteEquivalentInSourceCurrencyAmount = addFiatSymbolToNumber({
-    value: quote?.sourceAmount || 0,
-    currencyCode: baseCurrency.code,
-    currencySymbol: baseCurrency.symbol,
+  const quoteEquivalentInSourceCurrencyAmount = formatNumberOrString({
+    value: quote.sourceAmount - quote.totalFee,
+    type: NumberType.FiatStandard,
+    currencyCode: baseCurrency.code.toLowerCase(),
   })
 
   const isDarkMode = useIsDarkMode()

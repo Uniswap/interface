@@ -17,7 +17,11 @@ export function HiddenTokensRow({
   const { t } = useTranslation()
 
   return (
-    <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} onPress={onPress}>
+    <TouchableArea
+      hapticFeedback
+      activeOpacity={1}
+      hapticStyle={ImpactFeedbackStyle.Light}
+      onPress={onPress}>
       <Flex
         row
         alignItems="center"
@@ -27,47 +31,50 @@ export function HiddenTokensRow({
         <Text color="$neutral2" variant="subheading2">
           {t('Hidden ({{numHidden}})', { numHidden })}
         </Text>
-        <Flex
-          row
-          alignItems="center"
-          backgroundColor="$surface2"
-          borderRadius="$roundedFull"
-          gap="$spacing2"
-          justifyContent="center"
-          pl="$spacing12"
-          pr="$spacing8"
-          py="$spacing8"
-          // set width because otherwise the Text/Frame move as they animate
-          width={93}>
-          <AnimatePresence exitBeforeEnter initial={false}>
-            <Text
-              key={isExpanded ? 0 : 1}
-              animation="100ms"
+        {/* just used for opacity styling, the parent TouchableArea handles event */}
+        <TouchableArea>
+          <Flex
+            row
+            alignItems="center"
+            backgroundColor="$surface2"
+            borderRadius="$roundedFull"
+            gap="$spacing2"
+            justifyContent="center"
+            pl="$spacing12"
+            pr="$spacing8"
+            py="$spacing8"
+            // set width because otherwise the Text/Frame move as they animate
+            width={93}>
+            <AnimatePresence exitBeforeEnter initial={false}>
+              <Text
+                key={isExpanded ? 0 : 1}
+                animation="100ms"
+                color="$neutral2"
+                enterStyle={{
+                  y: -5,
+                  opacity: 0,
+                }}
+                exitStyle={{
+                  y: 5,
+                  opacity: 0,
+                }}
+                textAlign="center"
+                userSelect="none"
+                variant="buttonLabel3"
+                width={45}>
+                {isExpanded ? t('Hide') : t('Show')}
+              </Text>
+            </AnimatePresence>
+            <Icons.RotatableChevron
+              animation="semiBouncy"
               color="$neutral2"
-              enterStyle={{
-                y: -5,
-                opacity: 0,
-              }}
-              exitStyle={{
-                y: 5,
-                opacity: 0,
-              }}
-              textAlign="center"
-              userSelect="none"
-              variant="buttonLabel3"
-              width={45}>
-              {isExpanded ? t('Hide') : t('Show')}
-            </Text>
-          </AnimatePresence>
-          <Icons.RotatableChevron
-            animation="semiBouncy"
-            color="$neutral2"
-            direction="down"
-            height={iconSizes.icon20}
-            rotate={`${isExpanded ? -90 : 0}deg`}
-            width={iconSizes.icon20}
-          />
-        </Flex>
+              direction="down"
+              height={iconSizes.icon20}
+              rotate={`${isExpanded ? -90 : 0}deg`}
+              width={iconSizes.icon20}
+            />
+          </Flex>
+        </TouchableArea>
       </Flex>
     </TouchableArea>
   )

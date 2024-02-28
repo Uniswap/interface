@@ -1,5 +1,5 @@
 import { pick } from 'lodash'
-import { ComponentProps } from 'react'
+import { ComponentProps, useEffect, useState } from 'react'
 import { Flex, Sheet, useSporeColors } from 'ui/src'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { TextInput } from 'wallet/src/components/input/TextInput'
@@ -49,6 +49,8 @@ export function BottomSheetDetachedModal(props: BottomSheetModalProps): JSX.Elem
   return <WebBottomSheetModal {...supportedProps} />
 }
 
+const ANIMATION_MS = 200
+
 function WebBottomSheetModal({
   children,
   name,
@@ -60,6 +62,25 @@ function WebBottomSheetModal({
   isCentered = true,
 }: WebBottomSheetProps): JSX.Element {
   const colors = useSporeColors()
+  const [fullyClosed, setFullyClosed] = useState(false)
+
+  if (fullyClosed && isModalOpen) {
+    setFullyClosed(false)
+  }
+
+  // Not the greatest, we are syncing 200 here to 200ms animation
+  // TODO(EXT-745): Add Tamagui onFullyClosed callback and replace here
+  useEffect(() => {
+    if (!isModalOpen) {
+      const tm = setTimeout(() => {
+        setFullyClosed(true)
+      }, ANIMATION_MS)
+
+      return () => {
+        clearTimeout(tm)
+      }
+    }
+  }, [isModalOpen])
 
   return (
     <Trace logImpression={isModalOpen} modal={name}>
@@ -67,7 +88,7 @@ function WebBottomSheetModal({
         <Sheet
           disableDrag
           modal
-          animation="200ms"
+          animation={`${ANIMATION_MS}ms`}
           dismissOnOverlayPress={false}
           dismissOnSnapToBottom={false}
           open={isModalOpen}
@@ -97,7 +118,7 @@ function WebBottomSheetModal({
               style={{ backgroundColor: backgroundColor ?? colors.surface1.val }}
               width="100%">
               {/* To keep this consistent with how the `BottomSheetModal` works on native mobile, we only mount the children when the modal is open. */}
-              {isModalOpen ? children : null}
+              {fullyClosed ? null : children}
             </Flex>
           </Sheet.Frame>
         </Sheet>

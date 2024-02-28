@@ -32,7 +32,11 @@ import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { Pill } from 'wallet/src/components/text/Pill'
 import { uniswapUrls } from 'wallet/src/constants/urls'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
-import { UNITAG_SUFFIX, UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/constants'
+import {
+  UNITAG_SUFFIX,
+  UNITAG_SUFFIX_NO_LEADING_DOT,
+  UNITAG_VALID_REGEX,
+} from 'wallet/src/features/unitags/constants'
 import { useCanClaimUnitagName } from 'wallet/src/features/unitags/hooks'
 import { usePendingAccounts } from 'wallet/src/features/wallet/hooks'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
@@ -63,7 +67,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
-  const inputPlaceholder = t('yourname')
+  const inputPlaceholder = getYourNameString(t('yourname'))
 
   // In onboarding flow, delete pending accounts and create account actions happen right before navigation
   // So pendingAccountAddress must be fetched in this component and can't be passed in params
@@ -397,7 +401,7 @@ const InfoModal = ({
 }): JSX.Element => {
   const colors = useSporeColors()
   const { t } = useTranslation()
-  const usernamePlaceholder = t('yourname')
+  const usernamePlaceholder = getYourNameString(t('yourname'))
 
   return (
     <WarningModal
@@ -478,4 +482,15 @@ const ClaimPeriodInfoModal = ({
       <LearnMoreLink url={uniswapUrls.helpArticleUrls.unitagClaimPeriod} />
     </WarningModal>
   )
+}
+
+// Util to handle translations of `yourname`
+// If translated string only contains valid Unitag characters, return it lowercased and without spaces
+// Otherwise, return 'yourname'
+const getYourNameString = (yourname: string): string => {
+  const noSpacesLowercase = yourname.replaceAll(' ', '').toLowerCase()
+  if (UNITAG_VALID_REGEX.test(noSpacesLowercase)) {
+    return noSpacesLowercase
+  }
+  return 'yourname'
 }
