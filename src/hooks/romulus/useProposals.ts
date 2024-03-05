@@ -1,12 +1,12 @@
 import { useCelo } from '@celo/react-celo'
 import { ChainId } from '@ubeswap/sdk'
-import { BigNumber } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { TypedEvent } from 'generated/common'
 import { useRomulusDelegateContract } from 'hooks/useContract'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import fetchEvents from 'utils/fetchEvents'
 
 import { ubeGovernanceAddresses } from '../../constants'
+import { cachedStakeEvents } from './cachedStakeEvents'
 
 type Proposal = [BigNumber, string, string[], BigNumber[], string[], string[], BigNumber, BigNumber, string] & {
   id: BigNumber
@@ -29,9 +29,38 @@ export const useProposals = (): Array<TypedEvent<Proposal>> | undefined => {
 
   const call = useCallback(async () => {
     if (!romulusAddress || !romulusContract || !mountRef.current) return
-    const filter = romulusContract.filters.ProposalCreated(null, null, null, null, null, null, null, null, null)
-    const proposalEvents = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter)
-    setProposals(proposalEvents)
+    // const filter = romulusContract.filters.ProposalCreated(null, null, null, null, null, null, null, null, null)
+    // const proposalEvents = await fetchEvents<TypedEvent<Proposal>>(romulusContract, filter)
+    console.log(cachedStakeEvents)
+    setProposals(
+      cachedStakeEvents.map(
+        (a) =>
+          ({
+            blockNumber: a.blockNumber,
+            blockHash: a.blockHash,
+            transactionIndex: a.transactionIndex,
+            removed: a.removed,
+            address: a.address,
+            data: '',
+            topics: [],
+            transactionHash: a.transactionHash,
+            logIndex: a.logIndex,
+            event: a.event,
+            eventSignature: a.signature,
+            args: {
+              id: ethers.BigNumber.from(a.returnValues.id),
+              values: a.returnValues.values,
+              targets: a.returnValues.targets,
+              endBlock: ethers.BigNumber.from(a.returnValues.endBlock),
+              proposer: a.returnValues.proposer,
+              calldatas: a.returnValues.calldatas,
+              signatures: a.returnValues.signatures,
+              startBlock: ethers.BigNumber.from(a.returnValues.startBlock),
+              description: a.returnValues.description,
+            } as unknown as Proposal,
+          } as unknown as TypedEvent<Proposal>)
+      )
+    )
   }, [romulusContract, romulusAddress])
 
   useEffect(() => {
