@@ -73,7 +73,7 @@ export default function AddCommandModal({ isOpen, defaultCommand, onConfirm, onD
         }
       }
 
-      if (values.value) {
+      if (values.value || values.value.toString() === '0') {
         try {
           parseEther(values.value.toString())
         } catch (e) {
