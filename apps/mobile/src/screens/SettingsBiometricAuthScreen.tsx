@@ -22,7 +22,7 @@ import {
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { Switch } from 'wallet/src/components/buttons/Switch'
 import { openSettings } from 'wallet/src/utils/linking'
-import { isIOS } from 'wallet/src/utils/platform'
+import { isAndroid, isIOS } from 'wallet/src/utils/platform'
 
 interface BiometricAuthSetting {
   onValueChange: (newValue: boolean) => void
@@ -47,9 +47,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
   const onCloseModal = useCallback(() => setShowUnsafeWarningModal(false), [])
 
   const { touchId } = useDeviceSupportsBiometricAuth()
-  const authenticationTypeName = useBiometricName(touchId)
-  const capitalizedAuthTypeName =
-    authenticationTypeName.charAt(0).toUpperCase() + authenticationTypeName.slice(1)
+  const biometricsMethod = useBiometricName(touchId)
 
   const { requiredForAppAccess, requiredForTransactions } = useBiometricAppSettings()
   const { trigger } = useBiometricPrompt<BiometricPromptTriggerArgs>(
@@ -73,23 +71,28 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
     const handleOSBiometricAuthTurnedOff = (): void => {
       isIOS
         ? Alert.alert(
-            t('{{capitalizedAuthTypeName}} is turned off', { capitalizedAuthTypeName }),
-            t(
-              '{{capitalizedAuthTypeName}} is currently turned off for Uniswap Wallet—you can turn it on in your system settings.',
-              { capitalizedAuthTypeName }
-            ),
-            [{ text: t('Settings'), onPress: openSettings }, { text: t('Cancel') }]
+            isAndroid
+              ? t('settings.setting.biometrics.off.title.android')
+              : t('settings.setting.biometrics.off.title.ios', { biometricsMethod }),
+            isAndroid
+              ? t('settings.setting.biometrics.off.message.android')
+              : t('settings.setting.biometrics.off.message.ios', { biometricsMethod }),
+            [
+              { text: t('common.navigation.systemSettings'), onPress: openSettings },
+              { text: t('common.button.cancel') },
+            ]
           )
         : Alert.alert(
-            t('{{capitalizedAuthTypeName}} is not setup', {
-              capitalizedAuthTypeName,
-              authenticationTypeName,
-            }),
-            t(
-              '{{capitalizedAuthTypeName}} is not setup on your device. To use {{authenticationTypeName}}, set it up first in Settings.',
-              { capitalizedAuthTypeName, authenticationTypeName }
-            ),
-            [{ text: t('Set up'), onPress: enroll }, { text: t('Cancel') }]
+            isAndroid
+              ? t('settings.setting.biometrics.unavailable.title.android')
+              : t('settings.setting.biometrics.unavailable.title.ios', { biometricsMethod }),
+            isAndroid
+              ? t('settings.setting.biometrics.unavailable.message.android')
+              : t('settings.setting.biometrics.unavailable.message.ios', { biometricsMethod }),
+            [
+              { text: t('common.button.setup'), onPress: enroll },
+              { text: t('common.button.cancel') },
+            ]
           )
     }
 
@@ -121,8 +124,10 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
           })
         },
         value: requiredForAppAccess,
-        text: t('App access'),
-        subText: t('Require {{authenticationTypeName}} to open app', { authenticationTypeName }),
+        text: t('settings.setting.biometrics.appAccess.title'),
+        subText: isAndroid
+          ? t('settings.setting.biometrics.appAccess.subtitle.android')
+          : t('settings.setting.biometrics.appAccess.subtitle.ios', { biometricsMethod }),
       },
       {
         onValueChange: async (newRequiredForTransactionsValue): Promise<void> => {
@@ -151,18 +156,13 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
           })
         },
         value: requiredForTransactions,
-        text: t('Transactions'),
-        subText: t('Require {{authenticationTypeName}} to transact', { authenticationTypeName }),
+        text: t('settings.setting.biometrics.transactions.title'),
+        subText: isAndroid
+          ? t('settings.setting.biometrics.transactions.subtitle.android')
+          : t('settings.setting.biometrics.transactions.subtitle.ios', { biometricsMethod }),
       },
     ]
-  }, [
-    requiredForAppAccess,
-    t,
-    authenticationTypeName,
-    capitalizedAuthTypeName,
-    requiredForTransactions,
-    trigger,
-  ])
+  }, [requiredForAppAccess, t, biometricsMethod, requiredForTransactions, trigger])
 
   const renderItem = ({
     item: { text, subText, value, onValueChange },
@@ -214,7 +214,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
       <Screen>
         <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
           <Text variant="body1">
-            {t('{{capitalizedAuthTypeName}}', { capitalizedAuthTypeName })}
+            {isAndroid ? t('settings.setting.biometrics.title') : biometricsMethod}
           </Text>
         </BackHeader>
         <Flex p="$spacing24">

@@ -61,7 +61,7 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
         />
 
         <Text color="$neutral2" lineHeight={20} textAlign="center" variant="body3">
-          {t('You can send tokens on all of our supported networks to this address.')}
+          {t('qrScanner.wallet.title')}
         </Text>
         <TouchableArea onPress={(): void => setShowModal(true)}>
           <Flex row gap="$spacing4">
@@ -78,10 +78,8 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
       {showModal && (
         <WarningModal
           backgroundIconColor={colors.surface1.val}
-          caption={t(
-            'Uniswap Wallet supports tokens on Ethereum, Polygon, Arbitrum, Optimism, Base, and BNB Chain. Right now, we only support NFTs on Ethereum.'
-          )}
-          closeText={t('Close')}
+          caption={t('qrScanner.wallet.networks.description')}
+          closeText={t('common.button.close')}
           icon={
             <NetworkLogos
               centered
@@ -91,7 +89,7 @@ export function WalletQRCode({ address }: Props): JSX.Element | null {
             />
           }
           modalName={ModalName.QRCodeNetworkInfo}
-          title={t('Supported Networks')}
+          title={t('qrScanner.wallet.networks.title')}
           onClose={(): void => setShowModal(false)}>
           <LearnMoreLink url={uniswapUrls.helpArticleUrls.supportedNetworks} />
         </WarningModal>

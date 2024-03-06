@@ -61,8 +61,11 @@ function useTokenSectionsForSwapInput(
     )
 
     return [
-      ...(getTokenOptionsSection(t('Your tokens'), portfolioTokenOptions) ?? []),
-      ...(getTokenOptionsSection(t('Popular tokens'), popularMinusPortfolioTokens) ?? []),
+      ...(getTokenOptionsSection(t('tokens.selector.section.yours'), portfolioTokenOptions) ?? []),
+      ...(getTokenOptionsSection(
+        t('tokens.selector.section.popular'),
+        popularMinusPortfolioTokens
+      ) ?? []),
     ] satisfies TokenSection[]
   }, [loading, popularTokenOptions, portfolioTokenOptions, t])
 

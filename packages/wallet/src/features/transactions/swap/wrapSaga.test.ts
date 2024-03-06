@@ -5,7 +5,9 @@ import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { wrap, WrapParams } from 'wallet/src/features/transactions/swap/wrapSaga'
 import { TransactionType, WrapTransactionInfo } from 'wallet/src/features/transactions/types'
-import { account } from 'wallet/src/test/fixtures'
+import { ethersTransactionRequest, signerMnemonicAccount } from 'wallet/src/test/fixtures'
+
+const account = signerMnemonicAccount()
 
 const wrapTxInfo: WrapTransactionInfo = {
   type: TransactionType.Wrap,
@@ -18,17 +20,12 @@ const unwrapTxInfo: WrapTransactionInfo = {
   unwrapped: true,
 }
 
-const transaction = {
-  from: account.address,
-  to: '0xabc',
-  data: '0x01',
-  chainId: ChainId.Mainnet,
-}
+const txRequest = ethersTransactionRequest()
 
 const params: WrapParams = {
   txId: '1',
   account,
-  txRequest: transaction,
+  txRequest,
   inputCurrencyAmount: CurrencyAmount.fromRawAmount(
     NativeCurrency.onChain(ChainId.Mainnet),
     '200000'
@@ -44,7 +41,7 @@ describe(wrap, () => {
         chainId: ChainId.Mainnet,
         account: params.account,
         typeInfo: wrapTxInfo,
-        options: { request: transaction },
+        options: { request: txRequest },
       })
       .next()
       .isDone()
@@ -65,7 +62,7 @@ describe(wrap, () => {
         chainId: ChainId.Mainnet,
         account: params.account,
         typeInfo: unwrapTxInfo,
-        options: { request: transaction },
+        options: { request: txRequest },
       })
       .next()
       .isDone()

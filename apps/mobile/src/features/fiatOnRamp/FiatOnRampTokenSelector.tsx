@@ -46,7 +46,7 @@ export function FiatOnRampTokenSelectorModal({
         section={SectionName.TokenSelector}>
         <Flex grow gap="$spacing16" px="$spacing16">
           <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">
-            {t('Choose a token')}
+            {t('fiatOnRamp.button.chooseToken')}
           </Text>
           <AnimatedFlex grow entering={FadeIn} exiting={FadeOut}>
             <TokenFiatOnRampList

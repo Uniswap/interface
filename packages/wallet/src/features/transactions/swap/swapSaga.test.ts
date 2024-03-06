@@ -19,11 +19,16 @@ import {
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { account, mockProvider } from 'wallet/src/test/fixtures'
+import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
+import { getTxProvidersMocks } from 'wallet/src/test/mocks'
 import { currencyId } from 'wallet/src/utils/currencyId'
+
+const account = signerMnemonicAccount()
 
 const CHAIN_ID = ChainId.Goerli
 const universalRouterAddress = UNIVERSAL_ROUTER_ADDRESS(CHAIN_ID)
+
+const { mockProvider } = getTxProvidersMocks()
 
 const transactionTypeInfo: ExactInputSwapTransactionInfo = {
   type: TransactionType.Swap,

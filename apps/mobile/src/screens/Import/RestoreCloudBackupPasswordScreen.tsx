@@ -19,13 +19,13 @@ import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
-import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { MINUTES_IN_HOUR, ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { ImportType } from 'wallet/src/features/onboarding/types'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { ImportAccountType } from 'wallet/src/features/wallet/import/types'
 import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/wallet/import/utils'
 import { ElementName } from 'wallet/src/telemetry/constants'
-import { isAndroid } from 'wallet/src/utils/platform'
+import { getCloudProviderName } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,
@@ -60,13 +60,14 @@ function calculateLockoutEndTime(attemptCount: number): number | undefined {
   return undefined
 }
 
-function getLockoutTimeMessage(remainingLockoutTime: number): string {
+function useLockoutTimeMessage(remainingLockoutTime: number): string {
+  const { t } = useTranslation()
   const minutes = Math.ceil(remainingLockoutTime / ONE_MINUTE_MS)
-  if (minutes >= 60) {
-    return '1 hour'
+  if (minutes >= MINUTES_IN_HOUR) {
+    return t('account.cloud.lockout.time.hours', { count: Math.floor(minutes / MINUTES_IN_HOUR) })
   }
 
-  return minutes === 1 ? '1 minute' : `${minutes} minutes`
+  return t('account.cloud.lockout.time.minutes', { count: Math.floor(minutes) })
 }
 
 export function RestoreCloudBackupPasswordScreen({
@@ -87,15 +88,12 @@ export function RestoreCloudBackupPasswordScreen({
 
   const remainingLockoutTime = lockoutEndTime ? Math.max(0, lockoutEndTime - Date.now()) : 0
   const isLockedOut = remainingLockoutTime > 0
+  const lockoutMessage = useLockoutTimeMessage(remainingLockoutTime)
 
   useFocusEffect(
     useCallback(() => {
       if (isLockedOut) {
-        setErrorMessage(
-          t('Too many attempts. Try again in {{time}}.', {
-            time: getLockoutTimeMessage(remainingLockoutTime),
-          })
-        )
+        setErrorMessage(lockoutMessage)
 
         const timer = setTimeout(() => {
           setErrorMessage(undefined)
@@ -105,7 +103,7 @@ export function RestoreCloudBackupPasswordScreen({
 
         return () => clearTimeout(timer)
       }
-    }, [isLockedOut, t, dispatch, remainingLockoutTime])
+    }, [isLockedOut, lockoutMessage, remainingLockoutTime, dispatch])
   )
 
   useAddBackButton(navigation)
@@ -137,7 +135,7 @@ export function RestoreCloudBackupPasswordScreen({
         if (updatedLockoutEndTime) {
           dispatch(setLockoutEndTime({ lockoutEndTime: updatedLockoutEndTime }))
         } else {
-          setErrorMessage(t('Invalid password. Please try again.'))
+          setErrorMessage(t('account.cloud.error.password.title'))
           inputRef.current?.focus()
         }
       }
@@ -154,18 +152,14 @@ export function RestoreCloudBackupPasswordScreen({
 
   return (
     <OnboardingScreen
-      subtitle={
-        isAndroid
-          ? t('This password is required to recover your recovery phrase backup from Google Drive.')
-          : t('This password is required to recover your recovery phrase backup from iCloud.')
-      }
-      title={t('Enter backup password')}>
+      subtitle={t('account.cloud.password.subtitle', { cloudProviderName: getCloudProviderName() })}
+      title={t('account.cloud.password.title')}>
       <Flex>
         <PasswordInput
           ref={inputRef}
           autoFocus={!isLockedOut}
           editable={!isLockedOut}
-          placeholder={t('Enter password')}
+          placeholder={t('account.cloud.password.input')}
           value={enteredPassword}
           onChangeText={(newValue: string): void => {
             if (!isLockedOut) {
@@ -181,7 +175,7 @@ export function RestoreCloudBackupPasswordScreen({
         {isRestoringMnemonic && (
           <TouchableArea onPress={navigateToEnterRecoveryPhrase}>
             <Text color="$accent1" mb="$spacing12" textAlign="center" variant="buttonLabel3">
-              {t('Enter your recovery phrase instead')}
+              {t('account.cloud.password.recoveryPhrase')}
             </Text>
           </TouchableArea>
         )}
@@ -189,7 +183,7 @@ export function RestoreCloudBackupPasswordScreen({
           disabled={!enteredPassword || isLockedOut}
           testID={ElementName.Submit}
           onPress={onPasswordSubmit}>
-          {t('Continue')}
+          {t('common.button.continue')}
         </Button>
       </Flex>
     </OnboardingScreen>

@@ -38,10 +38,13 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
 import { useCurrentPriceAdjustment } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
+import Row from 'components/Row'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { useAtom } from 'jotai'
 import { LimitPriceError } from 'pages/Swap/Limit/LimitPriceError'
 import { getDefaultPriceInverted } from 'state/limit/hooks'
+import { ExternalLink, ThemedText } from 'theme/components'
+import { AlertTriangle } from 'ui/src/components/icons'
 import { LimitExpirySection } from './LimitExpirySection'
 
 const CustomHeightSwapSection = styled(SwapSection)`
@@ -51,6 +54,24 @@ const CustomHeightSwapSection = styled(SwapSection)`
 const ShortArrowWrapper = styled(ArrowWrapper)`
   margin-top: -22px;
   margin-bottom: -22px;
+`
+
+const StyledAlertIcon = styled(AlertTriangle)`
+  align-self: flex-start;
+  flex-shrink: 0;
+  margin-right: 12px;
+  fill: ${({ theme }) => theme.neutral2};
+`
+
+const LimitDisclaimerContainer = styled(Row)`
+  background-color: ${({ theme }) => theme.surface2};
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 12px;
+`
+
+const DisclaimerText = styled(ThemedText.LabelSmall)`
+  line-height: 20px;
 `
 
 export const LIMIT_FORM_CURRENCY_SEARCH_FILTERS: CurrencySearchFilters = {
@@ -330,6 +351,26 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           priceInverted={limitState.limitPriceInverted}
         />
       )}
+      {account && (
+        <OpenLimitOrdersButton
+          account={account}
+          openLimitsMenu={() => {
+            setMenu(MenuState.LIMITS)
+            openAccountDrawer()
+          }}
+        />
+      )}
+      <LimitDisclaimerContainer>
+        <StyledAlertIcon size={20} color={theme.neutral2} />
+        <DisclaimerText>
+          <Trans>
+            Limits may not execute exactly when tokens reach the specified price.{' '}
+            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/24300813697933">
+              <Trans>Learn more</Trans>
+            </ExternalLink>
+          </Trans>
+        </DisclaimerText>
+      </LimitDisclaimerContainer>
       {limitOrderTrade && showConfirm && (
         <ConfirmSwapModalV2
           allowance={allowance}
@@ -352,15 +393,6 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           }}
           swapResult={swapResult}
           swapError={swapError}
-        />
-      )}
-      {account && (
-        <OpenLimitOrdersButton
-          account={account}
-          openLimitsMenu={() => {
-            setMenu(MenuState.LIMITS)
-            openAccountDrawer()
-          }}
         />
       )}
     </Column>

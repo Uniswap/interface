@@ -119,7 +119,7 @@ export function useParseFiatOnRampError(
     return { errorText, errorColor }
   }
 
-  errorText = t('Something went wrong.')
+  errorText = t('fiatOnRamp.error.default')
   errorColor = '$DEP_accentWarning'
 
   if (isFiatOnRampApiError(error)) {
@@ -129,7 +129,7 @@ export function useParseFiatOnRampError(
         type: NumberType.FiatStandard,
         currencyCode,
       })
-      errorText = t('Minimum {{amount}}', { amount: formattedAmount })
+      errorText = t('fiatOnRamp.error.min', { amount: formattedAmount })
       errorColor = '$statusCritical'
     } else if (isInvalidRequestAmountTooHigh(error)) {
       const formattedAmount = formatNumberOrString({
@@ -137,7 +137,7 @@ export function useParseFiatOnRampError(
         type: NumberType.FiatStandard,
         currencyCode,
       })
-      errorText = t('Maximum {{amount}}', { amount: formattedAmount })
+      errorText = t('fiatOnRamp.error.max', { amount: formattedAmount })
       errorColor = '$statusCritical'
     }
   }

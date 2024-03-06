@@ -1,4 +1,4 @@
-import { ChainId, Currency, Ether, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, Currency, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@uniswap/sdk-core'
 import invariant from 'tiny-invariant'
 
 export const NATIVE_CHAIN_ID = 'NATIVE'
@@ -54,13 +54,7 @@ export const USDC_POLYGON_MUMBAI = new Token(
   'USDC',
   'USD Coin'
 )
-export const PORTAL_USDC_CELO = new Token(
-  ChainId.CELO,
-  '0x37f750B7cC259A2f741AF45294f6a16572CF5cAd',
-  6,
-  'USDCet',
-  'USDC (Portal from Ethereum)'
-)
+export const USDC_CELO = new Token(ChainId.CELO, '0xceba9300f2b948710d2653dd7b07f33a8b32118c', 6, 'USDC', 'USD Coin')
 export const USDC_BASE = new Token(ChainId.BASE, '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', 6, 'USDC', 'USD Coin')
 
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
@@ -423,17 +417,25 @@ class AvaxNativeCurrency extends NativeCurrency {
   }
 }
 
-class ExtendedEther extends Ether {
+class ExtendedEther extends NativeCurrency {
   public get wrapped(): Token {
     const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
     if (wrapped) return wrapped
     throw new Error(`Unsupported chain ID: ${this.chainId}`)
   }
 
+  protected constructor(chainId: number) {
+    super(chainId, 18, 'ETH', 'Ethereum')
+  }
+
   private static _cachedExtendedEther: { [chainId: number]: NativeCurrency } = {}
 
   public static onChain(chainId: number): ExtendedEther {
     return this._cachedExtendedEther[chainId] ?? (this._cachedExtendedEther[chainId] = new ExtendedEther(chainId))
+  }
+
+  public equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
   }
 }
 
@@ -466,8 +468,8 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in ChainId]?: s
     [ChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI.address,
     [ChainId.BNB]: USDC_BSC.address,
     [ChainId.BASE]: USDC_BASE.address,
-    [ChainId.CELO]: PORTAL_USDC_CELO.address,
-    [ChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
+    [ChainId.CELO]: USDC_CELO.address,
+    [ChainId.CELO_ALFAJORES]: USDC_CELO.address,
     [ChainId.GOERLI]: USDC_GOERLI.address,
     [ChainId.SEPOLIA]: USDC_SEPOLIA.address,
     [ChainId.AVALANCHE]: USDC_AVALANCHE.address,
@@ -484,8 +486,8 @@ const STABLECOINS: { [chainId in ChainId]: Token[] } = {
   [ChainId.POLYGON_MUMBAI]: [USDC_POLYGON_MUMBAI],
   [ChainId.BNB]: [USDC_BSC],
   [ChainId.BASE]: [USDC_BASE],
-  [ChainId.CELO]: [PORTAL_USDC_CELO],
-  [ChainId.CELO_ALFAJORES]: [PORTAL_USDC_CELO],
+  [ChainId.CELO]: [USDC_CELO],
+  [ChainId.CELO_ALFAJORES]: [USDC_CELO],
   [ChainId.GOERLI]: [USDC_GOERLI],
   [ChainId.SEPOLIA]: [USDC_SEPOLIA],
   [ChainId.AVALANCHE]: [USDC_AVALANCHE],

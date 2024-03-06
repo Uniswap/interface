@@ -46,8 +46,8 @@ enum PoolTransactionColumn {
 }
 
 const PoolTransactionColumnWidth: { [key in PoolTransactionColumn]: number } = {
-  [PoolTransactionColumn.Timestamp]: 164,
-  [PoolTransactionColumn.Type]: 100,
+  [PoolTransactionColumn.Timestamp]: 120,
+  [PoolTransactionColumn.Type]: 144,
   [PoolTransactionColumn.MakerAddress]: 100,
   [PoolTransactionColumn.FiatValue]: 125,
   [PoolTransactionColumn.InputAmount]: 125,

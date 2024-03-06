@@ -116,17 +116,17 @@ export function ReceiveCryptoModal(): JSX.Element {
       <Flex grow gap="$spacing12" px="$spacing16">
         <Flex gap="$spacing4" p="$spacing8">
           <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">
-            {t('Receive crypto')}
+            {t('home.upsell.receive.title')}
           </Text>
           <Text color="$neutral2" mt="$spacing2" textAlign="center" variant="body3">
-            {t('Fund your wallet by transferring crypto from another wallet or account')}
+            {t('home.upsell.receive.description')}
           </Text>
         </Flex>
         <AccountCardItem onClose={onClose} />
         <Flex centered row shrink gap="$spacing12" py="$spacing8">
           <Separator />
           <Text color="$neutral2" textAlign="center" variant="body3">
-            {t('Link an account')}
+            {t('home.upsell.receive.cta')}
           </Text>
           <Separator />
         </Flex>

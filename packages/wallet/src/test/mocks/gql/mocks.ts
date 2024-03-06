@@ -1,21 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
-  Chain,
   Currency,
   SafetyLevel,
   SwapOrderStatus,
   TransactionStatus,
 } from 'wallet/src/data/__generated__/types-and-hooks'
-import { FAKER_SEED, faker } from 'wallet/src/test/fixtures'
-
-faker.seed(FAKER_SEED)
-
-export const MAX_FIXTURE_TIMESTAMP = 1609459200
-
-const randomEnumValue = <T extends Record<string, string>>(enumObj: T): T[keyof T] => {
-  const values = Object.values(enumObj)
-  return values[Math.floor(Math.random() * values.length)] as T[keyof T]
-}
+import { GQL_CHAINS } from 'wallet/src/test/fixtures'
+import { MAX_FIXTURE_TIMESTAMP, faker } from 'wallet/src/test/shared'
+import { randomChoice, randomEnumValue } from 'wallet/src/test/utils'
 
 export const mocks = {
   TokenProject: {
@@ -26,18 +18,18 @@ export const mocks = {
     safetyLevel: () => SafetyLevel.Verified,
     tokens: () => new Array(4),
   },
-  Token: {
-    id: () => faker.datatype.uuid(),
-    address: () => faker.finance.ethereumAddress(),
-    chain: () => randomEnumValue(Chain),
-    decimals: () => 6,
-    symbol: () => faker.lorem.word(),
-  },
   TokenProjectMarket: {
     currency: () => Currency.Eth,
     id: () => faker.datatype.uuid(),
     tokenProject: () => ({ id: faker.datatype.uuid(), tokens: [] }),
     priceHistory: () => new Array(2),
+  },
+  Token: {
+    id: () => faker.datatype.uuid(),
+    address: () => faker.finance.ethereumAddress(),
+    chain: () => randomChoice(GQL_CHAINS),
+    decimals: () => 6,
+    symbol: () => faker.lorem.word(),
   },
   Amount: {
     id: () => faker.datatype.uuid(),
@@ -57,7 +49,7 @@ export const mocks = {
   },
   AssetActivity: {
     timestamp: () => faker.datatype.number({ max: MAX_FIXTURE_TIMESTAMP }),
-    chain: () => randomEnumValue(Chain),
+    chain: () => randomChoice(GQL_CHAINS),
   },
   TransactionDetails: {
     id: () => faker.datatype.uuid(),
@@ -76,7 +68,7 @@ export const mocks = {
   },
   ApplicationContract: {
     id: () => faker.datatype.uuid(),
-    chain: () => randomEnumValue(Chain),
+    chain: () => randomChoice(GQL_CHAINS),
     address: () => faker.finance.ethereumAddress(),
   },
   NftCollection: {
@@ -88,7 +80,7 @@ export const mocks = {
   },
   NftContract: {
     id: () => faker.datatype.uuid(),
-    chain: () => randomEnumValue(Chain),
+    chain: () => randomChoice(GQL_CHAINS),
     address: () => faker.finance.ethereumAddress(),
   },
   Image: {

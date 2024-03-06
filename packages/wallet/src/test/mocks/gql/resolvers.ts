@@ -1,28 +1,16 @@
 import { GraphQLJSON } from 'graphql-scalars'
 import { HistoryDuration, Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
-import {
-  TokenProjectDay,
-  TokenProjectMonth,
-  TokenProjectWeek,
-  TokenProjectYear,
-} from 'wallet/src/test/gqlFixtures'
+import { priceHistory, tokenProject } from 'wallet/src/test/fixtures'
 
-export const resolvers: Resolvers = {
+export const defaultResolvers: Resolvers = {
   Query: {
-    tokenProjects: (parent, args, context, info) => {
-      // Select token project based on the duration
-      switch (info.variableValues.duration) {
-        case HistoryDuration.Year:
-          return [TokenProjectYear]
-        case HistoryDuration.Month:
-          return [TokenProjectMonth]
-        case HistoryDuration.Week:
-          return [TokenProjectWeek]
-        case HistoryDuration.Day:
-        default:
-          return [TokenProjectDay]
-      }
-    },
+    tokenProjects: (parent, args, context, info) => [
+      tokenProject({
+        priceHistory: priceHistory({
+          duration: (info.variableValues.duration as HistoryDuration) ?? HistoryDuration.Day,
+        }),
+      }),
+    ],
   },
   AWSJSON: GraphQLJSON,
   ActivityDetails: {

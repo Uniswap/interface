@@ -264,7 +264,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
             <Text
               color={showInsufficientBalanceWarning ? '$DEP_accentWarning' : '$neutral2'}
               variant="subheading2">
-              {t('Balance')}:{' '}
+              {t('swap.form.balance')}:{' '}
               {formatCurrencyAmount({
                 value: currencyBalance,
                 type: NumberType.TokenNonTx,

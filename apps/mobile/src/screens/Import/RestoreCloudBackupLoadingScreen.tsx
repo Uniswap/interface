@@ -20,7 +20,7 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { ImportType } from 'wallet/src/features/onboarding/types'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
-import { isAndroid } from 'wallet/src/utils/platform'
+import { getCloudProviderName } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<
   OnboardingStackParamList,
@@ -138,12 +138,10 @@ export function RestoreCloudBackupLoadingScreen({
     return (
       <Flex alignSelf="center" px="$spacing16">
         <BaseCard.ErrorState
-          description={t(
-            `Failed to import backups due to lack of permissions, interruption of authorization, or due to a cloud error`
-          )}
+          description={t('account.cloud.error.backup.message')}
           icon={<Icons.OSDynamicCloudIcon color="$neutral3" size={imageSizes.image48} />}
-          retryButtonLabel={t('Retry')}
-          title={t('Error while importing backups')}
+          retryButtonLabel={t('common.button.retry')}
+          title={t('account.cloud.error.backup.title')}
           onRetry={fetchCloudStorageBackups}
         />
       </Flex>
@@ -161,14 +159,12 @@ export function RestoreCloudBackupLoadingScreen({
       return (
         <Flex alignSelf="center" px="$spacing16">
           <BaseCard.ErrorState
-            description={
-              isAndroid
-                ? t(`It looks like you haven’t backed up any of your seed phrases to Google Drive.`)
-                : t(`It looks like you haven’t backed up any of your seed phrases to iCloud.`)
-            }
+            description={t('account.cloud.empty.description', {
+              cloudProviderName: getCloudProviderName(),
+            })}
             icon={<Icons.OSDynamicCloudIcon color="$neutral3" size={imageSizes.image48} />}
-            retryButtonLabel={t('Retry')}
-            title={t('0 backups found')}
+            retryButtonLabel={t('common.button.retry')}
+            title={t('account.cloud.empty.title')}
             onRetry={fetchCloudStorageBackups}
           />
         </Flex>
@@ -177,7 +173,7 @@ export function RestoreCloudBackupLoadingScreen({
   }
 
   return (
-    <OnboardingScreen title={t('Searching for backups...')}>
+    <OnboardingScreen title={t('account.cloud.loading.title')}>
       <Loader.Wallets repeat={5} />
     </OnboardingScreen>
   )

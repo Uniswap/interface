@@ -21,7 +21,7 @@ export function SwapFee({
       <TouchableArea onPress={(): void => onShowSwapFeeInfo(swapFeeInfo.noFeeCharged)}>
         <Flex centered row gap="$spacing4">
           <Text color="$neutral2" variant="body3">
-            {t('Fee')}
+            {t('swap.details.uniswapFee')}
             {!swapFeeInfo.noFeeCharged && ` (${swapFeeInfo.formattedPercent})`}
           </Text>
           <Icons.InfoCircleFilled color="$neutral3" size="$icon.16" />

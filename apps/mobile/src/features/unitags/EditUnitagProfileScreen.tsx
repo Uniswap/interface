@@ -239,7 +239,7 @@ export function EditUnitagProfileScreen({
     dispatch(
       pushNotification({
         type: AppNotificationType.Success,
-        title: t('Profile updated'),
+        title: t('unitags.notification.profile.title'),
       })
     )
     triggerRefetchUnitags()
@@ -258,15 +258,15 @@ export function EditUnitagProfileScreen({
     dispatch(
       pushNotification({
         type: AppNotificationType.Error,
-        errorMessage: t('Could not update profile. Try again later.'),
+        errorMessage: t('unitags.notification.profile.error'),
       })
     )
   }
 
   const menuActions = useMemo(() => {
     return [
-      { title: t('Edit username'), systemIcon: 'pencil' },
-      { title: t('Delete username'), systemIcon: 'trash', destructive: true },
+      { title: t('unitags.profile.action.edit'), systemIcon: 'pencil' },
+      { title: t('unitags.profile.action.delete'), systemIcon: 'trash', destructive: true },
     ]
   }, [t])
 
@@ -311,7 +311,7 @@ export function EditUnitagProfileScreen({
               ? (): void => navigate(Screens.Home)
               : undefined
           }>
-          <Text variant="body1">{t('Edit profile')}</Text>
+          <Text variant="body1">{t('settings.setting.wallet.action.editProfile')}</Text>
         </BackHeader>
         <ScrollView
           contentContainerStyle={{ paddingBottom: spacing.spacing24 }}
@@ -390,7 +390,7 @@ export function EditUnitagProfileScreen({
               <Flex gap="$spacing24" px="$spacing16">
                 <Flex row>
                   <Text color="$neutral2" flex={1} pt="$spacing4" variant="subheading1">
-                    {t('Bio')}
+                    {t('unitags.profile.bio.label')}
                   </Text>
                   {!loading ? (
                     <TextInput
@@ -403,7 +403,7 @@ export function EditUnitagProfileScreen({
                       maxHeight={fonts.body1.lineHeight * BIO_TEXT_INPUT_LINES}
                       numberOfLines={BIO_TEXT_INPUT_LINES}
                       p="$none"
-                      placeholder={t('Type a bio for your profile')}
+                      placeholder={t('unitags.profile.bio.placeholder')}
                       placeholderTextColor="$neutral3"
                       returnKeyType="done"
                       textAlign="left"
@@ -414,7 +414,7 @@ export function EditUnitagProfileScreen({
                 </Flex>
                 <Flex row>
                   <Text color="$neutral2" flex={1} variant="subheading1">
-                    {t('Twitter')}
+                    {t('unitags.profile.links.twitter')}
                   </Text>
                   {!loading ? (
                     <Flex row flex={2} gap="$none">
@@ -427,7 +427,7 @@ export function EditUnitagProfileScreen({
                         fontFamily="$body"
                         fontSize="$small"
                         p="$none"
-                        placeholder={t('username')}
+                        placeholder={t('unitags.editProfile.placeholder')}
                         placeholderTextColor="$neutral3"
                         returnKeyType="done"
                         textAlign="left"
@@ -440,7 +440,7 @@ export function EditUnitagProfileScreen({
                 {ensName && (
                   <Flex row>
                     <Text color="$neutral2" flex={1} variant="subheading1">
-                      {t('ENS')}
+                      ENS
                     </Text>
                     <Text color="$neutral2" flex={2} variant="body2">
                       {ensName}
@@ -458,7 +458,7 @@ export function EditUnitagProfileScreen({
           size="medium"
           theme="primary"
           onPress={onPressSaveChanges}>
-          {t('Save')}
+          {t('common.button.save')}
         </Button>
         {showAvatarModal && (
           <ChoosePhotoOptionsModal

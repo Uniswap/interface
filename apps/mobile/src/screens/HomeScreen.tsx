@@ -76,7 +76,15 @@ import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import {
+  PendingAccountActions,
+  pendingAccountActions,
+} from 'wallet/src/features/wallet/create/pendingAccountsSaga'
+import {
+  useActiveAccountWithThrow,
+  useNonPendingSignerAccounts,
+} from 'wallet/src/features/wallet/hooks'
+import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 import {
   ElementName,
   ElementNameType,
@@ -105,6 +113,15 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const isModalOpen = useAppSelector(selectSomeModalOpen)
   const isHomeScreenBlur = !isFocused || isModalOpen
 
+  // Ensure if a user is here and has completed onboarding, they have at least one non-pending signer account
+  const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
+  const nonPendingSignerAccounts = useNonPendingSignerAccounts()
+  useEffect(() => {
+    if (finishedOnboarding && activeAccount.pending && nonPendingSignerAccounts.length === 0) {
+      dispatch(pendingAccountActions.trigger(PendingAccountActions.ActivateOneAndDelete))
+    }
+  }, [activeAccount, dispatch, finishedOnboarding, nonPendingSignerAccounts.length])
+
   const hasSkippedUnitagPrompt = useAppSelector(selectHasSkippedUnitagPrompt)
 
   const showFeedTab = useFeatureFlag(FEATURE_FLAGS.FeedTab)
@@ -123,10 +140,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const [tabIndex, setTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
   // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
-  const tokensTitle = t('Tokens')
-  const nftsTitle = t('NFTs')
-  const activityTitle = t('Activity')
-  const feedTitle = t('Feed')
+  const tokensTitle = t('home.tokens.title')
+  const nftsTitle = t('home.nfts.title')
+  const activityTitle = t('home.activity.title')
+  const feedTitle = t('home.feed.title')
 
   const routes = useMemo(() => {
     const tabs: Array<{ key: SectionNameType; title: string }> = [
@@ -329,10 +346,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   // Hide actions when active account isn't a signer account.
   const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
   // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
-  const buyLabel = t('Buy')
-  const sendLabel = t('Send')
-  const receiveLabel = t('Receive')
-  const scanLabel = t('Scan')
+  const buyLabel = t('home.label.buy')
+  const sendLabel = t('home.label.send')
+  const receiveLabel = t('home.label.receive')
+  const scanLabel = t('home.label.scan')
 
   const actions = useMemo(
     (): QuickAction[] => [
@@ -385,7 +402,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const shouldPromptUnitag =
     activeAccount.type === AccountType.SignerMnemonic && !hasSkippedUnitagPrompt && canClaimUnitag
 
-  const viewOnlyLabel = t('This is a view-only wallet')
+  const viewOnlyLabel = t('home.warning.viewOnly')
   const contentHeader = useMemo(() => {
     return (
       <Flex backgroundColor="$surface1" gap="$spacing8" pb="$spacing16" px="$spacing24">

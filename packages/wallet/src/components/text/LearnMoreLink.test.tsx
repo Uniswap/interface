@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/react-native'
-import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/eventFixtures'
+import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/fixtures'
 import { renderWithProviders } from 'wallet/src/test/render'
 import { openUri } from 'wallet/src/utils/linking'
 import { LearnMoreLink } from './LearnMoreLink'

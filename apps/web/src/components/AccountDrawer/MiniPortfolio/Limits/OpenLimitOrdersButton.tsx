@@ -12,7 +12,7 @@ const Container = styled.button`
   border: none;
   background: ${({ theme }) => theme.surface2};
   padding: 12px 16px;
-  margin-top: 8px;
+  margin-top: 12px;
   ${ClickableStyle}
 `
 

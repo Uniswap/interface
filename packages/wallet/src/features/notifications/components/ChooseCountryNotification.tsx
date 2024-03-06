@@ -22,7 +22,7 @@ export function ChooseCountryNotification({
           <SvgUri height={iconSizes.icon20} uri={countryFlagUrl} width={iconSizes.icon20} />
         </Flex>
       }
-      title={t('Switched to {{name}}', { name: countryName })}
+      title={t('notification.countryChange', { countryName })}
     />
   )
 }

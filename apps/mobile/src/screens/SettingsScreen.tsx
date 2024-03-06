@@ -75,7 +75,7 @@ import {
   setHideSpamTokens,
 } from 'wallet/src/features/wallet/slice'
 import { ModalName } from 'wallet/src/telemetry/constants'
-import { isAndroid } from 'wallet/src/utils/platform'
+import { getCloudProviderName, isAndroid } from 'wallet/src/utils/platform'
 
 export function SettingsScreen(): JSX.Element {
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
@@ -91,7 +91,7 @@ export function SettingsScreen(): JSX.Element {
   const { touchId: isTouchIdSupported, faceId: isFaceIdSupported } =
     useDeviceSupportsBiometricAuth()
 
-  const authenticationTypeName = useBiometricName(isTouchIdSupported, true)
+  const biometricsMethod = useBiometricName(isTouchIdSupported)
   const currentAppearanceSetting = useCurrentAppearanceSetting()
   const currentFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const { originName: currentLanguage } = useCurrentLanguageInfo()
@@ -132,17 +132,17 @@ export function SettingsScreen(): JSX.Element {
     // Defining them inline instead of outside component b.c. they need t()
     return [
       {
-        subTitle: t('Preferences'),
+        subTitle: t('settings.section.preferences'),
         data: [
           {
             screen: Screens.SettingsAppearance,
-            text: t('Appearance'),
+            text: t('settings.setting.appearance.title'),
             currentSetting:
               currentAppearanceSetting === 'system'
-                ? t('Device')
+                ? t('settings.setting.appearance.option.device.title')
                 : currentAppearanceSetting === 'dark'
-                ? t('Dark mode')
-                : t('Light mode'),
+                ? t('settings.setting.appearance.option.dark.title')
+                : t('settings.setting.appearance.option.light.title'),
             icon: <ContrastIcon {...svgProps} />,
           },
 
@@ -150,7 +150,7 @@ export function SettingsScreen(): JSX.Element {
             ? ([
                 {
                   modal: ModalName.FiatCurrencySelector,
-                  text: t('Local currency'),
+                  text: t('settings.setting.currency.title'),
                   currentSetting: currentFiatCurrencyInfo.code,
                   icon: <Icons.Coins {...iconProps} />,
                 },
@@ -158,23 +158,23 @@ export function SettingsScreen(): JSX.Element {
             : []),
           {
             modal: ModalName.LanguageSelector,
-            text: t('Language'),
+            text: t('settings.setting.language.title'),
             currentSetting: currentLanguage,
             icon: <Icons.Language {...iconProps} />,
           },
           {
             screen: Screens.SettingsPrivacy,
-            text: t('Privacy'),
+            text: t('settings.setting.privacy.title'),
             icon: <Icons.LineChartDots {...iconProps} />,
           },
           {
-            text: t('Hide small balances'),
+            text: t('settings.setting.smallBalances.title'),
             icon: <Icons.Chart {...iconProps} />,
             isToggleEnabled: hideSmallBalances,
             onToggle: onToggleHideSmallBalances,
           },
           {
-            text: t('Hide unknown tokens'),
+            text: t('settings.setting.unknownTokens.title'),
             icon: <Icons.ShieldQuestion {...iconProps} />,
             isToggleEnabled: hideSpamTokens,
             onToggle: onToggleHideSpamTokens,
@@ -183,7 +183,7 @@ export function SettingsScreen(): JSX.Element {
         ],
       },
       {
-        subTitle: t('Security'),
+        subTitle: t('settings.section.security'),
         isHidden: noSignerAccountImported,
         data: [
           ...(deviceSupportsBiometrics
@@ -191,7 +191,7 @@ export function SettingsScreen(): JSX.Element {
                 {
                   screen: Screens.SettingsBiometricAuth as Screens.SettingsBiometricAuth,
                   isHidden: !isTouchIdSupported && !isFaceIdSupported,
-                  text: authenticationTypeName,
+                  text: isAndroid ? t('settings.setting.biometrics.title') : biometricsMethod,
                   icon: isTouchIdSupported ? (
                     <FingerprintIcon {...svgProps} />
                   ) : (
@@ -202,7 +202,7 @@ export function SettingsScreen(): JSX.Element {
             : []),
           {
             screen: Screens.SettingsViewSeedPhrase,
-            text: t('Recovery phrase'),
+            text: t('settings.setting.seedPhrase.title'),
             icon: <Icons.Key {...iconProps} />,
             screenProps: { address: signerAccount?.address ?? '', walletNeedsRestore },
             isHidden: noSignerAccountImported,
@@ -222,54 +222,56 @@ export function SettingsScreen(): JSX.Element {
                   },
                 }
               : { address: signerAccount?.address ?? '' },
-            text: isAndroid ? t('Google Drive backup') : t('iCloud backup'),
+            text: t('settings.setting.backup.selected', {
+              cloudProviderName: getCloudProviderName(),
+            }),
             icon: <Icons.OSDynamicCloudIcon color="$neutral2" size="$icon.24" />,
             isHidden: noSignerAccountImported,
           },
         ],
       },
       {
-        subTitle: t('Support'),
+        subTitle: t('settings.section.support'),
         data: [
           {
             screen: Screens.WebView,
             screenProps: {
               uriLink: APP_FEEDBACK_LINK,
-              headerTitle: t('Send feedback'),
+              headerTitle: t('settings.action.feedback'),
             },
-            text: t('Send feedback'),
+            text: t('settings.action.feedback'),
             icon: <LikeSquare {...svgProps} />,
           },
           {
             screen: Screens.WebView,
             screenProps: {
               uriLink: uniswapUrls.helpUrl,
-              headerTitle: t('Get help'),
+              headerTitle: t('settings.action.help'),
             },
-            text: t('Get help'),
+            text: t('settings.action.help'),
             icon: <MessageQuestion {...svgProps} />,
           },
         ],
       },
       {
-        subTitle: t('About'),
+        subTitle: t('settings.section.about'),
         data: [
           {
             screen: Screens.WebView,
             screenProps: {
               uriLink: uniswapUrls.privacyPolicyUrl,
-              headerTitle: t('Privacy policy'),
+              headerTitle: t('settings.action.privacy'),
             },
-            text: t('Privacy policy'),
+            text: t('settings.action.privacy'),
             icon: <LockIcon {...svgProps} />,
           },
           {
             screen: Screens.WebView,
             screenProps: {
               uriLink: uniswapUrls.termsOfServiceUrl,
-              headerTitle: t('Terms of service'),
+              headerTitle: t('settings.action.terms'),
             },
-            text: t('Terms of service'),
+            text: t('settings.action.terms'),
             icon: <BookOpenIcon {...svgProps} />,
           },
         ],
@@ -298,14 +300,14 @@ export function SettingsScreen(): JSX.Element {
     onToggleHideSmallBalances,
     hideSpamTokens,
     onToggleHideSpamTokens,
+    noSignerAccountImported,
     deviceSupportsBiometrics,
     isTouchIdSupported,
     isFaceIdSupported,
-    authenticationTypeName,
-    walletNeedsRestore,
-    noSignerAccountImported,
-    hasCloudBackup,
+    biometricsMethod,
     signerAccount?.address,
+    walletNeedsRestore,
+    hasCloudBackup,
   ])
 
   const renderItem = ({
@@ -325,7 +327,7 @@ export function SettingsScreen(): JSX.Element {
   return (
     <HeaderScrollScreen
       alwaysShowCenterElement
-      centerElement={<Text variant="body1">{t('Settings')}</Text>}>
+      centerElement={<Text variant="body1">{t('settings.title')}</Text>}>
       <Flex pb={insets.bottom - spacing.spacing16} pt="$spacing12" px="$spacing24">
         <SectionList
           ItemSeparatorComponent={renderItemSeparator}
@@ -418,7 +420,7 @@ function WalletSettings(): JSX.Element {
     <Flex mb="$spacing16">
       <Flex row justifyContent="space-between">
         <Text color="$neutral2" variant="body1">
-          {t('Wallet settings')}
+          {t('settings.section.wallet.title')}
         </Text>
       </Flex>
       {allAccounts
@@ -452,7 +454,9 @@ function WalletSettings(): JSX.Element {
       {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
         <Button theme="tertiary" onPress={toggleViewAll}>
           <Text color="$neutral1" variant="buttonLabel4">
-            {showAll ? t('View less') : t('View all')}
+            {showAll
+              ? t('settings.section.wallet.button.viewLess')
+              : t('settings.section.wallet.button.viewAll')}
           </Text>
         </Button>
       )}
@@ -486,10 +490,7 @@ function FooterSettings(): JSX.Element {
           mt="$spacing16">
           <Flex gap="$spacing4">
             <Text color="$neutral3" textAlign="center" variant="body2">
-              {t('Made with love, ')}
-            </Text>
-            <Text color="$neutral3" textAlign="center" variant="body2">
-              {t('Uniswap Team 🦄')}
+              {t('settings.footer')}
             </Text>
           </Flex>
           {isDarkMode ? (
@@ -507,7 +508,7 @@ function FooterSettings(): JSX.Element {
         onLongPress={(): void => {
           setShowSignature(true)
         }}>
-        {t('Version {{appVersion}}', { appVersion: getFullAppVersion() })}
+        {t('settings.version', { appVersion: getFullAppVersion() })}
       </Text>
     </Flex>
   )

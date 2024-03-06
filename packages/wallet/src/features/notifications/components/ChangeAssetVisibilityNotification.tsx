@@ -35,8 +35,8 @@ export function ChangeAssetVisibilityNotification({
       }
       title={
         visible
-          ? t('{{assetName}} hidden', { assetName })
-          : t('{{assetName}} unhidden', { assetName })
+          ? t('notification.assetVisibility.hidden', { assetName })
+          : t('notification.assetVisibility.unhidden', { assetName })
       }
     />
   )

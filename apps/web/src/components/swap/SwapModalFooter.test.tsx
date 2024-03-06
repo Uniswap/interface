@@ -126,7 +126,7 @@ describe('SwapModalFooter.tsx', () => {
     expect(screen.getByText('Network cost')).toBeInTheDocument()
     expect(
       screen.getByText(
-        'Please be aware that the execution for this limit order may vary based on real-time market fluctuations and Ethereum network congestion. Canceling a limit has a network cost.'
+        'Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.'
       )
     ).toBeInTheDocument()
   })

@@ -339,7 +339,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
 }
 
 .c9 {
-  min-width: 164px;
+  min-width: 120px;
   -webkit-flex: 0;
   -ms-flex: 0;
   flex: 0;
@@ -361,7 +361,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
 }
 
 .c14 {
-  min-width: 100px;
+  min-width: 144px;
   -webkit-flex: 0;
   -ms-flex: 0;
   flex: 0;
@@ -614,7 +614,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
                           <div
                             class="c12 css-1urox24"
                           >
-                            01/12, 05:46am
+                            1mo ago
                           </div>
                         </div>
                       </div>
@@ -1058,7 +1058,7 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
 }
 
 .c9 {
-  min-width: 164px;
+  min-width: 120px;
   -webkit-flex: 0;
   -ms-flex: 0;
   flex: 0;
@@ -1080,7 +1080,7 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
 }
 
 .c14 {
-  min-width: 100px;
+  min-width: 144px;
   -webkit-flex: 0;
   -ms-flex: 0;
   flex: 0;
@@ -2193,7 +2193,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
 }
 
 .c9 {
-  min-width: 164px;
+  min-width: 120px;
   -webkit-flex: 0;
   -ms-flex: 0;
   flex: 0;
@@ -2215,7 +2215,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
 }
 
 .c14 {
-  min-width: 100px;
+  min-width: 144px;
   -webkit-flex: 0;
   -ms-flex: 0;
   flex: 0;

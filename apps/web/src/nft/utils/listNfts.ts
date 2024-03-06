@@ -20,8 +20,8 @@ import {
   OPENSEA_SEAPORT_V1_5_CONTRACT,
 } from 'nft/queries/openSea/constants'
 import { getX2Y2OrderId, newX2Y2Order } from 'nft/queries/x2y2'
-import ERC1155 from 'wallet/src/abis/erc1155.json'
-import ERC721 from 'wallet/src/abis/erc721.json'
+import ERC1155 from 'uniswap/src/abis/erc1155.json'
+import ERC721 from 'uniswap/src/abis/erc721.json'
 
 import { ListingMarket, ListingStatus, WalletAsset } from '../types'
 import { OfferItem, OrderPayload, createSellOrder, encodeOrder, signOrderData } from './x2y2'

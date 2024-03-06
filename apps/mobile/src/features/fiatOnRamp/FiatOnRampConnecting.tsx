@@ -47,13 +47,13 @@ export function FiatOnRampConnectingView({
         </Flex>
         <Flex centered gap="$spacing8">
           <Text variant="subheading1">
-            {t('Connecting you to {{serviceProvider}}', { serviceProvider: serviceProviderName })}
+            {t('fiatOnRamp.connection.message', { serviceProvider: serviceProviderName })}
           </Text>
           {quoteCurrencyCode && amount && (
             <Text color="$neutral2" variant="body2">
-              {t('Buying {{amount}} worth of {{quoteCurrencyCode}}', {
+              {t('fiatOnRamp.connection.quote', {
                 amount,
-                quoteCurrencyCode,
+                currencySymbol: quoteCurrencyCode,
               })}
             </Text>
           )}

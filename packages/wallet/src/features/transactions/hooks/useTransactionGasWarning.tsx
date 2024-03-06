@@ -51,11 +51,11 @@ export function useTransactionGasWarning({
       type: WarningLabel.InsufficientGasFunds,
       severity: WarningSeverity.Medium,
       action: WarningAction.DisableSubmit,
-      title: t('You don’t have enough {{ nativeCurrency }} to cover the network cost', {
-        nativeCurrency: nativeCurrencyBalance.currency.symbol,
+      title: t('swap.warning.insufficientGas.title', {
+        currencySymbol: nativeCurrencyBalance.currency.symbol,
       }),
       buttonText: isWeb
-        ? t('Not enough {{ currencySymbol }}', {
+        ? t('swap.warning.insufficientGas.button', {
             currencySymbol: nativeCurrencyBalance.currency.symbol,
           })
         : undefined,

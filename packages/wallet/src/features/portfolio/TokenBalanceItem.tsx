@@ -77,7 +77,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
         <Shine disabled={!isLoading}>
           {!portfolioBalance.balanceUSD ? (
             <Flex centered fill>
-              <Text color="$neutral2">{t('N/A')}</Text>
+              <Text color="$neutral2">{t('common.text.notAvailable')}</Text>
             </Flex>
           ) : (
             <Flex alignItems="flex-end" pl="$spacing8">

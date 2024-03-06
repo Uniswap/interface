@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmZ8D4oPRH7CbNZ1ULVQedBkTLJhqv539kRTmifrva49GM`
-- CIDv1: `bafybeifaiclxh6pc3bdtrrkpbvvqqxq6hz5r6htdzxaga4fikfpu2u56qi`
+- CIDv0: `QmWZERyNmMf7JhDQJ8mXYLPdchuQjWNdc5Z3sKN6C9bsL9`
+- CIDv1: `bafybeid2c2mdeiiysuldtcrlma2oaydsigt4ev55cttcb53zk6ldw7cozy`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,38 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeifaiclxh6pc3bdtrrkpbvvqqxq6hz5r6htdzxaga4fikfpu2u56qi.ipfs.dweb.link/
-- https://bafybeifaiclxh6pc3bdtrrkpbvvqqxq6hz5r6htdzxaga4fikfpu2u56qi.ipfs.cf-ipfs.com/
-- [ipfs://QmZ8D4oPRH7CbNZ1ULVQedBkTLJhqv539kRTmifrva49GM/](ipfs://QmZ8D4oPRH7CbNZ1ULVQedBkTLJhqv539kRTmifrva49GM/)
+- https://bafybeid2c2mdeiiysuldtcrlma2oaydsigt4ev55cttcb53zk6ldw7cozy.ipfs.dweb.link/
+- https://bafybeid2c2mdeiiysuldtcrlma2oaydsigt4ev55cttcb53zk6ldw7cozy.ipfs.cf-ipfs.com/
+- [ipfs://QmWZERyNmMf7JhDQJ8mXYLPdchuQjWNdc5Z3sKN6C9bsL9/](ipfs://QmWZERyNmMf7JhDQJ8mXYLPdchuQjWNdc5Z3sKN6C9bsL9/)
 
-### 5.16.2 (2024-02-28)
+## 5.17.0 (2024-03-06)
+
+
+### Features
+
+* **web:** [info] Shorthand for timestamps (#6675) 6b63c99
+* **web:** [info] truncate long token names in Tables (#6682) 402ba22
+* **web:** [info] Use sentence case for Swap in All Tx Table (#6687) f59d68d
+* **web:** add disclaimer to limits in more places (#6609) 0467d43
+* **web:** add more limits disclaimers 4345063
+* **web:** add more limits disclaimers (#6738) 5dc1070
+* **web:** adding USDC to Celo (#6641) a34ea26
+* **web:** Rename Ether -> Ethereum (#6661) 1f2efb3
 
 
 ### Bug Fixes
 
-* **web:** [hotfix] [limits] presets (#6638) 4f8964b
+* **web:** [info] Fixes blocking Testlio feedback (#6724) 2bbc8f8
+* **web:** [limits] presets breaking (#6634) 0036a7a
+* **web:** fix react lifecycle warning by setting in useEffect (#6663) c4f9753
+* **web:** fixes for Limits Menu on mobile layout (#6726) 7b44537
+* **web:** limits gas estimates hotfix (#6729) 02de460
+* **web:** merge Token fields in Apollo cache (#6611) 1d4853a
+* **web:** use correct all-time swappers (#6635) c1394d6
+
+
+### Code Refactoring
+
+* **web:** Remove no longer needed ternary since BE update (#6688) 9af401a
 
 

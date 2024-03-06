@@ -1,21 +1,22 @@
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
-import { ChainId } from 'wallet/src/constants/chains'
-import { AssetActivity, Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
-import { AssetType } from 'wallet/src/entities/assets'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
+import {
+  AssetActivity,
+  Resolvers,
+  TransactionListQuery,
+} from 'wallet/src/data/__generated__/types-and-hooks'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import {
-  MAX_FIXTURE_TIMESTAMP,
-  SAMPLE_SEED_ADDRESS_1,
-  account,
-  account2,
-  faker,
+  erc20ReceiveAssetActivity,
+  portfolio,
+  readOnlyAccount,
+  receiveCurrencyTxNotification,
+  signerMnemonicAccount,
 } from 'wallet/src/test/fixtures'
-import { Portfolios, PortfoliosWithReceive } from 'wallet/src/test/gqlFixtures'
-import { render } from 'wallet/src/test/test-utils'
+import { MAX_FIXTURE_TIMESTAMP, faker, render } from 'wallet/src/test/test-utils'
 import {
   TransactionHistoryUpdater,
   getReceiveNotificationFromData,
@@ -34,8 +35,11 @@ const present = dayjs('2022-02-01')
 const past = present.subtract(1, 'month')
 const future = present.add(1, 'month')
 
+const account1 = signerMnemonicAccount()
+const account2 = readOnlyAccount()
+
 const accounts: Record<Address, Account> = {
-  [account.address]: account,
+  [account1.address]: account1,
   [account2.address]: account2,
 }
 
@@ -80,22 +84,20 @@ const assetActivities2 = [
   },
 ] as AssetActivity[]
 
-const portfolioData = [
-  {
-    ...Portfolios[0],
-    ownerAddress: account.address,
-    assetActivities,
-  },
-  {
-    ...Portfolios[1],
-    ownerAddress: account2.address,
-    assetActivities: assetActivities2,
-  },
+const portfolios = [
+  portfolio({ ownerAddress: account1.address, assetActivities }),
+  portfolio({ ownerAddress: account2.address, assetActivities: assetActivities2 }),
 ]
+
+const receiveAssetActivity = erc20ReceiveAssetActivity()
+const portfolioWithReceive = portfolio({
+  ownerAddress: account1.address,
+  assetActivities: [receiveAssetActivity],
+})
 
 const resolvers: Resolvers = {
   Query: {
-    portfolios: () => portfolioData,
+    portfolios: () => portfolios,
   },
 }
 
@@ -126,7 +128,7 @@ describe(TransactionHistoryUpdater, () => {
         notificationQueue: [],
         notificationStatus: {},
         lastTxNotificationUpdate: {
-          [account.address]: past.valueOf(),
+          [account1.address]: past.valueOf(),
           [account2.address]: past.valueOf(),
         },
       },
@@ -137,11 +139,11 @@ describe(TransactionHistoryUpdater, () => {
       preloadedState: reduxState,
     })
 
-    const element = await tree.findByTestId(`AddressTransactionHistoryUpdater/${account.address}`)
+    const element = await tree.findByTestId(`AddressTransactionHistoryUpdater/${account1.address}`)
     expect(element).toBeDefined()
 
     const notificationStatusState = tree.store.getState().notifications.notificationStatus
-    expect(notificationStatusState[account.address]).toBeTruthy()
+    expect(notificationStatusState[account1.address]).toBeTruthy()
     expect(notificationStatusState[account2.address]).toBeTruthy()
     expect(mockedRefetchQueries).toHaveBeenCalled()
   })
@@ -153,7 +155,7 @@ describe(TransactionHistoryUpdater, () => {
         notificationQueue: [],
         notificationStatus: {},
         lastTxNotificationUpdate: {
-          [account.address]: future.valueOf(),
+          [account1.address]: future.valueOf(),
           [account2.address]: future.valueOf(),
         },
       },
@@ -164,11 +166,11 @@ describe(TransactionHistoryUpdater, () => {
       preloadedState: reduxState,
     })
 
-    const element = await tree.findByTestId(`AddressTransactionHistoryUpdater/${account.address}`)
+    const element = await tree.findByTestId(`AddressTransactionHistoryUpdater/${account1.address}`)
     expect(element).toBeDefined()
 
     const notificationStatusState = tree.store.getState().notifications.notificationStatus
-    expect(notificationStatusState[account.address]).toBeFalsy()
+    expect(notificationStatusState[account1.address]).toBeFalsy()
     expect(notificationStatusState[account2.address]).toBeFalsy()
     expect(mockedRefetchQueries).not.toHaveBeenCalled()
   })
@@ -190,49 +192,53 @@ describe(TransactionHistoryUpdater, () => {
       preloadedState: reduxState,
     })
 
-    const element = await tree.findByTestId(`AddressTransactionHistoryUpdater/${account.address}`)
+    const element = await tree.findByTestId(`AddressTransactionHistoryUpdater/${account1.address}`)
     expect(element).toBeDefined()
 
     const notificationStatusState = tree.store.getState().notifications.notificationStatus
-    expect(notificationStatusState[account.address]).toBeFalsy()
+    expect(notificationStatusState[account1.address]).toBeFalsy()
     expect(notificationStatusState[account2.address]).toBeFalsy()
   })
 })
 
 describe(getReceiveNotificationFromData, () => {
   it('returns app notification object with new receive', () => {
-    const txnData = { portfolios: PortfoliosWithReceive }
+    const txnData = { portfolios: [portfolioWithReceive] }
 
     // Ensure all transactions will be "new" compared to this
     const newTimestamp = 1
 
-    const notification = getReceiveNotificationFromData(txnData, account.address, newTimestamp)
+    const notification = getReceiveNotificationFromData(txnData, account1.address, newTimestamp)
 
-    expect(notification).toEqual({
-      txStatus: TransactionStatus.Success,
-      chainId: ChainId.Mainnet,
-      txHash: PortfoliosWithReceive[0].assetActivities[0]?.details.hash, // generated
-      address: account.address,
-      txId: '0x9b0e1021d79e2a85b7a419f47cfa364ea6ae10bf',
-      type: AppNotificationType.Transaction,
-      txType: TransactionType.Receive,
-      assetType: AssetType.Currency,
-      tokenAddress: '0x6B175474E89094C44Da98b954EedeAC495271d0F',
-      currencyAmountRaw: '1000000000000000000',
-      sender: SAMPLE_SEED_ADDRESS_1,
-    })
+    const assetChange = receiveAssetActivity.details.assetChanges[0]!
+
+    expect(notification).toEqual(
+      receiveCurrencyTxNotification({
+        address: account1.address,
+        txStatus: TransactionStatus.Success,
+        txHash: receiveAssetActivity.details.hash,
+        txId: receiveAssetActivity.details.hash,
+        sender: assetChange.sender,
+        tokenAddress: assetChange.asset.address,
+        chainId: fromGraphQLChain(assetChange.asset.chain)!,
+        // This is calculated based on a few different fields and we don't
+        // have to check if the calculation is correct in this test.
+        // It's better to test the calculation in a separate test.
+        currencyAmountRaw: expect.any(String),
+      })
+    )
   })
 
   it('returns undefined if no receive txns found', () => {
     // No receive type txn in this mock
-    const txnDataWithoutReceiveTxns = { portfolios: Portfolios }
+    const txnDataWithoutReceiveTxns = { portfolios } as TransactionListQuery
 
     // Ensure all transactions will be "new" compared to this
     const newTimestamp = 1
 
     const notification = getReceiveNotificationFromData(
       txnDataWithoutReceiveTxns,
-      account.address,
+      account1.address,
       newTimestamp
     )
 
@@ -240,12 +246,12 @@ describe(getReceiveNotificationFromData, () => {
   })
 
   it('returns undefined if receive is older than lastest status update timestamp', () => {
-    const txnData = { portfolios: PortfoliosWithReceive }
+    const txnData = { portfolios: [portfolioWithReceive] }
 
     // Ensure all transactions will be "old" compared to this
     const oldTimestamp = (MAX_FIXTURE_TIMESTAMP + 1) * 1000 // convert to ms
 
-    const notification = getReceiveNotificationFromData(txnData, account.address, oldTimestamp)
+    const notification = getReceiveNotificationFromData(txnData, account1.address, oldTimestamp)
 
     expect(notification).toBeUndefined()
   })

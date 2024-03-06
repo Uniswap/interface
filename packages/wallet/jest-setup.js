@@ -1,9 +1,13 @@
 import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
-import { MockLocalizationContext } from 'wallet/src/test/utils'
+import { initializeTranslation } from 'wallet/src/i18n/i18n'
+import { mockLocalizationContext } from 'wallet/src/test/mocks/utils'
+
+// Uses real translations for tests
+initializeTranslation()
 
 jest.mock('react-native-localize', () => mockRNLocalize)
-jest.mock('wallet/src/features/language/LocalizationContext', () => MockLocalizationContext)
+jest.mock('wallet/src/features/language/LocalizationContext', () => mockLocalizationContext)
 
 // Mock the appearance hook for all tests
 const mockAppearanceSetting = AppearanceSettingType.System

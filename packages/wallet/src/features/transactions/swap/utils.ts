@@ -198,11 +198,11 @@ export const getRateToDisplay = (
 export const getActionName = (t: AppTFunction, wrapType: WrapType): string => {
   switch (wrapType) {
     case WrapType.Unwrap:
-      return t('Unwrap')
+      return t('swap.button.unwrap')
     case WrapType.Wrap:
-      return t('Wrap')
+      return t('swap.button.wrap')
     default:
-      return t('Swap')
+      return t('swap.button.swap')
   }
 }
 

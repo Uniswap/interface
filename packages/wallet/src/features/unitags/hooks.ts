@@ -162,15 +162,15 @@ export const useUnitagByName = (
 // Helper function to enforce unitag length and alphanumeric characters
 export const getUnitagFormatError = (unitag: string, t: TFunction): string | undefined => {
   if (unitag.length < MIN_UNITAG_LENGTH) {
-    return t(`Usernames must be at least {{ minUnitagLength }} characters`, {
-      minUnitagLength: MIN_UNITAG_LENGTH,
+    return t('unitags.username.error.min', {
+      number: MIN_UNITAG_LENGTH,
     })
   } else if (unitag.length > MAX_UNITAG_LENGTH) {
-    return t(`Usernames cannot be more than {{ maxUnitagLength }} characters`, {
-      maxUnitagLength: MAX_UNITAG_LENGTH,
+    return t('unitags.username.error.max', {
+      number: MAX_UNITAG_LENGTH,
     })
   } else if (!UNITAG_VALID_REGEX.test(unitag)) {
-    return t('Usernames can only contain lowercase letters and numbers')
+    return t('unitags.username.error.chars')
   }
   return undefined
 }
@@ -194,10 +194,10 @@ export const useCanClaimUnitagName = (
   const dataLoaded = !loading && !!data
   const ensAddressMatchesUnitagAddress = areAddressesEqual(unitagAddress, ensAddress)
   if (dataLoaded && !data.available) {
-    error = t('This username is not available')
+    error = t('unitags.claim.error.unavailable')
   }
   if (dataLoaded && data.requiresEnsMatch && !ensAddressMatchesUnitagAddress) {
-    error = t('This username is not currently available.')
+    error = t('unitags.claim.error.ensMismatch')
   }
   return { error, loading, requiresENSMatch: data?.requiresEnsMatch ?? false }
 }
@@ -218,7 +218,7 @@ export const useClaimUnitag = (): ((
   return async (claim: UnitagClaim, context: UnitagClaimContext) => {
     const claimAccount = pendingAccounts[claim.address] || accounts[claim.address]
     if (!claimAccount || !deviceId) {
-      return { claimError: t('Could not claim username. Try again later.') }
+      return { claimError: t('unitags.claim.error.default') }
     }
 
     try {
@@ -226,7 +226,7 @@ export const useClaimUnitag = (): ((
       if (unitagsDeviceAttestationEnabled) {
         firebaseAppCheckToken = await getFirebaseAppCheckToken()
         if (!firebaseAppCheckToken) {
-          return { claimError: t('Could not claim username. Please try again tomorrow.') }
+          return { claimError: t('unitags.claim.error.appCheck') }
         }
       }
 
@@ -263,7 +263,7 @@ export const useClaimUnitag = (): ((
             dispatch(
               pushNotification({
                 type: AppNotificationType.Error,
-                errorMessage: t('Could not set avatar. Try again later.'),
+                errorMessage: t('unitags.claim.error.avatar'),
               })
             )
           }
@@ -276,7 +276,7 @@ export const useClaimUnitag = (): ((
       return { claimError: undefined }
     } catch (e) {
       logger.error(e, { tags: { file: 'useClaimUnitag', function: 'claimUnitag' } })
-      return { claimError: t('Could not claim username. Try again later.') }
+      return { claimError: t('unitags.claim.error.default') }
     }
   }
 }

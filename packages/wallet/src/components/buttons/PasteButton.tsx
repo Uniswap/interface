@@ -15,7 +15,7 @@ export default function PasteButton({
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const label = t('Paste')
+  const label = t('common.button.paste')
 
   const onPressButton = async (): Promise<void> => {
     const clipboard = await getClipboard()

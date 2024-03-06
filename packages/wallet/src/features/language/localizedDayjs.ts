@@ -24,22 +24,22 @@ import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 dayjs.extend(localizedFormat)
 
 export type DateFormat = 'l' | 'll' | 'LL'
-export const FORMAT_DATE_SHORT: DateFormat = 'l'
-export const FORMAT_DATE_MEDIUM: DateFormat = 'll'
-export const FORMAT_DATE_LONG: DateFormat = 'LL'
-export const FORMAT_DATE_MONTH = 'MMMM'
+export const FORMAT_DATE_SHORT: DateFormat = 'l' // M/D/YYYY e.g. 8/16/2018
+export const FORMAT_DATE_MEDIUM: DateFormat = 'll' // MMM D, YYYY	e.g. Aug 16, 2018
+export const FORMAT_DATE_LONG: DateFormat = 'LL' // MMMM D, YYYY	e.g. August 16, 2018
+export const FORMAT_DATE_MONTH = 'MMMM' // January-December
 export const FORMAT_DATE_MONTH_YEAR = 'MMMM YYYY'
-export const FORMAT_DATE_MONTH_DAY = 'MMM D'
+export const FORMAT_DATE_MONTH_DAY = 'MMM D' // Jan-Dec 1-31
 
 export type TimeFormat = 'LT' | 'LTS'
-export const FORMAT_TIME_SHORT: TimeFormat = 'LT'
-export const FORMAT_TIME_MEDIUM: TimeFormat = 'LTS'
+export const FORMAT_TIME_SHORT: TimeFormat = 'LT' // h:mm A	e.g. 8:02 PM
+export const FORMAT_TIME_MEDIUM: TimeFormat = 'LTS' // h:mm:ss A e.g. 8:02:18 PM
 
 export type DateTimeFormat = 'lll' | 'LLL' | 'llll' | 'LLLL'
-export const FORMAT_DATE_TIME_SHORT = 'lll'
-export const FORMAT_DATE_TIME_MEDIUM = 'LLL'
-export const FORMAT_DATE_TIME_LONG = 'llll'
-export const FORMAT_DATE_TIME_FULL = 'LLLL'
+export const FORMAT_DATE_TIME_SHORT = 'lll' // MMM D, YYYY h:mm A	e.g. Aug 16, 2018 8:02 PM
+export const FORMAT_DATE_TIME_MEDIUM = 'LLL' // MMMM D, YYYY h:mm A	e.g. August 16, 2018 8:02 PM
+export const FORMAT_DATE_TIME_LONG = 'llll' // ddd, MMM D, YYYY h:mm A e.g. Thu, Aug 16, 2018 8:02 PM
+export const FORMAT_DATE_TIME_FULL = 'LLLL' // dddd, MMMM D, YYYY h:mm A e.g. Thursday, August 16, 2018 8:02 PM
 
 export type LocalizedDayjs = typeof dayjs
 

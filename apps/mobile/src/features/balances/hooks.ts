@@ -136,34 +136,34 @@ export function useTokenContextMenu({
   const menuActions = useMemo(
     () => [
       {
-        title: t('Buy'),
+        title: t('common.button.buy'),
         systemIcon: 'arrow.down',
         onPress: () => onPressSwap(CurrencyField.OUTPUT),
       },
       {
-        title: t('Sell'),
+        title: t('common.button.sell'),
         systemIcon: 'arrow.up',
         onPress: () => onPressSwap(CurrencyField.INPUT),
       },
       {
-        title: t('Send'),
+        title: t('common.button.send'),
         systemIcon: 'paperplane',
         onPress: onPressSend,
       },
       {
-        title: t('Receive'),
+        title: t('common.button.receive'),
         systemIcon: 'qrcode',
         onPress: onPressReceive,
       },
       {
-        title: t('Share'),
+        title: t('common.button.share'),
         systemIcon: 'square.and.arrow.up',
         onPress: onPressShare,
       },
       ...(activeAccountHoldsToken
         ? [
             {
-              title: isHidden ? t('Unhide Token') : t('Hide Token'),
+              title: isHidden ? t('tokens.action.unhide') : t('tokens.action.hide'),
               systemIcon: isHidden ? 'eye' : 'eye.slash',
               destructive: !isHidden,
               onPress: onPressHiddenStatus,

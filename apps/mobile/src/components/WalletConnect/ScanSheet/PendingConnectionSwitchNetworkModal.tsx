@@ -63,7 +63,7 @@ export const PendingConnectionSwitchNetworkModal = ({
     <ActionSheetModal
       header={
         <Flex centered gap="$spacing4" py="$spacing16">
-          <Text variant="buttonLabel2">{t('Switch Network')}</Text>
+          <Text variant="buttonLabel2">{t('walletConnect.pending.switchNetwork')}</Text>
         </Flex>
       }
       isVisible={true}

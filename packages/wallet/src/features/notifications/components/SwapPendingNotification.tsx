@@ -31,10 +31,10 @@ export function SwapPendingNotification({
 function getNotificationText(wrapType: WrapType, t: TFunction): string {
   switch (wrapType) {
     case WrapType.NotApplicable:
-      return t('Swap pending')
+      return t('notification.swap.pending.swap')
     case WrapType.Unwrap:
-      return t('Unwrap pending')
+      return t('notification.swap.pending.unwrap')
     case WrapType.Wrap:
-      return t('Wrap pending')
+      return t('notification.swap.pending.wrap')
   }
 }

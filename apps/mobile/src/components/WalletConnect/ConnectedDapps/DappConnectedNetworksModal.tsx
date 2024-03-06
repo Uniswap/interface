@@ -1,11 +1,11 @@
 import { getSdkError } from '@walletconnect/utils'
 import React from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
-import { removeSession, WalletConnectSession } from 'src/features/walletConnect/walletConnectSlice'
+import { WalletConnectSession, removeSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Button, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
@@ -66,8 +66,10 @@ export function DappConnectedNetworkModal({
         <Flex alignItems="center" gap="$spacing8">
           <DappHeaderIcon dapp={dapp} />
           <Text textAlign="center" variant="buttonLabel2">
-            <Text variant="body1">{t('Connected to ')}</Text>
-            {dapp.name || dapp.url}
+            <Trans i18nKey="walletConnect.dapps.connection">
+              <Text variant="body1">Connected to</Text>
+              {{ dappNameOrUrl: dapp.name || dapp.url }}
+            </Trans>
           </Text>
           <Text color="$accent1" numberOfLines={1} textAlign="center" variant="buttonLabel4">
             {dapp.url}
@@ -101,10 +103,10 @@ export function DappConnectedNetworkModal({
         </Flex>
         <Flex centered row gap="$spacing16">
           <Button fill theme="secondary" onPress={onClose}>
-            {t('Close')}
+            {t('common.button.close')}
           </Button>
           <Button fill theme="detrimental" onPress={onDisconnect}>
-            {t('Disconnect')}
+            {t('common.button.disconnect')}
           </Button>
         </Flex>
       </Flex>

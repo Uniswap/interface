@@ -8,20 +8,18 @@ export function parseUnitagErrorCode(
 ): string {
   switch (errorCode) {
     case UnitagErrorCodes.UnitagNotAvailable:
-      return t('This username is not available')
+      return t('unitags.claim.error.unavailable')
     case UnitagErrorCodes.RequiresENSMatch:
-      return t('To claim this username you must own the {{ unitag }}.eth ENS', { unitag })
+      return t('unitags.claim.error.ens', { username: unitag })
     case UnitagErrorCodes.IPLimitReached:
     case UnitagErrorCodes.AddressLimitReached:
     case UnitagErrorCodes.DeviceLimitReached:
-      return t('Unable to claim username')
+      return t('unitags.claim.error.general')
     case UnitagErrorCodes.DeviceActiveLimitReached:
-      return t('You have hit the maximum number of usernames that can be active for this device')
+      return t('unitags.claim.error.deviceLimit')
     case UnitagErrorCodes.AddressActiveLimitReached:
-      return t(
-        'You already have made the maximum number of changes to your username for this address'
-      )
+      return t('unitags.claim.error.addressLimit')
     default:
-      return t('Unknown error')
+      return t('unitags.claim.error.unknown')
   }
 }

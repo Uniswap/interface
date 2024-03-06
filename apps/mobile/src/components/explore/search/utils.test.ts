@@ -7,7 +7,16 @@ import {
 import { Chain, ExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { SearchResultType } from 'wallet/src/features/search/SearchResult'
-import { SearchTokens, TopNFTCollections } from 'wallet/src/test/gqlFixtures'
+import {
+  amount,
+  ethToken,
+  nftCollection,
+  nftContract,
+  token,
+  tokenMarket,
+  tokenProject,
+} from 'wallet/src/test/fixtures'
+import { createArray } from 'wallet/src/test/utils'
 
 type ExploreSearchResult = NonNullable<ExploreSearchQuery>
 
@@ -17,29 +26,31 @@ describe(formatTokenSearchResults, () => {
   })
 
   it('filters out duplicate results', () => {
-    const data = [SearchTokens[0], SearchTokens[0]] as ExploreSearchResult['searchTokens']
+    const searchToken = token()
+    const data = createArray(2, () => searchToken)
 
     const result = formatTokenSearchResults(data, '')
 
     expect(result).toHaveLength(1)
-    expect(result?.[0]?.address).toEqual(SearchTokens?.[0]?.address)
+    expect(result?.[0]?.address).toEqual(data[0].address)
   })
 
-  it('uses tokens with highest volume for duplicate results', () => {
+  it('uses tokens with highest volume for tokens with the same project id', () => {
     const changedAddress = faker.finance.ethereumAddress()
 
     const data = [
-      SearchTokens[0],
-      {
-        ...SearchTokens[0],
+      // Tokens with the same address and chain will have the same project id
+      ethToken({
+        market: tokenMarket({ volume: amount({ value: 10 }) }),
+      }),
+      ethToken({
         address: changedAddress,
-        market: {
-          volume: {
-            value: 100,
-          },
-        },
-      },
-    ] as ExploreSearchResult['searchTokens']
+        market: tokenMarket({ volume: amount({ value: 100 }) }),
+      }),
+      ethToken({
+        market: tokenMarket({ volume: amount({ value: 20 }) }),
+      }),
+    ]
 
     const result = formatTokenSearchResults(data, '')
 
@@ -49,22 +60,10 @@ describe(formatTokenSearchResults, () => {
     expect(result?.[0]?.address).toEqual(changedAddress)
   })
 
-  it('sorts results by search query match', () => {
+  it('sorts results by best search query match', () => {
     const data: ExploreSearchResult['searchTokens'] = [
-      {
-        project: {
-          name: 'UniswapStartingName',
-          id: '2',
-        },
-        chain: Chain.Ethereum,
-      },
-      {
-        project: {
-          name: 'Uniswap',
-          id: '1',
-        },
-        chain: Chain.Ethereum,
-      },
+      ethToken({ project: tokenProject({ name: 'UniswapStartingName' }) }),
+      ethToken({ project: tokenProject({ name: 'Uniswap' }) }),
     ]
 
     const result = formatTokenSearchResults(data, 'uniswap')
@@ -75,59 +74,65 @@ describe(formatTokenSearchResults, () => {
   })
 
   it('properly formats token search result', () => {
-    const data = [SearchTokens[0]] as ExploreSearchResult['searchTokens']
+    const searchToken = token()
+    const data = [searchToken]
 
     const result = formatTokenSearchResults(data, '')
 
     expect(result).toHaveLength(1)
     expect(result?.[0]?.type).toEqual(SearchResultType.Token)
-    expect(result?.[0]?.chainId).toEqual(fromGraphQLChain(SearchTokens[0]?.chain))
-    expect(result?.[0]?.address).toEqual(SearchTokens?.[0]?.address)
-    expect(result?.[0]?.name).toEqual(SearchTokens?.[0]?.project?.name)
-    expect(result?.[0]?.symbol).toEqual(SearchTokens?.[0]?.symbol)
-    expect(result?.[0]?.logoUrl).toEqual(SearchTokens?.[0]?.project?.logoUrl)
-    expect(result?.[0]?.safetyLevel).toEqual(SearchTokens?.[0]?.project?.safetyLevel)
-  })
-})
-
-describe(gqlNFTToNFTCollectionSearchResult, () => {
-  const node = TopNFTCollections[0]
-
-  it('returns null if required data is missing', () => {
-    expect(gqlNFTToNFTCollectionSearchResult({ ...node, name: null })).toEqual(null)
-    expect(gqlNFTToNFTCollectionSearchResult({ ...node, nftContracts: undefined })).toEqual(null)
-    expect(gqlNFTToNFTCollectionSearchResult({ ...node, nftContracts: [] })).toEqual(null)
+    expect(result?.[0]?.chainId).toEqual(fromGraphQLChain(searchToken.chain))
+    expect(result?.[0]?.address).toEqual(searchToken.address)
+    expect(result?.[0]?.name).toEqual(searchToken.project?.name)
+    expect(result?.[0]?.symbol).toEqual(searchToken.symbol)
+    expect(result?.[0]?.logoUrl).toEqual(searchToken.project?.logoUrl)
+    expect(result?.[0]?.safetyLevel).toEqual(searchToken.project?.safetyLevel)
   })
 
-  it('properly formats NFT collection search result', () => {
-    const result = gqlNFTToNFTCollectionSearchResult(node)
+  describe(gqlNFTToNFTCollectionSearchResult, () => {
+    const collection = nftCollection({
+      nftContracts: [nftContract({ chain: Chain.Ethereum })],
+    })
 
-    expect(result?.type).toEqual(SearchResultType.NFTCollection)
-    expect(result?.chainId).toEqual(fromGraphQLChain(Chain.Ethereum))
-    expect(result?.address).toEqual(node?.nftContracts?.[0]?.address)
-    expect(result?.name).toEqual(node?.name)
-    expect(result?.imageUrl).toEqual(node?.image?.url)
-    expect(result?.isVerified).toEqual(node?.isVerified)
+    it('returns null if required data is missing', () => {
+      expect(gqlNFTToNFTCollectionSearchResult({ ...collection, name: null })).toEqual(null)
+      expect(gqlNFTToNFTCollectionSearchResult({ ...collection, nftContracts: undefined })).toEqual(
+        null
+      )
+      expect(gqlNFTToNFTCollectionSearchResult({ ...collection, nftContracts: [] })).toEqual(null)
+    })
+
+    it('properly formats NFT collection search result', () => {
+      const result = gqlNFTToNFTCollectionSearchResult(collection)
+
+      expect(result?.type).toEqual(SearchResultType.NFTCollection)
+      expect(result?.chainId).toEqual(fromGraphQLChain(Chain.Ethereum))
+      expect(result?.address).toEqual(collection.nftContracts[0]?.address)
+      expect(result?.name).toEqual(collection?.name)
+      expect(result?.imageUrl).toEqual(collection?.image?.url)
+      expect(result?.isVerified).toEqual(collection?.isVerified)
+    })
   })
-})
 
-describe(formatNFTCollectionSearchResults, () => {
-  it('returns undefined if there is no data', () => {
-    expect(formatNFTCollectionSearchResults(null)).toEqual(undefined)
-  })
+  describe(formatNFTCollectionSearchResults, () => {
+    it('returns undefined if there is no data', () => {
+      expect(formatNFTCollectionSearchResults(null)).toEqual(undefined)
+    })
 
-  it('filters out nfts that cannot be formatted', () => {
-    const nftSearchResult = {
-      edges: [
-        ...TopNFTCollections.map((nft) => ({ node: nft })),
-        { node: { ...TopNFTCollections[0], name: null } },
-      ],
-    }
+    it('filters out nfts that cannot be formatted', () => {
+      const topNFTCollections = createArray(2, nftCollection)
+      const nftSearchResult = {
+        edges: [
+          ...topNFTCollections.map((nft) => ({ node: nft })),
+          { node: nftCollection({ name: null }) },
+        ],
+      }
 
-    const result = formatNFTCollectionSearchResults(nftSearchResult)
+      const result = formatNFTCollectionSearchResults(nftSearchResult)
 
-    expect(result).toHaveLength(2)
-    expect(result?.[0]?.address).toEqual(TopNFTCollections?.[0]?.nftContracts?.[0]?.address)
-    expect(result?.[1]?.address).toEqual(TopNFTCollections?.[1]?.nftContracts?.[0]?.address)
+      expect(result).toHaveLength(2)
+      expect(result?.[0]?.address).toEqual(topNFTCollections[0].nftContracts[0]?.address)
+      expect(result?.[1]?.address).toEqual(topNFTCollections[1].nftContracts[0]?.address)
+    })
   })
 })

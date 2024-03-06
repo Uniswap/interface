@@ -1,13 +1,13 @@
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
-import { account } from 'wallet/src/test/fixtures'
+import { ACCOUNT } from 'wallet/src/test/fixtures'
 import { render } from 'wallet/src/test/test-utils'
 
 const unitagDisplayName: DisplayName = { name: 'luni', type: DisplayNameType.Unitag }
 const ensDisplayName: DisplayName = { name: 'vitalik.eth', type: DisplayNameType.ENS }
 const localDisplayName: DisplayName = { name: 'Wallet 1', type: DisplayNameType.Local }
-const addressDisplayName: DisplayName = { name: account.address, type: DisplayNameType.Address }
+const addressDisplayName: DisplayName = { name: ACCOUNT.address, type: DisplayNameType.Address }
 
 describe(AccountDetails, () => {
   it('renders unitag without error', () => {

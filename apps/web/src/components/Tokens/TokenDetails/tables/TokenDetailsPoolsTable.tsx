@@ -3,14 +3,17 @@ import { PoolTableColumns, PoolsTable, sortAscendingAtom, sortMethodAtom } from 
 import { usePoolsFromTokenAddress } from 'graphql/data/pools/usePoolsFromTokenAddress'
 import { OrderDirection } from 'graphql/data/util'
 import { useAtomValue, useResetAtom } from 'jotai/utils'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 const HIDDEN_COLUMNS = [PoolTableColumns.Transactions]
 
 export function TokenDetailsPoolsTable({ chainId, referenceToken }: { chainId: ChainId; referenceToken: Token }) {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
-  const sortState = { sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc }
+  const sortState = useMemo(
+    () => ({ sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc }),
+    [sortAscending, sortMethod]
+  )
   const { pools, loading, error, loadMore } = usePoolsFromTokenAddress(referenceToken.address, sortState, chainId)
 
   const resetSortMethod = useResetAtom(sortMethodAtom)

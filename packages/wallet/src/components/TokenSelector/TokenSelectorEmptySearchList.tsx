@@ -66,7 +66,7 @@ function ClearAll({ onPress }: { onPress: () => void }): JSX.Element {
   return (
     <TouchableArea onPress={onPress}>
       <Text color="$accent1" variant="buttonLabel3">
-        {t('Clear all')}
+        {t('tokens.selector.button.clear')}
       </Text>
     </TouchableArea>
   )
@@ -88,7 +88,7 @@ function useTokenSectionsForEmptySearch(): GqlResult<TokenSection[]> {
   const sections = useMemo(
     () => [
       ...(getTokenOptionsSection(
-        t('Recent searches'),
+        t('tokens.selector.section.recent'),
         currencyInfosToTokenOptions(
           searchHistory
             .filter(
@@ -100,7 +100,7 @@ function useTokenSectionsForEmptySearch(): GqlResult<TokenSection[]> {
         <ClearAll onPress={onPressClearSearchHistory} />
       ) ?? []),
       ...(getTokenOptionsSection(
-        t('Popular tokens'),
+        t('tokens.selector.section.popular'),
         currencyInfosToTokenOptions(popularTokens?.map(gqlTokenToCurrencyInfo))
       ) ?? []),
     ],
@@ -128,7 +128,7 @@ function _TokenSelectorEmptySearchList({
   return (
     <TokenSelectorList
       showTokenAddress
-      errorText={t('Couldn’t load search results')}
+      errorText={t('token.selector.search.error')}
       hasError={Boolean(error)}
       loading={loading}
       refetch={refetch}

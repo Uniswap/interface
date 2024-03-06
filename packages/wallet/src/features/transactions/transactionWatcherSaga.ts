@@ -90,7 +90,7 @@ export function* transactionWatcher({
         pushNotification({
           type: AppNotificationType.Error,
           address: transaction.from,
-          errorMessage: i18n.t('Error while checking transaction status'),
+          errorMessage: i18n.t('transaction.watcher.error.status'),
         })
       )
     }
@@ -239,7 +239,7 @@ export function* watchTransaction({
         pushNotification({
           type: AppNotificationType.Error,
           address: transaction.from,
-          errorMessage: i18n.t('Unable to cancel transaction'),
+          errorMessage: i18n.t('transaction.watcher.error.cancel'),
         })
       )
     }
@@ -375,7 +375,7 @@ export function logTransactionEvent(
 type StatusOverride =
   | TransactionStatus.Success
   | TransactionStatus.Failed
-  | TransactionStatus.Cancelled
+  | TransactionStatus.Canceled
 
 function* finalizeTransaction({
   apolloClient,

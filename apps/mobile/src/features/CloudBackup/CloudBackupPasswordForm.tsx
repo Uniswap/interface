@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Keyboard, TextInput } from 'react-native'
 import { PasswordInput } from 'src/components/input/PasswordInput'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
@@ -90,9 +90,9 @@ export function CloudBackupPasswordForm({
 
   let errorText = ''
   if (error === PasswordErrors.WeakPassword) {
-    errorText = t('Weak password')
+    errorText = t('settings.setting.backup.password.error.weak')
   } else if (error === PasswordErrors.PasswordsDoNotMatch) {
-    errorText = t('Passwords do not match')
+    errorText = t('settings.setting.backup.password.error.mismatch')
   } else if (error) {
     // use the upstream zxcvbn error message
     errorText = error
@@ -104,7 +104,11 @@ export function CloudBackupPasswordForm({
         <Flex gap="$spacing8">
           <PasswordInput
             ref={passwordInputRef}
-            placeholder={isConfirmation ? t('Confirm password') : t('Create password')}
+            placeholder={
+              isConfirmation
+                ? t('settings.setting.backup.password.placeholder.confirm')
+                : t('settings.setting.backup.password.placeholder.create')
+            }
             returnKeyType="next"
             value={password}
             onChangeText={(newText: string): void => {
@@ -120,29 +124,42 @@ export function CloudBackupPasswordForm({
           <Flex centered row gap="$spacing12" px="$spacing16">
             <Icons.DiamondExclamation color="$neutral2" size={iconSizes.icon20} />
             <Text color="$neutral2" variant="body3">
-              {t(
-                'Uniswap Labs does not store your password and can’t recover it, so it’s crucial you remember it.'
-              )}
+              {t('settings.setting.backup.password.disclaimer')}
             </Text>
           </Flex>
         )}
       </Flex>
       <Button disabled={isButtonDisabled} testID={ElementName.Next} onPress={onPressNext}>
-        {t('Continue')}
+        {t('common.button.continue')}
       </Button>
     </>
   )
 }
 
 function PasswordStrengthText({ strength }: { strength: PasswordStrength }): JSX.Element {
-  const { text, color } = getPasswordStrengthTextAndColor(strength)
+  const { t } = useTranslation()
+  const { color } = getPasswordStrengthTextAndColor(strength)
 
   const hasPassword = strength !== PasswordStrength.NONE
+  let strengthText: string = ''
+  switch (strength) {
+    case PasswordStrength.STRONG:
+      strengthText = t('settings.setting.backup.password.strong')
+      break
+    case PasswordStrength.MEDIUM:
+      strengthText = t('settings.setting.backup.password.medium')
+      break
+    case PasswordStrength.WEAK:
+      strengthText = t('settings.setting.backup.password.weak')
+      break
+    default:
+      break
+  }
 
   return (
     <Flex centered row opacity={hasPassword ? 1 : 0} pt="$spacing12" px="$spacing8">
       <Text color={color} variant="body3">
-        <Trans>This is a {text.toLowerCase()} password</Trans>
+        {strengthText}
       </Text>
     </Flex>
   )

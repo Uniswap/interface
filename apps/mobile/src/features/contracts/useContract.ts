@@ -2,9 +2,9 @@
 
 import { Contract, ContractInterface } from 'ethers'
 import { useMemo } from 'react'
+import ERC20_ABI from 'uniswap/src/abis/erc20.json'
+import { Erc20 } from 'uniswap/src/abis/types'
 import { logger } from 'utilities/src/logger/logger'
-import ERC20_ABI from 'wallet/src/abis/erc20.json'
-import { Erc20 } from 'wallet/src/abis/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 

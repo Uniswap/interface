@@ -1,9 +1,9 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { hasSufficientFundsIncludingGas, isOffline } from 'wallet/src/features/transactions/utils'
-import { ETH, networkDown, networkUnknown, networkUp } from 'wallet/src/test/fixtures'
+import { MAINNET_CURRENCY, networkDown, networkUnknown, networkUp } from 'wallet/src/test/fixtures'
 
-const ZERO_ETH = CurrencyAmount.fromRawAmount(ETH, 0)
-const ONE_ETH = CurrencyAmount.fromRawAmount(ETH, 1e18)
+const ZERO_ETH = CurrencyAmount.fromRawAmount(MAINNET_CURRENCY, 0)
+const ONE_ETH = CurrencyAmount.fromRawAmount(MAINNET_CURRENCY, 1e18)
 const TEN_ETH = ONE_ETH.multiply(10)
 
 describe(hasSufficientFundsIncludingGas, () => {
@@ -50,12 +50,12 @@ describe(hasSufficientFundsIncludingGas, () => {
 
 describe(isOffline, () => {
   it('returns true for not connected state', () => {
-    expect(isOffline(networkDown)).toBe(true)
+    expect(isOffline(networkDown())).toBe(true)
   })
   it('returns false for connected state', () => {
-    expect(isOffline(networkUp)).toBe(false)
+    expect(isOffline(networkUp())).toBe(false)
   })
   it('returns true for unknown state', () => {
-    expect(isOffline(networkUnknown)).toBe(false)
+    expect(isOffline(networkUnknown())).toBe(false)
   })
 })

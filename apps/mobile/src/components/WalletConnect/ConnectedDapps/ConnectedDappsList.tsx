@@ -50,7 +50,7 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
           </Flex>
           <Flex alignItems="center" flexBasis="70%">
             <Text color="$neutral1" numberOfLines={1} variant="body1">
-              {t('Manage connections')}
+              {t('walletConnect.dapps.manage.title')}
             </Text>
           </Flex>
           <Flex alignItems="flex-end" flexBasis="15%">
@@ -101,10 +101,10 @@ export function ConnectedDappsList({ backButton, sessions }: ConnectedDappsProps
               paddingTop: fullHeight / 5,
             }}>
             <Text color="$neutral1" variant="subheading1">
-              {t('No apps connected')}
+              {t('walletConnect.dapps.manage.empty.title')}
             </Text>
             <Text color="$neutral2" textAlign="center" variant="body2">
-              {t('Connect to an app by scanning a code via WalletConnect')}
+              {t('walletConnect.dapps.empty.description')}
             </Text>
           </Flex>
         )}

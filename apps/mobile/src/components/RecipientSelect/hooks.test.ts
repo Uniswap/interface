@@ -8,19 +8,33 @@ import { useRecipients } from 'wallet/src/components/RecipientSearch/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
-import { SendTokenTransactionInfo } from 'wallet/src/features/transactions/types'
+import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import {
-  account,
-  account2,
   SAMPLE_SEED_ADDRESS_1,
   SAMPLE_SEED_ADDRESS_2,
-  sendTxDetailsConfirmed,
-  sendTxDetailsFailed,
-  sendTxDetailsPending,
+  sendTokenTransactionInfo,
+  signerMnemonicAccount,
+  transactionDetails,
 } from 'wallet/src/test/fixtures'
 
 expect.extend({ toIncludeSameMembers })
+
+const sendTxDetailsPending = transactionDetails({
+  status: TransactionStatus.Pending,
+  typeInfo: sendTokenTransactionInfo(),
+  addedTime: 1487076708000,
+})
+const sendTxDetailsConfirmed = transactionDetails({
+  status: TransactionStatus.Success,
+  typeInfo: sendTokenTransactionInfo(),
+  addedTime: 1487076708000,
+})
+const sendTxDetailsFailed = transactionDetails({
+  status: TransactionStatus.Failed,
+  typeInfo: sendTokenTransactionInfo(),
+  addedTime: 1487076710000,
+})
 
 /**
  * Tests interaction of mobile state with useRecipients hook
@@ -58,8 +72,8 @@ const getPreloadedState = (props?: PreloadedStateProps): PreloadedState<MobileSt
   }
 }
 
-const activeAccount = account
-const inactiveAccount = account2
+const activeAccount = signerMnemonicAccount()
+const inactiveAccount = signerMnemonicAccount()
 const validatedAddressRecipient: SearchableRecipient = {
   address: SAMPLE_SEED_ADDRESS_1,
 }
@@ -75,15 +89,15 @@ const recentRecipientsSectionResult = {
   title: 'Recent',
   data: [
     {
-      address: (sendTxDetailsFailed.typeInfo as SendTokenTransactionInfo).recipient,
+      address: sendTxDetailsFailed.typeInfo.recipient,
       name: '',
     },
     {
-      address: (sendTxDetailsConfirmed.typeInfo as SendTokenTransactionInfo).recipient,
+      address: sendTxDetailsConfirmed.typeInfo.recipient,
       name: '',
     },
     {
-      address: (sendTxDetailsPending.typeInfo as SendTokenTransactionInfo).recipient,
+      address: sendTxDetailsPending.typeInfo.recipient,
       name: '',
     },
   ],
@@ -162,9 +176,7 @@ describe(useRecipients, () => {
       expect(result.current.searchableRecipientOptions).toEqual(
         expect.arrayContaining([
           {
-            data: {
-              address: SAMPLE_SEED_ADDRESS_1,
-            },
+            data: expect.objectContaining({ address: SAMPLE_SEED_ADDRESS_1 }),
             key: SAMPLE_SEED_ADDRESS_1,
           },
         ])
@@ -203,7 +215,7 @@ describe(useRecipients, () => {
               title: 'Recent',
               data: [
                 {
-                  address: (sendTxDetailsPending.typeInfo as SendTokenTransactionInfo).recipient,
+                  address: sendTxDetailsPending.typeInfo.recipient,
                   name: '',
                 },
               ],
@@ -231,15 +243,15 @@ describe(useRecipients, () => {
       // This method doesn't check the order of the elements
       expect(section.data).toIncludeSameMembers([
         {
-          address: (sendTxDetailsPending.typeInfo as SendTokenTransactionInfo).recipient,
+          address: sendTxDetailsPending.typeInfo.recipient,
           name: '',
         },
         {
-          address: (sendTxDetailsConfirmed.typeInfo as SendTokenTransactionInfo).recipient,
+          address: sendTxDetailsConfirmed.typeInfo.recipient,
           name: '',
         },
         {
-          address: (sendTxDetailsFailed.typeInfo as SendTokenTransactionInfo).recipient,
+          address: sendTxDetailsFailed.typeInfo.recipient,
           name: '',
         },
       ])

@@ -151,8 +151,8 @@ function _TokenSelectorList({
       <>
         <Flex grow justifyContent="center">
           <BaseCard.ErrorState
-            retryButtonLabel={t('Retry')}
-            title={errorText ?? t('Couldn’t load tokens')}
+            retryButtonLabel={t('common.button.retry')}
+            title={errorText ?? t('tokens.selector.error.load')}
             onRetry={refetch}
           />
         </Flex>

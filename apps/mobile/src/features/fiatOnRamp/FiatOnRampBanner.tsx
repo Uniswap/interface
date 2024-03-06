@@ -32,12 +32,12 @@ export function FiatOnRampBanner(props: TouchableAreaProps): JSX.Element {
         <Flex gap="$spacing4">
           <Flex row justifyContent="space-between">
             <Text color="$sporeWhite" variant="buttonLabel2">
-              {t('Buy crypto')}
+              {t('fiatOnRamp.banner.title')}
             </Text>
             <Icons.RotatableChevron color="$sporeWhite" direction="end" width={iconSizes.icon20} />
           </Flex>
           <Text color="$sporeWhite" opacity={0.72} variant="subheading2">
-            {t('Get tokens at the best prices in web3 with Uniswap Wallet.')}
+            {t('fiatOnRamp.banner.subtitle')}
           </Text>
         </Flex>
       </TouchableArea>

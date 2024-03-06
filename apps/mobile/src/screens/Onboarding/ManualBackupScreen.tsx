@@ -80,12 +80,6 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
     }
   }, [continueButtonPressed, activeAccount?.backups, navigation, params])
 
-  const responsiveTitle = media.short ? undefined : t('Confirm your recovery phrase')
-
-  const responsiveSubtitle = media.short
-    ? t('Confirm your recovery phrase') + '. ' + t('Select the missing words in order.')
-    : t('Select the missing words in order.')
-
   // Manually log as page views as these screens are not captured in navigation events
   useEffect(() => {
     switch (view) {
@@ -105,16 +99,14 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
     case View.SeedPhrase:
       return (
         <OnboardingScreen
-          subtitle={t('You can check this in settings at any time.')}
-          title={t('Write down your recovery phrase in order')}>
+          subtitle={t('onboarding.seedPhrase.view.subtitle')}
+          title={t('onboarding.seedPhrase.view.title')}>
           {showScreenShotWarningModal && (
             <WarningModal
-              caption={t(
-                'Anyone who gains access to your photos can access your wallet. We recommend that you write down your words instead.'
-              )}
-              confirmText={t('OK')}
+              caption={t('onboarding.seedPhrase.warning.screenshot.message')}
+              confirmText={t('common.button.ok')}
               modalName={ModalName.ScreenshotWarning}
-              title={t('Screenshots aren’t secure')}
+              title={t('onboarding.seedPhrase.warning.screenshot.title')}
               onConfirm={(): void => setShowScreenShotWarningModal(false)}
             />
           )}
@@ -128,7 +120,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
             </Flex>
             <Flex justifyContent="flex-end">
               <Button testID={ElementName.Next} onPress={nextView}>
-                {t('Continue')}
+                {t('common.button.continue')}
               </Button>
             </Flex>
           </Flex>
@@ -139,7 +131,13 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
       )
     case View.SeedPhraseConfirm:
       return (
-        <OnboardingScreen subtitle={responsiveSubtitle} title={responsiveTitle}>
+        <OnboardingScreen
+          subtitle={
+            media.short
+              ? t('onboarding.seedPhrase.confirm.subtitle.combined')
+              : t('onboarding.seedPhrase.confirm.subtitle.default')
+          }
+          title={media.short ? undefined : t('onboarding.seedPhrase.confirm.title')}>
           <Flex grow pointerEvents={continueButtonEnabled ? 'none' : 'auto'} pt="$spacing12">
             <MnemonicConfirmation
               mnemonicId={mnemonicId}
@@ -151,7 +149,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
               disabled={!continueButtonEnabled}
               testID={ElementName.Continue}
               onPress={onValidationSuccessful}>
-              {t('Continue')}
+              {t('common.button.continue')}
             </Button>
           </Flex>
         </OnboardingScreen>
@@ -179,15 +177,13 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
           />
         </Flex>
         <Text color="$neutral1" variant="body1">
-          {t('Do this step in a private place')}
+          {t('onboarding.seedPhrase.warning.final.title')}
         </Text>
         <Text color="$neutral2" textAlign="center" variant="body2">
-          {t(
-            'Your recovery phrase is what grants you (and anyone who has it) access to your funds. Be sure to keep it to yourself.'
-          )}
+          {t('onboarding.seedPhrase.warning.final.message')}
         </Text>
         <Button flexGrow={1} mt="$spacing16" theme="primary" width="100%" onPress={onPress}>
-          {t('I’m ready')}
+          {t('onboarding.seedPhrase.warning.final.button')}
         </Button>
       </Flex>
     </BottomSheetModal>

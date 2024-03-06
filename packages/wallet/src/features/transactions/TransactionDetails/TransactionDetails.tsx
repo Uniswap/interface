@@ -92,7 +92,7 @@ export function TransactionDetails({
           borderRadius="$rounded16"
           mb="$spacing12"
           p="$spacing12">
-          <Text color="$statusCritical">{t('This transaction is expected to fail')}</Text>
+          <Text color="$statusCritical">{t('swap.warning.expectedFailure')}</Text>
         </Flex>
       )}
       {!showWarning && banner && <Flex py="$spacing16">{banner}</Flex>}
@@ -107,7 +107,7 @@ export function TransactionDetails({
             pt="$spacing8"
             onPress={onPressToggleShowChildren}>
             <Text color="$neutral3" variant="body3">
-              {showChildren ? t('Show less') : t('Show more')}
+              {showChildren ? t('swap.details.action.less') : t('swap.details.action.more')}
             </Text>
             {showChildren ? (
               <AnglesMinimize

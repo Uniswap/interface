@@ -235,7 +235,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             x={isFocus ? 0 : dimensions.fullWidth}
             onLayout={onCancelButtonLayout}>
             <TouchableArea hitSlop={16} onPress={onPressCancel}>
-              <Text variant="buttonLabel2">{t('Cancel')}</Text>
+              <Text variant="buttonLabel2">{t('common.button.cancel')}</Text>
             </TouchableArea>
           </Flex>
         )}

@@ -52,7 +52,7 @@ type TransactionEip1559FeeParams = {
   gasLimit: string
 }
 
-interface GasFeeResult {
+export interface GasFeeResult {
   value?: string
   isLoading: boolean
   params?: TransactionLegacyFeeParams | TransactionEip1559FeeParams

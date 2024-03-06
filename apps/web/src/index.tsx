@@ -11,7 +11,7 @@ import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { Helmet } from 'react-helmet'
+import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
@@ -66,31 +66,33 @@ const Router = isBrowserRouterEnabled() ? BrowserRouter : HashRouter
 
 createRoot(container).render(
   <StrictMode>
-    <Provider store={store}>
-      <FeatureFlagsProvider>
-        <QueryClientProvider client={queryClient}>
-          <Router>
-            <LanguageProvider>
-              <Web3Provider>
-                <ApolloProvider client={apolloClient}>
-                  <BlockNumberProvider>
-                    <UnitagUpdaterContextProvider>
-                      <Updaters />
-                      <ThemeProvider>
-                        <TamaguiProvider>
-                          <ThemedGlobalStyle />
-                          <App />
-                        </TamaguiProvider>
-                      </ThemeProvider>
-                    </UnitagUpdaterContextProvider>
-                  </BlockNumberProvider>
-                </ApolloProvider>
-              </Web3Provider>
-            </LanguageProvider>
-          </Router>
-        </QueryClientProvider>
-      </FeatureFlagsProvider>
-    </Provider>
+    <HelmetProvider>
+      <Provider store={store}>
+        <FeatureFlagsProvider>
+          <QueryClientProvider client={queryClient}>
+            <Router>
+              <LanguageProvider>
+                <Web3Provider>
+                  <ApolloProvider client={apolloClient}>
+                    <BlockNumberProvider>
+                      <UnitagUpdaterContextProvider>
+                        <Updaters />
+                        <ThemeProvider>
+                          <TamaguiProvider>
+                            <ThemedGlobalStyle />
+                            <App />
+                          </TamaguiProvider>
+                        </ThemeProvider>
+                      </UnitagUpdaterContextProvider>
+                    </BlockNumberProvider>
+                  </ApolloProvider>
+                </Web3Provider>
+              </LanguageProvider>
+            </Router>
+          </QueryClientProvider>
+        </FeatureFlagsProvider>
+      </Provider>
+    </HelmetProvider>
   </StrictMode>
 )
 

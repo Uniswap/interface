@@ -35,19 +35,19 @@ interface ImportMethodOption {
 
 const options: ImportMethodOption[] = [
   {
-    title: (t: AppTFunction) => t('Import a wallet'),
-    blurb: (t: AppTFunction) => t('Enter your recovery phrase from another crypto wallet'),
+    title: (t: AppTFunction) => t('onboarding.import.method.import.title'),
+    blurb: (t: AppTFunction) => t('onboarding.import.method.import.message'),
     icon: <Icons.PaperStack color="$accent1" size={18} strokeWidth={1.5} />,
     nav: OnboardingScreens.SeedPhraseInput,
     importType: ImportType.SeedPhrase,
     name: ElementName.OnboardingImportSeedPhrase,
   },
   {
-    title: (t: AppTFunction) => t('Restore a wallet'),
+    title: (t: AppTFunction) => t('onboarding.import.method.restore.title'),
     blurb: (t: AppTFunction) =>
       isAndroid
-        ? t(`Add wallets you’ve backed up to your Google Drive account`)
-        : t(`Add wallets you’ve backed up to your iCloud account`),
+        ? t(`onboarding.import.method.restore.message.android`)
+        : t(`onboarding.import.method.restore.message.ios`),
     icon: <Icons.OSDynamicCloudIcon color="$accent1" size="$icon.24" />,
     nav: OnboardingScreens.RestoreCloudBackup,
     importType: ImportType.Restore,
@@ -71,17 +71,19 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
 
     if (!cloudStorageAvailable) {
       Alert.alert(
-        isAndroid ? t('Google Drive not available') : t('iCloud Drive not available'),
         isAndroid
-          ? t(
-              'Please verify that you are logged in to a Google account with Google Drive enabled on this device and try again.'
-            )
-          : t(
-              'Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.'
-            ),
+          ? t('account.cloud.error.unavailable.title.android')
+          : t('account.cloud.error.unavailable.title.ios'),
+        isAndroid
+          ? t('account.cloud.error.unavailable.message.android')
+          : t('account.cloud.error.unavailable.message.ios'),
         [
-          { text: t('Go to settings'), onPress: openSettings, style: 'default' },
-          { text: t('Not now'), style: 'cancel' },
+          {
+            text: t('account.cloud.error.unavailable.button.settings'),
+            onPress: openSettings,
+            style: 'default',
+          },
+          { text: t('account.cloud.error.unavailable.button.cancel'), style: 'cancel' },
         ]
       )
       return
@@ -116,7 +118,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
       : options
 
   return (
-    <OnboardingScreen title={t('Choose how you want to add your wallet')}>
+    <OnboardingScreen title={t('onboarding.import.title')}>
       <Flex
         grow
         gap="$spacing12"
@@ -150,7 +152,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
               onPress={(): Promise<void> =>
                 handleOnPress(OnboardingScreens.WatchWallet, ImportType.Watch)
               }>
-              {t('Watch a wallet')}
+              {t('account.wallet.button.watch')}
             </Text>
           </Flex>
         </TouchableArea>

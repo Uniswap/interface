@@ -153,7 +153,7 @@ export function NFTCollectionHeader({
           <Flex row gap="$spacing8" justifyContent="space-between">
             <Flex fill alignItems="flex-start" gap="$spacing4">
               <Text color="$neutral2" numberOfLines={1} variant="subheading2">
-                {t('Items')}
+                {t('tokens.nfts.collection.label.items')}
               </Text>
               <Text loading={loading} variant="body1">
                 {formatNumberOrString({
@@ -164,7 +164,7 @@ export function NFTCollectionHeader({
             </Flex>
             <Flex fill alignItems="flex-start" gap="$spacing4">
               <Text color="$neutral2" numberOfLines={1} variant="subheading2">
-                {t('Owners')}
+                {t('tokens.nfts.collection.label.owners')}
               </Text>
               <Text loading={loading} variant="body1">
                 {formatNumberOrString({
@@ -175,7 +175,7 @@ export function NFTCollectionHeader({
             </Flex>
             <Flex fill alignItems="flex-start" gap="$spacing4">
               <Text color="$neutral2" numberOfLines={1} variant="subheading2">
-                {t('Floor')}
+                {t('tokens.nfts.collection.label.priceFloor')}
               </Text>
               <Flex row alignItems="center">
                 <Text loading={loading} variant="body1">
@@ -191,7 +191,7 @@ export function NFTCollectionHeader({
             </Flex>
             <Flex fill alignItems="flex-start" gap="$spacing4">
               <Text color="$neutral2" numberOfLines={1} variant="subheading2">
-                {t('Volume')}
+                {t('tokens.nfts.collection.label.swapVolume')}
               </Text>
               <Flex row alignItems="center" gap="$spacing4">
                 <Text loading={loading} pr="$spacing1" variant="body1">

@@ -22,7 +22,7 @@ import { ExternalLink, Separator, ThemedText } from 'theme/components'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
 
-import { Info } from 'components/Icons/Info'
+import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import { ReactComponent as ExpandoIconClosed } from '../../assets/svg/expando-icon-closed.svg'
 import { ReactComponent as ExpandoIconOpened } from '../../assets/svg/expando-icon-opened.svg'
 import { ButtonError, SmallButtonPrimary } from '../Button'
@@ -327,12 +327,6 @@ function ExpandableLineItems(props: { trade: InterfaceTrade; allowedSlippage: Pe
   )
 }
 
-const StyledInfoIcon = styled(Info)`
-  margin-top: 2px;
-  align-self: flex-start;
-  flex-shrink: 0;
-`
-
 function LimitLineItems({ trade }: { trade: LimitOrderTrade }) {
   return (
     <>
@@ -340,18 +334,7 @@ function LimitLineItems({ trade }: { trade: LimitOrderTrade }) {
       <SwapLineItem trade={trade} type={SwapLineItemType.EXPIRY} />
       <SwapLineItem trade={trade} type={SwapLineItemType.SWAP_FEE} />
       <SwapLineItem trade={trade} type={SwapLineItemType.NETWORK_COST} />
-      <Row gap="sm" justify="space-between" marginTop="12px">
-        <StyledInfoIcon width={16} height={16} />
-        <ThemedText.LabelMicro>
-          <Trans>
-            Please be aware that the execution for this limit order may vary based on real-time market fluctuations and
-            Ethereum network congestion. Canceling a limit has a network cost.{' '}
-            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/24300813697933">
-              <Trans>Learn more</Trans>
-            </ExternalLink>
-          </Trans>
-        </ThemedText.LabelMicro>
-      </Row>
+      <LimitDisclaimer />
     </>
   )
 }

@@ -95,7 +95,7 @@ export function TransferReview({
 
   const actionButtonProps = {
     disabled: actionButtonDisabled,
-    label: t('Send'),
+    label: t('send.button.send'),
     name: ElementName.Send,
     onPress: onReviewSubmit,
   }
@@ -123,8 +123,8 @@ export function TransferReview({
       {showWarningModal && transferWarning?.title && (
         <WarningModal
           caption={transferWarning.message}
-          closeText={blockingWarning ? undefined : t('Cancel')}
-          confirmText={blockingWarning ? t('OK') : t('Confirm')}
+          closeText={blockingWarning ? undefined : t('common.button.cancel')}
+          confirmText={blockingWarning ? t('common.button.ok') : t('common.button.confirm')}
           modalName={ModalName.SendWarning}
           severity={transferWarning.severity}
           title={transferWarning.title}

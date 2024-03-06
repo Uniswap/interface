@@ -188,7 +188,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
               px="$spacing24"
               width="100%">
               <HandleBar backgroundColor="none" />
-              <Text variant="subheading1">{t('Buy')}</Text>
+              <Text variant="subheading1">{t('common.button.buy')}</Text>
               <FiatOnRampAmountSection
                 appFiatCurrencySupported={appFiatCurrencySupportedInMoonpay}
                 currency={currency}
@@ -233,7 +233,9 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                 <FiatOnRampCtaButton
                   analyticsProperties={{ externalTransactionId }}
                   continueButtonText={
-                    appFiatCurrencySupportedInMoonpay ? t('Continue to checkout') : t('Checkout')
+                    appFiatCurrencySupportedInMoonpay
+                      ? t('fiatOnRamp.button.continueCheckout')
+                      : t('fiatOnRamp.checkout.button')
                   }
                   disabled={!buttonEnabled}
                   eligible={eligible}

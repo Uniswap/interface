@@ -174,7 +174,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
             color="$sporeWhite"
             numberOfLines={1}
             variant="buttonLabel2">
-            {t('Swap')}
+            {t('common.button.swap')}
           </Text>
         </AnimatedFlex>
       </TapGestureHandler>
@@ -256,7 +256,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
                 pr="$spacing48"
                 style={{ lineHeight: fonts.body1.lineHeight }}
                 variant="body1">
-                {t('Search')}
+                {t('common.input.search')}
               </Text>
             </Flex>
           </BlurView>

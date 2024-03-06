@@ -29,7 +29,7 @@ export function NetworkFee({
       <TouchableArea flexShrink={1} onPress={onShowNetworkFeeInfo}>
         <Flex row shrink alignItems="center" gap="$spacing4">
           <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body3">
-            {t('Network cost')}
+            {t('transaction.networkCost.label')}
             &nbsp;
             <Icons.InfoCircleFilled color="$neutral3" size="$icon.16" />
           </Text>
@@ -41,7 +41,7 @@ export function NetworkFee({
           <SpinningLoader size={iconSizes.icon16} />
         ) : gasFee.error ? (
           <Text color="$neutral2" variant="body3">
-            {t('N/A')}
+            {t('common.text.notAvailable')}
           </Text>
         ) : (
           <Text color="$neutral1" variant="body3">

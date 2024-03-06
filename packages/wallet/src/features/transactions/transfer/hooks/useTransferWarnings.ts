@@ -48,13 +48,12 @@ export function getTransferWarnings(
       type: WarningLabel.InsufficientFunds,
       severity: WarningSeverity.None,
       action: WarningAction.DisableReview,
-      title: t('Not enough {{ symbol }}.', {
-        symbol: currencyAmountIn.currency?.symbol,
+      title: t('send.warning.insufficientFunds.title', {
+        currencySymbol: currencyAmountIn.currency?.symbol,
       }),
-      message: t(
-        'Your {{ symbol }} balance has decreased since you entered the amount you’d like to send',
-        { symbol: currencyAmountIn.currency?.symbol }
-      ),
+      message: t('send.warning.insufficientFunds.message', {
+        currencySymbol: currencyAmountIn.currency?.symbol,
+      }),
     })
   }
 

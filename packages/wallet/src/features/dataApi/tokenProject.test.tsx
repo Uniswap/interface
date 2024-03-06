@@ -1,8 +1,7 @@
 import { waitFor } from '@testing-library/react-native'
 import { useTokenProjects } from 'wallet/src/features/dataApi/tokenProjects'
 import { tokenProjectToCurrencyInfos } from 'wallet/src/features/dataApi/utils'
-import { SAMPLE_CURRENCY_ID_1 } from 'wallet/src/test/fixtures'
-import { TokenProjects } from 'wallet/src/test/gqlFixtures'
+import { SAMPLE_CURRENCY_ID_1, usdcTokenProject } from 'wallet/src/test/fixtures'
 import { renderHook } from 'wallet/src/test/test-utils'
 
 describe(useTokenProjects, () => {
@@ -22,17 +21,18 @@ describe(useTokenProjects, () => {
   })
 
   it('renders without error', async () => {
+    const projects = [usdcTokenProject()]
     const { result } = renderHook(() => useTokenProjects([SAMPLE_CURRENCY_ID_1]), {
       resolvers: {
         Query: {
-          tokenProjects: () => TokenProjects,
+          tokenProjects: () => projects,
         },
       },
     })
 
     await waitFor(() => {
       const data = result.current.data
-      expect(data).toEqual(tokenProjectToCurrencyInfos(TokenProjects))
+      expect(data).toEqual(tokenProjectToCurrencyInfos(projects))
     })
   })
 })

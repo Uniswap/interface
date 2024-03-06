@@ -118,7 +118,7 @@ export function LongMarkdownText(props: LongMarkdownTextProps): JSX.Element {
           testID="read-more-button"
           variant="buttonLabel3"
           onPress={toggleExpanded}>
-          {expanded ? t('Read less') : t('Read more')}
+          {expanded ? t('common.longText.button.less') : t('common.longText.button.more')}
         </Text>
       ) : null}
     </Flex>

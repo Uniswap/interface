@@ -29,10 +29,10 @@ export function HiddenTokensRow({
         px={padded ? '$spacing24' : '$none'}
         py="$spacing12">
         <Text color="$neutral2" variant="subheading2">
-          {t('Hidden ({{numHidden}})', { numHidden })}
+          {t('tokens.hidden.label', { numHidden })}
         </Text>
         {/* just used for opacity styling, the parent TouchableArea handles event */}
-        <TouchableArea>
+        <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} onPress={onPress}>
           <Flex
             row
             alignItems="center"
@@ -62,7 +62,7 @@ export function HiddenTokensRow({
                 userSelect="none"
                 variant="buttonLabel3"
                 width={45}>
-                {isExpanded ? t('Hide') : t('Show')}
+                {isExpanded ? t('common.button.hide') : t('common.button.show')}
               </Text>
             </AnimatePresence>
             <Icons.RotatableChevron
@@ -70,7 +70,7 @@ export function HiddenTokensRow({
               color="$neutral2"
               direction="down"
               height={iconSizes.icon20}
-              rotate={`${isExpanded ? -90 : 0}deg`}
+              rotate={`${isExpanded ? 180 : 0}deg`}
               width={iconSizes.icon20}
             />
           </Flex>

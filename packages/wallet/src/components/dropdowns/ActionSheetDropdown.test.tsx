@@ -3,7 +3,7 @@ import '@testing-library/jest-native/extend-expect'
 import { ReactNode } from 'react'
 import { Text } from 'ui/src'
 import { MenuItemProp } from 'wallet/src/components/modals/ActionSheetModal'
-import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/eventFixtures'
+import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/fixtures'
 import { fireEvent, render, screen, waitFor } from 'wallet/src/test/test-utils'
 import { ActionSheetDropdown } from './ActionSheetDropdown'
 

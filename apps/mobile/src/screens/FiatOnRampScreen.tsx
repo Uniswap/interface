@@ -261,7 +261,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
             px="$spacing24"
             width="100%">
             <Flex row alignItems="center" justifyContent="space-between">
-              <Text variant="subheading1">{t('Buy')}</Text>
+              <Text variant="subheading1">{t('common.button.buy')}</Text>
               <FiatOnRampCountryPicker
                 countryCode={countryCode}
                 onPress={(): void => {
@@ -312,7 +312,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               )}
               <FiatOnRampCtaButton
                 eligible
-                continueButtonText={t('Continue')}
+                continueButtonText={t('common.button.continue')}
                 disabled={buttonDisabled}
                 onPress={onContinue}
               />

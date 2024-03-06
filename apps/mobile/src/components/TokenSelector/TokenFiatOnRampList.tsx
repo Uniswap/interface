@@ -71,8 +71,8 @@ function _TokenFiatOnRampList({
     return (
       <Flex centered grow>
         <BaseCard.ErrorState
-          retryButtonLabel="Retry"
-          title={t('Couldn’t load tokens to buy')}
+          retryButtonLabel={t('common.button.retry')}
+          title={t('fiatOnRamp.error.load')}
           onRetry={onRetry}
         />
       </Flex>

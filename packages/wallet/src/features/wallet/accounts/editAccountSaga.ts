@@ -1,4 +1,5 @@
 import { all, call, put } from 'typed-redux-saga'
+import { isWeb } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { unique } from 'utilities/src/primitives/array'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
@@ -128,7 +129,10 @@ function* removeAccount(params: RemoveParams) {
   logger.debug('editAccountSaga', 'removeAccount', 'Removing account', address)
   // TODO [MOB-243] cleanup account artifacts in native-land (i.e. keystore)
   yield* put(removeInStore(address))
-  yield* call([Keyring, Keyring.removePrivateKey], address)
+  if (isWeb) {
+    // Adding multiple calls to this one function was causing race condition errors since `removeAccount` is often called in a loop so limiting to web for now
+    yield* call([Keyring, Keyring.removePrivateKey], address)
+  }
 }
 
 function* removeAccounts(params: RemoveBulkParams) {

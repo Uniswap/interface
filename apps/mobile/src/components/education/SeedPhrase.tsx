@@ -1,5 +1,5 @@
 import React, { ComponentProps, ReactNode, useCallback, useContext, useMemo } from 'react'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { runOnJS } from 'react-native-reanimated'
 import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app/navigation/types'
@@ -7,7 +7,7 @@ import { CloseButton } from 'src/components/buttons/CloseButton'
 import { CarouselContext } from 'src/components/carousel/Carousel'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { Flex, Text, useDeviceDimensions } from 'ui/src'
-import { isAndroid } from 'wallet/src/utils/platform'
+import { getCloudProviderName } from 'wallet/src/utils/platform'
 
 function Page({
   text,
@@ -16,6 +16,7 @@ function Page({
   text: ReactNode
   params: OnboardingStackBaseParams
 }): JSX.Element {
+  const { t } = useTranslation()
   const { fullWidth } = useDeviceDimensions()
   const { goToPrev, goToNext } = useContext(CarouselContext)
   const navigation = useOnboardingStackNavigation()
@@ -55,7 +56,7 @@ function Page({
             px="$spacing24"
             width={fullWidth}>
             <Text color="$neutral2" variant="subheading2">
-              <Trans>What’s a recovery phrase?</Trans>
+              {t('onboarding.tooltip.recoveryPhrase.trigger')}
             </Text>
             <GestureDetector gesture={dismissGesture}>
               <CloseButton color="$neutral2" onPress={(): void => undefined} />
@@ -71,13 +72,14 @@ function Page({
   )
 }
 
+const cloudProviderName = getCloudProviderName()
 export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): JSX.Element[] => [
   <Page
     params={params}
     text={
       <CustomHeadingText>
-        <Trans>
-          A recovery phrase (or seed phrase) is a{' '}
+        <Trans i18nKey="account.seedPhrase.education.part1">
+          A recovery phrase (or seed phrase) is a
           <CustomHeadingText color="$accent1">set of words</CustomHeadingText> required to access
           your wallet, <CustomHeadingText color="$accent1">like a password.</CustomHeadingText>
         </Trans>
@@ -88,9 +90,9 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
     params={params}
     text={
       <CustomHeadingText>
-        <Trans>
+        <Trans i18nKey="account.seedPhrase.education.part2">
           You can <CustomHeadingText color="$accent1">enter</CustomHeadingText> your recovery phrase
-          on a new device{' '}
+          on a new device
           <CustomHeadingText color="$accent1">to restore your wallet</CustomHeadingText> and its
           contents.
         </Trans>
@@ -101,9 +103,9 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
     params={params}
     text={
       <CustomHeadingText>
-        <Trans>
-          But, if you{' '}
-          <CustomHeadingText color="$accent1">lose your recovery phrase</CustomHeadingText>, you’ll{' '}
+        <Trans i18nKey="account.seedPhrase.education.part3">
+          But, if you
+          <CustomHeadingText color="$accent1">lose your recovery phrase</CustomHeadingText>, you’ll
           <CustomHeadingText color="$accent1">lose access</CustomHeadingText> to your wallet.
         </Trans>
       </CustomHeadingText>
@@ -113,19 +115,13 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
     params={params}
     text={
       <CustomHeadingText>
-        {isAndroid ? (
-          <Trans>
-            Instead of memorizing your recovery phrase, you can{' '}
-            <CustomHeadingText color="$accent1">back it up to Google Drive</CustomHeadingText> and
-            protect it with a password.
-          </Trans>
-        ) : (
-          <Trans>
-            Instead of memorizing your recovery phrase, you can{' '}
-            <CustomHeadingText color="$accent1">back it up to iCloud</CustomHeadingText> and protect
-            it with a password.
-          </Trans>
-        )}
+        <Trans i18nKey="account.seedPhrase.education.part4">
+          Instead of memorizing your recovery phrase, you can
+          <CustomHeadingText color="$accent1">
+            back it up to {{ cloudProviderName }}
+          </CustomHeadingText>
+          and protect it with a password.
+        </Trans>
       </CustomHeadingText>
     }
   />,
@@ -133,8 +129,8 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
     params={params}
     text={
       <CustomHeadingText>
-        <Trans>
-          You can also manually back up your recovery phrase by{' '}
+        <Trans i18nKey="account.seedPhrase.education.part5">
+          You can also manually back up your recovery phrase by
           <CustomHeadingText color="$accent1">writing it down</CustomHeadingText> and storing it in
           a safe place.
         </Trans>
@@ -145,8 +141,8 @@ export const SeedPhraseEducationContent = (params: OnboardingStackBaseParams): J
     params={params}
     text={
       <CustomHeadingText>
-        <Trans>
-          We recommend using{' '}
+        <Trans i18nKey="account.seedPhrase.education.part6">
+          We recommend using
           <CustomHeadingText color="$accent1">both types of backups</CustomHeadingText>, because if
           you lose your recovery phrase, you won’t be able to restore your wallet.
         </Trans>

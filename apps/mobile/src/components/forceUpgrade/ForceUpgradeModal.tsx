@@ -65,22 +65,20 @@ export function ForceUpgradeModal(): JSX.Element {
     <>
       {isVisible && (
         <WarningModal
-          confirmText={t('Update app')}
+          confirmText={t('forceUpgrade.action.confirm')}
           hideHandlebar={upgradeStatus === UpgradeStatus.Required}
           isDismissible={upgradeStatus !== UpgradeStatus.Required}
           modalName={ModalName.ForceUpgradeModal}
           severity={WarningSeverity.High}
-          title={t('Update the app to continue')}
+          title={t('forceUpgrade.title')}
           onClose={onClose}
           onConfirm={onPressConfirm}>
           <Text color="$neutral2" textAlign="center" variant="body2">
-            {t(
-              'The version of Uniswap Wallet you’re using is out of date and is missing critical upgrades. If you don’t update the app or you don’t have your recovery phrase written down, you won’t be able to access your assets.'
-            )}
+            {t('forceUpgrade.description')}
           </Text>
           {mnemonicId && (
             <Text color="$accent1" variant="buttonLabel3" onPress={onPressViewRecovery}>
-              {t('View recovery phrase')}
+              {t('forceUpgrade.action.seedPhrase')}
             </Text>
           )}
         </WarningModal>
@@ -96,7 +94,7 @@ export function ForceUpgradeModal(): JSX.Element {
               <TouchableArea onPress={onDismiss}>
                 <BackButtonView size={BACK_BUTTON_SIZE} />
               </TouchableArea>
-              <Text variant="subheading1">{t('Recovery phrase')}</Text>
+              <Text variant="subheading1">{t('forceUpgrade.label.seedPhrase')}</Text>
               <Flex width={BACK_BUTTON_SIZE} />
             </Flex>
             <SeedPhraseDisplay mnemonicId={mnemonicId} onDismiss={onDismiss} />

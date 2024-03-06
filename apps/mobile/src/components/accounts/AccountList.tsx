@@ -31,7 +31,7 @@ const ViewOnlyHeader = (): JSX.Element => {
   return (
     <Flex fill px="$spacing24" py="$spacing8">
       <Text color="$neutral2" variant="subheading2">
-        {t('View only wallets')}
+        {t('account.wallet.header.viewOnly')}
       </Text>
     </Flex>
   )
@@ -42,7 +42,7 @@ const SignerHeader = (): JSX.Element => {
   return (
     <Flex fill px="$spacing24" py="$spacing8">
       <Text color="$neutral2" variant="subheading2">
-        {t('Your other wallets')}
+        {t('account.wallet.header.other')}
       </Text>
     </Flex>
   )

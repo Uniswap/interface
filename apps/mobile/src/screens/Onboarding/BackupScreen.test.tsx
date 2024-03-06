@@ -10,7 +10,8 @@ import { renderWithProviders } from 'src/test/render'
 import { render } from 'src/test/test-utils'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
-import { mockWalletPreloadedState } from 'wallet/src/test/fixtures'
+import { ACCOUNT } from 'wallet/src/test/fixtures'
+import { mockWalletPreloadedState } from 'wallet/src/test/mocks'
 
 const navigationProp = {} as CompositeNavigationProp<
   StackNavigationProp<OnboardingStackParamList, OnboardingScreens.Backup, undefined>,
@@ -40,7 +41,7 @@ describe(BackupScreen, () => {
         <BackupScreen navigation={navigationProp} route={routeProp} />
       </TamaguiProvider>,
       {
-        preloadedState: mockWalletPreloadedState,
+        preloadedState: mockWalletPreloadedState(ACCOUNT),
       }
     )
 

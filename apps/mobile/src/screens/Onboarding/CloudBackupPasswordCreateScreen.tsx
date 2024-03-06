@@ -30,8 +30,8 @@ export function CloudBackupPasswordCreateScreen({
 
   return (
     <SafeKeyboardOnboardingScreen
-      subtitle={t('You’ll need to enter this password to recover your wallet.')}
-      title={t('Create your backup password')}>
+      subtitle={t('onboarding.cloud.createPassword.description')}
+      title={t('onboarding.cloud.createPassword.title')}>
       <CloudBackupPasswordForm navigateToNextScreen={navigateToNextScreen} />
     </SafeKeyboardOnboardingScreen>
   )

@@ -2,13 +2,20 @@ import { Resolvers } from '@apollo/client'
 import { waitFor } from '@testing-library/react-native'
 import { useTokenProjects } from 'wallet/src/features/dataApi/tokenProjects'
 import { gqlTokenToCurrencyInfo } from 'wallet/src/features/dataApi/utils'
-import { SearchTokens } from 'wallet/src/test/gqlFixtures'
-import { renderHook } from 'wallet/src/test/test-utils'
+import { token, tokenProject } from 'wallet/src/test/fixtures'
+import { createArray, renderHook } from 'wallet/src/test/test-utils'
 import { useSearchTokens } from './searchTokens'
+
+const searchTokens = createArray(5, () =>
+  token({
+    // There is no isSpam field in the query document, so we remove it from the token object
+    project: tokenProject({ isSpam: null }),
+  })
+)
 
 const resolvers: Resolvers = {
   Query: {
-    searchTokens: () => SearchTokens,
+    searchTokens: () => searchTokens,
   },
 }
 
@@ -34,17 +41,7 @@ describe(useTokenProjects, () => {
     })
 
     await waitFor(() => {
-      expect(result.current.data).toEqual([
-        gqlTokenToCurrencyInfo(SearchTokens[0]!),
-        gqlTokenToCurrencyInfo(SearchTokens[1]!),
-        gqlTokenToCurrencyInfo(SearchTokens[2]!),
-        gqlTokenToCurrencyInfo(SearchTokens[3]!),
-        gqlTokenToCurrencyInfo(SearchTokens[4]!),
-        gqlTokenToCurrencyInfo(SearchTokens[5]!),
-        gqlTokenToCurrencyInfo(SearchTokens[6]!),
-        gqlTokenToCurrencyInfo(SearchTokens[7]!),
-        gqlTokenToCurrencyInfo(SearchTokens[8]!),
-      ])
+      expect(result.current.data).toEqual(searchTokens.map(gqlTokenToCurrencyInfo))
     })
   })
 })

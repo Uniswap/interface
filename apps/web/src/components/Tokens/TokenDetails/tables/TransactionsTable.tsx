@@ -80,11 +80,12 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: ChainI
           amount: parseFloat(transaction.token1Quantity),
           token: transaction.token1,
         }
+        const token0IsBeingSold = parseFloat(transaction.token0Quantity) < 0
         return {
           hash: transaction.hash,
           timestamp: transaction.timestamp,
-          input: swapLeg0,
-          output: swapLeg1,
+          input: token0IsBeingSold ? swapLeg0 : swapLeg1,
+          output: token0IsBeingSold ? swapLeg1 : swapLeg0,
           usdValue: transaction.usdValue.value,
           makerAddress: transaction.account,
         }
@@ -100,7 +101,7 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: ChainI
       columnHelper.accessor((row) => row, {
         id: 'timestamp',
         header: () => (
-          <Cell minWidth={164} justifyContent="flex-start" grow>
+          <Cell minWidth={120} justifyContent="flex-start" grow>
             <Row gap="xs">
               {sortState.sortBy === Swap_OrderBy.Timestamp && <HeaderArrow direction={sortState.sortDirection} />}
               <HeaderSortText $active={sortState.sortBy === Swap_OrderBy.Timestamp}>
@@ -110,7 +111,7 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: ChainI
           </Cell>
         ),
         cell: (row) => (
-          <Cell loading={showLoadingSkeleton} minWidth={164} justifyContent="flex-start" grow>
+          <Cell loading={showLoadingSkeleton} minWidth={120} justifyContent="flex-start" grow>
             <TimestampCell
               timestamp={Number(row.getValue?.().timestamp)}
               link={getExplorerLink(chainId, row.getValue?.().hash, ExplorerDataType.TRANSACTION)}
@@ -222,16 +223,16 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: ChainI
       columnHelper.accessor((row) => row.makerAddress, {
         id: 'maker-address',
         header: () => (
-          <Cell minWidth={100} justifyContent="flex-end">
+          <Cell minWidth={150} justifyContent="flex-end">
             <ThemedText.BodySecondary>
               <Trans>Wallet</Trans>
             </ThemedText.BodySecondary>
           </Cell>
         ),
         cell: (makerAddress) => (
-          <Cell loading={showLoadingSkeleton} minWidth={100} justifyContent="flex-end">
+          <Cell loading={showLoadingSkeleton} minWidth={150} justifyContent="flex-end">
             <StyledExternalLink href={getExplorerLink(chainId, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}>
-              {shortenAddress(makerAddress.getValue?.(), 0)}
+              {shortenAddress(makerAddress.getValue?.())}
             </StyledExternalLink>
           </Cell>
         ),

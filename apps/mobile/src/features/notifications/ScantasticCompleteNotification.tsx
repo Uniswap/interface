@@ -29,8 +29,8 @@ export function ScantasticCompleteNotification({
           </Flex>
         </Flex>
       }
-      subtitle={t('Continue on Uniswap Extension')}
-      title={t('Success')}
+      subtitle={t('notifications.scantastic.subtitle')}
+      title={t('notifications.scantastic.title')}
     />
   )
 }

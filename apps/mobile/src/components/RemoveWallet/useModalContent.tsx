@@ -9,7 +9,7 @@ import WalletIcon from 'ui/src/assets/icons/wallet-filled.svg'
 import { ThemeNames } from 'ui/src/theme'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { isAndroid } from 'wallet/src/utils/platform'
+import { getCloudProviderName } from 'wallet/src/utils/platform'
 
 export enum RemoveWalletStep {
   Warning = 'warning',
@@ -49,21 +49,19 @@ export const useModalContent = ({
     if (isRemovingRecoveryPhrase && !isReplacing && currentStep === RemoveWalletStep.Warning) {
       return {
         title: (
-          <Trans t={t}>
-            <Text color="$neutral1" variant="body1">
-              You’re removing{' '}
+          <Text color="$neutral1" variant="body1">
+            <Trans i18nKey="account.seedPhrase.remove.initial.title">
+              You’re removing
               <Text color="$statusCritical" variant="body1">
-                {{ wallet: displayName?.name }}
+                {{ walletName: displayName?.name }}
               </Text>
-            </Text>
-          </Trans>
+            </Trans>
+          </Text>
         ),
-        description: t(
-          'This will remove your wallet from this device along with your recovery phrase.'
-        ),
+        description: t('account.seedPhrase.remove.initial.description'),
         Icon: TrashIcon,
         iconColorLabel: 'statusCritical',
-        actionButtonLabel: t('Continue'),
+        actionButtonLabel: t('common.button.continue'),
         actionButtonTheme: 'detrimental',
       }
     }
@@ -71,13 +69,11 @@ export const useModalContent = ({
     // 1st speed bump when replacing recovery phrase
     if (isRemovingRecoveryPhrase && isReplacing && currentStep === RemoveWalletStep.Warning) {
       return {
-        title: t('Import a new wallet'),
-        description: t(
-          'You can only store one recovery phrase at a time. To continue importing a new one, you’ll need to remove your current recovery phrase and any associated wallets from this device.'
-        ),
+        title: t('account.wallet.button.import'),
+        description: t('account.seedPhrase.remove.import.description'),
         Icon: WalletIcon,
         iconColorLabel: 'neutral2',
-        actionButtonLabel: t('Continue'),
+        actionButtonLabel: t('common.button.continue'),
         actionButtonTheme: 'secondary',
       }
     }
@@ -86,25 +82,19 @@ export const useModalContent = ({
     if (isRemovingRecoveryPhrase && currentStep === RemoveWalletStep.Final) {
       return {
         title: (
-          <Trans t={t}>
-            <Text color="$neutral1" variant="body1">
-              You’re removing your{' '}
+          <Text color="$neutral1" variant="body1">
+            <Trans i18nKey="account.seedPhrase.remove.final.title">
+              You’re removing your
               <Text color="$neutral1" variant="body1">
                 recovery phrase
               </Text>
-            </Text>
-          </Trans>
+            </Trans>
+          </Text>
         ),
-        description: isAndroid ? (
-          <Trans t={t}>
-            Make sure you’ve written down your recovery phrase or backed it up on Google Drive.{' '}
-            <Text color="$statusCritical" maxFontSizeMultiplier={1.4} variant="body3">
-              You will not be able to access your funds otherwise.
-            </Text>
-          </Trans>
-        ) : (
-          <Trans t={t}>
-            Make sure you’ve written down your recovery phrase or backed it up on iCloud.{' '}
+        description: (
+          <Trans i18nKey="account.seedPhrase.remove.final.description">
+            Make sure you’ve written down your recovery phrase or backed it up on
+            {{ cloudProviderName: getCloudProviderName() }}.
             <Text color="$statusCritical" maxFontSizeMultiplier={1.4} variant="body3">
               You will not be able to access your funds otherwise.
             </Text>
@@ -119,34 +109,32 @@ export const useModalContent = ({
     if (account?.type === AccountType.SignerMnemonic && currentStep === RemoveWalletStep.Final) {
       const associatedAccountNames = concatListOfAccountNames(
         associatedAccounts.filter((aa) => aa.address !== account?.address),
-        t('and')
+        ', '
       )
 
       return {
         title: (
-          <Trans t={t}>
-            <Text color="$neutral1" variant="body1">
-              You’re removing{' '}
+          <Text color="$neutral1" variant="body1">
+            <Trans i18nKey="account.seedPhrase.remove.initial.title">
+              You’re removing
               <Text color="$statusCritical" variant="body1">
-                {{ wallet: displayName?.name }}
+                {{ walletName: displayName?.name }}
               </Text>
-            </Text>
-          </Trans>
-        ),
-        description: (
-          <Text color="$neutral2" variant="body3">
-            <Trans t={t}>
-              It shares the same recovery phrase as{' '}
-              <Text color="$neutral1" variant="body3">
-                {{ wallets: associatedAccountNames }}
-              </Text>
-              . Your recovery phrase will remain stored until you delete all remaining wallets.
             </Trans>
           </Text>
         ),
+        description: (
+          <Trans i18nKey="account.seedPhrase.remove.mnemonic.description">
+            It shares the same recovery phrase as
+            <Text color="$neutral1" variant="body3">
+              {{ walletNames: associatedAccountNames }}
+            </Text>
+            . Your recovery phrase will remain stored until you delete all remaining wallets.
+          </Trans>
+        ),
         Icon: TrashIcon,
         iconColorLabel: 'statusCritical',
-        actionButtonLabel: t('Remove'),
+        actionButtonLabel: t('common.button.remove'),
         actionButtonTheme: 'detrimental',
       }
     }
@@ -155,21 +143,19 @@ export const useModalContent = ({
     if (account?.type === AccountType.Readonly && currentStep === RemoveWalletStep.Final) {
       return {
         title: (
-          <Trans t={t}>
-            <Text color="$neutral1" variant="body1">
-              You’re removing{' '}
+          <Text color="$neutral1" variant="body1">
+            <Trans i18nKey="account.seedPhrase.remove.initial.title">
+              You’re removing
               <Text color="$neutral2" variant="body1">
-                {{ wallet: displayName?.name }}
+                {{ walletName: displayName?.name }}
               </Text>
-            </Text>
-          </Trans>
+            </Trans>
+          </Text>
         ),
-        description: t(
-          'You can always add back view-only wallets by entering the wallet’s address.'
-        ),
+        description: t('account.wallet.remove.viewOnly'),
         Icon: TrashIcon,
         iconColorLabel: 'neutral2',
-        actionButtonLabel: t('Remove'),
+        actionButtonLabel: t('common.button.remove'),
         actionButtonTheme: 'secondary',
       }
     }

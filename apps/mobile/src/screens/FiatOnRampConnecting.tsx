@@ -62,7 +62,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     dispatch(
       pushNotification({
         type: AppNotificationType.Error,
-        errorMessage: t('Something went wrong.'),
+        errorMessage: t('common.error.general'),
       })
     )
     navigation.goBack()

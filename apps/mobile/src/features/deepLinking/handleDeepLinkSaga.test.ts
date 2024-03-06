@@ -19,12 +19,14 @@ import { UNISWAP_APP_HOSTNAME } from 'wallet/src/constants/urls'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { ModalName } from 'wallet/src/telemetry/constants'
 import {
-  account,
   SAMPLE_CURRENCY_ID_1,
   SAMPLE_CURRENCY_ID_2,
   SAMPLE_SEED_ADDRESS_1,
   SAMPLE_SEED_ADDRESS_2,
+  signerMnemonicAccount,
 } from 'wallet/src/test/fixtures'
+
+const account = signerMnemonicAccount()
 
 const swapUrl = `https://uniswap.org/app?screen=swap&userAddress=${account.address}&inputCurrencyId=${SAMPLE_CURRENCY_ID_1}&outputCurrencyId=${SAMPLE_CURRENCY_ID_2}&currencyField=INPUT`
 const transactionUrl = `https://uniswap.org/app?screen=transaction&userAddress=${account.address}`

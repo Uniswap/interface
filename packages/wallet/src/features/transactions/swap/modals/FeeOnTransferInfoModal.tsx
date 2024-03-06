@@ -13,10 +13,8 @@ export function FeeOnTransferInfoModal({ onClose }: { onClose: () => void }): JS
   return (
     <WarningModal
       backgroundIconColor={colors.DEP_magentaDark.val}
-      caption={t(
-        'Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any share of these fees.'
-      )}
-      closeText={t('Close')}
+      caption={t('swap.warning.feeOnTransfer.message')}
+      closeText={t('common.button.close')}
       icon={
         <Icons.MoneyBillSend
           color="$magentaVibrant"
@@ -26,7 +24,7 @@ export function FeeOnTransferInfoModal({ onClose }: { onClose: () => void }): JS
         />
       }
       modalName={ModalName.FOTInfo}
-      title={t('Why is there an additional fee?')}
+      title={t('swap.warning.feeOnTransfer.title')}
       onClose={onClose}>
       <LearnMoreLink url={uniswapUrls.helpArticleUrls.feeOnTransferHelp} />
     </WarningModal>

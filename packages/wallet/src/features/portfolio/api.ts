@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import ERC20_ABI from 'wallet/src/abis/erc20.json'
+import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useRestQuery } from 'wallet/src/data/rest'
 import { getPollingIntervalByBlocktime } from 'wallet/src/features/chains/utils'

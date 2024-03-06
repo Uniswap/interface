@@ -79,7 +79,7 @@ export function SwapFormHeader(): JSX.Element {
         )}
 
         <Text $sm={{ variant: 'subheading1' }} $xs={{ variant: 'subheading2' }}>
-          {t('Swap')}
+          {t('swap.form.header')}
         </Text>
 
         <Flex row gap="$spacing4">
@@ -98,7 +98,7 @@ export function SwapFormHeader(): JSX.Element {
                   width={iconSizes.icon16}
                 />
                 <Text color="$neutral2" variant="buttonLabel3">
-                  {t('View-only')}
+                  {t('swap.header.viewOnly')}
                 </Text>
               </Flex>
             </TouchableArea>
@@ -119,7 +119,7 @@ export function SwapFormHeader(): JSX.Element {
                 py="$spacing4">
                 {customSlippageTolerance ? (
                   <Text color="$neutral2" variant="buttonLabel4">
-                    {t('{{slippageTolerancePercent}} slippage', {
+                    {t('swap.form.slippage', {
                       slippageTolerancePercent: formatPercent(customSlippageTolerance),
                     })}
                   </Text>
@@ -151,12 +151,12 @@ const ViewOnlyModal = ({ onDismiss }: { onDismiss: () => void }): JSX.Element =>
   const { t } = useTranslation()
   return (
     <WarningModal
-      caption={t('You need to import this wallet via recovery phrase to swap tokens.')}
-      confirmText={t('Dismiss')}
+      caption={t('swap.warning.viewOnly.message')}
+      confirmText={t('common.button.dismiss')}
       icon={<Icons.Eye color="$neutral2" size={iconSizes.icon24} />}
       modalName={ModalName.SwapWarning}
       severity={WarningSeverity.Low}
-      title={t('This wallet is view-only')}
+      title={t('account.wallet.viewOnly.title')}
       onClose={onDismiss}
       onConfirm={onDismiss}
     />

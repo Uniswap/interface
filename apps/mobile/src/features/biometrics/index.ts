@@ -47,8 +47,8 @@ export async function tryLocalAuthenticate(): Promise<BiometricAuthenticationSta
      */
     const enrolled = await isEnrolledAsync()
     const result = await authenticateAsync({
-      cancelLabel: i18n.t('Cancel'),
-      promptMessage: i18n.t('Please authenticate'),
+      cancelLabel: i18n.t('common.button.cancel'),
+      promptMessage: i18n.t('settings.setting.biometrics.auth'),
       requireConfirmation: false,
     })
 

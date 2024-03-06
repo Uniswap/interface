@@ -39,6 +39,7 @@ export const uniswapUrls = {
   interfaceUrl: `https://${UNISWAP_APP_HOSTNAME}/#/swap`,
   extensionFeedbackFormUrl: 'https://forms.gle/RGFhKnABUjdPiYQH6', // TODO(EXT-668): Remove this after F&F launch
   interfaceTokensUrl: `https://${UNISWAP_APP_HOSTNAME}/explore/tokens`,
+  interfaceNftItemUrl: `https://${UNISWAP_APP_HOSTNAME}/nfts/asset`,
   unitagsApiUrl: getUnitagsApiUrl(),
   tradingApiPaths: {
     quote: getTradingApiQuotePath(),

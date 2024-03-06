@@ -108,7 +108,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
             maxFontSizeMultiplier={media.short ? 1.1 : fonts.heading3.maxFontSizeMultiplier}
             textAlign="center"
             variant="heading3">
-            {t('Welcome to your new wallet')}
+            {t('onboarding.wallet.title')}
           </Text>
           <Text
             $short={{ variant: 'subheading2' }}
@@ -116,9 +116,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
             maxFontSizeMultiplier={media.short ? 1.1 : fonts.body1.maxFontSizeMultiplier}
             textAlign="center"
             variant="subheading2">
-            {t(
-              'This is your personal space for tokens, NFTs, and all of your trades. Finish setting it up to keep your funds safe.'
-            )}
+            {t('onboarding.wallet.description.full')}
           </Text>
         </Flex>
       </Flex>
@@ -138,7 +136,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
                   />
                 </Flex>
                 <Text color="$sporeWhite" variant="buttonLabel2">
-                  {t('Let’s keep it safe')}
+                  {t('onboarding.wallet.continue')}
                 </Text>
               </Flex>
               <Arrow color={colors.sporeWhite.val} direction="e" size={iconSizes.icon24} />

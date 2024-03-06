@@ -8,13 +8,11 @@ export function BlockedAddressModal({ onClose }: { onClose: () => void }): JSX.E
 
   return (
     <WarningModal
-      caption={t(
-        'This address is blocked on Uniswap Wallet because it is associated with one or more blocked activities. If you believe this is an error, please email compliance@uniswap.org.'
-      )}
-      closeText={t('I understand')}
+      caption={t('send.warning.blocked.modal.message')}
+      closeText={t('common.button.understand')}
       modalName={ModalName.BlockedAddress}
       severity={WarningSeverity.None}
-      title={t('Blocked address')}
+      title={t('send.warning.blocked.modal.title')}
       onClose={onClose}
     />
   )

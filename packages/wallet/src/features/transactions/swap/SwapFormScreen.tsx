@@ -505,7 +505,7 @@ function SwapFormContent(): JSX.Element {
                         size="$icon.20"
                       />
                       <Text color="$DEP_accentWarning" variant="subheading2">
-                        {t('Restore your wallet to swap')}
+                        {t('swap.form.warning.restore')}
                       </Text>
                     </Flex>
                   </TouchableArea>

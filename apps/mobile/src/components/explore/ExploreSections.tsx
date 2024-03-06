@@ -142,8 +142,8 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
     return (
       <Flex height="100%" pb="$spacing60">
         <BaseCard.ErrorState
-          retryButtonLabel={t('Retry')}
-          title={t('Couldn’t load tokens')}
+          retryButtonLabel={t('common.button.retry')}
+          title={t('explore.tokens.error')}
           onRetry={onRetry}
         />
       </Flex>
@@ -188,7 +188,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
               mt="$spacing16"
               pl="$spacing4">
               <Text color="$neutral2" flexShrink={0} paddingEnd="$spacing8" variant="subheading2">
-                {t('Top tokens')}
+                {t('explore.tokens.top.title')}
               </Text>
               <Flex flexShrink={1}>
                 <SortButton orderBy={orderBy} />

@@ -75,22 +75,22 @@ export function _RecipientSelect({
         mt="$spacing16"
         px="$spacing24">
         <Flex row>
-          <Text variant="subheading1">{t('Send')}</Text>
+          <Text variant="subheading1">{t('qrScanner.recipient.label.send')}</Text>
         </Flex>
         <SearchBar
           autoFocus
           backgroundColor="$surface2"
           endAdornment={<QRScannerIconButton onPress={onPressQRScanner} />}
-          placeholder={t('Search ENS or address')}
+          placeholder={t('qrScanner.recipient.input.placeholder')}
           value={pattern ?? ''}
           onBack={recipient ? onToggleShowRecipientSelector : undefined}
           onChangeText={onChangePattern}
         />
         {noResults ? (
           <Flex centered gap="$spacing12" mt="$spacing24" px="$spacing24">
-            <Text variant="buttonLabel2">{t('No results found')}</Text>
+            <Text variant="buttonLabel2">{t('qrScanner.recipient.results.empty')}</Text>
             <Text color="$neutral3" textAlign="center" variant="body1">
-              {t('The address you typed either does not exist or is spelled incorrectly.')}
+              {t('qrScanner.recipient.results.error')}
             </Text>
           </Flex>
         ) : (

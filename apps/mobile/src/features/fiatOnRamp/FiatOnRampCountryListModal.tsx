@@ -97,11 +97,11 @@ function CountrySelectorContent({
   return (
     <Flex grow gap="$spacing16" px="$spacing16">
       <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">
-        {t('Select your region')}
+        {t('fiatOnRamp.region.title')}
       </Text>
       <SearchTextInput
         backgroundColor="$surface2"
-        placeholder={t('Search by country or region')}
+        placeholder={t('fiatOnRamp.region.placeholder')}
         py="$spacing8"
         value={searchText}
         onChangeText={setSearchText}
