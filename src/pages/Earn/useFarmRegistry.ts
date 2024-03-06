@@ -73,10 +73,10 @@ export const useFarmRegistry = () => {
   const client = useApolloClient()
   const [farmSummaries, setFarmSummaries] = React.useState<FarmSummary[]>([])
   const olderFarmInfoEvents = useMemo(() => {
-    return cachedFarmInfoEvents.map((e) => e.returnValues)
+    return cachedFarmInfoEvents.map((e) => e.args)
   }, [])
   const olderLpInfoEvents = useMemo(() => {
-    return cachedLpInfoEvents.map((e) => e.returnValues)
+    return cachedLpInfoEvents.map((e) => e.args)
   }, [])
 
   const call = React.useCallback(async () => {
@@ -85,6 +85,7 @@ export const useFarmRegistry = () => {
     const farmInfoFilter = farmRegistryContract.filters.FarmInfo()
     const lpInfoFilter = farmRegistryContract.filters.LPInfo()
     const farmDataFilter = farmRegistryContract.filters.FarmData()
+
     const [farmInfoEvents, lpInfoEvents, farmDataEvents] = await Promise.all([
       fetchEvents<FarmInfoEvent>(farmRegistryContract, farmInfoFilter, CACHED_FARM_INFO_BLOCK, 'latest').then(
         (events) => {
@@ -97,7 +98,11 @@ export const useFarmRegistry = () => {
         return olderLpInfoEvents.concat(onlyArgs)
       }),
       fetchEvents<FarmDataEvent>(farmRegistryContract, farmDataFilter, -LAST_N_BLOCKS, 'latest').then((events) =>
-        events.map((e) => e.args)
+        events.map((e) => ({
+          rewardsUSDPerYear: e.args.rewardsUSDPerYear,
+          stakingAddress: e.args.stakingAddress.toLowerCase(),
+          tvlUSD: e.args.tvlUSD,
+        }))
       ),
     ])
 

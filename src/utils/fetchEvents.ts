@@ -15,6 +15,15 @@ async function eventFetcher<T>(
 ): Promise<T[]> {
   const chainId = (contract.provider as any)._network.chainId
 
+  const currentBlock = await contract.provider.getBlockNumber()
+  const startBlock = typeof fromBlockOrBlockhash == 'number' ? fromBlockOrBlockhash : 0
+  const endBlock = toBlock == 'latest' ? currentBlock : typeof toBlock == 'number' ? toBlock : currentBlock
+  console.log({ startBlock, endBlock })
+  if (startBlock >= 0 && endBlock - startBlock > 10_000) {
+    // block range too wide
+    return []
+  }
+
   const promises = [contract.queryFilter(filter, fromBlockOrBlockhash, toBlock)]
 
   const alternativeRpc = EVENT_FETCH_RPC_URLS[chainId as ChainId]
