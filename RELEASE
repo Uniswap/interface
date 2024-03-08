@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmTFgNJaQqAaTCCyb3Zvz9jyLpQfB9Xh25WcvebZz6G1Pd`
-- CIDv1: `bafybeicjart6xnqnhn2wxxtaygvl327ad3dtufggocex2pczejucjiwhna`
+- CIDv0: `QmPfhCQw4e63hhx4FqWnroACYRcyZHw6f5Nvo6DXHwkEGr`
+- CIDv1: `bafybeiatxsersz6wkzf75lzpkhxoglubrcqv7uqy6nubdvvjyanidm4vam`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeicjart6xnqnhn2wxxtaygvl327ad3dtufggocex2pczejucjiwhna.ipfs.dweb.link/
-- https://bafybeicjart6xnqnhn2wxxtaygvl327ad3dtufggocex2pczejucjiwhna.ipfs.cf-ipfs.com/
-- [ipfs://QmTFgNJaQqAaTCCyb3Zvz9jyLpQfB9Xh25WcvebZz6G1Pd/](ipfs://QmTFgNJaQqAaTCCyb3Zvz9jyLpQfB9Xh25WcvebZz6G1Pd/)
+- https://bafybeiatxsersz6wkzf75lzpkhxoglubrcqv7uqy6nubdvvjyanidm4vam.ipfs.dweb.link/
+- https://bafybeiatxsersz6wkzf75lzpkhxoglubrcqv7uqy6nubdvvjyanidm4vam.ipfs.cf-ipfs.com/
+- [ipfs://QmPfhCQw4e63hhx4FqWnroACYRcyZHw6f5Nvo6DXHwkEGr/](ipfs://QmPfhCQw4e63hhx4FqWnroACYRcyZHw6f5Nvo6DXHwkEGr/)
 
-### 5.17.1 (2024-03-07)
+### 5.17.2 (2024-03-08)
 
 
 ### Bug Fixes
 
-* **web:** [info] Update PDP TX Table on token order switch (#6772) (#6775) 685bb6d
+* **web:** [hotfix] fiatCurrency is undefined (#6811) (#6814) a78d4cc
 
 

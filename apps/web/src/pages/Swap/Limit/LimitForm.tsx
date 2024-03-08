@@ -18,7 +18,7 @@ import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceIn
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
-import { isSupportedChain } from 'constants/chains'
+import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { STABLECOIN_AMOUNT_OUT } from 'hooks/useStablecoinPrice'
@@ -187,18 +187,20 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   )
 
   useEffect(() => {
-    if (!outputCurrency && chainId) {
-      onSelectCurrency('outputCurrency', STABLECOIN_AMOUNT_OUT[chainId].currency)
+    const supportedChainId = asSupportedChain(chainId)
+    if (!outputCurrency && supportedChainId) {
+      onSelectCurrency('outputCurrency', STABLECOIN_AMOUNT_OUT[supportedChainId].currency)
     }
   }, [chainId, onSelectCurrency, outputCurrency])
 
   useEffect(() => {
-    if (chainId && inputCurrency && outputCurrency && (inputCurrency.isNative || outputCurrency.isNative)) {
+    const supportedChainId = asSupportedChain(chainId)
+    if (supportedChainId && inputCurrency && outputCurrency && (inputCurrency.isNative || outputCurrency.isNative)) {
       const [nativeCurrency, nonNativeCurrency] = inputCurrency.isNative
         ? [inputCurrency, outputCurrency]
         : [outputCurrency, inputCurrency]
       if (nativeCurrency.wrapped.equals(nonNativeCurrency)) {
-        onSelectCurrency('outputCurrency', STABLECOIN_AMOUNT_OUT[chainId].currency)
+        onSelectCurrency('outputCurrency', STABLECOIN_AMOUNT_OUT[supportedChainId].currency)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
