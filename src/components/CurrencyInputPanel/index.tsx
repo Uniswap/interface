@@ -9,6 +9,7 @@ import { Fragment, ReactNode, useCallback, useEffect, useState } from 'react'
 import { Lock, Minus, Plus } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components/macro'
+import { CommonQuantity } from 'types/main'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
@@ -191,6 +192,20 @@ const ActionLabel = styled(Text)`
   padding: 10px 16px 0;
 `
 
+const StyledCommonQuantityButton = styled(ButtonGray)`
+  font-size: 14px;
+  cursor: pointer;
+  width: 25%;
+  border-radius: 8px;
+  background-color: ${({ theme }) => theme.bg1};
+  padding: 4px;
+  text-align: center;
+  :focus,
+  :hover {
+    background-color: ${({ theme }) => theme.bg2};
+  }
+`
+
 interface CurrencyInputPanelProps {
   currencySearchTitle?: string
   value: string
@@ -199,9 +214,8 @@ interface CurrencyInputPanelProps {
   decrementDisabled?: boolean
   incrementDisabled?: boolean
   onUserInput: (value: string) => void
-  onMax?: () => void
-  onHalf?: () => void
-  showMaxButton: boolean
+  onCommonQuantity?: (commonQuantity: CommonQuantity) => void
+  showCommonQuantityButtons: boolean
   label?: ReactNode
   onCurrencySelect?: (currency: Currency) => void
   currency?: Currency | null
@@ -229,9 +243,8 @@ export default function CurrencyInputPanel({
   currencySearchTitle = 'Select a token',
   value,
   onUserInput,
-  onMax,
-  onHalf,
-  showMaxButton,
+  onCommonQuantity,
+  showCommonQuantityButtons,
   onCurrencySelect,
   currency,
   otherCurrency,
@@ -307,10 +320,10 @@ export default function CurrencyInputPanel({
             <ActionLabel style={{ width: '50%' }}>
               <Trans>{actionLabel}</Trans>
             </ActionLabel>
-            {actionLabel === 'You sell' && selectedCurrencyBalance && (
+            {showCommonQuantityButtons && selectedCurrencyBalance && onCommonQuantity && (
               <ActionLabel
                 style={{
-                  width: '50%',
+                  width: '100%',
                   justifyContent: 'end',
                   display: 'flex',
                   gap: '10px',
@@ -318,24 +331,18 @@ export default function CurrencyInputPanel({
                 }}
               >
                 <>
-                  <TYPE.body
-                    onClick={onHalf}
-                    color={theme.text2}
-                    fontWeight={400}
-                    fontSize={14}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    1/2
-                  </TYPE.body>
-                  <TYPE.body
-                    onClick={onMax}
-                    color={theme.text2}
-                    fontWeight={400}
-                    fontSize={14}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    Max
-                  </TYPE.body>
+                  <StyledCommonQuantityButton onClick={() => onCommonQuantity('25%' as CommonQuantity)}>
+                    25%
+                  </StyledCommonQuantityButton>
+                  <StyledCommonQuantityButton onClick={() => onCommonQuantity('50%' as CommonQuantity)}>
+                    50%
+                  </StyledCommonQuantityButton>
+                  <StyledCommonQuantityButton onClick={() => onCommonQuantity('75%' as CommonQuantity)}>
+                    75%
+                  </StyledCommonQuantityButton>
+                  <StyledCommonQuantityButton onClick={() => onCommonQuantity('100%' as CommonQuantity)}>
+                    100%
+                  </StyledCommonQuantityButton>
                 </>
               </ActionLabel>
             )}
