@@ -2,7 +2,7 @@ import { TokenAmount } from '@ubeswap/sdk'
 
 export function relevantDigits(tokenAmount?: TokenAmount) {
   if (!tokenAmount || tokenAmount.equalTo('0')) {
-    return '0.0000'
+    return '0.0'
   }
 
   if (tokenAmount.lessThan('1')) {

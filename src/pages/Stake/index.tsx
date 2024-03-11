@@ -60,7 +60,7 @@ const Wrapper = styled.div({
 
 const ube = new WrappedTokenInfo(
   {
-    address: '0x00be915b9dcf56a3cbe739d9b9c202ca692409ec',
+    address: '0x71e26d0E519D14591b9dE9a0fE9513A398101490',
     name: 'Ubeswap Governance Token',
     symbol: 'UBE',
     chainId: 42220,
@@ -443,7 +443,7 @@ export const Stake: React.FC = () => {
             <ExternalLink
               style={{ textDecoration: 'underline', textAlign: 'left' }}
               target="_blank"
-              href="https://explorer.celo.org/address/0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC/transactions"
+              href="https://explorer.celo.org/address/0x71e26d0E519D14591b9dE9a0fE9513A398101490/transactions"
             >
               <Text fontSize={14} fontWeight={600}>
                 {t('ViewUBEContract')}
@@ -452,7 +452,7 @@ export const Stake: React.FC = () => {
             <ExternalLink
               style={{ textDecoration: 'underline', textAlign: 'left' }}
               target="_blank"
-              href="https://info.ubeswap.org/token/0x00be915b9dcf56a3cbe739d9b9c202ca692409ec"
+              href="https://info.ubeswap.org/token/0x71e26d0E519D14591b9dE9a0fE9513A398101490"
             >
               <Text fontSize={14} fontWeight={600}>
                 {t('ViewUBEChart')}

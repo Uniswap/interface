@@ -1,6 +1,7 @@
 import { useCelo } from '@celo/react-celo'
 import { ChainId as UbeswapChainId, TokenAmount } from '@ubeswap/sdk'
 import Loader from 'components/Loader'
+import { useToken } from 'hooks/Tokens'
 import React from 'react'
 import { X } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -51,6 +52,9 @@ export default function UbeBalanceContent({ setShowUbeBalanceModal }: { setShowU
   const ubeBalance: TokenAmount | undefined = useTokenBalance(account ?? undefined, ube)
   const ubeToClaim: TokenAmount | undefined = useTotalUbeEarned()
 
+  const oldUbeToken = useToken('0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC')
+  const oldUbeBalance = useTokenBalance(account ?? undefined, oldUbeToken ?? undefined)
+
   const totalSupply: TokenAmount | undefined = useTotalSupply(ube)
   const ubePrice = useCUSDPrice(ube)
   const circulation = useCirculatingSupply()
@@ -81,6 +85,17 @@ export default function UbeBalanceContent({ setShowUbeBalanceModal }: { setShowU
                 <RowBetween>
                   <TYPE.white color="white">{t('Balance')}:</TYPE.white>
                   <TYPE.white color="white">{ubeBalance?.toFixed(2, { groupSeparator: ',' })}</TYPE.white>
+                </RowBetween>
+                <RowBetween>
+                  <TYPE.white color="white">Old Ube Balance:</TYPE.white>
+                  <TYPE.white color="white">
+                    {oldUbeBalance?.toFixed(2, { groupSeparator: ',' })}
+                    {oldUbeBalance && oldUbeBalance.greaterThan('0') && (
+                      <StyledInternalLink onClick={() => setShowUbeBalanceModal(false)} to="/claim-new-ube">
+                        Convert
+                      </StyledInternalLink>
+                    )}
+                  </TYPE.white>
                 </RowBetween>
                 <RowBetween>
                   <TYPE.white color="white">{t('Unclaimed')}:</TYPE.white>

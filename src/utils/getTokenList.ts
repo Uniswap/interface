@@ -40,6 +40,30 @@ export default async function getTokenList(listUrl: string): Promise<TokenList> 
         }, '') ?? 'unknown error'
       throw new Error(`Token list failed validation: ${validationErrors}`)
     }
+    if (json.name == 'Ubeswap') {
+      json.tokens.splice(
+        json.tokens.findIndex(
+          (t) => t.address.toLocaleLowerCase() == '0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC'.toLocaleLowerCase()
+        ),
+        1,
+        {
+          address: '0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC',
+          name: 'Ubeswap Old',
+          symbol: 'old-UBE',
+          chainId: 42220,
+          decimals: 18,
+          logoURI: 'https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_UBE.png',
+        }
+      )
+      json.tokens.unshift({
+        address: '0x71e26d0E519D14591b9dE9a0fE9513A398101490',
+        name: 'Ubeswap',
+        symbol: 'UBE',
+        chainId: 42220,
+        decimals: 18,
+        logoURI: 'https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_UBE.png',
+      })
+    }
     return json
   }
   throw new Error('Unrecognized list URL protocol.')

@@ -5,6 +5,7 @@ import { CELO, ChainId as UbeswapChainId, TokenAmount } from '@ubeswap/sdk'
 import { CardNoise } from 'components/earn/styled'
 import Modal from 'components/Modal'
 import Hamburger from 'hamburger-react'
+import { useToken } from 'hooks/Tokens'
 import usePrevious from 'hooks/usePrevious'
 import { darken } from 'polished'
 import Drawer from 'rc-drawer'
@@ -17,7 +18,6 @@ import { useAggregateUbeBalance, useTokenBalance } from 'state/wallet/hooks'
 import styled from 'styled-components'
 import { TYPE } from 'theme'
 import { ExternalLink } from 'theme/components'
-import { CountUp } from 'use-count-up'
 import { relevantDigits } from 'utils/relevantDigits'
 
 import Icon from '../../assets/svg/icon-ube.svg'
@@ -368,6 +368,10 @@ export default function Header() {
   const countUpValue = relevantDigits(aggregateBalance)
   const countUpValuePrevious = usePrevious(countUpValue) ?? '0'
 
+  const oldUbeToken = useToken('0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC')
+  const oldUbeBalance = useTokenBalance(account ?? undefined, oldUbeToken ?? undefined)
+  const oldUbeBalanceFormatted = relevantDigits(oldUbeBalance)
+
   const [drawerVisible, setDrawerVisible] = useState<boolean>(false)
 
   const onDrawerClose = () => {
@@ -418,6 +422,9 @@ export default function Header() {
             {t('stake')}
           </StyledNavLinkExtraSmall>
           <ChartsMenuGroup />
+          <StyledNavLink id={`convert-nav-link`} to={'/claim-new-ube'}>
+            Convert UBE
+          </StyledNavLink>
         </HeaderLinks>
         <BurgerElement>
           <Hamburger size={18} hideOutline={false} label="show menu" toggled={drawerVisible} onToggle={onToggle} />
@@ -512,20 +519,27 @@ export default function Header() {
                         paddingRight: '.4rem',
                       }}
                     >
-                      <CountUp
-                        key={countUpValue}
-                        isCounting
-                        start={parseFloat(countUpValuePrevious)}
-                        end={parseFloat(countUpValue)}
-                        thousandsSeparator={','}
-                        duration={1}
-                      />
+                      {countUpValue}
                     </TYPE.white>
                   </HideSmall>
                 )}
                 UBE
               </UBEAmount>
               <CardNoise />
+              <HideSmall>
+                <UBEAmount active={!!account} style={{ pointerEvents: 'auto' }}>
+                  {account && (
+                    <TYPE.white
+                      style={{
+                        paddingRight: '.4rem',
+                      }}
+                    >
+                      {oldUbeBalanceFormatted}
+                    </TYPE.white>
+                  )}
+                  old-UBE
+                </UBEAmount>
+              </HideSmall>
             </UBEWrapper>
           )}
 
@@ -560,6 +574,8 @@ const UBEAmount = styled(AccountElement)`
 
 const UBEWrapper = styled.span`
   width: fit-content;
+  display: flex;
+  gap: 2px;
   position: relative;
   cursor: pointer;
   :hover {

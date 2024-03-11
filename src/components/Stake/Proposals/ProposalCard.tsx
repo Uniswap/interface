@@ -138,7 +138,7 @@ const SECONDS_PER_BLOCK = 5
 
 const ube = new WrappedTokenInfo(
   {
-    address: '0x00be915b9dcf56a3cbe739d9b9c202ca692409ec',
+    address: '0x71e26d0E519D14591b9dE9a0fE9513A398101490',
     name: 'Ubeswap Governance Token',
     symbol: 'UBE',
     chainId: 42220,

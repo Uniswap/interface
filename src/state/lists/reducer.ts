@@ -186,5 +186,38 @@ export default createReducer(initialState, (builder) =>
           return true
         })
       }
+
+      if (typeof state?.byUrl == 'object') {
+        Object.keys(state.byUrl).forEach((url) => {
+          const json = state.byUrl[url].current
+          if (json && json.name == 'Ubeswap') {
+            json.tokens = json.tokens.filter((t) => {
+              const addr = t.address.toLocaleLowerCase()
+              return (
+                [
+                  '0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC'.toLocaleLowerCase(),
+                  '0x71e26d0E519D14591b9dE9a0fE9513A398101490'.toLocaleLowerCase(),
+                ].includes(addr) == false
+              )
+            })
+            json.tokens.unshift({
+              address: '0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC',
+              name: 'Ubeswap Old',
+              symbol: 'old-UBE',
+              chainId: 42220,
+              decimals: 18,
+              logoURI: 'https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_UBE.png',
+            })
+            json.tokens.unshift({
+              address: '0x71e26d0E519D14591b9dE9a0fE9513A398101490',
+              name: 'Ubeswap',
+              symbol: 'UBE',
+              chainId: 42220,
+              decimals: 18,
+              logoURI: 'https://raw.githubusercontent.com/ubeswap/default-token-list/master/assets/asset_UBE.png',
+            })
+          }
+        })
+      }
     })
 )

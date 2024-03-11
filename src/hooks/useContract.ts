@@ -18,6 +18,7 @@ import POOL_MANAGER_ABI from '../constants/abis/pool-manager.json'
 import RELEASE_UBE_ABI from '../constants/abis/ReleaseUbe.json'
 import ROMULUS_DELEGATE_ABI from '../constants/abis/romulus/RomulusDelegate.json'
 import STAKING_REWARDS_ABI from '../constants/abis/StakingRewards.json'
+import UBE_CONVERT_ABI from '../constants/abis/UbeConvert.json'
 import VOTABLE_STAKING_REWARDS_ABI from '../constants/abis/VotableStakingRewards.json'
 import { MULTICALL_ABI, MULTICALL_NETWORKS } from '../constants/multicall'
 import {
@@ -31,6 +32,7 @@ import {
   PoolManager,
   RomulusDelegate,
   StakingRewards,
+  UbeConvert,
 } from '../generated'
 import { getContract } from '../utils'
 
@@ -170,4 +172,8 @@ export function usePoofTokenContract(address?: string, withSignerIfPossible?: bo
 
 export function useFarmRegistryContract(address?: string, withSignerIfPossible?: boolean): FarmRegistry | null {
   return useContract(address, FARM_REGISTRY_ABI, withSignerIfPossible) as FarmRegistry | null
+}
+
+export function useUbeConvertContract(address?: string, withSignerIfPossible?: boolean): UbeConvert | null {
+  return useContract(address, UBE_CONVERT_ABI, withSignerIfPossible) as UbeConvert | null
 }

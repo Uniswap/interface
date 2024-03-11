@@ -87,6 +87,23 @@ export function useHasPendingApproval(tokenAddress: string | undefined, spender:
   )
 }
 
+export function useHasPendingTransaction(): boolean {
+  const allTransactions = useAllTransactions()
+  return useMemo(
+    () =>
+      Object.keys(allTransactions).some((hash) => {
+        const tx = allTransactions[hash]
+        if (!tx) return false
+        if (tx.receipt) {
+          return false
+        } else {
+          return isTransactionRecent(tx)
+        }
+      }),
+    [allTransactions]
+  )
+}
+
 // watch for submissions to claim
 // return null if not done loading, return undefined if not found
 export function useUserHasSubmittedClaim(account?: string): {

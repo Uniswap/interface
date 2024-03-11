@@ -33,8 +33,12 @@ export const KNOWN_ADDRESSES: Record<
 > = {
   // Ubeswap
   // https://docs.ubeswap.org/code-and-contracts/contract-addresses
-  '0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC': {
+  '0x71e26d0E519D14591b9dE9a0fE9513A398101490': {
     name: 'UBE Token',
+    abi: ERC20Abi as unknown as Fragment[],
+  },
+  '0x00Be915B9dCf56a3CBE739D9B9c202ca692409EC': {
+    name: 'UBE Token (Old)',
     abi: ERC20Abi as unknown as Fragment[],
   },
   '0x471EcE3750Da237f93B8E339c536989b8978a438': {
