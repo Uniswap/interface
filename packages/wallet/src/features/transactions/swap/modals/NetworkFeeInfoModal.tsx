@@ -13,12 +13,14 @@ export function NetworkFeeInfoModal({ onClose }: { onClose: () => void }): JSX.E
   return (
     <WarningModal
       backgroundIconColor={colors.surface2.get()}
-      caption={t('swap.warning.networkFee.message')}
-      closeText={t('common.button.close')}
+      caption={t(
+        'This is the cost to process your transaction on the blockchain. Uniswap does not receive any share of these fees.'
+      )}
+      closeText={t('Close')}
       icon={<Icons.Gas color="$neutral2" size="$icon.24" />}
       modalName={ModalName.NetworkFeeInfo}
       severity={WarningSeverity.None}
-      title={t('swap.warning.networkFee.title')}
+      title={t('Network cost')}
       onClose={onClose}>
       <LearnMoreLink url={uniswapUrls.helpArticleUrls.networkFeeInfo} />
     </WarningModal>

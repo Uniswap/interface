@@ -96,7 +96,7 @@ function HeaderTitleElement({
           url={logo}
         />
         <Text color="$neutral2" numberOfLines={1} variant="buttonLabel4">
-          {symbol ?? t('token.error.unknown')}
+          {symbol ?? t('Unknown token')}
         </Text>
       </Flex>
     </Flex>

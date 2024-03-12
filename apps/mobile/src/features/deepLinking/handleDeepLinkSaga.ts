@@ -318,9 +318,11 @@ export function* handleWalletConnectDeepLink(wcUri: string) {
 
   if (wcUriVersion === 1) {
     Alert.alert(
-      i18n.t('walletConnect.error.unsupportedV1.title'),
-      i18n.t('walletConnect.error.unsupportedV1.message'),
-      [{ text: i18n.t('common.button.ok') }]
+      i18n.t('Invalid QR Code'),
+      i18n.t(
+        'WalletConnect v1 is no longer supported. The application you’re trying to connect to needs to upgrade to WalletConnect v2.'
+      ),
+      [{ text: i18n.t('OK') }]
     )
     return
   }
@@ -333,8 +335,8 @@ export function* handleWalletConnectDeepLink(wcUri: string) {
         tags: { file: 'handleDeepLinkSaga', function: 'handleWalletConnectDeepLink' },
       })
       Alert.alert(
-        i18n.t('walletConnect.error.general.title'),
-        i18n.t('walletConnect.error.general.message')
+        i18n.t('WalletConnect Error'),
+        i18n.t('There was an issue with WalletConnect. Please try again')
       )
     }
   }

@@ -5,9 +5,9 @@ import { ChainId } from '@uniswap/sdk-core'
 import { DutchOrder } from '@uniswap/uniswapx-sdk'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
-import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
-import { Permit2 } from 'uniswap/src/abis/types'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+import PERMIT2_ABI from 'wallet/src/abis/permit2.json'
+import { Permit2 } from 'wallet/src/abis/types'
 
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { BigNumber, ContractTransaction } from 'ethers/lib/ethers'
@@ -173,19 +173,18 @@ async function getCancelMultipleUniswapXOrdersTransaction(
   }
 }
 
-export function useCreateCancelTransactionRequest(
-  params:
-    | {
-        encodedOrders?: string[]
-        chainId: ChainId
-      }
-    | undefined
-): TransactionRequest | undefined {
+export function useCreateCancelTransactionRequest({
+  encodedOrders,
+  chainId,
+}: {
+  encodedOrders?: string[]
+  chainId: ChainId
+}): TransactionRequest | undefined {
   const permit2 = useContract<Permit2>(PERMIT2_ADDRESS, PERMIT2_ABI, true)
   const transactionFetcher = useCallback(() => {
-    if (!params || !params.encodedOrders || params.encodedOrders.filter(Boolean).length === 0 || !permit2) return
-    return getCancelMultipleUniswapXOrdersTransaction(params.encodedOrders, params.chainId, permit2)
-  }, [params, permit2])
+    if (!encodedOrders || encodedOrders.filter(Boolean).length === 0 || !permit2) return
+    return getCancelMultipleUniswapXOrdersTransaction(encodedOrders, chainId, permit2)
+  }, [encodedOrders, chainId, permit2])
 
   return useAsyncData(transactionFetcher).data
 }

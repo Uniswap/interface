@@ -234,9 +234,9 @@ export function NFTCollectionScreen({
         <Flex grow gap="$spacing16">
           <NFTCollectionHeader data={undefined} loading={true} />
           <BaseCard.ErrorState
-            description={t('common.error.general')}
-            retryButtonLabel={t('common.button.retry')}
-            title={t('tokens.nfts.collection.error.load.title')}
+            description={t('Something went wrong.')}
+            retryButtonLabel={t('Retry')}
+            title={t('Couldn’t load NFT collection')}
             onRetry={refetch}
           />
         </Flex>
@@ -272,9 +272,7 @@ export function NFTCollectionScreen({
           <List
             ref={listRef}
             ListEmptyComponent={
-              gridDataLoading ? null : (
-                <BaseCard.EmptyState description={t('tokens.nfts.empty.description')} />
-              )
+              gridDataLoading ? null : <BaseCard.EmptyState description={t('No NFTs found')} />
             }
             ListHeaderComponent={
               <NFTCollectionHeader

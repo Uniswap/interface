@@ -96,15 +96,15 @@ export function getTokenMetadataDisplayType(orderBy: TokensOrderBy): TokenMetada
 export function getTokensOrderByMenuLabel(orderBy: TokensOrderBy, t: AppTFunction): string {
   switch (orderBy) {
     case TokenSortableField.MarketCap:
-      return t('explore.tokens.sort.option.marketCap')
+      return t('Market cap')
     case TokenSortableField.Volume:
-      return t('explore.tokens.sort.option.volume')
+      return t('Uniswap volume (24H)')
     case TokenSortableField.TotalValueLocked:
-      return t('explore.tokens.sort.option.totalValueLocked')
+      return t('Uniswap TVL')
     case ClientTokensOrderBy.PriceChangePercentage24hDesc:
-      return t('explore.tokens.sort.option.priceIncrease')
+      return t('Price increase (24H)')
     case ClientTokensOrderBy.PriceChangePercentage24hAsc:
-      return t('explore.tokens.sort.option.priceDecrease')
+      return t('Price decrease (24H)')
     default:
       throw new Error('Unexpected order by value ' + orderBy)
   }
@@ -114,15 +114,15 @@ export function getTokensOrderByMenuLabel(orderBy: TokensOrderBy, t: AppTFunctio
 export function getTokensOrderBySelectedLabel(orderBy: TokensOrderBy, t: AppTFunction): string {
   switch (orderBy) {
     case TokenSortableField.MarketCap:
-      return t('explore.tokens.sort.label.marketCap')
+      return t('Market cap')
     case TokenSortableField.Volume:
-      return t('explore.tokens.sort.label.volume')
+      return t('Volume')
     case TokenSortableField.TotalValueLocked:
-      return t('explore.tokens.sort.label.totalValueLocked')
+      return t('TVL')
     case ClientTokensOrderBy.PriceChangePercentage24hDesc:
-      return t('explore.tokens.sort.label.priceIncrease')
+      return t('Price increase')
     case ClientTokensOrderBy.PriceChangePercentage24hAsc:
-      return t('explore.tokens.sort.label.priceDecrease')
+      return t('Price decrease')
     default:
       throw new Error('Unexpected order by value in option text ' + orderBy)
   }

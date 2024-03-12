@@ -171,9 +171,9 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
         isError(networkStatus, !!data) ? (
           <Flex centered grow style={errorStateStyle}>
             <BaseCard.ErrorState
-              description={t('common.error.general')}
-              retryButtonLabel={t('common.button.retry')}
-              title={t('tokens.nfts.list.error.load.title')}
+              description={t('Something went wrong.')}
+              retryButtonLabel={t('Retry')}
+              title={t('Couldn’t load NFTs')}
               onRetry={onRetry}
             />
           </Flex>
@@ -181,22 +181,18 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
           // empty view
           <Flex centered grow style={emptyStateStyle}>
             <BaseCard.EmptyState
-              buttonLabel={
-                isExternalProfile || !onPressEmptyState
-                  ? undefined
-                  : t('tokens.nfts.list.none.button')
-              }
+              buttonLabel={isExternalProfile || !onPressEmptyState ? undefined : t('Receive NFTs')}
               description={
                 isExternalProfile
-                  ? t('tokens.nfts.list.none.description.external')
-                  : t('tokens.nfts.list.none.description.default')
+                  ? t('When this wallet buys or receives NFTs, they’ll appear here.')
+                  : t('Transfer NFTs from another wallet to get started.')
               }
               icon={
                 <Flex pb="$spacing12">
                   <Icons.EmptyStatePicture color={colors.neutral3.get()} size="$icon.70" />
                 </Flex>
               }
-              title={t('tokens.nfts.list.none.title')}
+              title={t('No NFTs yet')}
               onPress={onPressEmptyState}
             />
           </Flex>

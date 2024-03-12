@@ -12,11 +12,13 @@ export function SwapProtectionInfoModal({ onClose }: { onClose: () => void }): J
   return (
     <WarningModal
       backgroundIconColor={colors.DEP_accentSuccessSoft.val}
-      caption={t('swap.settings.protection.description')}
-      closeText={t('common.button.close')}
+      caption={t(
+        'With swap protection on, your Ethereum transactions will be protected from sandwich attacks, with reduced chances of failure.'
+      )}
+      closeText={t('Close')}
       icon={<Icons.ShieldCheck color="$statusSuccess" size="$icon.24" />}
       modalName={ModalName.SwapProtection}
-      title={t('swap.settings.protection.title')}
+      title={t('Swap Protection')}
       onClose={onClose}>
       <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapProtection} />
     </WarningModal>

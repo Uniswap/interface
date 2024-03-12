@@ -39,7 +39,7 @@ export function DeleteUnitagModal({
     dispatch(
       pushNotification({
         type: AppNotificationType.Error,
-        errorMessage: t('unitags.notification.delete.error'),
+        errorMessage: t('Could not delete username. Try again later.'),
       })
     )
     onClose()
@@ -66,7 +66,7 @@ export function DeleteUnitagModal({
         dispatch(
           pushNotification({
             type: AppNotificationType.Success,
-            title: t('unitags.notification.delete.title'),
+            title: t('Username deleted'),
           })
         )
         navigation.goBack()
@@ -93,10 +93,12 @@ export function DeleteUnitagModal({
           <Icons.AlertTriangle color="$statusCritical" size="$icon.24" />
         </Flex>
         <Text textAlign="center" variant="subheading1">
-          {t('unitags.delete.confirm.title')}
+          {t('Are you sure?')}
         </Text>
         <Text color="$neutral2" textAlign="center" variant="body2">
-          {t('unitags.delete.confirm.subtitle')}
+          {t(
+            'You’re about to delete your username and customizable profile details. You will not be able to reclaim it.'
+          )}
         </Text>
         <Flex centered row gap="$spacing12" pt="$spacing24">
           <Button
@@ -110,7 +112,7 @@ export function DeleteUnitagModal({
                 <ActivityIndicator color={colors.sporeWhite.val} />
               </Flex>
             ) : (
-              t('common.button.delete')
+              t('Delete')
             )}
           </Button>
         </Flex>

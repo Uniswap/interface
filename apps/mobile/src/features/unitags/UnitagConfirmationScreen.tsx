@@ -54,10 +54,7 @@ export function UnitagConfirmationScreen({
       { element: <HeartElement />, coordinates: { x: 9, y: 7 } },
       { element: <SwapElement />, coordinates: { x: 10, y: 10 } },
       { element: <ENSElement />, coordinates: { x: 1, y: 8.5 } },
-      {
-        element: <TextElement text={t('unitags.claim.confirmation.success.short')} />,
-        coordinates: { x: 0, y: 5 },
-      },
+      { element: <TextElement text={t('got it!')} />, coordinates: { x: 0, y: 5 } },
       { element: <SendElement />, coordinates: { x: 1, y: 2 } },
       { element: <EmojiElement emoji="👍" />, coordinates: { x: 3.5, y: 2.5 } },
     ],
@@ -118,20 +115,21 @@ export function UnitagConfirmationScreen({
         </Flex>
         <Flex centered gap="$spacing16" pb="$spacing16" px="$spacing24">
           <Text color="$neutral1" textAlign="center" variant="heading3">
-            {t('unitags.claim.confirmation.success.long')}
+            {t('You got it!')}
           </Text>
           <Text color="$neutral2" textAlign="center" variant="subheading2">
-            {t('unitags.claim.confirmation.description', {
-              unitagAddress: `${unitag}${UNITAG_SUFFIX}`,
-            })}
+            {t(
+              '{{unitag}}{{unitagSuffix}} is ready to send and receive crypto. Continue to build out your wallet by customizing your web3 profile.',
+              { unitag, unitagSuffix: UNITAG_SUFFIX }
+            )}
           </Text>
         </Flex>
         <Flex gap="$spacing12">
           <Button size="medium" theme="primary" onPress={onPressDone}>
-            {t('common.button.done')}
+            {t('Done')}
           </Button>
           <Button size="medium" theme="secondary" onPress={onPressCustomize}>
-            {t('unitags.claim.confirmation.customize')}
+            {t('Customize profile')}
           </Button>
         </Flex>
       </Flex>

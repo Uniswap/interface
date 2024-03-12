@@ -19,7 +19,7 @@ import {
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
-import { getCloudProviderName } from 'wallet/src/utils/platform'
+import { isAndroid } from 'wallet/src/utils/platform'
 
 type Props = {
   accountAddress: Address
@@ -80,13 +80,17 @@ export function CloudBackupProcessingAnimation({
       })
 
       Alert.alert(
-        t('settings.setting.backup.error.title', { cloudProviderName: getCloudProviderName() }),
-        t('settings.setting.backup.error.message.full', {
-          cloudProviderName: getCloudProviderName(),
-        }),
+        isAndroid ? t('Google Drive error') : t('iCloud error'),
+        isAndroid
+          ? t(
+              'Unable to backup recovery phrase to Google Drive. Please ensure you have Google Drive enabled with available storage space and try again.'
+            )
+          : t(
+              'Unable to backup recovery phrase to iCloud. Please ensure you have iCloud enabled with available storage space and try again.'
+            ),
         [
           {
-            text: t('common.button.ok'),
+            text: t('OK'),
             style: 'default',
             onPress: onErrorPress,
           },
@@ -114,9 +118,7 @@ export function CloudBackupProcessingAnimation({
         <ActivityIndicator size="large" />
       </Flex>
       <Text variant="heading3">
-        {t('settings.setting.backup.status.inProgress', {
-          cloudProviderName: getCloudProviderName(),
-        })}
+        {isAndroid ? t('Backing up to Google Drive...') : t('Backing up to iCloud...')}
       </Text>
     </Flex>
   ) : (
@@ -129,9 +131,7 @@ export function CloudBackupProcessingAnimation({
         size={iconSize}
       />
       <Text variant="heading3">
-        {t('settings.setting.backup.status.complete', {
-          cloudProviderName: getCloudProviderName(),
-        })}
+        {isAndroid ? t('Backed up to Google Drive') : t('Backed up to iCloud')}
       </Text>
     </Flex>
   )

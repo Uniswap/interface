@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useState } from 'react'
+import { forwardRef, useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Keyboard,
@@ -19,6 +19,7 @@ import {
   Text,
   TouchableArea,
   isWeb,
+  useComposedRefs,
   useDeviceDimensions,
 } from 'ui/src'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
@@ -68,6 +69,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       value,
     } = props
 
+    const inputRef = useRef<Input>(null)
+    const combinedRef = useComposedRefs<Input>(inputRef, ref)
     const showCancelButton = !!onCancel
     const showCloseButton = !!onClose
     const [isFocus, setIsFocus] = useState(false)
@@ -90,6 +93,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     }, [])
 
     const onClear = (): void => {
+      inputRef.current?.clear()
       onChangeText?.('')
       setShowClearButton(false)
     }
@@ -143,7 +147,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
 
           <Flex grow alignSelf="stretch" mr="$spacing8" overflow="hidden">
             <Input
-              ref={ref}
+              ref={combinedRef}
               autoCapitalize="none"
               autoCorrect={false}
               autoFocus={autoFocus}
@@ -235,7 +239,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             x={isFocus ? 0 : dimensions.fullWidth}
             onLayout={onCancelButtonLayout}>
             <TouchableArea hitSlop={16} onPress={onPressCancel}>
-              <Text variant="buttonLabel2">{t('common.button.cancel')}</Text>
+              <Text variant="buttonLabel2">{t('Cancel')}</Text>
             </TouchableArea>
           </Flex>
         )}

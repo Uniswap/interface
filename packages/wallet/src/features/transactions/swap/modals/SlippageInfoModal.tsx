@@ -1,5 +1,5 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -11,6 +11,7 @@ import { useLocalizationContext } from 'wallet/src/features/language/Localizatio
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { slippageToleranceToPercent } from 'wallet/src/features/transactions/swap/utils'
 import { ModalName } from 'wallet/src/telemetry/constants'
+import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 export type SlippageInfoModalProps = {
   trade: Trade<Currency, Currency, TradeType>
@@ -39,7 +40,7 @@ export function SlippageInfoModal({
         : trade.maximumAmountIn(slippageTolerancePercent),
     type: NumberType.TokenTx,
   })
-  const tokenSymbol =
+  const symbol =
     trade.tradeType === TradeType.EXACT_INPUT
       ? trade.outputAmount.currency.symbol
       : trade.inputAmount.currency.symbol
@@ -54,12 +55,16 @@ export function SlippageInfoModal({
           <Icons.Settings color="$neutral2" size="$icon.28" />
         </Flex>
         <Text textAlign="center" variant="body1">
-          {t('swap.settings.slippage.control.title')}
+          {t('Maximum slippage')}
         </Text>
         <Text color="$neutral2" textAlign="center" variant="body2">
           {tradeType === TradeType.EXACT_INPUT
-            ? t('swap.settings.slippage.input.message')
-            : t('swap.settings.slippage.output.message')}
+            ? t(
+                'If the price slips any further, your transaction will revert. Below is the minimum amount you are guaranteed to receive.'
+              )
+            : t(
+                'If the price slips any further, your transaction will revert. Below is the maximum amount you would need to spend.'
+              )}{' '}
         </Text>
         <Flex
           backgroundColor="$surface2"
@@ -70,7 +75,7 @@ export function SlippageInfoModal({
           width="100%">
           <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
             <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body2">
-              {t('swap.settings.slippage.control.title')}
+              {t('Max slippage')}
             </Text>
             <Flex row gap="$spacing8">
               {!isCustomSlippage ? (
@@ -80,7 +85,7 @@ export function SlippageInfoModal({
                   borderRadius="$roundedFull"
                   px="$spacing8">
                   <Text color="$accent1" variant="buttonLabel4">
-                    {t('swap.settings.slippage.control.auto')}
+                    {t('Auto')}
                   </Text>
                 </Flex>
               ) : null}
@@ -92,25 +97,12 @@ export function SlippageInfoModal({
             </Flex>
           </Flex>
           <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
-            {tradeType === TradeType.EXACT_INPUT ? (
-              <Trans i18nKey="swap.settings.slippage.input.receive.formatted">
-                <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body2">
-                  Receive at least
-                </Text>
-                <Text color="$neutral1" textAlign="center" variant="subheading2">
-                  {{ amount }} {{ tokenSymbol }}
-                </Text>
-              </Trans>
-            ) : (
-              <Trans i18nKey="swap.settings.slippage.output.spend.formatted">
-                <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body2">
-                  Spend at most
-                </Text>
-                <Text color="$neutral1" textAlign="center" variant="subheading2">
-                  {{ amount }} {{ tokenSymbol }}
-                </Text>
-              </Trans>
-            )}
+            <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body2">
+              {tradeType === TradeType.EXACT_INPUT ? t('Receive at least') : t('Spend at most')}
+            </Text>
+            <Text color="$neutral1" textAlign="center" variant="subheading2">
+              {amount + ' ' + getSymbolDisplayText(symbol)}
+            </Text>
           </Flex>
         </Flex>
         {showSlippageWarning ? (
@@ -121,14 +113,14 @@ export function SlippageInfoModal({
               width={iconSizes.icon16}
             />
             <Text color="$DEP_accentWarning" variant="body2">
-              {t('swap.settings.slippage.warning.message')}
+              {t('Slippage may be higher than necessary')}
             </Text>
           </Flex>
         ) : null}
         <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} />
         <Flex centered row gap="$spacing12" pt="$spacing12">
           <Button fill testID="slippage-info-close" theme="secondary" onPress={onClose}>
-            {t('common.button.close')}
+            {t('Close')}
           </Button>
         </Flex>
       </Flex>

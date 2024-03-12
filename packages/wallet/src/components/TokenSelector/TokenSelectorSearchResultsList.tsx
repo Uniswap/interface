@@ -26,10 +26,10 @@ function EmptyResults({ searchFilter }: { searchFilter: string }): JSX.Element {
   const { t } = useTranslation()
   return (
     <Flex>
-      <SectionHeader title={t('tokens.selector.section.search')} />
+      <SectionHeader title={t('Search results')} />
       <Text color="$neutral3" textAlign="center" variant="subheading2">
-        <Trans i18nKey="tokens.selector.search.empty">
-          No results found for <Text color="$neutral1">"{{ searchText: searchFilter }}"</Text>
+        <Trans t={t}>
+          No results found for <Text color="$neutral1">"{searchFilter}"</Text>
         </Trans>
       </Text>
     </Flex>
@@ -78,7 +78,7 @@ function useTokenSectionsForSearchResults(
   const sections = useMemo(
     () =>
       getTokenOptionsSection(
-        t('tokens.selector.section.search'),
+        t('Search results'),
         // Use local search when only searching balances
         isBalancesOnlySearch ? portfolioTokenOptions : searchResults
       ),
@@ -160,7 +160,7 @@ function _TokenSelectorSearchResultsList({
       showTokenAddress
       chainFilter={chainFilter}
       emptyElement={emptyElement}
-      errorText={t('token.selector.search.error')}
+      errorText={t('Couldn’t load search results')}
       hasError={Boolean(error)}
       loading={userIsTyping || loading}
       refetch={refetch}

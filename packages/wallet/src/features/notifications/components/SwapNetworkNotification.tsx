@@ -18,7 +18,7 @@ export function SwapNetworkNotification({
       smallToast
       hideDelay={hideDelay}
       icon={<NetworkLogo chainId={chainId} size={iconSizes.icon24} />}
-      title={t('notification.swap.network', { network })}
+      title={t('Swapping on {{ network }}', { network })}
     />
   )
 }

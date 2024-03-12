@@ -2,12 +2,12 @@ import React from 'react'
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { render, screen } from 'src/test/test-utils'
 import { Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
-import { ethToken, usdcToken, wethToken } from 'wallet/src/test/fixtures'
+import { EthToken, TopTokens } from 'wallet/src/test/gqlFixtures'
 
 const resolvers: Resolvers = {
   Query: {
-    topTokens: () => [wethToken(), usdcToken()],
-    tokens: () => [ethToken({ address: null })],
+    topTokens: () => TopTokens,
+    tokens: () => [{ ...EthToken, address: null }],
   },
 }
 

@@ -31,7 +31,7 @@ export function SettingsViewSeedPhraseScreen({
   return (
     <Screen mb="$spacing12" mt="$spacing24">
       <BackHeader alignment="center" px="$spacing16">
-        <Text variant="body1">{t('settings.setting.seedPhrase.title')}</Text>
+        <Text variant="body1">{t('Recovery phrase')}</Text>
       </BackHeader>
       <SeedPhraseDisplay
         mnemonicId={mnemonicId}

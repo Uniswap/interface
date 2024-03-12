@@ -69,7 +69,7 @@ export function LongText(props: LongTextProps): JSX.Element {
           testID="read-more-button"
           variant="buttonLabel3"
           onPress={(): void => setExpanded(!expanded)}>
-          {expanded ? t('common.longText.button.less') : t('common.longText.button.more')}
+          {expanded ? t('Read less') : t('Read more')}
         </Text>
       ) : null}
     </Flex>

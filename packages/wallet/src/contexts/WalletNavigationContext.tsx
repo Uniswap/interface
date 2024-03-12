@@ -1,23 +1,13 @@
 import { createContext, ReactNode, useContext } from 'react'
-import { NFTItem } from 'wallet/src/features/nfts/types'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 
 export type NavigateToSwapFlowArgs = { initialState: TransactionState } | undefined
-
-export type NavigateToNftItemArgs = {
-  owner?: Address
-  address: Address
-  tokenId: string
-  isSpam?: boolean
-  fallbackData?: NFTItem
-}
 
 export type WalletNavigationContextState = {
   navigateToAccountActivityList: () => void
   navigateToAccountTokenList: () => void
   // Action that should be taken when the user presses the "Buy crypto" or "Receive tokens" button when they open the Send flow with an empty wallet.
   navigateToBuyOrReceiveWithEmptyWallet: () => void
-  navigateToNftDetails: (args: NavigateToNftItemArgs) => void
   navigateToSwapFlow: (args: NavigateToSwapFlowArgs) => void
   navigateToTokenDetails: (currencyId: string) => void
 }

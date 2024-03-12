@@ -32,7 +32,7 @@ function useTokenSectionsForSend(chainFilter: ChainId | null): GqlResult<TokenSe
   const error = !portfolioTokenOptions && portfolioTokenOptionsError
 
   const sections = useMemo(
-    () => getTokenOptionsSection(t('tokens.selector.section.yours'), portfolioTokenOptions),
+    () => getTokenOptionsSection(t('Your tokens'), portfolioTokenOptions),
     [portfolioTokenOptions, t]
   )
 
@@ -59,7 +59,7 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress: () => void }): 
 
   return (
     <Flex>
-      <SectionHeader title={t('tokens.selector.section.yours')} />
+      <SectionHeader title={t('Your tokens')} />
       <Flex pt="$spacing16" px="$spacing16">
         {isLoading ? (
           <Flex centered row flexDirection="row" gap="$spacing4" mt="$spacing60" p="$spacing4">
@@ -67,17 +67,13 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress: () => void }): 
           </Flex>
         ) : (
           <BaseCard.EmptyState
-            buttonLabel={
-              fiatOnRampEligible
-                ? t('tokens.selector.empty.buy.title')
-                : t('tokens.selector.empty.receive.title')
-            }
+            buttonLabel={fiatOnRampEligible ? t('Buy crypto') : t('Receive tokens')}
             description={
               fiatOnRampEligible
-                ? t('tokens.selector.empty.buy.message')
-                : t('tokens.selector.empty.receive.message')
+                ? t('Buy crypto with a card or bank to send tokens.')
+                : t('Transfer tokens from a centralized exchange or another wallet to send tokens.')
             }
-            title={t('tokens.selector.empty.title')}
+            title={t('No tokens yet')}
             onPress={onEmptyActionPress}
           />
         )}

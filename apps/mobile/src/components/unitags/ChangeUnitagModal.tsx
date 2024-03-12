@@ -127,7 +127,7 @@ export function ChangeUnitagModal({
         dispatch(
           pushNotification({
             type: AppNotificationType.Success,
-            title: t('unitags.notification.username.title'),
+            title: t('Username changed'),
           })
         )
         navigation.goBack()
@@ -141,7 +141,7 @@ export function ChangeUnitagModal({
       dispatch(
         pushNotification({
           type: AppNotificationType.Error,
-          errorMessage: t('unitags.notification.username.error'),
+          errorMessage: t('Could not change username. Try again later.'),
         })
       )
       onClose()
@@ -209,7 +209,7 @@ export function ChangeUnitagModal({
           pt="$spacing12"
           px="$spacing24">
           <Text textAlign="center" variant="subheading1">
-            {t('unitags.editUsername.title')}
+            {t('Edit username')}
           </Text>
           <Flex
             row
@@ -249,7 +249,7 @@ export function ChangeUnitagModal({
               py="$spacing12"
               width="100%">
               <Text color="$statusCritical" variant="body3">
-                {t('unitags.editUsername.warning.max')}
+                {t('You’ve reached the maximum number of 2 usernames changes.')}
               </Text>
             </Flex>
           ) : (
@@ -260,7 +260,9 @@ export function ChangeUnitagModal({
               py="$spacing12"
               width="100%">
               <Text color="$neutral2" variant="body3">
-                {t('unitags.editUsername.warning.default')}
+                {t(
+                  'Once you change your username, you can never claim it again. You can only change it 2 times.'
+                )}
               </Text>
             </Flex>
           )}
@@ -283,7 +285,7 @@ export function ChangeUnitagModal({
                   <ActivityIndicator color={colors.sporeWhite.val} />
                 </Flex>
               ) : (
-                t('unitags.editUsername.button.confirm')
+                t('Save changes')
               )}
             </Button>
           </Flex>
@@ -314,17 +316,19 @@ function ChangeUnitagConfirmModal({
           <Icons.AlertTriangle color="$statusCritical" size="$icon.24" />
         </Flex>
         <Text textAlign="center" variant="subheading1">
-          {t('unitags.editUsername.confirm.title')}
+          {t('Are you sure?')}
         </Text>
         <Text color="$neutral2" textAlign="center" variant="body2">
-          {t('unitags.editUsername.confirm.subtitle')}
+          {t(
+            'You’re about to change your username. Once you change it, you can never claim it again.'
+          )}
         </Text>
         <Flex centered row gap="$spacing12" pt="$spacing24">
           <Button fill testID={ElementName.Remove} theme="secondary" onPress={onClose}>
-            {t('common.button.back')}
+            {t('Back')}
           </Button>
           <Button fill testID={ElementName.Remove} theme="detrimental" onPress={onChangeSubmit}>
-            {t('common.button.confirm')}
+            {t('Confirm')}
           </Button>
         </Flex>
       </Flex>

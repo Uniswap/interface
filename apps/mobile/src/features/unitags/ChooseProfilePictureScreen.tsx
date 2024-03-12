@@ -113,8 +113,10 @@ export function ChooseProfilePictureScreen({
 
   return (
     <SafeKeyboardOnboardingScreen
-      subtitle={t('unitags.onboarding.profile.subtitle')}
-      title={t('unitags.onboarding.profile.title')}>
+      subtitle={t(
+        'Upload your own or stick with your unique Unicon. You can always change this later.'
+      )}
+      title={t('Choose a profile photo')}>
       <Flex centered gap="$spacing20" mt="$spacing24">
         <Flex mt="$spacing48" onPress={avatarSelectionHandler}>
           <Flex px="$spacing4">
@@ -152,7 +154,7 @@ export function ChooseProfilePictureScreen({
             <ActivityIndicator color={colors.sporeWhite.val} />
           </Flex>
         ) : (
-          t('common.button.continue')
+          t('Continue')
         )}
       </Button>
       {showModal && (

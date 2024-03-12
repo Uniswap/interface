@@ -5,8 +5,8 @@ import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
 import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
 import { useEffect, useState } from 'react'
-import FOT_DETECTOR_ABI from 'uniswap/src/abis/fee-on-transfer-detector.json'
-import { FeeOnTransferDetector } from 'uniswap/src/abis/types'
+import FOT_DETECTOR_ABI from 'wallet/src/abis/fee-on-transfer-detector.json'
+import { FeeOnTransferDetector } from 'wallet/src/abis/types'
 
 import { useContract } from './useContract'
 

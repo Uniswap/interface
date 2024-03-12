@@ -73,14 +73,14 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
   }): JSX.Element => (
     <Flex px="$spacing12">
       {type === InitialQuoteSelection.Best ? (
-        <SectionHeader Icon={Icons.Verified} title={t('fiatOnRamp.quote.type.best')} />
+        <SectionHeader Icon={Icons.Verified} title={t('Best overall')} />
       ) : type === InitialQuoteSelection.MostRecent ? (
-        <SectionHeader Icon={Icons.TimePast} title={t('fiatOnRamp.quote.type.recent')} />
+        <SectionHeader Icon={Icons.TimePast} title={t('Recently used')} />
       ) : (
         <Flex centered row gap="$spacing12" my="$spacing12">
           <Separator />
           <Text color="$neutral3" variant="body3">
-            {t('fiatOnRamp.quote.type.other')}
+            {t('Other options')}
           </Text>
           <Separator />
         </Flex>
@@ -108,7 +108,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
           px="$spacing16">
           <BackButton />
           <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">
-            {t('fiatOnRamp.checkout.title')}
+            {t('Checkout with')}
           </Text>
           <Flex width="$spacing24" />
         </Flex>
@@ -134,7 +134,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
               element={ElementName.FiatOnRampWidgetButton}
               pressEvent={MobileEventName.FiatOnRampWidgetOpened}>
               <Button size="large" theme="primary" onPress={onContinue}>
-                {t('fiatOnRamp.checkout.button')}
+                {t('Checkout')}
               </Button>
             </Trace>
           </AnimatedFlex>

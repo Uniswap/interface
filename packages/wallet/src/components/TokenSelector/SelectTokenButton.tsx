@@ -35,7 +35,7 @@ export function SelectTokenButton({
       ) : (
         <Flex centered row px="$spacing12" py="$spacing4">
           <Text color="$sporeWhite" variant="buttonLabel2">
-            {t('tokens.selector.button.choose')}
+            {t('Choose token')}
           </Text>
         </Flex>
       )}

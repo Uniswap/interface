@@ -6,21 +6,19 @@ import {
   filterRecipientsByName,
 } from 'wallet/src/components/RecipientSearch/filter'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
-import { searchableRecipient } from 'wallet/src/test/fixtures'
+import { SearchableRecipients } from 'wallet/src/test/fixtures'
 
-const recipient1 = searchableRecipient({ name: 'Recipient 1 name', address: '0x123456' })
-const recipient2 = searchableRecipient({ name: 'Recipient 2 name', address: '0x789012' })
-
-const options: ArrayOfLength<2, AutocompleteOption<SearchableRecipient>> = [
-  {
-    data: recipient1,
-    key: recipient1.address,
-  },
-  {
-    data: recipient2,
-    key: recipient2.address,
-  },
-]
+const options: [AutocompleteOption<SearchableRecipient>, AutocompleteOption<SearchableRecipient>] =
+  [
+    {
+      data: SearchableRecipients[0],
+      key: SearchableRecipients[0].address,
+    },
+    {
+      data: SearchableRecipients[1],
+      key: SearchableRecipients[1].address,
+    },
+  ]
 
 describe(filterRecipientsByName, () => {
   it('returns empty array if searchPattern is empty', () => {
@@ -93,15 +91,24 @@ describe(filterRecipientsByAddress, () => {
 
 describe(filterRecipientByNameAndAddress, () => {
   const option1: AutocompleteOption<SearchableRecipient> = {
-    data: searchableRecipient({ name: 'Recipient123', address: '0x123' }),
+    data: {
+      address: '0x123',
+      name: 'Recipient123',
+    },
     key: '0x123',
   }
   const option2: AutocompleteOption<SearchableRecipient> = {
-    data: searchableRecipient({ name: 'Recipient2', address: '0x456' }),
+    data: {
+      address: '0x456',
+      name: 'Recipient2',
+    },
     key: '0x456',
   }
   const option3: AutocompleteOption<SearchableRecipient> = {
-    data: searchableRecipient({ name: 'Recipient0x456123', address: '0x789' }),
+    data: {
+      address: '0x789',
+      name: 'Recipient0x456123',
+    },
     key: '0x789',
   }
 

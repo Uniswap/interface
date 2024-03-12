@@ -59,7 +59,7 @@ function TransactionSummaryLayout({
 
   const inProgress = status === TransactionStatus.Cancelling || status === TransactionStatus.Pending
   const inCancelling =
-    status === TransactionStatus.Canceled || status === TransactionStatus.Cancelling
+    status === TransactionStatus.Cancelled || status === TransactionStatus.Cancelling
 
   // Monitor latest nonce to identify queued transactions.
   const lowestPendingNonce = useLowestPendingNonce()
@@ -163,7 +163,7 @@ function TransactionSummaryLayout({
                 {status === TransactionStatus.Failed && onRetry && (
                   <Flex flexShrink={0}>
                     <Text color="$accent1" variant="buttonLabel3" onPress={onRetry}>
-                      {t('common.button.retry')}
+                      {t('Retry')}
                     </Text>
                   </Flex>
                 )}

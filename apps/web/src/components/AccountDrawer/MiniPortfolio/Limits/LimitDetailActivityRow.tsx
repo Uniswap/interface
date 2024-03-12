@@ -11,7 +11,6 @@ import Column from 'components/Column'
 import Row from 'components/Row'
 import { parseUnits } from 'ethers/lib/utils'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
-import { useScreenSize } from 'hooks/useScreenSize'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { useMemo, useState } from 'react'
 import { ArrowRight } from 'react-feather'
@@ -54,7 +53,6 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
   const openOffchainActivityModal = useOpenOffchainActivityModal()
   const { formatReviewSwapCurrencyAmount } = useFormatter()
   const [hovered, setHovered] = useState(false)
-  const isSmallScreen = !useScreenSize()['sm']
 
   const amounts = useOrderAmounts(order.offchainOrderDetails)
   const amountsDefined = !!amounts?.inputAmount?.currency && !!amounts?.outputAmount?.currency
@@ -126,7 +124,7 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
         }}
       />
       <StyledCheckbox
-        $visible={hovered || selected || isSmallScreen}
+        $visible={hovered || selected}
         size={18}
         hovered={false}
         checked={selected}

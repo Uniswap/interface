@@ -74,12 +74,12 @@ export const TokenItem = memo(function _TokenItem({
   const getMetadataSubtitle = (): string | undefined => {
     switch (metadataDisplayType) {
       case TokenMetadataDisplayType.MarketCap:
-        return t('explore.tokens.metadata.marketCap', { number: marketCapFormatted })
+        return t('{{num}} MCap', { num: marketCapFormatted })
       case TokenMetadataDisplayType.Volume:
-        return t('explore.tokens.metadata.volume', { number: volume24hFormatted })
+        return t('{{num}} Vol', { num: volume24hFormatted })
       case TokenMetadataDisplayType.TVL:
-        return t('explore.tokens.metadata.totalValueLocked', {
-          number: totalValueLockedFormatted,
+        return t('{{num}} TVL', {
+          num: totalValueLockedFormatted,
         })
       case TokenMetadataDisplayType.Symbol:
         return symbol

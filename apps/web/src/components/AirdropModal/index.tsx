@@ -17,7 +17,7 @@ import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
-import uniswapNftAirdropClaim from 'uniswap/src/abis/uniswap-nft-airdrop-claim.json'
+import uniswapNftAirdropClaim from 'wallet/src/abis/uniswap-nft-airdrop-claim.json'
 
 import Modal from '../Modal'
 

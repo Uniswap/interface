@@ -7,8 +7,8 @@ import { useContractMultichain } from 'components/AccountDrawer/MiniPortfolio/Po
 import JSBI from 'jsbi'
 import { useMultipleContractSingleData } from 'lib/hooks/multicall'
 import { useEffect, useMemo, useState } from 'react'
-import { IUniswapV3PoolStateInterface } from 'uniswap/src/abis/types/v3/IUniswapV3PoolState'
-import { UniswapV3Pool } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
+import { IUniswapV3PoolStateInterface } from 'wallet/src/abis/types/v3/IUniswapV3PoolState'
+import { UniswapV3Pool } from 'wallet/src/abis/types/v3/UniswapV3Pool'
 
 const POOL_STATE_INTERFACE = new Interface(IUniswapV3PoolStateJSON.abi) as IUniswapV3PoolStateInterface
 

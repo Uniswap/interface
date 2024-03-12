@@ -77,13 +77,13 @@ export function NFTCollectionContextMenu({
       : undefined,
     homepageUrl
       ? {
-          title: t('tokens.nfts.link.collection'),
+          title: t('Collection website'),
           action: openExplorerLink,
         }
       : undefined,
     shareURL
       ? {
-          title: t('common.button.share'),
+          title: t('Share'),
           action: onSharePress,
         }
       : undefined,

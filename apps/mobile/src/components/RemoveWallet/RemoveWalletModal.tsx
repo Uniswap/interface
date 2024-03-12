@@ -189,7 +189,7 @@ export function RemoveWalletModal(): JSX.Element | null {
                 <AnimatedFlex style={animatedCancelButtonSpanStyles} />
               ) : (
                 <Button fill disabled={inProgress} theme="outline" onPress={onClose}>
-                  {t('common.button.cancel')}
+                  {t('Cancel')}
                 </Button>
               )}
               <Button

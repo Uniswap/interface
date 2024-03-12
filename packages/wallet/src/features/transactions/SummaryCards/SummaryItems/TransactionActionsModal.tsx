@@ -92,7 +92,7 @@ export default function TransactionActionsModal({
               key: inputCurrencyInfo.currencyId,
               onPress: () => onViewTokenDetails(inputCurrencyInfo.currencyId),
               render: renderOptionItem(
-                t('transaction.action.view', {
+                t('View {{ tokenSymbol }}', {
                   tokenSymbol: inputCurrencyInfo?.currency.symbol,
                 })
               ),
@@ -101,7 +101,7 @@ export default function TransactionActionsModal({
               key: outputCurrencyInfo.currencyId,
               onPress: () => onViewTokenDetails(outputCurrencyInfo.currencyId),
               render: renderOptionItem(
-                t('transaction.action.view', {
+                t('View {{ tokenSymbol }}', {
                   tokenSymbol: outputCurrencyInfo?.currency.symbol,
                 })
               ),
@@ -114,7 +114,7 @@ export default function TransactionActionsModal({
           {
             key: ElementName.MoonpayExplorerView,
             onPress: onViewMoonpay,
-            render: renderOptionItem(t('transaction.action.viewMoonPay')),
+            render: renderOptionItem(t('View on MoonPay')),
           },
         ]
       : []
@@ -127,7 +127,7 @@ export default function TransactionActionsModal({
             key: ElementName.EtherscanView,
             onPress: onExplore,
             render: renderOptionItem(
-              t('transaction.action.viewEtherscan', {
+              t('View on {{ blockExplorerName }}', {
                 blockExplorerName: chainInfo.explorer.name,
               })
             ),
@@ -156,8 +156,8 @@ export default function TransactionActionsModal({
               handleClose()
             },
             render: onViewMoonpay
-              ? renderOptionItem(t('transaction.action.copyMoonPay'))
-              : renderOptionItem(t('transaction.action.copy')),
+              ? renderOptionItem(t('Copy MoonPay transaction ID'))
+              : renderOptionItem(t('Copy transaction ID')),
           },
         ]
       : []
@@ -178,14 +178,14 @@ export default function TransactionActionsModal({
 
           handleClose()
         },
-        render: renderOptionItem(t('settings.action.help')),
+        render: renderOptionItem(t('Get help')),
       },
     ]
     if (showCancelButton) {
       transactionActionOptions.push({
         key: ElementName.Cancel,
         onPress: onCancel,
-        render: renderOptionItem(t('transaction.action.cancel.button'), '$statusCritical'),
+        render: renderOptionItem(t('Cancel transaction'), '$statusCritical'),
       })
     }
     return transactionActionOptions
@@ -213,7 +213,7 @@ export default function TransactionActionsModal({
         <ActionSheetModalContent
           header={
             <Text color="$neutral3" p="$spacing16" variant="body2">
-              {t('transaction.date', { date: dateString })}
+              {t('Submitted on') + ' ' + dateString}
             </Text>
           }
           options={options}

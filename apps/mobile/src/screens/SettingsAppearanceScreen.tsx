@@ -24,29 +24,29 @@ export function SettingsAppearanceScreen(): JSX.Element {
   return (
     <Screen>
       <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
-        <Text variant="body1">{t('settings.screen.appearance.title')}</Text>
+        <Text variant="body1">{t('Appearance')}</Text>
       </BackHeader>
       <Flex p="$spacing24">
         <AppearanceOption
           Icon={ContrastIcon}
           active={currentTheme === 'system'}
           option={AppearanceSettingType.System}
-          subtitle={t('settings.setting.appearance.option.device.subtitle')}
-          title={t('settings.setting.appearance.option.device.title')}
+          subtitle={t('Default to your device’s appearance')}
+          title={t('Device settings')}
         />
         <AppearanceOption
           Icon={SunIcon}
           active={currentTheme === 'light'}
           option={AppearanceSettingType.Light}
-          subtitle={t('settings.setting.appearance.option.light.subtitle')}
-          title={t('settings.setting.appearance.option.light.title')}
+          subtitle={t('Always use light mode')}
+          title={t('Light mode')}
         />
         <AppearanceOption
           Icon={MoonIcon}
           active={currentTheme === 'dark'}
           option={AppearanceSettingType.Dark}
-          subtitle={t('settings.setting.appearance.option.dark.subtitle')}
-          title={t('settings.setting.appearance.option.dark.title')}
+          subtitle={t('Always use dark mode')}
+          title={t('Dark mode')}
         />
       </Flex>
     </Screen>

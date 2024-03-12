@@ -107,31 +107,29 @@ export function useExploreTokenContextMenu({
   const menuActions = useMemo(
     () => [
       {
-        title: isFavorited
-          ? t('explore.tokens.favorite.action.remove')
-          : t('explore.tokens.favorite.action.add'),
+        title: isFavorited ? t('Remove favorite') : t('Favorite token'),
         systemIcon: isFavorited ? 'heart.fill' : 'heart',
         onPress: onPressToggleFavorite,
       },
       ...(onEditFavorites
         ? [
             {
-              title: t('explore.tokens.favorite.action.edit'),
+              title: t('Edit favorites'),
               systemIcon: 'square.and.pencil',
               onPress: onEditFavorites,
             },
           ]
         : []),
-      { title: t('common.button.swap'), systemIcon: 'arrow.2.squarepath', onPress: onPressSwap },
+      { title: t('Swap'), systemIcon: 'arrow.2.squarepath', onPress: onPressSwap },
       {
-        title: t('common.button.receive'),
+        title: t('Receive'),
         systemIcon: 'qrcode',
         onPress: onPressReceive,
       },
       ...(!onEditFavorites
         ? [
             {
-              title: t('common.button.share'),
+              title: t('Share'),
               systemIcon: 'square.and.arrow.up',
               onPress: onPressShare,
             },

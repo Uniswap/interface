@@ -46,11 +46,11 @@ export function getSwapWarnings(
       type: WarningLabel.InsufficientFunds,
       severity: WarningSeverity.None,
       action: WarningAction.DisableReview,
-      title: t('swap.warning.insufficientBalance.title', {
-        currencySymbol: currencyAmountIn.currency?.symbol,
+      title: t('You don’t have enough {{ symbol }}', {
+        symbol: currencyAmountIn.currency?.symbol,
       }),
       buttonText: isWeb
-        ? t('swap.warning.insufficientBalance.button', {
+        ? t('Not enough {{ currencySymbol }}', {
             currencySymbol: currencyAmountIn.currency?.symbol,
           })
         : undefined,
@@ -70,16 +70,18 @@ export function getSwapWarnings(
         type: WarningLabel.LowLiquidity,
         severity: WarningSeverity.Medium,
         action: WarningAction.DisableReview,
-        title: t('swap.warning.lowLiquidity.title'),
-        message: t('swap.warning.lowLiquidity.message'),
+        title: t('Not enough liquidity'),
+        message: t(
+          'There isn’t currently enough liquidity available between these tokens to perform a swap. Please try again later or select another token.'
+        ),
       })
     } else if (errorData?.data?.errorCode === API_RATE_LIMIT_ERROR) {
       warnings.push({
         type: WarningLabel.RateLimit,
         severity: WarningSeverity.Medium,
         action: WarningAction.DisableReview,
-        title: t('swap.warning.rateLimit.title'),
-        message: t('swap.warning.rateLimit.message'),
+        title: t('Rate limit exceeded'),
+        message: t('Please try again in a few minutes.'),
       })
     } else {
       // catch all other router errors in a generic swap router error message
@@ -87,8 +89,10 @@ export function getSwapWarnings(
         type: WarningLabel.SwapRouterError,
         severity: WarningSeverity.Medium,
         action: WarningAction.DisableReview,
-        title: t('swap.warning.router.title'),
-        message: t('swap.warning.router.message'),
+        title: t('This trade cannot be completed right now'),
+        message: t(
+          'You may have lost connection or the network may be down. If the problem persists, please try again later.'
+        ),
       })
     }
   }
@@ -110,13 +114,16 @@ export function getSwapWarnings(
       type: highImpact ? WarningLabel.PriceImpactHigh : WarningLabel.PriceImpactMedium,
       severity: highImpact ? WarningSeverity.High : WarningSeverity.Medium,
       action: WarningAction.WarnBeforeSubmit,
-      title: t('swap.warning.priceImpact.title', {
+      title: t('High price impact ({{ swapSize }})', {
         swapSize: formatPriceImpact(priceImpact),
       }),
-      message: t('swap.warning.priceImpact.message', {
-        outputCurrencySymbol: currencies[CurrencyField.INPUT]?.currency.symbol,
-        inputCurrencySymbol: currencies[CurrencyField.OUTPUT]?.currency.symbol,
-      }),
+      message: t(
+        'Due to the amount of {{ currencyOut }} liquidity currently available, the more {{ currencyIn }} you try to swap, the less {{ currencyOut }} you will receive.',
+        {
+          currencyIn: currencies[CurrencyField.INPUT]?.currency.symbol,
+          currencyOut: currencies[CurrencyField.OUTPUT]?.currency.symbol,
+        }
+      ),
     })
   }
 

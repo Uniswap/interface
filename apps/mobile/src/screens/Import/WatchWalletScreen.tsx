@@ -62,11 +62,11 @@ const getErrorText = ({
   t: TFunction
 }): string | undefined => {
   if (walletExists) {
-    return t('account.wallet.watch.error.alreadyImported')
+    return t('This address is already imported')
   } else if (isSmartContractAddress) {
-    return t('account.wallet.watch.error.smartContract')
+    return t('Address is a smart contract')
   } else if (!loading) {
-    return t('account.wallet.watch.error.notFound')
+    return t('Address not found')
   }
   return undefined
 }
@@ -165,7 +165,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   }, [value])
 
   return (
-    <SafeKeyboardOnboardingScreen title={t('account.wallet.watch.title')}>
+    <SafeKeyboardOnboardingScreen title={t('Enter a wallet address')}>
       <Flex $short={{ gap: '$none' }} gap="$spacing12">
         <GenericImportForm
           blurOnSubmit
@@ -173,7 +173,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           inputAlignment="flex-start"
           inputSuffix={isAddress || hasSuffixIncluded ? undefined : '.eth'}
           liveCheck={showLiveCheck}
-          placeholderLabel={t('account.wallet.watch.placeholder')}
+          placeholderLabel={t('ENS or address')}
           shouldUseMinHeight={false}
           textAlign="left"
           value={value}
@@ -192,12 +192,14 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           p="$spacing16">
           <Icons.GraduationCap color="$neutral2" size="$icon.20" />
           <Text color="$neutral2" flexShrink={1} variant="body3">
-            {t('account.wallet.watch.message')}
+            {t(
+              'Adding a view-only wallet allows you to try out the app or track a wallet. You will not be able to swap or send funds.'
+            )}
           </Text>
         </Flex>
       </Flex>
       <Button disabled={!isValid} testID={ElementName.Next} onPress={onSubmit}>
-        {t('common.button.continue')}
+        {t('Continue')}
       </Button>
     </SafeKeyboardOnboardingScreen>
   )

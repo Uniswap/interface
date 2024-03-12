@@ -16,9 +16,9 @@ import { ContractInput, useUniswapPricesQuery } from 'graphql/data/__generated__
 import { toContractInput } from 'graphql/data/util'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useMemo } from 'react'
-import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { getContract } from 'utilities/src/contracts/getContract'
 import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils/currencyKey'
+import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'wallet/src/abis/types/v3'
 
 import { PositionInfo } from './cache'
 

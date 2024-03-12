@@ -229,7 +229,7 @@ export function TransferTokenForm({
       {showWarningModal && transferWarning?.title && (
         <WarningModal
           caption={transferWarning.message}
-          confirmText={t('common.button.close')}
+          confirmText={t('Close')}
           icon={
             <SendWarningIcon
               color={transferWarningColor.text}
@@ -345,7 +345,7 @@ export function TransferTokenForm({
                       width={iconSizes.icon20}
                     />
                     <Text color="$DEP_accentWarning" variant="subheading2">
-                      {t('send.warning.restore')}
+                      {t('Restore your wallet to send')}
                     </Text>
                   </Flex>
                 </TouchableArea>
@@ -423,7 +423,7 @@ export function TransferTokenForm({
             size="large"
             testID={ElementName.ReviewTransfer}
             onPress={onPressReview}>
-            {t('send.button.review')}
+            {t('Review transfer')}
           </Button>
         </AnimatedFlex>
       </Flex>

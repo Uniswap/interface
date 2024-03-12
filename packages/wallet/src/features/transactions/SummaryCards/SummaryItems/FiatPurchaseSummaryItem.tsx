@@ -53,9 +53,7 @@ export function FiatPurchaseSummaryItem({
   })
 
   const cryptoSymbol =
-    outputSymbol ??
-    getSymbolDisplayText(outputCurrencyInfo?.currency.symbol) ??
-    t('transaction.currency.unknown')
+    outputSymbol ?? getSymbolDisplayText(outputCurrencyInfo?.currency.symbol) ?? t('unknown token')
 
   const cryptoPurchaseAmount =
     formatNumberOrString({ value: outputCurrencyAmount }) + ' ' + cryptoSymbol
@@ -63,13 +61,13 @@ export function FiatPurchaseSummaryItem({
   const isDarkMode = useIsDarkMode()
   const serviceProviderLogoUrl = getServiceProviderLogo(serviceProviderLogo, isDarkMode)
 
-  const isTransfer = inputSymbol === outputSymbol
+  const isTransfer = inputSymbol && inputSymbol === outputSymbol
 
   const caption =
     outputCurrencyAmount !== undefined && outputCurrencyAmount !== null
       ? isTransfer
         ? cryptoPurchaseAmount
-        : t('fiatOnRamp.summary.total', {
+        : t('{{cryptoAmount}} for {{fiatAmount}}', {
             cryptoAmount: cryptoPurchaseAmount,
             fiatAmount: fiatPurchaseAmount,
           })

@@ -80,27 +80,23 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
     <SafeKeyboardOnboardingScreen
       subtitle={
         isRestoringMnemonic
-          ? t('account.seedPhrase.subtitle.restoring')
-          : t('account.seedPhrase.subtitle.import')
+          ? t('Enter your recovery phrase below, or try searching for backups again.')
+          : t('Your recovery phrase will only be stored locally on your device.')
       }
-      title={
-        isRestoringMnemonic
-          ? t('account.seedPhrase.title.restoring')
-          : t('account.seedPhrase.title.import')
-      }>
+      title={isRestoringMnemonic ? t('No backups found') : t('Enter your recovery phrase')}>
       {/* <Flex gap={itemSpacing}> */}
       <SeedPhraseInput
         ref={seedPhraseInputRef}
         strings={{
           [StringKey.HelpText]: isRestoringMnemonic
-            ? t('account.seedPhrase.helpText.restoring')
-            : t('account.seedPhrase.helpText.import'),
-          [StringKey.InputPlaceholder]: t('account.seedPhrase.input'),
-          [StringKey.PasteButton]: t('common.button.paste'),
-          [StringKey.ErrorInvalidWord]: t('account.seedPhrase.error.invalidWord'),
-          [StringKey.ErrorPhraseLength]: t('account.seedPhrase.error.phraseLength'),
-          [StringKey.ErrorWrongPhrase]: t('account.seedPhrase.error.wrong'),
-          [StringKey.ErrorInvalidPhrase]: t('account.seedPhrase.error.invalid'),
+            ? t('Try searching again')
+            : t('How do I find my recovery phrase?'),
+          [StringKey.InputPlaceholder]: t('Enter recovery phrase'),
+          [StringKey.PasteButton]: t('Paste'),
+          [StringKey.ErrorInvalidWord]: t('Invalid word: '),
+          [StringKey.ErrorPhraseLength]: t('Recovery phrase must be 12-24 words'),
+          [StringKey.ErrorWrongPhrase]: t('Wrong recovery phrase'),
+          [StringKey.ErrorInvalidPhrase]: t('Invalid phrase'),
         }}
         targetMnemonicId={targetMnemonicId}
         onHelpTextPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}
@@ -125,7 +121,7 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
           onPress={(): void => {
             seedPhraseInputRef.current?.handleSubmit()
           }}>
-          {t('common.button.continue')}
+          {t('Continue')}
         </Button>
       </Trace>
     </SafeKeyboardOnboardingScreen>

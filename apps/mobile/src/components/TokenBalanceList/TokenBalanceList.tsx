@@ -164,7 +164,7 @@ export const TokenBalanceListInner = forwardRef<
   const ListHeaderComponent = useMemo(() => {
     return hasError ? (
       <AnimatedFlex entering={FadeInDown} exiting={FadeOut} px="$spacing24" py="$spacing8">
-        <BaseCard.InlineErrorState title={t('home.tokens.error.fetch')} onRetry={refetch} />
+        <BaseCard.InlineErrorState title={t('Failed to fetch token balances')} onRetry={refetch} />
       </AnimatedFlex>
     ) : null
   }, [hasError, refetch, t])
@@ -204,8 +204,8 @@ export const TokenBalanceListInner = forwardRef<
         ) : (
           <Flex fill grow justifyContent="center" style={containerProps?.emptyContainerStyle}>
             <BaseCard.ErrorState
-              retryButtonLabel={t('common.button.retry')}
-              title={t('home.tokens.error.load')}
+              retryButtonLabel="Retry"
+              title={t('Couldn’t load token balances')}
               onRetry={(): void | undefined => refetch?.()}
             />
           </Flex>

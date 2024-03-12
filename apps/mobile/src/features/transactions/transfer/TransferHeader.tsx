@@ -78,7 +78,7 @@ export function TransferHeader({
                 width={iconSizes.icon16}
               />
               <Text color="$neutral2" variant="buttonLabel3">
-                {t('swap.header.viewOnly')}
+                {t('View-only')}
               </Text>
             </Flex>
           </TouchableArea>

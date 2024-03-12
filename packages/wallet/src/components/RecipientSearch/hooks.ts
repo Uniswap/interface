@@ -125,28 +125,28 @@ export function useRecipients(): {
 
     if (validatedAddressRecipients.length) {
       sectionsArr.push({
-        title: t('send.recipient.section.search'),
+        title: t('Search results'),
         data: validatedAddressRecipients,
       })
     }
 
     if (recentRecipients.length) {
       sectionsArr.push({
-        title: t('send.recipient.section.recent'),
+        title: t('Recent'),
         data: recentRecipients,
       })
     }
 
     if (inactiveLocalAccounts.length) {
       sectionsArr.push({
-        title: t('send.recipient.section.yours'),
+        title: t('Your wallets'),
         data: inactiveLocalAccounts,
       })
     }
 
     if (watchedWallets.size) {
       sectionsArr.push({
-        title: t('send.recipient.section.favorite'),
+        title: t('Favorite wallets'),
         data: Array.from(watchedWallets).map(
           (address) =>
             <SearchableRecipient>{

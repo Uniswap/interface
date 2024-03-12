@@ -353,8 +353,8 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
         {showWarningModal && reviewScreenWarning?.warning.title && (
           <WarningModal
             caption={reviewScreenWarning.warning.message}
-            closeText={blockingWarning ? undefined : t('common.button.cancel')}
-            confirmText={blockingWarning ? t('common.button.ok') : t('common.button.confirm')}
+            closeText={blockingWarning ? undefined : t('Cancel')}
+            confirmText={blockingWarning ? t('OK') : t('Confirm')}
             modalName={ModalName.SwapWarning}
             severity={reviewScreenWarning.warning.severity}
             title={reviewScreenWarning.warning.title}

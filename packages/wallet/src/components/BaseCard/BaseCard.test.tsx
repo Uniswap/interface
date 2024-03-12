@@ -1,5 +1,5 @@
 import { View } from 'react-native'
-import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/fixtures'
+import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/eventFixtures'
 import { fireEvent, render } from 'wallet/src/test/test-utils'
 import { BaseCard } from './BaseCard'
 

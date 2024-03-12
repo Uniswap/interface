@@ -41,7 +41,7 @@ export function MaxAmountButton({
     <Trace logPress element={ElementName.SetMaxInput}>
       <TouchableArea disabled={disableMaxButton} style={style} onPress={onPress}>
         <Text color={disableMaxButton ? '$neutral3' : '$accent1'} variant="subheading2">
-          {t('swap.button.max')}
+          {t('Max')}
         </Text>
       </TouchableArea>
     </Trace>

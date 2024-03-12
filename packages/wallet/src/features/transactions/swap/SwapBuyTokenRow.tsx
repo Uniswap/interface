@@ -26,9 +26,9 @@ export function SwapBuyTokenRow(): JSX.Element | null {
       borderWidth={1}
       p="$spacing12">
       <Flex fill>
-        <Trans currencySymbol={currencySymbol} i18nKey="swap.warning.insufficientGas.cta.message">
+        <Trans currencySymbol={currencySymbol}>
           <Text color="$neutral2" variant="body4">
-            You need more
+            You need more{' '}
             <Text style={{ color: networkColors.foreground }} variant="body4">
               {{ currencySymbol }}
             </Text>{' '}
@@ -45,9 +45,7 @@ export function SwapBuyTokenRow(): JSX.Element | null {
         px="$spacing12"
         py="$spacing8">
         <Text color={networkColors.foreground as ColorTokens} variant="buttonLabel4">
-          {t('swap.warning.insufficientGas.cta.button', {
-            currencySymbol: warning.currency?.symbol,
-          })}
+          {t(`Buy {{ currencySymbol }}`, { currencySymbol: warning.currency?.symbol })}
         </Text>
       </Button>
     </Flex>

@@ -78,22 +78,20 @@ export function SeedPhraseDisplay({
           testID={ElementName.Next}
           theme="secondary"
           onPress={(): void => setShowSeedPhrase(!showSeedPhrase)}>
-          {showSeedPhrase
-            ? t('setting.seedPhrase.action.hide')
-            : t('setting.seedPhrase.account.show')}
+          {showSeedPhrase ? t('Hide recovery phrase') : t('Show recovery phrase')}
         </Button>
       </Flex>
 
       {showSeedPhraseViewWarningModal && (
         <WarningModal
           hideHandlebar
-          caption={t('setting.seedPhrase.warning.view.message')}
-          closeText={t('common.button.close')}
-          confirmText={t('common.button.view')}
+          caption={t('Anyone who knows your recovery phrase can access your wallet and funds.')}
+          closeText={t('Close')}
+          confirmText={t('View')}
           isDismissible={false}
           modalName={ModalName.ViewSeedPhraseWarning}
           severity={WarningSeverity.High}
-          title={t('setting.seedPhrase.warning.view.title')}
+          title={t('View this in a private place')}
           onCancel={(): void => {
             setShowSeedPhraseViewWarningModal(false)
             if (!showSeedPhrase) {
@@ -105,10 +103,12 @@ export function SeedPhraseDisplay({
       )}
       {showScreenShotWarningModal && (
         <WarningModal
-          caption={t('setting.seedPhrase.warning.screenshot.message')}
-          confirmText={t('common.button.close')}
+          caption={t(
+            'Anyone who gains access to your photos can access your wallet. We recommend that you write down your words instead.'
+          )}
+          confirmText={t('Close')}
           modalName={ModalName.ScreenshotWarning}
-          title={t('setting.seedPhrase.warning.screenshot.title')}
+          title={t('Screenshots aren’t secure')}
           onConfirm={(): void => setShowScreenShotWarningModal(false)}
         />
       )}

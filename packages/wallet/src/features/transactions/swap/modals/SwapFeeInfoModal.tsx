@@ -26,17 +26,21 @@ export function SwapFeeInfoModal({
       backgroundIconColor={colors.surface2.get()}
       caption={
         noFee
-          ? t('swap.warning.uniswapFee.message.default')
-          : t('swap.warning.uniswapFee.message.included')
+          ? t(
+              'Fees are applied on a few select tokens to ensure the best experience with Uniswap. There is no fee associated with this swap.'
+            )
+          : t(
+              'Fees are applied on a few select tokens to ensure the best experience with Uniswap, and have already been factored into this quote.'
+            )
       }
-      closeText={t('common.button.close')}
+      closeText={t('Close')}
       modalName={ModalName.NetworkFeeInfo}
       severity={WarningSeverity.None}
-      title={t('swap.warning.uniswapFee.title')}
+      title={t('Swap fee')}
       onClose={onClose}>
       <TouchableArea onPress={onPressLearnMore}>
         <Text color="$magentaVibrant" variant="buttonLabel3">
-          {t('common.button.learn')}
+          {t('Learn more')}
         </Text>
       </TouchableArea>
     </WarningModal>

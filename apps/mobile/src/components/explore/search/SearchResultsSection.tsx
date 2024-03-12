@@ -34,19 +34,19 @@ import { SearchResultOrHeader } from './types'
 
 const WalletHeaderItem: SearchResultOrHeader = {
   type: SEARCH_RESULT_HEADER_KEY,
-  title: i18n.t('explore.search.section.wallets'),
+  title: i18n.t('Wallets'),
 }
 const TokenHeaderItem: SearchResultOrHeader = {
   type: SEARCH_RESULT_HEADER_KEY,
-  title: i18n.t('explore.search.section.tokens'),
+  title: i18n.t('Tokens'),
 }
 const NFTHeaderItem: SearchResultOrHeader = {
   type: SEARCH_RESULT_HEADER_KEY,
-  title: i18n.t('explore.search.section.nft'),
+  title: i18n.t('NFT Collections'),
 }
 const EtherscanHeaderItem: SearchResultOrHeader = {
   type: SEARCH_RESULT_HEADER_KEY,
-  title: i18n.t('explore.search.action.viewEtherscan', {
+  title: i18n.t('View on {{ blockExplorerName }}', {
     blockExplorerName: CHAIN_INFO[ChainId.Mainnet].explorer.name,
   }),
 }
@@ -170,8 +170,8 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     return (
       <AnimatedFlex entering={FadeIn} exiting={FadeOut} pt="$spacing24">
         <BaseCard.ErrorState
-          retryButtonLabel="common.button.retry"
-          title={t('explore.search.error')}
+          retryButtonLabel="Retry"
+          title={t('Couldn’t load search results')}
           onRetry={onRetry}
         />
       </AnimatedFlex>
@@ -184,8 +184,8 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
         ListEmptyComponent={
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing8">
             <Text color="$neutral2" variant="body1">
-              <Trans i18nKey="explore.search.empty.full">
-                No results found for <Text color="$neutral1">"{{ searchQuery }}"</Text>
+              <Trans t={t}>
+                No results found for <Text color="$neutral1">"{searchQuery}"</Text>
               </Trans>
             </Text>
           </AnimatedFlex>

@@ -200,7 +200,7 @@ export function FiatOnRampAmountSection({
         {!appFiatCurrencySupported ? (
           <Flex centered>
             <Text color="$neutral3" variant="body3">
-              {t('fiatOnRamp.error.usd')}
+              {t('Only available to purchase in USD')}
             </Text>
           </Flex>
         ) : null}

@@ -40,7 +40,7 @@ export function OfflineBanner(): JSX.Element | null {
           width={iconSizes.icon24}
         />
       }
-      text={t('home.banner.offline')}
+      text={t('You are in offline mode')}
       translateY={BANNER_HEIGHT - EXTRA_MARGIN}
     />
   ) : null

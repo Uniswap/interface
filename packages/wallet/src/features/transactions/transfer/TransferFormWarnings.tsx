@@ -68,24 +68,28 @@ export function TransferFormSpeedbumps({
     <>
       {showSpeedbumpModal && shouldWarnSmartContract && (
         <WarningModal
-          caption={t('send.warning.smartContract.message')}
-          closeText={t('common.button.cancel')}
-          confirmText={t('common.button.continue')}
+          caption={t(
+            'You’re about to send tokens to a special type of address—a smart contract. Double-check it’s the address you intended to send to. If it’s wrong, your tokens could be lost forever.'
+          )}
+          closeText={t('Cancel')}
+          confirmText={t('Continue')}
           modalName={ModalName.SendWarning}
           severity={WarningSeverity.None}
-          title={t('send.warning.smartContract.title')}
+          title={t('Is this a wallet address?')}
           onClose={onCloseWarning}
           onConfirm={onNext}
         />
       )}
       {showSpeedbumpModal && shouldWarnNewAddress && (
         <WarningModal
-          caption={t('send.warning.newAddress.message')}
-          closeText={t('common.button.cancel')}
-          confirmText={t('common.button.confirm')}
+          caption={t(
+            'You haven’t transacted with this address before. Please confirm that the address is correct before continuing.'
+          )}
+          closeText={t('Cancel')}
+          confirmText={t('Confirm')}
           modalName={ModalName.SendWarning}
           severity={WarningSeverity.Medium}
-          title={t('send.warning.newAddress.title')}
+          title={t('New address')}
           onClose={onCloseWarning}
           onConfirm={onNext}>
           <TransferRecipient

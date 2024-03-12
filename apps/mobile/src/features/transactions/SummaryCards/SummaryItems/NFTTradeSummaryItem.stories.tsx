@@ -69,7 +69,7 @@ export const NFTBuy: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTBuyTx,
-          status: TransactionStatus.Canceled,
+          status: TransactionStatus.Cancelled,
         }}
       />
       <NFTTradeSummaryItem
@@ -111,7 +111,7 @@ export const NFTSell: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTSellTx,
-          status: TransactionStatus.Canceled,
+          status: TransactionStatus.Cancelled,
         }}
       />
       <NFTTradeSummaryItem

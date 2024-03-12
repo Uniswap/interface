@@ -25,7 +25,7 @@ import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { ElementName } from 'wallet/src/telemetry/constants'
 import { openSettings } from 'wallet/src/utils/linking'
-import { getCloudProviderName, isAndroid } from 'wallet/src/utils/platform'
+import { isAndroid } from 'wallet/src/utils/platform'
 
 type Props = CompositeScreenProps<
   StackScreenProps<OnboardingStackParamList, OnboardingScreens.Backup>,
@@ -82,19 +82,21 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const onPressCloudBackup = (): void => {
     if (!cloudStorageAvailable) {
       Alert.alert(
+        isAndroid ? t('Google Drive not available') : t('iCloud Drive not available'),
         isAndroid
-          ? t('account.cloud.error.unavailable.title.android')
-          : t('account.cloud.error.unavailable.title.ios'),
-        isAndroid
-          ? t('account.cloud.error.unavailable.message.android')
-          : t('account.cloud.error.unavailable.message.ios'),
+          ? t(
+              'Please verify that you are logged in to a Google account with Google Drive enabled on this device and try again.'
+            )
+          : t(
+              'Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.'
+            ),
         [
           {
-            text: t('account.cloud.error.unavailable.button.settings'),
+            text: t('Go to settings'),
             onPress: openSettings,
             style: 'default',
           },
-          { text: t('account.cloud.error.unavailable.button.cancel'), style: 'cancel' },
+          { text: t('Not now'), style: 'cancel' },
         ]
       )
       return
@@ -121,20 +123,16 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const hasManualBackup = activeAccountBackups?.some((backup) => backup === BackupType.Manual)
 
   const isCreatingNew = params?.importType === ImportType.CreateNew
-  const screenTitle = isCreatingNew
-    ? t('onboarding.backup.title.new')
-    : t('onboarding.backup.title.existing')
+  const screenTitle = isCreatingNew ? t('Choose a backup method') : t('Back up your wallet')
   const options = []
   options.push(
     <OptionCard
       key={ElementName.AddCloudBackup}
-      blurb={t('onboarding.backup.option.cloud.description')}
+      blurb={t('Encrypt your recovery phrase with a secure password')}
       disabled={hasCloudBackup}
       elementName={ElementName.AddCloudBackup}
       icon={<Icons.OSDynamicCloudIcon color="$accent1" size="$icon.16" />}
-      title={t('onboarding.backup.option.cloud.title', {
-        cloudProviderName: getCloudProviderName(),
-      })}
+      title={isAndroid ? t('Google Drive backup') : t('iCloud backup')}
       onPress={onPressCloudBackup}
     />
   )
@@ -142,18 +140,20 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     options.push(
       <OptionCard
         key={ElementName.AddManualBackup}
-        blurb={t('onboarding.backup.option.manual.description')}
+        blurb={t('Write your recovery phrase down and store it in a safe location')}
         disabled={hasManualBackup}
         elementName={ElementName.AddManualBackup}
         icon={<PaperIcon color={colors.accent1.get()} height={iconSizes.icon16} />}
-        title={t('onboarding.backup.option.manual.title')}
+        title={t('Manual backup')}
         onPress={onPressManualBackup}
       />
     )
   }
 
   return (
-    <OnboardingScreen subtitle={t('onboarding.backup.subtitle')} title={screenTitle}>
+    <OnboardingScreen
+      subtitle={t('Backups let you restore your wallet if you delete the app or lose your device')}
+      title={screenTitle}>
       <Flex grow justifyContent="space-between">
         <Flex gap="$spacing24">
           <Flex
@@ -174,7 +174,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
           {showSkipOption && (
             <Trace logPress element={ElementName.Next}>
               <Button theme="tertiary" onPress={onPressNext}>
-                {t('common.button.later')}
+                {t('Maybe later')}
               </Button>
             </Trace>
           )}
@@ -200,7 +200,7 @@ function RecoveryPhraseTooltip({
       onPress={onPressEducationButton}>
       <Icons.QuestionInCircleFilled color="$surface1" size="$icon.20" />
       <Text color="$neutral3" variant="body2">
-        {t('onboarding.tooltip.recoveryPhrase.trigger')}
+        {t('What is a recovery phrase?')}
       </Text>
     </TouchableArea>
   )

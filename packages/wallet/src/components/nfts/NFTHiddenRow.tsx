@@ -18,7 +18,7 @@ export function HiddenNftsRowLeft({ numHidden }: { numHidden: number }): JSX.Ele
       my="$spacing16"
       py="$spacing4">
       <Text color="$neutral2" variant="subheading2">
-        {t('tokens.nfts.hidden.label', { numHidden })}
+        {t('Hidden ({{numHidden}})', { numHidden })}
       </Text>
     </Flex>
   )
@@ -39,7 +39,7 @@ export function HiddenNftsRowRight({
     return {
       transform: [{ rotateZ: `${chevronRotate.value}deg` }],
     }
-  }, [chevronRotate])
+  })
 
   const onPressRow = useCallback(() => {
     chevronRotate.value = withTiming(chevronRotate.value === 0 ? 180 : 0, {
@@ -65,7 +65,7 @@ export function HiddenNftsRowRight({
           pr="$spacing8"
           py="$spacing4">
           <Text color="$neutral2" variant="buttonLabel3">
-            {isExpanded ? t('common.button.hide') : t('common.button.show')}
+            {isExpanded ? t('Hide') : t('Show')}
           </Text>
           <AnimatedFlex style={chevronAnimatedStyle}>
             <Icons.RotatableChevron

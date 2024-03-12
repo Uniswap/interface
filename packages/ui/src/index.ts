@@ -20,6 +20,7 @@ export {
   getTokenValue,
   isWeb,
   styled,
+  useComposedRefs,
   useMedia,
   usePropsAndStyle,
   useWindowDimensions,

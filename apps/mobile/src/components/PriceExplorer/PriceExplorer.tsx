@@ -1,7 +1,7 @@
 import { ImpactFeedbackStyle } from 'expo-haptics'
 import { memo, useMemo } from 'react'
 import { I18nManager } from 'react-native'
-import { SharedValue } from 'react-native-reanimated'
+import { SharedValue, useDerivedValue } from 'react-native-reanimated'
 import { LineChart, LineChartProvider } from 'react-native-wagmi-charts'
 import PriceExplorerAnimatedNumber from 'src/components/PriceExplorer/PriceExplorerAnimatedNumber'
 import { PriceExplorerError } from 'src/components/PriceExplorer/PriceExplorerError'
@@ -24,7 +24,7 @@ type PriceTextProps = {
   loading: boolean
   relativeChange?: SharedValue<number>
   numberOfDigits: PriceNumberOfDigits
-  spotPrice?: number
+  spotPrice?: SharedValue<number>
 }
 
 function PriceTextSection({ loading, numberOfDigits, spotPrice }: PriceTextProps): JSX.Element {
@@ -34,9 +34,6 @@ function PriceTextSection({ loading, numberOfDigits, spotPrice }: PriceTextProps
 
   return (
     <Flex mx={mx}>
-      {/* Specify maxWidth to allow text scaling. onLayout was sometimes called after more
-      than 5 seconds which is not acceptable so we have to provide the approximate width
-      of the PriceText component explicitly. */}
       <PriceExplorerAnimatedNumber
         currency={currency}
         numberOfDigits={numberOfDigits}
@@ -84,14 +81,15 @@ export const PriceExplorer = memo(function PriceExplorer({
     return { lastPricePoint: lastPoint, convertedPriceHistory: priceHistory }
   }, [data, conversionRate])
 
+  const convertedSpotValue = useDerivedValue(() => conversionRate * (data?.spot?.value?.value ?? 0))
   const convertedSpot = useMemo((): TokenSpotData | undefined => {
     return (
       data?.spot && {
         ...data?.spot,
-        value: { value: conversionRate * (data?.spot?.value?.value ?? 0) },
+        value: convertedSpotValue,
       }
     )
-  }, [data, conversionRate])
+  }, [data, convertedSpotValue])
 
   if (
     !loading &&
@@ -135,7 +133,7 @@ export const PriceExplorer = memo(function PriceExplorer({
           loading={loading}
           numberOfDigits={numberOfDigits}
           relativeChange={convertedSpot?.relativeChange}
-          spotPrice={convertedSpot?.value.value}
+          spotPrice={convertedSpot?.value}
         />
         {content}
         <TimeRangeGroup setDuration={setDuration} />

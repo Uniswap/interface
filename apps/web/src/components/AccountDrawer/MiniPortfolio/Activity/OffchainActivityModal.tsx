@@ -30,11 +30,10 @@ import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { sendAnalyticsEvent } from 'analytics'
 import { cancelMultipleUniswapXOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
-import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import { ContractTransaction } from 'ethers/lib/ethers'
 import { useContract } from 'hooks/useContract'
-import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
-import { Permit2 } from 'uniswap/src/abis/types/Permit2'
+import PERMIT2_ABI from 'wallet/src/abis/permit2.json'
+import { Permit2 } from 'wallet/src/abis/types/Permit2'
 import { PortfolioLogo } from '../PortfolioLogo'
 import { OffchainOrderLineItem, OffchainOrderLineItemProps, OffchainOrderLineItemType } from './OffchainOrderLineItem'
 
@@ -68,7 +67,6 @@ export function useOpenOffchainActivityModal() {
 const Wrapper = styled(AutoColumn).attrs({ gap: 'md', grow: true })`
   padding: 12px 20px 20px 20px;
   width: 100%;
-  background-color: ${({ theme }) => theme.surface1};
 `
 
 const StyledXButton = styled(X)`
@@ -274,7 +272,7 @@ export function OrderContent({
           <Trans>Cancel limit</Trans>
         </OffchainModalBottomButton>
       )}
-      {order.status === UniswapXOrderStatus.INSUFFICIENT_FUNDS ? (
+      {order.status === UniswapXOrderStatus.INSUFFICIENT_FUNDS && (
         <InsufficientFundsCopyContainer>
           <AlertIconContainer>
             <AlertTriangleFilled size="20px" />
@@ -288,8 +286,6 @@ export function OrderContent({
             </ThemedText.SubHeaderSmall>
           </Column>
         </InsufficientFundsCopyContainer>
-      ) : (
-        <LimitDisclaimer />
       )}
     </Column>
   )

@@ -3,10 +3,10 @@ import { ChainId, Currency } from '@uniswap/sdk-core'
 import { SupportedInterfaceChain } from 'constants/chains'
 import { DEPRECATED_RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import ERC20_ABI from 'uniswap/src/abis/erc20.json'
-import { Erc20, Weth } from 'uniswap/src/abis/types'
-import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { getContract } from 'utilities/src/contracts/getContract'
+import ERC20_ABI from 'wallet/src/abis/erc20.json'
+import { Erc20, Weth } from 'wallet/src/abis/types'
+import WETH_ABI from 'wallet/src/abis/weth.json'
 
 import { ApproveInfo, WrapInfo } from './types'
 

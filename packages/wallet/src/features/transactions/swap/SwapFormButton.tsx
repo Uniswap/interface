@@ -93,7 +93,7 @@ export function SwapFormButton(): JSX.Element {
   const holdButtonText = useMemo(() => getHoldButtonActionText(wrapType, t), [t, wrapType])
 
   const hasButtonWarning = !!blockingWarning?.buttonText
-  const buttonText = blockingWarning?.buttonText ?? t('common.button.review')
+  const buttonText = blockingWarning?.buttonText ?? t('Review')
   const buttonTextColor = hasButtonWarning ? '$neutral2' : '$white'
   const buttonBgColor = hasButtonWarning
     ? '$surface3'
@@ -148,7 +148,7 @@ function HoldToInstantSwapRow(): JSX.Element {
     <Flex centered row gap="$spacing4">
       <Icons.GraduationCap color="$neutral3" size="$icon.16" />
       <Text color="$neutral3" variant="body3">
-        {t('swap.hold.tip')}
+        {t('Tip: Hold to instant swap')}
       </Text>
     </Flex>
   )
@@ -160,10 +160,10 @@ function getHoldButtonActionText(
 ): string {
   switch (wrapType) {
     case WrapType.Wrap:
-      return t('swap.hold.wrap')
+      return t('Hold to wrap')
     case WrapType.Unwrap:
-      return t('swap.hold.unwrap')
+      return t('Hold to unwrap')
     case WrapType.NotApplicable:
-      return t('swap.hold.swap')
+      return t('Hold to swap')
   }
 }

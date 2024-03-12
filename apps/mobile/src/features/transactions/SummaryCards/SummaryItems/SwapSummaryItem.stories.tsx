@@ -130,7 +130,7 @@ export const Swap: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSwapTx,
-          status: TransactionStatus.Canceled,
+          status: TransactionStatus.Cancelled,
         }}
       />
       <SwapSummaryItem

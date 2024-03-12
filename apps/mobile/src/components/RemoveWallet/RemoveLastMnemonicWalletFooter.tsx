@@ -29,7 +29,9 @@ export function RemoveLastMnemonicWalletFooter({
           text={
             <Flex>
               <Text color="$neutral2" variant="body3">
-                {t('account.wallet.remove.check')}
+                {t(
+                  'I backed up my recovery phrase and understand that Uniswap Labs can’t help me recover my wallets if I failed to do so.'
+                )}
               </Text>
             </Flex>
           }
@@ -44,7 +46,7 @@ export function RemoveLastMnemonicWalletFooter({
           testID={ElementName.Confirm}
           theme="detrimental"
           onPress={onPress}>
-          {!inProgress ? t('account.wallet.button.remove') : undefined}
+          {!inProgress ? t('Remove wallet') : undefined}
         </Button>
       </Flex>
     </>

@@ -94,8 +94,8 @@ export function useActivityData({
   const errorCard = (
     <Flex grow style={emptyContainerStyle}>
       <BaseCard.ErrorState
-        retryButtonLabel={t('common.button.retry')}
-        title={t('home.activity.error.load')}
+        retryButtonLabel={t('Retry')}
+        title={t('Couldn’t load activity')}
         onRetry={onRetry}
       />
     </Flex>
@@ -104,14 +104,16 @@ export function useActivityData({
   const emptyListView = (
     <Flex grow style={emptyContainerStyle}>
       <BaseCard.EmptyState
-        buttonLabel={isExternalProfile ? undefined : t('home.activity.empty.button')}
+        buttonLabel={isExternalProfile ? undefined : t('Receive tokens or NFTs')}
         description={
           isExternalProfile
-            ? t('home.activity.empty.description.external')
-            : t('home.activity.empty.description.default')
+            ? t('When this wallet makes transactions, they’ll appear here.')
+            : t(
+                'When you approve, trade, or transfer tokens or NFTs, your transactions will appear here.'
+              )
         }
         icon={<Icons.NoTransactions size="$icon.100" />}
-        title={t('home.activity.empty.title')}
+        title={t('No activity yet')}
         onPress={onPressEmptyState}
       />
     </Flex>

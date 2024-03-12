@@ -9,7 +9,7 @@ import { useFeatureFlagsIsLoaded, useFeatureFlagURLOverrides } from 'featureFlag
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
 import { lazy, memo, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react'
-import { Helmet } from 'react-helmet-async/lib/index'
+import { Helmet } from 'react-helmet'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppSelector } from 'state/hooks'
@@ -147,7 +147,7 @@ export default function App() {
         {/*
           This is where *static* page titles are injected into the <head> tag. If you
           want to set a page title based on data that's dynamic or not available on first render,
-          you can set it later in the page component itself, since react-helmet-async prefers the most recently rendered title.
+          you can set it later in the page component itself, since react-helmet prefers the most recently rendered title.
         */}
         <Helmet>
           <title>{findRouteByPath(pathname)?.getTitle(pathname) ?? 'Uniswap Interface'}</title>

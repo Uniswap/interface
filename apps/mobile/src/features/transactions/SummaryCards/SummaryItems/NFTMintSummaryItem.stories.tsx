@@ -55,7 +55,7 @@ export const NFTMint: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTMintTx,
-          status: TransactionStatus.Canceled,
+          status: TransactionStatus.Cancelled,
         }}
       />
       <NFTMintSummaryItem

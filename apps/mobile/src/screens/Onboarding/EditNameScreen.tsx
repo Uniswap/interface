@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, TextInput as NativeTextInput, StyleSheet } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
@@ -41,7 +41,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
     if (pendingAccount && pendingAccount.type !== AccountType.Readonly) {
       setNewAccountName(
         pendingAccount.name ||
-          t('onboarding.wallet.defaultName', { number: pendingAccount.derivationIndex + 1 }) ||
+          t('Wallet {{ number }}', { number: pendingAccount.derivationIndex + 1 }) ||
           ''
       )
     }
@@ -83,8 +83,8 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
 
   return (
     <SafeKeyboardOnboardingScreen
-      subtitle={t('onboarding.editName.subtitle')}
-      title={t('onboarding.editName.title')}>
+      subtitle={t('This nickname is only visible to you')}
+      title={t('Give your wallet a nickname')}>
       {pendingAccount ? (
         <CustomizationSection
           accountName={newAccountName}
@@ -96,7 +96,7 @@ export function EditNameScreen({ navigation, route: { params } }: Props): JSX.El
       )}
       <Flex justifyContent="flex-end">
         <Trace logPress element={ElementName.Continue}>
-          <Button onPress={onPressNext}>{t('onboarding.editName.button.create')}</Button>
+          <Button onPress={onPressNext}>{t('Create wallet')}</Button>
         </Trace>
       </Flex>
     </SafeKeyboardOnboardingScreen>
@@ -122,7 +122,6 @@ function CustomizationSection({
   const focusInputWithKeyboard = (): void => {
     textInputRef.current?.focus()
   }
-  const walletAddress = shortenAddress(address)
 
   return (
     <Flex
@@ -145,7 +144,7 @@ function CustomizationSection({
               fontSize={fonts.heading3.fontSize}
               maxFontSizeMultiplier={fonts.heading3.maxFontSizeMultiplier}
               maxLength={NICKNAME_MAX_LENGTH}
-              placeholder={t('onboarding.editName.label')}
+              placeholder={t('Nickname')}
               placeholderTextColor="$neutral3"
               style={isAndroid ? styles.noHorizontalPadding : {}}
               testID="customize/name"
@@ -174,12 +173,10 @@ function CustomizationSection({
         </Flex>
         <Flex centered gap="$spacing4">
           <Text color="$neutral3" variant="body3">
-            <Trans i18nKey="onboarding.editName.walletAddress">
-              Your public address will be
-              <Text color="$neutral3" variant="buttonLabel3">
-                {{ walletAddress }}
-              </Text>
-            </Trans>
+            {t('Your public address will be')}
+          </Text>
+          <Text color="$neutral3" variant="buttonLabel3">
+            {shortenAddress(address)}
           </Text>
         </Flex>
       </Flex>

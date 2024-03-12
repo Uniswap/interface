@@ -76,12 +76,14 @@ export function WalletConnectModal({
       if (!supportedURI) {
         setShouldFreezeCamera(true)
         Alert.alert(
-          t('walletConnect.error.unsupported.title'),
+          t('Invalid QR Code'),
           // TODO(EXT-495): Add Scantastic product name here when ready
-          t('walletConnect.error.unsupported.message'),
+          t(
+            'Make sure that you’re scanning a valid WalletConnect or Ethereum address QR code before trying again.'
+          ),
           [
             {
-              text: t('common.button.tryAgain'),
+              text: t('Try again'),
               onPress: (): void => {
                 setShouldFreezeCamera(false)
               },
@@ -101,11 +103,13 @@ export function WalletConnectModal({
       if (supportedURI.type === URIType.WalletConnectURL) {
         setShouldFreezeCamera(true)
         Alert.alert(
-          t('walletConnect.error.unsupportedV1.title'),
-          t('walletConnect.error.unsupportedV1.message'),
+          t('Invalid QR Code'),
+          t(
+            'WalletConnect v1 is no longer supported. The application you’re trying to connect to needs to upgrade to WalletConnect v2.'
+          ),
           [
             {
-              text: t('common.button.ok'),
+              text: t('OK'),
               onPress: (): void => {
                 setShouldFreezeCamera(false)
               },
@@ -122,11 +126,11 @@ export function WalletConnectModal({
         } catch (error) {
           logger.error(error, { tags: { file: 'WalletConnectModal', function: 'onScanCode' } })
           Alert.alert(
-            t('walletConnect.error.general.title'),
-            t('walletConnect.error.general.message'),
+            t('WalletConnect Error'),
+            t('There was an issue with WalletConnect. Please try again'),
             [
               {
-                text: t('common.button.ok'),
+                text: t('OK'),
                 onPress: (): void => {
                   setShouldFreezeCamera(false)
                 },
@@ -164,18 +168,14 @@ export function WalletConnectModal({
           const isAllowed = isAllowedUwULinkRequest(parsedUwulinkRequest)
 
           if (!isAllowed) {
-            Alert.alert(
-              t('walletConnect.error.uwu.title'),
-              t('walletConnect.error.uwu.unsupported'),
-              [
-                {
-                  text: t('common.button.ok'),
-                  onPress: (): void => {
-                    setShouldFreezeCamera(false)
-                  },
+            Alert.alert(t('UwU Link error'), t('This QR code is not supported.'), [
+              {
+                text: t('OK'),
+                onPress: (): void => {
+                  setShouldFreezeCamera(false)
                 },
-              ]
-            )
+              },
+            ])
             return
           }
 
@@ -201,7 +201,7 @@ export function WalletConnectModal({
           onClose()
         } catch (_) {
           setShouldFreezeCamera(false)
-          Alert.alert(t('walletConnect.error.uwu.title'), t('walletConnect.error.uwu.scan'))
+          Alert.alert(t('UwU Link error'), t('There was an issue scanning this QR code.'))
         }
       }
 
@@ -312,8 +312,8 @@ export function WalletConnectModal({
               )}
               <Text color="$neutral1" variant="buttonLabel2">
                 {currentScreenState === ScannerModalState.ScanQr
-                  ? t('qrScanner.recipient.action.show')
-                  : t('qrScanner.recipient.action.scan')}
+                  ? t('Show my QR code')
+                  : t('Scan a QR code')}
               </Text>
             </Flex>
           </TouchableArea>

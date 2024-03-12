@@ -30,12 +30,14 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export const showNotificationSettingsAlert = (): void => {
   Alert.alert(
-    i18n.t('onboarding.notification.permission.title'),
-    i18n.t('onboarding.notification.permission.message'),
+    i18n.t('Notifications permission'),
+    i18n.t(
+      'To receive notifications, turn on notifications for Uniswap Wallet in your device’s settings.'
+    ),
     [
-      { text: i18n.t('common.navigation.settings'), onPress: openSettings },
+      { text: i18n.t('Settings'), onPress: openSettings },
       {
-        text: i18n.t('common.button.cancel'),
+        text: i18n.t('Cancel'),
       },
     ]
   )
@@ -119,8 +121,8 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
 
   return (
     <OnboardingScreen
-      subtitle={t('onboarding.notification.subtitle')}
-      title={t('onboarding.notification.title')}>
+      subtitle={t('Get notified when your transfers, swaps, and approvals complete.')}
+      title={t('Turn on push notifications')}>
       <Flex centered shrink py={isIOS ? '$spacing60' : '$spacing16'}>
         <NotificationsBackgroundImage />
       </Flex>
@@ -128,13 +130,13 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
         <Trace logPress element={ElementName.Skip}>
           <TouchableArea onPress={navigateToNextScreen}>
             <Text color="$accent1" textAlign="center" variant="buttonLabel2">
-              {t('common.button.later')}
+              {t('Maybe later')}
             </Text>
           </TouchableArea>
         </Trace>
         <Trace logPress element={ElementName.Enable}>
           <Button testID="turn-on-notifications" onPress={onPressEnableNotifications}>
-            {t('common.button.enable')}
+            {t('Enable')}
           </Button>
         </Trace>
       </Flex>

@@ -137,7 +137,7 @@ export const Send: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseSendTx,
-          status: TransactionStatus.Canceled,
+          status: TransactionStatus.Cancelled,
         }}
       />
       <SendSummaryItem
@@ -187,7 +187,7 @@ export const NFTSend: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseNFTSendTx,
-          status: TransactionStatus.Canceled,
+          status: TransactionStatus.Cancelled,
         }}
       />
       <SendSummaryItem

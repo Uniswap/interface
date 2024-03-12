@@ -37,8 +37,8 @@ export function WalletEmptyState(): JSX.Element {
   const options: { [key in ActionOption]: ActionCardItem } = useMemo(
     () => ({
       [ActionOption.Buy]: {
-        title: t('home.tokens.empty.action.buy.title'),
-        blurb: t('home.tokens.empty.action.buy.description'),
+        title: t('Buy crypto'),
+        blurb: t('You’ll need ETH to get started. Buy with a card or bank.'),
         elementName: ElementName.EmptyStateBuy,
         icon: (
           <IconContainer
@@ -54,8 +54,8 @@ export function WalletEmptyState(): JSX.Element {
         onPress: () => dispatch(openModal({ name: ModalName.FiatOnRamp })),
       },
       [ActionOption.Receive]: {
-        title: t('home.tokens.empty.action.receive.title'),
-        blurb: t('home.tokens.empty.action.receive.description'),
+        title: t('Receive funds'),
+        blurb: t('Transfer tokens from another wallet or crypto exchange.'),
         elementName: ElementName.EmptyStateReceive,
         icon: (
           <IconContainer
@@ -77,8 +77,8 @@ export function WalletEmptyState(): JSX.Element {
           ),
       },
       [ActionOption.Import]: {
-        title: t('home.tokens.empty.action.import.title'),
-        blurb: t('home.tokens.empty.action.import.description'),
+        title: t('Import wallet'),
+        blurb: t(`Enter this wallet’s recovery phrase to begin swapping and sending.`),
         elementName: ElementName.EmptyStateImport,
         icon: (
           <IconContainer

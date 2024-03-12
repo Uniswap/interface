@@ -63,9 +63,7 @@ export function DappConnectionItem({
     }
   }
 
-  const menuActions = [
-    { title: t('common.button.disconnect'), systemIcon: 'trash', destructive: true },
-  ]
+  const menuActions = [{ title: t('Disconnect'), systemIcon: 'trash', destructive: true }]
 
   const onPress = async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
     if (e.nativeEvent.index === 0) {

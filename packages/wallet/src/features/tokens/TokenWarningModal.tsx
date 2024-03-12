@@ -15,11 +15,15 @@ import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 function getTokenSafetyBodyText(safetyLevel: Maybe<SafetyLevel>, t: AppTFunction): string {
   switch (safetyLevel) {
     case SafetyLevel.MediumWarning:
-      return t('token.safetyLevel.medium.message')
+      return t(
+        'This token isn’t traded on leading U.S. centralized exchanges. Always conduct your own research before trading.'
+      )
     case SafetyLevel.StrongWarning:
-      return t('token.safetyLevel.strong.message')
+      return t(
+        'This token isn’t traded on leading U.S. centralized exchanges or frequently swapped on Uniswap. Always conduct your own research before trading.'
+      )
     case SafetyLevel.Blocked:
-      return t('token.safetyLevel.blocked.message')
+      return t('You can’t trade this token using the Uniswap Wallet.')
     default:
       return ''
   }
@@ -53,7 +57,7 @@ export default function TokenWarningModal({
   // always hide accept button if blocked token
   const hideAcceptButton = disableAccept || safetyLevel === SafetyLevel.Blocked
 
-  const closeButtonText = hideAcceptButton ? t('common.button.close') : t('common.button.back')
+  const closeButtonText = hideAcceptButton ? t('Close') : t('Back')
 
   const showWarningIcon =
     safetyLevel === SafetyLevel.StrongWarning || safetyLevel === SafetyLevel.Blocked
@@ -97,7 +101,7 @@ export default function TokenWarningModal({
               testID={ElementName.TokenWarningAccept}
               theme={getButtonTheme(safetyLevel)}
               onPress={onAccept}>
-              {showWarningIcon ? t('common.button.understand') : t('common.button.continue')}
+              {showWarningIcon ? t('I understand') : t('Continue')}
             </Button>
           )}
         </Flex>

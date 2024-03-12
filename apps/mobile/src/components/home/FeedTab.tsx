@@ -76,8 +76,8 @@ export const FeedTab = memo(
     const errorCard = (
       <Flex grow style={containerProps?.emptyContainerStyle}>
         <BaseCard.ErrorState
-          retryButtonLabel={t('common.button.retry')}
-          title={t('home.feed.error')}
+          retryButtonLabel={t('Retry')}
+          title={t('Couldn’t load activity')}
           onRetry={onRetry}
         />
       </Flex>
@@ -86,9 +86,9 @@ export const FeedTab = memo(
     const emptyListView = (
       <Flex grow style={containerProps?.emptyContainerStyle}>
         <BaseCard.EmptyState
-          description={t('home.feed.empty.description')}
+          description={t('When your favorited wallets makes transactions, they’ll appear here.')}
           icon={<NoTransactions />}
-          title={t('home.feed.empty.title')}
+          title={t('No activity yet')}
           onPress={onPressReceive}
         />
       </Flex>

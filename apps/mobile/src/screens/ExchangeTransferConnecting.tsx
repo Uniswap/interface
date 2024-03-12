@@ -52,7 +52,7 @@ export function ExchangeTransferConnecting({
     dispatch(
       pushNotification({
         type: AppNotificationType.Error,
-        errorMessage: t('common.error.general'),
+        errorMessage: t('Something went wrong.'),
       })
     )
     onClose()

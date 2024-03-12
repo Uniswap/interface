@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { closeAllModals } from 'src/features/modals/modalSlice'
@@ -7,6 +7,7 @@ import { selectModalState } from 'src/features/modals/selectModalState'
 import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
+import { getDurationRemainingString } from 'utilities/src/time/duration'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
@@ -15,7 +16,6 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { ModalName } from 'wallet/src/telemetry/constants'
-import { getOtpDurationString } from 'wallet/src/utils/duration'
 import { getEncryptedMnemonic } from './ScantasticEncryption'
 
 enum OtpState {
@@ -52,9 +52,16 @@ export function ScantasticModal(): JSX.Element | null {
 
   const [expiryText, setExpiryText] = useState('')
   const setExpirationText = useCallback(() => {
-    const expirationString = getOtpDurationString(expirationTimestamp)
-    setExpiryText(expirationString)
-  }, [expirationTimestamp])
+    const timeLeft = expirationTimestamp - Date.now()
+    if (timeLeft <= 0) {
+      return setExpiryText(t('Expired'))
+    }
+    return setExpiryText(
+      t('Expires in {{duration}}', {
+        duration: getDurationRemainingString(expirationTimestamp),
+      })
+    )
+  }, [expirationTimestamp, t])
   useInterval(setExpirationText, ONE_SECOND_MS)
 
   if (redeemed) {
@@ -86,11 +93,11 @@ export function ScantasticModal(): JSX.Element | null {
     const { n, e } = pubKey
     try {
       if (!n || !e) {
-        throw new Error('Invalid public key.')
+        throw new Error(t('Invalid public key.'))
       }
       encryptedSeedphrase = await getEncryptedMnemonic(account?.address || '', n, e)
     } catch (err) {
-      setError(t('scantastic.error.encryption'))
+      setError('Failed to prepare seed phrase.')
       logger.error(err, {
         tags: {
           file: 'ScantasticModal',
@@ -129,7 +136,7 @@ export function ScantasticModal(): JSX.Element | null {
         setOTP(data.otp)
       }
     } catch (err) {
-      setError(t('scantastic.error.noCode'))
+      setError(t('No OTP received. Please try again.'))
       logger.error(err, {
         tags: {
           file: 'ScantasticModal',
@@ -209,12 +216,12 @@ export function ScantasticModal(): JSX.Element | null {
           <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
             <Icons.LinkBrokenHorizontal color="$neutral2" size={iconSizes.icon24} />
           </Flex>
-          <Text variant="subheading1">{t('scantastic.error.timeout.title')}</Text>
+          <Text variant="subheading1">{t('Your connection timed out')}</Text>
           <Text color="$neutral2" mb="$spacing12" textAlign="center" variant="body3">
-            {t('scantastic.error.timeout.message')}
+            {t('Scan the QR code on the Uniswap Extension again to continue syncing your wallet.')}
           </Text>
           <Button theme="secondary" width="100%" onPress={onClose}>
-            {t('common.button.close')}
+            {t('Close')}
           </Button>
         </Flex>
       </BottomSheetModal>
@@ -231,9 +238,12 @@ export function ScantasticModal(): JSX.Element | null {
           <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
             <Icons.Laptop color="$accent1" size={iconSizes.icon24} />
           </Flex>
-          <Text variant="subheading1">{t('scantastic.code.title')}</Text>
+          <Text variant="subheading1">{t('Uniswap one-time code')}</Text>
           <Text color="$neutral2" textAlign="center" variant="body3">
-            {t('scantastic.code.subtitle')}
+            <Trans>
+              Enter this code in the Uniswap Extension. Your recovery phrase will be safely
+              encrypted and transferred.
+            </Trans>
           </Text>
           <Flex row gap="$spacing20" py="$spacing8">
             <Text variant="heading1">{OTP.substring(0, 3).split('').join(' ')}</Text>
@@ -257,13 +267,17 @@ export function ScantasticModal(): JSX.Element | null {
           <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
             <Icons.AlertTriangle color="$statusCritical" size={iconSizes.icon24} />
           </Flex>
-          <Text variant="subheading1">{t('common.text.error')}</Text>
+          <Text variant="subheading1">
+            <Trans>Error</Trans>
+          </Text>
           <Text color="$neutral2" textAlign="center" variant="body3">
             {error}
           </Text>
           <Flex flexDirection="column" gap="$spacing4" mt="$spacing12" width="100%">
             <Button alignItems="center" theme="secondary" onPress={onClose}>
-              <Text variant="buttonLabel2">{t('common.button.close')}</Text>
+              <Text variant="buttonLabel2">
+                <Trans>Close</Trans>
+              </Text>
             </Button>
           </Flex>
         </Flex>
@@ -280,9 +294,9 @@ export function ScantasticModal(): JSX.Element | null {
         <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
           <Icons.Laptop color="$accent1" size={iconSizes.icon24} />
         </Flex>
-        <Text variant="subheading1">{t('scantastic.confirmation.title')}</Text>
+        <Text variant="subheading1">{t('Is this your device?')}</Text>
         <Text color="$neutral2" textAlign="center" variant="body3">
-          {t('scantastic.confirmation.subtitle')}
+          {t('Only continue if you are syncing with the Uniswap Extension on a trusted device.')}
         </Text>
         <Flex
           borderColor="$surface3"
@@ -294,7 +308,7 @@ export function ScantasticModal(): JSX.Element | null {
           {device && (
             <Flex row px="$spacing8">
               <Text color="$neutral2" flex={1} variant="body3">
-                {t('scantastic.confirmation.label.device')}
+                {t('Device')}
               </Text>
               <Text variant="body3">{device}</Text>
             </Flex>
@@ -302,7 +316,7 @@ export function ScantasticModal(): JSX.Element | null {
           {browser && (
             <Flex row px="$spacing8">
               <Text color="$neutral2" flex={1} variant="body3">
-                {t('scantastic.confirmation.label.browser')}
+                {t('Browser')}
               </Text>
               <Text variant="body3">{browser}</Text>
             </Flex>
@@ -314,11 +328,11 @@ export function ScantasticModal(): JSX.Element | null {
             mb="$spacing4"
             theme="primary"
             onPress={onConfirmSync}>
-            {t('scantastic.confirmation.button.continue')}
+            {t('Yes, continue')}
           </Button>
           <TouchableArea alignItems="center" onPress={onClose}>
             <Text color="$accent1" py="$spacing16" variant="buttonLabel2">
-              {t('common.button.cancel')}
+              {t('Cancel')}
             </Text>
           </TouchableArea>
         </Flex>

@@ -94,15 +94,13 @@ export function useNFTMenu({
       isAddressAndTokenOk
         ? [
             {
-              title: t('common.button.share'),
+              title: t('Share'),
               systemIcon: 'square.and.arrow.up',
               onPress: onPressShare,
             },
             ...((isLocalAccount && [
               {
-                title: hidden
-                  ? t('tokens.nfts.hidden.action.unhide')
-                  : t('tokens.nfts.hidden.action.hide'),
+                title: hidden ? t('Unhide NFT') : t('Hide NFT'),
                 systemIcon: hidden ? 'eye' : 'eye.slash',
                 destructive: !hidden,
                 onPress: onPressHiddenStatus,

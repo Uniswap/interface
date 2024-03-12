@@ -28,8 +28,10 @@ export function CloudBackupPasswordConfirmScreen({
 
   return (
     <SafeKeyboardOnboardingScreen
-      subtitle={t('onboarding.cloud.confirm.description')}
-      title={t('onboarding.cloud.confirm.title')}>
+      subtitle={t(
+        'You’ll need to enter this password to recover your account. It’s not stored anywhere, so it can’t be recovered by anyone else.'
+      )}
+      title={t('Confirm your backup password')}>
       <CloudBackupPasswordForm
         isConfirmation={true}
         navigateToNextScreen={navigateToNextScreen}

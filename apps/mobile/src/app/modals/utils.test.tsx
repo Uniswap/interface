@@ -6,7 +6,7 @@ import { MobileState } from 'src/app/reducer'
 import { initialModalState } from 'src/features/modals/modalSlice'
 import { renderWithProviders } from 'src/test/render'
 import { ModalName } from 'wallet/src/telemetry/constants'
-import { mockWalletPreloadedState } from 'wallet/src/test/mocks'
+import { mockWalletPreloadedState } from 'wallet/src/test/fixtures'
 
 const preloadedState = {
   ...mockWalletPreloadedState,

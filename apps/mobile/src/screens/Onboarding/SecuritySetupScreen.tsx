@@ -43,7 +43,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
   const [isLoadingAccount, setIsLoadingAccount] = useState(false)
   const [showWarningModal, setShowWarningModal] = useState(false)
   const { touchId: isTouchIdDevice } = useDeviceSupportsBiometricAuth()
-  const biometricsMethod = useBiometricName(isTouchIdDevice)
+  const authenticationTypeName = useBiometricName(isTouchIdDevice)
 
   const onCompleteOnboarding = useCompleteOnboardingCallback(params)
 
@@ -66,28 +66,27 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
   const onPressEnableSecurity = useCallback(async () => {
     const authStatus = await tryLocalAuthenticate()
 
+    const authTypeCapitalized =
+      authenticationTypeName.charAt(0).toUpperCase() + authenticationTypeName.slice(1)
+
     if (
       authStatus === BiometricAuthenticationStatus.Unsupported ||
       authStatus === BiometricAuthenticationStatus.MissingEnrollment
     ) {
       isIOS
         ? Alert.alert(
-            t('onboarding.security.alert.biometrics.title.ios', { biometricsMethod }),
-            t('onboarding.security.alert.biometrics.message.ios', {
-              biometricsMethod,
+            t('{{authTypeCapitalized}} is disabled', { authTypeCapitalized }),
+            t('To use {{authenticationTypeName}}, allow access in system settings', {
+              authenticationTypeName,
             }),
-            [
-              { text: t('common.navigation.systemSettings'), onPress: openSettings },
-              { text: t('common.button.notNow') },
-            ]
+            [{ text: t('Go to settings'), onPress: openSettings }, { text: t('Not now') }]
           )
         : Alert.alert(
-            t('onboarding.security.alert.biometrics.title.android'),
-            t('onboarding.security.alert.biometrics.message.android'),
-            [
-              { text: t('onboarding.security.button.setup'), onPress: enroll },
-              { text: t('common.button.notNow') },
-            ]
+            t('{{authTypeCapitalized}} is disabled', { authTypeCapitalized }),
+            t('To use {{authenticationTypeName}}, set up it first in settings', {
+              authenticationTypeName,
+            }),
+            [{ text: t('Set up'), onPress: enroll }, { text: t('Not now') }]
           )
     }
 
@@ -95,7 +94,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
       dispatch(setRequiredForTransactions(true))
       await onPressNext()
     }
-  }, [t, biometricsMethod, dispatch, onPressNext])
+  }, [t, authenticationTypeName, dispatch, onPressNext])
 
   const onCloseModal = useCallback(() => setShowWarningModal(false), [])
 
@@ -121,14 +120,13 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
       )}
       <OnboardingScreen
         childrenGap="$none"
-        subtitle={
-          isIOS
-            ? t('onboarding.security.subtitle.ios', {
-                biometricsMethod,
-              })
-            : t('onboarding.security.subtitle.android')
-        }
-        title={t('onboarding.security.title')}>
+        subtitle={t(
+          'Add an extra layer of security by requiring {{ authenticationTypeName }} to send transactions.',
+          {
+            authenticationTypeName,
+          }
+        )}
+        title={t('Protect your wallet')}>
         <Flex centered shrink gap="$spacing16" my="$spacing12" position="relative" py="$spacing24">
           <Flex pt="$spacing24">
             <SecurityBackgroundImage />
@@ -168,15 +166,15 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
           <Trace logPress element={ElementName.Skip}>
             <TouchableArea onPress={onMaybeLaterPressed}>
               <Text color="$accent1" textAlign="center" variant="buttonLabel2">
-                {t('common.button.later')}
+                {t('Maybe later')}
               </Text>
             </TouchableArea>
           </Trace>
           <Trace logPress element={ElementName.Enable}>
             <Button theme="primary" onPress={onPressEnableSecurity}>
-              {isIOS
-                ? t('onboarding.security.button.confirm.ios', { biometricsMethod })
-                : t('onboarding.security.button.confirm.android')}
+              {t('Enable', {
+                authenticationTypeName,
+              })}
             </Button>
           </Trace>
         </Flex>

@@ -55,7 +55,7 @@ export function SwapNotification({
   const retryButton =
     txStatus === TransactionStatus.Failed
       ? {
-          title: t('common.button.retry'),
+          title: t('Retry'),
           onPress: onRetry,
         }
       : undefined

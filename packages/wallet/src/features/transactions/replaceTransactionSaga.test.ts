@@ -19,23 +19,29 @@ import {
 } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import {
-  ACCOUNT,
-  ethersTransactionRequest,
-  getTxFixtures,
-  transactionDetails,
+  account,
+  provider,
+  providerManager,
+  signerManager,
+  txDetailsPending,
+  txRequest,
+  txResponse,
+  txTypeInfo,
 } from 'wallet/src/test/fixtures'
-import { provider, providerManager, signerManager } from 'wallet/src/test/mocks'
 
 const NEW_UNIQUE_ID = faker.datatype.uuid()
 
 // Structure with valid request address (to avoid address validation within saga)
-const transaction = transactionDetails({
+const transaction = {
+  ...txDetailsPending,
   options: {
-    request: ethersTransactionRequest({ from: ACCOUNT.address }),
+    ...txDetailsPending.options,
+    request: {
+      ...txDetailsPending.options.request,
+      from: account.address,
+    },
   },
-})
-
-const { txRequest, txResponse, txTypeInfo } = getTxFixtures(transaction)
+}
 
 const present = dayjs('2022-02-01')
 
@@ -59,7 +65,7 @@ describe(sendTransaction, () => {
     return expectSaga(attemptReplaceTransaction, transaction, transaction.options.request, false)
       .withState({
         transactions: {
-          [ACCOUNT.address]: {
+          [account.address]: {
             [transaction.chainId]: {
               [transaction.id]: transaction,
             },
@@ -67,12 +73,12 @@ describe(sendTransaction, () => {
         },
         wallet: {
           accounts: {
-            [ACCOUNT.address]: ACCOUNT,
+            [account.address]: account,
           },
         },
       })
       .provide([
-        [selectAccounts, { [transaction.from]: ACCOUNT }],
+        [selectAccounts, { [transaction.from]: account }],
         [call(getProvider, transaction.chainId), provider],
         [call(getProviderManager), providerManager],
         [call(getSignerManager), signerManager],
@@ -80,7 +86,7 @@ describe(sendTransaction, () => {
           call(
             signAndSendTransaction,
             transaction.options.request,
-            ACCOUNT,
+            account,
             provider as providers.Provider,
             signerManager
           ),

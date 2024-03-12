@@ -314,7 +314,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                 ) : (
                   <Flex row alignItems="center" justifyContent="space-between">
                     <Text color="$neutral1" variant="subheading2">
-                      {t('walletConnect.request.label.network')}
+                      {t('Network')}
                     </Text>
                     <NetworkPill
                       showIcon
@@ -333,8 +333,8 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                 <AccountDetails address={request.account} />
                 {!hasSufficientFunds && (
                   <Text color="$DEP_accentWarning" pt="$spacing8" variant="body2">
-                    {t('walletConnect.request.error.insufficientFunds', {
-                      currencySymbol: nativeCurrency?.symbol,
+                    {t('You don’t have enough {{symbol}} to complete this transaction.', {
+                      symbol: nativeCurrency?.symbol,
                     })}
                   </Text>
                 )}
@@ -351,7 +351,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                   />
                 }
                 textColor="$DEP_accentWarning"
-                title={t('walletConnect.request.error.network')}
+                title={t('Internet or network connection error')}
               />
             ) : (
               <WarningSection
@@ -367,7 +367,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                 testID={ElementName.Cancel}
                 theme="tertiary"
                 onPress={onReject}>
-                {t('common.button.cancel')}
+                {t('Cancel')}
               </Button>
               <Button
                 fill
@@ -381,9 +381,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                     await onConfirm()
                   }
                 }}>
-                {isTransactionRequest(request)
-                  ? t('common.button.accept')
-                  : t('walletConnect.request.button.sign')}
+                {isTransactionRequest(request) ? t('Accept') : t('Sign')}
               </Button>
             </Flex>
           </Flex>
@@ -421,9 +419,9 @@ function WarningSection({
         width={iconSizes.icon16}
       />
       <Text color="$neutral2" fontStyle="italic" variant="body3">
-        {isTransactionRequest(request)
-          ? t('walletConnect.request.warning.general.transaction')
-          : t('walletConnect.request.warning.general.message')}
+        {t('Be careful: this {{ requestType }} may transfer assets', {
+          requestType: isTransactionRequest(request) ? 'transaction' : 'message',
+        })}
       </Text>
     </Flex>
   )

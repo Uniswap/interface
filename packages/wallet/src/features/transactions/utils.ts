@@ -95,7 +95,7 @@ export function getFinalizedTransactionStatus(
     return TransactionStatus.Failed
   }
   if (currentStatus === TransactionStatus.Cancelling) {
-    return TransactionStatus.Canceled
+    return TransactionStatus.Cancelled
   }
   return TransactionStatus.Success
 }

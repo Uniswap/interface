@@ -143,7 +143,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
               {step !== TransactionStep.SUBMITTED && (
                 <TransferHeader
                   dispatch={dispatch}
-                  flowName={t('send.title')}
+                  flowName={t('Send')}
                   isFiatInput={isFiatInput}
                   setShowViewOnlyModal={setShowViewOnlyModal}
                   showFiatToggle={true}
@@ -183,8 +183,8 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
 
             {showViewOnlyModal && (
               <WarningModal
-                caption={t('send.warning.viewOnly.message')}
-                confirmText={t('common.button.dismiss')}
+                caption={t('You need to import this wallet via recovery phrase to send assets.')}
+                confirmText={t('Dismiss')}
                 icon={
                   <EyeIcon
                     color={colors.neutral2.get()}
@@ -194,7 +194,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
                 }
                 modalName={ModalName.SwapWarning}
                 severity={WarningSeverity.Low}
-                title={t('send.warning.viewOnly.title')}
+                title={t('This wallet is view-only')}
                 onClose={(): void => setShowViewOnlyModal(false)}
                 onConfirm={(): void => setShowViewOnlyModal(false)}
               />

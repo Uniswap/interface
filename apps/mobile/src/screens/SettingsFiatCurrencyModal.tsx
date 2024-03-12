@@ -21,7 +21,7 @@ export function SettingsFiatCurrencyModal(): JSX.Element {
       name={ModalName.FiatCurrencySelector}
       onClose={(): Action => dispatch(closeModal({ name: ModalName.FiatCurrencySelector }))}>
       <Text pb="$spacing12" textAlign="center" variant="subheading1">
-        {t('settings.setting.currency.title')}
+        {t('Local currency')}
       </Text>
       <VirtualizedList showsVerticalScrollIndicator={false}>
         <FiatCurrencySelection

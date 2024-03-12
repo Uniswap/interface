@@ -10,9 +10,9 @@ import { Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
 import { setupWalletCache } from 'wallet/src/data/cache'
 import { getErrorLink, getRestLink } from 'wallet/src/data/links'
 import { mocks as defaultMocks } from './mocks'
-import { defaultResolvers } from './resolvers'
+import { resolvers as defaultResolvers } from './resolvers'
 
-const GQL_SCHEMA_PATH = path.join(__dirname, '../../../data/schema.graphql')
+const GQL_SCHEMA_PATH = path.join(__dirname, '../../data/schema.graphql')
 
 const baseSchema = loadSchemaSync(GQL_SCHEMA_PATH, { loaders: [new GraphQLFileLoader()] })
 

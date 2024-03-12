@@ -6,11 +6,11 @@ import { MobileState } from 'src/app/reducer'
 import { initialModalState } from 'src/features/modals/modalSlice'
 import { render } from 'src/test/test-utils'
 import { ModalName } from 'wallet/src/telemetry/constants'
-import { ACCOUNT } from 'wallet/src/test/fixtures'
-import { mockWalletPreloadedState, noOpFunction } from 'wallet/src/test/mocks'
+import { mockWalletPreloadedState } from 'wallet/src/test/fixtures'
+import { noOpFunction } from 'wallet/src/test/utils'
 
 const preloadedState = {
-  ...mockWalletPreloadedState(ACCOUNT),
+  ...mockWalletPreloadedState,
   modals: {
     ...initialModalState,
     [ModalName.AccountSwitcher]: { isOpen: true },

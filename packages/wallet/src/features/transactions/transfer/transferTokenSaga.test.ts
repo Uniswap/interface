@@ -14,13 +14,7 @@ import {
 } from 'wallet/src/features/transactions/transfer/types'
 import { SendTokenTransactionInfo, TransactionType } from 'wallet/src/features/transactions/types'
 import { getContractManager, getProvider } from 'wallet/src/features/wallet/context'
-import { getTxFixtures, signerMnemonicAccount } from 'wallet/src/test/fixtures'
-import { getTxProvidersMocks, mockContractManager } from 'wallet/src/test/mocks'
-
-const account = signerMnemonicAccount()
-
-const { txRequest, ethersTxReceipt } = getTxFixtures()
-const { mockProvider } = getTxProvidersMocks(ethersTxReceipt)
+import { account, mockContractManager, mockProvider, txRequest } from 'wallet/src/test/fixtures'
 
 const erc20TranferParams: TransferCurrencyParams = {
   txId: '1',

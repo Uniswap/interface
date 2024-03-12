@@ -43,4 +43,11 @@ allprojects {
       codegenDir = rootProject.file("../../../node_modules/react-native-codegen/")
     }
   }
+
+  repositories {
+    maven {
+      // expo-camera bundles a custom com.google.android:cameraview
+      url "$rootDir/../../../node_modules/expo-camera/android/maven"
+    }
+  }
 }

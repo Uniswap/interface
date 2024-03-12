@@ -278,13 +278,13 @@ function useMoonpayError(
   let errorText, errorColor: ColorTokens | undefined
 
   if (hasError) {
-    errorText = t('fiatOnRamp.error.default')
+    errorText = t('Something went wrong.')
     errorColor = '$DEP_accentWarning'
   } else if (amountIsTooSmall) {
-    errorText = t('fiatOnRamp.error.min', { amount: minBuyAmountWithFiatSymbol })
+    errorText = t('Minimum {{amount}}', { amount: minBuyAmountWithFiatSymbol })
     errorColor = '$statusCritical'
   } else if (amountIsTooLarge) {
-    errorText = t('fiatOnRamp.error.max', { amount: maxBuyAmountWithFiatSymbol })
+    errorText = t('Maximum {{amount}}', { amount: maxBuyAmountWithFiatSymbol })
     errorColor = '$statusCritical'
   }
 

@@ -1,20 +1,12 @@
 import { ApolloError } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
 import { ChainId } from 'wallet/src/constants/chains'
-import {
-  Chain,
-  Token as GQLToken,
-  TokenProject,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+import { Token as GQLToken, TokenProject } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-import {
-  SAMPLE_CURRENCY_ID_1,
-  SAMPLE_CURRENCY_ID_2,
-  ethToken,
-  usdcTokenProject,
-} from 'wallet/src/test/fixtures'
+import { SAMPLE_CURRENCY_ID_1, SAMPLE_CURRENCY_ID_2 } from 'wallet/src/test/fixtures'
+import { EthToken, TokenProjectDay } from 'wallet/src/test/gqlFixtures'
 import { renderHook } from 'wallet/src/test/test-utils'
 import {
   buildCurrency,
@@ -38,7 +30,7 @@ describe(currencyIdToContractInput, () => {
 })
 
 describe(tokenProjectToCurrencyInfos, () => {
-  const project = usdcTokenProject()
+  const project = TokenProjectDay
 
   const getExpectedResult = (proj: TokenProject, token: GQLToken): CurrencyInfo =>
     ({
@@ -135,26 +127,28 @@ describe(buildCurrency, () => {
 
 describe(gqlTokenToCurrencyInfo, () => {
   it('returns formatted CurrencyInfo for a given token', () => {
-    const token = ethToken()
-    const result = gqlTokenToCurrencyInfo(token)
+    const result = gqlTokenToCurrencyInfo(EthToken)
 
     expect(result).toEqual({
       currency: buildCurrency({
-        chainId: fromGraphQLChain(token.chain),
-        address: token.address,
-        decimals: token.decimals,
-        symbol: token.symbol,
-        name: token.project?.name,
+        chainId: fromGraphQLChain(EthToken.chain),
+        address: EthToken.address,
+        decimals: EthToken.decimals,
+        symbol: EthToken.symbol,
+        name: EthToken.project?.name,
       }),
-      currencyId: `${fromGraphQLChain(token.chain)}-${token.address}`,
-      logoUrl: token.project?.logoUrl,
-      safetyLevel: token.project?.safetyLevel,
-      isSpam: token.project?.isSpam,
+      currencyId: `${fromGraphQLChain(EthToken.chain)}-${EthToken.address}`,
+      logoUrl: EthToken.project?.logoUrl,
+      safetyLevel: EthToken.project?.safetyLevel,
+      isSpam: false,
     })
   })
 
   it('returns null if currency is invalid', () => {
-    const result = gqlTokenToCurrencyInfo(ethToken({ chain: 'INVALID' as Chain }))
+    const result = gqlTokenToCurrencyInfo({
+      ...EthToken,
+      chain: 'INVALID',
+    } as unknown as GQLToken)
 
     expect(result).toBeNull()
   })

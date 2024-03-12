@@ -73,13 +73,10 @@ export function SearchEmptySection(): JSX.Element {
                 gap="$spacing16"
                 justifyContent="space-between"
                 mb="$spacing4">
-                <SectionHeaderText
-                  icon={<RecentIcon />}
-                  title={t('explore.search.section.recent')}
-                />
+                <SectionHeaderText icon={<RecentIcon />} title={t('Recent searches')} />
                 <TouchableArea onPress={onPressClearSearchHistory}>
                   <Text color="$accent1" variant="buttonLabel3">
-                    {t('explore.search.action.clear')}
+                    {t('Clear all')}
                   </Text>
                 </TouchableArea>
               </Flex>
@@ -92,19 +89,16 @@ export function SearchEmptySection(): JSX.Element {
         </AnimatedFlex>
       )}
       <Flex gap="$spacing4">
-        <SectionHeaderText icon={<TrendIcon />} title={t('explore.search.section.popularTokens')} />
+        <SectionHeaderText icon={<TrendIcon />} title={t('Popular tokens')} />
         <SearchPopularTokens />
       </Flex>
       <Flex gap="$spacing4">
-        <SectionHeaderText icon={<TrendIcon />} title={t('explore.search.section.popularNFT')} />
+        <SectionHeaderText icon={<TrendIcon />} title={t('Popular NFT collections')} />
         <SearchPopularNFTCollections />
       </Flex>
       <FlatList
         ListHeaderComponent={
-          <SectionHeaderText
-            icon={<TrendIcon />}
-            title={t('explore.search.section.suggestedWallets')}
-          />
+          <SectionHeaderText icon={<TrendIcon />} title={t('Suggested wallets')} />
         }
         data={SUGGESTED_WALLETS}
         keyExtractor={walletKey}

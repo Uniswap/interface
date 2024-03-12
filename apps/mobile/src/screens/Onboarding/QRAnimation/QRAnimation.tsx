@@ -295,7 +295,7 @@ export function QRAnimation({
               pb="$spacing12"
               textAlign="center"
               variant="subheading1">
-              {t('onboarding.wallet.title')}
+              {t('Welcome to your new wallet')}
             </Text>
             <Text
               $short={{ variant: 'body3' }}
@@ -304,8 +304,10 @@ export function QRAnimation({
               textAlign="center"
               variant="body2">
               {isNewWallet
-                ? t('onboarding.wallet.description.new')
-                : t('onboarding.wallet.description.existing')}
+                ? t('Your personal space for tokens, NFTs, and all your trades.')
+                : t(
+                    'Check out your tokens and NFTs, follow crypto wallets, and stay up to date on the go.'
+                  )}
             </Text>
           </AnimatedFlex>
         </Flex>
@@ -326,7 +328,7 @@ export function QRAnimation({
                       />
                     </Flex>
                     <Text color="$sporeWhite" variant="buttonLabel2">
-                      {t('onboarding.wallet.continue')}
+                      {t('Let’s keep it safe')}
                     </Text>
                   </Flex>
                   <Arrow color={colors.sporeWhite.val} direction="e" size={iconSizes.icon24} />

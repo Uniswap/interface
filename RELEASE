@@ -1,24 +1,8 @@
-IPFS hash of the deployment:
-- CIDv0: `QmPfhCQw4e63hhx4FqWnroACYRcyZHw6f5Nvo6DXHwkEGr`
-- CIDv1: `bafybeiatxsersz6wkzf75lzpkhxoglubrcqv7uqy6nubdvvjyanidm4vam`
+We are back with another round of updates. Here’s what’s new:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Launched uni.eth usernames!  This is a readable username that makes it easy to receive crypto and build your web3 profile. Claim your username in the app. 
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Other changes: 
 
-IPFS gateways:
-- https://bafybeiatxsersz6wkzf75lzpkhxoglubrcqv7uqy6nubdvvjyanidm4vam.ipfs.dweb.link/
-- https://bafybeiatxsersz6wkzf75lzpkhxoglubrcqv7uqy6nubdvvjyanidm4vam.ipfs.cf-ipfs.com/
-- [ipfs://QmPfhCQw4e63hhx4FqWnroACYRcyZHw6f5Nvo6DXHwkEGr/](ipfs://QmPfhCQw4e63hhx4FqWnroACYRcyZHw6f5Nvo6DXHwkEGr/)
-
-### 5.17.2 (2024-03-08)
-
-
-### Bug Fixes
-
-* **web:** [hotfix] fiatCurrency is undefined (#6811) (#6814) a78d4cc
-
-
+- Polish around recovery phrase settings and notifications
+- Various bug fixes and performance improvements

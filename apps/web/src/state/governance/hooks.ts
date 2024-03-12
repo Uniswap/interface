@@ -23,8 +23,8 @@ import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap
 import { useContract } from 'hooks/useContract'
 import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useCallback, useMemo } from 'react'
-import GOVERNOR_BRAVO_ABI from 'uniswap/src/abis/governor-bravo.json'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
+import GOVERNOR_BRAVO_ABI from 'wallet/src/abis/governor-bravo.json'
 
 import {
   BRAVO_START_BLOCK,

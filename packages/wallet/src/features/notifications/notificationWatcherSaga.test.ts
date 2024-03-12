@@ -17,9 +17,7 @@ import {
   TransactionTypeInfo,
   UnknownTransactionInfo,
 } from 'wallet/src/features/transactions/types'
-import { finalizedTransactionAction } from 'wallet/src/test/fixtures'
-
-const finalizedTxAction = finalizedTransactionAction()
+import { finalizedTxAction } from 'wallet/src/test/fixtures'
 
 const txId = 'uuid-4'
 

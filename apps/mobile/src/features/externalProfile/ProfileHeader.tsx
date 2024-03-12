@@ -283,7 +283,7 @@ export const ProfileHeader = memo(function ProfileHeader({
                   color="$neutral2"
                   maxFontSizeMultiplier={1.2}
                   variant="buttonLabel2">
-                  {t('common.button.send')}
+                  {t('Send')}
                 </Text>
               </Flex>
             </TouchableArea>

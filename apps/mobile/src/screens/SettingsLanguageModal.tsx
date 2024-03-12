@@ -39,17 +39,19 @@ export function SettingsLanguageModal(): JSX.Element {
       <Flex gap="$spacing24" pt="$spacing24" px="$spacing24">
         <Flex gap="$spacing8">
           <Text textAlign="center" variant="subheading1">
-            {t('settings.setting.language.title')}
+            {t('Change preferred language')}
           </Text>
           <Text color="$neutral2" textAlign="center" variant="body3">
-            {t('settings.setting.language.description')}
+            {t(
+              'Uniswap defaults to your device‘s language settings. To change your preferred language, go to “Uniswap” in your device settings and tap on “Language”'
+            )}
           </Text>
         </Flex>
         <Button
           testID={ElementName.OpenDeviceLanguageSettings}
           theme="tertiary"
           onPress={openLanguageSettings}>
-          {t('settings.setting.language.button.navigate')}
+          {t('Go to settings')}
         </Button>
       </Flex>
     </BottomSheetModal>

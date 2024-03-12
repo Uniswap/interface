@@ -57,7 +57,7 @@ export function TokenDetailsMarketData({
   return (
     <Flex gap="$spacing8">
       <StatsRow
-        label={t('token.stats.marketCap')}
+        label={t('Market Cap')}
         statsIcon={
           <Icons.ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />
         }>
@@ -66,7 +66,7 @@ export function TokenDetailsMarketData({
         </Text>
       </StatsRow>
       <StatsRow
-        label={t('token.stats.fullyDilutedValuation')}
+        label={t('Fully Diluted Valuation')}
         statsIcon={
           <Icons.ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />
         }>
@@ -75,7 +75,7 @@ export function TokenDetailsMarketData({
         </Text>
       </StatsRow>
       <StatsRow
-        label={t('token.stats.volume')}
+        label={t('24h Volume')}
         statsIcon={
           <Icons.ChartBar color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />
         }>
@@ -84,7 +84,7 @@ export function TokenDetailsMarketData({
         </Text>
       </StatsRow>
       <StatsRow
-        label={t('token.stats.priceHighYear')}
+        label={t('52W High')}
         statsIcon={
           <Icons.TrendUp color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />
         }>
@@ -93,7 +93,7 @@ export function TokenDetailsMarketData({
         </Text>
       </StatsRow>
       <StatsRow
-        label={t('token.stats.priceLowYear')}
+        label={t('52W Low')}
         statsIcon={
           <Icons.TrendDown color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />
         }>
@@ -147,7 +147,7 @@ export function TokenDetailsStats({
         <Flex gap="$spacing4">
           {name && (
             <Text color="$neutral2" variant="subheading2">
-              {t('token.stats.section.about', { token: name })}
+              {t('About {{ token }}', { token: name })}
             </Text>
           )}
           <Flex gap="$spacing16">
@@ -177,7 +177,7 @@ export function TokenDetailsStats({
                       </Text>
                     </Flex>
                     <Text color="$blue400" variant="buttonLabel4">
-                      {t('token.stats.translation.original')}
+                      {t('Show original')}
                     </Text>
                   </Flex>
                 ) : (
@@ -185,7 +185,7 @@ export function TokenDetailsStats({
                     <Flex row alignItems="center" gap="$spacing12">
                       <Icons.Language color="$neutral2" size="$icon.20" />
                       <Text color="$neutral2" variant="body3">
-                        {t('token.stats.translation.translate', {
+                        {t('Translate to {{ language }}', {
                           language: currentLanguageInfo.displayName,
                         })}
                       </Text>
@@ -199,7 +199,7 @@ export function TokenDetailsStats({
       )}
       <Flex gap="$spacing4">
         <Text color="$neutral2" variant="subheading2">
-          {t('token.stats.title')}
+          {t('Stats')}
         </Text>
         <TokenDetailsMarketData
           fullyDilutedValuation={fullyDilutedValuation}

@@ -63,8 +63,8 @@ export function SearchENSAddressItem({
           {showSecondLine ? (
             <Text color="$neutral2" ellipsizeMode="tail" numberOfLines={1} variant="subheading2">
               {showOwnedBy &&
-                t('explore.search.label.ownedBy', {
-                  ownerAddress: primaryENSName || formattedAddress,
+                t('Owned by {{owner}}', {
+                  owner: primaryENSName || formattedAddress,
                 })}
               {showAddress && formattedAddress}
             </Text>

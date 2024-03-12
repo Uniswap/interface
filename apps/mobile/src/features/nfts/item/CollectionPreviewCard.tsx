@@ -75,7 +75,7 @@ export function CollectionPreviewCard({
             {collection?.markets?.[0]?.floorPrice && (
               <Flex row gap="$spacing4">
                 <Text color="$neutral2" numberOfLines={1} variant="subheading2">
-                  {t('tokens.nfts.collection.label.priceFloor')}:
+                  {t('Floor')}:
                 </Text>
                 <PriceAmount
                   iconColor="$neutral2"

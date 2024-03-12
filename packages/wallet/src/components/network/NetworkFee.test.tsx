@@ -1,6 +1,6 @@
 import { ChainId } from 'wallet/src/constants/chains'
-import { noOpFunction } from 'wallet/src/test/mocks'
 import { render } from 'wallet/src/test/test-utils'
+import { noOpFunction } from 'wallet/src/test/utils'
 import { NetworkFee } from './NetworkFee'
 
 jest.mock('wallet/src/features/gas/hooks', () => {

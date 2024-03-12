@@ -68,7 +68,7 @@ export function TokenBalances({
       {hasOtherChainBalances && otherChainBalances ? (
         <Flex gap="$spacing8">
           <Text color="$neutral2" variant="subheading2">
-            {t('token.balances.other')}
+            {t('Balances on other networks')}
           </Text>
           <Flex gap="$spacing12">
             {otherChainBalances.map((balance) => {
@@ -106,9 +106,7 @@ export function CurrentChainBalance({
     <Flex row>
       <Flex fill gap="$spacing8">
         <Text color="$neutral2" variant="subheading2">
-          {isReadonly
-            ? t('token.balances.viewOnly', { ownerAddress: displayName })
-            : t('token.balances.main')}
+          {isReadonly ? t('{{owner}}’s balance', { owner: displayName }) : t('Your balance')}
         </Text>
         <Flex fill gap="$spacing4">
           <Text variant="heading3">

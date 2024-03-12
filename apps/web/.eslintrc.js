@@ -46,21 +46,6 @@ module.exports = {
                 message: 'Only import types, unless you are in the client-side SOR, to preserve lazy-loading.',
                 allowTypeImports: true,
               },
-              {
-                name: 'moment',
-                // tree-shaking for moment is not configured because it degrades performance - see craco.config.cjs.
-                message: 'moment is not configured for tree-shaking. If you use it, update the Webpack configuration.',
-              },
-              {
-                name: 'react-helmet-async',
-                // default package's esm export is broken, but the explicit cjs export works.
-                message: `Import from 'react-helment-async/lib/index' instead.`,
-              },
-              {
-                name: 'zustand',
-                importNames: ['default'],
-                message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
-              },
             ],
           },
         ],
@@ -71,6 +56,23 @@ module.exports = {
               {
                 target: ['src/**/*[!.test].ts', 'src/**/*[!.test].tsx'],
                 from: 'src/test-utils',
+              },
+            ],
+          },
+        ],
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                name: 'moment',
+                // tree-shaking for moment is not configured because it degrades performance - see craco.config.cjs.
+                message: 'moment is not configured for tree-shaking. If you use it, update the Webpack configuration.',
+              },
+              {
+                name: 'zustand',
+                importNames: ['default'],
+                message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
               },
             ],
           },
@@ -88,7 +90,6 @@ module.exports = {
       files: ['**/*.ts', '**/*.tsx'],
       excludedFiles: ['src/analytics/*'],
       rules: {
-        // Uses 'no-restricted-imports' to avoid overriding the above rules in '@typescript-eslint/no-restricted-imports'
         'no-restricted-imports': [
           'error',
           {

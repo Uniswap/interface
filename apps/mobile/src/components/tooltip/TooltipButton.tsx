@@ -49,7 +49,7 @@ export function TooltipInfoButton({
         <WarningModal
           backgroundIconColor={backgroundIconColor}
           caption={modalText}
-          closeText={closeText ?? t('common.button.close')}
+          closeText={closeText ?? t('Close')}
           icon={modalIcon}
           modalName={ModalName.TooltipContent}
           title={modalTitle}

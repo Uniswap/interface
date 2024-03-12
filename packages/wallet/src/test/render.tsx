@@ -15,7 +15,7 @@ import { Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
 import { UnitagUpdaterContextProvider } from 'wallet/src/features/unitags/context'
 import { SharedProvider } from 'wallet/src/provider'
 import { sharedRootReducer, type SharedState } from 'wallet/src/state/reducer'
-import { AutoMockedApolloProvider } from 'wallet/src/test/mocks'
+import { AutoMockedApolloProvider } from 'wallet/src/test/mocks/provider'
 
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.

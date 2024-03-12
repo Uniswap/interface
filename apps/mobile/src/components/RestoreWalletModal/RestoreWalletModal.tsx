@@ -51,17 +51,19 @@ export function RestoreWalletModal(): JSX.Element | null {
           />
         </Flex>
         <Text textAlign="center" variant="body1">
-          {t('account.wallet.button.restore')}
+          {t('Restore wallet')}
         </Text>
         <Text color="$neutral2" textAlign="center" variant="body2">
-          {t('account.wallet.restore.description')}
+          {t(
+            'Because you’re on a new device, you’ll need to restore your recovery phrase. This will allow you to swap and send tokens.'
+          )}
         </Text>
         <Flex centered row gap="$spacing12" pt="$spacing12">
           <Button fill theme="tertiary" onPress={onDismiss}>
-            {t('common.button.dismiss')}
+            {t('Dismiss')}
           </Button>
           <Button fill testID={ElementName.RestoreWallet} theme="primary" onPress={onRestore}>
-            {t('common.button.restore')}
+            {t('Restore')}
           </Button>
         </Flex>
       </Flex>

@@ -91,7 +91,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                 $short={{ size: 'medium' }}
                 size="large"
                 onPress={onPressCreateWallet}>
-                {t('onboarding.landing.button.create')}
+                {t('Create a new wallet')}
               </Button>
             </Trace>
             <Trace logPress element={ElementName.ImportAccount}>
@@ -110,7 +110,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                   $short={{ variant: 'buttonLabel2', fontSize: '$medium' }}
                   color="$accent1"
                   variant="buttonLabel1">
-                  {t('onboarding.landing.button.add')}
+                  {t('Add an existing wallet')}
                 </Text>
               </TouchableArea>
             </Trace>

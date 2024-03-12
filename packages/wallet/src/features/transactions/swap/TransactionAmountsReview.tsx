@@ -93,7 +93,7 @@ export function TransactionAmountsReview({
       <Flex row alignItems="center">
         <Flex fill>
           <Text color="$neutral2" variant="body2">
-            {t('swap.review.summary')}
+            {t('You’re swapping')}
           </Text>
         </Flex>
         {isWeb && (

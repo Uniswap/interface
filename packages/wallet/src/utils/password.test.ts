@@ -5,6 +5,12 @@ import {
   isPasswordStrongEnough,
 } from './password'
 
+jest.mock('i18next', () => {
+  return {
+    t: (key: string): string => key,
+  }
+})
+
 describe(isPasswordStrongEnough, () => {
   it('returns true for equal strengths', () => {
     expect(

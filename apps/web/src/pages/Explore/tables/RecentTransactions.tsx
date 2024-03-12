@@ -13,7 +13,7 @@ import {
   TokenLinkCell,
 } from 'components/Table/styled'
 import { PoolTransaction, PoolTransactionType } from 'graphql/data/__generated__/types-and-hooks'
-import { BETypeToTransactionType, TransactionType, useAllTransactions } from 'graphql/data/useAllTransactions'
+import { TransactionType, useAllTransactions } from 'graphql/data/useAllTransactions'
 import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { OrderDirection, Transaction_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
@@ -55,7 +55,7 @@ export default function RecentTransactions() {
       columnHelper.accessor((transaction) => transaction, {
         id: 'timestamp',
         header: () => (
-          <Cell minWidth={120} justifyContent="flex-start" grow>
+          <Cell minWidth={164} justifyContent="flex-start" grow>
             <Row gap="4px">
               {sortState.sortBy === Transaction_OrderBy.Timestamp && (
                 <HeaderArrow direction={sortState.sortDirection} />
@@ -67,7 +67,7 @@ export default function RecentTransactions() {
           </Cell>
         ),
         cell: (transaction) => (
-          <Cell loading={showLoadingSkeleton} minWidth={120} justifyContent="flex-start" grow>
+          <Cell loading={showLoadingSkeleton} minWidth={164} justifyContent="flex-start" grow>
             <TimestampCell
               timestamp={Number(transaction.getValue?.().timestamp)}
               link={getExplorerLink(chainId, transaction.getValue?.().hash, ExplorerDataType.TRANSACTION)}
@@ -78,7 +78,7 @@ export default function RecentTransactions() {
       columnHelper.accessor((transaction) => transaction, {
         id: 'swap-type',
         header: () => (
-          <Cell minWidth={276} justifyContent="flex-start" grow>
+          <Cell minWidth={300} justifyContent="flex-start" grow>
             <FilterHeaderRow modalOpen={filterModalIsOpen} onClick={() => toggleFilterModal()}>
               <Filter
                 allFilters={Object.values(TransactionType)}
@@ -95,11 +95,9 @@ export default function RecentTransactions() {
           </Cell>
         ),
         cell: (transaction) => (
-          <Cell loading={showLoadingSkeleton} minWidth={276} justifyContent="flex-start" grow>
+          <Cell loading={showLoadingSkeleton} minWidth={300} justifyContent="flex-start" grow>
             <Row gap="8px">
-              <ThemedText.BodySecondary>
-                <Trans>{BETypeToTransactionType[transaction.getValue?.().type]}</Trans>
-              </ThemedText.BodySecondary>
+              <ThemedText.BodySecondary>{transaction.getValue?.().type}</ThemedText.BodySecondary>
               <TokenLinkCell token={transaction.getValue?.().token0} />
               <ThemedText.BodySecondary>
                 {transaction.getValue?.().type === PoolTransactionType.Swap ? <Trans>for</Trans> : <Trans>and</Trans>}
@@ -169,16 +167,16 @@ export default function RecentTransactions() {
       columnHelper.accessor((transaction) => transaction.account, {
         id: 'maker-address',
         header: () => (
-          <Cell minWidth={150}>
+          <Cell minWidth={125}>
             <ThemedText.BodySecondary>
               <Trans>Wallet</Trans>
             </ThemedText.BodySecondary>
           </Cell>
         ),
         cell: (makerAddress) => (
-          <Cell loading={showLoadingSkeleton} minWidth={150}>
+          <Cell loading={showLoadingSkeleton} minWidth={125}>
             <StyledExternalLink href={getExplorerLink(chainId, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}>
-              {shortenAddress(makerAddress.getValue?.())}
+              {shortenAddress(makerAddress.getValue?.(), 0)}
             </StyledExternalLink>
           </Cell>
         ),

@@ -51,9 +51,11 @@ export function UnitagsIntroModal(): JSX.Element {
     <BottomSheetModal name={ModalName.UnitagsIntro} onClose={onClose}>
       <Flex gap="$spacing24" px="$spacing24" py="$spacing16">
         <Flex alignItems="center" gap="$spacing12">
-          <Text variant="subheading1">{t('unitags.intro.title')}</Text>
+          <Text variant="subheading1">{t('Introducing usernames')}</Text>
           <Text color="$neutral2" textAlign="center" variant="body2">
-            {t('unitags.intro.subtitle')}
+            {t(
+              'Say goodbye to 0x addresses. Usernames are readable names that make it easier to send and receive crypto.'
+            )}
           </Text>
         </Flex>
         <Flex alignItems="center" maxHeight={105}>
@@ -64,13 +66,13 @@ export function UnitagsIntroModal(): JSX.Element {
           />
         </Flex>
         <Flex gap="$spacing16" px="$spacing20">
-          <BodyItem Icon={Icons.UserSquare} title={t('unitags.intro.features.profile')} />
-          <BodyItem Icon={Icons.Ticket} title={t('unitags.intro.features.free')} />
-          <BodyItem Icon={Icons.Lightning} title={t('unitags.intro.features.ens')} />
+          <BodyItem Icon={Icons.UserSquare} title={t('Customizable profiles')} />
+          <BodyItem Icon={Icons.Ticket} title={t('Free to claim')} />
+          <BodyItem Icon={Icons.Lightning} title={t('Powered by ENS subdomains')} />
         </Flex>
         <Flex gap="$spacing8">
           <Button size="medium" theme="primary" onPress={onPressClaimOneNow}>
-            {t('common.button.continue')}
+            {t('Continue')}
           </Button>
         </Flex>
         <Flex $short={{ py: '$none', mx: '$spacing12' }} mx="$spacing24">

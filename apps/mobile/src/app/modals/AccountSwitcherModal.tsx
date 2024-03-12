@@ -190,19 +190,17 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
 
       if (!cloudStorageAvailable) {
         Alert.alert(
+          isAndroid ? t('Google Drive not available') : t('iCloud Drive not available'),
           isAndroid
-            ? t('account.cloud.error.unavailable.title.android')
-            : t('account.cloud.error.unavailable.title.ios'),
-          isAndroid
-            ? t('account.cloud.error.unavailable.message.android')
-            : t('account.cloud.error.unavailable.message.ios'),
+            ? t(
+                'Please verify that you are logged in to a Google account with Google Drive enabled on this device and try again.'
+              )
+            : t(
+                'Please verify that you are logged in to an Apple ID with iCloud Drive enabled on this device and try again.'
+              ),
           [
-            {
-              text: t('account.cloud.error.unavailable.button.settings'),
-              onPress: openSettings,
-              style: 'default',
-            },
-            { text: t('account.cloud.error.unavailable.button.cancel'), style: 'cancel' },
+            { text: t('Go to settings'), onPress: openSettings, style: 'default' },
+            { text: t('Not now'), style: 'cancel' },
           ]
         )
         return
@@ -226,7 +224,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
             borderBottomColor="$surface3"
             borderBottomWidth={1}
             p="$spacing16">
-            <Text variant="body1">{t('account.wallet.button.create')}</Text>
+            <Text variant="body1">{t('Create a new wallet')}</Text>
           </Flex>
         ),
       },
@@ -235,7 +233,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         onPress: onPressAddViewOnlyWallet,
         render: () => (
           <Flex alignItems="center" p="$spacing16">
-            <Text variant="body1">{t('account.wallet.button.addViewOnly')}</Text>
+            <Text variant="body1">{t('Add a view-only wallet')}</Text>
           </Flex>
         ),
       },
@@ -244,7 +242,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         onPress: onPressImportWallet,
         render: () => (
           <Flex alignItems="center" borderTopColor="$surface3" borderTopWidth={1} p="$spacing16">
-            <Text variant="body1">{t('account.wallet.button.import')}</Text>
+            <Text variant="body1">{t('Import a new wallet')}</Text>
           </Flex>
         ),
       },
@@ -257,9 +255,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         render: () => (
           <Flex alignItems="center" borderTopColor="$surface3" borderTopWidth={1} p="$spacing16">
             <Text variant="body1">
-              {isAndroid
-                ? t('account.cloud.button.restore.android')
-                : t('account.cloud.button.restore.ios')}
+              {isAndroid ? t('Restore from Google Drive') : t('Restore from iCloud')}
             </Text>
           </Flex>
         ),
@@ -299,7 +295,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
             testID={ElementName.WalletSettings}
             theme="secondary"
             onPress={onManageWallet}>
-            {t('account.wallet.button.manage')}
+            {t('Manage wallet')}
           </Button>
         </Flex>
       </Flex>
@@ -314,7 +310,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
             <Icons.Plus color="$neutral2" size="$icon.12" strokeWidth={2} />
           </Flex>
           <Text color="$neutral2" variant="buttonLabel3">
-            {t('account.wallet.button.add')}
+            {t('Add wallet')}
           </Text>
         </Flex>
       </TouchableArea>

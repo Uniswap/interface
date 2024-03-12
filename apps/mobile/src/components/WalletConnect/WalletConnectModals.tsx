@@ -104,8 +104,10 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
   if (!isRequestFromSignerAccount) {
     return (
       <WarningModal
-        caption={t('walletConnect.request.warning.message')}
-        closeText={t('common.button.dismiss')}
+        caption={t(
+          'In order to sign messages or transactions, you’ll need to import the wallet’s recovery phrase.'
+        )}
+        closeText={t('Dismiss')}
         icon={
           <EyeIcon
             color={colors.neutral2.get()}
@@ -116,7 +118,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         }
         modalName={ModalName.WCViewOnlyWarning}
         severity={WarningSeverity.None}
-        title={t('walletConnect.request.warning.title')}
+        title={t('This wallet is in view only mode')}
         onCancel={onClose}
         onClose={onClose}>
         <Flex

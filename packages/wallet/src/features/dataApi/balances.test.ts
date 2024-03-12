@@ -3,30 +3,24 @@ import { ApolloError, NetworkStatus } from '@apollo/client'
 import {
   Chain,
   PortfolioBalanceDocument,
+  Portfolio as PortfolioType,
   Resolvers,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { setupWalletCache } from 'wallet/src/data/cache'
-import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
+import { PortfolioBalance as PortfolioBalanceType } from 'wallet/src/features/dataApi/types'
 import { FavoritesState, initialFavoritesState } from 'wallet/src/features/favorites/slice'
 import { WalletState, initialWalletState } from 'wallet/src/features/wallet/slice'
 import {
-  ARBITRUM_CURRENCY,
-  BASE_CURRENCY,
-  MAINNET_CURRENCY,
-  OPTIMISM_CURRENCY,
-  POLYGON_CURRENCY,
+  PortfolioBalance,
+  PortfolioBalanceWithoutUSD,
+  PortfolioBalancesWithUSD,
   SAMPLE_CURRENCY_ID_1,
   SAMPLE_CURRENCY_ID_2,
   SAMPLE_SEED_ADDRESS_1,
   SAMPLE_SEED_ADDRESS_2,
-  currencyInfo,
-  daiToken,
-  ethToken,
-  portfolio,
-  portfolioBalance,
-  tokenBalance,
 } from 'wallet/src/test/fixtures'
-import { act, createArray, renderHook, waitFor } from 'wallet/src/test/test-utils'
+import { Portfolio, PortfolioBalancesById, Portfolios } from 'wallet/src/test/gqlFixtures'
+import { act, renderHook, waitFor } from 'wallet/src/test/test-utils'
 import {
   sortPortfolioBalances,
   useHighestBalanceNativeCurrencyId,
@@ -38,17 +32,17 @@ import {
   useTokenBalancesGroupedByVisibility,
 } from './balances'
 
-const daiTokenBalance = tokenBalance({ token: daiToken(), isHidden: true })
-const ethTokenBalance = tokenBalance({ token: ethToken(), isHidden: false })
-const daiPortfolioBalance = portfolioBalance({ from: daiTokenBalance })
-const ethPortfolioBalance = portfolioBalance({ from: ethTokenBalance })
-const Portfolio = portfolio({ tokenBalances: [daiTokenBalance, ethTokenBalance] })
-const daiCurrencyId = daiPortfolioBalance.currencyInfo.currencyId
-const ethCurrencyId = ethPortfolioBalance.currencyInfo.currencyId
+const currencyId1 = '1-0x6b175474e89094c44da98b954eedeac495271d0f'
+const currencyId2 = '1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+
+const BalancesById = {
+  [currencyId1]: PortfolioBalancesById[currencyId1],
+  [currencyId2]: PortfolioBalancesById[currencyId2],
+}
 
 const portfolioResolvers: Resolvers = {
   Query: {
-    portfolios: () => [Portfolio],
+    portfolios: () => [Portfolio as PortfolioType],
   },
 }
 
@@ -234,7 +228,7 @@ describe(usePortfolioBalances, () => {
   })
 
   it('returns loading set to true when data is being fetched', async () => {
-    const { result } = renderHook(() => usePortfolioBalances({ address: Portfolio.ownerAddress }), {
+    const { result } = renderHook(() => usePortfolioBalances({ address: SAMPLE_SEED_ADDRESS_1 }), {
       resolvers: portfolioResolvers,
     })
 
@@ -252,7 +246,7 @@ describe(usePortfolioBalances, () => {
   it('returns error when query fails', async () => {
     jest.spyOn(console, 'error').mockImplementation(() => undefined)
 
-    const { result } = renderHook(() => usePortfolioBalances({ address: Portfolio.ownerAddress }), {
+    const { result } = renderHook(() => usePortfolioBalances({ address: SAMPLE_SEED_ADDRESS_1 }), {
       resolvers: {
         Query: {
           portfolios: () => {
@@ -274,7 +268,7 @@ describe(usePortfolioBalances, () => {
   })
 
   it('returns undefined when no balances for the specified address are found', async () => {
-    const { result } = renderHook(() => usePortfolioBalances({ address: Portfolio.ownerAddress }), {
+    const { result } = renderHook(() => usePortfolioBalances({ address: SAMPLE_SEED_ADDRESS_1 }), {
       resolvers: {
         Query: {
           portfolios: () => [],
@@ -302,10 +296,7 @@ describe(usePortfolioBalances, () => {
 
     await waitFor(() => {
       expect(result.current).toEqual({
-        data: {
-          [daiCurrencyId]: daiPortfolioBalance,
-          [ethCurrencyId]: ethPortfolioBalance,
-        },
+        data: BalancesById,
         loading: false,
         networkStatus: NetworkStatus.ready,
         refetch: expect.any(Function),
@@ -317,7 +308,7 @@ describe(usePortfolioBalances, () => {
   it('calls onCompleted callback when query completes', async () => {
     const onCompleted = jest.fn()
     const { result } = renderHook(
-      () => usePortfolioBalances({ address: daiCurrencyId, onCompleted }),
+      () => usePortfolioBalances({ address: SAMPLE_SEED_ADDRESS_1, onCompleted }),
       { resolvers: portfolioResolvers }
     )
 
@@ -346,8 +337,10 @@ describe(usePortfolioTotalValue, () => {
 
   it('returns loading set to true when data is being fetched', async () => {
     const { result } = renderHook(
-      () => usePortfolioTotalValue({ address: Portfolio.ownerAddress }),
-      { resolvers: portfolioResolvers }
+      () => usePortfolioTotalValue({ address: SAMPLE_SEED_ADDRESS_1 }),
+      {
+        resolvers: portfolioResolvers,
+      }
     )
 
     expect(result.current).toEqual({
@@ -365,7 +358,7 @@ describe(usePortfolioTotalValue, () => {
     jest.spyOn(console, 'error').mockImplementation(() => undefined)
 
     const { result } = renderHook(
-      () => usePortfolioTotalValue({ address: Portfolio.ownerAddress }),
+      () => usePortfolioTotalValue({ address: SAMPLE_SEED_ADDRESS_1 }),
       {
         resolvers: {
           Query: {
@@ -390,7 +383,7 @@ describe(usePortfolioTotalValue, () => {
 
   it('retruns undefined when no balances for the specified address are found', async () => {
     const { result } = renderHook(
-      () => usePortfolioTotalValue({ address: Portfolio.ownerAddress }),
+      () => usePortfolioTotalValue({ address: SAMPLE_SEED_ADDRESS_1 }),
       {
         resolvers: {
           Query: {
@@ -442,7 +435,12 @@ describe(useHighestBalanceNativeCurrencyId, () => {
     const { result } = renderHook(() => useHighestBalanceNativeCurrencyId(SAMPLE_SEED_ADDRESS_1), {
       resolvers: {
         Query: {
-          portfolios: () => [portfolio({ tokenBalances: [daiTokenBalance] })],
+          portfolios: () => [
+            {
+              ...Portfolio,
+              tokenBalances: [Portfolio?.tokenBalances?.[0]], // the first balance is not native
+            } as PortfolioType,
+          ],
         },
       },
     })
@@ -453,21 +451,28 @@ describe(useHighestBalanceNativeCurrencyId, () => {
   })
 
   it('returns native currency id with the highest balance', async () => {
-    const { result } = renderHook(() => useHighestBalanceNativeCurrencyId(SAMPLE_SEED_ADDRESS_1), {
-      resolvers: portfolioResolvers,
-    })
+    const { result } = renderHook(
+      () => useHighestBalanceNativeCurrencyId(SAMPLE_SEED_ADDRESS_1.toLocaleLowerCase()),
+      {
+        resolvers: portfolioResolvers,
+      }
+    )
 
     await act(() => undefined) // wait for query to complete
 
     await waitFor(() => {
-      expect(result.current).toEqual(ethCurrencyId) // ETH currency is native
+      expect(result.current).toEqual('1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
     })
   })
 })
 
 describe(useTokenBalancesGroupedByVisibility, () => {
-  const hiddenBalances = [daiPortfolioBalance]
-  const visibleBalances = [ethPortfolioBalance]
+  const hiddenBalances = [{ ...PortfolioBalancesWithUSD[0], isHidden: true }] as [
+    PortfolioBalanceType
+  ]
+  const visibleBalances = [{ ...PortfolioBalancesWithUSD[1], isHidden: false }] as [
+    PortfolioBalanceType
+  ]
 
   it('shownTokens and hiddenTokens are undefined when no balances are passed', () => {
     const { result } = renderHook(() => useTokenBalancesGroupedByVisibility({}))
@@ -482,8 +487,8 @@ describe(useTokenBalancesGroupedByVisibility, () => {
     const { result } = renderHook(() =>
       useTokenBalancesGroupedByVisibility({
         balancesById: {
-          [daiPortfolioBalance.cacheId]: daiPortfolioBalance,
-          [ethPortfolioBalance.cacheId]: ethPortfolioBalance,
+          [visibleBalances[0].cacheId]: visibleBalances[0],
+          [hiddenBalances[0].cacheId]: hiddenBalances[0],
         },
       })
     )
@@ -498,7 +503,7 @@ describe(useTokenBalancesGroupedByVisibility, () => {
 describe(useSortedPortfolioBalances, () => {
   it('returns loading set to true when data is being fetched', () => {
     const { result } = renderHook(() =>
-      useSortedPortfolioBalances({ address: Portfolio.ownerAddress })
+      useSortedPortfolioBalances({ address: SAMPLE_SEED_ADDRESS_1 })
     )
 
     expect(result.current).toEqual({
@@ -514,7 +519,7 @@ describe(useSortedPortfolioBalances, () => {
 
   it('returns balances grouped by visibility when data is fetched', async () => {
     const { result } = renderHook(
-      () => useSortedPortfolioBalances({ address: Portfolio.ownerAddress }),
+      () => useSortedPortfolioBalances({ address: 'SAMPLE_SEED_ADDRESS_1' }),
       {
         resolvers: portfolioResolvers,
       }
@@ -523,8 +528,8 @@ describe(useSortedPortfolioBalances, () => {
     await waitFor(() => {
       expect(result.current).toEqual({
         data: {
-          balances: [ethPortfolioBalance],
-          hiddenBalances: [daiPortfolioBalance],
+          balances: [PortfolioBalancesById['1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee']],
+          hiddenBalances: [PortfolioBalancesById['1-0x6b175474e89094c44da98b954eedeac495271d0f']],
         },
         loading: false,
         networkStatus: NetworkStatus.ready,
@@ -535,55 +540,35 @@ describe(useSortedPortfolioBalances, () => {
 })
 
 describe(sortPortfolioBalances, () => {
-  const balancesWithUSD = createArray(3, portfolioBalance)
-  const balancesWithoutUSD: ArrayOfLength<5, PortfolioBalance> = [
-    portfolioBalance({
-      balanceUSD: null,
-      currencyInfo: currencyInfo({ currency: POLYGON_CURRENCY }),
-    }),
-    portfolioBalance({ balanceUSD: null, currencyInfo: currencyInfo({ currency: BASE_CURRENCY }) }),
-    portfolioBalance({
-      balanceUSD: null,
-      currencyInfo: currencyInfo({ currency: ARBITRUM_CURRENCY }),
-    }),
-    portfolioBalance({
-      balanceUSD: null,
-      currencyInfo: currencyInfo({ currency: MAINNET_CURRENCY }),
-    }),
-    portfolioBalance({
-      balanceUSD: null,
-      currencyInfo: currencyInfo({ currency: OPTIMISM_CURRENCY }),
-    }),
-  ]
-
   it('returns balances with USD value before balances without USD value', () => {
-    const result = sortPortfolioBalances([...balancesWithoutUSD, ...balancesWithUSD])
+    const result = sortPortfolioBalances([
+      ...PortfolioBalanceWithoutUSD,
+      ...PortfolioBalancesWithUSD,
+    ])
 
     expect(result).toEqual([
-      ...createArray(balancesWithUSD.length, () =>
-        expect.objectContaining({ balanceUSD: expect.any(Number) })
-      ),
-      ...createArray(balancesWithoutUSD.length, () =>
-        expect.objectContaining({ balanceUSD: null })
-      ),
+      expect.objectContaining({ balanceUSD: expect.any(Number) }),
+      expect.objectContaining({ balanceUSD: expect.any(Number) }),
+      expect.objectContaining({ balanceUSD: expect.any(Number) }),
+      expect.objectContaining({ balanceUSD: null }),
+      expect.objectContaining({ balanceUSD: null }),
+      expect.objectContaining({ balanceUSD: null }),
     ])
   })
 
   it('sorts balances with USD value by USD value in descending order', () => {
-    const result = sortPortfolioBalances(balancesWithUSD)
+    const result = sortPortfolioBalances(PortfolioBalancesWithUSD)
 
-    expect(result).toEqual(balancesWithUSD.sort((a, b) => b.balanceUSD! - a.balanceUSD!))
+    expect(result).toEqual(PortfolioBalancesWithUSD.sort((a, b) => b.balanceUSD! - a.balanceUSD!))
   })
 
   it('sorts balances without USD value by name', () => {
-    const result = sortPortfolioBalances(balancesWithoutUSD)
+    const result = sortPortfolioBalances(PortfolioBalanceWithoutUSD)
 
     expect(result).toEqual([
-      balancesWithoutUSD[2],
-      balancesWithoutUSD[1],
-      balancesWithoutUSD[3],
-      balancesWithoutUSD[4],
-      balancesWithoutUSD[0],
+      PortfolioBalanceWithoutUSD[2],
+      PortfolioBalanceWithoutUSD[0],
+      PortfolioBalanceWithoutUSD[1],
     ])
   })
 })
@@ -591,7 +576,6 @@ describe(sortPortfolioBalances, () => {
 describe(usePortfolioCacheUpdater, () => {
   const cache = setupWalletCache()
   const modifyMock = jest.spyOn(cache, 'modify')
-  const balance = portfolioBalance()
 
   beforeEach(async () => {
     await cache.reset()
@@ -599,7 +583,7 @@ describe(usePortfolioCacheUpdater, () => {
 
     cache.writeQuery({
       query: PortfolioBalanceDocument,
-      data: { portfolios: [Portfolio] },
+      data: { portfolios: Portfolios },
       variables: { owner: SAMPLE_SEED_ADDRESS_1 },
     })
   })
@@ -610,10 +594,10 @@ describe(usePortfolioCacheUpdater, () => {
       resolvers: portfolioResolvers,
     })
 
-    result.current(true, balance)
+    result.current(true, PortfolioBalance)
 
     expect(modifyMock).toHaveBeenCalledWith({
-      id: balance.cacheId,
+      id: PortfolioBalance.cacheId,
       fields: {
         isHidden: expect.any(Function),
       },
@@ -626,7 +610,7 @@ describe(usePortfolioCacheUpdater, () => {
       resolvers: portfolioResolvers,
     })
 
-    result.current(true, balance)
+    result.current(true, PortfolioBalance)
 
     expect(modifyMock).toHaveBeenCalledWith(
       expect.objectContaining({

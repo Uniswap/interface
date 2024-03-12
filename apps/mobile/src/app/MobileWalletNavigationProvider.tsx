@@ -6,7 +6,6 @@ import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { Screens } from 'src/screens/Screens'
 import {
-  NavigateToNftItemArgs,
   NavigateToSwapFlowArgs,
   WalletNavigationProvider,
 } from 'wallet/src/contexts/WalletNavigationContext'
@@ -17,7 +16,6 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
   const navigateToAccountActivityList = useNavigateToHomepageTab(HomeScreenTabIndex.Activity)
   const navigateToAccountTokenList = useNavigateToHomepageTab(HomeScreenTabIndex.Tokens)
   const navigateToBuyOrReceiveWithEmptyWallet = useNavigateToBuyOrReceiveWithEmptyWallet()
-  const navigateToNftDetails = useNavigateToNftDetails()
   const navigateToSwapFlow = useNavigateToSwapFlow()
   const navigateToTokenDetails = useNavigateToTokenDetails()
 
@@ -26,7 +24,6 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
       navigateToAccountActivityList={navigateToAccountActivityList}
       navigateToAccountTokenList={navigateToAccountTokenList}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
-      navigateToNftDetails={navigateToNftDetails}
       navigateToSwapFlow={navigateToSwapFlow}
       navigateToTokenDetails={navigateToTokenDetails}>
       {children}
@@ -62,23 +59,6 @@ function useNavigateToTokenDetails(): (currencyId: string) => void {
   return useCallback(
     (currencyId: string): void => {
       navigation.navigate(Screens.TokenDetails, { currencyId })
-    },
-    [navigation]
-  )
-}
-
-function useNavigateToNftDetails(): (args: NavigateToNftItemArgs) => void {
-  const navigation = useAppStackNavigation()
-
-  return useCallback(
-    ({ owner, address, tokenId, isSpam, fallbackData }: NavigateToNftItemArgs): void => {
-      navigation.navigate(Screens.NFTItem, {
-        owner,
-        address,
-        tokenId,
-        isSpam,
-        fallbackData,
-      })
     },
     [navigation]
   )

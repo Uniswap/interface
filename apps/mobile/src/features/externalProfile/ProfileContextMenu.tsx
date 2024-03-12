@@ -70,26 +70,26 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
   const menuActions = useMemo(() => {
     const options = [
       {
-        title: t('account.wallet.action.viewExplorer', {
+        title: t('View on {{ blockExplorerName }}', {
           blockExplorerName: CHAIN_INFO[ChainId.Mainnet].explorer.name,
         }),
         action: openExplorerLink,
         systemIcon: 'link',
       },
       {
-        title: t('account.wallet.action.copy'),
+        title: t('Copy address'),
         action: onPressCopyAddress,
         systemIcon: 'square.on.square',
       },
       {
-        title: t('common.button.share'),
+        title: t('Share'),
         action: onPressShare,
         systemIcon: 'square.and.arrow.up',
       },
     ]
     if (unitag) {
       options.push({
-        title: t('account.wallet.action.report'),
+        title: t('Report profile'),
         action: onReportProfile,
         systemIcon: 'flag',
       })

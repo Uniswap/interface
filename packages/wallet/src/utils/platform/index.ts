@@ -10,14 +10,3 @@ export const isIOS = platform === 'iOS'
 export const isAndroid = platform === 'Android'
 export const isNonSupportedDevice = !isIOS && !isAndroid && type === 'mobile'
 export const isMobileSafari = isMobile && isIOS && name?.toLowerCase().includes('safari')
-
-export function getCloudProviderName(): string {
-  switch (platform) {
-    case 'Android':
-      return 'Google Drive'
-    case 'iOS':
-      return 'iCloud'
-    default:
-      return ''
-  }
-}

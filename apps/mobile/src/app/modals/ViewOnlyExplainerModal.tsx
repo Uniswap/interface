@@ -46,9 +46,11 @@ export function ViewOnlyExplainerModal(): JSX.Element {
             <WalletImage height="100%" preserveAspectRatio="xMidYMid slice" width="100%" />
           </Flex>
           <Flex alignItems="center" gap="$spacing4">
-            <Text variant="subheading1">{t('account.wallet.viewOnly.title')}</Text>
+            <Text variant="subheading1">{t('This wallet is view-only')}</Text>
             <Text color="$neutral2" textAlign="center" variant="body2">
-              {t('account.wallet.viewOnly.description')}
+              {t(
+                'To swap, buy, send, and receive tokens, you need to import this wallet’s recovery phrase.'
+              )}
             </Text>
           </Flex>
         </Flex>
@@ -59,7 +61,7 @@ export function ViewOnlyExplainerModal(): JSX.Element {
             px={40}
             theme="primary"
             onPress={onPressImportWallet}>
-            {t('account.wallet.viewOnly.button')}
+            {t('Import wallet')}
           </Button>
           <Button
             alignSelf="center"
@@ -69,7 +71,7 @@ export function ViewOnlyExplainerModal(): JSX.Element {
             px={40}
             theme="secondary"
             onPress={onClose}>
-            {t('common.button.later')}
+            {t('Maybe later')}
           </Button>
         </Flex>
       </Flex>

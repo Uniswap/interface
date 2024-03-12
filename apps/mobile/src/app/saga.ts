@@ -1,3 +1,4 @@
+import { PersistState } from 'redux-persist'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { appRatingWatcherSaga } from 'src/features/appRating/saga'
 import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
@@ -8,7 +9,7 @@ import { telemetrySaga } from 'src/features/telemetry/saga'
 import { restoreMnemonicCompleteWatcher } from 'src/features/wallet/saga'
 import { walletConnectSaga } from 'src/features/walletConnect/saga'
 import { signWcRequestSaga } from 'src/features/walletConnect/signWcRequestSaga'
-import { spawn } from 'typed-redux-saga'
+import { delay, select, spawn } from 'typed-redux-saga'
 import { appLanguageWatcherSaga } from 'wallet/src/features/language/saga'
 import {
   swapActions,
@@ -43,6 +44,8 @@ import {
   importAccountSagaName,
 } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { getMonitoredSagaReducers, MonitoredSaga } from 'wallet/src/state/saga'
+
+const REHYDRATION_STATUS_POLLING_INTERVAL = 50
 
 // All regular sagas must be included here
 const sagas = [
@@ -96,6 +99,18 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
 export const monitoredSagaReducers = getMonitoredSagaReducers(monitoredSagas)
 
 export function* mobileSaga() {
+  // wait until redux-persist has finished rehydration
+  while (true) {
+    if (
+      yield* select(
+        (state: { _persist?: PersistState }): boolean | undefined => state._persist?.rehydrated
+      )
+    ) {
+      break
+    }
+    yield* delay(REHYDRATION_STATUS_POLLING_INTERVAL)
+  }
+
   for (const s of sagas) {
     yield* spawn(s)
   }

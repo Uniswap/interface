@@ -82,7 +82,7 @@ export const mockFiatConverter: LocalizationContextState = {
   },
 }
 
-export const mockLocalizationContext = {
+export const MockLocalizationContext = {
   LocalizationContextProvider: ({ children }: PropsWithChildren): ReactNode => children,
   useLocalizationContext: (): LocalizationContextState => ({
     convertFiatAmount: mockFiatConverter.convertFiatAmount,

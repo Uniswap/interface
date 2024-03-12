@@ -128,9 +128,9 @@ const ChoosePhotoOption = ({ type }: { type: PhotoAction }): JSX.Element => {
           color={type === PhotoAction.RemovePhoto ? '$statusCritical' : '$neutral1'}
           numberOfLines={1}
           variant="buttonLabel2">
-          {type === PhotoAction.BrowseCameraRoll && t('unitags.choosePhoto.option.cameraRoll')}
-          {type === PhotoAction.BrowseNftsList && t('unitags.choosePhoto.option.nft')}
-          {type === PhotoAction.RemovePhoto && t('unitags.choosePhoto.option.remove')}
+          {type === PhotoAction.BrowseCameraRoll && t('Choose from camera roll')}
+          {type === PhotoAction.BrowseNftsList && t('Choose an NFT')}
+          {type === PhotoAction.RemovePhoto && t('Remove profile picture')}
         </Text>
       </Flex>
     </Flex>

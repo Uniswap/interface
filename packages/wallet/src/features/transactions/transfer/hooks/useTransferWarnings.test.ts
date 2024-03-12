@@ -37,7 +37,7 @@ const transferState: DerivedTransferInfo = {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '20000'),
   },
   chainId: ChainId.Mainnet,
-  currencyInInfo: uniCurrencyInfo(),
+  currencyInInfo: uniCurrencyInfo,
   nftIn: undefined,
 }
 
@@ -51,7 +51,7 @@ const transferState2: DerivedTransferInfo = {
   },
   recipient: '0x0eae044f00b0af300500f090ea00027097d03000',
   chainId: ChainId.Mainnet,
-  currencyInInfo: uniCurrencyInfo(),
+  currencyInInfo: uniCurrencyInfo,
   nftIn: undefined,
 }
 
@@ -107,7 +107,7 @@ const transferCurrency: DerivedTransferInfo = {
   },
   recipient: '0x0eae044f00b0af300500f090ea00027097d03000',
   chainId: ChainId.Mainnet,
-  currencyInInfo: uniCurrencyInfo(),
+  currencyInInfo: uniCurrencyInfo,
   nftIn: undefined,
 }
 
@@ -121,7 +121,7 @@ const insufficientBalanceState: DerivedTransferInfo = {
   },
   recipient: '0x0eae044f00b0af300500f090ea00027097d03000',
   chainId: ChainId.Mainnet,
-  currencyInInfo: uniCurrencyInfo(),
+  currencyInInfo: uniCurrencyInfo,
   nftIn: undefined,
 }
 
@@ -129,33 +129,33 @@ const mockTranslate = jest.fn()
 
 describe(getTransferWarnings, () => {
   it('does not error when Currency with balances and amounts is provided', () => {
-    const warnings = getTransferWarnings(mockTranslate, transferCurrency, isOffline(networkUp()))
+    const warnings = getTransferWarnings(mockTranslate, transferCurrency, isOffline(networkUp))
     expect(warnings.length).toBe(0)
   })
 
   it('errors if there is no internet', () => {
-    const warnings = getTransferWarnings(mockTranslate, transferCurrency, isOffline(networkDown()))
+    const warnings = getTransferWarnings(mockTranslate, transferCurrency, isOffline(networkDown))
     expect(warnings.length).toBe(1)
   })
 
   it('does not error when network state is unknown', () => {
-    const warnings = getTransferWarnings(mockTranslate, transferNFT, isOffline(networkUnknown()))
+    const warnings = getTransferWarnings(mockTranslate, transferNFT, isOffline(networkUnknown))
     expect(warnings.length).toBe(0)
   })
 
   it('does not error when correctly formed NFT is provided', () => {
-    const warnings = getTransferWarnings(mockTranslate, transferNFT, isOffline(networkUp()))
+    const warnings = getTransferWarnings(mockTranslate, transferNFT, isOffline(networkUp))
     expect(warnings.length).toBe(0)
   })
 
   it('catches incomplete form errors: no recipient', async () => {
-    const warnings = getTransferWarnings(mockTranslate, transferState, isOffline(networkUp()))
+    const warnings = getTransferWarnings(mockTranslate, transferState, isOffline(networkUp))
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches incomplete form errors: no amount', async () => {
-    const warnings = getTransferWarnings(mockTranslate, transferState2, isOffline(networkUp()))
+    const warnings = getTransferWarnings(mockTranslate, transferState2, isOffline(networkUp))
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.FormIncomplete)
   })
@@ -164,7 +164,7 @@ describe(getTransferWarnings, () => {
     const warnings = getTransferWarnings(
       mockTranslate,
       insufficientBalanceState,
-      isOffline(networkUp())
+      isOffline(networkUp)
     )
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.InsufficientFunds)
@@ -182,7 +182,7 @@ describe(getTransferWarnings, () => {
     const warnings = getTransferWarnings(
       mockTranslate,
       incompleteAndInsufficientBalanceState,
-      isOffline(networkUp())
+      isOffline(networkUp)
     )
     expect(warnings.length).toBe(2)
   })

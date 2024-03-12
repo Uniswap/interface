@@ -3,29 +3,6 @@
 exports[`TDP Skeleton should render correctly 1`] = `
 <DocumentFragment>
   .c11 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c12 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c24 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -39,8 +16,8 @@ exports[`TDP Skeleton should render correctly 1`] = `
   display: -ms-flexbox;
   display: flex;
   color: #7D7D7D;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 20px;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -72,7 +49,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   color: #CECECE;
 }
 
-.c39 {
+.c41 {
   border-radius: 12px;
   height: 40px;
   width: 40px;
@@ -87,7 +64,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   z-index: 2;
 }
 
-.c41 {
+.c43 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -104,7 +81,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   height: 100%;
 }
 
-.c40 {
+.c42 {
   position: absolute;
   left: 50%;
   -webkit-transform: translate(-50%,-50%);
@@ -113,7 +90,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   margin: 0;
 }
 
-.c31 {
+.c33 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -132,37 +109,37 @@ exports[`TDP Skeleton should render correctly 1`] = `
   background-color: #FFFFFF;
 }
 
-.c35 {
+.c37 {
   background-color: #F9F9F9;
   border-radius: 4px;
   height: 56px;
   width: 60px;
 }
 
-.c37 {
+.c39 {
   background-color: #F9F9F9;
   border-radius: 16px;
   height: 56px;
   width: 100px;
 }
 
-.c42 {
+.c44 {
   background-color: #F9F9F9;
   border-radius: 16px;
   height: 56px;
   width: 100%;
 }
 
-.c36 {
+.c38 {
   background-color: #22222212;
   height: 36px;
 }
 
-.c32 {
+.c34 {
   padding: 8px;
 }
 
-.c34 {
+.c36 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -177,7 +154,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   justify-content: space-between;
 }
 
-.c33 {
+.c35 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -195,11 +172,11 @@ exports[`TDP Skeleton should render correctly 1`] = `
   padding: 48px 12px;
 }
 
-.c38 {
+.c40 {
   position: relative;
 }
 
-.c4 {
+.c6 {
   border-radius: 12px;
   border-radius: 12px;
   height: 24px;
@@ -214,24 +191,42 @@ exports[`TDP Skeleton should render correctly 1`] = `
   background-size: 400%;
 }
 
-.c22 {
+.c25 {
   background-color: #22222212;
   border: none;
   height: 0.5px;
 }
 
-.c23 {
+.c26 {
   gap: 16px;
   padding: 24px 0px;
   -webkit-animation: iAjNNh 125ms ease-in;
   animation: iAjNNh 125ms ease-in;
 }
 
-.c25 {
+.c27 {
   font-size: 28px !important;
 }
 
-.c19 {
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  height: 436px;
+  margin-bottom: 24px;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  position: relative;
+}
+
+.c22 {
   color: #7D7D7D;
   font-size: 14px;
   min-width: 121px;
@@ -242,7 +237,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   padding-bottom: 24px;
 }
 
-.c18 {
+.c21 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -255,7 +250,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   flex-wrap: wrap;
 }
 
-.c14 {
+.c18 {
   gap: 16px;
   -webkit-animation: iAjNNh 125ms ease-in;
   animation: iAjNNh 125ms ease-in;
@@ -284,7 +279,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   width: 100%;
 }
 
-.c30 {
+.c32 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -297,7 +292,25 @@ exports[`TDP Skeleton should render correctly 1`] = `
   width: 360px;
 }
 
-.c7 {
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: flex-end;
+  -webkit-box-align: flex-end;
+  -ms-flex-align: flex-end;
+  align-items: flex-end;
+  height: 100%;
+  padding-bottom: 66px;
+  overflow: hidden;
+  margin-bottom: 44px;
+}
+
+.c4 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -310,8 +323,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding-top: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 4px;
   gap: 20px;
   -webkit-animation: iAjNNh 125ms ease-in;
   animation: iAjNNh 125ms ease-in;
@@ -319,7 +331,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   animation-duration: 250ms;
 }
 
-.c8 {
+.c5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -333,58 +345,59 @@ exports[`TDP Skeleton should render correctly 1`] = `
   align-items: center;
 }
 
-.c5 {
+.c7 {
   height: 16px;
   width: 180px;
 }
 
-.c15 {
+.c12 {
   height: 32px;
   border-radius: 8px;
 }
 
-.c6 {
-  width: 169px;
-}
-
-.c9 {
+.c8 {
   width: 32px;
   height: 32px;
   border-radius: 50%;
 }
 
-.c10 {
-  height: 36px;
+.c9 {
   width: 136px;
 }
 
-.c16 {
+.c13 {
+  margin-top: 4px;
+  height: 40px;
+  width: 162px;
+}
+
+.c19 {
   width: 120px;
 }
 
-.c20 {
+.c23 {
   width: 80px;
   margin-bottom: 4px;
 }
 
-.c21 {
+.c24 {
   width: 116px;
 }
 
-.c26 {
+.c28 {
   margin-bottom: 6px;
   width: 100%;
 }
 
-.c29 {
+.c31 {
   width: 120px;
 }
 
-.c27 {
+.c29 {
   width: 50%;
 }
 
-.c17 {
+.c20 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -395,16 +408,31 @@ exports[`TDP Skeleton should render correctly 1`] = `
   flex-wrap: wrap;
 }
 
-.c28 {
+.c30 {
   padding-top: 24px;
 }
 
-.c13 {
+.c16 {
+  -webkit-animation: wave 8s cubic-bezier(0.36,0.45,0.63,0.53) infinite;
+  animation: wave 8s cubic-bezier(0.36,0.45,0.63,0.53) infinite;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  overflow: hidden;
+  margin-top: 90px;
+}
+
+.c14 {
+  height: 6px;
+}
+
+.c17 {
   height: 4px;
 }
 
 @media screen and (max-width:640px) {
-  .c19 {
+  .c22 {
     min-width: 168px;
   }
 }
@@ -434,7 +462,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
 }
 
 @media screen and (max-width:1024px) {
-  .c30 {
+  .c32 {
     width: 100%;
     max-width: 780px;
   }
@@ -453,14 +481,12 @@ exports[`TDP Skeleton should render correctly 1`] = `
           class="c1"
         >
           <nav
-            aria-label="breadcrumb-nav"
             class="c2"
           >
             <a
               class="c3"
-              href="/explore/undefined"
+              href="/tokens"
             >
-              Explore 
               <svg
                 fill="none"
                 height="14"
@@ -472,373 +498,264 @@ exports[`TDP Skeleton should render correctly 1`] = `
                 width="14"
                 xmlns="http://www.w3.org/2000/svg"
               >
+                <line
+                  x1="19"
+                  x2="5"
+                  y1="12"
+                  y2="12"
+                />
                 <polyline
-                  points="9 18 15 12 9 6"
+                  points="12 19 5 12 12 5"
                 />
               </svg>
+               Tokens
             </a>
-            <a
-              class="c3"
-              href="/explore/tokens/undefined"
-            >
-              Tokens 
-              <svg
-                fill="none"
-                height="14"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                width="14"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <polyline
-                  points="9 18 15 12 9 6"
-                />
-              </svg>
-            </a>
-            <div
-              class="c4 c5 c6"
-            />
           </nav>
           <div
-            class="c7"
+            class="c4"
           >
             <div
-              class="c8"
+              class="c5"
             >
               <div
-                class="c4 c5 c9"
+                class="c6 c7 c8"
               />
               <div
-                class="c4 c5 c10"
+                class="c6 c7 c9"
               />
             </div>
           </div>
           <div
-            class="c11 c12"
-            style="position: relative;"
-          >
-            <svg
-              fill="none"
-              height="356"
-              width="100%"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g>
-                <rect
-                  fill="#CECECE40"
-                  height="32"
-                  rx="4"
-                  width="180"
-                  y="0"
-                />
-                <rect
-                  fill="#CECECE40"
-                  height="13"
-                  rx="4"
-                  width="80"
-                  y="48"
-                />
-                <g
-                  transform="translate(0, 342)"
-                >
-                  <rect
-                    fill="#CECECE40"
-                    height="6"
-                    rx="3"
-                    width="7%"
-                    x="10%"
-                  />
-                  <rect
-                    fill="#CECECE40"
-                    height="6"
-                    rx="3"
-                    width="7%"
-                    x="28.25%"
-                  />
-                  <rect
-                    fill="#CECECE40"
-                    height="6"
-                    rx="3"
-                    width="7%"
-                    x="46.5%"
-                  />
-                  <rect
-                    fill="#CECECE40"
-                    height="6"
-                    rx="3"
-                    width="7%"
-                    x="64.75%"
-                  />
-                  <rect
-                    fill="#CECECE40"
-                    height="6"
-                    rx="3"
-                    width="7%"
-                    x="83%"
-                  />
-                </g>
-                <g
-                  transform="translate(0, 10)"
-                >
-                  <rect
-                    fill="#CECECE40"
-                    height="6"
-                    rx="3"
-                    width="24"
-                    x="96%"
-                    y="0"
-                  />
-                  <rect
-                    fill="#CECECE40"
-                    height="6"
-                    rx="3"
-                    width="24"
-                    x="96%"
-                    y="71.2"
-                  />
-                  <rect
-                    fill="#CECECE40"
-                    height="6"
-                    rx="3"
-                    width="24"
-                    x="96%"
-                    y="142.4"
-                  />
-                  <rect
-                    fill="#CECECE40"
-                    height="6"
-                    rx="3"
-                    width="24"
-                    x="96%"
-                    y="213.6"
-                  />
-                  <rect
-                    fill="#CECECE40"
-                    height="6"
-                    rx="3"
-                    width="24"
-                    x="96%"
-                    y="284.8"
-                  />
-                </g>
-              </g>
-              <defs>
-                <lineargradient
-                  id="mask-Price-356-gradient"
-                  x1="0%"
-                  x2="100%"
-                  y1="0%"
-                  y2="0%"
-                >
-                  <stop
-                    offset="0"
-                    stop-color="#CECECE"
-                  >
-                    <animate
-                      attributeName="offset"
-                      dur="1.3s"
-                      repeatCount="indefinite"
-                      values="-1;3"
-                    />
-                  </stop>
-                  <stop
-                    offset="0.5"
-                    stop-color="#fff"
-                  >
-                    <animate
-                      attributeName="offset"
-                      dur="1.3s"
-                      repeatCount="indefinite"
-                      values="-0.5;3.5"
-                    />
-                  </stop>
-                  <stop
-                    offset="1"
-                    stop-color="#CECECE"
-                  >
-                    <animate
-                      attributeName="offset"
-                      dur="1.3s"
-                      repeatCount="indefinite"
-                      values="0;4"
-                    />
-                  </stop>
-                </lineargradient>
-              </defs>
-              <mask
-                id="mask-Price-356"
-                style="mask-type: alpha;"
-              >
-                <path
-                  d="M0 122.5L7.26 116.158L14.52 109.916L21.78 103.873L29.04 98.1233L36.3 92.7582L43.56 87.862L50.82 83.5121L58.08 79.7771L65.34 76.7159L72.6 74.3767L79.86 72.7964L87.12 72H94.38L101.64 72.7964L108.9 74.3767L116.16 76.7159L123.42 79.7771L130.68 83.5121L137.94 87.862L145.2 92.7582L152.46 98.1233L159.72 103.873L166.98 109.916L174.24 116.158L181.5 122.5L188.76 128.842L196.02 135.084L203.28 141.127L210.54 146.877L217.8 152.242L225.06 157.138L232.32 161.488L239.58 165.223L246.84 168.284L254.1 170.623L261.36 172.204L268.62 173H275.88L283.14 172.204L290.4 170.623L297.66 168.284L304.92 165.223L312.18 161.488L319.44 157.138L326.7 152.242L333.96 146.877L341.22 141.127L348.48 135.084L355.74 128.842L363 122.5L370.26 116.158L377.52 109.916L384.78 103.873L392.04 98.1233L399.3 92.7582L406.56 87.862L413.82 83.5121L421.08 79.7771L428.34 76.7159L435.6 74.3767L442.86 72.7964L450.12 72L457.38 72L464.64 72.7964L471.9 74.3767L479.16 76.7159L486.42 79.7771L493.68 83.5121L500.94 87.862L508.2 92.7582L515.46 98.1233L522.72 103.873L529.98 109.916L537.24 116.158L544.5 122.5L551.76 128.842L559.02 135.084L566.28 141.127L573.54 146.877L580.8 152.242L588.06 157.138L595.32 161.488L602.58 165.223L609.84 168.284L617.1 170.623L624.36 172.204L631.62 173H638.88L646.14 172.204L653.4 170.623L660.66 168.284L667.92 165.223L675.18 161.488L682.44 157.138L689.7 152.242L696.96 146.877L704.22 141.127L711.48 135.084L718.74 128.842L726 122.5"
-                  stroke="white"
-                  stroke-linecap="round"
-                  stroke-width="4"
-                  transform="translate(5, 75)"
-                />
-              </mask>
-              <g
-                mask="url(#mask-Price-356)"
-              >
-                <rect
-                  fill="url(#mask-Price-356-gradient)"
-                  height="356"
-                  rx="4"
-                  width="94%"
-                />
-              </g>
-            </svg>
-          </div>
-          <div
-            class="c13"
-          />
-          <div
-            class="c14"
+            class="c10"
           >
             <div
-              class="c4 c5 c15 c16"
-            />
-            <div
-              class="c17"
+              class="c11 css-15popx1"
             >
               <div
-                class="c18"
+                class="c6 c7 c12 c13"
+              />
+            </div>
+            <div
+              class="c14"
+            />
+            <div
+              class="c15"
+            >
+              <div>
+                <div
+                  class="c16"
+                >
+                  <svg
+                    height="160"
+                    width="416"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 0 80 Q 104 10, 208 80 T 416 80"
+                      fill="transparent"
+                      stroke="#22222212"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <svg
+                    height="160"
+                    width="416"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 0 80 Q 104 10, 208 80 T 416 80"
+                      fill="transparent"
+                      stroke="#22222212"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <svg
+                    height="160"
+                    width="416"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 0 80 Q 104 10, 208 80 T 416 80"
+                      fill="transparent"
+                      stroke="#22222212"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <svg
+                    height="160"
+                    width="416"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 0 80 Q 104 10, 208 80 T 416 80"
+                      fill="transparent"
+                      stroke="#22222212"
+                      stroke-width="2"
+                    />
+                  </svg>
+                  <svg
+                    height="160"
+                    width="416"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M 0 80 Q 104 10, 208 80 T 416 80"
+                      fill="transparent"
+                      stroke="#22222212"
+                      stroke-width="2"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c17"
+          />
+          <div
+            class="c18"
+          >
+            <div
+              class="c6 c7 c12 c19"
+            />
+            <div
+              class="c20"
+            >
+              <div
+                class="c21"
               >
                 <div
-                  class="c19"
+                  class="c22"
                 >
                   <div
-                    class="c4 c5 c20"
+                    class="c6 c7 c23"
                   />
                   <div
-                    class="c4 c5 c15 c21"
+                    class="c6 c7 c12 c24"
                   />
                 </div>
                 <div
-                  class="c19"
+                  class="c22"
                 >
                   <div
-                    class="c4 c5 c20"
+                    class="c6 c7 c23"
                   />
                   <div
-                    class="c4 c5 c15 c21"
+                    class="c6 c7 c12 c24"
                   />
                 </div>
               </div>
               <div
-                class="c18"
+                class="c21"
               >
                 <div
-                  class="c19"
+                  class="c22"
                 >
                   <div
-                    class="c4 c5 c20"
+                    class="c6 c7 c23"
                   />
                   <div
-                    class="c4 c5 c15 c21"
+                    class="c6 c7 c12 c24"
                   />
                 </div>
                 <div
-                  class="c19"
+                  class="c22"
                 >
                   <div
-                    class="c4 c5 c20"
+                    class="c6 c7 c23"
                   />
                   <div
-                    class="c4 c5 c15 c21"
+                    class="c6 c7 c12 c24"
                   />
                 </div>
               </div>
             </div>
           </div>
           <hr
-            class="c22"
+            class="c25"
           />
           <div
-            class="c23"
+            class="c26"
           >
             <div
-              class="c24 c25 css-1a9hfw6"
+              class="c11 c27 css-1a9hfw6"
             >
               <div
-                class="c4 c5 c15 c16"
+                class="c6 c7 c12 c19"
               />
             </div>
           </div>
           <div
-            class="c4 c5 c26"
+            class="c6 c7 c28"
           />
           <div
-            class="c4 c5 c26"
+            class="c6 c7 c28"
           />
           <div
-            class="c4 c5 c26 c27"
+            class="c6 c7 c28 c29"
             style="margin-bottom: 24px;"
           />
           <div
-            class="c28"
+            class="c30"
           >
             <div
-              class="c4 c5 c26 c29"
+              class="c6 c7 c28 c31"
             />
             <div
-              class="c4 c5 c26 c27"
+              class="c6 c7 c28 c29"
             />
           </div>
           <div
-            class="c28"
+            class="c30"
           >
             <div
-              class="c4 c5 c26 c29"
+              class="c6 c7 c28 c31"
             />
             <div
-              class="c4 c5 c26 c27"
+              class="c6 c7 c28 c29"
             />
           </div>
         </div>
         <div
-          class="c30"
+          class="c32"
         >
           <div
-            class="c31"
+            class="c33"
           >
             <div
-              class="c32"
+              class="c34"
             >
               <div
-                class="c24 css-n8z49y"
+                class="c11 css-n8z49y"
               >
                 Swap
               </div>
             </div>
             <div
-              class="c33"
+              class="c35"
             >
               <div
-                class="c34"
+                class="c36"
               >
                 <div
-                  class="c35 c36"
+                  class="c37 c38"
                   width="60"
                 />
                 <div
-                  class="c37 c36"
+                  class="c39 c38"
                   radius="16"
                   width="100"
                 />
               </div>
             </div>
             <div
-              class="c38"
+              class="c40"
             >
               <div
-                class="c39 c40"
+                class="c41 c42"
               >
                 <div
-                  class="c41"
+                  class="c43"
                 >
                   <svg
                     fill="none"
@@ -864,17 +781,17 @@ exports[`TDP Skeleton should render correctly 1`] = `
                 </div>
               </div>
               <div
-                class="c33"
+                class="c35"
               >
                 <div
-                  class="c34"
+                  class="c36"
                 >
                   <div
-                    class="c35 c36"
+                    class="c37 c38"
                     width="60"
                   />
                   <div
-                    class="c37 c36"
+                    class="c39 c38"
                     radius="16"
                     width="100"
                   />
@@ -882,7 +799,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
               </div>
             </div>
             <div
-              class="c42"
+              class="c44"
               radius="16"
             />
           </div>

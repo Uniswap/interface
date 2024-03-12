@@ -202,11 +202,14 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
 
     const confirmed = yield* call(
       showAlert,
-      i18n.t('walletConnect.error.connection.title'),
-      i18n.t('walletConnect.error.connection.message', {
-        chainsNames: chainLabels,
-        dappName: dapp.name,
-      })
+      i18n.t('Connection Error'),
+      i18n.t(
+        `Uniswap Wallet currently supports {{ chains }}. Please only use "{{ dappName }}" on these chains`,
+        {
+          chains: chainLabels,
+          dappName: dapp.name,
+        }
+      )
     )
     if (confirmed) {
       yield* put(setHasPendingSessionError(false))

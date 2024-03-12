@@ -25,7 +25,7 @@ export function FiatOnRampCtaButton({
 }: FiatOnRampCtaButtonProps): JSX.Element {
   const { t } = useTranslation()
   const buttonAvailable = eligible || isLoading
-  const continueText = eligible ? continueButtonText : t('fiatOnRamp.error.unsupported')
+  const continueText = eligible ? continueButtonText : t('Not supported in region')
   return (
     <Trace
       logPress

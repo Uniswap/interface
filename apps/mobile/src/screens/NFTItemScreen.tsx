@@ -265,8 +265,8 @@ function NFTItemScreenContents({
                         style={{ backgroundColor: colorsDark.surface2 }}
                         width="100%">
                         <BaseCard.ErrorState
-                          retryButtonLabel={t('common.button.retry')}
-                          title={t('tokens.nfts.details.error.load.title')}
+                          retryButtonLabel="Retry"
+                          title={t('Couldn’t load NFT details')}
                           onRetry={(): Promise<ApolloQueryResult<NftItemScreenQuery>> =>
                             refetch?.()
                           }
@@ -315,7 +315,7 @@ function NFTItemScreenContents({
                   {listingPrice?.value ? (
                     <AssetMetadata
                       color={accentTextColor}
-                      title={t('tokens.nfts.details.price')}
+                      title={t('Current price')}
                       valueComponent={
                         <PriceAmount
                           iconColor="$neutral1"
@@ -329,7 +329,7 @@ function NFTItemScreenContents({
                   {lastSaleData?.price?.value ? (
                     <AssetMetadata
                       color={accentTextColor}
-                      title={t('tokens.nfts.details.recentPrice')}
+                      title={t('Last sale price')}
                       valueComponent={
                         <PriceAmount
                           iconColor="$neutral1"
@@ -344,7 +344,7 @@ function NFTItemScreenContents({
                   {owner && (
                     <AssetMetadata
                       color={accentTextColor}
-                      title={t('tokens.nfts.details.owner')}
+                      title={t('Owned by')}
                       valueComponent={
                         <TouchableArea
                           disabled={disableProfileNavigation}
@@ -368,7 +368,7 @@ function NFTItemScreenContents({
                 {asset?.traits && asset?.traits?.length > 0 ? (
                   <Flex gap="$spacing12">
                     <Text color="$neutral1" ml="$spacing24" variant="body2">
-                      {t('tokens.nfts.details.traits')}
+                      {t('Traits')}
                     </Text>
                     <NFTTraitList titleTextColor={accentTextColor} traits={asset.traits} />
                   </Flex>

@@ -1,12 +1,7 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
 import { DAI } from 'wallet/src/constants/tokens'
-import {
-  ARBITRUM_CURRENCY,
-  MAINNET_CURRENCY,
-  OPTIMISM_CURRENCY,
-  POLYGON_CURRENCY,
-} from 'wallet/src/test/fixtures'
+import { ArbitrumEth, MainnetEth, OptimismEth, PolygonMatic } from 'wallet/src/test/fixtures'
 import {
   MIN_ARBITRUM_FOR_GAS,
   MIN_ETH_FOR_GAS,
@@ -30,7 +25,7 @@ describe(maxAmountSpend, () => {
 
   it('reserves gas for large amounts on ETH Mainnet', () => {
     const amount = CurrencyAmount.fromRawAmount(
-      MAINNET_CURRENCY,
+      MainnetEth,
       JSBI.add(JSBI.BigInt(99), JSBI.BigInt(MIN_ETH_FOR_GAS))
     )
     const amount1Spend = maxAmountSpend(amount)
@@ -39,7 +34,7 @@ describe(maxAmountSpend, () => {
 
   it('handles small amounts on ETH Mainnet', () => {
     const amount = CurrencyAmount.fromRawAmount(
-      MAINNET_CURRENCY,
+      MainnetEth,
       JSBI.subtract(JSBI.BigInt(99), JSBI.BigInt(MIN_ETH_FOR_GAS))
     )
     const amount1Spend = maxAmountSpend(amount)
@@ -50,7 +45,7 @@ describe(maxAmountSpend, () => {
 
   it('reserves gas for large amounts on Polygon', () => {
     const amount = CurrencyAmount.fromRawAmount(
-      POLYGON_CURRENCY,
+      PolygonMatic,
       JSBI.add(JSBI.BigInt(99), JSBI.BigInt(MIN_POLYGON_FOR_GAS))
     )
     const amount1Spend = maxAmountSpend(amount)
@@ -59,7 +54,7 @@ describe(maxAmountSpend, () => {
 
   it('handles small amounts on Polygon', () => {
     const amount = CurrencyAmount.fromRawAmount(
-      POLYGON_CURRENCY,
+      PolygonMatic,
       JSBI.subtract(JSBI.BigInt(99), JSBI.BigInt(MIN_POLYGON_FOR_GAS))
     )
     const amount1Spend = maxAmountSpend(amount)
@@ -70,7 +65,7 @@ describe(maxAmountSpend, () => {
 
   it('reserves gas for large amounts on Arbitrum', () => {
     const amount = CurrencyAmount.fromRawAmount(
-      ARBITRUM_CURRENCY,
+      ArbitrumEth,
       JSBI.add(JSBI.BigInt(99), JSBI.BigInt(MIN_ARBITRUM_FOR_GAS))
     )
     const amount1Spend = maxAmountSpend(amount)
@@ -79,7 +74,7 @@ describe(maxAmountSpend, () => {
 
   it('handles small amounts on Arbitrum', () => {
     const amount = CurrencyAmount.fromRawAmount(
-      ARBITRUM_CURRENCY,
+      ArbitrumEth,
       JSBI.subtract(JSBI.BigInt(99), JSBI.BigInt(MIN_ARBITRUM_FOR_GAS))
     )
     const amount1Spend = maxAmountSpend(amount)
@@ -90,7 +85,7 @@ describe(maxAmountSpend, () => {
 
   it('reserves gas for large amounts on Optimism', () => {
     const amount = CurrencyAmount.fromRawAmount(
-      OPTIMISM_CURRENCY,
+      OptimismEth,
       JSBI.add(JSBI.BigInt(99), JSBI.BigInt(MIN_OPTIMISM_FOR_GAS))
     )
     const amount1Spend = maxAmountSpend(amount)
@@ -99,7 +94,7 @@ describe(maxAmountSpend, () => {
 
   it('handles small amounts on Optimism', () => {
     const amount = CurrencyAmount.fromRawAmount(
-      OPTIMISM_CURRENCY,
+      OptimismEth,
       JSBI.subtract(JSBI.BigInt(99), JSBI.BigInt(MIN_OPTIMISM_FOR_GAS))
     )
     const amount1Spend = maxAmountSpend(amount)

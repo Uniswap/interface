@@ -144,7 +144,9 @@ function VolumeChartSection({ chainId }: { chainId: number }) {
       {(() => {
         if (dataQuality === DataQuality.INVALID) {
           const errorText = loading ? undefined : (
-            <Trans>Unable to display historical volume data for the current chain.</Trans>
+            <Trans>
+              <Trans>Unable to display historical volume data for the current chain.</Trans>
+            </Trans>
           )
           return (
             <ChartSkeleton hideYAxis type={ChartType.VOLUME} height={EXPLORE_CHART_HEIGHT_PX} errorText={errorText} />
@@ -194,7 +196,9 @@ function TVLChartSection({ chainId }: { chainId: number }) {
       {(() => {
         if (dataQuality === DataQuality.INVALID) {
           const errorText = loading ? undefined : (
-            <Trans>Unable to display historical TVL data for the current chain.</Trans>
+            <Trans>
+              <Trans>Unable to display historical TVL data for the current chain.</Trans>
+            </Trans>
           )
           return <ChartSkeleton hideYAxis type={ChartType.TVL} height={EXPLORE_CHART_HEIGHT_PX} errorText={errorText} />
         }

@@ -3,5 +3,8 @@ node_modules/
 THUMBS_DB
 tsconfig.tsbuildinfo
 
+# Generated contract types
+src/abis/types
+
 # generated graphql and api files
 src/**/__generated__

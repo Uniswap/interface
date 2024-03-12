@@ -18,7 +18,7 @@ function* onRestoreMnemonicComplete() {
   yield* put(
     pushNotification({
       type: AppNotificationType.Success,
-      title: i18n.t('notification.restore.success'),
+      title: i18n.t('Wallet restored!'),
     })
   )
   yield* call(dispatchNavigationAction, StackActions.replace(Screens.Home))

@@ -138,7 +138,7 @@ Object {
       "decimals": 18,
       "isNative": true,
       "isToken": false,
-      "name": "Ethereum",
+      "name": "Ether",
       "symbol": "ETH",
     },
     Token {

@@ -11,7 +11,7 @@ export const LearnMoreLink = ({ url }: { url: string }): JSX.Element => {
   return (
     <TouchableArea onPress={(): Promise<void> => onPressLearnMore(url)}>
       <Text color="$accent1" variant="buttonLabel3">
-        {t('common.button.learn')}
+        {t('Learn more')}
       </Text>
     </TouchableArea>
   )

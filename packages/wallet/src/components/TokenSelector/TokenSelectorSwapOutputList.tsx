@@ -66,13 +66,10 @@ function useTokenSectionsForSwapOutput(
 
     return [
       // we draw the pills as a single item of a section list, so `data` is an array of Token[]
-      { title: t('tokens.selector.section.suggested'), data: [commonTokenOptions ?? []] },
+      { title: t('Suggested'), data: [commonTokenOptions ?? []] },
       // TODO temporarily hiding favorites from extension until we add favorites functionality
-      ...(isWeb
-        ? []
-        : getTokenOptionsSection(t('tokens.selector.section.favorite'), favoriteTokenOptions) ??
-          []),
-      ...(getTokenOptionsSection(t('tokens.selector.section.popular'), popularTokenOptions) ?? []),
+      ...(isWeb ? [] : getTokenOptionsSection(t('Favorites'), favoriteTokenOptions) ?? []),
+      ...(getTokenOptionsSection(t('Popular tokens'), popularTokenOptions) ?? []),
     ]
   }, [commonTokenOptions, favoriteTokenOptions, loading, popularTokenOptions, t])
 

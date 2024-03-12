@@ -97,25 +97,7 @@ import {
 } from 'wallet/src/features/wallet/accounts/types'
 import { initialWalletState, SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { ModalName } from 'wallet/src/telemetry/constants'
-import {
-  fiatPurchaseTransactionInfo,
-  signerMnemonicAccount,
-  transactionDetails,
-} from 'wallet/src/test/fixtures'
-
-const account = signerMnemonicAccount()
-
-const txDetailsConfirmed = transactionDetails({
-  status: TransactionStatus.Success,
-})
-const fiatOnRampTxDetailsFailed = transactionDetails({
-  status: TransactionStatus.Failed,
-  typeInfo: fiatPurchaseTransactionInfo({
-    explorerUrl:
-      'https://buy-sandbox.moonpay.com/transaction_receipt?transactionId=d6c32bb5-7cd9-4c22-8f46-6bbe786c599f',
-    id: 'd6c32bb5-7cd9-4c22-8f46-6bbe786c599f',
-  }),
-})
+import { account, fiatOnRampTxDetailsFailed, txDetailsConfirmed } from 'wallet/src/test/fixtures'
 
 // helps with object assignment
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

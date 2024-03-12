@@ -33,7 +33,7 @@ export function NetworkOption({
           <Icons.Ellipsis color={colors.sporeWhite.val} size="$icon.16" />
         </Flex>
         <Text color="$neutral1" variant="body2">
-          {t('transaction.network.all')}
+          {t('All networks')}
         </Text>
       </Flex>
     )

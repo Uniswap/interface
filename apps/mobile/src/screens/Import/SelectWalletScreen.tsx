@@ -171,7 +171,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
             editAccountActions.trigger({
               type: EditAccountAction.Rename,
               address,
-              newName: t('onboarding.wallet.defaultName', { number: account.derivationIndex + 1 }),
+              newName: t('Wallet {{ number }}', { number: account.derivationIndex + 1 }),
             })
           )
         }
@@ -195,10 +195,12 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
   const isLoading = loading || isForcedLoading || isImportingAccounts
 
   const title = isLoading
-    ? t('account.wallet.select.loading.title')
-    : t('account.wallet.select.title_one', { count: initialShownAccounts?.length ?? 0 })
+    ? t('Searching for wallets')
+    : isOnlyOneAccount
+    ? t('One wallet found')
+    : t('Select wallets to import')
 
-  const subtitle = isLoading ? t('account.wallet.select.loading.subtitle') : undefined
+  const subtitle = isLoading ? t('Your wallets will appear below.') : undefined
 
   return (
     <>
@@ -207,8 +209,8 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
         title={!showError ? title : ''}>
         {showError ? (
           <BaseCard.ErrorState
-            retryButtonLabel={t('common.button.retry')}
-            title={t('account.wallet.select.error')}
+            retryButtonLabel={t('Retry')}
+            title={t('Couldn’t load addresses')}
             onRetry={onRetry}
           />
         ) : isLoading ? (
@@ -243,7 +245,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
             }
             testID={ElementName.Next}
             onPress={onSubmit}>
-            {t('common.button.continue')}
+            {t('Continue')}
           </Button>
         </Flex>
       </OnboardingScreen>

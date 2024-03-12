@@ -23,35 +23,22 @@ import {
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { getProvider, getProviderManager } from 'wallet/src/features/wallet/context'
 import {
-  approveTransactionInfo,
-  fiatPurchaseTransactionInfo,
-  getTxFixtures,
-  transactionDetails,
-} from 'wallet/src/test/fixtures'
-import { getTxProvidersMocks } from 'wallet/src/test/mocks'
-
-const {
-  ethersTxReceipt,
-  txReceipt,
+  fiatOnRampTxDetailsPending,
   finalizedTxAction,
-  txDetailsPending: txDetailsPending,
-} = getTxFixtures(transactionDetails({ typeInfo: fiatPurchaseTransactionInfo() }))
-
-const { mockProvider, mockProviderManager } = getTxProvidersMocks(ethersTxReceipt)
+  mockProvider,
+  mockProviderManager,
+  txDetailsPending,
+  txReceipt,
+} from 'wallet/src/test/fixtures'
 
 describe(transactionWatcher, () => {
   it('Triggers watchers successfully', () => {
-    const approveTxDetailsPending = transactionDetails({
-      typeInfo: approveTransactionInfo(),
-      status: TransactionStatus.Pending,
-    })
-
     return expectSaga(transactionWatcher, { apolloClient: null })
       .withState({
         transactions: {
           byChainId: {
             [ChainId.Mainnet]: {
-              '0': approveTxDetailsPending,
+              '0': txDetailsPending,
             },
           },
         },
@@ -60,11 +47,11 @@ describe(transactionWatcher, () => {
         [call(getProvider, ChainId.Mainnet), mockProvider],
         [call(getProviderManager), mockProviderManager],
       ])
-      .fork(watchTransaction, { transaction: approveTxDetailsPending, apolloClient: null })
-      .dispatch(addTransaction(approveTxDetailsPending))
-      .fork(watchTransaction, { transaction: approveTxDetailsPending, apolloClient: null })
-      .dispatch(updateTransaction(approveTxDetailsPending))
-      .fork(watchTransaction, { transaction: approveTxDetailsPending, apolloClient: null })
+      .fork(watchTransaction, { transaction: txDetailsPending, apolloClient: null })
+      .dispatch(addTransaction(txDetailsPending))
+      .fork(watchTransaction, { transaction: txDetailsPending, apolloClient: null })
+      .dispatch(updateTransaction(txDetailsPending))
+      .fork(watchTransaction, { transaction: txDetailsPending, apolloClient: null })
       .silentRun()
   })
 })
@@ -72,7 +59,7 @@ describe(transactionWatcher, () => {
 describe(watchTransaction, () => {
   let dateNowSpy: jest.SpyInstance
   beforeAll(() => {
-    dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => txReceipt.confirmedTime)
+    dateNowSpy = jest.spyOn(Date, 'now').mockImplementation(() => 1400000000000)
   })
   afterAll(() => {
     dateNowSpy?.mockRestore()
@@ -82,7 +69,7 @@ describe(watchTransaction, () => {
 
   it('Finalizes successful transaction', () => {
     const receiptProvider = {
-      waitForTransaction: jest.fn(() => ethersTxReceipt),
+      waitForTransaction: jest.fn(() => txReceipt),
     }
     return expectSaga(watchTransaction, { transaction: txDetailsPending, apolloClient: null })
       .provide([[call(getProvider, chainId), receiptProvider]])
@@ -115,7 +102,6 @@ describe(watchTransaction, () => {
         return null
       }),
     }
-
     return expectSaga(watchTransaction, { transaction: txDetailsPending, apolloClient: null })
       .provide([
         [call(getProvider, chainId), receiptProvider],
@@ -129,10 +115,10 @@ describe(watchTransaction, () => {
 
 describe(watchFiatOnRampTransaction, () => {
   it('removes transactions on 404 when stale', () => {
-    const staleTx = { ...txDetailsPending, status: TransactionStatus.Unknown }
+    const staleTx = { ...fiatOnRampTxDetailsPending, status: TransactionStatus.Unknown }
     return (
-      expectSaga(watchFiatOnRampTransaction, txDetailsPending)
-        .provide([[call(fetchMoonpayTransaction, txDetailsPending), staleTx]])
+      expectSaga(watchFiatOnRampTransaction, fiatOnRampTxDetailsPending)
+        .provide([[call(fetchMoonpayTransaction, fiatOnRampTxDetailsPending), staleTx]])
         .put(
           transactionActions.deleteTransaction({
             address: staleTx.from,
@@ -147,7 +133,7 @@ describe(watchFiatOnRampTransaction, () => {
   })
 
   it('keeps a transaction on 404 when not yet stale', () => {
-    const tx = { ...txDetailsPending, addedTime: Date.now() }
+    const tx = { ...fiatOnRampTxDetailsPending, addedTime: Date.now() }
     const confirmedTx = { ...tx, status: TransactionStatus.Success }
 
     let fetchCalledCount = 0
@@ -179,7 +165,7 @@ describe(watchFiatOnRampTransaction, () => {
   })
 
   it('keeps a transaction on 404 when not yet stale, when fetch is forced', () => {
-    const tx = { ...txDetailsPending, addedTime: Date.now() }
+    const tx = { ...fiatOnRampTxDetailsPending, addedTime: Date.now() }
     const confirmedTx = { ...tx, status: TransactionStatus.Success }
 
     let fetchCalledCount = 0
@@ -212,9 +198,9 @@ describe(watchFiatOnRampTransaction, () => {
   })
 
   it('updates a transactions on success network request', () => {
-    const confirmedTx = { ...txDetailsPending, status: TransactionStatus.Success }
-    return expectSaga(watchFiatOnRampTransaction, txDetailsPending)
-      .provide([[call(fetchMoonpayTransaction, txDetailsPending), confirmedTx]])
+    const confirmedTx = { ...fiatOnRampTxDetailsPending, status: TransactionStatus.Success }
+    return expectSaga(watchFiatOnRampTransaction, fiatOnRampTxDetailsPending)
+      .provide([[call(fetchMoonpayTransaction, fiatOnRampTxDetailsPending), confirmedTx]])
       .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
       .not.call.fn(sleep)
       .run()

@@ -8,9 +8,9 @@ import { Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
 import { FavoritesState } from 'wallet/src/features/favorites/slice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { SectionName } from 'wallet/src/telemetry/constants'
-import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures/constants'
+import { DaiAsset } from 'wallet/src/test/gqlFixtures'
 
-const tokenId = SAMPLE_SEED_ADDRESS_1
+const tokenId = DaiAsset.address?.toLowerCase() ?? ''
 const currencyId = `1-${tokenId}`
 
 const resolvers: Resolvers = {

@@ -40,6 +40,19 @@ const getEmphasizedNumberColor = (
   return emphasizedColor
 }
 
+const shouldUseSeparator = (
+  index: number,
+  commaIndex: number,
+  decimalPlaceIndex: number
+): boolean => {
+  'worklet'
+  return (
+    (index - commaIndex) % 4 === 0 &&
+    index - commaIndex < 0 &&
+    index > commaIndex - decimalPlaceIndex
+  )
+}
+
 const NumbersMain = ({
   color,
   backgroundColor,
@@ -163,11 +176,7 @@ const RollNumber = ({
   // need it in case the current value is eg $999.00 but maximum value in chart is more than $1,000.00
   // so it can hide the comma to avoid something like $,999.00
   const animatedWrapperSeparatorStyle = useAnimatedStyle(() => {
-    const isSeparator =
-      (index - commaIndex) % 4 === 0 &&
-      index - commaIndex < 0 &&
-      index > commaIndex - decimalPlace.value
-    if (!isSeparator) {
+    if (!shouldUseSeparator(index, commaIndex, decimalPlace.value)) {
       return {
         width: withTiming(0),
       }
@@ -202,11 +211,7 @@ const RollNumber = ({
     )
   }
 
-  if (
-    (index - commaIndex) % 4 === 0 &&
-    index - commaIndex < 0 &&
-    index > commaIndex - decimalPlace.value
-  ) {
+  if ((index - commaIndex) % 4 === 0 && index - commaIndex < 0) {
     return (
       <Animated.View style={animatedWrapperSeparatorStyle}>
         <Animated.Text

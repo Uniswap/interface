@@ -18,7 +18,7 @@ export function TransferCurrencyPendingNotification({
       smallToast
       hideDelay={TRANSACTION_PENDING_NOTIFICATION_DELAY}
       icon={<SpinningLoader color="$accent1" />}
-      title={t('notification.transfer.pending', { currencySymbol: currencyInfo.currency.symbol })}
+      title={t(`{{symbol}} transfer pending`, { symbol: currencyInfo.currency.symbol })}
     />
   )
 }

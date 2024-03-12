@@ -72,8 +72,8 @@ function ErrorScreen({ error }: { error: Error }): JSX.Element {
       <Flex centered grow gap="$spacing36">
         <Image source={DEAD_LUNI} style={styles.errorImage} />
         <Flex centered gap="$spacing8">
-          <Text variant="subheading1">{t('errors.crash.title')}</Text>
-          <Text variant="body2">{t('errors.crash.message')}</Text>
+          <Text variant="subheading1">{t('Uh oh!')}</Text>
+          <Text variant="body2">{t('Something crashed.')}</Text>
         </Flex>
         {error.message && __DEV__ && <Text variant="body2">{error.message}</Text>}
       </Flex>
@@ -82,7 +82,7 @@ function ErrorScreen({ error }: { error: Error }): JSX.Element {
           onPress={(): void => {
             RNRestart.Restart()
           }}>
-          {t('errors.crash.restart')}
+          {t('Restart app')}
         </Button>
       </Flex>
     </Flex>

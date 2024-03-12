@@ -2,7 +2,7 @@ import React from 'react'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { render, screen } from 'src/test/test-utils'
 import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
-import { noOpFunction } from 'wallet/src/test/mocks'
+import { noOpFunction } from 'wallet/src/test/utils'
 
 describe(GenericImportForm, () => {
   it('renders a placeholder when there is no value', async () => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleProp, ViewStyle } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -110,24 +110,24 @@ export function UnitagBanner({
           justifyContent="space-between"
           onPress={onPressClaimNow}>
           <Text color="$neutral2" variant="subheading2">
-            <Trans i18nKey="unitags.banner.title.compact">
-              <Text color="$accent1" variant="buttonLabel3">
-                Claim your {{ unitagDomain: UNITAG_SUFFIX_NO_LEADING_DOT }} username
-              </Text>
-              and build out your customizable profile.
-            </Trans>
+            <Text color="$accent1" variant="buttonLabel3">
+              {t('Claim your {{unitagSuffix}} username', {
+                unitagSuffix: UNITAG_SUFFIX_NO_LEADING_DOT,
+              })}
+            </Text>
+            {t(' and build out your customizable profile.')}
           </Text>
         </Flex>
       ) : (
         <Flex fill gap="$spacing16" justifyContent="space-between">
           <Flex gap="$spacing4">
             <Text variant="subheading2">
-              {t('unitags.banner.title.full', {
-                unitagDomain: UNITAG_SUFFIX_NO_LEADING_DOT,
+              {t('Claim your {{unitagSuffix}} username', {
+                unitagSuffix: UNITAG_SUFFIX_NO_LEADING_DOT,
               })}
             </Text>
             <Text color="$neutral2" variant="body3">
-              {t('unitags.banner.subtitle')}
+              {t('Build a personalized web3 profile and easily share your address with friends.')}
             </Text>
           </Flex>
           <Flex row gap="$spacing2">
@@ -140,7 +140,7 @@ export function UnitagBanner({
               testID={ElementName.Confirm}
               onPress={onPressClaimNow}>
               <Text color="white" variant="buttonLabel4">
-                {t('unitags.banner.button.claim')}
+                {t('Claim now')}
               </Text>
             </TouchableArea>
             <TouchableArea
@@ -151,7 +151,7 @@ export function UnitagBanner({
               testID={ElementName.Cancel}
               onPress={onPressMaybeLater}>
               <Text color="$neutral2" variant="buttonLabel4">
-                {t('common.button.later')}
+                {t('Maybe later')}
               </Text>
             </TouchableArea>
           </Flex>

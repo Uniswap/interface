@@ -37,7 +37,7 @@ export function ApproveSummaryItem({
 
   const amount =
     approvalAmount === INFINITE_AMOUNT
-      ? t('transaction.amount.unlimited')
+      ? t('Unlimited')
       : approvalAmount && approvalAmount !== ZERO_AMOUNT
       ? formatNumberOrString({ value: approvalAmount, type: NumberType.TokenNonTx })
       : ''

@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers'
 import { Transaction, TransactionDescription } from 'no-yolo-signatures'
 import React, { useEffect, useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
@@ -162,29 +162,25 @@ function TransactionDetails({
       ) : null}
       {to ? (
         <Flex row alignItems="center" gap="$spacing16">
-          <Trans i18nKey="walletConnect.request.details.recipient">
-            <Text color="$neutral2" variant="body2">
-              To:
-            </Text>
-            <AddressButton address={to} chainId={chainId} />
-          </Trans>
+          <Text color="$neutral2" variant="body2">
+            {t('To')}:
+          </Text>
+          <AddressButton address={to} chainId={chainId} />
         </Flex>
       ) : null}
       <Flex row alignItems="center" gap="$spacing16">
-        <Trans i18nKey="walletConnect.request.details.function">
-          <Text color="$neutral2" variant="body2">
-            Function:
+        <Text color="$neutral2" variant="body2">
+          {t('Function')}:
+        </Text>
+        <Flex
+          backgroundColor={isLoading ? '$transparent' : '$surface3'}
+          borderRadius="$rounded12"
+          px="$spacing8"
+          py="$spacing4">
+          <Text color="$neutral1" loading={isLoading} variant="monospace">
+            {parsedData ? parsedData.name : t('Unknown')}
           </Text>
-          <Flex
-            backgroundColor={isLoading ? '$transparent' : '$surface3'}
-            borderRadius="$rounded12"
-            px="$spacing8"
-            py="$spacing4">
-            <Text color="$neutral1" loading={isLoading} variant="monospace">
-              {{ functionName: parsedData ? parsedData.name : t('common.text.unknown') }}
-            </Text>
-          </Flex>
-        </Trans>
+        </Flex>
       </Flex>
     </Flex>
   )
@@ -220,7 +216,7 @@ function RequestDetailsContent({ request }: Props): JSX.Element {
     <Text variant="body2">{message}</Text>
   ) : (
     <Text color="$neutral2" variant="body2">
-      {t('qrScanner.request.message.unavailable')}
+      {t('No message found.')}
     </Text>
   )
 }

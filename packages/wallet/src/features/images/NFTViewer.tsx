@@ -56,7 +56,7 @@ export function NFTViewer(props: Props): JSX.Element {
         maxHeight={maxHeight ?? '100%'}
         width="100%">
         <Text color="$neutral2" flex={0} variant="subheading2">
-          {placeholderContent || t('tokens.nfts.error.unavailable')}
+          {placeholderContent || t('Content not available')}
         </Text>
       </Flex>
     ),

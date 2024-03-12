@@ -77,9 +77,9 @@ export function SwapSettingsModal({
   const getTitle = (): string => {
     switch (view) {
       case SwapSettingsModalView.Options:
-        return t('swap.settings.title')
+        return t('Swap Settings')
       case SwapSettingsModalView.Slippage:
-        return t('swap.slippage.settings.title')
+        return t('Slippage Settings')
     }
   }
 
@@ -134,7 +134,7 @@ export function SwapSettingsModal({
         {innerContent}
         <Flex centered row>
           <Button fill testID="swap-settings-close" theme="secondary" onPress={onClose}>
-            {t('common.button.close')}
+            {t('Close')}
           </Button>
         </Flex>
       </Flex>
@@ -161,14 +161,14 @@ function SwapSettingsOptions({
     <Flex gap="$spacing16" py="$spacing12">
       <Flex row justifyContent="space-between">
         <Text color="$neutral1" variant="subheading2">
-          {t('swap.settings.slippage.control.title')}
+          {t('Max slippage')}
         </Text>
         <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Slippage)}>
           <Flex row gap="$spacing8">
             {!isCustomSlippage ? (
               <Flex centered backgroundColor="$accent2" borderRadius="$roundedFull" px="$spacing8">
                 <Text color="$accent1" variant="buttonLabel4">
-                  {t('swap.settings.slippage.control.auto')}
+                  {t('Auto')}
                 </Text>
               </Flex>
             ) : null}
@@ -208,8 +208,8 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Eleme
   const privateRpcSupportedOnChain = isPrivateRpcSupportedOnChain(chainId)
   const chainName = CHAIN_INFO[chainId].label
   const subText = privateRpcSupportedOnChain
-    ? t('swap.settings.protection.subtitle.supported', { chainName })
-    : t('swap.settings.protection.subtitle.unavailable', { chainName })
+    ? t('{{chainName}} Network', { chainName })
+    : t('Not available on {{chainName}}', { chainName })
 
   return (
     <>
@@ -221,7 +221,7 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Eleme
             <Flex gap="$spacing4">
               <Flex row alignItems="center" gap="$spacing4">
                 <Text color="$neutral1" variant="subheading2">
-                  {t('swap.settings.protection.title')}
+                  {t('Swap protection')}
                 </Text>
                 <Icons.InfoCircleFilled color="$neutral3" size={iconSizes.icon16} />
               </Flex>
@@ -316,12 +316,12 @@ function SlippageSettings({
       const isZero = parsedValue === 0
 
       if (isZero) {
-        setInputWarning(t('swap.settings.slippage.warning.min'))
+        setInputWarning(t('Enter a value larger than 0'))
       }
 
       if (overMaxTolerance) {
         setInputWarning(
-          t('swap.settings.slippage.warning.max', {
+          t('Enter a value less than {{ maxSlippageTolerance }}', {
             maxSlippageTolerance: MAX_CUSTOM_SLIPPAGE_TOLERANCE,
           })
         )
@@ -382,7 +382,7 @@ function SlippageSettings({
           : Math.max(newSlippage, 0)
 
       if (constrainedNewSlippage === 0) {
-        setInputWarning(t('swap.settings.slippage.warning.min'))
+        setInputWarning(t('Enter a value larger than 0'))
       } else {
         setInputWarning(undefined)
       }
@@ -396,7 +396,7 @@ function SlippageSettings({
   return (
     <Flex centered gap="$spacing16">
       <Text color="$neutral2" textAlign="center" variant="body2">
-        {t('swap.settings.slippage.description')}
+        {t('Your transaction will revert if the price changes more than the slippage percentage.')}{' '}
       </Text>
       <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} />
       <Flex gap="$spacing12">
@@ -418,7 +418,7 @@ function SlippageSettings({
             style={inputAnimatedStyle}>
             <TouchableArea hapticFeedback onPress={onPressAutoSlippage}>
               <Text color="$accent1" variant="buttonLabel3">
-                {t('swap.settings.slippage.control.auto')}
+                {t('Auto')}
               </Text>
             </TouchableArea>
             <BottomSheetTextInput
@@ -500,14 +500,14 @@ function BottomLabel({
     <Flex centered gap="$spacing8" height={fonts.body2.lineHeight * 2 + spacing.spacing8}>
       <Text color="$neutral2" textAlign="center" variant="body2">
         {trade.tradeType === TradeType.EXACT_INPUT
-          ? t('swap.settings.slippage.input.receive.unformatted', {
+          ? t('Receive at least {{amount}} {{symbol}}', {
               amount: formatCurrencyAmount({
                 value: trade.minimumAmountOut(slippageTolerancePercent),
                 type: NumberType.TokenTx,
               }),
               symbol: getSymbolDisplayText(trade.outputAmount.currency.symbol),
             })
-          : t('swap.settings.slippage.output.spend.unformatted', {
+          : t('Spend at most {{amount}} {{symbol}}', {
               amount: formatCurrencyAmount({
                 value: trade.maximumAmountIn(slippageTolerancePercent),
                 type: NumberType.TokenTx,
@@ -523,7 +523,7 @@ function BottomLabel({
             width={iconSizes.icon16}
           />
           <Text color="$DEP_accentWarning" variant="body2">
-            {t('swap.settings.slippage.warning.message')}
+            {t('Slippage may be higher than necessary')}
           </Text>
         </Flex>
       ) : null}

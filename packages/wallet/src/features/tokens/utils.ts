@@ -7,10 +7,10 @@ export function getTokenSafetyHeaderText(
 ): string | undefined {
   switch (safetyLevel) {
     case SafetyLevel.MediumWarning:
-      return t('token.safetyLevel.medium.header')
+      return t('Caution')
     case SafetyLevel.StrongWarning:
-      return t('token.safetyLevel.strong.header')
+      return t('Warning')
     case SafetyLevel.Blocked:
-      return t('token.safetyLevel.blocked.header')
+      return t('Not available')
   }
 }

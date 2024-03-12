@@ -20,13 +20,15 @@ export function SettingsPrivacyScreen(): JSX.Element {
   return (
     <Screen>
       <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
-        <Text variant="body1">{t('settings.setting.privacy.title')}</Text>
+        <Text variant="body1">{t('Privacy')}</Text>
       </BackHeader>
       <Flex row gap="$spacing12" m="$spacing24">
         <Flex shrink gap="$spacing4">
-          <Text variant="body2">{t('settings.setting.privacy.analytics.title')}</Text>
+          <Text variant="body2">{t('Allow analytics')}</Text>
           <Text color="$neutral2" variant="body3">
-            {t('settings.setting.privacy.analytics.description')}
+            {t(
+              'We use anonymous usage data to enhance your experience across Uniswap Labs products. When disabled, we only track errors and essential usage.'
+            )}
           </Text>
         </Flex>
         <Switch value={analyticsAllowed} onValueChange={onChangeAllowAnalytics} />

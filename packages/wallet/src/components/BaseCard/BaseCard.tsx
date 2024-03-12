@@ -148,13 +148,7 @@ type ErrorStateProps = {
 
 function ErrorState(props: ErrorStateProps): JSX.Element {
   const { t } = useTranslation()
-  const {
-    title,
-    description = t('common.card.error.description'),
-    retryButtonLabel,
-    onRetry,
-    icon,
-  } = props
+  const { title, description = t('Something went wrong'), retryButtonLabel, onRetry, icon } = props
   return (
     <Flex centered grow gap="$spacing24" p="$spacing12" width="100%">
       <Flex centered gap="$spacing16">
@@ -193,9 +187,9 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
   const {
     backgroundColor = '$surface2',
     textColor = '$neutral1',
-    title = t('common.card.error.title'),
+    title = t('Oops! Something went wrong.'),
     onRetry: retry,
-    retryButtonLabel = t('common.button.retry'),
+    retryButtonLabel = t('Retry'),
     icon = <Icons.AlertTriangle color="$neutral3" size="$icon.16" testID="error-icon" />,
   } = props
 

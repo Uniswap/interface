@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
-import ArgentWalletContractABI from 'uniswap/src/abis/argent-wallet-contract.json'
-import { ArgentWalletContract } from 'uniswap/src/abis/types'
+import ArgentWalletContractABI from 'wallet/src/abis/argent-wallet-contract.json'
+import { ArgentWalletContract } from 'wallet/src/abis/types'
 
 import { useContract } from './useContract'
 import useIsArgentWallet from './useIsArgentWallet'

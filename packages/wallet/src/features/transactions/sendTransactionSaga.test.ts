@@ -15,12 +15,15 @@ import {
   getProviderManager,
   getSignerManager,
 } from 'wallet/src/features/wallet/context'
-import { getTxFixtures, signerMnemonicAccount } from 'wallet/src/test/fixtures'
-import { provider, providerManager, signerManager } from 'wallet/src/test/mocks'
-
-const account = signerMnemonicAccount()
-
-const { txRequest, txResponse, txTypeInfo } = getTxFixtures()
+import {
+  account,
+  provider,
+  providerManager,
+  signerManager,
+  txRequest,
+  txResponse,
+  txTypeInfo,
+} from 'wallet/src/test/fixtures'
 
 const sendParams = {
   txId: '0',

@@ -1,5 +1,5 @@
 import { DAI, USDC } from 'wallet/src/constants/tokens'
-import { mockLocalizedFormatter } from 'wallet/src/test/mocks/utils'
+import { mockLocalizedFormatter } from 'wallet/src/test/utils'
 import { getCurrencyDisplayText, getFormattedCurrencyAmount } from './currency'
 
 describe(getFormattedCurrencyAmount, () => {

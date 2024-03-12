@@ -92,21 +92,17 @@ export function TransferTokenSummaryItem({
   const { unitag } = useUnitagByAddress(otherAddress)
   const personDisplayName = unitag?.username ?? ensName ?? shortenAddress(otherAddress)
 
-  const tokenAmountWithSymbol = isCurrency
-    ? (currencyAmount ?? '') + (getSymbolDisplayText(currencyInfo?.currency?.symbol) ?? '')
-    : transaction.typeInfo.nftSummaryInfo?.name
+  const translateOptions = {
+    what: isCurrency
+      ? (currencyAmount ?? '') + (getSymbolDisplayText(currencyInfo?.currency?.symbol) ?? '')
+      : transaction.typeInfo.nftSummaryInfo?.name,
+  }
 
   let caption = ''
   if (transactionType === TransactionType.Send) {
-    caption = t('transaction.summary.received', {
-      recipientAddress: personDisplayName,
-      tokenAmountWithSymbol,
-    })
+    caption = t('{{what}} to {{recipient}}', { recipient: personDisplayName, ...translateOptions })
   } else {
-    caption = t('transaction.summary.sent', {
-      senderAddress: personDisplayName,
-      tokenAmountWithSymbol,
-    })
+    caption = t('{{what}} from {{sender}}', { sender: personDisplayName, ...translateOptions })
   }
 
   return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {

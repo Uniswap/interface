@@ -12,16 +12,16 @@ export function CopiedNotification({
   let title
   switch (copyType) {
     case CopyNotificationType.Address:
-      title = t('notification.copied.address')
+      title = t('Address copied')
       break
     case CopyNotificationType.ContractAddress:
-      title = t('notification.copied.contractAddress')
+      title = t('Contract address copied')
       break
     case CopyNotificationType.TransactionId:
-      title = t('notification.copied.transactionId')
+      title = t('Transaction ID copied')
       break
     case CopyNotificationType.Image:
-      title = t('notification.copied.image')
+      title = t('Image copied')
       break
   }
 

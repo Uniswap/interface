@@ -53,7 +53,7 @@ function FeeOnTransferInfoRow({
       onPress={onShowInfo}>
       <Flex row alignItems="center" gap="$spacing1">
         <Text color="$neutral2" flex={0} variant="body3">
-          {t('swap.details.feeOnTransfer', { tokenSymbol: feeInfo.tokenSymbol })}
+          {t('{{ token }} fee', { token: feeInfo.tokenSymbol })}
         </Text>
         <Flex ml="$spacing4">
           <Icons.InfoCircleFilled color="$neutral3" size="$icon.16" />

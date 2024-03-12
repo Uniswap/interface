@@ -7,15 +7,12 @@ import {
   TransactionType,
 } from 'wallet/src/features/transactions/types'
 import { RootState } from 'wallet/src/state'
-import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
-import { mockWalletPreloadedState } from 'wallet/src/test/mocks'
-
-const account = signerMnemonicAccount()
+import { account, mockWalletPreloadedState } from 'wallet/src/test/fixtures'
 
 const MOCK_DATE_PROMPTED = Date.now()
 
 const state = {
-  ...mockWalletPreloadedState(),
+  ...mockWalletPreloadedState,
   wallet: {
     appRatingProvidedMs: MOCK_DATE_PROMPTED,
   },

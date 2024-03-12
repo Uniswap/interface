@@ -13,7 +13,7 @@ export enum TransactionType {
   BURN = 'Remove',
 }
 
-export const BETypeToTransactionType: { [key: string]: TransactionType } = {
+const BETypeToTransactionType: { [key: string]: TransactionType } = {
   [PoolTransactionType.Swap]: TransactionType.SWAP,
   [PoolTransactionType.Remove]: TransactionType.BURN,
   [PoolTransactionType.Add]: TransactionType.MINT,

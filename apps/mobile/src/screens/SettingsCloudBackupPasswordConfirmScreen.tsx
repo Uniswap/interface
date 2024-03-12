@@ -35,10 +35,12 @@ export function SettingsCloudBackupPasswordConfirmScreen({
       <ScrollView bounces={false} keyboardShouldPersistTaps="handled">
         <Flex alignItems="center" justifyContent="space-between" mb="$spacing24" mx="$spacing12">
           <Text textAlign="center" variant="heading3">
-            {t('onboarding.cloud.confirm.title')}
+            {t('Confirm your backup password')}
           </Text>
           <Text color="$neutral2" textAlign="center" variant="body2">
-            {t('onboarding.cloud.confirm.description')}
+            {t(
+              'You’ll need to enter this password to recover your account. It’s not stored anywhere, so it can’t be recovered by anyone else.'
+            )}
           </Text>
         </Flex>
         <CloudBackupPasswordForm

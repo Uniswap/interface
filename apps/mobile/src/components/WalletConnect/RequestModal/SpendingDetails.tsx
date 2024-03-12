@@ -1,5 +1,5 @@
 import React from 'react'
-import { Trans } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
@@ -18,6 +18,7 @@ export function SpendingDetails({
   value: string
   chainId: ChainId
 }): JSX.Element {
+  const { t } = useTranslation()
   const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
 
   const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
@@ -30,26 +31,21 @@ export function SpendingDetails({
     : null
   const usdValue = useUSDValue(chainId, value)
 
-  const tokenAmountWithSymbol =
-    formatCurrencyAmount({ value: nativeCurrencyAmount, type: NumberType.TokenTx }) +
-    ' ' +
-    getSymbolDisplayText(nativeCurrencyInfo?.currency.symbol)
-  const fiatAmount = convertFiatAmountFormatted(usdValue, NumberType.FiatTokenPrice)
-
   return (
     <Flex row alignItems="center" gap="$spacing16">
-      <Trans i18nKey="walletConnect.request.details.sending">
-        <Text color="$neutral2" variant="body2">
-          Sending:
+      <Text color="$neutral2" variant="body2">
+        {t('Sending')}:
+      </Text>
+      <Flex row alignItems="center" gap="$spacing4">
+        <CurrencyLogo currencyInfo={nativeCurrencyInfo} size={iconSizes.icon16} />
+        <Text variant="subheading2">
+          {formatCurrencyAmount({ value: nativeCurrencyAmount, type: NumberType.TokenTx })}{' '}
+          {getSymbolDisplayText(nativeCurrencyInfo?.currency.symbol)}
         </Text>
-        <Flex row alignItems="center" gap="$spacing4">
-          <CurrencyLogo currencyInfo={nativeCurrencyInfo} size={iconSizes.icon16} />
-          <Text variant="subheading2">{{ tokenAmountWithSymbol }}</Text>
-          <Text color="$neutral2" loading={!usdValue} variant="subheading2">
-            ({{ fiatAmount }})
-          </Text>
-        </Flex>
-      </Trans>
+        <Text color="$neutral2" loading={!usdValue} variant="subheading2">
+          ({convertFiatAmountFormatted(usdValue, NumberType.FiatTokenPrice)})
+        </Text>
+      </Flex>
     </Flex>
   )
 }

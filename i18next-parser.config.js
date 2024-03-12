@@ -18,7 +18,8 @@ module.exports = {
   keepRemoved: false,
 
   // Key separator used in your translation keys
-  keySeparator: '.',
+  // Disabling instead of default '.' so we can use plain english keys
+  keySeparator: false,
 
   // see below for more details
   lexers: {
@@ -70,6 +71,10 @@ module.exports = {
 
   // Whether or not to sort the catalog. Can also be a [compareFunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters)
   sort: true,
+
+  defaultValue: function (locale, namespace, key, value) {
+    return key
+  },
 
   // Display info about the parsing including some stats
   verbose: false,

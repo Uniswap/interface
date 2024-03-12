@@ -95,20 +95,22 @@ export function useTokenPriceHistory(
   }, [priceHistory])
 
   const numberOfDigits = useMemo(() => {
-    const max = maxBy(priceHistory, 'value')
-    const convertedMaxValue = convertFiatAmount(max?.value).amount
-
-    if (max) {
-      const newNumberOfDigits = {
-        left: String(convertedMaxValue).split('.')[0]?.length || 10,
-        right: Number(String(convertedMaxValue.toFixed(10)).split('.')[0]) > 0 ? 2 : 10,
-      }
-      lastNumberOfDigits.current = newNumberOfDigits
-      return newNumberOfDigits
+    const maxPriceInHistory = maxBy(priceHistory, 'value')?.value
+    // If there is neither max price in history nor current price, return last number of digits
+    if (!maxPriceInHistory && price === undefined) {
+      return lastNumberOfDigits.current
     }
+    const maxPrice = Math.max(maxPriceInHistory || 0, price || 0)
+    const convertedMaxValue = convertFiatAmount(maxPrice).amount
 
-    return lastNumberOfDigits.current
-  }, [convertFiatAmount, priceHistory])
+    const newNumberOfDigits = {
+      left: String(convertedMaxValue).split('.')[0]?.length || 10,
+      right: Number(String(convertedMaxValue.toFixed(10)).split('.')[0]) > 0 ? 2 : 10,
+    }
+    lastNumberOfDigits.current = newNumberOfDigits
+
+    return newNumberOfDigits
+  }, [convertFiatAmount, priceHistory, price])
 
   const retry = useCallback(async () => {
     await refetch({ contract: currencyIdToContractInput(currencyId) })

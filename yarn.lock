@@ -12677,6 +12677,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-helmet@npm:6.1.7":
+  version: 6.1.7
+  resolution: "@types/react-helmet@npm:6.1.7"
+  dependencies:
+    "@types/react": "*"
+  checksum: d5ee8343f10f8746a022249c6401493baa73241a90b5002b59e8a6ce31650b9e1ab38d398eba5564af026f68eda107c8fcdca01fc046a163a96dc422710f6a77
+  languageName: node
+  linkType: hard
+
 "@types/react-native@npm:0.71.3":
   version: 0.71.3
   resolution: "@types/react-native@npm:0.71.3"
@@ -13612,6 +13621,7 @@ __metadata:
     "@types/qs": 6.9.2
     "@types/react": ^18.0.15
     "@types/react-dom": ^18.0.6
+    "@types/react-helmet": 6.1.7
     "@types/react-redux": 7.1.30
     "@types/react-scroll-sync": 0.8.7
     "@types/react-table": 7.7.12
@@ -13729,7 +13739,7 @@ __metadata:
     react: 18.2.0
     react-dom: 18.2.0
     react-feather: 2.0.10
-    react-helmet-async: 2.0.4
+    react-helmet: 6.1.0
     react-infinite-scroll-component: 6.1.0
     react-is: 18.2.0
     react-markdown: 4.3.1
@@ -13761,7 +13771,6 @@ __metadata:
     ts-jest: ^29.1.1
     tsafe: 1.6.4
     typescript: 5.3.3
-    uniswap: "workspace:^"
     use-resize-observer: 9.1.0
     utilities: "workspace:^"
     uuid: 9.0.0
@@ -13887,6 +13896,7 @@ __metadata:
     expo-av: 13.4.1
     expo-barcode-scanner: 12.7.0
     expo-blur: 12.2.2
+    expo-camera: 13.4.4
     expo-haptics: 12.0.1
     expo-linear-gradient: 12.3.0
     expo-linking: 4.0.1
@@ -13958,7 +13968,6 @@ __metadata:
     statsig-react-native: 4.11.0
     typed-redux-saga: 1.5.0
     typescript: 5.3.3
-    uniswap: "workspace:^"
     utilities: "workspace:^"
     wallet: "workspace:^"
     yarn-deduplicate: 6.0.0
@@ -24103,6 +24112,17 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: d6c18737ca4afff93bcccc2681be0e02fea8ed75ed7b8752f9c7c88eb49127a868b610985d5b979b0ed654af06d04bf496b11f68638a2b34a334bdf00891316a
+  languageName: node
+  linkType: hard
+
+"expo-camera@npm:13.4.4":
+  version: 13.4.4
+  resolution: "expo-camera@npm:13.4.4"
+  dependencies:
+    invariant: ^2.2.4
+  peerDependencies:
+    expo: "*"
+  checksum: d2730038029e770de2f5106c24d6b5ec58131ac77bb06efc7892fd2dde9e813fd0141950d15ea3a2a997f0271916bc33a659341660b3ad357354630ed56adbbf
   languageName: node
   linkType: hard
 
@@ -37728,7 +37748,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-fast-compare@npm:^3.0.1, react-fast-compare@npm:^3.2.2":
+"react-fast-compare@npm:^3.0.1, react-fast-compare@npm:^3.1.1":
   version: 3.2.2
   resolution: "react-fast-compare@npm:3.2.2"
   checksum: 2071415b4f76a3e6b55c84611c4d24dcb12ffc85811a2840b5a3f1ff2d1a99be1020d9437ee7c6e024c9f4cbb84ceb35e48cf84f28fcb00265ad2dfdd3947704
@@ -37775,17 +37795,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-helmet-async@npm:2.0.4":
-  version: 2.0.4
-  resolution: "react-helmet-async@npm:2.0.4"
+"react-helmet@npm:6.1.0":
+  version: 6.1.0
+  resolution: "react-helmet@npm:6.1.0"
   dependencies:
-    invariant: ^2.2.4
-    react-fast-compare: ^3.2.2
-    shallowequal: ^1.1.0
+    object-assign: ^4.1.1
+    prop-types: ^15.7.2
+    react-fast-compare: ^3.1.1
+    react-side-effect: ^2.1.0
   peerDependencies:
-    react: ^16.6.0 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.6.0 || ^17.0.0 || ^18.0.0
-  checksum: 1bd16e6be6d15cf3d4b4c0853d1e122941a05d3fb2bad1fb1c5037069c5f142fcab063c342b95c58a998a81f093bdf1bd1bb00852a5a3a84d49e48790d5142bb
+    react: ">=16.3.0"
+  checksum: a4998479dab7fc1c2799eddefb1870a9d881b5f71cfdf97979a9882e42f4bb50402d55335f308f461e735e01a06f46b16cc7b4e6bcb22c7a4a6f85a753c5c106
   languageName: node
   linkType: hard
 
@@ -38769,6 +38789,15 @@ __metadata:
   peerDependencies:
     react: ^16.0.0 || ^17.0.0 || ^18.0.0
   checksum: 6052c7e3e9627485120ebd8257f128aad8f56386fe8d42374b7743eac1be457c33506d153c7886b4e32923c0c352d402ab805ef9ca02dbcd8393b2bdeb6e5af8
+  languageName: node
+  linkType: hard
+
+"react-side-effect@npm:^2.1.0":
+  version: 2.1.2
+  resolution: "react-side-effect@npm:2.1.2"
+  peerDependencies:
+    react: ^16.3.0 || ^17.0.0 || ^18.0.0
+  checksum: c5eb1f42b464fb093bca59aaae0f1b2060373a2aaff95275b8781493628cdbbb6acdd6014e7883782c65c361f35a30f28cc515d68a1263ddb39cbbc47110be53
   languageName: node
   linkType: hard
 
@@ -44357,22 +44386,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uniswap@workspace:^, uniswap@workspace:packages/uniswap":
-  version: 0.0.0-use.local
-  resolution: "uniswap@workspace:packages/uniswap"
-  dependencies:
-    "@typechain/ethers-v5": 7.2.0
-    "@uniswap/eslint-config": "workspace:^"
-    depcheck: 1.4.7
-    eslint: 8.44.0
-    ethers: 5.7.2
-    jest: 29.6.4
-    jest-presets: "workspace:^"
-    typechain: 5.2.0
-    typescript: 5.3.3
-  languageName: unknown
-  linkType: soft
-
 "universal-user-agent@npm:^6.0.0":
   version: 6.0.0
   resolution: "universal-user-agent@npm:6.0.0"
@@ -45403,6 +45416,7 @@ __metadata:
     "@testing-library/jest-native": 5.4.2
     "@testing-library/react-hooks": 7.0.2
     "@testing-library/react-native": 11.5.0
+    "@typechain/ethers-v5": 7.2.0
     "@types/react": ^18.0.15
     "@types/react-window": 1.8.2
     "@types/ua-parser-js": 0.7.31
@@ -45457,11 +45471,11 @@ __metadata:
     redux-saga: 1.2.2
     redux-saga-test-plan: 4.0.4
     statsig-react-native: 4.11.0
+    typechain: 5.2.0
     typed-redux-saga: 1.5.0
     typescript: 5.3.3
     ua-parser-js: 1.0.37
     ui: "workspace:^"
-    uniswap: "workspace:^"
     utilities: "workspace:^"
     uuid: 9.0.0
     wcag-contrast: 3.0.0

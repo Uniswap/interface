@@ -84,7 +84,7 @@ export function SettingsWalletEdit({
         contentContainerStyle={styles.expand}
         style={styles.base}>
         <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
-          <Text variant="body1">{t('settings.setting.wallet.action.editLabel')}</Text>
+          <Text variant="body1">{t('Edit label')}</Text>
         </BackHeader>
         <Flex
           grow
@@ -114,7 +114,7 @@ export function SettingsWalletEdit({
                 m="$none"
                 maxLength={NICKNAME_MAX_LENGTH}
                 numberOfLines={1}
-                placeholder={t('settings.setting.wallet.label')}
+                placeholder={t('Nickname')}
                 placeholderTextColor="$neutral3"
                 px="$none"
                 py="$spacing12"
@@ -137,7 +137,9 @@ export function SettingsWalletEdit({
             </Flex>
             {accountNameIsEditable && (
               <Flex px="$spacing8" py="$spacing12">
-                <Text color="$neutral3">{t('settings.setting.wallet.editLabel.description')}</Text>
+                <Text color="$neutral3">
+                  {t('Labels are not public. They are stored locally and only visible to you.')}
+                </Text>
               </Flex>
             )}
             {showUnitagBanner && (
@@ -150,7 +152,7 @@ export function SettingsWalletEdit({
             size="medium"
             theme="primary"
             onPress={onPressSaveChanges}>
-            {t('settings.setting.wallet.editLabel.save')}
+            {t('Save changes')}
           </Button>
         </Flex>
       </KeyboardAvoidingView>

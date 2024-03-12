@@ -66,7 +66,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
     if (mnemonicId && validMnemonic) {
       const generatedMnemonicId = await Keyring.generateAddressForMnemonic(validMnemonic, 0)
       if (generatedMnemonicId !== mnemonicId) {
-        setErrorMessage(t('account.seedPhrase.error.wrong'))
+        setErrorMessage(t('Wrong recovery phrase'))
         return
       }
     }
@@ -119,14 +119,10 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
     <SafeKeyboardOnboardingScreen
       subtitle={
         isRestoringMnemonic
-          ? t('account.seedPhrase.subtitle.restoring')
-          : t('account.seedPhrase.subtitle.import')
+          ? t('Enter your recovery phrase below, or try searching for backups again.')
+          : t('Your recovery phrase will only be stored locally on your device.')
       }
-      title={
-        isRestoringMnemonic
-          ? t('account.seedPhrase.title.restoring')
-          : t('account.seedPhrase.title.import')
-      }>
+      title={isRestoringMnemonic ? t('No backups found') : t('Enter your recovery phrase')}>
       <Flex $short={{ gap: '$spacing12' }} gap="$spacing16">
         <Flex px="$spacing8">
           <GenericImportForm
@@ -136,7 +132,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
             beforePasteButtonPress={(): void => setPastePermissionModalOpen(true)}
             errorMessage={errorMessage}
             inputAlignment="flex-start"
-            placeholderLabel={t('account.seedPhrase.input')}
+            placeholderLabel={t('Type your recovery phrase')}
             textAlign="left"
             value={value}
             onBlur={onBlur}
@@ -152,8 +148,8 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
               <Icons.QuestionInCircleFilled color="$surface1" size="$icon.20" />
               <Text $short={{ variant: 'body3' }} color="$neutral3" variant="body2">
                 {isRestoringMnemonic
-                  ? t('account.seedPhrase.helpText.restoring')
-                  : t('account.seedPhrase.helpText.import')}
+                  ? t('Try searching again')
+                  : t('How do I find my recovery phrase?')}
               </Text>
             </TouchableArea>
           </Trace>
@@ -161,7 +157,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
       </Flex>
       <Trace logPress element={ElementName.Next}>
         <Button disabled={!!errorMessage || !value} testID="seed-input-submit" onPress={onSubmit}>
-          {t('common.button.continue')}
+          {t('Continue')}
         </Button>
       </Trace>
     </SafeKeyboardOnboardingScreen>

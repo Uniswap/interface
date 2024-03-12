@@ -72,7 +72,6 @@ gql`
         id
         logoUrl
         markets(currencies: [USD]) {
-          id
           fullyDilutedValuation {
             id
             value
@@ -109,7 +108,7 @@ const TokenSortMethods = {
   [TokenSortMethod.DEPRECATE_PERCENT_CHANGE]: (a: TopToken, b: TopToken) =>
     (b?.market?.pricePercentChange?.value ?? 0) - (a?.market?.pricePercentChange?.value ?? 0),
   [TokenSortMethod.DAY_CHANGE]: (a: TopToken, b: TopToken) =>
-    (b?.market?.pricePercentChange1Day?.value ?? 0) - (a?.market?.pricePercentChange1Day?.value ?? 0),
+    (b?.market?.pricePercentChange?.value ?? 0) - (a?.market?.pricePercentChange?.value ?? 0),
   [TokenSortMethod.HOUR_CHANGE]: (a: TopToken, b: TopToken) =>
     (b?.market?.pricePercentChange1Hour?.value ?? 0) - (a?.market?.pricePercentChange1Hour?.value ?? 0),
   [TokenSortMethod.DEPRECATE_TOTAL_VALUE_LOCKED]: (a: TopToken, b: TopToken) =>

@@ -18,7 +18,7 @@ export function SwapWarningModal({
   return (
     <WarningModal
       caption={warning.message}
-      confirmText={t('common.button.close')}
+      confirmText={t('Close')}
       icon={Icon && <Icon color={color.text} height={iconSizes.icon24} width={iconSizes.icon24} />}
       modalName={ModalName.SwapWarning}
       severity={warning.severity}

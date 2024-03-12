@@ -11,7 +11,9 @@ export const getNetworkWarning = (t: AppTFunction): Warning => ({
   type: WarningLabel.NetworkError,
   severity: WarningSeverity.Low,
   action: WarningAction.DisableReview,
-  title: t('swap.warning.offline.title'),
+  title: t('You’re offline'),
   icon: WifiIcon,
-  message: t('swap.warning.offline.message'),
+  message: t(
+    'You may have lost internet connection or the network may be down. Please check your internet connection and try again.'
+  ),
 })

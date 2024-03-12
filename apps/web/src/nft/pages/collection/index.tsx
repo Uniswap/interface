@@ -19,7 +19,7 @@ import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'n
 import * as styles from 'nft/pages/collection/index.css'
 import { blocklistedCollections } from 'nft/utils'
 import { Suspense, useEffect } from 'react'
-import { Helmet } from 'react-helmet-async/lib/index'
+import { Helmet } from 'react-helmet'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { animated, easings, useSpring } from 'react-spring'
 import styled from 'styled-components'

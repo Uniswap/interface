@@ -53,7 +53,6 @@ export function initializeTranslation(): void {
     .init({
       defaultNS,
       lng: 'en-US',
-      fallbackLng: 'en-US',
       resources,
       interpolation: {
         escapeValue: false, // react already safes from xss
