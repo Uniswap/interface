@@ -54,12 +54,19 @@ export const USDC_POLYGON_MUMBAI = new Token(
   'USDC',
   'USD Coin'
 )
-export const PORTAL_USDC_CELO = new Token(
+export const USDC_CELO_NATIVE = new Token(
   ChainId.CELO,
-  '0x37f750B7cC259A2f741AF45294f6a16572CF5cAd',
+  '0xcebA9300f2b948710d2653dD7B07f33A8B32118C',
   6,
-  'USDCet',
-  'USDC (Portal from Ethereum)'
+  'USDC',
+  'USDC'
+)
+export const USDC_CELO_ALFAJ0RES_NATIVE = new Token(
+  ChainId.CELO_ALFAJORES,
+  '0x2F25deB3848C207fc8E0c34035B3Ba7fC157602B',
+  6,
+  'USDC',
+  'USDC CELO Testnet'
 )
 export const USDC_BASE = new Token(ChainId.BASE, '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', 6, 'USDC', 'USD Coin')
 
@@ -466,8 +473,8 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in ChainId]?: s
     [ChainId.POLYGON_MUMBAI]: USDC_POLYGON_MUMBAI.address,
     [ChainId.BNB]: USDC_BSC.address,
     [ChainId.BASE]: USDC_BASE.address,
-    [ChainId.CELO]: PORTAL_USDC_CELO.address,
-    [ChainId.CELO_ALFAJORES]: PORTAL_USDC_CELO.address,
+    [ChainId.CELO]: USDC_CELO_NATIVE.address,
+    [ChainId.CELO_ALFAJORES]: USDC_CELO_ALFAJ0RES_NATIVE.address,
     [ChainId.GOERLI]: USDC_GOERLI.address,
     [ChainId.SEPOLIA]: USDC_SEPOLIA.address,
     [ChainId.AVALANCHE]: USDC_AVALANCHE.address,
