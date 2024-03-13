@@ -1,13 +1,13 @@
 import { ChainId, Token } from '@uniswap/sdk-core'
 import { Interface } from 'ethers/lib/utils'
+import ERC20_ABI from 'uniswap/src/abis/erc20.json'
+import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
+import { Erc20Bytes32Interface } from 'uniswap/src/abis/types/Erc20Bytes32'
+import { UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { isAddress } from 'utilities/src/addresses'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { arrayToSlices } from 'utils/arrays'
 import { CurrencyKey, buildCurrencyKey, currencyKey } from 'utils/currencyKey'
-import ERC20_ABI from 'wallet/src/abis/erc20.json'
-import { Erc20Interface } from 'wallet/src/abis/types/Erc20'
-import { Erc20Bytes32Interface } from 'wallet/src/abis/types/Erc20Bytes32'
-import { UniswapInterfaceMulticall } from 'wallet/src/abis/types/v3'
 
 type TokenMap = { [address: string]: Token | undefined }
 export type Call = { target: string; callData: string; gasLimit: number }

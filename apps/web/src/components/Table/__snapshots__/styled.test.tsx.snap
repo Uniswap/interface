@@ -99,6 +99,7 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
 .c7 {
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 <span
@@ -245,6 +246,7 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
 .c6 {
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 <span
@@ -357,6 +359,7 @@ exports[`TokenLinkCell renders unknown token 1`] = `
 .c6 {
   white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 <span

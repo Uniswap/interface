@@ -10,7 +10,9 @@ import {
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
 import { ModalName } from 'wallet/src/telemetry/constants'
-import { account } from 'wallet/src/test/fixtures'
+import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
+
+const account = signerMnemonicAccount()
 
 const formSwapUrl = (
   userAddress?: Address,

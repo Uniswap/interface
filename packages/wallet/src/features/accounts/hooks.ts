@@ -1,4 +1,5 @@
 import { NetworkStatus, WatchQueryFetchPolicy } from '@apollo/client'
+import { GqlResult } from 'uniswap/src/data/types'
 import {
   AccountListQuery,
   // eslint-disable-next-line no-restricted-imports
@@ -6,7 +7,6 @@ import {
 } from 'wallet/src/data/__generated__/types-and-hooks'
 // eslint-disable-next-line no-restricted-imports
 import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
-import { GqlResult } from 'wallet/src/features/dataApi/types'
 
 export function useAccountList({
   addresses,

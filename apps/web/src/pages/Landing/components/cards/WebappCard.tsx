@@ -2,7 +2,7 @@ import { t } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { LDO, UNI, USDC_BASE } from 'constants/tokens'
+import { LDO, NATIVE_CHAIN_ID, UNI, USDC_BASE } from 'constants/tokens'
 import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useTokenPromoQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
@@ -209,7 +209,7 @@ function Token({ chainId, address }: { chainId: ChainId; address: string }) {
       e.stopPropagation()
       navigate(
         getTokenDetailsURL({
-          address: address === 'ETH' ? 'NATIVE' : address,
+          address: address === 'ETH' ? NATIVE_CHAIN_ID : address,
           chain: chainIdToBackendName(chainId),
           isInfoExplorePageEnabled,
         })

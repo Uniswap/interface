@@ -1,6 +1,5 @@
-import { useUniTagsEnabled } from 'featureFlags/flags/uniTags'
 import styled from 'styled-components'
-import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
+import { useUnitagByAddressWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
 
 const Container = styled.div<{ $iconSize: number }>`
   height: ${({ $iconSize: iconSize }) => `${iconSize}px`};
@@ -18,7 +17,7 @@ const Profile = styled.img`
 `
 
 export function UniTagProfilePicture({ account, size }: { account: string; size: number }) {
-  const { unitag } = useUnitagByAddress(account, useUniTagsEnabled() && Boolean(account))
+  const { unitag } = useUnitagByAddressWithoutFlag(account, Boolean(account))
 
   return (
     <Container $iconSize={size}>

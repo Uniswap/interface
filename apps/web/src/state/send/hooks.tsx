@@ -2,7 +2,6 @@ import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { nativeOnChain } from 'constants/tokens'
-import { useUniTagsEnabled } from 'featureFlags/flags/uniTags'
 import { useCurrency } from 'hooks/Tokens'
 import useENSAddress from 'hooks/useENSAddress'
 import useENSName from 'hooks/useENSName'
@@ -12,9 +11,12 @@ import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
 import { SendState } from 'state/send/SendContext'
+import {
+  useUnitagByAddressWithoutFlag,
+  useUnitagByNameWithoutFlag,
+} from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import { isAddress } from 'utilities/src/addresses'
 import { useCreateTransferTransaction } from 'utils/transfer'
-import { useUnitagByAddress, useUnitagByName } from 'wallet/src/features/unitags/hooks'
 
 export interface RecipientData {
   address: string
@@ -41,10 +43,9 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
   const { account, chainId, provider } = useWeb3React()
   const { exactAmountToken, exactAmountFiat, inputInFiat, inputCurrency, recipient, validatedRecipientData } = state
 
-  const isUniTagsEnabled = useUniTagsEnabled()
-  const { unitag: recipientInputUnitag } = useUnitagByName(
+  const { unitag: recipientInputUnitag } = useUnitagByNameWithoutFlag(
     validatedRecipientData ? undefined : recipient,
-    isUniTagsEnabled && Boolean(recipient)
+    Boolean(recipient)
   )
   const recipientInputUnitagUsername = validatedRecipientData?.unitag ?? recipientInputUnitag?.username
   const recipientInputUnitagAddress = recipientInputUnitag?.address?.address
@@ -58,9 +59,9 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
     )
   }, [recipient, recipientInputEnsAddress, recipientInputUnitagAddress, validatedRecipientData])
 
-  const { unitag } = useUnitagByAddress(
+  const { unitag } = useUnitagByAddressWithoutFlag(
     recipientInputUnitagUsername ? undefined : validatedRecipientAddress,
-    isUniTagsEnabled && Boolean(validatedRecipientAddress)
+    Boolean(validatedRecipientAddress)
   )
   const { ENSName } = useENSName(validatedRecipientData?.ensName ? undefined : validatedRecipientAddress)
   const recipientData = useMemo(() => {

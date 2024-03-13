@@ -19,6 +19,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { DeltaArrow, DeltaText } from '../Tokens/TokenDetails/Delta'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
@@ -136,7 +137,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
   const { formatFiatPrice, formatDelta } = useFormatter()
 
   const handleClick = useCallback(() => {
-    const address = !token.address && token.standard === TokenStandard.Native ? 'NATIVE' : token.address
+    const address = !token.address && token.standard === TokenStandard.Native ? NATIVE_CHAIN_ID : token.address
     address && addRecentlySearchedAsset({ address, chain: token.chain })
 
     toggleOpen()
@@ -163,7 +164,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
 
   return (
     <Link
-      data-testid={`searchbar-token-row-${token.chain}-${token.address ?? 'NATIVE'}`}
+      data-testid={`searchbar-token-row-${token.chain}-${token.address ?? NATIVE_CHAIN_ID}`}
       to={tokenDetailsPath}
       onClick={handleClick}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}

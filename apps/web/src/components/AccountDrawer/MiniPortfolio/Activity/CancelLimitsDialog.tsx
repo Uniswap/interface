@@ -1,5 +1,6 @@
 import { Plural, Trans } from '@lingui/macro'
-import { useCreateCancelTransactionRequest } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
+import { useCancelLimitsGasEstimate } from 'components/AccountDrawer/MiniPortfolio/Limits/hooks/useCancelLimitsGasEstimate'
 import GetHelp from 'components/Button/GetHelp'
 import Column from 'components/Column'
 import { Container, Dialog, DialogButtonType, DialogProps } from 'components/Dialog/Dialog'
@@ -8,9 +9,8 @@ import Modal from 'components/Modal'
 import Row from 'components/Row'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { ConfirmedIcon, LogoContainer, SubmittedIcon } from 'components/swap/PendingModalContent/Logos'
-import { formatEther } from 'ethers/lib/utils'
-import { GasSpeed, useTransactionGasFee } from 'hooks/useTransactionGasFee'
-import { useMemo } from 'react'
+import { nativeOnChain } from 'constants/tokens'
+import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { Slash } from 'react-feather'
 import { UniswapXOrderDetails } from 'state/signatures/types'
 import styled, { useTheme } from 'styled-components'
@@ -81,18 +81,9 @@ export function CancelLimitsDialog(
 ) {
   const { orders, cancelState, cancelTxHash, onConfirm, onCancel } = props
 
-  const { formatNumber } = useFormatter()
-  const cancelTransactionParams = useMemo(
-    () => ({
-      encodedOrders: orders.map((order) => order.encodedOrder as string),
-      chainId: orders[0]?.chainId,
-    }),
-    [orders]
-  )
-  const cancelTransaction = useCreateCancelTransactionRequest(cancelTransactionParams)
-  const gasEstimate = useTransactionGasFee(cancelTransaction, GasSpeed.Fast)
-
   const { title, icon } = useCancelLimitsDialogContent(cancelState, orders)
+
+  const gasEstimate = useCancelLimitsGasEstimate(orders)
 
   if (
     [CancellationState.PENDING_SIGNATURE, CancellationState.PENDING_CONFIRMATION, CancellationState.CANCELLED].includes(
@@ -144,23 +135,7 @@ export function CancelLimitsDialog(
               one="Your swap could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?"
               other="Your swaps could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?"
             />
-            {gasEstimate?.value && (
-              <GasEstimateContainer>
-                <DetailLineItem
-                  LineItem={{
-                    Label: () => <Trans>Network cost</Trans>,
-                    Value: () => (
-                      <span>
-                        {formatNumber({
-                          input: Number(formatEther(gasEstimate.value as string)),
-                          type: NumberType.FiatGasPrice,
-                        })}
-                      </span>
-                    ),
-                  }}
-                />
-              </GasEstimateContainer>
-            )}
+            <GasEstimateDisplay chainId={orders[0].chainId} gasEstimateValue={gasEstimate.value} />
           </Column>
         }
         buttonsConfig={{
@@ -183,4 +158,24 @@ export function CancelLimitsDialog(
     // CancellationState.NOT_STARTED
     return null
   }
+}
+
+function GasEstimateDisplay({ gasEstimateValue, chainId }: { gasEstimateValue?: string; chainId: ChainId }) {
+  const gasFeeCurrencyAmount = CurrencyAmount.fromRawAmount(nativeOnChain(chainId), gasEstimateValue ?? '0')
+  const gasFeeUSD = useStablecoinValue(gasFeeCurrencyAmount)
+  const { formatCurrencyAmount } = useFormatter()
+  const gasFeeFormatted = formatCurrencyAmount({
+    amount: gasFeeUSD,
+    type: NumberType.PortfolioBalance,
+  })
+  return (
+    <GasEstimateContainer>
+      <DetailLineItem
+        LineItem={{
+          Label: () => <Trans>Network cost</Trans>,
+          Value: () => <span>{gasEstimateValue ? gasFeeFormatted : '-'}</span>,
+        }}
+      />
+    </GasEstimateContainer>
+  )
 }

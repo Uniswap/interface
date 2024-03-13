@@ -23,9 +23,7 @@ import {
 import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
 import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
 import { useSendEnabledFlag } from 'featureFlags/flags/send'
-import { useSwapSmarterFlag } from 'featureFlags/flags/swapSmarter'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { useUniTagsFlag } from 'featureFlags/flags/uniTags'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useFeesEnabledFlag } from 'featureFlags/flags/useFees'
 import { useV2EverywhereFlag } from 'featureFlags/flags/v2Everywhere'
@@ -362,18 +360,6 @@ export default function FeatureFlagModal() {
           value={useV2EverywhereFlag()}
           featureFlag={FeatureFlag.v2Everywhere}
           label="Enable V2 Everywhere"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useUniTagsFlag()}
-          featureFlag={FeatureFlag.uniTags}
-          label="UniTags support"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useSwapSmarterFlag()}
-          featureFlag={FeatureFlag.swapSmarter}
-          label="Swap Smarter"
         />
         <FeatureFlagGroup name="Quick routes">
           <FeatureFlagOption

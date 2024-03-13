@@ -1,9 +1,9 @@
 import { Linking } from 'react-native'
 import OneSignal, { NotificationReceivedEvent, OpenedEvent } from 'react-native-onesignal'
 import { apolloClient } from 'src/data/usePersistedApolloClient'
+import { config } from 'uniswap/src/config'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { config } from 'wallet/src/config'
 import { GQLQueries } from 'wallet/src/data/queries'
 
 export const initOneSignal = (): void => {

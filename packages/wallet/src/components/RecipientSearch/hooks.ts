@@ -1,12 +1,12 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useUnitagByNameWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import { ChainId } from 'wallet/src/constants/chains'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { selectRecipientsByRecency } from 'wallet/src/features/transactions/selectors'
-import { useUnitagByName } from 'wallet/src/features/unitags/hooks'
 import { selectInactiveAccounts } from 'wallet/src/features/wallet/selectors'
 import { useAppSelector } from 'wallet/src/state'
 import { getValidAddress } from 'wallet/src/utils/addresses'
@@ -35,7 +35,7 @@ function useValidatedSearchedAddress(searchTerm: string | null): {
     name: ensName,
   } = useENS(ChainId.Mainnet, searchTerm, false)
 
-  const { loading: unitagLoading, unitag } = useUnitagByName(searchTerm ?? undefined)
+  const { loading: unitagLoading, unitag } = useUnitagByNameWithoutFlag(searchTerm ?? undefined)
 
   return useMemo(() => {
     // Check for a valid unitag, ENS address, or literal address
@@ -125,28 +125,28 @@ export function useRecipients(): {
 
     if (validatedAddressRecipients.length) {
       sectionsArr.push({
-        title: t('Search results'),
+        title: t('send.recipient.section.search'),
         data: validatedAddressRecipients,
       })
     }
 
     if (recentRecipients.length) {
       sectionsArr.push({
-        title: t('Recent'),
+        title: t('send.recipient.section.recent'),
         data: recentRecipients,
       })
     }
 
     if (inactiveLocalAccounts.length) {
       sectionsArr.push({
-        title: t('Your wallets'),
+        title: t('send.recipient.section.yours'),
         data: inactiveLocalAccounts,
       })
     }
 
     if (watchedWallets.size) {
       sectionsArr.push({
-        title: t('Favorite wallets'),
+        title: t('send.recipient.section.favorite'),
         data: Array.from(watchedWallets).map(
           (address) =>
             <SearchableRecipient>{

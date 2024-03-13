@@ -4,12 +4,12 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { MoonpayEventName, SharedEventName, SwapEventName } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
 import { providers } from 'ethers'
+import { UnitagClaimContext } from 'uniswap/src/features/unitags/types'
 import { TraceProps } from 'utilities/src/telemetry/trace/Trace'
 import { ChainId } from 'wallet/src/constants/chains'
 import { ImportType } from 'wallet/src/features/onboarding/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { QuoteType } from 'wallet/src/features/transactions/utils'
-import { UnitagClaimContext } from 'wallet/src/features/unitags/types'
 import {
   UnitagEventName,
   WalletAppsFlyerEvents,
@@ -30,6 +30,7 @@ export type SwapTradeBaseProperties = {
   fee_amount?: string
   quoteType?: QuoteType
   requestId?: string
+  quoteId?: string
 } & TraceProps
 
 type SwapTransactionResultProperties = {

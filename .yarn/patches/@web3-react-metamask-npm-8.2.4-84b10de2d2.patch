@@ -1,0 +1,13 @@
+diff --git a/dist/index.js b/dist/index.js
+index c8476dd9b01c0599dfc545f4c86432081bd0fcec..c0bfce759654232df771724e59a650c92b392f78 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -54,7 +54,7 @@ class MetaMask extends types_1.Connector {
+         return __awaiter(this, void 0, void 0, function* () {
+             if (this.eagerConnection)
+                 return;
+-            return (this.eagerConnection = Promise.resolve().then(() => __importStar(require('@metamask/detect-provider'))).then((m) => __awaiter(this, void 0, void 0, function* () {
++            return (this.eagerConnection = Promise.resolve().then(async () => __importStar(await import('@metamask/detect-provider'))).then((m) => __awaiter(this, void 0, void 0, function* () {
+                 var _a, _b;
+                 const provider = yield m.default(this.options);
+                 if (provider) {

@@ -1,3 +1,4 @@
+import { NATIVE_CHAIN_ID } from '../../src/constants/tokens'
 import { Chain, TokenDocument, TokenQuery } from '../../src/graphql/data/__generated__/types-and-hooks'
 import client from '../client'
 
@@ -12,7 +13,7 @@ function formatTitleName(symbol: string | undefined, name: string | undefined) {
 }
 
 const convertTokenAddress = (networkName: string, tokenAddress: string) => {
-  if (tokenAddress === 'NATIVE') {
+  if (tokenAddress === NATIVE_CHAIN_ID) {
     switch (networkName) {
       case Chain.Celo:
         return '0x471EcE3750Da237f93B8E339c536989b8978a438'

@@ -6,7 +6,7 @@ import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { Token } from 'graphql/data/__generated__/types-and-hooks'
-import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
+import { chainIdToBackendName, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { ReactNode, useMemo } from 'react'
@@ -17,6 +17,7 @@ import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { PoolData } from 'graphql/data/pools/usePoolData'
 import { DetailBubble } from './shared'
 
@@ -127,10 +128,12 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
   const isScreenSize = useScreenSize()
   const screenIsNotLarge = isScreenSize['lg']
   const { formatNumber } = useFormatter()
-
+  const unwrappedToken = chainId ? unwrapToken(chainId, token) : token
+  const isNative = unwrappedToken?.address === NATIVE_CHAIN_ID
+  const currency = isNative && chainId ? nativeOnChain(chainId) : token.currency
   return (
     <PoolBalanceTokenNamesContainer>
-      {!screenIsNotLarge && <CurrencyLogo currency={token.currency} size="20px" style={{ marginRight: '8px' }} />}
+      {!screenIsNotLarge && <CurrencyLogo currency={currency} size="20px" style={{ marginRight: '8px' }} />}
       {formatNumber({
         input: token.tvl,
         type: NumberType.TokenQuantityStats,
@@ -138,15 +141,15 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
       &nbsp;
       <StyledLink
         to={getTokenDetailsURL({
-          address: token.address,
+          address: unwrappedToken.address,
           chain: chainIdToBackendName(chainId),
           isInfoExplorePageEnabled: true,
         })}
       >
         {screenIsNotLarge && (
-          <CurrencyLogo currency={token.currency} size="16px" style={{ marginRight: '4px', marginLeft: '4px' }} />
+          <CurrencyLogo currency={currency} size="16px" style={{ marginRight: '4px', marginLeft: '4px' }} />
         )}
-        {token.symbol}
+        {unwrappedToken.symbol}
       </StyledLink>
     </PoolBalanceTokenNamesContainer>
   )

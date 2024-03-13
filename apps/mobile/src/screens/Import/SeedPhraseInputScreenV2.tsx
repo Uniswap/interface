@@ -17,7 +17,7 @@ import {
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button } from 'ui/src'
-import { uniswapUrls } from 'wallet/src/constants/urls'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ImportType } from 'wallet/src/features/onboarding/types'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { importAccountActions } from 'wallet/src/features/wallet/import/importAccountSaga'
@@ -80,23 +80,27 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
     <SafeKeyboardOnboardingScreen
       subtitle={
         isRestoringMnemonic
-          ? t('Enter your recovery phrase below, or try searching for backups again.')
-          : t('Your recovery phrase will only be stored locally on your device.')
+          ? t('account.recoveryPhrase.subtitle.restoring')
+          : t('account.recoveryPhrase.subtitle.import')
       }
-      title={isRestoringMnemonic ? t('No backups found') : t('Enter your recovery phrase')}>
+      title={
+        isRestoringMnemonic
+          ? t('account.recoveryPhrase.title.restoring')
+          : t('account.recoveryPhrase.title.import')
+      }>
       {/* <Flex gap={itemSpacing}> */}
       <SeedPhraseInput
         ref={seedPhraseInputRef}
         strings={{
           [StringKey.HelpText]: isRestoringMnemonic
-            ? t('Try searching again')
-            : t('How do I find my recovery phrase?'),
-          [StringKey.InputPlaceholder]: t('Enter recovery phrase'),
-          [StringKey.PasteButton]: t('Paste'),
-          [StringKey.ErrorInvalidWord]: t('Invalid word: '),
-          [StringKey.ErrorPhraseLength]: t('Recovery phrase must be 12-24 words'),
-          [StringKey.ErrorWrongPhrase]: t('Wrong recovery phrase'),
-          [StringKey.ErrorInvalidPhrase]: t('Invalid phrase'),
+            ? t('account.recoveryPhrase.helpText.restoring')
+            : t('account.recoveryPhrase.helpText.import'),
+          [StringKey.InputPlaceholder]: t('account.recoveryPhrase.input'),
+          [StringKey.PasteButton]: t('common.button.paste'),
+          [StringKey.ErrorInvalidWord]: t('account.recoveryPhrase.error.invalidWord'),
+          [StringKey.ErrorPhraseLength]: t('account.recoveryPhrase.error.phraseLength'),
+          [StringKey.ErrorWrongPhrase]: t('account.recoveryPhrase.error.wrong'),
+          [StringKey.ErrorInvalidPhrase]: t('account.recoveryPhrase.error.invalid'),
         }}
         targetMnemonicId={targetMnemonicId}
         onHelpTextPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}
@@ -121,7 +125,7 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
           onPress={(): void => {
             seedPhraseInputRef.current?.handleSubmit()
           }}>
-          {t('Continue')}
+          {t('common.button.continue')}
         </Button>
       </Trace>
     </SafeKeyboardOnboardingScreen>

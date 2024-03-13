@@ -12,6 +12,7 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
 import { NoTransactions } from 'ui/src/components/icons/NoTransactions'
+import { isAndroid } from 'uniswap/src/utils/platform'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { useFormattedTransactionDataForFeed } from 'wallet/src/features/activity/hooks'
@@ -20,7 +21,6 @@ import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCa
 import { generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
 import { ModalName } from 'wallet/src/telemetry/constants'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 export const FEED_TAB_DATA_DEPENDENCIES = [GQLQueries.FeedTransactionList]
 
@@ -76,8 +76,8 @@ export const FeedTab = memo(
     const errorCard = (
       <Flex grow style={containerProps?.emptyContainerStyle}>
         <BaseCard.ErrorState
-          retryButtonLabel={t('Retry')}
-          title={t('Couldn’t load activity')}
+          retryButtonLabel={t('common.button.retry')}
+          title={t('home.feed.error')}
           onRetry={onRetry}
         />
       </Flex>
@@ -86,9 +86,9 @@ export const FeedTab = memo(
     const emptyListView = (
       <Flex grow style={containerProps?.emptyContainerStyle}>
         <BaseCard.EmptyState
-          description={t('When your favorited wallets makes transactions, they’ll appear here.')}
+          description={t('home.feed.empty.description')}
           icon={<NoTransactions />}
-          title={t('No activity yet')}
+          title={t('home.feed.empty.title')}
           onPress={onPressReceive}
         />
       </Flex>

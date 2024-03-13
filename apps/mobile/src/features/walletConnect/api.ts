@@ -1,8 +1,8 @@
 import { getOneSignalPushToken } from 'src/features/notifications/Onesignal'
+import { config } from 'uniswap/src/config'
+import { isAndroid } from 'uniswap/src/utils/platform'
 import { isJestRun } from 'utilities/src/environment'
 import { logger } from 'utilities/src/logger/logger'
-import { config } from 'wallet/src/config'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 const WC_HOSTED_PUSH_SERVER_URL = `https://echo.walletconnect.com/${config.walletConnectProjectId}`
 

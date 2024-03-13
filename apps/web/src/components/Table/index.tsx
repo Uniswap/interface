@@ -89,12 +89,15 @@ function TableBody<Data extends RowData>({
           ))
         const rowOriginal = row.original as any
         const linkState = rowOriginal.linkState // optional data passed to linked page, accessible via useLocation().state
+        const rowTestId = rowOriginal.testId
         return 'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
-          <TableRowLink to={rowOriginal.link} key={row.id} state={linkState}>
+          <TableRowLink to={rowOriginal.link} key={row.id} state={linkState} data-testid={rowTestId}>
             <DataRow>{cells}</DataRow>
           </TableRowLink>
         ) : (
-          <DataRow key={row.id}>{cells}</DataRow>
+          <DataRow data-testid={rowTestId} key={row.id}>
+            {cells}
+          </DataRow>
         )
       })}
     </>

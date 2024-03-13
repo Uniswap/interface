@@ -11,11 +11,11 @@ import {
   RenderResult,
 } from '@testing-library/react-native'
 import React, { PropsWithChildren } from 'react'
+import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
-import { UnitagUpdaterContextProvider } from 'wallet/src/features/unitags/context'
 import { SharedProvider } from 'wallet/src/provider'
 import { sharedRootReducer, type SharedState } from 'wallet/src/state/reducer'
-import { AutoMockedApolloProvider } from 'wallet/src/test/mocks/provider'
+import { AutoMockedApolloProvider } from 'wallet/src/test/mocks'
 
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.

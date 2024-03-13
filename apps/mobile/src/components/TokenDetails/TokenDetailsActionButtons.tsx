@@ -58,13 +58,13 @@ export function TokenDetailsActionButtons({
       px="$spacing16">
       <CTAButton
         element={ElementName.Buy}
-        title={t('Buy')}
+        title={t('common.button.buy')}
         tokenColor={tokenColor}
         onPress={onPressBuy}
       />
       <CTAButton
         element={ElementName.Sell}
-        title={t('Sell')}
+        title={t('common.button.sell')}
         tokenColor={tokenColor}
         onPress={onPressSell}
       />

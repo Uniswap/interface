@@ -3,6 +3,7 @@
 exports[`renders wallet preview card 1`] = `
 <View
   cancelable={true}
+  disabled={false}
   focusable={true}
   hitSlop={[Function]}
   minPressDuration={0}

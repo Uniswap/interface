@@ -3,7 +3,8 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import { PropsWithChildren, default as React, StrictMode, useCallback, useEffect } from 'react'
-import { NativeModules, StatusBar } from 'react-native'
+import { I18nextProvider } from 'react-i18next'
+import { LogBox, NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
 import { getUniqueId } from 'react-native-device-info'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
@@ -41,12 +42,13 @@ import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
 import { Statsig, StatsigProvider } from 'statsig-react-native'
 import { flexStyles, useIsDarkMode } from 'ui/src'
+import { config } from 'uniswap/src/config'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
-import { config } from 'wallet/src/config'
-import { uniswapUrls } from 'wallet/src/constants/urls'
 import { initFirebaseAppCheck } from 'wallet/src/features/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { EXPERIMENT_NAMES, FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
@@ -56,11 +58,10 @@ import { LocalizationContextProvider } from 'wallet/src/features/language/Locali
 import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { updateLanguage } from 'wallet/src/features/language/slice'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
-import { UnitagUpdaterContextProvider } from 'wallet/src/features/unitags/context'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { initializeTranslation } from 'wallet/src/i18n/i18n'
+import i18n from 'wallet/src/i18n/i18n'
 import { SharedProvider } from 'wallet/src/provider'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { beforeSend } from 'wallet/src/utils/sentry'
@@ -77,7 +78,7 @@ const routingInstrumentation = new Sentry.ReactNavigationInstrumentation()
 // Dummy key since we use the reverse proxy will handle the real key
 const DUMMY_STATSIG_SDK_KEY = 'client-0000000000000000000000000000000000000000000'
 
-if (!__DEV__) {
+if (!__DEV__ && !process.env.DETOX_MODE) {
   Sentry.init({
     environment: getSentryEnvironment(),
     dsn: config.sentryDsn,
@@ -102,10 +103,15 @@ if (!__DEV__) {
   })
 }
 
+// Log boxes on simulators can block detox tap event when they cover buttons placed at
+// the bottom of the screen and cause tests to fail.
+if (process.env.DETOX_MODE) {
+  LogBox.ignoreAllLogs()
+}
+
 initOneSignal()
 initAppsFlyer()
 initFirebaseAppCheck()
-initializeTranslation()
 
 function App(): JSX.Element | null {
   // We want to ensure deviceID is used as the identifier to link with analytics
@@ -136,19 +142,21 @@ function App(): JSX.Element | null {
   return (
     <Trace>
       <StrictMode>
-        <StatsigProvider {...statSigOptions}>
-          <SentryTags>
-            <SafeAreaProvider>
-              <SharedProvider reduxStore={store}>
-                <AnalyticsNavigationContextProvider
-                  shouldLogScreen={shouldLogScreen}
-                  useIsPartOfNavigationTree={useIsPartOfNavigationTree}>
-                  <AppOuter />
-                </AnalyticsNavigationContextProvider>
-              </SharedProvider>
-            </SafeAreaProvider>
-          </SentryTags>
-        </StatsigProvider>
+        <I18nextProvider i18n={i18n}>
+          <StatsigProvider {...statSigOptions}>
+            <SentryTags>
+              <SafeAreaProvider>
+                <SharedProvider reduxStore={store}>
+                  <AnalyticsNavigationContextProvider
+                    shouldLogScreen={shouldLogScreen}
+                    useIsPartOfNavigationTree={useIsPartOfNavigationTree}>
+                    <AppOuter />
+                  </AnalyticsNavigationContextProvider>
+                </SharedProvider>
+              </SafeAreaProvider>
+            </SentryTags>
+          </StatsigProvider>
+        </I18nextProvider>
       </StrictMode>
     </Trace>
   )

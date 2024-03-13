@@ -61,7 +61,7 @@ export interface TransactionDetails extends TransactionId {
 }
 
 export enum TransactionStatus {
-  Cancelled = 'cancelled',
+  Canceled = 'cancelled',
   Cancelling = 'cancelling',
   FailedCancel = 'failedCancel',
   Success = 'confirmed',
@@ -76,7 +76,7 @@ export enum TransactionStatus {
 export type FinalizedTransactionStatus =
   | TransactionStatus.Success
   | TransactionStatus.Failed
-  | TransactionStatus.Cancelled
+  | TransactionStatus.Canceled
   | TransactionStatus.FailedCancel
 
 export interface FinalizedTransactionDetails extends TransactionDetails {
@@ -293,7 +293,7 @@ export function isFinalizedTx(
   return (
     tx.status === TransactionStatus.Success ||
     tx.status === TransactionStatus.Failed ||
-    tx.status === TransactionStatus.Cancelled ||
+    tx.status === TransactionStatus.Canceled ||
     tx.status === TransactionStatus.FailedCancel
   )
 }

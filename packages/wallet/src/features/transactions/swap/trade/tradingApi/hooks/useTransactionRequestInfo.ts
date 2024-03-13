@@ -1,10 +1,10 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { providers } from 'ethers'
 import { useEffect, useMemo } from 'react'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useRestQuery } from 'uniswap/src/data/rest'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { uniswapUrls } from 'wallet/src/constants/urls'
-import { useRestQuery } from 'wallet/src/data/rest'
 import {
   CreateSwapRequest,
   CreateSwapResponse,

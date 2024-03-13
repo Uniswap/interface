@@ -1,19 +1,19 @@
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { isWeb } from 'ui/src'
+import { GqlResult } from 'uniswap/src/data/types'
+import { TokenSelectorList } from 'wallet/src/components/TokenSelector/TokenSelectorList'
 import {
   useCommonTokensOptions,
   useFavoriteTokensOptions,
   usePopularTokensOptions,
 } from 'wallet/src/components/TokenSelector/hooks'
-import { TokenSelectorList } from 'wallet/src/components/TokenSelector/TokenSelectorList'
 import {
   OnSelectCurrency,
   TokenSelectorListSections,
 } from 'wallet/src/components/TokenSelector/types'
 import { getTokenOptionsSection } from 'wallet/src/components/TokenSelector/utils'
 import { ChainId } from 'wallet/src/constants/chains'
-import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 function useTokenSectionsForSwapOutput(
@@ -66,10 +66,13 @@ function useTokenSectionsForSwapOutput(
 
     return [
       // we draw the pills as a single item of a section list, so `data` is an array of Token[]
-      { title: t('Suggested'), data: [commonTokenOptions ?? []] },
+      { title: t('tokens.selector.section.suggested'), data: [commonTokenOptions ?? []] },
       // TODO temporarily hiding favorites from extension until we add favorites functionality
-      ...(isWeb ? [] : getTokenOptionsSection(t('Favorites'), favoriteTokenOptions) ?? []),
-      ...(getTokenOptionsSection(t('Popular tokens'), popularTokenOptions) ?? []),
+      ...(isWeb
+        ? []
+        : getTokenOptionsSection(t('tokens.selector.section.favorite'), favoriteTokenOptions) ??
+          []),
+      ...(getTokenOptionsSection(t('tokens.selector.section.popular'), popularTokenOptions) ?? []),
     ]
   }, [commonTokenOptions, favoriteTokenOptions, loading, popularTokenOptions, t])
 

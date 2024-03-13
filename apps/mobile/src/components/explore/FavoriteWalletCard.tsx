@@ -52,8 +52,8 @@ function FavoriteWalletCard({
   /// Options for long press context menu
   const menuActions = useMemo(() => {
     return [
-      { title: t('Remove favorite'), systemIcon: 'heart.fill' },
-      { title: t('Edit favorites'), systemIcon: 'square.and.pencil' },
+      { title: t('explore.wallets.favorite.action.remove'), systemIcon: 'heart.fill' },
+      { title: t('explore.wallets.favorite.action.edit'), systemIcon: 'square.and.pencil' },
     ]
   }, [t])
 

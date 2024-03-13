@@ -11,16 +11,15 @@ import Modal from 'components/Modal'
 import Row from 'components/Row'
 import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
 import { Unicon } from 'components/Unicon'
-import { useUniTagsEnabled } from 'featureFlags/flags/uniTags'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { ReactNode } from 'react'
 import { useSendContext } from 'state/send/SendContext'
 import styled from 'styled-components'
 import { ClickableStyle, CloseIcon, Separator, ThemedText } from 'theme/components'
 import { Icons } from 'ui/src'
+import { useUnitagByNameWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { useUnitagByName } from 'wallet/src/features/unitags/hooks'
 
 const ModalWrapper = styled(ColumnCenter)`
   background-color: ${({ theme }) => theme.surface1};
@@ -73,10 +72,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
     sendState: { inputCurrency, inputInFiat, exactAmountFiat },
     derivedSendInfo: { parsedTokenAmount, exactAmountOut, gasFeeCurrencyAmount, recipientData },
   } = useSendContext()
-  const { unitag: recipientUnitag } = useUnitagByName(
-    recipientData?.unitag,
-    useUniTagsEnabled() && Boolean(recipientData?.unitag)
-  )
+  const { unitag: recipientUnitag } = useUnitagByNameWithoutFlag(recipientData?.unitag, Boolean(recipientData?.unitag))
 
   const { formatConvertedFiatNumberOrString, formatCurrencyAmount } = useFormatter()
   const formattedInputAmount = formatCurrencyAmount({

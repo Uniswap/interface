@@ -1,10 +1,11 @@
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { GqlResult } from 'uniswap/src/data/types'
+import { TokenSelectorList } from 'wallet/src/components/TokenSelector/TokenSelectorList'
 import {
   usePopularTokensOptions,
   usePortfolioTokenOptions,
 } from 'wallet/src/components/TokenSelector/hooks'
-import { TokenSelectorList } from 'wallet/src/components/TokenSelector/TokenSelectorList'
 import {
   OnSelectCurrency,
   TokenSection,
@@ -15,7 +16,6 @@ import {
   tokenOptionDifference,
 } from 'wallet/src/components/TokenSelector/utils'
 import { ChainId } from 'wallet/src/constants/chains'
-import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 function useTokenSectionsForSwapInput(
@@ -61,8 +61,11 @@ function useTokenSectionsForSwapInput(
     )
 
     return [
-      ...(getTokenOptionsSection(t('Your tokens'), portfolioTokenOptions) ?? []),
-      ...(getTokenOptionsSection(t('Popular tokens'), popularMinusPortfolioTokens) ?? []),
+      ...(getTokenOptionsSection(t('tokens.selector.section.yours'), portfolioTokenOptions) ?? []),
+      ...(getTokenOptionsSection(
+        t('tokens.selector.section.popular'),
+        popularMinusPortfolioTokens
+      ) ?? []),
     ] satisfies TokenSection[]
   }, [loading, popularTokenOptions, portfolioTokenOptions, t])
 

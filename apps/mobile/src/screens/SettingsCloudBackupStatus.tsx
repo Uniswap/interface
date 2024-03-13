@@ -6,13 +6,14 @@ import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
-import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
-import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { deleteCloudStorageMnemonicBackup } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
+import { useCloudBackups } from 'src/features/CloudBackup/hooks'
+import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { Screens } from 'src/screens/Screens'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
+import { getCloudProviderName } from 'uniswap/src/utils/platform'
 import { logger } from 'utilities/src/logger/logger'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
@@ -27,7 +28,6 @@ import {
 } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsCloudBackupStatus>
 
@@ -73,9 +73,9 @@ export function SettingsCloudBackupStatus({
       logger.error(error, { tags: { file: 'SettingsCloudBackupStatus', function: 'deleteBackup' } })
 
       Alert.alert(
-        isAndroid ? t('Google Drive error') : t('iCloud error'),
-        t('Unable to delete backup'),
-        [{ text: t('OK'), style: 'default' }]
+        t('settings.setting.backup.error.title', { cloudProviderName: getCloudProviderName() }),
+        t('settings.setting.backup.error.message.short'),
+        [{ text: t('common.button.ok'), style: 'default' }]
       )
     }
   }
@@ -92,28 +92,26 @@ export function SettingsCloudBackupStatus({
   return (
     <Screen mx="$spacing16" my="$spacing16">
       <BackHeader alignment="center" mb="$spacing16" onPressBack={onPressBack}>
-        <Text variant="body1">{isAndroid ? t('Google Drive backup') : t('iCloud backup')}</Text>
+        <Text variant="body1">
+          {t('settings.setting.backup.status.title', { cloudProviderName: getCloudProviderName() })}
+        </Text>
       </BackHeader>
 
       <Flex grow alignItems="stretch" justifyContent="space-evenly" mt="$spacing16" mx="$spacing8">
         <Flex grow gap="$spacing24" justifyContent="flex-start">
           <Text color="$neutral2" variant="body2">
-            {isAndroid
-              ? t(
-                  'By having your recovery phrase backed up to Google Drive, you can recover your wallet just by being logged into your Google account on any device.'
-                )
-              : t(
-                  'By having your recovery phrase backed up to iCloud, you can recover your wallet just by being logged into your iCloud on any device.'
-                )}
+            {t('settings.setting.backup.status.description', {
+              cloudProviderName: getCloudProviderName(),
+            })}
           </Text>
           <Flex row justifyContent="space-between">
             <Text flexShrink={1} variant="body1">
-              {t('Recovery phrase')}
+              {t('settings.setting.backup.recoveryPhrase.label')}
             </Text>
             <Flex alignItems="flex-end" flexGrow={1} gap="$spacing4">
               <Flex row alignItems="center" gap="$spacing12" justifyContent="space-around">
                 <Text color="$neutral2" variant="buttonLabel4">
-                  {t('Backed up')}
+                  {t('settings.setting.backup.status.recoveryPhrase.backed')}
                 </Text>
 
                 {/* @TODO: [MOB-249] Add non-backed up state once we have more options on this page  */}
@@ -137,25 +135,19 @@ export function SettingsCloudBackupStatus({
           onPress={(): void => {
             setShowBackupDeleteWarning(true)
           }}>
-          {isAndroid ? t('Delete backup') : t('Delete backup')}
+          {t('settings.setting.backup.status.action.delete')}
         </Button>
       </Flex>
 
       {showBackupDeleteWarning && (
         <WarningModal
-          caption={
-            isAndroid
-              ? t(
-                  'If you delete your Google Drive backup, you’ll only be able to recover your wallet with a manual backup of your recovery phrase. Uniswap Labs can’t recover your assets if you lose your recovery phrase.'
-                )
-              : t(
-                  'If you delete your iCloud backup, you’ll only be able to recover your wallet with a manual backup of your recovery phrase. Uniswap Labs can’t recover your assets if you lose your recovery phrase.'
-                )
-          }
-          closeText={t('Close')}
-          confirmText={t('Delete')}
+          caption={t('settings.setting.backup.delete.warning', {
+            cloudProviderName: getCloudProviderName(),
+          })}
+          closeText={t('common.button.close')}
+          confirmText={t('common.button.delete')}
           modalName={ModalName.ViewSeedPhraseWarning}
-          title={t('Are you sure?')}
+          title={t('settings.setting.backup.delete.confirm.title')}
           onClose={(): void => {
             setShowBackupDeleteWarning(false)
           }}
@@ -163,9 +155,7 @@ export function SettingsCloudBackupStatus({
           {associatedAccounts.length > 1 && (
             <Flex>
               <Text textAlign="left" variant="subheading2">
-                {t(
-                  'Because these wallets share a recovery phrase, it will also delete the backups for:'
-                )}
+                {t('settings.setting.backup.delete.confirm.message')}
               </Text>
               <Flex>
                 {associatedAccounts.map((account) => (

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { providers } from 'ethers'
 import { useMemo } from 'react'
+import { useRestQuery } from 'uniswap/src/data/rest'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
-import { useRestQuery } from 'wallet/src/data/rest'
 import { createEthersProvider } from 'wallet/src/features/providers/createEthersProvider'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 

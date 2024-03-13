@@ -1,5 +1,7 @@
-import { NetworkStatus, useApolloClient, WatchQueryFetchPolicy } from '@apollo/client'
+import { NetworkStatus, Reference, useApolloClient, WatchQueryFetchPolicy } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
+import { GqlResult } from 'uniswap/src/data/types'
+import { logger } from 'utilities/src/logger/logger'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   ContractInput,
@@ -10,7 +12,7 @@ import {
   usePortfolioBalancesQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
-import { CurrencyInfo, GqlResult, PortfolioBalance } from 'wallet/src/features/dataApi/types'
+import { CurrencyInfo, PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import {
   buildCurrency,
   currencyIdToContractInput,
@@ -441,7 +443,21 @@ export function usePortfolioCacheUpdater(address: string): PortfolioCacheUpdater
       apolloClient.cache.modify({
         id: apolloClient.cache.identify(cachedPortfolio),
         fields: {
-          tokensTotalDenominatedValue(amount: IAmount) {
+          tokensTotalDenominatedValue(amount: Reference | IAmount, { isReference }) {
+            if (isReference(amount)) {
+              // I don't think this should ever happen, but this is required to keep TS happy after upgrading to @apollo/client > 3.8.
+              logger.error(new Error('Unable to modify cache for `tokensTotalDenominatedValue`'), {
+                tags: {
+                  file: 'balances.ts',
+                  function: 'usePortfolioCacheUpdater',
+                },
+                extra: {
+                  portfolioId: apolloClient.cache.identify(cachedPortfolio),
+                },
+              })
+              return amount
+            }
+
             const newValue = portfolioBalance.balanceUSD
               ? hidden
                 ? amount.value - portfolioBalance.balanceUSD

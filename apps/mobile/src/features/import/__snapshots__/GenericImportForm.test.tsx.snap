@@ -55,6 +55,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         autoCorrect={false}
         autoFocus={true}
         blurOnSubmit={false}
+        focusVisibleStyle={{}}
         focusable={true}
         maxFontSizeMultiplier={1.4}
         multiline={true}
@@ -159,6 +160,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
       >
         <View
           cancelable={true}
+          disabled={false}
           focusable={true}
           hitSlop={[Function]}
           minPressDuration={0}

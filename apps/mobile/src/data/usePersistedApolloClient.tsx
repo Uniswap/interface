@@ -7,10 +7,10 @@ import { initAndPersistCache } from 'src/data/cache'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { isNonJestDev } from 'utilities/src/environment'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import { uniswapUrls } from 'wallet/src/constants/urls'
 import {
   getCustomGraphqlHttpLink,
   getErrorLink,

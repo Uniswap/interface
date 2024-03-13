@@ -2,7 +2,7 @@ import { t } from '@lingui/macro'
 import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
-import { nativeOnChain } from 'constants/tokens'
+import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import {
@@ -124,12 +124,12 @@ function getSwapTitle(sent: TokenTransferPartsFragment, received: TokenTransferP
     return undefined
   }
   if (
-    sent.tokenStandard === 'NATIVE' &&
+    sent.tokenStandard === NATIVE_CHAIN_ID &&
     isSameAddress(nativeOnChain(supportedSentChain).wrapped.address, received.asset.address)
   )
     return t`Wrapped`
   else if (
-    received.tokenStandard === 'NATIVE' &&
+    received.tokenStandard === NATIVE_CHAIN_ID &&
     isSameAddress(nativeOnChain(supportedReceivedChain).wrapped.address, received.asset.address)
   ) {
     return t`Unwrapped`
@@ -183,12 +183,12 @@ export function parseSwapAmounts(
   const sent = changes.TokenTransfer.find((t) => t.direction === 'OUT')
   // Any leftover native token is refunded on exact_out swaps where the input token is native
   const refund = changes.TokenTransfer.find(
-    (t) => t.direction === 'IN' && t.asset.id === sent?.asset.id && t.asset.standard === 'NATIVE'
+    (t) => t.direction === 'IN' && t.asset.id === sent?.asset.id && t.asset.standard === NATIVE_CHAIN_ID
   )
   const received = changes.TokenTransfer.find((t) => t.direction === 'IN' && t !== refund)
   if (!sent || !received) return undefined
-  const inputCurrencyId = sent.asset.standard === 'NATIVE' ? 'ETH' : sent.asset.address
-  const outputCurrencyId = received.asset.standard === 'NATIVE' ? 'ETH' : received.asset.address
+  const inputCurrencyId = sent.asset.standard === NATIVE_CHAIN_ID ? 'ETH' : sent.asset.address
+  const outputCurrencyId = received.asset.standard === NATIVE_CHAIN_ID ? 'ETH' : received.asset.address
   if (!inputCurrencyId || !outputCurrencyId) return undefined
 
   const sentQuantity = parseUnits(sent.quantity, sent.asset.decimals)
@@ -247,7 +247,7 @@ function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumb
  * This function parses the transaction changes to determine if the transaction is a wrap/unwrap transaction.
  */
 function parseLend(changes: TransactionChanges, formatNumberOrString: FormatNumberOrStringFunctionType) {
-  const native = changes.TokenTransfer.find((t) => t.tokenStandard === 'NATIVE')?.asset
+  const native = changes.TokenTransfer.find((t) => t.tokenStandard === NATIVE_CHAIN_ID)?.asset
   const erc20 = changes.TokenTransfer.find((t) => t.tokenStandard === 'ERC20')?.asset
   if (native && erc20 && gqlToCurrency(native)?.wrapped.address === gqlToCurrency(erc20)?.wrapped.address) {
     return parseSwap(changes, formatNumberOrString)

@@ -26,7 +26,7 @@ export enum AppNotificationType {
   ScantasticComplete,
 }
 
-interface AppNotificationBase {
+export interface AppNotificationBase {
   type: AppNotificationType
   address?: Address
   hideDelay?: number
@@ -80,7 +80,7 @@ export interface WrapTxNotification extends TransactionNotificationBase {
   unwrapped: boolean
 }
 
-interface TransferCurrencyTxNotificationBase extends TransactionNotificationBase {
+export interface TransferCurrencyTxNotificationBase extends TransactionNotificationBase {
   txType: TransactionType.Send | TransactionType.Receive
   assetType: AssetType.Currency
   tokenAddress: string
@@ -97,7 +97,7 @@ export interface ReceiveCurrencyTxNotification extends TransferCurrencyTxNotific
   sender: Address
 }
 
-interface TransferNFTNotificationBase extends TransactionNotificationBase {
+export interface TransferNFTNotificationBase extends TransactionNotificationBase {
   txType: TransactionType.Send | TransactionType.Receive
   assetType: AssetType.ERC1155 | AssetType.ERC721
   tokenAddress: string

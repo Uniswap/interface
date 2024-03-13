@@ -81,7 +81,7 @@ export function ExploreScreen(): JSX.Element {
         <SearchTextInput
           ref={textInputRef}
           backgroundColor={isSearchMode ? contrastBackgroundColor : searchBarBackgroundColor}
-          placeholder={t('Search tokens and wallets')}
+          placeholder={t('explore.search.placeholder')}
           showShadow={!isSearchMode}
           onCancel={onSearchCancel}
           onChangeText={onSearchChangeText}

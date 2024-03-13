@@ -21,7 +21,7 @@ import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
 import { ArrowDown, X } from 'react-feather'
 import { useOrder } from 'state/signatures/hooks'
-import { UniswapXOrderDetails } from 'state/signatures/types'
+import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import styled, { useTheme } from 'styled-components'
 import { Divider, ThemedText } from 'theme/components'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -30,10 +30,11 @@ import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { sendAnalyticsEvent } from 'analytics'
 import { cancelMultipleUniswapXOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
+import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import { ContractTransaction } from 'ethers/lib/ethers'
 import { useContract } from 'hooks/useContract'
-import PERMIT2_ABI from 'wallet/src/abis/permit2.json'
-import { Permit2 } from 'wallet/src/abis/types/Permit2'
+import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
+import { Permit2 } from 'uniswap/src/abis/types/Permit2'
 import { PortfolioLogo } from '../PortfolioLogo'
 import { OffchainOrderLineItem, OffchainOrderLineItemProps, OffchainOrderLineItemType } from './OffchainOrderLineItem'
 
@@ -67,6 +68,7 @@ export function useOpenOffchainActivityModal() {
 const Wrapper = styled(AutoColumn).attrs({ gap: 'md', grow: true })`
   padding: 12px 20px 20px 20px;
   width: 100%;
+  background-color: ${({ theme }) => theme.surface1};
 `
 
 const StyledXButton = styled(X)`
@@ -141,17 +143,17 @@ export function useOrderAmounts(order?: UniswapXOrderDetails):
   }
 }
 
-function getOrderTitle(status: UniswapXOrderStatus): ReactNode {
-  switch (status) {
+function getOrderTitle(order: UniswapXOrderDetails): ReactNode {
+  switch (order.status) {
     case UniswapXOrderStatus.OPEN:
-      return <Trans>Order pending</Trans>
+      return order.type === SignatureType.SIGN_LIMIT ? <Trans>Limit pending</Trans> : <Trans>Order pending</Trans>
     case UniswapXOrderStatus.EXPIRED:
-      return <Trans>Order expired</Trans>
+      return order.type === SignatureType.SIGN_LIMIT ? <Trans>Limit expired</Trans> : <Trans>Order expired</Trans>
     case UniswapXOrderStatus.INSUFFICIENT_FUNDS:
     case UniswapXOrderStatus.CANCELLED:
-      return <Trans>Order cancelled</Trans>
+      return order.type === SignatureType.SIGN_LIMIT ? <Trans>Limit cancelled</Trans> : <Trans>Order cancelled</Trans>
     case UniswapXOrderStatus.FILLED:
-      return <Trans>Order executed</Trans>
+      return order.type === SignatureType.SIGN_LIMIT ? <Trans>Limit executed</Trans> : <Trans>Order executed</Trans>
     default:
       return null
   }
@@ -233,7 +235,7 @@ export function OrderContent({
           images={[logos?.inputLogo, logos?.outputLogo]}
         />
         <Column>
-          <ThemedText.SubHeader fontWeight={500}>{getOrderTitle(order.status)}</ThemedText.SubHeader>
+          <ThemedText.SubHeader fontWeight={500}>{getOrderTitle(order)}</ThemedText.SubHeader>
           <ThemedText.BodySmall color="neutral2" fontWeight={500}>
             {createdAt}
           </ThemedText.BodySmall>
@@ -269,10 +271,10 @@ export function OrderContent({
       </Column>
       {Boolean(order.status === UniswapXOrderStatus.OPEN && order.encodedOrder) && (
         <OffchainModalBottomButton emphasis={ButtonEmphasis.medium} onClick={onCancel} size={ButtonSize.medium}>
-          <Trans>Cancel limit</Trans>
+          {order.type === SignatureType.SIGN_LIMIT ? <Trans>Cancel limit</Trans> : <Trans>Cancel order</Trans>}
         </OffchainModalBottomButton>
       )}
-      {order.status === UniswapXOrderStatus.INSUFFICIENT_FUNDS && (
+      {order.status === UniswapXOrderStatus.INSUFFICIENT_FUNDS ? (
         <InsufficientFundsCopyContainer>
           <AlertIconContainer>
             <AlertTriangleFilled size="20px" />
@@ -286,6 +288,8 @@ export function OrderContent({
             </ThemedText.SubHeaderSmall>
           </Column>
         </InsufficientFundsCopyContainer>
+      ) : (
+        <LimitDisclaimer />
       )}
     </Column>
   )

@@ -1,8 +1,11 @@
+/* eslint-disable prettier/prettier */
+// Ordering is intentional and must be preserved: styling, polyfilling, tracing, and then functionality.
 import '@reach/dialog/styles.css'
-import 'connection/eagerlyConnect'
 import 'inter-ui'
 import 'polyfills'
 import 'tracing'
+import 'connection/eagerlyConnect'
+/* eslint-enable prettier/prettier */
 
 import { ApolloProvider } from '@apollo/client'
 import { FeatureFlagsProvider } from 'featureFlags'
@@ -11,15 +14,15 @@ import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { Helmet } from 'react-helmet'
+import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
 import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
+import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { isBrowserRouterEnabled } from 'utils/env'
 import { getCanonicalUrl } from 'utils/urlRoutes'
-import { UnitagUpdaterContextProvider } from 'wallet/src/features/unitags/context'
 import Web3Provider from './components/Web3Provider'
 import { LanguageProvider } from './i18n'
 import App from './pages/App'
@@ -66,31 +69,33 @@ const Router = isBrowserRouterEnabled() ? BrowserRouter : HashRouter
 
 createRoot(container).render(
   <StrictMode>
-    <Provider store={store}>
-      <FeatureFlagsProvider>
-        <QueryClientProvider client={queryClient}>
-          <Router>
-            <LanguageProvider>
-              <Web3Provider>
-                <ApolloProvider client={apolloClient}>
-                  <BlockNumberProvider>
-                    <UnitagUpdaterContextProvider>
-                      <Updaters />
-                      <ThemeProvider>
-                        <TamaguiProvider>
-                          <ThemedGlobalStyle />
-                          <App />
-                        </TamaguiProvider>
-                      </ThemeProvider>
-                    </UnitagUpdaterContextProvider>
-                  </BlockNumberProvider>
-                </ApolloProvider>
-              </Web3Provider>
-            </LanguageProvider>
-          </Router>
-        </QueryClientProvider>
-      </FeatureFlagsProvider>
-    </Provider>
+    <HelmetProvider>
+      <Provider store={store}>
+        <FeatureFlagsProvider>
+          <QueryClientProvider client={queryClient}>
+            <Router>
+              <LanguageProvider>
+                <Web3Provider>
+                  <ApolloProvider client={apolloClient}>
+                    <BlockNumberProvider>
+                      <UnitagUpdaterContextProvider>
+                        <Updaters />
+                        <ThemeProvider>
+                          <TamaguiProvider>
+                            <ThemedGlobalStyle />
+                            <App />
+                          </TamaguiProvider>
+                        </ThemeProvider>
+                      </UnitagUpdaterContextProvider>
+                    </BlockNumberProvider>
+                  </ApolloProvider>
+                </Web3Provider>
+              </LanguageProvider>
+            </Router>
+          </QueryClientProvider>
+        </FeatureFlagsProvider>
+      </Provider>
+    </HelmetProvider>
   </StrictMode>
 )
 

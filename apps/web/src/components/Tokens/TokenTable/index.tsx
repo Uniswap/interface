@@ -26,6 +26,7 @@ import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Tabl
 import { HEADER_DESCRIPTIONS } from 'components/Tokens/TokenTable/TokenRow'
 import { TokenSortMethod, sortAscendingAtom, sortMethodAtom, useSetSortMethod } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useAtomValue } from 'jotai/utils'
 import { useExploreParams } from 'pages/Explore/redirects'
 import { DeltaArrow, DeltaText } from '../TokenDetails/Delta'
@@ -47,7 +48,7 @@ const SparklineContainer = styled.div`
   height: 40px;
 `
 
-interface TokenTableValues {
+interface TokenTableValue {
   index: number
   tokenDescription: ReactElement
   price: number
@@ -65,7 +66,7 @@ function TokenDescription({ token }: { token: TopToken }) {
   return (
     <Row gap="sm">
       <QueryTokenLogo token={token} size="28px" />
-      <NameText>{token.name}</NameText>
+      <NameText data-testid="token-name">{token.name}</NameText>
       <ThemedText.BodySecondary style={{ minWidth: 'fit-content' }}>{token.symbol}</ThemedText.BodySecondary>
     </Row>
   )
@@ -110,8 +111,9 @@ function TokenTableHeader({
   direction: OrderDirection
 }) {
   const handleSortCategory = useSetSortMethod(category)
+
   return (
-    <MouseoverTooltip text={HEADER_DESCRIPTIONS[category]} placement="top">
+    <MouseoverTooltip disabled={!HEADER_DESCRIPTIONS[category]} text={HEADER_DESCRIPTIONS[category]} placement="top">
       <ClickableHeaderRow $justify="flex-end" onClick={handleSortCategory}>
         {isCurrentSortMethod && <HeaderArrow direction={direction} />}
         <HeaderSortText $active={isCurrentSortMethod}>{HEADER_TEXT[category]}</HeaderSortText>
@@ -142,15 +144,16 @@ function TokenTable({
   const orderDirection = sortAscending ? OrderDirection.Asc : OrderDirection.Desc
   const sortMethod = useAtomValue(sortMethodAtom)
 
-  const tokenTableValues: TokenTableValues[] | undefined = useMemo(
+  const tokenTableValues: TokenTableValue[] | undefined = useMemo(
     () =>
       tokens?.map((token) => {
         const delta1hr = token.market?.pricePercentChange1Hour?.value
         const delta1d = token.market?.pricePercentChange1Day?.value
         return {
-          index: tokenSortRank[token.address ?? 'NATIVE'],
+          index: tokenSortRank[token.address ?? NATIVE_CHAIN_ID],
           tokenDescription: <TokenDescription token={token} />,
           price: token.market?.price?.value ?? 0,
+          testId: `token-table-row-${token.address}`,
           percentChange1hr: (
             <>
               <DeltaArrow delta={delta1hr} />
@@ -195,7 +198,7 @@ function TokenTable({
 
   const showLoadingSkeleton = loading || !!error
   const columns = useMemo(() => {
-    const columnHelper = createColumnHelper<TokenTableValues>()
+    const columnHelper = createColumnHelper<TokenTableValue>()
     return [
       columnHelper.accessor((row) => row.index, {
         id: 'index',
@@ -220,7 +223,7 @@ function TokenTable({
           </Cell>
         ),
         cell: (tokenDescription) => (
-          <Cell justifyContent="flex-start" width={240} loading={showLoadingSkeleton} grow>
+          <Cell justifyContent="flex-start" width={240} loading={showLoadingSkeleton} grow testId="name-cell">
             {tokenDescription.getValue?.()}
           </Cell>
         ),
@@ -237,7 +240,7 @@ function TokenTable({
           </Cell>
         ),
         cell: (price) => (
-          <Cell loading={showLoadingSkeleton} minWidth={133} grow>
+          <Cell loading={showLoadingSkeleton} minWidth={133} grow testId="price-cell">
             <ThemedText.BodyPrimary>
               {/* A simple 0 price indicates the price is not currently available from the api */}
               {price.getValue?.() === 0
@@ -293,7 +296,7 @@ function TokenTable({
           </Cell>
         ),
         cell: (fdv) => (
-          <Cell loading={showLoadingSkeleton} width={133} grow>
+          <Cell loading={showLoadingSkeleton} width={133} grow testId="fdv-cell">
             <ValueText>{formatNumber({ input: fdv.getValue?.(), type: NumberType.FiatTokenStats })}</ValueText>
           </Cell>
         ),
@@ -310,7 +313,7 @@ function TokenTable({
           </Cell>
         ),
         cell: (volume) => (
-          <Cell width={133} loading={showLoadingSkeleton} grow>
+          <Cell width={133} loading={showLoadingSkeleton} grow testId="volume-cell">
             <ValueText>{formatNumber({ input: volume.getValue?.(), type: NumberType.FiatTokenStats })}</ValueText>
           </Cell>
         ),

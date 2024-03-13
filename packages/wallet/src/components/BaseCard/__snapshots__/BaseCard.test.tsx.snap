@@ -129,6 +129,7 @@ exports[`ErrorState renders without error 1`] = `
 exports[`Header renders without error 1`] = `
 <View
   cancelable={true}
+  disabled={false}
   focusable={true}
   hitSlop={[Function]}
   minPressDuration={0}
@@ -397,6 +398,7 @@ exports[`InlineErrorState renders without error 1`] = `
     </RNSVGSvgView>
     <Text
       allowFontScaling={true}
+      ellipsizeMode="tail"
       maxFontSizeMultiplier={1.4}
       numberOfLines={1}
       style={

@@ -13,10 +13,10 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
+import { isAndroid } from 'uniswap/src/utils/platform'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { useActivityData } from 'wallet/src/features/activity/useActivityData'
 import { ModalName } from 'wallet/src/telemetry/constants'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 export const ACTIVITY_TAB_DATA_DEPENDENCIES = [GQLQueries.TransactionList]
 

@@ -44,18 +44,14 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
       onSelectRecipient(supportedURI.value)
       onClose()
     } else {
-      Alert.alert(
-        t('Invalid QR Code'),
-        t('Make sure that you’re scanning a valid Ethereum address QR code before trying again.'),
-        [
-          {
-            text: t('Try again'),
-            onPress: (): void => {
-              setShouldFreezeCamera(false)
-            },
+      Alert.alert(t('qrScanner.recipient.error.title'), t('qrScanner.recipient.error.message'), [
+        {
+          text: t('common.button.tryAgain'),
+          onPress: (): void => {
+            setShouldFreezeCamera(false)
           },
-        ]
-      )
+        },
+      ])
     }
   }
 
@@ -107,8 +103,8 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
             )}
             <Text color="$neutral1" variant="buttonLabel2">
               {currentScreenState === ScannerModalState.ScanQr
-                ? t('Show my QR code')
-                : t('Scan a QR code')}
+                ? t('qrScanner.recipient.action.show')
+                : t('qrScanner.recipient.action.scan')}
             </Text>
           </Flex>
         </TouchableArea>

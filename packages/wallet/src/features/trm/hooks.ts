@@ -1,6 +1,6 @@
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useRestQuery } from 'uniswap/src/data/rest'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { uniswapUrls } from 'wallet/src/constants/urls'
-import { useRestQuery } from 'wallet/src/data/rest'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 

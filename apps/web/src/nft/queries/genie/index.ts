@@ -1,1 +1,0 @@
-export { CollectionRewardsFetcher } from './GetAirdorpMerkle'

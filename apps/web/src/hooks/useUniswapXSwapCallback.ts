@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import * as Sentry from '@sentry/react'
 import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
-import { DutchOrder, DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
+import { DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
@@ -72,139 +72,134 @@ export function useUniswapXSwapCallback({
   const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
 
   return useCallback(
-    async () =>
-      trace('swapx.send', async ({ setTraceData, setTraceStatus }) => {
+    () =>
+      trace({ name: 'Swap (Dutch)', op: 'swap.x.dutch' }, async (trace) => {
         if (!account) throw new Error('missing account')
         if (!provider) throw new Error('missing provider')
         if (!trade) throw new Error('missing trade')
 
-        const signDutchOrder = async (): Promise<{ signature: string; updatedOrder: DutchOrder }> => {
-          sendAnalyticsEvent('UniswapX Signature Requested', {
-            ...formatSwapSignedAnalyticsEventProperties({
-              trade,
-              allowedSlippage,
-              fiatValues,
-              portfolioBalanceUsd,
-            }),
-            ...analyticsContext,
-          })
-
-          try {
-            const updatedNonce = await getUpdatedNonce(
-              account,
-              trade.inputAmount.currency.chainId,
-              gatewayDNSUpdateAllEnabled
-            )
-
-            // TODO(limits): WEB-3434 - add error state for missing nonce
-            if (!updatedNonce) throw new Error('missing nonce')
-
-            const order = trade.asDutchOrderTrade({ nonce: updatedNonce, swapper: account }).order
-
-            const startTime = Math.floor(Date.now() / 1000) + trade.startTimeBufferSecs
-            setTraceData('startTime', startTime)
-
-            const endTime = startTime + trade.auctionPeriodSecs
-            setTraceData('endTime', endTime)
-
-            const deadline = endTime + trade.deadlineBufferSecs
-            setTraceData('deadline', deadline)
-
-            // Set timestamp and account based values when the user clicks 'swap' to make them as recent as possible
-            const updatedOrder = DutchOrderBuilder.fromOrder(order)
-              .decayStartTime(startTime)
-              .decayEndTime(endTime)
-              .deadline(deadline)
-              .swapper(account)
-              .nonFeeRecipient(account, trade.swapFee?.recipient)
-              // if fetching the nonce fails for any reason, default to existing nonce from the Swap quote.
-              .nonce(updatedNonce ?? order.info.nonce)
-              .build()
-
-            const { domain, types, values } = updatedOrder.permitData()
-
-            const signature = await signTypedData(provider.getSigner(account), domain, types, values)
-            if (deadline < Math.floor(Date.now() / 1000)) {
-              throw new SignatureExpiredError()
-            }
-            return { signature, updatedOrder }
-          } catch (swapError) {
-            if (swapError instanceof SignatureExpiredError) {
-              throw swapError
-            }
-            if (didUserReject(swapError)) {
-              setTraceStatus('cancelled')
-              throw new UserRejectedRequestError(swapErrorToUserReadableMessage(swapError))
-            }
-            throw new Error(swapErrorToUserReadableMessage(swapError))
-          }
-        }
-
-        const beforeSign = Date.now()
-        const { signature, updatedOrder } = await signDutchOrder()
-
-        sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
+        sendAnalyticsEvent('UniswapX Signature Requested', {
           ...formatSwapSignedAnalyticsEventProperties({
             trade,
             allowedSlippage,
             fiatValues,
-            timeToSignSinceRequestMs: Date.now() - beforeSign,
             portfolioBalanceUsd,
           }),
           ...analyticsContext,
-          // TODO (WEB-2993): remove these after debugging missing user properties.
-          [CustomUserProperties.WALLET_ADDRESS]: account,
-          [CustomUserProperties.WALLET_TYPE]: getConnection(connector).getProviderInfo().name,
-          [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
         })
 
-        const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
-        const endpoint = trade.offchainOrderType === OffchainOrderType.LIMIT_ORDER ? 'limit-order' : 'order'
-        const encodedOrder = updatedOrder.serialize()
+        try {
+          const updatedNonce = await getUpdatedNonce(
+            account,
+            trade.inputAmount.currency.chainId,
+            gatewayDNSUpdateAllEnabled
+          )
+          // TODO(limits): WEB-3434 - add error state for missing nonce
+          if (!updatedNonce) throw new Error('missing nonce')
 
-        const res = await fetch(`${baseURL}/${endpoint}`, {
-          method: 'POST',
-          body: JSON.stringify({
-            encodedOrder,
-            signature,
-            chainId: updatedOrder.chainId,
-            quoteId: trade.quoteId,
-          }),
-        })
+          const order = trade.asDutchOrderTrade({ nonce: updatedNonce, swapper: account }).order
+          const startTime = Math.floor(Date.now() / 1000) + trade.startTimeBufferSecs
+          const endTime = startTime + trade.auctionPeriodSecs
+          const deadline = endTime + trade.deadlineBufferSecs
+          trace.setData('startTime', startTime)
+          trace.setData('endTime', endTime)
+          trace.setData('deadline', deadline)
+          const updatedOrder = DutchOrderBuilder.fromOrder(order)
+            .decayStartTime(startTime)
+            .decayEndTime(endTime)
+            .deadline(deadline)
+            .swapper(account)
+            .nonFeeRecipient(account, trade.swapFee?.recipient)
+            // if fetching the nonce fails for any reason, default to existing nonce from the Swap quote.
+            .nonce(updatedNonce ?? order.info.nonce)
+            .build()
+          const { domain, types, values } = updatedOrder.permitData()
 
-        const body = (await res.json()) as DutchAuctionOrderResponse
+          const signature = await trace.child({ name: 'Sign', op: 'wallet.sign' }, async (walletTrace) => {
+            try {
+              return await signTypedData(provider.getSigner(account), domain, types, values)
+            } catch (error) {
+              if (didUserReject(error)) {
+                walletTrace.setStatus('cancelled')
+                throw new UserRejectedRequestError(swapErrorToUserReadableMessage(error))
+              } else {
+                throw error
+              }
+            }
+          })
+          if (deadline < Math.floor(Date.now() / 1000)) {
+            throw new SignatureExpiredError()
+          }
+          sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
+            ...formatSwapSignedAnalyticsEventProperties({
+              trade,
+              allowedSlippage,
+              fiatValues,
+              timeToSignSinceRequestMs: trace.now(),
+              portfolioBalanceUsd,
+            }),
+            ...analyticsContext,
+            // TODO (WEB-2993): remove these after debugging missing user properties.
+            [CustomUserProperties.WALLET_ADDRESS]: account,
+            [CustomUserProperties.WALLET_TYPE]: getConnection(connector).getProviderInfo().name,
+            [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
+          })
 
-        // TODO(UniswapX): For now, `errorCode` is not always present in the response, so we have to fallback
-        // check for status code and perform this type narrowing.
-        if (isErrorResponse(res, body)) {
-          sendAnalyticsEvent('UniswapX Order Post Error', {
+          const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
+          const endpoint = trade.offchainOrderType === OffchainOrderType.LIMIT_ORDER ? 'limit-order' : 'order'
+          const encodedOrder = updatedOrder.serialize()
+          const res = await fetch(`${baseURL}/${endpoint}`, {
+            method: 'POST',
+            body: JSON.stringify({
+              encodedOrder,
+              signature,
+              chainId: updatedOrder.chainId,
+              quoteId: trade.quoteId,
+            }),
+          })
+          const body = (await res.json()) as DutchAuctionOrderResponse
+          // TODO(UniswapX): For now, `errorCode` is not always present in the response, so we have to fallback
+          // check for status code and perform this type narrowing.
+          if (isErrorResponse(res, body)) {
+            sendAnalyticsEvent('UniswapX Order Post Error', {
+              ...formatSwapSignedAnalyticsEventProperties({
+                trade,
+                allowedSlippage,
+                fiatValues,
+                portfolioBalanceUsd,
+              }),
+              ...analyticsContext,
+              errorCode: body.errorCode,
+              detail: body.detail,
+            })
+            // TODO(UniswapX): Provide a similar utility to `swapErrorToUserReadableMessage` once
+            // backend team provides a list of error codes and potential messages
+            throw new Error(`${body.errorCode ?? body.detail ?? 'Unknown error'}`)
+          }
+          sendAnalyticsEvent('UniswapX Order Submitted', {
             ...formatSwapSignedAnalyticsEventProperties({
               trade,
               allowedSlippage,
               fiatValues,
               portfolioBalanceUsd,
             }),
-            ...analyticsContext,
-            errorCode: body.errorCode,
-            detail: body.detail,
           })
-          // TODO(UniswapX): Provide a similar utility to `swapErrorToUserReadableMessage` once
-          // backend team provides a list of error codes and potential messages
-          throw new Error(`${body.errorCode ?? body.detail ?? 'Unknown error'}`)
-        }
 
-        sendAnalyticsEvent('UniswapX Order Submitted', {
-          ...formatSwapSignedAnalyticsEventProperties({
-            trade,
-            allowedSlippage,
-            fiatValues,
-            portfolioBalanceUsd,
-          }),
-        })
-
-        return {
-          type: TradeFillType.UniswapX as const,
-          response: { orderHash: body.hash, deadline: updatedOrder.info.deadline, encodedOrder },
+          return {
+            type: TradeFillType.UniswapX as const,
+            response: { orderHash: body.hash, deadline: updatedOrder.info.deadline, encodedOrder },
+          }
+        } catch (error) {
+          if (error instanceof UserRejectedRequestError) {
+            trace.setStatus('cancelled')
+            throw error
+          } else if (error instanceof SignatureExpiredError) {
+            trace.setStatus('deadline_exceeded')
+            throw error
+          } else {
+            trace.setError(error)
+            throw new Error(swapErrorToUserReadableMessage(error))
+          }
         }
       }),
     [

@@ -4,7 +4,7 @@ import { animated, easings, useSpring, useTransition } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 import styled, { css } from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
-import { isMobile } from 'wallet/src/utils/platform'
+import { isMobile } from 'uniswap/src/utils/platform'
 
 export const MODAL_TRANSITION_DURATION = 200
 

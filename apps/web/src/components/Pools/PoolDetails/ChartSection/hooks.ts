@@ -50,7 +50,7 @@ export function usePDPPriceChartData(
 
     // TODO(WEB-3769): Append current price based on active tick to entries
     /* const dataQuality = checkDataQuality(entries, ChartType.PRICE, variables.duration) */
-    const dataQuality = loading ? DataQuality.INVALID : DataQuality.VALID
+    const dataQuality = loading || !priceHistory ? DataQuality.INVALID : DataQuality.VALID
 
     return { chartType: ChartType.PRICE, entries, loading, dataQuality }
   }, [data?.v2Pair, data?.v3Pool, isReversed, loading, poolData?.token0.address, tokenA, tokenB])

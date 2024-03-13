@@ -9,19 +9,19 @@ export const SearchResultsLoader = (): JSX.Element => {
   return (
     <Flex gap="$spacing16">
       <Flex gap="$spacing12">
-        <SectionHeaderText title={t('Tokens')} />
+        <SectionHeaderText title={t('explore.search.section.tokens')} />
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="$spacing8">
           <Loader.Token repeat={2} />
         </AnimatedFlex>
       </Flex>
       <Flex gap="$spacing12">
-        <SectionHeaderText title={t('NFT Collections')} />
+        <SectionHeaderText title={t('explore.search.section.nft')} />
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="$spacing8">
           <Loader.Token repeat={2} />
         </AnimatedFlex>
       </Flex>
       <Flex gap="$spacing12">
-        <SectionHeaderText title={t('Wallets')} />
+        <SectionHeaderText title={t('explore.search.section.wallets')} />
         <AnimatedFlex entering={FadeIn} exiting={FadeOut} mx="$spacing8">
           <Loader.Token />
         </AnimatedFlex>

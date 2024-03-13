@@ -255,11 +255,13 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   const chartModelRef = useRef<ChartModel<TDataType>>()
 
   // Creates the chart as soon as the chart div ref is defined
-  if (chartDivElement && chartModelRef.current === undefined) {
-    chartModelRef.current = new Model(chartDivElement, modelParams)
-    // Providers the time period selector with a handle to refit the chart
-    setRefitChartContent(() => () => chartModelRef.current?.fitContent())
-  }
+  useEffect(() => {
+    if (chartDivElement && chartModelRef.current === undefined) {
+      chartModelRef.current = new Model(chartDivElement, modelParams)
+      // Providers the time period selector with a handle to refit the chart
+      setRefitChartContent(() => () => chartModelRef.current?.fitContent())
+    }
+  }, [Model, chartDivElement, modelParams, setRefitChartContent])
 
   // Keeps the chart up-to-date with latest data/params, without re-creating the entire chart
   useEffect(() => {

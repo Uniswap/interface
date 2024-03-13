@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import Resource from './Resource'
 import { NoInfoAvailable, TRUNCATE_CHARACTER_COUNT, TruncateDescriptionButton, truncateDescription } from './shared'
@@ -70,7 +71,7 @@ export function AboutSection() {
       <ResourcesContainer data-cy="resources-container">
         <Resource
           name={currencyChainId === ChainId.MAINNET ? 'Etherscan' : 'Block Explorer'}
-          link={`${explorer}${address === 'NATIVE' ? '' : 'address/' + address}`}
+          link={`${explorer}${address === NATIVE_CHAIN_ID ? '' : 'address/' + address}`}
         />
         <Resource name="More analytics" link={`${infoLink}tokens/${address}`} />
         {homepageUrl && <Resource name="Website" link={homepageUrl} />}

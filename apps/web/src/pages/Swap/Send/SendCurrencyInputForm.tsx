@@ -22,6 +22,7 @@ import { ClickableStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
+import { asSupportedChain, SupportedInterfaceChain } from 'constants/chains'
 import useResizeObserver from 'use-resize-observer'
 import { ReactComponent as DropDown } from '../../../assets/images/dropdown.svg'
 
@@ -237,7 +238,10 @@ export default function SendCurrencyInputForm({
   const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedTokenAmount?.equalTo(maxInputAmount))
 
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
-  const fiatCurrency = useMemo(() => STABLECOIN_AMOUNT_OUT[chainId ?? ChainId.MAINNET].currency, [chainId])
+  const fiatCurrency = useMemo(
+    () => STABLECOIN_AMOUNT_OUT[asSupportedChain(chainId) ?? (ChainId.MAINNET as SupportedInterfaceChain)].currency,
+    [chainId]
+  )
   const fiatCurrencyEqualsTransferCurrency = !!inputCurrency && fiatCurrency.equals(inputCurrency)
 
   const formattedBalance = formatCurrencyAmount({

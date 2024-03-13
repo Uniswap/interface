@@ -16,8 +16,8 @@ import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnect
 import { WidgetType } from 'src/features/widgets/widgets'
 import { Screens } from 'src/screens/Screens'
 import { call, put, takeLatest } from 'typed-redux-saga'
+import { UNISWAP_APP_HOSTNAME, uniswapUrls } from 'uniswap/src/constants/urls'
 import { logger } from 'utilities/src/logger/logger'
-import { UNISWAP_APP_HOSTNAME, uniswapUrls } from 'wallet/src/constants/urls'
 import { fromUniswapWebAppLink } from 'wallet/src/features/chains/utils'
 import {
   selectAccounts,
@@ -318,11 +318,9 @@ export function* handleWalletConnectDeepLink(wcUri: string) {
 
   if (wcUriVersion === 1) {
     Alert.alert(
-      i18n.t('Invalid QR Code'),
-      i18n.t(
-        'WalletConnect v1 is no longer supported. The application you’re trying to connect to needs to upgrade to WalletConnect v2.'
-      ),
-      [{ text: i18n.t('OK') }]
+      i18n.t('walletConnect.error.unsupportedV1.title'),
+      i18n.t('walletConnect.error.unsupportedV1.message'),
+      [{ text: i18n.t('common.button.ok') }]
     )
     return
   }
@@ -335,8 +333,8 @@ export function* handleWalletConnectDeepLink(wcUri: string) {
         tags: { file: 'handleDeepLinkSaga', function: 'handleWalletConnectDeepLink' },
       })
       Alert.alert(
-        i18n.t('WalletConnect Error'),
-        i18n.t('There was an issue with WalletConnect. Please try again')
+        i18n.t('walletConnect.error.general.title'),
+        i18n.t('walletConnect.error.general.message')
       )
     }
   }

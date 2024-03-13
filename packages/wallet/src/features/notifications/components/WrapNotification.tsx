@@ -52,7 +52,7 @@ export function WrapNotification({
   const retryButton =
     txStatus === TransactionStatus.Failed
       ? {
-          title: t('Retry'),
+          title: t('common.button.retry'),
           onPress: onRetry,
         }
       : undefined

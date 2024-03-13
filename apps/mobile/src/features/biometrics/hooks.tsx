@@ -8,8 +8,8 @@ import { useAppSelector } from 'src/app/hooks'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { BiometricSettingsState } from 'src/features/biometrics/slice'
+import { isAndroid } from 'uniswap/src/utils/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 type TriggerArgs<T> = {
   params?: T

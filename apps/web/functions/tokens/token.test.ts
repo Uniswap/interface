@@ -1,3 +1,5 @@
+import { NATIVE_CHAIN_ID } from '../../src/constants/tokens'
+
 const tokens = [
   {
     address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
@@ -6,13 +8,13 @@ const tokens = [
     image: 'http://127.0.0.1:3000/api/image/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   },
   {
-    address: 'NATIVE',
+    address: NATIVE_CHAIN_ID,
     network: 'ethereum',
     symbol: 'ETH',
     image: 'http://127.0.0.1:3000/api/image/tokens/ethereum/NATIVE',
   },
   {
-    address: 'NATIVE',
+    address: NATIVE_CHAIN_ID,
     network: 'polygon',
     symbol: 'MATIC',
     image: 'http://127.0.0.1:3000/api/image/tokens/polygon/NATIVE',

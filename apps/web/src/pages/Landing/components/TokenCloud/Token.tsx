@@ -7,6 +7,7 @@ import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { TokenPoint } from '.'
 import { Ticker } from './Ticker'
 import { randomChoice } from './utils'
@@ -128,7 +129,7 @@ export function Token(props: {
 
   const tokenPromoQuery = useTokenPromoQuery({
     variables: {
-      address: address !== 'NATIVE' ? address : undefined,
+      address: address !== NATIVE_CHAIN_ID ? address : undefined,
       chain,
     },
     skip: standard !== TokenStandard.ERC20,

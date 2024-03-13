@@ -8,13 +8,14 @@ import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import catalog from 'locales/en-US'
 import { en } from 'make-plural/plurals'
 import { ReactElement, ReactNode } from 'react'
+import { HelmetProvider } from 'react-helmet-async/lib/index'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router-dom'
 import store from 'state'
 import { ThemeProvider } from 'theme'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
-import { UnitagUpdaterContextProvider } from 'wallet/src/features/unitags/context'
+import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 
 i18n.load({
   [DEFAULT_LOCALE]: catalog.messages,
@@ -29,27 +30,29 @@ const queryClient = new QueryClient()
 
 const WithProviders = ({ children }: { children?: ReactNode }) => {
   return (
-    <MockedI18nProvider>
-      <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
-            {/*
-             * Web3Provider is mocked through setupTests.ts
-             * To test behavior that depends on Web3Provider, use jest.unmock('@web3-react/core')
-             */}
-            <MockedProvider showWarnings={false}>
-              <BlockNumberProvider>
-                <UnitagUpdaterContextProvider>
-                  <ThemeProvider>
-                    <TamaguiProvider>{children}</TamaguiProvider>
-                  </ThemeProvider>
-                </UnitagUpdaterContextProvider>
-              </BlockNumberProvider>
-            </MockedProvider>
-          </BrowserRouter>
-        </QueryClientProvider>
-      </Provider>
-    </MockedI18nProvider>
+    <HelmetProvider>
+      <MockedI18nProvider>
+        <Provider store={store}>
+          <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+              {/*
+               * Web3Provider is mocked through setupTests.ts
+               * To test behavior that depends on Web3Provider, use jest.unmock('@web3-react/core')
+               */}
+              <MockedProvider showWarnings={false}>
+                <BlockNumberProvider>
+                  <UnitagUpdaterContextProvider>
+                    <ThemeProvider>
+                      <TamaguiProvider>{children}</TamaguiProvider>
+                    </ThemeProvider>
+                  </UnitagUpdaterContextProvider>
+                </BlockNumberProvider>
+              </MockedProvider>
+            </BrowserRouter>
+          </QueryClientProvider>
+        </Provider>
+      </MockedI18nProvider>
+    </HelmetProvider>
   )
 }
 

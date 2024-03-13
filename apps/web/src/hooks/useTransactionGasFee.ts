@@ -1,7 +1,6 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { useCallback, useMemo } from 'react'
-
-import { useAsyncData } from './useAsyncData'
+import { useAsyncData } from 'utilities/src/react/hooks'
 
 enum FeeType {
   Legacy = 'legacy',
@@ -52,7 +51,7 @@ type TransactionEip1559FeeParams = {
   gasLimit: string
 }
 
-interface GasFeeResult {
+export interface GasFeeResult {
   value?: string
   isLoading: boolean
   params?: TransactionLegacyFeeParams | TransactionEip1559FeeParams

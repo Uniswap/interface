@@ -16,11 +16,11 @@ describe('Navigation', () => {
     cy.url().should('include', '/swap')
   })
 
-  it('displays Tokens tab', () => {
+  it('displays Explore tab', () => {
     cy.get('nav').within(() => {
-      cy.contains('Tokens').should('be.visible').click()
+      cy.contains('Explore').should('be.visible').click()
     })
-    cy.url().should('include', '/tokens')
+    cy.url().should('include', '/explore')
   })
 
   it('displays NFTs tab', () => {

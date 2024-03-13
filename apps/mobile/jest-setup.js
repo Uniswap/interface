@@ -1,11 +1,13 @@
 // Setups and mocks can go here
 // For example: https://reactnavigation.org/docs/testing/
 
-import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
 import 'core-js' // necessary so setImmediate works in tests
+import 'wallet/src/i18n/i18n' // Uses real translations for tests
+
+import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
 import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
-import { MockLocalizationContext } from 'wallet/src/test/utils'
+import { mockLocalizationContext } from 'wallet/src/test/mocks/utils'
 
 // avoids polluting console in test runs, while keeping important log levels
 global.console = {
@@ -83,7 +85,7 @@ jest.mock('@react-navigation/elements', () => ({
 
 require('react-native-reanimated').setUpTests()
 
-jest.mock('wallet/src/features/language/LocalizationContext', () => MockLocalizationContext)
+jest.mock('wallet/src/features/language/LocalizationContext', () => mockLocalizationContext)
 
 jest.mock('react-native/Libraries/Share/Share', () => ({
   share: jest.fn(),
@@ -109,22 +111,6 @@ jest.mock('react-native/Libraries/Linking/Linking', () => ({
   removeEventListener: jest.fn(),
   canOpenURL: jest.fn(),
   getInitialURL: jest.fn(),
-}))
-
-jest.mock('react-i18next', () => ({
-  // this mock makes sure any components using the translate hook can use it without a warning being shown
-  useTranslation: () => {
-    return {
-      t: (str) => str,
-      i18n: {
-        changeLanguage: () => new Promise(jest.fn()),
-      },
-    }
-  },
-  initReactI18next: {
-    type: '3rdParty',
-    init: jest.fn(),
-  },
 }))
 
 // Mock the appearance hook for all tests

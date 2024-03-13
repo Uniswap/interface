@@ -60,7 +60,7 @@ describe('PoolDetailsStats', () => {
     expect(screen.getByText('90.9M')).toBeInTheDocument()
     expect(screen.getByText('USDC')).toBeInTheDocument()
     expect(screen.getByText('82.5K')).toBeInTheDocument()
-    expect(screen.getByText('WETH')).toBeInTheDocument()
+    expect(screen.getByText('ETH')).toBeInTheDocument()
     expect(screen.getByText(/TVL/i)).toBeInTheDocument()
     expect(screen.getByText('$223.2M')).toBeInTheDocument()
     expect(screen.getByTestId('pool-balance-chart')).toBeInTheDocument()

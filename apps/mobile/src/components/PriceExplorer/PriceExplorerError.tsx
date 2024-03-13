@@ -29,9 +29,9 @@ export function PriceExplorerError({
         justifyContent="center"
         overflow="hidden">
         <BaseCard.ErrorState
-          description={t('Something went wrong.')}
-          retryButtonLabel={showRetry ? t('Retry') : undefined}
-          title={t('Couldn’t load price chart')}
+          description={t('token.priceExplorer.error.description')}
+          retryButtonLabel={showRetry ? t('common.button.retry') : undefined}
+          title={t('token.priceExplorer.error.title')}
           onRetry={onRetry}
         />
       </Flex>

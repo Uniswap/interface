@@ -8,7 +8,7 @@ export function CopyFailedNotification({
   notification: CopyFailedNotificationType
 }): JSX.Element | null {
   const { t } = useTranslation()
-  const title = t('Failed to copy to clipboard')
+  const title = t('notification.copied.failed')
 
   return <NotificationToast hideDelay={hideDelay} title={title} />
 }

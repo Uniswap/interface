@@ -5,11 +5,12 @@ import { useContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { trace } from 'tracing/trace'
+import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
+import { Permit2 } from 'uniswap/src/abis/types'
 import { UserRejectedRequestError, toReadableError } from 'utils/errors'
 import { signTypedData } from 'utils/signing'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import PERMIT2_ABI from 'wallet/src/abis/permit2.json'
-import { Permit2 } from 'wallet/src/abis/types'
 
 const PERMIT_EXPIRATION = ms(`30d`)
 const PERMIT_SIG_EXPIRATION = ms(`30m`)
@@ -57,35 +58,53 @@ export function useUpdatePermitAllowance(
   onPermitSignature: (signature: PermitSignature) => void
 ) {
   const { account, chainId, provider } = useWeb3React()
-  return useCallback(async () => {
-    try {
-      if (!chainId) throw new Error('missing chainId')
-      if (!provider) throw new Error('missing provider')
-      if (!token) throw new Error('missing token')
-      if (!spender) throw new Error('missing spender')
-      if (nonce === undefined) throw new Error('missing nonce')
+  return useCallback(
+    () =>
+      trace({ name: 'Permit2', op: 'permit.permit2.signature' }, async (trace) => {
+        try {
+          if (!chainId) throw new Error('missing chainId')
+          if (!provider) throw new Error('missing provider')
+          if (!token) throw new Error('missing token')
+          if (!spender) throw new Error('missing spender')
+          if (nonce === undefined) throw new Error('missing nonce')
 
-      const permit: Permit = {
-        details: {
-          token: token.address,
-          amount: MaxAllowanceTransferAmount,
-          expiration: toDeadline(PERMIT_EXPIRATION),
-          nonce,
-        },
-        spender,
-        sigDeadline: toDeadline(PERMIT_SIG_EXPIRATION),
-      }
+          const permit: Permit = {
+            details: {
+              token: token.address,
+              amount: MaxAllowanceTransferAmount,
+              expiration: toDeadline(PERMIT_EXPIRATION),
+              nonce,
+            },
+            spender,
+            sigDeadline: toDeadline(PERMIT_SIG_EXPIRATION),
+          }
 
-      const { domain, types, values } = AllowanceTransfer.getPermitData(permit, PERMIT2_ADDRESS, chainId)
-      const signature = await signTypedData(provider.getSigner(account), domain, types, values)
-      onPermitSignature?.({ ...permit, signature })
-      return
-    } catch (e: unknown) {
-      const symbol = token?.symbol ?? 'Token'
-      if (didUserReject(e)) {
-        throw new UserRejectedRequestError(`${symbol} permit allowance failed: User rejected signature`)
-      }
-      throw toReadableError(`${symbol} permit allowance failed:`, e)
-    }
-  }, [account, chainId, nonce, onPermitSignature, provider, spender, token])
+          const { domain, types, values } = AllowanceTransfer.getPermitData(permit, PERMIT2_ADDRESS, chainId)
+          const signature = await trace.child({ name: 'Sign', op: 'wallet.sign' }, async (walletTrace) => {
+            try {
+              return await signTypedData(provider.getSigner(account), domain, types, values)
+            } catch (error) {
+              if (didUserReject(error)) {
+                walletTrace.setStatus('cancelled')
+                const symbol = token?.symbol ?? 'Token'
+                throw new UserRejectedRequestError(`${symbol} permit allowance failed: User rejected signature`)
+              } else {
+                throw error
+              }
+            }
+          })
+          onPermitSignature?.({ ...permit, signature })
+          return
+        } catch (error: unknown) {
+          if (error instanceof UserRejectedRequestError) {
+            trace.setStatus('cancelled')
+            throw error
+          } else {
+            const symbol = token?.symbol ?? 'Token'
+            throw toReadableError(`${symbol} permit allowance failed:`, error)
+          }
+        }
+      }),
+    [account, chainId, nonce, onPermitSignature, provider, spender, token]
+  )
 }

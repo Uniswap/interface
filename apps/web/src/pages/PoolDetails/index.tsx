@@ -9,14 +9,13 @@ import { PoolDetailsStats } from 'components/Pools/PoolDetails/PoolDetailsStats'
 import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetailsStatsButtons'
 import { PoolDetailsTableTab } from 'components/Pools/PoolDetails/PoolDetailsTable'
 import Row from 'components/Row'
-import { usePoolData } from 'graphql/data/pools/usePoolData'
-import { getValidUrlChainName, supportedChainIdFromGQLChain } from 'graphql/data/util'
-import { useCurrency } from 'hooks/Tokens'
+import { PoolData, usePoolData } from 'graphql/data/pools/usePoolData'
+import { getValidUrlChainName, gqlToCurrency, supportedChainIdFromGQLChain, unwrapToken } from 'graphql/data/util'
 import { useColor } from 'hooks/useColor'
 import NotFound from 'pages/NotFound'
 import { getPoolDetailPageTitle } from 'pages/PoolDetails/utils'
 import { useReducer } from 'react'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async/lib/index'
 import { useParams } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
@@ -101,6 +100,12 @@ const LinksContainer = styled(Column)`
   width: 100%;
 `
 
+function getUnwrappedPoolToken(poolData?: PoolData, chainId?: number) {
+  return poolData?.token0 && poolData?.token1 && chainId
+    ? [unwrapToken(chainId, poolData?.token0), unwrapToken(chainId, poolData?.token1)]
+    : [undefined, undefined]
+}
+
 export default function PoolDetailsPage() {
   const { poolAddress, chainName } = useParams<{
     poolAddress: string
@@ -110,15 +115,15 @@ export default function PoolDetailsPage() {
   const chainId = chain && supportedChainIdFromGQLChain(chain)
   const { data: poolData, loading } = usePoolData(poolAddress?.toLowerCase() ?? '', chainId)
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
-  const token0 = isReversed ? poolData?.token1 : poolData?.token0
-  const token1 = isReversed ? poolData?.token0 : poolData?.token1
+  const unwrappedTokens = getUnwrappedPoolToken(poolData, chainId)
+  const [token0, token1] = isReversed ? [unwrappedTokens?.[1], unwrappedTokens?.[0]] : unwrappedTokens
 
   const { darkMode, surface2, accent1 } = useTheme()
-  const color0 = useColor(useCurrency(token0?.address, chainId), {
+  const color0 = useColor(token0 && gqlToCurrency(token0), {
     backgroundColor: surface2,
     darkMode,
   })
-  const color1 = useColor(useCurrency(token1?.address, chainId), {
+  const color1 = useColor(token1 && gqlToCurrency(token1), {
     backgroundColor: surface2,
     darkMode,
   })
@@ -126,7 +131,6 @@ export default function PoolDetailsPage() {
   const isInvalidPool = !chainName || !poolAddress || !getValidUrlChainName(chainName) || !isAddress(poolAddress)
   const poolNotFound = (!loading && !poolData) || isInvalidPool
 
-  // TODO(WEB-3483): Add support for v2 Pairs when BE adds support
   if (poolNotFound) return <NotFound />
   return (
     <ThemeProvider token0={color0 !== accent1 ? color0 : undefined} token1={color1 !== accent1 ? color1 : undefined}>

@@ -1,14 +1,15 @@
 import { memo, useCallback, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import {
-  usePortfolioBalancesForAddressById,
-  usePortfolioTokenOptions,
-} from 'wallet/src/components/TokenSelector/hooks'
+import { GqlResult } from 'uniswap/src/data/types'
 import {
   SectionHeader,
   TokenSelectorList,
 } from 'wallet/src/components/TokenSelector/TokenSelectorList'
+import {
+  usePortfolioBalancesForAddressById,
+  usePortfolioTokenOptions,
+} from 'wallet/src/components/TokenSelector/hooks'
 import { OnSelectCurrency, TokenSection } from 'wallet/src/components/TokenSelector/types'
 import {
   formatSearchResults,
@@ -16,9 +17,8 @@ import {
 } from 'wallet/src/components/TokenSelector/utils'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useSearchTokens } from 'wallet/src/features/dataApi/searchTokens'
-import { GqlResult } from 'wallet/src/features/dataApi/types'
-import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 import { SearchResultType } from 'wallet/src/features/search/SearchResult'
+import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
 
@@ -26,11 +26,13 @@ function EmptyResults({ searchFilter }: { searchFilter: string }): JSX.Element {
   const { t } = useTranslation()
   return (
     <Flex>
-      <SectionHeader title={t('Search results')} />
+      <SectionHeader title={t('tokens.selector.section.search')} />
       <Text color="$neutral3" textAlign="center" variant="subheading2">
-        <Trans t={t}>
-          No results found for <Text color="$neutral1">"{searchFilter}"</Text>
-        </Trans>
+        <Trans
+          components={{ highlight: <Text color="$neutral1" /> }}
+          i18nKey="tokens.selector.search.empty"
+          values={{ searchText: searchFilter }}
+        />
       </Text>
     </Flex>
   )
@@ -78,7 +80,7 @@ function useTokenSectionsForSearchResults(
   const sections = useMemo(
     () =>
       getTokenOptionsSection(
-        t('Search results'),
+        t('tokens.selector.section.search'),
         // Use local search when only searching balances
         isBalancesOnlySearch ? portfolioTokenOptions : searchResults
       ),
@@ -160,7 +162,7 @@ function _TokenSelectorSearchResultsList({
       showTokenAddress
       chainFilter={chainFilter}
       emptyElement={emptyElement}
-      errorText={t('Couldn’t load search results')}
+      errorText={t('token.selector.search.error')}
       hasError={Boolean(error)}
       loading={userIsTyping || loading}
       refetch={refetch}

@@ -1,11 +1,12 @@
 import { ContractTransaction } from '@ethersproject/contracts'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
-import { sendAnalyticsEvent, useTrace } from 'analytics'
+import { sendAnalyticsEvent, useTrace as useAnalyticsTrace } from 'analytics'
 import { useTokenContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ApproveTransactionInfo, TransactionType } from 'state/transactions/types'
+import { trace } from 'tracing/trace'
 import { UserRejectedRequestError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
@@ -45,39 +46,57 @@ export function useUpdateTokenAllowance(
   spender: string
 ): () => Promise<{ response: ContractTransaction; info: ApproveTransactionInfo }> {
   const contract = useTokenContract(amount?.currency.address)
-  const trace = useTrace()
+  const analyticsTrace = useAnalyticsTrace()
 
-  return useCallback(async () => {
-    try {
-      if (!amount) throw new Error('missing amount')
-      if (!contract) throw new Error('missing contract')
-      if (!spender) throw new Error('missing spender')
+  return useCallback(
+    () =>
+      trace({ name: 'Allowance', op: 'permit.allowance' }, async (trace) => {
+        try {
+          if (!amount) throw new Error('missing amount')
+          if (!contract) throw new Error('missing contract')
+          if (!spender) throw new Error('missing spender')
 
-      const allowance = amount.equalTo(0) ? '0' : MAX_ALLOWANCE
-      const response = await contract.approve(spender, allowance)
-      sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
-        chain_id: amount.currency.chainId,
-        token_symbol: amount.currency.symbol,
-        token_address: amount.currency.address,
-        ...trace,
-      })
-      return {
-        response,
-        info: {
-          type: TransactionType.APPROVAL,
-          tokenAddress: contract.address,
-          spender,
-          amount: allowance,
-        },
-      }
-    } catch (e: unknown) {
-      const symbol = amount?.currency.symbol ?? 'Token'
-      if (didUserReject(e)) {
-        throw new UserRejectedRequestError(`${symbol} token allowance failed: User rejected`)
-      }
-      throw new Error(`${symbol} token allowance failed: ${e instanceof Error ? e.message : e}`)
-    }
-  }, [amount, contract, spender, trace])
+          const allowance = amount.equalTo(0) ? '0' : MAX_ALLOWANCE
+          const response = await trace.child({ name: 'Approve', op: 'wallet.approve' }, async (walletTrace) => {
+            try {
+              return await contract.approve(spender, allowance)
+            } catch (error) {
+              if (didUserReject(error)) {
+                walletTrace.setStatus('cancelled')
+                const symbol = amount?.currency.symbol ?? 'Token'
+                throw new UserRejectedRequestError(`${symbol} token allowance failed: User rejected`)
+              } else {
+                throw error
+              }
+            }
+          })
+          sendAnalyticsEvent(InterfaceEventName.APPROVE_TOKEN_TXN_SUBMITTED, {
+            chain_id: amount.currency.chainId,
+            token_symbol: amount.currency.symbol,
+            token_address: amount.currency.address,
+            ...analyticsTrace,
+          })
+          return {
+            response,
+            info: {
+              type: TransactionType.APPROVAL,
+              tokenAddress: contract.address,
+              spender,
+              amount: allowance,
+            },
+          }
+        } catch (error: unknown) {
+          if (error instanceof UserRejectedRequestError) {
+            trace.setStatus('cancelled')
+            throw error
+          } else {
+            const symbol = amount?.currency.symbol ?? 'Token'
+            throw new Error(`${symbol} token allowance failed: ${error instanceof Error ? error.message : error}`)
+          }
+        }
+      }),
+    [amount, contract, spender, analyticsTrace]
+  )
 }
 
 export function useRevokeTokenAllowance(

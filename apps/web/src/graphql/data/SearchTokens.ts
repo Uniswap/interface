@@ -1,4 +1,4 @@
-import { ARB, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { ARB, NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import gql from 'graphql-tag'
 import { useMemo } from 'react'
 import invariant from 'tiny-invariant'
@@ -56,7 +56,8 @@ function dedupeCrosschainTokens(current: SearchToken, existing: SearchToken | un
   if (existing.address?.toLowerCase() === ARB_ADDRESS) return existing
 
   // Always prioritize natives, and if both tokens are native, prefer native on current chain (i.e. Matic on Polygon over Matic on Mainnet )
-  if (current.standard === 'NATIVE' && (existing.standard !== 'NATIVE' || current.chain === searchChain)) return current
+  if (current.standard === NATIVE_CHAIN_ID && (existing.standard !== NATIVE_CHAIN_ID || current.chain === searchChain))
+    return current
 
   // Prefer tokens on the searched chain, otherwise prefer mainnet tokens
   if (current.chain === searchChain || (existing.chain !== searchChain && current.chain === Chain.Ethereum))
@@ -72,13 +73,13 @@ function searchTokenSortFunction(
   a: SearchToken,
   b: SearchToken
 ) {
-  if (a.standard === 'NATIVE') {
-    if (b.standard === 'NATIVE') {
+  if (a.standard === NATIVE_CHAIN_ID) {
+    if (b.standard === NATIVE_CHAIN_ID) {
       if (a.chain === searchChain) return -1
       else if (b.chain === searchChain) return 1
       else return 0
     } else return -1
-  } else if (b.standard === 'NATIVE') return 1
+  } else if (b.standard === NATIVE_CHAIN_ID) return 1
   else if (wrappedNativeAddress && a.address === wrappedNativeAddress) return -1
   else if (wrappedNativeAddress && b.address === wrappedNativeAddress) return 1
   else return (b.market?.volume24H?.value ?? 0) - (a.market?.volume24H?.value ?? 0)

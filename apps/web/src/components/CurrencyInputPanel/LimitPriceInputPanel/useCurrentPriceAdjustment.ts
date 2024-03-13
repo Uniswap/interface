@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Price } from '@uniswap/sdk-core'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
@@ -37,10 +37,15 @@ export function useCurrentPriceAdjustment({
 
     const marketQuote = marketPrice.quote(oneUnitOfBaseCurrency)
     const parsedPriceQuote = parsedLimitPrice.quote(oneUnitOfBaseCurrency)
-    const difference = parsedPriceQuote.subtract(marketQuote)
-    const percentageChange = difference.divide(marketQuote)
+    const decimalsScalar = JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(18))
 
-    const currentPriceAdjustment = Math.floor(Number(percentageChange.multiply(100).toFixed(2)))
+    const scaledMarketQuote = JSBI.BigInt(marketQuote.multiply(decimalsScalar).toFixed(0))
+    const scaledPriceQuote = JSBI.BigInt(parsedPriceQuote.multiply(decimalsScalar).toFixed(0))
+
+    const difference = JSBI.subtract(scaledPriceQuote, scaledMarketQuote)
+    const percentageChange = new Fraction(difference, scaledMarketQuote)
+
+    const currentPriceAdjustment = Math.round(Number(percentageChange.multiply(100).toFixed(2)))
     return {
       currentPriceAdjustment,
       priceError: limitPriceInverted ? (currentPriceAdjustment ?? 0) > 0 : (currentPriceAdjustment ?? 0) < 0,

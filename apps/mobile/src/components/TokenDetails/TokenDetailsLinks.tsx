@@ -35,7 +35,7 @@ export function TokenDetailsLinks({
     <View style={{ marginHorizontal: -14 }}>
       <Flex gap="$spacing8">
         <Text color="$neutral2" mx="$spacing16" variant="subheading2">
-          {t('Links')}
+          {t('token.links.title')}
         </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <Flex row gap="$spacing8" px="$spacing16">
@@ -51,7 +51,7 @@ export function TokenDetailsLinks({
                 Icon={GlobeIcon}
                 buttonType={LinkButtonType.Link}
                 element={ElementName.TokenLinkWebsite}
-                label={t('Website')}
+                label={t('token.links.website')}
                 value={homepageUrl}
               />
             )}
@@ -60,7 +60,7 @@ export function TokenDetailsLinks({
                 Icon={TwitterIcon}
                 buttonType={LinkButtonType.Link}
                 element={ElementName.TokenLinkTwitter}
-                label={t('Twitter')}
+                label={t('token.links.twitter')}
                 value={getTwitterLink(twitterName)}
               />
             )}
@@ -68,7 +68,7 @@ export function TokenDetailsLinks({
               <LinkButton
                 buttonType={LinkButtonType.Copy}
                 element={ElementName.Copy}
-                label={t('Contract')}
+                label={t('token.links.contract')}
                 value={address}
               />
             )}

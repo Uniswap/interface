@@ -30,12 +30,12 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { borderRadii, fonts } from 'ui/src/theme'
+import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
 import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
 import { prepareSwapFormState } from 'wallet/src/features/transactions/swap/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 import { opacify } from 'wallet/src/utils/colors'
-import { isAndroid, isIOS } from 'wallet/src/utils/platform'
 
 export const NAV_BAR_HEIGHT_XS = 52
 export const NAV_BAR_HEIGHT_SM = 72
@@ -140,7 +140,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
 
   return (
     <Flex centered height={SWAP_BUTTON_HEIGHT} pointerEvents="box-none" position="relative">
-      <TapGestureHandler onGestureEvent={onGestureEvent}>
+      <TapGestureHandler testID={ElementName.Swap} onGestureEvent={onGestureEvent}>
         <AnimatedFlex
           centered
           height="100%"
@@ -174,7 +174,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
             color="$sporeWhite"
             numberOfLines={1}
             variant="buttonLabel2">
-            {t('Swap')}
+            {t('common.button.swap')}
           </Text>
         </AnimatedFlex>
       </TapGestureHandler>
@@ -231,7 +231,9 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
       activeOpacity={1}
       style={[styles.searchBar, { borderRadius: borderRadii.roundedFull }]}
       onPress={onPress}>
-      <TapGestureHandler onGestureEvent={onGestureEvent}>
+      <TapGestureHandler
+        testID={ElementName.SearchTokensAndWallets}
+        onGestureEvent={onGestureEvent}>
         <AnimatedFlex borderRadius="$roundedFull" overflow="hidden" style={animatedStyle}>
           <BlurView intensity={isIOS ? 100 : 0}>
             <Flex
@@ -256,7 +258,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
                 pr="$spacing48"
                 style={{ lineHeight: fonts.body1.lineHeight }}
                 variant="body1">
-                {t('Search')}
+                {t('common.input.search')}
               </Text>
             </Flex>
           </BlurView>

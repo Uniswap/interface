@@ -16,7 +16,7 @@ export function BackButtonView({ size, color, showButtonLabel }: Props): JSX.Ele
       <Icons.RotatableChevron color={color ?? '$neutral2'} height={size} width={size} />
       {showButtonLabel && (
         <Text color="$neutral2" variant="subheading1">
-          {t('Back')}
+          {t('common.button.back')}
         </Text>
       )}
     </Flex>

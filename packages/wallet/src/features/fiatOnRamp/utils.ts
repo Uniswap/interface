@@ -1,8 +1,5 @@
 import { FORLogo } from './types'
 
-// Meld icons have a circle with 100px radius and 50px of a transparent border around it
-export const MELD_ICON_SIZE_MULTIPLIER = 1.5
-
 export interface FORApiError {
   data: {
     statusCode: number

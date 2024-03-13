@@ -1,7 +1,7 @@
 import { useNetInfo } from '@react-native-community/netinfo'
 import { getSdkError } from '@walletconnect/utils'
 import { providers } from 'ethers'
-import React, { PropsWithChildren, useMemo, useRef, useState } from 'react'
+import React, { PropsWithChildren, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
@@ -33,7 +33,6 @@ import { NetworkPill } from 'wallet/src/components/network/NetworkPill'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasSpeed } from 'wallet/src/features/gas/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-import { NetworkFeeInfoModal } from 'wallet/src/features/transactions/swap/modals/NetworkFeeInfoModal'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -107,16 +106,6 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const netInfo = useNetInfo()
   const didOpenFromDeepLink = useAppSelector(selectDidOpenFromDeepLink)
   const chainId = request.chainId
-
-  const [showNetworkFeeInfoModal, setShowNetworkFeeInfoModal] = useState(false)
-
-  const onShowNetworkFeeInfo = (): void => {
-    setShowNetworkFeeInfoModal(true)
-  }
-
-  const onCloseNetworkFeeInfo = (): void => {
-    setShowNetworkFeeInfoModal(false)
-  }
 
   const tx: providers.TransactionRequest | null = useMemo(() => {
     if (!isTransactionRequest(request)) {
@@ -287,7 +276,6 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
   return (
     <>
-      {showNetworkFeeInfoModal && <NetworkFeeInfoModal onClose={onCloseNetworkFeeInfo} />}
       <BottomSheetModal name={ModalName.WCSignRequest} onClose={handleClose}>
         <Flex gap="$spacing24" pb="$spacing12" pt="$spacing36" px="$spacing16">
           <ClientDetails permitInfo={permitInfo} request={request} />
@@ -306,15 +294,11 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
               )}
               <Flex px="$spacing16" py="$spacing8">
                 {methodCostsGas(request) ? (
-                  <NetworkFee
-                    chainId={chainId}
-                    gasFee={gasFee}
-                    onShowNetworkFeeInfo={onShowNetworkFeeInfo}
-                  />
+                  <NetworkFee chainId={chainId} gasFee={gasFee} />
                 ) : (
                   <Flex row alignItems="center" justifyContent="space-between">
                     <Text color="$neutral1" variant="subheading2">
-                      {t('Network')}
+                      {t('walletConnect.request.label.network')}
                     </Text>
                     <NetworkPill
                       showIcon
@@ -333,8 +317,8 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                 <AccountDetails address={request.account} />
                 {!hasSufficientFunds && (
                   <Text color="$DEP_accentWarning" pt="$spacing8" variant="body2">
-                    {t('You don’t have enough {{symbol}} to complete this transaction.', {
-                      symbol: nativeCurrency?.symbol,
+                    {t('walletConnect.request.error.insufficientFunds', {
+                      currencySymbol: nativeCurrency?.symbol,
                     })}
                   </Text>
                 )}
@@ -351,7 +335,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                   />
                 }
                 textColor="$DEP_accentWarning"
-                title={t('Internet or network connection error')}
+                title={t('walletConnect.request.error.network')}
               />
             ) : (
               <WarningSection
@@ -367,7 +351,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                 testID={ElementName.Cancel}
                 theme="tertiary"
                 onPress={onReject}>
-                {t('Cancel')}
+                {t('common.button.cancel')}
               </Button>
               <Button
                 fill
@@ -381,7 +365,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
                     await onConfirm()
                   }
                 }}>
-                {isTransactionRequest(request) ? t('Accept') : t('Sign')}
+                {isTransactionRequest(request)
+                  ? t('common.button.accept')
+                  : t('walletConnect.request.button.sign')}
               </Button>
             </Flex>
           </Flex>
@@ -419,9 +405,9 @@ function WarningSection({
         width={iconSizes.icon16}
       />
       <Text color="$neutral2" fontStyle="italic" variant="body3">
-        {t('Be careful: this {{ requestType }} may transfer assets', {
-          requestType: isTransactionRequest(request) ? 'transaction' : 'message',
-        })}
+        {isTransactionRequest(request)
+          ? t('walletConnect.request.warning.general.transaction')
+          : t('walletConnect.request.warning.general.message')}
       </Text>
     </Flex>
   )

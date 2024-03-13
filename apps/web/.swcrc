@@ -1,14 +1,10 @@
 {
   "$schema": "https://json.schemastore.org/swcrc",
   "jsc": {
-    "target": "es2020",
     "keepClassNames": true,
     "experimental": {
       "plugins": [
-        [
-          "@lingui/swc-plugin",
-          {}
-        ],
+        ["@lingui/swc-plugin", {}],
         [
           "@swc/plugin-styled-components",
           {
@@ -26,5 +22,9 @@
         "runtime": "automatic"
       }
     }
+  },
+  "env": {
+    "targets": { "chrome": "80" },
+    "include": ["transform-async-to-generator"]
   }
 }

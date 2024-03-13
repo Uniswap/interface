@@ -2,12 +2,13 @@ import { ApolloError, QueryHookOptions } from '@apollo/client'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers'
 import { useMemo } from 'react'
+import { ROUTING_API_PATH } from 'uniswap/src/data/constants'
+import { useRestQuery } from 'uniswap/src/data/rest'
+import { GqlResult } from 'uniswap/src/data/types'
 import { logger } from 'utilities/src/logger/logger'
-import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
-import { useRestQuery } from 'wallet/src/data/rest'
-import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { transformQuoteToTrade } from 'wallet/src/features/transactions/swap/trade/legacy/routeUtils'
 import {
   QuoteRequest,
@@ -29,8 +30,6 @@ export const SWAP_QUOTE_ERROR = 'QUOTE_ERROR'
 export const NO_QUOTE_DATA = 'NO_QUOTE_DATA'
 
 export const API_RATE_LIMIT_ERROR = 'TOO_MANY_REQUESTS'
-
-export const ROUTING_API_PATH = '/v2/quote'
 
 export enum RoutingIntent {
   Pricing = 'pricing',
@@ -143,7 +142,7 @@ export function useQuoteQuery(
     ['quote', 'routing'],
     {
       pollInterval,
-      ttlMs: ONE_MINUTE_MS,
+      ttlMs: ONE_SECOND_MS * 15,
       skip: !request,
       notifyOnNetworkStatusChange: true,
     }

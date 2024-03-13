@@ -5,7 +5,7 @@ import { useNftAssetDetails } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
-import { Helmet } from 'react-helmet'
+import { Helmet } from 'react-helmet-async/lib/index'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 

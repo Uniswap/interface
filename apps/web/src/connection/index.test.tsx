@@ -4,8 +4,8 @@ import { connections, getConnection } from 'connection'
 
 import { ConnectionType } from './types'
 
-const UserAgentMock = jest.requireMock('wallet/src/utils/platform')
-jest.mock('wallet/src/utils/platform', () => ({
+const UserAgentMock = jest.requireMock('uniswap/src/utils/platform')
+jest.mock('uniswap/src/utils/platform', () => ({
   isMobile: false,
 }))
 

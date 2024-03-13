@@ -13,12 +13,18 @@
       "react-native": [
         "react-native-web"
       ],
+      "ui/*": [
+        "../../packages/ui/*"
+      ],
+      "uniswap/*": [
+        "../../packages/uniswap/*"
+      ],
+      "utilities/*": [
+        "../../packages/utilities/*"
+      ],
       "wallet/*": [
         "../../packages/wallet/*"
       ],
-      "ui/*": [
-        "../../packages/ui/*"
-      ]
     },
     "allowJs": true,
     "resolveJsonModule": true,

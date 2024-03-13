@@ -89,7 +89,6 @@ describe('Swap errors', () => {
         send.withArgs('eth_estimateGas').resolves(BigNumber.from(2_000_000))
         send.callThrough()
       })
-
       // Set slippage to a very low value.
       cy.get(getTestSelector('open-settings-dialog-button')).click()
       cy.get(getTestSelector('max-slippage-settings')).click()
@@ -97,7 +96,6 @@ describe('Swap errors', () => {
       cy.get(getTestSelector('toggle-uniswap-x-button')).click() // turn off uniswapx
       cy.get('body').click('topRight') // close modal
       cy.get(getTestSelector('slippage-input')).should('not.exist')
-
       // Submit 2 transactions
       for (let i = 0; i < 2; i++) {
         cy.get('#swap-currency-input .token-amount-input').type('200').should('have.value', '200')

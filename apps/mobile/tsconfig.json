@@ -11,6 +11,9 @@
     },
     {
       "path": "../../packages/wallet"
+    },
+    {
+      "path": "../../packages/uniswap"
     }
   ],
   "compilerOptions": {

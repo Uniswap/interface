@@ -1,6 +1,5 @@
 import { ChainId } from 'wallet/src/constants/chains'
 import { render } from 'wallet/src/test/test-utils'
-import { noOpFunction } from 'wallet/src/test/utils'
 import { NetworkFee } from './NetworkFee'
 
 jest.mock('wallet/src/features/gas/hooks', () => {
@@ -12,33 +11,19 @@ jest.mock('wallet/src/features/gas/hooks', () => {
 describe(NetworkFee, () => {
   it('renders a NetworkFee normally', () => {
     const tree = render(
-      <NetworkFee
-        chainId={ChainId.Mainnet}
-        gasFee={{ value: '500', loading: false }}
-        onShowNetworkFeeInfo={noOpFunction}
-      />
+      <NetworkFee chainId={ChainId.Mainnet} gasFee={{ value: '500', loading: false }} />
     )
     expect(tree).toMatchSnapshot()
   })
 
   it('renders a NetworkFee in a loading state', () => {
-    const tree = render(
-      <NetworkFee
-        chainId={ChainId.Mainnet}
-        gasFee={{ loading: true }}
-        onShowNetworkFeeInfo={noOpFunction}
-      />
-    )
+    const tree = render(<NetworkFee chainId={ChainId.Mainnet} gasFee={{ loading: true }} />)
     expect(tree).toMatchSnapshot()
   })
 
   it('renders a NetworkFee in an error state', () => {
     const tree = render(
-      <NetworkFee
-        chainId={ChainId.Mainnet}
-        gasFee={{ error: true, loading: false }}
-        onShowNetworkFeeInfo={noOpFunction}
-      />
+      <NetworkFee chainId={ChainId.Mainnet} gasFee={{ error: true, loading: false }} />
     )
     expect(tree).toMatchSnapshot()
   })

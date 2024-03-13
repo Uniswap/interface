@@ -1,7 +1,8 @@
 import { ChainId } from 'wallet/src/constants/chains'
 import { gqlTokenToCurrencyInfo } from 'wallet/src/features/dataApi/utils'
-import { TopTokens } from 'wallet/src/test/gqlFixtures'
+import { token } from 'wallet/src/test/fixtures'
 import { act, renderHook, waitFor } from 'wallet/src/test/test-utils'
+import { createArray, queryResolvers } from 'wallet/src/test/utils'
 import { usePopularTokens } from './topTokens'
 
 describe(usePopularTokens, () => {
@@ -21,14 +22,13 @@ describe(usePopularTokens, () => {
   it('returns error when data fetching fails', async () => {
     jest.spyOn(console, 'error').mockImplementation(() => undefined)
 
-    const { result } = renderHook(() => usePopularTokens(ChainId.Mainnet), {
-      resolvers: {
-        Query: {
-          topTokens: () => {
-            throw new Error('test error')
-          },
-        },
+    const { resolvers } = queryResolvers({
+      topTokens: () => {
+        throw new Error('test error')
       },
+    })
+    const { result } = renderHook(() => usePopularTokens(ChainId.Mainnet), {
+      resolvers,
     })
 
     await waitFor(() => {
@@ -42,20 +42,17 @@ describe(usePopularTokens, () => {
   })
 
   it('returns data when data fetching succeeds', async () => {
+    const topToken = createArray(3, token)
+    const { resolvers } = queryResolvers({
+      topTokens: () => topToken,
+    })
     const { result } = renderHook(() => usePopularTokens(ChainId.Mainnet), {
-      resolvers: {
-        Query: {
-          topTokens: () => TopTokens,
-        },
-      },
+      resolvers,
     })
 
     await waitFor(() => {
       expect(result.current).toEqual({
-        data: TopTokens.map((token) => {
-          token.address = token?.address?.toLowerCase()
-          return gqlTokenToCurrencyInfo(token)
-        }),
+        data: topToken.map(gqlTokenToCurrencyInfo),
         loading: false,
         error: undefined,
         refetch: expect.any(Function),

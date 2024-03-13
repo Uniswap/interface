@@ -12,7 +12,7 @@ import {
   OPTIMISM_LOGO,
   POLYGON_LOGO,
 } from 'ui/src/assets'
-import { config } from 'wallet/src/config'
+import { config } from 'uniswap/src/config'
 
 /** Address that represents native currencies on ETH, Arbitrum, etc. */
 export const DEFAULT_NATIVE_ADDRESS = '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'

@@ -1,5 +1,5 @@
 /**
- * List of supported langauges in app, represented by ISO 639 language code.
+ * List of supported languages in app, represented by ISO 639 language code.
  * If you add a new locale here, be sure to add polyfills for it in intl.js,
  * resource strings in i18n.ts, and supported localizations in the Uniswap Xcode project.
  */
@@ -64,7 +64,7 @@ export const SUPPORTED_LANGUAGES: Language[] = [
 ]
 
 /**
- * Internal app mapping between langauge and locale enums
+ * Internal app mapping between language and locale enums
  * This is needed because we not support all locales and default languages to specific locales
  */
 export const mapLanguageToLocale: Record<Language, Locale> = {
@@ -90,7 +90,7 @@ export const mapLanguageToLocale: Record<Language, Locale> = {
 }
 
 /**
- * Internal app mapping between langauge and locale enums
+ * Internal app mapping between language and locale enums
  * This is needed because we not support all locales and default languages to specific locales
  */
 export const mapLocaleToLanguage: Record<Locale, Language> = {

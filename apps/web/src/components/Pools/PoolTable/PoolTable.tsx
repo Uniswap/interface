@@ -2,6 +2,7 @@ import { ApolloError } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { ChainId, Percent } from '@uniswap/sdk-core'
+import { DoubleTokenAndChainLogo } from 'components/Pools/PoolDetails/PoolDetailsHeader'
 import Row from 'components/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
@@ -16,6 +17,7 @@ import {
   OrderDirection,
   chainIdToBackendName,
   supportedChainIdFromGQLChain,
+  unwrapToken,
   validateUrlChainParam,
 } from 'graphql/data/util'
 import { useAtom } from 'jotai'
@@ -25,7 +27,6 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { DoubleTokenAndChainLogo } from '../PoolDetails/PoolDetailsHeader'
 
 const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
   [PoolSortFields.TVL]: undefined,
@@ -136,7 +137,7 @@ function PoolTableHeader({
 }) {
   const handleSortCategory = useSetSortMethod(category)
   return (
-    <MouseoverTooltip text={HEADER_DESCRIPTIONS[category]} placement="top">
+    <MouseoverTooltip disabled={!HEADER_DESCRIPTIONS[category]} text={HEADER_DESCRIPTIONS[category]} placement="top">
       <ClickableHeaderRow $justify="flex-end" onClick={handleSortCategory}>
         {isCurrentSortMethod && <HeaderArrow direction={direction} />}
         <HeaderSortText $active={isCurrentSortMethod}>{HEADER_TEXT[category]}</HeaderSortText>
@@ -201,8 +202,8 @@ export function PoolsTable({
           index: index + 1,
           poolDescription: (
             <PoolDescription
-              token0={pool.token0}
-              token1={pool.token1}
+              token0={unwrapToken(chainId, pool.token0)}
+              token1={unwrapToken(chainId, pool.token1)}
               feeTier={pool.feeTier}
               chainId={chainId}
               protocolVersion={pool.protocolVersion}

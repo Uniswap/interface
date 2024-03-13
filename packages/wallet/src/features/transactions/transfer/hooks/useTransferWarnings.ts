@@ -1,13 +1,10 @@
 import { useNetInfo } from '@react-native-community/netinfo'
+import { TFunction } from 'i18next'
 import _ from 'lodash'
-import { TFunction } from 'react-i18next'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
-import { isOffline } from 'wallet/src/features/transactions/utils'
 import { getNetworkWarning } from 'wallet/src/features/transactions/WarningModal/getNetworkWarning'
 import {
   Warning,
@@ -15,6 +12,9 @@ import {
   WarningLabel,
   WarningSeverity,
 } from 'wallet/src/features/transactions/WarningModal/types'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
+import { isOffline } from 'wallet/src/features/transactions/utils'
 import { currencyAddress } from 'wallet/src/utils/currencyId'
 
 export function getTransferWarnings(
@@ -48,13 +48,12 @@ export function getTransferWarnings(
       type: WarningLabel.InsufficientFunds,
       severity: WarningSeverity.None,
       action: WarningAction.DisableReview,
-      title: t('Not enough {{ symbol }}.', {
-        symbol: currencyAmountIn.currency?.symbol,
+      title: t('send.warning.insufficientFunds.title', {
+        currencySymbol: currencyAmountIn.currency?.symbol,
       }),
-      message: t(
-        'Your {{ symbol }} balance has decreased since you entered the amount you’d like to send',
-        { symbol: currencyAmountIn.currency?.symbol }
-      ),
+      message: t('send.warning.insufficientFunds.message', {
+        currencySymbol: currencyAmountIn.currency?.symbol,
+      }),
     })
   }
 

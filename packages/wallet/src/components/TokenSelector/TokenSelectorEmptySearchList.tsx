@@ -1,6 +1,7 @@
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Text, TouchableArea } from 'ui/src'
+import { GqlResult } from 'uniswap/src/data/types'
 import { TokenSelectorList } from 'wallet/src/components/TokenSelector/TokenSelectorList'
 import {
   OnSelectCurrency,
@@ -9,10 +10,10 @@ import {
 } from 'wallet/src/components/TokenSelector/types'
 import { getTokenOptionsSection } from 'wallet/src/components/TokenSelector/utils'
 import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
-import { CurrencyInfo, GqlResult } from 'wallet/src/features/dataApi/types'
+import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { buildCurrency, gqlTokenToCurrencyInfo } from 'wallet/src/features/dataApi/utils'
-import { clearSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 import { SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
+import { clearSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 import { selectSearchHistory } from 'wallet/src/features/search/selectSearchHistory'
 import { usePopularTokens } from 'wallet/src/features/tokens/hooks'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
@@ -66,7 +67,7 @@ function ClearAll({ onPress }: { onPress: () => void }): JSX.Element {
   return (
     <TouchableArea onPress={onPress}>
       <Text color="$accent1" variant="buttonLabel3">
-        {t('Clear all')}
+        {t('tokens.selector.button.clear')}
       </Text>
     </TouchableArea>
   )
@@ -88,7 +89,7 @@ function useTokenSectionsForEmptySearch(): GqlResult<TokenSection[]> {
   const sections = useMemo(
     () => [
       ...(getTokenOptionsSection(
-        t('Recent searches'),
+        t('tokens.selector.section.recent'),
         currencyInfosToTokenOptions(
           searchHistory
             .filter(
@@ -100,7 +101,7 @@ function useTokenSectionsForEmptySearch(): GqlResult<TokenSection[]> {
         <ClearAll onPress={onPressClearSearchHistory} />
       ) ?? []),
       ...(getTokenOptionsSection(
-        t('Popular tokens'),
+        t('tokens.selector.section.popular'),
         currencyInfosToTokenOptions(popularTokens?.map(gqlTokenToCurrencyInfo))
       ) ?? []),
     ],
@@ -128,7 +129,7 @@ function _TokenSelectorEmptySearchList({
   return (
     <TokenSelectorList
       showTokenAddress
-      errorText={t('Couldn’t load search results')}
+      errorText={t('token.selector.search.error')}
       hasError={Boolean(error)}
       loading={loading}
       refetch={refetch}

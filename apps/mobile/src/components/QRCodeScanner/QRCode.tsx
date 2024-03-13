@@ -11,12 +11,12 @@ import {
 } from 'ui/src'
 
 import { borderRadii } from 'ui/src/theme'
+import { isAndroid } from 'uniswap/src/utils/platform'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useAvatar } from 'wallet/src/features/wallet/hooks'
 import { passesContrast, useExtractedColors } from 'wallet/src/utils/colors'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 type AvatarColors = {
   primary: string

@@ -1,7 +1,7 @@
 ignores: [
     # Dependencies that depcheck thinks are unused but are actually used
-    "@typechain/ethers-v5",
     "jest-presets",
+    "i18next-resources-for-ts",
     # Dependencies that depcheck thinks are missing but are actually present or never used
     ## Internal packages / workspaces
     "wallet",

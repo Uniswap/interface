@@ -2,9 +2,9 @@
 export const inputStyles = {
   noOutline: { outlineWidth: 0 },
   inputFocus: {
-    backgroundColor: '$surface2',
+    backgroundColor: '$surface1',
     borderWidth: 1,
-    borderColor: '$neutral3',
+    borderColor: '$surface3',
     outlineWidth: 0,
   },
   inputHover: { borderWidth: 1, borderColor: '$surface3', outlineWidth: 0 },

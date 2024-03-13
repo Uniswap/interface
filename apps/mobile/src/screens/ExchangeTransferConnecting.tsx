@@ -8,9 +8,10 @@ import {
   SERVICE_PROVIDER_ICON_SIZE,
 } from 'src/features/fiatOnRamp/FiatOnRampConnecting'
 import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { isAndroid } from 'uniswap/src/utils/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
-import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useFiatOnRampAggregatorTransferWidgetQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { FORTransferInstitution } from 'wallet/src/features/fiatOnRamp/types'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
@@ -18,7 +19,6 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { openUri } from 'wallet/src/utils/linking'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 // Design decision
 const CONNECTING_TIMEOUT = 2 * ONE_SECOND_MS
@@ -52,7 +52,7 @@ export function ExchangeTransferConnecting({
     dispatch(
       pushNotification({
         type: AppNotificationType.Error,
-        errorMessage: t('Something went wrong.'),
+        errorMessage: t('common.error.general'),
       })
     )
     onClose()

@@ -47,8 +47,8 @@ const getTextFromTransferStatus = (
     // TODO: [MOB-240] should never go into this state but should probably do some
     // error display here as well as log to sentry or amplitude
     return {
-      title: t('Sending'),
-      description: t('We’ll notify you once your transaction is complete.'),
+      title: t('send.status.inProgress.title'),
+      description: t('send.status.inProgress.description'),
     }
   }
   const status = transactionDetails.status
@@ -59,35 +59,32 @@ const getTextFromTransferStatus = (
       currencySymbol: fiatCurrencyInfo.symbol,
     })
     return {
-      title: t('Send successful!'),
-      description: t(
-        'You sent {{ currencyAmount }}{{ tokenName }}{{ fiatValue }} to {{ recipient }}.',
-        {
-          currencyAmount: nftIn
-            ? ''
-            : formatter.formatCurrencyAmount({
-                value: currencyAmounts[CurrencyField.INPUT],
-                type: NumberType.TokenTx,
-              }),
-          fiatValue: isFiatInput ? ` (${formattedFiatValue})` : '',
-          tokenName: nftIn?.name ?? ` ${currencyInInfo?.currency.symbol}` ?? ' tokens',
-          recipient,
-        }
-      ),
+      title: t('send.status.success.title'),
+      description: t('send.status.success.description', {
+        currencyAmount: nftIn
+          ? ''
+          : formatter.formatCurrencyAmount({
+              value: currencyAmounts[CurrencyField.INPUT],
+              type: NumberType.TokenTx,
+            }),
+        fiatValue: isFiatInput ? ` (${formattedFiatValue})` : '',
+        tokenName: nftIn?.name ?? ` ${currencyInInfo?.currency.symbol}` ?? ' tokens',
+        recipient,
+      }),
     }
   }
 
   if (status === TransactionStatus.Failed) {
     return {
-      title: t('Send failed'),
-      description: t('Keep in mind that the network fee is still charged for failed transfers.'),
+      title: t('send.status.failed.title'),
+      description: t('send.status.fail.description'),
     }
   }
 
   // TODO: [MOB-241] handle TransactionStatus.Unknown state
   return {
-    title: t('Sending'),
-    description: t('We’ll notify you once your transaction is complete.'),
+    title: t('send.status.inProgress.title'),
+    description: t('send.status.inProgress.description'),
   }
 }
 

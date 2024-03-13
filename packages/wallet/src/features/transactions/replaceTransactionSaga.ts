@@ -96,8 +96,8 @@ export function* attemptReplaceTransaction(
         type: AppNotificationType.Error,
         address: transaction.from,
         errorMessage: isCancellation
-          ? i18n.t('Unable to cancel transaction')
-          : i18n.t('Unable to replace transaction'),
+          ? i18n.t('transaction.notification.error.cancel')
+          : i18n.t('transaction.notification.error.replace'),
       })
     )
   }

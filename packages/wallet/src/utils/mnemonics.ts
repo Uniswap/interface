@@ -17,12 +17,12 @@ export function translateMnemonicErrorMessage(
 ): string {
   switch (error) {
     case MnemonicValidationError.InvalidPhrase:
-      return t('Invalid phrase')
+      return t('account.recoveryPhrase.error.invalid')
     case MnemonicValidationError.InvalidWord:
-      return t('Invalid word: {{word}}', { word: invalidWord })
+      return t('account.recoveryPhrase.error.invalidWord', { word: invalidWord })
     case MnemonicValidationError.TooManyWords:
     case MnemonicValidationError.NotEnoughWords:
-      return t('Recovery phrase must be 12-24 words')
+      return t('account.recoveryPhrase.error.phraseLength')
     default:
       throw new Error(`Unhandled MnemonicValidationError case: ${error}`)
   }

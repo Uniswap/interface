@@ -35,7 +35,7 @@ function remoteTxStatusToLocalTxStatus(
       return TransactionStatus.Pending
     case RemoteTransactionStatus.Confirmed:
       if (type === RemoteTransactionType.Cancel) {
-        return TransactionStatus.Cancelled
+        return TransactionStatus.Canceled
       }
       return TransactionStatus.Success
   }

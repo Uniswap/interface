@@ -163,14 +163,14 @@ function TransactionDetails({
       {to ? (
         <Flex row alignItems="center" gap="$spacing16">
           <Text color="$neutral2" variant="body2">
-            {t('To')}:
+            {t('walletConnect.request.details.label.recipient')}
           </Text>
           <AddressButton address={to} chainId={chainId} />
         </Flex>
       ) : null}
       <Flex row alignItems="center" gap="$spacing16">
         <Text color="$neutral2" variant="body2">
-          {t('Function')}:
+          {t('walletConnect.request.details.label.function')}
         </Text>
         <Flex
           backgroundColor={isLoading ? '$transparent' : '$surface3'}
@@ -178,7 +178,7 @@ function TransactionDetails({
           px="$spacing8"
           py="$spacing4">
           <Text color="$neutral1" loading={isLoading} variant="monospace">
-            {parsedData ? parsedData.name : t('Unknown')}
+            {{ functionName: parsedData ? parsedData.name : t('common.text.unknown') }}
           </Text>
         </Flex>
       </Flex>
@@ -216,7 +216,7 @@ function RequestDetailsContent({ request }: Props): JSX.Element {
     <Text variant="body2">{message}</Text>
   ) : (
     <Text color="$neutral2" variant="body2">
-      {t('No message found.')}
+      {t('qrScanner.request.message.unavailable')}
     </Text>
   )
 }

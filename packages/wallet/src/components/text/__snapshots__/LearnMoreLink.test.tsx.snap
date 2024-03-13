@@ -3,6 +3,7 @@
 exports[`LearnMoreLink renders without error 1`] = `
 <View
   cancelable={true}
+  disabled={false}
   focusable={true}
   hitSlop={[Function]}
   minPressDuration={0}

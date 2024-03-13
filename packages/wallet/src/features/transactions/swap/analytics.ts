@@ -1,6 +1,6 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, TradeType } from '@uniswap/sdk-core'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { NumberType } from 'utilities/src/format/types'
 import {
   LocalizationContextState,
@@ -12,7 +12,7 @@ import { CurrencyField } from 'wallet/src/features/transactions/transactionState
 import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { SwapTradeBaseProperties } from 'wallet/src/telemetry/types'
-import { currencyAddress, getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
+import { getCurrencyAddressForAnalytics } from 'wallet/src/utils/currencyId'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 // hook-based analytics because this one is data-lifecycle dependent
@@ -22,35 +22,23 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
     trade: { trade },
   } = derivedSwapInfo
 
-  const tradeRef = useRef(trade)
+  const quoteId =
+    trade?.quoteData?.quoteType === QuoteType.RoutingApi
+      ? trade?.quoteData?.quote?.quoteId
+      : trade?.quoteData?.quote?.quote.quoteId
 
   useEffect(() => {
-    tradeRef.current = trade
-  }, [trade])
-
-  const inputAmount = tradeRef.current?.inputAmount.toExact()
-  const inputCurrency = tradeRef.current?.inputAmount.currency
-  const outputCurrency = tradeRef.current?.outputAmount.currency
-  const tradeType = tradeRef.current?.tradeType
-
-  // run useEffect based on ids since `Currency` objects themselves may be
-  // different instances per render
-  const inputCurrencyId = inputCurrency && currencyAddress(inputCurrency)
-  const outputCurrencyId = outputCurrency && currencyAddress(outputCurrency)
-
-  // a unique trade is defined by a combination of (input currencyAmount, output token, and trade type)
-  // send analytics event only on unique trades and not on swap quote refreshes
-  useEffect(() => {
-    const currTrade = tradeRef.current
-    if (!currTrade || !inputAmount) {
+    if (!trade) {
       return
     }
 
     sendWalletAnalyticsEvent(
       SwapEventName.SWAP_QUOTE_RECEIVED,
-      getBaseTradeAnalyticsProperties({ formatter, trade: currTrade })
+      getBaseTradeAnalyticsProperties({ formatter, trade })
     )
-  }, [inputAmount, inputCurrencyId, outputCurrencyId, tradeType, formatter])
+    // We only want to re-run this when we get a new `quoteId`.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quoteId])
 
   return
 }
@@ -70,9 +58,15 @@ export function getBaseTradeAnalyticsProperties({
     currency: trade.outputAmount.currency,
   })
 
+  const quoteId =
+    trade.quoteData?.quoteType === QuoteType.RoutingApi
+      ? trade.quoteData?.quote?.quoteId
+      : trade.quoteData?.quote?.quote.quoteId
+
   const finalOutputAmount = feeCurrencyAmount
     ? trade.outputAmount.subtract(feeCurrencyAmount)
     : trade.outputAmount
+
   return {
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
@@ -91,6 +85,7 @@ export function getBaseTradeAnalyticsProperties({
     fee_amount: portionAmount,
     quoteType: trade.quoteData?.quoteType,
     requestId: trade.quoteData?.quote?.requestId,
+    quoteId,
   }
 }
 

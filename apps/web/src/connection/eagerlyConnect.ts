@@ -3,6 +3,7 @@ import { useSyncExternalStore } from 'react'
 import store from 'state'
 import { clearRecentConnectionMeta } from 'state/user/reducer'
 
+import { trace } from 'tracing/trace'
 import { deprecatedNetworkConnection, eip6963Connection, getConnection, gnosisSafeConnection } from './index'
 import { getRecentConnectionMeta } from './meta'
 import { ConnectionType } from './types'
@@ -23,21 +24,22 @@ export function useConnectionReady() {
   )
 }
 
-async function connect(connector: Connector, type: ConnectionType) {
-  performance.mark(`web3:connect:${type}:start`)
-  try {
-    if (connector.connectEagerly) {
-      await connector.connectEagerly()
-    } else {
-      await connector.activate()
+function connect(connector: Connector, type: ConnectionType) {
+  // We intentionally omit setting a non-ok status on this trace, as it is expected to fail.
+  // The trace here is intended to capture duration and throughput, not status.
+  return trace({ name: 'Connect eagerly', op: 'wallet.connect.eager', tags: { type } }, async () => {
+    try {
+      if (connector.connectEagerly) {
+        await connector.connectEagerly()
+      } else {
+        await connector.activate()
+      }
+      return true
+    } catch (error) {
+      console.debug(`web3-react eager connection error: ${error}`)
+      return false
     }
-    return true
-  } catch (error) {
-    console.debug(`web3-react eager connection error: ${error}`)
-    return false
-  } finally {
-    performance.measure(`web3:connect:${type}`, `web3:connect:${type}:start`)
-  }
+  })
 }
 
 // The Safe connector will only work from safe.global, which iframes;

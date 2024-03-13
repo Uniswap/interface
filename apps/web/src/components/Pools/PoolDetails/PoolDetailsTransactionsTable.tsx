@@ -46,8 +46,8 @@ enum PoolTransactionColumn {
 }
 
 const PoolTransactionColumnWidth: { [key in PoolTransactionColumn]: number } = {
-  [PoolTransactionColumn.Timestamp]: 164,
-  [PoolTransactionColumn.Type]: 100,
+  [PoolTransactionColumn.Timestamp]: 120,
+  [PoolTransactionColumn.Type]: 144,
   [PoolTransactionColumn.MakerAddress]: 100,
   [PoolTransactionColumn.FiatValue]: 125,
   [PoolTransactionColumn.InputAmount]: 125,
@@ -191,7 +191,7 @@ export function PoolDetailsTransactionsTable({
         ),
       }),
       columnHelper.accessor(
-        (row) => (row.pool.token0.id.toLowerCase() === token0?.id.toLowerCase() ? row.amount0 : row.amount1),
+        (row) => (row.pool.token0.id.toLowerCase() === token0?.address?.toLowerCase() ? row.amount0 : row.amount1),
         {
           id: 'input-amount',
           header: () => (
@@ -219,7 +219,7 @@ export function PoolDetailsTransactionsTable({
         }
       ),
       columnHelper.accessor(
-        (row) => (row.pool.token0.id.toLowerCase() === token0?.id.toLowerCase() ? row.amount1 : row.amount0),
+        (row) => (row.pool.token0.id.toLowerCase() === token0?.address?.toLowerCase() ? row.amount1 : row.amount0),
         {
           id: 'output-amount',
           header: () => (
@@ -282,7 +282,7 @@ export function PoolDetailsTransactionsTable({
     formatNumber,
     showLoadingSkeleton,
     sortState.sortBy,
-    token0?.id,
+    token0?.address,
     token0?.symbol,
     token1?.symbol,
   ])

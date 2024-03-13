@@ -11,24 +11,23 @@ import {
 } from '@uniswap/sdk-core'
 import IUniswapV2PairJson from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import IUniswapV2Router02Json from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
-import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import NonfungiblePositionManagerJson from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import V3MigratorJson from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
+import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
 import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
 import { useEffect, useMemo } from 'react'
-import { getContract } from 'utilities/src/contracts/getContract'
-import ARGENT_WALLET_DETECTOR_ABI from 'wallet/src/abis/argent-wallet-detector.json'
-import EIP_2612 from 'wallet/src/abis/eip_2612.json'
-import ENS_PUBLIC_RESOLVER_ABI from 'wallet/src/abis/ens-public-resolver.json'
-import ENS_ABI from 'wallet/src/abis/ens-registrar.json'
-import ERC1155_ABI from 'wallet/src/abis/erc1155.json'
-import ERC20_ABI from 'wallet/src/abis/erc20.json'
-import ERC20_BYTES32_ABI from 'wallet/src/abis/erc20_bytes32.json'
-import ERC721_ABI from 'wallet/src/abis/erc721.json'
+import ARGENT_WALLET_DETECTOR_ABI from 'uniswap/src/abis/argent-wallet-detector.json'
+import EIP_2612 from 'uniswap/src/abis/eip_2612.json'
+import ENS_PUBLIC_RESOLVER_ABI from 'uniswap/src/abis/ens-public-resolver.json'
+import ENS_ABI from 'uniswap/src/abis/ens-registrar.json'
+import ERC1155_ABI from 'uniswap/src/abis/erc1155.json'
+import ERC20_ABI from 'uniswap/src/abis/erc20.json'
+import ERC20_BYTES32_ABI from 'uniswap/src/abis/erc20_bytes32.json'
+import ERC721_ABI from 'uniswap/src/abis/erc721.json'
 import {
   ArgentWalletDetector,
   EnsPublicResolver,
@@ -37,10 +36,11 @@ import {
   Erc20,
   Erc721,
   Weth,
-} from 'wallet/src/abis/types'
-import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'wallet/src/abis/types/v3'
-import { V3Migrator } from 'wallet/src/abis/types/v3/V3Migrator'
-import WETH_ABI from 'wallet/src/abis/weth.json'
+} from 'uniswap/src/abis/types'
+import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
+import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
+import WETH_ABI from 'uniswap/src/abis/weth.json'
+import { getContract } from 'utilities/src/contracts/getContract'
 
 const { abi: IUniswapV2PairABI } = IUniswapV2PairJson
 const { abi: IUniswapV2Router02ABI } = IUniswapV2Router02Json

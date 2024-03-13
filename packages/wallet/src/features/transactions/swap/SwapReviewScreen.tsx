@@ -15,7 +15,6 @@ import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/Swap
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { GasAndWarningRows } from 'wallet/src/features/transactions/swap/GasAndWarningRows'
 import { FeeOnTransferInfoModal } from 'wallet/src/features/transactions/swap/modals/FeeOnTransferInfoModal'
-import { NetworkFeeInfoModal } from 'wallet/src/features/transactions/swap/modals/NetworkFeeInfoModal'
 import { SlippageInfoModal } from 'wallet/src/features/transactions/swap/modals/SlippageInfoModal'
 import { SwapFeeInfoModal } from 'wallet/src/features/transactions/swap/modals/SwapFeeInfoModal'
 import { SwapDetails } from 'wallet/src/features/transactions/swap/SwapDetails'
@@ -51,7 +50,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
 
   const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const [showNetworkFeeInfoModal, setShowNetworkFeeInfoModal] = useState(false)
   const [showSwapFeeInfoModal, setShowSwapFeeInfoModal] = useState(false)
   const [noSwapFee, setNoSwapFee] = useState(false)
   const [showSlippageModal, setShowSlippageModal] = useState(false)
@@ -291,17 +289,9 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     setShowFOTInfoModal(false)
   }, [])
 
-  const onShowNetworkFeeInfo = useCallback(() => {
-    setShowNetworkFeeInfoModal(true)
-  }, [])
-
   const onShowSwapFeeInfo = useCallback<OnShowSwapFeeInfo>((_noSwapFee: boolean) => {
     setShowSwapFeeInfoModal(true)
     setNoSwapFee(_noSwapFee)
-  }, [])
-
-  const onCloseNetworkFeeInfo = useCallback(() => {
-    setShowNetworkFeeInfoModal(false)
   }, [])
 
   const onCloseSwapFeeInfo = useCallback(() => {
@@ -353,8 +343,8 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
         {showWarningModal && reviewScreenWarning?.warning.title && (
           <WarningModal
             caption={reviewScreenWarning.warning.message}
-            closeText={blockingWarning ? undefined : t('Cancel')}
-            confirmText={blockingWarning ? t('OK') : t('Confirm')}
+            closeText={blockingWarning ? undefined : t('common.button.cancel')}
+            confirmText={blockingWarning ? t('common.button.ok') : t('common.button.confirm')}
             modalName={ModalName.SwapWarning}
             severity={reviewScreenWarning.warning.severity}
             title={reviewScreenWarning.warning.title}
@@ -393,8 +383,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
 
             {showFOTInfoModal && <FeeOnTransferInfoModal onClose={onCloseFOTInfo} />}
 
-            {showNetworkFeeInfoModal && <NetworkFeeInfoModal onClose={onCloseNetworkFeeInfo} />}
-
             {showSwapFeeInfoModal && (
               <SwapFeeInfoModal noFee={noSwapFee} onClose={onCloseSwapFeeInfo} />
             )}
@@ -411,7 +399,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
                   chainId={chainId}
                   gasFee={gasFee}
                   warning={reviewScreenWarning?.warning}
-                  onShowNetworkFeeInfo={onShowNetworkFeeInfo}
                   onShowSwapFeeInfo={onShowSwapFeeInfo}
                   onShowWarning={onShowWarning}
                 />
@@ -427,7 +414,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
                   warning={reviewScreenWarning?.warning}
                   onAcceptTrade={onAcceptTrade}
                   onShowFOTInfo={onShowFOTInfo}
-                  onShowNetworkFeeInfo={onShowNetworkFeeInfo}
                   onShowSlippageModal={onShowSlippageModal}
                   onShowSwapFeeInfo={onShowSwapFeeInfo}
                   onShowWarning={onShowWarning}

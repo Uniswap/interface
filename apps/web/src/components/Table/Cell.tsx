@@ -32,6 +32,7 @@ export function Cell({
   justifyContent,
   grow,
   children,
+  testId,
 }: PropsWithChildren<{
   loading?: boolean
   width?: number
@@ -39,9 +40,17 @@ export function Cell({
   maxWidth?: number
   grow?: boolean
   justifyContent?: string
+  testId?: string
 }>) {
   return (
-    <Container $width={width} $minWidth={minWidth} $maxWidth={maxWidth} $grow={grow} $justifyContent={justifyContent}>
+    <Container
+      $width={width}
+      $minWidth={minWidth}
+      $maxWidth={maxWidth}
+      $grow={grow}
+      $justifyContent={justifyContent}
+      data-testid={testId}
+    >
       {loading ? <LoadingDataBubble data-testid="cell-loading-bubble" /> : children}
     </Container>
   )

@@ -113,7 +113,7 @@ async function checkApostrophes() {
     })
     changedLines.forEach((line, index) => {
       if (line.content.includes("'")) {
-        fail("You added a string using the ' character. Please use the ’ character instead!. Issue in line: " + index)
+        fail("You added a string to the translations file using the ' character. Please use the ’ character instead!. Issue in line: " + index)
       }
     })
   }

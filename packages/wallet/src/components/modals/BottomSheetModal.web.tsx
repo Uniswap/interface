@@ -111,7 +111,7 @@ function WebBottomSheetModal({
             flex={1}
             height={fullScreen || isCentered ? '100%' : undefined}
             justifyContent={isCentered ? 'center' : 'flex-end'}
-            padding="$spacing12">
+            p="$spacing12">
             <Flex
               borderRadius="$rounded24"
               p="$spacing12"

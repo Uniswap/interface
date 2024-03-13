@@ -18,8 +18,7 @@ module.exports = {
   keepRemoved: false,
 
   // Key separator used in your translation keys
-  // Disabling instead of default '.' so we can use plain english keys
-  keySeparator: false,
+  keySeparator: '.',
 
   // see below for more details
   lexers: {
@@ -51,7 +50,7 @@ module.exports = {
   // Supports $LOCALE and $NAMESPACE injection
   // Supports JSON (.json) and YAML (.yml) file formats
   // Where to write the locale files relative to process.cwd()
-  output: 'packages/wallet/src/i18n/locales/$LOCALE.json',
+  output: 'packages/wallet/src/i18n/locales/source/en-US.json',
   
 
   // Plural separator used in your translation keys
@@ -71,10 +70,6 @@ module.exports = {
 
   // Whether or not to sort the catalog. Can also be a [compareFunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters)
   sort: true,
-
-  defaultValue: function (locale, namespace, key, value) {
-    return key
-  },
 
   // Display info about the parsing including some stats
   verbose: false,

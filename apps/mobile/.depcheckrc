@@ -17,6 +17,7 @@ ignores: [
     "react-native-image-colors",
     # Dependencies that depcheck thinks are missing but are actually present or never used
     ## Internal packages / workspaces
+    "e2e",
     "src",
     "ui",
     "tsconfig",

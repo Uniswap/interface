@@ -6,13 +6,13 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated'
 import { useAppStackNavigation } from 'src/app/navigation/types'
+import { TokenBalanceItemContextMenu } from 'src/components/TokenBalanceList/TokenBalanceItemContextMenu'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import {
   TAB_BAR_HEIGHT,
   TAB_VIEW_SCROLL_THROTTLE,
   TabProps,
 } from 'src/components/layout/TabHelpers'
-import { TokenBalanceItemContextMenu } from 'src/components/TokenBalanceList/TokenBalanceItemContextMenu'
 import { Screens } from 'src/screens/Screens'
 import {
   AnimatedFlex,
@@ -23,6 +23,7 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { zIndices } from 'ui/src/theme'
+import { isAndroid } from 'uniswap/src/utils/platform'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { HiddenTokensRow } from 'wallet/src/features/portfolio/HiddenTokensRow'
@@ -34,7 +35,6 @@ import {
   useTokenBalanceListContext,
 } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 type TokenBalanceListProps = TabProps & {
   empty?: JSX.Element | null
@@ -164,7 +164,7 @@ export const TokenBalanceListInner = forwardRef<
   const ListHeaderComponent = useMemo(() => {
     return hasError ? (
       <AnimatedFlex entering={FadeInDown} exiting={FadeOut} px="$spacing24" py="$spacing8">
-        <BaseCard.InlineErrorState title={t('Failed to fetch token balances')} onRetry={refetch} />
+        <BaseCard.InlineErrorState title={t('home.tokens.error.fetch')} onRetry={refetch} />
       </AnimatedFlex>
     ) : null
   }, [hasError, refetch, t])
@@ -204,8 +204,8 @@ export const TokenBalanceListInner = forwardRef<
         ) : (
           <Flex fill grow justifyContent="center" style={containerProps?.emptyContainerStyle}>
             <BaseCard.ErrorState
-              retryButtonLabel="Retry"
-              title={t('Couldn’t load token balances')}
+              retryButtonLabel={t('common.button.retry')}
+              title={t('home.tokens.error.load')}
               onRetry={(): void | undefined => refetch?.()}
             />
           </Flex>

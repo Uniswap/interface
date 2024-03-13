@@ -29,6 +29,7 @@ import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import { DropdownSelector } from 'components/DropdownSelector'
 import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/TokenDetails/shared'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useFormatter } from 'utils/formatNumbers'
 import { DetailBubble } from './shared'
 
@@ -178,8 +179,15 @@ const ContractsDropdownRow = ({
   const theme = useTheme()
   const currency = tokens[0] && gqlToCurrency(tokens[0])
   const isPool = tokens.length === 2
+  const isNative = address === NATIVE_CHAIN_ID
   const explorerUrl =
-    chainId && address && getExplorerLink(chainId, address, isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN)
+    chainId &&
+    address &&
+    getExplorerLink(
+      chainId,
+      address,
+      isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN
+    )
 
   if (!chainId || !explorerUrl) {
     return (
@@ -419,15 +427,19 @@ export function DoubleTokenLogo({
   tokens: Array<Token | undefined>
   size?: number
 }) {
+  const token0IsNative = tokens?.[0]?.address === NATIVE_CHAIN_ID
+  const token1IsNative = tokens?.[1]?.address === NATIVE_CHAIN_ID
   const [src, nextSrc] = useTokenLogoSource({
     address: tokens?.[0]?.address,
     chainId,
-    primaryImg: tokens?.[0]?.project?.logo?.url,
+    primaryImg: token0IsNative ? undefined : tokens?.[0]?.project?.logo?.url,
+    isNative: token0IsNative,
   })
   const [src2, nextSrc2] = useTokenLogoSource({
     address: tokens?.[1]?.address,
     chainId,
-    primaryImg: tokens?.[1]?.project?.logo?.url,
+    primaryImg: token1IsNative ? undefined : tokens?.[1]?.project?.logo?.url,
+    isNative: token1IsNative,
   })
 
   return <DoubleLogo logo1={src} onError1={nextSrc} logo2={src2} onError2={nextSrc2} size={size} />

@@ -15,19 +15,16 @@ import useENSName from 'hooks/useENSName'
 import useLast from 'hooks/useLast'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import { Portal } from 'nft/components/common/Portal'
-import { useIsNftClaimAvailable } from 'nft/hooks/useIsNftClaimAvailable'
 import { darken } from 'polished'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { updateRecentConnectionMeta } from 'state/user/reducer'
 import styled from 'styled-components'
-import { colors } from 'theme/colors'
 import { flexRowNoWrap } from 'theme/styles'
 import { shortenAddress } from 'utilities/src/addresses'
 
-import { useUniTagsEnabled } from 'featureFlags/flags/uniTags'
 import { Icons } from 'ui/src'
-import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
+import { useUnitagByAddressWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
 import { RowBetween } from '../Row'
@@ -76,12 +73,10 @@ const Web3StatusConnectWrapper = styled.div`
 
 const Web3StatusConnected = styled(Web3StatusGeneric)<{
   pending?: boolean
-  isClaimAvailable?: boolean
 }>`
   background-color: ${({ pending, theme }) => (pending ? theme.accent1 : theme.surface1)};
   border: 1px solid ${({ pending, theme }) => (pending ? theme.accent1 : theme.surface1)};
   color: ${({ pending, theme }) => (pending ? theme.white : theme.neutral1)};
-  border: ${({ isClaimAvailable }) => isClaimAvailable && `1px solid ${colors.purple300}`};
   :hover,
   :focus {
     border: 1px solid ${({ theme }) => theme.surface2};
@@ -147,7 +142,7 @@ function Web3StatusInner() {
   const activeWeb3 = useWeb3React()
   const lastWeb3 = useLast(useWeb3React(), ignoreWhileSwitchingChain)
   const { account, connector } = useMemo(() => (activeWeb3.account ? activeWeb3 : lastWeb3), [activeWeb3, lastWeb3])
-  const { unitag } = useUnitagByAddress(account, useUniTagsEnabled() && Boolean(account))
+  const { unitag } = useUnitagByAddressWithoutFlag(account, Boolean(account))
   const { ENSName, loading: ENSLoading } = useENSName(account)
   const connection = getConnection(connector)
   const dispatch = useAppDispatch()
@@ -157,7 +152,6 @@ function Web3StatusInner() {
     sendAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
     toggleAccountDrawer()
   }, [toggleAccountDrawer])
-  const isClaimAvailable = useIsNftClaimAvailable((state) => state.isClaimAvailable)
 
   const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
 
@@ -213,7 +207,6 @@ function Web3StatusInner() {
           data-testid="web3-status-connected"
           onClick={handleWalletDropdownClick}
           pending={hasPendingActivity}
-          isClaimAvailable={isClaimAvailable}
         >
           {!hasPendingActivity && (
             <StatusIcon account={account} size={24} connection={connection} showMiniIcons={false} />

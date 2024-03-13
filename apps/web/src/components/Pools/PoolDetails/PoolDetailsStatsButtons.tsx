@@ -13,8 +13,7 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import { checkWarning, getPriorityWarning, NotFoundWarning } from 'constants/tokenSafety'
 import { Token } from 'graphql/data/__generated__/types-and-hooks'
-import { chainIdToBackendName } from 'graphql/data/util'
-import { useCurrency } from 'hooks/Tokens'
+import { chainIdToBackendName, gqlToCurrency } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { Swap } from 'pages/Swap'
@@ -158,8 +157,8 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
   const tokenId = position?.details.tokenId
   const switchChain = useSwitchChain()
   const navigate = useNavigate()
-  const currency0 = useCurrency(token0?.address, chainId)
-  const currency1 = useCurrency(token1?.address, chainId)
+  const currency0 = token0 && gqlToCurrency(token0)
+  const currency1 = token1 && gqlToCurrency(token1)
 
   // Mobile Balance Data
   const { data: balanceQuery } = useCachedPortfolioBalancesQuery({ account })

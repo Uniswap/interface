@@ -1,4 +1,5 @@
-import { TFunction, useTranslation } from 'react-i18next'
+import { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
@@ -31,10 +32,10 @@ export function SwapPendingNotification({
 function getNotificationText(wrapType: WrapType, t: TFunction): string {
   switch (wrapType) {
     case WrapType.NotApplicable:
-      return t('Swap pending')
+      return t('notification.swap.pending.swap')
     case WrapType.Unwrap:
-      return t('Unwrap pending')
+      return t('notification.swap.pending.unwrap')
     case WrapType.Wrap:
-      return t('Wrap pending')
+      return t('notification.swap.pending.wrap')
   }
 }

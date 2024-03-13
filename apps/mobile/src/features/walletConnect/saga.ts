@@ -23,8 +23,8 @@ import {
   setHasPendingSessionError,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { call, fork, put, take } from 'typed-redux-saga'
+import { config } from 'uniswap/src/config'
 import { logger } from 'utilities/src/logger/logger'
-import { config } from 'wallet/src/config'
 import { ALL_SUPPORTED_CHAIN_IDS, CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
 import { selectAccounts, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { EthEvent, EthMethod } from 'wallet/src/features/walletConnect/types'
@@ -202,14 +202,11 @@ function* handleSessionProposal(proposal: ProposalTypes.Struct) {
 
     const confirmed = yield* call(
       showAlert,
-      i18n.t('Connection Error'),
-      i18n.t(
-        `Uniswap Wallet currently supports {{ chains }}. Please only use "{{ dappName }}" on these chains`,
-        {
-          chains: chainLabels,
-          dappName: dapp.name,
-        }
-      )
+      i18n.t('walletConnect.error.connection.title'),
+      i18n.t('walletConnect.error.connection.message', {
+        chainNames: chainLabels,
+        dappName: dapp.name,
+      })
     )
     if (confirmed) {
       yield* put(setHasPendingSessionError(false))

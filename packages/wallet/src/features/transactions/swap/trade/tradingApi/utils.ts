@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sd
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
+import { logger } from 'utilities/src/logger/logger'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import {
   ClassicQuote,
@@ -13,9 +14,14 @@ import {
   V2PoolInRoute as TradingApiV2PoolInRoute,
   V3PoolInRoute as TradingApiV3PoolInRoute,
 } from 'wallet/src/data/tradingApi/__generated__/api'
+import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { QuoteData, SwapFee, Trade } from 'wallet/src/features/transactions/swap/trade/types'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { QuoteType } from 'wallet/src/features/transactions/utils'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
+import { currencyId } from 'wallet/src/utils/currencyId'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 const NATIVE_ADDRESS_FOR_TRADING_API = '0x0000000000000000000000000000000000000000'
@@ -262,4 +268,76 @@ export function getClassicQuoteFromResponse(quoteData?: QuoteData): ClassicQuote
     return undefined
   }
   return isClassicQuote(quoteData.quote?.quote) ? quoteData?.quote.quote : undefined
+}
+
+/**
+ * The trade object should always have the same currencies and amounts as the form values
+ * from state - to avoid bad swap submissions we should invalidate the trade object if there are mismatches.
+ */
+export function validateTrade({
+  trade,
+  currencyIn,
+  currencyOut,
+  exactAmount,
+  exactCurrencyField,
+  formatter,
+}: {
+  trade: Trade | null
+  currencyIn: Maybe<Currency>
+  currencyOut: Maybe<Currency>
+  exactAmount: Maybe<CurrencyAmount<Currency>>
+  exactCurrencyField: CurrencyField
+  formatter: LocalizationContextState
+}): Trade<Currency, Currency, TradeType> | null {
+  // skip if no valid trade object
+  if (!trade || !currencyIn || !currencyOut || !exactAmount) {
+    return null
+  }
+
+  const inputsMatch = areAddressesEqual(
+    currencyIn.wrapped.address,
+    trade?.inputAmount.currency.wrapped.address
+  )
+  const outputsMatch = areAddressesEqual(
+    currencyOut.wrapped.address,
+    trade.outputAmount.currency.wrapped.address
+  )
+
+  // TODO(MOB-3028): check if this logic needs any adjustments once we add UniswapX support.
+  // Verify the amount specified in the quote response matches the exact amount from input state
+  const exactAmountFromQuote =
+    trade.quoteData?.quoteType === QuoteType.RoutingApi
+      ? exactCurrencyField === CurrencyField.INPUT
+        ? trade.quoteData.quote?.quote
+        : trade.quoteData.quote?.amount
+      : isClassicQuote(trade.quoteData?.quote?.quote)
+      ? exactCurrencyField === CurrencyField.INPUT
+        ? trade.quoteData.quote.quote.input?.amount
+        : trade.quoteData.quote.quote.output?.amount
+      : undefined
+
+  const tokenAddressesMatch = inputsMatch && outputsMatch
+  const exactAmountsMatch = exactAmount?.toExact() !== exactAmountFromQuote
+
+  if (!(tokenAddressesMatch && exactAmountsMatch)) {
+    logger.error(
+      new Error(`Mismatched ${!tokenAddressesMatch ? 'address' : 'exact amount'} in swap trade`),
+      {
+        tags: { file: 'tradingApi/utils', function: 'validateTrade' },
+        extra: {
+          formState: {
+            currencyIdIn: currencyId(currencyIn),
+            currencyIdOut: currencyId(currencyOut),
+            exactAmount: exactAmount.toExact(),
+            exactCurrencyField,
+          },
+          tradeProperties: getBaseTradeAnalyticsProperties({ trade, formatter }),
+        },
+      }
+    )
+
+    return null
+  }
+
+  return trade
 }

@@ -1,25 +1,27 @@
 import { ApolloError, NetworkStatus } from '@apollo/client'
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useRestQuery } from 'uniswap/src/data/rest'
 import { logger } from 'utilities/src/logger/logger'
-import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { uniswapUrls } from 'wallet/src/constants/urls'
-import { useRestQuery } from 'wallet/src/data/rest'
 import {
   RoutingPreference,
   QuoteRequest as TradingApiQuoteRequest,
   QuoteResponse as TradingApiQuoteResponse,
   TradeType as TradingApiTradeType,
 } from 'wallet/src/data/tradingApi/__generated__/api'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 import {
   getTokenAddressForApiRequest,
   toTradingApiSupportedChainId,
   transformTradingApiResponseToTrade,
+  validateTrade,
 } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
 import { TradeWithStatus, UseTradeArgs } from 'wallet/src/features/transactions/swap/trade/types'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { areCurrencyIdsEqual, currencyId } from 'wallet/src/utils/currencyId'
 
@@ -31,6 +33,8 @@ export const SWAP_QUOTE_ERROR = 'QUOTE_ERROR'
 export const NO_QUOTE_DATA = 'NO_QUOTE_DATA'
 
 const DEFAULT_DEADLINE_S = 60 * 30 // 30 minutes in seconds
+
+export const SWAP_FORM_DEBOUNCE_TIME_MS = 250
 
 export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
   const {
@@ -44,9 +48,14 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
   } = args
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
+  const formatter = useLocalizationContext()
+
   /***** Format request arguments ******/
 
-  const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
+  const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(
+    amountSpecified,
+    SWAP_FORM_DEBOUNCE_TIME_MS
+  )
   const shouldDebounce =
     amountSpecified && debouncedAmountSpecified?.currency.chainId === otherCurrency?.chainId
   const amount = shouldDebounce ? debouncedAmountSpecified : amountSpecified
@@ -114,9 +123,9 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
     ['quote', 'permitData'],
     {
       pollInterval: pollingInterval ?? PollingInterval.Fast,
-      ttlMs: ONE_MINUTE_MS,
       skip: !quoteRequestArgs,
       notifyOnNetworkStatusChange: true,
+      fetchPolicy: 'no-cache',
     },
     'POST',
     TradingApiApolloClient
@@ -158,13 +167,25 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
       return { ...response, trade: null }
     }
 
-    const trade = transformTradingApiResponseToTrade({
+    const formattedTrade = transformTradingApiResponseToTrade({
       tokenInIsNative: Boolean(currencyIn?.isNative),
       tokenOutIsNative: Boolean(currencyOut?.isNative),
       tradeType,
       deadline: DEFAULT_DEADLINE_S,
       slippageTolerance: customSlippageTolerance,
       data,
+    })
+
+    const exactCurrencyField =
+      tradeType === TradeType.EXACT_INPUT ? CurrencyField.INPUT : CurrencyField.OUTPUT
+
+    const trade = validateTrade({
+      trade: formattedTrade,
+      currencyIn,
+      currencyOut,
+      exactAmount: amount,
+      exactCurrencyField,
+      formatter,
     })
 
     // If `transformTradingApiResponseToTrade` returns a `null` trade, it means we have a non-null quote, but no routes.
@@ -186,12 +207,14 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
       isFetching: networkStatus === NetworkStatus.poll,
     }
   }, [
+    amount,
     amountSpecified,
     currencyIn,
     currencyOut,
     customSlippageTolerance,
     data,
     error,
+    formatter,
     isDebouncing,
     isUSDQuote,
     loading,

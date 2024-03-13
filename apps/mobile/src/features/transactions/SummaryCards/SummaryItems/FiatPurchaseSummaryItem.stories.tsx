@@ -102,7 +102,7 @@ export const FiatPurchase: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseFaitPurchaseTx,
-          status: TransactionStatus.Cancelled,
+          status: TransactionStatus.Canceled,
         }}
       />
       <FiatPurchaseSummaryItem

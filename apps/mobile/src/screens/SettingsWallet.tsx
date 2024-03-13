@@ -133,7 +133,7 @@ export function SettingsWallet({
 
   const editNicknameSectionOption: SettingsSectionItem = {
     screen: Screens.SettingsWalletEdit,
-    text: t('Nickname'),
+    text: t('settings.setting.wallet.label'),
     icon: <TextEditIcon fill={colors.neutral2.get()} {...iconProps} />,
     screenProps: { address },
     isHidden: !!ensName || !!unitag?.username,
@@ -141,7 +141,7 @@ export function SettingsWallet({
 
   const sections: SettingsSection[] = [
     {
-      subTitle: t('Wallet preferences'),
+      subTitle: t('settings.setting.wallet.preferences.title'),
       data: [
         ...(showEditProfile ? [] : [editNicknameSectionOption]),
         {
@@ -152,12 +152,12 @@ export function SettingsWallet({
               onValueChange={onChangeNotificationSettings}
             />
           ),
-          text: t('Notifications'),
+          text: t('settings.setting.wallet.notifications.title'),
           icon: <NotificationIcon {...iconProps} />,
         },
         {
           screen: Screens.SettingsWalletManageConnection,
-          text: t('Manage connections'),
+          text: t('settings.setting.wallet.connections.title'),
           icon: <GlobalIcon {...iconProps} />,
           screenProps: { address },
           isHidden: readonly,
@@ -225,7 +225,7 @@ export function SettingsWallet({
           />
         </Flex>
         <Button testID={ElementName.Remove} theme="detrimental" onPress={onRemoveWallet}>
-          {t('Remove wallet')}
+          {t('settings.setting.wallet.action.remove')}
         </Button>
       </Flex>
     </Screen>
@@ -275,7 +275,9 @@ function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
           size="medium"
           theme="secondary_Button"
           onPress={onPressEditProfile}>
-          {unitag?.username ? t('Edit profile') : t('Edit label')}
+          {unitag?.username
+            ? t('settings.setting.wallet.action.editProfile')
+            : t('settings.setting.wallet.action.editLabel')}
         </Button>
       )}
     </Flex>

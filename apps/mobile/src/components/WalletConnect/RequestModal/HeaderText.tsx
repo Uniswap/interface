@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { Trans } from 'react-i18next'
 import { truncateDappName } from 'src/components/WalletConnect/ScanSheet/util'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { Text } from 'ui/src'
@@ -16,7 +16,6 @@ export function HeaderText({
   permitAmount?: number
   permitCurrency?: Currency | null
 }): JSX.Element {
-  const { t } = useTranslation()
   const { dapp, type: method } = request
 
   if (permitCurrency) {
@@ -27,39 +26,65 @@ export function HeaderText({
     })?.toExact()
 
     return readablePermitAmount ? (
-      <Trans t={t}>
-        <Text textAlign="center" variant="heading3">
-          Allow {dapp.name} to use up to
-          <Text fontWeight="bold"> {readablePermitAmount} </Text>
-          {permitCurrency?.symbol}?
-        </Text>
-      </Trans>
+      <Text textAlign="center" variant="heading3">
+        <Trans
+          components={{ highlight: <Text fontWeight="bold" /> }}
+          i18nKey="qrScanner.request.withAmount"
+          values={{
+            dappName: dapp.name,
+            currencySymbol: permitCurrency?.symbol,
+            amount: readablePermitAmount,
+          }}
+        />
+      </Text>
     ) : (
-      <Trans t={t}>
-        <Text textAlign="center" variant="heading3">
-          Allow <Text fontWeight="bold">{dapp.name}</Text> to use your {permitCurrency?.symbol}?
-        </Text>
-      </Trans>
+      <Text textAlign="center" variant="heading3">
+        <Trans
+          components={{ highlight: <Text fontWeight="bold" /> }}
+          i18nKey="qrScanner.request.withoutAmount"
+          values={{
+            dappName: dapp.name,
+            currencySymbol: permitCurrency?.symbol,
+          }}
+        />
+      </Text>
     )
   }
 
-  const getReadableMethodName = (ethMethod: EthMethod): string => {
+  const getReadableMethodName = (ethMethod: EthMethod, dappNameOrUrl: string): JSX.Element => {
     switch (ethMethod) {
       case EthMethod.PersonalSign:
       case EthMethod.EthSign:
       case EthMethod.SignTypedData:
-        return t('Signature request from')
+        return (
+          <Trans
+            components={{ highlight: <Text fontWeight="bold" /> }}
+            i18nKey="qrScanner.request.method.signature"
+            values={{ dappNameOrUrl }}
+          />
+        )
       case EthMethod.EthSendTransaction:
-        return t('Transaction request from')
+        return (
+          <Trans
+            components={{ highlight: <Text fontWeight="bold" /> }}
+            i18nKey="qrScanner.request.method.transaction"
+            values={{ dappNameOrUrl }}
+          />
+        )
     }
 
-    return t('Request from')
+    return (
+      <Trans
+        components={{ highlight: <Text fontWeight="bold" /> }}
+        i18nKey="qrScanner.request.method.default"
+        values={{ dappNameOrUrl }}
+      />
+    )
   }
 
   return (
     <Text textAlign="center" variant="heading3">
-      <Text>{getReadableMethodName(method)}</Text>
-      <Text fontWeight="bold"> {truncateDappName(dapp.name || dapp.url)}</Text>
+      {getReadableMethodName(method, truncateDappName(dapp.name || dapp.url))}
     </Text>
   )
 }

@@ -1,13 +1,14 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { SharedEventName } from '@uniswap/analytics-events'
+import { TFunction } from 'i18next'
 import React, { useCallback, useEffect, useState } from 'react'
-import { TFunction, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
-import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
+import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
@@ -62,11 +63,11 @@ const getErrorText = ({
   t: TFunction
 }): string | undefined => {
   if (walletExists) {
-    return t('This address is already imported')
+    return t('account.wallet.watch.error.alreadyImported')
   } else if (isSmartContractAddress) {
-    return t('Address is a smart contract')
+    return t('account.wallet.watch.error.smartContract')
   } else if (!loading) {
-    return t('Address not found')
+    return t('account.wallet.watch.error.notFound')
   }
   return undefined
 }
@@ -165,7 +166,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   }, [value])
 
   return (
-    <SafeKeyboardOnboardingScreen title={t('Enter a wallet address')}>
+    <SafeKeyboardOnboardingScreen title={t('account.wallet.watch.title')}>
       <Flex $short={{ gap: '$none' }} gap="$spacing12">
         <GenericImportForm
           blurOnSubmit
@@ -173,7 +174,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           inputAlignment="flex-start"
           inputSuffix={isAddress || hasSuffixIncluded ? undefined : '.eth'}
           liveCheck={showLiveCheck}
-          placeholderLabel={t('ENS or address')}
+          placeholderLabel={t('account.wallet.watch.placeholder')}
           shouldUseMinHeight={false}
           textAlign="left"
           value={value}
@@ -192,14 +193,12 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           p="$spacing16">
           <Icons.GraduationCap color="$neutral2" size="$icon.20" />
           <Text color="$neutral2" flexShrink={1} variant="body3">
-            {t(
-              'Adding a view-only wallet allows you to try out the app or track a wallet. You will not be able to swap or send funds.'
-            )}
+            {t('account.wallet.watch.message')}
           </Text>
         </Flex>
       </Flex>
       <Button disabled={!isValid} testID={ElementName.Next} onPress={onSubmit}>
-        {t('Continue')}
+        {t('common.button.continue')}
       </Button>
     </SafeKeyboardOnboardingScreen>
   )

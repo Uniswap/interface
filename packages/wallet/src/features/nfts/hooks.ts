@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
+import { GqlResult } from 'uniswap/src/data/types'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { NftsQuery, useNftsQuery } from 'wallet/src/data/__generated__/types-and-hooks'
-import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { selectNftsData } from 'wallet/src/features/favorites/selectors'
 import { AccountToNftData } from 'wallet/src/features/favorites/slice'
 import {

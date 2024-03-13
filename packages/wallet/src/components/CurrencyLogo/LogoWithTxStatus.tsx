@@ -12,7 +12,6 @@ import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIco
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
-import { MELD_ICON_SIZE_MULTIPLIER } from 'wallet/src/features/fiatOnRamp/utils'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
@@ -66,8 +65,8 @@ function getLogo(props: LogoWithTxStatusProps): JSX.Element {
       return (
         <ImageUri
           imageStyle={{
-            height: size * MELD_ICON_SIZE_MULTIPLIER,
-            width: size * MELD_ICON_SIZE_MULTIPLIER,
+            height: size,
+            width: size,
           }}
           uri={serviceProviderLogoUrl}
         />

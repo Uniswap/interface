@@ -15,6 +15,8 @@ const workspaceRoot = path.resolve(mobileRoot, '../..')
 
 const watchFolders = [mobileRoot, `${workspaceRoot}/node_modules`, `${workspaceRoot}/packages`]
 
+const detoxExtensions = process.env.DETOX_MODE === 'mocked' ? ['mock.tsx', 'mock.ts'] : []
+
 module.exports = (async () => {
   const {
     resolver: { sourceExts, assetExts },
@@ -23,7 +25,8 @@ module.exports = (async () => {
     resolver: {
       nodeModulesPaths: [`${workspaceRoot}/node_modules`],
       assetExts: assetExts.filter((ext) => ext !== 'svg'),
-      sourceExts: [...sourceExts, 'svg', 'cjs'],
+      // detox mocking works properly only being spreaded at the beginning of sourceExts array
+      sourceExts: [...detoxExtensions, ...sourceExts, 'svg', 'cjs']
     },
     transformer: {
       getTransformOptions: async () => ({

@@ -317,16 +317,16 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
                 >
                   <img
                     class="c11"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                    src="ethereum-logo.png"
                   />
                 </div>
               </div>
               82.5K 
               <a
                 class="c12"
-                href="/explore/tokens/ethereum/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+                href="/explore/tokens/ethereum/NATIVE"
               >
-                WETH
+                ETH
               </a>
             </div>
           </div>
@@ -768,7 +768,7 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
               82.5K 
               <a
                 class="c9"
-                href="/explore/tokens/ethereum/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
+                href="/explore/tokens/ethereum/NATIVE"
               >
                 <div
                   class="c10"
@@ -779,11 +779,11 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
                   >
                     <img
                       class="c12"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                      src="ethereum-logo.png"
                     />
                   </div>
                 </div>
-                WETH
+                ETH
               </a>
             </div>
           </div>

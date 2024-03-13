@@ -11,7 +11,6 @@ ignores: [
     "@typechain/ethers-v5",
     "@vanilla-extract/jest-transform",
     "buffer",
-    "patch-package",
     "swc-loader",
     "postinstall-postinstall",
     "process",
@@ -41,7 +40,6 @@ ignores: [
     "@walletconnect/ethereum-provider",
     "@testing-library/dom",
     ## Internal packages / workspaces
-    "wallet",
     "utilities",
     "ui",
     ## Top level local file paths

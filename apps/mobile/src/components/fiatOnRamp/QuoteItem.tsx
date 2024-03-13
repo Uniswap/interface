@@ -90,13 +90,15 @@ export function FORQuoteItem({
               <Flex alignItems="flex-end" gap="$spacing4">
                 {quoteAmount && (
                   <Text color="$neutral1" variant="body3">
-                    {t('Receive {{amount}}', {
-                      amount: `${quoteAmount + getSymbolDisplayText(currency?.symbol)}`,
+                    {t('fiatOnRamp.quote.amount', {
+                      tokenAmount: `${quoteAmount + getSymbolDisplayText(currency?.symbol)}`,
                     })}
                   </Text>
                 )}
                 <Text color="$neutral2" variant="body3">
-                  {t('{{amount}} after fees', { amount: quoteEquivalentInSourceCurrencyAmount })}
+                  {t('fiatOnRamp.quote.amountAfterFees', {
+                    tokenAmount: quoteEquivalentInSourceCurrencyAmount,
+                  })}
                 </Text>
               </Flex>
               {showCarret ? (

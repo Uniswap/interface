@@ -91,9 +91,7 @@ describe('SwapBuyFiatButton.tsx', () => {
 
   it('fiat on ramps unavailable in region', async () => {
     // we get flushSync errors only from Popper used in here, for now disabling this as an error
-    jest.spyOn(console, 'error').mockImplementation((...args) => {
-      process.stdout.write(`${args.join(' ')}`)
-    })
+    const error = jest.spyOn(console, 'error').mockReturnValue(undefined)
     mockUseFiatOnrampAvailability.mockImplementation(mockUseFiatOnRampsUnavailable)
     mockUseSetShowMoonpayText.mockImplementation(() => setShowMoonpayTextInDrawer)
     mockuseAccountDrawer.mockImplementation(() => [false, toggleWalletDrawer])
@@ -103,5 +101,10 @@ describe('SwapBuyFiatButton.tsx', () => {
     expect(await screen.findByTestId('fiat-on-ramp-unavailable-tooltip')).toBeInTheDocument()
     expect(await screen.findByText(/Learn more/i)).toHaveAttribute('href', MOONPAY_REGION_AVAILABILITY_ARTICLE)
     expect(await screen.findByTestId('buy-fiat-button')).toBeDisabled()
+    expect(error).toHaveBeenCalledTimes(2)
+    expect(error).toHaveBeenCalledWith(
+      'Warning: flushSync was called from inside a lifecycle method. React cannot flush when React is already rendering. Consider moving this call to a scheduler task or micro task.%s',
+      expect.anything()
+    )
   })
 })

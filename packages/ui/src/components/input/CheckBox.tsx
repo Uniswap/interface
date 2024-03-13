@@ -20,7 +20,7 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
 
   return (
     <TouchableArea onPress={onPress}>
-      <Flex row gap="$spacing12">
+      <Flex row gap="$spacing12" px="$spacing4">
         <Flex
           alignItems="center"
           backgroundColor={checked ? '$neutral1' : '$surface1'}

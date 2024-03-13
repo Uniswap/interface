@@ -25,7 +25,7 @@ import {
   useUniconV2Colors,
 } from 'ui/src'
 import { ENS_LOGO } from 'ui/src/assets'
-import { iconSizes, imageSizes, spacing } from 'ui/src/theme'
+import { iconSizes, imageSizes } from 'ui/src/theme'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useENSDescription, useENSName, useENSTwitterUsername } from 'wallet/src/features/ens/api'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
@@ -215,7 +215,7 @@ export const ProfileHeader = memo(function ProfileHeader({
           {(twitter || showENSName) && (
             <ScrollView
               horizontal
-              contentContainerStyle={{ paddingHorizontal: spacing.spacing24 }}
+              contentContainerStyle={{ px: '$spacing24' }}
               showsHorizontalScrollIndicator={false}>
               <Flex row gap="$spacing16">
                 {twitter ? (
@@ -283,7 +283,7 @@ export const ProfileHeader = memo(function ProfileHeader({
                   color="$neutral2"
                   maxFontSizeMultiplier={1.2}
                   variant="buttonLabel2">
-                  {t('Send')}
+                  {t('common.button.send')}
                 </Text>
               </Flex>
             </TouchableArea>

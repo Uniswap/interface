@@ -1,7 +1,7 @@
 import { ColorValue, FlexStyle } from 'react-native'
 import { Flex, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { isAndroid } from 'wallet/src/utils/platform'
+import { isAndroid } from 'uniswap/src/utils/platform'
 
 const HANDLEBAR_HEIGHT = spacing.spacing4
 const HANDLEBAR_WIDTH = spacing.spacing36

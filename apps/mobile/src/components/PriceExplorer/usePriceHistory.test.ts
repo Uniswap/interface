@@ -5,47 +5,38 @@ import { renderHookWithProviders } from 'src/test/render'
 import {
   HistoryDuration,
   TimestampedAmount,
-  TokenMarket as TokenMarketType,
   TokenProject as TokenProjectType,
 } from 'wallet/src/data/__generated__/types-and-hooks'
-import { SAMPLE_CURRENCY_ID_1, faker } from 'wallet/src/test/fixtures'
 import {
-  EthToken,
-  TokenDayPriceHistory,
-  TokenMarket,
-  TokenProjectDay,
-  TokenProjectWeek,
-  TokenProjectYear,
-  TokenProjects,
-  TokenWeekPriceHistory,
-  TokenYearPriceHistory,
-} from 'wallet/src/test/gqlFixtures'
+  SAMPLE_CURRENCY_ID_1,
+  getLatestPrice,
+  priceHistory,
+  timestampedAmount,
+  token,
+  tokenMarket,
+  tokenProject,
+  tokenProjectMarket,
+  usdcTokenProject,
+} from 'wallet/src/test/fixtures'
+import { queryResolvers } from 'wallet/src/test/utils'
 
-const mockHistoryPrice = (price: number): TimestampedAmount => ({
-  id: faker.datatype.uuid(),
-  timestamp: faker.date.past(/*year=*/ 2).getMilliseconds(),
-  value: price,
-})
+const mockTokenProjectsQuery = (historyPrices: number[]) => (): TokenProjectType[] => {
+  const history = historyPrices.map((value) => timestampedAmount({ value }))
 
-const mockTokenProject = (priceHistory: TokenMarketType['priceHistory']): TokenProjectType => ({
-  ...TokenProjectDay,
-  markets: [
-    {
-      ...TokenProjectDay.markets![0]!,
-      priceHistory,
-      price: {
-        ...TokenProjectDay.markets![0]!.price!,
-        value: (priceHistory && priceHistory[priceHistory.length - 1]?.value) ?? 0,
-      },
-    },
-  ],
-})
+  return [
+    tokenProject({
+      markets: [
+        tokenProjectMarket({
+          priceHistory: history,
+          price: getLatestPrice(history),
+        }),
+      ],
+    }),
+  ]
+}
 
-const mockTokenProjectsQuery = (historyPrices: number[]) => (): TokenProjectType[] =>
-  [mockTokenProject(historyPrices.map(mockHistoryPrice))]
-
-const formatPriceHistory = (priceHistory: TimestampedAmount[]): Omit<TimestampedAmount, 'id'>[] =>
-  priceHistory.map(({ timestamp, value }) => ({ value, timestamp: timestamp * 1000 }))
+const formatPriceHistory = (history: TimestampedAmount[]): Omit<TimestampedAmount, 'id'>[] =>
+  history.map(({ timestamp, value }) => ({ value, timestamp: timestamp * 1000 }))
 
 describe(useTokenPriceHistory, () => {
   it('returns correct initial values', async () => {
@@ -70,17 +61,12 @@ describe(useTokenPriceHistory, () => {
   })
 
   it('returns on-chain spot price if off-chain spot price is not available', async () => {
+    const market = tokenMarket()
+    const { resolvers } = queryResolvers({
+      tokenProjects: () => [usdcTokenProject({ markets: null, tokens: [token({ market })] })],
+    })
     const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
-      resolvers: {
-        Query: {
-          tokenProjects: () =>
-            TokenProjects.map((project) => ({
-              ...project,
-              markets: null,
-              tokens: [{ ...EthToken, market: TokenMarket }],
-            })),
-        },
-      },
+      resolvers,
     })
 
     await waitFor(() => {
@@ -89,19 +75,18 @@ describe(useTokenPriceHistory, () => {
     })
 
     expect(result.current.data?.spot).toEqual({
-      value: { value: TokenMarket.price?.value },
-      relativeChange: { value: TokenMarket.pricePercentChange?.value },
+      value: { value: market.price?.value },
+      relativeChange: { value: market.pricePercentChange?.value },
     })
   })
 
   describe('correct number of digits', () => {
     it('for max price greater than 1', async () => {
+      const { resolvers } = queryResolvers({
+        tokenProjects: mockTokenProjectsQuery([0.00001, 1, 111_111_111.1111]),
+      })
       const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
-        resolvers: {
-          Query: {
-            tokenProjects: mockTokenProjectsQuery([0.00001, 1, 111_111_111.1111]),
-          },
-        },
+        resolvers,
       })
 
       await waitFor(() => {
@@ -116,12 +101,11 @@ describe(useTokenPriceHistory, () => {
     })
 
     it('for max price less than 1', async () => {
+      const { resolvers } = queryResolvers({
+        tokenProjects: mockTokenProjectsQuery([0.001, 0.002]),
+      })
       const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
-        resolvers: {
-          Query: {
-            tokenProjects: mockTokenProjectsQuery([0.001, 0.002]),
-          },
-        },
+        resolvers,
       })
 
       await waitFor(() => {
@@ -136,12 +120,9 @@ describe(useTokenPriceHistory, () => {
     })
 
     it('for max price equal to 1', async () => {
+      const { resolvers } = queryResolvers({ tokenProjects: mockTokenProjectsQuery([0.1, 1]) })
       const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
-        resolvers: {
-          Query: {
-            tokenProjects: mockTokenProjectsQuery([0.1, 1]),
-          },
-        },
+        resolvers,
       })
 
       await waitFor(() => {
@@ -158,25 +139,37 @@ describe(useTokenPriceHistory, () => {
 
   describe('correct price history', () => {
     it('properly formats price history entries', async () => {
-      const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1))
+      const history = priceHistory()
+      const { resolvers } = queryResolvers({
+        tokenProjects: () => [usdcTokenProject({ priceHistory: history })],
+      })
+      const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
+        resolvers,
+      })
 
       await waitFor(() => {
         expect(result.current.loading).toBe(false)
         expect(result.current.error).toBe(false)
       })
 
-      expect(result.current.data?.priceHistory).toEqual(formatPriceHistory(TokenDayPriceHistory))
+      expect(result.current.data?.priceHistory).toEqual(formatPriceHistory(history))
     })
 
     it('filters out invalid price history entries', async () => {
-      const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
-        resolvers: {
-          Query: {
-            tokenProjects: () => [
-              mockTokenProject([null, mockHistoryPrice(1), null, mockHistoryPrice(2)]),
+      const { resolvers } = queryResolvers({
+        tokenProjects: () => [
+          usdcTokenProject({
+            priceHistory: [
+              null,
+              timestampedAmount({ value: 1 }),
+              null,
+              timestampedAmount({ value: 2 }),
             ],
-          },
-        },
+          }),
+        ],
+      })
+      const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
+        resolvers,
       })
 
       await waitFor(() => {
@@ -197,149 +190,193 @@ describe(useTokenPriceHistory, () => {
     })
   })
 
-  describe('when duration is set to default value (day)', () => {
-    it('returns correct price history', async () => {
-      const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1))
+  describe('different durations', () => {
+    const dayPriceHistory = priceHistory({ duration: HistoryDuration.Day })
+    const weekPriceHistory = priceHistory({ duration: HistoryDuration.Week })
+    const monthPriceHistory = priceHistory({ duration: HistoryDuration.Month })
+    const yearPriceHistory = priceHistory({ duration: HistoryDuration.Year })
 
-      await waitFor(() => {
-        expect(result.current).toEqual(
-          expect.objectContaining({
-            data: {
-              priceHistory: formatPriceHistory(TokenDayPriceHistory),
-              spot: expect.anything(),
-            },
-            selectedDuration: HistoryDuration.Day,
-          })
-        )
-      })
+    const dayTokenProject = usdcTokenProject({ priceHistory: dayPriceHistory })
+    const weekTokenProject = usdcTokenProject({ priceHistory: weekPriceHistory })
+    const monthTokenProject = usdcTokenProject({ priceHistory: monthPriceHistory })
+    const yearTokenProject = usdcTokenProject({ priceHistory: yearPriceHistory })
+
+    const { resolvers } = queryResolvers({
+      tokenProjects: (parent, args, context, info) => {
+        switch (info.variableValues.duration) {
+          case HistoryDuration.Day:
+            return [dayTokenProject]
+          case HistoryDuration.Week:
+            return [weekTokenProject]
+          case HistoryDuration.Month:
+            return [monthTokenProject]
+          case HistoryDuration.Year:
+            return [yearTokenProject]
+          default:
+            return [dayTokenProject]
+        }
+      },
     })
 
-    it('returns correct spot price', async () => {
-      const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1))
+    describe('when duration is set to default value (day)', () => {
+      it('returns correct price history', async () => {
+        const { result } = renderHookWithProviders(
+          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1),
+          { resolvers }
+        )
 
-      await waitFor(() => {
-        expect(result.current.data?.spot).toEqual({
-          value: { value: TokenProjectDay.markets?.[0]?.price?.value },
-          relativeChange: { value: TokenProjectDay.markets?.[0]?.pricePercentChange24h?.value },
+        await waitFor(() => {
+          expect(result.current).toEqual(
+            expect.objectContaining({
+              data: {
+                priceHistory: formatPriceHistory(dayPriceHistory),
+                spot: expect.anything(),
+              },
+              selectedDuration: HistoryDuration.Day,
+            })
+          )
+        })
+      })
+
+      it('returns correct spot price', async () => {
+        const { result } = renderHookWithProviders(
+          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1),
+          { resolvers }
+        )
+
+        await waitFor(() => {
+          expect(result.current.data?.spot).toEqual({
+            value: { value: dayTokenProject.markets[0]?.price.value },
+            relativeChange: { value: dayTokenProject.markets[0]?.pricePercentChange24h.value },
+          })
         })
       })
     })
-  })
 
-  describe('when duration is set to non-default value (year)', () => {
-    it('returns correct price history', async () => {
-      const { result } = renderHookWithProviders(() =>
-        useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, jest.fn(), HistoryDuration.Year)
-      )
-
-      await waitFor(() => {
-        expect(result.current).toEqual(
-          expect.objectContaining({
-            data: {
-              priceHistory: formatPriceHistory(TokenYearPriceHistory),
-              spot: expect.anything(),
-            },
-            selectedDuration: HistoryDuration.Year,
-          })
+    describe('when duration is set to non-default value (year)', () => {
+      it('returns correct price history', async () => {
+        const { result } = renderHookWithProviders(
+          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, jest.fn(), HistoryDuration.Year),
+          { resolvers }
         )
+
+        await waitFor(() => {
+          expect(result.current).toEqual(
+            expect.objectContaining({
+              data: {
+                priceHistory: formatPriceHistory(yearPriceHistory),
+                spot: expect.anything(),
+              },
+              selectedDuration: HistoryDuration.Year,
+            })
+          )
+        })
       })
-    })
 
-    it('returns correct spot price', async () => {
-      const { result } = renderHookWithProviders(() =>
-        useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, jest.fn(), HistoryDuration.Year)
-      )
-
-      await waitFor(() => {
-        expect(result.current.data?.spot).toEqual({
-          value: { value: TokenProjectYear.markets?.[0]?.price?.value },
-          relativeChange: { value: TokenProjectYear.markets?.[0]?.pricePercentChange24h?.value },
+      it('returns correct spot price', async () => {
+        const { result } = renderHookWithProviders(
+          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, jest.fn(), HistoryDuration.Year),
+          { resolvers }
+        )
+        await waitFor(() => {
+          expect(result.current.data?.spot).toEqual({
+            value: { value: yearTokenProject.markets[0]?.price?.value },
+            relativeChange: { value: yearTokenProject.markets[0]?.pricePercentChange24h?.value },
+          })
         })
       })
     })
-  })
 
-  describe('when duration is changed', () => {
-    it('re-fetches data', async () => {
-      const onCompleted = jest.fn()
-      const { result } = renderHookWithProviders(() =>
-        useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, onCompleted)
-      )
-
-      await waitFor(() => {
-        expect(result.current).toEqual(
-          expect.objectContaining({
-            loading: false,
-            error: false,
-            selectedDuration: HistoryDuration.Day,
-          })
+    describe('when duration is changed', () => {
+      it('re-fetches data', async () => {
+        const onCompleted = jest.fn()
+        const { result } = renderHookWithProviders(
+          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, onCompleted),
+          { resolvers }
         )
-      })
-      expect(onCompleted).toHaveBeenCalledTimes(1)
 
-      // Change duration
-      await act(() => {
-        result.current.setDuration(HistoryDuration.Week)
+        await waitFor(() => {
+          expect(result.current).toEqual(
+            expect.objectContaining({
+              loading: false,
+              error: false,
+              selectedDuration: HistoryDuration.Day,
+            })
+          )
+        })
+
+        expect(onCompleted).toHaveBeenCalledTimes(1)
+
+        // Change duration
+        await act(() => {
+          result.current.setDuration(HistoryDuration.Week)
+        })
+
+        await waitFor(() => {
+          expect(result.current).toEqual(
+            expect.objectContaining({
+              loading: false,
+              error: false,
+              selectedDuration: HistoryDuration.Week,
+            })
+          )
+        })
+
+        expect(onCompleted).toHaveBeenCalledTimes(2)
       })
 
-      await waitFor(() => {
-        expect(result.current).toEqual(
-          expect.objectContaining({
-            loading: false,
-            error: false,
-            selectedDuration: HistoryDuration.Week,
-          })
+      it('returns new price history and spot price', async () => {
+        const { result } = renderHookWithProviders(
+          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1),
+          { resolvers }
         )
+
+        await waitFor(() => {
+          expect(result.current.data).toEqual({
+            priceHistory: formatPriceHistory(dayPriceHistory),
+            spot: {
+              value: { value: dayTokenProject.markets[0]?.price.value },
+              relativeChange: { value: dayTokenProject.markets[0]?.pricePercentChange24h.value },
+            },
+          })
+        })
+
+        // Change duration
+        await act(() => {
+          result.current.setDuration(HistoryDuration.Week)
+        })
+
+        await waitFor(() => {
+          expect(result.current.data).toEqual({
+            priceHistory: formatPriceHistory(weekPriceHistory),
+            spot: {
+              value: { value: weekTokenProject.markets[0]?.price?.value },
+              relativeChange: {
+                value: weekTokenProject.markets[0]?.pricePercentChange24h?.value,
+              },
+            },
+          })
+        })
       })
-      expect(onCompleted).toHaveBeenCalledTimes(2)
     })
 
-    it('returns new price history and spot price', async () => {
-      const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1))
-
-      await waitFor(() => {
-        expect(result.current.data).toEqual({
-          priceHistory: formatPriceHistory(TokenDayPriceHistory),
-          spot: {
-            value: { value: TokenProjectDay.markets?.[0]?.price?.value },
-            relativeChange: { value: TokenProjectDay.markets?.[0]?.pricePercentChange24h?.value },
+    describe('error handling', () => {
+      it('returns error if query has no data and there is no loading state', async () => {
+        jest.spyOn(console, 'error').mockImplementation(() => undefined)
+        const { resolvers: errorResolvers } = queryResolvers({
+          tokenProjects: () => {
+            throw new Error('error')
           },
         })
-      })
+        const { result } = renderHookWithProviders(
+          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1),
+          { resolvers: errorResolvers }
+        )
 
-      // Change duration
-      await act(() => {
-        result.current.setDuration(HistoryDuration.Week)
-      })
-
-      await waitFor(() => {
-        expect(result.current.data).toEqual({
-          priceHistory: formatPriceHistory(TokenWeekPriceHistory),
-          spot: {
-            value: { value: TokenProjectWeek.markets?.[0]?.price?.value },
-            relativeChange: { value: TokenProjectWeek.markets?.[0]?.pricePercentChange24h?.value },
-          },
+        await waitFor(() => {
+          expect(result.current.loading).toBe(false)
+          expect(result.current.error).toBe(true)
         })
-      })
-    })
-  })
-
-  describe('error handling', () => {
-    it('returns error if query has no data and there is no loading state', async () => {
-      jest.spyOn(console, 'error').mockImplementation(() => undefined)
-      const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
-        resolvers: {
-          Query: {
-            tokenProjects: () => {
-              throw new Error('error')
-            },
-          },
-        },
-      })
-
-      await waitFor(() => {
-        expect(result.current.loading).toBe(false)
-        expect(result.current.error).toBe(true)
       })
     })
   })

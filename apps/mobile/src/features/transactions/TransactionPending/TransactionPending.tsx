@@ -51,7 +51,7 @@ export function TransactionPending({
           {transaction?.status === TransactionStatus.Failed ? (
             <TouchableArea onPress={onTryAgain}>
               <Text color="$accent1" variant="body1">
-                {t('Try again')}
+                {t('common.button.tryAgain')}
               </Text>
             </TouchableArea>
           ) : null}
@@ -63,11 +63,11 @@ export function TransactionPending({
             testID="transaction-pending-view"
             theme="tertiary"
             onPress={onPressViewTransaction}>
-            {t('View transaction')}
+            {t('swap.button.view')}
           </Button>
         ) : null}
         <Button testID={ElementName.OK} onPress={onNext}>
-          {t('Close')}
+          {t('common.button.close')}
         </Button>
       </Flex>
     </AnimatedFlex>

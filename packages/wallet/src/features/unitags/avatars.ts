@@ -1,11 +1,11 @@
 import axios from 'axios'
 import { Platform } from 'react-native'
-import { logger } from 'utilities/src/logger/logger'
-import { getUnitagAvatarUploadUrl, updateUnitagMetadata } from 'wallet/src/features/unitags/api'
 import {
   UnitagAvatarUploadCredentials,
   UnitagGetAvatarUploadUrlResponse,
-} from 'wallet/src/features/unitags/types'
+} from 'uniswap/src/features/unitags/types'
+import { logger } from 'utilities/src/logger/logger'
+import { getUnitagAvatarUploadUrl, updateUnitagMetadata } from 'wallet/src/features/unitags/api'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 

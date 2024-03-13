@@ -7,9 +7,8 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap } from 'theme/styles'
 import { getWalletMeta } from 'utils/walletMeta'
 
-import { useUniTagsEnabled } from 'featureFlags/flags/uniTags'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
-import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
+import { useUnitagByAddressWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import sockImg from '../../assets/svg/socks.svg'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import Identicon from '../Identicon'
@@ -96,7 +95,7 @@ const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'l
 }
 
 const MainWalletIcon = ({ account, connection, size }: { account: string; connection: Connection; size: number }) => {
-  const { unitag } = useUnitagByAddress(account, useUniTagsEnabled() && Boolean(account))
+  const { unitag } = useUnitagByAddressWithoutFlag(account, Boolean(account))
   const { avatar } = useENSAvatar(account ?? undefined)
 
   if (!account) return null

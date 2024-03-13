@@ -1,7 +1,7 @@
 import { InMemoryCache } from '@apollo/client'
 import { MMKVWrapper, persistCache } from 'apollo3-cache-persist'
+import { setupWalletCache } from 'uniswap/src/data/cache'
 import { logger } from 'utilities/src/logger/logger'
-import { setupWalletCache } from 'wallet/src/data/cache'
 
 const MAX_CACHE_SIZE_IN_BYTES = 1024 * 1024 * 25 // 25 MB
 

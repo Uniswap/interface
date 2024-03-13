@@ -1,7 +1,9 @@
-import i18n from 'i18next'
+import 'wallet/src/i18n/locales/@types/i18next.d.ts'
+
+import i18n, { TFunction } from 'i18next'
 import { initReactI18next } from 'react-i18next'
-import { AppTFunction } from 'ui/src/i18n/types'
-import enUS from './locales/en-US.json'
+import { logger } from 'utilities/src/logger/logger'
+import enUS from './locales/source/en-US.json'
 import esES from './locales/translations/es-ES.json'
 import frFR from './locales/translations/fr-FR.json'
 import hiIN from './locales/translations/hi-IN.json'
@@ -43,22 +45,42 @@ export const resources = {
 
 export const defaultNS = 'translation'
 
-export const changeLanguage = async (str: string): Promise<AppTFunction> => {
+export const changeLanguage = async (str: string): Promise<TFunction> => {
   return await i18n.changeLanguage(str)
 }
 
-export function initializeTranslation(): void {
-  i18n
-    .use(initReactI18next)
-    .init({
-      defaultNS,
-      lng: 'en-US',
-      resources,
-      interpolation: {
-        escapeValue: false, // react already safes from xss
-      },
-    })
-    .catch(() => undefined)
-}
+i18n
+  .use(initReactI18next)
+  .init({
+    defaultNS,
+    lng: 'en-US',
+    fallbackLng: 'en-US',
+    resources,
+    interpolation: {
+      escapeValue: false, // react already safes from xss
+    },
+    react: {
+      transSupportBasicHtmlNodes: false, // disabling since this breaks for mobile
+    },
+    missingInterpolationHandler: (text) => {
+      logger.error(`Missing i18n interpolation value for text: ${text}`, {
+        tags: {
+          file: 'i18n.ts',
+          function: 'init',
+        },
+      })
+      return '' // Using empty string for missing interpolation
+    },
+  })
+  .catch(() => undefined)
+
+i18n.on('missingKey', (_lngs, _ns, key, _res) => {
+  logger.error(`Missing i18n string key ${key} for language ${i18n.language}`, {
+    tags: {
+      file: 'i18n.ts',
+      function: 'onMissingKey',
+    },
+  })
+})
 
 export default i18n

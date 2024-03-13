@@ -8,6 +8,7 @@ import { getTransferWarnings } from 'wallet/src/features/transactions/transfer/h
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
 import { isOffline } from 'wallet/src/features/transactions/utils'
 import { WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
+import i18n from 'wallet/src/i18n/i18n'
 import { networkDown, networkUnknown, networkUp, uniCurrencyInfo } from 'wallet/src/test/fixtures'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
@@ -37,7 +38,7 @@ const transferState: DerivedTransferInfo = {
     [CurrencyField.INPUT]: CurrencyAmount.fromRawAmount(ETH, '20000'),
   },
   chainId: ChainId.Mainnet,
-  currencyInInfo: uniCurrencyInfo,
+  currencyInInfo: uniCurrencyInfo(),
   nftIn: undefined,
 }
 
@@ -51,7 +52,7 @@ const transferState2: DerivedTransferInfo = {
   },
   recipient: '0x0eae044f00b0af300500f090ea00027097d03000',
   chainId: ChainId.Mainnet,
-  currencyInInfo: uniCurrencyInfo,
+  currencyInInfo: uniCurrencyInfo(),
   nftIn: undefined,
 }
 
@@ -107,7 +108,7 @@ const transferCurrency: DerivedTransferInfo = {
   },
   recipient: '0x0eae044f00b0af300500f090ea00027097d03000',
   chainId: ChainId.Mainnet,
-  currencyInInfo: uniCurrencyInfo,
+  currencyInInfo: uniCurrencyInfo(),
   nftIn: undefined,
 }
 
@@ -121,51 +122,45 @@ const insufficientBalanceState: DerivedTransferInfo = {
   },
   recipient: '0x0eae044f00b0af300500f090ea00027097d03000',
   chainId: ChainId.Mainnet,
-  currencyInInfo: uniCurrencyInfo,
+  currencyInInfo: uniCurrencyInfo(),
   nftIn: undefined,
 }
 
-const mockTranslate = jest.fn()
-
 describe(getTransferWarnings, () => {
   it('does not error when Currency with balances and amounts is provided', () => {
-    const warnings = getTransferWarnings(mockTranslate, transferCurrency, isOffline(networkUp))
+    const warnings = getTransferWarnings(i18n.t, transferCurrency, isOffline(networkUp()))
     expect(warnings.length).toBe(0)
   })
 
   it('errors if there is no internet', () => {
-    const warnings = getTransferWarnings(mockTranslate, transferCurrency, isOffline(networkDown))
+    const warnings = getTransferWarnings(i18n.t, transferCurrency, isOffline(networkDown()))
     expect(warnings.length).toBe(1)
   })
 
   it('does not error when network state is unknown', () => {
-    const warnings = getTransferWarnings(mockTranslate, transferNFT, isOffline(networkUnknown))
+    const warnings = getTransferWarnings(i18n.t, transferNFT, isOffline(networkUnknown()))
     expect(warnings.length).toBe(0)
   })
 
   it('does not error when correctly formed NFT is provided', () => {
-    const warnings = getTransferWarnings(mockTranslate, transferNFT, isOffline(networkUp))
+    const warnings = getTransferWarnings(i18n.t, transferNFT, isOffline(networkUp()))
     expect(warnings.length).toBe(0)
   })
 
   it('catches incomplete form errors: no recipient', async () => {
-    const warnings = getTransferWarnings(mockTranslate, transferState, isOffline(networkUp))
+    const warnings = getTransferWarnings(i18n.t, transferState, isOffline(networkUp()))
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches incomplete form errors: no amount', async () => {
-    const warnings = getTransferWarnings(mockTranslate, transferState2, isOffline(networkUp))
+    const warnings = getTransferWarnings(i18n.t, transferState2, isOffline(networkUp()))
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.FormIncomplete)
   })
 
   it('catches insufficient balance errors', () => {
-    const warnings = getTransferWarnings(
-      mockTranslate,
-      insufficientBalanceState,
-      isOffline(networkUp)
-    )
+    const warnings = getTransferWarnings(i18n.t, insufficientBalanceState, isOffline(networkUp()))
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.InsufficientFunds)
   })
@@ -180,9 +175,9 @@ describe(getTransferWarnings, () => {
     }
 
     const warnings = getTransferWarnings(
-      mockTranslate,
+      i18n.t,
       incompleteAndInsufficientBalanceState,
-      isOffline(networkUp)
+      isOffline(networkUp())
     )
     expect(warnings.length).toBe(2)
   })

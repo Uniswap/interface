@@ -43,11 +43,14 @@ export function getPasswordStrengthTextAndColor(strength: PasswordStrength): {
 } {
   switch (strength) {
     case PasswordStrength.WEAK:
-      return { text: t('Weak'), color: '$statusCritical' }
+      return { text: t('common.input.password.strength.weak'), color: '$statusCritical' }
     case PasswordStrength.MEDIUM:
-      return { text: t('Medium'), color: '$DEP_accentWarning' }
+      return {
+        text: t('common.input.password.strength.medium'),
+        color: '$DEP_accentWarning',
+      }
     case PasswordStrength.STRONG:
-      return { text: t('Strong'), color: '$statusSuccess' }
+      return { text: t('common.input.password.strength.strong'), color: '$statusSuccess' }
     default:
       return { text: '', color: '$neutral1' }
   }

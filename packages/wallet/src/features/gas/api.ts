@@ -1,6 +1,6 @@
 import { providers } from 'ethers'
-import { uniswapUrls } from 'wallet/src/constants/urls'
-import { useRestQuery } from 'wallet/src/data/rest'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useRestQuery } from 'uniswap/src/data/rest'
 import { getPollingIntervalByBlocktime } from 'wallet/src/features/chains/utils'
 import { GasFeeResponse } from 'wallet/src/features/gas/types'
 

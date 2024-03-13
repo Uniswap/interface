@@ -397,7 +397,9 @@ exports[`SmartContractSpeedBumpModal should render correctly 1`] = `
   }
 }
 
-<body>
+<body
+  data-scroll-locked=""
+>
   <div
     aria-hidden="true"
   >

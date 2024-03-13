@@ -68,7 +68,7 @@ const SitePermissions = (): JSX.Element => {
         allowFontScaling={false}
         color="$neutral2"
         variant="subheading2">
-        {t('App permissions')}
+        {t('walletConnect.permissions.title')}
       </Text>
       <Flex centered row gap="$spacing8">
         <Icons.Check color="$statusSuccess" size={iconSizes.icon16} />
@@ -78,7 +78,7 @@ const SitePermissions = (): JSX.Element => {
           color="$neutral1"
           flexGrow={1}
           variant={normalInfoTextSize}>
-          {t('View your wallet address')}
+          {t('walletConnect.permissions.option.viewWalletAddress')}
         </Text>
       </Flex>
       <Flex centered row gap="$spacing8">
@@ -89,7 +89,7 @@ const SitePermissions = (): JSX.Element => {
           color="$neutral1"
           flexGrow={1}
           variant={normalInfoTextSize}>
-          {t('View your token balances')}
+          {t('walletConnect.permissions.option.viewTokenBalances')}
         </Text>
       </Flex>
       <Flex centered row gap="$spacing8">
@@ -100,7 +100,7 @@ const SitePermissions = (): JSX.Element => {
           color="$neutral1"
           flexGrow={1}
           variant={normalInfoTextSize}>
-          {t('Transfer your assets without consent')}
+          {t('walletConnect.permissions.option.transferAssets')}
         </Text>
       </Flex>
     </Flex>
@@ -124,7 +124,7 @@ const NetworksRow = ({ chains }: { chains: ChainId[] }): JSX.Element => {
         allowFontScaling={false}
         color="$neutral2"
         variant="subheading2">
-        {t('Networks')}
+        {t('walletConnect.permissions.networks')}
       </Text>
       <NetworkLogos chains={chains} />
     </Flex>
@@ -258,7 +258,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
             px="$spacing24"
             textAlign="center"
             variant="heading3">
-            {t('{{ dappName }} wants to connect to your wallet', {
+            {t('walletConnect.pending.title', {
               dappName: truncateDappName(dappName),
             })}{' '}
           </Text>
@@ -287,13 +287,13 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
             testID="cancel-pending-connection"
             theme="secondary"
             onPress={(): Promise<void> => onPressSettleConnection(false)}>
-            {t('Cancel')}
+            {t('common.button.cancel')}
           </Button>
           <Button
             fill
             testID="connect-pending-connection"
             onPress={(): Promise<void> => onPressSettleConnection(true)}>
-            {t('Connect')}
+            {t('walletConnect.pending.button.connect')}
           </Button>
         </Flex>
       </AnimatedFlex>

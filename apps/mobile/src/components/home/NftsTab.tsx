@@ -1,16 +1,21 @@
 import { FlashList } from '@shopify/flash-list'
 import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { RefreshControl } from 'react-native'
+import { useAppDispatch } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
+import { NftView } from 'src/components/NFT/NftView'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
-import { NftView } from 'src/components/NFT/NftView'
+import { openModal } from 'src/features/modals/modalSlice'
+import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Screens } from 'src/screens/Screens'
 import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
+import { isAndroid } from 'uniswap/src/utils/platform'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
 import { GQLQueries } from 'wallet/src/data/queries'
 import { NFTItem } from 'wallet/src/features/nfts/types'
-import { isAndroid } from 'wallet/src/utils/platform'
+import { ModalName } from 'wallet/src/telemetry/constants'
 
 export const NFTS_TAB_DATA_DEPENDENCIES = [GQLQueries.NftsTab]
 
@@ -29,12 +34,21 @@ export const NftsTab = memo(
     ref
   ) {
     const colors = useSporeColors()
+    const dispatch = useAppDispatch()
     const insets = useDeviceInsets()
     const navigation = useAppStackNavigation()
 
     const { onContentSizeChange, footerHeight, adaptiveFooter } = useAdaptiveFooter(
       containerProps?.contentContainerStyle
     )
+
+    const onPressScan = (): void => {
+      // in case we received a pending session from a previous scan after closing modal
+      dispatch(removePendingSession())
+      dispatch(
+        openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+      )
+    }
 
     const renderNFTItem = useCallback(
       (item: NFTItem) => {
@@ -81,6 +95,7 @@ export const NftsTab = memo(
           renderNFTItem={renderNFTItem}
           renderedInModal={renderedInModal}
           onContentSizeChange={onContentSizeChange}
+          onPressEmptyState={onPressScan}
           onRefresh={onRefresh}
           onScroll={scrollHandler}
           {...containerProps}

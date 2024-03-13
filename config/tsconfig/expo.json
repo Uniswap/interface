@@ -19,12 +19,18 @@
       "jest"
     ],
     "paths": {
+      "ui/*": [
+        "../../packages/ui/*"
+      ],
+      "uniswap/*": [
+        "../../packages/uniswap/*"
+      ],
+      "utilities/*": [
+        "../../packages/utilities/*"
+      ],
       "wallet/*": [
         "../../packages/wallet/*"
       ],
-      "ui/*": [
-        "../../packages/ui/*"
-      ]
     }
   },
   "exclude": [

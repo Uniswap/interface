@@ -121,8 +121,6 @@ export default function ProgressIndicator({
         previewTitle: t`Wrap ${nativeCurrency.symbol}`,
         actionRequiredTitle: t`Wrap  ${nativeCurrency.symbol} in wallet`,
         inProgressTitle: t`Wrapping  ${nativeCurrency.symbol}...`,
-        timeToEnd: estimatedTransactionTime,
-        delayedEndTitle: t`Longer than expected...`,
         learnMoreLinkText: t`Why do I have to wrap my ${nativeCurrency.symbol}?`,
         learnMoreLinkHref: SupportArticleURL.WETH_EXPLAINER,
       },
@@ -132,8 +130,6 @@ export default function ProgressIndicator({
         previewTitle: t`Reset ${trade?.inputAmount.currency.symbol} limit`,
         actionRequiredTitle: t`Reset ${trade?.inputAmount.currency.symbol} limit in wallet`,
         inProgressTitle: t`Resetting ${trade?.inputAmount.currency.symbol} limit...`,
-        timeToEnd: estimatedTransactionTime,
-        delayedEndTitle: t`Longer than expected...`,
       },
       [ConfirmModalState.APPROVING_TOKEN]: {
         icon: <CurrencyLogo currency={trade?.inputAmount.currency} />,
@@ -141,8 +137,6 @@ export default function ProgressIndicator({
         previewTitle: t`Approve ${trade?.inputAmount.currency.symbol} spending`,
         actionRequiredTitle: t`Approve in wallet`,
         inProgressTitle: t`Approval pending...`,
-        timeToEnd: estimatedTransactionTime,
-        delayedEndTitle: t`Longer than expected...`,
         learnMoreLinkText: t`Why do I have to approve a token?`,
         learnMoreLinkHref: SupportArticleURL.APPROVALS_EXPLAINER,
       },
@@ -160,13 +154,10 @@ export default function ProgressIndicator({
         previewTitle: isLimitTrade(trade) ? t`Confirm` : t`Confirm swap`,
         actionRequiredTitle: isLimitTrade(trade) ? t`Confirm in wallet` : t`Confirm swap in wallet`,
         inProgressTitle: isLimitTrade(trade) ? t`Pending...` : t`Swap pending...`,
-        timeToEnd: estimatedTransactionTime,
-        delayedEndTitle: t`Longer than expected...`,
         ...(isUniswapXTrade(trade) && trade.offchainOrderType === OffchainOrderType.DUTCH_AUCTION
           ? {
               timeToStart: trade.asDutchOrderTrade().order.info.deadline - Math.floor(Date.now() / 1000),
               delayedStartTitle: t`Confirmation timed out. Please retry.`,
-              timeToEnd: 60, // TODO: dynamically update UniswapX estimated fill time
             }
           : {}),
         learnMoreLinkText: isLimitTrade(trade) ? t`Learn more about limits` : t`Learn more about swaps`,
@@ -175,7 +166,7 @@ export default function ProgressIndicator({
           : SupportArticleURL.HOW_TO_SWAP_TOKENS,
       },
     }),
-    [inputTokenColor, nativeCurrency.symbol, trade, estimatedTransactionTime, theme.accent1]
+    [inputTokenColor, nativeCurrency.symbol, trade, theme.accent1]
   )
 
   if (steps.length === 0) {

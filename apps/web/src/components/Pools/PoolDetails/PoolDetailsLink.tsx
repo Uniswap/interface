@@ -18,6 +18,7 @@ import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/c
 import { shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { DoubleTokenAndChainLogo } from './PoolDetailsHeader'
 import { DetailBubble, SmallDetailBubble } from './shared'
 
@@ -87,6 +88,7 @@ interface PoolDetailsLinkProps {
 
 export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetailsLinkProps) {
   const theme = useTheme()
+  const isNative = address === NATIVE_CHAIN_ID
   const currency = tokens[0] && gqlToCurrency(tokens[0])
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
@@ -95,7 +97,13 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
 
   const isPool = tokens.length === 2
   const explorerUrl =
-    address && chainId && getExplorerLink(chainId, address, isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN)
+    address &&
+    chainId &&
+    getExplorerLink(
+      chainId,
+      address,
+      isNative ? ExplorerDataType.NATIVE : isPool ? ExplorerDataType.ADDRESS : ExplorerDataType.TOKEN
+    )
 
   const navigate = useNavigate()
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
@@ -158,12 +166,14 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
         </SymbolText>
       </TokenTextWrapper>
       <ButtonsRow>
-        <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t`Copied`}>
-          <CopyAddress data-testid={`copy-address-${address}`} onClick={copy}>
-            {shortenAddress(address, truncateAddress ? 2 : undefined, truncateAddress === 'both' ? 2 : undefined)}
-            <StyledCopyIcon />
-          </CopyAddress>
-        </Tooltip>
+        {!isNative && (
+          <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t`Copied`}>
+            <CopyAddress data-testid={`copy-address-${address}`} onClick={copy}>
+              {shortenAddress(address, truncateAddress ? 2 : undefined, truncateAddress === 'both' ? 2 : undefined)}
+              <StyledCopyIcon />
+            </CopyAddress>
+          </Tooltip>
+        )}
         {explorerUrl && (
           <ExternalLink href={explorerUrl} data-testid={`explorer-url-${explorerUrl}`}>
             <ExplorerWrapper>

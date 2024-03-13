@@ -441,7 +441,9 @@ exports[`<Dialog /> renders different button types 1`] = `
   }
 }
 
-<body>
+<body
+  data-scroll-locked=""
+>
   <div
     aria-hidden="true"
   >
@@ -984,7 +986,9 @@ exports[`<Dialog /> renders the Dialog component correctly 1`] = `
   }
 }
 
-<body>
+<body
+  data-scroll-locked=""
+>
   <div
     aria-hidden="true"
   >

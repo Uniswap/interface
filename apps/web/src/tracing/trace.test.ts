@@ -1,183 +1,175 @@
-import '@sentry/tracing' // required to populate Sentry.startTransaction, which is not included in the core module
-
+import { Span } from '@sentry/core'
 import * as Sentry from '@sentry/react'
-import { Transaction } from '@sentry/tracing'
-import { ErrorEvent, EventHint } from '@sentry/types'
-import assert from 'assert'
 import { mocked } from 'test-utils/mocked'
 
-import { beforeSend } from './errors'
 import { trace } from './trace'
+import { OpCode, TraceContext } from './types'
 
 jest.mock('@sentry/react', () => {
   return {
-    startTransaction: jest.fn(),
+    startInactiveSpan: jest.fn(),
   }
 })
 
-function getTransaction(index = 0): Transaction {
-  const transactions = mocked(Sentry.startTransaction).mock.results.map(({ value }) => value)
-  expect(transactions).toHaveLength(index + 1)
-  const transaction = transactions[index]
-  expect(transaction).toBeDefined()
-  return transaction
-}
+const CONTEXT = { name: 'Test', op: 'Test' as OpCode } as TraceContext
+
+let span: Span | undefined
+const spanMap = new Map<string, Span>()
 
 describe('trace', () => {
   beforeEach(() => {
-    mocked(Sentry.startTransaction).mockImplementation((context) => {
-      const transaction: Transaction = jest.requireActual('@sentry/react').startTransaction(context)
-      transaction.initSpanRecorder()
-      return transaction
+    span = undefined
+    spanMap.clear()
+    mocked(Sentry.startInactiveSpan).mockImplementation((context) => {
+      span = new Span(context)
+      const startChild = span.startChild.bind(span)
+      span.startChild = (context) => {
+        span = startChild(context)
+        spanMap.set(span.spanId, span)
+        return span
+      }
+      spanMap.set(span.spanId, span)
+      return span
     })
   })
 
-  it('propagates callback', async () => {
-    await expect(trace('test', () => Promise.resolve('resolved'))).resolves.toBe('resolved')
-    await expect(trace('test', () => Promise.reject('rejected'))).rejects.toBe('rejected')
+  describe('propagation', () => {
+    it('propagates resolved callback', async () => {
+      await expect(trace(CONTEXT, () => Promise.resolve('resolved'))).resolves.toBe('resolved')
+    })
+
+    it('propagates promise rejection', async () => {
+      await expect(trace(CONTEXT, () => Promise.reject('rejected'))).rejects.toBe('rejected')
+    })
   })
 
-  it('records transaction', async () => {
-    const metadata = { data: { a: 'a', b: 2 }, tags: { test_tag: true } }
-    // @ts-ignore test_tag is not an expected key for `tags` but force it for testing purposes
-    await trace('test', () => Promise.resolve(), metadata)
-    const transaction = getTransaction()
-    expect(transaction.name).toBe('test')
-    expect(transaction.data).toEqual({ a: 'a', b: 2 })
-    expect(transaction.tags).toEqual({ test_tag: true })
+  it('records span', async () => {
+    const metadata = { data: { a: 'a', b: 2 }, tags: { host: 'example.com' } }
+    await trace({ ...CONTEXT, ...metadata } as TraceContext, () => Promise.resolve())
+    expect(span!.name).toBe(CONTEXT.name)
+    expect(span!.op).toBe(CONTEXT.op)
+    expect(span!.data).toEqual({ a: 'a', b: 2 })
+    expect(span!.tags).toEqual({ host: 'example.com' })
+  })
+
+  it('forks a zone with the TraceCallbackContext', async () => {
+    await trace(CONTEXT, async (trace) => {
+      const context = Zone.current.get('trace')
+      expect(context).toBe(trace.child)
+    })
+
+    const context = Zone.current.get('trace')
+    expect(context).toBeUndefined()
   })
 
   describe('defaults status', () => {
     it('"ok" if resolved', async () => {
-      await trace('test', () => Promise.resolve())
-      const transaction = getTransaction()
-      expect(transaction.status).toBe('ok')
+      await trace(CONTEXT, () => Promise.resolve())
+      expect(span!.status).toBe('ok')
     })
 
-    it('"internal_error" if rejected, with data.error set to rejection', async () => {
+    it('"unknown_error" if rejected, with data.error set to rejection', async () => {
       const error = new Error('Test error')
-      await expect(trace('test', () => Promise.reject(error))).rejects.toBe(error)
-      const transaction = getTransaction()
-      expect(transaction.status).toBe('internal_error')
-      expect(transaction.data).toEqual({ error })
-    })
-  })
-
-  describe('setTraceData', () => {
-    it('sets transaction data', async () => {
-      await trace('test', ({ setTraceData }) => {
-        setTraceData('a', 'a')
-        setTraceData('b', 2)
-        return Promise.resolve()
-      })
-      const transaction = getTransaction()
-      expect(transaction.data).toEqual({ a: 'a', b: 2 })
-    })
-  })
-
-  describe('setTraceTag', () => {
-    it('sets a transaction tag', async () => {
-      await trace('test', ({ setTraceTag }) => {
-        // @ts-ignore test_tag is not an expected key for `tags` but force it for testing purposes
-        setTraceTag('test_tag', true)
-        return Promise.resolve()
-      })
-      const transaction = getTransaction()
-      expect(transaction.tags).toEqual({ test_tag: true })
-    })
-  })
-
-  describe('beforeSend', () => {
-    it('handles no path', async () => {
-      const errorEvent: ErrorEvent = {
-        type: undefined,
-        request: {
-          url: 'https://app.uniswap.org',
-        },
-      }
-      const eventHint: EventHint = {}
-      expect((beforeSend(errorEvent, eventHint) as ErrorEvent)?.request?.url).toEqual('https://app.uniswap.org')
+      await expect(trace(CONTEXT, () => Promise.reject(error))).rejects.toBe(error)
+      expect(span!.status).toBe('unknown_error')
+      expect(span!.data).toEqual({ error })
     })
 
-    it('handles hash with path', async () => {
-      const errorEvent: ErrorEvent = {
-        type: undefined,
-        request: {
-          url: 'https://app.uniswap.org/pools',
-        },
-      }
-      const eventHint: EventHint = {}
-      expect((beforeSend(errorEvent, eventHint) as ErrorEvent)?.request?.url).toEqual('https://app.uniswap.org/pools')
-    })
-
-    it('handles just hash', async () => {
-      const errorEvent: ErrorEvent = {
-        type: undefined,
-        request: {
-          url: 'https://app.uniswap.org/',
-        },
-      }
-      const eventHint: EventHint = {}
-      expect((beforeSend(errorEvent, eventHint) as ErrorEvent)?.request?.url).toEqual('https://app.uniswap.org')
-    })
-  })
-
-  describe('setTraceStatus', () => {
-    it('sets a transaction status with a string', async () => {
-      await trace('test', ({ setTraceStatus }) => {
-        setTraceStatus('cancelled')
-        return Promise.resolve()
-      })
-      let transaction = getTransaction(0)
-      expect(transaction.status).toBe('cancelled')
-
+    it('"unknown_error" if thrown, with data.error set to error', async () => {
+      const error = new Error('Test error')
       await expect(
-        trace('test', ({ setTraceStatus }) => {
-          setTraceStatus('failed_precondition')
-          return Promise.reject()
+        trace(CONTEXT, () => {
+          throw error
         })
-      ).rejects.toBeUndefined()
-      transaction = getTransaction(1)
-      expect(transaction.status).toBe('failed_precondition')
-    })
-
-    it('sets a transaction http status with a number', async () => {
-      await trace('test', ({ setTraceStatus }) => {
-        setTraceStatus(429)
-        return Promise.resolve()
-      })
-      const transaction = getTransaction()
-      expect(transaction.status).toBe('resource_exhausted')
+      ).rejects.toBe(error)
+      expect(span!.status).toBe('unknown_error')
+      expect(span!.data).toEqual({ error })
     })
   })
 
-  describe('setTraceError', () => {
-    it('sets transaction data.error', async () => {
+  describe('child', () => {
+    it('starts a span under a span', async () => {
+      await trace(CONTEXT, ({ child }) => {
+        child({ name: 'Child', op: 'child' as OpCode } as TraceContext, () => Promise.resolve())
+        return Promise.resolve()
+      })
+      expect(span!.name).toBe('Child')
+      expect(span!.op).toBe('child')
+      const parent = spanMap.get(span!.parentSpanId!)!
+      expect(parent.name).toBe(CONTEXT.name)
+      expect(parent.op).toBe(CONTEXT.op)
+    })
+  })
+
+  describe('setData', () => {
+    it('sets span data', async () => {
+      await trace(CONTEXT, ({ setData }) => {
+        setData('a', 'a')
+        setData('b', 2)
+        return Promise.resolve()
+      })
+      expect(span!.data).toEqual({ a: 'a', b: 2 })
+    })
+  })
+
+  describe('setStatus', () => {
+    it('sets a span status with a string', async () => {
+      await trace(CONTEXT, ({ setStatus }) => {
+        setStatus('cancelled')
+        return Promise.resolve()
+      })
+      expect(span!.status).toBe('cancelled')
+    })
+
+    it('sets a span http status with a number', async () => {
+      await trace(CONTEXT, ({ setStatus }) => {
+        setStatus(429)
+        return Promise.resolve()
+      })
+      expect(span!.status).toBe('resource_exhausted')
+    })
+  })
+
+  describe('setError', () => {
+    it('sets span data.error', async () => {
       const error = new Error('Test error')
       await expect(
-        trace('test', ({ setTraceError }) => {
-          setTraceError(error)
-          return Promise.reject(new Error(`Wrapped ${error.message}`))
+        trace(CONTEXT, ({ setError }) => {
+          setError(error)
+          return Promise.reject(error)
         })
       ).rejects.toBeDefined()
-      const transaction = getTransaction()
-      expect(transaction.data).toEqual({ error })
+      expect(span!.status).toEqual('unknown_error')
+      expect(span!.data).toEqual({ error })
+    })
+
+    it('sets span status', async () => {
+      const error = new Error('Test error')
+      await expect(
+        trace(CONTEXT, ({ setError }) => {
+          setError(error, 'cancelled')
+          return Promise.reject(error)
+        })
+      ).rejects.toBeDefined()
+      expect(span!.status).toEqual('cancelled')
+      expect(span!.data).toEqual({ error })
     })
   })
 
-  describe('traceChild', () => {
-    it('starts a span under a transaction', async () => {
-      await trace('test', ({ traceChild }) => {
-        // @ts-ignore test_tag is not an expected key for `tags` but force it for testing purposes
-        traceChild('child', () => Promise.resolve(), { data: { e: 'e' }, tags: { test_tag: true } })
+  describe('now', () => {
+    beforeAll(() => {
+      jest.useFakeTimers()
+      performance.measure = jest.fn()
+    })
+    afterAll(() => jest.useRealTimers())
+
+    it('returns elapsed', async () => {
+      await trace(CONTEXT, ({ now }) => {
+        jest.advanceTimersByTime(500)
+        const elapsedMs = now()
+        expect(elapsedMs).toBe(500)
         return Promise.resolve()
       })
-      const transaction = getTransaction()
-      const span = transaction.spanRecorder?.spans[1]
-      assert(span)
-      expect(span.op).toBe('child')
-      expect(span.data).toEqual({ e: 'e' })
-      expect(span.tags).toEqual({ test_tag: true })
     })
   })
 })

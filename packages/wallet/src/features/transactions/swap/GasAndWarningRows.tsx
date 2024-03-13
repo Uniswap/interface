@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, Icons, isWeb, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Icons, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
@@ -9,10 +9,10 @@ import { useLocalizationContext } from 'wallet/src/features/language/Localizatio
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
 import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedSwapWarnings'
-import { NetworkFeeInfoModal } from 'wallet/src/features/transactions/swap/modals/NetworkFeeInfoModal'
 import { SwapBuyTokenRow } from 'wallet/src/features/transactions/swap/SwapBuyTokenRow'
 import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRatio'
 import { SwapWarningModal } from 'wallet/src/features/transactions/swap/SwapWarningModal'
+import { NetworkFeeInfo } from 'wallet/src/features/transactions/swap/modals/NetworkFeeInfo'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
@@ -26,7 +26,6 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
   const { chainId, trade } = derivedSwapInfo
 
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const [showGasInfoModal, setShowGasInfoModal] = useState(false)
 
   const { isBlocked } = useIsBlockedActiveAddress()
 
@@ -51,8 +50,6 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
 
   return (
     <>
-      {showGasInfoModal && <NetworkFeeInfoModal onClose={(): void => setShowGasInfoModal(false)} />}
-
       {showWarningModal && formScreenWarning && (
         <SwapWarningModal
           parsedWarning={formScreenWarning}
@@ -87,14 +84,14 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
             </Flex>
           )}
           {showGasFee && (
-            <TouchableArea hapticFeedback onPress={(): void => setShowGasInfoModal(true)}>
+            <NetworkFeeInfo>
               <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
                 <Icons.Gas color={colors.neutral2.val} size="$icon.16" />
                 <Text color="$neutral2" variant="body3">
                   {gasFeeFormatted}
                 </Text>
               </AnimatedFlex>
-            </TouchableArea>
+            </NetworkFeeInfo>
           )}
         </Flex>
 

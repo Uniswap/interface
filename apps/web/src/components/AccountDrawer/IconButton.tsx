@@ -197,7 +197,7 @@ export const IconWithConfirmTextButton = ({
   }, [frame, setShowText, showText])
 
   const xPad = showText ? 8 : 0
-  const width = showText ? dimensions.frame + dimensions.innerText + xPad : 32
+  const width = showText ? dimensions.frame + dimensions.innerText + xPad * 2 : 32
   const mouseLeaveTimeout = useRef<NodeJS.Timeout>()
 
   return (
@@ -235,7 +235,7 @@ export const IconWithConfirmTextButton = ({
         },
       })}
     >
-      <Row height="100%" gap="xs">
+      <Row height="100%" align="center">
         <IconWrapper>
           <Icon width={24} height={24} />
         </IconWrapper>
@@ -245,6 +245,7 @@ export const IconWithConfirmTextButton = ({
           style={{
             maxWidth: showText ? dimensions.innerText : 0,
             width: showText ? dimensions.innerText : 0,
+            margin: showText ? 'auto' : 0,
             // this negative transform offsets for the shift it does due to being 0 width
             transform: showText ? undefined : `translateX(-8px)`,
             minWidth: showText ? dimensions.innerText : 0,

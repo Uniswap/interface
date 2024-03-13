@@ -17,7 +17,9 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'wallet/src/features/transactions/types'
-import { finalizedTxAction } from 'wallet/src/test/fixtures'
+import { finalizedTransactionAction } from 'wallet/src/test/fixtures'
+
+const finalizedTxAction = finalizedTransactionAction()
 
 const address = '0x123'
 
@@ -147,9 +149,9 @@ describe('transaction reducer', () => {
       }
 
       store.dispatch(addTransaction(transaction))
-      store.dispatch(updateTransaction({ ...transaction, status: TransactionStatus.Cancelled }))
+      store.dispatch(updateTransaction({ ...transaction, status: TransactionStatus.Canceled }))
       const tx = store.getState()[address]?.[chainId]?.[id]
-      expect(tx?.status).toEqual(TransactionStatus.Cancelled)
+      expect(tx?.status).toEqual(TransactionStatus.Canceled)
     })
   })
 
@@ -159,7 +161,9 @@ describe('transaction reducer', () => {
         store.dispatch(finalizeTransaction(finalizedTxAction.payload))
       } catch (error) {
         expect(error).toEqual(
-          Error('finalizeTransaction: Attempted to finalize a missing tx with id 0')
+          Error(
+            `finalizeTransaction: Attempted to finalize a missing tx with id ${finalizedTxAction.payload.id}`
+          )
         )
       }
       expect(store.getState()).toEqual({})

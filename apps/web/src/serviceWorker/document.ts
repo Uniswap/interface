@@ -52,7 +52,13 @@ type HandlerContext = {
  */
 export async function handleDocument(this: HandlerContext, { request }: RouteHandlerCallbackOptions) {
   // If we are offline, serve the offline document.
-  if ('onLine' in navigator && !navigator.onLine) return this?.offlineDocument?.clone() || fetch(request)
+  if ('onLine' in navigator && !navigator.onLine) {
+    if (this && this.offlineDocument) {
+      return this.offlineDocument.clone()
+    } else {
+      return fetch(request)
+    }
+  }
 
   // The exact cache key should be used for requests, as etags will be different for different paths.
   // This also prevents usage of preloadResponse.

@@ -27,7 +27,6 @@ import { GasAndWarningRows } from 'wallet/src/features/transactions/swap/GasAndW
 import { SwapArrowButton } from 'wallet/src/features/transactions/swap/SwapArrowButton'
 import { SwapFormHeader } from 'wallet/src/features/transactions/swap/SwapFormHeader'
 import { TransactionModalInnerContainer } from 'wallet/src/features/transactions/swap/TransactionModal'
-import { useSwapAnalytics } from 'wallet/src/features/transactions/swap/analytics'
 import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/trade/legacy/hooks'
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -97,7 +96,6 @@ function SwapFormContent(): JSX.Element {
 
   // Updaters
   useSyncFiatAndTokenAmountUpdater()
-  useSwapAnalytics(derivedSwapInfo)
   useShowSwapNetworkNotification(chainId)
 
   const onRestorePress = (): void => {
@@ -505,7 +503,7 @@ function SwapFormContent(): JSX.Element {
                         size="$icon.20"
                       />
                       <Text color="$DEP_accentWarning" variant="subheading2">
-                        {t('Restore your wallet to swap')}
+                        {t('swap.form.warning.restore')}
                       </Text>
                     </Flex>
                   </TouchableArea>

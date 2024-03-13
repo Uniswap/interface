@@ -5,7 +5,7 @@ import { UNI, WBTC, wrappedNativeCurrency } from 'wallet/src/constants/tokens'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { WrapType } from 'wallet/src/features/transactions/types'
-import { mockPool } from 'wallet/src/test/fixtures'
+import { mockPool } from 'wallet/src/test/mocks'
 import { getWrapType, requireAcceptNewTrade, serializeQueryParams } from './utils'
 
 describe(serializeQueryParams, () => {

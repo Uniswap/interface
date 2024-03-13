@@ -5,10 +5,11 @@ import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { Delay } from 'src/components/layout/Delayed'
 import { ColorTokens, useSporeColors } from 'ui/src'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { isAndroid } from 'uniswap/src/utils/platform'
 import { useDebounce } from 'utilities/src/time/timing'
 import { useAllCommonBaseCurrencies } from 'wallet/src/components/TokenSelector/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
-import { uniswapUrls } from 'wallet/src/constants/urls'
 import { fromMoonpayNetwork } from 'wallet/src/features/chains/utils'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import {
@@ -33,7 +34,6 @@ import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 import { ValueType } from 'wallet/src/utils/getCurrencyAmount'
-import { isAndroid } from 'wallet/src/utils/platform'
 import { FiatOnRampCurrency } from './types'
 
 export function useFormatExactCurrencyAmount(
@@ -278,13 +278,13 @@ function useMoonpayError(
   let errorText, errorColor: ColorTokens | undefined
 
   if (hasError) {
-    errorText = t('Something went wrong.')
+    errorText = t('fiatOnRamp.error.default')
     errorColor = '$DEP_accentWarning'
   } else if (amountIsTooSmall) {
-    errorText = t('Minimum {{amount}}', { amount: minBuyAmountWithFiatSymbol })
+    errorText = t('fiatOnRamp.error.min', { amount: minBuyAmountWithFiatSymbol })
     errorColor = '$statusCritical'
   } else if (amountIsTooLarge) {
-    errorText = t('Maximum {{amount}}', { amount: maxBuyAmountWithFiatSymbol })
+    errorText = t('fiatOnRamp.error.max', { amount: maxBuyAmountWithFiatSymbol })
     errorColor = '$statusCritical'
   }
 

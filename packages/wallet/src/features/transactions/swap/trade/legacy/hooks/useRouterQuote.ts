@@ -1,7 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+import { GqlResult } from 'uniswap/src/data/types'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { GqlResult } from 'wallet/src/features/dataApi/types'
 import {
   RoutingIntent,
   TradeQuoteRequest,

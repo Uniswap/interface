@@ -13,6 +13,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
 >
   <View
     cancelable={true}
+    disabled={false}
     focusable={true}
     hitSlop={[Function]}
     minPressDuration={0}
@@ -62,65 +63,64 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
         suppressHighlighting={true}
       >
         Network cost
-         
-        <RNSVGSvgView
-          align="xMidYMid"
-          bbHeight="16"
-          bbWidth="16"
-          fill="none"
-          focusable={false}
-          meetOrSlice={0}
-          minX={0}
-          minY={0}
-          strokeWidth={8}
-          style={
+      </Text>
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight="16"
+        bbWidth="16"
+        fill="none"
+        focusable={false}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        strokeWidth={8}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "color": "#CECECE",
+              "height": 16,
+              "width": 16,
+            },
+            {
+              "flex": 0,
+              "height": 16,
+              "width": 16,
+            },
+          ]
+        }
+        tintColor="#CECECE"
+        vbHeight={16}
+        vbWidth={16}
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
             [
-              {
-                "backgroundColor": "transparent",
-                "borderWidth": 0,
-              },
-              {
-                "color": "#CECECE",
-                "height": 16,
-                "width": 16,
-              },
-              {
-                "flex": 0,
-                "height": 16,
-                "width": 16,
-              },
+              "fill",
+              "strokeWidth",
             ]
           }
-          tintColor="#CECECE"
-          vbHeight={16}
-          vbWidth={16}
+          strokeWidth="8"
         >
-          <RNSVGGroup
-            fill={null}
+          <RNSVGPath
+            d="M7.99992 1.33325C4.31792 1.33325 1.33325 4.31792 1.33325 7.99992C1.33325 11.6819 4.31792 14.6666 7.99992 14.6666C11.6819 14.6666 14.6666 11.6819 14.6666 7.99992C14.6666 4.31792 11.6819 1.33325 7.99992 1.33325ZM8.49992 10.9999C8.49992 11.2759 8.27592 11.4999 7.99992 11.4999C7.72392 11.4999 7.49992 11.2759 7.49992 10.9999V7.95256C7.49992 7.67656 7.72392 7.45256 7.99992 7.45256C8.27592 7.45256 8.49992 7.67656 8.49992 7.95256V10.9999ZM8.01327 6.33325C7.64527 6.33325 7.34318 6.03459 7.34318 5.66659C7.34318 5.29859 7.63859 4.99992 8.00659 4.99992H8.01327C8.38193 4.99992 8.67993 5.29859 8.67993 5.66659C8.67993 6.03459 8.38127 6.33325 8.01327 6.33325Z"
+            fill={
+              {
+                "type": 2,
+              }
+            }
             propList={
               [
                 "fill",
-                "strokeWidth",
               ]
             }
-            strokeWidth="8"
-          >
-            <RNSVGPath
-              d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
-              fill={
-                {
-                  "type": 2,
-                }
-              }
-              propList={
-                [
-                  "fill",
-                ]
-              }
-            />
-          </RNSVGGroup>
-        </RNSVGSvgView>
-      </Text>
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
     </View>
   </View>
   <View
@@ -266,6 +266,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
 >
   <View
     cancelable={true}
+    disabled={false}
     focusable={true}
     hitSlop={[Function]}
     minPressDuration={0}
@@ -315,65 +316,64 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
         suppressHighlighting={true}
       >
         Network cost
-         
-        <RNSVGSvgView
-          align="xMidYMid"
-          bbHeight="16"
-          bbWidth="16"
-          fill="none"
-          focusable={false}
-          meetOrSlice={0}
-          minX={0}
-          minY={0}
-          strokeWidth={8}
-          style={
+      </Text>
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight="16"
+        bbWidth="16"
+        fill="none"
+        focusable={false}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        strokeWidth={8}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "color": "#CECECE",
+              "height": 16,
+              "width": 16,
+            },
+            {
+              "flex": 0,
+              "height": 16,
+              "width": 16,
+            },
+          ]
+        }
+        tintColor="#CECECE"
+        vbHeight={16}
+        vbWidth={16}
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
             [
-              {
-                "backgroundColor": "transparent",
-                "borderWidth": 0,
-              },
-              {
-                "color": "#CECECE",
-                "height": 16,
-                "width": 16,
-              },
-              {
-                "flex": 0,
-                "height": 16,
-                "width": 16,
-              },
+              "fill",
+              "strokeWidth",
             ]
           }
-          tintColor="#CECECE"
-          vbHeight={16}
-          vbWidth={16}
+          strokeWidth="8"
         >
-          <RNSVGGroup
-            fill={null}
+          <RNSVGPath
+            d="M7.99992 1.33325C4.31792 1.33325 1.33325 4.31792 1.33325 7.99992C1.33325 11.6819 4.31792 14.6666 7.99992 14.6666C11.6819 14.6666 14.6666 11.6819 14.6666 7.99992C14.6666 4.31792 11.6819 1.33325 7.99992 1.33325ZM8.49992 10.9999C8.49992 11.2759 8.27592 11.4999 7.99992 11.4999C7.72392 11.4999 7.49992 11.2759 7.49992 10.9999V7.95256C7.49992 7.67656 7.72392 7.45256 7.99992 7.45256C8.27592 7.45256 8.49992 7.67656 8.49992 7.95256V10.9999ZM8.01327 6.33325C7.64527 6.33325 7.34318 6.03459 7.34318 5.66659C7.34318 5.29859 7.63859 4.99992 8.00659 4.99992H8.01327C8.38193 4.99992 8.67993 5.29859 8.67993 5.66659C8.67993 6.03459 8.38127 6.33325 8.01327 6.33325Z"
+            fill={
+              {
+                "type": 2,
+              }
+            }
             propList={
               [
                 "fill",
-                "strokeWidth",
               ]
             }
-            strokeWidth="8"
-          >
-            <RNSVGPath
-              d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
-              fill={
-                {
-                  "type": 2,
-                }
-              }
-              propList={
-                [
-                  "fill",
-                ]
-              }
-            />
-          </RNSVGGroup>
-        </RNSVGSvgView>
-      </Text>
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
     </View>
   </View>
   <View
@@ -441,6 +441,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
 >
   <View
     cancelable={true}
+    disabled={false}
     focusable={true}
     hitSlop={[Function]}
     minPressDuration={0}
@@ -490,65 +491,64 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         suppressHighlighting={true}
       >
         Network cost
-         
-        <RNSVGSvgView
-          align="xMidYMid"
-          bbHeight="16"
-          bbWidth="16"
-          fill="none"
-          focusable={false}
-          meetOrSlice={0}
-          minX={0}
-          minY={0}
-          strokeWidth={8}
-          style={
+      </Text>
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight="16"
+        bbWidth="16"
+        fill="none"
+        focusable={false}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        strokeWidth={8}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "color": "#CECECE",
+              "height": 16,
+              "width": 16,
+            },
+            {
+              "flex": 0,
+              "height": 16,
+              "width": 16,
+            },
+          ]
+        }
+        tintColor="#CECECE"
+        vbHeight={16}
+        vbWidth={16}
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
             [
-              {
-                "backgroundColor": "transparent",
-                "borderWidth": 0,
-              },
-              {
-                "color": "#CECECE",
-                "height": 16,
-                "width": 16,
-              },
-              {
-                "flex": 0,
-                "height": 16,
-                "width": 16,
-              },
+              "fill",
+              "strokeWidth",
             ]
           }
-          tintColor="#CECECE"
-          vbHeight={16}
-          vbWidth={16}
+          strokeWidth="8"
         >
-          <RNSVGGroup
-            fill={null}
+          <RNSVGPath
+            d="M7.99992 1.33325C4.31792 1.33325 1.33325 4.31792 1.33325 7.99992C1.33325 11.6819 4.31792 14.6666 7.99992 14.6666C11.6819 14.6666 14.6666 11.6819 14.6666 7.99992C14.6666 4.31792 11.6819 1.33325 7.99992 1.33325ZM8.49992 10.9999C8.49992 11.2759 8.27592 11.4999 7.99992 11.4999C7.72392 11.4999 7.49992 11.2759 7.49992 10.9999V7.95256C7.49992 7.67656 7.72392 7.45256 7.99992 7.45256C8.27592 7.45256 8.49992 7.67656 8.49992 7.95256V10.9999ZM8.01327 6.33325C7.64527 6.33325 7.34318 6.03459 7.34318 5.66659C7.34318 5.29859 7.63859 4.99992 8.00659 4.99992H8.01327C8.38193 4.99992 8.67993 5.29859 8.67993 5.66659C8.67993 6.03459 8.38127 6.33325 8.01327 6.33325Z"
+            fill={
+              {
+                "type": 2,
+              }
+            }
             propList={
               [
                 "fill",
-                "strokeWidth",
               ]
             }
-            strokeWidth="8"
-          >
-            <RNSVGPath
-              d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
-              fill={
-                {
-                  "type": 2,
-                }
-              }
-              propList={
-                [
-                  "fill",
-                ]
-              }
-            />
-          </RNSVGGroup>
-        </RNSVGSvgView>
-      </Text>
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
     </View>
   </View>
   <View

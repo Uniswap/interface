@@ -1,6 +1,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useBiometricName } from 'src/features/biometrics/hooks'
+import { isAndroid } from 'uniswap/src/utils/platform'
 import {
   WarningModal,
   WarningModalProps,
@@ -20,18 +21,19 @@ export function BiometricAuthWarningModal({
   onClose,
 }: Props): JSX.Element {
   const { t } = useTranslation()
-  const authenticationTypeName = useBiometricName(isTouchIdDevice)
+  const biometricsMethod = useBiometricName(isTouchIdDevice)
   return (
     <WarningModal
-      caption={t(
-        'If you don’t turn on {{authenticationTypeName}}, anyone who gains access to your device can open Uniswap Wallet and make transactions.',
-        { authenticationTypeName }
-      )}
-      closeText={t('Back')}
-      confirmText={t('Skip')}
+      caption={
+        isAndroid
+          ? t('settings.setting.biometrics.warning.message.android')
+          : t('settings.setting.biometrics.warning.message.ios', { biometricsMethod })
+      }
+      closeText={t('common.button.back')}
+      confirmText={t('common.button.skip')}
       modalName={ModalName.FaceIDWarning}
       severity={WarningSeverity.Low}
-      title={t('Are you sure?')}
+      title={t('settings.setting.biometrics.warning.title')}
       onClose={onClose}
       onConfirm={onConfirm}
     />

@@ -71,9 +71,9 @@ export function FavoriteWalletsGrid({
   return (
     <AnimatedFlex entering={FadeIn} style={animatedStyle}>
       <FavoriteHeaderRow
-        editingTitle={t('Edit favorite wallets')}
+        editingTitle={t('explore.wallets.favorite.title.edit')}
         isEditing={isEditing}
-        title={t('Favorite wallets')}
+        title={t('explore.wallets.favorite.title.default')}
         onPress={(): void => setIsEditing(!isEditing)}
       />
       {showLoading ? (

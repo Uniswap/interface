@@ -43,7 +43,6 @@ export enum ApplicationModal {
   TAX_SERVICE,
   VOTE,
   UK_DISCLAIMER,
-  UNISWAP_NFT_AIRDROP_CLAIM,
   GET_THE_APP,
 }
 

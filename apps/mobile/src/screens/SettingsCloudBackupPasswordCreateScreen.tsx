@@ -8,9 +8,9 @@ import { Screen } from 'src/components/layout/Screen'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
 import { Screens } from 'src/screens/Screens'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { getCloudProviderName } from 'uniswap/src/utils/platform'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<
   SettingsStackParamList,
@@ -46,16 +46,14 @@ export function SettingsCloudBackupPasswordCreateScreen({
       <ScrollView bounces={false} keyboardShouldPersistTaps="handled">
         <Flex alignItems="center" justifyContent="space-between" mb="$spacing24" mx="$spacing12">
           <Text variant="heading3">
-            {isAndroid ? t('Back up to Google Drive') : t('Back up to iCloud')}
+            {t('settings.setting.backup.create.title', {
+              cloudProviderName: getCloudProviderName(),
+            })}
           </Text>
           <Text color="$neutral2" textAlign="center" variant="body2">
-            {isAndroid
-              ? t(
-                  'Setting a password will encrypt your recovery phrase backup, adding an extra level of protection if your Google Drive account is ever compromised.'
-                )
-              : t(
-                  'Setting a password will encrypt your recovery phrase backup, adding an extra level of protection if your iCloud account is ever compromised.'
-                )}
+            {t('settings.setting.backup.create.description', {
+              cloudProviderName: getCloudProviderName(),
+            })}
           </Text>
         </Flex>
         <CloudBackupPasswordForm navigateToNextScreen={navigateToNextScreen} />
@@ -69,29 +67,21 @@ export function SettingsCloudBackupPasswordCreateScreen({
                   <Icons.OSDynamicCloudIcon color="$accent1" size="$icon.24" />
                 </Flex>
                 <Text textAlign="center" variant="subheading1">
-                  {isAndroid
-                    ? t('Back up recovery phrase to Google Drive?')
-                    : t('Back up recovery phrase to iCloud?')}
+                  {t('settings.setting.backup.modal.title')}
                 </Text>
                 <Text color="$neutral2" textAlign="center" variant="body2">
-                  {isAndroid
-                    ? t(
-                        'You haven’t backed up your recovery phrase to Google Drive yet. By doing so, you can recover your wallet just by being logged into Google Drive on any device.'
-                      )
-                    : t(
-                        'You haven’t backed up your recovery phrase to iCloud yet. By doing so, you can recover your wallet just by being logged into iCloud on any device.'
-                      )}
+                  {t('settings.setting.backup.modal.description')}
                 </Text>
               </Flex>
               <Flex centered row gap="$spacing12" pt="$spacing24">
                 <Button fill theme="tertiary" onPress={(): void => navigation.goBack()}>
-                  {t('Cancel')}
+                  {t('common.button.cancel')}
                 </Button>
                 <Button
                   fill
                   testID={ElementName.Confirm}
                   onPress={(): void => setShowCloudBackupInfoModal(false)}>
-                  {t('Continue')}
+                  {t('common.button.continue')}
                 </Button>
               </Flex>
             </Flex>

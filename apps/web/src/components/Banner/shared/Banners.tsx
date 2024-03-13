@@ -3,20 +3,14 @@ import { ChainId } from '@uniswap/sdk-core'
 import WalletAppPromoBanner from 'components/Banner/MobileAppAnnouncementBanner'
 import { OutageBanner, getOutageBannerSessionStorageKey } from 'components/Banner/Outage/OutageBanner'
 import { useOutageBanners } from 'featureFlags/flags/outageBanner'
-import { useUniTagsEnabled } from 'featureFlags/flags/uniTags'
 import { getValidUrlChainId } from 'graphql/data/util'
 import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
-import { SwapSmarterBanner } from '../SwapSmarterBanner/SwapSmarterBanner'
-import { useSwapSmarterBanner } from '../SwapSmarterBanner/useSwapSmarterBanner'
-import { LargeUniTagBanner } from '../UniTag/LargeUniTagBanner'
 
 export function Banners() {
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
-  const isUniTagsEnabled = useUniTagsEnabled()
-  const { shouldShowBanner: shouldShowSwapSmarterBanner } = useSwapSmarterBanner()
 
   const outageBanners = useOutageBanners()
 
@@ -47,14 +41,6 @@ export function Banners() {
   // Outage Banners should take precedence over the Wallet Download Banner
   if (pageChainId && showOutageBanner) {
     return <OutageBanner chainId={pageChainId} />
-  }
-
-  if (shouldShowSwapSmarterBanner) {
-    return <SwapSmarterBanner />
-  }
-
-  if (isUniTagsEnabled) {
-    return <LargeUniTagBanner />
   }
 
   return <WalletAppPromoBanner />

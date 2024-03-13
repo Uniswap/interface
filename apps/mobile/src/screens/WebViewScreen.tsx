@@ -5,7 +5,7 @@ import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { Screens } from 'src/screens/Screens'
 import { Separator, Text } from 'ui/src'
-import { uniswapUrls } from 'wallet/src/constants/urls'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 export function WebViewScreen({

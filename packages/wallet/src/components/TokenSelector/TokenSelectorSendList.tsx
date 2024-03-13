@@ -3,17 +3,17 @@ import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, isWeb } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { GqlResult } from 'uniswap/src/data/types'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
-import { usePortfolioTokenOptions } from 'wallet/src/components/TokenSelector/hooks'
 import {
   SectionHeader,
   TokenSelectorList,
 } from 'wallet/src/components/TokenSelector/TokenSelectorList'
+import { usePortfolioTokenOptions } from 'wallet/src/components/TokenSelector/hooks'
 import { OnSelectCurrency, TokenSection } from 'wallet/src/components/TokenSelector/types'
 import { getTokenOptionsSection } from 'wallet/src/components/TokenSelector/utils'
+import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 import { ChainId } from 'wallet/src/constants/chains'
-import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { useFiatOnRampIpAddressQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -32,7 +32,7 @@ function useTokenSectionsForSend(chainFilter: ChainId | null): GqlResult<TokenSe
   const error = !portfolioTokenOptions && portfolioTokenOptionsError
 
   const sections = useMemo(
-    () => getTokenOptionsSection(t('Your tokens'), portfolioTokenOptions),
+    () => getTokenOptionsSection(t('tokens.selector.section.yours'), portfolioTokenOptions),
     [portfolioTokenOptions, t]
   )
 
@@ -59,7 +59,7 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress: () => void }): 
 
   return (
     <Flex>
-      <SectionHeader title={t('Your tokens')} />
+      <SectionHeader title={t('tokens.selector.section.yours')} />
       <Flex pt="$spacing16" px="$spacing16">
         {isLoading ? (
           <Flex centered row flexDirection="row" gap="$spacing4" mt="$spacing60" p="$spacing4">
@@ -67,13 +67,17 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress: () => void }): 
           </Flex>
         ) : (
           <BaseCard.EmptyState
-            buttonLabel={fiatOnRampEligible ? t('Buy crypto') : t('Receive tokens')}
+            buttonLabel={
+              fiatOnRampEligible
+                ? t('tokens.selector.empty.buy.title')
+                : t('tokens.selector.empty.receive.title')
+            }
             description={
               fiatOnRampEligible
-                ? t('Buy crypto with a card or bank to send tokens.')
-                : t('Transfer tokens from a centralized exchange or another wallet to send tokens.')
+                ? t('tokens.selector.empty.buy.message')
+                : t('tokens.selector.empty.receive.message')
             }
-            title={t('No tokens yet')}
+            title={t('tokens.selector.empty.title')}
             onPress={onEmptyActionPress}
           />
         )}

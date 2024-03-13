@@ -19,6 +19,7 @@ import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { ChartType } from 'components/Charts/utils'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { LoadingBubble } from '../loading'
 import { AboutContainer, AboutHeader } from './About'
 import { OldChartContainer, TDP_CHART_HEIGHT_PX } from './ChartSection'
@@ -319,7 +320,7 @@ function TokenDetailsSkeleton() {
   const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
   const isInfoTDPEnabled = useInfoTDPEnabled()
   const chainId = supportedChainIdFromGQLChain(validateUrlChainParam(chainName))
-  const token = useCurrency(tokenAddress === 'NATIVE' ? 'ETH' : tokenAddress, chainId)
+  const token = useCurrency(tokenAddress === NATIVE_CHAIN_ID ? 'ETH' : tokenAddress, chainId)
 
   return (
     <LeftPanel>

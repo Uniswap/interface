@@ -73,7 +73,9 @@ function Stat({
 
   return (
     <StatWrapper data-cy={`${dataCy}`} isInfoTDPEnabled={isInfoTDPEnabled}>
-      <MouseoverTooltip text={description}>{title}</MouseoverTooltip>
+      <MouseoverTooltip disabled={!description} text={description}>
+        {title}
+      </MouseoverTooltip>
       <StatPrice>
         {formatNumber({
           input: value,

@@ -1,9 +1,10 @@
 import { ApolloLink, createHttpLink } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
 import { RestLink } from 'apollo-link-rest'
+import { config } from 'uniswap/src/config'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { REQUEST_SOURCE } from 'uniswap/src/data/constants'
 import { logger } from 'utilities/src/logger/logger'
-import { config } from 'wallet/src/config'
-import { uniswapUrls } from 'wallet/src/constants/urls'
 import {
   EnsLookupParams,
   STUB_ONCHAIN_ENS_ENDPOINT,
@@ -14,11 +15,8 @@ import {
   STUB_ONCHAIN_BALANCES_ENDPOINT,
   getOnChainBalancesFetch,
 } from 'wallet/src/features/portfolio/api'
-import { isAndroid, isIOS } from 'wallet/src/utils/platform'
 
 const REST_API_URL = uniswapUrls.apiBaseUrl
-
-export const REQUEST_SOURCE = isIOS ? 'uniswap-ios' : isAndroid ? 'uniswap-android' : 'uniswap-web'
 
 // mapping from endpoint to custom fetcher, when needed
 function getCustomFetcherMap(
@@ -116,7 +114,7 @@ export function getErrorLink(
       graphQLErrors.forEach(({ message, locations, path }) => {
         sample(
           () =>
-            logger.error('GraphQL error', {
+            logger.error(`GraphQL error: ${message}`, {
               tags: {
                 file: 'data/links',
                 function: 'getErrorLink',

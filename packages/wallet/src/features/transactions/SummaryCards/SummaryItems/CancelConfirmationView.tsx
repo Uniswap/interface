@@ -73,11 +73,9 @@ export function CancelConfirmationView({
         <SlashCircleIcon color={colors.neutral2.get()} height={24} strokeWidth="1" width={24} />
       </Flex>
       <Flex centered gap="$spacing8">
-        <Text variant="buttonLabel2">{t('Cancel this transaction?')}</Text>
+        <Text variant="buttonLabel2">{t('transaction.action.cancel.title')}</Text>
         <Text color="$neutral2" textAlign="center" variant="body2">
-          {t(
-            'If you cancel this transaction before it’s processed by the network, you’ll pay a new network fee instead of the original one.'
-          )}
+          {t('transaction.action.cancel.description')}
         </Text>
       </Flex>
       <Flex
@@ -87,7 +85,7 @@ export function CancelConfirmationView({
         borderRadius="$rounded16"
         width="100%">
         <Flex grow row justifyContent="space-between" p="$spacing12">
-          <Text variant="subheading2">{t('Network cost')}</Text>
+          <Text variant="subheading2">{t('transaction.networkCost.label')}</Text>
           {!gasFeeUSD ? <ActivityIndicator /> : <Text variant="subheading2">{gasFee}</Text>}
         </Flex>
         {accountAddress && (
@@ -106,7 +104,7 @@ export function CancelConfirmationView({
       </Flex>
       <Flex grow row gap="$spacing8" px="$spacing4">
         <Button fill theme="tertiary" onPress={onBack}>
-          {t('Back')}
+          {t('common.button.back')}
         </Button>
         <Button
           fill
@@ -114,7 +112,7 @@ export function CancelConfirmationView({
           testID={ElementName.Cancel}
           theme="detrimental"
           onPress={onPressCancel}>
-          {t('Confirm')}
+          {t('common.button.confirm')}
         </Button>
       </Flex>
     </Flex>

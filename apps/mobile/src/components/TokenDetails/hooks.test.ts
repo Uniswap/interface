@@ -1,12 +1,17 @@
 import { useCrossChainBalances, useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { Screens } from 'src/screens/Screens'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
-import { USDBC_BASE, USDC_ARBITRUM } from 'wallet/src/constants/tokens'
-import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
-import { SAMPLE_CURRENCY_ID_1, mockWalletPreloadedState } from 'wallet/src/test/fixtures'
-import { Portfolio, Portfolio2, PortfolioBalancesById } from 'wallet/src/test/gqlFixtures'
+import {
+  SAMPLE_CURRENCY_ID_1,
+  portfolio,
+  portfolioBalances,
+  tokenBalance,
+  usdcArbitrumToken,
+  usdcBaseToken,
+} from 'wallet/src/test/fixtures'
+import { mockWalletPreloadedState } from 'wallet/src/test/mocks'
+import { queryResolvers } from 'wallet/src/test/utils'
 
 const mockedNavigation = {
   navigate: jest.fn(),
@@ -28,7 +33,7 @@ describe(useCrossChainBalances, () => {
   describe('currentChainBalance', () => {
     it('returns null if there are no balances for the specified currency', async () => {
       const { result } = renderHook(() => useCrossChainBalances(SAMPLE_CURRENCY_ID_1, null), {
-        preloadedState: mockWalletPreloadedState,
+        preloadedState: mockWalletPreloadedState(),
       })
 
       await act(() => undefined)
@@ -41,19 +46,23 @@ describe(useCrossChainBalances, () => {
     })
 
     it('returns balance if there is at least one for the specified currency', async () => {
-      const { result } = renderHook(() => useCrossChainBalances(SAMPLE_CURRENCY_ID_1, null), {
-        preloadedState: mockWalletPreloadedState,
-        resolvers: {
-          Query: {
-            portfolios: () => [Portfolio],
-          },
-        },
+      const Portfolio = portfolio()
+      const currentChainBalance = portfolioBalances({ portfolio: Portfolio })[0]!
+      const { resolvers } = queryResolvers({
+        portfolios: () => [Portfolio],
       })
+      const { result } = renderHook(
+        () => useCrossChainBalances(currentChainBalance.currencyInfo.currencyId, null),
+        {
+          preloadedState: mockWalletPreloadedState(),
+          resolvers,
+        }
+      )
 
       await waitFor(() => {
         expect(result.current).toEqual(
           expect.objectContaining({
-            currentChainBalance: PortfolioBalancesById[SAMPLE_CURRENCY_ID_1],
+            currentChainBalance,
           })
         )
       })
@@ -61,15 +70,9 @@ describe(useCrossChainBalances, () => {
   })
 
   describe('otherChainBalances', () => {
-    // Current chain balance will be determined by the following currency id
-    const currencyId1 = `${fromGraphQLChain(Chain.Base)}-${USDBC_BASE.address.toLocaleLowerCase()}`
-    const currencyId2 = `${fromGraphQLChain(
-      Chain.Arbitrum
-    )}-${USDC_ARBITRUM.address.toLocaleLowerCase()}`
-
     it('returns null if there are no bridged currencies', async () => {
       const { result } = renderHook(() => useCrossChainBalances(SAMPLE_CURRENCY_ID_1, null), {
-        preloadedState: mockWalletPreloadedState,
+        preloadedState: mockWalletPreloadedState(),
       })
 
       await act(() => undefined)
@@ -82,25 +85,34 @@ describe(useCrossChainBalances, () => {
     })
 
     it('does not include current chain balance in other chain balances', async () => {
-      const bridgeInfo: { chain: Chain; address?: string }[] = [
-        { chain: Chain.Base, address: USDBC_BASE.address.toLocaleLowerCase() },
-        { chain: Chain.Arbitrum, address: USDC_ARBITRUM.address.toLocaleLowerCase() },
+      const tokenBalances = [
+        tokenBalance({ token: usdcBaseToken() }),
+        tokenBalance({ token: usdcArbitrumToken() }),
       ]
-      const { result } = renderHook(() => useCrossChainBalances(currencyId1, bridgeInfo), {
-        preloadedState: mockWalletPreloadedState,
-        resolvers: {
-          Query: {
-            portfolios: () => [Portfolio2],
-          },
-        },
+
+      const bridgeInfo = tokenBalances.map((balance) => ({
+        chain: balance.token.chain,
+        address: balance.token?.address,
+      }))
+      const Portfolio = portfolio({ tokenBalances })
+      const [currentChainBalance, ...otherChainBalances] = portfolioBalances({
+        portfolio: Portfolio,
       })
+      const { resolvers } = queryResolvers({
+        portfolios: () => [Portfolio],
+      })
+
+      const { result } = renderHook(
+        () => useCrossChainBalances(currentChainBalance!.currencyInfo.currencyId, bridgeInfo),
+        {
+          preloadedState: mockWalletPreloadedState(),
+          resolvers,
+        }
+      )
 
       await waitFor(() => {
         expect(result.current).toEqual(
-          expect.objectContaining({
-            currentChainBalance: PortfolioBalancesById[currencyId1],
-            otherChainBalances: [PortfolioBalancesById[currencyId2]],
-          })
+          expect.objectContaining({ currentChainBalance, otherChainBalances })
         )
       })
     })
@@ -124,12 +136,11 @@ describe(useTokenDetailsNavigation, () => {
 
   it('preloads token details when preload function is called', async () => {
     const queryResolver = jest.fn()
+    const { resolvers } = queryResolvers({
+      token: queryResolver,
+    })
     const { result } = renderHook(() => useTokenDetailsNavigation(), {
-      resolvers: {
-        Query: {
-          token: queryResolver,
-        },
-      },
+      resolvers,
     })
 
     await act(() => result.current.preload(SAMPLE_CURRENCY_ID_1))

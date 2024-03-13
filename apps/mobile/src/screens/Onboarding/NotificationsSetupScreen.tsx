@@ -4,16 +4,17 @@ import { useTranslation } from 'react-i18next'
 import { Alert, Image, Platform, StyleSheet } from 'react-native'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { BackButton } from 'src/components/buttons/BackButton'
 import Trace from 'src/components/Trace/Trace'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
-import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
+import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { Button, Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'ui/src/assets'
+import { isIOS } from 'uniswap/src/utils/platform'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import {
   EditAccountAction,
@@ -24,20 +25,17 @@ import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import i18n from 'wallet/src/i18n/i18n'
 import { ElementName } from 'wallet/src/telemetry/constants'
 import { openSettings } from 'wallet/src/utils/linking'
-import { isIOS } from 'wallet/src/utils/platform'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Notifications>
 
 export const showNotificationSettingsAlert = (): void => {
   Alert.alert(
-    i18n.t('Notifications permission'),
-    i18n.t(
-      'To receive notifications, turn on notifications for Uniswap Wallet in your device’s settings.'
-    ),
+    i18n.t('onboarding.notification.permission.title'),
+    i18n.t('onboarding.notification.permission.message'),
     [
-      { text: i18n.t('Settings'), onPress: openSettings },
+      { text: i18n.t('common.navigation.settings'), onPress: openSettings },
       {
-        text: i18n.t('Cancel'),
+        text: i18n.t('common.button.cancel'),
       },
     ]
   )
@@ -121,22 +119,22 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
 
   return (
     <OnboardingScreen
-      subtitle={t('Get notified when your transfers, swaps, and approvals complete.')}
-      title={t('Turn on push notifications')}>
+      subtitle={t('onboarding.notification.subtitle')}
+      title={t('onboarding.notification.title')}>
       <Flex centered shrink py={isIOS ? '$spacing60' : '$spacing16'}>
         <NotificationsBackgroundImage />
       </Flex>
       <Flex gap="$spacing24">
         <Trace logPress element={ElementName.Skip}>
-          <TouchableArea onPress={navigateToNextScreen}>
+          <TouchableArea testID={ElementName.Skip} onPress={navigateToNextScreen}>
             <Text color="$accent1" textAlign="center" variant="buttonLabel2">
-              {t('Maybe later')}
+              {t('common.button.later')}
             </Text>
           </TouchableArea>
         </Trace>
         <Trace logPress element={ElementName.Enable}>
           <Button testID="turn-on-notifications" onPress={onPressEnableNotifications}>
-            {t('Enable')}
+            {t('common.button.enable')}
           </Button>
         </Trace>
       </Flex>

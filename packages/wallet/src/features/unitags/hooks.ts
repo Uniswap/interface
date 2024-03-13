@@ -2,6 +2,20 @@ import { TFunction } from 'i18next'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getUniqueId } from 'react-native-device-info'
+import { useUnitagQuery } from 'uniswap/src/features/unitags/api'
+import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
+import {
+  UseUnitagAddressResponse,
+  UseUnitagNameResponse,
+  useUnitagByAddressWithoutFlag,
+  useUnitagByNameWithoutFlag,
+} from 'uniswap/src/features/unitags/hooksWithoutFlags'
+import {
+  UnitagClaim,
+  UnitagClaimContext,
+  UnitagErrorCodes,
+  UnitagGetAvatarUploadUrlResponse,
+} from 'uniswap/src/features/unitags/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -15,9 +29,7 @@ import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
   claimUnitag,
   getUnitagAvatarUploadUrl,
-  useUnitagByAddressQuery,
   useUnitagClaimEligibilityQuery,
-  useUnitagQuery,
 } from 'wallet/src/features/unitags/api'
 import {
   isLocalFileUri,
@@ -27,15 +39,6 @@ import {
   AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS,
   UNITAG_VALID_REGEX,
 } from 'wallet/src/features/unitags/constants'
-import { useUnitagUpdater } from 'wallet/src/features/unitags/context'
-import {
-  UnitagAddressResponse,
-  UnitagClaim,
-  UnitagClaimContext,
-  UnitagErrorCodes,
-  UnitagGetAvatarUploadUrlResponse,
-  UnitagUsernameResponse,
-} from 'wallet/src/features/unitags/types'
 import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
@@ -52,6 +55,16 @@ import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 const MIN_UNITAG_LENGTH = 3
 const MAX_UNITAG_LENGTH = 20
+
+export const useUnitagByAddress = (address?: Address): UseUnitagAddressResponse => {
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+  return useUnitagByAddressWithoutFlag(address, unitagsFeatureFlagEnabled)
+}
+
+export const useUnitagByName = (name?: string): UseUnitagNameResponse => {
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+  return useUnitagByNameWithoutFlag(name, unitagsFeatureFlagEnabled)
+}
 
 export const useCanActiveAddressClaimUnitag = (): {
   canClaimUnitag: boolean
@@ -115,62 +128,18 @@ export const useCanAddressClaimUnitag = (
   }
 }
 
-export const useUnitagByAddress = (
-  address?: Address,
-  forceEnable?: boolean
-): { unitag?: UnitagAddressResponse; loading: boolean } => {
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags) || forceEnable
-  const { data, loading, refetch } = useUnitagByAddressQuery(
-    unitagsFeatureFlagEnabled ? address : undefined
-  )
-
-  // Force refetch if counter changes
-  const { refetchUnitagsCounter } = useUnitagUpdater()
-  useEffect(() => {
-    if (!unitagsFeatureFlagEnabled || loading || !address) {
-      return
-    }
-
-    refetch?.()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refetchUnitagsCounter])
-
-  return { unitag: data, loading }
-}
-
-export const useUnitagByName = (
-  name?: string,
-  forceEnable?: boolean
-): { unitag?: UnitagUsernameResponse; loading: boolean } => {
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags) || forceEnable
-  const { data, loading, refetch } = useUnitagQuery(unitagsFeatureFlagEnabled ? name : undefined)
-
-  // Force refetch if counter changes
-  const { refetchUnitagsCounter } = useUnitagUpdater()
-  useEffect(() => {
-    if (!unitagsFeatureFlagEnabled || loading || !name) {
-      return
-    }
-
-    refetch?.()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refetchUnitagsCounter])
-
-  return { unitag: data, loading }
-}
-
 // Helper function to enforce unitag length and alphanumeric characters
 export const getUnitagFormatError = (unitag: string, t: TFunction): string | undefined => {
   if (unitag.length < MIN_UNITAG_LENGTH) {
-    return t(`Usernames must be at least {{ minUnitagLength }} characters`, {
-      minUnitagLength: MIN_UNITAG_LENGTH,
+    return t('unitags.username.error.min', {
+      number: MIN_UNITAG_LENGTH,
     })
   } else if (unitag.length > MAX_UNITAG_LENGTH) {
-    return t(`Usernames cannot be more than {{ maxUnitagLength }} characters`, {
-      maxUnitagLength: MAX_UNITAG_LENGTH,
+    return t('unitags.username.error.max', {
+      number: MAX_UNITAG_LENGTH,
     })
   } else if (!UNITAG_VALID_REGEX.test(unitag)) {
-    return t('Usernames can only contain lowercase letters and numbers')
+    return t('unitags.username.error.chars')
   }
   return undefined
 }
@@ -194,10 +163,10 @@ export const useCanClaimUnitagName = (
   const dataLoaded = !loading && !!data
   const ensAddressMatchesUnitagAddress = areAddressesEqual(unitagAddress, ensAddress)
   if (dataLoaded && !data.available) {
-    error = t('This username is not available')
+    error = t('unitags.claim.error.unavailable')
   }
   if (dataLoaded && data.requiresEnsMatch && !ensAddressMatchesUnitagAddress) {
-    error = t('This username is not currently available.')
+    error = t('unitags.claim.error.ensMismatch')
   }
   return { error, loading, requiresENSMatch: data?.requiresEnsMatch ?? false }
 }
@@ -218,7 +187,7 @@ export const useClaimUnitag = (): ((
   return async (claim: UnitagClaim, context: UnitagClaimContext) => {
     const claimAccount = pendingAccounts[claim.address] || accounts[claim.address]
     if (!claimAccount || !deviceId) {
-      return { claimError: t('Could not claim username. Try again later.') }
+      return { claimError: t('unitags.claim.error.default') }
     }
 
     try {
@@ -226,7 +195,7 @@ export const useClaimUnitag = (): ((
       if (unitagsDeviceAttestationEnabled) {
         firebaseAppCheckToken = await getFirebaseAppCheckToken()
         if (!firebaseAppCheckToken) {
-          return { claimError: t('Could not claim username. Please try again tomorrow.') }
+          return { claimError: t('unitags.claim.error.appCheck') }
         }
       }
 
@@ -263,7 +232,7 @@ export const useClaimUnitag = (): ((
             dispatch(
               pushNotification({
                 type: AppNotificationType.Error,
-                errorMessage: t('Could not set avatar. Try again later.'),
+                errorMessage: t('unitags.claim.error.avatar'),
               })
             )
           }
@@ -276,7 +245,7 @@ export const useClaimUnitag = (): ((
       return { claimError: undefined }
     } catch (e) {
       logger.error(e, { tags: { file: 'useClaimUnitag', function: 'claimUnitag' } })
-      return { claimError: t('Could not claim username. Try again later.') }
+      return { claimError: t('unitags.claim.error.default') }
     }
   }
 }

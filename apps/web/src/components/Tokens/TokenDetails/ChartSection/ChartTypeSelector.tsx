@@ -6,7 +6,7 @@ import { useReducer } from 'react'
 import { Check, Info } from 'react-feather'
 import { css, useTheme } from 'styled-components'
 
-import { isMobile } from 'wallet/src/utils/platform'
+import { isMobile } from 'uniswap/src/utils/platform'
 
 const StyledDropdownButton = css`
   border-radius: 20px;

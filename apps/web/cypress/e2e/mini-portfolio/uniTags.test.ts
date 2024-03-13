@@ -1,4 +1,3 @@
-import { FeatureFlag } from 'featureFlags'
 import { getTestSelector } from '../../utils'
 
 describe('Uni tags support', () => {
@@ -7,45 +6,7 @@ describe('Uni tags support', () => {
     cy.intercept(/gateway.uniswap.org\/v2\/address/, (req) => {
       unitagSpy(req)
     })
-    cy.visit('/swap', {
-      featureFlags: [{ name: FeatureFlag.uniTags, value: true }],
-    })
-  })
-
-  it('displays banner in account drawer', () => {
-    cy.get(getTestSelector('web3-status-connected')).click()
-    cy.contains('Introducing uni.eth usernames')
-  })
-
-  it('displays large banner on page', () => {
-    cy.get(getTestSelector('large-unitag-banner')).should('be.visible')
-  })
-
-  it('does not display banner on landing page', () => {
-    cy.visit('/?intro=true', {
-      featureFlags: [{ name: FeatureFlag.uniTags, value: true }],
-    })
-    cy.get(getTestSelector('large-unitag-banner')).should('not.be.visible')
-  })
-
-  it('opens modal and hides itself when accept button is clicked', () => {
-    cy.get(getTestSelector('large-unitag-banner')).within(() => {
-      cy.get(getTestSelector('unitag-banner-accept-button')).click()
-    })
-    cy.contains('Download the Uniswap app').should('exist')
-    cy.get(getTestSelector('get-the-app-close-button')).click()
-    cy.get(getTestSelector('large-unitag-banner')).should('not.be.visible')
-    cy.get(getTestSelector('web3-status-connected')).click()
-    cy.get('Introducing uni.eth usernames').should('not.exist')
-  })
-
-  it('hides itself when reject button is clicked', () => {
-    cy.get(getTestSelector('large-unitag-banner')).within(() => {
-      cy.get(getTestSelector('unitag-banner-reject-button')).click()
-    })
-    cy.get(getTestSelector('large-unitag-banner')).should('not.be.visible')
-    cy.get(getTestSelector('web3-status-connected')).click()
-    cy.get('Introducing uni.eth usernames').should('not.exist')
+    cy.visit('/swap')
   })
 
   it('shows address if no Unitag or ENS exists', () => {

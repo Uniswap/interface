@@ -1,6 +1,6 @@
 import userEvent from '@testing-library/user-event'
 import { ChainId } from '@uniswap/sdk-core'
-import { nativeOnChain } from 'constants/tokens'
+import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { TokenFromList } from 'state/lists/tokenFromList'
 import { act, render, screen } from 'test-utils/render'
 
@@ -30,7 +30,7 @@ describe('BreadcrumbNav', () => {
 
   it('does not display address hover for native tokens', async () => {
     const ETH = nativeOnChain(ChainId.MAINNET)
-    const { asFragment } = render(<CurrentPageBreadcrumb address="NATIVE" currency={ETH} />)
+    const { asFragment } = render(<CurrentPageBreadcrumb address={NATIVE_CHAIN_ID} currency={ETH} />)
     expect(asFragment()).toMatchSnapshot()
 
     await act(() => userEvent.hover(screen.getByTestId('current-breadcrumb')))

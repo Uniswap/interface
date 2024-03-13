@@ -469,6 +469,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
       >
         <View
           cancelable={true}
+          disabled={false}
           focusable={true}
           hitSlop={[Function]}
           minPressDuration={0}
@@ -651,6 +652,7 @@ exports[`SearchPopularTokens renders without error 2`] = `
       >
         <View
           cancelable={true}
+          disabled={false}
           focusable={true}
           hitSlop={[Function]}
           minPressDuration={0}

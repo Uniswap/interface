@@ -194,7 +194,7 @@ function TokenSelectorContent({
           <SearchTextInput
             backgroundColor={isWeb ? '$surface1' : '$surface2'}
             endAdornment={hasClipboardString ? <PasteButton inline onPress={handlePaste} /> : null}
-            placeholder={t('Search tokens')}
+            placeholder={t('tokens.selector.search.placeholder')}
             px={isWeb ? '$none' : '$spacing16'}
             py="$none"
             value={searchFilter ?? ''}

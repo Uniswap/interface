@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`LimitsMenu should render when there are two open orders 1`] = `
-.c7 {
+.c13 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c8 {
+.c14 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -24,7 +24,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   justify-content: flex-start;
 }
 
-.c13 {
+.c18 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -50,7 +50,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c12 {
+.c9 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -58,11 +58,30 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c16 {
+.c21 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
+}
+
+.c11 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c11:hover {
+  opacity: 0.6;
+}
+
+.c11:active {
+  opacity: 0.4;
 }
 
 .c0 {
@@ -79,7 +98,22 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   justify-content: flex-start;
 }
 
-.c11 {
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c17 {
   display: grid;
   grid-auto-rows: auto;
   -webkit-box-flex: 1;
@@ -88,7 +122,18 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   flex-grow: 1;
 }
 
-.c9 {
+.c7 {
+  background-color: #F9F9F9;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 12px;
+}
+
+.c10 {
+  line-height: 16px;
+}
+
+.c15 {
   gap: 12px;
   height: 68px;
   padding: 0 16px;
@@ -97,11 +142,11 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   cursor: pointer;
 }
 
-.c9:hover {
+.c15:hover {
   cursor: pointer;
 }
 
-.c17 {
+.c22 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -116,7 +161,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   line-height: 1;
 }
 
-.c19 {
+.c24 {
   border-color: #22222212;
   display: inline-block;
   margin-right: 1px;
@@ -133,15 +178,15 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   transition-duration: 125ms;
 }
 
-.c19:hover {
+.c24:hover {
   opacity: 0.6;
 }
 
-.c19:active {
+.c24:active {
   opacity: 0.4;
 }
 
-.c20 {
+.c25 {
   position: absolute;
   top: -24px;
   -webkit-clip: rect(0 0 0 0);
@@ -155,7 +200,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   width: 1px;
 }
 
-.c21 {
+.c26 {
   display: none;
   height: 18px;
   width: 18px;
@@ -164,7 +209,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   right: 1px;
 }
 
-.c10 {
+.c16 {
   padding: 8px 0;
   height: unset;
   white-space: nowrap;
@@ -172,18 +217,18 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   text-overflow: ellipsis;
 }
 
-.c18 {
+.c23 {
   opacity: 0;
 }
 
-.c14 * {
+.c19 * {
   max-width: 40%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.c15 {
+.c20 {
   width: 16px;
   height: 16px;
   border-radius: 50%;
@@ -260,9 +305,13 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   margin-bottom: 20px;
 }
 
-.c6 {
+.c12 {
   height: 100%;
   position: relative;
+}
+
+.c8 {
+  margin-bottom: 24px;
 }
 
 <div>
@@ -312,20 +361,46 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
           </span>
         </div>
         <div
-          class="c0 c6"
+          class="c6 c7 c8"
+        >
+          <div
+            class="c9 c10 css-1m65e73"
+          >
+            Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.
+          </div>
+          <div
+            class="c9 c10 css-1m65e73"
+          >
+            Canceling a limit has a network cost.
+          </div>
+          <div
+            class="c9 c10 css-1m65e73"
+          >
+            <a
+              class="c11"
+              href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c0 c12"
           data-testid="LimitsMenuContainer"
         >
           <div
-            class="c7 c8"
+            class="c13 c14"
           >
             <div
-              class="c7 c8 c9 c10"
+              class="c13 c14 c15 c16"
             >
               <div
-                class="c11"
+                class="c17"
               >
                 <div
-                  class="c12 css-15li2d9"
+                  class="c9 css-15li2d9"
                 >
                   Expires January 26, 2024 at 1:52PM
                 </div>
@@ -333,10 +408,10 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                   class="c0"
                 >
                   <div
-                    class="c7 c13 c14"
+                    class="c13 c18 c19"
                   >
                     <img
-                      class="c15"
+                      class="c20"
                     />
                     <div
                       class="c5 css-n8z49y"
@@ -367,7 +442,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                       />
                     </svg>
                     <img
-                      class="c15"
+                      class="c20"
                     />
                     <div
                       class="c5 css-n8z49y"
@@ -378,7 +453,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                     </div>
                   </div>
                   <div
-                    class="c16 css-142zc9n"
+                    class="c21 css-142zc9n"
                   >
                     when 0.00042 WETH/DAI
                   </div>
@@ -386,20 +461,20 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
               </div>
             </div>
             <label
-              class="c17 c18"
+              class="c22 c23"
             >
               <span
                 aria-hidden="true"
-                class="c19"
+                class="c24"
                 size="18"
               />
               <input
-                class="c20"
+                class="c25"
                 size="18"
                 type="checkbox"
               />
               <svg
-                class="c21"
+                class="c26"
                 fill="none"
                 height="16"
                 size="18"
@@ -420,16 +495,16 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
             </label>
           </div>
           <div
-            class="c7 c8"
+            class="c13 c14"
           >
             <div
-              class="c7 c8 c9 c10"
+              class="c13 c14 c15 c16"
             >
               <div
-                class="c11"
+                class="c17"
               >
                 <div
-                  class="c12 css-15li2d9"
+                  class="c9 css-15li2d9"
                 >
                   Expires January 26, 2024 at 1:52PM
                 </div>
@@ -437,10 +512,10 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                   class="c0"
                 >
                   <div
-                    class="c7 c13 c14"
+                    class="c13 c18 c19"
                   >
                     <img
-                      class="c15"
+                      class="c20"
                     />
                     <div
                       class="c5 css-n8z49y"
@@ -471,7 +546,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                       />
                     </svg>
                     <img
-                      class="c15"
+                      class="c20"
                     />
                     <div
                       class="c5 css-n8z49y"
@@ -482,7 +557,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                     </div>
                   </div>
                   <div
-                    class="c16 css-142zc9n"
+                    class="c21 css-142zc9n"
                   >
                     when 0.00042 WETH/DAI
                   </div>
@@ -490,20 +565,20 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
               </div>
             </div>
             <label
-              class="c17 c18"
+              class="c22 c23"
             >
               <span
                 aria-hidden="true"
-                class="c19"
+                class="c24"
                 size="18"
               />
               <input
-                class="c20"
+                class="c25"
                 size="18"
                 type="checkbox"
               />
               <svg
-                class="c21"
+                class="c26"
                 fill="none"
                 height="16"
                 size="18"
@@ -531,13 +606,13 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
 `;
 
 exports[`LimitsMenu should render when there is one open order 1`] = `
-.c7 {
+.c13 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c8 {
+.c14 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -554,7 +629,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   justify-content: flex-start;
 }
 
-.c13 {
+.c18 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -580,7 +655,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c12 {
+.c9 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -588,11 +663,30 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c16 {
+.c21 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
+}
+
+.c11 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c11:hover {
+  opacity: 0.6;
+}
+
+.c11:active {
+  opacity: 0.4;
 }
 
 .c0 {
@@ -609,7 +703,22 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   justify-content: flex-start;
 }
 
-.c11 {
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c17 {
   display: grid;
   grid-auto-rows: auto;
   -webkit-box-flex: 1;
@@ -618,7 +727,18 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   flex-grow: 1;
 }
 
-.c9 {
+.c7 {
+  background-color: #F9F9F9;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 12px;
+}
+
+.c10 {
+  line-height: 16px;
+}
+
+.c15 {
   gap: 12px;
   height: 68px;
   padding: 0 16px;
@@ -627,11 +747,11 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   cursor: pointer;
 }
 
-.c9:hover {
+.c15:hover {
   cursor: pointer;
 }
 
-.c17 {
+.c22 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -646,7 +766,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   line-height: 1;
 }
 
-.c19 {
+.c24 {
   border-color: #22222212;
   display: inline-block;
   margin-right: 1px;
@@ -663,15 +783,15 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   transition-duration: 125ms;
 }
 
-.c19:hover {
+.c24:hover {
   opacity: 0.6;
 }
 
-.c19:active {
+.c24:active {
   opacity: 0.4;
 }
 
-.c20 {
+.c25 {
   position: absolute;
   top: -24px;
   -webkit-clip: rect(0 0 0 0);
@@ -685,7 +805,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   width: 1px;
 }
 
-.c21 {
+.c26 {
   display: none;
   height: 18px;
   width: 18px;
@@ -694,7 +814,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   right: 1px;
 }
 
-.c10 {
+.c16 {
   padding: 8px 0;
   height: unset;
   white-space: nowrap;
@@ -702,18 +822,18 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   text-overflow: ellipsis;
 }
 
-.c18 {
+.c23 {
   opacity: 0;
 }
 
-.c14 * {
+.c19 * {
   max-width: 40%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.c15 {
+.c20 {
   width: 16px;
   height: 16px;
   border-radius: 50%;
@@ -790,9 +910,13 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   margin-bottom: 20px;
 }
 
-.c6 {
+.c12 {
   height: 100%;
   position: relative;
+}
+
+.c8 {
+  margin-bottom: 24px;
 }
 
 <div>
@@ -842,20 +966,46 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
           </span>
         </div>
         <div
-          class="c0 c6"
+          class="c6 c7 c8"
+        >
+          <div
+            class="c9 c10 css-1m65e73"
+          >
+            Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.
+          </div>
+          <div
+            class="c9 c10 css-1m65e73"
+          >
+            Canceling a limit has a network cost.
+          </div>
+          <div
+            class="c9 c10 css-1m65e73"
+          >
+            <a
+              class="c11"
+              href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c0 c12"
           data-testid="LimitsMenuContainer"
         >
           <div
-            class="c7 c8"
+            class="c13 c14"
           >
             <div
-              class="c7 c8 c9 c10"
+              class="c13 c14 c15 c16"
             >
               <div
-                class="c11"
+                class="c17"
               >
                 <div
-                  class="c12 css-15li2d9"
+                  class="c9 css-15li2d9"
                 >
                   Expires January 26, 2024 at 1:52PM
                 </div>
@@ -863,10 +1013,10 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
                   class="c0"
                 >
                   <div
-                    class="c7 c13 c14"
+                    class="c13 c18 c19"
                   >
                     <img
-                      class="c15"
+                      class="c20"
                     />
                     <div
                       class="c5 css-n8z49y"
@@ -897,7 +1047,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
                       />
                     </svg>
                     <img
-                      class="c15"
+                      class="c20"
                     />
                     <div
                       class="c5 css-n8z49y"
@@ -908,7 +1058,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
                     </div>
                   </div>
                   <div
-                    class="c16 css-142zc9n"
+                    class="c21 css-142zc9n"
                   >
                     when 0.00042 WETH/DAI
                   </div>
@@ -916,20 +1066,20 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
               </div>
             </div>
             <label
-              class="c17 c18"
+              class="c22 c23"
             >
               <span
                 aria-hidden="true"
-                class="c19"
+                class="c24"
                 size="18"
               />
               <input
-                class="c20"
+                class="c25"
                 size="18"
                 type="checkbox"
               />
               <svg
-                class="c21"
+                class="c26"
                 fill="none"
                 height="16"
                 size="18"

@@ -6,10 +6,10 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useIsDarkMode, useMedia } from 'ui/src'
 import { ONBOARDING_LANDING_DARK, ONBOARDING_LANDING_LIGHT } from 'ui/src/assets'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
+import { isAndroid } from 'uniswap/src/utils/platform'
 import { useTimeout } from 'utilities/src/time/timing'
 import { Language } from 'wallet/src/features/language/constants'
 import { useCurrentLanguage } from 'wallet/src/features/language/hooks'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 const stateMachineName = 'State Machine 1'
 

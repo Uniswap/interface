@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { MoonpayEventName } from '@uniswap/analytics-events'
 import dayjs from 'dayjs'
+import { config } from 'uniswap/src/config'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { config } from 'wallet/src/config'
 import { createSignedRequestParams, objectToQueryString } from 'wallet/src/data/utils'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
 

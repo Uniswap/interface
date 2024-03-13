@@ -13,31 +13,36 @@ import { toBeVisible } from 'test-utils/matchers'
 import { mocked } from 'test-utils/mocked'
 import { TextDecoder, TextEncoder } from 'util'
 
-window.open = jest.fn()
-window.getComputedStyle = jest.fn()
-
-if (typeof globalThis.TextEncoder === 'undefined') {
-  globalThis.ReadableStream = Readable as unknown as typeof globalThis.ReadableStream
-  globalThis.TextEncoder = TextEncoder
-  globalThis.TextDecoder = TextDecoder as typeof globalThis.TextDecoder
-}
-
 // Sets origin to the production origin, because some tests depend on this.
 // This prevents each test file from needing to set this manually.
 globalThis.origin = 'https://app.uniswap.org'
 
-globalThis.React = React
+// Polyfill browser APIs (jest is a node.js environment):
+{
+  window.open = jest.fn()
+  window.getComputedStyle = jest.fn()
 
-globalThis.matchMedia =
-  globalThis.matchMedia ||
-  (() => {
-    return {
-      matches: false,
-      addListener: jest.fn(),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-    }
-  })
+  if (typeof globalThis.TextEncoder === 'undefined') {
+    globalThis.ReadableStream = Readable as unknown as typeof globalThis.ReadableStream
+    globalThis.TextEncoder = TextEncoder
+    globalThis.TextDecoder = TextDecoder as typeof globalThis.TextDecoder
+  }
+
+  globalThis.matchMedia =
+    globalThis.matchMedia ||
+    (() => {
+      return {
+        matches: false,
+        addListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+      }
+    })
+
+  globalThis.performance.measure = jest.fn()
+
+  globalThis.React = React
+}
 
 jest.mock('@popperjs/core', () => {
   const core = jest.requireActual('@popperjs/core')

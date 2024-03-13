@@ -8,9 +8,9 @@ import { NativeStackNavigationProp, NativeStackScreenProps } from '@react-naviga
 import { EducationContentType } from 'src/components/education'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { FiatOnRampScreens, OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
+import { UnitagClaim } from 'uniswap/src/features/unitags/types'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
-import { UnitagClaim } from 'wallet/src/features/unitags/types'
 
 type NFTItemScreenParams = {
   owner?: Address

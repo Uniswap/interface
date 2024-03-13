@@ -1,6 +1,6 @@
 import { providers as ethersProviders } from 'ethers'
+import { config } from 'uniswap/src/config'
 import { logger } from 'utilities/src/logger/logger'
-import { config } from 'wallet/src/config'
 import { CHAIN_INFO, ChainId, RPCType } from 'wallet/src/constants/chains'
 import { getInfuraChainName } from 'wallet/src/features/providers/utils'
 

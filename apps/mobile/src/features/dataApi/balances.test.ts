@@ -1,16 +1,15 @@
 import { act, renderHook, waitFor } from 'src/test/test-utils'
-import {
-  SAMPLE_CURRENCY_ID_1,
-  SAMPLE_CURRENCY_ID_2,
-  mockWalletPreloadedState,
-} from 'wallet/src/test/fixtures'
-import { Portfolio, PortfolioBalancesById } from 'wallet/src/test/gqlFixtures'
+import { SAMPLE_CURRENCY_ID_1, portfolio, portfolioBalances } from 'wallet/src/test/fixtures'
+import { mockWalletPreloadedState } from 'wallet/src/test/mocks'
+import { queryResolvers } from 'wallet/src/test/utils'
 import { useBalances } from './balances'
+
+const preloadedState = mockWalletPreloadedState()
 
 describe(useBalances, () => {
   it('returns null if no currency was specified', async () => {
     const { result } = renderHook(() => useBalances(undefined), {
-      preloadedState: mockWalletPreloadedState,
+      preloadedState,
     })
 
     await act(() => undefined)
@@ -20,7 +19,7 @@ describe(useBalances, () => {
 
   it('returns empty array if no balances are available', async () => {
     const { result } = renderHook(() => useBalances([SAMPLE_CURRENCY_ID_1]), {
-      preloadedState: mockWalletPreloadedState,
+      preloadedState,
     })
 
     expect(result.current).toEqual(null) // null while data is loading
@@ -31,18 +30,19 @@ describe(useBalances, () => {
   })
 
   it('returns balances for specified currencies if they exist in the portfolio', async () => {
-    const { result } = renderHook(() => useBalances([SAMPLE_CURRENCY_ID_1, SAMPLE_CURRENCY_ID_2]), {
-      preloadedState: mockWalletPreloadedState,
-      resolvers: {
-        Query: {
-          portfolios: () => [Portfolio],
-        },
-      },
+    const Portfolio = portfolio()
+    const balances = portfolioBalances({ portfolio: Portfolio })
+    const { resolvers } = queryResolvers({
+      portfolios: () => [Portfolio],
     })
+    const { result } = renderHook(
+      () => useBalances(balances.map(({ currencyInfo: { currencyId } }) => currencyId)),
+      { preloadedState, resolvers }
+    )
 
     await waitFor(() => {
       // The response contains only the first currency as the second one is not in the portfolio
-      expect(result.current).toEqual([PortfolioBalancesById[SAMPLE_CURRENCY_ID_1]])
+      expect(result.current).toEqual(balances)
     })
   })
 })

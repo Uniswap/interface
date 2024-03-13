@@ -8,14 +8,16 @@
         "scripts/fetch-schema.js",
         "src/graphql/**",
         "src/data/**/*.graphql",
-        "src/data/tradingApi/api.json"
+        "src/data/tradingApi/api.json",
+        "src/i18n/locales/source/en-US.json"
       ],
       "outputs": [
         "src/**/__generated__/**",
         "src/types/v3/**",
         "src/locales/**",
         "src/abis/types/**",
-        "src/constants/tokenLists/**"
+        "src/constants/tokenLists/**",
+        "src/i18n/locales/@types/resources.d.ts"
       ],
       "dependsOn": [
         "graphql:generate"
@@ -57,7 +59,8 @@
       ],
       "outputs": [],
       "dependsOn": [
-        "prepare"
+        "prepare",
+        "^prepare"
       ]
     },
     "check:circular": {},
@@ -73,6 +76,11 @@
       ]
     },
     "test": {
+      "dependsOn": [
+        "prepare"
+      ]
+    },
+    "start": {
       "dependsOn": [
         "prepare"
       ]

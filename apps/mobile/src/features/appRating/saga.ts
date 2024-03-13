@@ -5,6 +5,7 @@ import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/select
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
+import { isAndroid } from 'uniswap/src/utils/platform'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
@@ -13,7 +14,6 @@ import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors
 import { setAppRating } from 'wallet/src/features/wallet/slice'
 import { appSelect } from 'wallet/src/state'
 import { openUri } from 'wallet/src/utils/linking'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 // at most once per reminder period (120 days)
 const MIN_PROMPT_REMINDER_MS = 120 * ONE_DAY_MS

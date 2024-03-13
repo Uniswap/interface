@@ -12,7 +12,7 @@ import { ChartType } from './utils'
 
 const ChartErrorContainer = styled(Row)`
   position: absolute;
-  width: fit-content;
+  width: max-content;
   align-items: flex-start;
   max-width: 320px;
   top: 50%;
@@ -25,6 +25,9 @@ const ChartErrorContainer = styled(Row)`
   gap: 12px;
   ${textFadeIn};
 `
+const ErrorTextColumn = styled(Column)`
+  white-space: normal;
+`
 
 function ChartErrorView({ children }: PropsWithChildren) {
   return (
@@ -32,12 +35,12 @@ function ChartErrorView({ children }: PropsWithChildren) {
       <div>
         <MissingDataIcon />
       </div>
-      <Column gap="xs">
+      <ErrorTextColumn gap="xs">
         <ThemedText.SubHeader color="neutral1">
           <Trans>Missing chart data</Trans>
         </ThemedText.SubHeader>
         <ThemedText.BodySmall color="neutral2">{children}</ThemedText.BodySmall>
-      </Column>
+      </ErrorTextColumn>
     </ChartErrorContainer>
   )
 }

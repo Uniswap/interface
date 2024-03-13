@@ -124,7 +124,7 @@ export const Wrap: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseWrapTx,
-          status: TransactionStatus.Cancelled,
+          status: TransactionStatus.Canceled,
         }}
       />
       <WrapSummaryItem
@@ -166,7 +166,7 @@ export const Unwrap: StoryObj = {
         layoutElement={TransactionSummaryLayout}
         transaction={{
           ...baseUnwrapTx,
-          status: TransactionStatus.Cancelled,
+          status: TransactionStatus.Canceled,
         }}
       />
       <WrapSummaryItem

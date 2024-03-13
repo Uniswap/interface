@@ -52,7 +52,12 @@ export class TVLChartModel extends ChartModel<StackedLineData> {
     const isSingleLineChart = params.colors.length === 1
 
     const gridSettings = isSingleLineChart
-      ? { grid: { vertLines: { style: LineStyle.CustomDotGrid }, horzLines: { style: LineStyle.CustomDotGrid } } }
+      ? {
+          grid: {
+            vertLines: { style: LineStyle.CustomDotGrid, color: params.theme.neutral3 },
+            horzLines: { style: LineStyle.CustomDotGrid, color: params.theme.neutral3 },
+          },
+        }
       : {}
 
     super.updateOptions(params, {

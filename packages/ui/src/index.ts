@@ -31,6 +31,7 @@ export type {
   ColorTokens,
   GetRef,
   InputProps,
+  PopperProps,
   SpaceTokens,
   SwitchProps,
   TamaguiProviderProps,

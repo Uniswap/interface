@@ -95,7 +95,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
     )[0]
 
     if (!result) {
-      Alert.alert(t('No QR code found'))
+      Alert.alert(t('qrScanner.error.none'))
       setIsReadingImageFile(false)
       return
     }
@@ -110,16 +110,12 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
     }
 
     if (permissionStatus === PermissionStatus.DENIED) {
-      Alert.alert(
-        t('Camera is disabled'),
-        t('To scan a code, allow Camera access in system settings'),
-        [
-          { text: t('Go to settings'), onPress: openSettings },
-          {
-            text: t('Not now'),
-          },
-        ]
-      )
+      Alert.alert(t('qrScanner.error.camera.title'), t('qrScanner.error.camera.message'), [
+        { text: t('common.navigation.systemSettings'), onPress: openSettings },
+        {
+          text: t('common.button.notNow'),
+        },
+      ])
     }
   }, [permissionStatus, requestPermissionResponse, t])
 
@@ -180,7 +176,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
             width="100%"
             onLayout={(event: LayoutChangeEvent): void => setInfoLayout(event.nativeEvent.layout)}>
             <Text color="$neutral1" variant="heading3">
-              {t('Scan a QR code')}
+              {t('qrScanner.title')}
             </Text>
           </Flex>
           {!shouldFreezeCamera ? (
@@ -208,7 +204,9 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                 </Flex>
                 <Flex style={{ marginTop: LOADER_SIZE + spacing.spacing24 }} />
                 <Text color="$neutral1" textAlign="center" variant="body1">
-                  {isWalletConnectModal ? t('Connecting...') : t('Loading...')}
+                  {isWalletConnectModal
+                    ? t('qrScanner.status.connecting')
+                    : t('qrScanner.status.loading')}
                 </Text>
               </Flex>
             </Flex>
@@ -271,11 +269,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
                 icon={<Icons.Global color="$neutral2" />}
                 theme="secondary"
                 onPress={props.onPressConnections}>
-                {props.numConnections === 1
-                  ? t('1 app connected')
-                  : t('{{numConnections}} apps connected', {
-                      numConnections: props.numConnections,
-                    })}
+                {t('qrScanner.button.connections', { count: props.numConnections })}
               </Button>
             )}
           </Flex>

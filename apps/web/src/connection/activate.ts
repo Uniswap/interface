@@ -8,6 +8,7 @@ import { useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 
+import { trace } from 'tracing/trace'
 import { didUserReject } from './utils'
 
 export enum ActivationStatus {
@@ -36,38 +37,45 @@ function useTryActivation() {
       if (connection.overrideActivate?.(chainId)) return
 
       const { name } = connection.getProviderInfo()
-      try {
-        setActivationState({ status: ActivationStatus.PENDING, connection })
+      return trace(
+        { name: 'Connect', op: 'wallet.connect', tags: { type: connection.type, wallet: name } },
+        async (trace) => {
+          try {
+            setActivationState({ status: ActivationStatus.PENDING, connection })
 
-        console.debug(`Connection activating: ${name}`)
-        await connection.connector.activate()
+            console.debug(`Connection activating: ${name}`)
+            await connection.connector.activate()
 
-        console.debug(`Connection activated: ${name}`)
+            console.debug(`Connection activated: ${name}`)
 
-        // Clears pending connection state
-        setActivationState(IDLE_ACTIVATION_STATE)
+            // Clears pending connection state
+            setActivationState(IDLE_ACTIVATION_STATE)
 
-        onSuccess()
-      } catch (error) {
-        // Gracefully handles errors from the user rejecting a connection attempt
-        if (didUserReject(connection, error)) {
-          setActivationState(IDLE_ACTIVATION_STATE)
-          return
+            onSuccess()
+          } catch (error) {
+            // Gracefully handles errors from the user rejecting a connection attempt
+            if (didUserReject(connection, error)) {
+              trace.setStatus('cancelled')
+              setActivationState(IDLE_ACTIVATION_STATE)
+              return
+            }
+
+            // TODO(WEB-1859): re-add special treatment for already-pending injected errors & move debug to after didUserReject() check
+            console.debug(`Connection failed: ${name}`)
+            console.error(error)
+            trace.setError(error)
+
+            // Failed Connection events are logged here, while successful ones are logged by Web3Provider
+            sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
+              result: WalletConnectionResult.FAILED,
+              wallet_type: name,
+              page: currentPage,
+              error: error.message,
+            })
+            setActivationState({ status: ActivationStatus.ERROR, connection, error })
+          }
         }
-
-        // TODO(WEB-1859): re-add special treatment for already-pending injected errors & move debug to after didUserReject() check
-        console.debug(`Connection failed: ${name}`)
-        console.error(error)
-
-        // Failed Connection events are logged here, while successful ones are logged by Web3Provider
-        sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
-          result: WalletConnectionResult.FAILED,
-          wallet_type: name,
-          page: currentPage,
-          error: error.message,
-        })
-        setActivationState({ status: ActivationStatus.ERROR, connection, error })
-      }
+      )
     },
     [currentPage, setActivationState]
   )

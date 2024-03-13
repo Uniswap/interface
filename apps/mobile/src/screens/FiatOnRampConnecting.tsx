@@ -15,14 +15,12 @@ import { getServiceProviderForQuote } from 'src/features/fiatOnRamp/utils'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { FiatOnRampScreens } from 'src/screens/Screens'
 import { Flex, useIsDarkMode } from 'ui/src'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { isAndroid } from 'uniswap/src/utils/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
-import { uniswapUrls } from 'wallet/src/constants/urls'
 import { useFiatOnRampAggregatorWidgetQuery } from 'wallet/src/features/fiatOnRamp/api'
-import {
-  MELD_ICON_SIZE_MULTIPLIER,
-  getServiceProviderLogo,
-} from 'wallet/src/features/fiatOnRamp/utils'
+import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -30,7 +28,6 @@ import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { ModalName } from 'wallet/src/telemetry/constants'
 import { openUri } from 'wallet/src/utils/linking'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 // Design decision
 const CONNECTING_TIMEOUT = 2 * ONE_SECOND_MS
@@ -62,7 +59,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     dispatch(
       pushNotification({
         type: AppNotificationType.Error,
-        errorMessage: t('Something went wrong.'),
+        errorMessage: t('common.error.general'),
       })
     )
     navigation.goBack()
@@ -147,7 +144,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
 
 const ServiceProviderLogoStyles = StyleSheet.create({
   icon: {
-    height: SERVICE_PROVIDER_ICON_SIZE * MELD_ICON_SIZE_MULTIPLIER,
-    width: SERVICE_PROVIDER_ICON_SIZE * MELD_ICON_SIZE_MULTIPLIER,
+    height: SERVICE_PROVIDER_ICON_SIZE,
+    width: SERVICE_PROVIDER_ICON_SIZE,
   },
 })

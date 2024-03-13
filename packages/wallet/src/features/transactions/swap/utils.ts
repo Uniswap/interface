@@ -27,7 +27,6 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { ElementName, ElementNameType } from 'wallet/src/telemetry/constants'
-import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import {
   CurrencyId,
@@ -46,26 +45,6 @@ export function serializeQueryParams(
     queryString.push(`${encodeURIComponent(param)}=${encodeURIComponent(value)}`)
   }
   return queryString.join('&')
-}
-
-export const clearStaleTrades = (
-  trade: Trade,
-  currencyIn: Maybe<Currency>,
-  currencyOut: Maybe<Currency>
-): Trade | null => {
-  const currencyInAddress = currencyIn?.wrapped.address
-  const currencyOutAddress = currencyOut?.wrapped.address
-
-  const inputsMatch =
-    !!currencyInAddress &&
-    areAddressesEqual(currencyInAddress, trade?.inputAmount.currency.wrapped.address)
-  const outputsMatch =
-    !!currencyOutAddress &&
-    areAddressesEqual(currencyOutAddress, trade?.outputAmount.currency.wrapped.address)
-
-  // if the addresses entered by the user don't match what is being returned by the quote endpoint
-  // then set `trade` to null
-  return inputsMatch && outputsMatch ? trade : null
 }
 
 export function getWrapType(
@@ -198,11 +177,11 @@ export const getRateToDisplay = (
 export const getActionName = (t: AppTFunction, wrapType: WrapType): string => {
   switch (wrapType) {
     case WrapType.Unwrap:
-      return t('Unwrap')
+      return t('swap.button.unwrap')
     case WrapType.Wrap:
-      return t('Wrap')
+      return t('swap.button.wrap')
     default:
-      return t('Swap')
+      return t('swap.button.swap')
   }
 }
 

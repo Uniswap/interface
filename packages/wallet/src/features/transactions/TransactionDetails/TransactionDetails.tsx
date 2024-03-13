@@ -27,7 +27,6 @@ interface TransactionDetailsProps {
   showWarning?: boolean
   warning?: Warning
   feeOnTransferInfo?: FeeOnTransferInfo
-  onShowNetworkFeeInfo?: () => void
   onShowSwapFeeInfo?: OnShowSwapFeeInfo
   onShowWarning?: () => void
   isSwap?: boolean
@@ -44,7 +43,6 @@ export function TransactionDetails({
   showWarning,
   warning,
   feeOnTransferInfo,
-  onShowNetworkFeeInfo,
   onShowSwapFeeInfo,
   onShowWarning,
   isSwap,
@@ -92,7 +90,7 @@ export function TransactionDetails({
           borderRadius="$rounded16"
           mb="$spacing12"
           p="$spacing12">
-          <Text color="$statusCritical">{t('This transaction is expected to fail')}</Text>
+          <Text color="$statusCritical">{t('swap.warning.expectedFailure')}</Text>
         </Flex>
       )}
       {!showWarning && banner && <Flex py="$spacing16">{banner}</Flex>}
@@ -107,7 +105,7 @@ export function TransactionDetails({
             pt="$spacing8"
             onPress={onPressToggleShowChildren}>
             <Text color="$neutral3" variant="body3">
-              {showChildren ? t('Show less') : t('Show more')}
+              {showChildren ? t('swap.details.action.less') : t('swap.details.action.more')}
             </Text>
             {showChildren ? (
               <AnglesMinimize
@@ -132,7 +130,7 @@ export function TransactionDetails({
         {displaySwapFeeInfo && (
           <SwapFee swapFeeInfo={swapFeeInfo} onShowSwapFeeInfo={onShowSwapFeeInfo} />
         )}
-        <NetworkFee chainId={chainId} gasFee={gasFee} onShowNetworkFeeInfo={onShowNetworkFeeInfo} />
+        <NetworkFee chainId={chainId} gasFee={gasFee} />
         {AccountDetails}
       </Flex>
     </Flex>

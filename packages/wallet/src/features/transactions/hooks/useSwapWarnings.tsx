@@ -1,10 +1,17 @@
 import { useNetInfo } from '@react-native-community/netinfo'
 import { Percent } from '@uniswap/sdk-core'
+import { TFunction } from 'i18next'
 import _ from 'lodash'
-import { TFunction } from 'react-i18next'
 import { isWeb } from 'ui/src'
 import { formatPriceImpact } from 'utilities/src/format/formatPriceImpact'
 import { useMemoCompare } from 'utilities/src/react/hooks'
+import { getNetworkWarning } from 'wallet/src/features/transactions/WarningModal/getNetworkWarning'
+import {
+  Warning,
+  WarningAction,
+  WarningLabel,
+  WarningSeverity,
+} from 'wallet/src/features/transactions/WarningModal/types'
 import {
   API_RATE_LIMIT_ERROR,
   NO_QUOTE_DATA,
@@ -13,13 +20,6 @@ import {
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { isOffline } from 'wallet/src/features/transactions/utils'
-import { getNetworkWarning } from 'wallet/src/features/transactions/WarningModal/getNetworkWarning'
-import {
-  Warning,
-  WarningAction,
-  WarningLabel,
-  WarningSeverity,
-} from 'wallet/src/features/transactions/WarningModal/types'
 
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%
 const PRICE_IMPACT_THRESHOLD_HIGH = new Percent(5, 100) // 5%
@@ -46,11 +46,11 @@ export function getSwapWarnings(
       type: WarningLabel.InsufficientFunds,
       severity: WarningSeverity.None,
       action: WarningAction.DisableReview,
-      title: t('You don’t have enough {{ symbol }}', {
-        symbol: currencyAmountIn.currency?.symbol,
+      title: t('swap.warning.insufficientBalance.title', {
+        currencySymbol: currencyAmountIn.currency?.symbol,
       }),
       buttonText: isWeb
-        ? t('Not enough {{ currencySymbol }}', {
+        ? t('swap.warning.insufficientBalance.button', {
             currencySymbol: currencyAmountIn.currency?.symbol,
           })
         : undefined,
@@ -70,18 +70,16 @@ export function getSwapWarnings(
         type: WarningLabel.LowLiquidity,
         severity: WarningSeverity.Medium,
         action: WarningAction.DisableReview,
-        title: t('Not enough liquidity'),
-        message: t(
-          'There isn’t currently enough liquidity available between these tokens to perform a swap. Please try again later or select another token.'
-        ),
+        title: t('swap.warning.lowLiquidity.title'),
+        message: t('swap.warning.lowLiquidity.message'),
       })
     } else if (errorData?.data?.errorCode === API_RATE_LIMIT_ERROR) {
       warnings.push({
         type: WarningLabel.RateLimit,
         severity: WarningSeverity.Medium,
         action: WarningAction.DisableReview,
-        title: t('Rate limit exceeded'),
-        message: t('Please try again in a few minutes.'),
+        title: t('swap.warning.rateLimit.title'),
+        message: t('swap.warning.rateLimit.message'),
       })
     } else {
       // catch all other router errors in a generic swap router error message
@@ -89,10 +87,8 @@ export function getSwapWarnings(
         type: WarningLabel.SwapRouterError,
         severity: WarningSeverity.Medium,
         action: WarningAction.DisableReview,
-        title: t('This trade cannot be completed right now'),
-        message: t(
-          'You may have lost connection or the network may be down. If the problem persists, please try again later.'
-        ),
+        title: t('swap.warning.router.title'),
+        message: t('swap.warning.router.message'),
       })
     }
   }
@@ -114,16 +110,13 @@ export function getSwapWarnings(
       type: highImpact ? WarningLabel.PriceImpactHigh : WarningLabel.PriceImpactMedium,
       severity: highImpact ? WarningSeverity.High : WarningSeverity.Medium,
       action: WarningAction.WarnBeforeSubmit,
-      title: t('High price impact ({{ swapSize }})', {
-        swapSize: formatPriceImpact(priceImpact),
+      title: t('swap.warning.priceImpact.title', {
+        priceImpactValue: formatPriceImpact(priceImpact),
       }),
-      message: t(
-        'Due to the amount of {{ currencyOut }} liquidity currently available, the more {{ currencyIn }} you try to swap, the less {{ currencyOut }} you will receive.',
-        {
-          currencyIn: currencies[CurrencyField.INPUT]?.currency.symbol,
-          currencyOut: currencies[CurrencyField.OUTPUT]?.currency.symbol,
-        }
-      ),
+      message: t('swap.warning.priceImpact.message', {
+        outputCurrencySymbol: currencies[CurrencyField.INPUT]?.currency.symbol,
+        inputCurrencySymbol: currencies[CurrencyField.OUTPUT]?.currency.symbol,
+      }),
     })
   }
 

@@ -669,7 +669,7 @@ PODS:
     - ExpoModulesCore
   - Expo (48.0.19):
     - ExpoModulesCore
-  - ExpoBlur (12.2.2):
+  - ExpoBlur (12.6.0):
     - ExpoModulesCore
   - ExpoClipboard (4.1.2):
     - ExpoModulesCore
@@ -1286,7 +1286,8 @@ PODS:
     - RNFBApp
   - RNFlashList (1.6.3):
     - React-Core
-  - RNGestureHandler (2.9.0):
+  - RNGestureHandler (2.15.0):
+    - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - RNImageColors (1.5.2):
     - React-Core
@@ -1688,7 +1689,7 @@ SPEC CHECKSUMS:
   EXImageLoader: 03063370bc06ea1825713d3f55fe0455f7c88d04
   EXLocalAuthentication: 78cc5a00b13745b41d16d189ab332b61a01299f9
   Expo: 8448e3a2aa1b295f029c81551e1ab6d986517fdb
-  ExpoBlur: fac3c6318fdf409dd5740afd3313b2bd52a35bac
+  ExpoBlur: 9e6da7c2bd4a0c5de7e57124694d0a380d7962f7
   ExpoClipboard: 9b87df0ad145e3aa841614fab6aea54b7a604850
   ExpoHaptics: 5a56d30a87ea213dd00b09566dc4b441a4dff97f
   ExpoKeepAwake: 69f5f627670d62318410392d03e0b5db0f85759a
@@ -1779,7 +1780,7 @@ SPEC CHECKSUMS:
   RNFBAuth: 553c6e66d3c70e086799104dad4a554c2663c337
   RNFBFirestore: a60e6005e071b31360a5bf651eb403b36c7db7de
   RNFlashList: 4b4b6b093afc0df60ae08f9cbf6ccd4c836c667a
-  RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
+  RNGestureHandler: 7909c50383a18f0cb10ce1db7262b9a6da504c03
   RNImageColors: 9ac05083b52d5c350e6972650ae3ba0e556466c1
   RNLocalize: d4b8af4e442d4bcca54e68fc687a2129b4d71a81
   RNPermissions: de7b7c3fe1680d974ac7a85e3e97aa539c0e68ea

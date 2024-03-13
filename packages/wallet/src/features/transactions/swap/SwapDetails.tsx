@@ -52,7 +52,6 @@ interface SwapDetailsProps {
   outputCurrencyPricePerUnitExact?: string
   warning?: Warning
   onAcceptTrade: () => void
-  onShowNetworkFeeInfo: () => void
   onShowSwapFeeInfo: OnShowSwapFeeInfo
   onShowWarning?: () => void
   onShowSlippageModal: () => void
@@ -69,7 +68,6 @@ export function SwapDetails({
   outputCurrencyPricePerUnitExact,
   warning,
   onAcceptTrade,
-  onShowNetworkFeeInfo,
   onShowSwapFeeInfo,
   onShowWarning,
   onShowSlippageModal,
@@ -150,12 +148,11 @@ export function SwapDetails({
       showWarning={warning && !newTradeRequiresAcceptance}
       swapFeeInfo={swapFeeInfo}
       warning={warning}
-      onShowNetworkFeeInfo={onShowNetworkFeeInfo}
       onShowSwapFeeInfo={onShowSwapFeeInfo}
       onShowWarning={onShowWarning}>
       <Flex row alignItems="center" justifyContent="space-between">
         <Text color="$neutral2" variant="body3">
-          {t('Rate')}
+          {t('swap.details.rate')}
         </Text>
         <Flex row shrink justifyContent="flex-end">
           <SwapRateRatio trade={trade} />
@@ -165,7 +162,7 @@ export function SwapDetails({
         <TouchableArea flexShrink={1} onPress={onShowSlippageModal}>
           <Flex row alignItems="center" gap="$spacing4">
             <Text color="$neutral2" numberOfLines={3} variant="body3">
-              {t('Max slippage')}
+              {t('swap.details.slippage')}
               &nbsp;
               <Icons.InfoCircleFilled color="$neutral3" size="$icon.16" />
             </Text>
@@ -180,7 +177,7 @@ export function SwapDetails({
               px="$spacing4"
               py="$spacing2">
               <Text color="$neutral2" variant="buttonLabel4">
-                {t('Auto')}
+                {t('swap.settings.slippage.control.auto')}
               </Text>
             </Flex>
           ) : null}
@@ -240,8 +237,8 @@ function AcceptNewQuoteRow({
       <Flex fill>
         <Text color="$neutral2" variant="body3">
           {derivedSwapInfo.exactCurrencyField === CurrencyField.INPUT
-            ? t('New output')
-            : t('New input')}
+            ? t('swap.details.newQuote.output')
+            : t('swap.details.newQuote.input')}
         </Text>
         <Flex row alignItems="center">
           <Text
@@ -264,7 +261,7 @@ function AcceptNewQuoteRow({
             py="$spacing4"
             onPress={onAcceptTrade}>
             <Text color="$accent1" variant="buttonLabel3">
-              {t('Accept')}
+              {t('common.button.accept')}
             </Text>
           </TouchableArea>
         </Trace>

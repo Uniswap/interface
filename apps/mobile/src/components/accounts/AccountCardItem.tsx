@@ -57,7 +57,7 @@ function PortfolioValue({
   return (
     <Text color="$neutral2" loading={isLoading} variant="subheading2">
       {portfolioValue === undefined
-        ? t('N/A')
+        ? t('common.text.notAvailable')
         : convertFiatAmountFormatted(portfolioValue, NumberType.PortfolioBalance)}
     </Text>
   )
@@ -100,9 +100,9 @@ export function AccountCardItem({
 
   const menuActions = useMemo(() => {
     return [
-      { title: t('Copy wallet address'), systemIcon: 'doc.on.doc' },
-      { title: t('Wallet settings'), systemIcon: 'gearshape' },
-      { title: t('Remove wallet'), systemIcon: 'trash', destructive: true },
+      { title: t('account.wallet.action.copy'), systemIcon: 'doc.on.doc' },
+      { title: t('account.wallet.action.settings'), systemIcon: 'gearshape' },
+      { title: t('account.wallet.button.remove'), systemIcon: 'trash', destructive: true },
     ]
   }, [t])
 

@@ -71,9 +71,9 @@ export const TokensTab = memo(
         // Show different empty state on external profile pages
         return isExternalProfile ? (
           <BaseCard.EmptyState
-            description={t('When this wallet buys or receives tokens, they’ll appear here.')}
+            description={t('home.tokens.empty.description')}
             icon={<NoTokens />}
-            title={t('No tokens yet')}
+            title={t('home.tokens.empty.title')}
             onPress={onPressAction}
           />
         ) : (

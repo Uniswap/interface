@@ -1,7 +1,7 @@
 import appsFlyer from 'react-native-appsflyer'
 import { isBetaBuild, isDevBuild } from 'src/utils/version'
+import { config } from 'uniswap/src/config'
 import { logger } from 'utilities/src/logger/logger'
-import { config } from 'wallet/src/config'
 
 export function initAppsFlyer(): void {
   appsFlyer.initSdk(

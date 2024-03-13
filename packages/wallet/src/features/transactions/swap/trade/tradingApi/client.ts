@@ -1,7 +1,7 @@
 import { ApolloClient, from } from '@apollo/client'
 import { RestLink } from 'apollo-link-rest'
-import { config } from 'wallet/src/config'
-import { createNewInMemoryCache } from 'wallet/src/data/cache'
+import { config } from 'uniswap/src/config'
+import { createNewInMemoryCache } from 'uniswap/src/data/cache'
 
 const restLink = new RestLink({
   uri: config.tradingApiUrl,
@@ -19,7 +19,9 @@ export const TradingApiApolloClient = new ApolloClient({
     watchQuery: {
       // ensures query is returning data even if some fields errored out
       errorPolicy: 'all',
-      fetchPolicy: 'network-only',
+      // This isn't really being used because `useRestQuery` overrides this attribute.
+      // We need to explicitly pass `fetchPolicy: 'no-cache'` when calling `useRestQuery` to apply this policy.
+      fetchPolicy: 'no-cache',
     },
   },
 })

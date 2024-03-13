@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client'
-import { getLocaleTimeString } from 'components/Table/utils'
+import { getAbbreviatedTimeString } from 'components/Table/utils'
 import Router from 'react-router-dom'
 import { mocked } from 'test-utils/mocked'
 import { usdcWethPoolAddress, validParams } from 'test-utils/pools/fixtures'
@@ -74,7 +74,7 @@ describe('PoolDetailsTransactionsTable', () => {
       error: undefined,
       loadMore: jest.fn(),
     })
-    mocked(getLocaleTimeString).mockReturnValue('01/12, 05:46am')
+    mocked(getAbbreviatedTimeString).mockReturnValue('1mo ago')
 
     const { asFragment } = render(<PoolDetailsTransactionsTable poolAddress={usdcWethPoolAddress} />)
     expect(screen.getByTestId('pool-details-transactions-table')).not.toBeNull()

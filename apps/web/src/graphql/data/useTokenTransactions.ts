@@ -107,14 +107,16 @@ export function useTokenTransactions(
     () =>
       [
         ...(dataV3?.token?.v3Transactions?.filter((tx) => {
-          const isSell = tx.token0.address?.toLowerCase() === address.toLowerCase()
+          const tokenBeingSold = parseFloat(tx.token0Quantity) < 0 ? tx.token0 : tx.token1
+          const isSell = tokenBeingSold.address?.toLowerCase() === address.toLowerCase()
           return (
             tx.type === PoolTransactionType.Swap &&
             filter.includes(isSell ? TokenTransactionType.SELL : TokenTransactionType.BUY)
           )
         }) ?? []),
         ...(dataV2?.token?.v2Transactions?.filter((tx) => {
-          const isSell = tx.token0.address?.toLowerCase() === address.toLowerCase()
+          const tokenBeingSold = parseFloat(tx.token0Quantity) < 0 ? tx.token0 : tx.token1
+          const isSell = tokenBeingSold.address?.toLowerCase() === address.toLowerCase()
           return (
             tx.type === PoolTransactionType.Swap &&
             filter.includes(isSell ? TokenTransactionType.SELL : TokenTransactionType.BUY)

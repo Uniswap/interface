@@ -36,7 +36,9 @@
     "https://s2.coinmarketcap.com/",
     "https://static.optimism.io/",
     "https://vercel.com",
-    "https://vercel.live/"
+    "https://vercel.live/",
+    "https://trustwallet.com/",
+    "https://cloudflare-ipfs.com/"
   ],
   "frameSrc": [
     "'self'",
@@ -51,6 +53,9 @@
     "'self'",
     "blob:",
     "data:",
+    "https://*.gateway.uniswap.org",
+    "https://gateway.uniswap.org",
+    "https://statsigapi.net",
     "https://api.moonpay.com/",
     "https://api.opensea.io",
     "https://api.thegraph.com/",
@@ -84,7 +89,6 @@
     "wss://www.walletlink.org/rpc"
   ],
   "workerSrc": [
-    "*",
     "'self'",
     "blob:"
   ]

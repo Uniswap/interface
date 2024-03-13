@@ -14,6 +14,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { Button, Flex, Icons, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
+import { isIOS } from 'uniswap/src/utils/platform'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
@@ -26,7 +27,6 @@ import {
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
-import { isIOS } from 'wallet/src/utils/platform'
 import { Screens } from './Screens'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, Screens.SettingsWalletEdit>
@@ -84,7 +84,7 @@ export function SettingsWalletEdit({
         contentContainerStyle={styles.expand}
         style={styles.base}>
         <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
-          <Text variant="body1">{t('Edit label')}</Text>
+          <Text variant="body1">{t('settings.setting.wallet.action.editLabel')}</Text>
         </BackHeader>
         <Flex
           grow
@@ -114,7 +114,7 @@ export function SettingsWalletEdit({
                 m="$none"
                 maxLength={NICKNAME_MAX_LENGTH}
                 numberOfLines={1}
-                placeholder={t('Nickname')}
+                placeholder={t('settings.setting.wallet.label')}
                 placeholderTextColor="$neutral3"
                 px="$none"
                 py="$spacing12"
@@ -137,9 +137,7 @@ export function SettingsWalletEdit({
             </Flex>
             {accountNameIsEditable && (
               <Flex px="$spacing8" py="$spacing12">
-                <Text color="$neutral3">
-                  {t('Labels are not public. They are stored locally and only visible to you.')}
-                </Text>
+                <Text color="$neutral3">{t('settings.setting.wallet.editLabel.description')}</Text>
               </Flex>
             )}
             {showUnitagBanner && (
@@ -152,7 +150,7 @@ export function SettingsWalletEdit({
             size="medium"
             theme="primary"
             onPress={onPressSaveChanges}>
-            {t('Save changes')}
+            {t('settings.setting.wallet.editLabel.save')}
           </Button>
         </Flex>
       </KeyboardAvoidingView>

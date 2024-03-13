@@ -5,9 +5,9 @@ import { Action } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { Button, Flex, Icons, Text } from 'ui/src'
+import { isAndroid } from 'uniswap/src/utils/platform'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
-import { isAndroid } from 'wallet/src/utils/platform'
 
 // TODO(MOB-1190): this is DEP_blue_300 at 10% opacity, remove when we have a named color for this
 const LIGHT_BLUE = '#4C82FB1A'
@@ -39,19 +39,17 @@ export function SettingsLanguageModal(): JSX.Element {
       <Flex gap="$spacing24" pt="$spacing24" px="$spacing24">
         <Flex gap="$spacing8">
           <Text textAlign="center" variant="subheading1">
-            {t('Change preferred language')}
+            {t('settings.setting.language.title')}
           </Text>
           <Text color="$neutral2" textAlign="center" variant="body3">
-            {t(
-              'Uniswap defaults to your device‘s language settings. To change your preferred language, go to “Uniswap” in your device settings and tap on “Language”'
-            )}
+            {t('settings.setting.language.description')}
           </Text>
         </Flex>
         <Button
           testID={ElementName.OpenDeviceLanguageSettings}
           theme="tertiary"
           onPress={openLanguageSettings}>
-          {t('Go to settings')}
+          {t('settings.setting.language.button.navigate')}
         </Button>
       </Flex>
     </BottomSheetModal>

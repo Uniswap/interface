@@ -34,6 +34,7 @@ exports[`AccountHeader renders without error 1`] = `
     >
       <View
         cancelable={true}
+        disabled={false}
         focusable={true}
         hitSlop={[Function]}
         minPressDuration={0}
@@ -324,6 +325,7 @@ exports[`AccountHeader renders without error 1`] = `
       </View>
       <View
         cancelable={true}
+        disabled={false}
         focusable={true}
         hitSlop={[Function]}
         minPressDuration={0}
@@ -419,6 +421,7 @@ exports[`AccountHeader renders without error 1`] = `
     >
       <View
         cancelable={true}
+        disabled={false}
         focusable={true}
         hitSlop={[Function]}
         minPressDuration={0}
@@ -510,6 +513,8 @@ exports[`AccountHeader renders without error 1`] = `
                   animatedStyle={
                     {
                       "value": {
+                        "color": "#CECECE",
+                        "fontSize": 19,
                         "opacity": 0,
                       },
                     }
@@ -533,6 +538,7 @@ exports[`AccountHeader renders without error 1`] = `
               </View>
               <View
                 cancelable={true}
+                disabled={false}
                 focusable={true}
                 hitSlop={[Function]}
                 minPressDuration={0}

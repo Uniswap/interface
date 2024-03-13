@@ -104,8 +104,8 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
         },
       },
       grid: {
-        vertLines: { style: LineStyle.CustomDotGrid, visible: true },
-        horzLines: { style: LineStyle.CustomDotGrid, visible: true },
+        vertLines: { style: LineStyle.CustomDotGrid, color: theme.neutral3 },
+        horzLines: { style: LineStyle.CustomDotGrid, color: theme.neutral3 },
       },
     })
 

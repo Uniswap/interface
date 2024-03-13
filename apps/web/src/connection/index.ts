@@ -12,7 +12,7 @@ import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
 import { useSyncExternalStore } from 'react'
-import { isMobile, isNonSupportedDevice } from 'wallet/src/utils/platform'
+import { isMobile, isNonSupportedDevice } from 'uniswap/src/utils/platform'
 
 import { RPC_URLS } from '../constants/networks'
 import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from '../constants/providers'

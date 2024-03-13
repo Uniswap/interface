@@ -5,16 +5,17 @@ import { ButtonLight } from 'components/Button'
 import Column from 'components/Column'
 import { HideScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
-import { getLocaleTimeString } from 'components/Table/utils'
+import { getAbbreviatedTimeString } from 'components/Table/utils'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { Token } from 'graphql/data/__generated__/types-and-hooks'
-import { OrderDirection, getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { OrderDirection, getTokenDetailsURL, supportedChainIdFromGQLChain, unwrapToken } from 'graphql/data/util'
 import { OrderDirection as TheGraphOrderDirection } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { ArrowDown, CornerLeftUp, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
-import { ClickableStyle, ExternalLink, ThemedText } from 'theme/components'
+import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
 export const SHOW_RETURN_TO_TOP_OFFSET = 500
@@ -220,7 +221,7 @@ export const TimestampCell = ({ timestamp, link }: { timestamp: number; link: st
   return (
     <StyledTimestampRow href={link}>
       <MouseoverTooltip text={fullDate} placement="top" size={TooltipSize.Max}>
-        <ThemedText.BodySecondary>{getLocaleTimeString(timestamp * 1000, locale)}</ThemedText.BodySecondary>
+        <ThemedText.BodySecondary>{getAbbreviatedTimeString(timestamp * 1000)}</ThemedText.BodySecondary>
       </MouseoverTooltip>
       <StyledExternalLinkIcon />
     </StyledTimestampRow>
@@ -228,8 +229,7 @@ export const TimestampCell = ({ timestamp, link }: { timestamp: number; link: st
 }
 
 const TokenSymbolText = styled(ThemedText.BodyPrimary)`
-  white-space: nowrap;
-  overflow: hidden;
+  ${EllipsisStyle}
 `
 /**
  * Given a token displays the Token's Logo and Symbol with a link to its TDP
@@ -237,21 +237,26 @@ const TokenSymbolText = styled(ThemedText.BodyPrimary)`
  * @returns JSX.Element showing the Token's Logo, Chain logo if non-mainnet, and Token Symbol
  */
 export const TokenLinkCell = ({ token }: { token: Token }) => {
+  const chainId = supportedChainIdFromGQLChain(token.chain) ?? ChainId.MAINNET
+  const unwrappedToken = unwrapToken(chainId, token)
+  const isNative = unwrappedToken.address === NATIVE_CHAIN_ID
+  const nativeCurrency = nativeOnChain(chainId)
   return (
     <StyledInternalLink
       to={getTokenDetailsURL({
-        address: token.address,
+        address: unwrappedToken.address,
         chain: token.chain,
         isInfoExplorePageEnabled: true,
       })}
     >
       <Row gap="4px" maxWidth="68px">
         <PortfolioLogo
-          chainId={supportedChainIdFromGQLChain(token.chain) ?? ChainId.MAINNET}
+          chainId={chainId}
           size="16px"
-          images={[token.project?.logo?.url]}
+          images={isNative ? undefined : [token.project?.logo?.url]}
+          currencies={isNative ? [nativeCurrency] : undefined}
         />
-        <TokenSymbolText>{token?.symbol ?? <Trans>UNKNOWN</Trans>}</TokenSymbolText>
+        <TokenSymbolText>{unwrappedToken?.symbol ?? <Trans>UNKNOWN</Trans>}</TokenSymbolText>
       </Row>
     </StyledInternalLink>
   )

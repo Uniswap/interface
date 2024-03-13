@@ -83,7 +83,7 @@ export function useRecentlySearchedAssets() {
 
     const data: (SearchToken | GenieCollection)[] = []
     shortenedHistory.forEach((asset) => {
-      if (asset.address === 'NATIVE') {
+      if (asset.address === NATIVE_CHAIN_ID) {
         // Handles special case where wMATIC data needs to be used for MATIC
         const chain = supportedChainIdFromGQLChain(asset.chain)
         if (!chain) {
@@ -96,7 +96,7 @@ export function useRecentlySearchedAssets() {
         const native = nativeOnChain(chain)
         const queryAddress = getQueryAddress(asset.chain)?.toLowerCase() ?? `NATIVE-${asset.chain}`
         const result = resultsMap[queryAddress]
-        if (result) data.push({ ...result, address: 'NATIVE', ...native })
+        if (result) data.push({ ...result, address: NATIVE_CHAIN_ID, ...native })
       } else {
         const result = resultsMap[asset.address]
         if (result) data.push(result)

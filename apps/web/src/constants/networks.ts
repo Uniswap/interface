@@ -162,3 +162,17 @@ export const RPC_URLS = {
   [ChainId.AVALANCHE]: [`https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.AVALANCHE]],
   [ChainId.BASE]: [`https://base-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.BASE]],
 }
+
+export const INFURA_PREFIX_TO_CHAIN_ID: { [prefix: string]: ChainId } = {
+  mainnet: ChainId.MAINNET,
+  goerli: ChainId.GOERLI,
+  sepolia: ChainId.SEPOLIA,
+  'optimism-mainnet': ChainId.OPTIMISM,
+  'optimism-goerli': ChainId.OPTIMISM_GOERLI,
+  'arbitrum-mainnet': ChainId.ARBITRUM_ONE,
+  'arbitrum-goerli': ChainId.ARBITRUM_GOERLI,
+  'polygon-mainnet': ChainId.POLYGON,
+  'polygon-mumbai': ChainId.POLYGON_MUMBAI,
+  'avalanche-mainnet': ChainId.AVALANCHE,
+  'base-mainnet': ChainId.BASE,
+}

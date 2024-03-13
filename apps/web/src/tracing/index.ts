@@ -1,13 +1,18 @@
+import 'zone.js'
+
+import { BrowserTracing } from '@sentry/browser'
 import * as Sentry from '@sentry/react'
-import { BrowserTracing } from '@sentry/tracing'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { initializeAnalytics, OriginApplication } from 'analytics'
 import store from 'state'
 import { setOriginCountry } from 'state/user/reducer'
 import { getEnvName, isDevelopmentEnv, isProductionEnv, isSentryEnabled } from 'utils/env'
 import { v4 as uuidv4 } from 'uuid'
+import { patchFetch } from './request'
 
 import { beforeSend } from './errors'
+
+patchFetch(global)
 
 // Dump some metadata into the window to allow client verification.
 window.GIT_COMMIT_HASH = process.env.REACT_APP_GIT_COMMIT_HASH
@@ -26,6 +31,7 @@ Sentry.init({
   enabled: isSentryEnabled(),
   tracesSampleRate: Number(process.env.REACT_APP_SENTRY_TRACES_SAMPLE_RATE ?? 0),
   integrations: [
+    // Instruments pageload (and any requests that it depends on):
     new BrowserTracing({
       startTransactionOnLocationChange: false,
       startTransactionOnPageLoad: true,

@@ -117,7 +117,8 @@ export function TransactionReview({
             <Flex centered gap={amountAndEquivalentValueGap}>
               {recipient && (
                 <Text color="$neutral2" variant="body1">
-                  {t('Sending')}
+                  {/* TODO gary to come back and fix this later. More complicated with nested components */}
+                  {t('send.review.summary.sending')}
                 </Text>
               )}
               <AmountInput
@@ -188,7 +189,8 @@ export function TransactionReview({
         ) : recipient ? (
           <Flex centered gap="$spacing12">
             <Text color="$neutral2" variant="body1">
-              {t('To')}
+              {/* TODO gary to come back and fix this later. More complicated with nested components */}
+              {t('send.review.summary.to')}
             </Text>
             <Flex centered gap="$spacing8">
               <AddressDisplay

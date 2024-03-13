@@ -2,10 +2,12 @@ import { NetworkStatus } from '@apollo/client'
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useRouterQuote } from 'wallet/src/features/transactions/swap/trade/legacy/hooks/useRouterQuote'
+import { SWAP_FORM_DEBOUNCE_TIME_MS } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTradingApiTrade'
+import { validateTrade } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
 import { TradeWithStatus, UseTradeArgs } from 'wallet/src/features/transactions/swap/trade/types'
-
-import { clearStaleTrades } from 'wallet/src/features/transactions/swap/utils'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 export function useTrade(args: UseTradeArgs): TradeWithStatus {
   const {
@@ -18,7 +20,12 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     sendPortionEnabled,
     skip,
   } = args
-  const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(amountSpecified)
+  const [debouncedAmountSpecified, isDebouncing] = useDebounceWithStatus(
+    amountSpecified,
+    SWAP_FORM_DEBOUNCE_TIME_MS
+  )
+
+  const formatter = useLocalizationContext()
 
   /*
     1. if user clears input (amountSpecified is null or undefined), immediately use that
@@ -53,7 +60,17 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
         ? [amount?.currency, otherCurrency]
         : [otherCurrency, amount?.currency]
 
-    const trade = clearStaleTrades(data.trade, currencyIn, currencyOut)
+    const exactCurrencyField =
+      tradeType === TradeType.EXACT_INPUT ? CurrencyField.INPUT : CurrencyField.OUTPUT
+
+    const trade = validateTrade({
+      trade: data.trade,
+      currencyIn,
+      currencyOut,
+      exactAmount: amount,
+      exactCurrencyField,
+      formatter,
+    })
 
     return {
       loading: (amountSpecified && isDebouncing) || loading,
@@ -63,13 +80,14 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     }
   }, [
     data?.trade,
-    loading,
-    error,
     tradeType,
-    amount?.currency,
+    amount,
     otherCurrency,
+    formatter,
     amountSpecified,
     isDebouncing,
+    loading,
     networkStatus,
+    error,
   ])
 }

@@ -98,7 +98,6 @@ struct SeedPhraseInput: View {
     VStack(spacing: 16) {
       VStack {
         ZStack {
-          
           if #available(iOS 16.0, *) {
             TextEditor(text: $viewModel.input)
               .focused($focused)
@@ -106,14 +105,12 @@ struct SeedPhraseInput: View {
               .textInputAutocapitalization(.never)
               .multilineTextAlignment(.center)
               .scrollContentBackground(.hidden)
-              .allowsHitTesting(false)
           } else {
             TextEditor(text: $viewModel.input)
               .focused($focused)
               .autocorrectionDisabled()
               .textInputAutocapitalization(.never)
               .multilineTextAlignment(.center)
-              .allowsHitTesting(false)
               .onAppear() {
                 UITextView.appearance().backgroundColor = .clear
               }

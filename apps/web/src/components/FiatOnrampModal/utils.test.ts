@@ -1,6 +1,7 @@
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import {
   MATIC_MAINNET,
+  NATIVE_CHAIN_ID,
   USDC_ARBITRUM,
   USDC_MAINNET,
   USDC_OPTIMISM,
@@ -14,10 +15,10 @@ import { getDefaultCurrencyCode, parsePathParts } from './utils'
 
 describe('getDefaultCurrencyCode', () => {
   it('NATIVE/arbitrum should return the correct currency code', () => {
-    expect(getDefaultCurrencyCode('NATIVE', 'arbitrum')).toBe('eth_arbitrum')
+    expect(getDefaultCurrencyCode(NATIVE_CHAIN_ID, 'arbitrum')).toBe('eth_arbitrum')
   })
   it('NATIVE/optimism should return the correct currency code', () => {
-    expect(getDefaultCurrencyCode('NATIVE', 'optimism')).toBe('eth_optimism')
+    expect(getDefaultCurrencyCode(NATIVE_CHAIN_ID, 'optimism')).toBe('eth_optimism')
   })
   it('WETH/polygon should return the correct currency code', () => {
     expect(getDefaultCurrencyCode(WETH_POLYGON.address, 'polygon')).toBe('eth_polygon')
@@ -29,7 +30,7 @@ describe('getDefaultCurrencyCode', () => {
     expect(getDefaultCurrencyCode(WBTC.address, 'ethereum')).toBe('wbtc')
   })
   it('NATIVE/polygon should return the correct currency code', () => {
-    expect(getDefaultCurrencyCode('NATIVE', 'polygon')).toBe('matic_polygon')
+    expect(getDefaultCurrencyCode(NATIVE_CHAIN_ID, 'polygon')).toBe('matic_polygon')
   })
   it('MATIC/ethereum should return the correct currency code', () => {
     expect(getDefaultCurrencyCode(MATIC_MAINNET.address, 'ethereum')).toBe('polygon')
@@ -44,7 +45,7 @@ describe('getDefaultCurrencyCode', () => {
     expect(getDefaultCurrencyCode(USDC_POLYGON.address, 'polygon')).toBe('usdc_polygon')
   })
   it('native/ethereum should return the correct currency code', () => {
-    expect(getDefaultCurrencyCode('NATIVE', 'ethereum')).toBe('eth')
+    expect(getDefaultCurrencyCode(NATIVE_CHAIN_ID, 'ethereum')).toBe('eth')
   })
   it('usdc/ethereum should return the correct currency code', () => {
     expect(getDefaultCurrencyCode(USDC_MAINNET.address, 'ethereum')).toBe('usdc')

@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit/query/react'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { sendAnalyticsEvent } from 'analytics'
 import { isUniswapXSupportedChain } from 'constants/chains'
@@ -39,11 +39,6 @@ const DEFAULT_QUERY_PARAMS = {
   enableUniversalRouter: true,
 }
 
-function getQuoteLatencyMeasure(mark: PerformanceMark): PerformanceMeasure {
-  performance.mark('quote-fetch-end')
-  return performance.measure('quote-fetch-latency', mark.name, 'quote-fetch-end')
-}
-
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   const { account, tokenInChainId, uniswapXForceSyntheticQuotes, routerPreference } = args
 
@@ -80,37 +75,9 @@ export const routingApi = createApi({
   baseQuery: fetchBaseQuery(),
   endpoints: (build) => ({
     getQuote: build.query<TradeResult, GetQuoteArgs>({
-      async onQueryStarted(args: GetQuoteArgs, { queryFulfilled }) {
-        trace(
-          'quote',
-          async ({ setTraceError, setTraceStatus }) => {
-            try {
-              await queryFulfilled
-            } catch (error: unknown) {
-              if (error && typeof error === 'object' && 'error' in error) {
-                const queryError = (error as Record<'error', FetchBaseQueryError>).error
-                if (typeof queryError.status === 'number') {
-                  setTraceStatus(queryError.status)
-                }
-                setTraceError(queryError)
-              } else {
-                throw error
-              }
-            }
-          },
-          {
-            data: {
-              ...args,
-              isPrice: args.routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE,
-              isAutoRouter: args.routerPreference === RouterPreference.API,
-            },
-          }
-        )
-      },
-      async queryFn(args, _api, _extraOptions, fetch) {
-        logSwapQuoteRequest(args.tokenInChainId, args.routerPreference, false)
-        const quoteStartMark = performance.mark(`quote-fetch-start-${Date.now()}`)
-        try {
+      queryFn(args, _api, _extraOptions, fetch) {
+        return trace({ name: 'Quote', op: 'quote', data: { ...args } }, async (trace) => {
+          logSwapQuoteRequest(args.tokenInChainId, args.routerPreference, false)
           const {
             tokenInAddress: tokenIn,
             tokenInChainId,
@@ -136,67 +103,78 @@ export const routingApi = createApi({
           }
 
           const baseURL = gatewayDNSUpdateEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
-          const response = await fetch({
-            method: 'POST',
-            url: `${baseURL}/quote`,
-            body: JSON.stringify(requestBody),
-            headers: {
-              'x-request-source': 'uniswap-web',
-            },
-          })
+          try {
+            return trace.child({ name: 'Quote on server', op: 'quote.server' }, async (serverTrace) => {
+              const response = await fetch({
+                method: 'POST',
+                url: `${baseURL}/quote`,
+                body: JSON.stringify(requestBody),
+                headers: {
+                  'x-request-source': 'uniswap-web',
+                },
+              })
 
-          if (response.error) {
-            try {
-              // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
-              const errorData = response.error.data as { errorCode?: string; detail?: string }
-              // NO_ROUTE should be treated as a valid response to prevent retries.
-              if (
-                typeof errorData === 'object' &&
-                (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
-              ) {
-                sendAnalyticsEvent('No quote received from routing API', {
-                  requestBody,
-                  response,
-                  routerPreference: args.routerPreference,
-                })
-                return {
-                  data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
+              if (response.error) {
+                try {
+                  // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
+                  const errorData = response.error.data as { errorCode?: string; detail?: string }
+                  // NO_ROUTE should be treated as a valid response to prevent retries.
+                  if (
+                    typeof errorData === 'object' &&
+                    (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
+                  ) {
+                    serverTrace.setStatus('not_found')
+                    trace.setStatus('not_found')
+                    sendAnalyticsEvent('No quote received from routing API', {
+                      requestBody,
+                      response,
+                      routerPreference: args.routerPreference,
+                    })
+                    return {
+                      data: { state: QuoteState.NOT_FOUND, latencyMs: trace.now() },
+                    }
+                  }
+                } catch {
+                  throw response.error
                 }
               }
-            } catch {
-              throw response.error
-            }
+
+              const uraQuoteResponse = response.data as URAQuoteResponse
+              const tradeResult = await transformQuoteToTrade(args, uraQuoteResponse, QuoteMethod.ROUTING_API)
+              return { data: { ...tradeResult, latencyMs: trace.now() } }
+            })
+          } catch (error: any) {
+            console.warn(
+              `GetQuote failed on Unified Routing API, falling back to client: ${
+                error?.message ?? error?.detail ?? error
+              }`
+            )
           }
 
-          const uraQuoteResponse = response.data as URAQuoteResponse
-          const tradeResult = await transformQuoteToTrade(args, uraQuoteResponse, QuoteMethod.ROUTING_API)
-          return { data: { ...tradeResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
-        } catch (error: any) {
-          console.warn(
-            `GetQuote failed on Unified Routing API, falling back to client: ${
-              error?.message ?? error?.detail ?? error
-            }`
-          )
-        }
-
-        try {
-          const { getRouter, getClientSideQuote } = await import('lib/hooks/routing/clientSideSmartOrderRouter')
-          const router = getRouter(args.tokenInChainId)
-          const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
-          if (quoteResult.state === QuoteState.SUCCESS) {
-            const trade = await transformQuoteToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE_FALLBACK)
+          try {
+            return trace.child({ name: 'Quote on client', op: 'quote.client' }, async (clientTrace) => {
+              const { getRouter, getClientSideQuote } = await import('lib/hooks/routing/clientSideSmartOrderRouter')
+              const router = getRouter(args.tokenInChainId)
+              const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
+              if (quoteResult.state === QuoteState.SUCCESS) {
+                const trade = await transformQuoteToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE_FALLBACK)
+                return {
+                  data: { ...trade, latencyMs: trace.now() },
+                }
+              } else {
+                clientTrace.setStatus('not_found')
+                trace.setStatus('not_found')
+                return { data: { ...quoteResult, latencyMs: trace.now() } }
+              }
+            })
+          } catch (error: any) {
+            console.warn(`GetQuote failed on client: ${error}`)
+            trace.setError(error)
             return {
-              data: { ...trade, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
+              error: { status: 'CUSTOM_ERROR', error: error?.detail ?? error?.message ?? error },
             }
-          } else {
-            return { data: { ...quoteResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
           }
-        } catch (error: any) {
-          console.warn(`GetQuote failed on client: ${error}`)
-          return {
-            error: { status: 'CUSTOM_ERROR', error: error?.detail ?? error?.message ?? error },
-          }
-        }
+        })
       },
       keepUnusedDataFor: ms(`10s`),
       extraOptions: {

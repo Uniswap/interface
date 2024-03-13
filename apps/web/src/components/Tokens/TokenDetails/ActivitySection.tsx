@@ -31,7 +31,7 @@ export function ActivitySection() {
     return null
   }
   return (
-    <Container>
+    <Container data-testid="token-details-activity-section">
       <Row gap="24px" marginBottom="24px" id="activity-header">
         <Tab isActive={activityInView === ActivityTab.Txs} onClick={() => setActivityInView(ActivityTab.Txs)}>
           <Trans>Transactions</Trans>

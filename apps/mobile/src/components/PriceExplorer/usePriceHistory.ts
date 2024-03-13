@@ -2,6 +2,7 @@ import { maxBy } from 'lodash'
 import { Dispatch, SetStateAction, useCallback, useMemo, useRef, useState } from 'react'
 import { SharedValue } from 'react-native-reanimated'
 import { TLineChartData } from 'react-native-wagmi-charts'
+import { GqlResult } from 'uniswap/src/data/types'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   HistoryDuration,
@@ -9,7 +10,6 @@ import {
   useTokenPriceHistoryQuery,
 } from 'wallet/src/data/__generated__/types-and-hooks'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { GqlResult } from 'wallet/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 

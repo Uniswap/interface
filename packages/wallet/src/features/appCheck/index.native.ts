@@ -1,6 +1,6 @@
 import appCheck from '@react-native-firebase/app-check'
+import { config } from 'uniswap/src/config'
 import { logger } from 'utilities/src/logger/logger'
-import { config } from 'wallet/src/config'
 
 export function initFirebaseAppCheck(): void {
   // Configure app check for device attestation

@@ -33,8 +33,6 @@ export enum FeatureFlag {
   outageBannerOptimism = 'outage_banner_feb_2024_optimism',
   outageBannerArbitrum = 'outage_banner_feb_2024_arbitrum',
   outageBannerPolygon = 'outage_banner_feb_2024_polygon',
-  swapSmarter = 'swap_smarter',
-  uniTags = 'uni_tags',
 }
 
 interface FeatureFlagsContextType {

@@ -11,11 +11,12 @@ import { UnitagName } from 'src/features/unitags/UnitagName'
 import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
 import { Button, Flex, Icons, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
+import { UnitagClaimSource } from 'uniswap/src/features/unitags/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENSName } from 'wallet/src/features/ens/api'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useClaimUnitag } from 'wallet/src/features/unitags/hooks'
-import { UnitagClaimSource } from 'wallet/src/features/unitags/types'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 function convertEntryPointToAnalyticsSource(entryPoint: UnitagEntryPoint): UnitagClaimSource {
   switch (entryPoint) {
@@ -113,10 +114,8 @@ export function ChooseProfilePictureScreen({
 
   return (
     <SafeKeyboardOnboardingScreen
-      subtitle={t(
-        'Upload your own or stick with your unique Unicon. You can always change this later.'
-      )}
-      title={t('Choose a profile photo')}>
+      subtitle={t('unitags.onboarding.profile.subtitle')}
+      title={t('unitags.onboarding.profile.title')}>
       <Flex centered gap="$spacing20" mt="$spacing24">
         <Flex mt="$spacing48" onPress={avatarSelectionHandler}>
           <Flex px="$spacing4">
@@ -128,7 +127,8 @@ export function ChooseProfilePictureScreen({
             bottom={-spacing.spacing2}
             p="$spacing4"
             position="absolute"
-            right={-spacing.spacing2}>
+            right={-spacing.spacing2}
+            testID={ElementName.Edit}>
             <Flex
               backgroundColor={isDarkMode ? '$neutral3' : '$neutral2'}
               borderRadius="$roundedFull"
@@ -147,6 +147,7 @@ export function ChooseProfilePictureScreen({
       <Button
         disabled={!!claimError || isClaiming}
         size="medium"
+        testID={ElementName.Continue}
         theme="primary"
         onPress={onPressContinue}>
         {isClaiming ? (
@@ -154,7 +155,7 @@ export function ChooseProfilePictureScreen({
             <ActivityIndicator color={colors.sporeWhite.val} />
           </Flex>
         ) : (
-          t('Continue')
+          t('common.button.continue')
         )}
       </Button>
       {showModal && (

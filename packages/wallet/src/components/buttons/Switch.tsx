@@ -1,6 +1,6 @@
 import { Switch as BaseSwitch, SwitchProps, ViewProps } from 'react-native'
 import { Flex, useSporeColors } from 'ui/src'
-import { isAndroid } from 'wallet/src/utils/platform'
+import { isAndroid } from 'uniswap/src/utils/platform'
 
 // TODO(MOB-1518) change to tamagui ui/src Switch
 
