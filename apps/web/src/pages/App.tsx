@@ -153,7 +153,7 @@ export default function App() {
         {/*
           This is where *static* page titles are injected into the <head> tag. If you
           want to set a page title based on data that's dynamic or not available on first render,
-          you can set it later in the page component itself, since react-helmet-async prefers the most recently rendered title.
+          you can set it later in the page component itself, since react-helmet prefers the most recently rendered title.
         */}
         <Helmet>
           <title>{findRouteByPath(pathname)?.getTitle(pathname) ?? 'Uniswap Interface'}</title>
@@ -278,10 +278,7 @@ function UserPropertyUpdater() {
     const sendWebVital =
       (metric: string) =>
       ({ delta }: Metric) =>
-        sendAnalyticsEvent(SharedEventName.WEB_VITALS, {
-          ...pageLoadProperties,
-          [metric]: delta,
-        })
+        sendAnalyticsEvent(SharedEventName.WEB_VITALS, { ...pageLoadProperties, [metric]: delta })
     getCLS(sendWebVital('cumulative_layout_shift'))
     getFCP(sendWebVital('first_contentful_paint_ms'))
     getFID(sendWebVital('first_input_delay_ms'))
