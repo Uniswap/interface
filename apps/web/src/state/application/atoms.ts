@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+import { atom, useAtom } from 'jotai'
 import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 
 // Note:
@@ -10,3 +12,18 @@ import { atomWithStorage, createJSONStorage } from 'jotai/utils'
 const storage = createJSONStorage(() => sessionStorage)
 
 export const shouldDisableNFTRoutesAtom = atomWithStorage('shouldDisableNFTRoutes', false, storage)
+
+const UKBannerAtom = atomWithStorage<number>('uni:uk-banner', 0)
+
+const hideUKBannerAtom = atom(
+  (get) => {
+    const now = dayjs()
+    const last = dayjs(get(UKBannerAtom))
+    return now.diff(last, 'days', true) >= 5 // option to not totally disable banner forever
+  },
+  (_, set) => set(UKBannerAtom, Date.now())
+)
+
+export function useUkBannerState() {
+  return useAtom(hideUKBannerAtom)
+}
