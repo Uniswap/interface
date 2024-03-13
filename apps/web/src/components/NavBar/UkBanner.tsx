@@ -102,8 +102,8 @@ export const useRenderUkBanner = () => {
       if (window.scrollY > 0) setShow(false)
       if (window.scrollY <= 5) setShow(true)
     }
-    window.addEventListener('scroll', throttle(scrollListener, 100))
-    return () => window.removeEventListener('scroll', throttle(scrollListener, 100))
+    window.addEventListener('scroll', throttle(scrollListener, 200))
+    return () => window.removeEventListener('scroll', throttle(scrollListener, 200))
   }, [])
 
   return {
