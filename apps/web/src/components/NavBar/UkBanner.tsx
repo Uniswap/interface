@@ -72,7 +72,7 @@ export const bannerText = t`
   recommendation, invitation or inducement to deal in cryptoassets.
 `
 
-const BannerConatner = styled.div<{
+const BannerContainer = styled.div<{
   show: boolean
 }>`
   display: flex;
@@ -100,7 +100,7 @@ export const useRenderUkBanner = () => {
   useEffect(() => {
     const scrollListener = () => {
       if (window.scrollY > 0) setShow(false)
-      if (window.scrollY <= 5) setShow(true)
+      else setShow(true)
     }
     window.addEventListener('scroll', throttle(scrollListener, 200))
     return () => window.removeEventListener('scroll', throttle(scrollListener, 200))
@@ -117,7 +117,7 @@ export function UkBanner() {
   const openDisclaimer = useOpenModal(ApplicationModal.UK_DISCLAIMER)
 
   return (
-    <BannerConatner show={renderUkBanner}>
+    <BannerContainer show={renderUkBanner}>
       <BannerWrapper>
         <BannerTextWrapper lineHeight="24px">{`${t`UK disclaimer:`} ${bannerText}`}</BannerTextWrapper>
         <ReadMoreWrapper>
@@ -129,6 +129,6 @@ export function UkBanner() {
       <Flex alignContent="center" justifyContent="center" width="2%">
         <CloseIcon onClick={dismissBanner} width={18} height={18} />
       </Flex>
-    </BannerConatner>
+    </BannerContainer>
   )
 }
