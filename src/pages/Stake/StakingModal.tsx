@@ -279,7 +279,6 @@ export default function StakingModal({
 
   const handleCommonQuantityInput = useCallback(
     (commonQuantity: CommonQuantity) => {
-      // onFieldAInput(withdraw ? stakedBalance ?? '' : maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
       const maxAmountOrNothing: CurrencyAmount<Currency> | null = stakedBalance
         ? null
         : maxAmounts[Field.CURRENCY_A] ?? null

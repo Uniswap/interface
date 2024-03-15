@@ -417,10 +417,6 @@ const LimitOrderModal = () => {
     [onCurrencySelection]
   )
 
-  // const handleMaxInput = useCallback(() => {
-  //   maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
-  // }, [maxInputAmount, onUserInput])
-
   const handleCommonQuantityInput = useCallback(
     (commonQuantity: CommonQuantity) => {
       if (maxInputAmount) {

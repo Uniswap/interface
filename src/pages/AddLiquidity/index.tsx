@@ -442,11 +442,6 @@ export default function AddLiquidity({
                     value={formattedAmounts[Field.CURRENCY_A]}
                     onUserInput={onFieldAInput}
                     onCommonQuantity={handleCommonQuantityInput}
-                    // onMax={() => {
-                    //   onFieldAInput(
-                    //     withdrawKROM ? fundingBalance?.toExact() ?? '' : maxAmounts[Field.CURRENCY_A]?.toExact() ?? ''
-                    //   )
-                    // }}
                     showCommonQuantityButtons={!(withdrawKROM ? fundingBalance : atMaxAmounts[Field.CURRENCY_A])}
                     currency={currencies[Field.CURRENCY_A] ?? null}
                     id="add-liquidity-input-tokena"
