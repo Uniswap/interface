@@ -1,6 +1,6 @@
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
 import { toHex } from '@uniswap/v3-sdk'
 import CurrencyLogo from 'components/CurrencyLogo'
 import { useV3Positions } from 'hooks/useV3Positions'
@@ -10,6 +10,7 @@ import { RouteComponentProps, useLocation } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useV3DerivedMintInfo, useV3MintActionHandlers, useV3MintState } from 'state/mint/v3/hooks'
 import { useSingleCallResult } from 'state/multicall/hooks'
+import { CommonQuantity } from 'types/main'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import Web3 from 'web3-utils'
 
@@ -276,6 +277,29 @@ export default function StakingModal({
       </AutoColumn>
     )
 
+  const handleCommonQuantityInput = useCallback(
+    (commonQuantity: CommonQuantity) => {
+      const maxAmountOrNothing: CurrencyAmount<Currency> | null = stakedBalance
+        ? null
+        : maxAmounts[Field.CURRENCY_A] ?? null
+
+      if (maxAmountOrNothing === null) {
+        onFieldAInput('')
+      } else {
+        if (commonQuantity === '100%') {
+          onFieldAInput(maxAmountOrNothing.toExact())
+        } else if (commonQuantity === '25%') {
+          onFieldAInput(maxAmountOrNothing.divide(new Fraction(4, 1)).toExact())
+        } else if (commonQuantity === '50%') {
+          onFieldAInput(maxAmountOrNothing.divide(new Fraction(4, 2)).toExact())
+        } else if (commonQuantity === '75%') {
+          onFieldAInput(maxAmountOrNothing.divide(new Fraction(4, 3)).toExact())
+        }
+      }
+    },
+    [onFieldAInput, stakedBalance, maxAmounts]
+  )
+
   return (
     <>
       <ScrollablePage>
@@ -312,10 +336,8 @@ export default function StakingModal({
                   <CurrencyInputPanel
                     value={formattedAmounts[Field.CURRENCY_A]}
                     onUserInput={onFieldAInput}
-                    onMax={() => {
-                      onFieldAInput(withdraw ? stakedBalance ?? '' : maxAmounts[Field.CURRENCY_A]?.toExact() ?? '')
-                    }}
-                    showMaxButton={!(withdraw ? stakedBalance : atMaxAmounts[Field.CURRENCY_A])}
+                    onCommonQuantity={handleCommonQuantityInput}
+                    showCommonQuantityButtons={!(withdraw ? stakedBalance : atMaxAmounts[Field.CURRENCY_A])}
                     currency={currencies[Field.CURRENCY_A] ?? null}
                     id="add-liquidity-input-tokena"
                     fiatValue={usdcValues[Field.CURRENCY_A]}

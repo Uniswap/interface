@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-restricted-imports, simple-import-sort/imports
 import { t, Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
@@ -63,6 +63,7 @@ import AppBody from '../AppBody'
 import KromLogo from './../../assets/images/KROM_Transparent_1.png'
 import CandleSticks from '../../components/CandleSticks'
 import { usePoolAddress } from 'state/swap/hooks'
+import { CommonQuantity } from 'types/main'
 
 const WarningTitle = styled.div`
   width: 95%;
@@ -582,9 +583,25 @@ export default function SwapWidget() {
     [onCurrencySelection]
   )
 
-  const handleMaxInput = useCallback(() => {
-    maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
-  }, [maxInputAmount, onUserInput])
+  const handleCommonQuantityInput = useCallback(
+    (commonQuantity: CommonQuantity) => {
+      if (maxInputAmount) {
+        if (commonQuantity === '25%') {
+          onUserInput(Field.INPUT, maxInputAmount.divide(new Fraction(4, 1)).toExact())
+        }
+        if (commonQuantity === '50%') {
+          onUserInput(Field.INPUT, maxInputAmount.divide(new Fraction(4, 2)).toExact())
+        }
+        if (commonQuantity === '75%') {
+          onUserInput(Field.INPUT, maxInputAmount.divide(new Fraction(4, 3)).toExact())
+        }
+        if (commonQuantity === '100%') {
+          onUserInput(Field.INPUT, maxInputAmount.toExact())
+        }
+      }
+    },
+    [maxInputAmount, onUserInput]
+  )
 
   const handleOutputSelect = useCallback(
     (outputCurrency) => onCurrencySelection(Field.OUTPUT, outputCurrency),
@@ -672,10 +689,10 @@ export default function SwapWidget() {
                         )
                       }
                       value={formattedAmounts[Field.INPUT]}
-                      showMaxButton={showMaxButton}
+                      showCommonQuantityButtons={showMaxButton}
                       currency={currencies[Field.INPUT]}
                       onUserInput={handleTypeInput}
-                      onMax={handleMaxInput}
+                      onCommonQuantity={handleCommonQuantityInput}
                       fiatValue={fiatValueInput ?? undefined}
                       onCurrencySelect={handleInputSelect}
                       otherCurrency={currencies[Field.OUTPUT]}
@@ -700,7 +717,7 @@ export default function SwapWidget() {
                       label={
                         independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>
                       }
-                      showMaxButton={false}
+                      showCommonQuantityButtons={false}
                       hideBalance={false}
                       fiatValue={fiatValueOutput ?? undefined}
                       priceImpact={priceImpact}
@@ -1208,10 +1225,10 @@ export default function SwapWidget() {
                     independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
                   }
                   value={formattedAmounts[Field.INPUT]}
-                  showMaxButton={showMaxButton}
+                  showCommonQuantityButtons={showMaxButton}
                   currency={currencies[Field.INPUT]}
                   onUserInput={handleTypeInput}
-                  onMax={handleMaxInput}
+                  onCommonQuantity={handleCommonQuantityInput}
                   fiatValue={fiatValueInput ?? undefined}
                   onCurrencySelect={handleInputSelect}
                   otherCurrency={currencies[Field.OUTPUT]}
@@ -1236,7 +1253,7 @@ export default function SwapWidget() {
                   label={
                     independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>
                   }
-                  showMaxButton={false}
+                  showCommonQuantityButtons={false}
                   hideBalance={false}
                   fiatValue={fiatValueOutput ?? undefined}
                   priceImpact={priceImpact}

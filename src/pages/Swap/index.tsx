@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Token, TradeType } from '@uniswap/sdk-core'
 import { Trade as V3Trade } from '@uniswap/v3-sdk'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import PositionList from 'components/PositionList'
@@ -22,6 +22,7 @@ import { TransactionDetails } from 'state/transactions/reducer'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import { V3TradeState } from 'state/validator/types'
 import styled, { ThemeContext } from 'styled-components/macro'
+import { CommonQuantity } from 'types/main'
 import { PositionDetails } from 'types/position'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
@@ -429,7 +430,7 @@ export default function Swap({ history }: RouteComponentProps) {
   }, [approvalState, approvalSubmitted])
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = maxAmountSpend(currencyBalances[Field.INPUT])
-  const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts.input?.equalTo(maxInputAmount))
+  const showCommonQuantityButtons = Boolean(maxInputAmount?.greaterThan(0))
 
   // the callback to execute the swap
   const { callback: swapCallback, error: swapCallbackError } = useSwapCallback(
@@ -523,9 +524,25 @@ export default function Swap({ history }: RouteComponentProps) {
     [onCurrencySelection]
   )
 
-  const handleMaxInput = useCallback(() => {
-    maxInputAmount && onUserInput(Field.INPUT, maxInputAmount.toExact())
-  }, [maxInputAmount, onUserInput])
+  const handleCommonQuantityInput = useCallback(
+    (commonQuantity: CommonQuantity) => {
+      if (maxInputAmount) {
+        if (commonQuantity === '25%') {
+          onUserInput(Field.INPUT, maxInputAmount.divide(new Fraction(4, 1)).toExact())
+        }
+        if (commonQuantity === '50%') {
+          onUserInput(Field.INPUT, maxInputAmount.divide(new Fraction(4, 2)).toExact())
+        }
+        if (commonQuantity === '75%') {
+          onUserInput(Field.INPUT, maxInputAmount.divide(new Fraction(4, 3)).toExact())
+        }
+        if (commonQuantity === '100%') {
+          onUserInput(Field.INPUT, maxInputAmount.toExact())
+        }
+      }
+    },
+    [maxInputAmount, onUserInput]
+  )
 
   const handleOutputSelect = useCallback(
     (outputCurrency) => {
@@ -581,10 +598,10 @@ export default function Swap({ history }: RouteComponentProps) {
                           )
                         }
                         value={formattedAmounts.input}
-                        showMaxButton={showMaxButton}
+                        showCommonQuantityButtons={showCommonQuantityButtons}
                         currency={currencies[Field.INPUT]}
                         onUserInput={handleTypeInput}
-                        onMax={handleMaxInput}
+                        onCommonQuantity={handleCommonQuantityInput}
                         fiatValue={fiatValueInput ?? undefined}
                         onCurrencySelect={handleInputSelect}
                         otherCurrency={currencies[Field.OUTPUT]}
@@ -601,7 +618,7 @@ export default function Swap({ history }: RouteComponentProps) {
                         value={formattedAmounts.price}
                         onUserInput={handleTypePrice}
                         label={<Trans>Target Price</Trans>}
-                        showMaxButton={false}
+                        showCommonQuantityButtons={false}
                         hideBalance={true}
                         currency={currencies[Field.OUTPUT] ?? null}
                         otherCurrency={currencies[Field.INPUT]}
@@ -636,7 +653,7 @@ export default function Swap({ history }: RouteComponentProps) {
                             <Trans>To</Trans>
                           )
                         }
-                        showMaxButton={false}
+                        showCommonQuantityButtons={false}
                         hideBalance={false}
                         fiatValue={fiatValueOutput ?? undefined}
                         priceImpact={priceImpact}
@@ -1001,10 +1018,10 @@ export default function Swap({ history }: RouteComponentProps) {
                     independentField === Field.OUTPUT && !showWrap ? <Trans>From (at most)</Trans> : <Trans>From</Trans>
                   }
                   value={formattedAmounts.input}
-                  showMaxButton={showMaxButton}
+                  showCommonQuantityButtons={showCommonQuantityButtons}
                   currency={currencies[Field.INPUT]}
                   onUserInput={handleTypeInput}
-                  onMax={handleMaxInput}
+                  onCommonQuantity={handleCommonQuantityInput}
                   fiatValue={fiatValueInput ?? undefined}
                   onCurrencySelect={handleInputSelect}
                   otherCurrency={currencies[Field.OUTPUT]}
@@ -1021,7 +1038,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   value={formattedAmounts.price}
                   onUserInput={handleTypePrice}
                   label={<Trans>Target Price</Trans>}
-                  showMaxButton={false}
+                  showCommonQuantityButtons={false}
                   hideBalance={true}
                   currency={currencies[Field.OUTPUT] ?? null}
                   otherCurrency={currencies[Field.INPUT]}
@@ -1052,7 +1069,7 @@ export default function Swap({ history }: RouteComponentProps) {
                   label={
                     independentField === Field.INPUT && !showWrap ? <Trans>To (at least)</Trans> : <Trans>To</Trans>
                   }
-                  showMaxButton={false}
+                  showCommonQuantityButtons={false}
                   hideBalance={false}
                   fiatValue={fiatValueOutput ?? undefined}
                   priceImpact={priceImpact}

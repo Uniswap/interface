@@ -2,13 +2,14 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Trans } from '@lingui/macro'
-import { Currency, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
 import { useCallback, useContext, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import ReactGA from 'react-ga'
 import { RouteComponentProps } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeContext } from 'styled-components/macro'
+import { CommonQuantity } from 'types/main'
 
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
@@ -441,6 +442,13 @@ export default function RemoveLiquidity({
     liquidityPercentChangeCallback
   )
 
+  const handleCommonQuantityInput = useCallback(
+    (commonQuantity: CommonQuantity) => {
+      onUserInput(Field.LIQUIDITY_PERCENT, commonQuantity.replace('%', ''))
+    },
+    [onUserInput]
+  )
+
   return (
     <>
       <AppBody>
@@ -573,10 +581,8 @@ export default function RemoveLiquidity({
                 <CurrencyInputPanel
                   value={formattedAmounts[Field.LIQUIDITY]}
                   onUserInput={onLiquidityInput}
-                  onMax={() => {
-                    onUserInput(Field.LIQUIDITY_PERCENT, '100')
-                  }}
-                  showMaxButton={!atMaxAmount}
+                  onCommonQuantity={handleCommonQuantityInput}
+                  showCommonQuantityButtons={!atMaxAmount}
                   currency={pair?.liquidityToken}
                   pair={pair}
                   id="liquidity-amount"
@@ -588,8 +594,8 @@ export default function RemoveLiquidity({
                   hideBalance={true}
                   value={formattedAmounts[Field.CURRENCY_A]}
                   onUserInput={onCurrencyAInput}
-                  onMax={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}
-                  showMaxButton={!atMaxAmount}
+                  onCommonQuantity={handleCommonQuantityInput}
+                  showCommonQuantityButtons={!atMaxAmount}
                   currency={currencyA}
                   label={'Output'}
                   onCurrencySelect={handleSelectCurrencyA}
@@ -602,8 +608,8 @@ export default function RemoveLiquidity({
                   hideBalance={true}
                   value={formattedAmounts[Field.CURRENCY_B]}
                   onUserInput={onCurrencyBInput}
-                  onMax={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')}
-                  showMaxButton={!atMaxAmount}
+                  onCommonQuantity={handleCommonQuantityInput}
+                  showCommonQuantityButtons={!atMaxAmount}
                   currency={currencyB}
                   label={'Output'}
                   onCurrencySelect={handleSelectCurrencyB}
