@@ -5,18 +5,13 @@ import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { AutoRow } from 'components/Row'
 import { TopTokensTable } from 'components/Tokens/TokenTable'
 import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
-import OldTokenTable from 'components/Tokens/TokenTable/OldTokenTable'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
-import { MAX_WIDTH_MEDIA_BREAKPOINT, MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { exploreSearchStringAtom } from 'components/Tokens/state'
-import { MouseoverTooltip } from 'components/Tooltip'
-import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
-import { useResetAtom } from 'jotai/utils'
+import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { ExploreChartsSection } from 'pages/Explore/charts/ExploreChartsSection'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import styled, { css } from 'styled-components'
+import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 
 import { Chain } from 'graphql/data/__generated__/types-and-hooks'
@@ -25,62 +20,29 @@ import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useExploreParams } from './redirects'
 import RecentTransactions from './tables/RecentTransactions'
 
-const ExploreContainer = styled.div<{ isInfoExplorePageEnabled?: boolean }>`
+const ExploreContainer = styled.div`
   width: 100%;
   min-width: 320px;
+  padding: 48px 40px 0px;
 
-  ${({ isInfoExplorePageEnabled }) =>
-    isInfoExplorePageEnabled
-      ? css`
-          padding: 48px 40px 0px;
-
-          @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-            padding: 16px;
-            padding-bottom: 0px;
-          }
-        `
-      : css`
-          padding: 68px 12px 0px;
-
-          @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-            padding-top: 48px;
-          }
-
-          @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-            padding-top: 20px;
-          }
-        `}
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    padding: 16px;
+    padding-bottom: 0px;
+  }
 `
-const TitleContainer = styled.div`
-  margin-bottom: 32px;
-  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
-`
-const NavWrapper = styled.div<{ isInfoExplorePageEnabled: boolean }>`
+
+const NavWrapper = styled.div`
   display: flex;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   margin: 0 auto;
-  margin-bottom: ${({ isInfoExplorePageEnabled }) => (isInfoExplorePageEnabled ? '16px' : '20px')};
+  margin-bottom: 16px;
   color: ${({ theme }) => theme.neutral3};
   flex-direction: row;
-
-  ${({ isInfoExplorePageEnabled }) =>
-    isInfoExplorePageEnabled
-      ? css`
-          justify-content: space-between;
-          @media screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
-            flex-direction: column;
-            gap: 16px;
-          }
-        `
-      : css`
-          @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-            flex-direction: column;
-            gap: 8px;
-          }
-        `};
+  justify-content: space-between;
+  @media screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    flex-direction: column;
+    gap: 16px;
+  }
 `
 const TabBar = styled(AutoRow)`
   gap: 24px;
@@ -99,26 +61,13 @@ const TabItem = styled(ThemedText.HeadlineMedium)<{ active?: boolean }>`
     line-height: 32px !important;
   }
 `
-const FiltersContainer = styled.div<{ isInfoExplorePageEnabled: boolean }>`
+const FiltersContainer = styled.div`
   display: flex;
   gap: 8px;
   height: 40px;
   justify-content: flex-start;
-
-  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    ${({ isInfoExplorePageEnabled }) => !isInfoExplorePageEnabled && 'order: 2; justify-content: space-between;'}
-  }
 `
 
-const SearchContainer = styled(FiltersContainer)`
-  margin-left: 8px;
-  width: 100%;
-
-  @media only screen and (max-width: ${MEDIUM_MEDIA_BREAKPOINT}) {
-    order: 1;
-    margin: 0px;
-  }
-`
 export enum ExploreTab {
   Tokens = 'tokens',
   Pools = 'pools',
@@ -153,8 +102,6 @@ const Pages: Array<Page> = [
 ]
 
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
-  const resetFilterString = useResetAtom(exploreSearchStringAtom)
-  const location = useLocation()
   const tabNavRef = useRef<HTMLDivElement>(null)
 
   const initialKey: number = useMemo(() => {
@@ -174,7 +121,6 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   }, [])
 
   const [currentTab, setCurrentTab] = useState(initialKey)
-  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
   // to allow backward navigation between tabs
   const { tab: tabName, chainName } = useExploreParams()
@@ -187,12 +133,6 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
     }
   }, [tab])
 
-  useEffect(() => {
-    if (!isInfoExplorePageEnabled) {
-      resetFilterString()
-    }
-  }, [isInfoExplorePageEnabled, location, resetFilterString])
-
   const { component: Page, key: currentKey } = Pages[currentTab]
 
   // Automatically trigger a navigation when the app chain changes
@@ -201,76 +141,45 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
     useCallback(
       (_chainId, chain) => {
         if (chain && isBackendSupportedChain(chain)) {
-          navigate(getTokenExploreURL({ tab, chain }, isInfoExplorePageEnabled))
+          navigate(getTokenExploreURL({ tab, chain }))
         }
       },
-      [isInfoExplorePageEnabled, navigate, tab]
+      [navigate, tab]
     )
   )
 
   return (
-    <Trace
-      page={isInfoExplorePageEnabled ? InterfacePageName.EXPLORE_PAGE : InterfacePageName.TOKENS_PAGE}
-      properties={{ chainName: chain }}
-      shouldLogImpression
-    >
-      <ExploreContainer isInfoExplorePageEnabled={isInfoExplorePageEnabled}>
-        {isInfoExplorePageEnabled ? (
-          <ExploreChartsSection />
-        ) : (
-          <TitleContainer>
-            <MouseoverTooltip
-              text={<Trans>This table contains the top tokens by Uniswap volume, sorted based on your input.</Trans>}
-              placement="bottom"
-            >
-              <ThemedText.H1Large>
-                <Trans>Top tokens on Uniswap</Trans>
-              </ThemedText.H1Large>
-            </MouseoverTooltip>
-          </TitleContainer>
-        )}
-        <NavWrapper isInfoExplorePageEnabled={isInfoExplorePageEnabled} ref={tabNavRef}>
-          {isInfoExplorePageEnabled && (
-            <TabBar data-testid="explore-navbar">
-              {Pages.map(({ title, loggingElementName, key }, index) => {
-                return (
-                  <TraceEvent
-                    events={[BrowserEvent.onClick]}
-                    name={SharedEventName.NAVBAR_CLICKED}
-                    element={loggingElementName}
-                    key={index}
+    <Trace page={InterfacePageName.EXPLORE_PAGE} properties={{ chainName: chain }} shouldLogImpression>
+      <ExploreContainer>
+        <ExploreChartsSection />
+        <NavWrapper ref={tabNavRef}>
+          <TabBar data-testid="explore-navbar">
+            {Pages.map(({ title, loggingElementName, key }, index) => {
+              return (
+                <TraceEvent
+                  events={[BrowserEvent.onClick]}
+                  name={SharedEventName.NAVBAR_CLICKED}
+                  element={loggingElementName}
+                  key={index}
+                >
+                  <StyledInternalLink
+                    to={`/explore/${key}` + (chain !== Chain.Ethereum ? `/${chain.toLowerCase()}` : '')}
                   >
-                    <StyledInternalLink
-                      to={`/explore/${key}` + (chain !== Chain.Ethereum ? `/${chain.toLowerCase()}` : '')}
-                    >
-                      <TabItem onClick={() => setCurrentTab(index)} active={currentTab === index} key={key}>
-                        {title}
-                      </TabItem>
-                    </StyledInternalLink>
-                  </TraceEvent>
-                )
-              })}
-            </TabBar>
-          )}
-          {isInfoExplorePageEnabled ? (
-            <FiltersContainer isInfoExplorePageEnabled>
-              <NetworkFilter />
-              {currentKey === ExploreTab.Tokens && <TimeSelector />}
-              {currentKey !== ExploreTab.Transactions && <SearchBar tab={currentKey} />}
-            </FiltersContainer>
-          ) : (
-            <>
-              <FiltersContainer isInfoExplorePageEnabled={false}>
-                <NetworkFilter />
-                <TimeSelector />
-              </FiltersContainer>
-              <SearchContainer isInfoExplorePageEnabled={false}>
-                <SearchBar />
-              </SearchContainer>
-            </>
-          )}
+                    <TabItem onClick={() => setCurrentTab(index)} active={currentTab === index} key={key}>
+                      {title}
+                    </TabItem>
+                  </StyledInternalLink>
+                </TraceEvent>
+              )
+            })}
+          </TabBar>
+          <FiltersContainer>
+            <NetworkFilter />
+            {currentKey === ExploreTab.Tokens && <TimeSelector />}
+            {currentKey !== ExploreTab.Transactions && <SearchBar tab={currentKey} />}
+          </FiltersContainer>
         </NavWrapper>
-        {isInfoExplorePageEnabled ? <Page /> : <OldTokenTable />}
+        <Page />
       </ExploreContainer>
     </Trace>
   )

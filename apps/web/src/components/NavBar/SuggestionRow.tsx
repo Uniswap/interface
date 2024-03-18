@@ -4,7 +4,6 @@ import clsx from 'clsx'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkSearchTokenWarning } from 'constants/tokenSafety'
-import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { Chain, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL } from 'graphql/data/util'
@@ -144,9 +143,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
 
-  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
-
-  const tokenDetailsPath = getTokenDetailsURL({ ...token, isInfoExplorePageEnabled })
+  const tokenDetailsPath = getTokenDetailsURL({ ...token })
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
@@ -177,7 +174,7 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
           token={token}
           symbol={token.symbol}
           size="36px"
-          backupImg={token.project?.logoUrl}
+          primaryImg={token.project?.logoUrl}
           style={{ marginRight: '8px' }}
         />
         <Column className={styles.suggestionPrimaryContainer}>

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AccountHeader renders without error 1`] = `
+exports[`AccountHeader renders correctly 1`] = `
 <View
   style={
     {
@@ -81,6 +81,7 @@ exports[`AccountHeader renders without error 1`] = `
               "position": "relative",
             }
           }
+          testID="account-icon"
         >
           <View
             style={
@@ -347,6 +348,7 @@ exports[`AccountHeader renders without error 1`] = `
             ],
           }
         }
+        testID="account-header/settings-button"
       >
         <RNSVGSvgView
           align="xMidYMid"
@@ -418,6 +420,7 @@ exports[`AccountHeader renders without error 1`] = `
           "justifyContent": "space-between",
         }
       }
+      testID="account-header/display-name"
     >
       <View
         cancelable={true}

@@ -93,6 +93,7 @@ function SwapFormContent(): JSX.Element {
 
   const showWebInputTokenSelector = selectingCurrencyField === CurrencyField.INPUT && isWeb
   const showWebOutputTokenSelector = selectingCurrencyField === CurrencyField.OUTPUT && isWeb
+  const showSwitchCurrencies = !showWebInputTokenSelector && !showWebOutputTokenSelector
 
   // Updaters
   useSyncFiatAndTokenAmountUpdater()
@@ -381,7 +382,7 @@ function SwapFormContent(): JSX.Element {
         [colors.surface1.val, colors.surface2.val]
       ),
     }
-  }, [inputColorTransitionProgress])
+  }, [colors.surface1.val, colors.surface2.val, inputColorTransitionProgress])
 
   const outputBackgroundStyle = useAnimatedStyle(() => {
     return {
@@ -391,7 +392,7 @@ function SwapFormContent(): JSX.Element {
         [colors.surface1.val, colors.surface2.val]
       ),
     }
-  }, [outputColorTransitionProgress])
+  }, [colors.surface1.val, colors.surface2.val, outputColorTransitionProgress])
 
   return (
     <Flex
@@ -441,10 +442,15 @@ function SwapFormContent(): JSX.Element {
             )}
           </AnimatedFlex>
         </Trace>
+
+        {showSwitchCurrencies ? (
+          <SwitchCurrenciesButton onSwitchCurrencies={onSwitchCurrencies} />
+        ) : (
+          <Flex />
+        )}
+
         {!showWebInputTokenSelector && (
           <>
-            <SwitchCurrenciesButton onSwitchCurrencies={onSwitchCurrencies} />
-
             <Trace section={SectionName.CurrencyOutputPanel}>
               <AnimatedFlex
                 shrink
@@ -471,7 +477,6 @@ function SwapFormContent(): JSX.Element {
                     isFiatMode={isFiatMode && exactFieldIsOutput}
                     isLoading={!exactFieldIsOutput && isSwapDataLoading}
                     resetSelection={resetSelection}
-                    showNonZeroBalancesOnly={false}
                     showSoftInputOnFocus={false}
                     usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
                     value={exactFieldIsOutput ? exactValue : formattedDerivedValue}
@@ -582,6 +587,7 @@ const SwitchCurrenciesButton = ({
             <SwapArrowButton
               backgroundColor="$surface1"
               size={SWAP_DIRECTION_BUTTON_SIZE}
+              testID={ElementName.SwitchCurrenciesButton}
               onPress={onSwitchCurrencies}
             />
           </Trace>

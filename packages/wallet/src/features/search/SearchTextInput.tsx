@@ -187,6 +187,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           <AnimatePresence>
             {showClearButton ? (
               <Button
+                // TODO(MOB-3059): tamagui should fix this internally and then we can remove animateOnly
+                animateOnly={['transform', 'opacity']}
                 animation="quick"
                 backgroundColor="$surface3"
                 borderRadius="$roundedFull"

@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { createElement, useMemo, useState } from 'react'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { TXN_HISTORY_LOADER_ICON_SIZE } from 'ui/src/loading/TransactionLoader'
@@ -117,7 +118,6 @@ function getTransactionTypeVerbs(
   t: AppTFunction
 ): {
   success: string
-  successDapp: string
   pending?: string
   failed?: string
   canceling?: string
@@ -128,8 +128,9 @@ function getTransactionTypeVerbs(
   switch (typeInfo.type) {
     case TransactionType.Swap:
       return {
-        success: t('transaction.status.swap.success'),
-        successDapp: t('transaction.status.swap.successDapp', { externalDappName }),
+        success: externalDappName
+          ? t('transaction.status.swap.successDapp', { externalDappName })
+          : t('transaction.status.swap.success'),
         pending: t('transaction.status.swap.pending'),
         failed: t('transaction.status.swap.failed'),
         canceling: t('transaction.status.swap.canceling'),
@@ -137,13 +138,15 @@ function getTransactionTypeVerbs(
       }
     case TransactionType.Receive:
       return {
-        success: t('transaction.status.receive.success'),
-        successDapp: t('transaction.status.receive.successDapp', { externalDappName }),
+        success: externalDappName
+          ? t('transaction.status.receive.successDapp', { externalDappName })
+          : t('transaction.status.receive.success'),
       }
     case TransactionType.Send:
       return {
-        success: t('transaction.status.send.success'),
-        successDapp: t('transaction.status.send.successDapp', { externalDappName }),
+        success: externalDappName
+          ? t('transaction.status.send.successDapp', { externalDappName })
+          : t('transaction.status.send.success'),
         pending: t('transaction.status.send.pending'),
         failed: t('transaction.status.send.failed'),
         canceling: t('transaction.status.send.canceling'),
@@ -152,8 +155,9 @@ function getTransactionTypeVerbs(
     case TransactionType.Wrap:
       if (typeInfo.unwrapped) {
         return {
-          success: t('transaction.status.unwrap.success'),
-          successDapp: t('transaction.status.unwrap.successDapp', { externalDappName }),
+          success: externalDappName
+            ? t('transaction.status.unwrap.successDapp', { externalDappName })
+            : t('transaction.status.unwrap.success'),
           pending: t('transaction.status.unwrap.pending'),
           failed: t('transaction.status.unwrap.failed'),
           canceling: t('transaction.status.unwrap.canceling'),
@@ -161,8 +165,9 @@ function getTransactionTypeVerbs(
         }
       } else {
         return {
-          success: t('transaction.status.wrap.success'),
-          successDapp: t('transaction.status.wrap.successDapp', { externalDappName }),
+          success: externalDappName
+            ? t('transaction.status.wrap.successDapp', { externalDappName })
+            : t('transaction.status.wrap.success'),
           pending: t('transaction.status.wrap.pending'),
           failed: t('transaction.status.wrap.failed'),
           canceling: t('transaction.status.wrap.canceling'),
@@ -172,8 +177,9 @@ function getTransactionTypeVerbs(
     case TransactionType.Approve:
       if (typeInfo.approvalAmount === '0.0') {
         return {
-          success: t('transaction.status.revoke.success'),
-          successDapp: t('transaction.status.revoke.successDapp', { externalDappName }),
+          success: externalDappName
+            ? t('transaction.status.revoke.successDapp', { externalDappName })
+            : t('transaction.status.revoke.success'),
           pending: t('transaction.status.revoke.pending'),
           failed: t('transaction.status.revoke.failed'),
           canceling: t('transaction.status.revoke.canceling'),
@@ -181,8 +187,9 @@ function getTransactionTypeVerbs(
         }
       } else {
         return {
-          success: t('transaction.status.approve.success'),
-          successDapp: t('transaction.status.approve.successDapp', { externalDappName }),
+          success: externalDappName
+            ? t('transaction.status.approve.successDapp', { externalDappName })
+            : t('transaction.status.approve.success'),
           pending: t('transaction.status.approve.pending'),
           failed: t('transaction.status.approve.failed'),
           canceling: t('transaction.status.approve.canceling'),
@@ -191,8 +198,9 @@ function getTransactionTypeVerbs(
       }
     case TransactionType.NFTApprove:
       return {
-        success: t('transaction.status.approve.success'),
-        successDapp: t('transaction.status.approve.successDapp', { externalDappName }),
+        success: externalDappName
+          ? t('transaction.status.approve.successDapp', { externalDappName })
+          : t('transaction.status.approve.success'),
         pending: t('transaction.status.approve.pending'),
         failed: t('transaction.status.approve.failed'),
         canceling: t('transaction.status.approve.canceling'),
@@ -200,8 +208,9 @@ function getTransactionTypeVerbs(
       }
     case TransactionType.NFTMint:
       return {
-        success: t('transaction.status.mint.success'),
-        successDapp: t('transaction.status.mint.successDapp', { externalDappName }),
+        success: externalDappName
+          ? t('transaction.status.mint.successDapp', { externalDappName })
+          : t('transaction.status.mint.success'),
         pending: t('transaction.status.mint.pending'),
         failed: t('transaction.status.mint.failed'),
         canceling: t('transaction.status.mint.canceling'),
@@ -210,8 +219,9 @@ function getTransactionTypeVerbs(
     case TransactionType.NFTTrade:
       if (typeInfo.tradeType === NFTTradeType.BUY) {
         return {
-          success: t('transaction.status.buy.success'),
-          successDapp: t('transaction.status.buy.successDapp', { externalDappName }),
+          success: externalDappName
+            ? t('transaction.status.buy.successDapp', { externalDappName })
+            : t('transaction.status.buy.success'),
           pending: t('transaction.status.buy.pending'),
           failed: t('transaction.status.buy.failed'),
           canceling: t('transaction.status.buy.canceling'),
@@ -219,8 +229,9 @@ function getTransactionTypeVerbs(
         }
       } else {
         return {
-          success: t('transaction.status.sell.success'),
-          successDapp: t('transaction.status.sell.successDapp', { externalDappName }),
+          success: externalDappName
+            ? t('transaction.status.sell.successDapp', { externalDappName })
+            : t('transaction.status.sell.success'),
           pending: t('transaction.status.sell.pending'),
           failed: t('transaction.status.sell.failed'),
           canceling: t('transaction.status.sell.canceling'),
@@ -230,8 +241,9 @@ function getTransactionTypeVerbs(
     case TransactionType.FiatPurchase:
       if (typeInfo.inputSymbol && typeInfo.inputSymbol === typeInfo.outputSymbol) {
         return {
-          success: t('transaction.status.receive.success'),
-          successDapp: t('transaction.status.receive.successDapp', { externalDappName }),
+          success: externalDappName
+            ? t('transaction.status.receive.successDapp', { externalDappName })
+            : t('transaction.status.receive.success'),
           pending: t('transaction.status.receive.pending'),
           failed: t('transaction.status.receive.failed'),
           canceling: t('transaction.status.receive.canceling'),
@@ -239,8 +251,9 @@ function getTransactionTypeVerbs(
         }
       } else {
         return {
-          success: t('transaction.status.purchase.success'),
-          successDapp: t('transaction.status.purchase.successDapp', { externalDappName }),
+          success: externalDappName
+            ? t('transaction.status.purchase.successDapp', { externalDappName })
+            : t('transaction.status.purchase.success'),
           pending: t('transaction.status.purchase.pending'),
           failed: t('transaction.status.purchase.failed'),
           canceling: t('transaction.status.purchase.canceling'),
@@ -251,8 +264,9 @@ function getTransactionTypeVerbs(
     case TransactionType.WCConfirm:
     default:
       return {
-        success: t('transaction.status.confirm.success'),
-        successDapp: t('transaction.status.confirm.successDapp', { externalDappName }),
+        success: externalDappName
+          ? t('transaction.status.confirm.successDapp', { externalDappName })
+          : t('transaction.status.confirm.success'),
         pending: t('transaction.status.confirm.pending'),
         failed: t('transaction.status.confirm.failed'),
         canceling: t('transaction.status.confirm.canceling'),
@@ -265,11 +279,7 @@ export function getTransactionSummaryTitle(
   tx: TransactionDetails,
   t: AppTFunction
 ): string | undefined {
-  const { success, successDapp, pending, failed, canceling, canceled } = getTransactionTypeVerbs(
-    tx.typeInfo,
-    t
-  )
-  const externalDappName = tx.typeInfo.externalDappInfo?.name
+  const { success, pending, failed, canceling, canceled } = getTransactionTypeVerbs(tx.typeInfo, t)
 
   switch (tx.status) {
     case TransactionStatus.Pending:
@@ -281,9 +291,6 @@ export function getTransactionSummaryTitle(
     case TransactionStatus.Failed:
       return failed
     case TransactionStatus.Success:
-      if (externalDappName) {
-        return successDapp
-      }
       return success
     default:
       return undefined

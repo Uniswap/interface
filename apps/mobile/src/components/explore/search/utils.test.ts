@@ -4,7 +4,10 @@ import {
   formatTokenSearchResults,
   gqlNFTToNFTCollectionSearchResult,
 } from 'src/components/explore/search/utils'
-import { Chain, ExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import {
+  Chain,
+  ExploreSearchQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { SearchResultType } from 'wallet/src/features/search/SearchResult'
 import {

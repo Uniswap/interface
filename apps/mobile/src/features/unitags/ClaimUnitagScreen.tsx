@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import { default as React, useCallback, useEffect, useState } from 'react'
@@ -148,7 +149,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
         onSetFontSize(text + UNITAG_SUFFIX_CHARS_ONLY)
       }
 
-      setUnitagInputValue(text?.trim().toLowerCase())
+      setUnitagInputValue(text?.trim())
     },
     [inputPlaceholder, onSetFontSize]
   )
@@ -350,7 +351,13 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
               {requiresENSMatch && (
                 <Trans
                   components={{
-                    highlight: <Text color="$DEP_blue300" onPress={onPressClaimPeriodLearnMore} />,
+                    highlight: (
+                      <Text
+                        color="$DEP_blue300"
+                        variant="body2"
+                        onPress={onPressClaimPeriodLearnMore}
+                      />
+                    ),
                   }}
                   i18nKey="unitags.onboarding.claimPeriod.link"
                 />

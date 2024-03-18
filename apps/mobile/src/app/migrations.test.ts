@@ -58,6 +58,7 @@ import {
   v56Schema,
   v57Schema,
   v58Schema,
+  v59Schema,
   v5Schema,
   v6Schema,
   v7Schema,
@@ -69,7 +70,7 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
 import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLockoutSlice'
-import { initialModalState } from 'src/features/modals/modalSlice'
+import { initialModalsState } from 'src/features/modals/modalSlice'
 import { initialTelemetryState } from 'src/features/telemetry/slice'
 import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
@@ -177,7 +178,7 @@ describe('Redux state migrations', () => {
       favorites: initialFavoritesState,
       fiatCurrencySettings: initialFiatCurrencyState,
       languageSettings: initialLanguageState,
-      modals: initialModalState,
+      modals: initialModalsState,
       notifications: initialNotificationsState,
       passwordLockout: initialPasswordLockoutState,
       behaviorHistory: initialBehaviorHistoryState,
@@ -1324,5 +1325,12 @@ describe('Redux state migrations', () => {
     const v59 = migrations[59](v58Stub)
 
     expect(v59.behaviorHistory.hasCompletedUnitagsIntroModal).toBe(false)
+  })
+
+  it('migrates from v59 to 60', () => {
+    const v59Stub = { ...v59Schema }
+    const v60 = migrations[60](v59Stub)
+
+    expect(v60.behaviorHistory.hasViewedUniconV2IntroModal).toBe(false)
   })
 })

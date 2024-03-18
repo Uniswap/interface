@@ -1,4 +1,5 @@
 import DeviceInfo from 'react-native-device-info'
+import { StatsigEnvironmentTier } from 'wallet/src/version'
 
 /**
  * Returns a string with the app version and build number in the format:
@@ -47,12 +48,6 @@ export function getStatsigEnvironmentTier(): StatsigEnvironmentTier {
     return StatsigEnvironmentTier.BETA
   }
   return StatsigEnvironmentTier.PROD
-}
-
-enum StatsigEnvironmentTier {
-  DEV = 'development',
-  BETA = 'beta',
-  PROD = 'production',
 }
 
 export function getSentryEnvironment(): SentryEnvironment {

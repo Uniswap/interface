@@ -1,10 +1,12 @@
 import { useWeb3React } from '@web3-react/core'
 import { Unicon } from 'components/Unicon'
 import { Connection } from 'connection/types'
+import { useUniconV2Flag } from 'featureFlags/flags/uniconV2'
 import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap } from 'theme/styles'
+import { UniconV2 } from 'ui/src'
 import { getWalletMeta } from 'utils/walletMeta'
 
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
@@ -97,6 +99,7 @@ const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'l
 const MainWalletIcon = ({ account, connection, size }: { account: string; connection: Connection; size: number }) => {
   const { unitag } = useUnitagByAddressWithoutFlag(account, Boolean(account))
   const { avatar } = useENSAvatar(account ?? undefined)
+  const uniconV2Enabled = useUniconV2Flag()
 
   if (!account) return null
 
@@ -109,7 +112,13 @@ const MainWalletIcon = ({ account, connection, size }: { account: string; connec
   }
 
   const hasIdenticon = avatar || connection.getProviderInfo().name === 'MetaMask'
-  return hasIdenticon ? <Identicon account={account} size={size} /> : <Unicon address={account} size={size} />
+  return hasIdenticon ? (
+    <Identicon account={account} size={size} />
+  ) : uniconV2Enabled ? (
+    <UniconV2 address={account} size={size} />
+  ) : (
+    <Unicon address={account} size={size} />
+  )
 }
 
 export default function StatusIcon({

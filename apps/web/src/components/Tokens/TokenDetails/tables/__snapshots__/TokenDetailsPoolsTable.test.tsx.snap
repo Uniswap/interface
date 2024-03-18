@@ -78,45 +78,6 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   justify-content: flex-start;
 }
 
-.c21 {
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c22 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c22 img {
-  width: 14px;
-  height: 28px;
-  object-fit: cover;
-}
-
-.c22 img:first-child {
-  border-radius: 14px 0 0 14px;
-  object-position: 0 0;
-}
-
-.c22 img:last-child {
-  border-radius: 0 14px 14px 0;
-  object-position: 100% 0;
-}
-
-.c23 {
-  width: 14px;
-  height: 28px;
-  border-radius: 50%;
-}
-
 .c29 {
   height: 16px;
   width: 16px;
@@ -404,6 +365,45 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.c21 {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c22 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c22 img {
+  width: 14px;
+  height: 28px;
+  object-fit: cover;
+}
+
+.c22 img:first-child {
+  border-radius: 14px 0 0 14px;
+  object-position: 0 0;
+}
+
+.c22 img:last-child {
+  border-radius: 0 14px 14px 0;
+  object-position: 100% 0;
+}
+
+.c23 {
+  width: 14px;
+  height: 28px;
+  border-radius: 50%;
 }
 
 .c26 {

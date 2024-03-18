@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import Svg, { Defs, RadialGradient as RadialGradientSVG, Rect, Stop } from 'react-native-svg'
-import { ColorTokens, Flex, Icons, Unicon, UniconV2, isWeb, useUniconColors } from 'ui/src'
+import { ColorTokens, Flex, Icons, Unicon, UniconV2, useUniconColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
@@ -47,8 +47,7 @@ export function AccountIcon({
 
   const uniconImage = (
     <>
-      {/* TODO: remove isWeb here when unicons v2 feature flag turned on */}
-      {isUniconsV2Enabled || isWeb ? (
+      {isUniconsV2Enabled ? (
         <UniconV2 address={address} size={size} />
       ) : (
         <Flex centered borderRadius="$roundedFull" height={size} p={uniconPadding} width={size}>
@@ -65,7 +64,8 @@ export function AccountIcon({
       borderColor={showBorder ? borderColor : '$transparent'}
       borderRadius="$roundedFull"
       borderWidth={showBorder ? borderWidth : 0}
-      position="relative">
+      position="relative"
+      testID="account-icon">
       {avatarUri ? (
         <RemoteImage
           borderRadius={size}
@@ -88,7 +88,8 @@ export function AccountIcon({
           bottom={-4}
           justifyContent="center"
           position="absolute"
-          right={-4}>
+          right={-4}
+          testID="account-icon/view-only-badge">
           <Icons.Eye color="$neutral2" size={eyeIconSize} />
         </Flex>
       )}
@@ -97,7 +98,7 @@ export function AccountIcon({
 }
 
 // Circle shaped gradient that follows Unicon colors.
-const UniconGradient = ({ color, size }: { color: string; size: number }): JSX.Element => {
+export const UniconGradient = ({ color, size }: { color: string; size: number }): JSX.Element => {
   return (
     <Svg height={size} style={UniconGradientStyles.svg} width={size}>
       <Defs>

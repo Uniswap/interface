@@ -9,7 +9,4 @@ ignores: [
     "tsconfig",
     # types
     "@types/chrome",
-    ## GraphQL
-    "@graphql-codegen/*",
-    "get-graphql-schema",
   ]

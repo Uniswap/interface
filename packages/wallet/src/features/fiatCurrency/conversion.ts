@@ -1,7 +1,10 @@
 import { useCallback, useMemo } from 'react'
+import {
+  Currency,
+  useConvertQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FiatNumberType } from 'utilities/src/format/types'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { Currency, useConvertQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'

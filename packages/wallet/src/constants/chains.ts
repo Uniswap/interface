@@ -88,6 +88,7 @@ export interface L1ChainInfo {
     symbol: string // 'gorETH',
     decimals: number // 18,
     address: string // '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
+    explorerLink?: string // Special override for native ETH explorer link
   }
   readonly wrappedNativeCurrency: {
     name: string // 'Wrapped Ether',
@@ -124,6 +125,7 @@ export const CHAIN_INFO: ChainInfo = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
+      explorerLink: 'https://arbiscan.io/chart/etherprice',
     },
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
@@ -150,6 +152,7 @@ export const CHAIN_INFO: ChainInfo = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
+      explorerLink: 'https://etherscan.io/chart/etherprice',
     },
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
@@ -176,6 +179,7 @@ export const CHAIN_INFO: ChainInfo = {
       symbol: 'görETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
+      explorerLink: 'https://etherscan.io/chart/etherprice', // goerli.etherscan.io doesn't work
     },
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
@@ -202,6 +206,7 @@ export const CHAIN_INFO: ChainInfo = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
+      explorerLink: 'https://basescan.org/chart/etherprice',
     },
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
@@ -228,7 +233,7 @@ export const CHAIN_INFO: ChainInfo = {
       name: 'Binance Coin',
       symbol: 'BNB',
       decimals: 18,
-      address: '0xB8c77482e45F1F44dE1745F52C74426C631bDD52',
+      address: '0xb8c77482e45f1f44de1745f52c74426c631bdd52',
     },
     wrappedNativeCurrency: {
       name: 'Wrapped BNB',
@@ -256,6 +261,7 @@ export const CHAIN_INFO: ChainInfo = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
+      explorerLink: 'https://optimistic.etherscan.io/chart/etherprice',
     },
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',

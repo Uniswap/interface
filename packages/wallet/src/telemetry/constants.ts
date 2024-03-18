@@ -21,6 +21,18 @@ export enum UnitagEventName {
   UnitagRemoved = 'Unitag Removed',
 }
 
+export enum FiatOnRampEventName {
+  FiatOnRampAmountEntered = 'Fiat OnRamp Amount Entered',
+  FiatOnRampTransactionUpdated = 'Fiat OnRamp Transaction Updated',
+  FiatOnRampTokenSelected = 'Fiat OnRamp Token Selected',
+  FiatOnRampWidgetOpened = 'Fiat OnRamp Widget Opened',
+}
+
+export enum InstitutionTransferEventName {
+  InstitutionTransferTransactionUpdated = 'Institution Transfer Transaction Updated',
+  InstitutionTransferWidgetOpened = 'Institution Transfer Widget Opened',
+}
+
 export enum WalletAppsFlyerEvents {
   OnboardingCompleted = 'onboarding_complete',
   SwapCompleted = 'swap_completed',
@@ -78,6 +90,8 @@ export const ModalName = {
   UnitagsChangeConfirm: 'unitags-change-confirm-modal',
   UnitagsDelete: 'unitags-delete-modal',
   UnitagsIntro: 'unitags-intro-modal',
+  UniconsV2: 'unicons-v2-intro-modal',
+  UniconsDevModal: 'unicons-dev-modal',
   ViewSeedPhraseWarning: 'view-seed-phrase-warning',
   ViewOnlyExplainer: 'view-only-explainer-modal',
   WalletConnectScan: 'wallet-connect-scan-modal',
@@ -99,9 +113,13 @@ export const ElementName = {
   AddManualBackup: 'add-manual-backup',
   AddViewOnlyWallet: 'add-view-only-wallet',
   AddCloudBackup: 'add-cloud-backup',
+  AmountInputIn: 'amount-input-in',
+  AmountInputOut: 'amount-input-out',
   Back: 'back',
   Buy: 'buy',
   Cancel: 'cancel',
+  ChooseInputToken: 'choose-input-token',
+  ChooseOutputToken: 'choose-output-token',
   Confirm: 'confirm',
   Continue: 'continue',
   Copy: 'copy',
@@ -120,6 +138,7 @@ export const ElementName = {
   GetHelp: 'get-help',
   GetStarted: 'get-started',
   ImportAccount: 'import',
+  ImportAccountInput: 'import-account-input',
   Manage: 'manage',
   MoonpayExplorerView: 'moonpay-explorer-view',
   NetworkButton: 'network-button',
@@ -151,6 +170,7 @@ export const ElementName = {
   Skip: 'skip',
   Submit: 'submit',
   Swap: 'swap',
+  SwapFormHeader: 'swap-form-header',
   SwapReview: 'swap-review',
   SwapSettings: 'swap-settings',
   SwitchCurrenciesButton: 'switch-currencies-button',
@@ -168,6 +188,7 @@ export const ElementName = {
   TokenSelectorToggle: 'token-selector-toggle',
   TokenWarningAccept: 'token-warning-accept',
   Unwrap: 'unwrap',
+  WatchWallet: 'watch-wallet',
   WCDappSwitchAccount: 'wc-dapp-switch-account',
   WCDappNetworks: 'wc-dapp-networks',
   WalletCard: 'wallet-card',

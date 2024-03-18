@@ -38,16 +38,6 @@ export function openDownloadApp({ element }: OpenDownloadAppOptions) {
   }
 }
 
-export const getDownloadAppLinkProps = ({ element }: OpenDownloadAppOptions) => {
-  return {
-    href: APP_DOWNLOAD_LINKS[element],
-    onClick(e: { preventDefault: () => void }) {
-      e.preventDefault()
-      openDownloadApp({ element })
-    },
-  }
-}
-
 type AnalyticsLinkOptions = {
   element: InterfaceElementName
   appPlatform?: AppDownloadPlatform

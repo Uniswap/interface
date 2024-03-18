@@ -9,4 +9,7 @@ ignores: [
     "utilities",
     "src",
     "tsconfig",
+    ## GraphQL
+    "@graphql-codegen/*",
+    "get-graphql-schema",
   ]

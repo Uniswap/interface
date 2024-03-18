@@ -11,6 +11,8 @@ import { ImportType } from 'wallet/src/features/onboarding/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { QuoteType } from 'wallet/src/features/transactions/utils'
 import {
+  FiatOnRampEventName,
+  InstitutionTransferEventName,
   UnitagEventName,
   WalletAppsFlyerEvents,
   WalletEventName,
@@ -75,6 +77,30 @@ export type SearchResultContextProperties = {
 }
 
 export type WalletEventProperties = {
+  [InstitutionTransferEventName.InstitutionTransferTransactionUpdated]: {
+    status: string
+    externalTransactionId: string
+    institutionName: string
+  }
+  [InstitutionTransferEventName.InstitutionTransferWidgetOpened]: TraceProps & {
+    externalTransactionId: string
+    institutionName: string
+  }
+  [FiatOnRampEventName.FiatOnRampAmountEntered]: TraceProps & { source: 'chip' | 'textInput' }
+  [FiatOnRampEventName.FiatOnRampTokenSelected]: TraceProps & { token: string }
+  [FiatOnRampEventName.FiatOnRampTransactionUpdated]: {
+    status: string
+    externalTransactionId: string
+    serviceProvider: string
+  }
+  [FiatOnRampEventName.FiatOnRampWidgetOpened]: TraceProps & {
+    countryCode: string
+    cryptoCurrency: string
+    externalTransactionId: string
+    fiatCurrency: string
+    preselectedServiceProvider: string
+    serviceProvider: string
+  }
   [SharedEventName.ANALYTICS_SWITCH_TOGGLED]: {
     enabled: boolean
   }

@@ -7,8 +7,26 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://app.uniswap.org/tokens</loc>
-    <lastmod>2023-10-11T19:57:27.976Z</lastmod>
+    <loc>https://app.uniswap.org/explore</loc>
+    <lastmod>2024-03-08T18:44:55.418Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens</loc>
+    <lastmod>2024-03-08T18:44:55.418Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools</loc>
+    <lastmod>2024-03-08T18:44:55.418Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/transactions</loc>
+    <lastmod>2024-03-08T18:44:55.418Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

@@ -7,11 +7,8 @@ import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion
 import { useEip6963EnabledFlag } from 'featureFlags/flags/eip6963'
 import { useFallbackProviderEnabledFlag } from 'featureFlags/flags/fallbackProvider'
 import { useGatewayDNSUpdateAllEnabledFlag, useGatewayDNSUpdateEnabledFlag } from 'featureFlags/flags/gatewayDNSUpdate'
-import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
-import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
-import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
-import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
-import { useExitAnimationFlag, useLandingPageV2Flag } from 'featureFlags/flags/landingPageV2'
+import { useGqlTokenListsEnabledFlag } from 'featureFlags/flags/gqlTokenLists'
+import { useExitAnimationFlag } from 'featureFlags/flags/landingPageV2'
 import { useLimitsEnabledFlag } from 'featureFlags/flags/limits'
 import { useLimitsFeeesEnabledFlag } from 'featureFlags/flags/limitsFees'
 import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
@@ -20,10 +17,11 @@ import {
   useOutageBannerOptimism,
   useOutageBannerPolygon,
 } from 'featureFlags/flags/outageBanner'
-import { useProgressIndicatorV2Flag } from 'featureFlags/flags/progressIndicatorV2'
 import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
+import { useRealtimeFlag } from 'featureFlags/flags/realtime'
 import { useSendEnabledFlag } from 'featureFlags/flags/send'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
+import { useUniconV2Flag } from 'featureFlags/flags/uniconV2'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
 import { useFeesEnabledFlag } from 'featureFlags/flags/useFees'
 import { useV2EverywhereFlag } from 'featureFlags/flags/v2Everywhere'
@@ -339,15 +337,9 @@ export default function FeatureFlagModal() {
         />
         <FeatureFlagOption
           variant={BaseVariant}
-          value={useProgressIndicatorV2Flag()}
-          featureFlag={FeatureFlag.progressIndicatorV2}
-          label="Refreshed swap progress indicator"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useLandingPageV2Flag()}
-          featureFlag={FeatureFlag.landingPageV2}
-          label="Refreshed landing page"
+          value={useUniconV2Flag()}
+          featureFlag={FeatureFlag.uniconV2}
+          label="Unicon V2"
         />
         <FeatureFlagOption
           variant={BaseVariant}
@@ -360,6 +352,18 @@ export default function FeatureFlagModal() {
           value={useV2EverywhereFlag()}
           featureFlag={FeatureFlag.v2Everywhere}
           label="Enable V2 Everywhere"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useRealtimeFlag()}
+          featureFlag={FeatureFlag.realtime}
+          label="Realtime activity updates"
+        />
+        <FeatureFlagOption
+          variant={BaseVariant}
+          value={useGqlTokenListsEnabledFlag()}
+          featureFlag={FeatureFlag.gqlTokenLists}
+          label="Enable GQL Token Lists"
         />
         <FeatureFlagGroup name="Quick routes">
           <FeatureFlagOption
@@ -382,32 +386,6 @@ export default function FeatureFlagModal() {
             value={useUniswapXSyntheticQuoteFlag()}
             featureFlag={FeatureFlag.uniswapXSyntheticQuote}
             label="Force synthetic quotes for UniswapX"
-          />
-        </FeatureFlagGroup>
-        <FeatureFlagGroup name="Info Site Migration">
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useInfoExploreFlag()}
-            featureFlag={FeatureFlag.infoExplore}
-            label="Info site migration - Updating Token Explore Page"
-          />
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useInfoTDPFlag()}
-            featureFlag={FeatureFlag.infoTDP}
-            label="Info site migration - Updating Token Details Page"
-          />
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useInfoPoolPageFlag()}
-            featureFlag={FeatureFlag.infoPoolPage}
-            label="Info site migration - Adding Pool Details Page"
-          />
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useInfoLiveViewsFlag()}
-            featureFlag={FeatureFlag.infoLiveViews}
-            label="Info site migration - Support live view graphs"
           />
         </FeatureFlagGroup>
         <FeatureFlagGroup name="Outage Banners">

@@ -44,9 +44,9 @@ export function SpendingDetails({
       </Text>
       <Flex row alignItems="center" gap="$spacing4">
         <CurrencyLogo currencyInfo={nativeCurrencyInfo} size={iconSizes.icon16} />
-        <Text variant="subheading2">{{ tokenAmountWithSymbol }}</Text>
+        <Text variant="subheading2">{tokenAmountWithSymbol}</Text>
         <Text color="$neutral2" loading={!usdValue} variant="subheading2">
-          ({{ fiatAmount }})
+          {fiatAmount}
         </Text>
       </Flex>
     </Flex>

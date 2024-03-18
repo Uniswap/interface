@@ -2,7 +2,6 @@ import { Trans } from '@lingui/macro'
 import { createColumnHelper } from '@tanstack/react-table'
 import { ChainId } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
-import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import Row from 'components/Row'
 import { Table } from 'components/Table'
@@ -22,8 +21,8 @@ import { EllipsisStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { ApolloError } from '@apollo/client'
+import SparklineChart from 'components/Charts/SparklineChart'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Table/styled'
-import { HEADER_DESCRIPTIONS } from 'components/Tokens/TokenTable/TokenRow'
 import { TokenSortMethod, sortAscendingAtom, sortMethodAtom, useSetSortMethod } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
@@ -97,8 +96,20 @@ const HEADER_TEXT: Record<TokenSortMethod, ReactNode> = {
   [TokenSortMethod.VOLUME]: <Trans>Volume</Trans>,
   [TokenSortMethod.HOUR_CHANGE]: <Trans>1 hour</Trans>,
   [TokenSortMethod.DAY_CHANGE]: <Trans>1 day</Trans>,
-  [TokenSortMethod.DEPRECATE_PERCENT_CHANGE]: <Trans>Change</Trans>,
-  [TokenSortMethod.DEPRECATE_TOTAL_VALUE_LOCKED]: <Trans>TVL</Trans>,
+}
+
+export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined> = {
+  [TokenSortMethod.PRICE]: undefined,
+  [TokenSortMethod.DAY_CHANGE]: undefined,
+  [TokenSortMethod.HOUR_CHANGE]: undefined,
+  [TokenSortMethod.FULLY_DILUTED_VALUATION]: (
+    <Trans>
+      Fully diluted valuation (FDV) calculates the total market value assuming all tokens are in circulation.
+    </Trans>
+  ),
+  [TokenSortMethod.VOLUME]: (
+    <Trans>Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame.</Trans>
+  ),
 }
 
 function TokenTableHeader({
@@ -188,7 +199,6 @@ function TokenTable({
           link: getTokenDetailsURL({
             address: token.address,
             chain: chainIdToBackendName(chainId),
-            isInfoExplorePageEnabled: true,
           }),
           linkState: { preloadedLogoSrc: token.project?.logoUrl },
         }

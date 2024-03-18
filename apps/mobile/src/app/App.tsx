@@ -45,18 +45,24 @@ import { flexStyles, useIsDarkMode } from 'ui/src'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
+import { isDetoxBuild } from 'utilities/src/environment'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { initFirebaseAppCheck } from 'wallet/src/features/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
-import { EXPERIMENT_NAMES, FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import {
+  DUMMY_STATSIG_SDK_KEY,
+  EXPERIMENT_NAMES,
+  FEATURE_FLAGS,
+} from 'wallet/src/features/experiments/constants'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { updateLanguage } from 'wallet/src/features/language/slice'
+import { clearNotificationQueue } from 'wallet/src/features/notifications/slice'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
@@ -75,10 +81,7 @@ if (__DEV__) {
 // Construct a new instrumentation instance. This is needed to communicate between the integration and React
 const routingInstrumentation = new Sentry.ReactNavigationInstrumentation()
 
-// Dummy key since we use the reverse proxy will handle the real key
-const DUMMY_STATSIG_SDK_KEY = 'client-0000000000000000000000000000000000000000000'
-
-if (!__DEV__ && !process.env.DETOX_MODE) {
+if (!__DEV__ && !isDetoxBuild) {
   Sentry.init({
     environment: getSentryEnvironment(),
     dsn: config.sentryDsn,
@@ -105,7 +108,7 @@ if (!__DEV__ && !process.env.DETOX_MODE) {
 
 // Log boxes on simulators can block detox tap event when they cover buttons placed at
 // the bottom of the screen and cause tests to fail.
-if (process.env.DETOX_MODE) {
+if (isDetoxBuild) {
   LogBox.ignoreAllLogs()
 }
 
@@ -259,6 +262,7 @@ function AppInner(): JSX.Element {
   }, [allowAnalytics])
 
   useEffect(() => {
+    dispatch(clearNotificationQueue()) // clear all in-app toasts on app start
     dispatch(updateLanguage(null))
   }, [dispatch])
 

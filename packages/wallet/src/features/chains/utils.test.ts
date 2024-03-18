@@ -1,7 +1,7 @@
 import { BigNumber } from 'ethers'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ChainId, TESTNET_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   fromGraphQLChain,
   fromMoonpayNetwork,
@@ -67,7 +67,7 @@ describe(fromMoonpayNetwork, () => {
     expect(fromMoonpayNetwork(Chain.Arbitrum.toLowerCase())).toEqual(ChainId.ArbitrumOne)
     expect(fromMoonpayNetwork(Chain.Optimism.toLowerCase())).toEqual(ChainId.Optimism)
     expect(fromMoonpayNetwork(Chain.Polygon.toLowerCase())).toEqual(ChainId.Polygon)
-    // TODO: add Base test once Chain includes Base (GQL reliant)
+    expect(fromMoonpayNetwork(Chain.Base.toLowerCase())).toEqual(ChainId.Base)
   })
 
   it('handle unsupported chain', () => {

@@ -1,6 +1,5 @@
 import { Trans } from '@lingui/macro'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
-import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { TimePeriod } from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { useReducer } from 'react'
@@ -8,7 +7,6 @@ import { Check } from 'react-feather'
 import { css, useTheme } from 'styled-components'
 
 import { useScreenSize } from 'hooks/useScreenSize'
-import { SMALL_MEDIA_BREAKPOINT } from '../constants'
 import { filterTimeAtom } from '../state'
 
 export enum TimePeriodDisplay {
@@ -50,26 +48,15 @@ export const ORDERED_TIMES: TimePeriod[] = [
   TimePeriod.YEAR,
 ]
 
-const StyledMenuFlyout = css<{ isInfoExplorePageEnabled: boolean }>`
+const StyledMenuFlyout = css`
   max-height: 300px;
   left: 0px;
-
-  ${({ isInfoExplorePageEnabled }) =>
-    !isInfoExplorePageEnabled &&
-    css`
-      @media only screen and (max-width: ${SMALL_MEDIA_BREAKPOINT}) {
-        left: unset;
-        right: 0px;
-      }
-    `}
 `
 // TODO: change this to reflect data pipeline
 export default function TimeSelector() {
   const theme = useTheme()
   const [isMenuOpen, toggleMenu] = useReducer((s) => !s, false)
   const [activeTime, setTime] = useAtom(filterTimeAtom)
-
-  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
   const screenSize = useScreenSize()
   const isLargeScreen = screenSize['lg']
@@ -80,13 +67,9 @@ export default function TimeSelector() {
         isOpen={isMenuOpen}
         toggleOpen={toggleMenu}
         menuLabel={
-          isInfoExplorePageEnabled ? (
-            <>
-              {DISPLAYS[activeTime]} {isLargeScreen && <Trans>volume</Trans>}
-            </>
-          ) : (
-            <>{DISPLAYS[activeTime]}</>
-          )
+          <>
+            {DISPLAYS[activeTime]} {isLargeScreen && <Trans>volume</Trans>}
+          </>
         }
         internalMenuItems={
           <>
@@ -99,13 +82,9 @@ export default function TimeSelector() {
                   toggleMenu()
                 }}
               >
-                {isInfoExplorePageEnabled ? (
-                  <div>
-                    {DISPLAYS[time]} <Trans>volume</Trans>
-                  </div>
-                ) : (
-                  <div>{DISPLAYS[time]}</div>
-                )}
+                <div>
+                  {DISPLAYS[time]} <Trans>volume</Trans>
+                </div>
                 {time === activeTime && <Check color={theme.accent1} size={16} />}
               </InternalMenuItem>
             ))}

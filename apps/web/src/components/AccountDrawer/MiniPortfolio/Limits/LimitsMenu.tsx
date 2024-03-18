@@ -28,13 +28,9 @@ const Container = styled(Column)`
 `
 
 const StyledCancelButton = styled(ThemeButton)`
-  position: absolute;
   bottom: 0;
   width: 100%;
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    position: relative;
-    margin: 24px 0 24px;
-  }
+  margin: 24px 0 0;
 `
 
 const StyledLimitsDisclaimer = styled(LimitDisclaimer)`

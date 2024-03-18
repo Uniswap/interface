@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { I18nManager, ScrollView } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import { UniconSampleSheet } from 'src/components/DevelopmentOnly/UniconSampleSheet'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Screen } from 'src/components/layout/Screen'
 import { Screens } from 'src/screens/Screens'
@@ -62,6 +63,12 @@ export function DevScreen(): JSX.Element {
     dispatch(resetWallet())
   }
 
+  const [showUniconsModal, setShowUniconsModal] = useState(false)
+
+  const onPressShowUniconsModal = (): void => {
+    setShowUniconsModal((prev) => !prev)
+  }
+
   return (
     <Screen edges={['top']}>
       <Flex row justifyContent="flex-end" px="$spacing16" py="$spacing12">
@@ -111,8 +118,12 @@ export function DevScreen(): JSX.Element {
               }}
             />
           </Flex>
+          <TouchableArea mt="$spacing12" onPress={onPressShowUniconsModal}>
+            <Text color="$neutral1">Show Unicons sheet</Text>
+          </TouchableArea>
         </Flex>
       </ScrollView>
+      {showUniconsModal ? <UniconSampleSheet onClose={() => setShowUniconsModal(false)} /> : null}
     </Screen>
   )
 }

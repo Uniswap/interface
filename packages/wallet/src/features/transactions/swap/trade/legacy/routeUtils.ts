@@ -19,7 +19,7 @@ export function transformQuoteToTrade(
   tokenInIsNative: boolean,
   tokenOutIsNative: boolean,
   tradeType: TradeType,
-  deadline: number | undefined,
+  deadline: number,
   slippageTolerance: number | undefined,
   quoteResult: QuoteResult | undefined
 ): Trade | null {

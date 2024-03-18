@@ -12,7 +12,6 @@ import {
   useQuery,
 } from '@apollo/client'
 import { useEffect, useMemo } from 'react'
-import { ROUTING_API_PATH } from 'uniswap/src/data/constants'
 import { GqlResult } from 'uniswap/src/data/types'
 
 /** Wrapper around Apollo client `useQuery` that calls REST APIs */
@@ -33,6 +32,9 @@ export function useRestQuery<
         'variables' | 'fetchPolicy' | 'defaultOptions' | 'nextFetchPolicy'
       > & {
         ttlMs: number
+        // By default, we return stale data while refetching even when `ttlMs` has passed.
+        // To avoid returning stale data for time-sensitive responses (for example, swap quotes) set this to `true`.
+        clearIfStale?: boolean
       })
     | (Omit<
         QueryHookOptions<{ data: TData }, { input: TVariables }>,
@@ -40,6 +42,7 @@ export function useRestQuery<
       > & {
         fetchPolicy: 'no-cache'
         ttlMs?: undefined
+        clearIfStale?: undefined
       }),
   method: 'GET' | 'POST' = 'POST',
   client?: ApolloClient<unknown>
@@ -71,12 +74,11 @@ export function useRestQuery<
 
   // re-export query result with easier data access
   const result = useMemo(
-    // clear old routing API results if beyond TTL to avoid submitting outdated quotes
     () => ({
       ...queryResult,
-      data: cacheExpired && path === ROUTING_API_PATH ? undefined : queryResult.data?.data,
+      data: cacheExpired && options.clearIfStale ? undefined : queryResult.data?.data,
     }),
-    [path, cacheExpired, queryResult]
+    [queryResult, cacheExpired, options.clearIfStale]
   )
 
   useEffect(() => {

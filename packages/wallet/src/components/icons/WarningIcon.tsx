@@ -2,7 +2,7 @@ import { SvgProps } from 'react-native-svg'
 import { useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import XOctagon from 'ui/src/assets/icons/x-octagon.svg'
-import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useTokenSafetyLevelColors } from 'wallet/src/features/tokens/safetyHooks'
 
 interface Props {

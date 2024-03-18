@@ -65,8 +65,6 @@ export type MobileEventProperties = {
     type: 'token' | 'wallet'
   }
   [MobileEventName.FiatOnRampQuickActionButtonPressed]: TraceProps
-  [MobileEventName.FiatOnRampBannerPressed]: TraceProps
-  [MobileEventName.FiatOnRampAmountEntered]: TraceProps & { source: 'chip' | 'textInput' }
   [MobileEventName.FiatOnRampWidgetOpened]: TraceProps & { externalTransactionId: string }
   [MobileEventName.NotificationsToggled]: TraceProps & {
     enabled: boolean

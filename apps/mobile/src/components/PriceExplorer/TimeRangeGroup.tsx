@@ -10,7 +10,7 @@ import { TIME_RANGES } from 'src/components/PriceExplorer/constants'
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import Trace from 'src/components/Trace/Trace'
 import { AnimatedFlex, AnimatedText, Flex, TouchableArea, useSporeColors } from 'ui/src'
-import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
+import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 interface Props {
   label: string
@@ -70,7 +70,7 @@ export function TimeRangeGroup({
         },
       ],
     }),
-    [adjustedLabelWidth]
+    [adjustedLabelWidth, buttonWidth, currentIndex, isRTL]
   )
 
   return (

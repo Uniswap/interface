@@ -9,6 +9,7 @@ export interface BehaviorHistoryState {
   hasSubmittedHoldToSwap: boolean
   hasSkippedUnitagPrompt: boolean
   hasCompletedUnitagsIntroModal: boolean
+  hasViewedUniconV2IntroModal: boolean
 }
 
 export const initialBehaviorHistoryState: BehaviorHistoryState = {
@@ -16,6 +17,7 @@ export const initialBehaviorHistoryState: BehaviorHistoryState = {
   hasSubmittedHoldToSwap: false,
   hasSkippedUnitagPrompt: false,
   hasCompletedUnitagsIntroModal: false,
+  hasViewedUniconV2IntroModal: false,
 }
 
 const slice = createSlice({
@@ -34,6 +36,9 @@ const slice = createSlice({
     setHasCompletedUnitagsIntroModal: (state, action: PayloadAction<boolean>) => {
       state.hasCompletedUnitagsIntroModal = action.payload
     },
+    setHasViewedUniconV2IntroModal: (state, action: PayloadAction<boolean>) => {
+      state.hasViewedUniconV2IntroModal = action.payload
+    },
   },
 })
 
@@ -42,6 +47,7 @@ export const {
   setHasSubmittedHoldToSwap,
   setHasSkippedUnitagPrompt,
   setHasCompletedUnitagsIntroModal,
+  setHasViewedUniconV2IntroModal,
 } = slice.actions
 
 export const behaviorHistoryReducer = slice.reducer

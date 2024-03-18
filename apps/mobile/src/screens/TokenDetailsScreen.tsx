@@ -36,16 +36,16 @@ import {
 } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import {
+  SafetyLevel,
+  TokenDetailsScreenQuery,
+  useTokenDetailsScreenQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType } from 'utilities/src/format/types'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import {
-  SafetyLevel,
-  TokenDetailsScreenQuery,
-  useTokenDetailsScreenQuery,
-} from 'wallet/src/data/__generated__/types-and-hooks'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'

@@ -63,6 +63,7 @@ describe(requireAcceptNewTrade, () => {
     mixedRoutes: [],
     tradeType: TradeType.EXACT_INPUT,
     slippageTolerance: 0.5,
+    deadline: Date.now() + 60 * 30 * 1000,
   })
 
   it('returns false when prices are within threshold', () => {
@@ -79,6 +80,7 @@ describe(requireAcceptNewTrade, () => {
       mixedRoutes: [],
       tradeType: TradeType.EXACT_INPUT,
       slippageTolerance: 0.5,
+      deadline: Date.now() + 60 * 30 * 1000,
     })
     expect(requireAcceptNewTrade(oldTrade, newTrade)).toBe(false)
   })
@@ -97,6 +99,7 @@ describe(requireAcceptNewTrade, () => {
       mixedRoutes: [],
       tradeType: TradeType.EXACT_INPUT,
       slippageTolerance: 0.5,
+      deadline: Date.now() + 60 * 30 * 1000,
     })
     expect(requireAcceptNewTrade(oldTrade, newTrade)).toBe(true)
   })
@@ -114,6 +117,7 @@ describe(requireAcceptNewTrade, () => {
       mixedRoutes: [],
       tradeType: TradeType.EXACT_INPUT,
       slippageTolerance: 0.5,
+      deadline: Date.now() + 60 * 30 * 1000,
     })
     expect(requireAcceptNewTrade(oldTrade, newTrade)).toBe(false)
   })

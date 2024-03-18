@@ -1,6 +1,10 @@
 import React from 'react'
 import { IconPaths, Icons } from 'ui/src/components/UniconV2/UniconSVGs'
-import { getUniconsV2DeterministicHash, useUniconV2Colors } from 'ui/src/components/UniconV2/utils'
+import {
+  getUniconV2Colors,
+  getUniconsV2DeterministicHash,
+  isValidEthAddress,
+} from 'ui/src/components/UniconV2/utils'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { UniconV2Props } from './types'
 
@@ -8,8 +12,13 @@ const styles = { transformOrigin: 'center center' }
 
 export const UniconV2: React.FC<UniconV2Props> = ({ address, size = 32 }) => {
   const isDarkMode = useIsDarkMode()
+
+  if (!address || !isValidEthAddress(address)) {
+    return null
+  }
+
   const hashValue = getUniconsV2DeterministicHash(address)
-  const { color } = useUniconV2Colors(address, isDarkMode)
+  const { color } = getUniconV2Colors(address, isDarkMode)
 
   const iconKeys = Object.keys(Icons)
   if (iconKeys.length === 0) {

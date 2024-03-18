@@ -1,8 +1,5 @@
 import { NetworkStatus, Reference, useApolloClient, WatchQueryFetchPolicy } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
-import { GqlResult } from 'uniswap/src/data/types'
-import { logger } from 'utilities/src/logger/logger'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   ContractInput,
   IAmount,
@@ -10,7 +7,10 @@ import {
   PortfolioBalanceDocument,
   PortfolioValueModifier,
   usePortfolioBalancesQuery,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GqlResult } from 'uniswap/src/data/types'
+import { logger } from 'utilities/src/logger/logger'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { CurrencyInfo, PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import {

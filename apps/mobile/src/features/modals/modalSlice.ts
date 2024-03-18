@@ -101,7 +101,7 @@ export type OpenModalParams =
 
 export type CloseModalParams = { name: keyof ModalsState }
 
-export const initialModalState: ModalsState = {
+export const initialModalsState: ModalsState = {
   [ModalName.ExchangeTransferModal]: {
     isOpen: false,
     initialState: undefined,
@@ -174,7 +174,7 @@ export const initialModalState: ModalsState = {
 
 const slice = createSlice({
   name: 'modals',
-  initialState: initialModalState,
+  initialState: initialModalsState,
   reducers: {
     openModal: (state, action: PayloadAction<OpenModalParams>) => {
       const { name, initialState } = action.payload

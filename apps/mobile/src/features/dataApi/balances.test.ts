@@ -1,10 +1,10 @@
+import { preloadedMobileState } from 'src/test/fixtures'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
 import { SAMPLE_CURRENCY_ID_1, portfolio, portfolioBalances } from 'wallet/src/test/fixtures'
-import { mockWalletPreloadedState } from 'wallet/src/test/mocks'
 import { queryResolvers } from 'wallet/src/test/utils'
 import { useBalances } from './balances'
 
-const preloadedState = mockWalletPreloadedState()
+const preloadedState = preloadedMobileState()
 
 describe(useBalances, () => {
   it('returns null if no currency was specified', async () => {

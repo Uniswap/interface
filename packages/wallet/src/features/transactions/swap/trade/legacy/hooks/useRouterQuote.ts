@@ -1,7 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { GqlResult } from 'uniswap/src/data/types'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   RoutingIntent,
   TradeQuoteRequest,
@@ -31,7 +30,7 @@ export function useRouterQuote(params: UseQuoteProps): GqlResult<TradeQuoteResul
     amountSpecified,
     tradeType,
     otherCurrency,
-    pollingInterval = PollingInterval.Fast,
+    pollInterval,
     skip,
     fetchSimulatedGasLimit,
     permitSignatureInfo,
@@ -102,9 +101,7 @@ export function useRouterQuote(params: UseQuoteProps): GqlResult<TradeQuoteResul
     sendPortionEnabled,
   ])
 
-  const result = useQuoteQuery(request, {
-    pollInterval: pollingInterval,
-  })
+  const result = useQuoteQuery(request, { pollInterval })
 
   return result
 }

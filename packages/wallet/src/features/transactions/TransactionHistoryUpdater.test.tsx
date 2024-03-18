@@ -1,6 +1,9 @@
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
-import { AssetActivity, TransactionListQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import {
+  AssetActivity,
+  TransactionListQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'

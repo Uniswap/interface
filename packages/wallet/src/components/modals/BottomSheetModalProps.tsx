@@ -31,4 +31,5 @@ export type BottomSheetModalProps = PropsWithChildren<{
   // Currently only used for web
   isModalOpen?: boolean
   isCentered?: boolean
+  hideScrim?: boolean
 }>

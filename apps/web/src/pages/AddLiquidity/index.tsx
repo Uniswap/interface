@@ -54,7 +54,7 @@ import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { useDerivedPositionInfo } from '../../hooks/useDerivedPositionInfo'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
-import useTransactionDeadline from '../../hooks/useTransactionDeadline'
+import { useGetTransactionDeadline } from '../../hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
 import { Bound, Field } from '../../state/mint/v3/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -170,7 +170,7 @@ function AddLiquidity() {
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
 
   // txn values
-  const deadline = useTransactionDeadline() // custom from users settings
+  const getDeadline = useGetTransactionDeadline() // custom from users settings
 
   const [txHash, setTxHash] = useState<string>('')
 
@@ -228,6 +228,8 @@ function AddLiquidity() {
     if (!positionManager || !baseCurrency || !quoteCurrency) {
       return
     }
+
+    const deadline = await getDeadline()
 
     if (position && account && deadline) {
       const useNative = baseCurrency.isNative ? baseCurrency : quoteCurrency.isNative ? quoteCurrency : undefined

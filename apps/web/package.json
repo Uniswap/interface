@@ -212,9 +212,6 @@
     "@vanilla-extract/css": "1.14.0",
     "@vanilla-extract/dynamic": "2.1.0",
     "@vanilla-extract/sprinkles": "1.6.1",
-    "@visx/axis": "2.18.0",
-    "@visx/event": "2.17.0",
-    "@visx/glyph": "2.17.0",
     "@visx/group": "2.17.0",
     "@visx/responsive": "2.17.0",
     "@visx/shape": "2.18.0",
@@ -298,7 +295,7 @@
     "workbox-precaching": "6.6.0",
     "workbox-routing": "6.6.0",
     "xml2js": "0.6.2",
-    "zone.js": "0.14.4",
+    "zone.js": "0.12.0",
     "zustand": "4.4.6"
   },
   "engines": {

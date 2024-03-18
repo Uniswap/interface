@@ -1,7 +1,6 @@
 import Column from 'components/Column'
 import FilterButton from 'components/DropdownSelector/FilterButton'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import React, { useRef } from 'react'
 import { ChevronDown, ChevronUp } from 'react-feather'
@@ -32,7 +31,7 @@ export const InternalMenuItem = styled.div<{ disabled?: boolean }>`
       pointer-events: none;
     `}
 `
-const MenuFlyout = styled(Column)<{ isInfoExplorePageEnabled: boolean; menuFlyoutCss?: string }>`
+const MenuFlyout = styled(Column)<{ menuFlyoutCss?: string }>`
   min-width: 150px;
   overflow: auto;
   background-color: ${({ theme }) => theme.surface1};
@@ -85,7 +84,7 @@ const StyledMenu = styled.div`
   text-align: left;
   width: 100%;
 `
-const StyledMenuContent = styled.div<{ isInfoExplorePageEnabled: boolean }>`
+const StyledMenuContent = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 8px;
@@ -94,13 +93,13 @@ const StyledMenuContent = styled.div<{ isInfoExplorePageEnabled: boolean }>`
   font-weight: 535;
   width: 100%;
   vertical-align: middle;
-  ${({ isInfoExplorePageEnabled }) => isInfoExplorePageEnabled && 'white-space: nowrap;'}
+  white-space: nowrap;
 `
 const Chevron = styled.span<{ open: boolean }>`
   padding-top: 1px;
   color: ${({ open, theme }) => (open ? theme.neutral1 : theme.neutral2)};
 `
-const StyledFilterButton = styled(FilterButton)<{ isInfoExplorePageEnabled: boolean; buttonCss?: string }>`
+const StyledFilterButton = styled(FilterButton)<{ buttonCss?: string }>`
   ${({ buttonCss }) => buttonCss}
 `
 
@@ -130,8 +129,6 @@ export function DropdownSelector({
   const node = useRef<HTMLDivElement | null>(null)
   useOnClickOutside(node, isOpen ? toggleOpen : undefined)
 
-  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
-
   return (
     <StyledMenu ref={node}>
       <MouseoverTooltip
@@ -142,14 +139,13 @@ export function DropdownSelector({
         style={{ width: '100%' }}
       >
         <StyledFilterButton
-          isInfoExplorePageEnabled={isInfoExplorePageEnabled}
           onClick={toggleOpen}
           active={isOpen}
           aria-label={dataTestId}
           data-testid={dataTestId}
           buttonCss={buttonCss}
         >
-          <StyledMenuContent isInfoExplorePageEnabled={isInfoExplorePageEnabled}>
+          <StyledMenuContent>
             {menuLabel}
             {!hideChevron && (
               <Chevron open={isOpen}>
@@ -163,11 +159,7 @@ export function DropdownSelector({
           </StyledMenuContent>
         </StyledFilterButton>
       </MouseoverTooltip>
-      {isOpen && (
-        <MenuFlyout isInfoExplorePageEnabled={isInfoExplorePageEnabled} menuFlyoutCss={menuFlyoutCss}>
-          {internalMenuItems}
-        </MenuFlyout>
-      )}
+      {isOpen && <MenuFlyout menuFlyoutCss={menuFlyoutCss}>{internalMenuItems}</MenuFlyout>}
     </StyledMenu>
   )
 }

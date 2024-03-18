@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { FiatOnRampStackParamList } from 'src/app/navigation/types'
+import { Screen } from 'src/components/layout/Screen'
 import {
   FiatOnRampConnectingView,
   SERVICE_PROVIDER_ICON_SIZE,
@@ -19,6 +20,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
+import { ChainId } from 'wallet/src/constants/chains'
 import { useFiatOnRampAggregatorWidgetQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
@@ -26,7 +28,8 @@ import { useLocalizationContext } from 'wallet/src/features/language/Localizatio
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { ModalName } from 'wallet/src/telemetry/constants'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { FiatOnRampEventName, ModalName } from 'wallet/src/telemetry/constants'
 import { openUri } from 'wallet/src/utils/linking'
 
 // Design decision
@@ -41,8 +44,15 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
   const [timeoutElapsed, setTimeoutElapsed] = useState(false)
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
-  const { selectedQuote, serviceProviders, countryCode, baseCurrencyInfo, quoteCurrency, amount } =
-    useFiatOnRampContext()
+  const {
+    selectedQuote,
+    quotesSections,
+    serviceProviders,
+    countryCode,
+    baseCurrencyInfo,
+    quoteCurrency,
+    amount,
+  } = useFiatOnRampContext()
   const serviceProvider = getServiceProviderForQuote(selectedQuote, serviceProviders)
 
   const initialTypeInfo = useMemo(
@@ -52,6 +62,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
 
   const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
     activeAccountAddress,
+    quoteCurrency.currencyInfo?.currency.chainId ?? ChainId.Mainnet,
     initialTypeInfo
   )
 
@@ -97,6 +108,21 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     }
     async function navigateToWidget(widgetUrl: string): Promise<void> {
       dispatch(closeModal({ name: ModalName.FiatOnRampAggregator }))
+      if (
+        serviceProvider &&
+        quoteCurrency?.currencyInfo?.currency.symbol &&
+        baseCurrencyInfo &&
+        quotesSections?.[0]?.data?.[0]
+      ) {
+        sendWalletAnalyticsEvent(FiatOnRampEventName.FiatOnRampWidgetOpened, {
+          externalTransactionId,
+          serviceProvider: serviceProvider.serviceProvider,
+          preselectedServiceProvider: serviceProvider.serviceProvider,
+          countryCode,
+          fiatCurrency: baseCurrencyInfo?.code.toLowerCase(),
+          cryptoCurrency: quoteCurrency?.currencyInfo?.currency.symbol?.toLowerCase(),
+        })
+      }
       await openUri(widgetUrl).catch(onError)
       dispatchAddTransaction()
     }
@@ -115,31 +141,39 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     baseCurrencyInfo,
     serviceProvider,
     dispatch,
+    externalTransactionId,
+    quoteCurrency?.currencyInfo?.currency.symbol,
+    quotesSections,
+    countryCode,
   ])
 
   const isDarkMode = useIsDarkMode()
   const logoUrl = getServiceProviderLogo(serviceProvider?.logos, isDarkMode)
 
-  return baseCurrencyInfo && serviceProvider ? (
-    <FiatOnRampConnectingView
-      amount={addFiatSymbolToNumber({
-        value: amount,
-        currencyCode: baseCurrencyInfo?.code,
-        currencySymbol: baseCurrencyInfo?.symbol,
-      })}
-      quoteCurrencyCode={quoteCurrency.currencyInfo?.currency.symbol}
-      serviceProviderLogo={
-        <Flex
-          alignItems="center"
-          height={SERVICE_PROVIDER_ICON_SIZE}
-          justifyContent="center"
-          width={SERVICE_PROVIDER_ICON_SIZE}>
-          <ImageUri imageStyle={ServiceProviderLogoStyles.icon} uri={logoUrl} />
-        </Flex>
-      }
-      serviceProviderName={serviceProvider.name}
-    />
-  ) : null
+  return (
+    <Screen>
+      {baseCurrencyInfo && serviceProvider ? (
+        <FiatOnRampConnectingView
+          amount={addFiatSymbolToNumber({
+            value: amount,
+            currencyCode: baseCurrencyInfo?.code,
+            currencySymbol: baseCurrencyInfo?.symbol,
+          })}
+          quoteCurrencyCode={quoteCurrency.currencyInfo?.currency.symbol}
+          serviceProviderLogo={
+            <Flex
+              alignItems="center"
+              height={SERVICE_PROVIDER_ICON_SIZE}
+              justifyContent="center"
+              width={SERVICE_PROVIDER_ICON_SIZE}>
+              <ImageUri imageStyle={ServiceProviderLogoStyles.icon} uri={logoUrl} />
+            </Flex>
+          }
+          serviceProviderName={serviceProvider.name}
+        />
+      ) : null}
+    </Screen>
+  )
 }
 
 const ServiceProviderLogoStyles = StyleSheet.create({

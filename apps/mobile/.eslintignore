@@ -4,9 +4,6 @@ jest.config.js
 metro.config.js
 node_modules
 
-generated*.ts
-__generated__/
-
 storybook-static
 
 coverage

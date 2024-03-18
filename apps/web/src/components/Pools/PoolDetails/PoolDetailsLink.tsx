@@ -5,7 +5,6 @@ import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import Tooltip, { TooltipSize } from 'components/Tooltip'
-import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { Token } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName, getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import useCopyClipboard from 'hooks/useCopyClipboard'
@@ -15,7 +14,7 @@ import { useNavigate } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
-import { shortenAddress } from 'utilities/src/addresses'
+import { isAddress, shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
@@ -92,7 +91,8 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
   const currency = tokens[0] && gqlToCurrency(tokens[0])
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
-    address && setCopied(address)
+    const checksummedAddress = isAddress(address)
+    checksummedAddress && setCopied(checksummedAddress)
   }, [address, setCopied])
 
   const isPool = tokens.length === 2
@@ -106,13 +106,12 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
     )
 
   const navigate = useNavigate()
-  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
   const chainName = chainIdToBackendName(chainId)
   const handleTokenTextClick = useCallback(() => {
     if (!isPool) {
-      navigate(getTokenDetailsURL({ address: tokens[0]?.address, chain: chainName, isInfoExplorePageEnabled }))
+      navigate(getTokenDetailsURL({ address: tokens[0]?.address, chain: chainName }))
     }
-  }, [navigate, tokens, isPool, chainName, isInfoExplorePageEnabled])
+  }, [navigate, tokens, isPool, chainName])
 
   const [truncateAddress, setTruncateAddress] = useState<false | 'start' | 'both'>(false)
   const onTextRender = useCallback(

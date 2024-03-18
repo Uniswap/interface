@@ -4,7 +4,7 @@ import {
   TokenStandard,
   TokenTransfer,
   TransactionDirection,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { amount } from 'wallet/src/test/fixtures/gql/amounts'
 import { daiToken, ethToken } from 'wallet/src/test/fixtures/gql/assets'
 import { faker } from 'wallet/src/test/shared'

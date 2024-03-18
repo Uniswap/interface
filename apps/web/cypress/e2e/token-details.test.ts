@@ -1,6 +1,5 @@
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
-import { FeatureFlag } from 'featureFlags'
-
+import { shortenAddress } from 'utilities/src/addresses'
 import { ARB, UNI } from '../../src/constants/tokens'
 import { getTestSelector } from '../utils'
 
@@ -15,56 +14,19 @@ describe('Token details', () => {
 
   it('should have a single h1 tag on smaller screen size', () => {
     cy.viewport(800, 600)
-    cy.visit(`/tokens/ethereum/${UNI_ADDRESS}`, {
-      featureFlags: [{ name: FeatureFlag.infoTDP, value: false }],
-    })
+    cy.visit(`/explore/tokens/ethereum/${UNI_ADDRESS}`)
     cy.get('h1').should('have.length', 1)
   })
 
-  it('Uniswap token should have all information populated', () => {
-    // Uniswap token
-    cy.visit(`/tokens/ethereum/${UNI_ADDRESS}`, {
-      featureFlags: [{ name: FeatureFlag.infoTDP, value: false }],
-    })
+  it('UNI token should have all information populated', () => {
+    // $UNI token
+    cy.visit(`/explore/tokens/ethereum/${UNI_ADDRESS}`)
     // There should be a single h1 tag on large screen sizes
     cy.get('h1').should('have.length', 1)
 
     // Price chart should be filled in
     cy.get('[data-cy="chart-header"]').should('include.text', '$')
-    cy.get('[data-cy="price-chart"]').should('exist')
-
-    // Stats should have: TVL, 24H Volume, 52W low, 52W high
-    cy.get(getTestSelector('token-details-stats')).should('exist')
-    cy.get(getTestSelector('token-details-stats')).within(() => {
-      cy.get('[data-cy="tvl"]').should('include.text', '$')
-      cy.get('[data-cy="volume-24h"]').should('include.text', '$')
-      cy.get('[data-cy="52w-low"]').should('include.text', '$')
-      cy.get('[data-cy="52w-high"]').should('include.text', '$')
-    })
-
-    // About section should have description of token
-    cy.get(getTestSelector('token-details-about-section')).should('exist')
-    cy.contains('UNI is the governance token for Uniswap').should('exist')
-
-    // Links section should link out to Etherscan, More analytics, Website, Twitter
-    cy.get('[data-cy="resources-container"]').within(() => {
-      cy.contains('Etherscan').should('have.attr', 'href').and('include', `etherscan.io/address/${UNI_ADDRESS}`)
-      cy.contains('More analytics')
-        .should('have.attr', 'href')
-        .and('include', `info.uniswap.org/#/tokens/${UNI_ADDRESS}`)
-      cy.contains('Website').should('have.attr', 'href').and('include', 'uniswap.org')
-      cy.contains('Twitter').should('have.attr', 'href').and('include', 'twitter.com/Uniswap')
-    })
-
-    // Contract address should be displayed
-    cy.contains(UNI_ADDRESS).should('exist')
-  })
-
-  it('Uniswap token should have correct stats boxes if infoTDP flag on', () => {
-    // Uniswap token
-    cy.visit(`/tokens/ethereum/${UNI_ADDRESS}`, {
-      featureFlags: [{ name: FeatureFlag.infoTDP, value: true }],
-    })
+    cy.get('[data-cy="tdp-Price-chart-container"]').should('exist')
 
     // Stats should have: TVL, FDV, market cap, 24H volume
     cy.get(getTestSelector('token-details-stats')).should('exist')
@@ -74,41 +36,43 @@ describe('Token details', () => {
       cy.get('[data-cy="market-cap"]').should('include.text', '$')
       cy.get('[data-cy="volume-24h"]').should('include.text', '$')
     })
+
+    // Info section should have description of token & relevant links
+    cy.get(getTestSelector('token-details-info-section')).should('exist')
+    cy.contains('UNI is the governance token for Uniswap').should('exist')
+    cy.get(getTestSelector('token-details-info-links')).within(() => {
+      cy.contains('Etherscan').should('have.attr', 'href').and('include', `etherscan.io/token/${UNI_ADDRESS}`)
+      cy.contains('Website').should('have.attr', 'href').and('include', 'uniswap.org')
+      cy.contains('Twitter').should('have.attr', 'href').and('include', 'x.com/Uniswap')
+    })
+
+    // Contract address should be displayed
+    cy.contains(shortenAddress(UNI_ADDRESS)).should('exist')
   })
 
   it('token with warning and low trading volume should have all information populated', () => {
     // Null token created for this test, 0 trading volume and has warning modal
-    cy.visit('/tokens/ethereum/0x1eFBB78C8b917f67986BcE54cE575069c0143681', {
-      featureFlags: [
-        { name: FeatureFlag.infoTDP, value: false },
-        { name: FeatureFlag.infoExplore, value: false },
-      ],
-    })
+    cy.visit('/explore/tokens/ethereum/0x1eFBB78C8b917f67986BcE54cE575069c0143681')
 
-    // Should have missing price chart when price unavailable (expected for this token)
-    if (cy.get('[data-cy="chart-header"]').contains('Price unavailable')) {
-      cy.get('[data-cy="missing-chart"]').should('exist')
-    }
+    // Should have missing price view when price unavailable (expected for this token)
+    cy.get('[data-cy="chart-error-view"]').should('exist')
 
     // Stats should not exist
-    cy.get(getTestSelector('token-details-stats')).should('not.exist')
+    cy.get('[data-cy="token-details-no-stats-data"]').should('exist')
 
-    // About section should have description of token
-    cy.get(getTestSelector('token-details-about-section')).should('exist')
+    // Info section should have description of token
+    cy.get(getTestSelector('token-details-info-section')).should('exist')
     cy.contains('No token information available').should('exist')
 
-    // Links section should link out to Etherscan, More analytics
-    cy.get('[data-cy="resources-container"]').within(() => {
+    // Links section should link out to Etherscan
+    cy.get(getTestSelector('token-details-info-links')).within(() => {
       cy.contains('Etherscan')
         .should('have.attr', 'href')
-        .and('include', 'etherscan.io/address/0x1eFBB78C8b917f67986BcE54cE575069c0143681')
-      cy.contains('More analytics')
-        .should('have.attr', 'href')
-        .and('include', 'info.uniswap.org/#/tokens/0x1eFBB78C8b917f67986BcE54cE575069c0143681')
+        .and('include', 'etherscan.io/token/0x1eFBB78C8b917f67986BcE54cE575069c0143681')
     })
 
     // Contract address should be displayed
-    cy.contains('0x1eFBB78C8b917f67986BcE54cE575069c0143681').should('exist')
+    cy.contains(shortenAddress('0x1eFBB78C8b917f67986BcE54cE575069c0143681')).should('exist')
 
     // Warning label should show if relevant ([spec](https://www.notion.so/3f7fce6f93694be08a94a6984d50298e))
     cy.get('[data-cy="token-safety-message"]')
@@ -120,12 +84,7 @@ describe('Token details', () => {
     beforeEach(() => {
       // On mobile widths, we just link back to /swap instead of rendering the swap component.
       cy.viewport(1200, 800)
-      cy.visit(`/tokens/ethereum/${UNI_MAINNET.address}`, {
-        featureFlags: [
-          { name: FeatureFlag.infoTDP, value: false },
-          { name: FeatureFlag.infoExplore, value: false },
-        ],
-      }).then(() => {
+      cy.visit(`/explore/tokens/ethereum/${UNI_MAINNET.address}`).then(() => {
         cy.wait('@eth_blockNumber')
         cy.scrollTo('top')
       })
@@ -149,12 +108,7 @@ describe('Token details', () => {
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'UNI')
       cy.get(`#swap-currency-input .open-currency-select-button`).click()
       cy.contains('WETH').click()
-      cy.visit('/swap', {
-        featureFlags: [
-          { name: FeatureFlag.infoTDP, value: false },
-          { name: FeatureFlag.infoExplore, value: false },
-        ],
-      })
+      cy.visit('/swap')
       cy.contains('UNI').should('not.exist')
       cy.contains('WETH').should('not.exist')
     })
@@ -180,12 +134,7 @@ describe('Token details', () => {
     })
 
     it('should show a L2 token even if the user is connected to a different network', () => {
-      cy.visit('/tokens', {
-        featureFlags: [
-          { name: FeatureFlag.infoTDP, value: false },
-          { name: FeatureFlag.infoExplore, value: false },
-        ],
-      })
+      cy.visit('/explore/tokens')
       cy.get(getTestSelector('tokens-network-filter-selected')).click()
       cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
       cy.get(getTestSelector('tokens-network-filter-selected')).should('contain', 'Arbitrum')

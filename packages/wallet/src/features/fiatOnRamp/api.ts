@@ -8,6 +8,7 @@ import { createSignedRequestParams, objectToQueryString } from 'wallet/src/data/
 import { walletContextValue } from 'wallet/src/features/wallet/context'
 
 import {
+  FORGetCountryResponse,
   FORQuoteRequest,
   FORQuoteResponse,
   FORServiceProvidersResponse,
@@ -52,6 +53,7 @@ const FIAT_ONRAMP_STALE_TX_TIMEOUT = ONE_MINUTE_MS * 20
 const supportedCurrencyCodes = [
   'eth',
   'eth_arbitrum',
+  'eth_base',
   'eth_optimism',
   'eth_polygon',
   'weth',
@@ -59,6 +61,7 @@ const supportedCurrencyCodes = [
   'matic_polygon',
   'polygon',
   'usdc_arbitrum',
+  'usdc_base',
   'usdc_optimism',
   'usdc_polygon',
 ]
@@ -223,6 +226,9 @@ export const fiatOnRampAggregatorApi = createApi({
     fiatOnRampAggregatorCountryList: builder.query<FORSupportedCountriesResponse, void>({
       query: () => `/supported-countries`,
     }),
+    fiatOnRampAggregatorGetCountry: builder.query<FORGetCountryResponse, void>({
+      query: () => `/get-country`,
+    }),
     fiatOnRampAggregatorCryptoQuote: builder.query<FORQuoteResponse, FORQuoteRequest>({
       query: (request) => ({
         url: '/quote',
@@ -315,6 +321,7 @@ export const {
   useFiatOnRampAggregatorWidgetQuery,
   useFiatOnRampAggregatorTransferWidgetQuery,
   useFiatOnRampAggregatorTransactionsQuery,
+  useFiatOnRampAggregatorGetCountryQuery,
 } = fiatOnRampAggregatorApi
 
 /**

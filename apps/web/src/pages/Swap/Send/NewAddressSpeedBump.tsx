@@ -4,9 +4,11 @@ import { Dialog } from 'components/Dialog/Dialog'
 import { UserIcon } from 'components/Icons/UserIcon'
 import Row from 'components/Row'
 import { Unicon } from 'components/Unicon'
+import { useUniconV2Flag } from 'featureFlags/flags/uniconV2'
 import { useSendContext } from 'state/send/SendContext'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { UniconV2 } from 'ui/src'
 
 const StyledUserIcon = styled(UserIcon)`
   width: 28px;
@@ -25,6 +27,7 @@ export const NewAddressSpeedBumpModal = ({ onCancel, onConfirm }: { onCancel: ()
   const {
     derivedSendInfo: { recipientData },
   } = useSendContext()
+  const uniconsV2Enabled = useUniconV2Flag()
 
   return (
     <Dialog
@@ -40,7 +43,11 @@ export const NewAddressSpeedBumpModal = ({ onCancel, onConfirm }: { onCancel: ()
       body={
         <RecipientInfo>
           <Row justify="center" align="center" gap="xs">
-            <Unicon size={16} address={recipientData?.address ?? ''} />
+            {uniconsV2Enabled ? (
+              <UniconV2 size={16} address={recipientData?.address ?? ''} />
+            ) : (
+              <Unicon size={16} address={recipientData?.address ?? ''} />
+            )}
             <ThemedText.BodyPrimary lineHeight="24px">
               {recipientData?.ensName ?? recipientData?.address}
             </ThemedText.BodyPrimary>

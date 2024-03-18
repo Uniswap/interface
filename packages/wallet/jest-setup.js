@@ -24,3 +24,8 @@ jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),
   SafeAreaProvider: jest.fn(({ children }) => children),
 }))
+
+// Mock feature flag tests to use native implementation as we already mock the native implementation of the statsig library
+jest.mock('./src/features/experiments/hooks.ts', () => {
+  return jest.requireActual('./src/features/experiments/hooks.native.ts')
+})

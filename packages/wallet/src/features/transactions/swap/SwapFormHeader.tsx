@@ -10,7 +10,7 @@ import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningM
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
-import { SwapSettingsModal } from 'wallet/src/features/transactions/swap/modals/SwapSettingsModal'
+import { SwapSettingsModal } from 'wallet/src/features/transactions/swap/modals/settings/SwapSettingsModal'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -59,7 +59,8 @@ export function SwapFormHeader(): JSX.Element {
         mb={isWeb ? '$spacing24' : '$spacing12'}
         mt={isWeb ? '$spacing4' : '$spacing8'}
         pl={isWeb ? '$spacing4' : '$spacing12'}
-        pr={isWeb ? '$spacing4' : customSlippageTolerance ? '$spacing8' : '$spacing16'}>
+        pr={isWeb ? '$spacing4' : customSlippageTolerance ? '$spacing8' : '$spacing16'}
+        testID={ElementName.SwapFormHeader}>
         {isWeb && (
           <TouchableArea hapticFeedback testID={ElementName.SwapSettings} onPress={onClose}>
             <Flex

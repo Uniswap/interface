@@ -1,5 +1,3 @@
-import { FeatureFlag } from 'featureFlags'
-
 describe('Redirect', () => {
   it('should redirect to /vote/create-proposal when visiting /create-proposal', () => {
     cy.visit('/create-proposal')
@@ -12,20 +10,14 @@ describe('Redirect', () => {
 })
 
 describe('RedirectExplore', () => {
-  it('should redirect from /tokens/ to /explore under feature flag', () => {
-    cy.visit('/tokens', {
-      featureFlags: [{ name: FeatureFlag.infoExplore, value: true }],
-    })
+  it('should redirect from /tokens/ to /explore', () => {
+    cy.visit('/tokens')
     cy.url().should('match', /\/explore/)
 
-    cy.visit('/tokens/ethereum', {
-      featureFlags: [{ name: FeatureFlag.infoExplore, value: true }],
-    })
+    cy.visit('/tokens/ethereum')
     cy.url().should('match', /\/explore\/tokens\/ethereum/)
 
-    cy.visit('/tokens/optimism/NATIVE', {
-      featureFlags: [{ name: FeatureFlag.infoExplore, value: true }],
-    })
+    cy.visit('/tokens/optimism/NATIVE')
     cy.url().should('match', /\/explore\/tokens\/optimism\/NATIVE/)
   })
 })

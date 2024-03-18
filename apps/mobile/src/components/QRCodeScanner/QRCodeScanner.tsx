@@ -1,7 +1,7 @@
-import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner'
-import { Camera, CameraType } from 'expo-camera'
+import { BarCodeScanner } from 'expo-barcode-scanner'
+import { BarCodeScanningResult, Camera, CameraType } from 'expo-camera'
 import { PermissionStatus } from 'expo-modules-core'
-import React, { memo, useCallback, useMemo, useState } from 'react'
+import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet } from 'react-native'
 import { launchImageLibrary } from 'react-native-image-picker'
@@ -19,7 +19,7 @@ import {
 } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { useAsyncData } from 'utilities/src/react/hooks'
+import { Sentry } from 'utilities/src/logger/Sentry'
 import PasteButton from 'wallet/src/components/buttons/PasteButton'
 import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 import { openSettings } from 'wallet/src/utils/linking'
@@ -60,7 +60,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   const [bottomLayout, setBottomLayout] = useState<LayoutRectangle | null>()
 
   const handleBarCodeScanned = useCallback(
-    (result: BarCodeScannerResult): void => {
+    (result: BarCodeScanningResult): void => {
       if (shouldFreezeCamera) {
         return
       }
@@ -103,10 +103,18 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
     handleBarCodeScanned(result)
   }, [handleBarCodeScanned, isReadingImageFile, t])
 
-  // Check for camera permissions, handle cases where not granted or undetermined
-  const getPermissionStatuses = useCallback(async (): Promise<void> => {
+  useEffect(() => {
+    Sentry.addBreadCrumb({
+      level: 'info',
+      category: 'camera',
+      message: 'QRCodeScannera camera permission status',
+      data: {
+        permissionStatus,
+      },
+    })
+
     if (permissionStatus === PermissionStatus.UNDETERMINED) {
-      await requestPermissionResponse()
+      requestPermissionResponse().catch(() => {})
     }
 
     if (permissionStatus === PermissionStatus.DENIED) {
@@ -118,8 +126,6 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       ])
     }
   }, [permissionStatus, requestPermissionResponse, t])
-
-  useAsyncData(getPermissionStatuses)
 
   const overlayWidth = (overlayLayout?.height ?? 0) / CAMERA_ASPECT_RATIO
   const scannerSize = Math.min(overlayWidth, dimensions.fullWidth) * SCAN_ICON_WIDTH_RATIO
@@ -143,7 +149,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
               }}
               style={StyleSheet.absoluteFillObject}
               type={CameraType.back}
-              onBarCodeScanned={shouldFreezeCamera ? undefined : handleBarCodeScanned}
+              onBarCodeScanned={handleBarCodeScanned}
             />
           )}
         </Flex>

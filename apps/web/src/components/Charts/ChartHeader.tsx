@@ -124,7 +124,7 @@ export function ChartHeader({
   additionalFields,
 }: ChartHeaderProps) {
   return (
-    <ChartHeaderWrapper>
+    <ChartHeaderWrapper data-cy="chart-header">
       <ChartHeaderLeftDisplay>
         <HeaderValueDisplay value={value} valueFormatterType={valueFormatterType} />
         <Row gap="sm">

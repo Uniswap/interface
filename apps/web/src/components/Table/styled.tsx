@@ -246,7 +246,6 @@ export const TokenLinkCell = ({ token }: { token: Token }) => {
       to={getTokenDetailsURL({
         address: unwrappedToken.address,
         chain: token.chain,
-        isInfoExplorePageEnabled: true,
       })}
     >
       <Row gap="4px" maxWidth="68px">

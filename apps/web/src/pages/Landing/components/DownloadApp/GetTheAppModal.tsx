@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import walletAppPromoBannerQR from 'assets/images/app-promo-banner/walletAnnouncementBannerQR.png'
+import walletAppPromoBannerQR from 'assets/images/walletAnnouncementBannerQR.png'
 import { ReactComponent as AppStoreBadge } from 'assets/svg/app-store-badge.svg'
 import { ReactComponent as PlayStoreBadge } from 'assets/svg/play-store-badge.svg'
 import { ColumnCenter } from 'components/Column'

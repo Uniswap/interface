@@ -19,10 +19,10 @@ import {
   ScrollView,
   Text,
   TouchableArea,
+  getUniconV2Colors,
   useIsDarkMode,
   useSporeColors,
   useUniconColors,
-  useUniconV2Colors,
 } from 'ui/src'
 import { ENS_LOGO } from 'ui/src/assets'
 import { iconSizes, imageSizes } from 'ui/src/theme'
@@ -86,7 +86,7 @@ export const ProfileHeader = memo(function ProfileHeader({
     useUniconColors(address)
 
   // UniconV2 colors
-  const { color } = useUniconV2Colors(address)
+  const { color } = getUniconV2Colors(address)
 
   // Wait for avatar, then render avatar extracted colors or unicon colors if no avatar
   const fixedGradientColors: [string, string] = useMemo(() => {

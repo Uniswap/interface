@@ -73,7 +73,7 @@ export function PoolDetailsBreadcrumb({ chainId, poolAddress, token0, token1, lo
   const poolsOrigin = `/explore/pools/${chainName.toLowerCase()}`
 
   return (
-    <BreadcrumbNavContainer isInfoPDPEnabled aria-label="breadcrumb-nav">
+    <BreadcrumbNavContainer aria-label="breadcrumb-nav">
       <BreadcrumbNavLink to={exploreOrigin}>
         <Trans>Explore</Trans> <ChevronRight size={14} />
       </BreadcrumbNavLink>
@@ -131,7 +131,6 @@ const PoolDetailsTitle = ({
             to={getTokenDetailsURL({
               address: token0?.address,
               chain: chainIdToBackendName(chainId),
-              isInfoExplorePageEnabled: true,
             })}
           >
             {token0?.symbol}
@@ -141,7 +140,6 @@ const PoolDetailsTitle = ({
             to={getTokenDetailsURL({
               address: token1?.address,
               chain: chainIdToBackendName(chainId),
-              isInfoExplorePageEnabled: true,
             })}
           >
             {token1?.symbol}

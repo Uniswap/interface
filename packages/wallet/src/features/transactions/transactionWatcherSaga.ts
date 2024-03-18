@@ -45,12 +45,17 @@ import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import i18n from 'wallet/src/i18n/i18n'
 import { appSelect } from 'wallet/src/state'
 import { sendWalletAnalyticsEvent, sendWalletAppsFlyerEvent } from 'wallet/src/telemetry'
-import { WalletAppsFlyerEvents, WalletEventName } from 'wallet/src/telemetry/constants'
+import {
+  FiatOnRampEventName,
+  InstitutionTransferEventName,
+  WalletAppsFlyerEvents,
+  WalletEventName,
+} from 'wallet/src/telemetry/constants'
 
 export function* transactionWatcher({
   apolloClient,
 }: {
-  apolloClient: ApolloClient<NormalizedCacheObject> | null
+  apolloClient: ApolloClient<NormalizedCacheObject>
 }) {
   logger.debug('transactionWatcherSaga', 'transactionWatcher', 'Starting tx watcher')
 
@@ -148,6 +153,25 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
           'watchFiatOnRampTransaction',
           `Updating transaction with id ${id} from status ${transaction.status} to ${updatedTransaction.status}`
         )
+        const isTransfer =
+          updatedTransaction.typeInfo.inputSymbol === updatedTransaction.typeInfo.outputSymbol
+        if (isTransfer && transaction.typeInfo.institution) {
+          yield* call(
+            sendWalletAnalyticsEvent,
+            InstitutionTransferEventName.InstitutionTransferTransactionUpdated,
+            {
+              externalTransactionId: transaction.id,
+              status: transaction.status,
+              institutionName: transaction.typeInfo.institution,
+            }
+          )
+        } else if (transaction.typeInfo.serviceProvider) {
+          yield* call(sendWalletAnalyticsEvent, FiatOnRampEventName.FiatOnRampTransactionUpdated, {
+            externalTransactionId: transaction.id,
+            status: transaction.status,
+            serviceProvider: transaction.typeInfo.serviceProvider,
+          })
+        }
 
         // Stale transaction
         if (updatedTransaction.status === TransactionStatus.Unknown) {
@@ -191,7 +215,7 @@ export function* watchTransaction({
   apolloClient,
 }: {
   transaction: TransactionDetails
-  apolloClient: ApolloClient<NormalizedCacheObject> | null
+  apolloClient: ApolloClient<NormalizedCacheObject>
 }): Generator<unknown> {
   const { chainId, id, hash, options } = transaction
 
@@ -383,7 +407,7 @@ function* finalizeTransaction({
   statusOverride,
   transaction,
 }: {
-  apolloClient: ApolloClient<NormalizedCacheObject> | null
+  apolloClient: ApolloClient<NormalizedCacheObject>
   ethersReceipt?: providers.TransactionReceipt | null
   statusOverride?: StatusOverride
   transaction: TransactionDetails

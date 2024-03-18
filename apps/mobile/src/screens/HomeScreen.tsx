@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { useApolloClient } from '@apollo/client'
 import { useIsFocused, useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
 import { impactAsync } from 'expo-haptics'
@@ -19,6 +20,7 @@ import Animated, {
 import { SvgProps } from 'react-native-svg'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { UniconsV2Modal } from 'src/app/modals/UniconsV2Modal'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
@@ -41,7 +43,6 @@ import {
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
-import { apolloClient } from 'src/data/usePersistedApolloClient'
 import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { openModal } from 'src/features/modals/modalSlice'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
@@ -68,7 +69,10 @@ import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval, useTimeout } from 'utilities/src/time/timing'
-import { selectHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/selectors'
+import {
+  selectHasSkippedUnitagPrompt,
+  selectHasViewedUniconV2IntroModal,
+} from 'wallet/src/features/behaviorHistory/selectors'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
@@ -82,6 +86,7 @@ import {
 } from 'wallet/src/features/wallet/create/pendingAccountsSaga'
 import {
   useActiveAccountWithThrow,
+  useAvatar,
   useNonPendingSignerAccounts,
 } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
@@ -112,6 +117,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const isFocused = useIsFocused()
   const isModalOpen = useAppSelector(selectSomeModalOpen)
   const isHomeScreenBlur = !isFocused || isModalOpen
+  const { avatar, loading: avatarLoading } = useAvatar(activeAccount.address)
+  const hasAvatar = !!avatar && !avatarLoading
 
   // Ensure if a user is here and has completed onboarding, they have at least one non-pending signer account
   const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
@@ -123,6 +130,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   }, [activeAccount, dispatch, finishedOnboarding, nonPendingSignerAccounts.length])
 
   const hasSkippedUnitagPrompt = useAppSelector(selectHasSkippedUnitagPrompt)
+
+  const hasViewedUniconV2IntroModal = useAppSelector(selectHasViewedUniconV2IntroModal)
 
   const showFeedTab = useFeatureFlag(FEATURE_FLAGS.FeedTab)
   // opens the wallet restore modal if recovery phrase is missing after the app is opened
@@ -222,7 +231,13 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
       return activityTabScrollValue.value
     }
     return feedTabScrollValue.value
-  }, [tabIndex])
+  }, [
+    activityTabScrollValue,
+    feedTabScrollValue,
+    nftsTabScrollValue,
+    tabIndex,
+    tokensTabScrollValue,
+  ])
 
   // clear the notification indicator if the user is on the activity tab
   const hasNotifications = useSelectAddressHasNotifications(activeAccount.address)
@@ -402,6 +417,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const shouldPromptUnitag =
     activeAccount.type === AccountType.SignerMnemonic && !hasSkippedUnitagPrompt && canClaimUnitag
 
+  const isUniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
+  const shouldShowUniconV2Modal =
+    isUniconsV2Enabled && !hasViewedUniconV2IntroModal && !hasAvatar && !avatarLoading
+
   const viewOnlyLabel = t('home.warning.viewOnly')
   const contentHeader = useMemo(() => {
     return (
@@ -502,6 +521,8 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     ),
   }))
 
+  const apolloClient = useApolloClient()
+
   const renderTabBar = useCallback(
     (sceneProps: SceneRendererProps) => {
       const style = { width: 'auto' }
@@ -555,7 +576,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const onRefreshHomeData = useCallback(async () => {
     setRefreshing(true)
 
-    await apolloClient?.refetchQueries({
+    await apolloClient.refetchQueries({
       include: [
         ...TOKENS_TAB_DATA_DEPENDENCIES,
         ...NFTS_TAB_DATA_DEPENDENCIES,
@@ -567,7 +588,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     // Artificially delay 0.5 second to show the refresh animation
     const timeout = setTimeout(() => setRefreshing(false), 500)
     return () => clearTimeout(timeout)
-  }, [showFeedTab])
+  }, [apolloClient, showFeedTab])
 
   const renderTab = useCallback(
     ({
@@ -688,6 +709,19 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
         width="100%"
         zIndex="$sticky"
       />
+      {shouldShowUniconV2Modal && (
+        <>
+          <UniconsV2Modal address={activeAccount?.address} />
+          {/* manual scrim so we can highlight unicon above it */}
+          <Flex
+            backgroundColor="$sporeBlack"
+            inset={0}
+            opacity={0.4}
+            position="absolute"
+            zIndex="$modalBackdrop"
+          />
+        </>
+      )}
     </Screen>
   )
 }

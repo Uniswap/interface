@@ -245,11 +245,12 @@ export const getSwapMethodParameters = ({
   flatFeeOptions,
 }: MethodParameterArgs): { calldata: string; value: string } => {
   const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
-  const baseOptions = {
+  const baseOptions: UniversalRouterSwapOptions = {
     slippageTolerance: slippageTolerancePercent,
     recipient: address,
     fee: feeOptions,
     flatFee: flatFeeOptions,
+    deadlineOrPreviousBlockhash: trade.deadline,
   }
 
   const universalRouterSwapOptions: UniversalRouterSwapOptions = permit2Signature

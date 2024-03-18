@@ -23,13 +23,18 @@ export type SecretPayload = {
   hash: string
 }
 
-export async function encrypt(plaintext: string, password: string): Promise<SecretPayload> {
+export async function encrypt(
+  plaintext: string,
+  password: string,
+  address: string // address of a private key or address of 0 index for a mnemonic
+): Promise<SecretPayload> {
   const iv = crypto.getRandomValues(new Uint8Array(12))
   const salt = crypto.getRandomValues(new Uint8Array(16))
+  const encoder = new TextEncoder()
 
   const pbkdf2Params = { salt, ...PBKDF2_PARAMS }
 
-  const encodedPlaintext = new TextEncoder().encode(plaintext)
+  const encodedPlaintext = encoder.encode(plaintext)
   const keyMaterial = await getKeyMaterial(password)
   const key = await getKey(keyMaterial, pbkdf2Params, AES_GCM_PARAMS)
 
@@ -37,6 +42,7 @@ export async function encrypt(plaintext: string, password: string): Promise<Secr
     {
       iv,
       ...AES_GCM_PARAMS,
+      additionalData: encoder.encode(address),
     },
     key,
     encodedPlaintext
@@ -54,9 +60,14 @@ export async function encrypt(plaintext: string, password: string): Promise<Secr
 
 export async function decrypt(
   passwordAttempt: string,
-  secretPayload: SecretPayload
+  secretPayload: SecretPayload,
+  expectedAddress: string
 ): Promise<string | undefined> {
   const { name, iterations, hash } = secretPayload
+
+  const decoder = new TextDecoder()
+  const encoder = new TextEncoder()
+  const additionalData = encoder.encode(expectedAddress)
 
   const ciphertext = decodeFromStorage(secretPayload.ciphertext)
   const iv = decodeFromStorage(secretPayload.iv)
@@ -73,11 +84,12 @@ export async function decrypt(
       {
         iv,
         ...AES_GCM_PARAMS,
+        additionalData,
       },
       key,
       ciphertext
     )
-    return new TextDecoder().decode(result)
+    return decoder.decode(result)
   } catch (error) {
     logger.debug('crypto', 'decryptPassword', 'incorrect password')
     return undefined

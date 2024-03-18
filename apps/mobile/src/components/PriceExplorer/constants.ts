@@ -1,4 +1,4 @@
-import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
+import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import i18n from 'wallet/src/i18n/i18n'
 import { ElementName } from 'wallet/src/telemetry/constants'
 

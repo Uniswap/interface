@@ -145,7 +145,7 @@ exports[`AccountList renders without error 1`] = `
                   "gap": 16,
                 }
               }
-              testID="account_item/0x82D56A352367453f74FC0dC7B071b311da373Fa6"
+              testID="account-item/0x82D56A352367453f74FC0dC7B071b311da373Fa6"
             >
               <View
                 style={
@@ -193,6 +193,7 @@ exports[`AccountList renders without error 1`] = `
                           "position": "relative",
                         }
                       }
+                      testID="account-icon"
                     >
                       <View
                         style={

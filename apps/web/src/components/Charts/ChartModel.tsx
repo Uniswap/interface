@@ -327,7 +327,7 @@ function StaleBanner() {
   const theme = useTheme()
   // TODO(WEB-3739): Update Chart UI to grayscale when data is stale
   return (
-    <StaleBannerWrapper>
+    <StaleBannerWrapper data-testid="chart-stale-banner">
       <Row gap="sm">
         <MissingDataBars color={theme.neutral1} />
         <ThemedText.BodySmall>

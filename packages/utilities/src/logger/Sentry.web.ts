@@ -1,6 +1,6 @@
 import * as SentryReact from '@sentry/react'
 import { CaptureContext, SeverityLevel } from '@sentry/types'
-import { ISentry } from './Sentry'
+import { BreadCrumb, ISentry } from './Sentry'
 
 /**
  * Logs an exception to our Sentry Dashboard
@@ -34,7 +34,12 @@ export function captureMessage(
   })
 }
 
+function addBreadCrumb(breadCrumb: BreadCrumb): void {
+  SentryReact.addBreadcrumb(breadCrumb)
+}
+
 export const Sentry: ISentry = {
   captureException,
   captureMessage,
+  addBreadCrumb,
 } as ISentry

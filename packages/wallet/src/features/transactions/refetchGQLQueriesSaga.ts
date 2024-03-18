@@ -1,13 +1,12 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { call, delay } from 'typed-redux-saga'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { getNativeAddress } from 'wallet/src/constants/addresses'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   PortfolioBalancesDocument,
   PortfolioBalancesQuery,
-} from 'wallet/src/data/__generated__/types-and-hooks'
-import { GQLQueries } from 'wallet/src/data/queries'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
@@ -21,15 +20,15 @@ import {
 
 type CurrencyIdToBalance = Record<CurrencyId, number>
 
-const REFETCH_INTERVAL = ONE_SECOND_MS
-const MAX_REFETCH_ATTEMPTS = PollingInterval.Fast / REFETCH_INTERVAL
+const REFETCH_INTERVAL = ONE_SECOND_MS * 3
+const MAX_REFETCH_ATTEMPTS = 30
 
 export function* refetchGQLQueries({
   transaction,
   apolloClient,
 }: {
   transaction: TransactionDetails
-  apolloClient: ApolloClient<NormalizedCacheObject> | null
+  apolloClient: ApolloClient<NormalizedCacheObject>
 }) {
   const owner = transaction.from
   const currenciesWithBalToUpdate = getCurrenciesWithExpectedUpdates(transaction)
@@ -41,11 +40,10 @@ export function* refetchGQLQueries({
 
   // when there is a new local tx wait 1s then proactively refresh portfolio and activity queries
   yield* delay(REFETCH_INTERVAL)
-  if (apolloClient) {
-    yield* call([apolloClient, apolloClient.refetchQueries], {
-      include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
-    })
-  }
+
+  yield* call([apolloClient, apolloClient.refetchQueries], {
+    include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
+  })
 
   if (!currencyIdToStartingBalance) {
     return
@@ -59,17 +57,16 @@ export function* refetchGQLQueries({
       currencyIds: currenciesWithBalToUpdate,
       apolloClient,
     })
+
     if (checkIfBalancesUpdated(currencyIdToStartingBalance, currencyIdToUpdatedBalance)) {
       break
     }
 
     yield* delay(REFETCH_INTERVAL)
 
-    if (apolloClient) {
-      yield* call([apolloClient, apolloClient.refetchQueries], {
-        include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
-      })
-    }
+    yield* call([apolloClient, apolloClient.refetchQueries], {
+      include: [GQLQueries.PortfolioBalances, GQLQueries.TransactionList],
+    })
 
     freshnessLag += REFETCH_INTERVAL
   }
@@ -119,7 +116,7 @@ function readBalancesFromCache({
 }: {
   owner: string
   currencyIds: Set<CurrencyId> | undefined
-  apolloClient: ApolloClient<NormalizedCacheObject> | null
+  apolloClient: ApolloClient<NormalizedCacheObject>
 }): CurrencyIdToBalance | undefined {
   if (!currencyIds?.size) {
     return undefined
@@ -131,13 +128,14 @@ function readBalancesFromCache({
     {}
   )
 
-  const cachedBalancesData: Maybe<PortfolioBalancesQuery> = apolloClient?.readQuery({
+  const cachedBalancesData: Maybe<PortfolioBalancesQuery> = apolloClient.readQuery({
     query: PortfolioBalancesDocument,
     variables: { ownerAddress: owner },
   })
 
   for (const tokenData of cachedBalancesData?.portfolios?.[0]?.tokenBalances ?? []) {
     const chainId = fromGraphQLChain(tokenData?.token?.chain)
+
     if (!chainId) {
       continue
     }

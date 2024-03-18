@@ -1,5 +1,5 @@
 import { PersistState } from 'redux-persist'
-import { apolloClient } from 'src/data/usePersistedApolloClient'
+import { apolloClientRef } from 'src/data/usePersistedApolloClient'
 import { appRatingWatcherSaga } from 'src/features/appRating/saga'
 import { cloudBackupsManagerSaga } from 'src/features/CloudBackup/saga'
 import { deepLinkWatcher } from 'src/features/deepLinking/handleDeepLinkSaga'
@@ -9,7 +9,7 @@ import { telemetrySaga } from 'src/features/telemetry/saga'
 import { restoreMnemonicCompleteWatcher } from 'src/features/wallet/saga'
 import { walletConnectSaga } from 'src/features/walletConnect/saga'
 import { signWcRequestSaga } from 'src/features/walletConnect/signWcRequestSaga'
-import { delay, select, spawn } from 'typed-redux-saga'
+import { call, delay, select, spawn } from 'typed-redux-saga'
 import { appLanguageWatcherSaga } from 'wallet/src/features/language/saga'
 import {
   swapActions,
@@ -114,6 +114,8 @@ export function* mobileSaga() {
   for (const s of sagas) {
     yield* spawn(s)
   }
+
+  const apolloClient = yield* call(apolloClientRef.onReady)
 
   yield* spawn(transactionWatcher, { apolloClient })
 

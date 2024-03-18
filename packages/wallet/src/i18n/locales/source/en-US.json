@@ -212,7 +212,8 @@
       "password": {
         "confirm": "Confirm password",
         "error": {
-          "mismatch": "Passwords don’t match"
+          "mismatch": "Passwords don’t match",
+          "weak": "This password is too weak"
         },
         "new": "New password",
         "placeholder": "Password",
@@ -405,10 +406,6 @@
     }
   },
   "fiatOnRamp": {
-    "banner": {
-      "subtitle": "Get tokens at the best prices in web3 with Uniswap Wallet.",
-      "title": "Buy crypto"
-    },
     "button": {
       "chooseToken": "Choose a token",
       "continueCheckout": "Continue to checkout"
@@ -911,12 +908,12 @@
         "unavailable": "No message found."
       },
       "method": {
-        "default": "Request from <highlight>{{dappNameOrUrl}}</highlight>",
-        "signature": "Signature request from <highlight>{{dappNameOrUrl}}</highlight>",
-        "transaction": "Transaction request from <highlight>{{dappNameOrUrl}}</highlight>"
+        "default": "Request from {{dappNameOrUrl}}",
+        "signature": "Signature request from {{dappNameOrUrl}}",
+        "transaction": "Transaction request from {{dappNameOrUrl}}"
       },
       "withAmount": "Allow {{dappName}} to use up to<highlight> {{amount}} </highlight>{{currencySymbol}}?",
-      "withoutAmount": "Allow <highlight>{{dappName}}</highlight> to use your {{currencySymbol}}?"
+      "withoutAmount": "Allow {{dappName}} to use your {{currencySymbol}}?"
     },
     "status": {
       "connecting": "Connecting...",
@@ -1742,6 +1739,13 @@
       }
     }
   },
+  "unicons": {
+    "banner": {
+      "button": "Got it",
+      "subtitle": "We gave your wallet’s unique Unicon a makeover. Check out the rest of your accounts to see your upgraded icons.",
+      "title": "Your Unicon got a new look"
+    }
+  },
   "unitags": {
     "banner": {
       "button": {
@@ -1868,9 +1872,10 @@
     },
     "username": {
       "error": {
-        "chars": "Usernames can only contain lowercase letters and numbers",
+        "chars": "Usernames can only contain letters and numbers",
         "max": "Usernames cannot be more than {{number}} characters",
-        "min": "Usernames must be at least {{number}} characters"
+        "min": "Usernames must be at least {{number}} characters",
+        "uppercase": "Usernames can only contain lowercase letters and numbers"
       }
     }
   },
@@ -1895,6 +1900,10 @@
       "general": {
         "message": "There was an issue with WalletConnect. Please try again",
         "title": "WalletConnect Error"
+      },
+      "scantastic": {
+        "message": "There was an issue with your QR code. Please try again",
+        "title": "Invalid QR Code"
       },
       "unsupported": {
         "message": "Make sure that you’re scanning a valid WalletConnect or Ethereum address QR code before trying again.",

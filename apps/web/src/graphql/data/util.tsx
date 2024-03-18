@@ -223,29 +223,29 @@ export function isBackendSupportedChain(chain: Chain): chain is InterfaceGqlChai
   return (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(chain)
 }
 
-export function getTokenExploreURL(
-  { tab, chain }: { tab: ExploreTab; chain: Chain },
-  isInfoExplorePageEnabled: boolean
-) {
+export function getTokenExploreURL({ tab, chain }: { tab: ExploreTab; chain: Chain }) {
   const chainName = chain.toLowerCase()
-  return isInfoExplorePageEnabled ? `/explore/${tab}/${chainName}` : `/tokens/${chainName}`
+  return `/explore/${tab}/${chainName}`
 }
 
 export function getTokenDetailsURL({
   address,
   chain,
   inputAddress,
-  isInfoExplorePageEnabled,
 }: {
   address?: string | null
   chain: Chain
   inputAddress?: string | null
-  isInfoExplorePageEnabled: boolean
 }) {
   const chainName = chain.toLowerCase()
   const tokenAddress = address ?? NATIVE_CHAIN_ID
   const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
-  return (isInfoExplorePageEnabled ? '/explore' : '') + `/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
+  return `/explore/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
+}
+
+export function getPoolDetailsURL(address: string, chain: Chain) {
+  const chainName = chain.toLowerCase()
+  return `/explore/pools/${chainName}/${address}`
 }
 
 export function unwrapToken<

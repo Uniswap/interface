@@ -137,7 +137,24 @@ export function WalletConnectModal({
       }
 
       if (supportedURI.type === URIType.Scantastic) {
-        const { pubKey, uuid, vendor, model, browser } = parseScantasticParams(supportedURI.value)
+        const params = parseScantasticParams(supportedURI.value)
+
+        if (!params) {
+          setShouldFreezeCamera(true)
+          Alert.alert(
+            t('walletConnect.error.scantastic.title'),
+            t('walletConnect.error.scantastic.message'),
+            [
+              {
+                text: t('common.button.ok'),
+                onPress: (): void => {
+                  setShouldFreezeCamera(false)
+                },
+              },
+            ]
+          )
+          return
+        }
 
         setShouldFreezeCamera(true)
         dispatch(closeAllModals())
@@ -145,11 +162,7 @@ export function WalletConnectModal({
           openModal({
             name: ModalName.Scantastic,
             initialState: {
-              pubKey,
-              uuid,
-              vendor,
-              model,
-              browser,
+              params,
             },
           })
         )

@@ -2,16 +2,13 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { InterfaceSectionName } from '@uniswap/analytics-events'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 
-import { FeatureFlag } from 'featureFlags'
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../../src/constants/misc'
 import { DAI, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
 describe('Swap errors', () => {
   it('wallet rejection', () => {
-    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`, {
-      featureFlags: [{ name: FeatureFlag.progressIndicatorV2, value: true }],
-    })
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
     cy.hardhat().then((hardhat) => {
       // Stub the wallet to reject any transaction.
       cy.stub(hardhat.wallet, 'sendTransaction').log(false).rejects(new Error('user cancelled'))
@@ -32,9 +29,7 @@ describe('Swap errors', () => {
   })
 
   it('transaction past deadline', () => {
-    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`, {
-      featureFlags: [{ name: FeatureFlag.progressIndicatorV2, value: true }],
-    })
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
     cy.hardhat({ automine: false })
     getBalance(USDC_MAINNET).then((initialBalance) => {
       // Enter amount to swap
@@ -69,9 +64,7 @@ describe('Swap errors', () => {
   })
 
   it('slippage failure', () => {
-    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
-      featureFlags: [{ name: FeatureFlag.progressIndicatorV2, value: true }],
-    })
+    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
     cy.hardhat({ automine: false }).then(async (hardhat) => {
       await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 500e6))
       await hardhat.mine()
@@ -127,9 +120,7 @@ describe('Swap errors', () => {
       fixture: 'insufficientLiquidity.json',
     })
 
-    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
-      featureFlags: [{ name: FeatureFlag.progressIndicatorV2, value: true }],
-    })
+    cy.visit(`/swap?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
     cy.get('#swap-currency-output .token-amount-input').type('100000000000000').should('have.value', '100000000000000') // 100 trillion
     cy.contains('Insufficient liquidity for this trade.')
     cy.get('#swap-button').should('not.exist')

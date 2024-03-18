@@ -17,6 +17,7 @@ import {
 } from 'react-native-reanimated'
 import { AnimatedFlex, Flex, FlexProps, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { fonts } from 'ui/src/theme'
+import { isDetoxBuild } from 'utilities/src/environment'
 import { NumberType } from 'utilities/src/format/types'
 import { useForwardRef, usePrevious } from 'utilities/src/react/hooks'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
@@ -26,6 +27,7 @@ import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { MaxAmountButton } from 'wallet/src/features/transactions/swap/MaxAmountButton'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { ElementName } from 'wallet/src/telemetry/constants'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
@@ -45,7 +47,6 @@ type CurrentInputPanelProps = {
   onShowTokenSelector: () => void
   onToggleIsFiatMode: (currencyField: CurrencyField) => void
   selection?: TextInputProps['selection']
-  showNonZeroBalancesOnly?: boolean
   showSoftInputOnFocus?: boolean
   usdValue: Maybe<CurrencyAmount<Currency>>
   value?: string
@@ -78,7 +79,6 @@ export const CurrencyInputPanel = memo(
       onSetMax,
       onShowTokenSelector,
       onToggleIsFiatMode,
-      showNonZeroBalancesOnly = true,
       showSoftInputOnFocus = false,
       usdValue,
       resetSelection,
@@ -213,27 +213,29 @@ export const CurrencyInputPanel = memo(
     const loadingTextValue = previousValue && previousValue !== '' ? previousValue : '0'
 
     const loadingFlexProgress = useSharedValue(1)
-    loadingFlexProgress.value = withRepeat(
-      withSequence(
-        withTiming(0.4, { duration: 400, easing: Easing.ease }),
-        withTiming(1, { duration: 400, easing: Easing.ease })
-      ),
-      -1,
-      true
-    )
+
+    if (!isDetoxBuild) {
+      loadingFlexProgress.value = withRepeat(
+        withSequence(
+          withTiming(0.4, { duration: 400, easing: Easing.ease }),
+          withTiming(1, { duration: 400, easing: Easing.ease })
+        ),
+        -1,
+        true
+      )
+    }
 
     const loadingStyle = useAnimatedStyle(
       () => ({
         opacity: isLoading ? loadingFlexProgress.value : 1,
       }),
-      [isLoading]
+      [isLoading, loadingFlexProgress]
     )
 
     const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
 
     // TODO: Remove this when fiat mode is ready to be integrated, to small for feature flag.
     const fiatModeFeatureEnabled = false
-
     return (
       <TouchableArea hapticFeedback onPress={currencyInfo ? onPressIn : onShowTokenSelector}>
         <Flex {...rest} overflow="hidden" px="$spacing16" py="$spacing20">
@@ -284,7 +286,7 @@ export const CurrencyInputPanel = memo(
                   // Inline for better interaction with custom selection refs
                   showCurrencySign={false}
                   showSoftInputOnFocus={showSoftInputOnFocus}
-                  testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
+                  testID={isOutput ? ElementName.AmountInputOut : ElementName.AmountInputIn}
                   value={isLoading ? loadingTextValue : value}
                   onChangeText={onSetExactAmount}
                   onPressIn={onPressIn}
@@ -301,7 +303,11 @@ export const CurrencyInputPanel = memo(
             <Flex row alignItems="center">
               <SelectTokenButton
                 selectedCurrencyInfo={currencyInfo}
-                showNonZeroBalancesOnly={showNonZeroBalancesOnly}
+                testID={
+                  currencyField === CurrencyField.INPUT
+                    ? ElementName.ChooseInputToken
+                    : ElementName.ChooseOutputToken
+                }
                 onPress={onShowTokenSelector}
               />
             </Flex>

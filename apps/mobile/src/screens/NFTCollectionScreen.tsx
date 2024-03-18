@@ -28,12 +28,12 @@ import {
   useDeviceInsets,
 } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { isIOS } from 'uniswap/src/utils/platform'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import {
   NftCollectionScreenQuery,
   useNftCollectionScreenQuery,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { isIOS } from 'uniswap/src/utils/platform'
+import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError } from 'wallet/src/data/utils'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { NFTItem } from 'wallet/src/features/nfts/types'

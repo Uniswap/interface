@@ -16,7 +16,7 @@ import { NFTTransfer } from 'wallet/src/components/NFT/NFTTransfer'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
-import { ElementNameType } from 'wallet/src/telemetry/constants'
+import { ElementName, ElementNameType } from 'wallet/src/telemetry/constants'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface BaseReviewProps {
@@ -174,7 +174,7 @@ export function TransactionReview({
                 py="$none"
                 showCurrencySign={isFiatInput}
                 showSoftInputOnFocus={false}
-                testID="amount-input-out"
+                testID={ElementName.AmountInputOut}
                 textAlign="center"
                 value={formattedAmountOut}
               />

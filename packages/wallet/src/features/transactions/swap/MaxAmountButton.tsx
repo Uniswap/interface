@@ -56,6 +56,9 @@ export function MaxAmountButton({
         px="$spacing4"
         py="$spacing2"
         style={style}
+        testID={
+          currencyField === CurrencyField.INPUT ? ElementName.SetMaxInput : ElementName.SetMaxOutput
+        }
         onPress={onPress}>
         <Text color="$accent1" variant="buttonLabel4">
           {t('swap.button.max')}

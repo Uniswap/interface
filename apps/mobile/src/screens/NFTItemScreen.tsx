@@ -24,15 +24,15 @@ import { Flex, Text, Theme, TouchableArea, getTokenValue, useSporeColors } from 
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
-import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   NftActivityType,
   NftItemScreenQuery,
   useNftItemScreenQuery,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
+import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { pushNotification } from 'wallet/src/features/notifications/slice'

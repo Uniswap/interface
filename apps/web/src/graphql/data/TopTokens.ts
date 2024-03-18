@@ -106,14 +106,10 @@ gql`
 const TokenSortMethods = {
   [TokenSortMethod.PRICE]: (a: TopToken, b: TopToken) =>
     (b?.market?.price?.value ?? 0) - (a?.market?.price?.value ?? 0),
-  [TokenSortMethod.DEPRECATE_PERCENT_CHANGE]: (a: TopToken, b: TopToken) =>
-    (b?.market?.pricePercentChange?.value ?? 0) - (a?.market?.pricePercentChange?.value ?? 0),
   [TokenSortMethod.DAY_CHANGE]: (a: TopToken, b: TopToken) =>
     (b?.market?.pricePercentChange1Day?.value ?? 0) - (a?.market?.pricePercentChange1Day?.value ?? 0),
   [TokenSortMethod.HOUR_CHANGE]: (a: TopToken, b: TopToken) =>
     (b?.market?.pricePercentChange1Hour?.value ?? 0) - (a?.market?.pricePercentChange1Hour?.value ?? 0),
-  [TokenSortMethod.DEPRECATE_TOTAL_VALUE_LOCKED]: (a: TopToken, b: TopToken) =>
-    (b?.market?.totalValueLocked?.value ?? 0) - (a?.market?.totalValueLocked?.value ?? 0),
   [TokenSortMethod.VOLUME]: (a: TopToken, b: TopToken) =>
     (b?.market?.volume?.value ?? 0) - (a?.market?.volume?.value ?? 0),
   [TokenSortMethod.FULLY_DILUTED_VALUATION]: (a: TopToken, b: TopToken) =>
@@ -153,8 +149,6 @@ function useFilteredTokens(tokens: TopTokens100Query['topTokens']) {
   }, [tokens, lowercaseFilterString])
 }
 
-// Number of items to render in each fetch in infinite scroll.
-export const PAGE_SIZE = 20
 export type SparklineMap = { [key: string]: PricePoint[] | undefined }
 export type TopToken = NonNullable<NonNullable<TopTokens100Query>['topTokens']>[number]
 

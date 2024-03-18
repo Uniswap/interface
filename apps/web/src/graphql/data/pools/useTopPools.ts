@@ -48,7 +48,7 @@ export function calculateTurnover(volume24h?: number, tvl?: number, feeTier?: nu
   return new Percent(Math.round(volume24h * (feeTier / BIPS_BASE)), Math.round(tvl))
 }
 
-export const V2_BIPS = 300
+export const V2_BIPS = 3000
 
 export interface TablePool {
   hash: string

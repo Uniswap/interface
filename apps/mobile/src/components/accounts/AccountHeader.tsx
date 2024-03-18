@@ -96,12 +96,21 @@ export function AccountHeader(): JSX.Element {
                 size={iconSize}
               />
             </TouchableArea>
-            <TouchableArea hapticFeedback hitSlop={20} onPress={onPressSettings}>
+            <TouchableArea
+              hapticFeedback
+              hitSlop={20}
+              testID="account-header/settings-button"
+              onPress={onPressSettings}>
               <Icons.Settings color="$neutral2" opacity={0.8} size="$icon.28" />
             </TouchableArea>
           </Flex>
           {walletHasName ? (
-            <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between">
+            <Flex
+              row
+              alignItems="center"
+              gap="$spacing8"
+              justifyContent="space-between"
+              testID="account-header/display-name">
               <TouchableArea
                 hapticFeedback
                 flexShrink={1}
@@ -111,7 +120,11 @@ export function AccountHeader(): JSX.Element {
               </TouchableArea>
             </Flex>
           ) : (
-            <TouchableArea hapticFeedback hitSlop={20} onPress={onPressCopyAddress}>
+            <TouchableArea
+              hapticFeedback
+              hitSlop={20}
+              testID="account-header/address-only"
+              onPress={onPressCopyAddress}>
               <Flex centered row shrink gap="$spacing4">
                 <Text
                   adjustsFontSizeToFit

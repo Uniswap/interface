@@ -48,7 +48,7 @@ module.exports = {
     '\\.svg$': 'jest-transformer-svg',
   },
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|uuid|react-native-reanimated|react-native-safe-area-context|react-native-localize|react-native-splash-screen|@react-native-masked-view|statsig-js|statsig-react-native|@react-native|@react-native-firebase|react-native-webview|@gorhom|expo.*|react-native-flipper|d3-(array|color|format|interpolate|path|scale|shape|time-format|time)|internmap|react-native-qrcode-svg|react-native-modal|react-native-animatable|react-native-masked-view|redux-persist|react-native-url-polyfill|react-native-context-menu-view|react-native-wagmi-charts|react-native-markdown-display|react-native-redash|@walletconnect|moti|react-native-image-picker)/)',
+    'node_modules/(?!(react-native|uuid|react-native-reanimated|react-native-safe-area-context|react-native-localize|react-native-splash-screen|@react-native-masked-view|statsig-js|statsig-react-native|statsig-react|@react-native|@react-native-firebase|react-native-webview|@gorhom|expo.*|react-native-flipper|d3-(array|color|format|interpolate|path|scale|shape|time-format|time)|internmap|react-native-qrcode-svg|react-native-modal|react-native-animatable|react-native-masked-view|redux-persist|react-native-url-polyfill|react-native-context-menu-view|react-native-wagmi-charts|react-native-markdown-display|react-native-redash|@walletconnect|moti|react-native-image-picker)/)',
   ],
   collectCoverage: false, // only collect in CI
   clearMocks: true,

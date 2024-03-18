@@ -20,7 +20,7 @@ export const isValidEthAddress = (address: string): boolean => {
   )
 }
 
-export const useUniconV2Colors = (
+export const getUniconV2Colors = (
   activeAddress: string,
   isDark: boolean = false
 ): {

@@ -4,7 +4,6 @@ import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { PortfolioTokenBalancePartsFragment } from 'graphql/data/__generated__/types-and-hooks'
 import { PortfolioToken } from 'graphql/data/portfolios'
 import { getTokenDetailsURL, gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
@@ -83,12 +82,11 @@ function TokenRow({
 
   const navigate = useNavigate()
   const toggleWalletDrawer = useToggleAccountDrawer()
-  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
 
   const navigateToTokenDetails = useCallback(async () => {
-    navigate(getTokenDetailsURL({ ...token, isInfoExplorePageEnabled }))
+    navigate(getTokenDetailsURL({ ...token }))
     toggleWalletDrawer()
-  }, [navigate, token, isInfoExplorePageEnabled, toggleWalletDrawer])
+  }, [navigate, token, toggleWalletDrawer])
   const { formatNumber } = useFormatter()
 
   const currency = gqlToCurrency(token)
@@ -107,7 +105,14 @@ function TokenRow({
       properties={{ chain_id: currency.chainId, token_name: token?.name, address: token?.address }}
     >
       <PortfolioRow
-        left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size="40px" />}
+        left={
+          <PortfolioLogo
+            chainId={currency.chainId}
+            currencies={[currency]}
+            images={[tokenProjectMarket?.tokenProject.logoUrl]}
+            size="40px"
+          />
+        }
         title={<TokenNameText>{token?.name}</TokenNameText>}
         descriptor={
           <TokenBalanceText>

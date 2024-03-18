@@ -8,7 +8,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
 import { Screens } from 'src/screens/Screens'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
-import { getCloudProviderName } from 'uniswap/src/utils/platform'
+import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
@@ -67,10 +67,14 @@ export function SettingsCloudBackupPasswordCreateScreen({
                   <Icons.OSDynamicCloudIcon color="$accent1" size="$icon.24" />
                 </Flex>
                 <Text textAlign="center" variant="subheading1">
-                  {t('settings.setting.backup.modal.title')}
+                  {t('settings.setting.backup.modal.title', {
+                    cloudProviderName: getCloudProviderName(),
+                  })}
                 </Text>
                 <Text color="$neutral2" textAlign="center" variant="body2">
-                  {t('settings.setting.backup.modal.description')}
+                  {t('settings.setting.backup.modal.description', {
+                    cloudProviderName: getCloudProviderName(),
+                  })}
                 </Text>
               </Flex>
               <Flex centered row gap="$spacing12" pt="$spacing24">

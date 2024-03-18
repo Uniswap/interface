@@ -150,6 +150,7 @@ exports[`TokenDescription no description or social buttons shown when not availa
     >
       <div
         class="c0 c1"
+        data-testid="token-details-info-section"
       >
         <div
           class="c2 c3 css-1jyz67g"
@@ -158,6 +159,7 @@ exports[`TokenDescription no description or social buttons shown when not availa
         </div>
         <div
           class="c4 c5 c6 c7"
+          data-testid="token-details-info-links"
         >
           <div
             class="c8"
@@ -401,6 +403,7 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
     >
       <div
         class="c0 c1"
+        data-testid="token-details-info-section"
       >
         <div
           class="c2 c3 css-1jyz67g"
@@ -409,6 +412,7 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
         </div>
         <div
           class="c4 c5 c6 c7"
+          data-testid="token-details-info-links"
         >
           <div
             class="c8"
@@ -715,6 +719,7 @@ exports[`TokenDescription truncates description and shows more 1`] = `
     >
       <div
         class="c0 c1"
+        data-testid="token-details-info-section"
       >
         <div
           class="c2 c3 css-1jyz67g"
@@ -723,6 +728,7 @@ exports[`TokenDescription truncates description and shows more 1`] = `
         </div>
         <div
           class="c4 c5 c6 c7"
+          data-testid="token-details-info-links"
         >
           <div
             class="c8"

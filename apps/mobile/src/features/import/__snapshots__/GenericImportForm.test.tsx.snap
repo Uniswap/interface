@@ -99,7 +99,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             "width": 8,
           }
         }
-        testID="import_account_form/input"
+        testID="import-account-input"
         textAlignVertical="bottom"
       />
     </View>

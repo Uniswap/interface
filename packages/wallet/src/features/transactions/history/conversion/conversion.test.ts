@@ -1,7 +1,4 @@
 /* eslint-disable max-lines */
-import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
-import { ChainId } from 'wallet/src/constants/chains'
-import { DAI } from 'wallet/src/constants/tokens'
 import {
   Chain,
   Currency,
@@ -10,7 +7,10 @@ import {
   TokenStandard,
   TransactionDirection,
   TransactionStatus,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
+import { ChainId } from 'wallet/src/constants/chains'
+import { DAI } from 'wallet/src/constants/tokens'
 import {
   NFTTradeType,
   TransactionListQueryResponse,

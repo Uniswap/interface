@@ -12,9 +12,9 @@ import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
 import { useSyncExternalStore } from 'react'
-import { isMobile, isNonSupportedDevice } from 'uniswap/src/utils/platform'
+import { isMobile, isTouchable, isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
 
-import { RPC_URLS } from '../constants/networks'
+import { APP_RPC_URLS } from '../constants/networks'
 import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from '../constants/providers'
 import { EIP6963 } from './eip6963'
 import { Connection, ConnectionType, ProviderInfo } from './types'
@@ -185,6 +185,9 @@ export const walletConnectV2Connection: Connection = new (class implements Conne
 const [web3WCV2UniwalletConnect, web3WCV2UniwalletConnectHooks] = initializeConnector<UniwalletWCV2Connect>(
   (actions) => new UniwalletWCV2Connect({ actions, onError })
 )
+
+const isNonSupportedDevice = !isWebIOS && !isWebAndroid && isTouchable
+
 export const uniwalletWCV2ConnectConnection: Connection = {
   getProviderInfo: () => ({ name: 'Uniswap Wallet', icon: UNIWALLET_ICON }),
   connector: web3WCV2UniwalletConnect,
@@ -198,7 +201,7 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
     new CoinbaseWallet({
       actions,
       options: {
-        url: RPC_URLS[ChainId.MAINNET][0],
+        url: APP_RPC_URLS[ChainId.MAINNET][0],
         appName: 'Uniswap',
         appLogoUrl: UNISWAP_LOGO,
         reloadOnDisconnect: false,

@@ -2,7 +2,6 @@ import Badge from 'components/Badge'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChainInfo } from 'constants/chainInfo'
-import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import {
   BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
   BACKEND_SUPPORTED_CHAINS,
@@ -13,7 +12,7 @@ import { ExploreTab } from 'pages/Explore'
 import { useExploreParams } from 'pages/Explore/redirects'
 import { useReducer } from 'react'
 import { Check } from 'react-feather'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
 import { EllipsisStyle } from 'theme/components'
 
@@ -31,39 +30,26 @@ const Tag = styled(Badge)`
   opacity: 1;
   padding: 4px 6px;
 `
-const StyledButton = css<{ isInfoExplorePageEnabled: boolean }>`
+const StyledButton = css`
   height: 40px;
-  ${({ isInfoExplorePageEnabled }) => !isInfoExplorePageEnabled && `min-width: 156px;`}
 `
-const StyledMenuFlyout = css<{ isInfoExplorePageEnabled: boolean }>`
+const StyledMenuFlyout = css`
   max-height: 350px;
   min-width: 240px;
-
-  ${({ isInfoExplorePageEnabled }) =>
-    isInfoExplorePageEnabled
-      ? css`
-          right: 0px;
-          @media screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
-            left: 0px;
-          }
-        `
-      : css`
-          left: 0px;
-        `}
+  right: 0px;
+  @media screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
+    left: 0px;
+  }
 `
 export default function NetworkFilter() {
   const theme = useTheme()
   const navigate = useNavigate()
-  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
   const [isMenuOpen, toggleMenu] = useReducer((s) => !s, false)
 
-  const params = useParams()
   const exploreParams = useExploreParams()
   const tab = exploreParams.tab
-  const currentChainName = validateUrlChainParam((isInfoExplorePageEnabled ? exploreParams : params).chainName)
+  const currentChainName = validateUrlChainParam(exploreParams.chainName)
   const chainId = supportedChainIdFromGQLChain(currentChainName)
-
-  const chainInfo = getChainInfo(chainId)
 
   return (
     <div>
@@ -72,7 +58,7 @@ export default function NetworkFilter() {
         toggleOpen={toggleMenu}
         menuLabel={
           <NetworkLabel data-testid="tokens-network-filter-selected">
-            <ChainLogo chainId={chainId} size={20} /> {!isInfoExplorePageEnabled && chainInfo.label}
+            <ChainLogo chainId={chainId} size={20} />
           </NetworkLabel>
         }
         internalMenuItems={
@@ -85,9 +71,7 @@ export default function NetworkFilter() {
                   key={network}
                   data-testid={`tokens-network-filter-option-${network.toLowerCase()}`}
                   onClick={() => {
-                    isInfoExplorePageEnabled
-                      ? navigate(`/explore/${tab ?? ExploreTab.Tokens}/${network.toLowerCase()}`)
-                      : navigate(`/tokens/${network.toLowerCase()}`)
+                    navigate(`/explore/${tab ?? ExploreTab.Tokens}/${network.toLowerCase()}`)
                     toggleMenu()
                   }}
                 >

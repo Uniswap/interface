@@ -63,7 +63,7 @@ i18n
       transSupportBasicHtmlNodes: false, // disabling since this breaks for mobile
     },
     missingInterpolationHandler: (text) => {
-      logger.error(`Missing i18n interpolation value for text: ${text}`, {
+      logger.error(new Error(`Missing i18n interpolation value for text: ${text}`), {
         tags: {
           file: 'i18n.ts',
           function: 'init',
@@ -75,7 +75,7 @@ i18n
   .catch(() => undefined)
 
 i18n.on('missingKey', (_lngs, _ns, key, _res) => {
-  logger.error(`Missing i18n string key ${key} for language ${i18n.language}`, {
+  logger.error(new Error(`Missing i18n string key ${key} for language ${i18n.language}`), {
     tags: {
       file: 'i18n.ts',
       function: 'onMissingKey',

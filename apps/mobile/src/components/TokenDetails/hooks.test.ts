@@ -1,5 +1,6 @@
 import { useCrossChainBalances, useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { Screens } from 'src/screens/Screens'
+import { preloadedMobileState } from 'src/test/fixtures'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import {
@@ -10,7 +11,6 @@ import {
   usdcArbitrumToken,
   usdcBaseToken,
 } from 'wallet/src/test/fixtures'
-import { mockWalletPreloadedState } from 'wallet/src/test/mocks'
 import { queryResolvers } from 'wallet/src/test/utils'
 
 const mockedNavigation = {
@@ -33,7 +33,7 @@ describe(useCrossChainBalances, () => {
   describe('currentChainBalance', () => {
     it('returns null if there are no balances for the specified currency', async () => {
       const { result } = renderHook(() => useCrossChainBalances(SAMPLE_CURRENCY_ID_1, null), {
-        preloadedState: mockWalletPreloadedState(),
+        preloadedState: preloadedMobileState(),
       })
 
       await act(() => undefined)
@@ -54,7 +54,7 @@ describe(useCrossChainBalances, () => {
       const { result } = renderHook(
         () => useCrossChainBalances(currentChainBalance.currencyInfo.currencyId, null),
         {
-          preloadedState: mockWalletPreloadedState(),
+          preloadedState: preloadedMobileState(),
           resolvers,
         }
       )
@@ -72,7 +72,7 @@ describe(useCrossChainBalances, () => {
   describe('otherChainBalances', () => {
     it('returns null if there are no bridged currencies', async () => {
       const { result } = renderHook(() => useCrossChainBalances(SAMPLE_CURRENCY_ID_1, null), {
-        preloadedState: mockWalletPreloadedState(),
+        preloadedState: preloadedMobileState(),
       })
 
       await act(() => undefined)
@@ -105,7 +105,7 @@ describe(useCrossChainBalances, () => {
       const { result } = renderHook(
         () => useCrossChainBalances(currentChainBalance!.currencyInfo.currencyId, bridgeInfo),
         {
-          preloadedState: mockWalletPreloadedState(),
+          preloadedState: preloadedMobileState(),
           resolvers,
         }
       )

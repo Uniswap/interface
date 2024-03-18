@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, Icons, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Text, TouchableArea, isWeb } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
@@ -12,12 +12,11 @@ import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/us
 import { SwapBuyTokenRow } from 'wallet/src/features/transactions/swap/SwapBuyTokenRow'
 import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRatio'
 import { SwapWarningModal } from 'wallet/src/features/transactions/swap/SwapWarningModal'
-import { NetworkFeeInfo } from 'wallet/src/features/transactions/swap/modals/NetworkFeeInfo'
+import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
 export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolean }): JSX.Element {
-  const colors = useSporeColors()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const { gasFee } = useSwapTxContext()
@@ -84,14 +83,13 @@ export function GasAndWarningRows({ renderEmptyRows }: { renderEmptyRows: boolea
             </Flex>
           )}
           {showGasFee && (
-            <NetworkFeeInfo>
+            <NetworkFeeWarning showGasIcon={true}>
               <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
-                <Icons.Gas color={colors.neutral2.val} size="$icon.16" />
                 <Text color="$neutral2" variant="body3">
                   {gasFeeFormatted}
                 </Text>
               </AnimatedFlex>
-            </NetworkFeeInfo>
+            </NetworkFeeWarning>
           )}
         </Flex>
 

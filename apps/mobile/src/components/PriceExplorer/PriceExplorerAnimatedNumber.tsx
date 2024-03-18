@@ -135,7 +135,7 @@ const RollNumber = ({
     const char = chars.value[index - (commaIndex - decimalPlace.value)]
     const number = char ? parseFloat(char) : undefined
     return Number.isNaN(number) ? undefined : number
-  }, [chars])
+  }, [chars, commaIndex, decimalPlace, index])
 
   const animatedFontStyle = useAnimatedStyle(() => {
     return {
@@ -156,7 +156,7 @@ const RollNumber = ({
           restSpeedThreshold: 2,
         })
       : endValue
-  }, [shouldAnimate])
+  }, [animatedDigit, shouldAnimate])
 
   const animatedWrapperStyle = useAnimatedStyle(() => {
     const digitWidth =
@@ -261,7 +261,7 @@ const Numbers = ({
 
   const decimalPlace = useDerivedValue(() => {
     return price.formatted.value.indexOf(currency.decimalSeparator)
-  }, [price])
+  }, [currency.decimalSeparator, price.formatted])
 
   const commaIndex = numberOfDigits.left + Math.floor((numberOfDigits.left - 1) / 3)
 

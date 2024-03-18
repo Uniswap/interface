@@ -1,5 +1,5 @@
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ChainId } from 'wallet/src/constants/chains'
-import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { faker } from 'wallet/src/test/shared'
@@ -53,5 +53,12 @@ export const arbitrumDaiCurrencyInfo = createFixture<CurrencyInfo>()(() =>
     nativeCurrency: ARBITRUM_CURRENCY,
     logoUrl:
       'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png',
+  })
+)
+
+export const usdcCurrencyInfo = createFixture<CurrencyInfo>()(() =>
+  currencyInfo({
+    nativeCurrency: BASE_CURRENCY,
+    logoUrl: null,
   })
 )

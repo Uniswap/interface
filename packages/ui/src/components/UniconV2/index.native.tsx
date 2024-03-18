@@ -2,7 +2,11 @@ import { Canvas, Circle, Group, Path } from '@shopify/react-native-skia'
 import { memo } from 'react'
 import { IconPaths, Icons } from 'ui/src/components/UniconV2/UniconSVGs'
 import { UniconV2Props } from 'ui/src/components/UniconV2/types'
-import { getUniconsV2DeterministicHash, useUniconV2Colors } from 'ui/src/components/UniconV2/utils'
+import {
+  getUniconV2Colors,
+  getUniconsV2DeterministicHash,
+  isValidEthAddress,
+} from 'ui/src/components/UniconV2/utils'
 import { Flex } from 'ui/src/components/layout'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 
@@ -14,8 +18,13 @@ export const UniconV2 = memo(_UniconV2)
 
 export function _UniconV2({ address, size = 32 }: UniconV2Props): JSX.Element | null {
   const isDarkMode = useIsDarkMode()
+
+  if (!address || !isValidEthAddress(address)) {
+    return null
+  }
+
   const hashValue = getUniconsV2DeterministicHash(address)
-  const { color } = useUniconV2Colors(address, isDarkMode)
+  const { color } = getUniconV2Colors(address, isDarkMode)
 
   const iconKeys = Object.keys(Icons)
   if (iconKeys.length === 0) {

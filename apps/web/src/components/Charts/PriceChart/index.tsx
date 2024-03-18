@@ -266,7 +266,7 @@ export function PriceChart({ data, height, type, stale }: PriceChartProps) {
     >
       {(crosshairData) => (
         <ChartHeader
-          value={(crosshairData ?? lastPrice).value ?? (crosshairData ?? lastPrice).close}
+          value={(crosshairData ?? lastPrice)?.value ?? (crosshairData ?? lastPrice)?.close}
           additionalFields={<PriceChartDelta startingPrice={data?.[0]} endingPrice={crosshairData ?? lastPrice} />}
           valueFormatterType={NumberType.FiatTokenPrice}
           time={crosshairData?.time}

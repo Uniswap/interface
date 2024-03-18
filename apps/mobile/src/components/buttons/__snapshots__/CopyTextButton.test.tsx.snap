@@ -1,0 +1,68 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CopyTextButton renders without error 1`] = `
+<View
+  cancelable={true}
+  disabled={false}
+  focusable={true}
+  minPressDuration={0}
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+  onPress={[Function]}
+  onPressIn={[Function]}
+  onPressOut={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#2222220D",
+      "borderBottomColor": "transparent",
+      "borderBottomLeftRadius": 16,
+      "borderBottomRightRadius": 16,
+      "borderBottomWidth": 1,
+      "borderLeftColor": "transparent",
+      "borderLeftWidth": 1,
+      "borderRightColor": "transparent",
+      "borderRightWidth": 1,
+      "borderStyle": "solid",
+      "borderTopColor": "transparent",
+      "borderTopLeftRadius": 16,
+      "borderTopRightRadius": 16,
+      "borderTopWidth": 1,
+      "flexDirection": "row",
+      "gap": 8,
+      "height": "auto",
+      "justifyContent": "center",
+      "opacity": 1,
+      "paddingBottom": 12,
+      "paddingLeft": 12,
+      "paddingRight": 12,
+      "paddingTop": 12,
+    }
+  }
+>
+  <svg
+    color="#222222"
+    data-file-name="SvgCopySheets"
+    height={20}
+    size={20}
+    width={20}
+  />
+  <Text
+    maxFontSizeMultiplier={1.2}
+    style={
+      {
+        "color": "#222222",
+        "fontFamily": "Basel-Medium",
+        "fontSize": 19,
+        "fontWeight": "500",
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    Copy
+  </Text>
+</View>
+`;

@@ -9,7 +9,6 @@ import InvalidTokenDetails from 'components/Tokens/TokenDetails/InvalidTokenDeta
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { checkWarning } from 'constants/tokenSafety'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
-import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { useTokenQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { gqlToCurrency, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
@@ -87,8 +86,6 @@ function useMultiChainMap(tokenQuery: ReturnType<typeof useTokenQuery>) {
 }
 
 function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
-  const isInfoTDPEnabled = useInfoTDPEnabled()
-
   const { tokenAddress, chainName } = useParams<{ tokenAddress: string; chainName?: string }>()
   if (!tokenAddress) throw new Error('Invalid token details route: token address URL param is undefined')
   const currencyChain = validateUrlChainParam(chainName)
@@ -110,7 +107,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   // Extract color for page usage
   const theme = useTheme()
   const { preloadedLogoSrc } = (useLocation().state as { preloadedLogoSrc?: string }) ?? {}
-  const extractedColorSrc = isInfoTDPEnabled ? tokenQuery.data?.token?.project?.logoUrl ?? preloadedLogoSrc : undefined
+  const extractedColorSrc = tokenQuery.data?.token?.project?.logoUrl ?? preloadedLogoSrc
   const extractedAccent1 = useSrcColor(extractedColorSrc, { backgroundColor: theme.surface2, darkMode: theme.darkMode })
 
   return useMemo(() => {

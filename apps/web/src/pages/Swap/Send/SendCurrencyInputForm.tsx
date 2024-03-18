@@ -77,6 +77,7 @@ const NumericalInputWrapper = styled(Row)`
 
 const StyledNumericalInput = styled(NumericalInput)<{ $width?: number }>`
   max-height: 84px;
+  max-width: 100%;
   width: ${({ $width }) => `${$width ?? 43}px`}; // this value is from the size of a 0 which is the default value
   ${NumericalInputFontStyle}
 

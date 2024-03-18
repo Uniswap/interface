@@ -77,6 +77,8 @@ export const TouchableArea = forwardRef<TamaguiElement, TouchableAreaProps>(func
       // TODO(MOB-2826): tests are picking up weird animationStyle on snapshots...
       {...(process.env.NODE_ENV !== 'test' && {
         animation: '100ms',
+        // TODO(MOB-3059): fixes crash caused by animating shadowOffset, should be fixed in tamagui
+        animateOnly: ['transform', 'opacity'],
       })}
       cursor="pointer"
       hitSlop={defaultHitslopInset}

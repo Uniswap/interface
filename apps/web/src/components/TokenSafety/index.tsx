@@ -225,11 +225,11 @@ export default function TokenSafety({
 
   // Logic for only showing the 'unsupported' warning if one is supported and other isn't
   if (token1 && token1Warning && (token1Unsupported || !(token2Warning && token2Unsupported))) {
-    logos.push(<CurrencyLogo currency={token1} size="48px" />)
+    logos.push(<CurrencyLogo key={token1.address} currency={token1} size="48px" />)
     urls.push(<ExplorerView token={token1} />)
   }
   if (token2 && token2Warning && (token2Unsupported || !(token1Warning && token1Unsupported))) {
-    logos.push(<CurrencyLogo currency={token2} size="48px" />)
+    logos.push(<CurrencyLogo key={token2.address} currency={token2} size="48px" />)
     urls.push(<ExplorerView token={token2} />)
   }
 

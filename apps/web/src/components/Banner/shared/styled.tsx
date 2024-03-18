@@ -1,4 +1,3 @@
-import { ButtonText } from 'components/Button'
 import { OpacityHoverState } from 'components/Common'
 import { X } from 'react-feather'
 import styled from 'styled-components'
@@ -58,9 +57,7 @@ export const Container = styled.div`
   border-radius: 20px;
   gap: 16px;
 `
-export const Thumbnail = styled.img`
-  width: 82px;
-`
+
 export const TextContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -73,21 +70,4 @@ export const TextContainer = styled.div`
   @media only screen and (max-width: ${BREAKPOINTS.xs}px) {
     width: 220px;
   }
-`
-export const StyledQrCode = styled.img`
-  padding: 2px;
-  border-radius: 8px;
-  width: 64px;
-  height: 64px;
-  background-color: ${({ theme }) => theme.white};
-  margin-right: 16px;
-
-  @media only screen and (max-width: ${BREAKPOINTS.xs}px) {
-    display: none;
-  }
-`
-export const DownloadButton = styled(ButtonText)`
-  line-height: 16px;
-  font-size: 14px;
-  color: ${({ theme }) => theme.accent1};
 `

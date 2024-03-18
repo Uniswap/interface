@@ -143,7 +143,6 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
         to={getTokenDetailsURL({
           address: unwrappedToken.address,
           chain: chainIdToBackendName(chainId),
-          isInfoExplorePageEnabled: true,
         })}
       >
         {screenIsNotLarge && (

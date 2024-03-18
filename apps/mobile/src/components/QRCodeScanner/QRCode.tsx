@@ -4,10 +4,10 @@ import QRCode from 'src/components/QRCodeScanner/custom-qr-code-generator'
 import {
   ColorTokens,
   Flex,
+  getUniconV2Colors,
   useIsDarkMode,
   useSporeColors,
   useUniconColors,
-  useUniconV2Colors,
 } from 'ui/src'
 
 import { borderRadii } from 'ui/src/theme'
@@ -39,7 +39,7 @@ const useColorProps = (address: Address, color?: string): ColorProps => {
   const gradientData = useUniconColors(address)
   const isUniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
   const isDarkMode = useIsDarkMode()
-  const uniconV2Color = useUniconV2Colors(address, isDarkMode) as { color: string }
+  const uniconV2Color = getUniconV2Colors(address, isDarkMode) as { color: string }
   const { avatar, loading: avatarLoading } = useAvatar(address)
   const { colors: avatarColors } = useExtractedColors(avatar) as { colors: AvatarColors }
   const hasAvatar = !!avatar && !avatarLoading

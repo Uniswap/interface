@@ -1,7 +1,10 @@
 /* eslint-disable max-lines */
 import { ApolloError, NetworkStatus } from '@apollo/client'
 import { setupWalletCache } from 'uniswap/src/data/cache'
-import { Chain, PortfolioBalanceDocument } from 'wallet/src/data/__generated__/types-and-hooks'
+import {
+  Chain,
+  PortfolioBalanceDocument,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { FavoritesState, initialFavoritesState } from 'wallet/src/features/favorites/slice'
 import { WalletState, initialWalletState } from 'wallet/src/features/wallet/slice'
@@ -37,8 +40,8 @@ import {
 
 const daiTokenBalance = tokenBalance({ token: daiToken(), isHidden: true })
 const ethTokenBalance = tokenBalance({ token: ethToken(), isHidden: false })
-const daiPortfolioBalance = portfolioBalance({ from: daiTokenBalance })
-const ethPortfolioBalance = portfolioBalance({ from: ethTokenBalance })
+const daiPortfolioBalance = portfolioBalance({ fromBalance: daiTokenBalance })
+const ethPortfolioBalance = portfolioBalance({ fromBalance: ethTokenBalance })
 const Portfolio = portfolio({ tokenBalances: [daiTokenBalance, ethTokenBalance] })
 const daiCurrencyId = daiPortfolioBalance.currencyInfo.currencyId
 const ethCurrencyId = ethPortfolioBalance.currencyInfo.currencyId

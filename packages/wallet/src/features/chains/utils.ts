@@ -1,5 +1,4 @@
 import { BigNumber, BigNumberish } from 'ethers'
-import { logger } from 'utilities/src/logger/logger'
 import {
   ALL_SUPPORTED_CHAINS,
   ChainId,
@@ -9,7 +8,7 @@ import {
 } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 
-import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 // Some code from the web app uses chainId types as numbers
 // This validates them as coerces into SupportedChainId
@@ -93,12 +92,11 @@ export function fromMoonpayNetwork(moonpayNetwork: string | undefined): ChainId 
     // Moonpay still refers to BNB chain as BSC so including both BNB and BSC cases
     case 'bsc':
       return ChainId.Bnb
+    case Chain.Base.toLowerCase():
+      return ChainId.Base
     case undefined:
       return ChainId.Mainnet
     default:
-      logger.error(`Moonpay network "${moonpayNetwork}" can not be mapped`, {
-        tags: { file: 'chains/utils', function: 'fromMoonpayNetwork' },
-      })
       return undefined
   }
 }

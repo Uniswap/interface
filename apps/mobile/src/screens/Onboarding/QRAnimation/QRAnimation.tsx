@@ -41,12 +41,12 @@ import {
 import {
   Button,
   Flex,
+  getUniconV2Colors,
   Text,
   useIsDarkMode,
   useMedia,
   useSporeColors,
   useUniconColors,
-  useUniconV2Colors,
 } from 'ui/src'
 import { ONBOARDING_QR_ETCHING_VIDEO_DARK, ONBOARDING_QR_ETCHING_VIDEO_LIGHT } from 'ui/src/assets'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
@@ -171,7 +171,7 @@ export function QRAnimation({
   const UNICON_SIZE = 64
 
   const uniconV1Colors = useUniconColors(activeAddress)
-  const { color: uniconV2Color } = useUniconV2Colors(activeAddress)
+  const { color: uniconV2Color } = getUniconV2Colors(activeAddress)
   const isUniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
   const uniconColors = isUniconsV2Enabled
     ? { gradientStart: uniconV2Color, gradientEnd: uniconV2Color, glow: uniconV2Color }

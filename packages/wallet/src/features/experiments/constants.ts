@@ -52,3 +52,6 @@ export const EXPERIMENT_VALUES_BY_EXPERIMENT: Record<
 export enum DYNAMIC_CONFIGS {
   ForceUpgrade = 'force_upgrade',
 }
+
+// Dummy key since we use the reverse proxy will handle the real key
+export const DUMMY_STATSIG_SDK_KEY = 'client-000000000000000000000000000000000000000000'

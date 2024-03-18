@@ -5,7 +5,8 @@ import {
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/handleDeepLinkSaga'
-import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
+import { logger } from 'utilities/src/logger/logger'
+import { ScantasticParams, ScantasticParamsSchema } from 'wallet/src/features/scantastic/types'
 import { UwULinkRequest } from 'wallet/src/features/walletConnect/types'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 
@@ -167,12 +168,53 @@ function getScantasticAddress(uri: string): Nullable<string> {
   return uriParts[1] || null
 }
 
+const PARAM_PUB_KEY = 'pubKey'
+const PARAM_UUID = 'uuid'
+const PARAM_VENDOR = 'vendor'
+const PARAM_MODEL = 'model'
+const PARAM_BROWSER = 'browser'
+
 /** parses scantastic params for a valid scantastic URI. */
-export function parseScantasticParams(uri: string): ScantasticModalState {
-  const pubKey = new URLSearchParams(uri).get('pubKey') || ''
-  const uuid = new URLSearchParams(uri).get('uuid') || ''
-  const vendor = new URLSearchParams(uri).get('vendor') || ''
-  const model = new URLSearchParams(uri).get('model') || ''
-  const browser = new URLSearchParams(uri).get('browser') || ''
-  return { pubKey, uuid, vendor, model, browser }
+export function parseScantasticParams(uri: string): ScantasticParams | undefined {
+  const uriParams = new URLSearchParams(uri)
+  const paramKeys = [PARAM_PUB_KEY, PARAM_UUID, PARAM_VENDOR, PARAM_MODEL, PARAM_BROWSER]
+
+  // Validate all keys are unique for security
+  for (const paramKey of paramKeys) {
+    if (uriParams.getAll(paramKey).length > 1) {
+      logger.error(new Error('Invalid scantastic params due to duplicate keys'), {
+        tags: {
+          file: 'util.ts',
+          function: 'parseScantasticParams',
+        },
+        extra: { uri },
+      })
+      return
+    }
+  }
+
+  const publicKey = uriParams.get(PARAM_PUB_KEY)
+  const uuid = uriParams.get(PARAM_UUID)
+  const vendor = uriParams.get(PARAM_VENDOR)
+  const model = uriParams.get(PARAM_MODEL)
+  const browser = uriParams.get(PARAM_BROWSER)
+
+  try {
+    return ScantasticParamsSchema.parse({
+      publicKey: publicKey ? JSON.parse(publicKey) : undefined,
+      uuid: uuid ? decodeURIComponent(uuid) : undefined,
+      vendor: vendor ? decodeURIComponent(vendor) : undefined,
+      model: model ? decodeURIComponent(model) : undefined,
+      browser: browser ? decodeURIComponent(browser) : undefined,
+    })
+  } catch (e) {
+    const wrappedError = new Error('Invalid scantastic params')
+    wrappedError.cause = e
+    logger.error(wrappedError, {
+      tags: {
+        file: 'util.ts',
+        function: 'parseScantasticParams',
+      },
+    })
+  }
 }

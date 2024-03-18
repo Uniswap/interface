@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmbvpQZnmawF3Fj7MkSmPaiDXGaEgbnHUsHPcdphF2zdQS`
-- CIDv1: `bafybeigj5csihxv2gcyb4r2jaceaco7bmkltzh6krxveckivxp7hzto6s4`
+- CIDv0: `QmV8dNhZZhwARbFbRwX84c1qD5g1ByxuGSxegFdt4iLGWD`
+- CIDv1: `bafybeide5vkgujdy6vmvh2hzpkepm3lvyo3b7ed4vahlsf5nemuzjc3n4i`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,66 +10,47 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeigj5csihxv2gcyb4r2jaceaco7bmkltzh6krxveckivxp7hzto6s4.ipfs.dweb.link/
-- https://bafybeigj5csihxv2gcyb4r2jaceaco7bmkltzh6krxveckivxp7hzto6s4.ipfs.cf-ipfs.com/
-- [ipfs://QmbvpQZnmawF3Fj7MkSmPaiDXGaEgbnHUsHPcdphF2zdQS/](ipfs://QmbvpQZnmawF3Fj7MkSmPaiDXGaEgbnHUsHPcdphF2zdQS/)
+- https://bafybeide5vkgujdy6vmvh2hzpkepm3lvyo3b7ed4vahlsf5nemuzjc3n4i.ipfs.dweb.link/
+- https://bafybeide5vkgujdy6vmvh2hzpkepm3lvyo3b7ed4vahlsf5nemuzjc3n4i.ipfs.cf-ipfs.com/
+- [ipfs://QmV8dNhZZhwARbFbRwX84c1qD5g1ByxuGSxegFdt4iLGWD/](ipfs://QmV8dNhZZhwARbFbRwX84c1qD5g1ByxuGSxegFdt4iLGWD/)
 
-## 5.18.0 (2024-03-13)
+## 5.19.0 (2024-03-18)
 
 
 ### Features
 
-* **web:** [info] correctly identify buy/sell txs on TDP (#6715) 2c2f316
-* **web:** [info] correctly sort 1 day % change at different time intervals (#6703) 28e9f57
-* **web:** [info] Unwrap Natives on Info Pages (#6655) 7f4164d
-* **web:** [info] wrap error text in charts (#6705) c02ab49
-* **web:** add more limits disclaimers (#6737) fb50849
-* **web:** add trace.now() (#6782) 4384e96
-* **web:** add zone.js (#6697) 8b47c08
-* **web:** Hide 1H time option on PDP price chart (#6807) c6f84a3
-* **web:** trace permit ops (#6784) 6417afd
-* **web:** trace requests (#6698) 37eddbd
-* **web:** trace tx ops (#6785) 7dd8d9c
-* **web:** trace wallet ops (#6783) b7d6793
-* **web:** update Sentry tracing integration (#6696) e3872d2
+* **web:** add CurrencyInfo type to web (#6810) ffc3f51
+* **web:** add realtime feature flag (#6374) 7038b33
+* **web:** Add Unicons V2 to web behind flag (#5968) dc40653
+* **web:** gql token lists feature flag and boilerplate (#6857) 539001c
+* **web:** link PDP to LP positions page (#6838) 116eaf3
+* **web:** reinstate on-chain polling configuration (#6841) b020958
+* **web:** remove mobile app promo banner (#6917) (#6954) 0c1b9c3
+* **web:** update AppJsonRpcProvider to only use exp decay on fails (#6890) 37862f2
 
 
 ### Bug Fixes
 
-* **web:** [charts] use neutral3 dot grid (#6678) deb3486
-* **web:** [info] handle null priceHistory (#6806) 231d331
-* **web:** [info] Update PDP TX Table on token order switch (#6772) 371b6b4
-* **web:** adjust disconnect button hover state (#6788) 7df2c12
-* **web:** avoid navigator.getBattery call on web (#6708) bdd8f91
-* **web:** dedupe and use shared version of useAsyncData hook (#6734) 31275df
-* **web:** fiatCurrency is undefined (#6811) 3c8bea8
-* **web:** fix failing snapshot test for OffchainActivityModal (#6719) dedc87b
-* **web:** fix grammar in limits disclaimer (#6704) c197a86
-* **web:** fix incorrect label in OffchainActivityModal (#6694) 0215c87
-* **web:** fix mouseover remnant (#6725) 7fe49b8
-* **web:** fix token explore cypress tests (#6764) 2a5e945
-* **web:** fixes for Limits Menu on mobile layout (#6706) dc67454
-* **web:** limits cancellation gas estimates (#6716) 0406324
-* **web:** navigation cypress test (#6765) 889f5a3
-* **web:** patch zone.js to allow wc modal (#6865) c2166a8
-* **web:** remove NFT Airdrop claim (#6754) 6235a76
-* **web:** swap flow e2e tests (#6767) 8248b9e
-* **web:** universal search cypress test (#6766) dbeb2c2
-
-
-### Documentation
-
-* **web:** Sentry readme (#5501) 1f3f75e
+* **web:** avoid polling current block timestamp (#6843) 5c65ef9
+* **web:** broken token logos (#6935) 522f176
+* **web:** configure Sentry source maps for rebased branches (#6923) e2b0872
+* **web:** downgrade zone.js to fix iOS 16 (#6920) e0266b7
+* **web:** fetch HMR paths (#6862) 734d772
+* **web:** fix isMobile to not pick up desktop, and fix service worker checks (#6936) 2daff12
+* **web:** fix miniflare after apollo/client upgrade (#6913) f152713
+* **web:** LimitsMenu overflowing cancel button bug (#6854) acf2f01
+* **web:** only poll for gas price when needed (#6845) e15f3c5
+* **web:** patch zone.js to allow wc modal (#6864) 5d595b2
+* **web:** reduce polling for health to 5m (#6842) 49391c8
+* **web:** should copy checksummed address (#6757) bbc2aca
+* **web:** show correct v2 fee (#6925) bad29f9
+* **web:** stop requesting order statuses w/ invalid request body (#6820) 29ea4cd
+* **web:** stop updating displayed quote after trade is submitted (#6819) c0ed816
+* **web:** use apollo provider w/o realtime (#6914) 47db20e
 
 
 ### Code Refactoring
 
-* **web:** use NATIVE_CHAIN_ID over static string (#6770) 94c020a
-
-
-### Tests
-
-* **web:** fix token-explore-filter e2e test (#6763) 006dd59
-* **web:** squelch flushSync error (#6781) c9eecd7
+* **web:** wrap apollo Provider (#6375) 50d4d64
 
 

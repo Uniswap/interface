@@ -17,10 +17,13 @@ import {
   getSearchResultId,
 } from 'src/components/explore/search/utils'
 import { AnimatedFlex, Flex, Text } from 'ui/src'
+import {
+  SafetyLevel,
+  useExploreSearchQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { logger } from 'utilities/src/logger/logger'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
-import { SafetyLevel, useExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import {
   NFTCollectionSearchResult,
@@ -185,8 +188,9 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing8">
             <Text color="$neutral2" variant="body1">
               <Trans
-                components={{ highlight: <Text color="$neutral1" /> }}
+                components={{ highlight: <Text color="$neutral1" variant="body1" /> }}
                 i18nKey="explore.search.empty.full"
+                values={{ searchQuery }}
               />
             </Text>
           </AnimatedFlex>

@@ -20,9 +20,6 @@ import {
 } from 'src/features/fiatOnRamp/aggregatorHooks'
 import { useFiatOnRampSupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { FiatOnRampCurrency, InitialQuoteSelection } from 'src/features/fiatOnRamp/types'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
-import { MobileEventProperties } from 'src/features/telemetry/types'
 import { FiatOnRampScreens } from 'src/screens/Screens'
 import { AnimatedFlex, Flex, Text, useIsDarkMode } from 'ui/src'
 import { usePrevious } from 'utilities/src/react/hooks'
@@ -31,6 +28,7 @@ import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
 import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import {
+  useFiatOnRampAggregatorGetCountryQuery,
   useFiatOnRampAggregatorServiceProvidersQuery,
   useFiatOnRampAggregatorTransactionsQuery,
 } from 'wallet/src/features/fiatOnRamp/api'
@@ -38,6 +36,9 @@ import { FORQuote, FORServiceProvider, FORTransaction } from 'wallet/src/feature
 import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { FiatOnRampEventName } from 'wallet/src/telemetry/constants'
+import { WalletEventProperties } from 'wallet/src/telemetry/types'
 
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.AmountInput>
 
@@ -128,6 +129,14 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
 
   const selectTokenLoading = quotesLoading || amount !== debouncedAmount
 
+  const { currentData: ipCountryData } = useFiatOnRampAggregatorGetCountryQuery()
+
+  useEffect(() => {
+    if (ipCountryData) {
+      setCountryCode(ipCountryData.countryCode)
+    }
+  }, [ipCountryData, setCountryCode])
+
   const {
     currentData: serviceProvidersResponse,
     isFetching: serviceProvidersLoading,
@@ -200,9 +209,9 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   }
 
   const onChangeValue =
-    (source: MobileEventProperties[MobileEventName.FiatOnRampAmountEntered]['source']) =>
+    (source: WalletEventProperties[FiatOnRampEventName.FiatOnRampAmountEntered]['source']) =>
     (newAmount: string): void => {
-      sendMobileAnalyticsEvent(MobileEventName.FiatOnRampAmountEntered, {
+      sendWalletAnalyticsEvent(FiatOnRampEventName.FiatOnRampAmountEntered, {
         source,
       })
       setValue(newAmount)
@@ -248,6 +257,16 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     sourceCurrencyCode: meldSupportedFiatCurrency.code,
     countryCode,
   })
+
+  const onSelectCurrency = (newCurrency: FiatOnRampCurrency): void => {
+    setQuoteCurrency(newCurrency)
+    setShowTokenSelector(false)
+    if (newCurrency.currencyInfo?.currency.symbol) {
+      sendWalletAnalyticsEvent(FiatOnRampEventName.FiatOnRampTokenSelected, {
+        token: newCurrency.currencyInfo.currency.symbol.toLowerCase(),
+      })
+    }
+  }
 
   return (
     <Screen edges={['top']}>
@@ -336,10 +355,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
           loading={supportedTokensLoading}
           onClose={(): void => setShowTokenSelector(false)}
           onRetry={supportedTokensRefetch}
-          onSelectCurrency={(newCurrency: FiatOnRampCurrency): void => {
-            setQuoteCurrency(newCurrency)
-            setShowTokenSelector(false)
-          }}
+          onSelectCurrency={onSelectCurrency}
         />
       )}
     </Screen>

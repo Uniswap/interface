@@ -110,7 +110,7 @@ fragment TransactionDetailsParts on TransactionDetails {
   to
   hash
   nonce
-  status
+  status: transactionStatus
   assetChanges {
     __typename
     ... on TokenTransfer {
@@ -135,7 +135,7 @@ fragment SwapOrderDetailsParts on SwapOrderDetails {
   id
   offerer
   hash
-  orderStatus: status
+  orderStatus: swapOrderStatus
   expiry
   swapOrderType
   encodedOrder
@@ -170,5 +170,11 @@ query Activity($account: String!, $chains: [Chain!]!) {
     assetActivities(pageSize: 100, page: 1, includeOffChain: true, chains: $chains) {
       ...AssetActivityParts
     }
+  }
+}
+
+subscription OnAssetActivity($subscriptionId: ID!, $account: String!) {
+  onAssetActivity(subscriptionId: $subscriptionId, addresses: [$account]) {
+    ...AssetActivityParts
   }
 }

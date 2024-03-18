@@ -1,8 +1,13 @@
-import { Portfolio, TokenBalance } from 'wallet/src/data/__generated__/types-and-hooks'
+import {
+  Portfolio,
+  Token,
+  TokenBalance,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { buildCurrency } from 'wallet/src/features/dataApi/utils'
 import { portfolio } from 'wallet/src/test/fixtures/gql'
+import { tokenBalance } from 'wallet/src/test/fixtures/gql/assets'
 import { currencyInfo } from 'wallet/src/test/fixtures/wallet/currencies'
 import { faker } from 'wallet/src/test/shared'
 import { createFixture } from 'wallet/src/test/utils'
@@ -18,12 +23,15 @@ const portfolioBalanceBase = createFixture<PortfolioBalance>()(() => ({
 }))
 
 type PortfolioBalanceOptions = {
-  from?: RequireNonNullable<TokenBalance, 'quantity' | 'token'> | null
+  fromBalance: RequireNonNullable<TokenBalance, 'quantity' | 'token'> | null
+  fromToken: Token | null
 }
 
 export const portfolioBalance = createFixture<PortfolioBalance, PortfolioBalanceOptions>({
-  from: null,
-})(({ from: balance }) => {
+  fromBalance: null,
+  fromToken: null,
+})(({ fromBalance, fromToken }) => {
+  const balance = fromBalance ?? (fromToken && tokenBalance({ token: fromToken }))
   if (!balance) {
     return portfolioBalanceBase()
   }
@@ -63,15 +71,15 @@ type PortfolioBalancesOptions = {
   portfolio: Portfolio
 }
 
-export const portfolioBalances = createFixture<PortfolioBalance[], PortfolioBalancesOptions>({
-  portfolio: portfolio(),
-})(
+export const portfolioBalances = createFixture<PortfolioBalance[], PortfolioBalancesOptions>(
+  () => ({ portfolio: portfolio() })
+)(
   ({ portfolio: { tokenBalances } }) =>
     (tokenBalances
-      ?.map((tokenBalance) => {
-        if (tokenBalance?.quantity && tokenBalance?.token) {
+      ?.map((balance) => {
+        if (balance?.quantity && balance?.token) {
           return portfolioBalance({
-            from: tokenBalance as RequireNonNullable<TokenBalance, 'quantity' | 'token'>,
+            fromBalance: balance as RequireNonNullable<TokenBalance, 'quantity' | 'token'>,
           })
         }
       })

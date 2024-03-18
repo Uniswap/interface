@@ -1,0 +1,1021 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
+<DocumentFragment>
+  .c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.c6 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c8 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c10 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c0 {
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: 8px;
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c13 {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c11 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c7 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c9 {
+  color: #7D7D7D;
+  margin-right: 8px;
+}
+
+.c14 {
+  cursor: help;
+  color: #7D7D7D;
+  margin-right: 8px;
+}
+
+.c1 {
+  margin-top: 0px;
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1"
+      >
+        <div
+          class="c2"
+        >
+          <div
+            class="c3 c4"
+          >
+            <div
+              class="c5"
+            >
+              <div
+                class="c6 css-1urox24"
+              >
+                <div
+                  class="c7"
+                >
+                  <div>
+                    <div
+                      class="c8 c9 css-142zc9n"
+                    >
+                      You pay
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c5"
+              >
+                <div
+                  class="c10 css-15popx1"
+                  data-testid="INPUT-amount"
+                >
+                  &lt;0.00001 ABC
+                </div>
+                <div
+                  class="c6 css-142zc9n"
+                >
+                  -
+                </div>
+              </div>
+            </div>
+            <div
+              class="c11"
+              style="height: 36px; width: 36px;"
+            >
+              <div
+                class="c12"
+              >
+                <img
+                  class="c13"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="c3 c4"
+          >
+            <div
+              class="c5"
+            >
+              <div
+                class="c6 css-1urox24"
+              >
+                <div
+                  class="c7"
+                >
+                  <div>
+                    <div
+                      class="c8 c14 css-142zc9n"
+                      cursor="help"
+                    >
+                      You receive
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c5"
+              >
+                <div
+                  class="c10 css-15popx1"
+                  data-testid="OUTPUT-amount"
+                >
+                  &lt;0.00001 DEF
+                </div>
+                <div
+                  class="c6 css-142zc9n"
+                >
+                  -
+                </div>
+              </div>
+            </div>
+            <div
+              class="c11"
+              style="height: 36px; width: 36px;"
+            >
+              <div
+                class="c12"
+              >
+                <img
+                  class="c13"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 1`] = `
+<DocumentFragment>
+  .c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.c6 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c8 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c10 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c0 {
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: 8px;
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c13 {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c11 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c7 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c9 {
+  color: #7D7D7D;
+  margin-right: 8px;
+}
+
+.c14 {
+  cursor: help;
+  color: #7D7D7D;
+  margin-right: 8px;
+}
+
+.c1 {
+  margin-top: 0px;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1"
+      >
+        <div
+          class="c2"
+        >
+          <div
+            class="c3 c4"
+          >
+            <div
+              class="c5"
+            >
+              <div
+                class="c6 css-1urox24"
+              >
+                <div
+                  class="c7"
+                >
+                  <div>
+                    <div
+                      class="c8 c9 css-142zc9n"
+                    >
+                      You pay
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c5"
+              >
+                <div
+                  class="c10 css-15popx1"
+                  data-testid="INPUT-amount"
+                >
+                  &lt;0.00001 ETH
+                </div>
+                <div
+                  class="c6 css-142zc9n"
+                >
+                  -
+                </div>
+              </div>
+            </div>
+            <div
+              class="c11"
+              style="height: 36px; width: 36px;"
+            >
+              <div
+                class="c12"
+              >
+                <img
+                  class="c13"
+                  src="ethereum-logo.png"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="c3 c4"
+          >
+            <div
+              class="c5"
+            >
+              <div
+                class="c6 css-1urox24"
+              >
+                <div
+                  class="c7"
+                >
+                  <div>
+                    <div
+                      class="c8 c14 css-142zc9n"
+                      cursor="help"
+                    >
+                      You receive
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c5"
+              >
+                <div
+                  class="c10 css-15popx1"
+                  data-testid="OUTPUT-amount"
+                >
+                  &lt;0.00001 DEF
+                </div>
+                <div
+                  class="c6 css-142zc9n"
+                >
+                  -
+                </div>
+              </div>
+            </div>
+            <div
+              class="c11"
+              style="height: 36px; width: 36px;"
+            >
+              <div
+                class="c12"
+              >
+                <img
+                  class="c13"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`SwapPreview.tsx renders preview trades with loading states 1`] = `
+<DocumentFragment>
+  .c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.c6 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c8 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c10 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c0 {
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: 8px;
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c13 {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c11 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c7 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c9 {
+  color: #7D7D7D;
+  margin-right: 8px;
+}
+
+.c14 {
+  cursor: help;
+  color: #7D7D7D;
+  margin-right: 8px;
+}
+
+.c1 {
+  margin-top: 0px;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1"
+      >
+        <div
+          class="c2"
+        >
+          <div
+            class="c3 c4"
+          >
+            <div
+              class="c5"
+            >
+              <div
+                class="c6 css-1urox24"
+              >
+                <div
+                  class="c7"
+                >
+                  <div>
+                    <div
+                      class="c8 c9 css-142zc9n"
+                    >
+                      You pay
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c5"
+              >
+                <div
+                  class="c10 css-15popx1"
+                  data-testid="INPUT-amount"
+                >
+                  &lt;0.00001 DEF
+                </div>
+                <div
+                  class="c6 css-142zc9n"
+                >
+                  -
+                </div>
+              </div>
+            </div>
+            <div
+              class="c11"
+              style="height: 36px; width: 36px;"
+            >
+              <div
+                class="c12"
+              >
+                <img
+                  class="c13"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="c3 c4"
+          >
+            <div
+              class="c5"
+            >
+              <div
+                class="c6 css-1urox24"
+              >
+                <div
+                  class="c7"
+                >
+                  <div>
+                    <div
+                      class="c8 c14 css-142zc9n"
+                      cursor="help"
+                    >
+                      You receive
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c5"
+              >
+                <div
+                  class="c6 css-15popx1"
+                  data-testid="OUTPUT-amount"
+                >
+                  &lt;0.00001 DEF
+                </div>
+                <div
+                  class="c6 css-142zc9n"
+                >
+                  -
+                </div>
+              </div>
+            </div>
+            <div
+              class="c11"
+              style="height: 36px; width: 36px;"
+            >
+              <div
+                class="c12"
+              >
+                <img
+                  class="c13"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`SwapPreview.tsx test trade exact output, no recipient 1`] = `
+<DocumentFragment>
+  .c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.c6 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c8 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c10 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c0 {
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: 8px;
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c13 {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c11 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c7 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c9 {
+  color: #7D7D7D;
+  margin-right: 8px;
+}
+
+.c14 {
+  cursor: help;
+  color: #7D7D7D;
+  margin-right: 8px;
+}
+
+.c1 {
+  margin-top: 0px;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1"
+      >
+        <div
+          class="c2"
+        >
+          <div
+            class="c3 c4"
+          >
+            <div
+              class="c5"
+            >
+              <div
+                class="c6 css-1urox24"
+              >
+                <div
+                  class="c7"
+                >
+                  <div>
+                    <div
+                      class="c8 c9 css-142zc9n"
+                    >
+                      You pay
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c5"
+              >
+                <div
+                  class="c10 css-15popx1"
+                  data-testid="INPUT-amount"
+                >
+                  &lt;0.00001 ABC
+                </div>
+                <div
+                  class="c6 css-142zc9n"
+                >
+                  -
+                </div>
+              </div>
+            </div>
+            <div
+              class="c11"
+              style="height: 36px; width: 36px;"
+            >
+              <div
+                class="c12"
+              >
+                <img
+                  class="c13"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="c3 c4"
+          >
+            <div
+              class="c5"
+            >
+              <div
+                class="c6 css-1urox24"
+              >
+                <div
+                  class="c7"
+                >
+                  <div>
+                    <div
+                      class="c8 c14 css-142zc9n"
+                      cursor="help"
+                    >
+                      You receive
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c5"
+              >
+                <div
+                  class="c10 css-15popx1"
+                  data-testid="OUTPUT-amount"
+                >
+                  &lt;0.00001 GHI
+                </div>
+                <div
+                  class="c6 css-142zc9n"
+                >
+                  -
+                </div>
+              </div>
+            </div>
+            <div
+              class="c11"
+              style="height: 36px; width: 36px;"
+            >
+              <div
+                class="c12"
+              >
+                <img
+                  class="c13"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;

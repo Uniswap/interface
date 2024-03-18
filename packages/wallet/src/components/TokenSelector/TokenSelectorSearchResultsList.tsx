@@ -29,7 +29,7 @@ function EmptyResults({ searchFilter }: { searchFilter: string }): JSX.Element {
       <SectionHeader title={t('tokens.selector.section.search')} />
       <Text color="$neutral3" textAlign="center" variant="subheading2">
         <Trans
-          components={{ highlight: <Text color="$neutral1" /> }}
+          components={{ highlight: <Text color="$neutral1" variant="subheading2" /> }}
           i18nKey="tokens.selector.search.empty"
           values={{ searchText: searchFilter }}
         />

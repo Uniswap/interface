@@ -22,7 +22,7 @@ import { useDebounce } from 'utilities/src/time/timing'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
 import { useFiatOnRampAggregatorCountryListQuery } from 'wallet/src/features/fiatOnRamp/api'
-import { FORSupportedCountry } from 'wallet/src/features/fiatOnRamp/types'
+import { FORCountry } from 'wallet/src/features/fiatOnRamp/types'
 import { getCountryFlagSvgUrl } from 'wallet/src/features/fiatOnRamp/utils'
 import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
 import { ModalName } from 'wallet/src/telemetry/constants'
@@ -30,11 +30,11 @@ import { ModalName } from 'wallet/src/telemetry/constants'
 const ICON_SIZE = 32 // design prefers a custom value here
 
 interface CountrySelectorProps {
-  onSelectCountry: (country: FORSupportedCountry) => void
+  onSelectCountry: (country: FORCountry) => void
   countryCode: string
 }
 
-function key(item: FORSupportedCountry): string {
+function key(item: FORCountry): string {
   return item.countryCode
 }
 
@@ -52,7 +52,7 @@ function CountrySelectorContent({
 
   const debouncedSearchText = useDebounce(searchText)
 
-  const filteredData: FORSupportedCountry[] = useMemo(() => {
+  const filteredData: FORCountry[] = useMemo(() => {
     if (!data) {
       return []
     }
@@ -64,7 +64,7 @@ function CountrySelectorContent({
   }, [countryCode, data, debouncedSearchText])
 
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<FORSupportedCountry>): JSX.Element => {
+    ({ item }: ListRenderItemInfo<FORCountry>): JSX.Element => {
       const countryFlagUrl = getCountryFlagSvgUrl(item.countryCode)
 
       return (

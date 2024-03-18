@@ -1,6 +1,7 @@
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Text, TouchableArea } from 'ui/src'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { TokenSelectorList } from 'wallet/src/components/TokenSelector/TokenSelectorList'
 import {
@@ -9,7 +10,6 @@ import {
   TokenSection,
 } from 'wallet/src/components/TokenSelector/types'
 import { getTokenOptionsSection } from 'wallet/src/components/TokenSelector/utils'
-import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { buildCurrency, gqlTokenToCurrencyInfo } from 'wallet/src/features/dataApi/utils'
 import { SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'

@@ -4,11 +4,14 @@ import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { Delay } from 'src/components/layout/Delayed'
+import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { ColorTokens, useSporeColors } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { isAndroid } from 'uniswap/src/utils/platform'
+import { logger } from 'utilities/src/logger/logger'
 import { useDebounce } from 'utilities/src/time/timing'
 import { useAllCommonBaseCurrencies } from 'wallet/src/components/TokenSelector/hooks'
+import { BRIDGED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { fromMoonpayNetwork } from 'wallet/src/features/chains/utils'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
@@ -32,9 +35,13 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 import { ValueType } from 'wallet/src/utils/getCurrencyAmount'
-import { FiatOnRampCurrency } from './types'
+
+const ETH_POLYGON_MOONPAY_CODE = 'eth_polygon'
+const WETH_POLYGON_MOONPAY_CODE = 'weth_polygon'
+const BNB_MAINNET_MOONPAY_CODE = 'bnb'
 
 export function useFormatExactCurrencyAmount(
   currencyAmount: string,
@@ -61,6 +68,7 @@ export function useFormatExactCurrencyAmount(
 /** Returns a new externalTransactionId and a callback to store the transaction. */
 export function useFiatOnRampTransactionCreator(
   ownerAddress: string,
+  chainId: ChainId,
   initialTypeInfo?: Partial<FiatPurchaseTransactionInfo>
 ): {
   externalTransactionId: string
@@ -74,7 +82,7 @@ export function useFiatOnRampTransactionCreator(
     // adds a dummy transaction detail for now
     // later, we will attempt to look up information for that id
     const transactionDetail: TransactionDetails = {
-      chainId: ChainId.Mainnet,
+      chainId,
       id: externalTransactionId.current,
       from: ownerAddress,
       typeInfo: {
@@ -89,7 +97,7 @@ export function useFiatOnRampTransactionCreator(
     }
     // use addTransaction action so transactionWatcher picks it up
     dispatch(addTransaction(transactionDetail))
-  }, [dispatch, ownerAddress, initialTypeInfo])
+  }, [initialTypeInfo, chainId, ownerAddress, dispatch])
 
   return { externalTransactionId: externalTransactionId.current, dispatchAddTransaction }
 }
@@ -102,9 +110,11 @@ const MOONPAY_FEES_INCLUDED = true
 export function useMoonpayFiatOnRamp({
   baseCurrencyAmount,
   quoteCurrencyCode,
+  quoteChainId,
 }: {
   baseCurrencyAmount: string
   quoteCurrencyCode: string | undefined
+  quoteChainId: ChainId
 }): {
   eligible: boolean
   quoteAmount: number
@@ -126,8 +136,10 @@ export function useMoonpayFiatOnRamp({
   // for now, always assume the user wants to fund the current account
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
-  const { externalTransactionId, dispatchAddTransaction } =
-    useFiatOnRampTransactionCreator(activeAccountAddress)
+  const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
+    activeAccountAddress,
+    quoteChainId
+  )
 
   const { moonpaySupportedFiatCurrency: baseCurrency } = useMoonpayFiatCurrencySupportInfo()
   const baseCurrencyCode = baseCurrency.code.toLowerCase()
@@ -307,16 +319,38 @@ function findTokenOptionForMoonpayCurrency(
   commonBaseCurrencies: CurrencyInfo[] | undefined = [],
   moonpayCurrency: MoonpayCurrency
 ): Maybe<CurrencyInfo> {
-  return commonBaseCurrencies.find((item) => {
-    const [code, network] = moonpayCurrency.code.split('_')
+  const currencyInfo = commonBaseCurrencies.find((item) => {
+    // Moonpay uses WETH on Polygon to represent ETH on Polygon
+    const moonpayCurrencyCode =
+      moonpayCurrency.code === ETH_POLYGON_MOONPAY_CODE
+        ? WETH_POLYGON_MOONPAY_CODE
+        : moonpayCurrency.code
+    const [tokenSymbol, network] = moonpayCurrencyCode.split('_')
     const chainId = fromMoonpayNetwork(network)
     return (
       item &&
-      code &&
-      code === item.currency.symbol?.toLowerCase() &&
+      tokenSymbol &&
+      tokenSymbol.toLowerCase() === item.currency.symbol?.toLowerCase() &&
       chainId === item.currency.chainId
     )
   })
+  if (
+    !currencyInfo &&
+    !BRIDGED_BASE_ADDRESSES.find((bridgedAddress) =>
+      areAddressesEqual(bridgedAddress, moonpayCurrency.metadata?.contractAddress)
+    ) &&
+    // We do not support BNB onboarding and Moonpay does not return an address for it so map it manually
+    moonpayCurrency.code !== BNB_MAINNET_MOONPAY_CODE
+  ) {
+    logger.error(`Moonpay currency ${moonpayCurrency.code} cannot be mapped`, {
+      tags: { file: 'fiatOnRamp/hooks', function: 'useMoonpaySupportedTokens' },
+      extra: {
+        chainId: moonpayCurrency.metadata?.chainId,
+        address: moonpayCurrency.metadata?.contractAddress,
+      },
+    })
+  }
+  return currencyInfo
 }
 
 export function useFiatOnRampSupportedTokens({

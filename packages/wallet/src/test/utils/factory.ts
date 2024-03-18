@@ -63,7 +63,9 @@ import { omit, pick } from 'lodash'
 export function createFixture<T extends object>(): {
   <V extends T>(getValues: () => V): {
     // If some fields returned by getValues are overridden
-    <O extends Partial<T>>(overrides: O): Omit<V, keyof O> & O
+    <O extends Partial<T>>(overrides: O): V extends (infer I)[]
+      ? (Omit<I, keyof O> & O)[] // update type of each array element
+      : Omit<V, keyof O> & O // update type of the object
     // If no fields are overridden
     (): V
   }
@@ -75,7 +77,9 @@ export function createFixture<T extends object, P extends object>(
 ): {
   <V extends T>(getValues: (options: P) => V): {
     // If some fields returned by getValues are overridden
-    <O extends Partial<T & P>>(overrides: O): Omit<V, Exclude<keyof O, keyof T>> & Omit<O, keyof P>
+    <O extends Partial<T & P>>(overrides: O): V extends (infer I)[]
+      ? (Omit<I, Exclude<keyof O, keyof T>> & Omit<O, keyof P>)[] // update type of each array element
+      : Omit<V, Exclude<keyof O, keyof T>> & Omit<O, keyof P> // update type of the object
     // If no fields are overridden
     (): V
   }
@@ -87,7 +91,9 @@ export function createFixture<T extends object, P extends object>(
 ): {
   <V extends T>(getValues: (options: P) => V): {
     // If some fields returned by getValues are overridden
-    <O extends Partial<T & P>>(overrides: O): Omit<V, Exclude<keyof O, keyof T>> & Omit<O, keyof P>
+    <O extends Partial<T & P>>(overrides: O): V extends (infer I)[]
+      ? (Omit<I, Exclude<keyof O, keyof T>> & Omit<O, keyof P>)[] // update type of each array element
+      : Omit<V, Exclude<keyof O, keyof T>> & Omit<O, keyof P> // update type of the object
     // If no fields are overridden
     (): V
   }
@@ -104,14 +110,21 @@ export function createFixture<T extends object, P extends object>(
         typeof defaultOptionsOrGetter === 'function'
           ? defaultOptionsOrGetter()
           : defaultOptionsOrGetter
-      // Get overrides for options
-      const optionOverrides = defaultOptions ? pick(overrides, Object.keys(defaultOptions)) : {}
+      // Get overrides for options (filter out undefined values)
+      const optionOverrides = Object.fromEntries(
+        Object.entries(defaultOptions ? pick(overrides, Object.keys(defaultOptions)) : {}).filter(
+          ([, value]) => value !== undefined
+        )
+      )
       // Get values with getValues function
       const mergedOptions = defaultOptions ? { ...defaultOptions, ...optionOverrides } : undefined
       const values = getValues(mergedOptions)
       // Get overrides for values
       const valueOverrides = overrides ? omit(overrides, Object.keys(defaultOptions || {})) : {}
-      return Array.isArray(values) ? values : { ...values, ...valueOverrides }
+      return Array.isArray(values)
+        ? // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+          values.map((v) => ({ ...v, ...valueOverrides }))
+        : { ...values, ...valueOverrides }
     }
   }
 }

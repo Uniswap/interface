@@ -32,7 +32,7 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
  */
 export function useUSDCPrice(
   currency?: Currency,
-  pollingInterval?: PollingInterval
+  pollInterval?: PollingInterval
 ): Price<Currency, Currency> | undefined {
   const chainId = currency?.chainId
 
@@ -49,7 +49,7 @@ export function useUSDCPrice(
     amountSpecified,
     otherCurrency: currency,
     tradeType: TradeType.EXACT_OUTPUT,
-    pollingInterval,
+    pollInterval,
     isUSDQuote: true,
   })
 

@@ -178,7 +178,7 @@ function TransactionDetails({
           px="$spacing8"
           py="$spacing4">
           <Text color="$neutral1" loading={isLoading} variant="monospace">
-            {{ functionName: parsedData ? parsedData.name : t('common.text.unknown') }}
+            {parsedData ? parsedData.name : t('common.text.unknown')}
           </Text>
         </Flex>
       </Flex>

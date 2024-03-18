@@ -36,15 +36,17 @@ export function ScantasticModal(): JSX.Element | null {
   const account = useActiveAccount()
 
   const { initialState } = useAppSelector(selectModalState(ModalName.Scantastic))
+  const params = initialState?.params
+
   const [OTP, setOTP] = useState('')
   // Once a user has scanned a QR they have 6 minutes to correctly input the OTP
   const [expirationTimestamp, setExpirationTimestamp] = useState<number>(
     Date.now() + 6 * ONE_MINUTE_MS
   )
-  const pubKey: JsonWebKey = initialState?.pubKey ? JSON.parse(initialState?.pubKey) : undefined
-  const uuid = initialState?.uuid
-  const device = (initialState?.vendor + ' ' + initialState?.model || '').trim()
-  const browser = initialState?.browser || ''
+  const pubKey = params?.publicKey
+  const uuid = params?.uuid
+  const device = (params?.vendor + ' ' + params?.model || '').trim()
+  const browser = params?.browser || ''
 
   const [expired, setExpired] = useState(false)
   const [redeemed, setRedeemed] = useState(false)
@@ -81,13 +83,14 @@ export function ScantasticModal(): JSX.Element | null {
   }, [dispatch])
 
   const onEncryptSeedphrase = async (): Promise<void> => {
+    if (!pubKey) {
+      return
+    }
+
     setError('')
     let encryptedSeedphrase = ''
     const { n, e } = pubKey
     try {
-      if (!n || !e) {
-        throw new Error('Invalid public key.')
-      }
       encryptedSeedphrase = await getEncryptedMnemonic(account?.address || '', n, e)
     } catch (err) {
       setError(t('scantastic.error.encryption'))

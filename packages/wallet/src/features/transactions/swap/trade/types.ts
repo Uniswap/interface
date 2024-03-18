@@ -6,7 +6,7 @@ import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { providers } from 'ethers'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { QuoteResponse } from 'wallet/src/data/tradingApi/__generated__/api'
+import { QuoteResponse } from 'wallet/src/data/tradingApi/__generated__/index'
 import { QuoteResult } from 'wallet/src/features/transactions/swap/trade/legacy/types'
 import { QuoteType } from 'wallet/src/features/transactions/utils'
 
@@ -22,7 +22,7 @@ export class Trade<
   TTradeType extends TradeType = TradeType
 > extends RouterSDKTrade<TInput, TOutput, TTradeType> {
   readonly quoteData?: QuoteData
-  readonly deadline?: number
+  readonly deadline: number
   readonly slippageTolerance: number
   readonly swapFee?: SwapFee
 
@@ -35,7 +35,7 @@ export class Trade<
   }: {
     readonly quoteData?: QuoteData
     readonly swapFee?: SwapFee
-    readonly deadline?: number
+    readonly deadline: number
     readonly slippageTolerance: number
     readonly v2Routes: {
       routev2: V2RouteSDK<TInput, TOutput>
@@ -73,7 +73,7 @@ export interface UseTradeArgs {
   amountSpecified: Maybe<CurrencyAmount<Currency>>
   otherCurrency: Maybe<Currency>
   tradeType: TradeType
-  pollingInterval?: PollingInterval
+  pollInterval?: PollingInterval
   customSlippageTolerance?: number
   isUSDQuote?: boolean
   sendPortionEnabled?: boolean

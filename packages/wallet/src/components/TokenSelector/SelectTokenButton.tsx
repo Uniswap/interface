@@ -6,15 +6,15 @@ import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface SelectTokenButtonProps {
-  showNonZeroBalancesOnly?: boolean
   onPress: () => void
   selectedCurrencyInfo?: CurrencyInfo | null
+  testID?: string
 }
 
 export function SelectTokenButton({
-  showNonZeroBalancesOnly,
   selectedCurrencyInfo,
   onPress,
+  testID,
 }: SelectTokenButtonProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -23,7 +23,7 @@ export function SelectTokenButton({
       hapticFeedback
       backgroundColor={selectedCurrencyInfo ? '$surface3' : '$accent1'}
       borderRadius="$roundedFull"
-      testID={`currency-selector-toggle-${showNonZeroBalancesOnly ? 'in' : 'out'}`}
+      testID={testID}
       onPress={onPress}>
       {selectedCurrencyInfo ? (
         <Flex centered row gap="$spacing4" p="$spacing4" pr="$spacing12">

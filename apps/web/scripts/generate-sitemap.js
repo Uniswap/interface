@@ -11,8 +11,20 @@ const getTopTokensQuery = (chain) => `
     topTokens(pageSize: 100, page: 1, chain: ${chain}, orderBy: VOLUME) {
       address
     }
+  }`
+
+const getTopPoolsQuery = (v3Chain) => `
+  query {
+    topV3Pools(first: 50, chain: ${v3Chain}) {
+      id
+      address
+    }
+    topV2Pairs(first: 50, chain: ETHEREUM) {
+      address
+    }
   }
 `
+
 const chains = ['ETHEREUM', 'ARBITRUM', 'OPTIMISM', 'POLYGON', 'BASE', 'BNB', 'CELO']
 
 const nftTopCollectionsQuery = `
@@ -56,7 +68,7 @@ fs.readFile('./public/tokens-sitemap.xml', 'utf8', async (err, data) => {
       const tokenAddresses = tokensJSON.data.topTokens.map((token) => token.address.toLowerCase())
 
       tokenAddresses.forEach((address) => {
-        const tokenURL = `https://app.uniswap.org/tokens/${chainName.toLowerCase()}/${address}`
+        const tokenURL = `https://app.uniswap.org/explore/tokens/${chainName.toLowerCase()}/${address}`
         if (!(tokenURL in tokenURLs)) {
           sitemap.urlset.url.push({
             loc: [tokenURL],
@@ -134,6 +146,65 @@ fs.readFile('./public/nfts-sitemap.xml', 'utf8', async (err, data) => {
         throw new Error('Generated nfts-sitemap.xml file size exceeds 50MB')
       }
       console.log('NFT collections sitemap updated')
+    })
+  } catch (e) {
+    console.error(e)
+  }
+})
+
+fs.readFile('./public/pools-sitemap.xml', 'utf8', async (err, data) => {
+  const poolURLs = {}
+  try {
+    const sitemap = await parseStringPromise(data)
+    if (sitemap.urlset.url) {
+      sitemap.urlset.url.forEach((url) => {
+        const lastMod = new Date(url.lastmod).getTime()
+        if (lastMod < Date.now() - weekMs) {
+          url.lastmod = nowISO
+        }
+        poolURLs[url.loc] = true
+      })
+    }
+
+    for (const chainName of chains) {
+      const poolsResponse = await fetch('https://api.uniswap.org/v1/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Origin: 'https://app.uniswap.org',
+        },
+        body: JSON.stringify({ query: getTopPoolsQuery(chainName) }),
+      })
+      const poolsJSON = await poolsResponse.json()
+      const v3PoolAddresses = poolsJSON.data.topV3Pools?.map((pool) => pool.address.toLowerCase()) ?? []
+      const v2PoolAddresses = poolsJSON.data.topV2Pairs?.map((pool) => pool.address.toLowerCase()) ?? []
+      const poolAddresses = v3PoolAddresses.concat(v2PoolAddresses)
+
+      poolAddresses.forEach((address) => {
+        const poolUrl = `https://app.uniswap.org/explore/pools/${chainName.toLowerCase()}/${address}`
+        if (!(poolUrl in poolURLs)) {
+          sitemap.urlset.url.push({
+            loc: [poolUrl],
+            lastmod: [nowISO],
+            priority: [0.8],
+          })
+        }
+      })
+    }
+
+    const builder = new Builder()
+    const xml = builder.buildObject(sitemap)
+    const path = './public/pools-sitemap.xml'
+    fs.writeFile(path, xml, (error) => {
+      if (error) throw error
+      const stats = fs.statSync(path)
+      const fileSizeBytes = stats.size
+      const fileSizeMegabytes = fileSizeBytes / (1024 * 1024)
+
+      if (fileSizeMegabytes > 50) {
+        throw new Error('Generated pools-sitemap.xml file size exceeds 50MB')
+      }
+      console.log('Pools sitemap updated')
     })
   } catch (e) {
     console.error(e)

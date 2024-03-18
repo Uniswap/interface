@@ -1,11 +1,10 @@
 import fs from 'fs'
 import { parseStringPromise } from 'xml2js'
 
-import { routes } from './RouteDefinitions'
+import { findRouteByPath, routes } from './RouteDefinitions'
 
 describe('Routes', () => {
   it('sitemap URLs should exist as Router paths', async () => {
-    const pathNames: string[] = routes.map((routeDef) => routeDef.path)
     const contents = fs.readFileSync('./public/app-sitemap.xml', 'utf8')
     const sitemap = await parseStringPromise(contents)
 
@@ -14,7 +13,7 @@ describe('Routes', () => {
     sitemapPaths
       .filter((p) => !p.includes('/0x'))
       .forEach((path: string) => {
-        expect(pathNames).toContain(path)
+        expect(findRouteByPath(path)).toBeDefined()
       })
   })
 

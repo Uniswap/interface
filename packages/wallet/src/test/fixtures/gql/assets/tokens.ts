@@ -10,7 +10,7 @@ import {
   TokenMarket,
   TokenProject,
   TokenProjectMarket,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { toGraphQLChain } from 'wallet/src/features/chains/utils'
 import { amounts } from 'wallet/src/test/fixtures/gql/amounts'
 import {

@@ -13,7 +13,7 @@ import { Trace, TraceEvent } from 'analytics'
 import { useOpenAccountDrawer, useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight } from 'components/Button'
 import Column from 'components/Column'
-import ConfirmSwapModalV2 from 'components/ConfirmSwapModalV2'
+import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { Field } from 'components/swap/constants'
@@ -374,7 +374,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         </DisclaimerText>
       </LimitDisclaimerContainer>
       {limitOrderTrade && showConfirm && (
-        <ConfirmSwapModalV2
+        <ConfirmSwapModal
           allowance={allowance}
           trade={limitOrderTrade}
           inputCurrency={inputCurrency}

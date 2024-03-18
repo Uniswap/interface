@@ -78,45 +78,6 @@ exports[`PoolTable renders data filled state 1`] = `
   justify-content: flex-start;
 }
 
-.c22 {
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 img {
-  width: 14px;
-  height: 28px;
-  object-fit: cover;
-}
-
-.c23 img:first-child {
-  border-radius: 14px 0 0 14px;
-  object-position: 0 0;
-}
-
-.c23 img:last-child {
-  border-radius: 0 14px 14px 0;
-  object-position: 100% 0;
-}
-
-.c24 {
-  width: 14px;
-  height: 28px;
-  border-radius: 50%;
-}
-
 .c30 {
   height: 16px;
   width: 16px;
@@ -409,6 +370,45 @@ exports[`PoolTable renders data filled state 1`] = `
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.c22 {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c23 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c23 img {
+  width: 14px;
+  height: 28px;
+  object-fit: cover;
+}
+
+.c23 img:first-child {
+  border-radius: 14px 0 0 14px;
+  object-position: 0 0;
+}
+
+.c23 img:last-child {
+  border-radius: 0 14px 14px 0;
+  object-position: 100% 0;
+}
+
+.c24 {
+  width: 14px;
+  height: 28px;
+  border-radius: 50%;
 }
 
 .c0 {

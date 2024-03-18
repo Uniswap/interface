@@ -61,6 +61,7 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
+  // Poll for block number on the active provider.
   const windowVisible = useIsWindowVisible()
   useEffect(() => {
     if (provider && activeChainId && windowVisible) {
@@ -81,13 +82,12 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
     return
   }, [activeChainId, provider, windowVisible, onChainBlock])
 
+  // Poll once for the mainnet block number using the network provider.
   const networkProviders = useFallbackProviderEnabled() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
   useEffect(() => {
     networkProviders[ChainId.MAINNET]
       .getBlockNumber()
-      .then((block) => {
-        onChainBlock(ChainId.MAINNET, block)
-      })
+      .then((block) => onChainBlock(ChainId.MAINNET, block))
       // swallow errors - it's ok if this fails, as we'll try again if we activate mainnet
       .catch(() => undefined)
   }, [networkProviders, onChainBlock])
@@ -95,15 +95,14 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
   const value = useMemo(
     () => ({
       fastForward: (update: number) => {
-        if (activeBlock && update > activeBlock) {
-          const mainnetUpdate = activeChainId === ChainId.MAINNET ? update : mainnetBlock
-          setChainBlock({ chainId: activeChainId, block: update, mainnetBlock: mainnetUpdate })
+        if (activeChainId) {
+          onChainBlock(activeChainId, update)
         }
       },
       block: activeBlock,
       mainnetBlock,
     }),
-    [activeBlock, activeChainId, mainnetBlock]
+    [activeBlock, activeChainId, mainnetBlock, onChainBlock]
   )
   return <BlockNumberContext.Provider value={value}>{children}</BlockNumberContext.Provider>
 }

@@ -21,10 +21,10 @@ import {
   LinearGradient,
   ScrollView,
   Text,
+  getUniconV2Colors,
   useIsDarkMode,
   useSporeColors,
   useUniconColors,
-  useUniconV2Colors,
 } from 'ui/src'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
@@ -140,7 +140,7 @@ export function EditUnitagProfileScreen({
   const { colors: avatarColors } = useExtractedColors(avatarImageUri)
 
   const uniconV1Colors = useUniconColors(address)
-  const { color: uniconV2Color } = useUniconV2Colors(address)
+  const { color: uniconV2Color } = getUniconV2Colors(address)
   const isUniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
   const uniconColors = isUniconsV2Enabled
     ? { gradientStart: uniconV2Color, gradientEnd: uniconV2Color, glow: uniconV2Color }

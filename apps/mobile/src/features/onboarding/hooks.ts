@@ -5,7 +5,10 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
+import {
+  setHasSkippedUnitagPrompt,
+  setHasViewedUniconV2IntroModal,
+} from 'wallet/src/features/behaviorHistory/slice'
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -42,6 +45,8 @@ export function useCompleteOnboardingCallback({
 
   const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
   const claimUnitag = useClaimUnitag()
+
+  const uniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
 
   return async () => {
     sendMobileAnalyticsEvent(
@@ -90,6 +95,11 @@ export function useCompleteOnboardingCallback({
     // - the onboarding method prompts for unitags (create new)
     if (unitagsFeatureFlagEnabled && importType === ImportType.CreateNew) {
       dispatch(setHasSkippedUnitagPrompt(true))
+    }
+
+    if (uniconsV2Enabled) {
+      // Don't show Unicon V2 intro modal to new users
+      dispatch(setHasViewedUniconV2IntroModal(true))
     }
 
     // Exit flow

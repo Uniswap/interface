@@ -66,4 +66,4 @@ export const truncateDescription = (desc: string, maxCharacterCount = TRUNCATE_C
   return tokenDescriptionTruncated
 }
 
-export const TRUNCATE_CHARACTER_COUNT = 400
+const TRUNCATE_CHARACTER_COUNT = 400

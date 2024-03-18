@@ -17,12 +17,6 @@ export async function registerWCClientForPushNotifications(clientId: string): Pr
   try {
     const pushToken = await getOneSignalPushToken()
     if (!pushToken) {
-      logger.warn(
-        'walletConnectApi',
-        'registerWCv2ClientForPushNotifications',
-        'No OneSignal push token found'
-      )
-
       return
     }
 

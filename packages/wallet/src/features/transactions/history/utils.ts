@@ -1,6 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
 import dayjs from 'dayjs'
-import { getNativeAddress } from 'wallet/src/constants/addresses'
 import {
   Amount,
   Chain,
@@ -8,7 +7,8 @@ import {
   FeedTransactionListQuery,
   TokenStandard,
   TransactionListQuery,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {
   FORMAT_DATE_MONTH,

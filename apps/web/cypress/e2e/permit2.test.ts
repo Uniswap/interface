@@ -2,7 +2,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { MaxUint160, MaxUint256 } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 
-import { FeatureFlag } from 'featureFlags'
 import { DAI, USDC_MAINNET, USDT } from '../../src/constants/tokens'
 
 /** Initiates a swap. */
@@ -17,9 +16,7 @@ function initiateSwap(swapButtonText?: string) {
 describe('Permit2', () => {
   function setupInputs(inputToken: Token, outputToken: Token) {
     // Sets up a swap between inputToken and outputToken.
-    cy.visit(`/swap/?inputCurrency=${inputToken.address}&outputCurrency=${outputToken.address}`, {
-      featureFlags: [{ name: FeatureFlag.progressIndicatorV2, value: true }],
-    })
+    cy.visit(`/swap/?inputCurrency=${inputToken.address}&outputCurrency=${outputToken.address}`)
     cy.get('#swap-currency-input .token-amount-input').type('0.01')
   }
 

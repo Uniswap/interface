@@ -170,15 +170,19 @@ export type MoonpayTransactionResponseItem = MoonpayQuote & {
   }>
 }
 
-// /supported-countries
-
-export type FORSupportedCountry = {
+export type FORCountry = {
   countryCode: string
   displayName: string
 }
 
+// /get-country
+
+export type FORGetCountryResponse = FORCountry
+
+// /supported-countries
+
 export type FORSupportedCountriesResponse = {
-  supportedCountries: FORSupportedCountry[]
+  supportedCountries: FORCountry[]
 }
 
 // /quote

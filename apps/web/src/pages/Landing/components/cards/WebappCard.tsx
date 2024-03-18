@@ -3,7 +3,6 @@ import { ChainId } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { LDO, NATIVE_CHAIN_ID, UNI, USDC_BASE } from 'constants/tokens'
-import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { useTokenPromoQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
@@ -195,7 +194,6 @@ function Token({ chainId, address }: { chainId: ChainId; address: string }) {
   const navigate = useNavigate()
   const { formatFiatPrice, formatDelta } = useFormatter()
   const currency = useCurrency(address, chainId)
-  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
   const tokenPromoQuery = useTokenPromoQuery({
     variables: {
       address: currency?.wrapped.address,
@@ -211,11 +209,10 @@ function Token({ chainId, address }: { chainId: ChainId; address: string }) {
         getTokenDetailsURL({
           address: address === 'ETH' ? NATIVE_CHAIN_ID : address,
           chain: chainIdToBackendName(chainId),
-          isInfoExplorePageEnabled,
         })
       )
     },
-    [address, chainId, isInfoExplorePageEnabled, navigate]
+    [address, chainId, navigate]
   )
   return (
     <TokenRow onClick={handleClick}>

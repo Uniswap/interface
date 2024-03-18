@@ -1,4 +1,4 @@
-import { IAmount } from 'wallet/src/data/__generated__/types-and-hooks'
+import { IAmount } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export type NFTItem = {
   name?: string

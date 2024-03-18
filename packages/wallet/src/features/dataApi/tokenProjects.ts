@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react'
+import { useTokenProjectsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
-import { useTokenProjectsQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import {
   currencyIdToContractInput,
@@ -18,7 +18,7 @@ export function useTokenProjects(currencyIds: CurrencyId[]): GqlResult<CurrencyI
     [currencyIds]
   )
 
-  const { data, loading, refetch } = useTokenProjectsQuery({
+  const { data, loading, error, refetch } = useTokenProjectsQuery({
     variables: { contracts },
   })
 
@@ -32,5 +32,5 @@ export function useTokenProjects(currencyIds: CurrencyId[]): GqlResult<CurrencyI
 
   const retry = useCallback(() => refetch({ contracts }), [contracts, refetch])
 
-  return { data: formattedData, loading, refetch: retry }
+  return { data: formattedData, loading, refetch: retry, error }
 }

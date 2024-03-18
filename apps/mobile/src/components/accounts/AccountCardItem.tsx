@@ -131,7 +131,7 @@ export function AccountCardItem({
         px="$spacing24"
         onLongPress={disableOnPress}
         onPress={(): void => onPress(address)}>
-        <Flex row alignItems="flex-start" gap="$spacing16" testID={`account_item/${address}`}>
+        <Flex row alignItems="flex-start" gap="$spacing16" testID={`account-item/${address}`}>
           <Flex fill>
             <AddressDisplay
               address={address}

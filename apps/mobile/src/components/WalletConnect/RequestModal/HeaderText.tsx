@@ -28,7 +28,9 @@ export function HeaderText({
     return readablePermitAmount ? (
       <Text textAlign="center" variant="heading3">
         <Trans
-          components={{ highlight: <Text fontWeight="bold" /> }}
+          // `variant` prop must be first
+          // eslint-disable-next-line react/jsx-sort-props
+          components={{ highlight: <Text variant="heading3" fontWeight="bold" /> }}
           i18nKey="qrScanner.request.withAmount"
           values={{
             dappName: dapp.name,
@@ -40,7 +42,9 @@ export function HeaderText({
     ) : (
       <Text textAlign="center" variant="heading3">
         <Trans
-          components={{ highlight: <Text fontWeight="bold" /> }}
+          // `variant` prop must be first
+          // eslint-disable-next-line react/jsx-sort-props
+          components={{ highlight: <Text variant="heading3" fontWeight="bold" /> }}
           i18nKey="qrScanner.request.withoutAmount"
           values={{
             dappName: dapp.name,
@@ -56,30 +60,12 @@ export function HeaderText({
       case EthMethod.PersonalSign:
       case EthMethod.EthSign:
       case EthMethod.SignTypedData:
-        return (
-          <Trans
-            components={{ highlight: <Text fontWeight="bold" /> }}
-            i18nKey="qrScanner.request.method.signature"
-            values={{ dappNameOrUrl }}
-          />
-        )
+        return <Trans i18nKey="qrScanner.request.method.signature" values={{ dappNameOrUrl }} />
       case EthMethod.EthSendTransaction:
-        return (
-          <Trans
-            components={{ highlight: <Text fontWeight="bold" /> }}
-            i18nKey="qrScanner.request.method.transaction"
-            values={{ dappNameOrUrl }}
-          />
-        )
+        return <Trans i18nKey="qrScanner.request.method.transaction" values={{ dappNameOrUrl }} />
     }
 
-    return (
-      <Trans
-        components={{ highlight: <Text fontWeight="bold" /> }}
-        i18nKey="qrScanner.request.method.default"
-        values={{ dappNameOrUrl }}
-      />
-    )
+    return <Trans i18nKey="qrScanner.request.method.default" values={{ dappNameOrUrl }} />
   }
 
   return (

@@ -804,4 +804,15 @@ export const migrations = {
 
     return newState
   },
+
+  60: function addUniconV2IntroModalBoolean(state: any) {
+    const newState = { ...state }
+
+    newState.behaviorHistory = {
+      ...state.behaviorHistory,
+      hasViewedUniconV2IntroModal: false,
+    }
+
+    return newState
+  },
 }

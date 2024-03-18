@@ -13,10 +13,10 @@ import {
   useDeviceDimensions,
   useSporeColors,
 } from 'ui/src'
+import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { HiddenNftsRowLeft, HiddenNftsRowRight } from 'wallet/src/components/nfts/NFTHiddenRow'
-import { useNftsTabQuery } from 'wallet/src/data/__generated__/types-and-hooks'
-import { GQLQueries } from 'wallet/src/data/queries'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import {
   EMPTY_NFT_ITEM,

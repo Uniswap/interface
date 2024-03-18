@@ -12,13 +12,12 @@ import Row from 'components/Row'
 import ShareButton, { openShareTweetWindow } from 'components/Tokens/TokenDetails/ShareButton'
 import { ActionButtonStyle } from 'components/Tokens/TokenDetails/shared'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { useReducer, useRef } from 'react'
 import { Link } from 'react-feather'
-import styled, { css, useTheme } from 'styled-components'
+import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
@@ -85,40 +84,24 @@ const ActionButton = styled(Row)`
   }
 `
 
-const TokenTitle = styled.div<{ isInfoTDPEnabled?: boolean }>`
+const TokenTitle = styled.div`
   display: flex;
   gap: 8px;
-
-  ${({ isInfoTDPEnabled }) =>
-    isInfoTDPEnabled
-      ? css`
-          overflow: hidden;
-          white-space: nowrap;
-        `
-      : css`
-          @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
-            display: inline;
-          }
-        `}
+  overflow: hidden;
+  white-space: nowrap;
 `
 
-const TokenSymbol = styled.h1<{ isInfoTDPEnabled?: boolean }>`
-  font-weight: 485;
-  font-size: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '24px' : 'inherit')};
+const TokenSymbol = styled(ThemedText.SubHeaderSmall)`
+  font-size: 24px !important;
   line-height: inherit;
   margin-top: 0;
   margin-bottom: 0;
 
   text-transform: uppercase;
-  color: ${({ theme }) => theme.neutral2};
 
-  ${({ isInfoTDPEnabled }) =>
-    isInfoTDPEnabled &&
-    css`
-      @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
-        display: none;
-      }
-    `}
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    display: none;
+  }
 `
 
 const TokenName = styled(ThemedText.HeadlineMedium)`
@@ -136,7 +119,6 @@ export const StyledExternalLink = styled(ExternalLink)`
 export const TokenDetailsHeader = () => {
   const { address, currency, tokenQuery } = useTDPContext()
 
-  const isInfoTDPEnabled = useInfoTDPEnabled()
   const theme = useTheme()
   const screenSize = useScreenSize()
   const isMobileScreen = !screenSize['xs']
@@ -157,7 +139,7 @@ export const TokenDetailsHeader = () => {
     currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN
   )
 
-  const { homepageUrl, twitterName } = tokenQuery.data?.token?.project ?? {}
+  const { homepageUrl, twitterName, logoUrl } = tokenQuery.data?.token?.project ?? {}
   const twitterUrl = twitterName && `https://x.com/${twitterName}`
 
   const currentLocation = window.location.href
@@ -171,106 +153,93 @@ export const TokenDetailsHeader = () => {
 
   return (
     <>
-      <TokenNameCell isInfoTDPEnabled={isInfoTDPEnabled}>
-        <PortfolioLogo currencies={[currency]} chainId={currency.chainId} size="32px" />
-        {isInfoTDPEnabled ? (
-          <TokenTitle isInfoTDPEnabled>
-            <TokenName>{currency.name ?? <Trans>Name not found</Trans>}</TokenName>
-            <TokenSymbol isInfoTDPEnabled>{tokenSymbolName}</TokenSymbol>
-          </TokenTitle>
-        ) : (
-          <TokenTitle>
-            {currency.name ?? <Trans>Name not found</Trans>}
-            <TokenSymbol>{tokenSymbolName}</TokenSymbol>
-          </TokenTitle>
-        )}
+      <TokenNameCell>
+        <PortfolioLogo currencies={[currency]} images={[logoUrl]} chainId={currency.chainId} size="32px" />
+        <TokenTitle>
+          <TokenName>{currency.name ?? <Trans>Name not found</Trans>}</TokenName>
+          <TokenSymbol>{tokenSymbolName}</TokenSymbol>
+        </TokenTitle>
       </TokenNameCell>
-      {isInfoTDPEnabled ? (
-        <div ref={actionsRef}>
-          {isMobileScreen && <StyledMenuIcon onClick={toggleActionsModal} />}
-          {!isMobileScreen || (isMobileScreen && actionsModalIsOpen) ? (
-            <HeaderActionsContainer>
-              {explorerUrl && (
-                <MouseoverTooltip text={t`Explorer`} placement="top" size={TooltipSize.Max} disabled={isMobileScreen}>
-                  <StyledExternalLink href={explorerUrl}>
-                    <ActionButton>
-                      {currency.chainId === ChainId.MAINNET ? (
-                        <EtherscanLogo width="18px" height="18px" fill={theme.neutral1} />
-                      ) : (
-                        <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />
-                      )}
-                      {isMobileScreen && (
-                        <ThemedText.BodyPrimary>
-                          <Trans>Explorer</Trans>
-                        </ThemedText.BodyPrimary>
-                      )}
-                    </ActionButton>
-                  </StyledExternalLink>
-                </MouseoverTooltip>
-              )}
-              {homepageUrl && (
-                <MouseoverTooltip text={t`Website`} placement="top" size={TooltipSize.Max} disabled={isMobileScreen}>
-                  <StyledExternalLink href={homepageUrl}>
-                    <ActionButton>
-                      <Globe width="18px" height="18px" fill={theme.neutral1} />
-                      {isMobileScreen && (
-                        <ThemedText.BodyPrimary>
-                          <Trans>Website</Trans>
-                        </ThemedText.BodyPrimary>
-                      )}
-                    </ActionButton>
-                  </StyledExternalLink>
-                </MouseoverTooltip>
-              )}
-              {twitterUrl && (
-                <MouseoverTooltip text={t`Twitter`} placement="top" size={TooltipSize.Max} disabled={isMobileScreen}>
-                  <StyledExternalLink href={twitterUrl}>
-                    <ActionButton>
-                      <TwitterXLogo width="18px" height="18px" fill={theme.neutral1} />
-                      {isMobileScreen && (
-                        <ThemedText.BodyPrimary>
-                          <Trans>Twitter</Trans>
-                        </ThemedText.BodyPrimary>
-                      )}
-                    </ActionButton>
-                  </StyledExternalLink>
-                </MouseoverTooltip>
-              )}
-              {isMobileScreen ? (
-                <>
-                  <ActionButton onClick={() => setCopied(currentLocation)}>
-                    {isCopied ? (
-                      <CheckMark height={18} width={18} />
+      <div ref={actionsRef}>
+        {isMobileScreen && <StyledMenuIcon onClick={toggleActionsModal} />}
+        {!isMobileScreen || (isMobileScreen && actionsModalIsOpen) ? (
+          <HeaderActionsContainer>
+            {explorerUrl && (
+              <MouseoverTooltip text={t`Explorer`} placement="top" size={TooltipSize.Max} disabled={isMobileScreen}>
+                <StyledExternalLink href={explorerUrl}>
+                  <ActionButton>
+                    {currency.chainId === ChainId.MAINNET ? (
+                      <EtherscanLogo width="18px" height="18px" fill={theme.neutral1} />
                     ) : (
-                      <Link width="18px" height="18px" color={theme.neutral1} />
+                      <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />
                     )}
-                    <ThemedText.BodyPrimary>
-                      {isCopied ? <Trans>Copied</Trans> : <Trans>Copy link</Trans>}
-                    </ThemedText.BodyPrimary>
+                    {isMobileScreen && (
+                      <ThemedText.BodyPrimary>
+                        <Trans>Explorer</Trans>
+                      </ThemedText.BodyPrimary>
+                    )}
                   </ActionButton>
-                  <ActionButton
-                    onClick={() => {
-                      toggleActionsModal()
-                      openShareTweetWindow(twitterShareName)
-                    }}
-                  >
-                    <ShareIcon fill={theme.neutral1} width={18} height={18} />
-                    <ThemedText.BodyPrimary>
-                      <Trans>Share to Twitter</Trans>
-                    </ThemedText.BodyPrimary>
+                </StyledExternalLink>
+              </MouseoverTooltip>
+            )}
+            {homepageUrl && (
+              <MouseoverTooltip text={t`Website`} placement="top" size={TooltipSize.Max} disabled={isMobileScreen}>
+                <StyledExternalLink href={homepageUrl}>
+                  <ActionButton>
+                    <Globe width="18px" height="18px" fill={theme.neutral1} />
+                    {isMobileScreen && (
+                      <ThemedText.BodyPrimary>
+                        <Trans>Website</Trans>
+                      </ThemedText.BodyPrimary>
+                    )}
                   </ActionButton>
-                </>
-              ) : (
-                <ShareButton name={twitterShareName} />
-              )}
-            </HeaderActionsContainer>
-          ) : null}
-        </div>
-      ) : (
-        <HeaderActionsContainer>
-          <ShareButton name={twitterShareName} />
-        </HeaderActionsContainer>
-      )}
+                </StyledExternalLink>
+              </MouseoverTooltip>
+            )}
+            {twitterUrl && (
+              <MouseoverTooltip text={t`Twitter`} placement="top" size={TooltipSize.Max} disabled={isMobileScreen}>
+                <StyledExternalLink href={twitterUrl}>
+                  <ActionButton>
+                    <TwitterXLogo width="18px" height="18px" fill={theme.neutral1} />
+                    {isMobileScreen && (
+                      <ThemedText.BodyPrimary>
+                        <Trans>Twitter</Trans>
+                      </ThemedText.BodyPrimary>
+                    )}
+                  </ActionButton>
+                </StyledExternalLink>
+              </MouseoverTooltip>
+            )}
+            {isMobileScreen ? (
+              <>
+                <ActionButton onClick={() => setCopied(currentLocation)}>
+                  {isCopied ? (
+                    <CheckMark height={18} width={18} />
+                  ) : (
+                    <Link width="18px" height="18px" color={theme.neutral1} />
+                  )}
+                  <ThemedText.BodyPrimary>
+                    {isCopied ? <Trans>Copied</Trans> : <Trans>Copy link</Trans>}
+                  </ThemedText.BodyPrimary>
+                </ActionButton>
+                <ActionButton
+                  onClick={() => {
+                    toggleActionsModal()
+                    openShareTweetWindow(twitterShareName)
+                  }}
+                >
+                  <ShareIcon fill={theme.neutral1} width={18} height={18} />
+                  <ThemedText.BodyPrimary>
+                    <Trans>Share to Twitter</Trans>
+                  </ThemedText.BodyPrimary>
+                </ActionButton>
+              </>
+            ) : (
+              <ShareButton name={twitterShareName} />
+            )}
+          </HeaderActionsContainer>
+        ) : null}
+      </div>
     </>
   )
 }

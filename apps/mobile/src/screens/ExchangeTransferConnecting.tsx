@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getCountry } from 'react-native-localize'
 import { useAppDispatch } from 'src/app/hooks'
+import { Screen } from 'src/components/layout/Screen'
 import {
   FiatOnRampConnectingView,
   SERVICE_PROVIDER_ICON_BORDER_RADIUS,
@@ -12,12 +13,15 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
+import { ChainId } from 'wallet/src/constants/chains'
 import { useFiatOnRampAggregatorTransferWidgetQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { FORTransferInstitution } from 'wallet/src/features/fiatOnRamp/types'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { InstitutionTransferEventName } from 'wallet/src/telemetry/constants'
 import { openUri } from 'wallet/src/utils/linking'
 
 // Design decision
@@ -45,6 +49,7 @@ export function ExchangeTransferConnecting({
 
   const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
     activeAccountAddress,
+    ChainId.Mainnet,
     initialTypeInfo
   )
 
@@ -85,6 +90,11 @@ export function ExchangeTransferConnecting({
     }
     async function navigateToWidget(widgetUrl: string): Promise<void> {
       onClose()
+      sendWalletAnalyticsEvent(InstitutionTransferEventName.InstitutionTransferWidgetOpened, {
+        externalTransactionId,
+        institutionName: serviceProvider.name,
+      })
+
       await openUri(widgetUrl).catch(onError)
       dispatchAddTransaction()
     }
@@ -99,19 +109,23 @@ export function ExchangeTransferConnecting({
     widgetData,
     widgetLoading,
     widgetError,
+    externalTransactionId,
+    serviceProvider?.name,
   ])
 
   return (
-    <FiatOnRampConnectingView
-      serviceProviderLogo={
-        <RemoteImage
-          borderRadius={SERVICE_PROVIDER_ICON_BORDER_RADIUS}
-          height={SERVICE_PROVIDER_ICON_SIZE}
-          uri={serviceProvider.icon}
-          width={SERVICE_PROVIDER_ICON_SIZE}
-        />
-      }
-      serviceProviderName={serviceProvider.name}
-    />
+    <Screen>
+      <FiatOnRampConnectingView
+        serviceProviderLogo={
+          <RemoteImage
+            borderRadius={SERVICE_PROVIDER_ICON_BORDER_RADIUS}
+            height={SERVICE_PROVIDER_ICON_SIZE}
+            uri={serviceProvider.icon}
+            width={SERVICE_PROVIDER_ICON_SIZE}
+          />
+        }
+        serviceProviderName={serviceProvider.name}
+      />
+    </Screen>
   )
 }

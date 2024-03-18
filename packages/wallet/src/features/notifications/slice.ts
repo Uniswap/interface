@@ -35,6 +35,9 @@ const slice = createSlice({
         }
       }
     },
+    clearNotificationQueue: (state) => {
+      state.notificationQueue = []
+    },
     resetNotifications: () => initialNotificationsState,
     setNotificationStatus: (
       state,
@@ -56,6 +59,7 @@ const slice = createSlice({
 export const {
   pushNotification,
   popNotification,
+  clearNotificationQueue,
   resetNotifications,
   setNotificationStatus,
   setLastTxNotificationUpdate,

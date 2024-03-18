@@ -8,14 +8,14 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { RootState } from 'wallet/src/state'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
-import { mockWalletPreloadedState } from 'wallet/src/test/mocks'
+import { preloadedWalletState } from 'wallet/src/test/fixtures/wallet/redux'
 
 const account = signerMnemonicAccount()
 
 const MOCK_DATE_PROMPTED = Date.now()
 
 const state = {
-  ...mockWalletPreloadedState(),
+  ...preloadedWalletState(),
   wallet: {
     appRatingProvidedMs: MOCK_DATE_PROMPTED,
   },

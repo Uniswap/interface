@@ -160,7 +160,10 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
         </Flex>
       </Flex>
       <Trace logPress element={ElementName.Next}>
-        <Button disabled={!!errorMessage || !value} testID="seed-input-submit" onPress={onSubmit}>
+        <Button
+          disabled={!!errorMessage || !value}
+          testID={ElementName.Continue}
+          onPress={onSubmit}>
           {t('common.button.continue')}
         </Button>
       </Trace>

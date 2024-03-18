@@ -50,21 +50,19 @@ export enum MobileEventName {
   ExploreSearchResultClicked = 'Explore Search Result Clicked',
   ExploreTokenItemSelected = 'Explore Token Item Selected',
   FavoriteItem = 'Favorite Item',
-  FiatOnRampBannerPressed = 'Fiat OnRamp Banner Pressed',
   FiatOnRampQuickActionButtonPressed = 'Fiat OnRamp QuickAction Button Pressed',
-  FiatOnRampAmountEntered = 'Fiat OnRamp Amount Entered',
   FiatOnRampWidgetOpened = 'Fiat OnRamp Widget Opened',
   NotificationsToggled = 'Notifications Toggled',
   OnboardingCompleted = 'Onboarding Completed',
-  PerformanceReport = 'Performance Report',
   PerformanceGraphql = 'Performance GraphQL',
+  PerformanceReport = 'Performance Report',
   ShareButtonClicked = 'Share Button Clicked',
   ShareLinkOpened = 'Share Link Opened',
   TokenDetailsOtherChainButtonPressed = 'Token Details Other Chain Button Pressed',
   WalletAdded = 'Wallet Added',
   WalletConnectSheetCompleted = 'Wallet Connect Sheet Completed',
-  WidgetConfigurationUpdated = 'Widget Configuration Updated',
   WidgetClicked = 'Widget Clicked',
+  WidgetConfigurationUpdated = 'Widget Configuration Updated',
   // alphabetize additional values.
 }
 

@@ -101,11 +101,11 @@ export function TokenDescription() {
   const sameFee = sellFeeString === buyFeeString
 
   return (
-    <TokenInfoSection>
+    <TokenInfoSection data-testid="token-details-info-section">
       <InfoSectionHeader>
         <Trans>Info</Trans>
       </InfoSectionHeader>
-      <TokenButtonRow>
+      <TokenButtonRow data-testid="token-details-info-links">
         {!currency.isNative && (
           <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t`Copied`}>
             <TokenInfoButton onClick={copy}>

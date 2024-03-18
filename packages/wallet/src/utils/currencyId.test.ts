@@ -110,7 +110,7 @@ describe(buildNativeCurrencyId, () => {
 
   it('builds correct ID for BNB', () => {
     expect(buildNativeCurrencyId(ChainId.Bnb)).toEqual(
-      `56-0xB8c77482e45F1F44dE1745F52C74426C631bDD52`
+      `56-0xb8c77482e45f1f44de1745f52c74426c631bdd52`
     )
   })
 })

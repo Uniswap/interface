@@ -4,14 +4,14 @@ import { useMemo } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
 import { logger } from 'utilities/src/logger/logger'
+import { ONE_SECOND_MS, inXMinutesUnix } from 'utilities/src/time/time'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   RoutingPreference,
   QuoteRequest as TradingApiQuoteRequest,
   QuoteResponse as TradingApiQuoteResponse,
   TradeType as TradingApiTradeType,
-} from 'wallet/src/data/tradingApi/__generated__/api'
+} from 'wallet/src/data/tradingApi/__generated__/index'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 import {
@@ -32,16 +32,20 @@ export const SWAP_QUOTE_ERROR = 'QUOTE_ERROR'
 // client side error code for when the api returns an empty response
 export const NO_QUOTE_DATA = 'NO_QUOTE_DATA'
 
-const DEFAULT_DEADLINE_S = 60 * 30 // 30 minutes in seconds
+export const DEFAULT_SWAP_VALIDITY_TIME_MINS = 30
 
 export const SWAP_FORM_DEBOUNCE_TIME_MS = 250
+
+// We poll approximately twice per block to get users the most recent price regardless of when they start polling,
+// and to avoid users getting a bad price if they start polling right at the end of the block.
+export const SWAP_QUOTE_POLL_INTERVAL_MS = ONE_SECOND_MS * 6
 
 export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
   const {
     amountSpecified,
     otherCurrency,
     tradeType,
-    pollingInterval,
+    pollInterval,
     customSlippageTolerance,
     isUSDQuote,
     skip,
@@ -73,7 +77,9 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
   const tokenOutAddress = getTokenAddressForApiRequest(currencyOut)
 
   const requestTradeType =
-    tradeType === TradeType.EXACT_INPUT ? TradingApiTradeType.Input : TradingApiTradeType.Output
+    tradeType === TradeType.EXACT_INPUT
+      ? TradingApiTradeType.EXACT_INPUT
+      : TradingApiTradeType.EXACT_OUTPUT
 
   const skipQuery =
     skip ||
@@ -98,7 +104,8 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
       tokenOut: tokenOutAddress,
       slippageTolerance: customSlippageTolerance,
       includeGasInfo: true,
-      routingPreference: RoutingPreference.Classic,
+      routingPreference: RoutingPreference.CLASSIC,
+      deadline: inXMinutesUnix(DEFAULT_SWAP_VALIDITY_TIME_MINS),
     }
   }, [
     activeAccountAddress,
@@ -114,6 +121,8 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
 
   /***** Fetch quote from trading API  ******/
 
+  const internalPollInterval = pollInterval ?? SWAP_QUOTE_POLL_INTERVAL_MS
+
   const response = useRestQuery<
     TradingApiQuoteResponse,
     TradingApiQuoteRequest | Record<string, never>
@@ -122,10 +131,14 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
     quoteRequestArgs ?? {},
     ['quote', 'permitData'],
     {
-      pollInterval: pollingInterval ?? PollingInterval.Fast,
+      pollInterval: internalPollInterval,
+      // We set the `ttlMs` to 15 seconds longer than the poll interval so that there's more than enough time for a refetch to complete before we clear the stale data.
+      // If the user loses internet connection (or leaves the app and comes back) for longer than this,
+      // then we clear stale data and show a big loading spinner in the swap review screen.
+      ttlMs: internalPollInterval + ONE_SECOND_MS * 15,
+      clearIfStale: true,
       skip: !quoteRequestArgs,
       notifyOnNetworkStatusChange: true,
-      fetchPolicy: 'no-cache',
     },
     'POST',
     TradingApiApolloClient
@@ -171,7 +184,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
       tokenInIsNative: Boolean(currencyIn?.isNative),
       tokenOutIsNative: Boolean(currencyOut?.isNative),
       tradeType,
-      deadline: DEFAULT_DEADLINE_S,
+      deadline: inXMinutesUnix(DEFAULT_SWAP_VALIDITY_TIME_MINS), // TODO(MOB-3050): set deadline as `quoteRequestArgs.deadline`
       slippageTolerance: customSlippageTolerance,
       data,
     })

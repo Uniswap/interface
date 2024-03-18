@@ -1,6 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
-import WalletAppPromoBanner from 'components/Banner/MobileAppAnnouncementBanner'
 import { OutageBanner, getOutageBannerSessionStorageKey } from 'components/Banner/Outage/OutageBanner'
 import { useOutageBanners } from 'featureFlags/flags/outageBanner'
 import { getValidUrlChainId } from 'graphql/data/util'
@@ -38,10 +37,10 @@ export function Banners() {
     )
   }, [currentPage, outageBanners, pageChainId])
 
-  // Outage Banners should take precedence over the Wallet Download Banner
+  // Outage Banners should take precedence over other promotional banners
   if (pageChainId && showOutageBanner) {
     return <OutageBanner chainId={pageChainId} />
   }
 
-  return <WalletAppPromoBanner />
+  return null
 }

@@ -20,7 +20,7 @@ async function fetchStatuses(
   gatewayDNSUpdateAllEnabled: boolean
 ): Promise<OrderQueryResponse> {
   const hashes = orders.filter(filter).map((order) => order.orderHash)
-  if (!hashes) {
+  if (!hashes || hashes.length === 0) {
     return { orders: [] }
   }
   const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL

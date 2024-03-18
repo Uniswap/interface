@@ -2,10 +2,7 @@ import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
-import { ConfirmModalState } from 'components/swap/ConfirmSwapModal'
 import { Field, RESET_APPROVAL_TOKENS } from 'components/swap/constants'
-import { PendingConfirmModalState } from 'components/swap/PendingModalContent'
-import { PendingModalError } from 'components/swap/PendingModalContent/ErrorModalContent'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
@@ -16,10 +13,21 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { tradeMeaningfullyDiffers } from 'utils/tradeMeaningFullyDiffer'
 
+import { ConfirmModalState } from 'components/ConfirmSwapModal'
+import { PendingModalError } from 'components/ConfirmSwapModal/Error'
 import { useMaxAmountIn } from './useMaxAmountIn'
 import { Allowance, AllowanceState } from './usePermit2Allowance'
 import usePrevious from './usePrevious'
 import useWrapCallback from './useWrapCallback'
+
+type PendingConfirmModalState = Extract<
+  ConfirmModalState,
+  | ConfirmModalState.APPROVING_TOKEN
+  | ConfirmModalState.PERMITTING
+  | ConfirmModalState.PENDING_CONFIRMATION
+  | ConfirmModalState.WRAPPING
+  | ConfirmModalState.RESETTING_TOKEN_ALLOWANCE
+>
 
 export function useConfirmModalState({
   trade,

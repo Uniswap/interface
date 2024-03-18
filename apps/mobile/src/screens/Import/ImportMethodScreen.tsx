@@ -138,7 +138,11 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
         ))}
       </Flex>
       <Trace logPress element={ElementName.OnboardingImportBackup}>
-        <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12">
+        <TouchableArea
+          alignItems="center"
+          hitSlop={16}
+          mb="$spacing12"
+          testID={ElementName.WatchWallet}>
           <Flex row alignItems="center" gap="$spacing8">
             <EyeIcon
               color={colors.accent1.get()}

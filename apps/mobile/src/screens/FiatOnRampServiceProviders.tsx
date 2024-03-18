@@ -11,23 +11,38 @@ import { Screen } from 'src/components/layout/Screen'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { InitialQuoteSelection } from 'src/features/fiatOnRamp/types'
 import { getServiceProviderForQuote } from 'src/features/fiatOnRamp/utils'
-import { MobileEventName } from 'src/features/telemetry/constants'
 import { FiatOnRampScreens } from 'src/screens/Screens'
-import { AnimatedFlex, Button, Flex, GeneratedIcon, Icons, Inset, Separator, Text } from 'ui/src'
-import { Trace } from 'utilities/src/telemetry/trace/Trace'
+import {
+  AnimatedFlex,
+  Button,
+  ColorTokens,
+  Flex,
+  GeneratedIcon,
+  Icons,
+  Inset,
+  Separator,
+  Text,
+} from 'ui/src'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
 import { FORQuote } from 'wallet/src/features/fiatOnRamp/types'
-import { ElementName } from 'wallet/src/telemetry/constants'
 
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.ServiceProviders>
 
 const key = (item: FORQuote): string => item.serviceProvider
 
-function SectionHeader({ Icon, title }: { Icon: GeneratedIcon; title: string }): JSX.Element {
+function SectionHeader({
+  Icon,
+  title,
+  iconColor,
+}: {
+  Icon: GeneratedIcon
+  title: string
+  iconColor: ColorTokens
+}): JSX.Element {
   return (
     <Flex row alignItems="center" pl="$spacing8">
-      <Icon color="$neutral3" size="$icon.16" />
+      <Icon color={iconColor} size="$icon.16" />
       <Text color="$neutral2" pl="$spacing4" variant="body3">
         {title}
       </Text>
@@ -73,9 +88,17 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
   }): JSX.Element => (
     <Flex px="$spacing12">
       {type === InitialQuoteSelection.Best ? (
-        <SectionHeader Icon={Icons.Verified} title={t('fiatOnRamp.quote.type.best')} />
+        <SectionHeader
+          Icon={Icons.Verified}
+          iconColor="$accent1"
+          title={t('fiatOnRamp.quote.type.best')}
+        />
       ) : type === InitialQuoteSelection.MostRecent ? (
-        <SectionHeader Icon={Icons.TimePast} title={t('fiatOnRamp.quote.type.recent')} />
+        <SectionHeader
+          Icon={Icons.TimePast}
+          iconColor="$neutral3"
+          title={t('fiatOnRamp.quote.type.recent')}
+        />
       ) : (
         <Flex centered row gap="$spacing12" my="$spacing12">
           <Separator />
@@ -129,14 +152,9 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
               stickySectionHeadersEnabled={false}
               windowSize={5}
             />
-            <Trace
-              logPress
-              element={ElementName.FiatOnRampWidgetButton}
-              pressEvent={MobileEventName.FiatOnRampWidgetOpened}>
-              <Button size="large" theme="primary" onPress={onContinue}>
-                {t('fiatOnRamp.checkout.button')}
-              </Button>
-            </Trace>
+            <Button size="large" theme="primary" onPress={onContinue}>
+              {t('fiatOnRamp.checkout.button')}
+            </Button>
           </AnimatedFlex>
         </Flex>
       </Flex>

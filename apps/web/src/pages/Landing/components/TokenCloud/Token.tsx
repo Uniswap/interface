@@ -1,4 +1,3 @@
-import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
 import { motion } from 'framer-motion'
 import { useCollectionPromoQuery, useTokenPromoQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL } from 'graphql/data/util'
@@ -153,7 +152,6 @@ export function Token(props: {
   ])
 
   const navigate = useNavigate()
-  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
   const handleOnClick = useMemo(
     () => () =>
       navigate(
@@ -161,11 +159,10 @@ export function Token(props: {
           ? getTokenDetailsURL({
               address,
               chain,
-              isInfoExplorePageEnabled,
             })
           : `/nfts/collection/${address}`
       ),
-    [address, chain, isInfoExplorePageEnabled, navigate, standard]
+    [address, chain, navigate, standard]
   )
 
   const borderRadius = size / 8

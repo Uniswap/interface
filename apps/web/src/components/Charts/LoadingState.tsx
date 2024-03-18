@@ -31,7 +31,7 @@ const ErrorTextColumn = styled(Column)`
 
 function ChartErrorView({ children }: PropsWithChildren) {
   return (
-    <ChartErrorContainer>
+    <ChartErrorContainer data-cy="chart-error-view">
       <div>
         <MissingDataIcon />
       </div>

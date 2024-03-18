@@ -40,7 +40,11 @@ export async function openUri(
     return
   }
 
-  const supported = await Linking.canOpenURL(uri)
+  const isHttp = /^https?:\/\//.test(trimmedURI)
+
+  // `canOpenURL` returns `false` for App Links / Universal Links, so we just assume any device can handle the `https://` protocol.
+  const supported = isHttp ? true : await Linking.canOpenURL(uri)
+
   if (!supported) {
     logger.warn('linking', 'openUri', `Cannot open URI: ${uri}`)
     return
@@ -112,6 +116,12 @@ export function getExplorerLink(chainId: ChainId, data: string, type: ExplorerDa
       return `${prefix}tx/${data}`
 
     case ExplorerDataType.TOKEN:
+      if (
+        data === CHAIN_INFO[chainId].nativeCurrency.address &&
+        CHAIN_INFO[chainId].nativeCurrency.explorerLink
+      ) {
+        return CHAIN_INFO[chainId].nativeCurrency.explorerLink ?? `${prefix}token/${data}`
+      }
       return `${prefix}token/${data}`
 
     case ExplorerDataType.BLOCK:

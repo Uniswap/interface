@@ -21,7 +21,50 @@ import {
 import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 
-export let apolloClient: ApolloClient<NormalizedCacheObject> | null = null
+type ApolloClientRef = {
+  current: ApolloClient<NormalizedCacheObject> | null
+  onReady: () => Promise<ApolloClient<NormalizedCacheObject>>
+}
+
+// This object allows us to get access to the apollo client in places outside of React where we can't use hooks.
+export const apolloClientRef: ApolloClientRef = ((): ApolloClientRef => {
+  let apolloClient: ApolloClient<NormalizedCacheObject> | null = null
+
+  const listeners: Array<
+    (
+      value: ApolloClient<NormalizedCacheObject> | PromiseLike<ApolloClient<NormalizedCacheObject>>
+    ) => void
+  > = []
+
+  const ref: ApolloClientRef = {
+    get current() {
+      return apolloClient
+    },
+
+    set current(newApolloClient) {
+      if (!newApolloClient) {
+        throw new Error("Can't set `apolloClient` to `null`")
+      }
+
+      if (apolloClient) {
+        throw new Error('`apolloClient` should not be updated after it has already been set')
+      }
+
+      apolloClient = newApolloClient
+      listeners.forEach((resolve) => resolve(newApolloClient))
+    },
+
+    onReady: async (): Promise<ApolloClient<NormalizedCacheObject>> => {
+      if (apolloClient) {
+        return Promise.resolve(apolloClient)
+      }
+
+      return new Promise<ApolloClient<NormalizedCacheObject>>((resolve) => listeners.push(resolve))
+    },
+  }
+
+  return ref
+})()
 
 const mmkv = new MMKV()
 if (isNonJestDev) {
@@ -80,7 +123,7 @@ export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> 
       },
     })
 
-    apolloClient = newClient
+    apolloClientRef.current = newClient
     setClient(newClient)
 
     // Ensure this callback only is computed once even if apolloLink changes,

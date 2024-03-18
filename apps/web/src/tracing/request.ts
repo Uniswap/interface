@@ -12,7 +12,13 @@ export function patchFetch(api: Pick<typeof globalThis, 'fetch'>) {
   function tracedFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>
   function tracedFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
     const zonedTrace = Zone.current.get('trace')
-    const url = new URL(typeof input === 'string' ? input : 'url' in input ? input.url : input)
+    let url
+    try {
+      // Hot-module reload passes a relative path to a local file, which is a technically malformed URL.
+      url = new URL(typeof input === 'string' ? input : 'url' in input ? input.url : input)
+    } catch {
+      return apiFetch(input, init)
+    }
     const traceContext = getTraceContext(url, init, !!zonedTrace)
     if (traceContext) {
       const trace = zonedTrace || startTrace
