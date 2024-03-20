@@ -85,7 +85,7 @@ export function usePoolData(
     const anyLoading = Boolean(loadingV3 || (loadingV2 && chainId === ChainId.MAINNET))
 
     // return early if not all data yet
-    if (anyError || anyLoading) {
+    if (anyLoading) {
       return {
         loading: anyLoading,
         error: anyError,

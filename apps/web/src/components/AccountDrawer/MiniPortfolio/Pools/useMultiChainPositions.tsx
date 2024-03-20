@@ -160,6 +160,9 @@ export default function useMultiChainPositions(account: string, chains = DEFAULT
 
   const fetchPositionsForChain = useCallback(
     async (chainId: ChainId): Promise<PositionInfo[]> => {
+      if (!account || account.length === 0) {
+        return []
+      }
       try {
         const pm = pms[chainId]
         const multicall = multicalls[chainId]
