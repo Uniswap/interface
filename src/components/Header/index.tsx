@@ -2,6 +2,7 @@ import { ChainId } from '@uniswap/sdk'
 import React from 'react'
 import { isMobile } from 'react-device-detect'
 import { Text } from 'rebass'
+import { useLocation } from 'react-router-dom'; // Import useLocation hook
 
 import styled from 'styled-components'
 
@@ -19,7 +20,6 @@ import Menu from '../Menu'
 
 import Row, { RowBetween } from '../Row'
 import Web3Status from '../Web3Status'
-import VersionSwitch from './VersionSwitch'
 
 const HeaderFrame = styled.div`
   display: flex;
@@ -131,10 +131,15 @@ const NETWORK_LABELS: { [chainId in ChainId]: string | null } = {
   [ChainId.RINKEBY]: 'Rinkeby',
   [ChainId.ROPSTEN]: 'Ropsten',
   [ChainId.GÖRLI]: 'Görli',
-  [ChainId.KOVAN]: 'Kovan'
+  [ChainId.KOVAN]: 'Kovan',
+  [ChainId.AVALANCHE]: 'Avalanche',
+  [ChainId.FUJI]: 'Fuji'
 }
 
 export default function Header() {
+  const location = useLocation(); // Get the current location using useLocation hook
+  const isAggregatorPage = location.pathname === '/aggregator'; // Check if the current page is the aggregator page
+
   const { account, chainId } = useActiveWeb3React()
 
   const userEthBalance = useETHBalances(account ? [account] : [])?.[account ?? '']
@@ -146,10 +151,10 @@ export default function Header() {
         <HeaderElement>
           <Title href=".">
             <UniIcon>
-              <img src={isDark ? LogoDark : Logo} alt="logo" />
+              <img src={isDark ? LogoDark : Logo} alt="logo" style={{ width: '36px', height: '36px' }} />
             </UniIcon>
             <TitleText>
-              <img style={{ marginLeft: '4px', marginTop: '4px' }} src={isDark ? WordmarkDark : Wordmark} alt="logo" />
+              <img src={isDark ? WordmarkDark : Wordmark} alt="logo"  style={{ marginLeft: '0px', marginTop: '0px', height: '54px', width: 'auto' }} />
             </TitleText>
           </Title>
         </HeaderElement>
@@ -158,18 +163,17 @@ export default function Header() {
             <TestnetWrapper>
               {!isMobile && chainId && NETWORK_LABELS[chainId] && <NetworkCard>{NETWORK_LABELS[chainId]}</NetworkCard>}
             </TestnetWrapper>
-            <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
+            {!isAggregatorPage && <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
               {account && userEthBalance ? (
                 <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                  {userEthBalance?.toSignificant(4)} ETH
+                  {userEthBalance?.toSignificant(4)} AVAX
                 </BalanceText>
               ) : null}
               <Web3Status />
-            </AccountElement>
+            </AccountElement>}
           </HeaderElement>
           <HeaderElementWrap>
-            <VersionSwitch />
-            <Settings />
+            {!isAggregatorPage && <Settings />}
             <Menu />
           </HeaderElementWrap>
         </HeaderControls>

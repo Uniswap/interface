@@ -27,7 +27,7 @@ export function getNetworkLibrary(): Web3Provider {
 }
 
 export const injected = new InjectedConnector({
-  supportedChainIds: [1, 3, 4, 5, 42]
+  supportedChainIds: [43114, 43113]
 })
 
 // mainnet only
@@ -53,7 +53,7 @@ export const portis = new PortisConnector({
 // mainnet only
 export const walletlink = new WalletLinkConnector({
   url: NETWORK_URL,
-  appName: 'Uniswap',
+  appName: 'TraderQuest',
   appLogoUrl:
-    'https://mpng.pngfly.com/20181202/bex/kisspng-emoji-domain-unicorn-pin-badges-sticker-unicorn-tumblr-emoji-unicorn-iphoneemoji-5c046729264a77.5671679315437924251569.jpg'
+    'https://cdn.discordapp.com/attachments/1188170029573882016/1219187120208351323/zeemaaaaaaa__2acc0822-0f0c-48ce-acb4-c919262cb74d.webp?ex=660a637c&is=65f7ee7c&hm=1cfc69b1d3e6210309dbe7567b05ad310563f3eccb388be69432cefc3e9e378e&'
 })

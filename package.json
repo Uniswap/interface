@@ -26,7 +26,7 @@
     "@typescript-eslint/eslint-plugin": "^2.31.0",
     "@typescript-eslint/parser": "^2.31.0",
     "@uniswap/default-token-list": "^1.3.1",
-    "@uniswap/sdk": "3.0.3-beta.1",
+    "@uniswap/sdk": "file:../v2-sdk",
     "@uniswap/token-lists": "^1.0.0-beta.15",
     "@uniswap/v2-core": "1.0.0",
     "@uniswap/v2-periphery": "^1.1.0-beta.0",
