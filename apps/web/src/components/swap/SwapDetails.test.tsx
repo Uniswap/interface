@@ -8,8 +8,6 @@ import { render, screen, within } from 'test-utils/render'
 
 import { SwapDetails } from './SwapDetails'
 
-jest.mock('../../featureFlags/flags/useFees', () => ({ useFeesEnabled: () => true }))
-
 describe('SwapDetails.tsx', () => {
   it('matches base snapshot, test trade exact input', () => {
     const { asFragment } = render(

@@ -4,7 +4,6 @@ import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { USDC_MAINNET } from 'constants/tokens'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
-import { useFeesEnabled } from 'featureFlags/flags/useFees'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import ms from 'ms'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
@@ -28,13 +27,11 @@ jest.mock('./slice', () => {
 })
 jest.mock('state/user/hooks')
 jest.mock('featureFlags/flags/uniswapXUseSyntheticQuote')
-jest.mock('featureFlags/flags/useFees')
 
 beforeEach(() => {
   mocked(useIsWindowVisible).mockReturnValue(true)
   mocked(useRouterPreference).mockReturnValue([RouterPreference.API, () => undefined])
   mocked(useUniswapXSyntheticQuoteEnabled).mockReturnValue(false)
-  mocked(useFeesEnabled).mockReturnValue(true)
   // @ts-ignore we dont use the response from this hook in useRoutingAPITrade so fine to mock as undefined
   mocked(useGetQuoteQuery).mockReturnValue(undefined)
   mocked(useGetQuoteQueryState).mockReturnValue({

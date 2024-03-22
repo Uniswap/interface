@@ -2,7 +2,6 @@ import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useGatewayDNSUpdateEnabled } from 'featureFlags/flags/gatewayDNSUpdate'
 import { useUniswapXSyntheticQuoteEnabled } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
-import { useFeesEnabled } from 'featureFlags/flags/useFees'
 import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
@@ -29,9 +28,8 @@ export function useRoutingAPIArguments({
 }): GetQuoteArgs | SkipToken {
   const uniswapXForceSyntheticQuotes = useUniswapXSyntheticQuoteEnabled()
   const gatewayDNSUpdateEnabled = useGatewayDNSUpdateEnabled()
-  const feesEnabled = useFeesEnabled()
   // Don't enable fee logic if this is a quote for pricing
-  const sendPortionEnabled = routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? false : feesEnabled
+  const sendPortionEnabled = routerPreference !== INTERNAL_ROUTER_PREFERENCE_PRICE
 
   return useMemo(
     () =>

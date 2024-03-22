@@ -6,7 +6,6 @@ import RouterLabel from 'components/RouterLabel'
 import Row from 'components/Row'
 import { TooltipSize } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
-import { useFeesEnabled } from 'featureFlags/flags/useFees'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import React, { useEffect, useState } from 'react'
 import { animated, SpringValue } from 'react-spring'
@@ -124,7 +123,6 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   const { trade, syncing, allowedSlippage, type } = props
   const { formatPercent } = useFormatter()
   const isAutoSlippage = useUserSlippageTolerance()[0] === SlippageTolerance.Auto
-  const feesEnabled = useFeesEnabled()
 
   const isUniswapX = isUniswapXTrade(trade)
   const isPreview = isPreviewTrade(trade)
@@ -173,7 +171,6 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         ),
       }
     case SwapLineItemType.SWAP_FEE: {
-      if (!feesEnabled) return
       if (isPreview) return { Label: () => <Trans>Fee</Trans>, Value: () => <Loading /> }
       return {
         Label: () => (

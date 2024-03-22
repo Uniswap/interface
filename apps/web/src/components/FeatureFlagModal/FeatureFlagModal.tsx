@@ -23,7 +23,6 @@ import { useSendEnabledFlag } from 'featureFlags/flags/send'
 import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
 import { useUniconV2Flag } from 'featureFlags/flags/uniconV2'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
-import { useFeesEnabledFlag } from 'featureFlags/flags/useFees'
 import { useV2EverywhereFlag } from 'featureFlags/flags/v2Everywhere'
 import { useUpdateAtom } from 'jotai/utils'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
@@ -299,12 +298,7 @@ export default function FeatureFlagModal() {
           featureFlag={FeatureFlag.eip6963Enabled}
           label="Enable EIP-6963: Multi Injected Provider Discovery"
         />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useFeesEnabledFlag()}
-          featureFlag={FeatureFlag.feesEnabled}
-          label="Enable Swap Fees"
-        />
+
         <FeatureFlagOption
           variant={BaseVariant}
           value={useLimitsEnabledFlag()}

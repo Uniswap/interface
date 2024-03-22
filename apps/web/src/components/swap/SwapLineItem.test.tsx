@@ -12,8 +12,6 @@ import {
 } from 'test-utils/constants'
 import { render, screen } from 'test-utils/render'
 
-jest.mock('../../featureFlags/flags/useFees', () => ({ useFeesEnabled: () => true }))
-
 // Forces tooltips to render in snapshots
 jest.mock('react-dom', () => {
   const original = jest.requireActual('react-dom')
