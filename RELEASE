@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmXzhJmLYm2o4XE8etZaPyjF8oeenpqB31D5WrfVc4Amcy`
-- CIDv1: `bafybeieppayk37xqd2if3vmfoqy2t2ey4am4juzy4pgq4eudjyhmnswczy`
+- CIDv0: `QmU9Yoq9SE7sqBXEwUhAYbfnJFwQp2BRb17J9ohrqWVnRK`
+- CIDv1: `bafybeicwjyhv4k3yykxinpfnpipkhvqit2aaoqu4nzgodsghwzzf4wrciy`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeieppayk37xqd2if3vmfoqy2t2ey4am4juzy4pgq4eudjyhmnswczy.ipfs.dweb.link/
-- https://bafybeieppayk37xqd2if3vmfoqy2t2ey4am4juzy4pgq4eudjyhmnswczy.ipfs.cf-ipfs.com/
-- [ipfs://QmXzhJmLYm2o4XE8etZaPyjF8oeenpqB31D5WrfVc4Amcy/](ipfs://QmXzhJmLYm2o4XE8etZaPyjF8oeenpqB31D5WrfVc4Amcy/)
+- https://bafybeicwjyhv4k3yykxinpfnpipkhvqit2aaoqu4nzgodsghwzzf4wrciy.ipfs.dweb.link/
+- https://bafybeicwjyhv4k3yykxinpfnpipkhvqit2aaoqu4nzgodsghwzzf4wrciy.ipfs.cf-ipfs.com/
+- [ipfs://QmU9Yoq9SE7sqBXEwUhAYbfnJFwQp2BRb17J9ohrqWVnRK/](ipfs://QmU9Yoq9SE7sqBXEwUhAYbfnJFwQp2BRb17J9ohrqWVnRK/)
 
-### 5.19.2 (2024-03-22)
+### 5.19.3 (2024-03-23)
 
 
 ### Bug Fixes
 
-* **web:** clean feesEnabled feature flag from codebase (#6967) (#7054) f6d99da
+* **web:** prod hotfix - dont show table error when only one query fails (#7075) aa14544
 
 

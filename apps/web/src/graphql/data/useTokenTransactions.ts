@@ -133,7 +133,7 @@ export function useTokenTransactions(
       transactions,
       loading: loadingV3 || loadingV2,
       loadMore,
-      error: errorV2 || errorV3,
+      error: errorV2 && errorV3,
     }
   }, [transactions, loadingV3, loadingV2, loadMore, errorV2, errorV3])
 }
