@@ -4,7 +4,13 @@ import { getDeviceId, sendAnalyticsEvent, sendInitializationEvent, Trace, user }
 import ErrorBoundary from 'components/ErrorBoundary'
 import Loader from 'components/Icons/LoadingSpinner'
 import NavBar, { PageTabs } from 'components/NavBar'
-import { UK_BANNER_HEIGHT, UK_BANNER_HEIGHT_MD, UK_BANNER_HEIGHT_SM, UkBanner } from 'components/NavBar/UkBanner'
+import {
+  UK_BANNER_HEIGHT,
+  UK_BANNER_HEIGHT_MD,
+  UK_BANNER_HEIGHT_SM,
+  UkBanner,
+  useRenderUkBanner,
+} from 'components/NavBar/UkBanner'
 import { useFeatureFlagsIsLoaded, useFeatureFlagURLOverrides } from 'featureFlags'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
@@ -13,7 +19,6 @@ import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppSelector } from 'state/hooks'
-import { AppState } from 'state/reducer'
 import { useRouterPreference } from 'state/user/hooks'
 import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components'
@@ -37,6 +42,7 @@ const BodyWrapper = styled.div<{ bannerIsVisible?: boolean }>`
   flex-direction: column;
   position: relative;
   width: 100%;
+
   min-height: calc(100vh - ${({ bannerIsVisible }) => (bannerIsVisible ? UK_BANNER_HEIGHT : 0)}px);
   padding: ${({ theme }) => theme.navHeight}px 0px 5rem 0px;
   align-items: center;
@@ -49,6 +55,7 @@ const BodyWrapper = styled.div<{ bannerIsVisible?: boolean }>`
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     min-height: calc(100vh - ${({ bannerIsVisible }) => (bannerIsVisible ? UK_BANNER_HEIGHT_SM : 0)}px);
   }
+  transition: top 0.35s ease-out;
 `
 
 const MobileBottomBar = styled.div`
@@ -72,7 +79,11 @@ const MobileBottomBar = styled.div`
   }
 `
 
-const HeaderWrapper = styled.div<{ transparent?: boolean; bannerIsVisible?: boolean; scrollY: number }>`
+const HeaderWrapper = styled.div<{
+  transparent?: boolean
+  bannerIsVisible?: boolean
+  scrollY: number
+}>`
   ${flexRowNoWrap};
   background-color: ${({ theme, transparent }) => !transparent && theme.surface1};
   border-bottom: ${({ theme, transparent }) => !transparent && `1px solid ${theme.surface3}`};
@@ -89,12 +100,8 @@ const HeaderWrapper = styled.div<{ transparent?: boolean; bannerIsVisible?: bool
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     top: ${({ bannerIsVisible }) => (bannerIsVisible ? Math.max(UK_BANNER_HEIGHT_SM - scrollY, 0) : 0)}px;
   }
+  transition: top 0.35s ease-out;
 `
-
-const useRenderUkBanner = () => {
-  const originCountry = useAppSelector((state: AppState) => state.user.originCountry)
-  return Boolean(originCountry) && originCountry === 'GB'
-}
 
 export default function App() {
   const [, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
@@ -102,7 +109,6 @@ export default function App() {
   const location = useLocation()
   const { pathname } = location
   const currentPage = getCurrentPageFromLocation(pathname)
-  const renderUkBanner = useRenderUkBanner()
 
   const [searchParams] = useSearchParams()
   useEffect(() => {
@@ -165,7 +171,7 @@ export default function App() {
           }}
         >
           <UserPropertyUpdater />
-          {renderUkBanner && <UkBanner />}
+          <UkBanner />
           <Header />
           <ResetPageScrollEffect />
           <Body />
@@ -181,7 +187,7 @@ export default function App() {
 const Body = memo(function Body() {
   const isLoaded = useFeatureFlagsIsLoaded()
   const routerConfig = useRouterConfig()
-  const renderUkBanner = useRenderUkBanner()
+  const { renderUkBanner } = useRenderUkBanner()
 
   return (
     <BodyWrapper bannerIsVisible={renderUkBanner}>
@@ -235,18 +241,10 @@ const ResetPageScrollEffect = memo(function ResetPageScrollEffect() {
 })
 
 const Header = memo(function Header() {
-  const [isScrolledDown, setIsScrolledDown] = useState(false)
   const isBagExpanded = useBag((state) => state.bagExpanded)
-  const isHeaderTransparent = !isScrolledDown && !isBagExpanded
-  const renderUkBanner = useRenderUkBanner()
+  const { renderUkBanner } = useRenderUkBanner()
 
-  useEffect(() => {
-    const scrollListener = () => {
-      setIsScrolledDown(window.scrollY > 0)
-    }
-    window.addEventListener('scroll', scrollListener)
-    return () => window.removeEventListener('scroll', scrollListener)
-  }, [])
+  const isHeaderTransparent = useMemo(() => Boolean(window.scrollY > 0 && !isBagExpanded), [isBagExpanded])
 
   return (
     <HeaderWrapper transparent={isHeaderTransparent} bannerIsVisible={renderUkBanner} scrollY={scrollY}>

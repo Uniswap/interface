@@ -1,16 +1,22 @@
 import { t, Trans } from '@lingui/macro'
+import throttle from 'lodash/throttle'
+import { useEffect, useState } from 'react'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components'
-import { ButtonText, ThemedText } from 'theme/components'
+import { ButtonText, CloseIcon, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+
+import { useUkBannerState } from 'state/application/atoms'
+import { useAppSelector } from 'state/hooks'
+import { AppState } from 'state/reducer'
+import { Flex } from 'ui/src'
 
 export const UK_BANNER_HEIGHT = 65
 export const UK_BANNER_HEIGHT_MD = 113
 export const UK_BANNER_HEIGHT_SM = 137
 
 const BannerWrapper = styled.div`
-  position: relative;
   display: flex;
   background-color: ${({ theme }) => theme.surface1};
   padding: 20px;
@@ -19,7 +25,7 @@ const BannerWrapper = styled.div`
   box-sizing: border-box;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
-
+  width: 98%;
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     flex-direction: column;
   }
@@ -66,17 +72,63 @@ export const bannerText = t`
   recommendation, invitation or inducement to deal in cryptoassets.
 `
 
+const BannerContainer = styled.div<{
+  show: boolean
+}>`
+  display: flex;
+  max-height: ${({ show }) => (show ? `${UK_BANNER_HEIGHT}px` : '0px')};
+  overflow: hidden;
+  width: 100%;
+  transition: max-height 0.35s ease-in-out;
+  position: relative;
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    max-height: ${({ show }) => (show ? `${UK_BANNER_HEIGHT_MD}px` : '0px')};
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    max-height: ${({ show }) => (show ? `${UK_BANNER_HEIGHT_SM}px` : '0px')};
+  }
+`
+
+export const useRenderUkBanner = () => {
+  const [show, setShow] = useState<boolean>(true)
+  const [notDismissed, dismissBanner] = useUkBannerState()
+
+  const originCountry = useAppSelector((state: AppState) => state.user.originCountry)
+
+  useEffect(() => {
+    const scrollListener = () => {
+      if (window.scrollY > 0) setShow(false)
+      else setShow(true)
+    }
+    window.addEventListener('scroll', throttle(scrollListener, 200))
+    return () => window.removeEventListener('scroll', throttle(scrollListener, 200))
+  }, [])
+
+  return {
+    renderUkBanner: Boolean(originCountry) && originCountry === 'GB' && show && notDismissed,
+    dismissBanner,
+  }
+}
+
 export function UkBanner() {
+  const { renderUkBanner, dismissBanner } = useRenderUkBanner()
   const openDisclaimer = useOpenModal(ApplicationModal.UK_DISCLAIMER)
 
   return (
-    <BannerWrapper>
-      <BannerTextWrapper lineHeight="24px">{t`UK disclaimer:` + ' ' + bannerText}</BannerTextWrapper>
-      <ReadMoreWrapper>
-        <ThemedText.BodySecondary lineHeight="24px" color="accent1" onClick={openDisclaimer}>
-          <Trans>Read more</Trans>
-        </ThemedText.BodySecondary>
-      </ReadMoreWrapper>
-    </BannerWrapper>
+    <BannerContainer show={renderUkBanner}>
+      <BannerWrapper>
+        <BannerTextWrapper lineHeight="24px">{`${t`UK disclaimer:`} ${bannerText}`}</BannerTextWrapper>
+        <ReadMoreWrapper>
+          <ThemedText.BodySecondary lineHeight="24px" color="accent1" onClick={openDisclaimer}>
+            <Trans>Read more</Trans>
+          </ThemedText.BodySecondary>
+        </ReadMoreWrapper>
+      </BannerWrapper>
+      <Flex alignContent="center" justifyContent="center" width="2%">
+        <CloseIcon onClick={dismissBanner} width={18} height={18} />
+      </Flex>
+    </BannerContainer>
   )
 }
