@@ -4,7 +4,7 @@ import { sendAnalyticsEvent } from 'analytics'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS } from 'constants/chains'
 import { APP_RPC_URLS } from 'constants/networks'
 import { Z_INDEX } from 'theme/zIndex'
-import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
+import { isAndroid, isIOS } from 'utils/platform'
 
 // Avoid testing for the best URL by only passing a single URL per chain.
 // Otherwise, WC will not initialize until all URLs have been tested (see getBestUrl in web3-react).
