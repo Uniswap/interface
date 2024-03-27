@@ -93,7 +93,7 @@ export function useEagerExternalProfileRootNavigation(): {
 /**
  * Utility hook that checks if the caller is part of the navigation tree.
  *
- * Inspired by how the navigation library checks if the the navigation object exists.
+ * Inspired by how the navigation library checks if the navigation object exists.
  * https://github.com/react-navigation/react-navigation/blob/d7032ba8bb6ae24030a47f0724b61b561132fca6/packages/core/src/useNavigation.tsx#L18
  */
 export function useIsPartOfNavigationTree(): boolean {

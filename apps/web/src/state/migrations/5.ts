@@ -19,7 +19,7 @@ export const migration5 = (state: PersistAppStateV5 | undefined) => {
   if (state?.user && 'optedOutOfUniswapX' in state.user) {
     delete state.user['optedOutOfUniswapX']
   }
-  // If the the user has previously disabled UniswapX *during the opt-out rollout period*, we respect that preference.
+  // If the user has previously disabled UniswapX *during the opt-out rollout period*, we respect that preference.
   if (state?.user && !userOptedOutOfUniswapX) {
     return {
       ...state,
