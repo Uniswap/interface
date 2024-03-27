@@ -102,7 +102,7 @@ const MobileFilterHeader = styled(Row)`
   justify-content: space-between;
 `
 
-// Sticky navbar on light mode looks incorrect because the box shadows from assets overlap the the edges of the navbar.
+// Sticky navbar on light mode looks incorrect because the box shadows from assets overlap the edges of the navbar.
 // As a result it needs 16px padding on either side. These paddings are offset by 16px to account for this. Please see CollectionNFTs.css.ts for the additional sizing context.
 // See breakpoint values in ScreenBreakpointsPaddings above - they must match
 const CollectionDisplaySection = styled(Row)`
