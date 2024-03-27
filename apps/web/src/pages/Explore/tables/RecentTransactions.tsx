@@ -1,3 +1,4 @@
+import { ApolloError } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { createColumnHelper } from '@tanstack/react-table'
 import Row from 'components/Row'
@@ -12,7 +13,7 @@ import {
   TimestampCell,
   TokenLinkCell,
 } from 'components/Table/styled'
-import { PoolTransaction, PoolTransactionType } from 'graphql/data/__generated__/types-and-hooks'
+import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { BETypeToTransactionType, TransactionType, useAllTransactions } from 'graphql/data/useAllTransactions'
 import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { OrderDirection, Transaction_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
@@ -20,6 +21,10 @@ import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useMemo, useReducer, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
+import {
+  PoolTransaction,
+  PoolTransactionType,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -45,9 +50,14 @@ export default function RecentTransactions() {
     sortBy: Transaction_OrderBy.Timestamp,
     sortDirection: OrderDirection.Desc,
   })
-  const { transactions, loading, loadMore, error } = useAllTransactions(chainName, filter)
-
-  const showLoadingSkeleton = loading || !!error
+  const { transactions, loading, loadMore, errorV2, errorV3 } = useAllTransactions(chainName, filter)
+  const combinedError =
+    errorV2 && errorV3
+      ? new ApolloError({ errorMessage: `Could not retrieve V2 and V3 Transactions for chain: ${chainId}` })
+      : undefined
+  const allDataStillLoading = loading && !transactions.length
+  const showLoadingSkeleton = allDataStillLoading || !!combinedError
+  useUpdateManualOutage({ chainId, errorV3, errorV2 })
   // TODO(WEB-3236): once GQL BE Transaction query is supported add usd, token0 amount, and token1 amount sort support
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolTransaction>()
@@ -197,6 +207,13 @@ export default function RecentTransactions() {
   ])
 
   return (
-    <Table columns={columns} data={transactions} loading={loading} error={error} loadMore={loadMore} maxWidth={1200} />
+    <Table
+      columns={columns}
+      data={transactions}
+      loading={allDataStillLoading}
+      error={combinedError}
+      loadMore={loadMore}
+      maxWidth={1200}
+    />
   )
 }

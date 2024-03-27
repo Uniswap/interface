@@ -1,74 +1,12 @@
 import { WatchQueryFetchPolicy } from '@apollo/client'
-import gql from 'graphql-tag'
 import { ActivityEvent } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
 
-import { NftActivityFilterInput, useNftActivityQuery } from '../__generated__/types-and-hooks'
-
-gql`
-  query NftActivity($filter: NftActivityFilterInput, $after: String, $first: Int) {
-    nftActivity(filter: $filter, after: $after, first: $first) {
-      edges {
-        node {
-          id
-          address
-          tokenId
-          asset {
-            id
-            metadataUrl
-            image {
-              id
-              url
-            }
-            smallImage {
-              id
-              url
-            }
-            name
-            rarities {
-              id
-              provider
-              rank
-              score
-            }
-            suspiciousFlag
-            nftContract {
-              id
-              standard
-            }
-            collection {
-              id
-              image {
-                id
-                url
-              }
-            }
-          }
-          type
-          marketplace
-          fromAddress
-          toAddress
-          transactionHash
-          price {
-            id
-            value
-          }
-          orderStatus
-          quantity
-          url
-          timestamp
-        }
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
-        hasPreviousPage
-        startCursor
-      }
-    }
-  }
-`
+import {
+  NftActivityFilterInput,
+  useNftActivityQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export function useNftActivity(filter: NftActivityFilterInput, first?: number, fetchPolicy?: WatchQueryFetchPolicy) {
   const { data, loading, fetchMore, error } = useNftActivityQuery({

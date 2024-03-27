@@ -1,56 +1,42 @@
 import { useWeb3React } from '@web3-react/core'
-import { useGatewayDNSUpdateAllEnabled } from 'featureFlags/flags/gatewayDNSUpdate'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { isFinalizedOrder } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
-
 import { OrderQueryResponse, UniswapXBackendOrder } from './types'
 
-const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
 const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
-if (UNISWAP_API_URL === undefined || UNISWAP_GATEWAY_DNS_URL === undefined) {
-  throw new Error(`UNISWAP_API_URL and UNISWAP_GATEWAY_DNS_URL must be defined environment variables`)
+if (UNISWAP_GATEWAY_DNS_URL === undefined) {
+  throw new Error(`UNISWAP_GATEWAY_DNS_URL must be defined environment variables`)
 }
 
 async function fetchStatuses(
   orders: UniswapXOrderDetails[],
   filter: (order: UniswapXOrderDetails) => boolean,
-  path: (hashes: string[]) => string,
-  gatewayDNSUpdateAllEnabled: boolean
+  path: (hashes: string[]) => string
 ): Promise<OrderQueryResponse> {
   const hashes = orders.filter(filter).map((order) => order.orderHash)
   if (!hashes || hashes.length === 0) {
     return { orders: [] }
   }
-  const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
+  const baseURL = UNISWAP_GATEWAY_DNS_URL
   const result = await global.fetch(`${baseURL}${path(hashes)}`)
   return result.json()
 }
 
-async function fetchLimitStatuses(
-  account: string,
-  orders: UniswapXOrderDetails[],
-  gatewayDNSUpdateAllEnabled: boolean
-) {
+async function fetchLimitStatuses(account: string, orders: UniswapXOrderDetails[]) {
   return fetchStatuses(
     orders,
     (order) => order.type === SignatureType.SIGN_LIMIT,
-    (hashes) => `/limit-orders?swapper=${account}&orderHashes=${hashes}`,
-    gatewayDNSUpdateAllEnabled
+    (hashes) => `/limit-orders?swapper=${account}&orderHashes=${hashes}`
   )
 }
 
-async function fetchOrderStatuses(
-  account: string,
-  orders: UniswapXOrderDetails[],
-  gatewayDNSUpdateAllEnabled: boolean
-): Promise<OrderQueryResponse> {
+async function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[]): Promise<OrderQueryResponse> {
   return fetchStatuses(
     orders,
     (order) => order.type === SignatureType.SIGN_UNISWAPX_ORDER,
-    (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}`,
-    gatewayDNSUpdateAllEnabled
+    (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}`
   )
 }
 
@@ -63,8 +49,6 @@ interface UpdaterProps {
 
 export default function OrderUpdater({ pendingOrders, onOrderUpdate }: UpdaterProps): null {
   const { account } = useWeb3React()
-
-  const gatewayDNSUpdateAllEnabled = useGatewayDNSUpdateAllEnabled()
 
   const [currentDelay, setCurrentDelay] = useState(OFF_CHAIN_ORDER_STATUS_POLLING_INITIAL_INTERVAL)
 
@@ -80,8 +64,8 @@ export default function OrderUpdater({ pendingOrders, onOrderUpdate }: UpdaterPr
       }
       try {
         const [orderStatuses, limitStatuses] = await Promise.all([
-          fetchOrderStatuses(account, pendingOrders, gatewayDNSUpdateAllEnabled),
-          fetchLimitStatuses(account, pendingOrders, gatewayDNSUpdateAllEnabled),
+          fetchOrderStatuses(account, pendingOrders),
+          fetchLimitStatuses(account, pendingOrders),
         ])
 
         pendingOrders.forEach((pendingOrder) => {
@@ -106,7 +90,7 @@ export default function OrderUpdater({ pendingOrders, onOrderUpdate }: UpdaterPr
 
     timeout = setTimeout(getOrderStatuses, currentDelay)
     return () => clearTimeout(timeout)
-  }, [account, currentDelay, gatewayDNSUpdateAllEnabled, onOrderUpdate, pendingOrders])
+  }, [account, currentDelay, onOrderUpdate, pendingOrders])
 
   return null
 }

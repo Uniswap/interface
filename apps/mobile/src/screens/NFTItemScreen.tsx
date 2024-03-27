@@ -1,7 +1,6 @@
 /* eslint-disable complexity */
 import { ApolloQueryResult } from '@apollo/client'
 import { isAddress } from 'ethers/lib/utils'
-import { impactAsync } from 'expo-haptics'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native'
@@ -20,7 +19,15 @@ import { CollectionPreviewCard } from 'src/features/nfts/item/CollectionPreviewC
 import { NFTTraitList } from 'src/features/nfts/item/traits'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Text, Theme, TouchableArea, getTokenValue, useSporeColors } from 'ui/src'
+import {
+  Flex,
+  HapticFeedback,
+  Text,
+  Theme,
+  TouchableArea,
+  getTokenValue,
+  useSporeColors,
+} from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
@@ -176,7 +183,7 @@ function NFTItemScreenContents({
 
   const onLongPressNFTImage = async (): Promise<void> => {
     await setClipboardImage(imageUrl)
-    await impactAsync()
+    await HapticFeedback.impact()
     dispatch(
       pushNotification({
         type: AppNotificationType.Copied,

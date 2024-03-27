@@ -154,7 +154,12 @@ module.exports = {
             message: 'Use our internal `useDeviceInsets` hook instead.',
           },
           {
-            name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
+            name: 'react-native',
+            importNames: ['Switch'],
+            message: 'Use our custom Switch component instead.',
+          },
+          {
+            name: 'wallet/src/data/__generated__/types-and-hooks',
             importNames: ['usePortfolioBalancesQuery'],
             message: 'Use `usePortfolioBalances` instead.',
           },
@@ -179,6 +184,16 @@ module.exports = {
             name: 'expo-localization',
             message:
               'Avoid using due to issue with unsupported locales. Use utilties/src/device/locales.ts getDeviceLocales instead',
+          },
+          {
+            name: 'expo-haptics',
+            message: "Use our internal `HapticFeedback` wrapper instead: `import { HapticFeedback } from 'ui/src'`",
+          },
+          {
+            name: 'src/data/usePersistedApolloClient',
+            importNames: ['usePersistedApolloClient'],
+            message:
+              "This hook should only be used once at the App level. You can use `import { useApolloClient } from '@apollo/client'` to get the default apollo client from the provider. If you need access to apollo outside of React, you can use `import { apolloClientRef } from 'src/data/usePersistedApolloClient'`.",
           },
         ],
       },

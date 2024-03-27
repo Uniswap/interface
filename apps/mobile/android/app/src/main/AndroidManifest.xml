@@ -42,11 +42,55 @@
         <data android:scheme="uniswap" />
       </intent-filter>
       <intent-filter>
-				<data android:scheme="wc" />
 				<action android:name="android.intent.action.VIEW" />
+
 				<category android:name="android.intent.category.DEFAULT" />
 				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="wc" />
 			</intent-filter>
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+            android:scheme="https"
+            android:host="app.uniswap.org"
+            android:pathPrefix="/nfts/asset/" />
+
+        <data
+            android:scheme="https"
+            android:host="app.uniswap.org"
+            android:pathPrefix="/nfts/collection/" />
+
+        <data
+            android:scheme="https"
+            android:host="app.uniswap.org"
+            android:pathPrefix="/tokens/" />
+
+        <data
+            android:scheme="https"
+            android:host="app.uniswap.org"
+            android:pathPrefix="/address/" />
+      </intent-filter>
+      <intent-filter android:autoVerify="true">
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+            android:scheme="https"
+            android:host="uniswap.org"
+            android:pathPrefix="/app" />
+
+        <data
+            android:scheme="https"
+            android:host="uniswap.org"
+            android:pathPrefix="/app/wc" />
+      </intent-filter>
     </activity>
   </application>
 </manifest>

@@ -1,5 +1,9 @@
-import { NftMarketplace, NftTradeInput, TokenAmountInput } from 'graphql/data/__generated__/types-and-hooks'
 import { BagItem, BagItemStatus, UpdatedGenieAsset } from 'nft/types'
+import {
+  NftMarketplace,
+  NftTradeInput,
+  TokenAmountInput,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export const buildNftTradeInputFromBagItems = (itemsInBag: BagItem[]): NftTradeInput[] => {
   const assetsToBuy = itemsInBag.filter((item) => item.status !== BagItemStatus.UNAVAILABLE).map((item) => item.asset)

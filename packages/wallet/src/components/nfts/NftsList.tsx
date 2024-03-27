@@ -107,11 +107,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     })
   }, [data?.nftBalances?.pageInfo?.endCursor, data?.nftBalances?.pageInfo?.hasNextPage, fetchMore])
 
-  const { nfts, numHidden, numShown } = useGroupNftsByVisibility(
-    nftDataItems,
-    hiddenNftsExpanded,
-    owner
-  )
+  const { nfts, numHidden, numShown } = useGroupNftsByVisibility(nftDataItems, hiddenNftsExpanded)
 
   const onHiddenRowPressed = useCallback((): void => {
     if (hiddenNftsExpanded && footerHeight) {

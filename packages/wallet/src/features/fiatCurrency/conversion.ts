@@ -3,10 +3,10 @@ import {
   Currency,
   useConvertQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { FiatNumberType } from 'utilities/src/format/types'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { getFiatCurrencyCode, useAppFiatCurrency } from 'wallet/src/features/fiatCurrency/hooks'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
@@ -108,7 +108,7 @@ const SOURCE_CURRENCY = Currency.Usd // Assuming all currency data comes from US
 export function useFiatConverter({
   formatNumberOrString,
 }: Pick<LocalizationContextState, 'formatNumberOrString'>): FiatConverter {
-  const featureEnabled = useFeatureFlag(FEATURE_FLAGS.CurrencyConversion)
+  const featureEnabled = useFeatureFlag(FeatureFlags.CurrencyConversion)
   const appCurrency = useAppFiatCurrency()
   const toCurrency = mapFiatCurrencyToServerCurrency[appCurrency]
 

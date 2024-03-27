@@ -38,7 +38,6 @@ const previousState: PersistAppStateV3 = {
     },
     pairs: {},
     timestamp: Date.now(),
-    hideAppPromoBanner: false,
   },
   _persist: {
     version: 2,

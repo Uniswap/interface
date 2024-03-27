@@ -1,7 +1,6 @@
-import { ImpactFeedbackStyle } from 'expo-haptics'
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { I18nManager, LayoutChangeEvent } from 'react-native'
-import { Flex, Icons, Text, TouchableArea, useMedia } from 'ui/src'
+import { Flex, Icons, ImpactFeedbackStyle, Text, TouchableArea, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 

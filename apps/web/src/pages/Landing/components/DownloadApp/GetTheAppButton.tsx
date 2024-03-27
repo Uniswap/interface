@@ -5,9 +5,8 @@ import Row from 'components/Row'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
-import { BREAKPOINTS } from 'theme'
-import { ThemedText } from 'theme/components'
 
+import { Text } from 'ui/src'
 import { Wiggle } from '../animations'
 
 const StyledButton = styled.button`
@@ -19,14 +18,6 @@ const StyledButton = styled.button`
   cursor: pointer;
   &:hover {
     background: ${({ theme }) => theme.surface2};
-  }
-`
-const CallToAction = styled(ThemedText.BodyPrimary)`
-  line-height: 20px;
-  white-space: nowrap;
-
-  @media screen and (max-width: ${BREAKPOINTS.sm}px) {
-    display: none;
   }
 `
 
@@ -45,9 +36,17 @@ export function GetTheAppButton() {
   return (
     <StyledButton onClick={openModal}>
       <Row width="fit-content" gap="12px" align="center" justify="center">
-        <CallToAction data-testid="get-the-app-cta">
+        <Text
+          data-testid="get-the-app-cta"
+          variant="body2"
+          lineHeight={0}
+          whiteSpace="nowrap"
+          $lg={{
+            display: 'none',
+          }}
+        >
           <Trans>Get the app</Trans>
-        </CallToAction>
+        </Text>
         <WiggleIcon>
           <AppleLogo fill={theme.neutral1} />
         </WiggleIcon>

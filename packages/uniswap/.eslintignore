@@ -2,3 +2,5 @@
 
 # Generated contract types
 src/abis/types
+
+src/i18n/locales/@types/resources.d.ts

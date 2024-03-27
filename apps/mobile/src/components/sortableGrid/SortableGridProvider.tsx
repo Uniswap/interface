@@ -1,4 +1,3 @@
-import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { View } from 'react-native'
 import {
@@ -7,6 +6,7 @@ import {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
+import { HapticFeedback, ImpactFeedbackStyle } from 'ui/src'
 import { TIME_TO_ACTIVATE_PAN } from './constants'
 import { useAutoScroll, useStableCallback } from './hooks'
 import {
@@ -145,9 +145,9 @@ export default function SortableGridProvider<I>({
     // so we check if the item is still being dragged before setting the
     // active index
     if ((index === null || touchedIndex.value !== null) && index !== activeIndex) {
-      impactAsync(index === null ? ImpactFeedbackStyle.Light : ImpactFeedbackStyle.Medium).catch(
-        () => undefined
-      )
+      HapticFeedback.impact(
+        index === null ? ImpactFeedbackStyle.Light : ImpactFeedbackStyle.Medium
+      ).catch(() => undefined)
       if (index !== null) {
         onDragStart?.()
       } else {

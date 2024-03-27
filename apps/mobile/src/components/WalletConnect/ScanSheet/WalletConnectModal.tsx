@@ -1,35 +1,34 @@
-import { selectionAsync } from 'expo-haptics'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import 'react-native-reanimated'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useEagerExternalProfileRootNavigation } from 'src/app/navigation/hooks'
-import { BackButtonView } from 'src/components/layout/BackButtonView'
-import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { WalletQRCode } from 'src/components/QRCodeScanner/WalletQRCode'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import Trace from 'src/components/Trace/Trace'
 import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/ConnectedDappsList'
 import {
+  URIType,
+  UWULINK_PREFIX,
   getSupportedURI,
   isAllowedUwULinkRequest,
   parseScantasticParams,
-  URIType,
-  UWULINK_PREFIX,
 } from 'src/components/WalletConnect/ScanSheet/util'
+import { BackButtonView } from 'src/components/layout/BackButtonView'
 import { closeAllModals, openModal } from 'src/features/modals/modalSlice'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { addRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, HapticFeedback, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { logger } from 'utilities/src/logger/logger'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { EthMethod, UwULinkRequest } from 'wallet/src/features/walletConnect/types'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
@@ -53,8 +52,8 @@ export function WalletConnectModal({
   const [shouldFreezeCamera, setShouldFreezeCamera] = useState(false)
   const { preload, navigate } = useEagerExternalProfileRootNavigation()
   const dispatch = useAppDispatch()
-  const isUwULinkEnabled = useFeatureFlag(FEATURE_FLAGS.UwULink)
-  const isScantasticEnabled = useFeatureFlag(FEATURE_FLAGS.Scantastic)
+  const isUwULinkEnabled = useFeatureFlag(FeatureFlags.UwULink)
+  const isScantasticEnabled = useFeatureFlag(FeatureFlags.Scantastic)
 
   // Update QR scanner states when pending session error alert is shown from WCv2 saga event channel
   useEffect(() => {
@@ -70,7 +69,7 @@ export function WalletConnectModal({
       if (!activeAddress || hasPendingSessionError || shouldFreezeCamera) {
         return
       }
-      await selectionAsync()
+      await HapticFeedback.selection()
 
       const supportedURI = await getSupportedURI(uri, { isUwULinkEnabled, isScantasticEnabled })
       if (!supportedURI) {

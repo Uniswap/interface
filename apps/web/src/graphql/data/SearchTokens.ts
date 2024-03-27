@@ -1,50 +1,17 @@
 import { ARB, NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import gql from 'graphql-tag'
 import { useMemo } from 'react'
 import invariant from 'tiny-invariant'
-
-import { Chain, SearchTokensQuery, useSearchTokensQuery } from './__generated__/types-and-hooks'
+import {
+  Chain,
+  SearchTokensWebQuery,
+  Token,
+  useSearchTokensWebQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { BACKEND_SUPPORTED_CHAINS, chainIdToBackendName } from './util'
-
-gql`
-  query SearchTokens($searchQuery: String!) {
-    searchTokens(searchQuery: $searchQuery) {
-      id
-      decimals
-      name
-      chain
-      standard
-      address
-      symbol
-      market(currency: USD) {
-        id
-        price {
-          id
-          value
-          currency
-        }
-        pricePercentChange(duration: DAY) {
-          id
-          value
-        }
-        volume24H: volume(duration: DAY) {
-          id
-          value
-          currency
-        }
-      }
-      project {
-        id
-        logoUrl
-        safetyLevel
-      }
-    }
-  }
-`
 
 const ARB_ADDRESS = ARB.address.toLowerCase()
 
-export type SearchToken = NonNullable<NonNullable<SearchTokensQuery['searchTokens']>[number]>
+export type SearchToken = NonNullable<NonNullable<SearchTokensWebQuery['searchTokens']>[number]>
 
 /* Returns the more relevant cross-chain token based on native status and search chain */
 function dedupeCrosschainTokens(current: SearchToken, existing: SearchToken | undefined, searchChain: Chain) {
@@ -85,10 +52,10 @@ function searchTokenSortFunction(
   else return (b.market?.volume24H?.value ?? 0) - (a.market?.volume24H?.value ?? 0)
 }
 
-export function useSearchTokens(searchQuery: string, chainId: number) {
-  const { data, loading, error } = useSearchTokensQuery({
+export function useSearchTokens(searchQuery: string | undefined, chainId: number) {
+  const { data, loading, error } = useSearchTokensWebQuery({
     variables: {
-      searchQuery,
+      searchQuery: searchQuery ?? '',
     },
     skip: !searchQuery,
   })
@@ -97,8 +64,9 @@ export function useSearchTokens(searchQuery: string, chainId: number) {
     const searchChain = chainIdToBackendName(chainId)
     // Stores results, allowing overwriting cross-chain tokens w/ more 'relevant token'
     const selectionMap: { [projectId: string]: SearchToken } = {}
-    const filteredTokens = data?.searchTokens?.filter((token) =>
-      (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(token.chain)
+    const filteredTokens = data?.searchTokens?.filter(
+      (token): token is Token =>
+        token !== undefined && (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(token.chain)
     )
     filteredTokens?.forEach((token) => {
       if (token.project?.id) {

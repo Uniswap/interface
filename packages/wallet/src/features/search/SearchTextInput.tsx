@@ -45,6 +45,7 @@ export type SearchTextInputProps = InputProps & {
   showShadow?: boolean
   py?: SpaceTokens
   px?: SpaceTokens
+  hideIcon?: boolean
 }
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>(
@@ -67,6 +68,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       px = '$spacing16',
       showShadow,
       value,
+      hideIcon,
     } = props
 
     const inputRef = useRef<Input>(null)
@@ -141,9 +143,11 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
               shadowColor: '$sporeBlack',
             },
           })}>
-          <Flex py="$spacing4">
-            <Icons.Search color="$neutral2" size="$icon.20" />
-          </Flex>
+          {!hideIcon && (
+            <Flex py="$spacing4">
+              <Icons.Search color="$neutral2" size="$icon.20" />
+            </Flex>
+          )}
 
           <Flex grow alignSelf="stretch" mr="$spacing8" overflow="hidden">
             <Input
@@ -178,6 +182,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
               {...(Platform.OS === 'android' && {
                 width: value ? undefined : 9999,
               })}
+              width="100%"
               onChangeText={onChangeTextInput}
               onFocus={onTextInputFocus}
               onSubmitEditing={onTextInputSubmitEditing}

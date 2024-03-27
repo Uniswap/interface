@@ -196,7 +196,7 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 
 export interface TokenSafetyProps {
-  tokenAddress: string | null
+  tokenAddress?: string
   secondTokenAddress?: string
   onContinue: () => void
   onCancel: () => void
@@ -215,9 +215,9 @@ export default function TokenSafety({
   const logos = []
   const urls = []
 
-  const token1Warning = tokenAddress ? checkWarning(tokenAddress) : null
+  const token1Warning = tokenAddress ? checkWarning(tokenAddress) : undefined
   const token1 = useToken(tokenAddress)
-  const token2Warning = secondTokenAddress ? checkWarning(secondTokenAddress) : null
+  const token2Warning = secondTokenAddress ? checkWarning(secondTokenAddress) : undefined
   const token2 = useToken(secondTokenAddress)
 
   const token1Unsupported = !token1Warning?.canProceed

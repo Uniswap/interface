@@ -1,5 +1,5 @@
-import { Currency } from 'graphql/data/__generated__/types-and-hooks'
 import { ReactNode } from 'react'
+import { Currency } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import {
   AUD_ICON,

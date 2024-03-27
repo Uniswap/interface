@@ -18,7 +18,6 @@ ignores: [
     ## GraphQL
     "@graphql-codegen/*",
     "get-graphql-schema",
-    "graphql-tag",
     ## React Scripts and subpackages used from within it
     "case-sensitive-paths-webpack-plugin",
     "react-dev-utils",

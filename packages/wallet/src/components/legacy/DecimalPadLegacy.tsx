@@ -1,7 +1,6 @@
-import { ImpactFeedbackStyle } from 'expo-haptics'
 import { memo, useMemo } from 'react'
 import { I18nManager, TextInputProps } from 'react-native'
-import { AnimatedFlex, Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Flex, Icons, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
 enum KeyAction {

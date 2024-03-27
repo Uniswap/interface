@@ -1,20 +1,19 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
-import { Flex, Icons, isWeb, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, isWeb, Text, TouchableArea, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import SettingsIcon from 'ui/src/assets/icons/settings.svg'
 import XIcon from 'ui/src/assets/icons/x.svg'
 import { iconSizes } from 'ui/src/theme'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { SwapSettingsModal } from 'wallet/src/features/transactions/swap/modals/settings/SwapSettingsModal'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
+import { ViewOnlyModal } from 'wallet/src/features/transactions/swap/modals/ViewOnlyModal'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
+import { ElementName } from 'wallet/src/telemetry/constants'
 
 export function SwapFormHeader(): JSX.Element {
   const { t } = useTranslation()
@@ -66,7 +65,7 @@ export function SwapFormHeader(): JSX.Element {
             <Flex
               centered
               row
-              backgroundColor="$surface2"
+              backgroundColor={isWeb ? undefined : '$surface2'}
               borderRadius="$roundedFull"
               px="$spacing4"
               py="$spacing4">
@@ -113,7 +112,7 @@ export function SwapFormHeader(): JSX.Element {
               <Flex
                 centered
                 row
-                backgroundColor={customSlippageTolerance || isWeb ? '$surface2' : '$transparent'}
+                backgroundColor={customSlippageTolerance ? '$surface2' : '$transparent'}
                 borderRadius="$roundedFull"
                 gap="$spacing4"
                 px={customSlippageTolerance ? '$spacing8' : '$spacing4'}
@@ -145,21 +144,5 @@ export function SwapFormHeader(): JSX.Element {
       )}
       {showViewOnlyModal && <ViewOnlyModal onDismiss={(): void => setShowViewOnlyModal(false)} />}
     </>
-  )
-}
-
-const ViewOnlyModal = ({ onDismiss }: { onDismiss: () => void }): JSX.Element => {
-  const { t } = useTranslation()
-  return (
-    <WarningModal
-      caption={t('swap.warning.viewOnly.message')}
-      confirmText={t('common.button.dismiss')}
-      icon={<Icons.Eye color="$neutral2" size={iconSizes.icon24} />}
-      modalName={ModalName.SwapWarning}
-      severity={WarningSeverity.Low}
-      title={t('account.wallet.viewOnly.title')}
-      onClose={onDismiss}
-      onConfirm={onDismiss}
-    />
   )
 }

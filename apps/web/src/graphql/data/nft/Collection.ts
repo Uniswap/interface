@@ -1,90 +1,9 @@
-import gql from 'graphql-tag'
 import { GenieCollection, Trait } from 'nft/types'
 import { useMemo } from 'react'
-
-import { NftCollection, useCollectionQuery } from '../__generated__/types-and-hooks'
-
-gql`
-  query Collection($addresses: [String!]!) {
-    nftCollections(filter: { addresses: $addresses }) {
-      edges {
-        cursor
-        node {
-          bannerImage {
-            url
-          }
-          collectionId
-          description
-          discordUrl
-          homepageUrl
-          image {
-            url
-          }
-          instagramName
-          isVerified
-          name
-          numAssets
-          twitterName
-          nftContracts {
-            address
-            chain
-            name
-            standard
-            symbol
-            totalSupply
-          }
-          traits {
-            name
-            values
-            stats {
-              name
-              value
-              assets
-              listings
-            }
-          }
-          markets(currencies: ETH) {
-            floorPrice {
-              currency
-              value
-            }
-            owners
-            totalVolume {
-              value
-              currency
-            }
-            listings {
-              value
-            }
-            volume(duration: DAY) {
-              value
-              currency
-            }
-            volumePercentChange(duration: DAY) {
-              value
-              currency
-            }
-            floorPricePercentChange(duration: DAY) {
-              value
-              currency
-            }
-            marketplaces {
-              marketplace
-              listings
-              floorPrice
-            }
-          }
-        }
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
-        hasPreviousPage
-        startCursor
-      }
-    }
-  }
-`
+import {
+  NftCollection,
+  useCollectionQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export function formatCollectionQueryData(
   queryCollection: NonNullable<NftCollection>,

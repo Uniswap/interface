@@ -9,7 +9,7 @@ import { useSearchTokens } from './searchTokens'
 describe(useTokenProjects, () => {
   it('returns undefined when there is no data', async () => {
     const { resolvers } = queryResolvers({
-      searchTokens: () => null,
+      searchTokens: () => undefined,
     })
     const { result } = renderHook(() => useSearchTokens('', null, false), {
       resolvers,

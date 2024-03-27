@@ -1,9 +1,14 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { ProtocolVersion, Token, useV2PairQuery, useV3PoolQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { V2_BIPS } from 'graphql/data/pools/useTopPools'
 import { chainIdToBackendName } from 'graphql/data/util'
 import ms from 'ms'
 import { useMemo } from 'react'
+import {
+  ProtocolVersion,
+  Token,
+  useV2PairQuery,
+  useV3PoolQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export interface PoolData {
   // basic pool info
@@ -30,10 +35,12 @@ export interface PoolData {
   tvlUSDChange?: number
 }
 
+type VolumeChange = { value: number; timestamp: number }
+
 /**
  * Given an array of historical volume, calculate the 24h % change in volume
  */
-function calc24HVolChange(historicalVolume?: { value: number; timestamp: number }[]) {
+function calc24HVolChange(historicalVolume?: (VolumeChange | undefined)[]) {
   if (!historicalVolume) {
     return undefined
   }
@@ -42,10 +49,13 @@ function calc24HVolChange(historicalVolume?: { value: number; timestamp: number 
   const twoDaysAgo = (currentTime - ms('2d')) / 1000
 
   const volume24h = historicalVolume
-    .filter((entry) => entry.timestamp >= dayAgo)
+    .filter((entry): entry is VolumeChange => entry?.timestamp !== undefined && entry.timestamp >= dayAgo)
     .reduce((acc, cur) => acc + cur.value, 0)
   const volume48h = historicalVolume
-    .filter((entry) => entry.timestamp >= twoDaysAgo && entry.timestamp < dayAgo)
+    .filter(
+      (entry): entry is VolumeChange =>
+        entry?.timestamp !== undefined && entry.timestamp >= twoDaysAgo && entry.timestamp < dayAgo
+    )
     .reduce((acc, cur) => acc + cur.value, 0)
   return ((volume24h - volume48h) / volume48h) * 100
 }
@@ -83,15 +93,6 @@ export function usePoolData(
   return useMemo(() => {
     const anyError = Boolean(errorV3 || (errorV2 && chainId === ChainId.MAINNET))
     const anyLoading = Boolean(loadingV3 || (loadingV2 && chainId === ChainId.MAINNET))
-
-    // return early if not all data yet
-    if (anyLoading) {
-      return {
-        loading: anyLoading,
-        error: anyError,
-        data: undefined,
-      }
-    }
 
     const pool = dataV3?.v3Pool ?? dataV2?.v2Pair ?? undefined
     const feeTier = dataV3?.v3Pool?.feeTier ?? V2_BIPS

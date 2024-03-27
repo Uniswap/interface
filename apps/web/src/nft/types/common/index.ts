@@ -1,6 +1,5 @@
-import { MediaType, NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { SortBy } from 'nft/hooks'
-
+import { MediaType, NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SellOrder } from '../sell'
 
 export enum TokenType {

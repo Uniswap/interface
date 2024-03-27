@@ -1,14 +1,13 @@
 import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
-import { useLimitsEnabled } from 'featureFlags/flags/limits'
-import { useSendEnabled } from 'featureFlags/flags/send'
-import { useSwapAndLimitContext, useSwapContext } from 'state/swap/SwapContext'
-import styled from 'styled-components'
-import { isIFramed } from 'utils/isIFramed'
-
 import { sendAnalyticsEvent } from 'analytics'
 import { useCallback, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { useSwapAndLimitContext, useSwapContext } from 'state/swap/SwapContext'
+import styled from 'styled-components'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { isIFramed } from 'utils/isIFramed'
 import { RowBetween, RowFixed } from '../Row'
 import SettingsTab from '../Settings'
 import SwapBuyFiatButton from './SwapBuyFiatButton'
@@ -36,8 +35,8 @@ const PathnameToTab: { [key: string]: SwapTab } = {
 }
 
 export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean; syncTabToUrl: boolean }) {
-  const limitsEnabled = useLimitsEnabled()
-  const sendEnabled = useSendEnabled() && !isIFramed()
+  const limitsEnabled = useFeatureFlag(FeatureFlags.LimitsEnabled)
+  const sendEnabled = useFeatureFlag(FeatureFlags.SendEnabled) && !isIFramed()
   const { chainId, currentTab, setCurrentTab } = useSwapAndLimitContext()
   const {
     derivedSwapInfo: { trade, autoSlippage },

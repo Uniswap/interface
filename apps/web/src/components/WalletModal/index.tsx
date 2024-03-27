@@ -8,12 +8,12 @@ import Row, { AutoRow } from 'components/Row'
 import { deprecatedNetworkConnection, networkConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { isSupportedChain } from 'constants/chains'
-import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
-
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import ConnectionErrorView from './ConnectionErrorView'
 import { DeprecatedInjectorMessage } from './Option'
 import PrivacyPolicyNotice from './PrivacyPolicyNotice'
@@ -52,7 +52,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   const showMoonpayText = useShowMoonpayText()
 
   const { activationState } = useActivationState()
-  const fallbackProviderEnabled = useFallbackProviderEnabled()
+  const fallbackProviderEnabled = useFeatureFlag(FeatureFlags.FallbackProvider)
   // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
   useEffect(() => {
     if (chainId && isSupportedChain(chainId) && connector !== networkConnection.connector) {

@@ -9,6 +9,8 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
+import { TraceEvent, useTrace } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ErrorModal } from 'components/Table/ErrorBox'
 import useDebounce from 'hooks/useDebounce'
@@ -44,6 +46,8 @@ function TableBody<Data extends RowData>({
   loading?: boolean
   error?: ApolloError
 }) {
+  const analyticsContext = useTrace()
+
   if (loading || error) {
     // loading and error states
     return (
@@ -90,14 +94,26 @@ function TableBody<Data extends RowData>({
         const rowOriginal = row.original as any
         const linkState = rowOriginal.linkState // optional data passed to linked page, accessible via useLocation().state
         const rowTestId = rowOriginal.testId
-        return 'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
-          <TableRowLink to={rowOriginal.link} key={row.id} state={linkState} data-testid={rowTestId}>
-            <DataRow>{cells}</DataRow>
-          </TableRowLink>
-        ) : (
-          <DataRow data-testid={rowTestId} key={row.id}>
-            {cells}
-          </DataRow>
+        return (
+          <TraceEvent
+            shouldLogImpression={Boolean(rowOriginal.analytics)}
+            events={[BrowserEvent.onClick]}
+            name={SharedEventName.ELEMENT_CLICKED}
+            element={rowOriginal.analytics?.elementName}
+            properties={{
+              ...rowOriginal.analytics?.properties,
+              ...analyticsContext,
+            }}
+            key={row.id}
+          >
+            {'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
+              <TableRowLink to={rowOriginal.link} state={linkState} data-testid={rowTestId}>
+                <DataRow>{cells}</DataRow>
+              </TableRowLink>
+            ) : (
+              <DataRow data-testid={rowTestId}>{cells}</DataRow>
+            )}
+          </TraceEvent>
         )
       })}
     </>

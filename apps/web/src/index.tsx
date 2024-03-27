@@ -7,7 +7,6 @@ import 'tracing'
 import 'connection/eagerlyConnect'
 /* eslint-enable prettier/prettier */
 
-import { FeatureFlagsProvider } from 'featureFlags'
 import { Provider as ApolloProvider } from 'graphql/data/apollo/Provider'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
 import { MulticallUpdater } from 'lib/state/multicall'
@@ -70,29 +69,27 @@ createRoot(container).render(
   <StrictMode>
     <HelmetProvider>
       <Provider store={store}>
-        <FeatureFlagsProvider>
-          <QueryClientProvider client={queryClient}>
-            <Router>
-              <LanguageProvider>
-                <Web3Provider>
-                  <ApolloProvider>
-                    <BlockNumberProvider>
-                      <UnitagUpdaterContextProvider>
-                        <Updaters />
-                        <ThemeProvider>
-                          <TamaguiProvider>
-                            <ThemedGlobalStyle />
-                            <App />
-                          </TamaguiProvider>
-                        </ThemeProvider>
-                      </UnitagUpdaterContextProvider>
-                    </BlockNumberProvider>
-                  </ApolloProvider>
-                </Web3Provider>
-              </LanguageProvider>
-            </Router>
-          </QueryClientProvider>
-        </FeatureFlagsProvider>
+        <QueryClientProvider client={queryClient}>
+          <Router>
+            <LanguageProvider>
+              <Web3Provider>
+                <ApolloProvider>
+                  <BlockNumberProvider>
+                    <UnitagUpdaterContextProvider>
+                      <Updaters />
+                      <ThemeProvider>
+                        <TamaguiProvider>
+                          <ThemedGlobalStyle />
+                          <App />
+                        </TamaguiProvider>
+                      </ThemeProvider>
+                    </UnitagUpdaterContextProvider>
+                  </BlockNumberProvider>
+                </ApolloProvider>
+              </Web3Provider>
+            </LanguageProvider>
+          </Router>
+        </QueryClientProvider>
       </Provider>
     </HelmetProvider>
   </StrictMode>

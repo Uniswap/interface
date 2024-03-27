@@ -2,20 +2,20 @@ import { Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState } fro
 import { useAppSelector } from 'src/app/hooks'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { useOnCloseSendModal } from 'src/features/transactions/swap/hooks/useOnCloseSendModal'
-import { getFocusOnCurrencyFieldFromInitialState } from 'src/features/transactions/swap/utils'
 import { TransferFormScreen } from 'src/features/transactions/transfer/transferRewrite/TransferFormScreen'
+import {
+  TransferScreen,
+  TransferScreenContextProvider,
+  useTransferScreenContext,
+} from 'src/features/transactions/transfer/transferRewrite/TransferScreenContext'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import {
   SwapFormContextProvider,
   SwapFormState,
 } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import {
-  TransferScreen,
-  TransferScreenContextProvider,
-  useTransferScreenContext,
-} from 'wallet/src/features/transactions/contexts/TransferScreenContext'
 import { TransactionModal } from 'wallet/src/features/transactions/swap/TransactionModal'
+import { getFocusOnCurrencyFieldFromInitialState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
 import { ModalName, SectionName } from 'wallet/src/telemetry/constants'
 
 /**

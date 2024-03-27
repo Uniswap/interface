@@ -53,7 +53,7 @@ export const defaultResolvers: Resolvers = {
         }
       }
 
-      return null
+      return undefined
     },
   },
 }

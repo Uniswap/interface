@@ -19,3 +19,15 @@ export function escapeRegExp(string: string): string {
 export function normalizeTwitterUsername(input: string): string {
   return input.replace(/[^a-zA-Z0-9_]/g, '') // must be alphanumeric or an underscore
 }
+
+export function concatStrings(list: string[], endAdornmentText: string): string {
+  let result = list.join(', ')
+  // replacing last comma with ' and'
+  const lastCommaIndex = result.lastIndexOf(',')
+  if (lastCommaIndex !== -1) {
+    const before = result.slice(0, lastCommaIndex)
+    const after = result.slice(lastCommaIndex + 1)
+    result = before + ' ' + endAdornmentText + after
+  }
+  return result
+}

@@ -11,8 +11,8 @@ import { AnimatedFlex, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ClockIcon from 'ui/src/assets/icons/clock.svg'
 import TrendArrowIcon from 'ui/src/assets/icons/trend-up.svg'
 import { iconSizes } from 'ui/src/theme'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { clearSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 import {
   SearchResult,
@@ -38,7 +38,7 @@ export function SearchEmptySection(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const searchHistory = useAppSelector(selectSearchHistory)
-  const unitagFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+  const unitagFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
 
   const onPressClearSearchHistory = (): void => {
     dispatch(clearSearchHistory())

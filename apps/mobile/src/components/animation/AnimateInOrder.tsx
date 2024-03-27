@@ -1,6 +1,5 @@
-import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
 import { PropsWithChildren, useEffect, useState } from 'react'
-import { Flex, FlexProps } from 'ui/src'
+import { Flex, FlexProps, HapticFeedback } from 'ui/src'
 
 export const AnimateInOrder = ({
   children,
@@ -43,7 +42,7 @@ const Delay = ({
   useEffect(() => {
     const showTimer = setTimeout(async () => {
       if (hapticOnEnter) {
-        await impactAsync(ImpactFeedbackStyle.Light)
+        await HapticFeedback.light()
       }
       setDone(true)
     }, by)

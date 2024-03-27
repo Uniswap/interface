@@ -1,7 +1,6 @@
-import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType } from 'utilities/src/format/types'

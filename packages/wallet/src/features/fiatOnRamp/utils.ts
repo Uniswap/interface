@@ -1,4 +1,8 @@
+import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
 import { FORLogo } from './types'
+
+const APPLE_PAY = 'Apple Pay'
+const GOOGLE_PAY = 'Google Pay'
 
 export interface FORApiError {
   data: {
@@ -78,4 +82,10 @@ export function getServiceProviderLogo(
   }
 
   return isDarkMode ? logos.darkLogo : logos.lightLogo
+}
+
+export function transformPaymentMethods(paymentMethods: string[]): string[] {
+  return paymentMethods.filter(
+    (pm) => !(pm === APPLE_PAY && isAndroid) && !(pm === GOOGLE_PAY && isIOS)
+  )
 }

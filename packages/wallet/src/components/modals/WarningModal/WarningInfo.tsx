@@ -10,7 +10,7 @@ import { WarningTooltipProps } from 'wallet/src/components/modals/WarningModal/W
 type WarningInfoProps = {
   tooltipProps: Omit<WarningTooltipProps, 'button' | 'trigger'>
   modalProps: Omit<WarningModalProps, 'onClose'>
-  infoButton: ReactNode
+  infoButton?: ReactNode
   trigger?: ReactNode
   triggerPlacement?: 'start' | 'end'
 }

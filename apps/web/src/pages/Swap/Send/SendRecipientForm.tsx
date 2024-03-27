@@ -5,7 +5,6 @@ import Identicon from 'components/Identicon'
 import Row from 'components/Row'
 import { Unicon } from 'components/Unicon'
 import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
-import { useUniconV2Flag } from 'featureFlags/flags/uniconV2'
 import useENSName from 'hooks/useENSName'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -18,6 +17,8 @@ import styled, { css, keyframes } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
 import { Icons, UniconV2 } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import {
   useUnitagByAddressWithoutFlag,
   useUnitagByNameWithoutFlag,
@@ -126,7 +127,7 @@ const AutocompleteRow = ({
   const { ENSName } = useENSName(address)
   const cachedEnsName = ENSName || validatedEnsName
   const formattedAddress = shortenAddress(address)
-  const uniconsV2Enabled = useUniconV2Flag()
+  const uniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   const boundSelectRecipient = useCallback(
     () =>
@@ -223,7 +224,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
   const { sendState, setSendState, derivedSendInfo } = useSendContext()
   const { recipient } = sendState
   const { recipientData } = derivedSendInfo
-  const unicodeV2Enabled = useUniconV2Flag()
+  const unicodeV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   const unitagMetadata = useUnitagByNameWithoutFlag(recipientData?.unitag, Boolean(recipientData?.unitag)).unitag
     ?.metadata

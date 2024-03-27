@@ -8,7 +8,7 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { FORLogo, MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
-import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
+import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
 import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { DappInfo } from 'wallet/src/features/walletConnect/types'
@@ -317,7 +317,7 @@ export interface TransferFlowProps {
   gasFee: GasFeeResult
   step: TransactionStep
   setStep: (newStep: TransactionStep) => void
-  warnings: Warning[]
+  warnings: ParsedWarnings
   exactValue: string
   isFiatInput?: boolean
   showFiatToggle?: boolean

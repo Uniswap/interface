@@ -6,14 +6,15 @@ import {
   SupportedLocalCurrency,
 } from 'constants/localCurrencies'
 import { DEFAULT_LOCALE, SupportedLocale } from 'constants/locales'
-import { useCurrencyConversionFlagEnabled } from 'featureFlags/flags/currencyConversion'
 import { useLocalCurrencyConversionRate } from 'graphql/data/ConversionRate'
-import { Currency as GqlCurrency } from 'graphql/data/__generated__/types-and-hooks'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import usePrevious from 'hooks/usePrevious'
 import { useCallback, useMemo } from 'react'
 import { Bound } from 'state/mint/v3/actions'
+import { Currency as GqlCurrency } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 
 type Nullish<T> = T | null | undefined
 type NumberFormatOptions = Intl.NumberFormatOptions
@@ -800,7 +801,7 @@ export function useFormatterLocales(): {
   formatterLocale: SupportedLocale
   formatterLocalCurrency: SupportedLocalCurrency
 } {
-  const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
+  const currencyConversionEnabled = useFeatureFlag(FeatureFlags.CurrencyConversion)
   const activeLocale = useActiveLocale()
   const activeLocalCurrency = useActiveLocalCurrency()
 

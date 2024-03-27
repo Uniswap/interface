@@ -33,7 +33,7 @@ type BuildCurrencyParams = {
 export function currencyIdToContractInput(id: CurrencyId): ContractInput {
   return {
     chain: toGraphQLChain(currencyIdToChain(id) ?? ChainId.Mainnet) ?? Chain.Ethereum,
-    address: currencyIdToGraphQLAddress(id),
+    address: currencyIdToGraphQLAddress(id) ?? undefined,
   }
 }
 

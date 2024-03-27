@@ -107,13 +107,8 @@ export function useTokenContextMenu({
      */
     updateCache(!isHidden, portfolioBalance ?? undefined)
 
-    dispatch(
-      toggleTokenVisibility({
-        accountAddress: activeAccountAddress,
-        currencyId: currencyId.toLowerCase(),
-        currentlyVisible: !isHidden,
-      })
-    )
+    dispatch(toggleTokenVisibility({ currencyId: currencyId.toLowerCase(), isSpam: isHidden }))
+
     if (tokenSymbolForNotification) {
       dispatch(
         pushNotification({
@@ -124,15 +119,7 @@ export function useTokenContextMenu({
         })
       )
     }
-  }, [
-    activeAccountAddress,
-    currencyId,
-    dispatch,
-    isHidden,
-    tokenSymbolForNotification,
-    updateCache,
-    portfolioBalance,
-  ])
+  }, [currencyId, dispatch, isHidden, tokenSymbolForNotification, updateCache, portfolioBalance])
 
   const menuActions = useMemo(
     (): MenuAction[] => [

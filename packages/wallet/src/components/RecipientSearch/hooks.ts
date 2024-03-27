@@ -7,6 +7,7 @@ import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { selectRecipientsByRecency } from 'wallet/src/features/transactions/selectors'
+import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { selectInactiveAccounts } from 'wallet/src/features/wallet/selectors'
 import { useAppSelector } from 'wallet/src/state'
 import { getValidAddress } from 'wallet/src/utils/addresses'
@@ -115,6 +116,21 @@ export function useRecipients(): {
   const [pattern, setPattern] = useState<string | null>(null)
 
   const inactiveLocalAccounts = useAppSelector(selectInactiveAccounts)
+  const { importedWallets, viewOnlyWallets } = useMemo(
+    () =>
+      inactiveLocalAccounts.reduce<{ importedWallets: Account[]; viewOnlyWallets: Account[] }>(
+        (acc, account) => {
+          if (account.type === AccountType.Readonly) {
+            acc.viewOnlyWallets.push(account)
+          } else {
+            acc.importedWallets.push(account)
+          }
+          return acc
+        },
+        { importedWallets: [], viewOnlyWallets: [] }
+      ),
+    [inactiveLocalAccounts]
+  )
   const recentRecipients = useAppSelector(selectRecipientsByRecency).slice(0, MAX_RECENT_RECIPIENTS)
 
   const { recipients: validatedAddressRecipients, loading } = useValidatedSearchedAddress(pattern)
@@ -137,10 +153,17 @@ export function useRecipients(): {
       })
     }
 
-    if (inactiveLocalAccounts.length) {
+    if (importedWallets.length) {
       sectionsArr.push({
         title: t('send.recipient.section.yours'),
-        data: inactiveLocalAccounts,
+        data: importedWallets,
+      })
+    }
+
+    if (viewOnlyWallets.length) {
+      sectionsArr.push({
+        title: t('send.recipient.section.viewOnly'),
+        data: viewOnlyWallets,
       })
     }
 
@@ -157,7 +180,14 @@ export function useRecipients(): {
     }
 
     return sectionsArr
-  }, [validatedAddressRecipients, recentRecipients, t, inactiveLocalAccounts, watchedWallets])
+  }, [
+    validatedAddressRecipients,
+    recentRecipients,
+    t,
+    importedWallets,
+    viewOnlyWallets,
+    watchedWallets,
+  ])
 
   const searchableRecipientOptions = useMemo(
     () =>

@@ -13,6 +13,7 @@ import {
   parseDataResponseToFeedTransactionDetails,
   parseDataResponseToTransactionDetails,
 } from 'wallet/src/features/transactions/history/utils'
+import { useCurrencyIdToVisibility } from 'wallet/src/features/transactions/selectors'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
 import { LoadingItem, SectionHeader, isLoadingItem, isSectionHeader } from './utils'
 
@@ -144,6 +145,8 @@ export function useFormattedTransactionDataForActivity(
     pollInterval: undefined,
   })
 
+  const tokenVisibilityOverrides = useCurrencyIdToVisibility()
+
   const keyExtractor = useCallback(
     (info: TransactionDetails | SectionHeader | LoadingItem) => {
       // for loading items, use the index as the key
@@ -165,8 +168,8 @@ export function useFormattedTransactionDataForActivity(
       return
     }
 
-    return parseDataResponseToTransactionDetails(data, hideSpamTokens)
-  }, [data, hideSpamTokens])
+    return parseDataResponseToTransactionDetails(data, hideSpamTokens, tokenVisibilityOverrides)
+  }, [data, hideSpamTokens, tokenVisibilityOverrides])
 
   const transactions = useMergeLocalFunction(address, formattedTransactions)
 

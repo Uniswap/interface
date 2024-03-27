@@ -3,15 +3,15 @@ import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { getRecentConnectionMeta } from 'connection/meta'
-import { useExitAnimation } from 'featureFlags/flags/landingPageV2'
 import usePrevious from 'hooks/usePrevious'
 import { parse } from 'qs'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-
 import { useAppDispatch } from 'state/hooks'
 import { setRecentConnectionDisconnected } from 'state/user/reducer'
 import { TRANSITION_DURATIONS } from 'theme/styles'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import LandingV2 from './LandingV2'
 
 export default function Landing() {
@@ -24,7 +24,7 @@ export default function Landing() {
     dispatch(setRecentConnectionDisconnected())
   }, [connector, dispatch])
 
-  const isExitAnimationEnabled = useExitAnimation()
+  const isExitAnimationEnabled = useFeatureFlag(FeatureFlags.ExitAnimation)
   const [transition, setTransition] = useState(false)
   const location = useLocation()
   const queryParams = useMemo(() => parse(location.search, { ignoreQueryPrefix: true }), [location])

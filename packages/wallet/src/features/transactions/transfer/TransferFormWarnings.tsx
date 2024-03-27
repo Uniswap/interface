@@ -112,13 +112,13 @@ const TransferRecipient = ({
 }: TransferRecipientProps): JSX.Element => {
   return (
     <Flex
-      centered
       borderColor="$surface3"
       borderRadius="$rounded12"
       borderWidth={1}
       gap="$spacing8"
       px="$spacing16"
-      py="$spacing12">
+      py="$spacing12"
+      width="100%">
       <Text color="$neutral1" textAlign="center" variant="subheading2">
         {type === DisplayNameType.ENS ? displayName : address}
       </Text>

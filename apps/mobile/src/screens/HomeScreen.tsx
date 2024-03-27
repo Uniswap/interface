@@ -2,7 +2,6 @@
 import { useApolloClient } from '@apollo/client'
 import { useIsFocused, useScrollToTop } from '@react-navigation/native'
 import { FlashList } from '@shopify/flash-list'
-import { impactAsync } from 'expo-haptics'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Freeze } from 'react-freeze'
 import { useTranslation } from 'react-i18next'
@@ -55,6 +54,7 @@ import { hideSplashScreen } from 'src/utils/splashScreen'
 import {
   AnimatedFlex,
   Flex,
+  HapticFeedback,
   Text,
   TouchableArea,
   useDeviceDimensions,
@@ -67,14 +67,14 @@ import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-home.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval, useTimeout } from 'utilities/src/time/timing'
 import {
   selectHasSkippedUnitagPrompt,
   selectHasViewedUniconV2IntroModal,
 } from 'wallet/src/features/behaviorHistory/selectors'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
@@ -133,7 +133,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const hasViewedUniconV2IntroModal = useAppSelector(selectHasViewedUniconV2IntroModal)
 
-  const showFeedTab = useFeatureFlag(FEATURE_FLAGS.FeedTab)
+  const showFeedTab = useFeatureFlag(FeatureFlags.FeedTab)
   // opens the wallet restore modal if recovery phrase is missing after the app is opened
   useWalletRestore({ openModalImmediately: true })
 
@@ -325,7 +325,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const { sync } = useScrollSync(currentTabIndex, scrollPairs, headerConfig)
 
-  const forAggregatorEnabled = useFeatureFlag(FEATURE_FLAGS.ForAggregator)
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
 
   const onPressBuy = useCallback(
     () =>
@@ -417,7 +417,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const shouldPromptUnitag =
     activeAccount.type === AccountType.SignerMnemonic && !hasSkippedUnitagPrompt && canClaimUnitag
 
-  const isUniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
+  const isUniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
   const shouldShowUniconV2Modal =
     isUniconsV2Enabled && !hasViewedUniconV2IntroModal && !hasAvatar && !avatarLoading
 
@@ -550,7 +550,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
                 ]}
                 tabStyle={style}
                 onTabPress={async (): Promise<void> => {
-                  await impactAsync()
+                  await HapticFeedback.impact()
                 }}
               />
             </Animated.View>

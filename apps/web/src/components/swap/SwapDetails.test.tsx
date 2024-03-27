@@ -5,7 +5,6 @@ import {
   TEST_TRADE_EXACT_INPUT,
 } from 'test-utils/constants'
 import { render, screen, within } from 'test-utils/render'
-
 import { SwapDetails } from './SwapDetails'
 
 describe('SwapDetails.tsx', () => {

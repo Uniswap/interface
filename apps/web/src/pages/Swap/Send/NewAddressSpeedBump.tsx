@@ -4,11 +4,12 @@ import { Dialog } from 'components/Dialog/Dialog'
 import { UserIcon } from 'components/Icons/UserIcon'
 import Row from 'components/Row'
 import { Unicon } from 'components/Unicon'
-import { useUniconV2Flag } from 'featureFlags/flags/uniconV2'
 import { useSendContext } from 'state/send/SendContext'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { UniconV2 } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 
 const StyledUserIcon = styled(UserIcon)`
   width: 28px;
@@ -27,7 +28,7 @@ export const NewAddressSpeedBumpModal = ({ onCancel, onConfirm }: { onCancel: ()
   const {
     derivedSendInfo: { recipientData },
   } = useSendContext()
-  const uniconsV2Enabled = useUniconV2Flag()
+  const uniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   return (
     <Dialog

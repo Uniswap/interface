@@ -11,9 +11,9 @@ import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Flex, Icons, Text, TouchableArea, Unicon, UniconV2, useIsDarkMode } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import {
   FORMAT_DATE_TIME_SHORT,
   useLocalizedDayjs,
@@ -35,7 +35,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
   // const backups = useMockCloudBackups(4) // returns 4 mock backups with random mnemonicIds and createdAt dates
   const backups = useCloudBackups()
   const sortedBackups = backups.slice().sort((a, b) => b.createdAt - a.createdAt)
-  const isUniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
+  const isUniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   const onPressRestoreBackup = async (backup: CloudStorageMnemonicBackup): Promise<void> => {
     // Clear any existing pending accounts

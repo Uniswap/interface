@@ -1,7 +1,7 @@
 import { ChartType } from 'components/Charts/utils'
-import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
 import { UTCTimestamp } from 'lightweight-charts'
 import ms from 'ms'
+import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export type ChartQueryResult<TDataType, TChartType extends ChartType> = {
   chartType: TChartType

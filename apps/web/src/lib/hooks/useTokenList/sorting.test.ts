@@ -1,6 +1,12 @@
 import { ChainId, Token as InterfaceToken } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET, USDT, WBTC, nativeOnChain } from 'constants/tokens'
-import { Chain, Currency, Token, TokenBalance, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
+import {
+  Chain,
+  Currency,
+  Token,
+  TokenBalance,
+  TokenStandard,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { getSortedPortfolioTokens, tokenQuerySortComparator } from './sorting'
 

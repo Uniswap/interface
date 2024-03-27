@@ -1,5 +1,5 @@
 import { ChartHeaderProtocolInfo } from 'components/Charts/ChartHeader'
-import { PriceSource } from 'graphql/data/__generated__/types-and-hooks'
+import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { CustomHistogramData, StackedHistogramData } from './renderer'
 

@@ -29,7 +29,7 @@ const Container = styled.button<{ disabled: boolean }>`
     background-color;
   width: 240px;
 
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.xs}px`}) {
     width: 100%;
   }
 

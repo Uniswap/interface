@@ -2,8 +2,8 @@ import { PropsWithChildren } from 'react'
 import { Flex, Text, Tooltip } from 'ui/src'
 import { WarningTooltipProps } from 'wallet/src/components/modals/WarningModal/WarningTooltipProps'
 
-const TOOLTIP_REST_MS = 250
-const TOOLTIP_CLOSE_MS = 500
+const TOOLTIP_REST_MS = 50
+const TOOLTIP_CLOSE_MS = 200
 
 export function WarningTooltip({
   title,

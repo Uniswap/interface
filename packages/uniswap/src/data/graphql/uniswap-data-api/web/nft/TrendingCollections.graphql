@@ -1,0 +1,44 @@
+query TrendingCollections($size: Int, $timePeriod: HistoryDuration) {
+  topCollections(first: $size, duration: $timePeriod) {
+    edges {
+      node {
+        name
+        nftContracts {
+          address
+          totalSupply
+        }
+        image {
+          url
+        }
+        bannerImage {
+          url
+        }
+        isVerified
+        markets(currencies: ETH) {
+          floorPrice {
+            value
+          }
+          owners
+          totalVolume {
+            value
+          }
+          volume(duration: $timePeriod) {
+            value
+          }
+          volumePercentChange(duration: $timePeriod) {
+            value
+          }
+          floorPricePercentChange(duration: $timePeriod) {
+            value
+          }
+          sales {
+            value
+          }
+          listings {
+            value
+          }
+        }
+      }
+    }
+  }
+}

@@ -2,15 +2,14 @@ import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Icons, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { Switch } from 'wallet/src/components/buttons/Switch'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
-import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { SwapProtectionInfoModal } from 'wallet/src/features/transactions/swap/modals/SwapProtectionModal'
+import { SlippageSettingsRow } from 'wallet/src/features/transactions/swap/modals/settings/SlippageSettingsRow'
 import { SlippageSettingsScreen } from 'wallet/src/features/transactions/swap/modals/settings/SlippageSettingsScreen'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
@@ -40,10 +39,10 @@ export function SwapSettingsModal({
   const { t } = useTranslation()
   const [view, setView] = useState(SwapSettingsModalView.Options)
 
-  const { customSlippageTolerance, autoSlippageTolerance, chainId } = derivedSwapInfo
-  const isCustomSlippage = !!customSlippageTolerance
-  const currentSlippage =
-    customSlippageTolerance ?? autoSlippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE
+  const { customSlippageTolerance } = derivedSwapInfo
+  const [customSlippageInput, setCustomSlippageInput] = useState<number | undefined>(
+    customSlippageTolerance
+  )
 
   const getTitle = (): string => {
     switch (view) {
@@ -54,41 +53,48 @@ export function SwapSettingsModal({
     }
   }
 
+  const onSlippageChange = useCallback((slippage: number | undefined) => {
+    setCustomSlippageInput(slippage)
+  }, [])
+  const onSettingsClose = useCallback((): void => {
+    if (isWeb) {
+      setCustomSlippageTolerance(customSlippageInput)
+    }
+    onClose?.()
+  }, [customSlippageInput, onClose, setCustomSlippageTolerance])
+
   const innerContent = useMemo(() => {
     switch (view) {
       case SwapSettingsModalView.Options:
         return (
           <SwapSettingsOptions
-            chainId={chainId}
-            isCustomSlippage={isCustomSlippage}
+            derivedSwapInfo={derivedSwapInfo}
             setView={setView}
-            slippage={currentSlippage}
+            onSlippageChange={onSlippageChange}
           />
         )
       case SwapSettingsModalView.Slippage:
         return (
           <SlippageSettingsScreen
             derivedSwapInfo={derivedSwapInfo}
-            setCustomSlippageTolerance={setCustomSlippageTolerance}
+            onSlippageChange={setCustomSlippageTolerance}
           />
         )
     }
-  }, [
-    chainId,
-    currentSlippage,
-    derivedSwapInfo,
-    isCustomSlippage,
-    setCustomSlippageTolerance,
-    view,
-  ])
+  }, [derivedSwapInfo, onSlippageChange, setCustomSlippageTolerance, view])
+
+  const showSaveButton = isWeb && customSlippageInput !== customSlippageTolerance
 
   return (
     <BottomSheetModal
+      alignment={isWeb ? 'top' : undefined}
       backgroundColor={colors.surface1.get()}
-      isCentered={isWeb}
       name={ModalName.SwapSettings}
-      onClose={onClose}>
-      <Flex gap="$spacing16" px="$spacing24" py="$spacing12">
+      onClose={onSettingsClose}>
+      <Flex
+        gap="$spacing16"
+        px={isWeb ? '$spacing4' : '$spacing24'}
+        py={isWeb ? '$spacing4' : '$spacing12'}>
         <Flex row justifyContent="space-between">
           <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Options)}>
             <Icons.RotatableChevron
@@ -104,8 +110,13 @@ export function SwapSettingsModal({
         </Flex>
         {innerContent}
         <Flex centered row>
-          <Button fill testID="swap-settings-close" theme="secondary" onPress={onClose}>
-            {t('common.button.close')}
+          <Button
+            fill
+            color={showSaveButton ? '$accent1' : undefined}
+            testID="swap-settings-close"
+            theme="secondary"
+            onPress={onSettingsClose}>
+            {showSaveButton ? t('common.button.save') : t('common.button.close')}
           </Button>
         </Flex>
       </Flex>
@@ -114,47 +125,24 @@ export function SwapSettingsModal({
 }
 
 function SwapSettingsOptions({
-  slippage,
-  isCustomSlippage,
+  derivedSwapInfo,
+  onSlippageChange,
   setView,
-  chainId,
 }: {
-  slippage: number
-  isCustomSlippage: boolean
+  derivedSwapInfo: DerivedSwapInfo
+  onSlippageChange: (slippage: number | undefined) => void
   setView: (newView: SwapSettingsModalView) => void
-  chainId: ChainId
 }): JSX.Element {
-  const { t } = useTranslation()
-  const { formatPercent } = useLocalizationContext()
-  const isMevBlockerFeatureEnabled = useFeatureFlag(FEATURE_FLAGS.MevBlocker)
+  const isMevBlockerFeatureEnabled = useFeatureFlag(FeatureFlags.MevBlocker)
+  const { chainId } = derivedSwapInfo
 
   return (
     <Flex gap="$spacing16" py="$spacing12">
-      <Flex row justifyContent="space-between">
-        <Text color="$neutral1" variant="subheading2">
-          {t('swap.settings.slippage.control.title')}
-        </Text>
-        <TouchableArea onPress={(): void => setView(SwapSettingsModalView.Slippage)}>
-          <Flex row gap="$spacing8">
-            {!isCustomSlippage ? (
-              <Flex centered backgroundColor="$accent2" borderRadius="$roundedFull" px="$spacing8">
-                <Text color="$accent1" variant="buttonLabel4">
-                  {t('swap.settings.slippage.control.auto')}
-                </Text>
-              </Flex>
-            ) : null}
-            <Text color="$neutral2" variant="subheading2">
-              {formatPercent(slippage)}
-            </Text>
-            <Icons.RotatableChevron
-              color="$neutral3"
-              direction="end"
-              height={iconSizes.icon24}
-              width={iconSizes.icon24}
-            />
-          </Flex>
-        </TouchableArea>
-      </Flex>
+      <SlippageSettingsRow
+        derivedSwapInfo={derivedSwapInfo}
+        onPress={(): void => setView(SwapSettingsModalView.Slippage)}
+        onSlippageChange={onSlippageChange}
+      />
       {isMevBlockerFeatureEnabled && <SwapProtectionSettingsRow chainId={chainId} />}
     </Flex>
   )

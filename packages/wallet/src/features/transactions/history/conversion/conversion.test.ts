@@ -352,6 +352,7 @@ describe(parseSendTransaction, () => {
     expect(parseSendTransaction(MOCK_ERC721_SEND)).toEqual({
       type: TransactionType.Send,
       assetType: 'erc-721',
+      isSpam: false,
       tokenAddress: 'nft_contract_address',
       recipient: TO_ADDRESS,
       nftSummaryInfo: {
@@ -496,7 +497,7 @@ describe(parseTradeTransaction, () => {
 
 describe(extractTransactionDetails, () => {
   it('Empty transaction', () => {
-    expect(extractTransactionDetails(null)).toEqual(null)
+    expect(extractTransactionDetails(undefined)).toEqual(null)
   })
   it('Approve', () => {
     const txn = extractTransactionDetails(MOCK_ERC20_APPROVE)

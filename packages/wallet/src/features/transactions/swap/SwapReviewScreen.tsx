@@ -1,4 +1,3 @@
-import { notificationAsync } from 'expo-haptics'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
@@ -22,12 +21,12 @@ import {
 } from 'wallet/src/features/transactions/swap/TransactionModal'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
-import { AnimatedFlex, Button, Flex, isWeb, Separator } from 'ui/src'
+import { AnimatedFlex, Button, Flex, HapticFeedback, isWeb, Separator } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { iconSizes } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedSwapWarnings'
+import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { HOLD_TO_SWAP_TIMEOUT } from 'wallet/src/features/transactions/swap/HoldToSwapProgressCircle'
 import { useAcceptedTrade } from 'wallet/src/features/transactions/swap/trade/hooks/useAcceptedTrade'
 import { useSwapCallback } from 'wallet/src/features/transactions/swap/trade/hooks/useSwapCallback'
@@ -165,9 +164,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const onSubmitTransaction = useCallback(async () => {
     updateSwapForm({ isSubmitting: true })
 
-    if (!isWeb) {
-      await notificationAsync()
-    }
+    await HapticFeedback.success()
 
     if (authTrigger) {
       await authTrigger({

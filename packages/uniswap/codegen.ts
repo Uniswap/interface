@@ -17,6 +17,7 @@ const config: CodegenConfig = {
       plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo', 'typescript-resolvers'],
       config: {
         withHooks: true,
+        maybeValue: 'T | undefined',
       },
     }
   }

@@ -26,10 +26,10 @@ import {
 } from 'ui/src'
 import { ENS_LOGO } from 'ui/src/assets'
 import { iconSizes, imageSizes } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useENSDescription, useENSName, useENSTwitterUsername } from 'wallet/src/features/ens/api'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -77,7 +77,7 @@ export const ProfileHeader = memo(function ProfileHeader({
   const showENSName = primaryENSName && primaryENSName !== displayName?.name
 
   const { colors: avatarColors } = useExtractedColors(avatar)
-  const isUniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
+  const isUniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   const hasAvatar = !!avatar && !avatarLoading
 

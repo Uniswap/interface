@@ -64,7 +64,7 @@ const preloadedState: PreloadedState<SharedState> = {
     tokens: favoriteCurrencyIds,
     watchedAddresses: [],
     tokensVisibility: {},
-    nftsData: {},
+    nftsVisibility: {},
   },
 }
 
@@ -99,7 +99,7 @@ describe(useAllCommonBaseCurrencies, () => {
   const cases = [
     {
       test: 'returns undefined if there is no data',
-      input: null,
+      input: undefined,
       output: {},
     },
     {
@@ -156,7 +156,7 @@ describe(useFavoriteCurrencies, () => {
   const cases = [
     {
       test: 'returns undefined when there is no data',
-      input: null,
+      input: undefined,
       output: {},
     },
     {
@@ -341,7 +341,7 @@ describe(usePortfolioBalancesForAddressById, () => {
   const cases = [
     {
       test: 'returns undefined when there is no data',
-      input: null,
+      input: undefined,
       output: {},
     },
     {
@@ -385,7 +385,7 @@ describe(usePortfolioTokenOptions, () => {
     const cases = [
       {
         test: 'returns undefined when there is no data',
-        input: null,
+        input: undefined,
         output: { data: undefined },
       },
       {

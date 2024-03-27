@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { SelectionSetNode } from 'graphql'
+import { cloneDeepWith } from 'lodash'
 import {
   QueryResolvers,
   Resolver,
@@ -7,6 +8,8 @@ import {
   ResolverTypeWrapper,
   ResolverWithResolve,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+
+type UndefinedToNull<T> = T extends undefined ? null : T
 
 type ResolverReturnType<T> = T extends (...args: any[]) => infer TResult
   ? TResult
@@ -77,15 +80,17 @@ export function queryResolvers<T extends QueryResolvers>(
 
             const filteredObj = await filterObjectFields(
               info.fieldNodes[0]?.selectionSet,
-              resolvedObj
+              resolvedObj ?? null
             )
+            // cloneDeepWith returns any type so we need to cast it manually
+            const resultObj = cloneDeepWith(filteredObj, undefinedToNull) as ResolverReturnType<R>
 
             // Resolve the corresponding promise
             if (promiseResolvers[key]) {
-              promiseResolvers[key](filteredObj)
+              promiseResolvers[key](resultObj)
             }
 
-            return filteredObj
+            return resultObj
           }
 
           return [key, resolve]
@@ -128,3 +133,5 @@ async function filterObjectFields<T extends object>(
 
   return result as T
 }
+
+const undefinedToNull = <T>(value: T): UndefinedToNull<T> => (value ?? null) as UndefinedToNull<T>

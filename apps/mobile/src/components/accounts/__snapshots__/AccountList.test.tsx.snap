@@ -160,6 +160,7 @@ exports[`AccountList renders without error 1`] = `
                     {
                       "alignItems": "center",
                       "flexDirection": "row",
+                      "flexShrink": 1,
                       "gap": 12,
                     }
                   }

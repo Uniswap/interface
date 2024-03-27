@@ -64,8 +64,8 @@ import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
 import { Icons, useDeviceInsets, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
@@ -215,7 +215,7 @@ const renderHeaderBackImage = (): JSX.Element => (
 export function OnboardingStackNavigator(): JSX.Element {
   const colors = useSporeColors()
   const insets = useDeviceInsets()
-  const seedPhraseRefactorEnabled = useFeatureFlag(FEATURE_FLAGS.SeedPhraseRefactorNative)
+  const seedPhraseRefactorEnabled = useFeatureFlag(FeatureFlags.SeedPhraseRefactorNative)
   const SeedPhraseInputComponent = seedPhraseRefactorEnabled
     ? SeedPhraseInputScreenV2
     : SeedPhraseInputScreen

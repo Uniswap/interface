@@ -1,14 +1,14 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import i18n from 'uniswap/src/i18n/i18n'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
+import { WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { getTransferWarnings } from 'wallet/src/features/transactions/transfer/hooks/useTransferWarnings'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
 import { isOffline } from 'wallet/src/features/transactions/utils'
-import { WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
-import i18n from 'wallet/src/i18n/i18n'
 import { networkDown, networkUnknown, networkUp, uniCurrencyInfo } from 'wallet/src/test/fixtures'
 
 const ETH = NativeCurrency.onChain(ChainId.Mainnet)
@@ -61,19 +61,14 @@ const mockNFT = {
   collection: {
     id: '123',
     collectionId: '123',
-    description: null,
-    image: null,
     isVerified: true,
     markets: [],
     name: 'BAYC',
     numAssets: 10,
   },
   name: 'BAYC1',
-  description: null,
-  image: null,
-  thumbnail: null,
   tokenId: '1',
-  nftContract: { id: '2', address: '0xNFTAddress', chain: 'ETHEREUM', standard: null },
+  nftContract: { id: '2', address: '0xNFTAddress', chain: 'ETHEREUM' },
   creator: {
     id: '3',
     address: '0xCreateAddress',

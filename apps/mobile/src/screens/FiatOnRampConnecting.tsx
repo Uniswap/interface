@@ -15,7 +15,8 @@ import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
 import { getServiceProviderForQuote } from 'src/features/fiatOnRamp/utils'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { FiatOnRampScreens } from 'src/screens/Screens'
-import { Flex, useIsDarkMode } from 'ui/src'
+import { Flex, Text, useIsDarkMode } from 'ui/src'
+import { spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -153,24 +154,35 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
   return (
     <Screen>
       {baseCurrencyInfo && serviceProvider ? (
-        <FiatOnRampConnectingView
-          amount={addFiatSymbolToNumber({
-            value: amount,
-            currencyCode: baseCurrencyInfo?.code,
-            currencySymbol: baseCurrencyInfo?.symbol,
-          })}
-          quoteCurrencyCode={quoteCurrency.currencyInfo?.currency.symbol}
-          serviceProviderLogo={
-            <Flex
-              alignItems="center"
-              height={SERVICE_PROVIDER_ICON_SIZE}
-              justifyContent="center"
-              width={SERVICE_PROVIDER_ICON_SIZE}>
-              <ImageUri imageStyle={ServiceProviderLogoStyles.icon} uri={logoUrl} />
-            </Flex>
-          }
-          serviceProviderName={serviceProvider.name}
-        />
+        <>
+          <FiatOnRampConnectingView
+            amount={addFiatSymbolToNumber({
+              value: amount,
+              currencyCode: baseCurrencyInfo?.code,
+              currencySymbol: baseCurrencyInfo?.symbol,
+            })}
+            quoteCurrencyCode={quoteCurrency.currencyInfo?.currency.symbol}
+            serviceProviderLogo={
+              <Flex
+                alignItems="center"
+                height={SERVICE_PROVIDER_ICON_SIZE}
+                justifyContent="center"
+                width={SERVICE_PROVIDER_ICON_SIZE}>
+                <ImageUri imageStyle={ServiceProviderLogoStyles.icon} uri={logoUrl} />
+              </Flex>
+            }
+            serviceProviderName={serviceProvider.name}
+          />
+          <Text
+            bottom={spacing.spacing8}
+            color="$neutral3"
+            position="absolute"
+            px="$spacing24"
+            textAlign="center"
+            variant="body3">
+            {t('fiatOnRamp.connection.terms', { serviceProvider: serviceProvider.name })}
+          </Text>
+        </>
       ) : null}
     </Screen>
   )

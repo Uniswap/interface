@@ -17,8 +17,8 @@ import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-do
 import styled from 'styled-components'
 
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { Z_INDEX } from 'theme/zIndex'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useIsNavSearchInputVisible } from '../../nft/hooks/useIsNavSearchInputVisible'
 import { Bag } from './Bag'
 import Blur from './Blur'

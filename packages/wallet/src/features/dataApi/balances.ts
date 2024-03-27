@@ -18,7 +18,7 @@ import {
   currencyIdToContractInput,
   usePersistedError,
 } from 'wallet/src/features/dataApi/utils'
-import { useAccountToTokenVisibility } from 'wallet/src/features/transactions/selectors'
+import { useCurrencyIdToVisibility } from 'wallet/src/features/transactions/selectors'
 import {
   useHideSmallBalancesSetting,
   useHideSpamTokensSetting,
@@ -36,6 +36,11 @@ export type PortfolioTotalValue = {
   absoluteChangeUSD: number | undefined
 }
 
+interface TokenOverrides {
+  tokenIncludeOverrides: ContractInput[]
+  tokenExcludeOverrides: ContractInput[]
+}
+
 export type PortfolioCacheUpdater = (hidden: boolean, portfolioBalance?: PortfolioBalance) => void
 
 export function usePortfolioValueModifiers(
@@ -46,47 +51,44 @@ export function usePortfolioValueModifiers(
     () => (!address ? [] : Array.isArray(address) ? address : [address]),
     [address]
   )
-  const accountToTokensVisibility = useAccountToTokenVisibility(addressArray)
+  const currencyIdToTokenVisibility = useCurrencyIdToVisibility()
 
   const hideSpamTokens = useHideSpamTokensSetting()
   const hideSmallBalances = useHideSmallBalancesSetting()
 
+  const { tokenIncludeOverrides, tokenExcludeOverrides } = Object.entries(
+    currencyIdToTokenVisibility
+  ).reduce(
+    (acc: TokenOverrides, [key, tokenVisibility]) => {
+      const contractInput = currencyIdToContractInput(key)
+      if (tokenVisibility.isVisible) {
+        acc.tokenIncludeOverrides.push(contractInput)
+      } else {
+        acc.tokenExcludeOverrides.push(contractInput)
+      }
+      return acc
+    },
+    {
+      tokenIncludeOverrides: [],
+      tokenExcludeOverrides: [],
+    }
+  )
+
   const modifiers = useMemo<PortfolioValueModifier[]>(() => {
-    return addressArray.map((addr) => {
-      const tokenOverrides = accountToTokensVisibility[addr] || {}
-
-      interface TokenOverrides {
-        tokenIncludeOverrides: ContractInput[]
-        tokenExcludeOverrides: ContractInput[]
-      }
-
-      const { tokenIncludeOverrides, tokenExcludeOverrides } = Object.entries(
-        tokenOverrides
-      ).reduce(
-        (acc: TokenOverrides, [key, tokenVisibility]) => {
-          const contractInput = currencyIdToContractInput(key)
-          if (tokenVisibility.isVisible) {
-            acc.tokenIncludeOverrides.push(contractInput)
-          } else {
-            acc.tokenExcludeOverrides.push(contractInput)
-          }
-          return acc
-        },
-        {
-          tokenIncludeOverrides: [],
-          tokenExcludeOverrides: [],
-        }
-      )
-
-      return {
-        ownerAddress: addr,
-        tokenIncludeOverrides,
-        tokenExcludeOverrides,
-        includeSmallBalances: !hideSmallBalances,
-        includeSpamTokens: !hideSpamTokens,
-      }
-    })
-  }, [accountToTokensVisibility, addressArray, hideSmallBalances, hideSpamTokens])
+    return addressArray.map((addr) => ({
+      ownerAddress: addr,
+      tokenIncludeOverrides,
+      tokenExcludeOverrides,
+      includeSmallBalances: !hideSmallBalances,
+      includeSpamTokens: !hideSpamTokens,
+    }))
+  }, [
+    addressArray,
+    tokenIncludeOverrides,
+    tokenExcludeOverrides,
+    hideSmallBalances,
+    hideSpamTokens,
+  ])
 
   return modifiers.length > 0 ? modifiers : undefined
 }

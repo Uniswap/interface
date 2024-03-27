@@ -1,10 +1,8 @@
 /* eslint-env node */
 
-const defaultConfig = require('./graphql.data.config')
-
 module.exports = {
-  src: defaultConfig.src,
-  language: defaultConfig.language,
+  src: './src',
+  language: 'typescript',
   schema: './src/graphql/thegraph/schema.graphql',
   exclude: ['**/node_modules/**', '**/__mocks__/**', '**/__generated__/**', '**/data/**'],
 }

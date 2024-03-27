@@ -17,6 +17,7 @@ import { WidgetType } from 'src/features/widgets/widgets'
 import { Screens } from 'src/screens/Screens'
 import { call, put, takeLatest } from 'typed-redux-saga'
 import { UNISWAP_APP_HOSTNAME, uniswapUrls } from 'uniswap/src/constants/urls'
+import i18n from 'uniswap/src/i18n/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { fromUniswapWebAppLink } from 'wallet/src/features/chains/utils'
 import {
@@ -26,7 +27,6 @@ import {
   selectNonPendingAccounts,
 } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import i18n from 'wallet/src/i18n/i18n'
 import { ModalName } from 'wallet/src/telemetry/constants'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 import { UNISWAP_APP_NATIVE_TOKEN, openUri } from 'wallet/src/utils/linking'
@@ -66,7 +66,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
   // which causes the bottom sheet to break
   navigate(Screens.Home)
 
-  // Handle NFT Item share (ex. https://app.uniswap.org/#/nfts/asset/0x.../123)
+  // Handle NFT Item share (ex. https://app.uniswap.org/nfts/asset/0x.../123)
   if (NFT_ITEM_SHARE_LINK_HASH_REGEX.test(path)) {
     const [, , contractAddress, tokenId] = path.match(NFT_ITEM_SHARE_LINK_HASH_REGEX) || []
     if (!contractAddress || !tokenId) {
@@ -92,7 +92,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
     return
   }
 
-  // Handle NFT collection share (ex. https://app.uniswap.org/#/nfts/collection/0x...)
+  // Handle NFT collection share (ex. https://app.uniswap.org/nfts/collection/0x...)
   if (NFT_COLLECTION_SHARE_LINK_HASH_REGEX.test(path)) {
     const [, , contractAddress] = path.match(NFT_COLLECTION_SHARE_LINK_HASH_REGEX) || []
     if (!contractAddress) {
@@ -116,7 +116,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
     return
   }
 
-  // Handle Token share (ex. https://app.uniswap.org/#/tokens/ethereum/0x...)
+  // Handle Token share (ex. https://app.uniswap.org/tokens/ethereum/0x...)
   if (TOKEN_SHARE_LINK_HASH_REGEX.test(path)) {
     const [, , network, contractAddress] = path.match(TOKEN_SHARE_LINK_HASH_REGEX) || []
     const chainId = network && fromUniswapWebAppLink(network)
@@ -152,7 +152,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
     return
   }
 
-  // Handle Address share (ex. https://app.uniswap.org/#/address/0x...)
+  // Handle Address share (ex. https://app.uniswap.org/address/0x...)
   if (ADDRESS_SHARE_LINK_HASH_REGEX.test(path)) {
     const [, , accountAddress] = path.match(ADDRESS_SHARE_LINK_HASH_REGEX) || []
     if (!accountAddress) {

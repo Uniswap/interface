@@ -6,7 +6,7 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
 import { selectTokensVisibility } from 'wallet/src/features/favorites/selectors'
-import { AccountToTokenVisibility, TokenVisibility } from 'wallet/src/features/favorites/slice'
+import { CurrencyIdToVisibility } from 'wallet/src/features/favorites/slice'
 import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
 import {
   SendTokenTransactionInfo,
@@ -14,6 +14,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { RootState, useAppSelector } from 'wallet/src/state'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
@@ -82,54 +83,54 @@ export function useSelectAddressTransactions(
   return useAppSelector((state) => selectAddressTransactions(state, address))
 }
 
-export function useAccountToTokenVisibility(addresses: Address[]): AccountToTokenVisibility {
-  const accountToTokenVisibilityFromUserSettings = useAppSelector(selectTokensVisibility)
+export function useCurrencyIdToVisibility(): CurrencyIdToVisibility {
+  const accounts = useAccounts()
+  const addresses = Object.values(accounts).map((account) => account.address)
+  const manuallySetTokenVisibility = useAppSelector(selectTokensVisibility)
   const selectLocalTxCurrencyIds: (
     state: RootState,
     addresses: Address[]
-  ) => AccountToTokenVisibility = useMemo(makeSelectTokenVisibilityFromLocalTxs, [])
-  const accountToTokenVisibilityFromLocalTxs = useAppSelector((state) =>
+  ) => CurrencyIdToVisibility = useMemo(makeSelectTokenVisibilityFromLocalTxs, [])
+
+  const tokenVisibilityFromLocalTxs = useAppSelector((state) =>
     selectLocalTxCurrencyIds(state, addresses)
   )
+
   return {
-    ...accountToTokenVisibilityFromLocalTxs,
-    // User settings has higher priority and overrides items from local txs
-    ...accountToTokenVisibilityFromUserSettings,
+    ...tokenVisibilityFromLocalTxs,
+    // Tokens the user has individually shown/hidden in the app should take preference over local txs
+    ...manuallySetTokenVisibility,
   }
 }
 
-export const makeSelectTokenVisibilityFromLocalTxs = (): Selector<
+const makeSelectTokenVisibilityFromLocalTxs = (): Selector<
   RootState,
-  AccountToTokenVisibility,
+  CurrencyIdToVisibility,
   [Address[]]
 > =>
   createSelector(
     selectTransactions,
     (_: RootState, addresses: Address[]) => addresses,
-    (transactions, addresses) => {
-      return addresses.reduce<AccountToTokenVisibility>((addressAcc, address) => {
-        const addressTransactions = address && transactions[address]
+    (transactions, addresses) =>
+      addresses.reduce<CurrencyIdToVisibility>((acc, address) => {
+        const addressTransactions = transactions[address]
         if (!addressTransactions) {
-          return addressAcc
+          return acc
         }
 
-        addressAcc[address] = flattenObjectOfObjects(addressTransactions).reduce<
-          Record<string, TokenVisibility>
-        >((txAcc, tx) => {
+        Object.values(flattenObjectOfObjects(addressTransactions)).forEach((tx) => {
           if (tx.typeInfo.type === TransactionType.Send) {
-            txAcc[buildCurrencyId(tx.chainId, tx.typeInfo.tokenAddress.toLowerCase())] = {
+            acc[buildCurrencyId(tx.chainId, tx.typeInfo.tokenAddress.toLowerCase())] = {
               isVisible: true,
             }
           } else if (tx.typeInfo.type === TransactionType.Swap) {
-            txAcc[tx.typeInfo.inputCurrencyId.toLowerCase()] = { isVisible: true }
-            txAcc[tx.typeInfo.outputCurrencyId.toLowerCase()] = { isVisible: true }
+            acc[tx.typeInfo.inputCurrencyId.toLowerCase()] = { isVisible: true }
+            acc[tx.typeInfo.outputCurrencyId.toLowerCase()] = { isVisible: true }
           }
-          return txAcc
-        }, {})
+        })
 
-        return addressAcc
+        return acc
       }, {})
-    }
   )
 
 interface MakeSelectParams {

@@ -8,7 +8,6 @@ import {
   TEST_TRADE_FEE_ON_SELL,
 } from 'test-utils/constants'
 import { act, render, screen } from 'test-utils/render'
-
 import SwapDetailsDropdown from './SwapDetailsDropdown'
 
 describe('SwapDetailsDropdown.tsx', () => {

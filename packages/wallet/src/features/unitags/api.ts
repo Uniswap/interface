@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { REQUEST_SOURCE } from 'uniswap/src/data/constants'
+import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
 import { useRestQuery } from 'uniswap/src/data/rest'
 import { addQueryParamsToEndpoint, unitagsApolloClient } from 'uniswap/src/features/unitags/api'
 import {
@@ -27,6 +27,7 @@ const generateAxiosHeaders = async (
   return {
     'x-uni-sig': signature,
     'x-request-source': REQUEST_SOURCE,
+    'x-app-version': getVersionHeader(),
     Origin: uniswapUrls.apiBaseUrl,
     ...(firebaseAppCheckToken && { 'x-firebase-app-check': firebaseAppCheckToken }),
   }

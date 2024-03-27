@@ -10,6 +10,7 @@ export const config = createTamagui({
   animations,
   shouldAddPrefersColorThemes: true,
   themeClassNameOnRoot: true,
+  disableSSR: true,
   onlyAllowShorthands: true,
   shorthands: {
     m: 'margin',

@@ -2,48 +2,40 @@ import { t } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
-import { BaseButton } from 'components/Button'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import { MouseoverTooltip } from 'components/Tooltip'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { WalletConnectV2 } from 'connection/WalletConnectV2'
 import { getChainInfo } from 'constants/chainInfo'
 import { getChainPriority, L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 'constants/chains'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { useAtomValue } from 'jotai/utils'
-import { Portal } from 'nft/components/common/Portal'
-import { Column } from 'nft/components/Flex'
-import { useIsMobile } from 'nft/hooks'
-import { useCallback, useMemo, useRef, useState } from 'react'
-import { AlertTriangle, ChevronDown, ChevronUp } from 'react-feather'
-import styled, { useTheme } from 'styled-components'
+import { useCallback, useMemo, useState } from 'react'
+import { AlertTriangle } from 'react-feather'
+import { css, useTheme } from 'styled-components'
 import { getSupportedChainIdsFromWalletConnectSession } from 'utils/getSupportedChainIdsFromWalletConnectSession'
 
+import { DropdownSelector, StyledMenuContent } from 'components/DropdownSelector'
 import ChainSelectorRow from './ChainSelectorRow'
-import { NavDropdown } from './NavDropdown'
 
 const NETWORK_SELECTOR_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
 
-const ChainSelectorWrapper = styled.div`
-  position: relative;
+const StyledDropdownButton = css`
+  display: flex;
+  flex-direction: row;
+  padding: 10px 8px;
+  background: none;
+  gap: 4px;
+  border: none;
+  & ${StyledMenuContent} {
+    gap: 4px;
+  }
 `
 
-const ChainSelectorButton = styled(BaseButton)<{ isOpen: boolean }>`
-  display: flex;
-  background: ${({ theme, isOpen }) => (isOpen ? theme.accent2 : 'none')};
-  padding: 10px 8px;
-  gap: 4px;
-  border-radius: 12px;
-  height: 40px;
-  color: ${({ theme }) => theme.neutral1};
-  transition: ${({ theme }) =>
-    `${theme.transition.duration.medium} ${theme.transition.timing.ease} background-color, ${theme.transition.duration.medium} ${theme.transition.timing.ease} margin`};
-
-  &:hover {
-    background-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
+const styledMobileMenuCss = css`
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
+    bottom: 50px;
   }
 `
 
@@ -63,7 +55,6 @@ function useWalletSupportedChains(): ChainId[] {
 export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
   const { chainId } = useWeb3React()
   const [isOpen, setIsOpen] = useState<boolean>(false)
-  const isMobile = useIsMobile()
 
   const theme = useTheme()
 
@@ -89,10 +80,6 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
     return [supported, unsupported]
   }, [showTestnets, walletSupportsChain])
 
-  const ref = useRef<HTMLDivElement>(null)
-  const modalRef = useRef<HTMLDivElement>(null)
-  useOnClickOutside(ref, () => setIsOpen(false), [modalRef])
-
   const info = getChainInfo(chainId)
 
   const selectChain = useSelectChain()
@@ -116,50 +103,49 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
 
   const isSupported = !!info
 
-  const dropdown = (
-    <NavDropdown top="56" left={leftAlign ? '0' : 'auto'} right={leftAlign ? 'auto' : '0'} ref={modalRef}>
-      <Column paddingX="8" data-testid="chain-selector-options">
-        {supportedChains.map((selectorChain) => (
-          <ChainSelectorRow
-            disabled={!walletSupportsChain.includes(selectorChain)}
-            onSelectChain={onSelectChain}
-            targetChain={selectorChain}
-            key={selectorChain}
-            isPending={selectorChain === pendingChainId}
-          />
-        ))}
-        {unsupportedChains.map((selectorChain) => (
-          <ChainSelectorRow
-            disabled
-            onSelectChain={() => undefined}
-            targetChain={selectorChain}
-            key={selectorChain}
-            isPending={false}
-          />
-        ))}
-      </Column>
-    </NavDropdown>
-  )
-
-  const chevronProps = {
-    height: 20,
-    width: 20,
-    color: theme.neutral2,
-  }
+  const styledMenuCss = css`
+    ${leftAlign ? 'left: 0;' : 'right: 0;'}
+    ${styledMobileMenuCss};
+  `
 
   return (
-    <ChainSelectorWrapper ref={ref}>
-      <MouseoverTooltip text={t`Your wallet's current network is unsupported.`} disabled={isSupported}>
-        <ChainSelectorButton data-testid="chain-selector" onClick={() => setIsOpen(!isOpen)} isOpen={isOpen}>
-          {!isSupported ? (
-            <AlertTriangle size={20} color={theme.neutral2} />
-          ) : (
-            <ChainLogo chainId={chainId} size={20} testId="chain-selector-logo" />
-          )}
-          {isOpen ? <ChevronUp {...chevronProps} /> : <ChevronDown {...chevronProps} />}
-        </ChainSelectorButton>
-      </MouseoverTooltip>
-      {isOpen && (isMobile ? <Portal>{dropdown}</Portal> : <>{dropdown}</>)}
-    </ChainSelectorWrapper>
+    <DropdownSelector
+      isOpen={isOpen}
+      toggleOpen={() => setIsOpen(!isOpen)}
+      menuLabel={
+        !isSupported ? (
+          <AlertTriangle size={20} color={theme.neutral2} />
+        ) : (
+          <ChainLogo chainId={chainId} size={20} testId="chain-selector-logo" />
+        )
+      }
+      tooltipText={isSupported ? undefined : t`Your wallet's current network is unsupported.`}
+      dataTestId="chain-selector"
+      optionsContainerTestId="chain-selector-options"
+      internalMenuItems={
+        <>
+          {supportedChains.map((selectorChain) => (
+            <ChainSelectorRow
+              disabled={!walletSupportsChain.includes(selectorChain)}
+              onSelectChain={onSelectChain}
+              targetChain={selectorChain}
+              key={selectorChain}
+              isPending={selectorChain === pendingChainId}
+            />
+          ))}
+          {unsupportedChains.map((selectorChain) => (
+            <ChainSelectorRow
+              disabled
+              onSelectChain={() => undefined}
+              targetChain={selectorChain}
+              key={selectorChain}
+              isPending={false}
+            />
+          ))}
+        </>
+      }
+      buttonCss={StyledDropdownButton}
+      menuFlyoutCss={styledMenuCss}
+    />
   )
 }

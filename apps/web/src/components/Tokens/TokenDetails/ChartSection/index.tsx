@@ -17,9 +17,9 @@ import {
   ORDERED_TIMES,
   TimePeriodDisplay,
 } from 'components/Tokens/TokenTable/TimeSelector'
-import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { useAtomValue } from 'jotai/utils'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AdvancedPriceChartToggle } from './AdvancedPriceChartToggle'
 import { ChartTypeDropdown } from './ChartTypeSelector'
 import { useTDPPriceChartData, useTDPTVLChartData, useTDPVolumeChartData } from './hooks'

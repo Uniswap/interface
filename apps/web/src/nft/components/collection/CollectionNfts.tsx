@@ -5,7 +5,6 @@ import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import clsx from 'clsx'
 import { OpacityHoverState } from 'components/Common'
-import { NftAssetTraitInput, NftMarketplace, NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { ASSET_PAGE_SIZE, AssetFetcherParams, useNftAssets } from 'graphql/data/nft/Asset'
 import useDebounce from 'hooks/useDebounce'
 import { useScreenSize } from 'hooks/useScreenSize'
@@ -54,6 +53,11 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { useLocation } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme/components'
+import {
+  NftAssetTraitInput,
+  NftMarketplace,
+  NftStandard,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { LoadingAssets } from './CollectionAssetLoading'
 import { MARKETPLACE_ITEMS } from './MarketplaceSelect'

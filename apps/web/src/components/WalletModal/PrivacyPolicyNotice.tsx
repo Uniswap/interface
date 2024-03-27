@@ -7,12 +7,6 @@ const StyledLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.neutral2};
 `
 
-const LastUpdatedText = styled.span`
-  color: ${({ theme }) => theme.neutral3};
-`
-
-const LAST_UPDATED_DATE = '2.16.24'
-
 export default function PrivacyPolicyNotice() {
   return (
     <ThemedText.BodySmall color="neutral2">
@@ -24,11 +18,6 @@ export default function PrivacyPolicyNotice() {
       <StyledLink href="https://uniswap.org/privacy-policy">
         <Trans>Privacy Policy.</Trans>
       </StyledLink>
-      <LastUpdatedText>
-        {' ('}
-        <Trans>Last updated</Trans>
-        {` ${LAST_UPDATED_DATE})`}
-      </LastUpdatedText>
     </ThemedText.BodySmall>
   )
 }

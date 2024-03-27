@@ -14,8 +14,3 @@ export type NFTItem = {
   listPrice?: IAmount
   isSpam?: boolean
 }
-
-export type NftData = {
-  isSpamIgnored?: boolean
-  isHidden?: boolean
-}

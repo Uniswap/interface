@@ -1,15 +1,15 @@
 import { ChainId, Percent } from '@uniswap/sdk-core'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { BIPS_BASE } from 'constants/misc'
+import { OrderDirection, chainIdToBackendName } from 'graphql/data/util'
+import { useAtomValue } from 'jotai/utils'
+import { useMemo } from 'react'
 import {
   ProtocolVersion,
   Token,
   useTopV2PairsQuery,
   useTopV3PoolsQuery,
-} from 'graphql/data/__generated__/types-and-hooks'
-import { OrderDirection, chainIdToBackendName } from 'graphql/data/util'
-import { useAtomValue } from 'jotai/utils'
-import { useMemo } from 'react'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
   return pools.sort((a, b) => {
@@ -121,7 +121,6 @@ export function useTopPools(sortState: PoolTableSortState, chainId?: ChainId) {
     skip: chainId !== ChainId.MAINNET,
   })
   const loading = loadingV3 || loadingV2
-  const error = errorV3 || errorV2
 
   const unfilteredPools = useMemo(() => {
     const topV3Pools: TablePool[] =
@@ -159,5 +158,5 @@ export function useTopPools(sortState: PoolTableSortState, chainId?: ChainId) {
   }, [dataV2?.topV2Pairs, dataV3?.topV3Pools, sortState])
 
   const filteredPools = useFilteredPools(unfilteredPools).slice(0, 100)
-  return { topPools: filteredPools, loading, error }
+  return { topPools: filteredPools, loading, errorV3, errorV2 }
 }

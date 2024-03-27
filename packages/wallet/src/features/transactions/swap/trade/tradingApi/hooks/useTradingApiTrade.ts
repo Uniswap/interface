@@ -6,6 +6,7 @@ import { useRestQuery } from 'uniswap/src/data/rest'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS, inXMinutesUnix } from 'utilities/src/time/time'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   RoutingPreference,
   QuoteRequest as TradingApiQuoteRequest,
@@ -36,9 +37,10 @@ export const DEFAULT_SWAP_VALIDITY_TIME_MINS = 30
 
 export const SWAP_FORM_DEBOUNCE_TIME_MS = 250
 
-// We poll approximately twice per block to get users the most recent price regardless of when they start polling,
-// and to avoid users getting a bad price if they start polling right at the end of the block.
-export const SWAP_QUOTE_POLL_INTERVAL_MS = ONE_SECOND_MS * 6
+// We poll approximately once per block.
+// Ideally, we would poll more often to account for cases where we start polling right at the end of a block,
+// but our backend can't handle this right now, so do not increase this value without discussing it with the backend team first.
+export const SWAP_QUOTE_POLL_INTERVAL_MS = PollingInterval.Fast
 
 export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
   const {

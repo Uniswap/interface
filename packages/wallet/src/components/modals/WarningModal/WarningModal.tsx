@@ -1,7 +1,7 @@
 import { PropsWithChildren, ReactNode } from 'react'
 import { ColorValue } from 'react-native'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
-import { opacify } from 'ui/src/theme'
+import { iconSizes, opacify } from 'ui/src/theme'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { WarningColor, WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { ElementName, ModalNameType } from 'wallet/src/telemetry/constants'
@@ -23,8 +23,6 @@ export type WarningModalProps = {
   hideIcon?: boolean
   backgroundIconColor?: ColorValue
 }
-
-const WARNING_MODAL_BG_SIZE = 48
 
 export function WarningModal({
   onClose,
@@ -58,15 +56,14 @@ export function WarningModal({
         centered
         gap="$spacing12"
         pb="$spacing12"
-        pt={hideHandlebar ? '$spacing24' : '$spacing12'}
-        px="$spacing24">
+        pt={hideHandlebar ? '$spacing24' : '$spacing12'}>
         {!hideIcon && (
           <Flex
             centered
             borderRadius="$rounded12"
-            height={WARNING_MODAL_BG_SIZE}
+            height={iconSizes.icon48}
             mb="$spacing8"
-            minWidth={WARNING_MODAL_BG_SIZE}
+            minWidth={iconSizes.icon48}
             style={{
               backgroundColor: backgroundIconColor ?? opacify(12, colors[alertColorValue].val),
             }}>
@@ -82,7 +79,12 @@ export function WarningModal({
           </Text>
         )}
         {children}
-        <Flex centered row gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'}>
+        <Flex
+          centered
+          row
+          gap="$spacing12"
+          pt={children ? '$spacing12' : '$spacing24'}
+          width="100%">
           {closeText && (
             <Button fill theme="secondary" onPress={onCancel ?? onClose}>
               {closeText}

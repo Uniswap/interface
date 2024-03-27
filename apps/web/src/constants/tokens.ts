@@ -510,3 +510,6 @@ export function isStablecoin(currency?: Currency): boolean {
 
   return STABLECOINS[currency.chainId as ChainId].some((stablecoin) => stablecoin.equals(currency))
 }
+
+export const UNKNOWN_TOKEN_SYMBOL = 'UNKNOWN'
+export const UNKNOWN_TOKEN_NAME = 'Unknown Token'

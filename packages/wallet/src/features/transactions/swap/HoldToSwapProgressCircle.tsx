@@ -1,7 +1,7 @@
-import { impactAsync, ImpactFeedbackStyle } from 'expo-haptics'
 import { useEffect, useRef } from 'react'
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated'
 import Svg, { Circle } from 'react-native-svg'
+import { HapticFeedback } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import {
   SwapScreen,
@@ -74,7 +74,7 @@ function useHapticFeedback(): void {
 
   useEffect(() => {
     impactCount.current += 1
-    impactAsync(ImpactFeedbackStyle.Light).catch(() => undefined)
+    HapticFeedback.light().catch(() => undefined)
 
     const hapticImpactInterval = HOLD_TO_SWAP_TIMEOUT / 3
 
@@ -82,9 +82,9 @@ function useHapticFeedback(): void {
       impactCount.current += 1
 
       if (impactCount.current === 2) {
-        impactAsync(ImpactFeedbackStyle.Medium).catch(() => undefined)
+        HapticFeedback.medium().catch(() => undefined)
       } else {
-        impactAsync(ImpactFeedbackStyle.Heavy).catch(() => undefined)
+        HapticFeedback.success().catch(() => undefined)
         clearInterval(timeout)
       }
     }, hapticImpactInterval)

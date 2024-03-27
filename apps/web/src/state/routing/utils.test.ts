@@ -29,7 +29,6 @@ const BASE_ARGS = {
   userOptedOutOfUniswapX: false,
   isUniswapXDefaultEnabled: false,
   sendPortionEnabled: true,
-  gatewayDNSUpdateEnabled: false,
 }
 
 function constructArgs(currencyIn: Currency, currencyOut: Currency): GetQuoteArgs {

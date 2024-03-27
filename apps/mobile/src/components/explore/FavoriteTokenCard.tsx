@@ -1,4 +1,3 @@
-import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo, useCallback } from 'react'
 import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
@@ -10,7 +9,7 @@ import { useAnimatedCardDragStyle, useExploreTokenContextMenu } from 'src/compon
 import { Loader } from 'src/components/loading'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
-import { AnimatedFlex, AnimatedTouchableArea, Flex, Text } from 'ui/src'
+import { AnimatedFlex, AnimatedTouchableArea, Flex, ImpactFeedbackStyle, Text } from 'ui/src'
 import { borderRadii, imageSizes } from 'ui/src/theme'
 import { useFavoriteTokenCardQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType } from 'utilities/src/format/types'

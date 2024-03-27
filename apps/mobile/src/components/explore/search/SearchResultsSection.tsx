@@ -21,6 +21,7 @@ import {
   SafetyLevel,
   useExploreSearchQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import i18n from 'uniswap/src/i18n/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
@@ -30,7 +31,6 @@ import {
   SearchResultType,
   TokenSearchResult,
 } from 'wallet/src/features/search/SearchResult'
-import i18n from 'wallet/src/i18n/i18n'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { SEARCH_RESULT_HEADER_KEY } from './constants'
 import { SearchResultOrHeader } from './types'

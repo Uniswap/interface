@@ -57,7 +57,7 @@ describe(toGraphQLChain, () => {
   })
 
   it('handle unsupported chain', () => {
-    expect(toGraphQLChain(ChainId.PolygonMumbai)).toEqual(null)
+    expect(toGraphQLChain(ChainId.PolygonMumbai)).toEqual(undefined)
   })
 })
 

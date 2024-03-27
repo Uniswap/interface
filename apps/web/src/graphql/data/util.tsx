@@ -4,13 +4,18 @@ import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'constants/tokens'
 import ms from 'ms'
+import { ExploreTab } from 'pages/Explore'
 import { useEffect } from 'react'
 import { DefaultTheme } from 'styled-components'
 import { ThemeColors } from 'theme/colors'
+import {
+  Chain,
+  ContractInput,
+  HistoryDuration,
+  PriceSource,
+  TokenStandard,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
-
-import { ExploreTab } from 'pages/Explore'
-import { Chain, ContractInput, HistoryDuration, PriceSource, TokenStandard } from './__generated__/types-and-hooks'
 
 export enum PollingInterval {
   Slow = ms(`5m`),
@@ -59,11 +64,22 @@ export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
 
 export type PricePoint = { timestamp: number; value: number }
 
-export function isPricePoint(p: PricePoint | null): p is PricePoint {
-  return p !== null
+export function isPricePoint(p: PricePoint | undefined): p is PricePoint {
+  return p !== undefined
 }
 
-export const GQL_MAINNET_CHAINS = [
+export const GQL_MAINNET_CHAINS_MUTABLE = [
+  Chain.Ethereum,
+  Chain.Polygon,
+  Chain.Celo,
+  Chain.Optimism,
+  Chain.Arbitrum,
+  Chain.Bnb,
+  Chain.Avalanche,
+  Chain.Base,
+]
+
+const GQL_MAINNET_CHAINS = [
   Chain.Ethereum,
   Chain.Polygon,
   Chain.Celo,
@@ -126,7 +142,8 @@ export function gqlToCurrency(token: {
   if (!chainId) return undefined
   if (token.standard === TokenStandard.Native || token.address === NATIVE_CHAIN_ID || !token.address)
     return nativeOnChain(chainId)
-  else return new Token(chainId, token.address, token.decimals ?? 18, token.symbol, token.name)
+  else
+    return new Token(chainId, token.address, token.decimals ?? 18, token.symbol ?? undefined, token.name ?? undefined)
 }
 
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
@@ -249,9 +266,11 @@ export function getPoolDetailsURL(address: string, chain: Chain) {
 }
 
 export function unwrapToken<
-  T extends {
-    address?: string | null
-  } | null
+  T extends
+    | {
+        address?: string | null
+      }
+    | undefined
 >(chainId: number, token: T): T {
   if (!token?.address) return token
 

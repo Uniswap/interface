@@ -1,16 +1,16 @@
 import { useWeb3React } from '@web3-react/core'
 import { Unicon } from 'components/Unicon'
 import { Connection } from 'connection/types'
-import { useUniconV2Flag } from 'featureFlags/flags/uniconV2'
 import useENSAvatar from 'hooks/useENSAvatar'
+import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import styled from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap } from 'theme/styles'
 import { UniconV2 } from 'ui/src'
-import { getWalletMeta } from 'utils/walletMeta'
-
-import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { useUnitagByAddressWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
+import { getWalletMeta } from 'utils/walletMeta'
 import sockImg from '../../assets/svg/socks.svg'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import Identicon from '../Identicon'
@@ -99,7 +99,7 @@ const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'l
 const MainWalletIcon = ({ account, connection, size }: { account: string; connection: Connection; size: number }) => {
   const { unitag } = useUnitagByAddressWithoutFlag(account, Boolean(account))
   const { avatar } = useENSAvatar(account ?? undefined)
-  const uniconV2Enabled = useUniconV2Flag()
+  const uniconV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   if (!account) return null
 

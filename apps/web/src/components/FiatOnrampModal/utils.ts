@@ -9,8 +9,8 @@ import {
   WBTC,
   WETH_POLYGON,
 } from 'constants/tokens'
-import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { validateUrlChainParam } from 'graphql/data/util'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { MoonpaySupportedCurrencyCode } from './constants'
 

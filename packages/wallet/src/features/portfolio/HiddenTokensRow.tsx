@@ -1,6 +1,5 @@
-import { ImpactFeedbackStyle } from 'expo-haptics'
 import { useTranslation } from 'react-i18next'
-import { AnimatePresence, Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Flex, Icons, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 export function HiddenTokensRow({
@@ -42,35 +41,20 @@ export function HiddenTokensRow({
             justifyContent="center"
             pl="$spacing12"
             pr="$spacing8"
-            py="$spacing8"
-            // set width because otherwise the Text/Frame move as they animate
-            width={93}>
-            <AnimatePresence exitBeforeEnter initial={false}>
-              <Text
-                key={isExpanded ? 0 : 1}
-                animation="100ms"
-                color="$neutral2"
-                enterStyle={{
-                  y: -5,
-                  opacity: 0,
-                }}
-                exitStyle={{
-                  y: 5,
-                  opacity: 0,
-                }}
-                textAlign="center"
-                userSelect="none"
-                variant="buttonLabel3"
-                width={45}>
-                {isExpanded ? t('common.button.hide') : t('common.button.show')}
-              </Text>
-            </AnimatePresence>
+            py="$spacing8">
+            <Text
+              allowFontScaling={false}
+              color="$neutral2"
+              textAlign="center"
+              userSelect="none"
+              variant="buttonLabel3">
+              {isExpanded ? t('common.button.hide') : t('common.button.show')}
+            </Text>
             <Icons.RotatableChevron
               animation="semiBouncy"
               color="$neutral2"
-              direction="down"
+              direction={isExpanded ? 'up' : 'down'}
               height={iconSizes.icon20}
-              rotate={`${isExpanded ? 180 : 0}deg`}
               width={iconSizes.icon20}
             />
           </Flex>

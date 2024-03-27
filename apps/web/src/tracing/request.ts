@@ -1,7 +1,7 @@
 import { INFURA_PREFIX_TO_CHAIN_ID } from 'constants/networks'
 import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { TraceContext } from 'tracing/types'
-import { Chain } from '../graphql/data/__generated__/types-and-hooks'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { trace as startTrace } from './trace'
 
 export function patchFetch(api: Pick<typeof globalThis, 'fetch'>) {

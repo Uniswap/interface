@@ -1,6 +1,7 @@
 import { ApolloError } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import { ChainId, Percent } from '@uniswap/sdk-core'
 import { DoubleTokenAndChainLogo } from 'components/Pools/PoolDetails/PoolDetailsHeader'
 import Row from 'components/Row'
@@ -9,9 +10,10 @@ import { Cell } from 'components/Table/Cell'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Table/styled'
 import { NameText } from 'components/Tokens/TokenTable'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { BIPS_BASE } from 'constants/misc'
-import { ProtocolVersion, Token } from 'graphql/data/__generated__/types-and-hooks'
+import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { PoolSortFields, TablePool, useTopPools } from 'graphql/data/pools/useTopPools'
 import {
   OrderDirection,
@@ -26,6 +28,7 @@ import { ReactElement, ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
@@ -159,14 +162,26 @@ export function TopPoolTable() {
     resetSortAscending()
   }, [resetSortAscending, resetSortMethod])
 
-  const { topPools, loading, error } = useTopPools(
+  const { topPools, loading, errorV3, errorV2 } = useTopPools(
     { sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc },
     chainId
   )
+  const combinedError =
+    errorV2 && errorV3
+      ? new ApolloError({ errorMessage: `Could not retrieve V2 and V3 Top Pools on chain: ${chainId}` })
+      : undefined
+  const allDataStillLoading = loading && !topPools.length
+  useUpdateManualOutage({ chainId, errorV3, errorV2 })
 
   return (
     <TableWrapper data-testid="top-pools-explore-table">
-      <PoolsTable pools={topPools} loading={loading} error={error} chainId={chainId} maxWidth={1200} />
+      <PoolsTable
+        pools={topPools}
+        loading={allDataStillLoading}
+        error={combinedError}
+        chainId={chainId}
+        maxWidth={1200}
+      />
     </TableWrapper>
   )
 }
@@ -194,12 +209,15 @@ export function PoolsTable({
   const sortAscending = useAtomValue(sortAscendingAtom)
   const orderDirection = sortAscending ? OrderDirection.Asc : OrderDirection.Desc
   const sortMethod = useAtomValue(sortMethodAtom)
+  const filterString = useAtomValue(exploreSearchStringAtom)
 
   const poolTableValues: PoolTableValues[] | undefined = useMemo(
     () =>
       pools?.map((pool, index) => {
+        const poolSortRank = index + 1
+
         return {
-          index: index + 1,
+          index: poolSortRank,
           poolDescription: (
             <PoolDescription
               token0={unwrapToken(chainId, pool.token0)}
@@ -215,9 +233,24 @@ export function PoolsTable({
           volumeWeek: pool.volumeWeek,
           turnover: pool.turnover,
           link: `/explore/pools/${chainIdToBackendName(chainId).toLowerCase()}/${pool.hash}`,
+          analytics: {
+            elementName: InterfaceElementName.POOLS_TABLE_ROW,
+            properties: {
+              chain_id: chainId,
+              pool_address: pool.hash,
+              token0_address: pool.token0.address,
+              token0_symbol: pool.token0.symbol,
+              token1_address: pool.token1.address,
+              token1_symbol: pool.token1.symbol,
+              pool_list_index: index,
+              pool_list_rank: poolSortRank,
+              pool_list_length: pools.length,
+              search_pool_input: filterString,
+            },
+          },
         }
       }) ?? [],
-    [chainId, pools]
+    [chainId, filterString, pools]
   )
 
   const showLoadingSkeleton = loading || !!error

@@ -1,8 +1,7 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, useSporeColors } from 'ui/src'
-import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
-import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { fonts, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
@@ -14,11 +13,13 @@ export function SwapSettingsMessage({
   trade,
   slippageTolerance,
   showSlippageWarning,
+  showEmpty = true,
 }: {
   inputWarning?: string
   trade: Trade<Currency, Currency, TradeType> | null
   slippageTolerance: number
   showSlippageWarning: boolean
+  showEmpty?: boolean
 }): JSX.Element | null {
   const colors = useSporeColors()
   const { t } = useTranslation()
@@ -28,11 +29,7 @@ export function SwapSettingsMessage({
   if (inputWarning) {
     return (
       <Flex centered row gap="$spacing8" height={fonts.body2.lineHeight * 2 + spacing.spacing8}>
-        <AlertTriangleIcon
-          color={colors.DEP_accentWarning.val}
-          height={iconSizes.icon16}
-          width={iconSizes.icon16}
-        />
+        <Icons.AlertTriangle color="$DEP_accentWarning" size="$icon.16" />
         <Text color="$DEP_accentWarning" textAlign="center" variant="body2">
           {inputWarning}
         </Text>
@@ -41,7 +38,7 @@ export function SwapSettingsMessage({
   }
 
   return trade ? (
-    <Flex centered gap="$spacing8" height={fonts.body2.lineHeight * 2 + spacing.spacing8}>
+    <Flex centered gap="$spacing8" py="$spacing4">
       <Text color="$neutral2" textAlign="center" variant="body2">
         {trade.tradeType === TradeType.EXACT_INPUT
           ? t('swap.settings.slippage.input.receive.unformatted', {
@@ -61,18 +58,14 @@ export function SwapSettingsMessage({
       </Text>
       {showSlippageWarning ? (
         <Flex centered row gap="$spacing8">
-          <AlertTriangleIcon
-            color={colors.DEP_accentWarning.val}
-            height={iconSizes.icon16}
-            width={iconSizes.icon16}
-          />
+          <Icons.AlertTriangle color={colors.DEP_accentWarning.val} size="$icon.16" />
           <Text color="$DEP_accentWarning" variant="body2">
             {t('swap.settings.slippage.warning.message')}
           </Text>
         </Flex>
       ) : null}
     </Flex>
-  ) : (
+  ) : showEmpty ? (
     <Flex height={fonts.body2.lineHeight} />
-  )
+  ) : null
 }

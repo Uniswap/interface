@@ -4,8 +4,10 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { ChainSelector } from 'components/NavBar/ChainSelector'
+import { useCurrencySearchResults } from 'components/SearchModal/useCurrencySearchResults'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import useSelectChain from 'hooks/useSelectChain'
 import useToggle from 'hooks/useToggle'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
@@ -16,8 +18,8 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
-
-import { useCurrencySearchResults } from 'components/SearchModal/useCurrencySearchResults'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { isAddress } from 'utilities/src/addresses'
 import Column from '../Column'
 import Row, { RowBetween } from '../Row'
@@ -86,25 +88,40 @@ export function CurrencySearch({
   const debouncedQuery = useDebounce(searchQuery, 200)
   const isAddressSearch = isAddress(debouncedQuery)
 
-  const { searchCurrency, allCurrencyRows } = useCurrencySearchResults({
+  const {
+    searchCurrency,
+    allCurrencyRows,
+    loading: currencySearchResultsLoading,
+  } = useCurrencySearchResults({
     searchQuery: debouncedQuery,
     filters,
     selectedCurrency,
     otherSelectedCurrency,
   })
 
-  const { balanceMap, loading: balancesAreLoading } = useTokenBalances()
+  const { balanceMap } = useTokenBalances()
 
-  const isLoading = Boolean(balancesAreLoading && !tokenLoaderTimerElapsed)
+  const gqlTokenListsEnabled = useFeatureFlag(FeatureFlags.GqlTokenLists)
+  const isLoading = Boolean(
+    gqlTokenListsEnabled ? currencySearchResultsLoading : currencySearchResultsLoading && !tokenLoaderTimerElapsed
+  )
 
   const native = useNativeCurrency(chainId)
 
+  const selectChain = useSelectChain()
   const handleCurrencySelect = useCallback(
-    (currency: Currency, hasWarning?: boolean) => {
+    async (currency: Currency, hasWarning?: boolean) => {
+      if (currency.chainId !== chainId) {
+        const result = await selectChain(currency.chainId)
+        if (!result) {
+          // failed to switch chains, don't select the currency
+          return
+        }
+      }
       onCurrencySelect(currency, hasWarning)
       if (!hasWarning) onDismiss()
     },
-    [onDismiss, onCurrencySelect]
+    [chainId, onCurrencySelect, onDismiss, selectChain]
   )
 
   // clear the input on open
@@ -155,6 +172,11 @@ export function CurrencySearch({
     }, 3000)
     return () => clearTimeout(tokenLoaderTimer)
   }, [])
+
+  useEffect(() => {
+    // Reset token loading timer when search query changes, since new search terms fire new backend requests.
+    setTokenLoaderTimerElapsed(false)
+  }, [searchQuery])
 
   return (
     <ContentWrapper>

@@ -52,7 +52,6 @@ export interface GetQuoteArgs {
   needsWrapIfUniswapX: boolean
   uniswapXForceSyntheticQuotes: boolean
   sendPortionEnabled: boolean
-  gatewayDNSUpdateEnabled: boolean
 }
 
 export type GetQuickQuoteArgs = {
@@ -68,7 +67,6 @@ export type GetQuickQuoteArgs = {
   tradeType: TradeType
   inputTax: Percent
   outputTax: Percent
-  gatewayDNSUpdateAllEnabled: boolean
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts

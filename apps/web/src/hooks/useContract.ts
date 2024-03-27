@@ -16,9 +16,8 @@ import V3MigratorJson from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator
 import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
-import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
+import { useNetworkProviders } from 'hooks/useNetworkProviders'
 import { useEffect, useMemo } from 'react'
 import ARGENT_WALLET_DETECTOR_ABI from 'uniswap/src/abis/argent-wallet-detector.json'
 import EIP_2612 from 'uniswap/src/abis/eip_2612.json'
@@ -75,7 +74,7 @@ function useMainnetContract<T extends Contract = Contract>(address: string | und
   const { chainId } = useWeb3React()
   const isMainnet = chainId === ChainId.MAINNET
   const contract = useContract(isMainnet ? address : undefined, ABI, false)
-  const providers = useFallbackProviderEnabled() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
+  const providers = useNetworkProviders()
 
   return useMemo(() => {
     if (isMainnet) return contract

@@ -79,7 +79,12 @@ describe('transaction reducer', () => {
           hash: '0x0',
           chainId: ChainId.MAINNET,
           nonce: 2,
-          info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0', amount: '10000' },
+          info: {
+            type: TransactionType.APPROVAL,
+            spender: '0x0',
+            tokenAddress: '0x0',
+            amount: '10000',
+          },
           from: '0x0',
         })
       )
@@ -132,7 +137,12 @@ describe('transaction reducer', () => {
           hash: '0x0',
           chainId: ChainId.MAINNET,
           nonce: 3,
-          info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0', amount: '10000' },
+          info: {
+            type: TransactionType.APPROVAL,
+            spender: '0x0',
+            tokenAddress: '0x0',
+            amount: '10000',
+          },
           from: '0x0',
         })
       )
@@ -152,7 +162,12 @@ describe('transaction reducer', () => {
           hash: '0x0',
           chainId: ChainId.MAINNET,
           nonce: 4,
-          info: { type: TransactionType.APPROVAL, spender: '0x0', tokenAddress: '0x0', amount: '10000' },
+          info: {
+            type: TransactionType.APPROVAL,
+            spender: '0x0',
+            tokenAddress: '0x0',
+            amount: '10000',
+          },
           from: '0x0',
         })
       )
@@ -182,7 +197,12 @@ describe('transaction reducer', () => {
           chainId: ChainId.MAINNET,
           hash: '0x0',
           nonce: 5,
-          info: { type: TransactionType.APPROVAL, spender: 'abc', tokenAddress: 'def', amount: '10000' },
+          info: {
+            type: TransactionType.APPROVAL,
+            spender: 'abc',
+            tokenAddress: 'def',
+            amount: '10000',
+          },
           from: 'abc',
         })
       )
@@ -191,7 +211,12 @@ describe('transaction reducer', () => {
           chainId: ChainId.OPTIMISM,
           nonce: 6,
           hash: '0x1',
-          info: { type: TransactionType.APPROVAL, spender: 'abc', tokenAddress: 'def', amount: '10000' },
+          info: {
+            type: TransactionType.APPROVAL,
+            spender: 'abc',
+            tokenAddress: 'def',
+            amount: '10000',
+          },
           from: 'abc',
         })
       )
@@ -214,7 +239,12 @@ describe('transaction reducer', () => {
           chainId: ChainId.MAINNET,
           hash: '0x0',
           nonce: 7,
-          info: { type: TransactionType.APPROVAL, spender: 'abc', tokenAddress: 'def', amount: '10000' },
+          info: {
+            type: TransactionType.APPROVAL,
+            spender: 'abc',
+            tokenAddress: 'def',
+            amount: '10000',
+          },
           from: 'abc',
         })
       )

@@ -1,8 +1,7 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
-import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import { useNetworkProviders } from 'hooks/useNetworkProviders'
 import { ReactNode, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 const MISSING_PROVIDER = Symbol()
@@ -83,7 +82,7 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
   }, [activeChainId, provider, windowVisible, onChainBlock])
 
   // Poll once for the mainnet block number using the network provider.
-  const networkProviders = useFallbackProviderEnabled() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
+  const networkProviders = useNetworkProviders()
   useEffect(() => {
     networkProviders[ChainId.MAINNET]
       .getBlockNumber()

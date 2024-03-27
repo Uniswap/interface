@@ -1,13 +1,51 @@
 import { WebKeyring } from 'wallet/src/features/wallet/Keyring/Keyring.web'
 import { SAMPLE_PASSWORD, SAMPLE_SEED, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 
-jest.mock('./crypto')
+const base64EncryptionKey = '9AUCx5ZQFC60vBL51aEwSCPIvAcalrZv3bRKVnRa3E8='
+jest.mock('./crypto', () => ({
+  ...jest.requireActual('./crypto'),
+  exportKey: jest.fn().mockReturnValue('9AUCx5ZQFC60vBL51aEwSCPIvAcalrZv3bRKVnRa3E8='),
+  encrypt: jest.fn().mockResolvedValue('encrypted'),
+  decrypt: jest.fn().mockImplementation(async ({ encryptionKey, ciphertext }): Promise<string> => {
+    const SAMPLE_SEED_MOCK = [
+      'dove',
+      'lumber',
+      'quote',
+      'board',
+      'young',
+      'robust',
+      'kit',
+      'invite',
+      'plastic',
+      'regular',
+      'skull',
+      'history',
+    ].join(' ')
+    if (ciphertext === 'fail') {
+      return Promise.resolve('an invalid seed phrase that will fail at Wallet.fromMnemonic()')
+    }
+    const b64 = await jest.requireActual('./crypto').exportKey(encryptionKey)
+    if (b64 === base64EncryptionKey) {
+      return Promise.resolve(SAMPLE_SEED_MOCK)
+    }
+
+    return Promise.reject('Wrong password')
+  }),
+  generateNewSalt: jest
+    .fn()
+    .mockReturnValue(
+      new Uint8Array([190, 197, 42, 2, 229, 18, 122, 161, 234, 166, 219, 110, 247, 102, 197, 214])
+    ),
+  generateNewIV: jest
+    .fn()
+    .mockReturnValue(new Uint8Array([142, 65, 15, 198, 69, 200, 74, 43, 159, 8, 170, 46])),
+}))
 
 const mockStore = async ({ data }: { data: Record<string, string> }): Promise<void> => {
   await chrome.storage.local.set(data)
 }
 
-const PASSWORD_KEY = 'com.uniswap.web.password'
+const ENCRYPTION_KEY_KEY = 'com.uniswap.web.encryptionKey'
 
 describe(WebKeyring, () => {
   beforeEach(async () => {
@@ -55,7 +93,7 @@ describe(WebKeyring, () => {
     beforeEach(() => {
       jest.spyOn(chrome.storage.session, 'get').mockImplementation(() => {
         return new Promise((resolve) => {
-          resolve({ [PASSWORD_KEY]: SAMPLE_PASSWORD })
+          resolve({ [ENCRYPTION_KEY_KEY]: base64EncryptionKey })
         })
       })
     })

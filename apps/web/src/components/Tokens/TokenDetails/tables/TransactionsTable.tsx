@@ -1,3 +1,4 @@
+import { ApolloError } from '@apollo/client'
 import { Trans } from '@lingui/macro'
 import { createColumnHelper } from '@tanstack/react-table'
 import { ChainId, Token } from '@uniswap/sdk-core'
@@ -13,7 +14,7 @@ import {
   TimestampCell,
   TokenLinkCell,
 } from 'components/Table/styled'
-import { Token as GQLToken } from 'graphql/data/__generated__/types-and-hooks'
+import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { TokenTransactionType, useTokenTransactions } from 'graphql/data/useTokenTransactions'
 import { unwrapToken } from 'graphql/data/util'
 import { OrderDirection, Swap_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
@@ -21,6 +22,7 @@ import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
+import { Token as GQLToken } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -64,7 +66,19 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: ChainI
     sortBy: Swap_OrderBy.Timestamp,
     sortDirection: OrderDirection.Desc,
   })
-  const { transactions, loading, loadMore, error } = useTokenTransactions(referenceToken.address, chainId, filter)
+  const { transactions, loading, loadMore, errorV2, errorV3 } = useTokenTransactions(
+    referenceToken.address,
+    chainId,
+    filter
+  )
+  const combinedError =
+    errorV2 && errorV3
+      ? new ApolloError({
+          errorMessage: `Could not retrieve V2 and V3 Transactions for token: ${referenceToken.address} on chain: ${chainId}`,
+        })
+      : undefined
+  const allDataStillLoading = loading && !transactions.length
+  useUpdateManualOutage({ chainId, errorV3, errorV2 })
   const unwrappedReferenceToken = unwrapToken(chainId, referenceToken)
 
   const data = useMemo(
@@ -95,7 +109,7 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: ChainI
     [transactions]
   )
 
-  const showLoadingSkeleton = loading || !!error
+  const showLoadingSkeleton = allDataStillLoading || !!combinedError
   // TODO(WEB-3236): once GQL BE Transaction query is supported add usd, token0 amount, and token1 amount sort support
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<SwapTransaction>()
@@ -256,7 +270,14 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: ChainI
 
   return (
     <TableWrapper>
-      <Table columns={columns} data={data} loading={loading} error={error} loadMore={loadMore} maxHeight={600} />
+      <Table
+        columns={columns}
+        data={data}
+        loading={allDataStillLoading}
+        error={combinedError}
+        loadMore={loadMore}
+        maxHeight={600}
+      />
     </TableWrapper>
   )
 }

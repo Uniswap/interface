@@ -8,6 +8,8 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { isNonJestDev } from 'utilities/src/environment'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -18,8 +20,6 @@ import {
   getPerformanceLink,
   getRestLink,
 } from 'wallet/src/data/links'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 
 type ApolloClientRef = {
   current: ApolloClient<NormalizedCacheObject> | null
@@ -44,10 +44,6 @@ export const apolloClientRef: ApolloClientRef = ((): ApolloClientRef => {
     set current(newApolloClient) {
       if (!newApolloClient) {
         throw new Error("Can't set `apolloClient` to `null`")
-      }
-
-      if (apolloClient) {
-        throw new Error('`apolloClient` should not be updated after it has already been set')
       }
 
       apolloClient = newApolloClient
@@ -76,7 +72,7 @@ if (isNonJestDev) {
 export const usePersistedApolloClient = (): ApolloClient<NormalizedCacheObject> | undefined => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
   const customEndpoint = useAppSelector(selectCustomEndpoint)
-  const cloudflareGatewayEnabled = useFeatureFlag(FEATURE_FLAGS.CloudflareGateway)
+  const cloudflareGatewayEnabled = useFeatureFlag(FeatureFlags.GatewayDNSUpdateMobile)
 
   const apolloLink = customEndpoint
     ? getCustomGraphqlHttpLink(customEndpoint)

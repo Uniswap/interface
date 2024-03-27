@@ -1,4 +1,3 @@
-import { impactAsync } from 'expo-haptics'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, Share } from 'react-native'
@@ -8,7 +7,7 @@ import { TripleDot } from 'src/components/icons/TripleDot'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, TouchableArea } from 'ui/src'
+import { Flex, HapticFeedback, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { logger } from 'utilities/src/logger/logger'
@@ -34,7 +33,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
     if (!address) {
       return
     }
-    await impactAsync()
+    await HapticFeedback.impact()
     await setClipboard(address)
     dispatch(
       pushNotification({ type: AppNotificationType.Copied, copyType: CopyNotificationType.Address })

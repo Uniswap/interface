@@ -1,11 +1,11 @@
+import { useCallback, useMemo, useRef } from 'react'
 import {
   Chain,
   PoolTransaction,
   PoolTransactionType,
   useV2TransactionsQuery,
   useV3TransactionsQuery,
-} from 'graphql/data/__generated__/types-and-hooks'
-import { useCallback, useMemo, useRef } from 'react'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export enum TransactionType {
   SWAP = 'Swap',
@@ -89,9 +89,13 @@ export function useAllTransactions(
 
   const transactions: PoolTransaction[] = useMemo(() => {
     const v3Transactions =
-      dataV3?.v3Transactions?.filter((tx) => tx.type && filter.includes(BETypeToTransactionType[tx.type])) ?? []
+      dataV3?.v3Transactions?.filter(
+        (tx): tx is PoolTransaction => tx.type && filter.includes(BETypeToTransactionType[tx.type])
+      ) ?? []
     const v2Transactions =
-      dataV2?.v2Transactions?.filter((tx) => tx.type && filter.includes(BETypeToTransactionType[tx.type])) ?? []
+      dataV2?.v2Transactions?.filter(
+        (tx): tx is PoolTransaction => tx !== undefined && tx.type && filter.includes(BETypeToTransactionType[tx.type])
+      ) ?? []
     return [...v3Transactions, ...v2Transactions]
       .sort((a, b) => (b?.timestamp || 0) - (a?.timestamp || 0))
       .slice(0, querySizeRef.current)
@@ -100,7 +104,8 @@ export function useAllTransactions(
   return {
     transactions,
     loading: loadingV2 || loadingV3,
-    error: errorV2 || errorV3,
+    errorV2,
+    errorV3,
     loadMore,
   }
 }

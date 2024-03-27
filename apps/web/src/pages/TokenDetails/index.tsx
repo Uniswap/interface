@@ -8,17 +8,16 @@ import { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSect
 import InvalidTokenDetails from 'components/Tokens/TokenDetails/InvalidTokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { checkWarning } from 'constants/tokenSafety'
-import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
-import { useTokenQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL, nativeOnChain } from 'constants/tokens'
 import { gqlToCurrency, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useSrcColor } from 'hooks/useColor'
-import { UNKNOWN_TOKEN_SYMBOL } from 'lib/hooks/useCurrency'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useLocation, useParams } from 'react-router-dom'
 import styled, { useTheme } from 'styled-components'
 import { ThemeProvider } from 'theme'
+import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isAddress } from 'utilities/src/addresses'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 import { LoadedTDPContext, MultiChainMap, PendingTDPContext, TDPProvider } from './TDPContext'
@@ -40,7 +39,7 @@ function useOnChainToken(address: string | undefined, chainId: ChainId, skip: bo
 
 /** Resolves a currency object from the following sources in order of preference: statically stored natives, query data, backup on-chain fetch data */
 function useTDPCurrency(
-  tokenQuery: ReturnType<typeof useTokenQuery>,
+  tokenQuery: ReturnType<typeof useTokenWebQuery>,
   tokenAddress: string,
   currencyChainId: ChainId,
   isNative: boolean
@@ -63,13 +62,13 @@ function useTDPCurrency(
 }
 
 /** Returns a map to store addresses and balances of the TDP token on other chains */
-function useMultiChainMap(tokenQuery: ReturnType<typeof useTokenQuery>) {
+function useMultiChainMap(tokenQuery: ReturnType<typeof useTokenWebQuery>) {
   const { account } = useWeb3React()
 
   // Build map to store addresses and balances of this token on other chains
   const { data: balanceQuery } = useCachedPortfolioBalancesQuery({ account })
   return useMemo(() => {
-    const tokenBalances = balanceQuery?.portfolios?.[0].tokenBalances
+    const tokenBalances = balanceQuery?.portfolios?.[0]?.tokenBalances
     const tokensAcrossChains = tokenQuery.data?.token?.project?.tokens
     if (!tokensAcrossChains) return {}
     return tokensAcrossChains.reduce<MultiChainMap>((map, current) => {
@@ -77,7 +76,7 @@ function useMultiChainMap(tokenQuery: ReturnType<typeof useTokenQuery>) {
         if (!map[current.chain]) map[current.chain] = {}
         const update = map[current.chain] ?? {}
         update.address = current.address
-        update.balance = tokenBalances?.find((tokenBalance) => tokenBalance.token?.id === current.id)
+        update.balance = tokenBalances?.find((tokenBalance) => tokenBalance?.token?.id === current.id)
         map[current.chain] = update
       }
       return map
@@ -95,7 +94,10 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
 
   const tokenDBAddress = isNative ? getNativeTokenDBAddress(currencyChain) : tokenAddress
 
-  const tokenQuery = useTokenQuery({ variables: { address: tokenDBAddress, chain: currencyChain }, errorPolicy: 'all' })
+  const tokenQuery = useTokenWebQuery({
+    variables: { address: tokenDBAddress, chain: currencyChain },
+    errorPolicy: 'all',
+  })
   const chartState = useCreateTDPChartState(tokenDBAddress, currencyChain)
 
   const multiChainMap = useMultiChainMap(tokenQuery)

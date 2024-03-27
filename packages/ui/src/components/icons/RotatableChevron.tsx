@@ -42,11 +42,7 @@ function _RotatableChevron({
   }
 
   return (
-    <Flex
-      centered
-      borderRadius="$roundedFull"
-      style={{ transform: [{ rotate: degree }] }}
-      {...rest}>
+    <Flex centered borderRadius="$roundedFull" rotate={degree} {...rest}>
       {/* @ts-expect-error TODO(MOB-1570) this works but we should migrate to size prop */}
       <Icons.Chevron color={color} height={height} width={width} />
     </Flex>

@@ -1,5 +1,10 @@
-import { MediaType, NftActivityType, NftStandard, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { ActivityEvent, GenieAsset, Markets, WalletAsset } from 'nft/types'
+import {
+  MediaType,
+  NftActivityType,
+  NftStandard,
+  OrderStatus,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export const TEST_NFT_ASSET: GenieAsset = {
   id: 'TmZ0QXNzZXQ6MHhlZDVhZjM4ODY1MzU2N2FmMmYzODhlNjIyNGRjN2M0YjMyNDFjNTQ0XzMzMTg=',

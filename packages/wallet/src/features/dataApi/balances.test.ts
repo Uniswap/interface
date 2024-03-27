@@ -9,6 +9,8 @@ import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { FavoritesState, initialFavoritesState } from 'wallet/src/features/favorites/slice'
 import { WalletState, initialWalletState } from 'wallet/src/features/wallet/slice'
 import {
+  ACCOUNT,
+  ACCOUNT2,
   ARBITRUM_CURRENCY,
   BASE_CURRENCY,
   MAINNET_CURRENCY,
@@ -172,14 +174,13 @@ describe(usePortfolioValueModifiers, () => {
         () => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]),
         {
           preloadedState: {
+            wallet: {
+              ...initialWalletState,
+              accounts: { [SAMPLE_SEED_ADDRESS_1]: ACCOUNT, [SAMPLE_SEED_ADDRESS_2]: ACCOUNT2 },
+            },
             favorites: mockFavoritesState({
-              [SAMPLE_SEED_ADDRESS_1]: {
-                [SAMPLE_CURRENCY_ID_1]: { isVisible: false },
-                [SAMPLE_CURRENCY_ID_2]: { isVisible: true },
-              },
-              [SAMPLE_SEED_ADDRESS_2]: {
-                [SAMPLE_CURRENCY_ID_1]: { isVisible: true },
-              },
+              [SAMPLE_CURRENCY_ID_1]: { isVisible: false },
+              [SAMPLE_CURRENCY_ID_2]: { isVisible: true },
             }),
           },
         }
@@ -208,10 +209,15 @@ describe(usePortfolioValueModifiers, () => {
           tokenIncludeOverrides: [
             {
               chain: Chain.Ethereum,
+              address: SAMPLE_CURRENCY_ID_2.replace('1-', '').toLocaleLowerCase(),
+            },
+          ],
+          tokenExcludeOverrides: [
+            {
+              chain: Chain.Ethereum,
               address: SAMPLE_CURRENCY_ID_1.replace('1-', '').toLocaleLowerCase(),
             },
           ],
-          tokenExcludeOverrides: [],
         },
       ])
     })

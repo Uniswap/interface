@@ -4,13 +4,14 @@ import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction
 import { MissingImageLogo } from 'components/Logo/AssetLogo'
 import { ChainLogo, getDefaultBorderRadius } from 'components/Logo/ChainLogo'
 import { Unicon } from 'components/Unicon'
-import { useUniconV2Flag } from 'featureFlags/flags/uniconV2'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import useENSAvatar from 'hooks/useENSAvatar'
 import React from 'react'
 import { Loader } from 'react-feather'
 import styled from 'styled-components'
 import { UniconV2 } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 
 const UnknownContract = styled(UnknownStatus)`
   color: ${({ theme }) => theme.neutral2};
@@ -124,7 +125,7 @@ function DoubleCurrencyLogo({ chainId, currencies, images, size }: DoubleCurrenc
 
 function PortfolioAvatar({ accountAddress, size }: { accountAddress: string; size: string }) {
   const { avatar, loading } = useENSAvatar(accountAddress, false)
-  const uniconV2Enabled = useUniconV2Flag()
+  const uniconV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   if (loading) {
     return <Loader size={size} />

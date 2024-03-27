@@ -1,4 +1,4 @@
-import { Chain } from '../../src/graphql/data/__generated__/types-and-hooks'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export default function getNetworkLogoUrl(network: string, origin: string) {
   switch (network) {

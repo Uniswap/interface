@@ -1,0 +1,33 @@
+query HistoricalProtocolVolume($chain: Chain!, $duration: HistoryDuration!) {
+  v3HistoricalProtocolVolume: historicalProtocolVolume(
+    chain: $chain
+    version: V3
+    duration: $duration
+  ) {
+    id
+    timestamp
+    value
+  }
+  v2HistoricalProtocolVolume: historicalProtocolVolume(
+    chain: $chain
+    version: V2
+    duration: $duration
+  ) {
+    id
+    timestamp
+    value
+  }
+}
+
+query DailyProtocolTVL($chain: Chain!) {
+  v3DailyProtocolTvl: dailyProtocolTvl(chain: $chain, version: V3) {
+    id
+    timestamp
+    value
+  }
+  v2DailyProtocolTvl: dailyProtocolTvl(chain: $chain, version: V2) {
+    id
+    timestamp
+    value
+  }
+}

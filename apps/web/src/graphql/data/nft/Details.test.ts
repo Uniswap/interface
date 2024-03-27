@@ -1,5 +1,4 @@
 import { renderHook } from 'test-utils/render'
-
 import { useNftAssetDetails } from './Details'
 
 describe('useNftAssetDetails', () => {
@@ -29,7 +28,7 @@ describe('useNftAssetDetails', () => {
       },
       loading: false,
     }))
-    jest.mock('../__generated__/types-and-hooks', () => ({
+    jest.mock('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks', () => ({
       useDetailsQuery: mockUseDetailsQuery,
     }))
     const { result } = renderHook(() => useNftAssetDetails('address', 'tokenId'))

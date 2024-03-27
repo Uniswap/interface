@@ -22,6 +22,7 @@ import { persistor, store } from 'src/app/store'
 import Trace from 'src/components/Trace/Trace'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
+// eslint-disable-next-line no-restricted-imports
 import { usePersistedApolloClient } from 'src/data/usePersistedApolloClient'
 import { initAppsFlyer } from 'src/features/analytics/appsflyer'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
@@ -44,7 +45,13 @@ import { Statsig, StatsigProvider } from 'statsig-react-native'
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import {
+  DUMMY_STATSIG_SDK_KEY,
+  ExperimentsWallet,
+} from 'uniswap/src/features/experiments/constants'
+import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/experiments/flags'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
+import i18n from 'uniswap/src/i18n/i18n'
 import { isDetoxBuild } from 'utilities/src/environment'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
@@ -52,11 +59,6 @@ import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { initFirebaseAppCheck } from 'wallet/src/features/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
-import {
-  DUMMY_STATSIG_SDK_KEY,
-  EXPERIMENT_NAMES,
-  FEATURE_FLAGS,
-} from 'wallet/src/features/experiments/constants'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
@@ -67,7 +69,6 @@ import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/Tran
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import i18n from 'wallet/src/i18n/i18n'
 import { SharedProvider } from 'wallet/src/provider'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { beforeSend } from 'wallet/src/utils/sentry'
@@ -167,14 +168,12 @@ function App(): JSX.Element | null {
 
 function SentryTags({ children }: PropsWithChildren): JSX.Element {
   useEffect(() => {
-    Object.entries(FEATURE_FLAGS).map(([_, featureFlagName]) => {
-      Sentry.setTag(
-        `featureFlag.${featureFlagName}`,
-        Statsig.checkGateWithExposureLoggingDisabled(featureFlagName)
-      )
-    })
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    for (const [_, flagKey] of WALLET_FEATURE_FLAG_NAMES.entries()) {
+      Sentry.setTag(`featureFlag.${flagKey}`, Statsig.checkGateWithExposureLoggingDisabled(flagKey))
+    }
 
-    Object.entries(EXPERIMENT_NAMES).map(([_, experimentName]) => {
+    Object.entries(ExperimentsWallet).map(([_, experimentName]) => {
       Sentry.setTag(
         `experiment.${experimentName}`,
         Statsig.getExperimentWithExposureLoggingDisabled(experimentName).getGroupName()

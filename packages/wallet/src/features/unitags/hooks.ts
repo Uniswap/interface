@@ -2,6 +2,8 @@ import { TFunction } from 'i18next'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getUniqueId } from 'react-native-device-info'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { useUnitagQuery } from 'uniswap/src/features/unitags/api'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import {
@@ -22,8 +24,6 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
 import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck'
 import { useENS } from 'wallet/src/features/ens/useENS'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
@@ -57,19 +57,19 @@ const MIN_UNITAG_LENGTH = 3
 const MAX_UNITAG_LENGTH = 20
 
 export const useUnitagByAddress = (address?: Address): UseUnitagAddressResponse => {
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
   return useUnitagByAddressWithoutFlag(address, unitagsFeatureFlagEnabled)
 }
 
 export const useUnitagByName = (name?: string): UseUnitagNameResponse => {
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
   return useUnitagByNameWithoutFlag(name, unitagsFeatureFlagEnabled)
 }
 
 export const useCanActiveAddressClaimUnitag = (): {
   canClaimUnitag: boolean
 } => {
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
   const activeAddress = useActiveAccountAddressWithThrow()
   const { data: deviceId } = useAsyncData(getUniqueId)
   const { refetchUnitagsCounter } = useUnitagUpdater()
@@ -100,7 +100,7 @@ export const useCanAddressClaimUnitag = (
   address?: Address,
   isUsernameChange?: boolean
 ): { canClaimUnitag: boolean; errorCode?: UnitagErrorCodes } => {
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
   const { data: deviceId } = useAsyncData(getUniqueId)
   const { refetchUnitagsCounter } = useUnitagUpdater()
   const skip = !unitagsFeatureFlagEnabled || !deviceId
@@ -184,7 +184,7 @@ export const useClaimUnitag = (): ((
   const pendingAccounts = usePendingAccounts()
   const signerManager = useWalletSigners()
   const { triggerRefetchUnitags } = useUnitagUpdater()
-  const unitagsDeviceAttestationEnabled = useFeatureFlag(FEATURE_FLAGS.UnitagsDeviceAttestation)
+  const unitagsDeviceAttestationEnabled = useFeatureFlag(FeatureFlags.UnitagsDeviceAttestation)
 
   return async (claim: UnitagClaim, context: UnitagClaimContext) => {
     const claimAccount = pendingAccounts[claim.address] || accounts[claim.address]

@@ -1,7 +1,7 @@
 type AreaName = keyof Pick<typeof chrome.storage, 'sync' | 'local' | 'managed' | 'session'>
 
 export const prefix = 'com.uniswap.web'
-export const passwordKey = `${prefix}.password`
+export const encryptionKeyKey = `${prefix}.encryptionKey`
 
 /**
  * Chrome storage wrapper

@@ -14,9 +14,11 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 
-import { Chain } from 'graphql/data/__generated__/types-and-hooks'
+import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { getTokenExploreURL, isBackendSupportedChain, validateUrlChainParam } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
+import { useResetAtom } from 'jotai/utils'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useExploreParams } from './redirects'
 import RecentTransactions from './tables/RecentTransactions'
 
@@ -103,6 +105,7 @@ const Pages: Array<Page> = [
 
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const tabNavRef = useRef<HTMLDivElement>(null)
+  const resetManualOutage = useResetAtom(manualChainOutageAtom)
 
   const initialKey: number = useMemo(() => {
     const key = initialTab && Pages.findIndex((page) => page.key === initialTab)
@@ -131,7 +134,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
     if (tabIndex !== -1) {
       setCurrentTab(tabIndex)
     }
-  }, [tab])
+    resetManualOutage()
+  }, [resetManualOutage, tab])
 
   const { component: Page, key: currentKey } = Pages[currentTab]
 

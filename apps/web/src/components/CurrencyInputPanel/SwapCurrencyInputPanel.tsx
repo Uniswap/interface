@@ -21,6 +21,7 @@ import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
+import { Text } from 'ui/src'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ButtonGray } from '../Button'
@@ -293,15 +294,17 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
           <FixedContainer>
             <AutoColumn gap="sm" justify="center">
               <Lock />
-              <ThemedText.BodySecondary fontSize="12px" textAlign="center" padding="0 12px">
+              <Text variant="body2" textAlign="center" px="$spacing12">
                 <Trans>The market price is outside your specified price range. Single-asset deposit only.</Trans>
-              </ThemedText.BodySecondary>
+              </Text>
             </AutoColumn>
           </FixedContainer>
         )}
 
         <Container hideInput={hideInput}>
-          <ThemedText.SubHeaderSmall style={{ userSelect: 'none' }}>{label}</ThemedText.SubHeaderSmall>
+          <Text variant="subheading2" userSelect="none">
+            {label}
+          </Text>
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>
             {!hideInput && (
               <div style={{ display: 'flex', flexGrow: 1 }} onClick={handleDisabledNumericalInputClick}>

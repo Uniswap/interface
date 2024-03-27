@@ -19,7 +19,7 @@ const FilterButton = styled.button<{ active: boolean; highlight?: boolean }>`
     opacity: ${({ theme, active }) => (active ? theme.opacity.hover : 1)};
   }
   :focus {
-    background-color: ${({ theme, active }) => (active ? theme.surface2 : theme.surface3)};
+    background-color: ${({ theme, active }) => (active ? theme.surface2 : 'none')};
   }
 `
 export default FilterButton

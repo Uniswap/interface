@@ -1,50 +1,14 @@
 import { isAddress } from '@ethersproject/address'
-import gql from 'graphql-tag'
 import { GenieCollection } from 'nft/types'
 import { blocklistedCollections } from 'nft/utils'
 import { useMemo } from 'react'
-
-import { NftCollection, useCollectionSearchQuery } from '../__generated__/types-and-hooks'
+import {
+  NftCollection,
+  useCollectionSearchQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { formatCollectionQueryData, useCollection } from './Collection'
 
 const MAX_SEARCH_RESULTS = 6
-
-gql`
-  query CollectionSearch($query: String!) {
-    nftCollections(filter: { nameQuery: $query }) {
-      edges {
-        cursor
-        node {
-          image {
-            url
-          }
-          isVerified
-          name
-          numAssets
-          nftContracts {
-            address
-            chain
-            name
-            symbol
-            totalSupply
-          }
-          markets(currencies: ETH) {
-            floorPrice {
-              currency
-              value
-            }
-          }
-        }
-      }
-      pageInfo {
-        endCursor
-        hasNextPage
-        hasPreviousPage
-        startCursor
-      }
-    }
-  }
-`
 
 interface useCollectionSearchReturnProps {
   data: GenieCollection[]

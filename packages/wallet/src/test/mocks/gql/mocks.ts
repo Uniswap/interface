@@ -17,6 +17,7 @@ export const mocks = {
     name: () => faker.lorem.word(),
     safetyLevel: () => SafetyLevel.Verified,
     tokens: () => new Array(4),
+    markets: () => null,
   },
   TokenProjectMarket: {
     currency: () => Currency.Eth,
@@ -26,7 +27,7 @@ export const mocks = {
   },
   Token: {
     id: () => faker.datatype.uuid(),
-    address: () => faker.finance.ethereumAddress(),
+    address: () => null,
     chain: () => randomChoice(GQL_CHAINS),
     decimals: () => 6,
     symbol: () => faker.lorem.word(),

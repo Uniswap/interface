@@ -1,0 +1,16 @@
+query SearchPopularTokensWeb($chain: Chain!, $orderBy: TokenSortableField) {
+  topTokens(chain: $chain, orderBy: $orderBy, page: 1, pageSize: 100) {
+    id
+    address
+    chain
+    symbol
+    name
+    decimals
+    project {
+      id
+      logoUrl
+      safetyLevel
+      isSpam
+    }
+  }
+}

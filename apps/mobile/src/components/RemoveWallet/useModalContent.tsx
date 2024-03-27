@@ -1,13 +1,13 @@
 import React, { useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { SvgProps } from 'react-native-svg'
-import { concatListOfAccountNames } from 'src/components/RemoveWallet/utils'
 import { Text, ThemeKeys } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import TrashIcon from 'ui/src/assets/icons/trash.svg'
 import WalletIcon from 'ui/src/assets/icons/wallet-filled.svg'
 import { ThemeNames } from 'ui/src/theme'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
+import { concatStrings } from 'utilities/src/primitives/string'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
@@ -106,9 +106,11 @@ export const useModalContent = ({
 
     // removing mnemonic account
     if (account?.type === AccountType.SignerMnemonic && currentStep === RemoveWalletStep.Final) {
-      const associatedAccountNames = concatListOfAccountNames(
-        associatedAccounts.filter((aa) => aa.address !== account?.address),
-        ', '
+      const associatedAccountNames = concatStrings(
+        associatedAccounts
+          .filter((aa): aa is Account => aa.address !== account?.address)
+          .map((aa) => aa.name ?? ''),
+        t('common.endAdornment')
       )
 
       return {

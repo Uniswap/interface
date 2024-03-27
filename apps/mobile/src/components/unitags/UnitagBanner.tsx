@@ -1,6 +1,6 @@
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Keyboard, StyleProp, ViewStyle } from 'react-native'
+import { Keyboard } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -10,12 +10,12 @@ import {
   Image,
   Text,
   TouchableArea,
+  TouchableAreaProps,
   useDeviceDimensions,
   useIsDarkMode,
-  useSporeColors,
 } from 'ui/src'
 import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/src/assets'
-import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
+import { iconSizes } from 'ui/src/theme'
 import { selectHasCompletedUnitagsIntroModal } from 'wallet/src/features/behaviorHistory/selectors'
 import { setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/constants'
@@ -40,7 +40,6 @@ export function UnitagBanner({
   const { t } = useTranslation()
   const { fullWidth } = useDeviceDimensions()
   const isDarkMode = useIsDarkMode()
-  const colors = useSporeColors()
   const hasCompletedUnitagsIntroModal = useAppSelector(selectHasCompletedUnitagsIntroModal)
 
   const imageWidth = compact
@@ -77,13 +76,13 @@ export function UnitagBanner({
     dispatch(setHasSkippedUnitagPrompt(true))
   }
 
-  const baseButtonStyle: StyleProp<ViewStyle> = {
-    backgroundColor: colors.accent1.get(),
-    borderRadius: borderRadii.rounded20,
+  const baseButtonStyle: TouchableAreaProps = {
+    backgroundColor: '$accent1',
+    borderRadius: '$rounded20',
     justifyContent: 'center',
     height: iconSizes.icon36,
-    paddingVertical: spacing.spacing8,
-    paddingHorizontal: spacing.spacing12,
+    py: '$spacing8',
+    px: '$spacing12',
   }
 
   return (
@@ -132,10 +131,7 @@ export function UnitagBanner({
           <Flex row gap="$spacing2">
             {/* TODO: replace with Button when it's extensible enough to accommodate designs */}
             <TouchableArea
-              style={{
-                ...baseButtonStyle,
-                backgroundColor: colors.accent1.get(),
-              }}
+              {...baseButtonStyle}
               testID={ElementName.Confirm}
               onPress={onPressClaimNow}>
               <Text color="white" variant="buttonLabel4">
@@ -143,10 +139,8 @@ export function UnitagBanner({
               </Text>
             </TouchableArea>
             <TouchableArea
-              style={{
-                ...baseButtonStyle,
-                backgroundColor: colors.transparent.get(),
-              }}
+              {...baseButtonStyle}
+              backgroundColor="$transparent"
               testID={ElementName.Cancel}
               onPress={onPressMaybeLater}>
               <Text color="$neutral2" variant="buttonLabel4">

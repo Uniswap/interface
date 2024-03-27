@@ -20,8 +20,8 @@ export const ScantasticParamsSchema = z.object({
     },
     { required_error: 'Public key is required' }
   ),
-  vendor: z.string().nullable(),
-  model: z.string().nullable(),
-  browser: z.string().nullable(),
+  vendor: z.string().nullish(),
+  model: z.string().nullish(),
+  browser: z.string().nullish(),
 })
 export type ScantasticParams = z.infer<typeof ScantasticParamsSchema>

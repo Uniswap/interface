@@ -1,7 +1,7 @@
 import { Span } from '@sentry/core'
 import * as Sentry from '@sentry/react'
-import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { mocked } from 'test-utils/mocked'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getTraceContext, patchFetch } from './request'
 import { trace } from './trace'
 import { OpCode, TraceContext } from './types'

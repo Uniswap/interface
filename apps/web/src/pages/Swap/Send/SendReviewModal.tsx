@@ -11,13 +11,14 @@ import Modal from 'components/Modal'
 import Row from 'components/Row'
 import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
 import { Unicon } from 'components/Unicon'
-import { useUniconV2Flag } from 'featureFlags/flags/uniconV2'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { ReactNode } from 'react'
 import { useSendContext } from 'state/send/SendContext'
 import styled from 'styled-components'
 import { ClickableStyle, CloseIcon, Separator, ThemedText } from 'theme/components'
 import { Icons, UniconV2 } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { useUnitagByNameWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -97,7 +98,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
     ? [formattedFiatInputAmount, currencySymbolAmount]
     : [currencySymbolAmount, formattedFiatInputAmount]
 
-  const uniconsV2Enabled = useUniconV2Flag()
+  const uniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   return (
     <Modal $scrollOverlay isOpen onDismiss={onDismiss} maxHeight={90}>

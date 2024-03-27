@@ -1,5 +1,5 @@
 import { ConnectionType } from 'connection/types'
-import { Chain } from 'graphql/data/__generated__/types-and-hooks'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 /**
  * A short code identifying the type of operation, typically following [OpenTelemetry's semantic conventions][1].

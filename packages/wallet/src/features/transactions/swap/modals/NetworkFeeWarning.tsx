@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Icons, isWeb, useSporeColors } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { WarningInfo } from 'wallet/src/components/modals/WarningModal/WarningInfo'
+import { WarningTooltipProps } from 'wallet/src/components/modals/WarningModal/WarningTooltipProps'
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { ModalName } from 'wallet/src/telemetry/constants'
@@ -10,7 +11,11 @@ import { ModalName } from 'wallet/src/telemetry/constants'
 export function NetworkFeeWarning({
   children,
   showGasIcon = false,
-}: PropsWithChildren<{ showGasIcon?: boolean }>): JSX.Element {
+  placement = 'top',
+}: PropsWithChildren<{
+  showGasIcon?: boolean
+  placement?: WarningTooltipProps['placement']
+}>): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
@@ -33,7 +38,7 @@ export function NetworkFeeWarning({
         severity: WarningSeverity.None,
         title: t('transaction.networkCost.label'),
       }}
-      tooltipProps={{ text: caption, placement: 'top' }}
+      tooltipProps={{ text: caption, placement }}
       trigger={showGasIcon ? <Icons.Gas color="$neutral2" size="$icon.16" /> : undefined}
       triggerPlacement={showGasIcon ? 'start' : undefined}>
       {children}

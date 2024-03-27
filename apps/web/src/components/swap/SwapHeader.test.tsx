@@ -1,12 +1,12 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 import { CurrencyState, EMPTY_DERIVED_SWAP_INFO, SwapAndLimitContext, SwapContext } from 'state/swap/SwapContext'
+import { mocked } from 'test-utils/mocked'
 import { act, render, screen } from 'test-utils/render'
-
-import { Field, SwapTab } from './constants'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import SwapHeader from './SwapHeader'
-
-jest.mock('../../featureFlags/flags/limits', () => ({ useLimitsEnabled: () => true }))
+import { Field, SwapTab } from './constants'
 
 interface WrapperProps {
   setCurrentTab?: Dispatch<SetStateAction<SwapTab>>
@@ -44,6 +44,10 @@ function Wrapper(props: PropsWithChildren<WrapperProps>) {
     </SwapAndLimitContext.Provider>
   )
 }
+
+beforeEach(() => {
+  mocked(useFeatureFlag).mockImplementation((f) => f === FeatureFlags.LimitsEnabled)
+})
 
 describe('SwapHeader.tsx', () => {
   it('matches base snapshot', () => {

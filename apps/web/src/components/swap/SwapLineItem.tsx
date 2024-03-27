@@ -17,7 +17,6 @@ import styled, { DefaultTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { getPriceImpactColor } from 'utils/prices'
-
 import { DetailLineItem, LineItemData } from './DetailLineItem'
 import { GasBreakdownTooltip, UniswapXDescription } from './GasBreakdownTooltip'
 import GasEstimateTooltip from './GasEstimateTooltip'

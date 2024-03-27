@@ -30,6 +30,6 @@ export type BottomSheetModalProps = PropsWithChildren<{
   // TODO MOB-2526 refactor BottomSheetModal to more platform-agnostic
   // Currently only used for web
   isModalOpen?: boolean
-  isCentered?: boolean
+  alignment?: 'center' | 'top' | 'bottom'
   hideScrim?: boolean
 }>

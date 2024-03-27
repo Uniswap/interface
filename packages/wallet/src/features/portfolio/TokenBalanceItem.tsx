@@ -1,7 +1,6 @@
-import { ImpactFeedbackStyle } from 'expo-haptics'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Shine, Text, TouchableArea, isWeb } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Shine, Text, TouchableArea, isWeb } from 'ui/src'
 import { NumberType } from 'utilities/src/format/types'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'

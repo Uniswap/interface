@@ -5,6 +5,14 @@ import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
+import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
+import ms from 'ms'
+import { useEffect, useState } from 'react'
+import store from 'state'
+import { addSignature } from 'state/signatures/reducer'
+import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
+import { TransactionType as LocalTransactionType } from 'state/transactions/types'
 import {
   AssetActivityPartsFragment,
   Currency as GQLCurrency,
@@ -19,15 +27,7 @@ import {
   TokenTransferPartsFragment,
   TransactionDetailsPartsFragment,
   TransactionType,
-} from 'graphql/data/__generated__/types-and-hooks'
-import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
-import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
-import ms from 'ms'
-import { useEffect, useState } from 'react'
-import store from 'state'
-import { addSignature } from 'state/signatures/reducer'
-import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
-import { TransactionType as LocalTransactionType } from 'state/transactions/types'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { currencyId } from 'utils/currencyId'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -226,7 +226,7 @@ function parseSwap(changes: TransactionChanges, formatNumberOrString: FormatNumb
 
     return { title, descriptor }
   }
-  // Some swaps may have more than 2 transfers, e.g. swaps with fees on tranfer
+  // Some swaps may have more than 2 transfers, e.g. swaps with fees on transfer
   if (changes.TokenTransfer.length >= 2) {
     const swapAmounts = parseSwapAmounts(changes, formatNumberOrString)
 
@@ -559,22 +559,26 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
 }
 
 function parseRemoteActivity(
-  assetActivity: AssetActivityPartsFragment,
+  assetActivity: AssetActivityPartsFragment | undefined,
   account: string,
   formatNumberOrString: FormatNumberOrStringFunctionType
 ): Activity | undefined {
   try {
+    if (!assetActivity) {
+      return undefined
+    }
+
     if (assetActivity.details.__typename === 'SwapOrderDetails') {
       return parseUniswapXOrder(assetActivity as OrderActivity)
     }
 
     const changes = assetActivity.details.assetChanges.reduce(
       (acc: TransactionChanges, assetChange) => {
-        if (assetChange.__typename === 'NftApproval') acc.NftApproval.push(assetChange)
-        else if (assetChange.__typename === 'NftApproveForAll') acc.NftApproveForAll.push(assetChange)
-        else if (assetChange.__typename === 'NftTransfer') acc.NftTransfer.push(assetChange)
-        else if (assetChange.__typename === 'TokenTransfer') acc.TokenTransfer.push(assetChange)
-        else if (assetChange.__typename === 'TokenApproval') acc.TokenApproval.push(assetChange)
+        if (assetChange?.__typename === 'NftApproval') acc.NftApproval.push(assetChange)
+        else if (assetChange?.__typename === 'NftApproveForAll') acc.NftApproveForAll.push(assetChange)
+        else if (assetChange?.__typename === 'NftTransfer') acc.NftTransfer.push(assetChange)
+        else if (assetChange?.__typename === 'TokenTransfer') acc.TokenTransfer.push(assetChange)
+        else if (assetChange?.__typename === 'TokenApproval') acc.TokenApproval.push(assetChange)
 
         return acc
       },
@@ -616,7 +620,7 @@ function parseRemoteActivity(
 }
 
 export function parseRemoteActivities(
-  assetActivities: readonly AssetActivityPartsFragment[] | undefined,
+  assetActivities: (AssetActivityPartsFragment | undefined)[] | undefined,
   account: string,
   formatNumberOrString: FormatNumberOrStringFunctionType
 ) {

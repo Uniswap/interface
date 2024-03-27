@@ -2,6 +2,20 @@
 import { Extras, ScopeContext } from '@sentry/types'
 import { Sentry } from './Sentry'
 
+// weird temp fix: the web app is complaining about __DEV__ being global
+// i tried declaring it in a variety of places:
+//   - in web app env.d.ts and polyfills.ts files
+//   - in utilities index.ts and in a new env.d.ts file
+// none of them work! but declaring it here does
+// perhaps because the declarations are not applying to external packages
+// but somehow its also not picking up the declarations here
+declare global {
+  // @typescript-eslint/ban-ts-comment
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore its ok
+  const __DEV__: boolean
+}
+
 const SENTRY_CHAR_LIMIT = 8192
 
 type LogLevel = 'debug' | 'info' | 'warn' | 'error'

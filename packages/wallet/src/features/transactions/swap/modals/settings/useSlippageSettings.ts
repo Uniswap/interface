@@ -1,23 +1,26 @@
-import { impactAsync } from 'expo-haptics'
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
+import { HapticFeedback } from 'ui/src'
 import { PlusMinusButtonType } from 'wallet/src/components/buttons/PlusMinusButton'
 import {
   MAX_AUTO_SLIPPAGE_TOLERANCE,
   MAX_CUSTOM_SLIPPAGE_TOLERANCE,
 } from 'wallet/src/constants/transactions'
-import { SwapSettingsModalProps } from 'wallet/src/features/transactions/swap/modals/settings/SwapSettingsModal'
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
+import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { errorShakeAnimation } from 'wallet/src/utils/animations'
 
 const SLIPPAGE_INCREMENT = 0.1
 
 export function useSlippageSettings({
   derivedSwapInfo,
-  setCustomSlippageTolerance,
-}: SwapSettingsModalProps): {
+  onSlippageChange,
+}: {
+  derivedSwapInfo: DerivedSwapInfo
+  onSlippageChange: (slippage: number | undefined) => void
+}): {
   trade: Trade | null
   isEditingSlippage: boolean
   autoSlippageEnabled: boolean
@@ -75,7 +78,7 @@ export function useSlippageSettings({
     setAutoSlippageEnabled(true)
     setInputWarning(undefined)
     setInputSlippageTolerance('')
-    setCustomSlippageTolerance(undefined)
+    onSlippageChange(undefined)
   }
 
   const onChangeSlippageInput = useCallback(
@@ -121,14 +124,14 @@ export function useSlippageSettings({
        */
       if (isInvalidNumber || overMaxTolerance || moreThanOneDecimalSymbol || moreThanTwoDecimals) {
         inputShakeX.value = errorShakeAnimation(inputShakeX)
-        await impactAsync()
+        await HapticFeedback.impact()
         return
       }
 
       setInputSlippageTolerance(value)
-      setCustomSlippageTolerance(parsedValue)
+      onSlippageChange(parsedValue)
     },
-    [inputShakeX, setCustomSlippageTolerance, t]
+    [inputShakeX, onSlippageChange, t]
   )
 
   const onFocusSlippageInput = useCallback((): void => {
@@ -147,12 +150,12 @@ export function useSlippageSettings({
     // Set autoSlippageEnabled to true if input is invalid (ex. '' or '.')
     if (isNaN(parsedInputSlippageTolerance)) {
       setAutoSlippageEnabled(true)
-      setCustomSlippageTolerance(undefined)
+      onSlippageChange(undefined)
       return
     }
 
     setInputSlippageTolerance(parsedInputSlippageTolerance.toFixed(2))
-  }, [parsedInputSlippageTolerance, setCustomSlippageTolerance])
+  }, [parsedInputSlippageTolerance, onSlippageChange])
 
   const onPressPlusMinusButton = useCallback(
     (type: PlusMinusButtonType): void => {
@@ -175,9 +178,9 @@ export function useSlippageSettings({
       }
 
       setInputSlippageTolerance(constrainedNewSlippage.toFixed(2).toString())
-      setCustomSlippageTolerance(constrainedNewSlippage)
+      onSlippageChange(constrainedNewSlippage)
     },
-    [autoSlippageEnabled, currentSlippageToleranceNum, setCustomSlippageTolerance, t]
+    [autoSlippageEnabled, currentSlippageToleranceNum, onSlippageChange, t]
   )
 
   return {

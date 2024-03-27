@@ -165,7 +165,7 @@ export function getTokenUrl(currencyId: string): string | undefined {
       // this is how web app handles native tokens
       tokenAddress = UNISWAP_APP_NATIVE_TOKEN
     }
-    return `${uniswapUrls.appUrl}/tokens/${network}/${tokenAddress}`
+    return `${uniswapUrls.interfaceTokensUrl}/${network}/${tokenAddress}`
   } catch (_) {
     return
   }

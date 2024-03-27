@@ -1,0 +1,34 @@
+query CollectionSearch($query: String!) {
+  nftCollections(filter: { nameQuery: $query }) {
+    edges {
+      cursor
+      node {
+        image {
+          url
+        }
+        isVerified
+        name
+        numAssets
+        nftContracts {
+          address
+          chain
+          name
+          symbol
+          totalSupply
+        }
+        markets(currencies: ETH) {
+          floorPrice {
+            currency
+            value
+          }
+        }
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
+  }
+}

@@ -3,7 +3,7 @@ import { UserState } from 'state/user/reducer'
 
 export type PersistAppStateV7 = {
   _persist: PersistState
-} & { user?: UserState & { hideAndroidAnnouncementBanner?: boolean } }
+} & { user?: UserState & { hideAndroidAnnouncementBanner?: boolean; hideAppPromoBanner: boolean } }
 
 /**
  * Migration to rename hideAndroidAnnouncementBanner to hideAppPromoBanner.

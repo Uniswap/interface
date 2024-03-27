@@ -1,6 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
 import { useScrollToTop } from '@react-navigation/native'
-import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { ReactElement, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
@@ -22,6 +21,7 @@ import {
   AnimatedBottomSheetFlashList,
   AnimatedFlashList,
   Flex,
+  ImpactFeedbackStyle,
   Text,
   TouchableArea,
   useDeviceDimensions,

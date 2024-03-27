@@ -7,7 +7,6 @@ import { BottomSheetTextInput } from 'wallet/src/components/modals/BottomSheetMo
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { MAX_CUSTOM_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import { SwapSettingsMessage } from 'wallet/src/features/transactions/swap/modals/settings/SwapSettingsMessage'
-import { SwapSettingsModalProps } from 'wallet/src/features/transactions/swap/modals/settings/SwapSettingsModal'
 import { useSlippageSettings } from 'wallet/src/features/transactions/swap/modals/settings/useSlippageSettings'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 
@@ -17,8 +16,11 @@ export type SlippageSettingsScreen = {
 }
 export function SlippageSettingsScreen({
   derivedSwapInfo,
-  setCustomSlippageTolerance,
-}: SwapSettingsModalProps): JSX.Element {
+  onSlippageChange,
+}: {
+  derivedSwapInfo: DerivedSwapInfo
+  onSlippageChange: (slippage: number | undefined) => void
+}): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
@@ -37,7 +39,7 @@ export function SlippageSettingsScreen({
     onFocusSlippageInput,
     onBlurSlippageInput,
     onPressPlusMinusButton,
-  } = useSlippageSettings({ derivedSwapInfo, setCustomSlippageTolerance })
+  } = useSlippageSettings({ derivedSwapInfo, onSlippageChange })
 
   return (
     <Flex centered gap="$spacing16">

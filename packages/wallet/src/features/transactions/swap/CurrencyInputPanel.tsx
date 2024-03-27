@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react'
+import { forwardRef, memo, useCallback, useEffect, useRef } from 'react'
 import {
   NativeSyntheticEvent,
   TextInput,
@@ -15,7 +15,16 @@ import {
   withSequence,
   withTiming,
 } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, FlexProps, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import {
+  AnimatedFlex,
+  Flex,
+  FlexProps,
+  Icons,
+  isWeb,
+  Text,
+  TouchableArea,
+  useSporeColors,
+} from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { isDetoxBuild } from 'utilities/src/environment'
 import { NumberType } from 'utilities/src/format/types'
@@ -25,10 +34,10 @@ import { SelectTokenButton } from 'wallet/src/components/TokenSelector/SelectTok
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { useTokenAndFiatDisplayAmounts } from 'wallet/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
 import { MaxAmountButton } from 'wallet/src/features/transactions/swap/MaxAmountButton'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { ElementName } from 'wallet/src/telemetry/constants'
-import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 type CurrentInputPanelProps = {
@@ -88,11 +97,9 @@ export const CurrencyInputPanel = memo(
     forwardedRef
   ): JSX.Element {
     const colors = useSporeColors()
-    const { convertFiatAmountFormatted, formatCurrencyAmount, addFiatSymbolToNumber } =
-      useLocalizationContext()
+    const { formatCurrencyAmount } = useLocalizationContext()
 
     const inputRef = useRef<TextInput>(null)
-    const appFiatCurrency = useAppFiatCurrencyInfo()
 
     useForwardRef(forwardedRef, inputRef)
 
@@ -101,18 +108,9 @@ export const CurrencyInputPanel = memo(
     const showInsufficientBalanceWarning =
       !isOutput && !!currencyBalance && !!currencyAmount && currencyBalance.lessThan(currencyAmount)
 
-    const formattedFiatValue: string = convertFiatAmountFormatted(
-      usdValue?.toExact(),
-      NumberType.FiatTokenQuantity
-    )
-
     const _onToggleIsFiatMode = useCallback(() => {
       onToggleIsFiatMode(currencyField)
     }, [currencyField, onToggleIsFiatMode])
-
-    const formattedCurrencyAmount = currencyAmount
-      ? formatCurrencyAmount({ value: currencyAmount, type: NumberType.TokenTx })
-      : ''
 
     // the focus state for native Inputs can sometimes be out of sync with the controlled `focus`
     // prop. When the internal focus state differs from our `focus` prop, sync the internal
@@ -173,41 +171,14 @@ export const CurrencyInputPanel = memo(
     const inputColor = showInsufficientBalanceWarning ? '$statusCritical' : emptyColor
 
     // In fiat mode, show equivalent token amount. In token mode, show equivalent fiat amount
-    const inputPanelFormattedValue = useMemo((): string => {
-      const currencySymbol = currencyInfo ? getSymbolDisplayText(currencyInfo.currency.symbol) : ''
-      // handle no value case
-      if (!value) {
-        return isFiatMode
-          ? `${0} ${currencySymbol}`
-          : (addFiatSymbolToNumber({
-              value: 0,
-              currencyCode: appFiatCurrency.code,
-              currencySymbol: appFiatCurrency.symbol,
-            }).toString() as string)
-      }
-      // Handle value
-      if (isFiatMode) {
-        if (formattedCurrencyAmount) {
-          return `${formattedCurrencyAmount} ${currencySymbol}`
-        }
-      } else {
-        if (formattedFiatValue && usdValue) {
-          return formattedFiatValue
-        }
-      }
-      // Fallback for no formatted value case
-      return ''
-    }, [
-      addFiatSymbolToNumber,
-      appFiatCurrency.code,
-      appFiatCurrency.symbol,
-      currencyInfo,
-      formattedCurrencyAmount,
-      formattedFiatValue,
-      isFiatMode,
-      usdValue,
+    const inputPanelFormattedValue = useTokenAndFiatDisplayAmounts({
       value,
-    ])
+      currencyInfo,
+      currencyAmount,
+      usdValue,
+      isFiatMode,
+    })
+
     // We need to store the previous value, because new quote request resets `Trade`, and this value, to undefined
     const previousValue = usePrevious(value)
     const loadingTextValue = previousValue && previousValue !== '' ? previousValue : '0'
@@ -238,7 +209,7 @@ export const CurrencyInputPanel = memo(
     const fiatModeFeatureEnabled = false
     return (
       <TouchableArea hapticFeedback onPress={currencyInfo ? onPressIn : onShowTokenSelector}>
-        <Flex {...rest} overflow="hidden" px="$spacing16" py="$spacing20">
+        <Flex {...rest} overflow="hidden" px="$spacing16" py={isWeb ? '$spacing24' : '$spacing20'}>
           <Flex
             row
             alignItems="center"

@@ -1,8 +1,12 @@
 import { ApolloProvider, SubscriptionResult } from '@apollo/client'
 import { useWeb3React } from '@web3-react/core'
-import { useIsRealtimeEnabled } from 'featureFlags/flags/realtime'
-import { OnAssetActivitySubscription, useOnAssetActivitySubscription } from 'graphql/data/__generated__/types-and-hooks'
 import { PropsWithChildren, createContext, useMemo, useReducer } from 'react'
+import {
+  OnAssetActivitySubscription,
+  useOnAssetActivitySubscription,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { v4 as uuidV4 } from 'uuid'
 import { apolloClient } from './client'
 
@@ -25,7 +29,7 @@ function AssetActivityProvider({ children }: PropsWithChildren) {
 }
 
 export function Provider({ children }: PropsWithChildren) {
-  const isRealtimeEnabled = useIsRealtimeEnabled()
+  const isRealtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
   return (
     <ApolloProvider client={apolloClient}>
       {isRealtimeEnabled ? <AssetActivityProvider>{children}</AssetActivityProvider> : children}

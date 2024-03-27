@@ -365,7 +365,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
 }
 
 .c17:focus {
-  background-color: #22222212;
+  background-color: none;
 }
 
 .c15 {
