@@ -276,8 +276,9 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
 }
 
 export enum OffchainOrderType {
-  DUTCH_AUCTION = 'dutch_auction',
-  LIMIT_ORDER = 'limit_order',
+  DUTCH_AUCTION = 'Dutch',
+  DUTCH_V2_AUCTION = 'Dutch_V2',
+  LIMIT_ORDER = 'Limit',
 }
 
 export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeType> {

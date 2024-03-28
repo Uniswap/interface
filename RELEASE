@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmTvM34jfBYkJ6rpJHD1cCdwKPjegWGhczv5ZWBsZuB4Zz`
-- CIDv1: `bafybeics5qzpmtytcpa7xbxkea4ynmoiq2fjqma4ttjyjjg3inpusyjwgu`
+- CIDv0: `QmceYEww1w186EQeHgyYWp66x1rumWmducQaVi9okeFcEd`
+- CIDv1: `bafybeigutdbafox64hsv2tq2blgpqcgwtc7fk5a45dlcqtvjgt6fodcc4i`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,41 +10,16 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeics5qzpmtytcpa7xbxkea4ynmoiq2fjqma4ttjyjjg3inpusyjwgu.ipfs.dweb.link/
-- https://bafybeics5qzpmtytcpa7xbxkea4ynmoiq2fjqma4ttjyjjg3inpusyjwgu.ipfs.cf-ipfs.com/
-- [ipfs://QmTvM34jfBYkJ6rpJHD1cCdwKPjegWGhczv5ZWBsZuB4Zz/](ipfs://QmTvM34jfBYkJ6rpJHD1cCdwKPjegWGhczv5ZWBsZuB4Zz/)
+- https://bafybeigutdbafox64hsv2tq2blgpqcgwtc7fk5a45dlcqtvjgt6fodcc4i.ipfs.dweb.link/
+- https://bafybeigutdbafox64hsv2tq2blgpqcgwtc7fk5a45dlcqtvjgt6fodcc4i.ipfs.cf-ipfs.com/
+- [ipfs://QmceYEww1w186EQeHgyYWp66x1rumWmducQaVi9okeFcEd/](ipfs://QmceYEww1w186EQeHgyYWp66x1rumWmducQaVi9okeFcEd/)
 
-## 5.20.0 (2024-03-27)
+## 5.21.0 (2024-03-28)
 
 
 ### Features
 
-* **web:** add devflagsbox tooltip (#6970) d503b06
-* **web:** add p0.5 info analytics tracking (#6984) 3137968
-* **web:** add token/search gql queries to token selector (#6861) 0e73fa5
-* **web:** allow manual outage chain and version setting (#7027) d75b235
-* **web:** Have dropdown menu chevron rotate when opened (#6912) b00132a
-* **web:** Link to new foundation version of governance site (#7040) 54d3cb5
-* **web:** migrate graphql generation to shared package (#6906) 1d1c5b1
-* **web:** redux migration to delete hideAppPromoBanner var. and add readme (#6942) 2690193
-* **web:** remove last-modified from wallet modal (#7051) 2ad42f4
-* **web:** remove mobile app promo banner (#6917) bd307a4
-* **web:** Remove Vanilla Extract from Chain Selector (#6885) 63b5ad7
-* **web:** replace useTokenListCurrency and useTokenListToken with GQL versions (#6871) 41b6d0f
-* **web:** show loading state in CurrencySearch while any GQL queries are loading (#6896) d2c6475
-* **web:** show manual outage banner after gql error (#7029) 498d6d2
-* **web:** using shared feature flags implementation (#6941) e877f95
-
-
-### Bug Fixes
-
-* **web:** add back missing env variable for gql apollo client endpoint (#6981) f33ea82
-* **web:** clean feesEnabled feature flag from codebase (#6967) e56e0de
-* **web:** dont crash PDP when one of the v2/v3 queries fails (#7010) 6b1dbf1
-* **web:** e2e tests (#6999) 7499d74
-* **web:** fix platform checks for mweb breaking uniwallet deeplinking (#7078) 0a6ea55
-* **web:** fix thegraph gql schema generation (#6986) 430fc9d
-* **web:** link to correct limit failure support article (#6958) b8a9c14
-* **web:** re-add wallet qr code (#6955) 2e2dd6d
+* **web:** fix orderType to backend types (#7093) a4dbcb6
+* **web:** fix orderType to backend types (#7093) (#7159) 8bfacb7
 
 
