@@ -333,7 +333,7 @@ function useTokenListCurrency(currencyId: Maybe<string>, chainId?: ChainId): Cur
 export function useCurrency(address?: string, chainId?: ChainId, skip?: boolean): Maybe<Currency> {
   const { chainId: connectedChainId } = useWeb3React()
   const gqlTokenListsEnabled = useFeatureFlag(FeatureFlags.GqlTokenLists)
-  const tokenListCurrency = useTokenListCurrency(address)
+  const tokenListCurrency = useTokenListCurrency(address, chainId)
 
   const backendChainName = chainIdToBackendName(chainId ?? connectedChainId)
   const isNative =

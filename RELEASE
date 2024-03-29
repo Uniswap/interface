@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmceYEww1w186EQeHgyYWp66x1rumWmducQaVi9okeFcEd`
-- CIDv1: `bafybeigutdbafox64hsv2tq2blgpqcgwtc7fk5a45dlcqtvjgt6fodcc4i`
+- CIDv0: `QmbYSi6bDw9e8CzLAzN8k6UkcgGYCheJGqsexFZW9HCLnP`
+- CIDv1: `bafybeigefvkmjdhesneplmk35lfudrzcycnhtb7awt76obc2ceggoimo5q`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,16 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeigutdbafox64hsv2tq2blgpqcgwtc7fk5a45dlcqtvjgt6fodcc4i.ipfs.dweb.link/
-- https://bafybeigutdbafox64hsv2tq2blgpqcgwtc7fk5a45dlcqtvjgt6fodcc4i.ipfs.cf-ipfs.com/
-- [ipfs://QmceYEww1w186EQeHgyYWp66x1rumWmducQaVi9okeFcEd/](ipfs://QmceYEww1w186EQeHgyYWp66x1rumWmducQaVi9okeFcEd/)
+- https://bafybeigefvkmjdhesneplmk35lfudrzcycnhtb7awt76obc2ceggoimo5q.ipfs.dweb.link/
+- https://bafybeigefvkmjdhesneplmk35lfudrzcycnhtb7awt76obc2ceggoimo5q.ipfs.cf-ipfs.com/
+- [ipfs://QmbYSi6bDw9e8CzLAzN8k6UkcgGYCheJGqsexFZW9HCLnP/](ipfs://QmbYSi6bDw9e8CzLAzN8k6UkcgGYCheJGqsexFZW9HCLnP/)
 
-## 5.21.0 (2024-03-28)
+### 5.21.1 (2024-03-29)
 
 
-### Features
+### Bug Fixes
 
-* **web:** fix orderType to backend types (#7093) a4dbcb6
-* **web:** fix orderType to backend types (#7093) (#7159) 8bfacb7
+* **web:** [hotfix] use chainId when getting token list currency (#7186) 92ec24b
 
 
