@@ -16,7 +16,7 @@ import { useSendContext } from 'state/send/SendContext'
 import styled, { css, keyframes } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
-import { Icons, UniconV2 } from 'ui/src'
+import { Icons, Text, UniconV2 } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import {
@@ -309,9 +309,9 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
     <RecipientWrapper $disabled={disabled}>
       {showInputField ? (
         <>
-          <ThemedText.SubHeaderSmall lineHeight="24px">
+          <Text variant="body3" userSelect="none" color="$neutral2">
             <Trans>To</Trans>
-          </ThemedText.SubHeaderSmall>
+          </Text>
           <StyledRecipientInputRow justify="space-between">
             <Row ref={inputWrapperNode}>
               <StyledRecipientInput

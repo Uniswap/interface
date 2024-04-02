@@ -5,6 +5,7 @@ import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/Prefetch
 import Row from 'components/Row'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
+import { Text } from 'ui/src'
 
 const CurrencySymbolContainer = styled.span`
   display: inline-block;
@@ -34,7 +35,7 @@ export function LimitPriceInputLabel({
     )
   }
   return (
-    <ThemedText.LabelSmall style={{ userSelect: 'none' }}>
+    <Text variant="body3" userSelect="none" color="$neutral2">
       <Row align="center">
         <Trans>When 1</Trans>{' '}
         <CurrencySymbolContainer>
@@ -47,6 +48,6 @@ export function LimitPriceInputLabel({
         </CurrencySymbolContainer>{' '}
         <Trans>is worth</Trans>
       </Row>
-    </ThemedText.LabelSmall>
+    </Text>
   )
 }

@@ -147,6 +147,7 @@ const InputRow = styled.div`
   ${flexRowNoWrap};
   align-items: center;
   justify-content: space-between;
+  margin-top: 4px;
 `
 
 const LabelRow = styled.div`
@@ -304,7 +305,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
         )}
 
         <Container hideInput={hideInput}>
-          <Text variant="subheading2" userSelect="none" color="$neutral2">
+          <Text variant="body3" userSelect="none" color="$neutral2">
             {label}
           </Text>
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>

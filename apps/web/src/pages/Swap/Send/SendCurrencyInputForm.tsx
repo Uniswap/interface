@@ -18,6 +18,7 @@ import { SendInputError } from 'state/send/hooks'
 import { useSendContext } from 'state/send/SendContext'
 import styled, { css } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
+import { Text } from 'ui/src'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
@@ -335,9 +336,9 @@ export default function SendCurrencyInputForm({
     <Wrapper $disabled={disabled}>
       <InputWrapper>
         <InputLabelContainer>
-          <ThemedText.SubHeaderSmall color="neutral2">
+          <Text variant="body3" userSelect="none" color="$neutral2">
             <Trans>You&apos;re sending</Trans>
-          </ThemedText.SubHeaderSmall>
+          </Text>
         </InputLabelContainer>
         <NumericalInputWrapper>
           {inputInFiat && (
