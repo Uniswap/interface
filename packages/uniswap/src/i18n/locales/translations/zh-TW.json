@@ -174,6 +174,7 @@
       "dismiss": "關閉",
       "done": "完畢",
       "enable": "開啟",
+      "goBack": "回去",
       "hide": "隱藏",
       "later": "稍後再說",
       "learn": "了解更多",
@@ -205,6 +206,7 @@
         "title": "哎呀！出了些問題。"
       }
     },
+    "endAdornment": "和",
     "error": {
       "general": "出了些問題。"
     },
@@ -266,15 +268,42 @@
   "dapp": {
     "request": {
       "approve": {
-        "label": "錢包"
+        "action": "核准",
+        "fallbackTitle": "批准支出代幣",
+        "helptext": "允許該網站存取並使用您錢包中的此代幣。",
+        "label": "錢包",
+        "title": "核准支出 {{tokenSymbol}}"
+      },
+      "base": {
+        "title": "確認交易"
+      },
+      "changeChain": {
+        "title": "將網路切換至 {{network}}"
+      },
+      "connect": {
+        "helptext": "允許網站查看您的錢包地址、餘額並請求交易批准。",
+        "title": "連接到站點"
       },
       "error": {
         "none": "沒有等待批准的情況"
       },
+      "fallback": {
+        "calldata": {
+          "label": "數據"
+        },
+        "function": {
+          "label": "函數"
+        },
+        "recipient": {
+          "label": "接收者"
+        },
+        "sending": {
+          "label": "發送"
+        }
+      },
       "signature": {
-        "education": {
-          "description": "需要簽名來證明你擁有該錢包而不暴露你的私鑰",
-          "title": "什麼是簽名請求？"
+        "error": {
+          "712-spec-compliance": "SignTypedDataRequestContent 收到的簽章資料不符合 EIP-712 規格。"
         }
       },
       "warning": {
@@ -370,8 +399,15 @@
   },
   "extension": {
     "connection": {
-      "popup": "您的錢包未連接到此網站。",
-      "popupWithButton": "您的錢包未連接到此網站。尋找“連接錢包”或“登入”按鈕。"
+      "popup": "您的錢包未連接到此網站。尋找“連接錢包”或“登入”按鈕。",
+      "popupWithButton": "您的錢包未連接到此網站。",
+      "titleConnected": "已連接",
+      "titleNotConnected": "未連接"
+    },
+    "dappRequest": {
+      "signatureRequest": {
+        "header": "簽名請求"
+      }
     },
     "lock": {
       "button": {
@@ -416,7 +452,8 @@
     },
     "connection": {
       "message": "將您連接至 {{serviceProvider}}",
-      "quote": "買入 {{amount}} 價值 {{currencySymbol}}"
+      "quote": "買入 {{amount}} 價值 {{currencySymbol}}",
+      "terms": "繼續操作即表示您承認您將遵守 {{serviceProvider}}的服務條款和隱私權政策（如果適用）。"
     },
     "error": {
       "default": "出了些問題。",
@@ -427,10 +464,9 @@
       "usd": "只能以美元買入"
     },
     "quote": {
-      "amount": "接收 {{tokenAmount}}",
-      "amountAfterFees": "費用後{{tokenAmount}}",
+      "advice": "您將繼續訪問提供者的入口網站以查看與您的交易相關的費用。",
+      "others": "其他的",
       "type": {
-        "best": "最佳整體",
         "other": "其他選項",
         "recent": "最近使用過"
       }
@@ -470,6 +506,11 @@
       "title": "動態"
     },
     "banner": {
+      "extension": {
+        "confirm": "加入測試版",
+        "message": "成為第一個在網頁瀏覽器上試用 Uniswap 擴充功能的人",
+        "title": "Uniswap 擴充功能在這裡"
+      },
       "offline": "你處於離線模式"
     },
     "extension": {
@@ -490,6 +531,14 @@
       "scan": "掃碼",
       "send": "傳送",
       "swap": "兌換"
+    },
+    "modal": {
+      "getExtension": {
+        "step1": "1. 在電腦上訪問 <highlight>uniswap.org/ext</highlight>",
+        "step2": "2. 在 Chrome 瀏覽器上新增 Uniswap 擴充功能",
+        "step3": "3. 輸入您的使用者名稱進行訪問",
+        "title": "加入 Uniswap 擴充測試版"
+      }
     },
     "nfts": {
       "title": "NFT"
@@ -558,6 +607,7 @@
     },
     "copied": {
       "address": "地址已複製",
+      "calldata": "通話資料已複製",
       "contractAddress": "複製合約地址",
       "failed": "無法複製到剪貼簿",
       "image": "圖像已複製",
@@ -708,12 +758,16 @@
       "label": "暱稱",
       "subtitle": "給你的錢包個暱稱",
       "title": "此暱稱只有你自己可見",
-      "walletAddress": "Your public address will be <highlight>{{walletAddress}}</highlight>"
+      "walletAddress": "您的公共地址將是<highlight>{{walletAddress}}</highlight>"
     },
     "extension": {
       "connectMobile": {
         "button": "從您的手機匯入",
         "title": "有 Uniswap 應用程式嗎？"
+      },
+      "getOnTheBetaWaitlist": {
+        "subtitle": "下載行動應用程式並索取用戶名",
+        "title": "進入測試版候補名單"
       },
       "password": {
         "subtitle": "您需要它來解鎖您的錢包並訪問您的恢復短語",
@@ -763,6 +817,19 @@
         "alreadyHave": "我已經有錢包了"
       },
       "title": "歡迎來到 \nUniswap 錢包"
+    },
+    "introBetaWaitlist": {
+      "button": {
+        "checkEligibility": "檢查資格",
+        "letsGo": "我們走吧"
+      },
+      "checkEligibilityInstructions": "在下面輸入您的 <highlight>uni.eth</highlight> 用戶名，檢查您是否有資格參加測試版。",
+      "eligible": {
+        "tagline": "歡迎來到 Beta 版——您是第一批嘗試 Uniswap 錢包的人之一。",
+        "title": "您已登出候補名單！"
+      },
+      "ineligibleExplanation": "您仍在候補名單上。當您符合資格時，我們將在 Uniswap 行動應用程式中通知您！",
+      "unitagPlaceholder": "使用者名稱"
     },
     "landing": {
       "button": {
@@ -814,12 +881,12 @@
       "error": "抱歉，我們現在無法載入二維碼。請嘗試其他入職方法。",
       "otp": {
         "error": "您提交的程式碼不正確，或提交時發生錯誤。請再試一次。",
-        "failed": "失敗嘗試： {{count}}",
+        "failed": "失敗嘗試： {{number}}",
         "subtitle": "檢查您的 Uniswap 行動應用程式中的 6 字元代碼",
         "title": "輸入一次性代碼"
       },
-      "subtitle": "使用 Uniswap 應用程式掃描二維碼導入錢包",
-      "title": "從您的手機同步"
+      "subtitle": "使用 Uniswap 行動應用程式掃描二維碼開始匯入您的錢包",
+      "title": "從應用程式導入錢包"
     },
     "security": {
       "alert": {
@@ -909,7 +976,7 @@
       },
       "method": {
         "default": "來自 {{dappNameOrUrl}}的請求",
-        "signature": "Signature request from {{dappNameOrUrl}}",
+        "signature": "從 {{dappNameOrUrl}} 的簽名請求",
         "transaction": "來自 {{dappNameOrUrl}}的交易請求"
       },
       "withAmount": "允許 {{dappName}} 使用最多<highlight> {{amount}} </highlight>{{currencySymbol}}？",
@@ -959,6 +1026,16 @@
         "message": "再次掃描 Uniswap Extension 上的二維碼以繼續同步您的錢包。",
         "title": "您的連線逾時"
       }
+    },
+    "modal": {
+      "notOnWaitlist": {
+        "message": "為了獲得 Uniswap Extension Beta 的資格，請透過申請 uni.eth 使用者名稱加入候補名單",
+        "title": "您不在候補名單上"
+      },
+      "onWaitlist": {
+        "message": "當您有資格加入 Uniswap Extension Beta 時，我們會在應用程式中通知您。",
+        "title": "您仍在候補名單上"
+      }
     }
   },
   "send": {
@@ -966,18 +1043,55 @@
       "review": "預覽",
       "send": "傳送"
     },
+    "gas": {
+      "error": {
+        "title": "不適用"
+      },
+      "networkCost": {
+        "title": "網路成本"
+      }
+    },
+    "input": {
+      "token": {
+        "balance": {
+          "title": "餘額： {{balance}} {{symbol}}"
+        }
+      }
+    },
     "recipient": {
-      "previous_one": "之前 {{count}} 次發送",
+      "previous_one": "1 次先前轉賬",
       "previous_other": "之前 {{count}} 次發送",
       "section": {
         "favorite": "收藏錢包",
         "recent": "最近",
         "search": "搜尋結果",
+        "viewOnly": "僅供查看的錢包",
         "yours": "你的錢包"
+      },
+      "warning": {
+        "viewOnly": {
+          "message": "只有當您有恢復短語或知道錢包所有者時才將資金發送至此錢包。",
+          "title": "您將其作為僅供查看的錢包"
+        }
       }
     },
+    "recipientSelect": {
+      "search": {
+        "empty": {
+          "message": "當您將代幣發送到錢包地址時，它們會顯示在此處",
+          "title": "沒有保存錢包"
+        }
+      },
+      "title": "接收者"
+    },
     "review": {
+      "modal": {
+        "title": "你正在發送"
+      },
       "summary": {
+        "button": {
+          "title": "確認發送"
+        },
         "sending": "發送",
         "to": "接收者"
       }
@@ -1017,7 +1131,16 @@
       },
       "insufficientFunds": {
         "message": "自從你輸入要發送的金額以來，你的餘額已減少 {{currencySymbol}}",
-        "title": "不夠 {{currencySymbol}}."
+        "title": "不夠 {{currencySymbol}}"
+      },
+      "modal": {
+        "button": {
+          "cta": {
+            "blocking": "好的",
+            "cancel": "取消",
+            "confirm": "確認"
+          }
+        }
       },
       "newAddress": {
         "message": "你以前沒有與這地址交易過。請確認地址是否正確。",
@@ -1110,12 +1233,16 @@
           "viewAll": "顯示全部",
           "viewLess": "顯示更少"
         },
+        "label": {
+          "viewOnly": "僅查看"
+        },
         "title": "錢包設定"
       }
     },
     "setting": {
       "appearance": {
         "option": {
+          "auto": "自動",
           "dark": {
             "subtitle": "一直使用深色主題",
             "title": "深色主題"
@@ -1185,6 +1312,9 @@
           "title": "{{cloudProviderName}} 備份"
         }
       },
+      "beta": {
+        "tooltip": "即將推出！"
+      },
       "biometrics": {
         "appAccess": {
           "subtitle": {
@@ -1224,14 +1354,17 @@
         },
         "warning": {
           "message": {
-            "android": "如果不開啟 {{biometricsMethod}}，任何有權存取你設備的人都可以打開 Uniswap 錢包並進行交易。",
-            "ios": "如果不開啟生物識別，任何有權存取你設備的人都可以打開 Uniswap 錢包並進行交易。"
+            "android": "如果不開啟生物識別，任何有權存取你設備的人都可以打開 Uniswap 錢包並進行交易。",
+            "ios": "如果不開啟 {{biometricsMethod}}，任何有權存取你設備的人都可以打開 Uniswap 錢包並進行交易。"
           },
           "title": "你確定嗎？"
         }
       },
       "currency": {
         "title": "當地貨幣"
+      },
+      "giveFeedback": {
+        "title": "給予回饋"
       },
       "helpCenter": {
         "title": "幫助中心"
@@ -1241,6 +1374,7 @@
           "navigate": "前往設定"
         },
         "description": "Uniswap 預設為您裝置的語言設定。若要變更您的首選語言，請前往裝置設定中的“Uniswap”，然後點擊“語言”",
+        "exampleTitle": "英語",
         "title": "語言"
       },
       "password": {
@@ -1260,6 +1394,9 @@
       },
       "smallBalances": {
         "title": "隱藏小額餘額"
+      },
+      "theme": {
+        "title": "主題"
       },
       "unknownTokens": {
         "title": "隱藏未知代幣"
@@ -1294,6 +1431,7 @@
   "swap": {
     "button": {
       "max": "總餘額",
+      "review": "審查交換",
       "swap": "兌換",
       "unwrap": "拆封",
       "view": "查看交易",
@@ -1945,7 +2083,7 @@
       },
       "details": {
         "label": {
-          "function": "功能： ",
+          "function": "函數： ",
           "recipient": "到： ",
           "sending": "發送: "
         }

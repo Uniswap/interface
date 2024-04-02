@@ -113,6 +113,13 @@ export function useHideSpamTokensSetting(): boolean {
   return useAppSelector(selectWalletHideSpamTokensSetting)
 }
 
+type DisplayNameOptions = {
+  showShortenedEns?: boolean
+  includeUnitagSuffix?: boolean
+  showLocalName?: boolean
+  overrideDisplayName?: string
+}
+
 /**
  * Displays the ENS name if one is available otherwise displays the local name and if neither are available it shows the address.
  *
@@ -121,14 +128,6 @@ export function useHideSpamTokensSetting(): boolean {
  * @param options.includeUnitagSuffix - Whether to include the unitag suffix (.uni.eth) in returned unitag name
  * @param options.showLocalName - Whether to show the local wallet name
  */
-
-type DisplayNameOptions = {
-  showShortenedEns?: boolean
-  includeUnitagSuffix?: boolean
-  showLocalName?: boolean
-  overrideDisplayName?: string
-}
-
 export function useDisplayName(
   address: Maybe<string>,
   options?: DisplayNameOptions

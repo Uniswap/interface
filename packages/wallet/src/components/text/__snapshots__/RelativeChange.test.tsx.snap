@@ -10,6 +10,7 @@ exports[`renders a relative change 1`] = `
       "justifyContent": "flex-start",
     }
   }
+  testID="relative-change"
 >
   <RNSVGSvgView
     align="xMidYMid"
@@ -109,6 +110,7 @@ exports[`renders placeholders with absolute change 1`] = `
       "justifyContent": "flex-start",
     }
   }
+  testID="relative-change"
 >
   <RNSVGSvgView
     align="xMidYMid"
@@ -208,6 +210,7 @@ exports[`renders placeholders without a change 1`] = `
       "justifyContent": "flex-start",
     }
   }
+  testID="relative-change"
 >
   <View
     style={

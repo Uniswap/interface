@@ -9,6 +9,7 @@ import {
   NavigateToNftItemArgs,
   NavigateToSwapFlowArgs,
   WalletNavigationProvider,
+  getNavigateToSwapFlowArgsInitialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
 import { useFiatOnRampIpAddressQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { ModalName } from 'wallet/src/telemetry/constants'
@@ -47,8 +48,7 @@ function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
 
   return useCallback(
     (args: NavigateToSwapFlowArgs): void => {
-      const initialState = args?.initialState
-
+      const initialState = getNavigateToSwapFlowArgsInitialState(args)
       dispatch(closeModal({ name: ModalName.Swap }))
       dispatch(openModal({ name: ModalName.Swap, initialState }))
     },

@@ -140,6 +140,7 @@ export function useUniswapXSwapCallback({
             method: 'POST',
             body: JSON.stringify({
               encodedOrder,
+              orderType: trade.offchainOrderType,
               signature,
               chainId: updatedOrder.chainId,
               quoteId: trade.quoteId,
@@ -182,7 +183,7 @@ export function useUniswapXSwapCallback({
             trace.setStatus('cancelled')
             throw error
           } else if (error instanceof SignatureExpiredError) {
-            trace.setStatus('deadline_exceeded')
+            trace.setStatus('unknown_error')
             throw error
           } else {
             trace.setError(error)

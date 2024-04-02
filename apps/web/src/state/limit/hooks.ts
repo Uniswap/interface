@@ -7,14 +7,14 @@ import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import ms from 'ms'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
+import { Expiry, LimitState } from 'state/limit/types'
 import { getWrapInfo } from 'state/routing/gas'
 import { LimitOrderTrade, RouterPreference, SubmittableTrade, SwapFeeInfo, WrapInfo } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getUSDCostPerGas, isClassicTrade } from 'state/routing/utils'
-import { useSwapAndLimitContext } from 'state/swap/SwapContext'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
-import { Expiry, LimitState } from './LimitContext'
 
 export type LimitInfo = {
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }

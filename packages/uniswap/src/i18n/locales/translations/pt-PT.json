@@ -174,6 +174,7 @@
       "dismiss": "Dispensar",
       "done": "Feito",
       "enable": "Habilitar",
+      "goBack": "Volte",
       "hide": "Ocultar",
       "later": "Talvez mais tarde",
       "learn": "Saiba mais",
@@ -205,6 +206,7 @@
         "title": "Ops! Algo deu errado."
       }
     },
+    "endAdornment": "e",
     "error": {
       "general": "Algo deu errado."
     },
@@ -266,15 +268,42 @@
   "dapp": {
     "request": {
       "approve": {
-        "label": "Carteira"
+        "action": "Aprovar",
+        "fallbackTitle": "Aprovar tokens de gastos",
+        "helptext": "Permita que este site acesse e gaste este token de sua carteira.",
+        "label": "Carteira",
+        "title": "Aprovar gastos {{tokenSymbol}}"
+      },
+      "base": {
+        "title": "Confirmar transação"
+      },
+      "changeChain": {
+        "title": "Mude a rede para {{network}}"
+      },
+      "connect": {
+        "helptext": "Permita que este site visualize o endereço e o saldo da sua carteira e solicite aprovações para transações.",
+        "title": "Conectar ao site"
       },
       "error": {
         "none": "Nenhuma aprovação pendente"
       },
+      "fallback": {
+        "calldata": {
+          "label": "dados"
+        },
+        "function": {
+          "label": "função"
+        },
+        "recipient": {
+          "label": "para"
+        },
+        "sending": {
+          "label": "enviando"
+        }
+      },
       "signature": {
-        "education": {
-          "description": "É necessária uma assinatura para provar que você possui a carteira sem expor suas chaves privadas",
-          "title": "O que é um pedido de assinatura?"
+        "error": {
+          "712-spec-compliance": "SignTypedDataRequestContent recebeu dados para assinatura que não estão em conformidade com a especificação EIP-712."
         }
       },
       "warning": {
@@ -370,8 +399,15 @@
   },
   "extension": {
     "connection": {
-      "popup": "Sua carteira não está conectada a este site.",
-      "popupWithButton": "Sua carteira não está conectada a este site. Procure o botão “Conectar carteira” ou “Login”."
+      "popup": "Sua carteira não está conectada a este site. Procure o botão “Conectar carteira” ou “Login”.",
+      "popupWithButton": "Sua carteira não está conectada a este site.",
+      "titleConnected": "Conectado",
+      "titleNotConnected": "Não conectado"
+    },
+    "dappRequest": {
+      "signatureRequest": {
+        "header": "Solicitação de assinatura"
+      }
     },
     "lock": {
       "button": {
@@ -416,7 +452,8 @@
     },
     "connection": {
       "message": "Conectando você a {{serviceProvider}}",
-      "quote": "Comprando {{amount}} de {{currencySymbol}}"
+      "quote": "Comprando {{amount}} de {{currencySymbol}}",
+      "terms": "Ao continuar, você reconhece que estará sujeito aos Termos de Serviço e à Política de Privacidade de {{serviceProvider}}, conforme aplicável."
     },
     "error": {
       "default": "Algo deu errado.",
@@ -427,10 +464,9 @@
       "usd": "Disponível apenas para compra em dólares americanos"
     },
     "quote": {
-      "amount": "Receber {{tokenAmount}}",
-      "amountAfterFees": "{{tokenAmount}} após taxas",
+      "advice": "Você continuará no portal do provedor para ver as taxas associadas à sua transação.",
+      "others": "outros",
       "type": {
-        "best": "Melhor geral",
         "other": "Outras opções",
         "recent": "Usado recentemente"
       }
@@ -470,6 +506,11 @@
       "title": "Atividade"
     },
     "banner": {
+      "extension": {
+        "confirm": "Junte-se à versão beta",
+        "message": "Seja o primeiro a experimentar a extensão Uniswap em seu navegador",
+        "title": "A extensão Uniswap está aqui"
+      },
       "offline": "Você está em modo offline"
     },
     "extension": {
@@ -490,6 +531,14 @@
       "scan": "Escanear",
       "send": "Enviar",
       "swap": "Trocar"
+    },
+    "modal": {
+      "getExtension": {
+        "step1": "1. Visite <highlight>uniswap.org/ext</highlight> no seu computador",
+        "step2": "2. Adicione a extensão Uniswap em seu navegador Chrome",
+        "step3": "3. Digite seu nome de usuário para obter acesso",
+        "title": "Junte-se à extensão beta do Uniswap"
+      }
     },
     "nfts": {
       "title": "NFTs"
@@ -558,6 +607,7 @@
     },
     "copied": {
       "address": "Endereço copiado",
+      "calldata": "Dados de chamada copiados",
       "contractAddress": "Endereço do contrato copiado",
       "failed": "Falha ao copiar para área de transferência",
       "image": "Imagem copiada",
@@ -715,6 +765,10 @@
         "button": "Importe do seu telefone",
         "title": "Possui o aplicativo móvel Uniswap?"
       },
+      "getOnTheBetaWaitlist": {
+        "subtitle": "Baixe o aplicativo móvel e reivindique um nome de usuário",
+        "title": "Entre na lista de espera do Beta"
+      },
       "password": {
         "subtitle": "Você precisará disso para desbloquear sua carteira e acessar sua frase de recuperação",
         "title": {
@@ -763,6 +817,19 @@
         "alreadyHave": "Eu já tenho uma carteira"
       },
       "title": "Bem-vindo à \nCarteira Uniswap"
+    },
+    "introBetaWaitlist": {
+      "button": {
+        "checkEligibility": "Verifique a elegibilidade",
+        "letsGo": "Vamos"
+      },
+      "checkEligibilityInstructions": "Digite seu nome de usuário <highlight>uni.eth</highlight> abaixo para verificar se você é elegível para o Beta.",
+      "eligible": {
+        "tagline": "Bem-vindo ao Beta – você é um dos primeiros a experimentar a carteira Uniswap.",
+        "title": "Você saiu da lista de espera!"
+      },
+      "ineligibleExplanation": "Você ainda está na lista de espera. Iremos notificá-lo no aplicativo móvel Uniswap quando você se tornar elegível!",
+      "unitagPlaceholder": "nome de usuário"
     },
     "landing": {
       "button": {
@@ -814,12 +881,12 @@
       "error": "Desculpe, não é possível carregar o código QR no momento. Tente outro método de integração.",
       "otp": {
         "error": "O código que você enviou está incorreto ou ocorreu um erro ao enviar. Por favor, tente novamente.",
-        "failed": "Tentativas falhadas: {{count}}",
+        "failed": "Tentativas falhadas: {{number}}",
         "subtitle": "Verifique seu aplicativo móvel Uniswap para obter o código de 6 caracteres",
         "title": "Insira o código único"
       },
-      "subtitle": "Digitalize o código QR com o aplicativo Uniswap para importar sua carteira",
-      "title": "Sincronize do seu telefone"
+      "subtitle": "Digitalize o código QR com o aplicativo móvel Uniswap para começar a importar sua(s) carteira(s)",
+      "title": "Importe carteira do aplicativo"
     },
     "security": {
       "alert": {
@@ -959,6 +1026,16 @@
         "message": "Digitalize o código QR na extensão Uniswap novamente para continuar sincronizando sua carteira.",
         "title": "Sua conexão expirou"
       }
+    },
+    "modal": {
+      "notOnWaitlist": {
+        "message": "Para se tornar elegível para a extensão Uniswap Beta, entre na lista de espera reivindicando um nome de usuário uni.eth",
+        "title": "Você não está na lista de espera"
+      },
+      "onWaitlist": {
+        "message": "Notificaremos você no aplicativo quando você se tornar elegível para ingressar na extensão beta do Uniswap.",
+        "title": "Você ainda está na lista de espera"
+      }
     }
   },
   "send": {
@@ -966,18 +1043,55 @@
       "review": "Revisar transferência",
       "send": "Enviar"
     },
+    "gas": {
+      "error": {
+        "title": "N / D"
+      },
+      "networkCost": {
+        "title": "Custo de rede"
+      }
+    },
+    "input": {
+      "token": {
+        "balance": {
+          "title": "Saldo: {{balance}} {{symbol}}"
+        }
+      }
+    },
     "recipient": {
-      "previous_one": "{{count}} transferência anterior",
+      "previous_one": "1 transferência anterior",
       "previous_other": "{{count}} transferências anteriores",
       "section": {
         "favorite": "Carteiras favoritas",
         "recent": "Recente",
         "search": "Resultados da pesquisa",
+        "viewOnly": "Carteiras somente para visualização",
         "yours": "Suas carteiras"
+      },
+      "warning": {
+        "viewOnly": {
+          "message": "Envie fundos para esta carteira apenas se você tiver a frase de recuperação ou conhecer o dono da carteira.",
+          "title": "Você tem isso como uma carteira somente para visualização"
+        }
       }
     },
+    "recipientSelect": {
+      "search": {
+        "empty": {
+          "message": "Quando você envia tokens para um endereço de carteira, eles aparecerão aqui",
+          "title": "Nenhuma carteira salva"
+        }
+      },
+      "title": "Para"
+    },
     "review": {
+      "modal": {
+        "title": "Você está enviando"
+      },
       "summary": {
+        "button": {
+          "title": "Confirmar envio"
+        },
         "sending": "Enviando",
         "to": "Para"
       }
@@ -1017,7 +1131,16 @@
       },
       "insufficientFunds": {
         "message": "Seu saldo de {{currencySymbol}} diminuiu desde que você inseriu o valor que gostaria de enviar",
-        "title": "Não é suficiente {{currencySymbol}}."
+        "title": "Não é suficiente {{currencySymbol}}"
+      },
+      "modal": {
+        "button": {
+          "cta": {
+            "blocking": "OK",
+            "cancel": "Cancelar",
+            "confirm": "Confirmar"
+          }
+        }
       },
       "newAddress": {
         "message": "Você nunca fez transações com este endereço antes. Por favor, confirme se o endereço está correto antes de continuar.",
@@ -1110,12 +1233,16 @@
           "viewAll": "Ver tudo",
           "viewLess": "Ver menos"
         },
+        "label": {
+          "viewOnly": "Somente visualização"
+        },
         "title": "Configurações da carteira"
       }
     },
     "setting": {
       "appearance": {
         "option": {
+          "auto": "Auto",
           "dark": {
             "subtitle": "Sempre usar o modo escuro",
             "title": "Modo escuro"
@@ -1185,6 +1312,9 @@
           "title": "{{cloudProviderName}} cópia de segurança"
         }
       },
+      "beta": {
+        "tooltip": "Em breve!"
+      },
       "biometrics": {
         "appAccess": {
           "subtitle": {
@@ -1224,14 +1354,17 @@
         },
         "warning": {
           "message": {
-            "android": "Se você não ativar {{biometricsMethod}}, qualquer pessoa que tenha acesso ao seu dispositivo poderá abrir a Carteira Uniswap e fazer transações.",
-            "ios": "Se você não ativar a biometria, qualquer pessoa que tenha acesso ao seu dispositivo poderá abrir a Carteira Uniswap e fazer transações."
+            "android": "Se você não ativar a biometria, qualquer pessoa que tenha acesso ao seu dispositivo poderá abrir a Carteira Uniswap e fazer transações.",
+            "ios": "Se você não ativar {{biometricsMethod}}, qualquer pessoa que tenha acesso ao seu dispositivo poderá abrir a Carteira Uniswap e fazer transações."
           },
           "title": "Tem certeza?"
         }
       },
       "currency": {
         "title": "Moeda local"
+      },
+      "giveFeedback": {
+        "title": "Dê retorno"
       },
       "helpCenter": {
         "title": "Centro de ajuda"
@@ -1241,6 +1374,7 @@
           "navigate": "Ir para as configurações"
         },
         "description": "Uniswap usa o idioma do seu dispositivo como padrão. Para alterar seu idioma preferido, vá em “Uniswap” nas configurações do seu dispositivo e toque em “Idioma”",
+        "exampleTitle": "Inglês",
         "title": "Linguagem"
       },
       "password": {
@@ -1260,6 +1394,9 @@
       },
       "smallBalances": {
         "title": "Ocultar saldos pequenos"
+      },
+      "theme": {
+        "title": "Tema"
       },
       "unknownTokens": {
         "title": "Ocultar tokens desconhecidos"
@@ -1294,6 +1431,7 @@
   "swap": {
     "button": {
       "max": "Máx.",
+      "review": "Rever troca",
       "swap": "Trocar",
       "unwrap": "Desembrulhar",
       "view": "Ver transação",

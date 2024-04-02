@@ -17,7 +17,7 @@ import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import { ContractTransaction } from 'ethers/lib/ethers'
 import { useContract } from 'hooks/useContract'
 import { useCallback, useMemo, useState } from 'react'
-import { UniswapXOrderDetails } from 'state/signatures/types'
+import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import styled from 'styled-components'
 import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
 import { Permit2 } from 'uniswap/src/abis/types/Permit2'
@@ -48,7 +48,9 @@ function useCancelMultipleOrders(orders?: UniswapXOrderDetails[]): () => Promise
     })
 
     return cancelMultipleUniswapXOrders({
-      encodedOrders: orders.map((order) => order.encodedOrder as string),
+      orders: orders.map((order) => {
+        return { encodedOrder: order.encodedOrder as string, type: order.type as SignatureType }
+      }),
       permit2,
       provider,
       chainId: orders?.[0].chainId,

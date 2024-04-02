@@ -2,12 +2,12 @@ import { memo, useMemo } from 'react'
 import { Image } from 'react-native'
 import { Flex, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import { useLogolessColorScheme } from 'ui/src/utils/colors'
 import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
 import { STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { THIN_BORDER, style } from 'wallet/src/components/CurrencyLogo/styles'
 import { ChainId } from 'wallet/src/constants/chains'
 import { RemoteSvg } from 'wallet/src/features/images/RemoteSvg'
-import { useLogolessColorScheme } from 'wallet/src/utils/colors'
 import { NetworkLogo } from './NetworkLogo'
 
 interface TokenLogoProps {

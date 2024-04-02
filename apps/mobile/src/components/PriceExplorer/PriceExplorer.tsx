@@ -13,9 +13,9 @@ import { Loader } from 'src/components/loading'
 import { Flex, HapticFeedback } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { PriceNumberOfDigits, TokenSpotData, useTokenPriceHistory } from './usePriceHistory'
 
 type PriceTextProps = {

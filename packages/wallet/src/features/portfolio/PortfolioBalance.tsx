@@ -1,6 +1,8 @@
 import { Flex, Icons, Shine, Skeleton, Text, isWeb, useSporeColors } from 'ui/src'
+import { NumberType } from 'utilities/src/format/types'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioTotalValue } from 'wallet/src/features/dataApi/balances'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 type WalletBalanceProps = {
   address: Address
 }
@@ -15,6 +17,7 @@ export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
   const isPositiveChange = change !== undefined ? change >= 0 : undefined
   const colors = useSporeColors()
   const arrowColor = isPositiveChange ? colors.statusSuccess : colors.statusCritical
+  const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const formattedChange = change !== undefined ? `${Math.abs(change).toFixed(2)}%` : '-'
   return (
@@ -46,7 +49,9 @@ export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
         <Flex gap="$spacing12">
           <Shine disabled={!isWarmLoadingStatus(networkStatus)}>
             <Flex>
-              <Text variant={isWeb ? 'heading2' : 'heading1'}>${balanceUSD?.toFixed(2)}</Text>
+              <Text variant={isWeb ? 'heading2' : 'heading1'}>
+                {convertFiatAmountFormatted(balanceUSD, NumberType.FiatTokenDetails)}
+              </Text>
               <Flex row alignItems="center">
                 <Icons.ArrowChange
                   color={arrowColor.get()}

@@ -5,6 +5,8 @@ import {
   ColorTokens,
   Flex,
   getUniconV2Colors,
+  passesContrast,
+  useExtractedColors,
   useIsDarkMode,
   useSporeColors,
   useUniconColors,
@@ -16,7 +18,6 @@ import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { useAvatar } from 'wallet/src/features/wallet/hooks'
-import { passesContrast, useExtractedColors } from 'wallet/src/utils/colors'
 
 type AvatarColors = {
   primary: string

@@ -41,6 +41,7 @@ globalThis.origin = 'https://app.uniswap.org'
     })
 
   globalThis.performance.measure = jest.fn()
+  globalThis.performance.mark = jest.fn()
 
   globalThis.React = React
 }

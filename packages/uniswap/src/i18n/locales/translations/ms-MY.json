@@ -78,7 +78,7 @@
       "input": "Taip frasa pemulihan anda",
       "remove": {
         "final": {
-          "description": "Pastikan anda telah menulis frasa pemulihan anda atau menyandarkannya pada {{cloudProviderName}}. <highlight>Anda tidak akan dapat mengakses dana anda sebaliknya.</highlight>",
+          "description": "Pastikan anda telah menulis frasa pemulihan anda atau menyandarkannya pada {{cloudProviderName}}. <highlight>Anda tidak akan dapat mengakses dana anda jika tidak.</highlight>",
           "title": "Anda sedang mengalih keluar <highlight>frasa pemulihan</highlight>"
         },
         "import": {
@@ -174,6 +174,7 @@
       "dismiss": "Tolak",
       "done": "Selesai",
       "enable": "Dayakan",
+      "goBack": "Pergi balik",
       "hide": "Sembunyi",
       "later": "Mungkin kemudian",
       "learn": "Ketahui lebih lanjut",
@@ -205,6 +206,7 @@
         "title": "Aduh! Sesuatu telah berlaku."
       }
     },
+    "endAdornment": "dan",
     "error": {
       "general": "Sesuatu telah berlaku."
     },
@@ -266,15 +268,42 @@
   "dapp": {
     "request": {
       "approve": {
-        "label": "Dompet"
+        "action": "Terima",
+        "fallbackTitle": "Luluskan token perbelanjaan",
+        "helptext": "Benarkan tapak ini mengakses dan membelanjakan token ini daripada dompet anda.",
+        "label": "Dompet",
+        "title": "Luluskan perbelanjaan {{tokenSymbol}}"
+      },
+      "base": {
+        "title": "Sahkan transaksi"
+      },
+      "changeChain": {
+        "title": "Tukar rangkaian kepada {{network}}"
+      },
+      "connect": {
+        "helptext": "Benarkan tapak ini melihat alamat dompet anda, baki dan meminta kelulusan untuk transaksi.",
+        "title": "Sambung ke tapak"
       },
       "error": {
         "none": "Tiada kelulusan belum selesai"
       },
+      "fallback": {
+        "calldata": {
+          "label": "data"
+        },
+        "function": {
+          "label": "fungsi"
+        },
+        "recipient": {
+          "label": "kepada"
+        },
+        "sending": {
+          "label": "menghantar"
+        }
+      },
       "signature": {
-        "education": {
-          "description": "Tandatangan diperlukan untuk membuktikan bahawa anda memiliki dompet tanpa mendedahkan kunci peribadi anda",
-          "title": "Apakah permintaan tandatangan?"
+        "error": {
+          "712-spec-compliance": "SignTypedDataRequestContent menerima data untuk menandatangani yang tidak mematuhi spesifikasi EIP-712."
         }
       },
       "warning": {
@@ -370,8 +399,15 @@
   },
   "extension": {
     "connection": {
-      "popup": "Dompet anda tidak disambungkan ke tapak ini.",
-      "popupWithButton": "Dompet anda tidak disambungkan ke tapak ini. Cari butang \"Sambung Dompet\" atau \"Log masuk\"."
+      "popup": "Dompet anda tidak disambungkan ke tapak ini. Cari butang \"Sambung Dompet\" atau \"Log masuk\".",
+      "popupWithButton": "Dompet anda tidak disambungkan ke tapak ini.",
+      "titleConnected": "Bersambung",
+      "titleNotConnected": "Tidak bersambung"
+    },
+    "dappRequest": {
+      "signatureRequest": {
+        "header": "Permintaan tandatangan"
+      }
     },
     "lock": {
       "button": {
@@ -416,7 +452,8 @@
     },
     "connection": {
       "message": "Menghubungkan anda ke {{serviceProvider}}",
-      "quote": "Membeli {{amount}} bernilai {{currencySymbol}}"
+      "quote": "Membeli {{amount}} bernilai {{currencySymbol}}",
+      "terms": "Dengan meneruskan, anda mengakui bahawa anda akan tertakluk pada Syarat Perkhidmatan dan Dasar Privasi dengan {{serviceProvider}}, mengikut mana yang berkenaan."
     },
     "error": {
       "default": "Sesuatu telah berlaku.",
@@ -427,10 +464,9 @@
       "usd": "Hanya tersedia untuk pembelian dalam USD"
     },
     "quote": {
-      "amount": "Terima {{tokenAmount}}",
-      "amountAfterFees": "{{tokenAmount}} selepas yuran",
+      "advice": "Anda akan terus ke portal penyedia untuk melihat yuran yang berkaitan dengan transaksi anda.",
+      "others": "yang lain",
       "type": {
-        "best": "Terbaik secara keseluruhan",
         "other": "Pilihan lain",
         "recent": "Baru-baru ini digunakan"
       }
@@ -470,6 +506,11 @@
       "title": "Aktiviti"
     },
     "banner": {
+      "extension": {
+        "confirm": "Sertai Beta",
+        "message": "Jadilah yang pertama mencuba Sambungan Uniswap pada penyemak imbas web anda",
+        "title": "Sambungan Uniswap ada di sini"
+      },
       "offline": "Anda berada dalam mod luar talian"
     },
     "extension": {
@@ -490,6 +531,14 @@
       "scan": "Imbas",
       "send": "Hantar",
       "swap": "Tukar"
+    },
+    "modal": {
+      "getExtension": {
+        "step1": "1. Lawati <highlight>uniswap.org/ext</highlight> pada komputer anda",
+        "step2": "2. Tambahkan Sambungan Uniswap pada penyemak imbas Chrome anda",
+        "step3": "3. Masukkan nama pengguna anda untuk mendapatkan akses",
+        "title": "Sertai Uniswap Extension Beta"
+      }
     },
     "nfts": {
       "title": "NFT"
@@ -558,6 +607,7 @@
     },
     "copied": {
       "address": "Alamat disalin",
+      "calldata": "Data panggilan disalin",
       "contractAddress": "Alamat kontrak disalin",
       "failed": "Gagal menyalin ke papan keratan",
       "image": "Imej disalin",
@@ -715,6 +765,10 @@
         "button": "Import dari telefon anda",
         "title": "Mempunyai apl mudah alih Uniswap?"
       },
+      "getOnTheBetaWaitlist": {
+        "subtitle": "Muat turun apl mudah alih dan tuntut nama pengguna",
+        "title": "Dapatkan senarai tunggu Beta"
+      },
       "password": {
         "subtitle": "Anda memerlukan ini untuk membuka kunci dompet anda dan mengakses frasa pemulihan anda",
         "title": {
@@ -763,6 +817,19 @@
         "alreadyHave": "Saya sudah mempunyai dompet"
       },
       "title": "Selamat datang ke \nUniswap Wallet"
+    },
+    "introBetaWaitlist": {
+      "button": {
+        "checkEligibility": "Semak kelayakan",
+        "letsGo": "Mari pergi"
+      },
+      "checkEligibilityInstructions": "Masukkan <highlight>uni.eth</highlight> nama pengguna anda di bawah untuk menyemak sama ada anda layak untuk Beta.",
+      "eligible": {
+        "tagline": "Selamat datang ke Beta — anda salah seorang yang pertama mencuba dompet Uniswap.",
+        "title": "Anda tiada dalam senarai menunggu!"
+      },
+      "ineligibleExplanation": "Anda masih dalam senarai menunggu. Kami akan memberitahu anda dalam apl mudah alih Uniswap apabila anda layak!",
+      "unitagPlaceholder": "nama pengguna"
     },
     "landing": {
       "button": {
@@ -814,12 +881,12 @@
       "error": "Maaf, kami tidak dapat memuatkan kod QR sekarang. Sila cuba kaedah sedia ada yang lain.",
       "otp": {
         "error": "Kod yang anda serahkan adalah salah, atau terdapat ralat semasa menyerahkan. Sila cuba lagi.",
-        "failed": "Percubaan gagal: {{count}}",
+        "failed": "Percubaan gagal: {{number}}",
         "subtitle": "Semak apl mudah alih Uniswap anda untuk kod 6 aksara",
         "title": "Masukkan kod sekali sahaja"
       },
-      "subtitle": "Imbas kod QR dengan apl Uniswap untuk mengimport dompet anda",
-      "title": "Segerakkan daripada telefon anda"
+      "subtitle": "Imbas kod QR dengan apl mudah alih Uniswap untuk mula mengimport dompet anda",
+      "title": "Import dompet daripada apl"
     },
     "security": {
       "alert": {
@@ -959,6 +1026,16 @@
         "message": "Imbas kod QR pada Sambungan Uniswap sekali lagi untuk meneruskan penyegerakan dompet anda.",
         "title": "Sambungan anda tamat masa"
       }
+    },
+    "modal": {
+      "notOnWaitlist": {
+        "message": "Untuk menjadi layak untuk Uniswap Extension Beta, sertai senarai tunggu dengan menuntut nama pengguna uni.eth",
+        "title": "Anda tiada dalam senarai menunggu"
+      },
+      "onWaitlist": {
+        "message": "Kami akan memberitahu anda dalam apl apabila anda layak untuk menyertai Uniswap Extension Beta.",
+        "title": "Anda masih dalam senarai menunggu"
+      }
     }
   },
   "send": {
@@ -966,18 +1043,55 @@
       "review": "Semak semula pemindahan",
       "send": "Hantar"
     },
+    "gas": {
+      "error": {
+        "title": "T/A"
+      },
+      "networkCost": {
+        "title": "Kos Rangkaian"
+      }
+    },
+    "input": {
+      "token": {
+        "balance": {
+          "title": "Baki: {{balance}} {{symbol}}"
+        }
+      }
+    },
     "recipient": {
-      "previous_one": "{{count}} pemindahan sebelumnya",
+      "previous_one": "1 pemindahan sebelumnya",
       "previous_other": "{{count}} pemindahan sebelumnya",
       "section": {
         "favorite": "Dompet kegemaran",
         "recent": "Baru-baru ini",
         "search": "Keputusan Carian",
+        "viewOnly": "Dompet lihat sahaja",
         "yours": "dompet anda"
+      },
+      "warning": {
+        "viewOnly": {
+          "message": "Hanya hantar dana ke dompet ini jika anda mempunyai frasa pemulihan atau mengenali pemilik dompet itu.",
+          "title": "Anda mempunyai ini sebagai dompet lihat sahaja"
+        }
       }
     },
+    "recipientSelect": {
+      "search": {
+        "empty": {
+          "message": "Apabila anda menghantar token ke alamat dompet, token tersebut akan dipaparkan di sini",
+          "title": "Tiada dompet disimpan"
+        }
+      },
+      "title": "Kepada"
+    },
     "review": {
+      "modal": {
+        "title": "Anda menghantar"
+      },
       "summary": {
+        "button": {
+          "title": "Sahkan hantar"
+        },
         "sending": "Menghantar",
         "to": "Kepada"
       }
@@ -1017,7 +1131,16 @@
       },
       "insufficientFunds": {
         "message": "Baki {{currencySymbol}} anda telah berkurangan sejak anda memasukkan jumlah yang anda ingin hantar",
-        "title": "Tak cukup {{currencySymbol}}."
+        "title": "Tidak cukup {{currencySymbol}}"
+      },
+      "modal": {
+        "button": {
+          "cta": {
+            "blocking": "okey",
+            "cancel": "Batal",
+            "confirm": "sahkan"
+          }
+        }
       },
       "newAddress": {
         "message": "Anda tidak pernah berurusan dengan alamat ini sebelum ini. Sila sahkan bahawa alamat adalah betul sebelum meneruskan.",
@@ -1110,12 +1233,16 @@
           "viewAll": "Lihat semua",
           "viewLess": "Lihat kurang"
         },
+        "label": {
+          "viewOnly": "Lihat sahaja"
+        },
         "title": "Tetapan dompet"
       }
     },
     "setting": {
       "appearance": {
         "option": {
+          "auto": "Auto",
           "dark": {
             "subtitle": "Sentiasa gunakan mod gelap",
             "title": "Mod gelap"
@@ -1185,6 +1312,9 @@
           "title": "{{cloudProviderName}} sandaran"
         }
       },
+      "beta": {
+        "tooltip": "Akan datang!"
+      },
       "biometrics": {
         "appAccess": {
           "subtitle": {
@@ -1224,14 +1354,17 @@
         },
         "warning": {
           "message": {
-            "android": "Jika anda tidak menghidupkan {{biometricsMethod}}, sesiapa sahaja yang mendapat akses kepada peranti anda boleh membuka Uniswap Wallet dan membuat transaksi.",
-            "ios": "Jika anda tidak menghidupkan biometrik, sesiapa sahaja yang mendapat akses kepada peranti anda boleh membuka Uniswap Wallet dan membuat transaksi."
+            "android": "Jika anda tidak menghidupkan biometrik, sesiapa sahaja yang mendapat akses kepada peranti anda boleh membuka Uniswap Wallet dan membuat transaksi.",
+            "ios": "Jika anda tidak menghidupkan {{biometricsMethod}}, sesiapa sahaja yang mendapat akses kepada peranti anda boleh membuka Uniswap Wallet dan membuat transaksi."
           },
           "title": "Adakah anda pasti?"
         }
       },
       "currency": {
         "title": "Mata wang tempatan"
+      },
+      "giveFeedback": {
+        "title": "Beri maklum balas"
       },
       "helpCenter": {
         "title": "Pusat bantuan"
@@ -1241,6 +1374,7 @@
           "navigate": "Pergi ke tetapan"
         },
         "description": "Uniswap lalai kepada tetapan bahasa peranti anda. Untuk menukar bahasa pilihan anda, pergi ke \"Uniswap\" dalam tetapan peranti anda dan ketik pada \"Bahasa\"",
+        "exampleTitle": "Bahasa Inggeris",
         "title": "Bahasa"
       },
       "password": {
@@ -1260,6 +1394,9 @@
       },
       "smallBalances": {
         "title": "Sembunyikan baki kecil"
+      },
+      "theme": {
+        "title": "Tema"
       },
       "unknownTokens": {
         "title": "Sembunyikan token yang tidak diketahui"
@@ -1294,6 +1431,7 @@
   "swap": {
     "button": {
       "max": "Maks",
+      "review": "Tukar ulasan",
       "swap": "Tukar",
       "unwrap": "Buka bungkus",
       "view": "Lihat transaksi",
@@ -1398,7 +1536,7 @@
         "button": "Tidak cukup {{currencySymbol}}",
         "cta": {
           "button": "Beli {{currencySymbol}}",
-          "message": "Anda memerlukan lebih <highlight>{{currencySymbol}}</highlight> untuk menampung kos rangkaian untuk transaksi ini."
+          "message": "Anda memerlukan lebih banyak <highlight>{{currencySymbol}}</highlight> untuk menampung kos rangkaian untuk transaksi ini."
         },
         "title": "Anda tidak mempunyai cukup {{currencySymbol}} untuk menampung kos rangkaian"
       },
@@ -1608,7 +1746,7 @@
       "copy": "Salin ID transaksi",
       "copyMoonPay": "Salin ID transaksi MoonPay",
       "view": "Lihat {{tokenSymbol}}",
-      "viewEtherscan": "Lihat pada {{blockExplorerName}}",
+      "viewEtherscan": "Lihat di {{blockExplorerName}}",
       "viewMoonPay": "Lihat di MoonPay"
     },
     "amount": {

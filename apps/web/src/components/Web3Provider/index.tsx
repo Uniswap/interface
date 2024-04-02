@@ -4,7 +4,7 @@ import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, useTrace, user } from 'analytics'
 import { connections, getConnection } from 'connection'
 import { isSupportedChain } from 'constants/chains'
-import { useNetworkProviders } from 'hooks/useNetworkProviders'
+import { RPC_PROVIDERS } from 'constants/providers'
 import usePrevious from 'hooks/usePrevious'
 import { ReactNode, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -31,11 +31,9 @@ function Updater() {
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
   const analyticsContext = useTrace()
-
-  const providers = useNetworkProviders()
+  const networkProvider = isSupportedChain(chainId) ? RPC_PROVIDERS[chainId] : undefined
 
   // Trace RPC calls (for debugging).
-  const networkProvider = isSupportedChain(chainId) ? providers[chainId] : undefined
   const shouldTrace = useFeatureFlag(FeatureFlags.TraceJsonRpc)
   useEffect(() => {
     if (shouldTrace) {

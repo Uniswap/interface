@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Icons, Text, TouchableArea, isWeb } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
-import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface SelectTokenButtonProps {

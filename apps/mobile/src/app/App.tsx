@@ -40,7 +40,11 @@ import {
   setI18NUserDefaults,
 } from 'src/features/widgets/widgets'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
+import {
+  getSentryEnvironment,
+  getSentryTracesSamplingRate,
+  getStatsigEnvironmentTier,
+} from 'src/utils/version'
 import { Statsig, StatsigProvider } from 'statsig-react-native'
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { config } from 'uniswap/src/config'
@@ -52,6 +56,7 @@ import {
 import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/experiments/flags'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n/i18n'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { isDetoxBuild } from 'utilities/src/environment'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
@@ -70,7 +75,6 @@ import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { SharedProvider } from 'wallet/src/provider'
-import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { beforeSend } from 'wallet/src/utils/sentry'
 
 enableFreeze(true)
@@ -88,9 +92,7 @@ if (!__DEV__ && !isDetoxBuild) {
     dsn: config.sentryDsn,
     attachViewHierarchy: true,
     enableCaptureFailedRequests: true,
-    tracesSampler: (_) => {
-      return 0.2
-    },
+    tracesSampleRate: getSentryTracesSamplingRate(),
     integrations: [
       new Sentry.ReactNativeTracing({
         enableUserInteractionTracing: true,

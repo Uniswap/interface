@@ -144,16 +144,17 @@ export function useOrderAmounts(order?: UniswapXOrderDetails):
 }
 
 function getOrderTitle(order: UniswapXOrderDetails): ReactNode {
+  const isLimit = order.type === SignatureType.SIGN_LIMIT
   switch (order.status) {
     case UniswapXOrderStatus.OPEN:
-      return order.type === SignatureType.SIGN_LIMIT ? <Trans>Limit pending</Trans> : <Trans>Order pending</Trans>
+      return isLimit ? <Trans>Limit pending</Trans> : <Trans>Order pending</Trans>
     case UniswapXOrderStatus.EXPIRED:
-      return order.type === SignatureType.SIGN_LIMIT ? <Trans>Limit expired</Trans> : <Trans>Order expired</Trans>
+      return isLimit ? <Trans>Limit expired</Trans> : <Trans>Order expired</Trans>
     case UniswapXOrderStatus.INSUFFICIENT_FUNDS:
     case UniswapXOrderStatus.CANCELLED:
-      return order.type === SignatureType.SIGN_LIMIT ? <Trans>Limit cancelled</Trans> : <Trans>Order cancelled</Trans>
+      return isLimit ? <Trans>Limit cancelled</Trans> : <Trans>Order cancelled</Trans>
     case UniswapXOrderStatus.FILLED:
-      return order.type === SignatureType.SIGN_LIMIT ? <Trans>Limit executed</Trans> : <Trans>Order executed</Trans>
+      return isLimit ? <Trans>Limit executed</Trans> : <Trans>Order executed</Trans>
     default:
       return null
   }
@@ -165,7 +166,7 @@ function useCancelOrder(order?: UniswapXOrderDetails): () => Promise<ContractTra
   return useCallback(async () => {
     if (!order) return undefined
     return await cancelMultipleUniswapXOrders({
-      encodedOrders: [order.encodedOrder as string],
+      orders: [{ encodedOrder: order.encodedOrder as string, type: order.type as SignatureType }],
       chainId: order.chainId,
       provider,
       permit2,

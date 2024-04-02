@@ -11,6 +11,7 @@ import { ImportType } from 'wallet/src/features/onboarding/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { QuoteType } from 'wallet/src/features/transactions/utils'
 import {
+  ExtensionOnboardingEventName,
   FiatOnRampEventName,
   InstitutionTransferEventName,
   UnitagEventName,
@@ -95,6 +96,7 @@ export type WalletEventProperties = {
   }
   [FiatOnRampEventName.FiatOnRampWidgetOpened]: TraceProps & {
     countryCode: string
+    countryState?: string
     cryptoCurrency: string
     externalTransactionId: string
     fiatCurrency: string
@@ -179,6 +181,9 @@ export type WalletEventProperties = {
     twitter: boolean
   }
   [UnitagEventName.UnitagRemoved]: undefined
+  [ExtensionOnboardingEventName.PromoBannerActionTaken]: {
+    action: 'join' | 'dismiss'
+  }
 }
 
 export type WalletAppsFlyerEventProperties = {

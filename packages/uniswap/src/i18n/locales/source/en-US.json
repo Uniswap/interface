@@ -188,6 +188,7 @@
       "retry": "Retry",
       "review": "Review",
       "save": "Save",
+      "scrollDown": "Scroll down",
       "sell": "Sell",
       "send": "Send",
       "setup": "Set up",
@@ -277,6 +278,9 @@
       "base": {
         "title": "Confirm transaction"
       },
+      "changeChain": {
+        "title": "Switch network to {{network}}"
+      },
       "connect": {
         "helptext": "Allow this site to view your wallet address, balance, and request approvals for transactions.",
         "title": "Connect to site"
@@ -299,9 +303,13 @@
         }
       },
       "signature": {
-        "education": {
-          "description": "A signature is required to prove that you own the wallet without exposing your private keys",
-          "title": "What’s a signature request?"
+        "containsUnrenderableCharacters": "This message contains unrenderable characters. Make sure you trust this site.",
+        "error": {
+          "712-spec-compliance": "SignTypedDataRequestContent received data for signing which does not comply with the EIP-712 spec."
+        },
+        "toggleDataView": {
+          "raw": "View raw data",
+          "readable": "View original data"
         }
       },
       "warning": {
@@ -504,6 +512,11 @@
       "title": "Activity"
     },
     "banner": {
+      "extension": {
+        "confirm": "Join Beta",
+        "message": "Be the first to try out the Uniswap Extension on your web browser",
+        "title": "Uniswap Extension is here"
+      },
       "offline": "You are in offline mode"
     },
     "extension": {
@@ -524,6 +537,14 @@
       "scan": "Scan",
       "send": "Send",
       "swap": "Swap"
+    },
+    "modal": {
+      "getExtension": {
+        "step1": "1. Visit <highlight>uniswap.org/ext</highlight> on your computer",
+        "step2": "2. Add the Uniswap Extension on your Chrome browser",
+        "step3": "3. Enter your username to get access",
+        "title": "Join the Uniswap Extension Beta"
+      }
     },
     "nfts": {
       "title": "NFTs"
@@ -750,6 +771,10 @@
         "button": "Import from your phone",
         "title": "Have the Uniswap mobile app?"
       },
+      "getOnTheBetaWaitlist": {
+        "subtitle": "Download the mobile app and claim a username",
+        "title": "Get on the Beta waitlist"
+      },
       "password": {
         "subtitle": "You’ll need this to unlock your wallet and access your recovery phrase",
         "title": {
@@ -798,6 +823,19 @@
         "alreadyHave": "I already have a wallet"
       },
       "title": "Welcome to \nUniswap Wallet"
+    },
+    "introBetaWaitlist": {
+      "button": {
+        "checkEligibility": "Check eligibility",
+        "letsGo": "Let’s go"
+      },
+      "checkEligibilityInstructions": "Enter your <highlight>uni.eth</highlight> username below to check if you’re eligible for the Beta.",
+      "eligible": {
+        "tagline": "Welcome to the Beta — you’re one of the first to try out the Uniswap wallet.",
+        "title": "You’re off the waitlist!"
+      },
+      "ineligibleExplanation": "You’re still on the waitlist. We’ll notify you in the Uniswap mobile app when you become eligible!",
+      "unitagPlaceholder": "username"
     },
     "landing": {
       "button": {
@@ -853,8 +891,8 @@
         "subtitle": "Check your Uniswap mobile app for the 6-character code",
         "title": "Enter one-time code"
       },
-      "subtitle": "Scan the QR code with the Uniswap app to import your wallet",
-      "title": "Sync from your phone"
+      "subtitle": "Scan the QR code with the Uniswap mobile app to begin importing your wallet(s)",
+      "title": "Import wallet from the app"
     },
     "security": {
       "alert": {
@@ -957,7 +995,7 @@
     "title": "Scan a QR code",
     "wallet": {
       "networks": {
-        "description": "Uniswap Wallet supports tokens on Ethereum, Polygon, Arbitrum, Optimism, Base, Blast, and BNB Chain. Right now, we only support NFTs on Ethereum.",
+        "description": "Uniswap Wallet supports tokens on Ethereum, Polygon, Arbitrum, Optimism, Base, and BNB Chain. Right now, we only support NFTs on Ethereum.",
         "title": "Supported Networks"
       },
       "title": "You can send tokens on all of our supported networks to this address."
@@ -993,6 +1031,16 @@
       "timeout": {
         "message": "Scan the QR code on the Uniswap Extension again to continue syncing your wallet.",
         "title": "Your connection timed out"
+      }
+    },
+    "modal": {
+      "notOnWaitlist": {
+        "message": "In order to become eligible for the Uniswap Extension Beta, join the waitlist by claiming a uni.eth username",
+        "title": "You’re not on the waitlist"
+      },
+      "onWaitlist": {
+        "message": "We’ll notify you in the app when you become eligible to join the Uniswap Extension Beta.",
+        "title": "You’re still on the waitlist"
       }
     }
   },
@@ -1034,9 +1082,20 @@
       }
     },
     "recipientSelect": {
+      "search": {
+        "empty": {
+          "message": "When you send tokens to a wallet address, they’ll show up here",
+          "title": "No wallets saved"
+        }
+      },
       "title": "To"
     },
     "review": {
+      "input": {
+        "tokenAmount": {
+          "title": "{{currencyAmount}} of {{currencySymbol}}"
+        }
+      },
       "modal": {
         "title": "You’re sending"
       },
@@ -1194,6 +1253,7 @@
     "setting": {
       "appearance": {
         "option": {
+          "auto": "Auto",
           "dark": {
             "subtitle": "Always use dark mode",
             "title": "Dark mode"
@@ -1263,6 +1323,9 @@
           "title": "{{cloudProviderName}} backup"
         }
       },
+      "beta": {
+        "tooltip": "Coming soon!"
+      },
       "biometrics": {
         "appAccess": {
           "subtitle": {
@@ -1311,6 +1374,9 @@
       "currency": {
         "title": "Local currency"
       },
+      "giveFeedback": {
+        "title": "Give feedback"
+      },
       "helpCenter": {
         "title": "Help center"
       },
@@ -1319,6 +1385,7 @@
           "navigate": "Go to settings"
         },
         "description": "Uniswap defaults to your device‘s language settings. To change your preferred language, go to “Uniswap” in your device settings and tap on “Language”",
+        "exampleTitle": "English",
         "title": "Language"
       },
       "password": {
@@ -1338,6 +1405,9 @@
       },
       "smallBalances": {
         "title": "Hide small balances"
+      },
+      "theme": {
+        "title": "Theme"
       },
       "unknownTokens": {
         "title": "Hide unknown tokens"
@@ -1410,9 +1480,6 @@
       "wrap": "Hold to wrap"
     },
     "request": {
-      "details": {
-        "header": "You’re swapping"
-      },
       "title": {
         "full": "Swap {{inputCurrencySymbol}} → {{outputCurrencySymbol}}",
         "short": "Swap Tokens"
@@ -2003,7 +2070,8 @@
     },
     "pending": {
       "button": {
-        "connect": "Connect"
+        "connect": "Connect",
+        "scrollDown": "Scroll down to connect"
       },
       "switchAccount": "Switch Account",
       "switchNetwork": "Switch Network",
@@ -2020,6 +2088,7 @@
     },
     "request": {
       "button": {
+        "scrollDown": "Scroll down to sign",
         "sign": "Sign"
       },
       "details": {

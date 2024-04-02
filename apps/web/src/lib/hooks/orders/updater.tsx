@@ -35,7 +35,7 @@ async function fetchLimitStatuses(account: string, orders: UniswapXOrderDetails[
 async function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[]): Promise<OrderQueryResponse> {
   return fetchStatuses(
     orders,
-    (order) => order.type === SignatureType.SIGN_UNISWAPX_ORDER,
+    (order) => order.type === SignatureType.SIGN_UNISWAPX_ORDER || order.type === SignatureType.SIGN_UNISWAPX_V2_ORDER,
     (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}`
   )
 }

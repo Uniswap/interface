@@ -69,7 +69,13 @@ export function AccountHeader(): JSX.Element {
   const iconSize = 52
 
   return (
-    <Flex gap="$spacing12" overflow="scroll" pt="$spacing8" testID="account-header" width="100%">
+    <Flex
+      gap="$spacing12"
+      overflow="scroll"
+      pt="$spacing8"
+      px="$spacing12"
+      testID="account-header"
+      width="100%">
       {activeAddress && (
         <Flex alignItems="flex-start" gap="$spacing12" width="100%">
           <Flex row justifyContent="space-between" width="100%">

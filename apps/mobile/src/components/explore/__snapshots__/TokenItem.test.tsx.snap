@@ -1,0 +1,250 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TokenItem renders without error 1`] = `
+<View
+  actions={[]}
+  onPress={[MockFunction]}
+>
+  <View
+    cancelable={true}
+    disabled={false}
+    focusable={true}
+    hitSlop={[Function]}
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onLongPress={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
+    style={
+      {
+        "flexDirection": "column",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+    testID="token-item-cum"
+  >
+    <View
+      animatedStyle={
+        {
+          "value": {},
+        }
+      }
+      collapsable={false}
+      style={
+        {
+          "flexDirection": "row",
+          "flexGrow": 1,
+          "gap": 12,
+          "paddingBottom": 8,
+          "paddingLeft": 24,
+          "paddingRight": 24,
+          "paddingTop": 8,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "gap": 4,
+            "justifyContent": "center",
+            "overflow": "hidden",
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "flexDirection": "column",
+              "minWidth": 16,
+            }
+          }
+        >
+          <Text
+            allowFontScaling={true}
+            maxFontSizeMultiplier={1.2}
+            style={
+              {
+                "color": "#7D7D7D",
+                "fontFamily": "Basel-Medium",
+                "fontSize": 15,
+                "fontWeight": "500",
+                "lineHeight": 16,
+              }
+            }
+            suppressHighlighting={true}
+          >
+            1
+          </Text>
+        </View>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "column",
+              "height": 40,
+              "justifyContent": "center",
+              "width": 40,
+            }
+          }
+        >
+          <Image
+            source={
+              {
+                "uri": "https://loremflickr.com/640/480",
+              }
+            }
+            style={
+              [
+                {
+                  "resizeMode": "contain",
+                },
+                {
+                  "backgroundColor": "#2222220D",
+                  "borderColor": "#2222220D",
+                  "borderRadius": 20,
+                  "borderWidth": 0.5,
+                  "height": 40,
+                  "width": 40,
+                },
+              ]
+            }
+          />
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+            "gap": 2,
+          }
+        }
+      >
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
+          numberOfLines={1}
+          style={
+            {
+              "color": "#222222",
+              "fontFamily": "Basel-Book",
+              "fontSize": 19,
+              "lineHeight": 24,
+            }
+          }
+          suppressHighlighting={true}
+        >
+          cum
+        </Text>
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
+          numberOfLines={1}
+          style={
+            {
+              "color": "#7D7D7D",
+              "fontFamily": "Basel-Book",
+              "fontSize": 17,
+              "lineHeight": 24,
+            }
+          }
+          suppressHighlighting={true}
+          testID="token-item/metadata-subtitle"
+        />
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "flexGrow": 1,
+            "justifyContent": "flex-end",
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "flexDirection": "row",
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "flex-end",
+                "flexDirection": "column",
+                "gap": 4,
+                "minWidth": 70,
+              }
+            }
+          >
+            <Text
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.4}
+              style={
+                {
+                  "color": "#222222",
+                  "fontFamily": "Basel-Book",
+                  "fontSize": 19,
+                  "lineHeight": 24,
+                }
+              }
+              suppressHighlighting={true}
+              testID="token-item/price"
+            >
+              -
+            </Text>
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "gap": 2,
+                  "justifyContent": "flex-start",
+                }
+              }
+              testID="relative-change"
+            >
+              <View
+                style={
+                  {
+                    "flexDirection": "column",
+                  }
+                }
+              >
+                <Text
+                  allowFontScaling={true}
+                  maxFontSizeMultiplier={1.4}
+                  style={
+                    {
+                      "color": "#7D7D7D",
+                      "fontFamily": "Basel-Book",
+                      "fontSize": 17,
+                      "lineHeight": 24,
+                    }
+                  }
+                  suppressHighlighting={true}
+                >
+                  -
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

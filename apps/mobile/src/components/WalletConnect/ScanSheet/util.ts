@@ -2,9 +2,10 @@ import { parseUri } from '@walletconnect/utils'
 import { parseEther } from 'ethers/lib/utils'
 import {
   UNISWAP_URL_SCHEME,
+  UNISWAP_URL_SCHEME_SCANTASTIC,
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
   UNISWAP_WALLETCONNECT_URL,
-} from 'src/features/deepLinking/handleDeepLinkSaga'
+} from 'src/features/deepLinking/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { ScantasticParams, ScantasticParamsSchema } from 'wallet/src/features/scantastic/types'
 import { UwULinkRequest } from 'wallet/src/features/walletConnect/types'
@@ -36,12 +37,11 @@ const UWULINK_MAX_TXN_VALUE = '0.001'
 const EASTER_EGG_QR_CODE = 'DO_NOT_SCAN_OR_ELSE_YOU_WILL_GO_TO_MOBILE_TEAM_JAIL'
 export const CUSTOM_UNI_QR_CODE_PREFIX = 'hello_uniwallet:'
 export const UWULINK_PREFIX = 'uwulink'
-const MAX_DAPP_NAME_LENGTH = 60
 
-export function truncateDappName(name: string): string {
-  return name && name.length > MAX_DAPP_NAME_LENGTH
-    ? `${name.slice(0, MAX_DAPP_NAME_LENGTH)}...`
-    : name
+export const truncateQueryParams = (url: string): string => {
+  // In fact, the first element will be always returned below. url is
+  // added as a fallback just to satisfy TypeScript.
+  return url.split('?')[0] ?? url
 }
 
 export async function getSupportedURI(
@@ -62,9 +62,9 @@ export async function getSupportedURI(
     return { type: URIType.Address, value: maybeMetamaskAddress }
   }
 
-  const maybeScantasticAddress = getScantasticAddress(uri)
-  if (enabledFeatureFlags?.isScantasticEnabled && maybeScantasticAddress) {
-    return { type: URIType.Scantastic, value: maybeScantasticAddress }
+  const maybeScantasticQueryParams = getScantasticQueryParams(uri)
+  if (enabledFeatureFlags?.isScantasticEnabled && maybeScantasticQueryParams) {
+    return { type: URIType.Scantastic, value: maybeScantasticQueryParams }
   }
 
   // The check for custom prefixes must be before the parseUri version 2 check because
@@ -153,13 +153,13 @@ function getMetamaskAddress(uri: string): Nullable<string> {
   return getValidAddress(uriParts[1], /*withChecksum=*/ true, /*log=*/ false)
 }
 
-// format is scantastic://<uri>
-function getScantasticAddress(uri: string): Nullable<string> {
-  if (!uri.startsWith('scantastic://')) {
+// format is uniswap://scantastic?<params>
+export function getScantasticQueryParams(uri: string): Nullable<string> {
+  if (!uri.startsWith(UNISWAP_URL_SCHEME_SCANTASTIC)) {
     return null
   }
 
-  const uriParts = uri.split('://')
+  const uriParts = uri.split('://scantastic?')
 
   if (uriParts.length < 2) {
     return null

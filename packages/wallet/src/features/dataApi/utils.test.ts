@@ -5,9 +5,9 @@ import {
   Token as GQLToken,
   TokenProject,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
-import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import {
   SAMPLE_CURRENCY_ID_1,

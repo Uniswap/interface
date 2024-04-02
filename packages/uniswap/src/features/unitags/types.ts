@@ -27,7 +27,14 @@ export type UnitagUsernameResponse = {
 
 export type UnitagAddressResponse = {
   username?: string
+  address?: Address
   metadata?: ProfileMetadata
+}
+
+export type UnitagAddressesResponse = {
+  usernames: {
+    [address: Address]: UnitagAddressResponse
+  }
 }
 
 export type UnitagResponse = {
@@ -88,6 +95,18 @@ export type UnitagChangeUsernameRequestBody = {
   username: string
   deviceId: string
 }
+
+export type UnitagWaitlistPositionResponse =
+  | {
+      isAccepted: false
+      waitlistPosition?: never
+      address?: never
+    }
+  | {
+      isAccepted: true
+      waitlistPosition: number
+      address: Address
+    }
 
 // Copied enum from unitags backend code -- needs to be up-to-date
 export enum UnitagErrorCodes {

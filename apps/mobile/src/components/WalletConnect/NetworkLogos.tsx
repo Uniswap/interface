@@ -35,10 +35,11 @@ export function NetworkLogos({
         <Flex centered row gap={negativeGap ? -spacing.spacing8 : '$spacing4'}>
           {chains.map((chainId) => (
             <Flex
+              key={chainId}
               backgroundColor="$surface2"
               borderRadius="$rounded8"
               p={negativeGap ? '$spacing2' : '$none'}>
-              <NetworkLogo key={chainId} chainId={chainId} size={size} />
+              <NetworkLogo chainId={chainId} size={size} />
             </Flex>
           ))}
         </Flex>

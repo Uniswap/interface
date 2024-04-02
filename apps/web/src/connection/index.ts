@@ -15,7 +15,7 @@ import { useSyncExternalStore } from 'react'
 import { isMobile, isTouchable, isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
 
 import { APP_RPC_URLS } from '../constants/networks'
-import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from '../constants/providers'
+import { RPC_PROVIDERS } from '../constants/providers'
 import { EIP6963 } from './eip6963'
 import { Connection, ConnectionType, ProviderInfo } from './types'
 import { getDeprecatedInjection, getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
@@ -65,22 +65,6 @@ export const networkConnection: Connection = {
   getProviderInfo: () => ({ name: 'Network' }),
   connector: web3Network,
   hooks: web3NetworkHooks,
-  type: ConnectionType.NETWORK,
-  shouldDisplay: () => false,
-}
-
-const [deprecatedWeb3Network, deprecatedWeb3NetworkHooks] = initializeConnector<Network>(
-  (actions) =>
-    new Network({
-      actions,
-      urlMap: DEPRECATED_RPC_PROVIDERS,
-      defaultChainId: 1,
-    })
-)
-export const deprecatedNetworkConnection: Connection = {
-  getProviderInfo: () => ({ name: 'Network' }),
-  connector: deprecatedWeb3Network,
-  hooks: deprecatedWeb3NetworkHooks,
   type: ConnectionType.NETWORK,
   shouldDisplay: () => false,
 }
@@ -235,7 +219,6 @@ export const connections = [
   eip6963Connection,
   // network connector should be last in the list, as it should be the fallback if no other connector is active
   networkConnection,
-  deprecatedNetworkConnection,
 ]
 
 export function getConnection(c: Connector | ConnectionType) {
@@ -257,8 +240,6 @@ export function getConnection(c: Connector | ConnectionType) {
         return uniwalletWCV2ConnectConnection
       case ConnectionType.NETWORK:
         return networkConnection
-      case ConnectionType.DEPRECATED_NETWORK:
-        return deprecatedNetworkConnection
       case ConnectionType.GNOSIS_SAFE:
         return gnosisSafeConnection
       case ConnectionType.EIP_6963_INJECTED:

@@ -91,7 +91,7 @@ export function GasAndWarningRows({
                 <SwapRateRatio initialInverse={true} styling="secondary" trade={trade.trade} />
               </Flex>
               {showGasFee && (
-                <NetworkFeeWarning placement="bottom" showGasIcon={true}>
+                <NetworkFeeWarning placement="bottom">
                   <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
                     <Text color="$neutral2" variant="body4">
                       {gasFeeFormatted}

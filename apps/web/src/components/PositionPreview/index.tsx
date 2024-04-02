@@ -11,6 +11,7 @@ import RateToggle from 'components/RateToggle'
 import { RowBetween, RowFixed } from 'components/Row'
 import { BIPS_BASE } from 'constants/misc'
 import JSBI from 'jsbi'
+import { BlastRebasingAlert } from 'pages/AddLiquidity/blastAlerts'
 import { ReactNode, useCallback, useState } from 'react'
 import { Bound } from 'state/mint/v3/actions'
 import { useTheme } from 'styled-components'
@@ -24,12 +25,14 @@ export const PositionPreview = ({
   inRange,
   baseCurrencyDefault,
   ticksAtLimit,
+  showBlastAlert,
 }: {
   position: Position
   title?: ReactNode
   inRange: boolean
   baseCurrencyDefault?: Currency
   ticksAtLimit: { [bound: string]: boolean | undefined }
+  showBlastAlert?: boolean
 }) => {
   const theme = useTheme()
   const { formatCurrencyAmount, formatDelta, formatPrice, formatTickPrice } = useFormatter()
@@ -78,7 +81,7 @@ export const PositionPreview = ({
         </RowFixed>
         <RangeBadge removed={removed} inRange={inRange} />
       </RowBetween>
-
+      {showBlastAlert && <BlastRebasingAlert />}
       <LightCard>
         <AutoColumn gap="md">
           <RowBetween>
@@ -114,7 +117,6 @@ export const PositionPreview = ({
           </RowBetween>
         </AutoColumn>
       </LightCard>
-
       <AutoColumn gap="md">
         <RowBetween>
           {title ? <ThemedText.DeprecatedMain>{title}</ThemedText.DeprecatedMain> : <div />}

@@ -1,6 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { Dispatch, PropsWithChildren, SetStateAction } from 'react'
-import { CurrencyState, EMPTY_DERIVED_SWAP_INFO, SwapAndLimitContext, SwapContext } from 'state/swap/SwapContext'
+import { CurrencyState, EMPTY_DERIVED_SWAP_INFO, SwapAndLimitContext, SwapContext } from 'state/swap/types'
 import { mocked } from 'test-utils/mocked'
 import { act, render, screen } from 'test-utils/render'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'

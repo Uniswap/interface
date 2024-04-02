@@ -17,7 +17,7 @@ import { removeWatchedAddress } from 'wallet/src/features/favorites/slice'
 import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
-type FavoriteWalletCardProps = {
+export type FavoriteWalletCardProps = {
   address: Address
   isEditing?: boolean
   isTouched: SharedValue<boolean>
@@ -84,6 +84,7 @@ function FavoriteWalletCard({
           disabled={isEditing}
           hapticStyle={ImpactFeedbackStyle.Light}
           m="$spacing4"
+          testID="favorite-wallet-card"
           onLongPress={disableOnPress}
           onPress={(): void => {
             navigate(address)

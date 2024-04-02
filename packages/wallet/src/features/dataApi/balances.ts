@@ -9,10 +9,11 @@ import {
   usePortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
+import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
-import { CurrencyInfo, PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import {
   buildCurrency,
   currencyIdToContractInput,
@@ -23,7 +24,7 @@ import {
   useHideSmallBalancesSetting,
   useHideSpamTokensSetting,
 } from 'wallet/src/features/wallet/hooks'
-import { CurrencyId, currencyId } from 'wallet/src/utils/currencyId'
+import { currencyId } from 'wallet/src/utils/currencyId'
 
 type SortedPortfolioBalances = {
   balances: PortfolioBalance[]

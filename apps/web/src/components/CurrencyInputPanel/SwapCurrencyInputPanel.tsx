@@ -58,13 +58,15 @@ const Container = styled.div<{ hideInput: boolean }>`
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
 `
 
-export const CurrencySelect = styled(ButtonGray)<{
+interface CurrencySelectProps {
   visible: boolean
   selected: boolean
   hideInput?: boolean
   disabled?: boolean
   animateShake?: boolean
-}>`
+}
+
+export const CurrencySelect = styled(ButtonGray)<CurrencySelectProps>`
   align-items: center;
   background-color: ${({ selected, theme }) => (selected ? theme.surface1 : theme.accent1)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
@@ -302,7 +304,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
         )}
 
         <Container hideInput={hideInput}>
-          <Text variant="subheading2" userSelect="none">
+          <Text variant="subheading2" userSelect="none" color="$neutral2">
             {label}
           </Text>
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>

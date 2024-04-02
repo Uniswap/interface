@@ -10,13 +10,13 @@ import {
   useRef,
   useState,
 } from 'react'
+import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 import {
   usePortfolioBalances,
   useTokenBalancesGroupedByVisibility,
 } from 'wallet/src/features/dataApi/balances'
-import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 
 type CurrencyId = string
 export const HIDDEN_TOKEN_BALANCES_ROW = 'HIDDEN_TOKEN_BALANCES_ROW' as const

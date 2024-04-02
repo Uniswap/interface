@@ -1,9 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Ether } from '@uniswap/sdk-core'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { WBTC } from 'wallet/src/constants/tokens'
-import { CurrencyId, currencyId as idFromCurrency } from 'wallet/src/utils/currencyId'
+import { currencyId as idFromCurrency } from 'wallet/src/utils/currencyId'
 
 export type Visibility = { isVisible: boolean }
 export type CurrencyIdToVisibility = Record<CurrencyId, Visibility>
@@ -22,10 +23,11 @@ const ETH_CURRENCY_ID = idFromCurrency(Ether.onChain(ChainId.Mainnet)).toLowerCa
 
 const VITALIK_ETH_ADDRESS = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
 const HAYDEN_ETH_ADDRESS = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
+export const DEFAULT_WATCHED_ADDRESSES = [VITALIK_ETH_ADDRESS, HAYDEN_ETH_ADDRESS]
 
 export const initialFavoritesState: FavoritesState = {
   tokens: [ETH_CURRENCY_ID, WBTC_CURRENCY_ID],
-  watchedAddresses: [VITALIK_ETH_ADDRESS, HAYDEN_ETH_ADDRESS],
+  watchedAddresses: DEFAULT_WATCHED_ADDRESSES,
   tokensVisibility: {},
   nftsVisibility: {},
 }

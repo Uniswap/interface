@@ -47,8 +47,12 @@ import { Text } from 'rebass'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
-import { queryParametersToCurrencyState, useSwapActionHandlers } from 'state/swap/hooks'
-import { CurrencyState, useSwapAndLimitContext, useSwapContext } from 'state/swap/SwapContext'
+import {
+  queryParametersToCurrencyState,
+  useSwapActionHandlers,
+  useSwapAndLimitContext,
+  useSwapContext,
+} from 'state/swap/hooks'
 import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
@@ -60,6 +64,7 @@ import { largerPercentValue } from 'utils/percent'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
+import { CurrencyState } from 'state/swap/types'
 import { getIsReviewableQuote } from '.'
 import { OutputTaxTooltipBody } from './TaxTooltipBody'
 

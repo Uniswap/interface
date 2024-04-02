@@ -1,6 +1,6 @@
+import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { differenceWith } from 'utilities/src/primitives/array'
 import { TokenOption, TokenSection } from 'wallet/src/components/TokenSelector/types'
-import { CurrencyInfo, PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { areCurrencyIdsEqual } from 'wallet/src/utils/currencyId'
 
 export function createEmptyBalanceOption(currencyInfo: CurrencyInfo): TokenOption {

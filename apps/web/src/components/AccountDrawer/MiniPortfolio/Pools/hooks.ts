@@ -9,9 +9,9 @@ import NFTPositionManagerJSON from '@uniswap/v3-periphery/artifacts/contracts/No
 import MulticallJSON from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { useWeb3React } from '@web3-react/core'
 import { isSupportedChain } from 'constants/chains'
+import { RPC_PROVIDERS } from 'constants/providers'
 import { BaseContract } from 'ethers/lib/ethers'
 import { toContractInput } from 'graphql/data/util'
-import { useNetworkProviders } from 'hooks/useNetworkProviders'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useMemo } from 'react'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
@@ -32,7 +32,6 @@ export function useContractMultichain<T extends BaseContract>(
   chainIds?: ChainId[]
 ): ContractMap<T> {
   const { chainId: walletChainId, provider: walletProvider } = useWeb3React()
-  const networkProviders = useNetworkProviders()
 
   return useMemo(() => {
     const relevantChains =
@@ -46,14 +45,14 @@ export function useContractMultichain<T extends BaseContract>(
         walletProvider && walletChainId === chainId
           ? walletProvider
           : isSupportedChain(chainId)
-          ? networkProviders[chainId]
+          ? RPC_PROVIDERS[chainId]
           : undefined
       if (provider) {
         acc[chainId] = getContract(addressMap[chainId] ?? '', ABI, provider) as T
       }
       return acc
     }, {})
-  }, [ABI, addressMap, chainIds, networkProviders, walletChainId, walletProvider])
+  }, [ABI, addressMap, chainIds, walletChainId, walletProvider])
 }
 
 export function useV3ManagerContracts(chainIds: ChainId[]): ContractMap<NonfungiblePositionManager> {

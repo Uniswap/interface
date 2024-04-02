@@ -174,6 +174,7 @@
       "dismiss": "閉じる",
       "done": "完了",
       "enable": "有効にする",
+      "goBack": "戻る",
       "hide": "非表示",
       "later": "後で",
       "learn": "もっと詳しく知る",
@@ -205,6 +206,7 @@
         "title": "エラーが発生しました。"
       }
     },
+    "endAdornment": "と",
     "error": {
       "general": "エラーが発生しました"
     },
@@ -266,15 +268,42 @@
   "dapp": {
     "request": {
       "approve": {
-        "label": "ウォレット"
+        "action": "承認する",
+        "fallbackTitle": "トークンの使用を承認する",
+        "helptext": "このサイトがウォレットからこのトークンにアクセスして使用できるようにします。",
+        "label": "ウォレット",
+        "title": "支出を承認 {{tokenSymbol}}"
+      },
+      "base": {
+        "title": "取引の確認"
+      },
+      "changeChain": {
+        "title": "ネットワークを {{network}}に切り替えます"
+      },
+      "connect": {
+        "helptext": "このサイトでウォレット アドレス、残高を表示し、取引の承認をリクエストできるようにします。",
+        "title": "サイトに接続する"
       },
       "error": {
         "none": "保留中の承認はありません"
       },
+      "fallback": {
+        "calldata": {
+          "label": "データ"
+        },
+        "function": {
+          "label": "関数"
+        },
+        "recipient": {
+          "label": "受信者"
+        },
+        "sending": {
+          "label": "送金"
+        }
+      },
       "signature": {
-        "education": {
-          "description": "秘密鍵を公開せずにウォレットを所有していることを証明するために署名が必要です",
-          "title": "署名リクエストとは?"
+        "error": {
+          "712-spec-compliance": "SignTypedDataRequestContent は、EIP-712 仕様に準拠していない署名用のデータを受信しました。"
         }
       },
       "warning": {
@@ -370,8 +399,15 @@
   },
   "extension": {
     "connection": {
-      "popup": "あなたのウォレットはこのサイトに接続されていません。",
-      "popupWithButton": "あなたのウォレットはこのサイトに接続されていません。 「ウォレットに接続」または「ログイン」ボタンを探します。"
+      "popup": "あなたのウォレットはこのサイトに接続されていません。 「ウォレットに接続」または「ログイン」ボタンを探します。",
+      "popupWithButton": "あなたのウォレットはこのサイトに接続されていません。",
+      "titleConnected": "接続されました",
+      "titleNotConnected": "接続されていません"
+    },
+    "dappRequest": {
+      "signatureRequest": {
+        "header": "署名リクエスト"
+      }
     },
     "lock": {
       "button": {
@@ -416,7 +452,8 @@
     },
     "connection": {
       "message": "あなたを {{serviceProvider}}に繋ぐ",
-      "quote": "{{amount}} 相当の {{currencySymbol}} を購入"
+      "quote": "{{amount}} 相当の {{currencySymbol}} を購入",
+      "terms": "続行すると、 {{serviceProvider}}の利用規約およびプライバシー ポリシー (該当する場合) が適用されることを承認したことになります。"
     },
     "error": {
       "default": "エラーが発生しました",
@@ -427,10 +464,9 @@
       "usd": "米ドルのみで購入"
     },
     "quote": {
-      "amount": "{{tokenAmount}}を受信",
-      "amountAfterFees": "手数料後{{tokenAmount}}",
+      "advice": "引き続きプロバイダーのポータルに移動して、トランザクションに関連する料金を確認します。",
+      "others": "その他",
       "type": {
-        "best": "全体的に最高",
         "other": "その他のオプション",
         "recent": "最近使用された"
       }
@@ -470,6 +506,11 @@
       "title": "履歴"
     },
     "banner": {
+      "extension": {
+        "confirm": "ベータ版に参加する",
+        "message": "Web ブラウザで Uniswap 拡張機能を最初に試してみましょう",
+        "title": "Uniswap 拡張機能はこちら"
+      },
       "offline": "インターネットに接続されていません"
     },
     "extension": {
@@ -490,6 +531,14 @@
       "scan": "スキャン",
       "send": "送金",
       "swap": "スワップ"
+    },
+    "modal": {
+      "getExtension": {
+        "step1": "1. コンピューターで <highlight>uniswap.org/ext</highlight> にアクセスします",
+        "step2": "2. Chrome ブラウザに Uniswap 拡張機能を追加します。",
+        "step3": "3. ユーザー名を入力してアクセスします",
+        "title": "Uniswap 拡張機能ベータ版に参加する"
+      }
     },
     "nfts": {
       "title": "NFT"
@@ -558,6 +607,7 @@
     },
     "copied": {
       "address": "コピーしました",
+      "calldata": "通話データがコピーされました",
       "contractAddress": "契約アドレスをコピーしました",
       "failed": "クリップボードにコピーできませんでした",
       "image": "画像をコピー",
@@ -708,12 +758,16 @@
       "label": "ニックネーム",
       "subtitle": "ウォレットにニックネームを作成しよう",
       "title": "このニックネームはあなただけに表示されます",
-      "walletAddress": "公開アドレスは <highlight>{{walletAddress}}</highlight>になります。"
+      "walletAddress": "あなたの公開アドレスは<highlight>{{walletAddress}}</highlight>になります"
     },
     "extension": {
       "connectMobile": {
         "button": "携帯電話からインポートする",
         "title": "Uniswap アプリをお持ちですか?"
+      },
+      "getOnTheBetaWaitlist": {
+        "subtitle": "モバイルアプリをダウンロードしてユーザー名を取得します",
+        "title": "ベータ版の待機リストに登録する"
       },
       "password": {
         "subtitle": "ウォレットのロックを解除し、回復フレーズにアクセスするにはこれが必要です",
@@ -763,6 +817,19 @@
         "alreadyHave": "既存のウォレットをインポート"
       },
       "title": "\nUniswap ウォレットへようこそ"
+    },
+    "introBetaWaitlist": {
+      "button": {
+        "checkEligibility": "資格を確認する",
+        "letsGo": "さあ行こう"
+      },
+      "checkEligibilityInstructions": "以下に <highlight>uni.eth</highlight> ユーザー名を入力して、ベータ版の利用資格があるかどうかを確認してください。",
+      "eligible": {
+        "tagline": "ベータ版へようこそ — あなたは Uniswap ウォレットを最初に試した一人です。",
+        "title": "あなたは順番待ちリストから外れました!"
+      },
+      "ineligibleExplanation": "あなたはまだ順番待ちリストに載っています。資格が得られたら、Uniswap モバイル アプリで通知します。",
+      "unitagPlaceholder": "ユーザー名"
     },
     "landing": {
       "button": {
@@ -814,12 +881,12 @@
       "error": "申し訳ございませんが、現在 QR コードを読み込むことができません。別のオンボーディング方法を試してください。",
       "otp": {
         "error": "送信したコードが間違っているか、送信中にエラーが発生しました。もう一度試してください。",
-        "failed": "失敗した試行: {{count}}",
+        "failed": "失敗した試行: {{number}}",
         "subtitle": "Uniswap モバイル アプリで 6 文字のコードを確認してください",
         "title": "ワンタイムコードを入力してください"
       },
-      "subtitle": "Uniswap アプリで QR コードをスキャンしてウォレットをインポートします",
-      "title": "携帯電話から同期する"
+      "subtitle": "Uniswap モバイル アプリで QR コードをスキャンして、ウォレットのインポートを開始します",
+      "title": "アプリからウォレットをインポートする"
     },
     "security": {
       "alert": {
@@ -959,6 +1026,16 @@
         "message": "ウォレットの同期を続けるには、Uniswap Extension の QR コードを再度スキャンしてください。",
         "title": "接続がタイムアウトしました"
       }
+    },
+    "modal": {
+      "notOnWaitlist": {
+        "message": "Uniswap Extension Beta の資格を得るには、uni.eth ユーザー名を主張して待機リストに参加してください。",
+        "title": "あなたは順番待ちリストに載っていません"
+      },
+      "onWaitlist": {
+        "message": "Uniswap Extension ベータ版に参加する資格が得られると、アプリ内で通知されます。",
+        "title": "あなたはまだ順番待ちリストにいます"
+      }
     }
   },
   "send": {
@@ -966,18 +1043,55 @@
       "review": "確認へ進む",
       "send": "送金"
     },
+    "gas": {
+      "error": {
+        "title": "該当なし"
+      },
+      "networkCost": {
+        "title": "ネットワークコスト"
+      }
+    },
+    "input": {
+      "token": {
+        "balance": {
+          "title": "残高: {{balance}} {{symbol}}"
+        }
+      }
+    },
     "recipient": {
-      "previous_one": "{{count}} 過去の送金",
+      "previous_one": "1回前の転送",
       "previous_other": "{{count}} 過去の送金",
       "section": {
         "favorite": "お気に入りウォレット",
         "recent": "最近",
         "search": "検索結果",
+        "viewOnly": "表示専用ウォレット",
         "yours": "あなたのウォレット"
+      },
+      "warning": {
+        "viewOnly": {
+          "message": "回復フレーズを持っている場合、またはウォレットの所有者を知っている場合にのみ、このウォレットに資金を送信してください。",
+          "title": "これを表示専用ウォレットとして使用します"
+        }
       }
     },
+    "recipientSelect": {
+      "search": {
+        "empty": {
+          "message": "ウォレットアドレスにトークンを送信すると、ここに表示されます",
+          "title": "ウォレットが保存されていません"
+        }
+      },
+      "title": "受信者"
+    },
     "review": {
+      "modal": {
+        "title": "あなたが送っているのは"
+      },
       "summary": {
+        "button": {
+          "title": "送信の確認"
+        },
         "sending": "送金",
         "to": "受信者"
       }
@@ -1017,7 +1131,16 @@
       },
       "insufficientFunds": {
         "message": "送金額を入力してから {{currencySymbol}} 残高が減少しました",
-        "title": "{{currencySymbol}} が足りません."
+        "title": "{{currencySymbol}} が足りません"
+      },
+      "modal": {
+        "button": {
+          "cta": {
+            "blocking": "了解",
+            "cancel": "キャンセル",
+            "confirm": "確認"
+          }
+        }
       },
       "newAddress": {
         "message": "このアドレスと取引したことがありません。アドレスが正しいことを確認してください。",
@@ -1110,12 +1233,16 @@
           "viewAll": "すべて表示",
           "viewLess": "表示を減らす"
         },
+        "label": {
+          "viewOnly": "閲覧専用"
+        },
         "title": "ウォレット設定"
       }
     },
     "setting": {
       "appearance": {
         "option": {
+          "auto": "自動",
           "dark": {
             "subtitle": "常にダークモードを使用",
             "title": "ダークモード"
@@ -1185,6 +1312,9 @@
           "title": "{{cloudProviderName}} バックアップ"
         }
       },
+      "beta": {
+        "tooltip": "近日公開！"
+      },
       "biometrics": {
         "appAccess": {
           "subtitle": {
@@ -1224,14 +1354,17 @@
         },
         "warning": {
           "message": {
-            "android": "{{biometricsMethod}}をオンにしないと、デバイスにアクセスできる人は誰でも取引を行うことができます。",
-            "ios": "生体認証をオンにしないと、デバイスにアクセスできる人は誰でも取引を行うことができます。"
+            "android": "生体認証をオンにしないと、デバイスにアクセスできる人は誰でも取引を行うことができます。",
+            "ios": "{{biometricsMethod}}をオンにしないと、デバイスにアクセスできる人は誰でも取引を行うことができます。"
           },
           "title": "本当によろしいですか？"
         }
       },
       "currency": {
         "title": "現地通貨"
+      },
+      "giveFeedback": {
+        "title": "フィードバックを与えます"
       },
       "helpCenter": {
         "title": "ヘルプセンター"
@@ -1241,6 +1374,7 @@
           "navigate": "設定へ"
         },
         "description": "Uniswap のデフォルトはデバイスの言語設定です。優先言語を変更するには、デバイス設定の「Uniswap」に移動し、「言語」をタップします。",
+        "exampleTitle": "英語",
         "title": "言語"
       },
       "password": {
@@ -1260,6 +1394,9 @@
       },
       "smallBalances": {
         "title": "少額の残高を非表示"
+      },
+      "theme": {
+        "title": "テーマ"
       },
       "unknownTokens": {
         "title": "不明なトークンを非表示"
@@ -1294,6 +1431,7 @@
   "swap": {
     "button": {
       "max": "最大額",
+      "review": "レビュー交換",
       "swap": "スワップ",
       "unwrap": "アンラップ",
       "view": "取引を表示",
@@ -1608,7 +1746,7 @@
       "copy": "取引 ID をコピー",
       "copyMoonPay": "MoonPay取引IDをコピー",
       "view": "{{tokenSymbol}}を見る",
-      "viewEtherscan": "{{blockExplorerName}}で見る",
+      "viewEtherscan": "{{blockExplorerName}} で表示",
       "viewMoonPay": "MoonPayで表示"
     },
     "amount": {
@@ -1708,7 +1846,7 @@
       },
       "swap": {
         "canceled": "スワップ取消済",
-        "canceling": "スワップ取消中",
+        "canceling": "スワップのキャンセル",
         "failed": "スワップに失敗",
         "pending": "スワップ中",
         "success": "スワップ済",
@@ -1945,7 +2083,7 @@
       },
       "details": {
         "label": {
-          "function": "関数： ",
+          "function": "関数: ",
           "recipient": "に： ",
           "sending": "送金: "
         }

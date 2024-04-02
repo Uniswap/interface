@@ -174,6 +174,7 @@
       "dismiss": "Membubarkan",
       "done": "Selesai",
       "enable": "Memungkinkan",
+      "goBack": "Kembali",
       "hide": "Bersembunyi",
       "later": "mungkin nanti",
       "learn": "Belajarlah lagi",
@@ -205,6 +206,7 @@
         "title": "Ups! Ada yang salah."
       }
     },
+    "endAdornment": "Dan",
     "error": {
       "general": "Ada yang salah."
     },
@@ -266,15 +268,42 @@
   "dapp": {
     "request": {
       "approve": {
-        "label": "Dompet"
+        "action": "Menyetujui",
+        "fallbackTitle": "Setujui token pembelanjaan",
+        "helptext": "Izinkan situs ini mengakses dan membelanjakan token ini dari dompet Anda.",
+        "label": "Dompet",
+        "title": "Setujui pembelanjaan {{tokenSymbol}}"
+      },
+      "base": {
+        "title": "Konfirmasikan transaksi"
+      },
+      "changeChain": {
+        "title": "Alihkan jaringan ke {{network}}"
+      },
+      "connect": {
+        "helptext": "Izinkan situs ini melihat alamat dompet Anda, saldo, dan meminta persetujuan transaksi.",
+        "title": "Hubungkan ke situs"
       },
       "error": {
         "none": "Tidak ada persetujuan yang tertunda"
       },
+      "fallback": {
+        "calldata": {
+          "label": "data"
+        },
+        "function": {
+          "label": "fungsi"
+        },
+        "recipient": {
+          "label": "ke"
+        },
+        "sending": {
+          "label": "mengirim"
+        }
+      },
       "signature": {
-        "education": {
-          "description": "Tanda tangan diperlukan untuk membuktikan bahwa Anda pemilik dompet tersebut tanpa memperlihatkan kunci pribadi Anda",
-          "title": "Apa itu permintaan tanda tangan?"
+        "error": {
+          "712-spec-compliance": "SignTypedDataRequestContent menerima data untuk penandatanganan yang tidak sesuai dengan spesifikasi EIP-712."
         }
       },
       "warning": {
@@ -370,8 +399,15 @@
   },
   "extension": {
     "connection": {
-      "popup": "Dompet Anda tidak terhubung ke situs ini.",
-      "popupWithButton": "Dompet Anda tidak terhubung ke situs ini. Cari tombol “Hubungkan Dompet” atau “Masuk”."
+      "popup": "Dompet Anda tidak terhubung ke situs ini. Cari tombol “Hubungkan Dompet” atau “Masuk”.",
+      "popupWithButton": "Dompet Anda tidak terhubung ke situs ini.",
+      "titleConnected": "Terhubung",
+      "titleNotConnected": "Tidak terhubung"
+    },
+    "dappRequest": {
+      "signatureRequest": {
+        "header": "Permintaan tanda tangan"
+      }
     },
     "lock": {
       "button": {
@@ -416,7 +452,8 @@
     },
     "connection": {
       "message": "Menghubungkan Anda ke {{serviceProvider}}",
-      "quote": "Membeli {{amount}} bernilai {{currencySymbol}}"
+      "quote": "Membeli {{amount}} bernilai {{currencySymbol}}",
+      "terms": "Dengan melanjutkan, Anda mengakui bahwa Anda akan tunduk pada Persyaratan Layanan dan Kebijakan Privasi dengan {{serviceProvider}}, sebagaimana berlaku."
     },
     "error": {
       "default": "Ada yang salah.",
@@ -427,10 +464,9 @@
       "usd": "Hanya tersedia untuk dibeli dalam USD"
     },
     "quote": {
-      "amount": "Terima {{tokenAmount}}",
-      "amountAfterFees": "{{tokenAmount}} setelah biaya",
+      "advice": "Anda akan melanjutkan ke portal penyedia untuk melihat biaya yang terkait dengan transaksi Anda.",
+      "others": "yang lain",
       "type": {
-        "best": "Secara keseluruhan terbaik",
         "other": "Pilihan lain",
         "recent": "Baru - baru ini digunakan"
       }
@@ -470,6 +506,11 @@
       "title": "Aktivitas"
     },
     "banner": {
+      "extension": {
+        "confirm": "Bergabunglah dengan Beta",
+        "message": "Jadilah orang pertama yang mencoba Ekstensi Uniswap di browser web Anda",
+        "title": "Ekstensi Uniswap ada di sini"
+      },
       "offline": "Anda berada dalam mode offline"
     },
     "extension": {
@@ -490,6 +531,14 @@
       "scan": "Pindai",
       "send": "Mengirim",
       "swap": "Menukar"
+    },
+    "modal": {
+      "getExtension": {
+        "step1": "1. Kunjungi <highlight>uniswap.org/ext</highlight> di komputer Anda",
+        "step2": "2. Tambahkan Ekstensi Uniswap di browser Chrome Anda",
+        "step3": "3. Masukkan nama pengguna Anda untuk mendapatkan akses",
+        "title": "Bergabunglah dengan Ekstensi Uniswap Beta"
+      }
     },
     "nfts": {
       "title": "NFT"
@@ -558,6 +607,7 @@
     },
     "copied": {
       "address": "Alamat disalin",
+      "calldata": "Data panggilan disalin",
       "contractAddress": "Alamat kontrak disalin",
       "failed": "Gagal menyalin ke papan klip",
       "image": "Gambar disalin",
@@ -715,6 +765,10 @@
         "button": "Impor dari ponsel Anda",
         "title": "Punya aplikasi seluler Uniswap?"
       },
+      "getOnTheBetaWaitlist": {
+        "subtitle": "Unduh aplikasi seluler dan klaim nama pengguna",
+        "title": "Masuk daftar tunggu Beta"
+      },
       "password": {
         "subtitle": "Anda memerlukan ini untuk membuka kunci dompet Anda dan mengakses frase pemulihan Anda",
         "title": {
@@ -763,6 +817,19 @@
         "alreadyHave": "Saya sudah punya dompet"
       },
       "title": "Selamat datang di \nDompet Uniswap"
+    },
+    "introBetaWaitlist": {
+      "button": {
+        "checkEligibility": "Periksa kelayakan",
+        "letsGo": "Ayo pergi"
+      },
+      "checkEligibilityInstructions": "Masukkan nama pengguna <highlight>uni.eth</highlight> Anda di bawah untuk memeriksa apakah Anda memenuhi syarat untuk Beta.",
+      "eligible": {
+        "tagline": "Selamat datang di versi Beta — Anda adalah orang pertama yang mencoba dompet Uniswap.",
+        "title": "Anda keluar dari daftar tunggu!"
+      },
+      "ineligibleExplanation": "Anda masih dalam daftar tunggu. Kami akan memberi tahu Anda di aplikasi seluler Uniswap saat Anda memenuhi syarat!",
+      "unitagPlaceholder": "nama belakang"
     },
     "landing": {
       "button": {
@@ -814,12 +881,12 @@
       "error": "Maaf, kami tidak dapat memuat kode QR saat ini. Silakan coba metode orientasi lainnya.",
       "otp": {
         "error": "Kode yang Anda kirimkan salah, atau terjadi kesalahan saat mengirimkan. Silakan coba lagi.",
-        "failed": "Upaya yang gagal: {{count}}",
+        "failed": "Upaya yang gagal: {{number}}",
         "subtitle": "Periksa aplikasi seluler Uniswap Anda untuk kode 6 karakter",
         "title": "Masukkan kode satu kali"
       },
-      "subtitle": "Pindai kode QR dengan aplikasi Uniswap untuk mengimpor dompet Anda",
-      "title": "Sinkronkan dari ponsel Anda"
+      "subtitle": "Pindai kode QR dengan aplikasi seluler Uniswap untuk mulai mengimpor dompet Anda",
+      "title": "Impor dompet dari aplikasi"
     },
     "security": {
       "alert": {
@@ -959,6 +1026,16 @@
         "message": "Pindai lagi kode QR di Ekstensi Uniswap untuk melanjutkan sinkronisasi dompet Anda.",
         "title": "Waktu koneksi Anda habis"
       }
+    },
+    "modal": {
+      "notOnWaitlist": {
+        "message": "Agar memenuhi syarat untuk Ekstensi Uniswap Beta, bergabunglah dalam daftar tunggu dengan mengklaim nama pengguna uni.eth",
+        "title": "Anda tidak ada dalam daftar tunggu"
+      },
+      "onWaitlist": {
+        "message": "Kami akan memberi tahu Anda di aplikasi saat Anda memenuhi syarat untuk bergabung dengan Uniswap Extension Beta.",
+        "title": "Anda masih dalam daftar tunggu"
+      }
     }
   },
   "send": {
@@ -966,18 +1043,55 @@
       "review": "Tinjau transfer",
       "send": "Mengirim"
     },
+    "gas": {
+      "error": {
+        "title": "T/A"
+      },
+      "networkCost": {
+        "title": "Biaya Jaringan"
+      }
+    },
+    "input": {
+      "token": {
+        "balance": {
+          "title": "Saldo: {{balance}} {{symbol}}"
+        }
+      }
+    },
     "recipient": {
-      "previous_one": "{{count}} transfer sebelumnya",
+      "previous_one": "1 transfer sebelumnya",
       "previous_other": "{{count}} transfer sebelumnya",
       "section": {
         "favorite": "Dompet favorit",
         "recent": "Terkini",
         "search": "Hasil Pencarian",
+        "viewOnly": "Dompet hanya lihat",
         "yours": "dompet Anda"
+      },
+      "warning": {
+        "viewOnly": {
+          "message": "Kirimkan dana ke dompet ini hanya jika Anda memiliki frasa pemulihan atau mengetahui pemilik dompet.",
+          "title": "Anda memiliki ini sebagai dompet hanya lihat"
+        }
       }
     },
+    "recipientSelect": {
+      "search": {
+        "empty": {
+          "message": "Saat Anda mengirim token ke alamat dompet, token tersebut akan muncul di sini",
+          "title": "Tidak ada dompet yang disimpan"
+        }
+      },
+      "title": "Ke"
+    },
     "review": {
+      "modal": {
+        "title": "Anda mengirim"
+      },
       "summary": {
+        "button": {
+          "title": "Konfirmasikan pengiriman"
+        },
         "sending": "Mengirim",
         "to": "Ke"
       }
@@ -1017,7 +1131,16 @@
       },
       "insufficientFunds": {
         "message": "Saldo {{currencySymbol}} Anda berkurang sejak Anda memasukkan jumlah yang ingin Anda kirim",
-        "title": "Tidak cukup {{currencySymbol}}."
+        "title": "Tidak cukup {{currencySymbol}}"
+      },
+      "modal": {
+        "button": {
+          "cta": {
+            "blocking": "OKE",
+            "cancel": "Membatalkan",
+            "confirm": "Mengonfirmasi"
+          }
+        }
       },
       "newAddress": {
         "message": "Anda belum pernah bertransaksi dengan alamat ini sebelumnya. Harap konfirmasikan bahwa alamatnya benar sebelum melanjutkan.",
@@ -1110,12 +1233,16 @@
           "viewAll": "Lihat semua",
           "viewLess": "Lihat lebih sedikit"
         },
+        "label": {
+          "viewOnly": "Hanya lihat"
+        },
         "title": "Pengaturan dompet"
       }
     },
     "setting": {
       "appearance": {
         "option": {
+          "auto": "Mobil",
           "dark": {
             "subtitle": "Selalu gunakan mode gelap",
             "title": "Mode gelap"
@@ -1185,6 +1312,9 @@
           "title": "{{cloudProviderName}} cadangan"
         }
       },
+      "beta": {
+        "tooltip": "Segera hadir!"
+      },
       "biometrics": {
         "appAccess": {
           "subtitle": {
@@ -1224,14 +1354,17 @@
         },
         "warning": {
           "message": {
-            "android": "Jika Anda tidak mengaktifkan {{biometricsMethod}}, siapa pun yang mendapatkan akses ke perangkat Anda dapat membuka Dompet Uniswap dan melakukan transaksi.",
-            "ios": "Jika Anda tidak mengaktifkan biometrik, siapa pun yang mendapatkan akses ke perangkat Anda dapat membuka Dompet Uniswap dan melakukan transaksi."
+            "android": "Jika Anda tidak mengaktifkan biometrik, siapa pun yang mendapatkan akses ke perangkat Anda dapat membuka Dompet Uniswap dan melakukan transaksi.",
+            "ios": "Jika Anda tidak mengaktifkan {{biometricsMethod}}, siapa pun yang mendapatkan akses ke perangkat Anda dapat membuka Dompet Uniswap dan melakukan transaksi."
           },
           "title": "Apa kamu yakin?"
         }
       },
       "currency": {
         "title": "Mata uang lokal"
+      },
+      "giveFeedback": {
+        "title": "Berikan umpan balik"
       },
       "helpCenter": {
         "title": "Pusat Bantuan"
@@ -1241,6 +1374,7 @@
           "navigate": "Pergi ke pengaturan"
         },
         "description": "Uniswap default pada pengaturan bahasa perangkat Anda. Untuk mengubah bahasa pilihan Anda, buka “Uniswap” di pengaturan perangkat Anda dan ketuk “Bahasa”",
+        "exampleTitle": "Bahasa Inggris",
         "title": "Bahasa"
       },
       "password": {
@@ -1260,6 +1394,9 @@
       },
       "smallBalances": {
         "title": "Sembunyikan saldo kecil"
+      },
+      "theme": {
+        "title": "Tema"
       },
       "unknownTokens": {
         "title": "Sembunyikan token yang tidak diketahui"
@@ -1294,6 +1431,7 @@
   "swap": {
     "button": {
       "max": "Maks",
+      "review": "Tinjau pertukaran",
       "swap": "Menukar",
       "unwrap": "Membuka",
       "view": "Lihat transaksi",

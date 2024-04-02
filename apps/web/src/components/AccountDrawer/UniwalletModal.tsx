@@ -13,7 +13,7 @@ import { QRCodeSVG } from 'qrcode.react'
 import { useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
-import { isAndroid, isIOS } from 'utils/platform'
+import { isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
 
 import uniPng from '../../assets/images/uniwallet_modal_icon.png'
 import { DownloadButton } from './DownloadButton'
@@ -43,7 +43,7 @@ export default function UniwalletModal() {
   const [uri, setUri] = useState<string>()
 
   // Displays the modal if not on iOS/Android, a Uniswap Wallet Connection is pending, & qrcode URI is available
-  const onLaunchedMobilePlatform = isIOS || isAndroid
+  const onLaunchedMobilePlatform = isWebIOS || isWebAndroid
   const open =
     !onLaunchedMobilePlatform &&
     activationState.status === ActivationStatus.PENDING &&

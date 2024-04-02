@@ -14,10 +14,9 @@ import {
   UWULINK_PREFIX,
   getSupportedURI,
   isAllowedUwULinkRequest,
-  parseScantasticParams,
 } from 'src/components/WalletConnect/ScanSheet/util'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
-import { closeAllModals, openModal } from 'src/features/modals/modalSlice'
+import { openDeepLink } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { addRequest } from 'src/features/walletConnect/walletConnectSlice'
@@ -136,36 +135,9 @@ export function WalletConnectModal({
       }
 
       if (supportedURI.type === URIType.Scantastic) {
-        const params = parseScantasticParams(supportedURI.value)
-
-        if (!params) {
-          setShouldFreezeCamera(true)
-          Alert.alert(
-            t('walletConnect.error.scantastic.title'),
-            t('walletConnect.error.scantastic.message'),
-            [
-              {
-                text: t('common.button.ok'),
-                onPress: (): void => {
-                  setShouldFreezeCamera(false)
-                },
-              },
-            ]
-          )
-          return
-        }
-
         setShouldFreezeCamera(true)
-        dispatch(closeAllModals())
-        dispatch(
-          openModal({
-            name: ModalName.Scantastic,
-            initialState: {
-              params,
-            },
-          })
-        )
-
+        dispatch(openDeepLink({ url: uri, coldStart: false }))
+        onClose()
         return
       }
 

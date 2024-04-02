@@ -36,8 +36,7 @@ const DetailsRow = styled.div`
 `
 
 const StyledLink = styled(ExternalLink)`
-  color: ${({ theme }) => theme.accent1};
-
+  color: ${({ theme }) => theme.neutral1};
   font-weight: 535;
 `
 

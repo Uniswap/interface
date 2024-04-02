@@ -5,6 +5,7 @@
 
 import dayjs from 'dayjs'
 import { ChainId } from 'wallet/src/constants/chains'
+import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
 import { initialLanguageState } from 'wallet/src/features/language/slice'
@@ -860,6 +861,17 @@ export const migrations = {
     }
 
     delete newState.favorites.nftsData
+
+    return newState
+  },
+
+  62: function addExtensionOnboardingState(state: any) {
+    const newState = { ...state }
+
+    newState.behaviorHistory = {
+      ...state.behaviorHistory,
+      extensionOnboardingState: ExtensionOnboardingState.Undefined,
+    }
 
     return newState
   },

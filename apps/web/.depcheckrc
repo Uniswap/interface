@@ -14,6 +14,7 @@ ignores: [
     "swc-loader",
     "postinstall-postinstall",
     "process",
+    "madge",
     # Dependencies that depcheck thinks are missing but are actually present or never used
     ## GraphQL
     "@graphql-codegen/*",

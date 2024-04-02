@@ -364,8 +364,8 @@ export function numberToLocaleStringWorklet(
   // if we encounter any coins with a unit price over $1M then add a shorthand case
   if (value < 0) {
     sNum = value.toString()
-  } else if (value < 0.00000001) {
-    sNum = '<0.00000001'
+  } else if (value < 0.0000000000000001) {
+    sNum = '<0.0000000000000001'
   } else if (value < 1) {
     sNum = convertSmallSciNotationToDecimal(value)
   } else {

@@ -18,10 +18,12 @@ import { chainIdToBackendName } from 'graphql/data/util'
 import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import { deserializeToken } from 'state/user/utils'
 import {
   Token as GqlToken,
   useSimpleTokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { isAddress } from 'utilities/src/addresses'
@@ -29,7 +31,7 @@ import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 import { useAllLists, useCombinedActiveList, useCombinedTokenMapFromUrls } from '../state/lists/hooks'
 import { TokenFromList } from '../state/lists/tokenFromList'
-import { deserializeToken, useUserAddedTokens } from '../state/user/hooks'
+import { useUserAddedTokens } from '../state/user/userAddedTokens'
 import { useUnsupportedTokenList } from './../state/lists/hooks'
 
 type Maybe<T> = T | undefined
@@ -331,9 +333,20 @@ function useTokenListCurrency(currencyId: Maybe<string>, chainId?: ChainId): Cur
 }
 
 export function useCurrency(address?: string, chainId?: ChainId, skip?: boolean): Maybe<Currency> {
-  const { chainId: connectedChainId } = useWeb3React()
+  const currencyInfo = useCurrencyInfo(address, chainId, skip)
   const gqlTokenListsEnabled = useFeatureFlag(FeatureFlags.GqlTokenLists)
   const tokenListCurrency = useTokenListCurrency(address, chainId)
+  return gqlTokenListsEnabled ? currencyInfo?.currency : tokenListCurrency
+}
+
+/**
+ * Returns a CurrencyInfo from the tokenAddress+chainId pair. This should only
+ * be used directly if the gqlTokenListsEnabled flag is enabled, otherwise it
+ * will return undefined every time.
+ */
+function useCurrencyInfo(address?: string, chainId?: ChainId, skip?: boolean): Maybe<CurrencyInfo> {
+  const { chainId: connectedChainId } = useWeb3React()
+  const gqlTokenListsEnabled = useFeatureFlag(FeatureFlags.GqlTokenLists)
 
   const backendChainName = chainIdToBackendName(chainId ?? connectedChainId)
   const isNative =
@@ -343,21 +356,21 @@ export function useCurrency(address?: string, chainId?: ChainId, skip?: boolean)
       chain: backendChainName,
       address: isNative ? getNativeTokenDBAddress(backendChainName) : address ?? '',
     },
-    skip: (!address && !isNative) || skip,
+    skip: (!address && !isNative) || skip || !gqlTokenListsEnabled,
     fetchPolicy: 'cache-first',
   })
 
   return useMemo(() => {
     if (!gqlTokenListsEnabled) {
-      return tokenListCurrency
+      return undefined
     }
 
     if (!data?.token || !address || skip) {
       return
     }
 
-    return gqlTokenToCurrencyInfo(data.token as GqlToken)?.currency
-  }, [gqlTokenListsEnabled, data?.token, address, skip, tokenListCurrency])
+    return gqlTokenToCurrencyInfo(data.token as GqlToken)
+  }, [gqlTokenListsEnabled, data?.token, address, skip])
 }
 
 export function useToken(tokenAddress?: string, chainId?: ChainId): Maybe<Token> {

@@ -293,7 +293,6 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
     offerer: activity.details.from,
     txHash: activity.details.hash,
     chainId,
-    type: SignatureType.SIGN_UNISWAPX_ORDER,
     status: UniswapXOrderStatus.FILLED,
     addedTime: activity.timestamp,
     swapInfo: {
@@ -455,8 +454,9 @@ function swapOrderTypeToSignatureType(swapOrderType: SwapOrderType): SignatureTy
     case SwapOrderType.Limit:
       return SignatureType.SIGN_LIMIT
     case SwapOrderType.Dutch:
-    default:
       return SignatureType.SIGN_UNISWAPX_ORDER
+    case SwapOrderType.DutchV2:
+      return SignatureType.SIGN_UNISWAPX_V2_ORDER
   }
 }
 
@@ -528,8 +528,8 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
     statusMessage,
     offchainOrderDetails: {
       id: details.id,
-      // TODO(limits): check type from backend and use SignatureType.SIGN_LIMIT here if necessary
-      type: SignatureType.SIGN_UNISWAPX_ORDER,
+      type: swapOrderTypeToSignatureType(details.swapOrderType),
+      encodedOrder: details.encodedOrder,
       txHash: details.hash,
       orderHash: details.hash,
       offerer: details.offerer,
@@ -569,6 +569,7 @@ function parseRemoteActivity(
     }
 
     if (assetActivity.details.__typename === 'SwapOrderDetails') {
+      // UniswapX orders are returned as SwapOrderDetails until they are filled onchain, at which point they are returned as TransactionDetails
       return parseUniswapXOrder(assetActivity as OrderActivity)
     }
 

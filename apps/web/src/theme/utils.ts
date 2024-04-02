@@ -1,4 +1,4 @@
-import { darken, lighten, mix } from 'polished'
+import { mix } from 'polished'
 import { colors } from 'theme/colors'
 import { hex } from 'wcag-contrast'
 
@@ -45,20 +45,6 @@ const MIN_COLOR_CONTRAST_THRESHOLD = 1.95
 export function passesContrast(color: string, backgroundColor: string): boolean {
   const contrast = hex(color, backgroundColor)
   return contrast >= MIN_COLOR_CONTRAST_THRESHOLD
-}
-
-/** Returns a color that passes the minimum contrast threshold against the background color. */
-export function getAccessibleColor(color: string, backgroundColor: string, darkMode: boolean): string {
-  if (passesContrast(color, backgroundColor)) return color
-
-  let accessibleColor = color
-  for (let amount = 0.1; amount <= 1; amount += 0.1) {
-    if (passesContrast(accessibleColor, backgroundColor)) return accessibleColor
-    accessibleColor = darkMode ? lighten(amount, color) : darken(amount, color)
-  }
-
-  console.warn(`Unable to find accessible color for ${color} on ${backgroundColor}`)
-  return color
 }
 
 /**

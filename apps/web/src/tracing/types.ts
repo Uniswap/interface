@@ -26,7 +26,6 @@ export type OpCode =
   | 'wallet.approve'
   | 'wallet.connect'
   | 'wallet.connect.eager'
-  | 'wallet.estimate_gas'
   | 'wallet.send_transaction'
   | 'wallet.sign'
   | 'wallet.switch_chain'

@@ -174,6 +174,7 @@
       "dismiss": "Afwijzen",
       "done": "Gereed",
       "enable": "Inschakelen",
+      "goBack": "Ga terug",
       "hide": "Verbergen",
       "later": "Misschien later",
       "learn": "Kom meer te weten",
@@ -205,6 +206,7 @@
         "title": "Oeps! Er is iets fout gegaan."
       }
     },
+    "endAdornment": "en",
     "error": {
       "general": "Er is iets fout gegaan."
     },
@@ -266,15 +268,42 @@
   "dapp": {
     "request": {
       "approve": {
-        "label": "Portemonnee"
+        "action": "Goedkeuren",
+        "fallbackTitle": "Keur bestedingstokens goed",
+        "helptext": "Geef deze site toegang tot dit token en geef het uit uw portemonnee uit.",
+        "label": "Portemonnee",
+        "title": "Uitgaven goedkeuren {{tokenSymbol}}"
+      },
+      "base": {
+        "title": "Transactie bevestigen"
+      },
+      "changeChain": {
+        "title": "Schakel het netwerk naar {{network}}"
+      },
+      "connect": {
+        "helptext": "Sta toe dat deze site uw portemonneeadres en saldo bekijkt en goedkeuringen voor transacties aanvraagt.",
+        "title": "Maak verbinding met de locatie"
       },
       "error": {
         "none": "Er zijn geen goedkeuringen in behandeling"
       },
+      "fallback": {
+        "calldata": {
+          "label": "gegevens"
+        },
+        "function": {
+          "label": "functie"
+        },
+        "recipient": {
+          "label": "naar"
+        },
+        "sending": {
+          "label": "bezig met verzenden"
+        }
+      },
       "signature": {
-        "education": {
-          "description": "Er is een handtekening vereist om te bewijzen dat u de eigenaar van de portemonnee bent, zonder uw privésleutels bloot te leggen",
-          "title": "Wat is een handtekeningverzoek?"
+        "error": {
+          "712-spec-compliance": "SignTypedDataRequestContent heeft gegevens ontvangen voor ondertekening die niet voldoen aan de EIP-712-specificatie."
         }
       },
       "warning": {
@@ -370,8 +399,15 @@
   },
   "extension": {
     "connection": {
-      "popup": "Uw portemonnee is niet verbonden met deze site.",
-      "popupWithButton": "Uw portemonnee is niet verbonden met deze site. Zoek naar de knop 'Wallet verbinden' of 'Inloggen'."
+      "popup": "Uw portemonnee is niet verbonden met deze site. Zoek naar de knop 'Wallet verbinden' of 'Inloggen'.",
+      "popupWithButton": "Uw portemonnee is niet verbonden met deze site.",
+      "titleConnected": "Gekoppeld",
+      "titleNotConnected": "Niet verbonden"
+    },
+    "dappRequest": {
+      "signatureRequest": {
+        "header": "Handtekening verzoek"
+      }
     },
     "lock": {
       "button": {
@@ -416,7 +452,8 @@
     },
     "connection": {
       "message": "Ik verbind je met {{serviceProvider}}",
-      "quote": "{{amount}} waarde van {{currencySymbol}}kopen"
+      "quote": "{{amount}} waarde van {{currencySymbol}}kopen",
+      "terms": "Als u doorgaat, erkent u dat u onderworpen bent aan de Servicevoorwaarden en het Privacybeleid met {{serviceProvider}}, indien van toepassing."
     },
     "error": {
       "default": "Er is iets fout gegaan.",
@@ -427,10 +464,9 @@
       "usd": "Alleen verkrijgbaar in USD"
     },
     "quote": {
-      "amount": "Ontvang {{tokenAmount}}",
-      "amountAfterFees": "{{tokenAmount}} na kosten",
+      "advice": "U gaat door naar het portaal van de aanbieder om de kosten te zien die aan uw transactie zijn verbonden.",
+      "others": "anderen",
       "type": {
-        "best": "Beste overall",
         "other": "Andere opties",
         "recent": "Laatst gebruikt"
       }
@@ -470,6 +506,11 @@
       "title": "Activiteit"
     },
     "banner": {
+      "extension": {
+        "confirm": "Sluit je aan bij Bèta",
+        "message": "Probeer als eerste de Uniswap-extensie uit in uw webbrowser",
+        "title": "Uniswap-extensie is hier"
+      },
       "offline": "U bevindt zich in de offlinemodus"
     },
     "extension": {
@@ -490,6 +531,14 @@
       "scan": "Scannen",
       "send": "Versturen",
       "swap": "Ruil"
+    },
+    "modal": {
+      "getExtension": {
+        "step1": "1. Ga naar <highlight>uniswap.org/ext</highlight> op je computer",
+        "step2": "2. Voeg de Uniswap-extensie toe aan uw Chrome-browser",
+        "step3": "3. Voer uw gebruikersnaam in om toegang te krijgen",
+        "title": "Doe mee aan de Uniswap-extensiebèta"
+      }
     },
     "nfts": {
       "title": "NFT's"
@@ -558,6 +607,7 @@
     },
     "copied": {
       "address": "Adres gekopieerd",
+      "calldata": "Oproepgegevens gekopieerd",
       "contractAddress": "Contractadres gekopieerd",
       "failed": "Kon niet naar klembord kopiëren",
       "image": "Afbeelding gekopieerd",
@@ -715,6 +765,10 @@
         "button": "Importeren vanaf uw telefoon",
         "title": "Heb je de Uniswap mobiele app?"
       },
+      "getOnTheBetaWaitlist": {
+        "subtitle": "Download de mobiele app en claim een gebruikersnaam",
+        "title": "Zet u op de bèta-wachtlijst"
+      },
       "password": {
         "subtitle": "U heeft dit nodig om uw portemonnee te ontgrendelen en toegang te krijgen tot uw herstelzin",
         "title": {
@@ -763,6 +817,19 @@
         "alreadyHave": "Ik heb al een portemonnee"
       },
       "title": "Welkom bij \nUniswap-portemonnee"
+    },
+    "introBetaWaitlist": {
+      "button": {
+        "checkEligibility": "Controleer geschiktheid",
+        "letsGo": "Laten we gaan"
+      },
+      "checkEligibilityInstructions": "Voer hieronder uw <highlight>uni.eth</highlight> gebruikersnaam in om te controleren of u in aanmerking komt voor de bèta.",
+      "eligible": {
+        "tagline": "Welkom bij de bèta: u bent een van de eersten die de Uniswap-portemonnee uitprobeert.",
+        "title": "Je bent van de wachtlijst verwijderd!"
+      },
+      "ineligibleExplanation": "Je staat nog steeds op de wachtlijst. We laten het je weten in de Uniswap mobiele app wanneer je in aanmerking komt!",
+      "unitagPlaceholder": "gebruikersnaam"
     },
     "landing": {
       "button": {
@@ -814,12 +881,12 @@
       "error": "Sorry, we kunnen de QR-code momenteel niet laden. Probeer een andere onboardingmethode.",
       "otp": {
         "error": "De code die u heeft ingediend, is onjuist of er is een fout opgetreden bij het indienen. Probeer het opnieuw.",
-        "failed": "Mislukte pogingen: {{count}}",
+        "failed": "Mislukte pogingen: {{number}}",
         "subtitle": "Controleer uw Uniswap mobiele app voor de code van 6 tekens",
         "title": "Voer eenmalige code in"
       },
-      "subtitle": "Scan de QR-code met de Uniswap-app om uw portemonnee te importeren",
-      "title": "Synchroniseer vanaf uw telefoon"
+      "subtitle": "Scan de QR-code met de Uniswap mobiele app om te beginnen met het importeren van uw portemonnee(s)",
+      "title": "Importeer portemonnee vanuit de app"
     },
     "security": {
       "alert": {
@@ -959,6 +1026,16 @@
         "message": "Scan de QR-code op de Uniswap-extensie opnieuw om door te gaan met het synchroniseren van uw portemonnee.",
         "title": "Er is een time-out opgetreden in uw verbinding"
       }
+    },
+    "modal": {
+      "notOnWaitlist": {
+        "message": "Om in aanmerking te komen voor de Uniswap Extension Beta, moet u zich op de wachtlijst plaatsen door een uni.eth-gebruikersnaam te claimen",
+        "title": "Je staat niet op de wachtlijst"
+      },
+      "onWaitlist": {
+        "message": "We laten het u weten in de app wanneer u in aanmerking komt voor deelname aan de Uniswap Extensie Bèta.",
+        "title": "Je staat nog steeds op de wachtlijst"
+      }
     }
   },
   "send": {
@@ -966,18 +1043,55 @@
       "review": "Overdracht beoordelen",
       "send": "Versturen"
     },
+    "gas": {
+      "error": {
+        "title": "N.v.t"
+      },
+      "networkCost": {
+        "title": "Netwerkkosten"
+      }
+    },
+    "input": {
+      "token": {
+        "balance": {
+          "title": "Saldo: {{balance}} {{symbol}}"
+        }
+      }
+    },
     "recipient": {
-      "previous_one": "{{count}} vorige overdracht",
+      "previous_one": "1 eerdere overdracht",
       "previous_other": "{{count}} eerdere overdrachten",
       "section": {
         "favorite": "Favoriete portemonnees",
         "recent": "Recent",
         "search": "Zoekresultaten",
+        "viewOnly": "Alleen-lezen-portemonnees",
         "yours": "Je portemonnees"
+      },
+      "warning": {
+        "viewOnly": {
+          "message": "Stuur alleen geld naar deze portemonnee als u over de herstelzin beschikt of als u de eigenaar van de portemonnee kent.",
+          "title": "Je hebt dit als een alleen-lezen portemonnee"
+        }
       }
     },
+    "recipientSelect": {
+      "search": {
+        "empty": {
+          "message": "Wanneer u tokens naar een portemonnee-adres verzendt, worden ze hier weergegeven",
+          "title": "Geen portemonnees opgeslagen"
+        }
+      },
+      "title": "Naar"
+    },
     "review": {
+      "modal": {
+        "title": "Je verzendt"
+      },
       "summary": {
+        "button": {
+          "title": "Bevestig het verzenden"
+        },
         "sending": "Bezig met verzenden",
         "to": "Naar"
       }
@@ -1017,7 +1131,16 @@
       },
       "insufficientFunds": {
         "message": "Uw {{currencySymbol}} saldo is afgenomen sinds u het bedrag heeft ingevoerd dat u wilt verzenden",
-        "title": "Niet genoeg {{currencySymbol}}."
+        "title": "Niet genoeg {{currencySymbol}}"
+      },
+      "modal": {
+        "button": {
+          "cta": {
+            "blocking": "OK",
+            "cancel": "Annuleer",
+            "confirm": "Bevestig"
+          }
+        }
       },
       "newAddress": {
         "message": "U heeft nog niet eerder een transactie met dit adres uitgevoerd. Controleer of het adres correct is voordat u verdergaat.",
@@ -1110,12 +1233,16 @@
           "viewAll": "Bekijk alles",
           "viewLess": "Bekijk minder"
         },
+        "label": {
+          "viewOnly": "Alleen-lezen"
+        },
         "title": "Portemonnee-instellingen"
       }
     },
     "setting": {
       "appearance": {
         "option": {
+          "auto": "Auto",
           "dark": {
             "subtitle": "Gebruik standaard darkmode",
             "title": "Donkere modus"
@@ -1185,6 +1312,9 @@
           "title": "{{cloudProviderName}} back-up"
         }
       },
+      "beta": {
+        "tooltip": "Binnenkort beschikbaar!"
+      },
       "biometrics": {
         "appAccess": {
           "subtitle": {
@@ -1224,14 +1354,17 @@
         },
         "warning": {
           "message": {
-            "android": "Als u {{biometricsMethod}}niet inschakelt, kan iedereen die toegang krijgt tot uw apparaat Uniswap Wallet openen en transacties uitvoeren.",
-            "ios": "Als u biometrie niet inschakelt, kan iedereen die toegang krijgt tot uw apparaat Uniswap Wallet openen en transacties uitvoeren."
+            "android": "Als u biometrie niet inschakelt, kan iedereen die toegang krijgt tot uw apparaat Uniswap Wallet openen en transacties uitvoeren.",
+            "ios": "Als u {{biometricsMethod}}niet inschakelt, kan iedereen die toegang krijgt tot uw apparaat Uniswap Wallet openen en transacties uitvoeren."
           },
           "title": "Weet je het zeker?"
         }
       },
       "currency": {
         "title": "Lokale munteenheid"
+      },
+      "giveFeedback": {
+        "title": "Geef feedback"
       },
       "helpCenter": {
         "title": "Helpcentrum"
@@ -1241,6 +1374,7 @@
           "navigate": "Ga naar Instellingen"
         },
         "description": "Uniswap is standaard ingesteld op de taalinstellingen van uw apparaat. Om uw voorkeurstaal te wijzigen, gaat u naar “Uniswap” in uw apparaatinstellingen en tikt u op “Taal”",
+        "exampleTitle": "Engels",
         "title": "Taal"
       },
       "password": {
@@ -1260,6 +1394,9 @@
       },
       "smallBalances": {
         "title": "Verberg kleine saldi"
+      },
+      "theme": {
+        "title": "Thema"
       },
       "unknownTokens": {
         "title": "Verberg onbekende tokens"
@@ -1294,6 +1431,7 @@
   "swap": {
     "button": {
       "max": "Max",
+      "review": "Recensiewissel",
       "swap": "Ruil",
       "unwrap": "Uitpakken",
       "view": "Transactie bekijken",

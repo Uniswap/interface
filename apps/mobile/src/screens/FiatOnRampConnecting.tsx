@@ -28,6 +28,7 @@ import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { forceFetchFiatOnRampTransactions } from 'wallet/src/features/transactions/slice'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { FiatOnRampEventName, ModalName } from 'wallet/src/telemetry/constants'
@@ -50,6 +51,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     quotesSections,
     serviceProviders,
     countryCode,
+    countryState,
     baseCurrencyInfo,
     quoteCurrency,
     amount,
@@ -120,12 +122,14 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
           serviceProvider: serviceProvider.serviceProvider,
           preselectedServiceProvider: serviceProvider.serviceProvider,
           countryCode,
+          countryState,
           fiatCurrency: baseCurrencyInfo?.code.toLowerCase(),
           cryptoCurrency: quoteCurrency?.currencyInfo?.currency.symbol?.toLowerCase(),
         })
       }
-      await openUri(widgetUrl).catch(onError)
       dispatchAddTransaction()
+      await openUri(widgetUrl).catch(onError)
+      dispatch(forceFetchFiatOnRampTransactions())
     }
 
     if (timeoutElapsed && !widgetLoading && widgetData) {
@@ -146,6 +150,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     quoteCurrency?.currencyInfo?.currency.symbol,
     quotesSections,
     countryCode,
+    countryState,
   ])
 
   const isDarkMode = useIsDarkMode()

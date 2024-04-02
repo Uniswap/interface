@@ -43,11 +43,13 @@ const ColorWrapper = styled.span<{ textColor?: keyof DefaultTheme }>`
 `
 
 const AutoBadge = styled(ThemedText.LabelMicro).attrs({ fontWeight: 535 })`
+  display: flex;
   background: ${({ theme }) => theme.surface3};
   border-radius: 8px;
   color: ${({ theme }) => theme.neutral2};
   height: 20px;
   padding: 0 6px;
+  align-items: center;
 
   ::after {
     content: '${t`Auto`}';

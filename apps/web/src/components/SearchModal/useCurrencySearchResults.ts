@@ -3,7 +3,6 @@ import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { CurrencyListRow, CurrencyListSectionTitle } from 'components/SearchModal/CurrencyList'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
-import { useSearchTokens } from 'graphql/data/SearchTokens'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useDefaultActiveTokens, useSearchInactiveTokenLists, useTokenListToken } from 'hooks/Tokens'
@@ -11,12 +10,16 @@ import { useTokenBalances } from 'hooks/useTokenBalances'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { getSortedPortfolioTokens, tokenQuerySortComparator } from 'lib/hooks/useTokenList/sorting'
 import { useMemo } from 'react'
+import { useUserAddedTokens } from 'state/user/userAddedTokens'
 import { UserAddedToken } from 'types/tokens'
 import {
+  Chain,
   Token as GqlToken,
   TokenSortableField,
-  useSearchPopularTokensWebQuery,
+  useSearchTokensWebQuery,
+  useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 
@@ -56,14 +59,19 @@ export function useCurrencySearchResults({
   /**
    * GraphQL queries for tokens and search results
    */
-  const { data: searchResults, loading: searchResultsLoading } = useSearchTokens(
-    gqlTokenListsEnabled ? searchQuery : undefined, // skip if gql token lists are disabled
-    chainId ?? ChainId.MAINNET
-  )
-  const { data: popularTokens, loading: popularTokensLoading } = useSearchPopularTokensWebQuery({
+  const { data: searchResults, loading: searchResultsLoading } = useSearchTokensWebQuery({
     variables: {
-      chain: chainIdToBackendName(chainId),
+      searchQuery: searchQuery ?? '',
+      chains: [chainIdToBackendName(chainId) ?? Chain.Ethereum],
+    },
+    skip: !searchQuery || !gqlTokenListsEnabled,
+  })
+  const { data: popularTokens, loading: popularTokensLoading } = useTopTokensQuery({
+    variables: {
+      chain: toGraphQLChain(chainId ?? ChainId.MAINNET) ?? undefined,
       orderBy: TokenSortableField.Popularity,
+      page: 1,
+      pageSize: 100,
     },
     skip: !gqlTokenListsEnabled,
   })
@@ -76,6 +84,7 @@ export function useCurrencySearchResults({
   // Queries for a single token directly by address, if the query is an address.
   const searchToken = useTokenListToken(searchQuery)
   const defaultAndUserAddedTokens = useDefaultActiveTokens(chainId)
+  const userAddedTokens = useUserAddedTokens()
 
   /**
    * Results processing: sorting, filtering, and merging data sources into the final list.
@@ -85,9 +94,15 @@ export function useCurrencySearchResults({
       if (!gqlTokenListsEnabled) {
         return Object.values(defaultAndUserAddedTokens)
       } else if (!isEmpty(searchQuery)) {
-        return (searchResults?.map(gqlCurrencyMapper).filter(Boolean) as Currency[]) ?? []
+        return [
+          ...((searchResults?.searchTokens?.map(gqlCurrencyMapper).filter(Boolean) as Currency[]) ?? []),
+          ...userAddedTokens,
+        ]
       } else {
-        return (popularTokens?.topTokens?.map(gqlCurrencyMapper).filter(Boolean) as Currency[]) ?? []
+        return [
+          ...((popularTokens?.topTokens?.map(gqlCurrencyMapper).filter(Boolean) as Currency[]) ?? []),
+          ...userAddedTokens,
+        ]
       }
     })()
 
@@ -163,14 +178,15 @@ export function useCurrencySearchResults({
       portfolioTokens: portfolioTokens.filter(currencyFilter),
     }
   }, [
+    gqlTokenListsEnabled,
+    searchQuery,
     balancesLoading,
     balanceList,
     balanceMap,
     chainId,
-    searchQuery,
-    gqlTokenListsEnabled,
     defaultAndUserAddedTokens,
     searchResults,
+    userAddedTokens,
     popularTokens?.topTokens,
     filters?.onlyShowCurrenciesWithBalance,
     filters?.disableNonToken,

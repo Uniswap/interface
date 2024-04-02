@@ -231,7 +231,6 @@ export default function FeatureFlagModal() {
         />
         <FeatureFlagOption flag={FeatureFlags.LimitsEnabled} label="Enable Limits" />
         <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
-        <FeatureFlagOption flag={FeatureFlags.FallbackProvider} label="Enable fallback provider" />
         <FeatureFlagOption flag={FeatureFlags.CurrencyConversion} label="Enable currency conversion" />
         <FeatureFlagOption flag={FeatureFlags.UniconsV2} label="Unicon V2" />
         <FeatureFlagOption flag={FeatureFlags.ExitAnimation} label="Landing page exit animation" />
@@ -250,6 +249,7 @@ export default function FeatureFlagModal() {
         </FeatureFlagGroup>
         <FeatureFlagGroup name="UniswapX Flags">
           <FeatureFlagOption flag={FeatureFlags.UniswapXSyntheticQuote} label="Force synthetic quotes for UniswapX" />
+          <FeatureFlagOption flag={FeatureFlags.UniswapXv2} label="UniswapX v2" />
         </FeatureFlagGroup>
         <FeatureFlagGroup name="Outage Banners">
           <FeatureFlagOption flag={FeatureFlags.OutageBannerArbitrum} label="Outage Banner for Arbitrum" />

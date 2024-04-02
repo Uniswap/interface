@@ -19,6 +19,7 @@ import Animated, {
 import { SvgProps } from 'react-native-svg'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { ExtensionPromoModal } from 'src/app/modals/ExtensionPromoModal'
 import { UniconsV2Modal } from 'src/app/modals/UniconsV2Modal'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { AppStackScreenProp } from 'src/app/navigation/types'
@@ -26,6 +27,7 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import Trace from 'src/components/Trace/Trace'
 import TraceTabView from 'src/components/Trace/TraceTabView'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
+import { ExtensionPromoBanner } from 'src/components/banners/ExtensionPromoBanner'
 import { ACTIVITY_TAB_DATA_DEPENDENCIES, ActivityTab } from 'src/components/home/ActivityTab'
 import { FEED_TAB_DATA_DEPENDENCIES, FeedTab } from 'src/components/home/FeedTab'
 import { NFTS_TAB_DATA_DEPENDENCIES, NftsTab } from 'src/components/home/NftsTab'
@@ -78,7 +80,10 @@ import {
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
-import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
+import {
+  useCanActiveAddressClaimUnitag,
+  useShowExtensionPromoBanner,
+} from 'wallet/src/features/unitags/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import {
   PendingAccountActions,
@@ -326,6 +331,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const { sync } = useScrollSync(currentTabIndex, scrollPairs, headerConfig)
 
   const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
+  const cexTransferEnabled = useFeatureFlag(FeatureFlags.CexTransfers)
 
   const onPressBuy = useCallback(
     () =>
@@ -345,14 +351,14 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   }, [dispatch])
   const onPressSend = useCallback(() => dispatch(openModal({ name: ModalName.Send })), [dispatch])
   const onPressReceive = useCallback(() => {
-    if (forAggregatorEnabled) {
+    if (cexTransferEnabled) {
       dispatch(openModal({ name: ModalName.ReceiveCryptoModal }))
     } else {
       dispatch(
         openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
       )
     }
-  }, [dispatch, forAggregatorEnabled])
+  }, [dispatch, cexTransferEnabled])
   const onPressViewOnlyLabel = useCallback(
     () => dispatch(openModal({ name: ModalName.ViewOnlyExplainer })),
     [dispatch]
@@ -421,12 +427,35 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   const shouldShowUniconV2Modal =
     isUniconsV2Enabled && !hasViewedUniconV2IntroModal && !hasAvatar && !avatarLoading
 
+  const { showExtensionPromoBanner } = useShowExtensionPromoBanner()
+  const [showExtensionPromoModal, setShowExtensionPromoModal] = useState(false)
+
   const viewOnlyLabel = t('home.warning.viewOnly')
+
+  const promoBanner = useMemo(() => {
+    if (shouldPromptUnitag) {
+      return (
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
+          <UnitagBanner address={activeAccount.address} entryPoint={Screens.Home} />
+        </AnimatedFlex>
+      )
+    } else if (showExtensionPromoBanner) {
+      return (
+        <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
+          <ExtensionPromoBanner
+            onShowExtensionPromoModal={() => setShowExtensionPromoModal(true)}
+          />
+        </AnimatedFlex>
+      )
+    }
+    return null
+  }, [shouldPromptUnitag, showExtensionPromoBanner, activeAccount.address])
+
   const contentHeader = useMemo(() => {
     return (
-      <Flex backgroundColor="$surface1" gap="$spacing8" pb="$spacing16" px="$spacing24">
+      <Flex backgroundColor="$surface1" gap="$spacing8" pb="$spacing16" px="$spacing12">
         <AccountHeader />
-        <Flex pb="$spacing8">
+        <Flex pb="$spacing8" px="$spacing12">
           <PortfolioBalance owner={activeAccount.address} />
         </Flex>
         {isSignerAccount ? (
@@ -446,11 +475,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
             </Flex>
           </TouchableArea>
         )}
-        {shouldPromptUnitag && (
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-            <UnitagBanner address={activeAccount.address} entryPoint={Screens.Home} />
-          </AnimatedFlex>
-        )}
+        {promoBanner}
       </Flex>
     )
   }, [
@@ -459,7 +484,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
     actions,
     onPressViewOnlyLabel,
     viewOnlyLabel,
-    shouldPromptUnitag,
+    promoBanner,
   ])
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -709,7 +734,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
         width="100%"
         zIndex="$sticky"
       />
-      {shouldShowUniconV2Modal && (
+      {shouldShowUniconV2Modal ? (
         <>
           <UniconsV2Modal address={activeAccount?.address} />
           {/* manual scrim so we can highlight unicon above it */}
@@ -721,6 +746,10 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
             zIndex="$modalBackdrop"
           />
         </>
+      ) : (
+        showExtensionPromoModal && (
+          <ExtensionPromoModal onClose={() => setShowExtensionPromoModal(false)} />
+        )
       )}
     </Screen>
   )
@@ -738,7 +767,7 @@ type QuickAction = {
 
 function QuickActions({ actions }: { actions: QuickAction[] }): JSX.Element {
   return (
-    <Flex centered row gap="$spacing12">
+    <Flex centered row gap="$spacing12" px="$spacing12">
       {actions.map((action) => (
         <ActionButton
           key={action.name}

@@ -100,12 +100,13 @@ export function useTokenPriceHistory(
     if (!maxPriceInHistory && price === undefined) {
       return lastNumberOfDigits.current
     }
+
     const maxPrice = Math.max(maxPriceInHistory || 0, price || 0)
     const convertedMaxValue = convertFiatAmount(maxPrice).amount
 
     const newNumberOfDigits = {
       left: String(convertedMaxValue).split('.')[0]?.length || 10,
-      right: Number(String(convertedMaxValue.toFixed(10)).split('.')[0]) > 0 ? 2 : 10,
+      right: Number(String(convertedMaxValue.toFixed(16)).split('.')[0]) > 0 ? 2 : 16,
     }
     lastNumberOfDigits.current = newNumberOfDigits
 

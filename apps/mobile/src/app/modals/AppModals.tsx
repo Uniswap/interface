@@ -15,6 +15,7 @@ import { LockScreenModal } from 'src/features/authentication/LockScreenModal'
 import { ExchangeTransferModal } from 'src/features/fiatOnRamp/ExchangeTransferModal'
 import { FiatOnRampAggregatorModal } from 'src/features/fiatOnRamp/FiatOnRampAggregatorModal'
 import { FiatOnRampModal } from 'src/features/fiatOnRamp/FiatOnRampModal'
+import { ExtensionWaitlistModal } from 'src/features/scantastic/ExtensionWaitlistModal'
 import { ScantasticModal } from 'src/features/scantastic/ScantasticModal'
 import { ReceiveCryptoModal } from 'src/screens/ReceiveCryptoModal'
 import { SettingsFiatCurrencyModal } from 'src/screens/SettingsFiatCurrencyModal'
@@ -46,6 +47,10 @@ export function AppModals(): JSX.Element {
 
       <LazyModalRenderer name={ModalName.Explore}>
         <ExploreModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.ExtensionWaitlistModal}>
+        <ExtensionWaitlistModal />
       </LazyModalRenderer>
 
       <ForceUpgradeModal />

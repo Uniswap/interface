@@ -11,8 +11,10 @@ export enum FeatureFlags {
   Unitags,
 
   // Wallet
+  ExtensionOnboarding,
   FeedTab,
   ForAggregator,
+  CexTransfers,
   GatewayDNSUpdateMobile,
   LanguageSelection,
   MevBlocker,
@@ -28,7 +30,6 @@ export enum FeatureFlags {
   // Web
   Eip6936Enabled,
   ExitAnimation,
-  FallbackProvider,
   GqlTokenLists,
   LimitsEnabled,
   LimitsFees,
@@ -38,6 +39,7 @@ export enum FeatureFlags {
   SendEnabled,
   TraceJsonRpc,
   UniswapXSyntheticQuote,
+  UniswapXv2,
   V2Everywhere,
   // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
   OutageBannerArbitrum,
@@ -52,7 +54,6 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   // Web Specific
   [FeatureFlags.Eip6936Enabled, 'eip6963_enabled'],
   [FeatureFlags.ExitAnimation, 'exit_animation'],
-  [FeatureFlags.FallbackProvider, 'fallback_provider'],
   [FeatureFlags.GqlTokenLists, 'gql_token_lists'],
   [FeatureFlags.LimitsEnabled, 'limits_enabled'],
   [FeatureFlags.LimitsFees, 'limits_fees'],
@@ -62,6 +63,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.SendEnabled, 'swap_send'],
   [FeatureFlags.TraceJsonRpc, 'traceJsonRpc'],
   [FeatureFlags.UniswapXSyntheticQuote, 'uniswapx_synthetic_quote'],
+  [FeatureFlags.UniswapXv2, 'uniswapx_v2'],
   [FeatureFlags.V2Everywhere, 'v2_everywhere'],
   // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
   [FeatureFlags.OutageBannerArbitrum, 'outage_banner_feb_2024_arbitrum'],
@@ -75,8 +77,10 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.UniconsV2, 'unicons-v2'],
   [FeatureFlags.Unitags, 'unitags'],
   // Wallet Specific
+  [FeatureFlags.ExtensionOnboarding, 'extension-onboarding'],
   [FeatureFlags.FeedTab, 'feed-tab'],
   [FeatureFlags.ForAggregator, 'for-aggregator'],
+  [FeatureFlags.CexTransfers, 'cex-transfers'],
   [FeatureFlags.GatewayDNSUpdateMobile, 'cloudflare-gateway'],
   [FeatureFlags.LanguageSelection, 'language-selection'],
   [FeatureFlags.MevBlocker, 'mev-blocker'],

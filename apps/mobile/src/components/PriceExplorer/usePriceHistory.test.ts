@@ -115,7 +115,7 @@ describe(useTokenPriceHistory, () => {
 
       expect(result.current.numberOfDigits).toEqual({
         left: 1,
-        right: 10,
+        right: 16,
       })
     })
 

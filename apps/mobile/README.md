@@ -131,6 +131,8 @@ Note: The app will likely have limited functionality when running it locally wit
 
 Use the environment variables defined in the `.env.defaults.local` file to run the app locally.
 
+You can use the command `yarn mobile env:local:download` if you have the 1password CLI to copy that file to your root folder.
+
 ### Compile contract ABI types
 
 This is done in bootstrap but good to know about. Before the code will compile you need to generate types for the smart contracts the wallet interacts with. Run `yarn g:prepare` at the top level. Re-run this if the ABIs are ever changed.

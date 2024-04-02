@@ -110,7 +110,8 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   const theme = useTheme()
   const { preloadedLogoSrc } = (useLocation().state as { preloadedLogoSrc?: string }) ?? {}
   const extractedColorSrc = tokenQuery.data?.token?.project?.logoUrl ?? preloadedLogoSrc
-  const extractedAccent1 = useSrcColor(extractedColorSrc, { backgroundColor: theme.surface2, darkMode: theme.darkMode })
+  const tokenColor =
+    useSrcColor(extractedColorSrc, tokenQuery.data?.token?.name, theme.surface2).tokenColor ?? undefined
 
   return useMemo(() => {
     return {
@@ -124,14 +125,14 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
       chartState,
       warning,
       multiChainMap,
-      extractedAccent1,
+      tokenColor,
     }
   }, [
     currency,
     currencyChain,
     currencyChainId,
     currencyWasFetchedOnChain,
-    extractedAccent1,
+    tokenColor,
     multiChainMap,
     warning,
     tokenAddress,
@@ -146,7 +147,7 @@ export default function TokenDetailsPage() {
 
   return (
     <StyledPrefetchBalancesWrapper shouldFetchOnAccountUpdate={true} shouldFetchOnHover={false}>
-      <ThemeProvider accent1={contextValue.extractedAccent1}>
+      <ThemeProvider accent1={contextValue.tokenColor ?? undefined}>
         <Helmet>
           <title>{getTokenPageTitle(contextValue?.currency)}</title>
         </Helmet>

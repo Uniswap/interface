@@ -3,8 +3,8 @@ import { useCallback, useEffect } from 'react'
 import { NativeSyntheticEvent, TextInputSelectionChangeEventData } from 'react-native'
 import { Flex, FlexProps, Icons, Text, TouchableArea } from 'ui/src'
 import { fonts } from 'ui/src/theme'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
-import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
 import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
@@ -26,9 +26,9 @@ type TransferAmountInputProps = {
   onSelectionChange?: (start: number, end: number) => void
 } & FlexProps
 
-const MAX_INPUT_FONT_SIZE = 70
+const MAX_INPUT_FONT_SIZE = 52
 const MIN_INPUT_FONT_SIZE = 24
-const MAX_CHAR_PIXEL_WIDTH = 60
+const MAX_CHAR_PIXEL_WIDTH = 52
 
 export function TransferAmountInput({
   currencyInfo,
@@ -114,7 +114,6 @@ export function TransferAmountInput({
       <Flex fill grow row alignItems="center" height={MAX_INPUT_FONT_SIZE} overflow="hidden">
         {currencyInfo ? (
           <AmountInput
-            autoFocus
             backgroundColor="$transparent"
             borderWidth={0}
             color={inputColor}

@@ -270,7 +270,21 @@ function UserPropertyUpdater() {
     const isServiceWorkerHit = Boolean((window as any).__isDocumentCached)
     const serviceWorkerProperty = isServiceWorkerInstalled ? (isServiceWorkerHit ? 'hit' : 'miss') : 'uninstalled'
 
-    const pageLoadProperties = { service_worker: serviceWorkerProperty }
+    let cache = 'unknown'
+    try {
+      const timing = performance
+        .getEntriesByType('resource')
+        .find((timing) => timing.name.match(/\/static\/js\/main\.\w{8}\.js$/)) as PerformanceResourceTiming
+      if (timing.transferSize === 0) {
+        cache = 'hit'
+      } else {
+        cache = 'miss'
+      }
+    } catch {
+      // ignore
+    }
+
+    const pageLoadProperties = { service_worker: serviceWorkerProperty, cache }
     sendInitializationEvent(SharedEventName.APP_LOADED, pageLoadProperties)
     const sendWebVital =
       (metric: string) =>

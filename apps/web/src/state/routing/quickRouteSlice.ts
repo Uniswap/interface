@@ -47,7 +47,6 @@ export const quickRouteApi = createApi({
               typeof errorData === 'object' &&
               (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
             ) {
-              trace.setStatus('not_found')
               sendAnalyticsEvent('No quote received from quickroute API', {
                 requestBody,
                 response,

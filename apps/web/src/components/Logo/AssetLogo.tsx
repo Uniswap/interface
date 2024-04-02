@@ -3,17 +3,17 @@ import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioL
 import React from 'react'
 import styled from 'styled-components'
 
-export const MissingImageLogo = styled.div<{ size?: string }>`
-  --size: ${({ size }) => size};
+export const MissingImageLogo = styled.div<{ $size?: string; $textColor: string; $backgroundColor: string }>`
+  --size: ${({ $size }) => $size};
   border-radius: 100px;
-  color: ${({ theme }) => theme.neutral1};
-  background-color: ${({ theme }) => theme.surface3};
+  color: ${({ $textColor }) => $textColor};
+  background-color: ${({ $backgroundColor }) => $backgroundColor};
   font-size: calc(var(--size) / 3);
   font-weight: 535;
-  height: ${({ size }) => size ?? '24px'};
-  line-height: ${({ size }) => size ?? '24px'};
+  height: ${({ $size }) => $size ?? '24px'};
+  line-height: ${({ $size }) => $size ?? '24px'};
   text-align: center;
-  width: ${({ size }) => size ?? '24px'};
+  width: ${({ $size }) => $size ?? '24px'};
   display: flex;
   align-items: center;
   justify-content: center;

@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react'
 import ContextMenu from 'react-native-context-menu-view'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { borderRadii } from 'ui/src/theme'
-import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
+import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 
 export const TokenBalanceItemContextMenu = memo(function _TokenBalanceItem({
   portfolioBalance,

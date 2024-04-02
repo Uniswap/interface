@@ -26,6 +26,7 @@ import {
   Theme,
   TouchableArea,
   getTokenValue,
+  passesContrast,
   useSporeColors,
 } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
@@ -50,7 +51,6 @@ import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { setClipboardImage } from 'wallet/src/utils/clipboard'
 import {
   MIN_COLOR_CONTRAST_THRESHOLD,
-  passesContrast,
   useNearestThemeColorFromImageUri,
 } from 'wallet/src/utils/colors'
 

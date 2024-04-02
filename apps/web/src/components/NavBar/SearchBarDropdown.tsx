@@ -15,7 +15,7 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
-import { GenieCollection, TrendingCollection } from 'nft/types'
+import { GenieCollection } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
@@ -27,11 +27,7 @@ import { SuspendConditionally } from '../Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from '../Suspense/SuspenseWithPreviousRenderAsFallback'
 import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
-import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
-
-function isCollection(suggestion: GenieCollection | SearchToken | TrendingCollection) {
-  return (suggestion as SearchToken).decimals === undefined
-}
+import { SkeletonRow, SuggestionRow } from './SuggestionRow'
 
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
@@ -66,25 +62,10 @@ const SearchBarDropdownSection = ({
         {suggestions.map((suggestion, index) =>
           isLoading || !suggestion ? (
             <SkeletonRow key={index} />
-          ) : isCollection(suggestion) ? (
-            <CollectionRow
-              key={suggestion.address}
-              collection={suggestion as GenieCollection}
-              isHovered={hoveredIndex === index + startingIndex}
-              setHoveredIndex={setHoveredIndex}
-              toggleOpen={toggleOpen}
-              index={index + startingIndex}
-              eventProperties={{
-                position: index + startingIndex,
-                selected_search_result_name: suggestion.name,
-                selected_search_result_address: suggestion.address,
-                ...eventProperties,
-              }}
-            />
           ) : (
-            <TokenRow
+            <SuggestionRow
               key={suggestion.address}
-              token={suggestion as SearchToken}
+              suggestion={suggestion}
               isHovered={hoveredIndex === index + startingIndex}
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}

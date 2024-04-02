@@ -96,5 +96,5 @@ createRoot(container).render(
 )
 
 if (process.env.REACT_APP_SERVICE_WORKER !== 'false') {
-  serviceWorkerRegistration.register()
+  serviceWorkerRegistration.unregister()
 }

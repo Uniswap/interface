@@ -75,6 +75,7 @@ export function LimitPresetPriceButton({
   onSelect,
 }: LimitPriceButtonProps) {
   const { formatPercent } = useFormatter()
+  const sign = priceAdjustmentPercentage > 0 ? '+' : '-'
   return (
     <Container
       $selected={selected}
@@ -88,7 +89,8 @@ export function LimitPresetPriceButton({
         </ThemedText.BodySecondary>
       ) : (
         <ThemedText.BodySecondary fontWeight={535} color="inherit">
-          +{formatPercent(new Percent(Math.abs(priceAdjustmentPercentage), 100))}
+          {sign}
+          {formatPercent(new Percent(Math.abs(priceAdjustmentPercentage), 100))}
         </ThemedText.BodySecondary>
       )}
     </Container>

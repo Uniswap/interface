@@ -3,26 +3,22 @@ import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
+import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import SwapHeader from 'components/swap/SwapHeader'
 import { SwapTab } from 'components/swap/constants'
 import { PageWrapper, SwapWrapper } from 'components/swap/styled'
-import SwapHeader from 'components/swap/SwapHeader'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { asSupportedChain } from 'constants/chains'
 import { useCurrency } from 'hooks/Tokens'
 import useParsedQueryString from 'hooks/useParsedQueryString'
+import { useScreenSize } from 'hooks/useScreenSize'
 import { SendForm } from 'pages/Swap/Send/SendForm'
 import { ReactNode, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { isPreviewTrade } from 'state/routing/utils'
+import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/SwapContext'
 import { queryParametersToCurrencyState } from 'state/swap/hooks'
-import {
-  CurrencyState,
-  SwapAndLimitContext,
-  SwapAndLimitContextProvider,
-  SwapContextProvider,
-} from 'state/swap/SwapContext'
-
+import { CurrencyState, SwapAndLimitContext } from 'state/swap/types'
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'
 import { LimitFormWrapper } from './Limit/LimitForm'
 import { SwapForm } from './SwapForm'
@@ -99,6 +95,7 @@ export function Swap({
   syncTabToUrl: boolean
 }) {
   const isDark = useIsDarkMode()
+  const screenSize = useScreenSize()
 
   return (
     <SwapAndLimitContextProvider
@@ -111,7 +108,7 @@ export function Swap({
         {({ currentTab }) => (
           <SwapContextProvider>
             <SwapWrapper isDark={isDark} className={className} id="swap-page">
-              <SwapHeader compact={compact} syncTabToUrl={syncTabToUrl} />
+              <SwapHeader compact={compact || !screenSize.sm} syncTabToUrl={syncTabToUrl} />
               {currentTab === SwapTab.Swap && (
                 <SwapForm onCurrencyChange={onCurrencyChange} disableTokenInputs={disableTokenInputs} />
               )}

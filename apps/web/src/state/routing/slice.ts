@@ -101,7 +101,7 @@ export const routingApi = createApi({
           }
 
           try {
-            return trace.child({ name: 'Quote on server', op: 'quote.server' }, async (serverTrace) => {
+            return trace.child({ name: 'Quote on server', op: 'quote.server' }, async () => {
               const response = await fetch({
                 method: 'POST',
                 url: `${UNISWAP_GATEWAY_DNS_URL}/quote`,
@@ -120,8 +120,6 @@ export const routingApi = createApi({
                     typeof errorData === 'object' &&
                     (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
                   ) {
-                    serverTrace.setStatus('not_found')
-                    trace.setStatus('not_found')
                     sendAnalyticsEvent('No quote received from routing API', {
                       requestBody,
                       response,
@@ -149,7 +147,7 @@ export const routingApi = createApi({
           }
 
           try {
-            return trace.child({ name: 'Quote on client', op: 'quote.client' }, async (clientTrace) => {
+            return trace.child({ name: 'Quote on client', op: 'quote.client' }, async () => {
               const { getRouter, getClientSideQuote } = await import('lib/hooks/routing/clientSideSmartOrderRouter')
               const router = getRouter(args.tokenInChainId)
               const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
@@ -159,8 +157,6 @@ export const routingApi = createApi({
                   data: { ...trade, latencyMs: trace.now() },
                 }
               } else {
-                clientTrace.setStatus('not_found')
-                trace.setStatus('not_found')
                 return { data: { ...quoteResult, latencyMs: trace.now() } }
               }
             })

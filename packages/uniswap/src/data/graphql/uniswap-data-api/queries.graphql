@@ -301,7 +301,7 @@ query PortfolioBalances(
 ) {
   portfolios(
     ownerAddresses: [$ownerAddress]
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
     valueModifiers: $valueModifiers
   ) {
     id
@@ -355,7 +355,7 @@ query MultiplePortfolioBalances(
 ) {
   portfolios(
     ownerAddresses: $ownerAddresses
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
     valueModifiers: $valueModifiers
   ) {
     id
@@ -407,7 +407,7 @@ query MultiplePortfolioBalances(
 query SelectWalletScreen($ownerAddresses: [String!]!) {
   portfolios(
     ownerAddresses: $ownerAddresses
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
   ) {
     id
     ownerAddress
@@ -420,7 +420,7 @@ query SelectWalletScreen($ownerAddresses: [String!]!) {
 query TransactionHistoryUpdater($addresses: [String!]!) {
   portfolios(
     ownerAddresses: $addresses
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
   ) {
     id
     ownerAddress
@@ -543,13 +543,13 @@ query TokenProjects($contracts: [ContractInput!]!) {
 query TransactionList($address: String!) {
   portfolios(
     ownerAddresses: [$address]
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
   ) {
     id
     assetActivities(
       pageSize: 100
       page: 1
-      chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST]
+      chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
     ) {
       id
       timestamp
@@ -638,14 +638,14 @@ query TransactionList($address: String!) {
 query FeedTransactionList($addresses: [String!]!) {
   portfolios(
     ownerAddresses: $addresses
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
   ) {
     id
     ownerAddress
     assetActivities(
       pageSize: 30
       page: 1
-      chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB, BLAST]
+      chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
     ) {
       id
       timestamp

@@ -90,7 +90,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const [showTokenSelector, setShowTokenSelector] = useState(false)
   const inputRef = useRef<TextInput>(null)
   const [selectingCountry, setSelectingCountry] = useState(false)
-  const [countryState, setCountryState] = useState<string | undefined>()
 
   const { isSheetReady } = useBottomSheetContext()
 
@@ -100,6 +99,8 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     setQuotesSections,
     countryCode,
     setCountryCode,
+    countryState,
+    setCountryState,
     amount,
     setAmount,
     setBaseCurrencyInfo,

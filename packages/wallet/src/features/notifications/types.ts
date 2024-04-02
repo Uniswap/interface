@@ -1,7 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
-import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import {
   FinalizedTransactionStatus,
   TransactionType,

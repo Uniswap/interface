@@ -1,0 +1,63 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RemoveButton renders without error 1`] = `
+<View
+  animatedStyle={
+    {
+      "value": {
+        "opacity": 1,
+      },
+    }
+  }
+  cancelable={true}
+  collapsable={false}
+  disabled={false}
+  focusable={true}
+  hitSlop={[Function]}
+  minPressDuration={0}
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+  onPress={[Function]}
+  onPressIn={[Function]}
+  onPressOut={[Function]}
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "#CECECE",
+      "borderBottomLeftRadius": 999999,
+      "borderBottomRightRadius": 999999,
+      "borderTopLeftRadius": 999999,
+      "borderTopRightRadius": 999999,
+      "flexDirection": "column",
+      "height": 24,
+      "justifyContent": "center",
+      "opacity": 1,
+      "transform": [
+        {
+          "scale": 1,
+        },
+      ],
+      "width": 24,
+      "zIndex": 1080,
+    }
+  }
+  testID="explore/remove-button"
+>
+  <View
+    style={
+      {
+        "backgroundColor": "#FFFFFF",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
+        "flexDirection": "column",
+        "height": 2,
+        "width": 10,
+      }
+    }
+  />
+</View>
+`;

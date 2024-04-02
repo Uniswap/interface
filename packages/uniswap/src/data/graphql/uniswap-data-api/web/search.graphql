@@ -32,8 +32,8 @@ query TrendingTokens($chain: Chain!) {
   }
 }
 
-query SearchTokensWeb($searchQuery: String!) {
-  searchTokens(searchQuery: $searchQuery) {
+query SearchTokensWeb($searchQuery: String!, $chains: [Chain!]) {
+  searchTokens(searchQuery: $searchQuery, chains: $chains) {
     id
     decimals
     name

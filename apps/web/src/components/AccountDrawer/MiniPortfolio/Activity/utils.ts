@@ -2,7 +2,7 @@ import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Web3Provider } from '@ethersproject/providers'
 import { t } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
-import { DutchOrder } from '@uniswap/uniswapx-sdk'
+import { CosignedV2DutchOrder, DutchOrder } from '@uniswap/uniswapx-sdk'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
 import { Permit2 } from 'uniswap/src/abis/types'
@@ -121,25 +121,32 @@ function getCancelMultipleParams(noncesToCancel: BigNumber[]): {
   })
 }
 
-function getCancelMultipleUniswapXOrdersParams(encodedOrders: string[], chainId: ChainId) {
-  const nonces = encodedOrders
-    .map((encodedOrder) => DutchOrder.parse(encodedOrder, chainId))
+function getCancelMultipleUniswapXOrdersParams(
+  orders: Array<{ encodedOrder: string; type: SignatureType }>,
+  chainId: ChainId
+) {
+  const nonces = orders
+    .map(({ encodedOrder, type }) =>
+      type === SignatureType.SIGN_UNISWAPX_V2_ORDER
+        ? CosignedV2DutchOrder.parse(encodedOrder, chainId)
+        : DutchOrder.parse(encodedOrder, chainId)
+    )
     .map((order) => order.info.nonce)
   return getCancelMultipleParams(nonces)
 }
 
 export async function cancelMultipleUniswapXOrders({
-  encodedOrders,
+  orders,
   chainId,
   permit2,
   provider,
 }: {
-  encodedOrders: string[]
+  orders: Array<{ encodedOrder: string; type: SignatureType }>
   chainId: ChainId
   permit2: Permit2 | null
   provider?: Web3Provider
 }) {
-  const cancelParams = getCancelMultipleUniswapXOrdersParams(encodedOrders, chainId)
+  const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
   if (!permit2 || !provider) return
   try {
     const transactions: ContractTransaction[] = []
@@ -155,11 +162,11 @@ export async function cancelMultipleUniswapXOrders({
 }
 
 async function getCancelMultipleUniswapXOrdersTransaction(
-  encodedOrders: string[],
+  orders: Array<{ encodedOrder: string; type: SignatureType }>,
   chainId: ChainId,
   permit2: Permit2
 ): Promise<TransactionRequest | undefined> {
-  const cancelParams = getCancelMultipleUniswapXOrdersParams(encodedOrders, chainId)
+  const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
   if (!permit2 || cancelParams.length === 0) return
   try {
     const tx = await permit2.populateTransaction.invalidateUnorderedNonces(cancelParams[0].word, cancelParams[0].mask)
@@ -176,15 +183,21 @@ async function getCancelMultipleUniswapXOrdersTransaction(
 export function useCreateCancelTransactionRequest(
   params:
     | {
-        encodedOrders?: string[]
+        orders: Array<{ encodedOrder: string; type: SignatureType }>
         chainId: ChainId
       }
     | undefined
 ): TransactionRequest | undefined {
   const permit2 = useContract<Permit2>(PERMIT2_ADDRESS, PERMIT2_ABI, true)
   const transactionFetcher = useCallback(() => {
-    if (!params || !params.encodedOrders || params.encodedOrders.filter(Boolean).length === 0 || !permit2) return
-    return getCancelMultipleUniswapXOrdersTransaction(params.encodedOrders, params.chainId, permit2)
+    if (
+      !params ||
+      !params.orders ||
+      params.orders.filter(({ encodedOrder }) => Boolean(encodedOrder)).length === 0 ||
+      !permit2
+    )
+      return
+    return getCancelMultipleUniswapXOrdersTransaction(params.orders, params.chainId, permit2)
   }, [params, permit2])
 
   return useAsyncData(transactionFetcher).data

@@ -1,13 +1,13 @@
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, ImpactFeedbackStyle, Shine, Text, TouchableArea, isWeb } from 'ui/src'
+import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
-import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
-import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { disableOnPress } from 'wallet/src/utils/disableOnPress'
 
 interface TokenBalanceItemProps {

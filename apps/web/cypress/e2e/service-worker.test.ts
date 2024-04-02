@@ -1,6 +1,6 @@
 import assert from 'assert'
 
-describe('Service Worker', () => {
+describe.skip('Service Worker', () => {
   before(() => {
     // Fail fast if there is no Service Worker on this build.
     cy.request({ url: '/service-worker.js', headers: { 'Service-Worker': 'script' } }).then((response) => {

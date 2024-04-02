@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react'
 import { RecipientData, SendInfo, useDerivedSendInfo } from 'state/send/hooks'
-import { useSwapAndLimitContext } from 'state/swap/SwapContext'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
 
 export type SendState =
   | {

@@ -1,6 +1,160 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`disable nft on searchbar dropdown should not render popular nft collections 1`] = `
+.c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c7 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 20px;
+  width: 50%;
+  width: 180px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c8 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 20px;
+  width: 50%;
+  width: 48px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c9 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 16px;
+  width: 50%;
+  width: 120px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c10 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 16px;
+  width: 50%;
+  width: 48px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  padding: 8px 16px;
+}
+
+.c0:hover {
+  background: #F9F9F9;
+}
+
+.c3 {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: #22222212;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c5 {
+  width: 100%;
+}
+
 <div>
   <span
     class=" _dsp_contents"
@@ -47,72 +201,86 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
                 class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr"
               >
                 <div
-                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e3 sprinkles_paddingRight_16_sm__rgw6ez2jl sprinkles_paddingTop_8_sm__rgw6ez2of sprinkles_paddingBottom_8_sm__rgw6ez27x sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f sprinkles_cursor_pointer_default__rgw6ez7zd"
+                  class="c0"
                 >
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_width_full_sm__rgw6ez16r"
+                    class="c1 c2"
                   >
                     <div
-                      class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez133 sprinkles_height_36_sm__rgw6ez1a3 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_marginRight_8_sm__rgw6ezqx SearchBar__1fbf9szp sprinkles_background_surface2_default__rgw6ez4ql sprinkles_flexShrink_0_sm__rgw6ez3xr"
+                      class="c3"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr sprinkles_width_full_sm__rgw6ez16r"
+                      class="c4 c5"
                     >
                       <div
-                        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                        class="c1 c6"
                       >
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_background_surface2_default__rgw6ez4ql"
-                          style="width: 180px;"
+                          class="c7"
+                          height="20px"
+                          width="180px"
                         />
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c8"
+                          height="20px"
+                          width="48px"
                         />
                       </div>
                       <div
-                        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                        class="c1 c6"
                       >
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_120_sm__rgw6ez15f sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c9"
+                          height="16px"
+                          width="120px"
                         />
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c10"
+                          height="16px"
+                          width="48px"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
                 <div
-                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e3 sprinkles_paddingRight_16_sm__rgw6ez2jl sprinkles_paddingTop_8_sm__rgw6ez2of sprinkles_paddingBottom_8_sm__rgw6ez27x sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f sprinkles_cursor_pointer_default__rgw6ez7zd"
+                  class="c0"
                 >
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_width_full_sm__rgw6ez16r"
+                    class="c1 c2"
                   >
                     <div
-                      class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez133 sprinkles_height_36_sm__rgw6ez1a3 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_marginRight_8_sm__rgw6ezqx SearchBar__1fbf9szp sprinkles_background_surface2_default__rgw6ez4ql sprinkles_flexShrink_0_sm__rgw6ez3xr"
+                      class="c3"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr sprinkles_width_full_sm__rgw6ez16r"
+                      class="c4 c5"
                     >
                       <div
-                        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                        class="c1 c6"
                       >
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_background_surface2_default__rgw6ez4ql"
-                          style="width: 180px;"
+                          class="c7"
+                          height="20px"
+                          width="180px"
                         />
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c8"
+                          height="20px"
+                          width="48px"
                         />
                       </div>
                       <div
-                        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                        class="c1 c6"
                       >
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_120_sm__rgw6ez15f sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c9"
+                          height="16px"
+                          width="120px"
                         />
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c10"
+                          height="16px"
+                          width="48px"
                         />
                       </div>
                     </div>
@@ -129,6 +297,160 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
 `;
 
 exports[`disable nft on searchbar dropdown should render popular nft collections 1`] = `
+.c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c7 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 20px;
+  width: 50%;
+  width: 180px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c8 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 20px;
+  width: 50%;
+  width: 48px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c9 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 16px;
+  width: 50%;
+  width: 120px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c10 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 16px;
+  width: 50%;
+  width: 48px;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  padding: 8px 16px;
+}
+
+.c0:hover {
+  background: #F9F9F9;
+}
+
+.c3 {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: #22222212;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+}
+
+.c5 {
+  width: 100%;
+}
+
 <div>
   <span
     class="t_light is_inversed _dsp_contents"
@@ -175,72 +497,86 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                 class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr"
               >
                 <div
-                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e3 sprinkles_paddingRight_16_sm__rgw6ez2jl sprinkles_paddingTop_8_sm__rgw6ez2of sprinkles_paddingBottom_8_sm__rgw6ez27x sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f sprinkles_cursor_pointer_default__rgw6ez7zd"
+                  class="c0"
                 >
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_width_full_sm__rgw6ez16r"
+                    class="c1 c2"
                   >
                     <div
-                      class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez133 sprinkles_height_36_sm__rgw6ez1a3 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_marginRight_8_sm__rgw6ezqx SearchBar__1fbf9szp sprinkles_background_surface2_default__rgw6ez4ql sprinkles_flexShrink_0_sm__rgw6ez3xr"
+                      class="c3"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr sprinkles_width_full_sm__rgw6ez16r"
+                      class="c4 c5"
                     >
                       <div
-                        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                        class="c1 c6"
                       >
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_background_surface2_default__rgw6ez4ql"
-                          style="width: 180px;"
+                          class="c7"
+                          height="20px"
+                          width="180px"
                         />
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c8"
+                          height="20px"
+                          width="48px"
                         />
                       </div>
                       <div
-                        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                        class="c1 c6"
                       >
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_120_sm__rgw6ez15f sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c9"
+                          height="16px"
+                          width="120px"
                         />
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c10"
+                          height="16px"
+                          width="48px"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
                 <div
-                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e3 sprinkles_paddingRight_16_sm__rgw6ez2jl sprinkles_paddingTop_8_sm__rgw6ez2of sprinkles_paddingBottom_8_sm__rgw6ez27x sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f sprinkles_cursor_pointer_default__rgw6ez7zd"
+                  class="c0"
                 >
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_width_full_sm__rgw6ez16r"
+                    class="c1 c2"
                   >
                     <div
-                      class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez133 sprinkles_height_36_sm__rgw6ez1a3 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_marginRight_8_sm__rgw6ezqx SearchBar__1fbf9szp sprinkles_background_surface2_default__rgw6ez4ql sprinkles_flexShrink_0_sm__rgw6ez3xr"
+                      class="c3"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr sprinkles_width_full_sm__rgw6ez16r"
+                      class="c4 c5"
                     >
                       <div
-                        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                        class="c1 c6"
                       >
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_background_surface2_default__rgw6ez4ql"
-                          style="width: 180px;"
+                          class="c7"
+                          height="20px"
+                          width="180px"
                         />
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c8"
+                          height="20px"
+                          width="48px"
                         />
                       </div>
                       <div
-                        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                        class="c1 c6"
                       >
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_120_sm__rgw6ez15f sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c9"
+                          height="16px"
+                          width="120px"
                         />
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c10"
+                          height="16px"
+                          width="48px"
                         />
                       </div>
                     </div>
@@ -278,72 +614,86 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                 class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr"
               >
                 <div
-                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e3 sprinkles_paddingRight_16_sm__rgw6ez2jl sprinkles_paddingTop_8_sm__rgw6ez2of sprinkles_paddingBottom_8_sm__rgw6ez27x sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f sprinkles_cursor_pointer_default__rgw6ez7zd"
+                  class="c0"
                 >
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_width_full_sm__rgw6ez16r"
+                    class="c1 c2"
                   >
                     <div
-                      class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez133 sprinkles_height_36_sm__rgw6ez1a3 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_marginRight_8_sm__rgw6ezqx SearchBar__1fbf9szp sprinkles_background_surface2_default__rgw6ez4ql sprinkles_flexShrink_0_sm__rgw6ez3xr"
+                      class="c3"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr sprinkles_width_full_sm__rgw6ez16r"
+                      class="c4 c5"
                     >
                       <div
-                        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                        class="c1 c6"
                       >
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_background_surface2_default__rgw6ez4ql"
-                          style="width: 180px;"
+                          class="c7"
+                          height="20px"
+                          width="180px"
                         />
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c8"
+                          height="20px"
+                          width="48px"
                         />
                       </div>
                       <div
-                        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                        class="c1 c6"
                       >
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_120_sm__rgw6ez15f sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c9"
+                          height="16px"
+                          width="120px"
                         />
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c10"
+                          height="16px"
+                          width="48px"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
                 <div
-                  class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x SearchBar_suggestionRow__1fbf9szg SearchBar__1fbf9szf sprinkles_paddingLeft_16_sm__rgw6ez2e3 sprinkles_paddingRight_16_sm__rgw6ez2jl sprinkles_paddingTop_8_sm__rgw6ez2of sprinkles_paddingBottom_8_sm__rgw6ez27x sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f sprinkles_cursor_pointer_default__rgw6ez7zd"
+                  class="c0"
                 >
                   <div
-                    class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_width_full_sm__rgw6ez16r"
+                    class="c1 c2"
                   >
                     <div
-                      class="reset_base__1klryar0 SearchBar_imageHolder__1fbf9szq SearchBar__1fbf9szh sprinkles_width_36_sm__rgw6ez133 sprinkles_height_36_sm__rgw6ez1a3 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_marginRight_8_sm__rgw6ezqx SearchBar__1fbf9szp sprinkles_background_surface2_default__rgw6ez4ql sprinkles_flexShrink_0_sm__rgw6ez3xr"
+                      class="c3"
                     />
                     <div
-                      class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_column_sm__rgw6ez473 sprinkles_gap_4_sm__rgw6ez3sr sprinkles_width_full_sm__rgw6ez16r"
+                      class="c4 c5"
                     >
                       <div
-                        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                        class="c1 c6"
                       >
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_background_surface2_default__rgw6ez4ql"
-                          style="width: 180px;"
+                          class="c7"
+                          height="20px"
+                          width="180px"
                         />
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_20_sm__rgw6ez199 sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c8"
+                          height="20px"
+                          width="48px"
                         />
                       </div>
                       <div
-                        class="reset_base__1klryar0 sprinkles_display_flex_sm__rgw6ez44r sprinkles_flexDirection_row_sm__rgw6ez46x sprinkles_alignItems_center_sm__rgw6ez3x sprinkles_justifyContent_space-between_sm__rgw6ez48f"
+                        class="c1 c6"
                       >
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_120_sm__rgw6ez15f sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c9"
+                          height="16px"
+                          width="120px"
                         />
                         <div
-                          class="reset_base__1klryar0 sprinkles_borderRadius_round_default__rgw6ez81x sprinkles_height_16_sm__rgw6ez18x sprinkles_width_48_sm__rgw6ez13r sprinkles_background_surface2_default__rgw6ez4ql"
+                          class="c10"
+                          height="16px"
+                          width="48px"
                         />
                       </div>
                     </div>

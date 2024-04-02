@@ -16,7 +16,7 @@ import {
   formatTokenSearchResults,
   getSearchResultId,
 } from 'src/components/explore/search/utils'
-import { AnimatedFlex, Flex, Text } from 'ui/src'
+import { AnimatedFlex, Flex, Icons, Text } from 'ui/src'
 import {
   SafetyLevel,
   useExploreSearchQuery,
@@ -35,15 +35,21 @@ import { getValidAddress } from 'wallet/src/utils/addresses'
 import { SEARCH_RESULT_HEADER_KEY } from './constants'
 import { SearchResultOrHeader } from './types'
 
+const ICON_SIZE = '$icon.24'
+const ICON_COLOR = '$neutral2'
+
 const WalletHeaderItem: SearchResultOrHeader = {
+  icon: <Icons.Person color={ICON_COLOR} size={ICON_SIZE} />,
   type: SEARCH_RESULT_HEADER_KEY,
   title: i18n.t('explore.search.section.wallets'),
 }
 const TokenHeaderItem: SearchResultOrHeader = {
+  icon: <Icons.Coin color={ICON_COLOR} size={ICON_SIZE} />,
   type: SEARCH_RESULT_HEADER_KEY,
   title: i18n.t('explore.search.section.tokens'),
 }
 const NFTHeaderItem: SearchResultOrHeader = {
+  icon: <Icons.Gallery color={ICON_COLOR} size={ICON_SIZE} />,
   type: SEARCH_RESULT_HEADER_KEY,
   title: i18n.t('explore.search.section.nft'),
 }
@@ -121,7 +127,12 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   const hasVerifiedNFTResults = Boolean(nftCollectionResults?.some((res) => res.isVerified))
 
-  const showWalletSectionFirst = exactUnitagMatch || (exactENSMatch && !prefixTokenMatch)
+  const isUsernameSearch = useMemo(() => {
+    return searchQuery.includes('.')
+  }, [searchQuery])
+
+  const showWalletSectionFirst =
+    isUsernameSearch && (exactUnitagMatch || (exactENSMatch && !prefixTokenMatch))
   const showNftCollectionsBeforeTokens = hasVerifiedNFTResults && !hasVerifiedTokenResults
 
   const sortedSearchResults: SearchResultOrHeader[] = useMemo(() => {
@@ -133,18 +144,17 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     const walletsWithHeader =
       walletSearchResults.length > 0 ? [WalletHeaderItem, ...walletSearchResults] : []
 
-    // Rank token and nft results
-    const searchResultItems: SearchResultOrHeader[] = showNftCollectionsBeforeTokens
-      ? [...nftsWithHeader, ...tokensWithHeader]
-      : [...tokensWithHeader, ...nftsWithHeader]
+    let searchResultItems: SearchResultOrHeader[] = []
 
-    // Add wallet results at beginning or end
-    if (walletsWithHeader.length > 0) {
-      if (showWalletSectionFirst) {
-        searchResultItems.unshift(...walletsWithHeader)
-      } else {
-        searchResultItems.push(...walletsWithHeader)
-      }
+    if (showWalletSectionFirst) {
+      // Wallets first, then tokens, then NFTs
+      searchResultItems = [...walletsWithHeader, ...tokensWithHeader, ...nftsWithHeader]
+    } else if (showNftCollectionsBeforeTokens) {
+      // NFTs, then wallets, then tokens
+      searchResultItems = [...nftsWithHeader, ...walletsWithHeader, ...tokensWithHeader]
+    } else {
+      // Tokens, then NFTs, then wallets
+      searchResultItems = [...tokensWithHeader, ...nftsWithHeader, ...walletsWithHeader]
     }
 
     // Add etherscan items at end
@@ -182,7 +192,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   }
 
   return (
-    <Flex grow gap="$spacing8">
+    <Flex grow gap="$spacing8" pb="$spacing36">
       <FlatList
         ListEmptyComponent={
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing8">
@@ -222,7 +232,6 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 }
 
 // Render function for FlatList of SearchResult items
-
 export const renderSearchItem = ({
   item: searchResult,
   searchContext,
@@ -233,7 +242,11 @@ export const renderSearchItem = ({
   switch (searchResult.type) {
     case SEARCH_RESULT_HEADER_KEY:
       return (
-        <SectionHeaderText mt={index === 0 ? '$none' : '$spacing8'} title={searchResult.title} />
+        <SectionHeaderText
+          icon={searchResult.icon}
+          mt={index === 0 ? '$none' : '$spacing8'}
+          title={searchResult.title}
+        />
       )
     case SearchResultType.Token:
       return <SearchTokenItem searchContext={searchContext} token={searchResult} />

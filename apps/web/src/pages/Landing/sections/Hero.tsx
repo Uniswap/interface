@@ -22,9 +22,6 @@ const LandingSwapContainer = styled(Box)`
   padding: 8px;
   border-radius: 24px;
   background: ${({ theme }) => theme.surface1};
-  @media (max-width: 768px) {
-    width: 100%;
-  }
 `
 const LandingSwap = styled(Swap)`
   position: relative;

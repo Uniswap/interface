@@ -5,6 +5,7 @@ import Modal from 'components/Modal'
 import Row from 'components/Row'
 import { ReactNode } from 'react'
 import styled, { DefaultTheme } from 'styled-components'
+import { Gap } from 'theme'
 import { CloseIcon, ThemedText } from 'theme/components'
 
 export const Container = styled(ColumnCenter)`
@@ -51,12 +52,15 @@ const StyledButton = styled(ThemeButton)<{ $color?: keyof DefaultTheme }>`
 export enum DialogButtonType {
   Primary = 'primary',
   Error = 'error',
+  Accent = 'accent',
 }
 
 function getButtonEmphasis(type?: DialogButtonType) {
   switch (type) {
     case DialogButtonType.Error:
       return ButtonEmphasis.destructive
+    case DialogButtonType.Accent:
+      return ButtonEmphasis.high
     default:
       return ButtonEmphasis.medium
   }
@@ -73,6 +77,7 @@ type ButtonConfig = {
 type ButtonsConfig = {
   left?: ButtonConfig
   right?: ButtonConfig
+  gap?: Gap
 }
 
 export interface DialogProps {
@@ -99,7 +104,7 @@ export interface DialogProps {
  *  ------------------
  */
 export function Dialog({ isVisible, buttonsConfig, icon, title, onCancel, description, body }: DialogProps) {
-  const { left, right } = buttonsConfig ?? {}
+  const { left, right, gap } = buttonsConfig ?? {}
   return (
     <Modal $scrollOverlay isOpen={isVisible} onDismiss={onCancel}>
       <Container gap="lg">
@@ -113,7 +118,7 @@ export function Dialog({ isVisible, buttonsConfig, icon, title, onCancel, descri
           <DescriptionText>{description}</DescriptionText>
           {body}
         </ColumnCenter>
-        <Row align="center" justify="center" gap="md">
+        <Row align="center" justify="center" gap={gap ?? 'md'}>
           {left && (
             <StyledButton
               size={ButtonSize.small}

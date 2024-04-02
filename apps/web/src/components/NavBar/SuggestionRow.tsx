@@ -1,27 +1,26 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { sendAnalyticsEvent } from 'analytics'
-import clsx from 'clsx'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkSearchTokenWarning } from 'constants/tokenSafety'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
-import { Box } from 'nft/components/Box'
-import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
-import { vars } from 'nft/css/sprinkles.css'
 import { GenieCollection } from 'nft/types'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
-import { ThemedText } from 'theme/components'
+import styled, { css } from 'styled-components'
+import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Chain, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { Trans } from '@lingui/macro'
+import Column from 'components/Column'
+import Row from 'components/Row'
+import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { DeltaArrow, DeltaText } from '../Tokens/TokenDetails/Delta'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
-import * as styles from './SearchBar.css'
 
 const PriceChangeContainer = styled.div`
   display: flex;
@@ -29,9 +28,55 @@ const PriceChangeContainer = styled.div`
   padding-top: 4px;
   gap: 2px;
 `
+const SuggestionRowStyles = css<{ $isFocused: boolean }>`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  text-decoration: none;
+  padding: 8px 16px;
+  :hover {
+    background: ${({ theme }) => theme.surface2};
+  }
+  ${({ $isFocused, theme }) =>
+    $isFocused &&
+    `
+  background: ${theme.surface2};
+`}
+`
+const StyledLink = styled(Link)`
+  ${SuggestionRowStyles}
+`
+const SkeletonSuggestionRow = styled.div`
+  ${SuggestionRowStyles}
+`
+const PrimaryContainer = styled(Column)`
+  align-items: flex-start;
+  width: 90%;
+`
+const CollectionImageStyles = css`
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background: ${({ theme }) => theme.surface3};
+  flex-shrink: 0;
+`
+const CollectionImage = styled.img`
+  ${CollectionImageStyles}
+`
+const BrokenCollectionImage = styled.div`
+  ${CollectionImageStyles}
+`
+const PrimaryText = styled(ThemedText.SubHeader)`
+  ${EllipsisStyle}
+`
+const SecondaryContainer = styled(Column)`
+  text-align: right;
+  align-items: flex-end;
+`
 
-interface CollectionRowProps {
-  collection: GenieCollection
+interface SuggestionRowProps {
+  suggestion: GenieCollection | SearchToken
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
@@ -39,117 +84,43 @@ interface CollectionRowProps {
   eventProperties: Record<string, unknown>
 }
 
-export const CollectionRow = ({
-  collection,
+function suggestionIsToken(suggestion: GenieCollection | SearchToken): suggestion is SearchToken {
+  return (suggestion as SearchToken).decimals !== undefined
+}
+
+export const SuggestionRow = ({
+  suggestion,
   isHovered,
   setHoveredIndex,
   toggleOpen,
   index,
   eventProperties,
-}: CollectionRowProps) => {
-  const { formatNumberOrString } = useFormatter()
-
-  const [brokenImage, setBrokenImage] = useState(false)
-  const [loaded, setLoaded] = useState(false)
-
+}: SuggestionRowProps) => {
+  const isToken = suggestionIsToken(suggestion)
   const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
   const navigate = useNavigate()
+  const { formatFiatPrice, formatDelta, formatNumberOrString } = useFormatter()
+  const [brokenCollectionImage, setBrokenCollectionImage] = useState(false)
 
   const handleClick = useCallback(() => {
-    addRecentlySearchedAsset({ ...collection, isNft: true, chain: Chain.Ethereum })
-    toggleOpen()
-    sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
-  }, [addRecentlySearchedAsset, collection, toggleOpen, eventProperties])
-
-  useEffect(() => {
-    const keyDownHandler = (event: KeyboardEvent) => {
-      if (event.key === 'Enter' && isHovered) {
-        event.preventDefault()
-        navigate(`/nfts/collection/${collection.address}`)
-        handleClick()
-      }
-    }
-    document.addEventListener('keydown', keyDownHandler)
-    return () => {
-      document.removeEventListener('keydown', keyDownHandler)
-    }
-  }, [toggleOpen, isHovered, collection, navigate, handleClick])
-
-  return (
-    <Link
-      to={`/nfts/collection/${collection.address}`}
-      onClick={handleClick}
-      onMouseEnter={() => !isHovered && setHoveredIndex(index)}
-      onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
-      className={styles.suggestionRow}
-      style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
-    >
-      <Row style={{ width: '60%' }}>
-        {!brokenImage && collection.imageUrl ? (
-          <Box
-            as="img"
-            src={collection.imageUrl}
-            alt={collection.name}
-            className={clsx(loaded ? styles.suggestionImage : styles.imageHolder)}
-            onError={() => setBrokenImage(true)}
-            onLoad={() => setLoaded(true)}
-          />
-        ) : (
-          <Box className={styles.imageHolder} />
-        )}
-        <Column className={styles.suggestionPrimaryContainer}>
-          <Row gap="4" width="full">
-            <Box className={styles.primaryText}>{collection.name}</Box>
-            {collection.isVerified && <VerifiedIcon className={styles.suggestionIcon} />}
-          </Row>
-          <Box className={styles.secondaryText}>
-            {formatNumberOrString({ input: collection?.stats?.total_supply, type: NumberType.WholeNumber })} items
-          </Box>
-        </Column>
-      </Row>
-      {collection.stats?.floor_price ? (
-        <Column className={styles.suggestionSecondaryContainer}>
-          <Row gap="4">
-            <Box className={styles.primaryText}>
-              {formatNumberOrString({ input: collection.stats?.floor_price, type: NumberType.NFTToken })} ETH
-            </Box>
-          </Row>
-          <Box className={styles.secondaryText}>Floor</Box>
-        </Column>
-      ) : null}
-    </Link>
-  )
-}
-
-interface TokenRowProps {
-  token: SearchToken
-  isHovered: boolean
-  setHoveredIndex: (index: number | undefined) => void
-  toggleOpen: () => void
-  index: number
-  eventProperties: Record<string, unknown>
-}
-
-export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
-  const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
-  const navigate = useNavigate()
-  const { formatFiatPrice, formatDelta } = useFormatter()
-
-  const handleClick = useCallback(() => {
-    const address = !token.address && token.standard === TokenStandard.Native ? NATIVE_CHAIN_ID : token.address
-    address && addRecentlySearchedAsset({ address, chain: token.chain })
+    const address =
+      !suggestion.address && suggestion.standard === TokenStandard.Native ? NATIVE_CHAIN_ID : suggestion.address
+    const asset = isToken
+      ? address && { address, chain: suggestion.chain }
+      : { ...suggestion, isNft: true, chain: Chain.Ethereum }
+    asset && addRecentlySearchedAsset(asset)
 
     toggleOpen()
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
-  }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
+  }, [suggestion, isToken, addRecentlySearchedAsset, toggleOpen, eventProperties])
 
-  const tokenDetailsPath = getTokenDetailsURL({ ...token })
+  const path = isToken ? getTokenDetailsURL({ ...suggestion }) : `/nfts/collection/${suggestion.address}`
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
       if (event.key === 'Enter' && isHovered) {
         event.preventDefault()
-        navigate(tokenDetailsPath)
+        navigate(path)
         handleClick()
       }
     }
@@ -157,73 +128,107 @@ export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index,
     return () => {
       document.removeEventListener('keydown', keyDownHandler)
     }
-  }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
+  }, [toggleOpen, isHovered, suggestion, navigate, handleClick, path])
 
   return (
-    <Link
-      data-testid={`searchbar-token-row-${token.chain}-${token.address ?? NATIVE_CHAIN_ID}`}
-      to={tokenDetailsPath}
+    <StyledLink
+      to={path}
       onClick={handleClick}
+      $isFocused={isHovered}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
-      className={styles.suggestionRow}
-      style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
+      data-testid={isToken ? `searchbar-token-row-${suggestion.chain}-${suggestion.address}` : ''}
     >
-      <Row style={{ width: '65%' }}>
-        <QueryTokenLogo
-          token={token}
-          symbol={token.symbol}
-          size="36px"
-          primaryImg={token.project?.logoUrl}
-          style={{ marginRight: '8px' }}
-        />
-        <Column className={styles.suggestionPrimaryContainer}>
-          <Row gap="4" width="full">
-            <Box className={styles.primaryText}>{token.name}</Box>
-            <TokenSafetyIcon warning={checkSearchTokenWarning(token)} />
+      <Row width="60%" gap="sm">
+        {isToken ? (
+          <QueryTokenLogo
+            token={suggestion}
+            symbol={suggestion.symbol}
+            size="36px"
+            primaryImg={suggestion.project?.logoUrl}
+          />
+        ) : brokenCollectionImage ? (
+          <BrokenCollectionImage />
+        ) : (
+          <CollectionImage
+            src={suggestion.imageUrl}
+            alt={suggestion.name}
+            onError={() => setBrokenCollectionImage(true)}
+          />
+        )}
+        <PrimaryContainer>
+          <Row gap="xs">
+            <PrimaryText lineHeight="24px">{suggestion.name}</PrimaryText>
+            {isToken ? (
+              <TokenSafetyIcon warning={checkSearchTokenWarning(suggestion)} />
+            ) : (
+              suggestion.isVerified && <VerifiedIcon />
+            )}
           </Row>
-          <Box className={styles.secondaryText}>{token.symbol}</Box>
-        </Column>
+          <ThemedText.SubHeaderSmall lineHeight="20px">
+            {isToken ? (
+              suggestion.symbol
+            ) : (
+              <>
+                {formatNumberOrString({ input: suggestion?.stats?.total_supply, type: NumberType.WholeNumber })}&nbsp;
+                <Trans>items</Trans>
+              </>
+            )}
+          </ThemedText.SubHeaderSmall>
+        </PrimaryContainer>
       </Row>
 
-      <Column className={styles.suggestionSecondaryContainer}>
-        {!!token.market?.price?.value && (
-          <>
-            <Row gap="4">
-              <Box className={styles.primaryText}>{formatFiatPrice({ price: token.market.price.value })}</Box>
-            </Row>
-            <PriceChangeContainer>
-              <DeltaArrow delta={token.market?.pricePercentChange?.value} />
+      <SecondaryContainer>
+        <Row gap="xs">
+          <PrimaryText width="100%">
+            {isToken
+              ? formatFiatPrice({ price: suggestion.market?.price?.value })
+              : `${formatNumberOrString({ input: suggestion.stats?.floor_price, type: NumberType.NFTToken })} ETH`}
+          </PrimaryText>
+        </Row>
+
+        <PriceChangeContainer>
+          {isToken ? (
+            <>
+              <DeltaArrow delta={suggestion.market?.pricePercentChange?.value} />
               <ThemedText.BodySmall>
-                <DeltaText delta={token.market?.pricePercentChange?.value}>
-                  {formatDelta(Math.abs(token.market?.pricePercentChange?.value ?? 0))}
+                <DeltaText delta={suggestion.market?.pricePercentChange?.value}>
+                  {formatDelta(Math.abs(suggestion.market?.pricePercentChange?.value ?? 0))}
                 </DeltaText>
               </ThemedText.BodySmall>
-            </PriceChangeContainer>
-          </>
-        )}
-      </Column>
-    </Link>
+            </>
+          ) : (
+            <ThemedText.BodySmall color="neutral2">
+              <Trans>Floor</Trans>
+            </ThemedText.BodySmall>
+          )}
+        </PriceChangeContainer>
+      </SecondaryContainer>
+    </StyledLink>
   )
 }
 
+const SkeletonContent = styled(Column)`
+  width: 100%;
+`
+
 export const SkeletonRow = () => {
   return (
-    <Row className={styles.suggestionRow}>
-      <Row width="full">
-        <Box className={styles.imageHolder} />
-        <Column gap="4" width="full">
-          <Row justifyContent="space-between">
-            <Box borderRadius="round" height="20" background="surface2" style={{ width: '180px' }} />
-            <Box borderRadius="round" height="20" width="48" background="surface2" />
+    <SkeletonSuggestionRow $isFocused={false}>
+      <Row>
+        <BrokenCollectionImage />
+        <SkeletonContent gap="sm">
+          <Row justify="space-between">
+            <LoadingBubble height="20px" width="180px" />
+            <LoadingBubble height="20px" width="48px" />
           </Row>
 
-          <Row justifyContent="space-between">
-            <Box borderRadius="round" height="16" width="120" background="surface2" />
-            <Box borderRadius="round" height="16" width="48" background="surface2" />
+          <Row justify="space-between">
+            <LoadingBubble height="16px" width="120px" />
+            <LoadingBubble height="16px" width="48px" />
           </Row>
-        </Column>
+        </SkeletonContent>
       </Row>
-    </Row>
+    </SkeletonSuggestionRow>
   )
 }

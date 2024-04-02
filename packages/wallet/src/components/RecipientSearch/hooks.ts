@@ -6,6 +6,7 @@ import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
+import { DEFAULT_WATCHED_ADDRESSES } from 'wallet/src/features/favorites/slice'
 import { selectRecipientsByRecency } from 'wallet/src/features/transactions/selectors'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { selectInactiveAccounts } from 'wallet/src/features/wallet/selectors'
@@ -138,6 +139,11 @@ export function useRecipients(): {
 
   const sections = useMemo(() => {
     const sectionsArr = []
+
+    // Don't show default favorites as search result for recipient
+    for (const address of DEFAULT_WATCHED_ADDRESSES) {
+      watchedWallets.delete(address)
+    }
 
     if (validatedAddressRecipients.length) {
       sectionsArr.push({

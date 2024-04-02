@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { GqlResult } from 'uniswap/src/data/types'
+import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { filter } from 'wallet/src/components/TokenSelector/filter'
 import { flowToModalName } from 'wallet/src/components/TokenSelector/flowToModalName'
 import { TokenOption } from 'wallet/src/components/TokenSelector/types'
@@ -14,7 +15,6 @@ import {
 } from 'wallet/src/features/dataApi/balances'
 import { useTokenProjects } from 'wallet/src/features/dataApi/tokenProjects'
 import { usePopularTokens } from 'wallet/src/features/dataApi/topTokens'
-import { CurrencyInfo, PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
@@ -42,7 +42,11 @@ const baseCurrencyIds = [
 ]
 
 export function useAllCommonBaseCurrencies(): GqlResult<CurrencyInfo[]> {
-  const { data: baseCurrencyInfos, loading, error, refetch } = useTokenProjects(baseCurrencyIds)
+  return useCurrencies(baseCurrencyIds)
+}
+
+export function useCurrencies(currencyIds: string[]): GqlResult<CurrencyInfo[]> {
+  const { data: baseCurrencyInfos, loading, error, refetch } = useTokenProjects(currencyIds)
   const persistedError = usePersistedError(loading, error)
 
   // TokenProjects returns tokens on every network, so filter out native assets that have a

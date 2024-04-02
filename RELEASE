@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmbYSi6bDw9e8CzLAzN8k6UkcgGYCheJGqsexFZW9HCLnP`
-- CIDv1: `bafybeigefvkmjdhesneplmk35lfudrzcycnhtb7awt76obc2ceggoimo5q`
+- CIDv0: `QmUnNYjRF1siz1YhXyqh2UEoB5AJiTyiYihJCvPVm3FCdJ`
+- CIDv1: `bafybeic7xtznmrazhjjf2wlmdwzng2qfw3th6skmbj6bjc4i452fvjevsu`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,47 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeigefvkmjdhesneplmk35lfudrzcycnhtb7awt76obc2ceggoimo5q.ipfs.dweb.link/
-- https://bafybeigefvkmjdhesneplmk35lfudrzcycnhtb7awt76obc2ceggoimo5q.ipfs.cf-ipfs.com/
-- [ipfs://QmbYSi6bDw9e8CzLAzN8k6UkcgGYCheJGqsexFZW9HCLnP/](ipfs://QmbYSi6bDw9e8CzLAzN8k6UkcgGYCheJGqsexFZW9HCLnP/)
+- https://bafybeic7xtznmrazhjjf2wlmdwzng2qfw3th6skmbj6bjc4i452fvjevsu.ipfs.dweb.link/
+- https://bafybeic7xtznmrazhjjf2wlmdwzng2qfw3th6skmbj6bjc4i452fvjevsu.ipfs.cf-ipfs.com/
+- [ipfs://QmUnNYjRF1siz1YhXyqh2UEoB5AJiTyiYihJCvPVm3FCdJ/](ipfs://QmUnNYjRF1siz1YhXyqh2UEoB5AJiTyiYihJCvPVm3FCdJ/)
 
-### 5.21.1 (2024-03-29)
+## 5.22.0 (2024-04-02)
+
+
+### Features
+
+* **web:** add orderType to uniswapX POST order (#7071) 296a280
+* **web:** add warning when pool is out of sync (#7074) 0b4142b
+* **web:** alerts for adding liquidity to blast (#7090) 4bb5949
+* **web:** blast (#6853) 2e14697
+* **web:** Condense SuggestionRow and Remove VE (#6961) ff0aea0
+* **web:** fix orderType to backend types (#7093) 516b4a9
+* **web:** only search for tokens on the connected chain (#7062) f21bd47
+* **web:** rm deprecated providers usage (#6891) c27e170
+* **web:** share gql types + query with mobile (#6898) 4f047c7
+* **web:** show user added tokens in currency list when using gql tokens (#7095) c21d5bd
+* **web:** support parsing X v2 encoded orders (#7157) bbc7791
+* **web:** unregister the service worker (#7155) 563c75b
 
 
 ### Bug Fixes
 
-* **web:** [hotfix] use chainId when getting token list currency (#7186) 92ec24b
+* **web:** auto bade not centered (#7166) 1b11359
+* **web:** avoid stacking nested AnimatedDropdowns (#7097) cdee8c0
+* **web:** bump redux version to 8 (#7121) b0c0e4e
+* **web:** clean up sentry integration (#6945) 7073673
+* **web:** fix failing type error on main (#7187) cec328f
+* **web:** fix platform checks for mweb breaking uniwallet deeplinking (#7076) a4c6b86
+* **web:** fix prepare not generating graphql breaking vercel build (#7049) d6b7e02
+* **web:** remove circular dependencies in unit test code (#7057) 769c0b4
+* **web:** responsive swap header (#7117) cce2323
+* **web:** universal search e2e test (#7153) f767f6b
+* **web:** update limit price signage (#7150) 2b303a9
+* **web:** use chainId when getting token list currency (#7184) 93e5c4c
+
+
+### Tests
+
+* **web:** update SwapEventTimestampTracker to not use mocks (#7056) b1c7c61
 
 

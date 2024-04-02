@@ -48,7 +48,8 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
       row
       alignItems="center"
       gap="$spacing2"
-      justifyContent={alignRight ? 'flex-end' : 'flex-start'}>
+      justifyContent={alignRight ? 'flex-end' : 'flex-start'}
+      testID="relative-change">
       {change !== undefined && (
         <Icons.Caret color={arrowColor} direction={isPositiveChange ? 'n' : 's'} size={arrowSize} />
       )}

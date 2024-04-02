@@ -1,7 +1,7 @@
 import { SwapTab } from 'components/swap/constants'
 import { DAI } from 'constants/tokens'
 import { SendContext, SendContextType } from 'state/send/SendContext'
-import { SwapAndLimitContext } from 'state/swap/SwapContext'
+import { SwapAndLimitContext } from 'state/swap/types'
 import { render, screen, waitFor } from 'test-utils/render'
 import SendCurrencyInputForm from './SendCurrencyInputForm'
 

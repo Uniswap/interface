@@ -1,8 +1,10 @@
+import { SCREEN_WIDTH } from '@gorhom/bottom-sheet'
 import _ from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Animated, {
   SharedValue,
+  useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -294,6 +296,8 @@ const LoadingWrapper = (): JSX.Element | null => {
   )
 }
 
+const SCREEN_WIDTH_BUFFER = 50
+
 const PriceExplorerAnimatedNumber = ({
   price,
   numberOfDigits,
@@ -305,6 +309,8 @@ const PriceExplorerAnimatedNumber = ({
 }): JSX.Element => {
   const colors = useSporeColors()
   const hideShimmer = useSharedValue(false)
+  const scale = useSharedValue(1)
+  const offset = useSharedValue(0)
   const animatedWrapperStyle = useAnimatedStyle(() => {
     return {
       opacity: price.value.value > 0 && hideShimmer.value ? 0 : 1,
@@ -319,6 +325,31 @@ const PriceExplorerAnimatedNumber = ({
       width: price.formatted.value[0] === '<' ? withTiming(22) : withTiming(0),
     }
   })
+
+  useAnimatedReaction(
+    () => {
+      return Number(
+        [0, ...price.formatted.value.split('')].reduce((accumulator, currentValue) => {
+          if (NUMBER_WIDTH_ARRAY[Number(currentValue)]) {
+            return Number(accumulator) + Number(NUMBER_WIDTH_ARRAY[Number(currentValue)])
+          }
+          return accumulator
+        })
+      )
+    },
+    (priceWidth: number) => {
+      const newScale = (SCREEN_WIDTH - SCREEN_WIDTH_BUFFER) / priceWidth
+
+      if (newScale < 1) {
+        const newOffset = (priceWidth - priceWidth * newScale) / 2
+        scale.value = withTiming(newScale)
+        offset.value = withTiming(-newOffset)
+      } else if (scale.value < 1) {
+        scale.value = withTiming(1)
+        offset.value = withTiming(0)
+      }
+    }
+  )
 
   const hidePlaceholder = (): void => {
     hideShimmer.value = true
@@ -344,8 +375,18 @@ const PriceExplorerAnimatedNumber = ({
     </Animated.Text>
   )
 
+  const scaleWraper = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: -SCREEN_WIDTH / 2 },
+        { scale: scale.value },
+        { translateX: SCREEN_WIDTH / 2 },
+      ],
+    }
+  })
+
   return (
-    <>
+    <Animated.View style={scaleWraper}>
       <Animated.View style={animatedWrapperStyle}>
         <LoadingWrapper />
       </Animated.View>
@@ -356,7 +397,7 @@ const PriceExplorerAnimatedNumber = ({
         {Numbers({ price, hidePlaceholder, numberOfDigits, currency })}
         {!currency.symbolAtFront && currencySymbol}
       </View>
-    </>
+    </Animated.View>
   )
 }
 

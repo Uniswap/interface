@@ -174,6 +174,7 @@
       "dismiss": "Azletmek",
       "done": "Tamamlamak",
       "enable": "Olanak vermek",
+      "goBack": "Geri gitmek",
       "hide": "Saklamak",
       "later": "Belki sonra",
       "learn": "Daha fazla bilgi edin",
@@ -205,6 +206,7 @@
         "title": "Hata! Bir şeyler yanlış gitti."
       }
     },
+    "endAdornment": "Ve",
     "error": {
       "general": "Bir şeyler yanlış gitti."
     },
@@ -266,15 +268,42 @@
   "dapp": {
     "request": {
       "approve": {
-        "label": "Cüzdan"
+        "action": "Onaylamak",
+        "fallbackTitle": "Harcama belirteçlerini onaylayın",
+        "helptext": "Bu sitenin bu jetona erişmesine ve cüzdanınızdan harcama yapmasına izin verin.",
+        "label": "Cüzdan",
+        "title": "Harcamayı onayla {{tokenSymbol}}"
+      },
+      "base": {
+        "title": "İşlemi onayla"
+      },
+      "changeChain": {
+        "title": "Ağı {{network}}olarak değiştir"
+      },
+      "connect": {
+        "helptext": "Bu sitenin cüzdan adresinizi, bakiyenizi görüntülemesine ve işlemler için onay istemesine izin verin.",
+        "title": "Siteye bağlanın"
       },
       "error": {
         "none": "Bekleyen onay yok"
       },
+      "fallback": {
+        "calldata": {
+          "label": "veri"
+        },
+        "function": {
+          "label": "i̇şlev"
+        },
+        "recipient": {
+          "label": "i̇le"
+        },
+        "sending": {
+          "label": "gönderiliyor"
+        }
+      },
       "signature": {
-        "education": {
-          "description": "Özel anahtarlarınızı açığa çıkarmadan cüzdanın sahibi olduğunuzu kanıtlamak için imza gereklidir",
-          "title": "İmza isteği nedir?"
+        "error": {
+          "712-spec-compliance": "SignTypedDataRequestContent, imzalama için EIP-712 spesifikasyonuna uymayan veriler aldı."
         }
       },
       "warning": {
@@ -370,8 +399,15 @@
   },
   "extension": {
     "connection": {
-      "popup": "Cüzdanınız bu siteye bağlı değil.",
-      "popupWithButton": "Cüzdanınız bu siteye bağlı değil. “Cüzdanı Bağla” veya “Oturum Aç” düğmesini arayın."
+      "popup": "Cüzdanınız bu siteye bağlı değil. “Cüzdanı Bağla” veya “Oturum Aç” düğmesini arayın.",
+      "popupWithButton": "Cüzdanınız bu siteye bağlı değil.",
+      "titleConnected": "Bağlı",
+      "titleNotConnected": "Bağlı değil"
+    },
+    "dappRequest": {
+      "signatureRequest": {
+        "header": "İmza isteği"
+      }
     },
     "lock": {
       "button": {
@@ -416,7 +452,8 @@
     },
     "connection": {
       "message": "Sizi {{serviceProvider}}bağlıyorum",
-      "quote": "{{currencySymbol}}değerinde {{amount}} satın almak"
+      "quote": "{{currencySymbol}}değerinde {{amount}} satın almak",
+      "terms": "Devam ederek, uygun olduğu şekilde {{serviceProvider}}ile Hizmet Şartları ve Gizlilik Politikasına tabi olacağınızı kabul etmiş olursunuz."
     },
     "error": {
       "default": "Bir şeyler yanlış gitti.",
@@ -427,10 +464,9 @@
       "usd": "Yalnızca USD cinsinden satın alınabilir"
     },
     "quote": {
-      "amount": "{{tokenAmount}}al",
-      "amountAfterFees": "{{tokenAmount}} ücretlerden sonra",
+      "advice": "İşleminizle ilişkili ücretleri görmek için sağlayıcının portalına devam edeceksiniz.",
+      "others": "diğerleri",
       "type": {
-        "best": "Genel olarak en iyi",
         "other": "Diğer seçenekler",
         "recent": "Son zamanlarda kullanılmış"
       }
@@ -470,11 +506,16 @@
       "title": "Aktivite"
     },
     "banner": {
+      "extension": {
+        "confirm": "Beta'ya Katılın",
+        "message": "Uniswap Uzantısını web tarayıcınızda deneyen ilk siz olun",
+        "title": "Uniswap Uzantısı burada"
+      },
       "offline": "Çevrimdışı moddasınız"
     },
     "extension": {
       "error": "Hesaplar yüklenirken hata oluştu",
-      "pin": "<puzzleIcon />simgesine tıklayarak Uniswap Cüzdanı tarayıcı araç çubuğunuza sabitleyin"
+      "pin": "<puzzleIcon />simgesine tıklayarak Uniswap Cüzdanını tarayıcı araç çubuğunuza sabitleyin"
     },
     "feed": {
       "empty": {
@@ -490,6 +531,14 @@
       "scan": "Tara",
       "send": "Göndermek",
       "swap": "Takas"
+    },
+    "modal": {
+      "getExtension": {
+        "step1": "1. Bilgisayarınızda <highlight>uniswap.org/ext</highlight> adresini ziyaret edin",
+        "step2": "2. Uniswap Uzantısını Chrome tarayıcınıza ekleyin",
+        "step3": "3. Erişim sağlamak için kullanıcı adınızı girin",
+        "title": "Uniswap Uzantısı Beta'ya katılın"
+      }
     },
     "nfts": {
       "title": "NFT'ler"
@@ -558,6 +607,7 @@
     },
     "copied": {
       "address": "Adres kopyalandı",
+      "calldata": "Arama verileri kopyalandı",
       "contractAddress": "Sözleşme adresi kopyalandı",
       "failed": "Panoya kopyalanamadı",
       "image": "Resim kopyalandı",
@@ -715,6 +765,10 @@
         "button": "Telefonunuzdan içe aktarın",
         "title": "Uniswap mobil uygulamasına sahip misiniz?"
       },
+      "getOnTheBetaWaitlist": {
+        "subtitle": "Mobil uygulamayı indirin ve bir kullanıcı adı talep edin",
+        "title": "Beta bekleme listesine girin"
+      },
       "password": {
         "subtitle": "Cüzdanınızın kilidini açmak ve kurtarma ifadenize erişmek için buna ihtiyacınız olacak",
         "title": {
@@ -763,6 +817,19 @@
         "alreadyHave": "Zaten bir cüzdanım var"
       },
       "title": "\nUniswap Cüzdan'a hoş geldiniz"
+    },
+    "introBetaWaitlist": {
+      "button": {
+        "checkEligibility": "Uygunluğu kontrol edin",
+        "letsGo": "Hadi gidelim"
+      },
+      "checkEligibilityInstructions": "Beta için uygun olup olmadığınızı kontrol etmek için aşağıya <highlight>uni.eth</highlight> kullanıcı adınızı girin.",
+      "eligible": {
+        "tagline": "Beta'ya hoş geldiniz; Uniswap cüzdanını ilk deneyenlerden birisiniz.",
+        "title": "Bekleme listesinden çıktınız!"
+      },
+      "ineligibleExplanation": "Hala bekleme listesindesin. Uygun olduğunuzda sizi Uniswap mobil uygulamasında bilgilendireceğiz!",
+      "unitagPlaceholder": "Kullanıcı adı"
     },
     "landing": {
       "button": {
@@ -814,12 +881,12 @@
       "error": "Üzgünüz, şu anda QR kodunu yükleyemiyoruz. Lütfen başka bir katılım yöntemini deneyin.",
       "otp": {
         "error": "Gönderdiğiniz kod hatalı veya gönderilirken bir hata oluştu. Lütfen tekrar deneyin.",
-        "failed": "Başarısız denemeler: {{count}}",
+        "failed": "Başarısız denemeler: {{number}}",
         "subtitle": "6 karakterli kod için Uniswap mobil uygulamanızı kontrol edin",
         "title": "Tek kullanımlık kodu girin"
       },
-      "subtitle": "Cüzdanınızı içe aktarmak için QR kodunu Uniswap uygulamasıyla tarayın",
-      "title": "Telefonunuzdan senkronize edin"
+      "subtitle": "Cüzdanlarınızı içe aktarmaya başlamak için QR kodunu Uniswap mobil uygulamasıyla tarayın",
+      "title": "Uygulamadan cüzdanı içe aktar"
     },
     "security": {
       "alert": {
@@ -959,6 +1026,16 @@
         "message": "Cüzdanınızı senkronize etmeye devam etmek için Uniswap Uzantısındaki QR kodunu tekrar tarayın.",
         "title": "Bağlantınız zaman aşımına uğradı"
       }
+    },
+    "modal": {
+      "notOnWaitlist": {
+        "message": "Uniswap Extension Beta'ya hak kazanabilmek için uni.eth kullanıcı adını talep ederek bekleme listesine katılın",
+        "title": "Bekleme listesinde değilsiniz"
+      },
+      "onWaitlist": {
+        "message": "Uniswap Extension Beta'ya katılmaya uygun olduğunuzda sizi uygulamada bilgilendireceğiz.",
+        "title": "Hala bekleme listesindesin"
+      }
     }
   },
   "send": {
@@ -966,18 +1043,55 @@
       "review": "Aktarımı inceleyin",
       "send": "Göndermek"
     },
+    "gas": {
+      "error": {
+        "title": "Yok"
+      },
+      "networkCost": {
+        "title": "Ağ Maliyeti"
+      }
+    },
+    "input": {
+      "token": {
+        "balance": {
+          "title": "Bakiye: {{balance}} {{symbol}}"
+        }
+      }
+    },
     "recipient": {
-      "previous_one": "{{count}} önceki transfer",
+      "previous_one": "1 önceki transfer",
       "previous_other": "{{count}} önceki transferler",
       "section": {
         "favorite": "Favori cüzdanlar",
         "recent": "Son",
         "search": "Arama Sonuçları",
+        "viewOnly": "Salt görüntülenebilen cüzdanlar",
         "yours": "Cüzdanlarınız"
+      },
+      "warning": {
+        "viewOnly": {
+          "message": "Bu cüzdana yalnızca kurtarma ifadesine sahipseniz veya cüzdanın sahibini tanıyorsanız para gönderin.",
+          "title": "Bunu salt görüntülenebilir bir cüzdan olarak kullanıyorsunuz"
+        }
       }
     },
+    "recipientSelect": {
+      "search": {
+        "empty": {
+          "message": "Tokenları bir cüzdan adresine gönderdiğinizde burada görünürler",
+          "title": "Kaydedilmiş cüzdan yok"
+        }
+      },
+      "title": "İle"
+    },
     "review": {
+      "modal": {
+        "title": "gönderiyorsun"
+      },
       "summary": {
+        "button": {
+          "title": "Göndermeyi onayla"
+        },
         "sending": "Gönderiliyor",
         "to": "İle"
       }
@@ -1017,7 +1131,16 @@
       },
       "insufficientFunds": {
         "message": "Göndermek istediğiniz tutarı girdiğiniz andan itibaren {{currencySymbol}} bakiyeniz azaldı",
-        "title": "Yeterli değil {{currencySymbol}}."
+        "title": "Yeterli değil {{currencySymbol}}"
+      },
+      "modal": {
+        "button": {
+          "cta": {
+            "blocking": "TAMAM",
+            "cancel": "İptal etmek",
+            "confirm": "Onaylamak"
+          }
+        }
       },
       "newAddress": {
         "message": "Bu adresle daha önce işlem yapmadınız. Lütfen devam etmeden önce adresin doğru olduğunu onaylayın.",
@@ -1110,12 +1233,16 @@
           "viewAll": "Hepsini gör",
           "viewLess": "Daha az görüntüle"
         },
+        "label": {
+          "viewOnly": "Sadece Görüntüle"
+        },
         "title": "Cüzdan ayarları"
       }
     },
     "setting": {
       "appearance": {
         "option": {
+          "auto": "Oto",
           "dark": {
             "subtitle": "Her zaman karanlık modu kullan",
             "title": "Karanlık mod"
@@ -1185,6 +1312,9 @@
           "title": "{{cloudProviderName}} yedekleme"
         }
       },
+      "beta": {
+        "tooltip": "Yakında gelecek!"
+      },
       "biometrics": {
         "appAccess": {
           "subtitle": {
@@ -1224,14 +1354,17 @@
         },
         "warning": {
           "message": {
-            "android": "{{biometricsMethod}}açmazsanız cihazınıza erişim sağlayan herkes Uniswap Cüzdan'ı açabilir ve işlem yapabilir.",
-            "ios": "Biyometriyi açmazsanız cihazınıza erişim sağlayan herkes Uniswap Cüzdan'ı açabilir ve işlem yapabilir."
+            "android": "Biyometriyi açmazsanız cihazınıza erişim sağlayan herkes Uniswap Cüzdan'ı açabilir ve işlem yapabilir.",
+            "ios": "{{biometricsMethod}}açmazsanız cihazınıza erişim sağlayan herkes Uniswap Cüzdan'ı açabilir ve işlem yapabilir."
           },
           "title": "Emin misin?"
         }
       },
       "currency": {
         "title": "Yerel para birimi"
+      },
+      "giveFeedback": {
+        "title": "Geri bildirimde bulunun"
       },
       "helpCenter": {
         "title": "Yardım Merkezi"
@@ -1241,6 +1374,7 @@
           "navigate": "Ayarlara git"
         },
         "description": "Uniswap varsayılan olarak cihazınızın dil ayarlarını kullanır. Tercih ettiğiniz dili değiştirmek için cihaz ayarlarınızda \"Uniswap\"e gidin ve \"Dil\"e dokunun",
+        "exampleTitle": "İngilizce",
         "title": "Dil"
       },
       "password": {
@@ -1260,6 +1394,9 @@
       },
       "smallBalances": {
         "title": "Küçük bakiyeleri gizle"
+      },
+      "theme": {
+        "title": "Tema"
       },
       "unknownTokens": {
         "title": "Bilinmeyen belirteçleri gizle"
@@ -1294,6 +1431,7 @@
   "swap": {
     "button": {
       "max": "Maksimum",
+      "review": "Takası inceleyin",
       "swap": "Takas",
       "unwrap": "Paketi aç",
       "view": "İşlemi görüntüle",

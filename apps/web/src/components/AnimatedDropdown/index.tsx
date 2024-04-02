@@ -1,4 +1,6 @@
-import { animated, useSpring, UseSpringProps } from 'react-spring'
+import { useRef } from 'react'
+import { UseSpringProps, animated, easings, useSpring } from 'react-spring'
+import { TRANSITION_DURATIONS } from 'theme/styles'
 import useResizeObserver from 'use-resize-observer'
 
 type AnimatedDropdownProps = React.PropsWithChildren<{ open: boolean; springProps?: UseSpringProps }>
@@ -8,6 +10,7 @@ type AnimatedDropdownProps = React.PropsWithChildren<{ open: boolean; springProp
  * @returns Wrapper to smoothly hide and expand content
  */
 export default function AnimatedDropdown({ open, springProps, children }: AnimatedDropdownProps) {
+  const wasOpen = useRef(open)
   const { ref, height } = useResizeObserver()
 
   const props = useSpring({
@@ -16,11 +19,12 @@ export default function AnimatedDropdown({ open, springProps, children }: Animat
     // Otherwise, we just animate between actual height (when open) and 0 (when closed).
     height: open ? height ?? 'auto' : 0,
     config: {
-      mass: 1.2,
-      tension: 300,
-      friction: 20,
-      clamp: true,
-      velocity: 0.01,
+      easing: open ? easings.easeInCubic : easings.easeOutCubic,
+      // Avoid animating if `open` is unchanged, so that nested AnimatedDropdowns don't stack and delay animations.
+      duration: open === wasOpen.current ? 0 : TRANSITION_DURATIONS.medium,
+    },
+    onStart: () => {
+      wasOpen.current = open
     },
     ...springProps,
   })

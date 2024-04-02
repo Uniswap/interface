@@ -5,7 +5,8 @@ import store from 'state'
 import { RouterPreference } from 'state/routing/types'
 import { renderHook } from 'test-utils/render'
 
-import { deserializeToken, serializeToken, useRouterPreference, useUserSlippageTolerance } from './hooks'
+import { deserializeToken, serializeToken } from 'state/user/utils'
+import { useRouterPreference, useUserSlippageTolerance } from './hooks'
 import { updateUserSlippageTolerance } from './reducer'
 import { SlippageTolerance } from './types'
 

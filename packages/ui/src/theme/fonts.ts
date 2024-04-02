@@ -38,96 +38,99 @@ const platformFontFamily = (
   return fontFamily.sansSerif[family]
 }
 
+const BOOK_WEIGHT = '400'
+const MEDIUM_WEIGHT = '500'
+
 export const fonts = {
   heading1: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(52),
     lineHeight: 60,
-    fontWeight: '400',
+    fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.2,
   },
   heading2: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(36),
     lineHeight: 44,
-    fontWeight: '400',
+    fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.2,
   },
   heading3: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(24),
     lineHeight: 32,
-    fontWeight: '400',
+    fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.2,
   },
   subheading1: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(18),
     lineHeight: 24,
-    fontWeight: '400',
+    fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.4,
   },
   subheading2: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(16),
     lineHeight: 24,
-    fontWeight: '400',
+    fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.4,
   },
   body1: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(18),
     lineHeight: 24,
-    fontWeight: '400',
+    fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.4,
   },
   body2: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(16),
     lineHeight: 24,
-    fontWeight: '400',
+    fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.4,
   },
   body3: {
     family: platformFontFamily('book'),
     fontSize: adjustedSize(14),
     lineHeight: 20,
-    fontWeight: '400',
+    fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.4,
   },
   body4: {
-    family: platformFontFamily('medium'),
+    family: platformFontFamily('book'),
     fontSize: adjustedSize(12),
     lineHeight: 16,
-    fontWeight: '500',
+    fontWeight: BOOK_WEIGHT,
     maxFontSizeMultiplier: 1.4,
   },
   buttonLabel1: {
     family: platformFontFamily('medium'),
     fontSize: adjustedSize(20),
     lineHeight: 24,
-    fontWeight: '500',
+    fontWeight: MEDIUM_WEIGHT,
     maxFontSizeMultiplier: 1.2,
   },
   buttonLabel2: {
     family: platformFontFamily('medium'),
     fontSize: adjustedSize(18),
     lineHeight: 24,
-    fontWeight: '500',
+    fontWeight: MEDIUM_WEIGHT,
     maxFontSizeMultiplier: 1.2,
   },
   buttonLabel3: {
     family: platformFontFamily('medium'),
     fontSize: adjustedSize(16),
     lineHeight: 24,
-    fontWeight: '500',
+    fontWeight: MEDIUM_WEIGHT,
     maxFontSizeMultiplier: 1.2,
   },
   buttonLabel4: {
     family: platformFontFamily('medium'),
     fontSize: adjustedSize(14),
     lineHeight: 16,
-    fontWeight: '500',
+    fontWeight: MEDIUM_WEIGHT,
     maxFontSizeMultiplier: 1.2,
   },
   monospace: {
@@ -143,7 +146,7 @@ const baselMedium = isWeb
   : 'Basel-Medium'
 
 const baselBook = isWeb
-  ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
+  ? 'Basel-Book, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
   : 'Basel-Book'
 
 export const headingFont = createFont({

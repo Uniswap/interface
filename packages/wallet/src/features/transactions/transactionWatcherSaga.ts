@@ -200,9 +200,7 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
       // try again after a waiting period or when we've come back WebView
       yield* race({
         forceFetch: take(forceFetchFiatOnRampTransactions),
-        timeout: delay(
-          useOldMoonpayIntegration ? PollingInterval.Normal : PollingInterval.KindaFast
-        ),
+        timeout: delay(useOldMoonpayIntegration ? PollingInterval.Normal : PollingInterval.Fast),
       })
     }
   } catch (error) {

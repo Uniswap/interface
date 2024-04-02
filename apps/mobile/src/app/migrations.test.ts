@@ -61,6 +61,7 @@ import {
   v59Schema,
   v5Schema,
   v60Schema,
+  v61Schema,
   v6Schema,
   v7Schema,
   v8Schema,
@@ -76,7 +77,10 @@ import { initialTelemetryState } from 'src/features/telemetry/slice'
 import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { ChainId } from 'wallet/src/constants/chains'
-import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
+import {
+  ExtensionOnboardingState,
+  initialBehaviorHistoryState,
+} from 'wallet/src/features/behaviorHistory/slice'
 import { initialFavoritesState } from 'wallet/src/features/favorites/slice'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
 import { initialLanguageState } from 'wallet/src/features/language/slice'
@@ -1378,5 +1382,12 @@ describe('Redux state migrations', () => {
       [nftKey3]: { isVisible: true },
       [nftKey4]: { isVisible: false },
     })
+  })
+
+  it('migrates from v61 to 62', () => {
+    const v61Stub = { ...v61Schema }
+    const v62 = migrations[62](v61Stub)
+
+    expect(v62.behaviorHistory.extensionOnboardingState).toBe(ExtensionOnboardingState.Undefined)
   })
 })

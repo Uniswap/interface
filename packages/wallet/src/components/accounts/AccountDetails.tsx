@@ -1,4 +1,4 @@
-import { Flex, Icons, Text } from 'ui/src'
+import { ColorTokens, Flex, Icons, Text } from 'ui/src'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
@@ -7,11 +7,13 @@ export function AccountDetails({
   allowFontScaling = true,
   iconSize = 20,
   chevron = false,
+  chevronColor = '$neutral2',
 }: {
   address: string
   allowFontScaling?: boolean
   iconSize?: number
   chevron?: boolean
+  chevronColor?: ColorTokens | undefined
 }): JSX.Element {
   return (
     <Flex row shrink alignItems="center" gap="$spacing16" justifyContent="space-between">
@@ -31,7 +33,7 @@ export function AccountDetails({
         </Text>
         {chevron && (
           <Icons.RotatableChevron
-            color="$neutral2"
+            color={chevronColor}
             direction="end"
             height={iconSize}
             width={iconSize}

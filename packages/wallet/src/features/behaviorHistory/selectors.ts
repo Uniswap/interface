@@ -1,3 +1,4 @@
+import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { SharedState } from 'wallet/src/state/reducer'
 
 export const selectHasViewedReviewScreen = (state: SharedState): boolean =>
@@ -14,3 +15,6 @@ export const selectHasCompletedUnitagsIntroModal = (state: SharedState): boolean
 
 export const selectHasViewedUniconV2IntroModal = (state: SharedState): boolean =>
   state.behaviorHistory.hasViewedUniconV2IntroModal
+
+export const selectExtensionOnboardingState = (state: SharedState): ExtensionOnboardingState =>
+  state.behaviorHistory.extensionOnboardingState

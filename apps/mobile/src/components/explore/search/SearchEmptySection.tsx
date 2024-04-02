@@ -7,9 +7,8 @@ import { SearchPopularNFTCollections } from 'src/components/explore/search/Searc
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { renderSearchItem } from 'src/components/explore/search/SearchResultsSection'
 import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
-import { AnimatedFlex, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ClockIcon from 'ui/src/assets/icons/clock.svg'
-import TrendArrowIcon from 'ui/src/assets/icons/trend-up.svg'
 import { iconSizes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
@@ -20,6 +19,8 @@ import {
   WalletSearchResult,
 } from 'wallet/src/features/search/SearchResult'
 import { selectSearchHistory } from 'wallet/src/features/search/selectSearchHistory'
+
+const TrendUpIcon = <Icons.TrendUp color="$neutral2" size="$icon.24" />
 
 export const SUGGESTED_WALLETS: WalletSearchResult[] = [
   {
@@ -62,7 +63,7 @@ export function SearchEmptySection(): JSX.Element {
 
   // Show search history (if applicable), trending tokens, and wallets
   return (
-    <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing12">
+    <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing12" pb="$spacing36">
       {searchHistory.length > 0 && (
         <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
           <FlatList
@@ -92,17 +93,17 @@ export function SearchEmptySection(): JSX.Element {
         </AnimatedFlex>
       )}
       <Flex gap="$spacing4">
-        <SectionHeaderText icon={<TrendIcon />} title={t('explore.search.section.popularTokens')} />
+        <SectionHeaderText icon={TrendUpIcon} title={t('explore.search.section.popularTokens')} />
         <SearchPopularTokens />
       </Flex>
       <Flex gap="$spacing4">
-        <SectionHeaderText icon={<TrendIcon />} title={t('explore.search.section.popularNFT')} />
+        <SectionHeaderText icon={TrendUpIcon} title={t('explore.search.section.popularNFT')} />
         <SearchPopularNFTCollections />
       </Flex>
       <FlatList
         ListHeaderComponent={
           <SectionHeaderText
-            icon={<TrendIcon />}
+            icon={TrendUpIcon}
             title={t('explore.search.section.suggestedWallets')}
           />
         }
@@ -116,11 +117,6 @@ export function SearchEmptySection(): JSX.Element {
 
 const walletKey = (wallet: WalletSearchResult): string => {
   return wallet.address
-}
-
-export const TrendIcon = (): JSX.Element => {
-  const colors = useSporeColors()
-  return <TrendArrowIcon color={colors.neutral2.get()} width={iconSizes.icon20} />
 }
 
 export const RecentIcon = (): JSX.Element => {

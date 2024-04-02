@@ -13,10 +13,10 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { Screens } from 'src/screens/Screens'
 import { Flex } from 'ui/src'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 import { ModalName } from 'wallet/src/telemetry/constants'
-import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 export const TOKENS_TAB_DATA_DEPENDENCIES = [GQLQueries.PortfolioBalances]
 

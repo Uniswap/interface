@@ -9,7 +9,9 @@ import useENSAvatar from 'hooks/useENSAvatar'
 import React from 'react'
 import { Loader } from 'react-feather'
 import styled from 'styled-components'
+import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { UniconV2 } from 'ui/src'
+import { useLogolessColorScheme } from 'ui/src/utils/colors'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 
@@ -116,9 +118,17 @@ function DoubleCurrencyLogo({ chainId, currencies, images, size }: DoubleCurrenc
   if (currencies.length > 1) {
     return <DoubleLogo logo1={src} onError1={nextSrc} logo2={src2} onError2={nextSrc2} size={size} />
   }
+  return <LogolessPlaceholder currency={currencies?.[0]} size={size} />
+}
+
+function LogolessPlaceholder({ currency, size }: { currency?: Currency; size: string }) {
+  const isDarkMode = useIsDarkMode()
+  const logolessColorScheme = useLogolessColorScheme(currency?.name ?? currency?.symbol ?? '')
+  const { foreground, background } = isDarkMode ? logolessColorScheme.dark : logolessColorScheme.light
+
   return (
-    <MissingImageLogo size={size}>
-      {currencies[0]?.symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
+    <MissingImageLogo $size={size} $textColor={foreground} $backgroundColor={background}>
+      {currency?.symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
     </MissingImageLogo>
   )
 }

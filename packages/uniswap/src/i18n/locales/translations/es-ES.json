@@ -174,6 +174,7 @@
       "dismiss": "Cerrar",
       "done": "Listo",
       "enable": "Habilitar",
+      "goBack": "Regresa",
       "hide": "Ocultar",
       "later": "Quizá más tarde",
       "learn": "Aprender más",
@@ -205,6 +206,7 @@
         "title": "¡Ups! Algo salió mal."
       }
     },
+    "endAdornment": "y",
     "error": {
       "general": "Algo salió mal."
     },
@@ -266,21 +268,48 @@
   "dapp": {
     "request": {
       "approve": {
-        "label": "Billetera"
+        "action": "Aprobar",
+        "fallbackTitle": "Aprobar tokens de gasto",
+        "helptext": "Permita que este sitio acceda y gaste este token desde su billetera.",
+        "label": "Wallet",
+        "title": "Aprobar gasto {{tokenSymbol}}"
+      },
+      "base": {
+        "title": "Confirmar transacción"
+      },
+      "changeChain": {
+        "title": "Cambiar red a {{network}}"
+      },
+      "connect": {
+        "helptext": "Permitir a este sitio ver su dirección de wallet, saldo y solicitar aprobaciones para las transacciones.",
+        "title": "Conectarse al sitio"
       },
       "error": {
         "none": "No hay aprobaciones pendientes"
       },
+      "fallback": {
+        "calldata": {
+          "label": "datos"
+        },
+        "function": {
+          "label": "función"
+        },
+        "recipient": {
+          "label": "para"
+        },
+        "sending": {
+          "label": "enviando"
+        }
+      },
       "signature": {
-        "education": {
-          "description": "Se requiere una firma para demostrar que eres propietario de la wallet sin exponer tus llaves privadas",
-          "title": "¿Qué es una solicitud de firma?"
+        "error": {
+          "712-spec-compliance": "SignTypedDataRequestContent recibió datos para firmar que no cumplen con la especificación EIP-712."
         }
       },
       "warning": {
         "notActive": {
           "message": "Asegúrate de que sea el correcto",
-          "title": "Esta no es tu billetera activa"
+          "title": "Esta no es tu wallet activa"
         }
       }
     }
@@ -313,7 +342,7 @@
         "recent": "Búsquedas recientes",
         "suggestedWallets": "Wallets sugeridas",
         "tokens": "Tokens",
-        "wallets": "Carteras"
+        "wallets": "Wallets"
       }
     },
     "tokens": {
@@ -370,8 +399,15 @@
   },
   "extension": {
     "connection": {
-      "popup": "Su billetera no está conectada a este sitio.",
-      "popupWithButton": "Su billetera no está conectada a este sitio. Busque el botón \"Conectar Wallet\" o \"Iniciar sesión\"."
+      "popup": "Su wallet no está conectada a este sitio. Busque un botón \"Conectar Wallet\" o \"Iniciar sesión\".",
+      "popupWithButton": "Su billetera no está conectada a este sitio.",
+      "titleConnected": "Conectado",
+      "titleNotConnected": "No conectado"
+    },
+    "dappRequest": {
+      "signatureRequest": {
+        "header": "Solicitud de firma"
+      }
     },
     "lock": {
       "button": {
@@ -416,7 +452,8 @@
     },
     "connection": {
       "message": "Conectándote a {{serviceProvider}}",
-      "quote": "Comprando {{amount}} por valor de {{currencySymbol}}"
+      "quote": "Comprando {{amount}} por valor de {{currencySymbol}}",
+      "terms": "Al continuar, reconoces que estarás sujeto a los Términos de servicio y la Política de privacidad de {{serviceProvider}}, según corresponda."
     },
     "error": {
       "default": "Algo salió mal.",
@@ -427,10 +464,9 @@
       "usd": "Sólo disponible para comprar en USD"
     },
     "quote": {
-      "amount": "Recibir {{tokenAmount}}",
-      "amountAfterFees": "{{tokenAmount}} después de tarifas",
+      "advice": "Continuará al portal del proveedor para ver las tarifas asociadas con su transacción.",
+      "others": "otros",
       "type": {
-        "best": "Mejor en general",
         "other": "Otras opciones",
         "recent": "Recientemente usado"
       }
@@ -470,6 +506,11 @@
       "title": "Actividad"
     },
     "banner": {
+      "extension": {
+        "confirm": "Unirse a la beta",
+        "message": "Sea el primero en probar la extensión Uniswap en su navegador web",
+        "title": "La extensión Uniswap está aquí"
+      },
       "offline": "Estás en modo offline"
     },
     "extension": {
@@ -490,6 +531,14 @@
       "scan": "Escanear",
       "send": "Enviar",
       "swap": "Intercambiar"
+    },
+    "modal": {
+      "getExtension": {
+        "step1": "1. Visita <highlight>uniswap.org/ext</highlight> en tu computadora",
+        "step2": "2. Agregue la extensión Uniswap en su navegador Chrome",
+        "step3": "3. Ingrese su nombre de usuario para obtener acceso.",
+        "title": "Únase a la versión beta de la extensión Uniswap"
+      }
     },
     "nfts": {
       "title": "NFT"
@@ -558,6 +607,7 @@
     },
     "copied": {
       "address": "Dirección copiada",
+      "calldata": "Datos de llamada copiados",
       "contractAddress": "Dirección del contrato copiada",
       "failed": "Error al copiar al portapapeles",
       "image": "Imagen copiada",
@@ -715,6 +765,10 @@
         "button": "Importa desde tu teléfono",
         "title": "¿Tienes la aplicación móvil Uniswap?"
       },
+      "getOnTheBetaWaitlist": {
+        "subtitle": "Descargue la aplicación móvil y reclame un nombre de usuario",
+        "title": "Inscríbete en la lista de espera Beta"
+      },
       "password": {
         "subtitle": "Necesitará esto para desbloquear su billetera y acceder a su frase de recuperación.",
         "title": {
@@ -763,6 +817,19 @@
         "alreadyHave": "Ya tengo una wallet"
       },
       "title": "Bienvenido a \nUniswap Wallet"
+    },
+    "introBetaWaitlist": {
+      "button": {
+        "checkEligibility": "Verificar elegibilidad",
+        "letsGo": "Vamos"
+      },
+      "checkEligibilityInstructions": "Ingresa tu nombre de usuario <highlight>uni.eth</highlight> a continuación para verificar si eres elegible para la versión Beta.",
+      "eligible": {
+        "tagline": "Bienvenido a la Beta: eres uno de los primeros en probar la billetera Uniswap.",
+        "title": "¡Estás fuera de la lista de espera!"
+      },
+      "ineligibleExplanation": "Todavía estás en la lista de espera. ¡Te notificaremos en la aplicación móvil de Uniswap cuando seas elegible!",
+      "unitagPlaceholder": "nombre de usuario"
     },
     "landing": {
       "button": {
@@ -814,12 +881,12 @@
       "error": "Lo sentimos, no podemos cargar el código QR en este momento. Pruebe con otro método de incorporación.",
       "otp": {
         "error": "El código que envió es incorrecto o hubo un error al enviarlo. Inténtalo de nuevo.",
-        "failed": "Intentos fallidos: {{count}}",
+        "failed": "Intentos fallidos: {{number}}",
         "subtitle": "Consulte su aplicación móvil Uniswap para ver el código de 6 caracteres",
         "title": "Ingrese el código de un solo uso"
       },
-      "subtitle": "Escanea el código QR con la aplicación Uniswap para importar tu billetera",
-      "title": "Sincroniza desde tu teléfono"
+      "subtitle": "Escanee el código QR con la aplicación móvil Uniswap para comenzar a importar su(s) billetera(s)",
+      "title": "Importar wallet desde la aplicación"
     },
     "security": {
       "alert": {
@@ -959,6 +1026,16 @@
         "message": "Escanee el código QR en Uniswap Extension nuevamente para continuar sincronizando su billetera.",
         "title": "Tu conexión se agotó"
       }
+    },
+    "modal": {
+      "notOnWaitlist": {
+        "message": "Para ser elegible para la extensión Beta de Uniswap, únase a la lista de espera solicitando un nombre de usuario uni.eth",
+        "title": "No estás en la lista de espera"
+      },
+      "onWaitlist": {
+        "message": "Le notificaremos en la aplicación cuando sea elegible para unirse a Uniswap Extension Beta.",
+        "title": "Todavía estás en la lista de espera."
+      }
     }
   },
   "send": {
@@ -966,18 +1043,55 @@
       "review": "Revisar transferencia",
       "send": "Enviar"
     },
+    "gas": {
+      "error": {
+        "title": "N/D"
+      },
+      "networkCost": {
+        "title": "Costo de la red"
+      }
+    },
+    "input": {
+      "token": {
+        "balance": {
+          "title": "Saldo: {{balance}} {{symbol}}"
+        }
+      }
+    },
     "recipient": {
-      "previous_one": "{{count}} transferencia anterior",
+      "previous_one": "1 transferencia anterior",
       "previous_other": "{{count}} transferencias anteriores",
       "section": {
         "favorite": "Wallets favoritas",
         "recent": "Reciente",
         "search": "Resultados de la búsqueda",
+        "viewOnly": "Wallets de sólo lectura",
         "yours": "Tus wallets"
+      },
+      "warning": {
+        "viewOnly": {
+          "message": "Sólo envíe fondos a esta wallet si tiene la frase de recuperación o si conoce al propietario de la wallet.",
+          "title": "Tienes esto como una billetera de solo visualización."
+        }
       }
     },
+    "recipientSelect": {
+      "search": {
+        "empty": {
+          "message": "Cuando envías tokens a una dirección de billetera, aparecerán aquí",
+          "title": "No hay billeteras guardadas"
+        }
+      },
+      "title": "Para"
+    },
     "review": {
+      "modal": {
+        "title": "estas enviando"
+      },
       "summary": {
+        "button": {
+          "title": "Confirmar envío"
+        },
         "sending": "Enviando",
         "to": "Para"
       }
@@ -1017,7 +1131,16 @@
       },
       "insufficientFunds": {
         "message": "Tu saldo de {{currencySymbol}} ha disminuido desde que ingresaste la cantidad que quieres enviar",
-        "title": "No hay suficientes {{currencySymbol}}."
+        "title": "No hay suficientes {{currencySymbol}}"
+      },
+      "modal": {
+        "button": {
+          "cta": {
+            "blocking": "Aceptar",
+            "cancel": "Cancelar",
+            "confirm": "Confirmar"
+          }
+        }
       },
       "newAddress": {
         "message": "No has realizado transacciones con esta dirección antes. Confirma que la dirección sea correcta antes de continuar.",
@@ -1103,12 +1226,15 @@
       "wallet": {
         "action": {
           "hide": "Ocultar wallets",
-          "showAll_one": "Mostrar una billetera",
+          "showAll_one": "Mostrar una wallet",
           "showAll_other": "Ver todas las {{count}} wallets"
         },
         "button": {
           "viewAll": "Ver todo",
           "viewLess": "Ver menos"
+        },
+        "label": {
+          "viewOnly": "Sólo lectura"
         },
         "title": "Configuración de wallet"
       }
@@ -1116,6 +1242,7 @@
     "setting": {
       "appearance": {
         "option": {
+          "auto": "Auto",
           "dark": {
             "subtitle": "Usa siempre el modo oscuro",
             "title": "Modo oscuro"
@@ -1185,6 +1312,9 @@
           "title": "{{cloudProviderName}} copia de seguridad"
         }
       },
+      "beta": {
+        "tooltip": "¡Muy pronto!"
+      },
       "biometrics": {
         "appAccess": {
           "subtitle": {
@@ -1224,14 +1354,17 @@
         },
         "warning": {
           "message": {
-            "android": "Si no activas {{biometricsMethod}}, cualquiera que obtenga acceso a tu dispositivo podrá abrir Uniswap Wallet y realizar transacciones.",
-            "ios": "Si no activas la biometría, cualquiera que obtenga acceso a tu dispositivo podrá abrir Uniswap Wallet y realizar transacciones."
+            "android": "Si no activas la biometría, cualquiera que obtenga acceso a tu dispositivo podrá abrir Uniswap Wallet y realizar transacciones.",
+            "ios": "Si no activas {{biometricsMethod}}, cualquiera que obtenga acceso a tu dispositivo podrá abrir Uniswap Wallet y realizar transacciones."
           },
           "title": "¿Estás seguro?"
         }
       },
       "currency": {
         "title": "Moneda local"
+      },
+      "giveFeedback": {
+        "title": "Dar opinion"
       },
       "helpCenter": {
         "title": "Centro de ayuda"
@@ -1241,6 +1374,7 @@
           "navigate": "Ir a la configuración"
         },
         "description": "Uniswap utiliza de forma predeterminada la configuración de idioma de su dispositivo. Para cambiar su idioma preferido, vaya a \"Uniswap\" en la configuración de su dispositivo y toque \"Idioma\"",
+        "exampleTitle": "Inglés",
         "title": "Idioma"
       },
       "password": {
@@ -1260,6 +1394,9 @@
       },
       "smallBalances": {
         "title": "Ocultar saldos pequeños"
+      },
+      "theme": {
+        "title": "Tema"
       },
       "unknownTokens": {
         "title": "Ocultar tokens desconocidos"
@@ -1294,6 +1431,7 @@
   "swap": {
     "button": {
       "max": "Máx",
+      "review": "Revisar intercambio",
       "swap": "Intercambiar",
       "unwrap": "Desenvolver",
       "view": "Ver transacción",
@@ -1928,7 +2066,7 @@
       },
       "switchAccount": "Cambiar Cuenta",
       "switchNetwork": "Cambiar Red",
-      "title": "{{dappName}} quiere conectarse a tu billetera"
+      "title": "{{dappName}} quiere conectarse a su wallet"
     },
     "permissions": {
       "networks": "Redes",

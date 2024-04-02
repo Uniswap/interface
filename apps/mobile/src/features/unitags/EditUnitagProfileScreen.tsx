@@ -27,6 +27,7 @@ import {
   useUniconColors,
 } from 'ui/src'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
+import { useExtractedColors } from 'ui/src/utils/colors'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
@@ -53,7 +54,6 @@ import { useAppDispatch } from 'wallet/src/state'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { UnitagEventName } from 'wallet/src/telemetry/constants'
 import { shortenAddress } from 'wallet/src/utils/addresses'
-import { useExtractedColors } from 'wallet/src/utils/colors'
 
 const BIO_TEXT_INPUT_LINES = 6
 

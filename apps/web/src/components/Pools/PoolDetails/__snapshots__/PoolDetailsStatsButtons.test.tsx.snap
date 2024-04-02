@@ -875,7 +875,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
 }
 
 .c58 {
-  color: #FC72FF;
+  color: #222222;
   font-weight: 535;
 }
 
@@ -1201,7 +1201,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                       class="c27"
                     >
                       <span
-                        class="font_subHeading _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-400 _userSelect-none"
+                        class="font_subHeading _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-16px _lineHeight-24px _fontWeight-400 _userSelect-none"
                       >
                         You pay
                       </span>
@@ -1330,7 +1330,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                         class="c27"
                       >
                         <span
-                          class="font_subHeading _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-400 _userSelect-none"
+                          class="font_subHeading _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-16px _lineHeight-24px _fontWeight-400 _userSelect-none"
                         >
                           You receive
                         </span>

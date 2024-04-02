@@ -31,3 +31,16 @@ export function concatStrings(list: string[], endAdornmentText: string): string 
   }
   return result
 }
+
+export function containsNonPrintableChars(msg: string): boolean {
+  // Matches control characters and space separators.
+  const regex = /[\p{C}\p{Z}]/gu
+
+  if (regex.test(msg)) {
+    return ![...msg].every(
+      (char) => char === '\n' || char === '\r' || char === '\t' || !/\p{C}/u.test(char)
+    )
+  }
+
+  return false
+}

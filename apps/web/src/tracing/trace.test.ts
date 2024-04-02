@@ -99,6 +99,18 @@ describe('trace', () => {
       expect(parent.name).toBe(CONTEXT.name)
       expect(parent.op).toBe(CONTEXT.op)
     })
+
+    it("starts a span under the parent Zone's span", async () => {
+      await trace(CONTEXT, () => {
+        trace({ name: 'Child', op: 'child' as OpCode } as TraceContext, () => Promise.resolve())
+        return Promise.resolve()
+      })
+      expect(span!.name).toBe('Child')
+      expect(span!.op).toBe('child')
+      const parent = spanMap.get(span!.parentSpanId!)!
+      expect(parent.name).toBe(CONTEXT.name)
+      expect(parent.op).toBe(CONTEXT.op)
+    })
   })
 
   describe('setData', () => {
@@ -120,10 +132,12 @@ describe('trace', () => {
       })
       expect(span!.status).toBe('cancelled')
     })
+  })
 
+  describe('setHttpStatus', () => {
     it('sets a span http status with a number', async () => {
-      await trace(CONTEXT, ({ setStatus }) => {
-        setStatus(429)
+      await trace(CONTEXT, ({ setHttpStatus }) => {
+        setHttpStatus(429)
         return Promise.resolve()
       })
       expect(span!.status).toBe('resource_exhausted')
@@ -139,7 +153,7 @@ describe('trace', () => {
           return Promise.reject(error)
         })
       ).rejects.toBeDefined()
-      expect(span!.status).toEqual('unknown_error')
+      expect(span!.status).toEqual('internal_error')
       expect(span!.data).toEqual({ error })
     })
 
@@ -147,11 +161,11 @@ describe('trace', () => {
       const error = new Error('Test error')
       await expect(
         trace(CONTEXT, ({ setError }) => {
-          setError(error, 'cancelled')
+          setError(error, 'aborted')
           return Promise.reject(error)
         })
       ).rejects.toBeDefined()
-      expect(span!.status).toEqual('cancelled')
+      expect(span!.status).toEqual('aborted')
       expect(span!.data).toEqual({ error })
     })
   })

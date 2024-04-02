@@ -174,6 +174,7 @@
       "dismiss": "关闭",
       "done": "完成",
       "enable": "开启",
+      "goBack": "回去",
       "hide": "隐藏",
       "later": "稍后再说",
       "learn": "了解更多",
@@ -205,6 +206,7 @@
         "title": "哎呀！出了些问题。"
       }
     },
+    "endAdornment": "和",
     "error": {
       "general": "出了些问题。"
     },
@@ -266,15 +268,42 @@
   "dapp": {
     "request": {
       "approve": {
-        "label": "钱包"
+        "action": "批准",
+        "fallbackTitle": "批准支出代币",
+        "helptext": "允许该网站访问并使用您钱包中的此代币。",
+        "label": "钱包",
+        "title": "批准支出 {{tokenSymbol}}"
+      },
+      "base": {
+        "title": "确认交易"
+      },
+      "changeChain": {
+        "title": "将网络切换至 {{network}}"
+      },
+      "connect": {
+        "helptext": "允许该网站查看您的钱包地址、余额并请求交易批准。",
+        "title": "连接到站点"
       },
       "error": {
         "none": "没有等待批准的情况"
       },
+      "fallback": {
+        "calldata": {
+          "label": "数据"
+        },
+        "function": {
+          "label": "功能"
+        },
+        "recipient": {
+          "label": "接受者"
+        },
+        "sending": {
+          "label": "发送"
+        }
+      },
       "signature": {
-        "education": {
-          "description": "需要签名来证明你拥有该钱包而不暴露你的私钥",
-          "title": "什么是签名请求？"
+        "error": {
+          "712-spec-compliance": "SignTypedDataRequestContent 收到的签名数据不符合 EIP-712 规范。"
         }
       },
       "warning": {
@@ -370,8 +399,15 @@
   },
   "extension": {
     "connection": {
-      "popup": "您的钱包未连接到此网站。",
-      "popupWithButton": "您的钱包未连接到此网站。寻找“连接钱包”或“登录”按钮。"
+      "popup": "您的钱包未连接到此网站。寻找“连接钱包”或“登录”按钮。",
+      "popupWithButton": "您的钱包未连接到此网站。",
+      "titleConnected": "已连接",
+      "titleNotConnected": "未连接"
+    },
+    "dappRequest": {
+      "signatureRequest": {
+        "header": "签名请求"
+      }
     },
     "lock": {
       "button": {
@@ -416,7 +452,8 @@
     },
     "connection": {
       "message": "将您连接至 {{serviceProvider}}",
-      "quote": "买入 {{amount}} 价值 {{currencySymbol}}"
+      "quote": "买入 {{amount}} 价值 {{currencySymbol}}",
+      "terms": "继续操作即表示您承认您将遵守 {{serviceProvider}}的服务条款和隐私政策（如果适用）。"
     },
     "error": {
       "default": "出了些问题。",
@@ -427,10 +464,9 @@
       "usd": "只能以美元买入"
     },
     "quote": {
-      "amount": "接收 {{tokenAmount}}",
-      "amountAfterFees": "费用后{{tokenAmount}}",
+      "advice": "您将继续访问提供商的门户以查看与您的交易相关的费用。",
+      "others": "其他的",
       "type": {
-        "best": "最佳整体",
         "other": "其他选项",
         "recent": "最近使用过"
       }
@@ -470,6 +506,11 @@
       "title": "动态"
     },
     "banner": {
+      "extension": {
+        "confirm": "加入测试版",
+        "message": "成为第一个在网络浏览器上试用 Uniswap 扩展的人",
+        "title": "Uniswap 扩展在这里"
+      },
       "offline": "你处于离线模式"
     },
     "extension": {
@@ -490,6 +531,14 @@
       "scan": "扫码",
       "send": "发送",
       "swap": "兑换"
+    },
+    "modal": {
+      "getExtension": {
+        "step1": "1. 在电脑上访问 <highlight>uniswap.org/ext</highlight>",
+        "step2": "2. 在 Chrome 浏览器上添加 Uniswap 扩展程序",
+        "step3": "3. 输入您的用户名进行访问",
+        "title": "加入 Uniswap 扩展测试版"
+      }
     },
     "nfts": {
       "title": "NFT"
@@ -558,6 +607,7 @@
     },
     "copied": {
       "address": "地址已复制",
+      "calldata": "通话数据已复制",
       "contractAddress": "复制合约地址",
       "failed": "复制到剪贴板失败",
       "image": "图像已复制",
@@ -708,12 +758,16 @@
       "label": "昵称",
       "subtitle": "给你的钱包起个昵称",
       "title": "此昵称只有你自己可见",
-      "walletAddress": "Your public address will be <highlight>{{walletAddress}}</highlight>"
+      "walletAddress": "您的公共地址将是<highlight>{{walletAddress}}</highlight>"
     },
     "extension": {
       "connectMobile": {
         "button": "从您的手机导入",
         "title": "有 Uniswap 应用程序吗？"
+      },
+      "getOnTheBetaWaitlist": {
+        "subtitle": "下载移动应用程序并索取用户名",
+        "title": "进入测试版候补名单"
       },
       "password": {
         "subtitle": "您需要它来解锁您的钱包并访问您的恢复短语",
@@ -763,6 +817,19 @@
         "alreadyHave": "我已经有钱包了"
       },
       "title": "欢迎来到<></> Uniswap 钱包"
+    },
+    "introBetaWaitlist": {
+      "button": {
+        "checkEligibility": "检查资格",
+        "letsGo": "我们走吧"
+      },
+      "checkEligibilityInstructions": "在下面输入您的 <highlight>uni.eth</highlight> 用户名，检查您是否有资格参加测试版。",
+      "eligible": {
+        "tagline": "欢迎来到 Beta 版——您是第一批尝试 Uniswap 钱包的人之一。",
+        "title": "您已退出候补名单！"
+      },
+      "ineligibleExplanation": "您仍在候补名单上。当您符合资格时，我们将在 Uniswap 移动应用程序中通知您！",
+      "unitagPlaceholder": "用户名"
     },
     "landing": {
       "button": {
@@ -814,12 +881,12 @@
       "error": "抱歉，我们现在无法加载二维码。请尝试其他入职方法。",
       "otp": {
         "error": "您提交的代码不正确，或者提交时出错。请再试一次。",
-        "failed": "失败尝试： {{count}}",
+        "failed": "失败尝试： {{number}}",
         "subtitle": "检查您的 Uniswap 移动应用程序中的 6 字符代码",
         "title": "输入一次性代码"
       },
-      "subtitle": "使用 Uniswap 应用扫描二维码导入钱包",
-      "title": "从您的手机同步"
+      "subtitle": "使用 Uniswap 移动应用扫描二维码开始导入您的钱包",
+      "title": "从应用程序导入钱包"
     },
     "security": {
       "alert": {
@@ -843,7 +910,7 @@
       },
       "subtitle": {
         "android": "通过要求生物识别技术发送交易来添加额外的安全层。",
-        "ios": "通过要求 {{biometricsMethod}} 发送交易来添加额外的安全层。"
+        "ios": "{{biometricsMethod}} 让你的交易更加安全"
       },
       "title": "保护你的钱包"
     },
@@ -854,7 +921,7 @@
         "error": "导入钱包时出错"
       }
     },
-    "termsOfService": "继续操作即表示我同意<highlightTerms> 服务条款 </highlightTerms>并同意<highlightPrivacy> 隐私政策</highlightPrivacy>。",
+    "termsOfService": "我同意<highlightTerms>服务条款</highlightTerms>和<highlightPrivacy>隐私政策</highlightPrivacy>。",
     "tooltip": {
       "recoveryPhrase": {
         "trigger": "什么是恢复短语？"
@@ -909,7 +976,7 @@
       },
       "method": {
         "default": "来自 {{dappNameOrUrl}}的请求",
-        "signature": "Signature request from {{dappNameOrUrl}}",
+        "signature": "来自 {{dappNameOrUrl}} 的签名请求",
         "transaction": "来自 {{dappNameOrUrl}}的交易请求"
       },
       "withAmount": "允许 {{dappName}} 使用最多<highlight> {{amount}} </highlight>{{currencySymbol}}？",
@@ -959,6 +1026,16 @@
         "message": "再次扫描 Uniswap Extension 上的二维码以继续同步您的钱包。",
         "title": "您的连接超时"
       }
+    },
+    "modal": {
+      "notOnWaitlist": {
+        "message": "为了获得 Uniswap Extension Beta 的资格，请通过申请 uni.eth 用户名加入候补名单",
+        "title": "您不在候补名单上"
+      },
+      "onWaitlist": {
+        "message": "当您有资格加入 Uniswap Extension Beta 时，我们会在应用程序中通知您。",
+        "title": "您仍在候补名单上"
+      }
     }
   },
   "send": {
@@ -966,18 +1043,55 @@
       "review": "预览",
       "send": "发送"
     },
+    "gas": {
+      "error": {
+        "title": "不适用"
+      },
+      "networkCost": {
+        "title": "网络费用"
+      }
+    },
+    "input": {
+      "token": {
+        "balance": {
+          "title": "余额： {{balance}} {{symbol}}"
+        }
+      }
+    },
     "recipient": {
-      "previous_one": "之前 {{count}} 次发送",
+      "previous_one": "1 次先前转账",
       "previous_other": "之前 {{count}} 次发送",
       "section": {
         "favorite": "收藏钱包",
         "recent": "最近",
         "search": "搜索结果",
+        "viewOnly": "仅查看钱包",
         "yours": "你的钱包"
+      },
+      "warning": {
+        "viewOnly": {
+          "message": "仅当您有恢复短语或知道钱包所有者时才将资金发送至此钱包。",
+          "title": "您将其作为仅供查看的钱包"
+        }
       }
     },
+    "recipientSelect": {
+      "search": {
+        "empty": {
+          "message": "当您将代币发送到钱包地址时，它们会显示在此处",
+          "title": "没有保存钱包"
+        }
+      },
+      "title": "接受者"
+    },
     "review": {
+      "modal": {
+        "title": "你正在发送"
+      },
       "summary": {
+        "button": {
+          "title": "确认发送"
+        },
         "sending": "发送",
         "to": "接受者"
       }
@@ -1017,7 +1131,16 @@
       },
       "insufficientFunds": {
         "message": "自从你输入要发送的金额以来，你的余额已减少 {{currencySymbol}}",
-        "title": "不够 {{currencySymbol}}."
+        "title": "不够 {{currencySymbol}}"
+      },
+      "modal": {
+        "button": {
+          "cta": {
+            "blocking": "好的",
+            "cancel": "取消",
+            "confirm": "确认"
+          }
+        }
       },
       "newAddress": {
         "message": "你以前没有与这地址交易过。请确认地址是否正确。",
@@ -1110,12 +1233,16 @@
           "viewAll": "显示全部",
           "viewLess": "显示更少"
         },
+        "label": {
+          "viewOnly": "仅查看"
+        },
         "title": "钱包设定"
       }
     },
     "setting": {
       "appearance": {
         "option": {
+          "auto": "自动",
           "dark": {
             "subtitle": "一直使用深色主题",
             "title": "深色主题"
@@ -1185,6 +1312,9 @@
           "title": "{{cloudProviderName}} 备份"
         }
       },
+      "beta": {
+        "tooltip": "即将推出！"
+      },
       "biometrics": {
         "appAccess": {
           "subtitle": {
@@ -1224,14 +1354,17 @@
         },
         "warning": {
           "message": {
-            "android": "如果你不开启 {{biometricsMethod}}，任何有权访问你设备的人都可以打开 Uniswap 钱包并进行交易。",
-            "ios": "如果你不开启生物识别，任何有权访问你设备的人都可以打开 Uniswap 钱包并进行交易。"
+            "android": "如果你不开启生物识别，任何有权访问你设备的人都可以打开 Uniswap 钱包并进行交易。",
+            "ios": "如果你不开启 {{biometricsMethod}}，任何有权访问你设备的人都可以打开 Uniswap 钱包并进行交易。"
           },
           "title": "你确定吗？"
         }
       },
       "currency": {
         "title": "当地货币"
+      },
+      "giveFeedback": {
+        "title": "给予反馈"
       },
       "helpCenter": {
         "title": "帮助中心"
@@ -1241,6 +1374,7 @@
           "navigate": "前往设置"
         },
         "description": "Uniswap 默认为您设备的语言设置。要更改您的首选语言，请转到设备设置中的“Uniswap”，然后点击“语言”",
+        "exampleTitle": "英语",
         "title": "语言"
       },
       "password": {
@@ -1260,6 +1394,9 @@
       },
       "smallBalances": {
         "title": "隐藏小额余额"
+      },
+      "theme": {
+        "title": "主题"
       },
       "unknownTokens": {
         "title": "隐藏未知代币"
@@ -1294,6 +1431,7 @@
   "swap": {
     "button": {
       "max": "总余额",
+      "review": "审查交换",
       "swap": "兑换",
       "unwrap": "拆封",
       "view": "查看交易",
@@ -1680,7 +1818,7 @@
         "failed": "接收失败",
         "pending": "接收中",
         "success": "已接收",
-        "successDapp": "收到于 {{externalDappName}}"
+        "successDapp": "收到 {{externalDappName}}"
       },
       "revoke": {
         "canceled": "已取消撤销授权",

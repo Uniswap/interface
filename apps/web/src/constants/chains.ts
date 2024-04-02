@@ -15,6 +15,7 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.BNB]: 'bnb',
   [ChainId.AVALANCHE]: 'avalanche',
   [ChainId.BASE]: 'base',
+  [ChainId.BLAST]: 'blast',
 } as const
 
 // Include ChainIds in this array if they are not supported by the UX yet, but are already in the SDK.
@@ -22,12 +23,20 @@ const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = [
   ChainId.BASE_GOERLI,
   ChainId.ARBITRUM_SEPOLIA,
   ChainId.OPTIMISM_SEPOLIA,
+  ChainId.ROOTSTOCK,
+  ChainId.ZORA,
+  ChainId.ZORA_SEPOLIA,
 ]
 
 // TODO: include BASE_GOERLI, OPTIMISM_SEPOLIA, or ARBITRUM_SEPOLIA when routing is implemented
 export type SupportedInterfaceChain = Exclude<
   SupportedChainsType,
-  ChainId.BASE_GOERLI | ChainId.ARBITRUM_SEPOLIA | ChainId.OPTIMISM_SEPOLIA
+  | ChainId.BASE_GOERLI
+  | ChainId.ARBITRUM_SEPOLIA
+  | ChainId.OPTIMISM_SEPOLIA
+  | ChainId.ROOTSTOCK
+  | ChainId.ZORA
+  | ChainId.ZORA_SEPOLIA
 >
 
 export function isSupportedChain(
@@ -60,6 +69,7 @@ export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [
   ChainId.BNB,
   ChainId.AVALANCHE,
   ChainId.BASE,
+  ChainId.BLAST,
 ] as const
 
 /**
@@ -104,6 +114,7 @@ export const L2_CHAIN_IDS = [
   ChainId.OPTIMISM,
   ChainId.OPTIMISM_GOERLI,
   ChainId.BASE,
+  ChainId.BLAST,
 ] as const
 
 export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]
@@ -137,8 +148,10 @@ export function getChainPriority(chainId: ChainId): number {
     case ChainId.CELO:
     case ChainId.CELO_ALFAJORES:
       return 7
-    default:
+    case ChainId.BLAST:
       return 8
+    default:
+      return Infinity
   }
 }
 

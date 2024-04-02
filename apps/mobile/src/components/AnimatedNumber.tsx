@@ -42,6 +42,7 @@ const RollNumber = ({
   chars,
   commonPrefixLength,
   shouldFadeDecimals,
+  disableAnimations,
 }: {
   chars: string[]
   digit?: string
@@ -49,6 +50,7 @@ const RollNumber = ({
   index: number
   commonPrefixLength: number
   shouldFadeDecimals: boolean
+  disableAnimations?: boolean
 }): JSX.Element => {
   const colors = useSporeColors()
   const fontColor = useSharedValue(
@@ -60,6 +62,10 @@ const RollNumber = ({
   useEffect(() => {
     const finishColor =
       shouldFadeDecimals && index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val
+    if (disableAnimations) {
+      fontColor.value = finishColor
+      return
+    }
     if (nextColor && index > commonPrefixLength - 1) {
       fontColor.value = withSequence(
         withTiming(nextColor, { duration: 250 }),
@@ -78,6 +84,7 @@ const RollNumber = ({
     commonPrefixLength,
     fontColor,
     shouldFadeDecimals,
+    disableAnimations,
   ])
 
   const animatedFontStyle = useAnimatedStyle(() => {
@@ -99,7 +106,8 @@ const RollNumber = ({
 
   useEffect(() => {
     if (digit && Number(digit) >= 0) {
-      yOffset.value = withTiming(DIGIT_HEIGHT * -digit)
+      const newOffset = DIGIT_HEIGHT * -digit
+      yOffset.value = disableAnimations ? newOffset : withTiming(newOffset)
     }
   })
 
@@ -139,23 +147,26 @@ const Char = ({
   nextColor,
   commonPrefixLength,
   shouldFadeDecimals,
+  disableAnimations,
 }: {
   index: number
   chars: string[]
   nextColor?: string
   commonPrefixLength: number
   shouldFadeDecimals: boolean
+  disableAnimations?: boolean
 }): JSX.Element => {
   return (
     <Animated.View
-      entering={nextColor ? FadeIn : undefined}
-      exiting={FadeOut}
-      layout={Layout}
+      entering={nextColor && !disableAnimations ? FadeIn : undefined}
+      exiting={disableAnimations ? undefined : FadeOut}
+      layout={disableAnimations ? undefined : Layout}
       style={[{ height: DIGIT_HEIGHT }, AnimatedCharStyles.wrapperStyle]}>
       <RollNumber
         chars={chars}
         commonPrefixLength={commonPrefixLength}
         digit={chars[index]}
+        disableAnimations={disableAnimations}
         index={index}
         nextColor={nextColor}
         shouldFadeDecimals={shouldFadeDecimals}
@@ -205,6 +216,7 @@ const AnimatedNumber = ({
   colorIndicationDuration,
   shouldFadeDecimals,
   warmLoading,
+  disableAnimations,
 }: {
   loadingPlaceholderText: string
   loading: boolean | 'no-shimmer'
@@ -212,6 +224,7 @@ const AnimatedNumber = ({
   colorIndicationDuration: number
   shouldFadeDecimals: boolean
   warmLoading: boolean
+  disableAnimations?: boolean
 }): JSX.Element => {
   const prevValue = usePrevious(value)
   const [chars, setChars] = useState<string[]>()
@@ -237,11 +250,11 @@ const AnimatedNumber = ({
 
     if (newScale < 1) {
       const newOffset = (e.nativeEvent.layout.width - e.nativeEvent.layout.width * newScale) / 2
-      scale.value = withTiming(newScale)
-      offset.value = withTiming(-newOffset)
+      scale.value = disableAnimations ? newScale : withTiming(newScale)
+      offset.value = disableAnimations ? -newOffset : withTiming(-newOffset)
     } else if (scale.value < 1) {
-      scale.value = withTiming(1)
-      offset.value = withTiming(0)
+      scale.value = disableAnimations ? 1 : withTiming(1)
+      offset.value = disableAnimations ? 0 : withTiming(0)
     }
   }
 
@@ -278,6 +291,7 @@ const AnimatedNumber = ({
               }
               chars={placeholderChars}
               commonPrefixLength={commonPrefixLength}
+              disableAnimations={disableAnimations}
               index={index}
               nextColor={nextColor}
               shouldFadeDecimals={shouldFadeDecimals}
@@ -306,6 +320,7 @@ const AnimatedNumber = ({
                 }
                 chars={chars}
                 commonPrefixLength={commonPrefixLength}
+                disableAnimations={disableAnimations}
                 index={index}
                 nextColor={nextColor}
                 shouldFadeDecimals={shouldFadeDecimals}

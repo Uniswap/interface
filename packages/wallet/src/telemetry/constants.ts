@@ -21,6 +21,10 @@ export enum UnitagEventName {
   UnitagRemoved = 'Unitag Removed',
 }
 
+export enum ExtensionOnboardingEventName {
+  PromoBannerActionTaken = 'Extension Promo Banner Action Taken',
+}
+
 export enum FiatOnRampEventName {
   FiatOnRampAmountEntered = 'Fiat OnRamp Amount Entered',
   FiatOnRampTransactionUpdated = 'Fiat OnRamp Transaction Updated',
@@ -51,6 +55,8 @@ export const ModalName = {
   ExchangeTransferModal: 'exchange-transfer-modal',
   Experiments: 'experiments',
   Explore: 'explore-modal',
+  ExtensionPromoModal: 'extension-promo',
+  ExtensionWaitlistModal: 'extension-waitlist',
   FaceIDWarning: 'face-id-warning',
   FOTInfo: 'fee-on-transfer',
   FiatCurrencySelector: 'fiat-currency-selector',
