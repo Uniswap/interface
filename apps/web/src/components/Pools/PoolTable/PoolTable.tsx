@@ -39,7 +39,7 @@ const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
   [PoolSortFields.Turnover]: (
     <Trans>
       Turnover refers to the amount of trading volume relative to total value locked (TVL) within a pool. Turnover = 24H
-      Fees / TVL
+      Volume / TVL
     </Trans>
   ),
 }
