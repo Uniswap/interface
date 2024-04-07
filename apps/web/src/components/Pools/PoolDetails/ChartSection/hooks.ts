@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@jaguarswap/sdk-core'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType } from 'components/Charts/utils'

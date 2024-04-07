@@ -6,6 +6,7 @@ import sortByListPriority from 'utils/listSort'
 
 import BROKEN_LIST from '../../constants/tokenLists/broken.tokenlist.json'
 import { DEFAULT_ACTIVE_LIST_URLS, UNSUPPORTED_LIST_URLS } from './../../constants/lists'
+import EXTENDED_TOKEN_LIST from './../../constants/extendedList.json';
 
 type Mutable<T> = {
   -readonly [P in keyof T]: Mutable<T[P]>
@@ -66,7 +67,10 @@ export function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAd
 
 // get all the tokens from active lists, combine with local default tokens
 export function useCombinedActiveList(): TokenAddressMap {
-  const activeTokens = useCombinedTokenMapFromUrls(DEFAULT_ACTIVE_LIST_URLS)
+  console.log('activeTokens---', EXTENDED_TOKEN_LIST)
+  let activeTokens = useCombinedTokenMapFromUrls(DEFAULT_ACTIVE_LIST_URLS)
+  const extendedList = tokensToChainTokenMap(EXTENDED_TOKEN_LIST);
+  activeTokens = { ...activeTokens, ...extendedList}
   return activeTokens
 }
 

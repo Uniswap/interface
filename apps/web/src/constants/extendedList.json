@@ -1,0 +1,26 @@
+[
+    {
+        "name": "USDCoin",
+        "address": "0x04292af1cf8687235a83766d55b307880fc5e76d",
+        "symbol": "USDC",
+        "decimals": 6,
+        "chainId": 195,
+        "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+    },
+    {
+        "name": "Tether USD",
+        "address": "0xded3ac2a172a21a729063c39da55c030ec4a8cc9",
+        "symbol": "USDT",
+        "decimals": 6,
+        "chainId": 195,
+        "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"
+    },
+    {
+        "name": "Dai Stablecoin",
+        "address": "0x1b981e783d8d139e74ebbd7be5d99d8a0a7eeb0a",
+        "symbol": "DAI",
+        "decimals": 18,
+        "chainId": 195,
+        "logoURI": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x4F96Fe3b7A6Cf9725f59d353F723c1bDb64CA6Aa/logo.png"
+    }
+]

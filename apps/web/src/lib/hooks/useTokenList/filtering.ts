@@ -1,4 +1,4 @@
-import { NativeCurrency, Token } from '@uniswap/sdk-core'
+import { NativeCurrency, Token } from '@jaguarswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 import { isAddress } from 'utilities/src/addresses'
 

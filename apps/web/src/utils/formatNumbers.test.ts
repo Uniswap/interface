@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react'
-import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent } from '@jaguarswap/sdk-core'
 import { DEFAULT_LOCAL_CURRENCY } from 'constants/localCurrencies'
 import { USDC_MAINNET } from 'constants/tokens'
 import { useLocalCurrencyConversionRate } from 'graphql/data/ConversionRate'

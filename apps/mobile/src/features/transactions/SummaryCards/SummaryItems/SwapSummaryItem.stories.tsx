@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@jaguarswap/sdk-core'
 import React from 'react'
 import { TokenDocument } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ChainId } from 'wallet/src/constants/chains'

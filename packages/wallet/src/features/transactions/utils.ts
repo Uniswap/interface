@@ -1,5 +1,5 @@
 import { NetInfoState } from '@react-native-community/netinfo'
-import { CurrencyAmount, NativeCurrency } from '@uniswap/sdk-core'
+import { CurrencyAmount, NativeCurrency } from '@jaguarswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
 import { v4 as uuid } from 'uuid'
 import { ChainId } from 'wallet/src/constants/chains'

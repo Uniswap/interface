@@ -1,4 +1,4 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { ChainId, Token } from '@jaguarswap/sdk-core'
 import { PersistState } from 'redux-persist'
 import { serializeToken } from 'state/user/hooks'
 import { UserState } from 'state/user/reducer'

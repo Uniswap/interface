@@ -24,7 +24,7 @@ import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import { OfflineBanner } from 'src/components/banners/OfflineBanner'
 // eslint-disable-next-line no-restricted-imports
 import { usePersistedApolloClient } from 'src/data/usePersistedApolloClient'
-import { initAppsFlyer } from 'src/features/analytics/appsflyer'
+// import { initAppsFlyer } from 'src/features/analytics/appsflyer'
 import { LockScreenContextProvider } from 'src/features/authentication/lockScreenContext'
 import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
@@ -114,7 +114,7 @@ if (isDetoxBuild) {
 }
 
 initOneSignal()
-initAppsFlyer()
+// initAppsFlyer()
 initFirebaseAppCheck()
 
 function App(): JSX.Element | null {

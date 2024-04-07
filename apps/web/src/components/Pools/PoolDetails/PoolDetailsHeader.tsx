@@ -1,5 +1,5 @@
 import { t, Trans } from '@lingui/macro'
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { ChainId, Percent } from '@jaguarswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import Column from 'components/Column'

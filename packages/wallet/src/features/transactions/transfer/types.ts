@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@jaguarswap/sdk-core'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType, NFTAssetType } from 'wallet/src/entities/assets'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'

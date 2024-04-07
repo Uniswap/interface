@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@jaguarswap/sdk-core'
 import { useMemo } from 'react'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
 import { SimulatedGasEstimationInfo } from 'wallet/src/features/gas/types'

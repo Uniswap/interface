@@ -1,4 +1,4 @@
-import { FeeAmount, Pool } from '@uniswap/v3-sdk'
+import { FeeAmount, Pool } from '@jaguarswap/v3-sdk'
 import { ChainId } from 'wallet/src/constants/chains'
 import { UNI, WBTC } from 'wallet/src/constants/tokens'
 

@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@jaguarswap/sdk-core'
 import { useMemo } from 'react'
 import { NumberType } from 'utilities/src/format/types'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'

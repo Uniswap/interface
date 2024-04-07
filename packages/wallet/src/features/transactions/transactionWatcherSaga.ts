@@ -1,6 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { SwapEventName } from '@uniswap/analytics-events'
-import { TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@jaguarswap/sdk-core'
 import { BigNumberish, providers } from 'ethers'
 import { Statsig } from 'statsig-react-native'
 import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'

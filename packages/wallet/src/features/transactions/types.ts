@@ -1,6 +1,6 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { Protocol } from '@uniswap/router-sdk'
-import { TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@jaguarswap/sdk-core'
 import { providers } from 'ethers'
 import { Dispatch } from 'react'
 import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'

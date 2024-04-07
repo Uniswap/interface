@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@jaguarswap/sdk-core'
 import { ChainId } from 'wallet/src/constants/chains'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { useTrade } from 'wallet/src/features/transactions/swap/trade/legacy/hooks/useTrade'

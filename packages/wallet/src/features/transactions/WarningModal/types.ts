@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@jaguarswap/sdk-core'
 import { FunctionComponent } from 'react'
 import { SvgProps } from 'react-native-svg'
 import { ColorTokens } from 'ui/src'

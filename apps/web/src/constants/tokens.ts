@@ -1,4 +1,4 @@
-import { ChainId, Currency, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, Currency, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@jaguarswap/sdk-core'
 import invariant from 'tiny-invariant'
 
 // eslint-disable-next-line no-restricted-syntax
@@ -217,6 +217,7 @@ export const ETH_BSC = new Token(ChainId.BNB, '0x2170Ed0880ac9A755fd29B2688956BD
 export const BTC_BSC = new Token(ChainId.BNB, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'BTCB')
 export const BUSD_BSC = new Token(ChainId.BNB, '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', 18, 'BUSD', 'BUSD')
 export const DAI_BSC = new Token(ChainId.BNB, '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', 18, 'DAI', 'DAI')
+export const OKB_BSC = new Token(ChainId.BNB, '0x75231f58b43240c9718dd58b4967c5114342a86c', 18, 'OKB', 'OKB')
 
 export const USDC_AVALANCHE = new Token(
   ChainId.AVALANCHE,
@@ -340,6 +341,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     18,
     'WAVAX',
     'Wrapped AVAX'
+  ),
+  [ChainId.X1_TESTNET]: new Token(
+    ChainId.X1_TESTNET,
+    '0x75231f58b43240c9718dd58b4967c5114342a86c',
+    18,
+    'OKB',
+    'Wrapped OKB'
   ),
 }
 

@@ -1,5 +1,5 @@
-import { Price, WETH9 } from '@uniswap/sdk-core'
-import { FeeAmount, Pool } from '@uniswap/v3-sdk'
+import { Price, WETH9 } from '@jaguarswap/sdk-core'
+import { FeeAmount, Pool } from '@jaguarswap/v3-sdk'
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import { USDC_MAINNET } from 'constants/tokens'
 import { render, screen } from 'test-utils/render'

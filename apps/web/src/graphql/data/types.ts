@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@jaguarswap/sdk-core'
 import { gqlToCurrency } from 'graphql/data/util'
 import { Token as GqlToken, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { currencyId } from 'utils/currencyId'

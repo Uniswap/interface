@@ -1,5 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
-import { ChainId, Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Price, TradeType } from '@jaguarswap/sdk-core'
 import { nativeOnChain } from 'constants/tokens'
 import { PollingInterval, chainIdToBackendName, isGqlSupportedChain } from 'graphql/data/util'
 import { useMemo } from 'react'

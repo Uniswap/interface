@@ -1,5 +1,5 @@
 import { Plural, Trans } from '@lingui/macro'
-import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount } from '@jaguarswap/sdk-core'
 import { ConfirmedIcon, LogoContainer, SubmittedIcon } from 'components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { useCancelLimitsGasEstimate } from 'components/AccountDrawer/MiniPortfolio/Limits/hooks/useCancelLimitsGasEstimate'
 import GetHelp from 'components/Button/GetHelp'

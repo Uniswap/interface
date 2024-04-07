@@ -3,8 +3,8 @@ import {
   MULTICALL_ADDRESSES,
   Token,
   NONFUNGIBLE_POSITION_MANAGER_ADDRESSES as V3NFT_ADDRESSES,
-} from '@uniswap/sdk-core'
-import type { AddressMap } from '@uniswap/smart-order-router'
+} from '@jaguarswap/sdk-core'
+import type { AddressMap } from '@jaguarswap/smart-order-router'
 import NFTPositionManagerJSON from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import MulticallJSON from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { useWeb3React } from '@web3-react/core'
@@ -22,9 +22,12 @@ import {
 import { getContract } from 'utilities/src/contracts/getContract'
 import { CurrencyKey, currencyKey, currencyKeyFromGraphQL } from 'utils/currencyKey'
 import { PositionInfo } from './cache'
+import ConfiguredJsonRpcProvider from 'rpc/ConfiguredJsonRpcProvider'
 
 type ContractMap<T extends BaseContract> = { [key: number]: T }
-
+interface NetworkProviders {
+  [key: number]: ConfiguredJsonRpcProvider; // Replace `ConfiguredJsonRpcProvider` with the actual type
+}
 // Constructs a chain-to-contract map, using the wallet's provider when available
 export function useContractMultichain<T extends BaseContract>(
   addressMap: AddressMap,
@@ -32,7 +35,7 @@ export function useContractMultichain<T extends BaseContract>(
   chainIds?: ChainId[]
 ): ContractMap<T> {
   const { chainId: walletChainId, provider: walletProvider } = useWeb3React()
-  const networkProviders = useNetworkProviders()
+  const networkProviders: NetworkProviders = useNetworkProviders();
 
   return useMemo(() => {
     const relevantChains =

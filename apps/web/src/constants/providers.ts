@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@jaguarswap/sdk-core'
 import AppJsonRpcProvider from 'rpc/AppJsonRpcProvider'
 
 import ConfiguredJsonRpcProvider from 'rpc/ConfiguredJsonRpcProvider'
@@ -32,6 +32,7 @@ export const RPC_PROVIDERS = {
   [ChainId.BNB]: getAppProvider(ChainId.BNB),
   [ChainId.AVALANCHE]: getAppProvider(ChainId.AVALANCHE),
   [ChainId.BASE]: getAppProvider(ChainId.BASE),
+  [ChainId.X1_TESTNET]: getAppProvider(ChainId.X1_TESTNET)
 } satisfies Record<SupportedInterfaceChain, AppJsonRpcProvider>
 
 export const DEPRECATED_RPC_PROVIDERS = {
@@ -49,4 +50,5 @@ export const DEPRECATED_RPC_PROVIDERS = {
   [ChainId.BNB]: providerFactory(ChainId.BNB),
   [ChainId.AVALANCHE]: providerFactory(ChainId.AVALANCHE),
   [ChainId.BASE]: providerFactory(ChainId.BASE),
+  [ChainId.X1_TESTNET]: providerFactory(ChainId.X1_TESTNET)
 } satisfies Record<SupportedInterfaceChain, ConfiguredJsonRpcProvider>

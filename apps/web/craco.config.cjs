@@ -190,6 +190,12 @@ module.exports = {
         test: /\.m?js$/,
         resolve: {
           fullySpecified: false,
+          fallback: {
+            "http": require.resolve("https-browserify"),
+            "https": require.resolve("https-browserify"),
+            "stream": require.resolve("stream-browserify"),
+            "fs": require.resolve("browserify-fs"),
+          }
         },
       })
 

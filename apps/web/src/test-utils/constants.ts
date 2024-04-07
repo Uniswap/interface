@@ -1,8 +1,8 @@
-import { ChainId, CurrencyAmount, Percent, Token, TradeType } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, Percent, Token, TradeType } from '@jaguarswap/sdk-core'
 // This is a test file, so the import of smart-order-router is allowed.
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { V3Route } from '@uniswap/smart-order-router'
-import { FeeAmount, Pool } from '@uniswap/v3-sdk'
+import { V3Route } from '@jaguarswap/smart-order-router'
+import { FeeAmount, Pool } from '@jaguarswap/v3-sdk'
 import { DAI, nativeOnChain, USDC_MAINNET } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'

@@ -1,5 +1,5 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
-import { Pool, Position } from '@uniswap/v3-sdk'
+import { ChainId, Token } from '@jaguarswap/sdk-core'
+import { Pool, Position } from '@jaguarswap/v3-sdk'
 import { useAllTokensMultichain } from 'hooks/Tokens'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'

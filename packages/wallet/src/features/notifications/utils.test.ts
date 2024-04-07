@@ -1,4 +1,4 @@
-import { TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@jaguarswap/sdk-core'
 import { DAI, USDC } from 'wallet/src/constants/tokens'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { mockLocalizedFormatter } from 'wallet/src/test/mocks'

@@ -1,5 +1,5 @@
 // Copied from https://github.com/Uniswap/interface/blob/main/src/constants/tokens.ts
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@jaguarswap/sdk-core'
 import { UNI_ADDRESS } from 'wallet/src/constants/addresses'
 import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
 

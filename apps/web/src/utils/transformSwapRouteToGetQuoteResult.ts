@@ -1,9 +1,9 @@
 import { Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@jaguarswap/sdk-core'
 // This file is lazy-loaded, so the import of smart-order-router is intentional.
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { routeAmountsToString, SwapRoute } from '@uniswap/smart-order-router'
-import { Pool } from '@uniswap/v3-sdk'
+import { routeAmountsToString, SwapRoute } from '@jaguarswap/smart-order-router'
+import { Pool } from '@jaguarswap/v3-sdk'
 import {
   ClassicQuoteData,
   QuoteResult,

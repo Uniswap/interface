@@ -19,6 +19,15 @@ export const logo = style([
   }),
 ])
 
+export const title = style([
+  sprinkles({
+    display: 'block',
+    color: 'neutral1',
+    paddingLeft: '12',
+    fontSize: '16'
+  }),
+])
+
 export const baseSideContainer = style([
   sprinkles({
     display: 'flex',
@@ -94,6 +103,12 @@ export const activeMenuItem = style([
   baseMenuItem,
   sprinkles({
     color: 'neutral1',
-    background: 'none',
+    borderBottomWidth: '1px',
+    borderBottomStyle: 'solid',
   }),
+  {
+    borderImage: 'linear-gradient(90deg, #F2994A 0%, #F2C94C 100%)',
+    borderImageSlice: 1,
+    width: '100%'
+  }
 ])

@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, WETH9 } from '@jaguarswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { SignatureType } from 'state/signatures/types'

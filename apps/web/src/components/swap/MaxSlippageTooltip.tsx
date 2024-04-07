@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent, TradeType } from '@jaguarswap/sdk-core'
 import Column from 'components/Column'
 import { RowBetween } from 'components/Row'
 import { InterfaceTrade } from 'state/routing/types'

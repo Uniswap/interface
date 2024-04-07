@@ -43,17 +43,17 @@ const SwapWrapperInner = styled.div`
 `
 
 export const ArrowWrapper = styled.div<{ clickable: boolean }>`
-  border-radius: 12px;
+  border-radius: 100%;
   height: 40px;
   width: 40px;
   position: relative;
   margin-top: -18px;
-  margin-bottom: -18px;
+  margin-bottom: -20px;
   margin-left: auto;
   margin-right: auto;
   background-color: ${({ theme }) => theme.surface2};
   border: 4px solid;
-  border-color: ${({ theme }) => theme.surface1};
+  border-color: ${({ theme }) => theme.borderColor};
 
   z-index: 2;
   ${({ clickable }) =>
@@ -136,13 +136,17 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
   border-radius: 12px;
 `
 
+export const SwapWrapperContainer = styled.div`
+  background-color: ${({ theme }) => theme.surface2};
+  border-radius: 16px;
+`
 export const SwapSection = styled.div`
   background-color: ${({ theme }) => theme.surface2};
   border-radius: 16px;
   color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
   font-weight: 500;
-  height: 120px;
+  height: 100%;
   line-height: 20px;
   padding: 16px;
   position: relative;
@@ -159,16 +163,11 @@ export const SwapSection = styled.div`
     content: '';
     border: 1px solid ${({ theme }) => theme.surface2};
   }
-  &:hover:before {
-    border-color: ${({ theme }) => theme.deprecated_stateOverlayHover};
-  }
-  &:focus-within:before {
-    border-color: ${({ theme }) => theme.deprecated_stateOverlayPressed};
-  }
 `
 
 export const OutputSwapSection = styled(SwapSection)`
-  border-bottom: ${({ theme }) => `1px solid ${theme.surface1}`};
+  border-top: ${({ theme }) => `2px solid ${theme.borderColor}`};
+  border-radius: 0px;
 `
 
 export const ArrowContainer = styled.div`

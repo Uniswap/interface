@@ -103,7 +103,7 @@ export const colors = {
   neutral2_dark: '#9B9B9B',
   neutral3_dark: '#5E5E5E',
   surface1_dark: '#131313',
-  surface2_dark: '#1B1B1B',
+  surface2_dark: '#303030',
   surface3_dark: '#FFFFFF12',
   surface4_dark: '#FFFFFF20',
   surface5_dark: '#00000004',
@@ -126,6 +126,7 @@ export const colors = {
   critical2_dark: '#2E0805',
   critical2_light: '#FFF2F1',
   scrim: 'rgba(0, 0, 0, 0.60)',
+  borderColor: 'rgba(255, 255, 255, 0.12)'
 }
 
 export type ThemeColors = typeof darkTheme
@@ -189,6 +190,8 @@ export const darkTheme = {
   scrim: colors.scrim,
 
   warning2: colors.gold200,
+
+  borderColor: colors.borderColor
 }
 
 export const lightTheme: ThemeColors = {
@@ -220,4 +223,6 @@ export const lightTheme: ThemeColors = {
   scrim: colors.scrim,
 
   warning2: colors.gold200,
+  
+  borderColor: colors.borderColor
 }

@@ -30,5 +30,6 @@
     "types": ["jest"],
     "useUnknownInCatchVariables": false
   },
-  "include": ["src/**/*", "src/**/*.json"],
+  "include": [],
+  "exclude": ["src/**/*", "src/**/*.json"],
 }

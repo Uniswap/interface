@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client'
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@jaguarswap/sdk-core'
 import { useRef } from 'react'
 import {
   Chain,

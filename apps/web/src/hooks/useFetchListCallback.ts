@@ -1,5 +1,5 @@
 import { nanoid } from '@reduxjs/toolkit'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@jaguarswap/sdk-core'
 import { TokenList } from '@uniswap/token-lists'
 import { useNetworkProviders } from 'hooks/useNetworkProviders'
 import getTokenList from 'lib/hooks/useTokenList/fetchTokenList'

@@ -1,4 +1,4 @@
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@jaguarswap/sdk-core'
 import { ChainId } from 'wallet/src/constants/chains'
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
 

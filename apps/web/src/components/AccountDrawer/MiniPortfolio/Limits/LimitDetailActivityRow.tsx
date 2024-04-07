@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { CurrencyAmount, Price } from '@jaguarswap/sdk-core'
 import {
   useOpenOffchainActivityModal,
   useOrderAmounts,

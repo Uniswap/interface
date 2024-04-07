@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@jaguarswap/sdk-core'
 import ms from 'ms'
 import { darkTheme } from 'theme/colors'
 
@@ -59,7 +59,7 @@ interface BaseChainInfo {
   readonly backgroundColor?: string
 }
 
-interface L1ChainInfo extends BaseChainInfo {
+export interface L1ChainInfo extends BaseChainInfo {
   readonly networkType: NetworkType.L1
   readonly defaultListUrl?: string
 }
@@ -242,6 +242,15 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_84531,
   },
+  [ChainId.X1_TESTNET]: {
+    networkType: NetworkType.L1,
+    docs: 'https://docs.uniswap.org/',
+    explorer: 'https://goerli.etherscan.io/',
+    infoLink: 'https://info.uniswap.org/#/',
+    label: 'X1 Testnet',
+    nativeCurrency: { name: 'OKB', symbol: 'OKB', decimals: 18 },
+    color: darkTheme.chain_84531,
+  },
 } as const
 
 export function getChainInfo(
@@ -259,7 +268,7 @@ export function getChainInfo(
 export function getChainInfo(
   chainId: ChainId | SupportedL1ChainId | SupportedL2ChainId | number | undefined,
   featureFlags?: Record<ChainId | SupportedL1ChainId | SupportedL2ChainId | number, boolean>
-): L1ChainInfo | L2ChainInfo | undefined
+): L1ChainInfo | L2ChainInfo
 
 /**
  * Overloaded method for returning ChainInfo given a chainID

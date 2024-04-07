@@ -1,4 +1,4 @@
-import { ChainId, Currency, Percent } from '@uniswap/sdk-core'
+import { ChainId, Currency, Percent } from '@jaguarswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Field, SwapTab } from 'components/swap/constants'
 import { parsedQueryString } from 'hooks/useParsedQueryString'

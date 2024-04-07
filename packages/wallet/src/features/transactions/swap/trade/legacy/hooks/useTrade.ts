@@ -1,5 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
-import { TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@jaguarswap/sdk-core'
 import { useMemo } from 'react'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'

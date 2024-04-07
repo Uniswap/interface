@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price } from '@jaguarswap/sdk-core'
 import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
 
 interface FormatLocaleNumberArgs {

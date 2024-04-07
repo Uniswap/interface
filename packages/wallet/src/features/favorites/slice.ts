@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Ether } from '@uniswap/sdk-core'
+import { Ether } from '@jaguarswap/sdk-core'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { WBTC } from 'wallet/src/constants/tokens'

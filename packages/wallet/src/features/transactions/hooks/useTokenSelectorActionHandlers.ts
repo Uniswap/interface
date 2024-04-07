@@ -1,5 +1,5 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@jaguarswap/sdk-core'
 import { useCallback } from 'react'
 import { flowToModalName } from 'wallet/src/components/TokenSelector/flowToModalName'
 import { AssetType } from 'wallet/src/entities/assets'

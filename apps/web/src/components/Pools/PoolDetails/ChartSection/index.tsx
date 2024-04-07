@@ -1,6 +1,6 @@
 import { Trans, t } from '@lingui/macro'
-import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { ChainId, CurrencyAmount, Token } from '@jaguarswap/sdk-core'
+import { FeeAmount } from '@jaguarswap/v3-sdk'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart } from 'components/Charts/ChartModel'
 import { LiquidityBarChartModel, useLiquidityBarData } from 'components/Charts/LiquidityChart'

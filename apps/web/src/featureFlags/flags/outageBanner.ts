@@ -1,5 +1,5 @@
 import { ApolloError } from '@apollo/client'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@jaguarswap/sdk-core'
 import { atomWithReset, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'

@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event'
-import { Token } from '@uniswap/sdk-core'
+import { Token } from '@jaguarswap/sdk-core'
 import { useUnsupportedTokens } from 'hooks/Tokens'
 import { mocked } from 'test-utils/mocked'
 import { act, render, screen, waitForElementToBeRemoved, within } from 'test-utils/render'

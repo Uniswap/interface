@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@jaguarswap/sdk-core'
 
 const PRECISION = 10_000
 const DENOMINATOR = PRECISION * 100

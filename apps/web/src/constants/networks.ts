@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@jaguarswap/sdk-core'
 import { SupportedInterfaceChain } from 'constants/chains'
 
 const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
@@ -124,6 +124,11 @@ export const PUBLIC_RPC_URLS: Record<SupportedInterfaceChain, string[]> = {
     'https://1rpc.io/base',
     'https://base.meowrpc.com',
   ],
+  [ChainId.X1_TESTNET]: [
+    // "Safe" URLs
+    'https://x1testrpc.okx.com',
+    'https://testrpc.x1.tech',
+  ],
 }
 
 /**
@@ -145,6 +150,7 @@ export const APP_RPC_URLS: Record<SupportedInterfaceChain, string[]> = {
   [ChainId.BNB]: [QUICKNODE_BNB_RPC_URL],
   [ChainId.AVALANCHE]: [`https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`],
   [ChainId.BASE]: [`https://base-mainnet.infura.io/v3/${INFURA_KEY}`],
+  [ChainId.X1_TESTNET]: [`https://x1testrpc.okx.com`],
 }
 
 export const INFURA_PREFIX_TO_CHAIN_ID: { [prefix: string]: ChainId } = {
@@ -159,4 +165,5 @@ export const INFURA_PREFIX_TO_CHAIN_ID: { [prefix: string]: ChainId } = {
   'polygon-mumbai': ChainId.POLYGON_MUMBAI,
   'avalanche-mainnet': ChainId.AVALANCHE,
   'base-mainnet': ChainId.BASE,
+  'x1-testnet': ChainId.X1_TESTNET,
 }

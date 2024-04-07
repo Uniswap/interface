@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Pool } from '@uniswap/v3-sdk'
+import { Pool } from '@jaguarswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import Column from 'components/Column'

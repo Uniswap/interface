@@ -69,7 +69,7 @@ export const PageTabs = () => {
   return (
     <>
       <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
-        <Trans>Swap</Trans>
+        <Trans>Trade</Trans>
       </MenuItem>
       <MenuItem
         href={'/explore' + (chainName !== Chain.Ethereum ? `/${chainName.toLowerCase()}` : '')}
@@ -77,11 +77,11 @@ export const PageTabs = () => {
       >
         <Trans>Explore</Trans>
       </MenuItem>
-      {!shouldDisableNFTRoutes && (
+      {/* {!shouldDisableNFTRoutes && (
         <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
           <Trans>NFTs</Trans>
         </MenuItem>
-      )}
+      )} */}
       <Box display={{ sm: 'flex', lg: 'none', xxl: 'flex' }} width="full">
         <MenuItem href="/pool" dataTestId="pool-nav-link" isActive={isPoolActive}>
           <Trans>Pool</Trans>
@@ -129,24 +129,26 @@ const Navbar = ({ blur }: { blur: boolean }) => {
                 clickable={!account}
                 onClick={handleUniIconClick}
               />
+              <Box className={styles.title}>Jaguar Swap</Box>
+              
             </Box>
-            {!isNftPage && (
+            {/* {!isNftPage && (
               <Box display={{ sm: 'flex', lg: 'none' }}>
                 <ChainSelector leftAlign={true} />
               </Box>
-            )}
-            <Row display={{ sm: 'none', lg: 'flex' }}>
-              <PageTabs />
-            </Row>
+            )} */}
           </Box>
-          <Box
+          <Row display={{ sm: 'none', lg: 'flex' }} justifyContent={{ lg: 'flex-end', xl: 'center' }}>
+            <PageTabs />
+          </Row>
+          {/* <Box
             className={styles.searchContainer}
             {...(isNavSearchInputVisible && {
               display: 'flex',
             })}
           >
             <SearchBar />
-          </Box>
+          </Box> */}
           <Box className={styles.rightSideContainer}>
             <Row gap="12">
               <Box position="relative" display={isNavSearchInputVisible ? 'none' : { sm: 'flex' }}>

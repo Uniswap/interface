@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Currency, Price } from '@uniswap/sdk-core'
+import { Currency, Price } from '@jaguarswap/sdk-core'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useMemo, useState } from 'react'

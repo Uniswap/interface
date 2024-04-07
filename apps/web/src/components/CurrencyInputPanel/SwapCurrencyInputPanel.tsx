@@ -1,6 +1,6 @@
 import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent } from '@jaguarswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
@@ -66,22 +66,21 @@ export const CurrencySelect = styled(ButtonGray)<{
   animateShake?: boolean
 }>`
   align-items: center;
-  background-color: ${({ selected, theme }) => (selected ? theme.surface1 : theme.accent1)};
+  background-color: ${({ selected, theme }) => (selected ? theme.surface2 : theme.accent1)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   color: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.neutralContrast)};
   cursor: pointer;
   height: 36px;
-  border-radius: 18px;
+  border-radius: 12px;
   outline: none;
   user-select: none;
   border: 1px solid ${({ selected, theme }) => (selected ? theme.surface3 : theme.accent1)};
-  font-size: 24px;
+  font-size: 14px;
   font-weight: 485;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
-  padding: ${({ selected }) => (selected ? '4px 8px 4px 4px' : '6px 6px 6px 8px')};
+  padding: ${({ selected }) => (selected ? '6px 13px' : '8px 13px')};
   gap: 8px;
   justify-content: space-between;
-  margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
   box-shadow: ${({ theme }) => theme.deprecated_shallowShadow};
 
   &:hover,
@@ -145,6 +144,10 @@ const InputRow = styled.div`
   ${flexRowNoWrap};
   align-items: center;
   justify-content: space-between;
+  background-color: #222;
+  padding: 17px;
+  border-radius: 12px;
+  margin-top: 5px;
 `
 
 const LabelRow = styled.div`
@@ -179,14 +182,14 @@ const StyledDropDown = styled(DropDown)<{ selected: boolean }>`
   margin-left: 8px;
 
   path {
-    stroke: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.neutralContrast)};
+    stroke: ${({ selected, theme }) => (selected ? theme.neutral2 : theme.neutralContrast)};
     stroke-width: 2px;
   }
 `
 
 const StyledTokenName = styled.span<{ active?: boolean }>`
   ${({ active }) => (active ? '  margin: 0 0.25rem 0 0.25rem;' : '  margin: 0 0.25rem 0 0.25rem;')}
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 535;
 `
 
@@ -305,22 +308,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
           <Text variant="subheading2" userSelect="none">
             {label}
           </Text>
-          <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>
-            {!hideInput && (
-              <div style={{ display: 'flex', flexGrow: 1 }} onClick={handleDisabledNumericalInputClick}>
-                <StyledNumericalInput
-                  className="token-amount-input"
-                  value={value}
-                  onUserInput={onUserInput}
-                  disabled={!chainAllowed || disabled || numericalInputSettings?.disabled}
-                  $loading={loading}
-                  id={id}
-                  ref={ref}
-                  maxDecimals={currency?.decimals}
-                />
-              </div>
-            )}
-            <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={modalOpen}>
+          <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}><PrefetchBalancesWrapper shouldFetchOnAccountUpdate={modalOpen}>
               <Tooltip
                 show={tooltipVisible && !modalOpen}
                 placement="bottom"
@@ -367,6 +355,20 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                 </CurrencySelect>
               </Tooltip>
             </PrefetchBalancesWrapper>
+            {!hideInput && (
+              <div style={{ display: 'flex', flexGrow: 1 }} onClick={handleDisabledNumericalInputClick}>
+                <StyledNumericalInput
+                  className="token-amount-input"
+                  value={value}
+                  onUserInput={onUserInput}
+                  disabled={!chainAllowed || disabled || numericalInputSettings?.disabled}
+                  $loading={loading}
+                  id={id}
+                  ref={ref}
+                  maxDecimals={currency?.decimals}
+                />
+              </div>
+            )}
           </InputRow>
           {Boolean(!hideInput && !hideBalance) && (
             <FiatRow>

@@ -1,5 +1,5 @@
 import { t } from '@lingui/macro'
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { ChainId, Currency } from '@jaguarswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { CurrencyListRow, CurrencyListSectionTitle } from 'components/SearchModal/CurrencyList'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
@@ -52,7 +52,6 @@ export function useCurrencySearchResults({
   const { chainId } = useWeb3React()
 
   const gqlTokenListsEnabled = useFeatureFlag(FeatureFlags.GqlTokenLists)
-
   /**
    * GraphQL queries for tokens and search results
    */
@@ -77,6 +76,7 @@ export function useCurrencySearchResults({
   const searchToken = useTokenListToken(searchQuery)
   const defaultAndUserAddedTokens = useDefaultActiveTokens(chainId)
 
+  console.log('defaultAndUserAddedTokens---', defaultAndUserAddedTokens)
   /**
    * Results processing: sorting, filtering, and merging data sources into the final list.
    */

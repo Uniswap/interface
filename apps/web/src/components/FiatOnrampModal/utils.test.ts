@@ -1,4 +1,4 @@
-import { ChainId, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, WETH9 } from '@jaguarswap/sdk-core'
 import {
   MATIC_MAINNET,
   NATIVE_CHAIN_ID,

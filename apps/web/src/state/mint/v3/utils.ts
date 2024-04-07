@@ -1,4 +1,4 @@
-import { Price, Token } from '@uniswap/sdk-core'
+import { Price, Token } from '@jaguarswap/sdk-core'
 import {
   FeeAmount,
   TICK_SPACINGS,
@@ -6,7 +6,7 @@ import {
   encodeSqrtRatioX96,
   nearestUsableTick,
   priceToClosestTick,
-} from '@uniswap/v3-sdk'
+} from '@jaguarswap/v3-sdk'
 import JSBI from 'jsbi'
 
 export function tryParsePrice(baseToken?: Token, quoteToken?: Token, value?: string) {

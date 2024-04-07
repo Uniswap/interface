@@ -1,5 +1,5 @@
 import { SwapEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@jaguarswap/sdk-core'
 import { providers } from 'ethers'
 import { useMemo } from 'react'
 import { logger } from 'utilities/src/logger/logger'

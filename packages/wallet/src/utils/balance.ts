@@ -1,4 +1,4 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@jaguarswap/sdk-core'
 import JSBI from 'jsbi'
 import { ChainId } from 'wallet/src/constants/chains'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'

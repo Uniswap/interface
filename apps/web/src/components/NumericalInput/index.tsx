@@ -126,8 +126,8 @@ export { MemoizedInput as Input }
 
 export const StyledNumericalInput = styled(MemoizedInput)<{ $loading: boolean }>`
   ${loadingOpacityMixin};
-  text-align: left;
-  font-size: 36px;
+  text-align: right;
+  font-size: 20px;
   font-weight: 485;
   max-height: 44px;
 `
