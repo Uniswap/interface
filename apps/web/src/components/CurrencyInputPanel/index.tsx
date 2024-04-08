@@ -30,7 +30,7 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   ${flexColumnNoWrap};
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.surface2)};
+  background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.surface6)};
 
   z-index: 1;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
@@ -41,7 +41,7 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
 const Container = styled.div<{ hideInput: boolean; disabled: boolean }>`
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
   border: 1px solid ${({ theme }) => theme.surface3};
-  background-color: ${({ theme }) => theme.surface2};
+  background-color: ${({ theme }) => theme.surface6};
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
   ${({ theme, hideInput, disabled }) =>
     !disabled &&

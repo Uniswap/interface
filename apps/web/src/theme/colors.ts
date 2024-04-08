@@ -84,7 +84,7 @@ export const colors = {
   blueVibrant: '#587BFF',
   // TODO: add magenta 50-900
   magenta300: '#FD82FF',
-  magentaVibrant: '#FC72FF',
+  magentaVibrant: '#FFC552',
   purple300: '#8440F2',
   purple900: '#1C0337',
   purpleVibrant: '#6100FF',
@@ -107,7 +107,8 @@ export const colors = {
   surface3_dark: '#FFFFFF12',
   surface4_dark: '#FFFFFF20',
   surface5_dark: '#00000004',
-  accent1_dark: '#FC72FF',
+  surface6_dark: '#1B1B1B',
+  accent1_dark: '#FFC552',
   accent2_dark: '#311C31',
   accent3_dark: '#4C82FB',
   neutral1_light: '#222222',
@@ -118,7 +119,8 @@ export const colors = {
   surface3_light: '#22222212',
   surface4_light: '#FFFFFF64',
   surface5_light: '#00000004',
-  accent1_light: '#FC72FF',
+  surface6_light: '#1B1B1B',
+  accent1_light: '#FFC552',
   accent2_light: '#FFEFFF',
   accent3_light: '#4C82FB',
   success: '#40B66B',
@@ -176,6 +178,7 @@ export const darkTheme = {
   surface3: colors.surface3_dark,
   surface4: colors.surface4_dark,
   surface5: colors.surface5_dark,
+  surface6: colors.surface6_dark,
 
   accent1: colors.accent1_dark,
   accent2: colors.accent2_dark,
@@ -209,6 +212,7 @@ export const lightTheme: ThemeColors = {
   surface3: colors.surface3_light,
   surface4: colors.surface4_light,
   surface5: colors.surface5_light,
+  surface6: colors.surface6_light,
 
   accent1: colors.accent1_light,
   accent2: colors.accent2_light,
@@ -223,6 +227,6 @@ export const lightTheme: ThemeColors = {
   scrim: colors.scrim,
 
   warning2: colors.gold200,
-  
+
   borderColor: colors.borderColor
 }

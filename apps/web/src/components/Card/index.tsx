@@ -29,7 +29,7 @@ export const DarkCard = styled(Card)`
 
 export const OutlineCard = styled(Card)`
   border: 1px solid ${({ theme }) => theme.surface3};
-  background-color: ${({ theme }) => theme.surface2};
+  background-color: ${({ theme }) => theme.surface6};
 `
 
 export const YellowCard = styled(Card)`

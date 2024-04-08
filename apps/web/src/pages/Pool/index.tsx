@@ -263,7 +263,7 @@ export default function Pool() {
                 <ThemedText.LargeHeader>
                   <Trans>Positions</Trans>
                 </ThemedText.LargeHeader>
-                <PoolVersionMenu protocolVersion={ProtocolVersion.V3} />
+                {/* <PoolVersionMenu protocolVersion={ProtocolVersion.V3} /> */}
               </Row>
               <ButtonRow>
                 {networkSupportsV2 && (
@@ -330,9 +330,9 @@ export default function Pool() {
                 </ErrorContainer>
               )}
             </MainContentWrapper>
-            <HideSmall>
+            {/* <HideSmall>
               <CTACards />
-            </HideSmall>
+            </HideSmall> */}
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>
