@@ -1,6 +1,6 @@
-import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
 import { TokenDetailsPoolsTable } from 'components/Tokens/TokenDetails/tables/TokenDetailsPoolsTable'
+import { Trans } from 'i18n'
 import { useState } from 'react'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'

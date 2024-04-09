@@ -1,5 +1,4 @@
 import { ApolloError } from '@apollo/client'
-import { Trans } from '@lingui/macro'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { ChainId, Percent } from '@uniswap/sdk-core'
@@ -22,6 +21,7 @@ import {
   unwrapToken,
   validateUrlChainParam,
 } from 'graphql/data/util'
+import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { ReactElement, ReactNode, useCallback, useEffect, useMemo } from 'react'
@@ -36,9 +36,9 @@ const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
   [PoolSortFields.Volume24h]: undefined,
   [PoolSortFields.VolumeWeek]: undefined,
   [PoolSortFields.TxCount]: undefined,
-  [PoolSortFields.Turnover]: (
+  [PoolSortFields.OneDayApr]: (
     <Trans>
-      Turnover refers to the amount of trading volume relative to total value locked (TVL) within a pool. Turnover = 24H
+      1 day APR refers to the amount of trading fees relative to total value locked (TVL) within a pool. 1 day APR = 24H
       Fees / TVL
     </Trans>
   ),
@@ -62,7 +62,7 @@ interface PoolTableValues {
   tvl: number
   volume24h: number
   volumeWeek: number
-  turnover: Percent
+  oneDayApr: Percent
   link: string
 }
 
@@ -73,7 +73,7 @@ export enum PoolTableColumns {
   TVL,
   Volume24h,
   VolumeWeek,
-  Turnover,
+  OneDayApr,
 }
 
 function PoolDescription({
@@ -125,7 +125,7 @@ const HEADER_TEXT: Record<PoolSortFields, ReactNode> = {
   [PoolSortFields.TVL]: <Trans>TVL</Trans>,
   [PoolSortFields.Volume24h]: <Trans>1 day volume</Trans>,
   [PoolSortFields.VolumeWeek]: <Trans>7 day volume</Trans>,
-  [PoolSortFields.Turnover]: <Trans>Turnover</Trans>,
+  [PoolSortFields.OneDayApr]: <Trans>1 day APR</Trans>,
   [PoolSortFields.TxCount]: <Trans>Transactions</Trans>,
 }
 
@@ -231,7 +231,7 @@ export function PoolsTable({
           tvl: pool.tvl,
           volume24h: pool.volume24h,
           volumeWeek: pool.volumeWeek,
-          turnover: pool.turnover,
+          oneDayApr: pool.oneDayApr,
           link: `/explore/pools/${chainIdToBackendName(chainId).toLowerCase()}/${pool.hash}`,
           analytics: {
             elementName: InterfaceElementName.POOLS_TABLE_ROW,
@@ -254,7 +254,6 @@ export function PoolsTable({
   )
 
   const showLoadingSkeleton = loading || !!error
-  // TODO(WEB-3236): once GQL BE Pool query add 1 day, 7 day, turnover sort support
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolTableValues>()
     return [
@@ -374,21 +373,21 @@ export function PoolsTable({
             ),
           })
         : null,
-      !hiddenColumns?.includes(PoolTableColumns.Turnover)
-        ? columnHelper.accessor((row) => row.turnover, {
-            id: 'turnover',
+      !hiddenColumns?.includes(PoolTableColumns.OneDayApr)
+        ? columnHelper.accessor((row) => row.oneDayApr, {
+            id: 'oneDayApr',
             header: () => (
               <Cell minWidth={100} grow>
                 <PoolTableHeader
-                  category={PoolSortFields.Turnover}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.Turnover}
+                  category={PoolSortFields.OneDayApr}
+                  isCurrentSortMethod={sortMethod === PoolSortFields.OneDayApr}
                   direction={orderDirection}
                 />
               </Cell>
             ),
-            cell: (turnover) => (
+            cell: (oneDayApr) => (
               <Cell minWidth={100} loading={showLoadingSkeleton} grow>
-                <ThemedText.BodyPrimary>{formatPercent(turnover.getValue?.())}</ThemedText.BodyPrimary>
+                <ThemedText.BodyPrimary>{formatPercent(oneDayApr.getValue?.())}</ThemedText.BodyPrimary>
               </Cell>
             ),
           })

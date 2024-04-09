@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { createColumnHelper } from '@tanstack/react-table'
 import { ChainId } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
@@ -15,6 +14,7 @@ import {
   supportedChainIdFromGQLChain,
   validateUrlChainParam,
 } from 'graphql/data/util'
+import { Trans } from 'i18n'
 import { ReactElement, ReactNode, useMemo } from 'react'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'

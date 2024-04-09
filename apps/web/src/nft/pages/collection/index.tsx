@@ -1,4 +1,3 @@
-import { t } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
@@ -8,6 +7,7 @@ import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useCollection } from 'graphql/data/nft/Collection'
 import { useScreenSize } from 'hooks/useScreenSize'
+import { t } from 'i18n'
 import { BAG_WIDTH, XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
@@ -184,7 +184,11 @@ const Collection = () => {
   return (
     <>
       <Helmet>
-        <title>{t`Buy, sell & trade ${collectionStats.name} on Uniswap`}</title>
+        <title>
+          {t(`Buy, sell & trade {{name}} on Uniswap`, {
+            name: collectionStats.name,
+          })}
+        </title>
       </Helmet>
       <Trace
         page={InterfacePageName.NFT_COLLECTION_PAGE}

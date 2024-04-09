@@ -17,9 +17,7 @@ import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import Trace from 'src/components/Trace/Trace'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Loader } from 'src/components/loading'
-import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { useNavigateToSend } from 'src/features/send/hooks'
 import { Screens } from 'src/screens/Screens'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { useSkeletonLoading } from 'src/utils/useSkeletonLoading'
@@ -54,6 +52,7 @@ import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Language } from 'wallet/src/features/language/constants'
 import { useCurrentLanguage } from 'wallet/src/features/language/hooks'
+import { useTokenContextMenu } from 'wallet/src/features/portfolio/useTokenContextMenu'
 import TokenWarningModal from 'wallet/src/features/tokens/TokenWarningModal'
 import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -214,8 +213,7 @@ function TokenDetails({
     retry()
   }, [error, retry])
 
-  const { navigateToSwapFlow } = useWalletNavigation()
-  const navigateToSend = useNavigateToSend()
+  const { navigateToSwapFlow, navigateToSend } = useWalletNavigation()
 
   // set if attempting buy or sell, use for warning modal
   const [activeTransactionType, setActiveTransactionType] = useState<CurrencyField | undefined>(
@@ -245,7 +243,7 @@ function TokenDetails({
 
   const onPressSend = useCallback(() => {
     // Do not show warning modal speedbump if user is trying to send tokens they own
-    navigateToSend(currencyAddress, currencyChainId)
+    navigateToSend({ currencyAddress, chainId: currencyChainId })
   }, [currencyAddress, currencyChainId, navigateToSend])
 
   const onAcceptWarning = useCallback(() => {

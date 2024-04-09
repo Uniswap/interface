@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Price, Rounding, Token } from '@uniswap/sdk-core'
 import {
   FeeAmount,
@@ -13,6 +12,7 @@ import {
 } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { usePool } from 'hooks/usePools'
+import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback, useMemo } from 'react'
@@ -465,11 +465,11 @@ export function useV3DerivedMintInfo(
   const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
 
   if (currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
-    errorMessage = <Trans>Insufficient {currencies[Field.CURRENCY_A]?.symbol} balance</Trans>
+    errorMessage = <Trans>Insufficient {{ symbol: currencies[Field.CURRENCY_A]?.symbol }} balance</Trans>
   }
 
   if (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
-    errorMessage = <Trans>Insufficient {currencies[Field.CURRENCY_B]?.symbol} balance</Trans>
+    errorMessage = <Trans>Insufficient {{ symbol: currencies[Field.CURRENCY_B]?.symbol }} balance</Trans>
   }
 
   const invalidPool = poolState === PoolState.INVALID

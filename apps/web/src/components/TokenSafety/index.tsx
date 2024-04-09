@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -13,6 +12,7 @@ import {
   Warning,
 } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
+import { Trans } from 'i18n'
 import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
 import { useAddUserToken } from 'state/user/hooks'

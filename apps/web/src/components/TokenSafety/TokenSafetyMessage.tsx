@@ -1,6 +1,6 @@
-import { Trans } from '@lingui/macro'
 import { displayWarningLabel, getWarningCopy, TOKEN_SAFETY_ARTICLE, Warning } from 'constants/tokenSafety'
 import { useTokenWarningColor, useTokenWarningTextColor } from 'hooks/useTokenWarningColor'
+import { Trans } from 'i18n'
 import { AlertTriangle, Slash } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'

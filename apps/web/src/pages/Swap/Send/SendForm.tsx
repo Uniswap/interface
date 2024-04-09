@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
@@ -10,6 +9,7 @@ import { getChainInfo } from 'constants/chainInfo'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useSendCallback } from 'hooks/useSendCallback'
 import { useSwitchChain } from 'hooks/useSwitchChain'
+import { Trans } from 'i18n'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { SendContextProvider, useSendContext } from 'state/send/SendContext'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -216,7 +216,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
               }
             }}
           >
-            <Trans>Connect to {getChainInfo(chainId)?.label}</Trans>
+            <Trans>Connect to {{ label: getChainInfo(chainId)?.label }}</Trans>
           </ButtonPrimary>
         ) : (
           <ButtonPrimary

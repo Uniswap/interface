@@ -152,7 +152,7 @@ export function FiatOnRampAmountSection({
             </Text>
           )}
         </AnimatedFlex>
-        <AnimatedFlex style={inputAnimatedStyle}>
+        <AnimatedFlex style={inputAnimatedStyle} width="100%">
           <AmountInput
             ref={inputRef}
             autoFocus

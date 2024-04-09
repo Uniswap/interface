@@ -1,7 +1,15 @@
 import { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, Text, TouchableArea } from 'ui/src'
+import {
+  AnimatedFlex,
+  Flex,
+  Icons,
+  Text,
+  TouchableArea,
+  useIsShortMobileDevice,
+  useMedia,
+} from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
@@ -16,6 +24,8 @@ import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWar
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
 export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): JSX.Element {
+  const isShort = useMedia().short
+  const isShortMobileDevice = useIsShortMobileDevice()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const { gasFee } = useSwapTxContext()
@@ -59,7 +69,7 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
         Do not add any margins directly to this container, as this component is used in 2 different places.
         Adjust the margin in the parent component instead.
       */}
-      <Flex $short={{ gap: '$spacing8' }} gap="$spacing16">
+      <Flex gap={isShortMobileDevice ? '$spacing2' : isShort ? '$spacing8' : '$spacing16'}>
         {isBlocked && (
           // TODO: review design of this warning.
           <BlockedAddressWarning
@@ -77,11 +87,12 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
 
         <Flex centered row>
           {showGasFee && (
-            <NetworkFeeWarning showGasIcon={true}>
+            <NetworkFeeWarning tooltipTrigger={<></>}>
               <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
                 <Text color="$neutral2" variant="body3">
                   {gasFeeFormatted}
                 </Text>
+                <Icons.Gas color="$neutral2" size="$icon.16" />
               </AnimatedFlex>
             </NetworkFeeWarning>
           )}

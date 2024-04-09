@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -11,6 +10,7 @@ import { V2Unsupported } from 'components/V2Unsupported'
 import { isSupportedChain } from 'constants/chains'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
+import { Trans } from 'i18n'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
@@ -340,8 +340,8 @@ function RemoveLiquidity() {
 
         <ThemedText.DeprecatedItalic fontSize={12} color={theme.neutral2} textAlign="left" padding="12px 0 0 0">
           <Trans>
-            Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
-            will revert.
+            Output is estimated. If the price changes by more than {{ allowed: allowedSlippage.toSignificant(4) }}% your
+            transaction will revert.
           </Trans>
         </ThemedText.DeprecatedItalic>
       </AutoColumn>
@@ -354,7 +354,7 @@ function RemoveLiquidity() {
         <RowBetween>
           <Text color={theme.neutral2} fontWeight={535} fontSize={16}>
             <Trans>
-              UNI {currencyA?.symbol}/{currencyB?.symbol} Burned
+              UNI {{ a: currencyA?.symbol }}/{{ b: currencyB?.symbol }} Burned
             </Trans>
           </Text>
           <RowFixed>
@@ -393,8 +393,8 @@ function RemoveLiquidity() {
 
   const pendingText = (
     <Trans>
-      Removing {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} {currencyA?.symbol} and
-      {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} {currencyB?.symbol}
+      Removing {{ amtA: parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) }} {{ symA: currencyA?.symbol }} and
+      {{ amtB: parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) }} {{ symB: currencyB?.symbol }}
     </Trans>
   )
 

@@ -210,7 +210,7 @@ function TokenSelectorContent({
             {tokenSelector}
 
             {(!searchInFocus || searchFilter) && (
-              <Flex position="absolute" right={0} zIndex={zIndices.fixed}>
+              <Flex position="absolute" right={0} top={5} zIndex={zIndices.fixed}>
                 <NetworkFilter
                   includeAllNetworks
                   selectedChain={chainFilter}

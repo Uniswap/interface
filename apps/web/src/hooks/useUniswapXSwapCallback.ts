@@ -5,8 +5,8 @@ import { Percent } from '@uniswap/sdk-core'
 import { DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
-import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { getConnection } from 'connection'
+import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { DutchOrderTrade, LimitOrderTrade, OffchainOrderType, TradeFillType } from 'state/routing/types'
@@ -60,9 +60,7 @@ export function useUniswapXSwapCallback({
 }) {
   const { account, provider, connector } = useWeb3React()
   const analyticsContext = useTrace()
-
-  const { data } = useCachedPortfolioBalancesQuery({ account })
-  const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
+  const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 
   return useCallback(
     () =>

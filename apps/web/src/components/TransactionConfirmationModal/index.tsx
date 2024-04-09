@@ -1,10 +1,10 @@
-import { t, Trans } from '@lingui/macro'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import Badge from 'components/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChainInfo } from 'constants/chainInfo'
 import { SupportedL2ChainId } from 'constants/chains'
+import { Trans, t } from 'i18n'
 import useCurrencyLogoURIs from 'lib/hooks/useCurrencyLogoURIs'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
@@ -136,11 +136,11 @@ function TransactionSubmittedContent({
             <ButtonLight mt="12px" padding="6px 12px" width="fit-content" onClick={addToken}>
               {!success ? (
                 <RowFixed>
-                  <Trans>Add {currencyToAdd.symbol}</Trans>
+                  <Trans>Add {{ sym: currencyToAdd.symbol }}</Trans>
                 </RowFixed>
               ) : (
                 <RowFixed>
-                  <Trans>Added {currencyToAdd.symbol} </Trans>
+                  <Trans>Added {{ sym: currencyToAdd.symbol }} </Trans>
                   <CheckCircle size="16px" stroke={theme.success} style={{ marginLeft: '6px' }} />
                 </RowFixed>
               )}

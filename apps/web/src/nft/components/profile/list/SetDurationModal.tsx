@@ -1,5 +1,5 @@
-import { Plural } from '@lingui/macro'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { Plural, t } from 'i18n'
 import ms from 'ms'
 import { Column, Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
@@ -145,16 +145,16 @@ export const SetDurationModal = () => {
   let prompt
   switch (duration) {
     case Duration.hour:
-      prompt = <Plural value={amount} _1="hour" other="hours" />
+      prompt = <Plural value={+amount} one={t`hour`} other={t`hours`} />
       break
     case Duration.day:
-      prompt = <Plural value={amount} _1="day" other="days" />
+      prompt = <Plural value={+amount} one={t`day`} other={t`days`} />
       break
     case Duration.week:
-      prompt = <Plural value={amount} _1="week" other="weeks" />
+      prompt = <Plural value={+amount} one={t`week`} other={t`weeks`} />
       break
     case Duration.month:
-      prompt = <Plural value={amount} _1="month" other="months" />
+      prompt = <Plural value={+amount} one={t`month`} other={t`months`} />
       break
     default:
       break

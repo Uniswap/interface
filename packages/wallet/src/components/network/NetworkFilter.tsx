@@ -13,15 +13,10 @@ import { ChainId } from 'wallet/src/constants/chains'
 
 const ELLIPSIS = 'ellipsis'
 const NETWORK_ICON_SIZE = iconSizes.icon20
-const NETWORK_ICON_SHIFT = 10
+const NETWORK_ICON_SHIFT = 8
 // Array of logos to show when "all networks" are visible. Don't want to show all
 // logos because there are too many
-const NETWORK_LOGOS_TO_SHOW = [
-  ChainId.Mainnet,
-  ChainId.Polygon,
-  ChainId.ArbitrumOne,
-  ChainId.Optimism,
-]
+const NETWORK_LOGOS_TO_SHOW = [ChainId.Mainnet, ChainId.ArbitrumOne, ChainId.Optimism, ChainId.Base]
 
 interface NetworkFilterProps {
   selectedChain: ChainId | null
@@ -56,7 +51,7 @@ function keyExtractor(item: ListItem): string {
   return item.toString()
 }
 
-function NetworksInSeries({
+export function NetworksInSeries({
   networks,
   ellipsisPosition,
 }: {
@@ -81,6 +76,7 @@ function NetworksInSeries({
   return (
     <Flex>
       <VirtualizedList<ListItem>
+        horizontal
         contentContainerStyle={styles.networkListContainer}
         getItem={getItem}
         getItemCount={getItemCount}
@@ -121,7 +117,7 @@ export function NetworkFilter({
 
   return (
     <ActionSheetDropdown alignment="right" options={networkOptions}>
-      <Flex centered row gap="$spacing4" py="$spacing8">
+      <Flex centered row gap="$spacing4">
         <NetworksInSeries
           // show ellipsis as the last item when all networks is selected
           ellipsisPosition={!selectedChain ? 'end' : undefined}

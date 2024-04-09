@@ -1,6 +1,6 @@
-import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import { BlockedIcon } from 'components/TokenSafety/TokenSafetyIcon'
+import { Trans } from 'i18n'
 import styled, { useTheme } from 'styled-components'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme/components'
 

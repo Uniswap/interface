@@ -51,7 +51,7 @@ export function MaxAmountButton({
         borderRadius="$rounded8"
         disabled={disableMaxButton}
         opacity={disableMaxButton ? 0.5 : 1}
-        px="$spacing8"
+        px="$spacing4"
         py="$spacing2"
         style={style}
         testID={

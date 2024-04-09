@@ -26,6 +26,12 @@ export function CopiedNotification({
     case CopyNotificationType.Image:
       title = t('notification.copied.image')
       break
+    case CopyNotificationType.TokenUrl:
+      title = t('notification.copied.tokenUrl')
+      break
+    case CopyNotificationType.NftUrl:
+      title = t('notification.copied.nftUrl')
+      break
   }
 
   return <SuccessNotification notification={{ title, hideDelay }} />

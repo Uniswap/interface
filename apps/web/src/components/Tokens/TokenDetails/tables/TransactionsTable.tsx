@@ -1,5 +1,4 @@
 import { ApolloError } from '@apollo/client'
-import { Trans } from '@lingui/macro'
 import { createColumnHelper } from '@tanstack/react-table'
 import { ChainId, Token } from '@uniswap/sdk-core'
 import Row from 'components/Row'
@@ -19,6 +18,7 @@ import { TokenTransactionType, useTokenTransactions } from 'graphql/data/useToke
 import { unwrapToken } from 'graphql/data/util'
 import { OrderDirection, Swap_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
+import { Trans } from 'i18n'
 import { useMemo, useReducer, useState } from 'react'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'

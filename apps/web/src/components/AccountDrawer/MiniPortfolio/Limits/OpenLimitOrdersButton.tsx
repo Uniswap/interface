@@ -1,8 +1,8 @@
-import { Plural, t, Trans } from '@lingui/macro'
 import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import Column from 'components/Column'
 import { TimeForwardIcon } from 'components/Icons/TimeForward'
 import Row from 'components/Row'
+import { Plural, t, Trans } from 'i18n'
 import { ChevronRight } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
@@ -46,8 +46,8 @@ export function OpenLimitOrdersButton({
             <ThemedText.SubHeader textAlign="start">
               <Plural
                 value={openLimitOrders.length}
-                _1={t`1 open limit`}
-                other={t`${openLimitOrders.length} open limits`}
+                one={t`1 open limit`}
+                other={t(`{{count}} open limits`, { count: openLimitOrders.length })}
               />
             </ThemedText.SubHeader>
             {extraWarning && <ThemedText.LabelMicro>{extraWarning}</ThemedText.LabelMicro>}

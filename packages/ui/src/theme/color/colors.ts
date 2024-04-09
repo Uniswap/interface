@@ -159,6 +159,7 @@ export const colors = {
   networkArbitrum: '#28A0F0',
   networkBsc: '#F0B90B',
   networkBase: '#0052FF',
+  networkBlast: '#FCFC03',
   fiatOnRampBanner: '#FB36D0',
 }
 
@@ -188,6 +189,7 @@ const sporeLight = {
 
   statusActive: '#236EFF',
   statusSuccess: '#40B66B',
+  statusSuccess2: '#EEFBF1',
   statusCritical: '#FF5F52',
 }
 
@@ -214,6 +216,7 @@ const sporeDark = {
 
   statusActive: '#236EFF',
   statusSuccess: '#40B66B',
+  statusSuccess2: '#0F2C1A',
   statusCritical: '#FF5F52',
 }
 
@@ -243,6 +246,7 @@ export const colorsLight = {
   accentSoft: sporeLight.accentSoft,
 
   statusSuccess: sporeLight.statusSuccess,
+  statusSuccess2: sporeLight.statusSuccess2,
   statusCritical: sporeLight.statusCritical,
 
   DEP_backgroundBranded: '#FCF7FF',
@@ -273,6 +277,7 @@ export const colorsLight = {
   chain_42161: colors.networkArbitrum,
   chain_80001: colors.networkPolygon,
   chain_8453: colors.networkBase,
+  chain_81457: colors.networkBlast,
   chain_56: colors.networkBsc,
 }
 
@@ -304,6 +309,7 @@ export const colorsDark = {
   accentSoft: sporeDark.accentSoft,
 
   statusSuccess: sporeDark.statusSuccess,
+  statusSuccess2: sporeDark.statusSuccess2,
   statusCritical: sporeDark.statusCritical,
 
   DEP_backgroundBranded: '#100D1C',
@@ -335,5 +341,6 @@ export const colorsDark = {
   chain_42161: colors.networkArbitrum,
   chain_80001: colors.networkPolygon,
   chain_8453: colors.networkBase,
+  chain_81457: colors.networkBlast,
   chain_56: colors.networkBsc,
 }

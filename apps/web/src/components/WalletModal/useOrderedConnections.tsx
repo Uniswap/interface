@@ -8,7 +8,7 @@ import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import Option from './Option'
 
-function useEIP6963Connections() {
+export function useEIP6963Connections() {
   const eip6963Injectors = useInjectedProviderDetails()
   const eip6963Enabled = useFeatureFlag(FeatureFlags.Eip6936Enabled)
 
@@ -39,11 +39,20 @@ function mergeConnections(connections: Connection[], eip6963Connections: Connect
 
 // TODO(WEB-3244) Improve ordering logic to make less brittle, as it is spread across connections/index.ts and here
 /** Returns an array of all connection Options that should be displayed, where the recent connection is first in the array */
-function getOrderedConnections(connections: Connection[], recentConnection: RecentConnectionMeta | undefined) {
+function getOrderedConnections(
+  connections: Connection[],
+  recentConnection: RecentConnectionMeta | undefined,
+  excludeUniswapConnections: boolean
+) {
   const list: JSX.Element[] = []
   for (const connection of connections) {
     if (!connection.shouldDisplay()) continue
     const { name, rdns } = connection.getProviderInfo()
+
+    // Uniswap options may be displayed separately
+    if (excludeUniswapConnections && name.includes('Uniswap')) {
+      continue
+    }
 
     // For eip6963 injectors, we need to check rdns in addition to connection type to ensure it's the recent connection
     const isRecent = connection.type === recentConnection?.type && (!rdns || rdns === recentConnection.rdns)
@@ -57,13 +66,13 @@ function getOrderedConnections(connections: Connection[], recentConnection: Rece
   return list
 }
 
-export function useOrderedConnections() {
+export function useOrderedConnections(excludeUniswapConnections?: boolean) {
   const { eip6963Connections, showDeprecatedMessage } = useEIP6963Connections()
   const recentConnection = useAppSelector((state) => state.user.recentConnectionMeta)
   const orderedConnections = useMemo(() => {
     const allConnections = mergeConnections(connections, eip6963Connections)
-    return getOrderedConnections(allConnections, recentConnection)
-  }, [eip6963Connections, recentConnection])
+    return getOrderedConnections(allConnections, recentConnection, excludeUniswapConnections ?? false)
+  }, [eip6963Connections, excludeUniswapConnections, recentConnection])
 
   return { orderedConnections, showDeprecatedMessage }
 }

@@ -14,6 +14,7 @@ import {
   ExtensionOnboardingEventName,
   FiatOnRampEventName,
   InstitutionTransferEventName,
+  ShareableEntity,
   UnitagEventName,
   WalletAppsFlyerEvents,
   WalletEventName,
@@ -127,6 +128,10 @@ export type WalletEventProperties = {
   }
   [WalletEventName.SendRecipientSelected]: {
     domain: string
+  }
+  [WalletEventName.ShareButtonClicked]: {
+    entity: ShareableEntity
+    url: string
   }
   [WalletEventName.SwapSubmitted]: {
     transaction_hash: string

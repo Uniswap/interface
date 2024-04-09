@@ -33,6 +33,8 @@ export function FiatOnRampCtaButton({
       pressEvent={MobileEventName.FiatOnRampWidgetOpened}
       properties={analyticsProperties}>
       <Button
+        // TODO: remove when https://linear.app/uniswap/issue/MOB-3182/disabled-ui-on-enabled-button is fixed
+        key={Math.random()}
         color={buttonAvailable ? '$white' : '$neutral2'}
         disabled={disabled}
         icon={

@@ -1,13 +1,11 @@
 // eslint-disable-next-line no-restricted-imports
-import { t } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
+import { Trace, TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import clsx from 'clsx'
 import { Search } from 'components/Icons/Search'
-import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
+import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import useDebounce from 'hooks/useDebounce'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -22,6 +20,7 @@ import { ChangeEvent, useCallback, useEffect, useReducer, useRef, useState } fro
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
+import { useTranslation } from 'i18n'
 import { ChevronLeftIcon, NavMagnifyingGlassIcon } from '../../nft/components/icons'
 import { NavIcon } from './NavIcon'
 import * as styles from './SearchBar.css'
@@ -106,12 +105,12 @@ export const SearchBar = () => {
     ...trace,
   }
 
-  const { i18n } = useLingui() // subscribe to locale changes
+  const { t } = useTranslation() // subscribe to locale changes
   const placeholderText = isMobileOrTablet
-    ? t(i18n)`Search`
+    ? t`Search`
     : shouldDisableNFTRoutes
-    ? t(i18n)`Search tokens`
-    : t(i18n)`Search tokens and NFT collections`
+    ? t`Search tokens`
+    : t`Search tokens and NFT collections`
 
   const handleKeyPress = useCallback(
     (event: any) => {

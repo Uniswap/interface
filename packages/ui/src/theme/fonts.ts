@@ -1,15 +1,13 @@
-import { Platform } from 'react-native'
-import { createFont, isWeb } from 'tamagui'
-import { getDeviceLocales } from 'utilities/src/device/locales'
+// until the web app needs all of tamagui, avoid heavy imports there
+// eslint-disable-next-line no-restricted-imports
+import { createFont, isWeb } from '@tamagui/core'
+import { needsSmallFont } from 'ui/src/utils/needs-small-font'
 
 // TODO(EXT-148): remove this type and use Tamagui's FontTokens
 export type TextVariantTokens = keyof typeof fonts
 
-// make React Native font rendering more visually similar to the web and Figma
-// Except for CJK languages (only Chinese and Japanese for now)
-const languageCode = getDeviceLocales()[0]?.languageCode
 const adjustedSize = (fontSize: number): number => {
-  if (Platform.OS === 'web' || languageCode === 'zh' || languageCode === 'ja') {
+  if (needsSmallFont()) {
     return fontSize
   }
   return fontSize + 1
@@ -31,7 +29,7 @@ type SansSerifFontFamilyValue = (typeof fontFamily.sansSerif)[SansSerifFontFamil
 const platformFontFamily = (
   family: SansSerifFontFamilyKey
 ): SansSerifFontFamilyKey | SansSerifFontFamilyValue => {
-  if (Platform.OS === 'web') {
+  if (isWeb) {
     return family
   }
 
@@ -248,3 +246,10 @@ export const buttonFont = createFont({
 })
 
 // TODO mono font
+
+export const allFonts = {
+  heading: headingFont,
+  subHeading: subHeadingFont,
+  body: bodyFont,
+  button: buttonFont,
+}

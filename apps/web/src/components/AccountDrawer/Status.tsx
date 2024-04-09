@@ -9,7 +9,7 @@ import { useRef, useState } from 'react'
 import { MoreHorizontal } from 'react-feather'
 import styled from 'styled-components'
 import { ClickableStyle, CopyHelper, ThemedText } from 'theme/components'
-import { Icons } from 'ui/src'
+import { Unitag } from 'ui/src/components/icons/Unitag'
 import { shortenAddress } from 'utilities/src/addresses'
 
 const Container = styled.div`
@@ -142,7 +142,7 @@ export function Status({
           >
             <Row gap="2px">
               {uniswapUsername ?? ensUsername ?? shortenAddress(account)}
-              {uniswapUsername && <Icons.Unitag size={18} />}
+              {uniswapUsername && <Unitag size={18} />}
             </Row>
           </CopyHelper>
         </ThemedText.SubHeader>

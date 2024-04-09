@@ -4,7 +4,7 @@ import { Button, Flex, Icons, Text, TouchableArea, isWeb, useSporeColors } from 
 import { iconSizes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
-import { Switch } from 'wallet/src/components/buttons/Switch'
+import { Switch, WebSwitch } from 'wallet/src/components/buttons/Switch'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
@@ -189,11 +189,23 @@ function SwapProtectionSettingsRow({ chainId }: { chainId: ChainId }): JSX.Eleme
               </Text>
             </Flex>
           </TouchableArea>
-          <Switch
-            disabled={!privateRpcSupportedOnChain}
-            value={privateRpcSupportedOnChain && swapProtectionSetting === SwapProtectionSetting.On}
-            onValueChange={toggleSwapProtectionSetting}
-          />
+          {isWeb ? (
+            <WebSwitch
+              disabled={!privateRpcSupportedOnChain}
+              value={
+                privateRpcSupportedOnChain && swapProtectionSetting === SwapProtectionSetting.On
+              }
+              onValueChange={toggleSwapProtectionSetting}
+            />
+          ) : (
+            <Switch
+              disabled={!privateRpcSupportedOnChain}
+              value={
+                privateRpcSupportedOnChain && swapProtectionSetting === SwapProtectionSetting.On
+              }
+              onValueChange={toggleSwapProtectionSetting}
+            />
+          )}
         </Flex>
       </Flex>
     </>

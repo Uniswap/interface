@@ -29,7 +29,6 @@ declare global {
       interceptGraphqlOperation(operationName: string, fixturePath: string): Chainable<Subject>
     }
     interface VisitOptions {
-      serviceWorker?: true
       featureFlags?: Array<{ flag: FeatureFlags; value: boolean }>
       /**
        * Initial user state.
@@ -73,32 +72,29 @@ Cypress.Commands.overwrite(
       )
     }
 
-    return cy
-      .intercept('/service-worker.js', options?.serviceWorker ? undefined : { statusCode: 404 })
-      .provider()
-      .then((provider) =>
-        original({
-          ...options,
-          url:
-            [...overrideParams.entries()].length === 0
-              ? url
-              : url.includes('?')
-              ? `${url}&${overrideParams.toString()}`
-              : `${url}?${overrideParams.toString()}`,
-          onBeforeLoad(win) {
-            options?.onBeforeLoad?.(win)
+    return cy.provider().then((provider) =>
+      original({
+        ...options,
+        url:
+          [...overrideParams.entries()].length === 0
+            ? url
+            : url.includes('?')
+            ? `${url}&${overrideParams.toString()}`
+            : `${url}?${overrideParams.toString()}`,
+        onBeforeLoad(win) {
+          options?.onBeforeLoad?.(win)
 
-            setInitialUserState(win, {
-              ...initialState,
-              ...CONNECTED_WALLET_USER_STATE,
-              ...(options?.userState ?? {}),
-            })
+          setInitialUserState(win, {
+            ...initialState,
+            ...CONNECTED_WALLET_USER_STATE,
+            ...(options?.userState ?? {}),
+          })
 
-            // Inject the mock ethereum provider.
-            win.ethereum = provider
-          },
-        })
-      )
+          // Inject the mock ethereum provider.
+          win.ethereum = provider
+        },
+      })
+    )
   }
 )
 

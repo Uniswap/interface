@@ -1,7 +1,7 @@
-import { Trans } from '@lingui/macro'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import Modal from 'components/Modal'
+import { Trans } from 'i18n'
 import { X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'

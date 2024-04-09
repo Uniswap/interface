@@ -23,7 +23,6 @@ import { ExtensionPromoModal } from 'src/app/modals/ExtensionPromoModal'
 import { UniconsV2Modal } from 'src/app/modals/UniconsV2Modal'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { AppStackScreenProp } from 'src/app/navigation/types'
-import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import Trace from 'src/components/Trace/Trace'
 import TraceTabView from 'src/components/Trace/TraceTabView'
 import { AccountHeader } from 'src/components/accounts/AccountHeader'
@@ -44,7 +43,6 @@ import {
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
-import { PortfolioBalance } from 'src/features/balances/PortfolioBalance'
 import { openModal } from 'src/features/modals/modalSlice'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
 import { MobileEventName } from 'src/features/telemetry/constants'
@@ -73,12 +71,14 @@ import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval, useTimeout } from 'utilities/src/time/timing'
+import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
   selectHasSkippedUnitagPrompt,
   selectHasViewedUniconV2IntroModal,
 } from 'wallet/src/features/behaviorHistory/selectors'
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
+import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 import {
   useCanActiveAddressClaimUnitag,

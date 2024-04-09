@@ -9,7 +9,7 @@ These functions utilize Cloudflare Functions to dynamically inject meta tags ser
 Currently, there are 2 types of cloudflare functions developed
 
 - Meta Data Injectors - Workers that inject [Open Graph](https://ogp.me/) standardized meta tags into the `header` of specific webpages.
-  - Currently we support this functionaltiy for three separate webpages: NFT Assets, NFT Collections, and Token Detail Pages
+  - Currently we support this functionality for three separate webpages: NFT Assets, NFT Collections, and Token Detail Pages
   - These functions query data from GraphQL and then formats them into HTML `meta` tags to be injected
 - Dynamically Generated Images - Utilizes Vercel's [Open Graph Image Generation Library](https://vercel.com/docs/concepts/functions/edge-functions/og-image-generation) to create custom thumbnails for specific webpages
   - Currently supports NFT Assets, NFT Collections, and Token Detail Pages
@@ -18,14 +18,14 @@ Currently, there are 2 types of cloudflare functions developed
 
 ## Testing
 
-Testing is done utilizing a custom jest environment as well as Cloudflare's local tester: `wrangler`. Wrangler enables testing locally by running a proxy to wrap `localhost`. Tests run against a proxy server, so you'll need to start it before running tests:
+Testing is done utilizing a custom jest environment as well as Cloudflare's local tester: `wrangler`. Wrangler enables testing locally by running a proxy ("Miniflare") to wrap `localhost`. Tests run against a proxy server, so you'll need to start it before running tests:
 
-- Manually run `yarn start:cloud` to setup wrangler on `localhost:3000`
+- Manually run `yarn start:cloud` to setup wrangler on `localhost:3000` and proxy on `localhost:3001`
 - Run unit tests with `yarn test:cloud`
 
 ## Deployment
 
-Functions will be deployed to Cloudlfare where they will be ran automatically when the appropriate route is hit.
+Functions will be deployed to Cloudflare where they will be ran automatically when the appropriate route is hit.
 
 ## Miscellaneous
 

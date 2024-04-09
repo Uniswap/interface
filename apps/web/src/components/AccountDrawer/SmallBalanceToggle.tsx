@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro'
+import { t } from 'i18n'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 

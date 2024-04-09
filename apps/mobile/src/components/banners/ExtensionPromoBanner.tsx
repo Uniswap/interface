@@ -8,6 +8,7 @@ import {
   TouchableArea,
   useDeviceDimensions,
   useIsDarkMode,
+  useIsShortMobileDevice,
   useSporeColors,
 } from 'ui/src'
 import { EXTENSION_PROMO_BANNER_DARK, EXTENSION_PROMO_BANNER_LIGHT } from 'ui/src/assets'
@@ -32,6 +33,7 @@ export function ExtensionPromoBanner({
   const { fullWidth } = useDeviceDimensions()
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
+  const isShortDevice = useIsShortMobileDevice()
 
   const imageWidth = IMAGE_SCREEN_WIDTH_PROPORTION * fullWidth
   const imageHeight = imageWidth / IMAGE_ASPECT_RATIO
@@ -79,9 +81,11 @@ export function ExtensionPromoBanner({
           <Text color="$neutral1" variant="subheading1">
             {t('home.banner.extension.title')}
           </Text>
-          <Text color="$neutral2" variant="body3">
-            {t('home.banner.extension.message')}
-          </Text>
+          {!isShortDevice && (
+            <Text color="$neutral2" variant="body3">
+              {t('home.banner.extension.message')}
+            </Text>
+          )}
         </Flex>
         <Flex grow row gap="$spacing8">
           <TouchableArea

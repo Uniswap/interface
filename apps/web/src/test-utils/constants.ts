@@ -6,7 +6,7 @@ import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { DAI, USDC_MAINNET, nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import JSBI from 'jsbi'
-import { expiryToDeadlineSeconds } from 'state/limit/hooks'
+import { expiryToDeadlineSeconds } from 'state/limit/expiryToDeadlineSeconds'
 import { Expiry } from 'state/limit/types'
 import { ClassicTrade, DutchOrderTrade, LimitOrderTrade, PreviewTrade, QuoteMethod } from 'state/routing/types'
 

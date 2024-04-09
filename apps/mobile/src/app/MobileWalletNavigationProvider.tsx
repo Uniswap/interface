@@ -1,38 +1,107 @@
 import { PropsWithChildren, useCallback } from 'react'
+import { Share } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
+import { exploreNavigationRef } from 'src/app/navigation/navigation'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { Screens } from 'src/screens/Screens'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { logger } from 'utilities/src/logger/logger'
+import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
   NavigateToNftItemArgs,
+  NavigateToSendArgs,
   NavigateToSwapFlowArgs,
+  ShareNftArgs,
+  ShareTokenArgs,
   WalletNavigationProvider,
   getNavigateToSwapFlowArgsInitialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
+import { AssetType } from 'wallet/src/entities/assets'
 import { useFiatOnRampIpAddressQuery } from 'wallet/src/features/fiatOnRamp/api'
-import { ModalName } from 'wallet/src/telemetry/constants'
+import {
+  CurrencyField,
+  TransactionState,
+} from 'wallet/src/features/transactions/transactionState/types'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { ModalName, ShareableEntity, WalletEventName } from 'wallet/src/telemetry/constants'
+import { getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
 
 export function MobileWalletNavigationProvider({ children }: PropsWithChildren): JSX.Element {
+  const handleShareNft = useHandleShareNft()
+  const handleShareToken = useHandleShareToken()
   const navigateToAccountActivityList = useNavigateToHomepageTab(HomeScreenTabIndex.Activity)
   const navigateToAccountTokenList = useNavigateToHomepageTab(HomeScreenTabIndex.Tokens)
   const navigateToBuyOrReceiveWithEmptyWallet = useNavigateToBuyOrReceiveWithEmptyWallet()
   const navigateToNftDetails = useNavigateToNftDetails()
+  const navigateToReceive = useNavigateToReceive()
+  const navigateToSend = useNavigateToSend()
   const navigateToSwapFlow = useNavigateToSwapFlow()
   const navigateToTokenDetails = useNavigateToTokenDetails()
 
   return (
     <WalletNavigationProvider
+      handleShareNft={handleShareNft}
+      handleShareToken={handleShareToken}
       navigateToAccountActivityList={navigateToAccountActivityList}
       navigateToAccountTokenList={navigateToAccountTokenList}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
       navigateToNftDetails={navigateToNftDetails}
+      navigateToReceive={navigateToReceive}
+      navigateToSend={navigateToSend}
       navigateToSwapFlow={navigateToSwapFlow}
       navigateToTokenDetails={navigateToTokenDetails}>
       {children}
     </WalletNavigationProvider>
   )
+}
+
+function useHandleShareNft(): (args: ShareNftArgs) => Promise<void> {
+  return useCallback(async ({ contractAddress, tokenId }: ShareNftArgs): Promise<void> => {
+    try {
+      const url = getNftUrl(contractAddress, tokenId)
+
+      await Share.share({ message: url })
+
+      sendWalletAnalyticsEvent(WalletEventName.ShareButtonClicked, {
+        entity: ShareableEntity.NftItem,
+        url,
+      })
+    } catch (error) {
+      logger.error(error, {
+        tags: { file: 'MobileWalletNavigationProvider.tsx', function: 'useHandleShareNft' },
+      })
+    }
+  }, [])
+}
+
+function useHandleShareToken(): (args: ShareTokenArgs) => Promise<void> {
+  return useCallback(async ({ currencyId }: ShareTokenArgs): Promise<void> => {
+    const url = getTokenUrl(currencyId)
+
+    if (!url) {
+      logger.error(new Error('Failed to get token URL'), {
+        tags: { file: 'MobileWalletNavigationProvider.tsx', function: 'useHandleShareToken' },
+        extra: { currencyId },
+      })
+      return
+    }
+
+    try {
+      await Share.share({ message: url })
+
+      sendWalletAnalyticsEvent(WalletEventName.ShareButtonClicked, {
+        entity: ShareableEntity.Token,
+        url,
+      })
+    } catch (error) {
+      logger.error(error, {
+        tags: { file: 'MobileWalletNavigationProvider.tsx', function: 'useHandleShareToken' },
+      })
+    }
+  }, [])
 }
 
 function useNavigateToHomepageTab(tab: HomeScreenTabIndex): () => void {
@@ -41,6 +110,40 @@ function useNavigateToHomepageTab(tab: HomeScreenTabIndex): () => void {
   return useCallback((): void => {
     navigate(Screens.Home, { tab })
   }, [navigate, tab])
+}
+
+function useNavigateToReceive(): () => void {
+  const dispatch = useAppDispatch()
+
+  return useCallback((): void => {
+    dispatch(
+      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+    )
+  }, [dispatch])
+}
+
+function useNavigateToSend(): (args: NavigateToSendArgs) => void {
+  const dispatch = useAppDispatch()
+
+  return useCallback(
+    (args: NavigateToSendArgs) => {
+      const initialSendState: TransactionState = {
+        exactCurrencyField: CurrencyField.INPUT,
+        exactAmountToken: '',
+        [CurrencyField.INPUT]: args
+          ? {
+              address: args.currencyAddress,
+              chainId: args.chainId,
+              type: AssetType.Currency,
+            }
+          : null,
+        [CurrencyField.OUTPUT]: null,
+        showRecipientSelector: true,
+      }
+      dispatch(openModal({ name: ModalName.Send, initialState: initialSendState }))
+    },
+    [dispatch]
+  )
 }
 
 function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
@@ -57,14 +160,9 @@ function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
 }
 
 function useNavigateToTokenDetails(): (currencyId: string) => void {
-  const navigation = useAppStackNavigation()
-
-  return useCallback(
-    (currencyId: string): void => {
-      navigation.navigate(Screens.TokenDetails, { currencyId })
-    },
-    [navigation]
-  )
+  return useCallback((currencyId: string): void => {
+    exploreNavigationRef.navigate(Screens.TokenDetails, { currencyId })
+  }, [])
 }
 
 function useNavigateToNftDetails(): (args: NavigateToNftItemArgs) => void {
@@ -88,12 +186,15 @@ function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {
   const dispatch = useAppDispatch()
 
   const { data } = useFiatOnRampIpAddressQuery()
-  const fiatOnRampEligible = Boolean(data?.isBuyAllowed)
+  const moonpayFiatOnRampEligible = Boolean(data?.isBuyAllowed)
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
 
   return useCallback((): void => {
     dispatch(closeModal({ name: ModalName.Send }))
 
-    if (fiatOnRampEligible) {
+    if (forAggregatorEnabled) {
+      dispatch(openModal({ name: ModalName.FiatOnRampAggregator }))
+    } else if (moonpayFiatOnRampEligible) {
       dispatch(openModal({ name: ModalName.FiatOnRamp }))
     } else {
       dispatch(
@@ -103,5 +204,5 @@ function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {
         })
       )
     }
-  }, [dispatch, fiatOnRampEligible])
+  }, [dispatch, forAggregatorEnabled, moonpayFiatOnRampEligible])
 }

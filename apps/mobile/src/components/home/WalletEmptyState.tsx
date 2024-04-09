@@ -1,12 +1,14 @@
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
-import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import Trace from 'src/components/Trace/Trace'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import PaperStackIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { iconSizes, colors as rawColors } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { ElementName, ElementNameType, ModalName } from 'wallet/src/telemetry/constants'
@@ -33,6 +35,7 @@ export function WalletEmptyState(): JSX.Element {
 
   const activeAccount = useActiveAccount()
   const isViewOnly = activeAccount?.type === AccountType.Readonly
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
 
   const options: { [key in ActionOption]: ActionCardItem } = useMemo(
     () => ({
@@ -51,7 +54,12 @@ export function WalletEmptyState(): JSX.Element {
             }
           />
         ),
-        onPress: () => dispatch(openModal({ name: ModalName.FiatOnRamp })),
+        onPress: () =>
+          dispatch(
+            openModal({
+              name: forAggregatorEnabled ? ModalName.FiatOnRampAggregator : ModalName.FiatOnRamp,
+            })
+          ),
       },
       [ActionOption.Receive]: {
         title: t('home.tokens.empty.action.receive.title'),
@@ -95,7 +103,7 @@ export function WalletEmptyState(): JSX.Element {
         onPress: () => dispatch(openModal({ name: ModalName.AccountSwitcher })),
       },
     }),
-    [dispatch, t]
+    [dispatch, forAggregatorEnabled, t]
   )
 
   // Order options based on view only status

@@ -1,7 +1,7 @@
-import { Trans } from '@lingui/macro'
 import * as Sentry from '@sentry/react'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonLight, SmallButtonPrimary } from 'components/Button'
+import { Trans } from 'i18n'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { useIsMobile } from 'nft/hooks'
 import { PropsWithChildren, useState } from 'react'
@@ -105,7 +105,7 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
   const showMoreButton = (
     <ShowMoreButton onClick={() => setExpanded((s) => !s)}>
       <ThemedText.Link color="neutral2">
-        <Trans>{isExpanded ? 'Show less' : 'Show more'}</Trans>
+        {isExpanded ? <Trans>Show less</Trans> : <Trans>Show more</Trans>}
       </ThemedText.Link>
       <ShowMoreIcon $isExpanded={isExpanded} secondaryWidth="20" secondaryHeight="20" />
     </ShowMoreButton>
@@ -133,7 +133,7 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
               <CodeBlockWrapper>
                 <CodeTitle>
                   <ThemedText.SubHeader>
-                    <Trans>Error ID: {eventId}</Trans>
+                    <Trans>Error ID: {{ eventId }}</Trans>
                   </ThemedText.SubHeader>
                   <CopyToClipboard toCopy={eventId}>
                     <CopyIcon />
@@ -192,31 +192,6 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
   )
 }
 
-async function updateServiceWorker(): Promise<ServiceWorkerRegistration> {
-  const ready = await navigator.serviceWorker.ready
-  // the return type of update is incorrectly typed as Promise<void>. See
-  // https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/update
-  return ready.update() as unknown as Promise<ServiceWorkerRegistration>
-}
-
-const updateServiceWorkerInBackground = async () => {
-  try {
-    const registration = await updateServiceWorker()
-
-    // We want to refresh only if we detect a new service worker is waiting to be activated.
-    // See details about it: https://web.dev/service-worker-lifecycle/
-    if (registration?.waiting) {
-      await registration.unregister()
-
-      // Makes Workbox call skipWaiting().
-      // For more info on skipWaiting see: https://web.dev/service-worker-lifecycle/#skip-the-waiting-phase
-      registration.waiting.postMessage({ type: 'SKIP_WAITING' })
-    }
-  } catch (error) {
-    console.error('Failed to update service worker', error)
-  }
-}
-
 export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Element {
   const { chainId } = useWeb3React()
   return (
@@ -225,9 +200,6 @@ export default function ErrorBoundary({ children }: PropsWithChildren): JSX.Elem
       beforeCapture={(scope) => {
         scope.setLevel('fatal')
         scope.setTag('chain_id', chainId)
-      }}
-      onError={() => {
-        updateServiceWorkerInBackground()
       }}
     >
       {children}

@@ -1,19 +1,16 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeSyntheticEvent, Share } from 'react-native'
+import { NativeSyntheticEvent } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
-import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { selectNftsVisibility } from 'wallet/src/features/favorites/selectors'
 import { toggleNftVisibility } from 'wallet/src/features/favorites/slice'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { getNftUrl } from 'wallet/src/utils/linking'
 
 interface NFTMenuParams {
   tokenId?: string
@@ -37,6 +34,8 @@ export function useNFTMenu({
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
+  const { handleShareNft } = useWalletNavigation()
+
   const accounts = useAccounts()
   const isLocalAccount = owner && !!accounts[owner]
 
@@ -49,19 +48,8 @@ export function useNFTMenu({
     if (!contractAddress || !tokenId) {
       return
     }
-    try {
-      const url = getNftUrl(contractAddress, tokenId)
-      await Share.share({
-        message: url,
-      })
-      sendMobileAnalyticsEvent(MobileEventName.ShareButtonClicked, {
-        entity: ShareableEntity.NftItem,
-        url,
-      })
-    } catch (error) {
-      logger.error(error, { tags: { file: 'nfts/hooks', function: 'useNFTMenu' } })
-    }
-  }, [contractAddress, tokenId])
+    handleShareNft({ contractAddress, tokenId })
+  }, [contractAddress, handleShareNft, tokenId])
 
   const onPressHiddenStatus = useCallback(() => {
     if (!nftKey) {

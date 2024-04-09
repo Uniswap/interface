@@ -1,5 +1,4 @@
-import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
-
+import { UniswapXOrderStatus } from 'types/uniswapx'
 import { ExactInputSwapTransactionInfo, ExactOutputSwapTransactionInfo } from '../transactions/types'
 
 export enum SignatureType {

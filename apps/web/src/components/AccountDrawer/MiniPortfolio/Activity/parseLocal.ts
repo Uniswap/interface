@@ -1,9 +1,9 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { t } from '@lingui/macro'
 import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import { nativeOnChain } from 'constants/tokens'
 import { ChainTokenMap, useAllTokensMultichain } from 'hooks/Tokens'
+import { t } from 'i18n'
 import { useMemo } from 'react'
 import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
@@ -171,7 +171,7 @@ function parseMigrateCreateV3(
   const baseSymbol = baseCurrency?.symbol ?? t`Unknown`
   const quoteCurrency = getCurrency(lp.quoteCurrencyId, chainId, tokens)
   const quoteSymbol = quoteCurrency?.symbol ?? t`Unknown`
-  const descriptor = t`${baseSymbol} and ${quoteSymbol}`
+  const descriptor = t(`{{baseSymbol}} and {{quoteSymbol}}`, { baseSymbol, quoteSymbol })
 
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }

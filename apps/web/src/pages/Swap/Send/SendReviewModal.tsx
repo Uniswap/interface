@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
@@ -12,11 +11,13 @@ import Row from 'components/Row'
 import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
 import { Unicon } from 'components/Unicon'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
+import { Trans } from 'i18n'
 import { ReactNode } from 'react'
 import { useSendContext } from 'state/send/SendContext'
 import styled from 'styled-components'
 import { ClickableStyle, CloseIcon, Separator, ThemedText } from 'theme/components'
-import { Icons, UniconV2 } from 'ui/src'
+import { UniconV2 } from 'ui/src/components/UniconV2'
+import { Unitag } from 'ui/src/components/icons/Unitag'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { useUnitagByNameWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
@@ -128,7 +129,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
                 recipientData?.unitag || recipientData?.ensName ? (
                   <Row gap="xs">
                     <ThemedText.HeadlineLarge>{recipientData.unitag ?? recipientData.ensName}</ThemedText.HeadlineLarge>
-                    {recipientData?.unitag && <Icons.Unitag size={18} />}
+                    {recipientData?.unitag && <Unitag size={18} />}
                   </Row>
                 ) : (
                   shortenAddress(recipientData?.address)

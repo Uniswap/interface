@@ -1,6 +1,6 @@
-import { Trans } from '@lingui/macro'
 import { NFTEventName } from '@uniswap/analytics-events'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
+import { Trans } from 'i18n'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'
 import { detailsHref } from 'nft/components/card/utils'
 import { VerifiedIcon } from 'nft/components/icons'

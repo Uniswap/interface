@@ -11,6 +11,12 @@ import Animated, {
   withSpring,
   withTiming,
 } from 'react-native-reanimated'
+import { ValueAndFormattedWithAnimation } from 'src/components/PriceExplorer/usePrice'
+import { PriceNumberOfDigits } from 'src/components/PriceExplorer/usePriceHistory'
+import { useSporeColors } from 'ui/src'
+import { TextLoaderWrapper } from 'ui/src/components/text/Text'
+import { fonts } from 'ui/src/theme'
+import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import {
   ADDITIONAL_WIDTH_FOR_ANIMATIONS,
   AnimatedCharStyles,
@@ -18,13 +24,7 @@ import {
   NUMBER_ARRAY,
   NUMBER_WIDTH_ARRAY,
   TopAndBottomGradient,
-} from 'src/components/AnimatedNumber'
-import { ValueAndFormattedWithAnimation } from 'src/components/PriceExplorer/usePrice'
-import { PriceNumberOfDigits } from 'src/components/PriceExplorer/usePriceHistory'
-import { useSporeColors } from 'ui/src'
-import { TextLoaderWrapper } from 'ui/src/components/text/Text'
-import { fonts } from 'ui/src/theme'
-import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+} from 'wallet/src/features/portfolio/AnimatedNumber'
 
 // if price per token has > 3 numbers before the decimal, start showing decimals in neutral3
 // otherwise, show entire price in neutral1

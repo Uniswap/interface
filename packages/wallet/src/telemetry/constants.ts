@@ -1,13 +1,14 @@
 export enum WalletEventName {
   ExploreSearchCancel = 'Explore Search Cancel',
-  NetworkFilterSelected = 'Network Filter Selected',
   NFTsLoaded = 'NFTs Loaded',
+  NetworkFilterSelected = 'Network Filter Selected',
   PortfolioBalanceFreshnessLag = 'Portfolio Balance Freshness Lag',
-  SwapSubmitted = 'Swap Submitted to Provider',
   SendRecipientSelected = 'Send Recipient Selected',
-  TransferSubmitted = 'Transfer Submitted',
-  TransferCompleted = 'Transfer Completed',
+  ShareButtonClicked = 'Share Button Clicked',
+  SwapSubmitted = 'Swap Submitted to Provider',
   TokenSelected = 'Token Selected',
+  TransferCompleted = 'Transfer Completed',
+  TransferSubmitted = 'Transfer Submitted',
 }
 
 // MOB-2816: move these to analytics-events package
@@ -45,6 +46,7 @@ export enum WalletAppsFlyerEvents {
 
 export const ModalName = {
   AccountEdit: 'account-edit-modal',
+  AccountEditLabel: 'account-edit--label-modal',
   AccountSwitcher: 'account-switcher-modal',
   AddWallet: 'add-wallet-modal',
   BlockedAddress: 'blocked-address',
@@ -84,6 +86,7 @@ export const ModalName = {
   SendWarning: 'send-warning-modal',
   SendReview: 'send-review-modal',
   SlippageInfo: 'slippage-info-modal',
+  StorageWarning: 'storage-warning-modal',
   Swap: 'swap-modal',
   SwapReview: 'swap-review-modal',
   SwapSettings: 'swap-settings-modal',
@@ -240,3 +243,10 @@ export const SectionName = {
 } as const
 
 export type SectionNameType = (typeof SectionName)[keyof typeof SectionName]
+
+export enum ShareableEntity {
+  NftItem = 'NftItem',
+  NftCollection = 'NftCollection',
+  Token = 'Token',
+  Wallet = 'Wallet',
+}

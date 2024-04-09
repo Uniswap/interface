@@ -1,10 +1,10 @@
-import { t } from '@lingui/macro'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartModelParams } from 'components/Charts/ChartModel'
 import { getCumulativeVolume } from 'components/Charts/VolumeChart/utils'
 import { useHeaderDateFormatter } from 'components/Charts/hooks'
 import { BIPS_BASE } from 'constants/misc'
 import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
+import { t } from 'i18n'
 import { useMemo } from 'react'
 import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -111,10 +111,14 @@ function FeesTooltipDisplay({ data, feeTier }: { data: SingleHistogramData; feeT
 
   return (
     <>
-      <ThemedText.BodySmall>{t`Fees: ${formatFiatPrice({
-        price: fees,
-        type: NumberType.ChartFiatValue,
-      })}`}</ThemedText.BodySmall>
+      <ThemedText.BodySmall>
+        {t(`Fees: {{amount}}`, {
+          amount: formatFiatPrice({
+            price: fees,
+            type: NumberType.ChartFiatValue,
+          }),
+        })}
+      </ThemedText.BodySmall>
     </>
   )
 }

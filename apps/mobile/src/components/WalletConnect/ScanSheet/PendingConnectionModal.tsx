@@ -6,7 +6,6 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
 import { ModalWithOverlay } from 'src/components/WalletConnect/ModalWithOverlay/ModalWithOverlay'
-import { NetworkLogos } from 'src/components/WalletConnect/NetworkLogos'
 import { PendingConnectionSwitchAccountModal } from 'src/components/WalletConnect/ScanSheet/PendingConnectionSwitchAccountModal'
 import { truncateQueryParams } from 'src/components/WalletConnect/ScanSheet/util'
 import { LinkButton } from 'src/components/buttons/LinkButton'
@@ -25,6 +24,7 @@ import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
+import { NetworkLogos } from 'wallet/src/components/network/NetworkLogos'
 import { ChainId } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -135,7 +135,7 @@ const NetworksRow = ({ chains }: { chains: ChainId[] }): JSX.Element => {
         variant="body3">
         {t('walletConnect.permissions.networks')}
       </Text>
-      <NetworkLogos negativeGap chains={chains} />
+      <NetworkLogos chains={chains} />
     </Flex>
   )
 }

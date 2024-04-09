@@ -1,7 +1,7 @@
-import { Trans, t } from '@lingui/macro'
 import { ButtonGray } from 'components/Button'
 import { Pool } from 'components/Icons/Pool'
 import { FlyoutAlignment, Menu } from 'components/Menu'
+import { Trans, t } from 'i18n'
 import { ChevronDown } from 'react-feather'
 import { useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'

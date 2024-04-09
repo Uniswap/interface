@@ -1,4 +1,3 @@
-import { Plural, t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import Column, { AutoColumn } from 'components/Column'
 import Identicon from 'components/Identicon'
@@ -9,6 +8,7 @@ import useENSName from 'hooks/useENSName'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
+import { Plural, t, Trans } from 'i18n'
 import { ChangeEvent, ForwardedRef, forwardRef, KeyboardEvent, useCallback, useRef, useState } from 'react'
 import { X } from 'react-feather'
 import { RecipientData } from 'state/send/hooks'
@@ -16,7 +16,9 @@ import { useSendContext } from 'state/send/SendContext'
 import styled, { css, keyframes } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
-import { Icons, Text, UniconV2 } from 'ui/src'
+import { Unitag } from 'ui/src/components/icons/Unitag'
+import { Text } from 'ui/src/components/text/Text'
+import { UniconV2 } from 'ui/src/components/UniconV2'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import {
@@ -156,7 +158,7 @@ const AutocompleteRow = ({
             <ThemedText.BodyPrimary lineHeight="24px">
               {unitag?.username ?? cachedEnsName ?? formattedAddress}
             </ThemedText.BodyPrimary>
-            {unitag?.username && <Icons.Unitag size={18} />}
+            {unitag?.username && <Unitag size={18} />}
           </Row>
           {(unitag || cachedEnsName) && (
             <ThemedText.LabelSmall lineHeight="20px">{formattedAddress}</ThemedText.LabelSmall>
@@ -165,7 +167,7 @@ const AutocompleteRow = ({
       </Row>
       {account && (
         <StyledTransferText>
-          {numberOfTransfers} <Plural value={numberOfTransfers} _1="transfer" other="transfers" />
+          {numberOfTransfers} <Plural value={numberOfTransfers} one={t`transfer`} other={t`transfers`} />
         </StyledTransferText>
       )}
     </StyledAutocompleteRow>
@@ -357,7 +359,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
                 <ThemedText.BodyPrimary lineHeight="24px">
                   {recipientData.unitag ?? recipientData.ensName ?? shortenAddress(recipientData.address)}
                 </ThemedText.BodyPrimary>
-                {recipientData.unitag && <Icons.Unitag size={18} />}
+                {recipientData.unitag && <Unitag size={18} />}
               </Row>
               {Boolean(recipientData.ensName) && (
                 <ThemedText.LabelMicro lineHeight="16px">{shortenAddress(recipientData.address)}</ThemedText.LabelMicro>

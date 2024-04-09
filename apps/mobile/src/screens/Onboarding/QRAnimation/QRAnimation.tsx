@@ -22,7 +22,6 @@ import {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
-import { QRCodeDisplay } from 'src/components/QRCodeScanner/QRCode'
 import Trace from 'src/components/Trace/Trace'
 import { GradientBackground } from 'src/components/gradients/GradientBackground'
 import { UniconThemedGradient } from 'src/components/gradients/UniconThemedGradient'
@@ -54,6 +53,7 @@ import { AnimatedFlex, flexStyles } from 'ui/src/components/layout'
 import { fonts, iconSizes, opacify, spacing } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { QRCodeDisplay } from 'wallet/src/components/QRCodeScanner/QRCode'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
 import { ElementName } from 'wallet/src/telemetry/constants'
@@ -219,7 +219,10 @@ export function QRAnimation({
                     height={QR_CONTAINER_SIZE}
                     overflow="hidden"
                     width={QR_CONTAINER_SIZE}>
-                    <AnimatedFlex entering={realQrFadeIn} style={[styles.qrCodeContainer]}>
+                    <AnimatedFlex
+                      entering={realQrFadeIn}
+                      p="$spacing12"
+                      style={[styles.qrCodeContainer]}>
                       <QRCodeDisplay
                         hideOutline
                         address={activeAddress}

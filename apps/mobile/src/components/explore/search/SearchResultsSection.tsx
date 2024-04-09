@@ -17,10 +17,7 @@ import {
   getSearchResultId,
 } from 'src/components/explore/search/utils'
 import { AnimatedFlex, Flex, Icons, Text } from 'ui/src'
-import {
-  SafetyLevel,
-  useExploreSearchQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import i18n from 'uniswap/src/i18n/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
@@ -118,13 +115,6 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     isPrefixTokenMatch(res, searchQuery)
   )
 
-  const hasVerifiedTokenResults = Boolean(
-    tokenResults?.some(
-      (res) =>
-        res.safetyLevel === SafetyLevel.Verified || res.safetyLevel === SafetyLevel.MediumWarning
-    )
-  )
-
   const hasVerifiedNFTResults = Boolean(nftCollectionResults?.some((res) => res.isVerified))
 
   const isUsernameSearch = useMemo(() => {
@@ -133,7 +123,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   const showWalletSectionFirst =
     isUsernameSearch && (exactUnitagMatch || (exactENSMatch && !prefixTokenMatch))
-  const showNftCollectionsBeforeTokens = hasVerifiedNFTResults && !hasVerifiedTokenResults
+  const showNftCollectionsBeforeTokens = hasVerifiedNFTResults && !tokenResults?.length
 
   const sortedSearchResults: SearchResultOrHeader[] = useMemo(() => {
     // Format results arrays with header, and handle empty results

@@ -56,7 +56,6 @@ export enum MobileEventName {
   OnboardingCompleted = 'Onboarding Completed',
   PerformanceGraphql = 'Performance GraphQL',
   PerformanceReport = 'Performance Report',
-  ShareButtonClicked = 'Share Button Clicked',
   ShareLinkOpened = 'Share Link Opened',
   TokenDetailsOtherChainButtonPressed = 'Token Details Other Chain Button Pressed',
   WalletAdded = 'Wallet Added',
@@ -106,11 +105,4 @@ export enum AuthMethod {
   None = 'None',
   TouchId = 'TouchId',
   // alphabetize additional values.
-}
-
-export enum ShareableEntity {
-  NftItem = 'NftItem',
-  NftCollection = 'NftCollection',
-  Token = 'Token',
-  Wallet = 'Wallet',
 }

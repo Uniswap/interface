@@ -1,6 +1,6 @@
-import { t } from '@lingui/macro'
-import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
+import { t } from 'i18n'
 import { TransactionType } from 'state/transactions/types'
+import { UniswapXOrderStatus } from 'types/uniswapx'
 import {
   SwapOrderStatus,
   TransactionStatus,
@@ -221,7 +221,7 @@ export const OrderTextTable: {
   },
   [UniswapXOrderStatus.INSUFFICIENT_FUNDS]: {
     title: t`Insufficient funds`,
-    statusMessage: t`Your account had insufficent funds to complete this swap.`,
+    statusMessage: t`Your account had insufficient funds to complete this swap.`,
     status: TransactionStatus.Failed,
   },
   [UniswapXOrderStatus.CANCELLED]: {
@@ -253,7 +253,7 @@ export const LimitOrderTextTable: {
   },
   [UniswapXOrderStatus.INSUFFICIENT_FUNDS]: {
     title: LimitTitleTable.FAILED,
-    statusMessage: t`Your account had insufficent funds to complete this swap.`,
+    statusMessage: t`Your account had insufficient funds to complete this swap.`,
     status: TransactionStatus.Failed,
   },
   [UniswapXOrderStatus.CANCELLED]: {

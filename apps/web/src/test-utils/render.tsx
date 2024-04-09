@@ -1,12 +1,9 @@
 import { MockedProvider } from '@apollo/client/testing'
-import { i18n } from '@lingui/core'
-import { I18nProvider } from '@lingui/react'
 import { queries } from '@testing-library/dom'
 import { render, renderHook, RenderHookOptions, RenderOptions } from '@testing-library/react'
-import { DEFAULT_LOCALE } from 'constants/locales'
+import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
+import { TokenBalancesProvider } from 'graphql/data/apollo/TokenBalancesProvider'
 import { BlockNumberContext } from 'lib/hooks/useBlockNumber'
-import catalog from 'locales/en-US'
-import { en } from 'make-plural/plurals'
 import { PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { HelmetProvider } from 'react-helmet-async/lib/index'
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -16,15 +13,6 @@ import store from 'state'
 import { ThemeProvider } from 'theme'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
-
-i18n.load({
-  [DEFAULT_LOCALE]: catalog.messages,
-})
-i18n.loadLocaleData({
-  [DEFAULT_LOCALE]: { plurals: en },
-})
-i18n.activate(DEFAULT_LOCALE)
-const MockedI18nProvider = ({ children }: any) => <I18nProvider i18n={i18n}>{children}</I18nProvider>
 
 const queryClient = new QueryClient()
 
@@ -36,27 +24,29 @@ function MockedBlockNumberProvider({ children }: PropsWithChildren) {
 const WithProviders = ({ children }: { children?: ReactNode }) => {
   return (
     <HelmetProvider>
-      <MockedI18nProvider>
-        <Provider store={store}>
-          <QueryClientProvider client={queryClient}>
-            <BrowserRouter>
-              {/*
-               * Web3Provider is mocked through setupTests.ts
-               * To test behavior that depends on Web3Provider, use jest.unmock('@web3-react/core')
-               */}
-              <MockedProvider showWarnings={false}>
-                <MockedBlockNumberProvider>
-                  <UnitagUpdaterContextProvider>
-                    <ThemeProvider>
-                      <TamaguiProvider>{children}</TamaguiProvider>
-                    </ThemeProvider>
-                  </UnitagUpdaterContextProvider>
-                </MockedBlockNumberProvider>
-              </MockedProvider>
-            </BrowserRouter>
-          </QueryClientProvider>
-        </Provider>
-      </MockedI18nProvider>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <BrowserRouter>
+            {/*
+             * Web3Provider is mocked through setupTests.ts
+             * To test behavior that depends on Web3Provider, use jest.unmock('@web3-react/core')
+             */}
+            <MockedProvider showWarnings={false}>
+              <AssetActivityProvider>
+                <TokenBalancesProvider>
+                  <MockedBlockNumberProvider>
+                    <UnitagUpdaterContextProvider>
+                      <ThemeProvider>
+                        <TamaguiProvider>{children}</TamaguiProvider>
+                      </ThemeProvider>
+                    </UnitagUpdaterContextProvider>
+                  </MockedBlockNumberProvider>
+                </TokenBalancesProvider>
+              </AssetActivityProvider>
+            </MockedProvider>
+          </BrowserRouter>
+        </QueryClientProvider>
+      </Provider>
     </HelmetProvider>
   )
 }

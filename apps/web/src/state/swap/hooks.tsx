@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Field } from 'components/swap/constants'
@@ -7,6 +6,7 @@ import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { useUSDPrice } from 'hooks/useUSDPrice'
+import { Trans } from 'i18n'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
 import { ReactNode, useCallback, useContext, useMemo } from 'react'
@@ -204,7 +204,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     const [balanceIn, maxAmountIn] = [currencyBalances[Field.INPUT], trade?.trade?.maximumAmountIn(allowedSlippage)]
 
     if (balanceIn && maxAmountIn && balanceIn.lessThan(maxAmountIn)) {
-      inputError = <Trans>Insufficient {balanceIn.currency.symbol} balance</Trans>
+      inputError = <Trans>Insufficient {{ symbol: balanceIn.currency.symbol }} balance</Trans>
     }
 
     return inputError

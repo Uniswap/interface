@@ -1,6 +1,6 @@
-import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { Trans } from 'i18n'
 import { getRoyalty } from 'nft/components/profile/list/utils'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'

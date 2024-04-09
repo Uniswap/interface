@@ -3,10 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useIsErc20Contract } from 'wallet/src/features/contracts/hooks'
+import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { useAllTransactionsBetweenAddresses } from 'wallet/src/features/transactions/hooks/useAllTransactionsBetweenAddresses'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'
 import { TransferSpeedbump } from 'wallet/src/features/transactions/transfer/types'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import {
   useActiveAccountAddressWithThrow,
   useDisplayName,
@@ -31,7 +32,7 @@ export function TransferFormSpeedbumps({
   onNext,
   setTransferSpeedbump,
   setShowSpeedbumpModal,
-}: TransferFormWarningProps): JSX.Element {
+}: TransferFormWarningProps): JSX.Element | null {
   const { t } = useTranslation()
 
   const activeAddress = useActiveAccountAddressWithThrow()
@@ -50,6 +51,7 @@ export function TransferFormSpeedbumps({
 
   const shouldWarnSmartContract = isNewRecipient && !isSignerRecipient && isSmartContractAddress
   const shouldWarnNewAddress = isNewRecipient && !isSignerRecipient && !shouldWarnSmartContract
+  const shouldWarnErc20 = useIsErc20Contract(recipient, chainId ?? ChainId.Mainnet)
 
   useEffect(() => {
     setTransferSpeedbump({
@@ -64,39 +66,57 @@ export function TransferFormSpeedbumps({
 
   const displayName = useDisplayName(recipient)
 
-  return (
-    <>
-      {showSpeedbumpModal && shouldWarnSmartContract && (
-        <WarningModal
-          caption={t('send.warning.smartContract.message')}
-          closeText={t('common.button.cancel')}
-          confirmText={t('common.button.continue')}
-          modalName={ModalName.SendWarning}
-          severity={WarningSeverity.None}
-          title={t('send.warning.smartContract.title')}
-          onClose={onCloseWarning}
-          onConfirm={onNext}
+  if (!showSpeedbumpModal) {
+    return null
+  }
+  if (shouldWarnErc20) {
+    return (
+      <WarningModal
+        caption={t('send.warning.erc20.message')}
+        closeText={t('common.button.cancel')}
+        confirmText={t('common.button.continue')}
+        modalName={ModalName.SendWarning}
+        severity={WarningSeverity.High}
+        title={t('send.warning.erc20.title')}
+        onClose={onCloseWarning}
+        onConfirm={onNext}
+      />
+    )
+  }
+  if (shouldWarnSmartContract) {
+    return (
+      <WarningModal
+        caption={t('send.warning.smartContract.message')}
+        closeText={t('common.button.cancel')}
+        confirmText={t('common.button.continue')}
+        modalName={ModalName.SendWarning}
+        severity={WarningSeverity.None}
+        title={t('send.warning.smartContract.title')}
+        onClose={onCloseWarning}
+        onConfirm={onNext}
+      />
+    )
+  }
+  if (shouldWarnNewAddress) {
+    return (
+      <WarningModal
+        caption={t('send.warning.newAddress.message')}
+        closeText={t('common.button.cancel')}
+        confirmText={t('common.button.confirm')}
+        modalName={ModalName.SendWarning}
+        severity={WarningSeverity.Medium}
+        title={t('send.warning.newAddress.title')}
+        onClose={onCloseWarning}
+        onConfirm={onNext}>
+        <TransferRecipient
+          address={recipient}
+          displayName={displayName?.name}
+          type={displayName?.type}
         />
-      )}
-      {showSpeedbumpModal && shouldWarnNewAddress && (
-        <WarningModal
-          caption={t('send.warning.newAddress.message')}
-          closeText={t('common.button.cancel')}
-          confirmText={t('common.button.confirm')}
-          modalName={ModalName.SendWarning}
-          severity={WarningSeverity.Medium}
-          title={t('send.warning.newAddress.title')}
-          onClose={onCloseWarning}
-          onConfirm={onNext}>
-          <TransferRecipient
-            address={recipient}
-            displayName={displayName?.name}
-            type={displayName?.type}
-          />
-        </WarningModal>
-      )}
-    </>
-  )
+      </WarningModal>
+    )
+  }
+  return null
 }
 
 interface TransferRecipientProps {

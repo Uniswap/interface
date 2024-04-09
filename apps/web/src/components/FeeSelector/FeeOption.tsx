@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ButtonRadioChecked } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -36,9 +35,7 @@ export function FeeOption({ feeAmount, active, poolState, distributions, onClick
     <ButtonRadioChecked active={active} onClick={onClick}>
       <AutoColumn gap="sm" justify="flex-start">
         <AutoColumn justify="flex-start" gap="6px">
-          <ResponsiveText>
-            <Trans>{formatDelta(parseFloat(FEE_AMOUNT_DETAIL[feeAmount].label))}</Trans>
-          </ResponsiveText>
+          <ResponsiveText>{formatDelta(parseFloat(FEE_AMOUNT_DETAIL[feeAmount].label))}</ResponsiveText>
           <ThemedText.DeprecatedMain fontWeight={485} fontSize="12px" textAlign="left">
             {FEE_AMOUNT_DETAIL[feeAmount].description}
           </ThemedText.DeprecatedMain>

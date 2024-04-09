@@ -1,5 +1,4 @@
 import { ApolloError } from '@apollo/client'
-import { Trans } from '@lingui/macro'
 import {
   CellContext,
   ColumnDef,
@@ -14,6 +13,7 @@ import { TraceEvent, useTrace } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ErrorModal } from 'components/Table/ErrorBox'
 import useDebounce from 'hooks/useDebounce'
+import { Trans } from 'i18n'
 import { useEffect, useRef, useState } from 'react'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
 import { ThemedText } from 'theme/components'

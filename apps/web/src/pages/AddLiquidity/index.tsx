@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
@@ -11,6 +10,7 @@ import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { isSupportedChain } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
+import { Trans } from 'i18n'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { BodyWrapper } from 'pages/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
@@ -522,10 +522,10 @@ function AddLiquidity() {
                 >
                   {approvalA === ApprovalState.PENDING ? (
                     <Dots>
-                      <Trans>Approving {currencies[Field.CURRENCY_A]?.symbol}</Trans>
+                      <Trans>Approving {{ amount: currencies[Field.CURRENCY_A]?.symbol }}</Trans>
                     </Dots>
                   ) : (
-                    <Trans>Approve {currencies[Field.CURRENCY_A]?.symbol}</Trans>
+                    <Trans>Approve {{ amount: currencies[Field.CURRENCY_A]?.symbol }}</Trans>
                   )}
                 </ButtonPrimary>
               )}
@@ -537,10 +537,10 @@ function AddLiquidity() {
                 >
                   {approvalB === ApprovalState.PENDING ? (
                     <Dots>
-                      <Trans>Approving {currencies[Field.CURRENCY_B]?.symbol}</Trans>
+                      <Trans>Approving {{ amount: currencies[Field.CURRENCY_B]?.symbol }}</Trans>
                     </Dots>
                   ) : (
-                    <Trans>Approve {currencies[Field.CURRENCY_B]?.symbol}</Trans>
+                    <Trans>Approve {{ amount: currencies[Field.CURRENCY_B]?.symbol }}</Trans>
                   )}
                 </ButtonPrimary>
               )}
@@ -795,19 +795,17 @@ function AddLiquidity() {
                       <>
                         {Boolean(price && baseCurrency && quoteCurrency && !noLiquidity) && (
                           <AutoColumn gap="2px" style={{ marginTop: '0.5rem' }}>
-                            <Trans>
-                              <ThemedText.DeprecatedMain fontWeight={535} fontSize={12} color="text1">
-                                Current price:
-                              </ThemedText.DeprecatedMain>
-                              <ThemedText.DeprecatedBody fontWeight={535} fontSize={20} color="text1">
-                                {price && <HoverInlineText maxCharacters={20} text={formattedPrice} />}
+                            <ThemedText.DeprecatedMain fontWeight={535} fontSize={12} color="text1">
+                              <Trans>Current price:</Trans>
+                            </ThemedText.DeprecatedMain>
+                            <ThemedText.DeprecatedBody fontWeight={535} fontSize={20} color="text1">
+                              {price && <HoverInlineText maxCharacters={20} text={formattedPrice} />}
+                            </ThemedText.DeprecatedBody>
+                            {baseCurrency && (
+                              <ThemedText.DeprecatedBody color="text2" fontSize={12}>
+                                {quoteCurrency?.symbol} <Trans>per</Trans> {baseCurrency.symbol}
                               </ThemedText.DeprecatedBody>
-                              {baseCurrency && (
-                                <ThemedText.DeprecatedBody color="text2" fontSize={12}>
-                                  {quoteCurrency?.symbol} per {baseCurrency.symbol}
-                                </ThemedText.DeprecatedBody>
-                              )}
-                            </Trans>
+                            )}
                           </AutoColumn>
                         )}
                         <LiquidityChartRangeInput
@@ -865,7 +863,7 @@ function AddLiquidity() {
                           }}
                         >
                           <ThemedText.DeprecatedMain>
-                            <Trans>Starting {baseCurrency?.symbol} Price:</Trans>
+                            <Trans>Starting {{ sym: baseCurrency?.symbol }} Price:</Trans>
                           </ThemedText.DeprecatedMain>
                           <ThemedText.DeprecatedMain>
                             {price ? (

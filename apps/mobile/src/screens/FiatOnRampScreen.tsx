@@ -127,7 +127,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   } = useFiatOnRampQuotes({
     baseCurrencyAmount: debouncedAmount,
     baseCurrencyCode: meldSupportedFiatCurrency.code,
-    quoteCurrencyCode: quoteCurrency.currencyInfo?.currency.symbol,
+    quoteCurrencyCode: quoteCurrency.meldCurrencyCode,
     countryCode,
     countryState,
   })
@@ -340,6 +340,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               onLayout={onDecimalPadLayout}>
               {!showNativeKeyboard && (
                 <DecimalPadLegacy
+                  hasCurrencyPrefix
                   resetSelection={resetSelection}
                   selection={selection}
                   setValue={onChangeValue('textInput')}

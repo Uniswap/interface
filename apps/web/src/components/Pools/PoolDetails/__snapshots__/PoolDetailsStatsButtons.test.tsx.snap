@@ -1062,8 +1062,21 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
 
 }
 
+@media (max-width:640px) {
+  .c4 {
+    width: 100%;
+  }
+}
+
 @media (max-width:1024px) {
 
+}
+
+@media (max-width:640px) {
+  .c6 {
+    display: none;
+    width: 100%;
+  }
 }
 
 @media (max-width:1024px) {

@@ -909,44 +909,13 @@ exports[`TDP Skeleton should render correctly 1`] = `
 
 exports[`getLoadingTitle should return correct title 1`] = `
 <DocumentFragment>
-  .c0 {
-  color: #CECECE;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 16px;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c0:hover {
-  opacity: 0.6;
-}
-
-.c0:active {
-  opacity: 0.4;
-}
-
-<span
+  <span
     class=" _dsp_contents"
   >
     <span
       class=" t_light _dsp_contents is_Theme"
     >
-      token data for 
-      <a
-        class="c0"
-        href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-        rel="noopener noreferrer"
-        target="_blank"
-      >
-        USD//C (USDC)
-      </a>
-       on Ethereum
+      token data for [object Object] on Ethereum
     </span>
   </span>
 </DocumentFragment>

@@ -41,10 +41,24 @@ export function SelectTokenButton({
           )}
         </Flex>
       ) : (
-        <Flex centered row px="$spacing12" py="$spacing4">
+        <Flex
+          centered
+          row
+          gap="$spacing4"
+          pl="$spacing8"
+          pr={isWeb ? '$spacing4' : '$spacing8'}
+          py="$spacing4">
           <Text color="$sporeWhite" variant="buttonLabel2">
             {t('tokens.selector.button.choose')}
           </Text>
+          {isWeb && (
+            <Icons.RotatableChevron
+              color="$white"
+              direction="down"
+              height={iconSizes.icon20}
+              width={iconSizes.icon20}
+            />
+          )}
         </Flex>
       )}
     </TouchableArea>

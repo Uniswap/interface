@@ -15,11 +15,11 @@ export function isProductionEnv(): boolean {
   return process.env.NODE_ENV === 'production' && !isStagingEnv()
 }
 
-export function isAppUniswapOrg({ hostname }: { hostname: string }): boolean {
+function isAppUniswapOrg({ hostname }: { hostname: string }): boolean {
   return hostname === 'app.uniswap.org'
 }
 
-export function isAppUniswapStagingOrg({ hostname }: { hostname: string }): boolean {
+function isAppUniswapStagingOrg({ hostname }: { hostname: string }): boolean {
   return hostname === 'app.corn-staging.com'
 }
 

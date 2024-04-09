@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { RowFixed } from 'components/Row'
 import {
@@ -11,6 +10,7 @@ import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import useMachineTimeMs from 'hooks/useMachineTime'
+import { Trans } from 'i18n'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo, useState } from 'react'
 import styled, { keyframes } from 'styled-components'

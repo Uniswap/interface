@@ -1,13 +1,12 @@
 import { BarCodeScanner } from 'expo-barcode-scanner'
 import { BarCodeScanningResult, Camera, CameraType } from 'expo-camera'
 import { PermissionStatus } from 'expo-modules-core'
-import React, { memo, useCallback, useEffect, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet } from 'react-native'
 import { launchImageLibrary } from 'react-native-image-picker'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
-import { DevelopmentOnly } from 'src/components/DevelopmentOnly/DevelopmentOnly'
 import {
   AnimatedFlex,
   Button,
@@ -20,6 +19,7 @@ import {
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { Sentry } from 'utilities/src/logger/Sentry'
+import { DevelopmentOnly } from 'wallet/src/components/DevelopmentOnly/DevelopmentOnly'
 import PasteButton from 'wallet/src/components/buttons/PasteButton'
 import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 import { openSettings } from 'wallet/src/utils/linking'

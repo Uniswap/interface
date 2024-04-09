@@ -173,7 +173,7 @@ function KeyButton({
   }
 
   const handleDelete = (): void => {
-    if (start === undefined || end === undefined) {
+    if (start === undefined || end === undefined || (start === end && end === value.length)) {
       // has no text selection, cursor is at the end of the text input
       setValue(value.slice(0, -1))
     } else if (start < end) {

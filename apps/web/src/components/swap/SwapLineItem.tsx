@@ -1,4 +1,3 @@
-import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { LoadingRow } from 'components/Loader/styled'
@@ -7,8 +6,9 @@ import Row from 'components/Row'
 import { TooltipSize } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { useUSDPrice } from 'hooks/useUSDPrice'
+import { Trans, t } from 'i18n'
 import React, { useEffect, useState } from 'react'
-import { animated, SpringValue } from 'react-spring'
+import { SpringValue, animated } from 'react-spring'
 import { InterfaceTrade, SubmittableTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
@@ -239,7 +239,7 @@ function getFOTLineItem({ type, trade }: SwapLineItemProps): LineItemData | unde
   if (tax.equalTo(0)) return
 
   return {
-    Label: () => <>{t`${currency.symbol ?? currency.name ?? t`Token`} fee`}</>,
+    Label: () => <>{t(`{{name}} fee`, { name: currency.symbol ?? currency.name ?? t`Token` })}</>,
     TooltipBody: FOTTooltipContent,
     Value: () => <ColoredPercentRow percent={tax} />,
   }

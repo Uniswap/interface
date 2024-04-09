@@ -1,6 +1,6 @@
-import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import Badge, { BadgeVariant } from 'components/Badge'
+import { Trans } from 'i18n'
 import { transparentize } from 'polished'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'

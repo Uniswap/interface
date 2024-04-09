@@ -7,7 +7,6 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useIsDarkMode } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'wallet/src/components/icons/WarningIcon'
@@ -87,10 +86,9 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
               {(safetyLevel === SafetyLevel.Blocked ||
                 safetyLevel === SafetyLevel.StrongWarning) && (
                 <WarningIcon
-                  height={iconSizes.icon16}
                   safetyLevel={safetyLevel}
+                  size="$icon.16"
                   strokeColorOverride="neutral3"
-                  width={iconSizes.icon16}
                 />
               )}
             </Flex>

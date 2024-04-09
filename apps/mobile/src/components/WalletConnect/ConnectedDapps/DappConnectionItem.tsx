@@ -7,7 +7,6 @@ import 'react-native-reanimated'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
 import { DappHeaderIcon } from 'src/components/WalletConnect/DappHeaderIcon'
-import { NetworkLogos } from 'src/components/WalletConnect/NetworkLogos'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { WalletConnectSession, removeSession } from 'src/features/walletConnect/walletConnectSlice'
 import { disableOnPress } from 'src/utils/disableOnPress'
@@ -15,6 +14,7 @@ import { AnimatedTouchableArea, Flex, ImpactFeedbackStyle, Text, TouchableArea }
 import { iconSizes, spacing } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { NetworkLogos } from 'wallet/src/components/network/NetworkLogos'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -127,7 +127,6 @@ export function DappConnectionItem({
           onLongPress={disableOnPress}
           onPress={(): void => onPressChangeNetwork(session)}>
           <NetworkLogos
-            negativeGap
             showFirstChainLabel
             backgroundColor="$surface2"
             borderRadius="$roundedFull"

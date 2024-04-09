@@ -6,6 +6,7 @@ import { act, fireEvent, render, screen } from 'test-utils/render'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', () => ({
+  ...jest.requireActual('components/AccountDrawer/MiniPortfolio/Activity/hooks'),
   useOpenLimitOrders: jest.fn(),
 }))
 

@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { NumberType } from 'utilities/src/format/types'
@@ -91,13 +91,17 @@ export function GasAndWarningRows({
                 <SwapRateRatio initialInverse={true} styling="secondary" trade={trade.trade} />
               </Flex>
               {showGasFee && (
-                <NetworkFeeWarning placement="bottom">
-                  <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
-                    <Text color="$neutral2" variant="body4">
-                      {gasFeeFormatted}
-                    </Text>
-                  </AnimatedFlex>
-                </NetworkFeeWarning>
+                <NetworkFeeWarning
+                  placement="bottom"
+                  tooltipTrigger={
+                    <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
+                      <Text color="$neutral2" variant="body4">
+                        {gasFeeFormatted}
+                      </Text>
+                      <Icons.Gas color="$neutral2" size="$icon.16" />
+                    </AnimatedFlex>
+                  }
+                />
               )}
             </Flex>
           )}

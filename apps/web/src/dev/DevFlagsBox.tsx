@@ -47,7 +47,9 @@ const SettingsContainer = styled(ColumnCenter)`
 `
 
 export default function DevFlagsBox() {
-  const statsigOverrides = Statsig.getAllOverrides()
+  const statsigOverrides = Statsig.initializeCalled()
+    ? Statsig.getAllOverrides()
+    : { gates: {}, configs: {}, layers: {} }
   const configOverrides = Object.entries(statsigOverrides.configs)
   const gateOverrides = Object.entries(statsigOverrides.gates)
 

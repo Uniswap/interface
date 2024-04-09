@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart } from 'components/Charts/ChartModel'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
@@ -22,6 +21,7 @@ import {
   validateUrlChainParam,
 } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/useScreenSize'
+import { Trans } from 'i18n'
 import { useExploreParams } from 'pages/Explore/redirects'
 import { ReactNode, useMemo, useState } from 'react'
 import styled, { useTheme } from 'styled-components'

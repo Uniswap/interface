@@ -22,6 +22,7 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),
+  useSafeAreaFrame: jest.fn().mockImplementation(() => ({})),
   SafeAreaProvider: jest.fn(({ children }) => children),
 }))
 

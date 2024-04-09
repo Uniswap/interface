@@ -1,9 +1,9 @@
-import { Trans } from '@lingui/macro'
 import { formatTickMarks } from 'components/Charts/utils'
 import Row from 'components/Row'
 import { MissingDataBars } from 'components/Table/icons'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useScreenSize } from 'hooks/useScreenSize'
+import { Trans } from 'i18n'
 import { useUpdateAtom } from 'jotai/utils'
 import {
   BarPrice,

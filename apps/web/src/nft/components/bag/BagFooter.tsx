@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { formatEther, parseEther } from '@ethersproject/units'
-import { Trans, t } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -19,6 +18,7 @@ import { useCurrency } from 'hooks/Tokens'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useSwitchChain } from 'hooks/useSwitchChain'
+import { Trans, t } from 'i18n'
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useBag } from 'nft/hooks/useBag'
@@ -249,7 +249,7 @@ const FiatValue = ({
             <PriceImpactRow>
               <AlertTriangle color={priceImpact.priceImpactSeverity.color} size="16px" />
               <ThemedText.BodySmall style={{ color: priceImpact.priceImpactSeverity.color }} lineHeight="20px">
-                (<Trans>{priceImpact.displayPercentage()}</Trans>)
+                ({priceImpact.displayPercentage()})
               </ThemedText.BodySmall>
             </PriceImpactRow>
           </MouseoverTooltip>

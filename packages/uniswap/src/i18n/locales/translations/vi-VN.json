@@ -89,7 +89,7 @@
           "title": "Bạn đang xóa <highlight>{{walletName}}</highlight>"
         },
         "mnemonic": {
-          "description": "Nó có chung cụm từ khôi phục như <highlight>{{walletNames}}</highlight>. Cụm từ khôi phục của bạn sẽ vẫn được lưu trữ cho đến khi bạn xóa tất cả các ví còn lại."
+          "description": "Nó có chung cụm từ khôi phục như {{walletName}}. Cụm từ khôi phục của bạn sẽ vẫn được lưu trữ cho đến khi bạn xóa tất cả các ví còn lại."
         }
       },
       "subtitle": {
@@ -118,12 +118,40 @@
         "restore": "Khôi phục ví",
         "watch": "Xem một chiếc ví"
       },
+      "create": {
+        "placeholder": "Ví {{index}}"
+      },
+      "edit": {
+        "label": {
+          "input": {
+            "placeholder": "Nhãn ví"
+          }
+        }
+      },
       "header": {
+        "button": {
+          "disabled": {
+            "title": "Chỉnh sửa hồ sơ"
+          },
+          "title": "Chỉnh sửa nhãn"
+        },
         "other": "Các ví khác của bạn",
         "viewOnly": "Chỉ xem ví"
       },
+      "menu": {
+        "copy": {
+          "title": "Sao chép địa chỉ ví"
+        },
+        "edit": {
+          "title": "Chỉnh sửa nhãn"
+        },
+        "remove": {
+          "title": "Xóa ví"
+        }
+      },
       "remove": {
         "check": "Tôi đã sao lưu cụm từ khôi phục của mình và hiểu rằng Uniswap Labs không thể giúp tôi khôi phục ví của mình nếu tôi không làm như vậy.",
+        "title": "Xóa {{name}}",
         "viewOnly": "Bạn luôn có thể thêm ví chỉ xem lại bằng cách nhập địa chỉ của ví."
       },
       "restore": {
@@ -138,7 +166,6 @@
         "title_one_one": "Đã tìm thấy một chiếc ví",
         "title_one_other": "Chọn ví để nhập"
       },
-      "title": "Ví của bạn",
       "viewOnly": {
         "button": "Nhập ví",
         "description": "Để trao đổi, mua, gửi và nhận mã thông báo, bạn cần nhập cụm từ khôi phục của ví này.",
@@ -157,7 +184,6 @@
     }
   },
   "common": {
-    "app": "Ví Uniswap",
     "button": {
       "accept": "Chấp nhận",
       "back": "Mặt sau",
@@ -169,6 +195,7 @@
       "continue": "Tiếp tục",
       "copied": "Đã sao chép",
       "copy": "Sao chép",
+      "create": "Tạo nên",
       "delete": "Xóa bỏ",
       "disconnect": "Ngắt kết nối",
       "dismiss": "Miễn nhiệm",
@@ -188,6 +215,7 @@
       "retry": "Thử lại",
       "review": "Ôn tập",
       "save": "Cứu",
+      "scrollDown": "Cuộn xuống",
       "sell": "Bán",
       "send": "Gửi",
       "setup": "Cài đặt",
@@ -301,9 +329,20 @@
           "label": "gửi"
         }
       },
+      "permit2": {
+        "description": "Permit2 quản lý việc phê duyệt mã thông báo trên nhiều dapp.",
+        "header": "Ký giấy phép2",
+        "price": "Không có"
+      },
       "signature": {
+        "containsUnrenderableCharacters": "Tin nhắn này chứa các ký tự không thể hiển thị. Hãy chắc chắn rằng bạn tin tưởng trang web này.",
         "error": {
           "712-spec-compliance": "SignTypedDataRequestContent đã nhận được dữ liệu để ký không tuân thủ thông số EIP-712."
+        },
+        "header": "Yêu cầu chữ ký",
+        "toggleDataView": {
+          "raw": "Xem dữ liệu thô",
+          "readable": "Xem dữ liệu gốc"
         }
       },
       "warning": {
@@ -313,6 +352,10 @@
         }
       }
     }
+  },
+  "emptyTokenCard": {
+    "description": "Mua hoặc chuyển token vào ví này để bắt đầu",
+    "title": "Chưa có token nào"
   },
   "errors": {
     "crash": {
@@ -404,11 +447,6 @@
       "titleConnected": "Đã kết nối",
       "titleNotConnected": "Không kết nối"
     },
-    "dappRequest": {
-      "signatureRequest": {
-        "header": "Yêu cầu chữ ký"
-      }
-    },
     "lock": {
       "button": {
         "forgot": "Quên mật khẩu?",
@@ -438,6 +476,13 @@
           "wrong": "Sai mật khẩu"
         },
         "placeholder": "Mật khẩu hiện tại"
+      }
+    },
+    "warning": {
+      "storage": {
+        "button": "Hỗ trợ",
+        "message": "Đảm bảo sao lưu cụm từ khôi phục của bạn để tránh mất quyền truy cập vào ví và tiền của bạn.",
+        "title": "Trình duyệt của bạn sắp hết dung lượng"
       }
     }
   },
@@ -514,8 +559,7 @@
       "offline": "Bạn đang ở chế độ ngoại tuyến"
     },
     "extension": {
-      "error": "Lỗi tải tài khoản",
-      "pin": "Ghim Ví Uniswap vào thanh công cụ trình duyệt của bạn bằng cách nhấp vào <puzzleIcon />"
+      "error": "Lỗi tải tài khoản"
     },
     "feed": {
       "empty": {
@@ -611,6 +655,8 @@
       "contractAddress": "Đã sao chép địa chỉ hợp đồng",
       "failed": "Không sao chép được vào bảng nhớ tạm",
       "image": "Đã sao chép hình ảnh",
+      "nftUrl": "Đã sao chép URL NFT",
+      "tokenUrl": "Đã sao chép URL mã thông báo",
       "transactionId": "Đã sao chép ID giao dịch"
     },
     "countryChange": "Đã chuyển sang {{countryName}}",
@@ -680,7 +726,7 @@
   "notifications": {
     "scantastic": {
       "subtitle": "Tiếp tục mở rộng Uniswap",
-      "title": "Thành công"
+      "title": "Thành công!"
     }
   },
   "onboarding": {
@@ -733,23 +779,13 @@
       }
     },
     "complete": {
-      "card": {
-        "buy": {
-          "description": "Mua bằng thẻ hoặc chuyển khoản từ sàn giao dịch",
-          "title": "Mua hoặc chuyển tiền điện tử"
-        },
-        "explore": {
-          "description": "Tìm kiếm và duyệt các token và NFT theo xu hướng",
-          "title": "Khám phá token & NFT"
-        },
-        "swap": {
-          "description": "Mua bằng thẻ hoặc chuyển khoản từ sàn giao dịch",
-          "title": "Bắt đầu trao đổi"
-        }
+      "button": "Mở ví Uniswap",
+      "description": "Ví của bạn đã sẵn sàng để trao đổi, gửi và nhận tiền điện tử.",
+      "pin": {
+        "description": "Nhấp vào biểu tượng câu đố trên thanh công cụ của bạn và tìm Ví Uniswap trong danh sách",
+        "title": "Ghim ví Uniswap"
       },
-      "description": "Ví của bạn đã sẵn sàng! Bắt đầu bằng cách nạp tiền vào ví của bạn bằng cách mua hoặc chuyển tiền điện tử vào ví của bạn.",
-      "footer": "Tìm hiểu cách sử dụng Ví Uniswap",
-      "pin": "<text>Ghim tiện ích mở rộng vào cửa sổ trình duyệt của bạn</text><container><text>bằng cách nhấp vào biểu tượng </text><puzzleIcon /><text> , sau đó chốt</text></container>"
+      "title": "Bạn đã sẵn sàng"
     },
     "editName": {
       "button": {
@@ -766,7 +802,7 @@
         "title": "Bạn có ứng dụng di động Uniswap không?"
       },
       "getOnTheBetaWaitlist": {
-        "subtitle": "Tải xuống ứng dụng di động và yêu cầu tên người dùng",
+        "subtitle": "Tải xuống ứng dụng di động để yêu cầu tên người dùng",
         "title": "Tham gia danh sách chờ Beta"
       },
       "password": {
@@ -825,7 +861,7 @@
       },
       "checkEligibilityInstructions": "Nhập tên người dùng <highlight>uni.eth</highlight> của bạn bên dưới để kiểm tra xem bạn có đủ điều kiện tham gia bản Beta hay không.",
       "eligible": {
-        "tagline": "Chào mừng bạn đến với bản Beta — bạn là một trong những người đầu tiên dùng thử ví Uniswap.",
+        "tagline": "Chào mừng bạn đến với bản Beta — bạn là một trong những người đầu tiên dùng thử Tiện ích mở rộng Uniswap.",
         "title": "Bạn đã ra khỏi danh sách chờ!"
       },
       "ineligibleExplanation": "Bạn vẫn còn trong danh sách chờ. Chúng tôi sẽ thông báo cho bạn trong ứng dụng di động Uniswap khi bạn đủ điều kiện!",
@@ -885,7 +921,7 @@
         "subtitle": "Kiểm tra ứng dụng di động Uniswap của bạn để tìm mã 6 ký tự",
         "title": "Nhập mã một lần"
       },
-      "subtitle": "Quét mã QR bằng ứng dụng di động Uniswap để bắt đầu nhập (các) ví của bạn",
+      "subtitle": "Quét mã QR bằng ứng dụng di động Uniswap để bắt đầu nhập ví của bạn.",
       "title": "Nhập ví từ ứng dụng"
     },
     "security": {
@@ -921,7 +957,7 @@
         "error": "Lỗi nhập ví"
       }
     },
-    "termsOfService": "Bằng việc tiếp tục, tôi đồng ý với<highlightTerms> Điều khoản dịch vụ </highlightTerms>và đồng ý với<highlightPrivacy> Chính sách quyền riêng tư</highlightPrivacy>.",
+    "termsOfService": "Bằng cách tiếp tục, tôi đồng ý với<highlightTerms> Điều khoản dịch vụ </highlightTerms>và đồng ý với<highlightPrivacy> Chính sách quyền riêng tư</highlightPrivacy>",
     "tooltip": {
       "recoveryPhrase": {
         "trigger": "Cụm từ phục hồi là gì?"
@@ -988,11 +1024,7 @@
     },
     "title": "Quét mã QR",
     "wallet": {
-      "networks": {
-        "description": "Ví Uniswap hỗ trợ các token trên Ethereum, Polygon, Arbitrum, Optimism, Base và BNB Chain. Hiện tại, chúng tôi chỉ hỗ trợ NFT trên Ethereum.",
-        "title": "Mạng được hỗ trợ"
-      },
-      "title": "Bạn có thể gửi mã thông báo trên tất cả các mạng được hỗ trợ của chúng tôi tới địa chỉ này."
+      "title": "Ví Uniswap hỗ trợ các token trên Ethereum, Polygon, Arbitrum, Optimism, Base, Blast và BNB Chain. Hiện tại, chúng tôi chỉ hỗ trợ NFT trên Ethereum."
     }
   },
   "scantastic": {
@@ -1016,8 +1048,9 @@
         "browser": "Trình duyệt",
         "device": "Thiết bị"
       },
-      "subtitle": "Chỉ tiếp tục nếu bạn đang đồng bộ hóa với Tiện ích mở rộng Uniswap trên một thiết bị đáng tin cậy.",
-      "title": "Đây có phải là thiết bị của bạn không?"
+      "subtitle": "Chỉ tiếp tục nếu bạn đang quét mã QR từ Tiện ích mở rộng Uniswap trên một thiết bị đáng tin cậy.",
+      "title": "Bạn đang cố gắng nhập ví của mình?",
+      "warning": "Cảnh giác với các trang web và ứng dụng mạo danh Uniswap. Nếu không ví của bạn có thể bị xâm phạm."
     },
     "error": {
       "encryption": "Không chuẩn bị được cụm từ hạt giống.",
@@ -1085,6 +1118,11 @@
       "title": "ĐẾN"
     },
     "review": {
+      "input": {
+        "tokenAmount": {
+          "title": "{{currencyAmount}} trong số {{currencySymbol}}"
+        }
+      },
       "modal": {
         "title": "Bạn đang gửi"
       },
@@ -1128,6 +1166,10 @@
           "title": "Địa chỉ bị chặn"
         },
         "recipient": "Ví người nhận bị chặn"
+      },
+      "erc20": {
+        "message": "Bạn đang cố gắng gửi tiền đến một địa chỉ mã thông báo. Gửi tiền điện tử đến loại địa chỉ này có thể dẫn đến mất tiền vĩnh viễn.",
+        "title": "Đây là địa chỉ mã thông báo"
       },
       "insufficientFunds": {
         "message": "Số dư {{currencySymbol}} của bạn đã giảm kể từ khi bạn nhập số tiền bạn muốn gửi",
@@ -1206,7 +1248,7 @@
   },
   "settings": {
     "action": {
-      "feedback": "Gửi phản hồi",
+      "feedback": "Chia sẻ phản hồi",
       "help": "Được giúp đỡ",
       "lock": "Khóa ví",
       "privacy": "Chính sách bảo mật",
@@ -1313,7 +1355,7 @@
         }
       },
       "beta": {
-        "tooltip": "Sắp ra mắt!"
+        "tooltip": "Sắp ra mắt"
       },
       "biometrics": {
         "appAccess": {
@@ -1364,7 +1406,7 @@
         "title": "Nội tệ"
       },
       "giveFeedback": {
-        "title": "Cung cấp thông tin phản hồi"
+        "title": "Chia sẻ phản hồi"
       },
       "helpCenter": {
         "title": "Trung tâm trợ giúp"
@@ -1431,7 +1473,7 @@
   "swap": {
     "button": {
       "max": "Tối đa",
-      "review": "Đánh giá trao đổi",
+      "review": "Ôn tập",
       "swap": "Tráo đổi",
       "unwrap": "Mở gói",
       "view": "Xem giao dịch",
@@ -1469,9 +1511,6 @@
       "wrap": "Giữ để bọc"
     },
     "request": {
-      "details": {
-        "header": "Bạn đang trao đổi"
-      },
       "title": {
         "full": "Hoán đổi {{inputCurrencySymbol}} → {{outputCurrencySymbol}}",
         "short": "Hoán đổi token"
@@ -1515,7 +1554,7 @@
           "min": "Nhập giá trị lớn hơn 0"
         }
       },
-      "title": "Cài đặt hoán đổi"
+      "title": "Cài đặt trao đổi"
     },
     "slippage": {
       "settings": {
@@ -2062,7 +2101,8 @@
     },
     "pending": {
       "button": {
-        "connect": "Kết nối"
+        "connect": "Kết nối",
+        "scrollDown": "Cuộn xuống để kết nối"
       },
       "switchAccount": "Chuyển tài khoản",
       "switchNetwork": "Chuyển mạng",
@@ -2079,6 +2119,7 @@
     },
     "request": {
       "button": {
+        "scrollDown": "Cuộn xuống để ký",
         "sign": "Dấu hiệu"
       },
       "details": {

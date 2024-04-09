@@ -5,15 +5,14 @@ import 'react-native-reanimated'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useEagerExternalProfileRootNavigation } from 'src/app/navigation/hooks'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
-import { WalletQRCode } from 'src/components/QRCodeScanner/WalletQRCode'
-import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import Trace from 'src/components/Trace/Trace'
 import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/ConnectedDappsList'
 import {
   URIType,
   UWULINK_PREFIX,
   getSupportedURI,
-  isAllowedUwULinkRequest,
+  isAllowedUwuLinkRequest,
+  useUwuLinkContractAllowlist,
 } from 'src/components/WalletConnect/ScanSheet/util'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
 import { openDeepLink } from 'src/features/deepLinking/handleDeepLinkSaga'
@@ -27,6 +26,8 @@ import { iconSizes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { logger } from 'utilities/src/logger/logger'
+import { WalletQRCode } from 'wallet/src/components/QRCodeScanner/WalletQRCode'
+import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { EthMethod, UwULinkRequest } from 'wallet/src/features/walletConnect/types'
@@ -53,6 +54,8 @@ export function WalletConnectModal({
   const dispatch = useAppDispatch()
   const isUwULinkEnabled = useFeatureFlag(FeatureFlags.UwULink)
   const isScantasticEnabled = useFeatureFlag(FeatureFlags.Scantastic)
+
+  const uwuLinkContractAllowlist = useUwuLinkContractAllowlist()
 
   // Update QR scanner states when pending session error alert is shown from WCv2 saga event channel
   useEffect(() => {
@@ -145,7 +148,7 @@ export function WalletConnectModal({
         setShouldFreezeCamera(true)
         try {
           const parsedUwulinkRequest: UwULinkRequest = JSON.parse(supportedURI.value)
-          const isAllowed = isAllowedUwULinkRequest(parsedUwulinkRequest)
+          const isAllowed = isAllowedUwuLinkRequest(parsedUwulinkRequest, uwuLinkContractAllowlist)
 
           if (!isAllowed) {
             Alert.alert(
@@ -204,16 +207,16 @@ export function WalletConnectModal({
     },
     [
       activeAddress,
-      navigate,
-      onClose,
-      preload,
-      setShouldFreezeCamera,
-      shouldFreezeCamera,
       hasPendingSessionError,
+      shouldFreezeCamera,
       isUwULinkEnabled,
       isScantasticEnabled,
       t,
+      preload,
+      navigate,
+      onClose,
       dispatch,
+      uwuLinkContractAllowlist,
     ]
   )
 

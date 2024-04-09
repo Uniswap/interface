@@ -1,6 +1,5 @@
 import React from 'react'
 import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
-import { iconSizes, imageSizes } from 'ui/src/theme'
 import {
   SafetyLevel,
   TokenDetailsScreenQuery,
@@ -45,10 +44,9 @@ export function TokenDetailsHeader({
           tokenProject?.safetyLevel === SafetyLevel.Blocked) && (
           <TouchableArea onPress={onPressWarningIcon}>
             <WarningIcon
-              height={iconSizes.icon20}
               safetyLevel={tokenProject?.safetyLevel}
+              size="$icon.20"
               strokeColorOverride="neutral3"
-              width={imageSizes.image20}
             />
           </TouchableArea>
         )}

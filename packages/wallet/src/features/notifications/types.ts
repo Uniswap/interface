@@ -138,6 +138,8 @@ export enum CopyNotificationType {
   Calldata = 'calldata',
   TransactionId = 'transactionId',
   Image = 'image',
+  TokenUrl = 'tokenUrl',
+  NftUrl = 'nftUrl',
 }
 
 export interface CopyNotification extends AppNotificationBase {

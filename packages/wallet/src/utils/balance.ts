@@ -23,9 +23,11 @@ export const MIN_ARBITRUM_FOR_GAS: JSBI = JSBI.multiply(
 
 export const MIN_OPTIMISM_FOR_GAS: JSBI = MIN_ARBITRUM_FOR_GAS
 
-export const MIN_BASE_FOR_GAS: JSBI = MIN_OPTIMISM_FOR_GAS
+export const MIN_BASE_FOR_GAS: JSBI = MIN_ARBITRUM_FOR_GAS
 
 export const MIN_BNB_FOR_GAS: JSBI = MIN_ARBITRUM_FOR_GAS
+
+export const MIN_BLAST_FOR_GAS: JSBI = MIN_ARBITRUM_FOR_GAS
 
 /**
  * Given some token amount, return the max that can be spent of it
@@ -61,6 +63,9 @@ export function maxAmountSpend(
       break
     case ChainId.Bnb:
       minAmount = MIN_BNB_FOR_GAS
+      break
+    case ChainId.Blast:
+      minAmount = MIN_BLAST_FOR_GAS
       break
     default:
       return undefined

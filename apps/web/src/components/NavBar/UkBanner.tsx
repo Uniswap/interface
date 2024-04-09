@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro'
+import { t, Trans } from 'i18n'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components'

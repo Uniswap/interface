@@ -43,7 +43,7 @@ export function SwapTokenSelector(): JSX.Element {
       const newState: Partial<SwapFormState> = {}
 
       const otherField = field === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
-      const otherFieldTradeableAsset = swapContext[otherField]
+      const otherFieldTradeableAsset = field === CurrencyField.INPUT ? output : input
 
       // We need to parse this, because one value is 'Currency' type, other is 'TradeableAsset', so shallowCompare on objects wont work
       const chainsAreEqual = currency.chainId === otherFieldTradeableAsset?.chainId
@@ -52,7 +52,7 @@ export function SwapTokenSelector(): JSX.Element {
       // swap order if tokens are the same
       if (chainsAreEqual && addressesAreEqual) {
         newState.exactCurrencyField = field
-        newState[otherField] = swapContext[field]
+        newState[otherField] = otherFieldTradeableAsset
       }
 
       // reset the other field if network changed
@@ -80,7 +80,7 @@ export function SwapTokenSelector(): JSX.Element {
       // Hide screen when done selecting.
       onHideTokenSelector()
     },
-    [onHideTokenSelector, swapContext, updateSwapForm]
+    [input, onHideTokenSelector, output, updateSwapForm]
   )
 
   const props: TokenSelectorProps = {

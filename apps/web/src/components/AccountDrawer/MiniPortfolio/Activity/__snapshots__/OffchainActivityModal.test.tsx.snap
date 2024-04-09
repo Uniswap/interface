@@ -250,17 +250,6 @@ exports[`OrderContent should render without error, filled order 1`] = `
   display: flex;
 }
 
-.c23 {
-  background-color: #F9F9F9;
-  border-radius: 12px;
-  padding: 12px;
-  margin-top: 12px;
-}
-
-.c24 {
-  line-height: 16px;
-}
-
 .c21 {
   background-color: transparent;
   border: none;
@@ -514,32 +503,6 @@ exports[`OrderContent should render without error, filled order 1`] = `
                 0xad...6564
               </a>
             </div>
-          </div>
-        </div>
-        <div
-          class="c16 c23"
-        >
-          <div
-            class="c7 c24 css-1m65e73"
-          >
-            Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.
-          </div>
-          <div
-            class="c7 c24 css-1m65e73"
-          >
-            Canceling a limit has a network cost.
-          </div>
-          <div
-            class="c7 c24 css-1m65e73"
-          >
-            <a
-              class="c22"
-              href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Learn more
-            </a>
           </div>
         </div>
       </div>
@@ -1265,25 +1228,6 @@ exports[`OrderContent should render without error, open order 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c28 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c28:hover {
-  opacity: 0.6;
-}
-
-.c28:active {
-  opacity: 0.4;
-}
-
 .c8 {
   width: 100%;
   height: 1px;
@@ -1495,17 +1439,6 @@ exports[`OrderContent should render without error, open order 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-}
-
-.c26 {
-  background-color: #F9F9F9;
-  border-radius: 12px;
-  padding: 12px;
-  margin-top: 12px;
-}
-
-.c27 {
-  line-height: 16px;
 }
 
 .c21 {
@@ -1770,32 +1703,6 @@ exports[`OrderContent should render without error, open order 1`] = `
           />
           Cancel order
         </button>
-        <div
-          class="c16 c26"
-        >
-          <div
-            class="c7 c27 css-1m65e73"
-          >
-            Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.
-          </div>
-          <div
-            class="c7 c27 css-1m65e73"
-          >
-            Canceling a limit has a network cost.
-          </div>
-          <div
-            class="c7 c27 css-1m65e73"
-          >
-            <a
-              class="c28"
-              href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Learn more
-            </a>
-          </div>
-        </div>
       </div>
     </span>
   </span>

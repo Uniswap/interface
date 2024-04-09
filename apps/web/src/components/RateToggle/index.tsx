@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { ToggleElement, ToggleWrapper } from 'components/Toggle/MultiToggle'
 
@@ -22,10 +21,10 @@ export default function RateToggle({
     <div style={{ width: 'fit-content', display: 'flex', alignItems: 'center' }} onClick={handleRateToggle}>
       <ToggleWrapper width="fit-content">
         <ToggleElement isActive={isSorted} fontSize="12px">
-          <Trans>{isSorted ? currencyA.symbol : currencyB.symbol}</Trans>
+          {isSorted ? currencyA.symbol : currencyB.symbol}
         </ToggleElement>
         <ToggleElement isActive={!isSorted} fontSize="12px">
-          <Trans>{isSorted ? currencyB.symbol : currencyA.symbol}</Trans>
+          {isSorted ? currencyB.symbol : currencyA.symbol}
         </ToggleElement>
       </ToggleWrapper>
     </div>

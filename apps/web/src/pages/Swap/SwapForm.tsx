@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import {
   BrowserEvent,
   InterfaceElementName,
@@ -10,20 +9,20 @@ import {
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
+import { Trace, TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GrayCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
-import { Field } from 'components/swap/constants'
+import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
-import { ArrowContainer, ArrowWrapper, OutputSwapSection, SwapSection } from 'components/swap/styled'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
-import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
+import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
+import { Field } from 'components/swap/constants'
+import { ArrowContainer, ArrowWrapper, OutputSwapSection, SwapSection } from 'components/swap/styled'
 import { useConnectionReady } from 'connection/eagerlyConnect'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
@@ -38,6 +37,7 @@ import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import useWrapCallback, { WrapErrorText, WrapType } from 'hooks/useWrapCallback'
+import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -610,7 +610,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
             </ButtonPrimary>
           ) : switchingChain ? (
             <ButtonPrimary $borderRadius="16px" disabled={true}>
-              <Trans>Connecting to {getChainInfo(switchingChain)?.label}</Trans>
+              <Trans>Connecting to {{ label: getChainInfo(switchingChain)?.label }}</Trans>
             </ButtonPrimary>
           ) : connectionReady && !account ? (
             <TraceEvent

@@ -1,6 +1,6 @@
-import { Plural, t, Trans } from '@lingui/macro'
 import { ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
+import { Plural, t, Trans } from 'i18n'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { Listing, WalletAsset } from 'nft/types'
@@ -105,10 +105,14 @@ export const BelowFloorWarningModal = ({
         <ThemedText.BodyPrimary textAlign="center">
           <Plural
             value={listingsBelowFloor.length !== 1 ? 2 : 1}
-            _1={t`One NFT is listed ${formatDelta(
-              (1 - (listingsBelowFloor[0][1].price ?? 0) / (listingsBelowFloor[0][0].floorPrice ?? 0)) * 100
-            )} `}
-            other={t`${listingsBelowFloor.length} NFTs are listed significantly `}
+            one={t(`One NFT is listed {{delta}} `, {
+              delta: formatDelta(
+                (1 - (listingsBelowFloor[0][1].price ?? 0) / (listingsBelowFloor[0][0].floorPrice ?? 0)) * 100
+              ),
+            })}
+            other={t(`{{count}} NFTs are listed significantly `, {
+              count: listingsBelowFloor.length,
+            })}
           />
           &nbsp;
           <Trans>below the collection’s floor price. Are you sure you want to continue?</Trans>

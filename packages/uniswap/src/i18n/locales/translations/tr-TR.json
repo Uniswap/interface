@@ -89,7 +89,7 @@
           "title": "<highlight>{{walletName}}</highlight>'yi kaldırıyorsunuz"
         },
         "mnemonic": {
-          "description": "<highlight>{{walletNames}}</highlight>ile aynı kurtarma ifadesini paylaşır. Geriye kalan tüm cüzdanları silene kadar kurtarma ifadeniz kayıtlı kalacaktır."
+          "description": "{{walletName}}ile aynı kurtarma ifadesini paylaşır. Geriye kalan tüm cüzdanları silene kadar kurtarma ifadeniz kayıtlı kalacaktır."
         }
       },
       "subtitle": {
@@ -118,12 +118,40 @@
         "restore": "Cüzdanı geri yükle",
         "watch": "Bir cüzdanı izle"
       },
+      "create": {
+        "placeholder": "Cüzdan {{index}}"
+      },
+      "edit": {
+        "label": {
+          "input": {
+            "placeholder": "Cüzdan etiketi"
+          }
+        }
+      },
       "header": {
+        "button": {
+          "disabled": {
+            "title": "Profili Düzenle"
+          },
+          "title": "Etiketi düzenle"
+        },
         "other": "Diğer cüzdanlarınız",
         "viewOnly": "Yalnızca cüzdanları görüntüle"
       },
+      "menu": {
+        "copy": {
+          "title": "Cüzdan adresini kopyala"
+        },
+        "edit": {
+          "title": "Etiketi düzenle"
+        },
+        "remove": {
+          "title": "Cüzdanı kaldır"
+        }
+      },
       "remove": {
         "check": "Kurtarma ifademi yedekledim ve bunu başaramazsam Uniswap Labs'ın cüzdanlarımı kurtarmama yardımcı olamayacağını anladım.",
+        "title": "{{name}}'yi kaldır",
         "viewOnly": "M-cüzdanın adresini girerek her zaman salt görüntülenebilir cüzdanları geri ekleyebilirsiniz."
       },
       "restore": {
@@ -138,7 +166,6 @@
         "title_one_one": "Bir cüzdan bulundu",
         "title_one_other": "İçe aktarılacak cüzdanları seçin"
       },
-      "title": "Cüzdanlarınız",
       "viewOnly": {
         "button": "Cüzdanı içe aktar",
         "description": "Tokenları takas etmek, satın almak, göndermek ve almak için bu cüzdanın kurtarma ifadesini içe aktarmanız gerekir.",
@@ -157,7 +184,6 @@
     }
   },
   "common": {
-    "app": "Uniswap Cüzdan",
     "button": {
       "accept": "Kabul etmek",
       "back": "Geri",
@@ -169,6 +195,7 @@
       "continue": "Devam etmek",
       "copied": "Kopyalandı",
       "copy": "Kopyala",
+      "create": "Yaratmak",
       "delete": "Silmek",
       "disconnect": "Bağlantıyı kes",
       "dismiss": "Azletmek",
@@ -188,6 +215,7 @@
       "retry": "Yeniden dene",
       "review": "Gözden geçirmek",
       "save": "Kaydetmek",
+      "scrollDown": "Aşağı kaydır",
       "sell": "Satmak",
       "send": "Göndermek",
       "setup": "Kurmak",
@@ -301,9 +329,20 @@
           "label": "gönderiliyor"
         }
       },
+      "permit2": {
+        "description": "Permit2, birden fazla dapp genelinde token onaylarını yönetir.",
+        "header": "İmza İzni2",
+        "price": "Hiçbiri"
+      },
       "signature": {
+        "containsUnrenderableCharacters": "Bu mesaj işlenemeyen karakterler içeriyor. Bu siteye güvendiğinizden emin olun.",
         "error": {
           "712-spec-compliance": "SignTypedDataRequestContent, imzalama için EIP-712 spesifikasyonuna uymayan veriler aldı."
+        },
+        "header": "İmza isteği",
+        "toggleDataView": {
+          "raw": "Ham verileri görüntüle",
+          "readable": "Orijinal verileri görüntüle"
         }
       },
       "warning": {
@@ -313,6 +352,10 @@
         }
       }
     }
+  },
+  "emptyTokenCard": {
+    "description": "Başlamak için token satın alın veya bu cüzdana aktarın",
+    "title": "Henüz jeton yok"
   },
   "errors": {
     "crash": {
@@ -404,11 +447,6 @@
       "titleConnected": "Bağlı",
       "titleNotConnected": "Bağlı değil"
     },
-    "dappRequest": {
-      "signatureRequest": {
-        "header": "İmza isteği"
-      }
-    },
     "lock": {
       "button": {
         "forgot": "Parolanızı mı unuttunuz?",
@@ -438,6 +476,13 @@
           "wrong": "Yanlış şifre"
         },
         "placeholder": "Mevcut Şifre"
+      }
+    },
+    "warning": {
+      "storage": {
+        "button": "Destek olmak",
+        "message": "Cüzdanınıza ve paranıza erişiminizi kaybetmemek için kurtarma ifadenizi yedeklediğinizden emin olun.",
+        "title": "Tarayıcınızın depolama alanı tükeniyor"
       }
     }
   },
@@ -514,8 +559,7 @@
       "offline": "Çevrimdışı moddasınız"
     },
     "extension": {
-      "error": "Hesaplar yüklenirken hata oluştu",
-      "pin": "<puzzleIcon />simgesine tıklayarak Uniswap Cüzdanını tarayıcı araç çubuğunuza sabitleyin"
+      "error": "Hesaplar yüklenirken hata oluştu"
     },
     "feed": {
       "empty": {
@@ -611,6 +655,8 @@
       "contractAddress": "Sözleşme adresi kopyalandı",
       "failed": "Panoya kopyalanamadı",
       "image": "Resim kopyalandı",
+      "nftUrl": "NFT URL'si kopyalandı",
+      "tokenUrl": "Jeton URL'si kopyalandı",
       "transactionId": "İşlem kimliği kopyalandı"
     },
     "countryChange": "{{countryName}}geçildi",
@@ -680,7 +726,7 @@
   "notifications": {
     "scantastic": {
       "subtitle": "Uniswap Uzantısına devam edin",
-      "title": "Başarı"
+      "title": "Başarı!"
     }
   },
   "onboarding": {
@@ -733,23 +779,13 @@
       }
     },
     "complete": {
-      "card": {
-        "buy": {
-          "description": "Kartla satın alın veya borsadan transfer edin",
-          "title": "Kripto satın alın veya aktarın"
-        },
-        "explore": {
-          "description": "Trend olan tokenları ve NFT'leri arayın ve göz atın",
-          "title": "Tokenları ve NFT'leri keşfedin"
-        },
-        "swap": {
-          "description": "Kartla satın alın veya borsadan transfer edin",
-          "title": "Değiştirmeye başla"
-        }
+      "button": "Uniswap Cüzdanını aç",
+      "description": "Cüzdanınız kripto takas etmeye, göndermeye ve almaya hazır.",
+      "pin": {
+        "description": "Araç çubuğunuzdaki bulmaca simgesine tıklayın ve listede Uniswap Cüzdan'ı bulun",
+        "title": "Uniswap Cüzdanını Pinle"
       },
-      "description": "Cüzdanınız hazır! Cüzdanınıza kripto satın alarak veya aktararak cüzdanınıza fon sağlayarak başlayın.",
-      "footer": "Uniswap Cüzdanını nasıl kullanacağınızı öğrenin",
-      "pin": "<text>Uzantıyı tarayıcı pencerenize sabitleyin</text><container><text> </text><puzzleIcon /><text> simgesine tıklayarak ve ardından pin</text></container>"
+      "title": "Hazırsınız"
     },
     "editName": {
       "button": {
@@ -766,7 +802,7 @@
         "title": "Uniswap mobil uygulamasına sahip misiniz?"
       },
       "getOnTheBetaWaitlist": {
-        "subtitle": "Mobil uygulamayı indirin ve bir kullanıcı adı talep edin",
+        "subtitle": "Kullanıcı adı talep etmek için mobil uygulamayı indirin",
         "title": "Beta bekleme listesine girin"
       },
       "password": {
@@ -825,7 +861,7 @@
       },
       "checkEligibilityInstructions": "Beta için uygun olup olmadığınızı kontrol etmek için aşağıya <highlight>uni.eth</highlight> kullanıcı adınızı girin.",
       "eligible": {
-        "tagline": "Beta'ya hoş geldiniz; Uniswap cüzdanını ilk deneyenlerden birisiniz.",
+        "tagline": "Beta'ya hoş geldiniz; Uniswap Uzantısını deneyen ilk kişilerden birisiniz.",
         "title": "Bekleme listesinden çıktınız!"
       },
       "ineligibleExplanation": "Hala bekleme listesindesin. Uygun olduğunuzda sizi Uniswap mobil uygulamasında bilgilendireceğiz!",
@@ -885,7 +921,7 @@
         "subtitle": "6 karakterli kod için Uniswap mobil uygulamanızı kontrol edin",
         "title": "Tek kullanımlık kodu girin"
       },
-      "subtitle": "Cüzdanlarınızı içe aktarmaya başlamak için QR kodunu Uniswap mobil uygulamasıyla tarayın",
+      "subtitle": "Cüzdanınızı içe aktarmaya başlamak için QR kodunu Uniswap mobil uygulamasıyla tarayın.",
       "title": "Uygulamadan cüzdanı içe aktar"
     },
     "security": {
@@ -921,7 +957,7 @@
         "error": "Cüzdanları içe aktarırken hata oluştu"
       }
     },
-    "termsOfService": "Devam ederek<highlightTerms> Hizmet Koşullarını </highlightTerms>kabul ediyorum ve<highlightPrivacy> Gizlilik Politikasını</highlightPrivacy>kabul ediyorum.",
+    "termsOfService": "Devam ederek<highlightTerms> Hizmet Koşullarını </highlightTerms>kabul ediyorum ve<highlightPrivacy> Gizlilik Politikasını</highlightPrivacy>kabul ediyorum",
     "tooltip": {
       "recoveryPhrase": {
         "trigger": "Kurtarma ifadesi nedir?"
@@ -988,11 +1024,7 @@
     },
     "title": "QR kodunu tarayın",
     "wallet": {
-      "networks": {
-        "description": "Uniswap Cüzdan, Ethereum, Polygon, Arbitrum, Optimism, Base ve BNB Chain üzerindeki tokenleri destekler. Şu anda yalnızca Ethereum'da NFT'leri destekliyoruz.",
-        "title": "Desteklenen Ağlar"
-      },
-      "title": "Desteklenen tüm ağlarımızda belirteçleri bu adrese gönderebilirsiniz."
+      "title": "Uniswap Cüzdan, Ethereum, Polygon, Arbitrum, Optimism, Base, Blast ve BNB Chain üzerindeki tokenleri destekler. Şu anda yalnızca Ethereum'da NFT'leri destekliyoruz."
     }
   },
   "scantastic": {
@@ -1016,8 +1048,9 @@
         "browser": "Tarayıcı",
         "device": "Cihaz"
       },
-      "subtitle": "Yalnızca güvenilir bir cihazdaki Uniswap Uzantısıyla senkronizasyon yapıyorsanız devam edin.",
-      "title": "Bu senin cihazın mı?"
+      "subtitle": "Yalnızca güvenilir bir cihazda Uniswap Uzantısından bir QR kodu tarıyorsanız devam edin.",
+      "title": "Cüzdanınızı içe aktarmaya mı çalışıyorsunuz?",
+      "warning": "Uniswap'i taklit eden sitelere ve uygulamalara karşı dikkatli olun. Aksi takdirde cüzdanınız tehlikeye girebilir."
     },
     "error": {
       "encryption": "Başlangıç ifadesi hazırlanamadı.",
@@ -1048,7 +1081,7 @@
         "title": "Yok"
       },
       "networkCost": {
-        "title": "Ağ Maliyeti"
+        "title": "Ağ maliyeti"
       }
     },
     "input": {
@@ -1085,6 +1118,11 @@
       "title": "İle"
     },
     "review": {
+      "input": {
+        "tokenAmount": {
+          "title": "{{currencyAmount}} / {{currencySymbol}}"
+        }
+      },
       "modal": {
         "title": "gönderiyorsun"
       },
@@ -1128,6 +1166,10 @@
           "title": "Engellenen adres"
         },
         "recipient": "Alıcının cüzdanı engellendi"
+      },
+      "erc20": {
+        "message": "Bir jeton adresine para göndermeye çalışıyorsunuz. Bu tür bir adrese kripto göndermek kalıcı para kaybına yol açabilir.",
+        "title": "Bu bir simge adrestir"
       },
       "insufficientFunds": {
         "message": "Göndermek istediğiniz tutarı girdiğiniz andan itibaren {{currencySymbol}} bakiyeniz azaldı",
@@ -1206,7 +1248,7 @@
   },
   "settings": {
     "action": {
-      "feedback": "Geribildirim yolla",
+      "feedback": "Geri bildirimi paylaşın",
       "help": "Yardım almak",
       "lock": "Cüzdanı kilitle",
       "privacy": "Gizlilik Politikası",
@@ -1313,7 +1355,7 @@
         }
       },
       "beta": {
-        "tooltip": "Yakında gelecek!"
+        "tooltip": "Yakında gelecek"
       },
       "biometrics": {
         "appAccess": {
@@ -1364,7 +1406,7 @@
         "title": "Yerel para birimi"
       },
       "giveFeedback": {
-        "title": "Geri bildirimde bulunun"
+        "title": "Geri bildirimi paylaşın"
       },
       "helpCenter": {
         "title": "Yardım Merkezi"
@@ -1431,7 +1473,7 @@
   "swap": {
     "button": {
       "max": "Maksimum",
-      "review": "Takası inceleyin",
+      "review": "Gözden geçirmek",
       "swap": "Takas",
       "unwrap": "Paketi aç",
       "view": "İşlemi görüntüle",
@@ -1469,9 +1511,6 @@
       "wrap": "Sarmak için basılı tutun"
     },
     "request": {
-      "details": {
-        "header": "takas yapıyorsun"
-      },
       "title": {
         "full": "Takas {{inputCurrencySymbol}} → {{outputCurrencySymbol}}",
         "short": "Jetonları Değiştir"
@@ -1515,11 +1554,11 @@
           "min": "0'dan büyük bir değer girin"
         }
       },
-      "title": "Ayarları Değiştir"
+      "title": "Ayarları değiştir"
     },
     "slippage": {
       "settings": {
-        "title": "Kayma Ayarları"
+        "title": "Kayma ayarları"
       }
     },
     "warning": {
@@ -2062,7 +2101,8 @@
     },
     "pending": {
       "button": {
-        "connect": "Bağlamak"
+        "connect": "Bağlamak",
+        "scrollDown": "Bağlanmak için aşağı kaydırın"
       },
       "switchAccount": "Hesap değiştir",
       "switchNetwork": "Ağı Değiştir",
@@ -2079,6 +2119,7 @@
     },
     "request": {
       "button": {
+        "scrollDown": "İmzalamak için aşağı kaydırın",
         "sign": "İmza"
       },
       "details": {

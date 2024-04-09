@@ -1,11 +1,10 @@
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
-import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { AutoRow } from 'components/Row'
 import { COMMON_BASES } from 'constants/routing'
+import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { Text } from 'rebass'
@@ -65,9 +64,7 @@ export default function CommonBases({
   portfolioBalanceUsd?: number
 }) {
   const bases = chainId !== undefined ? COMMON_BASES[chainId] ?? [] : []
-  const { account } = useWeb3React()
-  const { data } = useCachedPortfolioBalancesQuery({ account })
-  const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
+  const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 
   return bases.length > 0 ? (
     <AutoRow gap="4px">

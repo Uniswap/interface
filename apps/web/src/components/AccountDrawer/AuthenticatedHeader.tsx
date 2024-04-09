@@ -1,8 +1,7 @@
-import { t, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent, TraceEvent } from 'analytics'
+import { TraceEvent, sendAnalyticsEvent } from 'analytics'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import { CreditCardIcon } from 'components/Icons/CreditCard'
@@ -10,11 +9,13 @@ import { ImagesIcon } from 'components/Icons/Images'
 import { Power } from 'components/Icons/Power'
 import { Settings } from 'components/Icons/Settings'
 import Row, { AutoRow } from 'components/Row'
-import { LoadingBubble } from 'components/Tokens/loading'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
+import { LoadingBubble } from 'components/Tokens/loading'
 import { getConnection } from 'connection'
+import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import useENSName from 'hooks/useENSName'
+import { Trans, t } from 'i18n'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
@@ -29,12 +30,11 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
-import { useCachedPortfolioBalancesQuery } from '../PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { ActionTile } from './ActionTile'
 import IconButton, { IconHoverText, IconWithConfirmTextButton } from './IconButton'
 import MiniPortfolio from './MiniPortfolio'
-import { useToggleAccountDrawer } from './MiniPortfolio/hooks'
 import { portfolioFadeInAnimation } from './MiniPortfolio/PortfolioRow'
+import { useAccountDrawer } from './MiniPortfolio/hooks'
 import { Status } from './Status'
 
 const AuthenticatedHeaderWrapper = styled.div`
@@ -118,23 +118,23 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     dispatch(setRecentConnectionDisconnected())
   }, [connector, dispatch])
 
-  const toggleWalletDrawer = useToggleAccountDrawer()
+  const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
 
   const navigateToProfile = useCallback(() => {
-    toggleWalletDrawer()
+    toggleAccountDrawer()
     resetSellAssets()
     setSellPageState(ProfilePageStateType.VIEWING)
     clearCollectionFilters()
     navigate('/nfts/profile')
     closeModal()
-  }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState, toggleWalletDrawer])
+  }, [clearCollectionFilters, closeModal, navigate, resetSellAssets, setSellPageState, toggleAccountDrawer])
 
   const openFiatOnrampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
   const openFoRModalWithAnalytics = useCallback(() => {
-    toggleWalletDrawer()
+    toggleAccountDrawer()
     sendAnalyticsEvent(InterfaceEventName.FIAT_ONRAMP_WIDGET_OPENED)
     openFiatOnrampModal()
-  }, [openFiatOnrampModal, toggleWalletDrawer])
+  }, [openFiatOnrampModal, toggleAccountDrawer])
 
   const [shouldCheck, setShouldCheck] = useState(false)
   const {
@@ -155,7 +155,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading
   )
 
-  const { data: portfolioBalances } = useCachedPortfolioBalancesQuery({ account })
+  const { data: portfolioBalances } = useTokenBalancesQuery({ skip: !accountDrawerOpen })
   const portfolio = portfolioBalances?.portfolios?.[0]
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
@@ -163,6 +163,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
 
   const { unitag } = useUnitagByAddressWithoutFlag(account, Boolean(account))
+  const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')
 
   return (
     <AuthenticatedHeaderWrapper>
@@ -246,7 +247,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         <MiniPortfolio account={account} />
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
-            <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
+            <Trans>Claim {{ amount }} reward</Trans>
           </UNIButton>
         )}
       </PortfolioDrawerContainer>

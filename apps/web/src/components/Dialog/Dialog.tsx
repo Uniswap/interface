@@ -91,6 +91,48 @@ export interface DialogProps {
 }
 
 /**
+ * All the content of the dialog that doesn't relate to the modal presentation.
+ * Use this if you want to use the dialog within a different modal.
+ */
+export function DialogContent({ icon, title, description, body, buttonsConfig }: DialogProps) {
+  const { left, right, gap } = buttonsConfig ?? {}
+  return (
+    <>
+      <ColumnCenter gap="md">
+        <IconContainer>{icon}</IconContainer>
+        <TitleText>{title}</TitleText>
+        <DescriptionText>{description}</DescriptionText>
+        {body}
+      </ColumnCenter>
+      <Row align="center" justify="center" gap={gap ?? 'md'}>
+        {left && (
+          <StyledButton
+            size={ButtonSize.small}
+            onClick={left.onClick}
+            disabled={left.disabled}
+            emphasis={getButtonEmphasis(left.type)}
+            $color={left.textColor}
+          >
+            {left.title}
+          </StyledButton>
+        )}
+        {right && (
+          <StyledButton
+            size={ButtonSize.small}
+            onClick={right.onClick}
+            disabled={right.disabled}
+            emphasis={getButtonEmphasis(right.type)}
+            $color={right.textColor}
+          >
+            {right.title}
+          </StyledButton>
+        )}
+      </Row>
+    </>
+  )
+}
+
+/**
  * Displays interruptive timely information.
  * Persists until dismissed by user.
  * Appears on top of a scrim.
@@ -103,45 +145,15 @@ export interface DialogProps {
  * |   left | right   |
  *  ------------------
  */
-export function Dialog({ isVisible, buttonsConfig, icon, title, onCancel, description, body }: DialogProps) {
-  const { left, right, gap } = buttonsConfig ?? {}
+export function Dialog(props: DialogProps) {
   return (
-    <Modal $scrollOverlay isOpen={isVisible} onDismiss={onCancel}>
+    <Modal $scrollOverlay isOpen={props.isVisible} onDismiss={props.onCancel}>
       <Container gap="lg">
         <Row gap="10px" width="100%" padding="4px 0px" justify="end" align="center">
           <GetHelp />
-          <CloseIcon data-testid="Dialog-closeButton" onClick={onCancel} />
+          <CloseIcon data-testid="Dialog-closeButton" onClick={props.onCancel} />
         </Row>
-        <ColumnCenter gap="md">
-          <IconContainer>{icon}</IconContainer>
-          <TitleText>{title}</TitleText>
-          <DescriptionText>{description}</DescriptionText>
-          {body}
-        </ColumnCenter>
-        <Row align="center" justify="center" gap={gap ?? 'md'}>
-          {left && (
-            <StyledButton
-              size={ButtonSize.small}
-              onClick={left.onClick}
-              disabled={left.disabled}
-              emphasis={getButtonEmphasis(left.type)}
-              $color={left.textColor}
-            >
-              {left.title}
-            </StyledButton>
-          )}
-          {right && (
-            <StyledButton
-              size={ButtonSize.small}
-              onClick={right.onClick}
-              disabled={right.disabled}
-              emphasis={getButtonEmphasis(right.type)}
-              $color={right.textColor}
-            >
-              {right.title}
-            </StyledButton>
-          )}
-        </Row>
+        <DialogContent {...props} />
       </Container>
     </Modal>
   )

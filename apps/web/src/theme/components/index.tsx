@@ -1,6 +1,6 @@
-import { Trans } from '@lingui/macro'
 import { outboundLink } from 'components/analytics'
 import useCopyClipboard from 'hooks/useCopyClipboard'
+import { Trans } from 'i18n'
 import React, {
   forwardRef,
   HTMLProps,

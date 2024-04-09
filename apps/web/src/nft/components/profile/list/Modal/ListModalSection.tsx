@@ -1,8 +1,8 @@
-import { Plural, Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { Plural, Trans, t } from 'i18n'
 import { ChevronUpIcon, ListingModalWindowActive, ListingModalWindowClosed } from 'nft/components/icons'
 import { useSellAsset } from 'nft/hooks'
 import { AssetRow, CollectionRow, ListingRow, ListingStatus } from 'nft/types'
@@ -108,12 +108,12 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
             {isCollectionApprovalSection ? (
               <>
                 <Trans>Approve</Trans>&nbsp;
-                <Plural value={uniqueCollections ?? 1} _1="collection" other="collections" />
+                <Plural value={uniqueCollections ?? 1} one={t`collection`} other={t`collections`} />
               </>
             ) : (
               <>
                 <Trans>Sign</Trans> &nbsp;{content.length}&nbsp;{' '}
-                <Plural value={content.length} _1="listing" other="listings" />
+                <Plural value={content.length} one={t`listing`} other={t`listings`} />
               </>
             )}
           </SectionTitle>

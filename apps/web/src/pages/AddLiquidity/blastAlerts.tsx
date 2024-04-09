@@ -1,8 +1,8 @@
-import { Trans, t } from '@lingui/macro'
 import Column from 'components/Column'
 import { Dialog, DialogButtonType } from 'components/Dialog/Dialog'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import Row from 'components/Row'
+import { Trans, t } from 'i18n'
 import { useCallback, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -141,7 +141,7 @@ export function BlastRebasingAlert() {
         </TextWrapper>
         <ReadMore onClick={handleSetExpanded}>
           <ThemedText.SubHeaderSmall lineHeight="20px" fontWeight={535}>
-            {expanded ? t`Read less` : t`Read more`}
+            {expanded ? t('Read less') : t('Read more')}
           </ThemedText.SubHeaderSmall>
           <StyledChevronDown $expanded={expanded} size={16} />
         </ReadMore>

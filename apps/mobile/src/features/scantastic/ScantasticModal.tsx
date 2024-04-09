@@ -56,7 +56,7 @@ export function ScantasticModal(): JSX.Element | null {
   )
   const pubKey = params?.publicKey
   const uuid = params?.uuid
-  const device = (params?.vendor + ' ' + params?.model || '').trim()
+  const device = `${params?.vendor || ''} ${params?.model || ''}`.trim()
   const browser = params?.browser || ''
 
   const [expired, setExpired] = useState(false)
@@ -160,9 +160,11 @@ export function ScantasticModal(): JSX.Element | null {
     requiredForAppAccess: biometricAuthRequiredForAppAccess,
     requiredForTransactions: biometricAuthRequiredForTransactions,
   } = useBiometricAppSettings()
+  const requiresBiometricAuth =
+    biometricAuthRequiredForAppAccess || biometricAuthRequiredForTransactions
 
   const onConfirmSync = async (): Promise<void> => {
-    if (biometricAuthRequiredForAppAccess || biometricAuthRequiredForTransactions) {
+    if (requiresBiometricAuth) {
       await biometricTrigger()
     } else {
       await onEncryptSeedphrase()
@@ -286,6 +288,8 @@ export function ScantasticModal(): JSX.Element | null {
     )
   }
 
+  const renderDeviceDetails = Boolean(device || browser)
+
   return (
     <BottomSheetModal
       backgroundColor={colors.surface1.get()}
@@ -299,33 +303,48 @@ export function ScantasticModal(): JSX.Element | null {
         <Text color="$neutral2" textAlign="center" variant="body3">
           {t('scantastic.confirmation.subtitle')}
         </Text>
+        {renderDeviceDetails && (
+          <Flex
+            borderColor="$surface3"
+            borderRadius="$rounded20"
+            borderWidth={1}
+            gap="$spacing12"
+            p="$spacing16"
+            width="100%">
+            {device && (
+              <Flex row px="$spacing8">
+                <Text color="$neutral2" flex={1} variant="body3">
+                  {t('scantastic.confirmation.label.device')}
+                </Text>
+                <Text variant="body3">{device}</Text>
+              </Flex>
+            )}
+            {browser && (
+              <Flex row px="$spacing8">
+                <Text color="$neutral2" flex={1} variant="body3">
+                  {t('scantastic.confirmation.label.browser')}
+                </Text>
+                <Text variant="body3">{browser}</Text>
+              </Flex>
+            )}
+          </Flex>
+        )}
         <Flex
-          borderColor="$surface3"
-          borderRadius="$rounded20"
-          borderWidth={1}
-          gap="$spacing12"
+          row
+          alignItems="center"
+          backgroundColor="$surface2"
+          borderRadius="$rounded16"
+          gap="$spacing8"
           p="$spacing16"
           width="100%">
-          {device && (
-            <Flex row px="$spacing8">
-              <Text color="$neutral2" flex={1} variant="body3">
-                {t('scantastic.confirmation.label.device')}
-              </Text>
-              <Text variant="body3">{device}</Text>
-            </Flex>
-          )}
-          {browser && (
-            <Flex row px="$spacing8">
-              <Text color="$neutral2" flex={1} variant="body3">
-                {t('scantastic.confirmation.label.browser')}
-              </Text>
-              <Text variant="body3">{browser}</Text>
-            </Flex>
-          )}
+          <Icons.AlertTriangle color="$neutral2" size="$icon.20" />
+          <Text color="$neutral2" variant="body4">
+            {t('scantastic.confirmation.warning')}
+          </Text>
         </Flex>
-        <Flex flexDirection="column" gap="$spacing4" mt="$spacing12" width="100%">
+        <Flex flexDirection="column" gap="$spacing4" width="100%">
           <Button
-            icon={<Icons.Faceid size={iconSizes.icon16} />}
+            icon={requiresBiometricAuth ? <Icons.Faceid size={iconSizes.icon16} /> : undefined}
             mb="$spacing4"
             theme="primary"
             onPress={onConfirmSync}>

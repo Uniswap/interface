@@ -13,6 +13,7 @@ import {
   TouchableAreaProps,
   useDeviceDimensions,
   useIsDarkMode,
+  useIsShortMobileDevice,
 } from 'ui/src'
 import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
@@ -41,6 +42,7 @@ export function UnitagBanner({
   const { fullWidth } = useDeviceDimensions()
   const isDarkMode = useIsDarkMode()
   const hasCompletedUnitagsIntroModal = useAppSelector(selectHasCompletedUnitagsIntroModal)
+  const isShortDevice = useIsShortMobileDevice()
 
   const imageWidth = compact
     ? COMPACT_IMAGE_SCREEN_WIDTH_PROPORTION * fullWidth
@@ -124,9 +126,11 @@ export function UnitagBanner({
                 unitagDomain: UNITAG_SUFFIX_NO_LEADING_DOT,
               })}
             </Text>
-            <Text color="$neutral2" variant="body3">
-              {t('unitags.banner.subtitle')}
-            </Text>
+            {!isShortDevice && (
+              <Text color="$neutral2" variant="body3">
+                {t('unitags.banner.subtitle')}
+              </Text>
+            )}
           </Flex>
           <Flex row gap="$spacing2">
             {/* TODO: replace with Button when it's extensible enough to accommodate designs */}

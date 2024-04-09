@@ -354,10 +354,11 @@ exports[`AccountHeader renders correctly 1`] = `
       >
         <RNSVGSvgView
           align="xMidYMid"
-          bbHeight="28"
-          bbWidth="28"
+          bbHeight="24"
+          bbWidth="24"
           fill="none"
           focusable={false}
+          height="24"
           meetOrSlice={0}
           minX={0}
           minY={0}
@@ -370,20 +371,21 @@ exports[`AccountHeader renders correctly 1`] = `
               },
               {
                 "color": "#7D7D7D",
-                "height": 28,
+                "height": 24,
                 "opacity": 0.8,
-                "width": 28,
+                "width": 24,
               },
               {
                 "flex": 0,
-                "height": 28,
-                "width": 28,
+                "height": 24,
+                "width": 24,
               },
             ]
           }
           tintColor="#7D7D7D"
           vbHeight={24}
           vbWidth={24}
+          width="24"
         >
           <RNSVGGroup
             fill={null}
@@ -453,211 +455,205 @@ exports[`AccountHeader renders correctly 1`] = `
         <View
           style={
             {
-              "flexDirection": "column",
+              "flexDirection": "row",
+              "flexShrink": 1,
             }
           }
         >
-          <View
+          <Text
+            allowFontScaling={true}
+            maxFontSizeMultiplier={1.4}
+            numberOfLines={1}
             style={
               {
-                "flexDirection": "row",
+                "color": "#222222",
+                "fontFamily": "Basel-Book",
+                "fontSize": 19,
+                "lineHeight": 24,
               }
             }
+            suppressHighlighting={true}
           >
-            <Text
-              allowFontScaling={true}
-              maxFontSizeMultiplier={1.4}
-              style={
-                {
-                  "color": "#222222",
-                  "fontFamily": "Basel-Book",
-                  "fontSize": 19,
-                  "lineHeight": 24,
-                }
-              }
-              suppressHighlighting={true}
-            >
-              Test Account
-            </Text>
-            <View
-              animatedStyle={
-                {
-                  "value": {
-                    "transform": [
-                      {
-                        "translateX": 0,
-                      },
-                    ],
-                  },
-                }
-              }
-              collapsable={false}
-              forwardedRef={[Function]}
-              style={
-                {
-                  "flexDirection": "row",
-                  "marginLeft": -0,
+            Test Account
+          </Text>
+          <View
+            animatedStyle={
+              {
+                "value": {
                   "transform": [
                     {
                       "translateX": 0,
+                    },
+                  ],
+                },
+              }
+            }
+            collapsable={false}
+            forwardedRef={[Function]}
+            style={
+              {
+                "flexDirection": "row",
+                "marginLeft": -0,
+                "transform": [
+                  {
+                    "translateX": 0,
+                  },
+                ],
+              }
+            }
+          >
+            <View
+              onLayout={[Function]}
+              style={
+                {
+                  "flexDirection": "column",
+                }
+              }
+            >
+              <Text
+                allowFontScaling={true}
+                animatedStyle={
+                  {
+                    "value": {
+                      "color": "#CECECE",
+                      "fontSize": 19,
+                      "opacity": 0,
+                    },
+                  }
+                }
+                collapsable={false}
+                forwardedRef={[Function]}
+                maxFontSizeMultiplier={1.4}
+                style={
+                  {
+                    "color": "#CECECE",
+                    "fontFamily": "Basel-Book",
+                    "fontSize": 19,
+                    "lineHeight": 24,
+                    "opacity": 0,
+                  }
+                }
+                suppressHighlighting={true}
+              >
+                .uni.eth
+              </Text>
+            </View>
+            <View
+              cancelable={true}
+              disabled={false}
+              focusable={true}
+              hitSlop={[Function]}
+              minPressDuration={0}
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onMouseEnter={[Function]}
+              onMouseLeave={[Function]}
+              onPress={[Function]}
+              onPressIn={[Function]}
+              onPressOut={[Function]}
+              style={
+                {
+                  "flexDirection": "column",
+                  "opacity": 1,
+                  "paddingLeft": 8,
+                  "transform": [
+                    {
+                      "scale": 1,
                     },
                   ],
                 }
               }
             >
               <View
-                onLayout={[Function]}
                 style={
                   {
-                    "flexDirection": "column",
+                    "alignItems": "center",
+                    "flexDirection": "row",
+                    "gap": 4,
                   }
                 }
               >
                 <Text
                   allowFontScaling={true}
-                  animatedStyle={
-                    {
-                      "value": {
-                        "color": "#CECECE",
-                        "fontSize": 19,
-                        "opacity": 0,
-                      },
-                    }
-                  }
-                  collapsable={false}
-                  forwardedRef={[Function]}
                   maxFontSizeMultiplier={1.4}
+                  numberOfLines={1}
                   style={
                     {
                       "color": "#CECECE",
                       "fontFamily": "Basel-Book",
-                      "fontSize": 19,
+                      "fontSize": 17,
                       "lineHeight": 24,
-                      "opacity": 0,
                     }
                   }
                   suppressHighlighting={true}
                 >
-                  .uni.eth
+                  0x​82D5...3Fa6
                 </Text>
-              </View>
-              <View
-                cancelable={true}
-                disabled={false}
-                focusable={true}
-                hitSlop={[Function]}
-                minPressDuration={0}
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseEnter={[Function]}
-                onMouseLeave={[Function]}
-                onPress={[Function]}
-                onPressIn={[Function]}
-                onPressOut={[Function]}
-                style={
-                  {
-                    "flexDirection": "column",
-                    "opacity": 1,
-                    "paddingLeft": 8,
-                    "transform": [
-                      {
-                        "scale": 1,
-                      },
-                    ],
-                  }
-                }
-              >
-                <View
+                <RNSVGSvgView
+                  align="xMidYMid"
+                  bbHeight="16"
+                  bbWidth="16"
+                  fill="none"
+                  focusable={false}
+                  meetOrSlice={0}
+                  minX={0}
+                  minY={0}
+                  strokeWidth={8}
                   style={
-                    {
-                      "alignItems": "center",
-                      "flexDirection": "row",
-                      "gap": 4,
-                    }
-                  }
-                >
-                  <Text
-                    allowFontScaling={true}
-                    maxFontSizeMultiplier={1.4}
-                    numberOfLines={1}
-                    style={
+                    [
+                      {
+                        "backgroundColor": "transparent",
+                        "borderWidth": 0,
+                      },
                       {
                         "color": "#CECECE",
-                        "fontFamily": "Basel-Book",
-                        "fontSize": 17,
-                        "lineHeight": 24,
-                      }
-                    }
-                    suppressHighlighting={true}
-                  >
-                    0x​82D5...3Fa6
-                  </Text>
-                  <RNSVGSvgView
-                    align="xMidYMid"
-                    bbHeight="16"
-                    bbWidth="16"
-                    fill="none"
-                    focusable={false}
-                    meetOrSlice={0}
-                    minX={0}
-                    minY={0}
-                    strokeWidth={8}
-                    style={
+                        "height": 16,
+                        "width": 16,
+                      },
+                      {
+                        "flex": 0,
+                        "height": 16,
+                        "width": 16,
+                      },
+                    ]
+                  }
+                  tintColor="#CECECE"
+                  vbHeight={16}
+                  vbWidth={16}
+                >
+                  <RNSVGGroup
+                    fill={null}
+                    propList={
                       [
-                        {
-                          "backgroundColor": "transparent",
-                          "borderWidth": 0,
-                        },
-                        {
-                          "color": "#CECECE",
-                          "height": 16,
-                          "width": 16,
-                        },
-                        {
-                          "flex": 0,
-                          "height": 16,
-                          "width": 16,
-                        },
+                        "fill",
+                        "strokeWidth",
                       ]
                     }
-                    tintColor="#CECECE"
-                    vbHeight={16}
-                    vbWidth={16}
+                    strokeWidth="8"
                   >
-                    <RNSVGGroup
-                      fill={null}
+                    <RNSVGPath
+                      d="M12.25 4.16667H6.41667C4.96533 4.16667 4.16667 4.96533 4.16667 6.41667V12.25C4.16667 13.7013 4.96533 14.5 6.41667 14.5H12.25C13.7013 14.5 14.5 13.7013 14.5 12.25V6.41667C14.5 4.96533 13.7013 4.16667 12.25 4.16667ZM13.5 12.25C13.5 13.138 13.138 13.5 12.25 13.5H6.41667C5.52867 13.5 5.16667 13.138 5.16667 12.25V6.41667C5.16667 5.52867 5.52867 5.16667 6.41667 5.16667H12.25C13.138 5.16667 13.5 5.52867 13.5 6.41667V12.25ZM2.5 3.74666V9.58667C2.5 10.3853 2.82206 10.582 2.92806 10.6473C3.16406 10.7913 3.23726 11.0993 3.09326 11.3347C2.9986 11.4887 2.83468 11.5733 2.66602 11.5733C2.57735 11.5733 2.48661 11.5493 2.40527 11.5C1.80461 11.132 1.5 10.4887 1.5 9.58667V3.74666C1.5 2.31866 2.31941 1.5 3.74674 1.5H9.58659C10.7099 1.5 11.2467 1.99265 11.5 2.40531C11.644 2.64065 11.57 2.94865 11.3346 3.09265C11.0986 3.23732 10.792 3.16266 10.6473 2.92733C10.5826 2.82133 10.3853 2.49935 9.58659 2.49935H3.74674C2.86141 2.50002 2.5 2.86133 2.5 3.74666Z"
+                      fill={
+                        {
+                          "type": 2,
+                        }
+                      }
                       propList={
                         [
                           "fill",
+                          "stroke",
                           "strokeWidth",
                         ]
                       }
-                      strokeWidth="8"
-                    >
-                      <RNSVGPath
-                        d="M12.25 4.16667H6.41667C4.96533 4.16667 4.16667 4.96533 4.16667 6.41667V12.25C4.16667 13.7013 4.96533 14.5 6.41667 14.5H12.25C13.7013 14.5 14.5 13.7013 14.5 12.25V6.41667C14.5 4.96533 13.7013 4.16667 12.25 4.16667ZM13.5 12.25C13.5 13.138 13.138 13.5 12.25 13.5H6.41667C5.52867 13.5 5.16667 13.138 5.16667 12.25V6.41667C5.16667 5.52867 5.52867 5.16667 6.41667 5.16667H12.25C13.138 5.16667 13.5 5.52867 13.5 6.41667V12.25ZM2.5 3.74666V9.58667C2.5 10.3853 2.82206 10.582 2.92806 10.6473C3.16406 10.7913 3.23726 11.0993 3.09326 11.3347C2.9986 11.4887 2.83468 11.5733 2.66602 11.5733C2.57735 11.5733 2.48661 11.5493 2.40527 11.5C1.80461 11.132 1.5 10.4887 1.5 9.58667V3.74666C1.5 2.31866 2.31941 1.5 3.74674 1.5H9.58659C10.7099 1.5 11.2467 1.99265 11.5 2.40531C11.644 2.64065 11.57 2.94865 11.3346 3.09265C11.0986 3.23732 10.792 3.16266 10.6473 2.92733C10.5826 2.82133 10.3853 2.49935 9.58659 2.49935H3.74674C2.86141 2.50002 2.5 2.86133 2.5 3.74666Z"
-                        fill={
-                          {
-                            "type": 2,
-                          }
+                      stroke={
+                        {
+                          "type": 2,
                         }
-                        propList={
-                          [
-                            "fill",
-                            "stroke",
-                            "strokeWidth",
-                          ]
-                        }
-                        stroke={
-                          {
-                            "type": 2,
-                          }
-                        }
-                        strokeWidth="0.5"
-                      />
-                    </RNSVGGroup>
-                  </RNSVGSvgView>
-                </View>
+                      }
+                      strokeWidth="0.5"
+                    />
+                  </RNSVGGroup>
+                </RNSVGSvgView>
               </View>
             </View>
           </View>

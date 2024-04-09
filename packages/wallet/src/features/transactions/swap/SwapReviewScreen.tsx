@@ -1,10 +1,24 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
+import {
+  AnimatedFlex,
+  Button,
+  Flex,
+  HapticFeedback,
+  Separator,
+  isWeb,
+  useIsShortMobileDevice,
+} from 'ui/src'
+import { BackArrow } from 'ui/src/components/icons/BackArrow'
+import { iconSizes } from 'ui/src/theme'
 import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { selectHasViewedReviewScreen } from 'wallet/src/features/behaviorHistory/selectors'
 import { setHasViewedReviewScreen } from 'wallet/src/features/behaviorHistory/slice'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import {
   SwapScreen,
@@ -12,37 +26,31 @@ import {
 } from 'wallet/src/features/transactions/contexts/SwapScreenContext'
 import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
+import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { GasAndWarningRows } from 'wallet/src/features/transactions/swap/GasAndWarningRows'
-import { SlippageInfoModal } from 'wallet/src/features/transactions/swap/modals/SlippageInfoModal'
+import { HOLD_TO_SWAP_TIMEOUT } from 'wallet/src/features/transactions/swap/HoldToSwapProgressCircle'
 import { SwapDetails } from 'wallet/src/features/transactions/swap/SwapDetails'
+import { TransactionAmountsReview } from 'wallet/src/features/transactions/swap/TransactionAmountsReview'
 import {
   TransactionModalFooterContainer,
   TransactionModalInnerContainer,
 } from 'wallet/src/features/transactions/swap/TransactionModal'
-import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
-
-import { AnimatedFlex, Button, Flex, HapticFeedback, isWeb, Separator } from 'ui/src'
-import { BackArrow } from 'ui/src/components/icons/BackArrow'
-import { iconSizes } from 'ui/src/theme'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
-import { HOLD_TO_SWAP_TIMEOUT } from 'wallet/src/features/transactions/swap/HoldToSwapProgressCircle'
+import { SlippageInfoModal } from 'wallet/src/features/transactions/swap/modals/SlippageInfoModal'
 import { useAcceptedTrade } from 'wallet/src/features/transactions/swap/trade/hooks/useAcceptedTrade'
 import { useSwapCallback } from 'wallet/src/features/transactions/swap/trade/hooks/useSwapCallback'
 import { useWrapCallback } from 'wallet/src/features/transactions/swap/trade/hooks/useWrapCallback'
-import { TransactionAmountsReview } from 'wallet/src/features/transactions/swap/TransactionAmountsReview'
 import { getActionName, isWrapAction } from 'wallet/src/features/transactions/swap/utils'
-import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 // eslint-disable-next-line complexity
 export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX.Element | null {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+  const isShortMobileDevice = useIsShortMobileDevice()
 
   const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -393,14 +401,19 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
         <TransactionModalFooterContainer>
           <Flex row gap="$spacing8">
             {!isWeb && (
-              <Button icon={<BackArrow />} size="large" theme="tertiary" onPress={onPrev} />
+              <Button
+                icon={<BackArrow />}
+                size={isShortMobileDevice ? 'medium' : 'large'}
+                theme="tertiary"
+                onPress={onPrev}
+              />
             )}
 
             <Button
               fill
               disabled={submitButtonDisabled}
               icon={BiometricsIcon}
-              size="large"
+              size={isShortMobileDevice ? 'small' : 'large'}
               testID={ElementName.Swap}
               onPress={onSubmitTransaction}>
               {actionText}

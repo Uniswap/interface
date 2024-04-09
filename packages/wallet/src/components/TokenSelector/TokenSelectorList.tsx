@@ -202,7 +202,7 @@ export function SectionHeader({ title, rightElement }: SectionHeaderProps): JSX.
       justifyContent="space-between"
       pb="$spacing4"
       pt="$spacing12">
-      <Text color="$neutral2" variant="subheading2">
+      <Text color="$neutral2" variant={isWeb ? 'body2' : 'subheading2'}>
         {title}
       </Text>
       {rightElement}

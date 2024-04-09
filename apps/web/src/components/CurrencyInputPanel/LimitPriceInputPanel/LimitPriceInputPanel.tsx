@@ -13,8 +13,8 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { sendAnalyticsEvent } from 'analytics'
 import { useCurrentPriceAdjustment } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
-import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { ReversedArrowsIcon } from 'nft/components/icons'
 import { LIMIT_FORM_CURRENCY_SEARCH_FILTERS } from 'pages/Swap/Limit/LimitForm'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
@@ -162,7 +162,6 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
         <LimitPriceInputLabel
           currency={baseCurrency}
           showCurrencyMessage={!!formattedLimitPriceOutputAmount}
-          currencySearchModalOpen={currencySelectModalField === 'inputCurrency'}
           openCurrencySearchModal={() => setCurrencySelectModalField('inputCurrency')}
         />
         <ReverseIconContainer
@@ -196,7 +195,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
           $loading={false}
         />
         {quoteCurrency && (
-          <OutputCurrencyContainer shouldFetchOnAccountUpdate={currencySelectModalField === 'outputCurrency'}>
+          <OutputCurrencyContainer>
             <OutputCurrencyButton onClick={() => setCurrencySelectModalField('outputCurrency')}>
               <Row gap="xs" width="unset">
                 <CurrencyLogo currency={quoteCurrency} size="16px" />

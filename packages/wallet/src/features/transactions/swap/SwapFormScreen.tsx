@@ -3,7 +3,15 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, StyleSheet, TextInput, TextInputProps } from 'react-native'
-import { Flex, Icons, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import {
+  Flex,
+  Icons,
+  Text,
+  TouchableArea,
+  isWeb,
+  useIsShortMobileDevice,
+  useSporeColors,
+} from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
@@ -23,15 +31,26 @@ import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { ElementName, SectionName } from 'wallet/src/telemetry/constants'
-
 // eslint-disable-next-line no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { SwapFormButton } from 'wallet/src/features/transactions/swap/SwapFormButton'
 import { SwapTokenSelector } from 'wallet/src/features/transactions/swap/SwapTokenSelector'
 
-const SWAP_DIRECTION_BUTTON_SIZE = iconSizes.icon24
-const SWAP_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing8 + spacing.spacing2
-const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
+const SWAP_DIRECTION_BUTTON_SIZE = {
+  size: {
+    regular: iconSizes.icon24,
+    small: iconSizes.icon12,
+  },
+  innerPadding: {
+    regular: spacing.spacing8 + spacing.spacing2,
+    small: spacing.spacing8,
+  },
+  borderWidth: {
+    regular: spacing.spacing4,
+    small: spacing.spacing1,
+  },
+} as const
+
 const WEB_CURRENCY_PANEL_INACTIVE_OPACITY = 0.6
 
 const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
@@ -56,6 +75,7 @@ export function SwapFormScreen({ hideContent }: { hideContent: boolean }): JSX.E
 function SwapFormContent(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const isShortMobileDevice = useIsShortMobileDevice()
 
   const { walletNeedsRestore, openWalletRestoreModal } = useTransactionModalContext()
 
@@ -202,7 +222,7 @@ function SwapFormContent(): JSX.Element {
     [decimalPadControlledField, isFiatMode, updateSwapForm]
   )
 
-  const [decimalPadReady, setDecimalPadReady] = useState(true)
+  const [decimalPadReady, setDecimalPadReady] = useState(false)
 
   const onBottomScreenLayout = useCallback((event: LayoutChangeEvent): void => {
     decimalPadRef.current?.setMaxHeight(event.nativeEvent.layout.height)
@@ -513,7 +533,7 @@ function SwapFormContent(): JSX.Element {
                     <SwapFormButton />
                   </Flex>
                 )}
-                <Flex pt="$spacing12">
+                <Flex pt={isShortMobileDevice ? '$spacing8' : '$spacing12'}>
                   <GasAndWarningRows renderEmptyRows={!isWeb} />
                 </Flex>
               </Flex>
@@ -530,7 +550,11 @@ function SwapFormContent(): JSX.Element {
           putting it inside this container in order to avoid any overflows while the `DecimalPad`
           is automatically resizing to find the right size for the screen.
           */}
-          <Flex fill mt="$spacing8" onLayout={onBottomScreenLayout} />
+          <Flex
+            fill
+            mt={isShortMobileDevice ? '$spacing2' : '$spacing8'}
+            onLayout={onBottomScreenLayout}
+          />
           <Flex
             $short={{ gap: '$none' }}
             animation="quick"
@@ -562,6 +586,9 @@ const SwitchCurrenciesButton = ({
 }: {
   onSwitchCurrencies: () => void
 }): JSX.Element => {
+  const isShortMobileDevice = useIsShortMobileDevice()
+  const smallOrRegular = isShortMobileDevice ? 'small' : 'regular'
+
   return (
     <Flex zIndex="$popover">
       <Flex alignItems="center" height={0} style={StyleSheet.absoluteFill}>
@@ -572,9 +599,9 @@ const SwitchCurrenciesButton = ({
               // (icon size + (top + bottom padding) + (top + bottom border)) / 2
               // to center the swap direction button vertically
               (
-                SWAP_DIRECTION_BUTTON_SIZE +
-                SWAP_DIRECTION_BUTTON_INNER_PADDING * 2 +
-                SWAP_DIRECTION_BUTTON_BORDER_WIDTH * 2
+                SWAP_DIRECTION_BUTTON_SIZE.size[smallOrRegular] +
+                SWAP_DIRECTION_BUTTON_SIZE.innerPadding[smallOrRegular] * 2 +
+                SWAP_DIRECTION_BUTTON_SIZE.borderWidth[smallOrRegular] * 2
               )
             ) / 2
           }
@@ -582,7 +609,7 @@ const SwitchCurrenciesButton = ({
           <Trace logPress element={ElementName.SwitchCurrenciesButton}>
             <SwapArrowButton
               backgroundColor="$surface1"
-              size={SWAP_DIRECTION_BUTTON_SIZE}
+              size={SWAP_DIRECTION_BUTTON_SIZE.size[smallOrRegular]}
               testID={ElementName.SwitchCurrenciesButton}
               onPress={onSwitchCurrencies}
             />

@@ -1,5 +1,4 @@
-import { t } from '@lingui/macro'
-import { ChainId, Currency } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { CurrencyListRow, CurrencyListSectionTitle } from 'components/SearchModal/CurrencyList'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
@@ -7,8 +6,9 @@ import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useDefaultActiveTokens, useSearchInactiveTokenLists, useTokenListToken } from 'hooks/Tokens'
 import { useTokenBalances } from 'hooks/useTokenBalances'
+import { t } from 'i18next'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
-import { getSortedPortfolioTokens, tokenQuerySortComparator } from 'lib/hooks/useTokenList/sorting'
+import { getSortedPortfolioTokens } from 'lib/hooks/useTokenList/sorting'
 import { useMemo } from 'react'
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
 import { UserAddedToken } from 'types/tokens'
@@ -19,9 +19,9 @@ import {
   useSearchTokensWebQuery,
   useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { isSameAddress } from 'utilities/src/addresses'
 
 interface CurrencySearchParams {
   searchQuery?: string
@@ -36,7 +36,8 @@ interface CurrencySearchResults {
   loading: boolean
 }
 
-const currencyListRowMapper = (currency: Currency) => new CurrencyListRow(currency, false)
+const currencyListRowMapper = (currency: Currency) => new CurrencyListRow(currency)
+const searchResultsCurrencyListMapper = (currency: Currency) => new CurrencyListRow(currency, { showAddress: true })
 const gqlCurrencyMapper = (gqlToken: any) => {
   const currencyInfo = gqlTokenToCurrencyInfo(gqlToken as GqlToken)
   return currencyInfo ? currencyInfo.currency : undefined
@@ -68,13 +69,24 @@ export function useCurrencySearchResults({
   })
   const { data: popularTokens, loading: popularTokensLoading } = useTopTokensQuery({
     variables: {
-      chain: toGraphQLChain(chainId ?? ChainId.MAINNET) ?? undefined,
+      chain: chainIdToBackendName(chainId) ?? Chain.Ethereum,
       orderBy: TokenSortableField.Popularity,
       page: 1,
       pageSize: 100,
     },
     skip: !gqlTokenListsEnabled,
   })
+  const sortedPopularTokens = useMemo(() => {
+    if (!popularTokens?.topTokens) {
+      return undefined
+    }
+    return [...popularTokens.topTokens].sort((a, b) => {
+      if (a?.project?.name && b?.project?.name) {
+        return a.project.name.localeCompare(b.project.name)
+      }
+      return 0
+    })
+  }, [popularTokens?.topTokens])
   const { balanceMap, balanceList, loading: balancesLoading } = useTokenBalances()
 
   /**
@@ -86,21 +98,35 @@ export function useCurrencySearchResults({
   const defaultAndUserAddedTokens = useDefaultActiveTokens(chainId)
   const userAddedTokens = useUserAddedTokens()
 
+  const gqlSearchResultsEmpty =
+    (!searchResults?.searchTokens || searchResults.searchTokens.length === 0) && !searchResultsLoading
+  const gqlPopularTokensEmpty =
+    (!popularTokens?.topTokens || popularTokens.topTokens.length === 0) && !popularTokensLoading
+
   /**
    * Results processing: sorting, filtering, and merging data sources into the final list.
    */
   const { sortedCombinedTokens, portfolioTokens, sortedTokensWithoutPortfolio } = useMemo(() => {
     const fullBaseList = (() => {
-      if (!gqlTokenListsEnabled) {
+      if (
+        !gqlTokenListsEnabled ||
+        (!isEmpty(searchQuery) && gqlSearchResultsEmpty) ||
+        (isEmpty(searchQuery) && gqlPopularTokensEmpty)
+      ) {
         return Object.values(defaultAndUserAddedTokens)
       } else if (!isEmpty(searchQuery)) {
         return [
           ...((searchResults?.searchTokens?.map(gqlCurrencyMapper).filter(Boolean) as Currency[]) ?? []),
-          ...userAddedTokens,
+          ...userAddedTokens
+            .filter(getTokenFilter(searchQuery))
+            .filter(
+              (userAddedToken) =>
+                !searchResults?.searchTokens?.find((token) => isSameAddress(token?.address, userAddedToken.address))
+            ),
         ]
       } else {
         return [
-          ...((popularTokens?.topTokens?.map(gqlCurrencyMapper).filter(Boolean) as Currency[]) ?? []),
+          ...((sortedPopularTokens?.map(gqlCurrencyMapper).filter(Boolean) as Currency[]) ?? []),
           ...userAddedTokens,
         ]
       }
@@ -108,7 +134,7 @@ export function useCurrencySearchResults({
 
     // If we're using gql token lists and there's a search query, we don't need to
     // filter because the backend already does it for us.
-    if (gqlTokenListsEnabled && !isEmpty(searchQuery)) {
+    if (gqlTokenListsEnabled && !isEmpty(searchQuery) && !gqlSearchResultsEmpty) {
       return {
         sortedCombinedTokens: fullBaseList,
         portfolioTokens: [],
@@ -128,7 +154,7 @@ export function useCurrencySearchResults({
     if (balancesLoading) {
       const sortedCombinedTokens =
         !isEmpty(searchQuery) && !gqlTokenListsEnabled
-          ? filteredListTokens.filter(getTokenFilter(searchQuery)).sort(tokenQuerySortComparator(searchQuery))
+          ? filteredListTokens.filter(getTokenFilter(searchQuery))
           : filteredListTokens
       return {
         sortedCombinedTokens,
@@ -168,8 +194,8 @@ export function useCurrencySearchResults({
     }
 
     const sortedCombinedTokens =
-      !isEmpty(searchQuery) && !gqlTokenListsEnabled
-        ? mergedTokens.filter(getTokenFilter(searchQuery)).sort(tokenQuerySortComparator(searchQuery))
+      !isEmpty(searchQuery) && (!gqlTokenListsEnabled || gqlSearchResultsEmpty)
+        ? mergedTokens.filter(getTokenFilter(searchQuery))
         : mergedTokens
 
     return {
@@ -180,14 +206,16 @@ export function useCurrencySearchResults({
   }, [
     gqlTokenListsEnabled,
     searchQuery,
+    gqlSearchResultsEmpty,
     balancesLoading,
     balanceList,
     balanceMap,
     chainId,
+    gqlPopularTokensEmpty,
     defaultAndUserAddedTokens,
-    searchResults,
+    searchResults?.searchTokens,
     userAddedTokens,
-    popularTokens?.topTokens,
+    sortedPopularTokens,
     filters?.onlyShowCurrenciesWithBalance,
     filters?.disableNonToken,
     selectedCurrency,
@@ -205,7 +233,7 @@ export function useCurrencySearchResults({
     if (!isEmpty(searchQuery) || portfolioTokens.length === 0) {
       return [
         new CurrencyListSectionTitle(searchQuery ? t`Search results` : t`Popular tokens`),
-        ...sortedCombinedTokens.map(currencyListRowMapper),
+        ...sortedCombinedTokens.map(searchQuery ? searchResultsCurrencyListMapper : currencyListRowMapper),
         ...inactiveTokens.map(currencyListRowMapper),
       ]
     } else if (sortedTokensWithoutPortfolio.length === 0 && inactiveTokens.length === 0) {

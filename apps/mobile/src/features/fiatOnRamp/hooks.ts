@@ -410,6 +410,7 @@ export function useFiatOnRampSupportedTokens({
       (supportedTokensResponse?.supportedTokens || [])
         .map((fiatOnRampToken) => ({
           currencyInfo: findTokenOptionForFiatOnRampToken(currencies, fiatOnRampToken),
+          meldCurrencyCode: fiatOnRampToken.cryptoCurrencyCode,
         }))
         .filter((item) => !!item.currencyInfo),
     [currencies, supportedTokensResponse?.supportedTokens]
@@ -463,16 +464,18 @@ export function useMoonpaySupportedTokens(): {
     refetch: refetchCommonBaseCurrencies,
   } = useAllCommonBaseCurrencies()
 
-  const list = useMemo(
-    () =>
-      (supportedTokens || [])
-        .map((fiatOnRampToken) => ({
-          currencyInfo: findTokenOptionForMoonpayCurrency(commonBaseCurrencies, fiatOnRampToken),
-          moonpayCurrencyCode: fiatOnRampToken.code,
-        }))
-        .filter((item) => !!item.currencyInfo),
-    [commonBaseCurrencies, supportedTokens]
-  )
+  const list = useMemo(() => {
+    if (!commonBaseCurrencies || !supportedTokens) {
+      return undefined
+    }
+
+    return supportedTokens
+      .map((fiatOnRampToken) => ({
+        currencyInfo: findTokenOptionForMoonpayCurrency(commonBaseCurrencies, fiatOnRampToken),
+        moonpayCurrencyCode: fiatOnRampToken.code,
+      }))
+      .filter((item) => !!item.currencyInfo)
+  }, [commonBaseCurrencies, supportedTokens])
 
   const loading = ipAddressLoading || supportedTokensLoading || commonBaseCurrenciesLoading
   const error = Boolean(ipAddressError || supportedTokensError || commonBaseCurrenciesError)

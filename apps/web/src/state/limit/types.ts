@@ -1,3 +1,6 @@
+import { Dispatch, SetStateAction } from 'react'
+import { LimitInfo } from './hooks'
+
 export enum Expiry {
   Day = 'Day',
   Week = 'Week',
@@ -19,4 +22,10 @@ export interface LimitState {
   // The limit form has 3 fields, but only two of them can be independent at a time.
   // Always prefer `marketPrice` be independent, so either derive the input amount or the output amount
   readonly isInputAmountFixed: boolean
+}
+
+export type LimitContextType = {
+  limitState: LimitState
+  derivedLimitInfo: LimitInfo
+  setLimitState: Dispatch<SetStateAction<LimitState>>
 }

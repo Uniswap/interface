@@ -1,7 +1,7 @@
-import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { transparentize } from 'polished'
 import { useState } from 'react'
@@ -249,7 +249,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={535}>
-                  <Trans>Pooled {currency0.symbol}:</Trans>
+                  <Trans>Pooled {{ sym: currency0.symbol }}:</Trans>
                 </Text>
               </RowFixed>
               {token0Deposited ? (
@@ -267,7 +267,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={535}>
-                  <Trans>Pooled {currency1.symbol}:</Trans>
+                  <Trans>Pooled {{ sym: currency1.symbol }}:</Trans>
                 </Text>
               </RowFixed>
               {token1Deposited ? (
@@ -289,7 +289,7 @@ export default function FullPositionCard({ pair, border, stakedBalance }: Positi
               <Text fontSize={16} fontWeight={535}>
                 {poolTokenPercentage ? (
                   <Trans>
-                    {poolTokenPercentage.toFixed(2) === '0.00' ? '<0.01' : poolTokenPercentage.toFixed(2)} %
+                    {{ amt: poolTokenPercentage.toFixed(2) === '0.00' ? '<0.01' : poolTokenPercentage.toFixed(2) }}%
                   </Trans>
                 ) : (
                   '-'

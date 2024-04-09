@@ -1,4 +1,3 @@
-import { t } from '@lingui/macro'
 import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
@@ -6,13 +5,14 @@ import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
-import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
+import { t } from 'i18n'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import store from 'state'
 import { addSignature } from 'state/signatures/reducer'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { TransactionType as LocalTransactionType } from 'state/transactions/types'
+import { UniswapXOrderStatus } from 'types/uniswapx'
 import {
   AssetActivityPartsFragment,
   Currency as GQLCurrency,
@@ -31,7 +31,6 @@ import {
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { currencyId } from 'utils/currencyId'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
 import { MOONPAY_SENDER_ADDRESSES, OrderStatusTable, OrderTextTable } from '../constants'
 import { Activity } from './types'
 

@@ -89,7 +89,7 @@
           "title": "Estás eliminando <highlight>{{walletName}}</highlight>"
         },
         "mnemonic": {
-          "description": "Comparte la misma frase de recuperación que <highlight>{{walletNames}}</highlight>. Tu frase de recuperación permanecerá almacenada hasta que elimines todas las wallets restantes."
+          "description": "Comparte la misma frase de recuperación que {{walletName}}. Tu frase de recuperación permanecerá almacenada hasta que elimines todas las wallets restantes."
         }
       },
       "subtitle": {
@@ -118,12 +118,40 @@
         "restore": "Restaurar wallet",
         "watch": "Seguir un wallet"
       },
+      "create": {
+        "placeholder": "Wallet {{index}}"
+      },
+      "edit": {
+        "label": {
+          "input": {
+            "placeholder": "Etiqueta de billetera"
+          }
+        }
+      },
       "header": {
+        "button": {
+          "disabled": {
+            "title": "Editar perfil"
+          },
+          "title": "Editar etiqueta"
+        },
         "other": "Tus otras wallets",
         "viewOnly": "Wallets de sólo lectura"
       },
+      "menu": {
+        "copy": {
+          "title": "Copiar la dirección de la wallet"
+        },
+        "edit": {
+          "title": "Editar etiqueta"
+        },
+        "remove": {
+          "title": "Eliminar wallet"
+        }
+      },
       "remove": {
         "check": "Hice una copia de seguridad de mi frase de recuperación y entiendo que Uniswap Labs no puede ayudarme a recuperar mis billeteras si no lo hago.",
+        "title": "Eliminar {{name}}",
         "viewOnly": "Siempre puedes volver a agregar wallets de sólo visualización ingresando la dirección de la billetera."
       },
       "restore": {
@@ -138,7 +166,6 @@
         "title_one_one": "Una wallet encontrada",
         "title_one_other": "Selecciona wallets para importar"
       },
-      "title": "Tus wallets",
       "viewOnly": {
         "button": "Importar wallet",
         "description": "Para intercambiar, comprar, enviar y recibir tokens, debes importar la frase de recuperación de esta billetera.",
@@ -157,7 +184,6 @@
     }
   },
   "common": {
-    "app": "Monedero Uniswap",
     "button": {
       "accept": "Aceptar",
       "back": "Volver",
@@ -169,6 +195,7 @@
       "continue": "Continuar",
       "copied": "Copiado",
       "copy": "Copiar",
+      "create": "Crear",
       "delete": "Borrar",
       "disconnect": "Desconectar",
       "dismiss": "Cerrar",
@@ -188,6 +215,7 @@
       "retry": "Reintentar",
       "review": "Revisar",
       "save": "Guardar",
+      "scrollDown": "Desplácese hacia abajo",
       "sell": "Vender",
       "send": "Enviar",
       "setup": "Configuración",
@@ -301,9 +329,20 @@
           "label": "enviando"
         }
       },
+      "permit2": {
+        "description": "Permit2 gestiona las aprobaciones de tokens en múltiples dapps.",
+        "header": "Firmar permiso2",
+        "price": "Ninguno"
+      },
       "signature": {
+        "containsUnrenderableCharacters": "Este mensaje contiene caracteres que no se pueden reproducir. Asegúrate de confiar en este sitio.",
         "error": {
           "712-spec-compliance": "SignTypedDataRequestContent recibió datos para firmar que no cumplen con la especificación EIP-712."
+        },
+        "header": "Solicitud de firma",
+        "toggleDataView": {
+          "raw": "Ver datos sin procesar",
+          "readable": "Ver datos originales"
         }
       },
       "warning": {
@@ -313,6 +352,10 @@
         }
       }
     }
+  },
+  "emptyTokenCard": {
+    "description": "Compra o transfiere tokens a esta billetera para comenzar",
+    "title": "Aún no hay tokens"
   },
   "errors": {
     "crash": {
@@ -404,11 +447,6 @@
       "titleConnected": "Conectado",
       "titleNotConnected": "No conectado"
     },
-    "dappRequest": {
-      "signatureRequest": {
-        "header": "Solicitud de firma"
-      }
-    },
     "lock": {
       "button": {
         "forgot": "¿Has olvidado tu contraseña?",
@@ -438,6 +476,13 @@
           "wrong": "Contraseña incorrecta"
         },
         "placeholder": "Contraseña actual"
+      }
+    },
+    "warning": {
+      "storage": {
+        "button": "Respaldo",
+        "message": "Asegúrese de hacer una copia de seguridad de su frase de recuperación para evitar perder el acceso a su billetera y a sus fondos.",
+        "title": "Tu navegador se está quedando sin almacenamiento"
       }
     }
   },
@@ -514,8 +559,7 @@
       "offline": "Estás en modo offline"
     },
     "extension": {
-      "error": "Error al cargar cuentas",
-      "pin": "Fije Uniswap Wallet a la barra de herramientas de su navegador haciendo clic en la <puzzleIcon />"
+      "error": "Error al cargar cuentas"
     },
     "feed": {
       "empty": {
@@ -611,6 +655,8 @@
       "contractAddress": "Dirección del contrato copiada",
       "failed": "Error al copiar al portapapeles",
       "image": "Imagen copiada",
+      "nftUrl": "URL NFT copiada",
+      "tokenUrl": "URL del token copiada",
       "transactionId": "ID de transacción copiada"
     },
     "countryChange": "Cambiada a {{countryName}}",
@@ -680,7 +726,7 @@
   "notifications": {
     "scantastic": {
       "subtitle": "Continuar en la extensión Uniswap",
-      "title": "Éxito"
+      "title": "Éxito!"
     }
   },
   "onboarding": {
@@ -733,23 +779,13 @@
       }
     },
     "complete": {
-      "card": {
-        "buy": {
-          "description": "Compra con tarjeta o transferencia desde una casa de cambio",
-          "title": "Comprar o transferir criptomonedas"
-        },
-        "explore": {
-          "description": "Busque y explore tokens y NFT de tendencias",
-          "title": "Explora tokens y NFT"
-        },
-        "swap": {
-          "description": "Compra con tarjeta o transferencia desde una casa de cambio",
-          "title": "Empezar a intercambiar"
-        }
+      "button": "Abrir billetera Uniswap",
+      "description": "Su billetera está lista para intercambiar, enviar y recibir criptomonedas.",
+      "pin": {
+        "description": "Haga clic en el ícono del rompecabezas en su barra de herramientas y busque Uniswap Wallet en la lista",
+        "title": "Pin Uniswap Monedero"
       },
-      "description": "¡Tu billetera está lista! Comience financiando su billetera comprando o transfiriendo criptomonedas a su billetera.",
-      "footer": "Aprenda a usar Uniswap Wallet",
-      "pin": "<text>Fije la extensión a la ventana de su navegador</text><container><text>haciendo clic en el icono </text><puzzleIcon /><text> y luego el alfiler</text></container>"
+      "title": "Estás todo listo"
     },
     "editName": {
       "button": {
@@ -766,7 +802,7 @@
         "title": "¿Tienes la aplicación móvil Uniswap?"
       },
       "getOnTheBetaWaitlist": {
-        "subtitle": "Descargue la aplicación móvil y reclame un nombre de usuario",
+        "subtitle": "Descargue la aplicación móvil para reclamar un nombre de usuario",
         "title": "Inscríbete en la lista de espera Beta"
       },
       "password": {
@@ -825,7 +861,7 @@
       },
       "checkEligibilityInstructions": "Ingresa tu nombre de usuario <highlight>uni.eth</highlight> a continuación para verificar si eres elegible para la versión Beta.",
       "eligible": {
-        "tagline": "Bienvenido a la Beta: eres uno de los primeros en probar la billetera Uniswap.",
+        "tagline": "Bienvenido a la Beta: eres uno de los primeros en probar la extensión Uniswap.",
         "title": "¡Estás fuera de la lista de espera!"
       },
       "ineligibleExplanation": "Todavía estás en la lista de espera. ¡Te notificaremos en la aplicación móvil de Uniswap cuando seas elegible!",
@@ -885,7 +921,7 @@
         "subtitle": "Consulte su aplicación móvil Uniswap para ver el código de 6 caracteres",
         "title": "Ingrese el código de un solo uso"
       },
-      "subtitle": "Escanee el código QR con la aplicación móvil Uniswap para comenzar a importar su(s) billetera(s)",
+      "subtitle": "Escanee el código QR con la aplicación móvil Uniswap para comenzar a importar su billetera.",
       "title": "Importar wallet desde la aplicación"
     },
     "security": {
@@ -921,7 +957,7 @@
         "error": "Error al importar wallets"
       }
     },
-    "termsOfService": "Al continuar, acepto los <highlightTerms>Términos de servicio</highlightTerms> y consiento a la <highlightPrivacy>Política de Privacidad</highlightPrivacy>.",
+    "termsOfService": "Al continuar, acepto los <highlightTerms>Términos de servicio</highlightTerms> y consiento a la <highlightPrivacy>Política de Privacidad</highlightPrivacy>",
     "tooltip": {
       "recoveryPhrase": {
         "trigger": "¿Qué es una frase de recuperación?"
@@ -988,11 +1024,7 @@
     },
     "title": "Escanea un código QR",
     "wallet": {
-      "networks": {
-        "description": "Uniswap Wallet admite tokens en Ethereum, Polygon, Arbitrum, Optimism, Base y BNB Chain. En este momento, solo admitimos NFT en Ethereum.",
-        "title": "Redes compatibles"
-      },
-      "title": "Puede enviar tokens en todas nuestras redes compatibles a esta dirección."
+      "title": "Uniswap Wallet admite tokens en Ethereum, Polygon, Arbitrum, Optimism, Base, Blast y BNB Chain. En este momento, solo admitimos NFT en Ethereum."
     }
   },
   "scantastic": {
@@ -1016,8 +1048,9 @@
         "browser": "Navegador",
         "device": "Dispositivo"
       },
-      "subtitle": "Continúe solo si está sincronizando con Uniswap Extension en un dispositivo confiable.",
-      "title": "¿Es este tu dispositivo?"
+      "subtitle": "Continúe solo si está escaneando un código QR de Uniswap Extension en un dispositivo confiable.",
+      "title": "¿Estás intentando importar tu billetera?",
+      "warning": "Tenga cuidado con los sitios y aplicaciones que se hacen pasar por Uniswap. De lo contrario, su billetera podría verse comprometida."
     },
     "error": {
       "encryption": "No se pudo preparar la frase inicial.",
@@ -1048,7 +1081,7 @@
         "title": "N/D"
       },
       "networkCost": {
-        "title": "Costo de la red"
+        "title": "Costo de red"
       }
     },
     "input": {
@@ -1085,6 +1118,11 @@
       "title": "Para"
     },
     "review": {
+      "input": {
+        "tokenAmount": {
+          "title": "{{currencyAmount}} de {{currencySymbol}}"
+        }
+      },
       "modal": {
         "title": "estas enviando"
       },
@@ -1128,6 +1166,10 @@
           "title": "Dirección bloqueada"
         },
         "recipient": "La wallet del destinatario está bloqueada"
+      },
+      "erc20": {
+        "message": "Está intentando enviar fondos a una dirección simbólica. Enviar criptomonedas a este tipo de dirección puede resultar en una pérdida permanente de fondos.",
+        "title": "Esta es una dirección simbólica"
       },
       "insufficientFunds": {
         "message": "Tu saldo de {{currencySymbol}} ha disminuido desde que ingresaste la cantidad que quieres enviar",
@@ -1206,7 +1248,7 @@
   },
   "settings": {
     "action": {
-      "feedback": "Enviar comentarios",
+      "feedback": "Compartir comentarios",
       "help": "Consigue ayuda",
       "lock": "Bloquear cartera",
       "privacy": "Política de privacidad",
@@ -1313,7 +1355,7 @@
         }
       },
       "beta": {
-        "tooltip": "¡Muy pronto!"
+        "tooltip": "Muy pronto"
       },
       "biometrics": {
         "appAccess": {
@@ -1364,7 +1406,7 @@
         "title": "Moneda local"
       },
       "giveFeedback": {
-        "title": "Dar opinion"
+        "title": "Compartir comentarios"
       },
       "helpCenter": {
         "title": "Centro de ayuda"
@@ -1431,7 +1473,7 @@
   "swap": {
     "button": {
       "max": "Máx",
-      "review": "Revisar intercambio",
+      "review": "Revisar",
       "swap": "Intercambiar",
       "unwrap": "Desenvolver",
       "view": "Ver transacción",
@@ -1469,9 +1511,6 @@
       "wrap": "Mantén presionado para envolver"
     },
     "request": {
-      "details": {
-        "header": "Estás intercambiando"
-      },
       "title": {
         "full": "Intercambiar {{inputCurrencySymbol}} → {{outputCurrencySymbol}}",
         "short": "Intercambiar fichas"
@@ -1515,11 +1554,11 @@
           "min": "Ingresa un valor mayor que 0"
         }
       },
-      "title": "Configuración de Intercambio"
+      "title": "Cambiar configuración"
     },
     "slippage": {
       "settings": {
-        "title": "Configuración de Deslizamiento"
+        "title": "Configuración de deslizamiento"
       }
     },
     "warning": {
@@ -1705,7 +1744,7 @@
     },
     "selector": {
       "button": {
-        "choose": "Elegir token",
+        "choose": "Seleccionar ficha",
         "clear": "Limpiar todo"
       },
       "empty": {
@@ -2062,7 +2101,8 @@
     },
     "pending": {
       "button": {
-        "connect": "Conectar"
+        "connect": "Conectar",
+        "scrollDown": "Desplácese hacia abajo para conectarse"
       },
       "switchAccount": "Cambiar Cuenta",
       "switchNetwork": "Cambiar Red",
@@ -2079,6 +2119,7 @@
     },
     "request": {
       "button": {
+        "scrollDown": "Desplácese hacia abajo para firmar",
         "sign": "Firmar"
       },
       "details": {

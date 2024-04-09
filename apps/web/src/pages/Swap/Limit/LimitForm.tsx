@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import {
   BrowserEvent,
   InterfaceElementName,
@@ -24,6 +23,7 @@ import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { STABLECOIN_AMOUNT_OUT } from 'hooks/useStablecoinPrice'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
+import { Trans } from 'i18n'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
@@ -435,7 +435,7 @@ function SubmitOrderButton({
       <ButtonError disabled>
         <Text fontSize={20}>
           {inputCurrency ? (
-            <Trans>Insufficient {inputCurrency.symbol} balance</Trans>
+            <Trans>Insufficient {{ sym: inputCurrency.symbol }} balance</Trans>
           ) : (
             <Trans>Insufficient balance</Trans>
           )}

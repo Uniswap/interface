@@ -4,6 +4,10 @@ const preset = require('../../config/jest-presets/jest/jest-preset')
 module.exports = {
   ...preset,
   preset: 'jest-expo',
+  transform: {
+    ...preset.transform,
+    '^.+\\.jsx?$': 'babel-jest',
+  },
   displayName: 'Mobile Wallet',
   collectCoverageFrom: [
     'src/**/*.{js,ts,tsx}',

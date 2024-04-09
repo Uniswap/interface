@@ -1,4 +1,3 @@
-import { Plural, Trans } from '@lingui/macro'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
@@ -16,6 +15,7 @@ import Column from 'components/Column'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import { ContractTransaction } from 'ethers/lib/ethers'
 import { useContract } from 'hooks/useContract'
+import { Plural, Trans, t } from 'i18n'
 import { useCallback, useMemo, useState } from 'react'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import styled from 'styled-components'
@@ -100,10 +100,9 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
             disabled={cancelState !== CancellationState.NOT_STARTED || selectedOrders.length === 0}
           >
             <Plural
-              id="cancelling"
               value={selectedOrders.length}
-              one="Cancel limit"
-              other={`Cancel ${selectedOrders.length} limits`}
+              one={t`Cancel limit`}
+              other={t(`Cancel {{count}} limits`, { count: selectedOrders.length })}
             />
           </StyledCancelButton>
         )}

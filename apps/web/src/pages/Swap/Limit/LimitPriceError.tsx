@@ -1,8 +1,8 @@
-import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import { LimitPriceErrorType } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import Row from 'components/Row'
+import { Trans } from 'i18n'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
@@ -40,9 +40,9 @@ function getTitle({ inputCurrency, outputCurrency, priceInverted, priceError }: 
   if (priceError === LimitPriceErrorType.CALCULATION_ERROR) {
     return <Trans>Market price not available</Trans>
   } else if (priceInverted) {
-    return <Trans>Buying {outputCurrency.symbol} above market price</Trans>
+    return <Trans>Buying {{ symbol: outputCurrency.symbol }} above market price</Trans>
   } else {
-    return <Trans>Selling {inputCurrency.symbol} below market price</Trans>
+    return <Trans>Selling {{ symbol: inputCurrency.symbol }} below market price</Trans>
   }
 }
 
@@ -57,15 +57,15 @@ function getDescription({ priceInverted, priceAdjustmentPercentage, priceError }
   } else if (priceInverted && !!priceAdjustmentPercentage) {
     return (
       <Trans>
-        Your limit price is {Math.abs(priceAdjustmentPercentage)}% higher than market. Adjust your limit price to
-        proceed.
+        Your limit price is {{ pct: Math.abs(priceAdjustmentPercentage) }}% higher than market. Adjust your limit price
+        to proceed.
       </Trans>
     )
   } else if (priceAdjustmentPercentage) {
     return (
       <Trans>
-        Your limit price is {Math.abs(priceAdjustmentPercentage)}% lower than market. Adjust your limit price to
-        proceed.
+        Your limit price is {{ pct: Math.abs(priceAdjustmentPercentage) }}% lower than market. Adjust your limit price
+        to proceed.
       </Trans>
     )
   }

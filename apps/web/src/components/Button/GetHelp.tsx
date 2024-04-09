@@ -1,7 +1,7 @@
-import { Trans } from '@lingui/macro'
 import { EnvelopeHeartIcon } from 'components/Icons/EnvelopeHeart'
 import Row from 'components/Row'
 import { SupportArticleURL } from 'constants/supportArticles'
+import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
 

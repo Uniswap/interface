@@ -2,7 +2,7 @@
 import { TFunction } from 'i18next'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Icons, Text, isWeb } from 'ui/src'
+import { Button, Flex, Icons, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import {
   selectHasSubmittedHoldToSwap,
@@ -33,6 +33,7 @@ export const HOLD_TO_SWAP_TIMEOUT = 3000
 
 export function SwapFormButton(): JSX.Element {
   const { t } = useTranslation()
+  const isShortMobileDevice = useIsShortMobileDevice()
   const activeAccount = useActiveAccountWithThrow()
 
   const { walletNeedsRestore } = useTransactionModalContext()
@@ -112,7 +113,7 @@ export function SwapFormButton(): JSX.Element {
     : '$accent1'
 
   return (
-    <Flex alignItems="center" gap="$spacing16">
+    <Flex alignItems="center" gap={isShortMobileDevice ? '$spacing8' : '$spacing16'}>
       {!isWeb && !isHoldToSwapPressed && showHoldToSwapTip && <HoldToInstantSwapRow />}
 
       <Trace logPress element={ElementName.SwapReview}>
@@ -122,7 +123,7 @@ export function SwapFormButton(): JSX.Element {
           disabled={reviewButtonDisabled && !isHoldToSwapPressed && !isViewOnlyWallet}
           // Override opacity only for view only wallets
           opacity={isViewOnlyWallet ? 0.4 : undefined}
-          size="large"
+          size={isShortMobileDevice ? 'small' : isWeb ? 'medium' : 'large'}
           testID={ElementName.ReviewSwap}
           width="100%"
           onLongPress={onLongPressHoldToSwap}
@@ -157,11 +158,12 @@ export function SwapFormButton(): JSX.Element {
 
 function HoldToInstantSwapRow(): JSX.Element {
   const { t } = useTranslation()
+  const isShortMobileDevice = useIsShortMobileDevice()
 
   return (
     <Flex centered row gap="$spacing4">
       <Icons.GraduationCap color="$neutral3" size="$icon.16" />
-      <Text color="$neutral3" variant="body3">
+      <Text color="$neutral3" variant={isShortMobileDevice ? 'body4' : 'body3'}>
         {t('swap.hold.tip')}
       </Text>
     </Flex>

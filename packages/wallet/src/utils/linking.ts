@@ -57,6 +57,7 @@ export async function openUri(
       await WebBrowser.openBrowserAsync(uri, {
         controlsColor,
         presentationStyle: WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
+        windowFeatures: 'popup=false',
       })
     }
   } catch (error) {

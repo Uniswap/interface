@@ -1,11 +1,10 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'state/hooks'
 import { OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE, OffchainOrderType } from 'state/routing/types'
-
+import { UniswapXOrderStatus } from 'types/uniswapx'
 import { addSignature } from './reducer'
 import { SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
 
@@ -80,7 +79,9 @@ export function isOnChainOrder(orderStatus: UniswapXOrderStatus) {
 
 function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrderDetails {
   return (
-    (signature.type === SignatureType.SIGN_UNISWAPX_ORDER || signature.type === SignatureType.SIGN_UNISWAPX_V2_ORDER) &&
+    (signature.type === SignatureType.SIGN_UNISWAPX_ORDER ||
+      signature.type === SignatureType.SIGN_UNISWAPX_V2_ORDER ||
+      signature.type === SignatureType.SIGN_LIMIT) &&
     signature.status === UniswapXOrderStatus.OPEN
   )
 }

@@ -131,7 +131,7 @@ export const useModalContent = ({
               highlight: <Text color="$neutral1" variant="body3" />,
             }}
             i18nKey="account.recoveryPhrase.remove.mnemonic.description"
-            values={{ walletNames: associatedAccountNames }}
+            values={{ walletName: associatedAccountNames }}
           />
         ),
         Icon: TrashIcon,

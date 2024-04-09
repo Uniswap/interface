@@ -11,7 +11,6 @@ import {
   Icons,
   Loader,
   useDeviceDimensions,
-  useSporeColors,
 } from 'ui/src'
 import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
@@ -79,7 +78,6 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
   ref
 ) {
   const { t } = useTranslation()
-  const colors = useSporeColors()
   const { fullHeight } = useDeviceDimensions()
 
   const [hiddenNftsExpanded, setHiddenNftsExpanded] = useState(false)
@@ -175,7 +173,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
           </Flex>
         ) : (
           // empty view
-          <Flex centered grow style={emptyStateStyle}>
+          <Flex centered pt="$spacing48" px="$spacing36" style={emptyStateStyle}>
             <BaseCard.EmptyState
               buttonLabel={
                 isExternalProfile || !onPressEmptyState
@@ -189,7 +187,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
               }
               icon={
                 <Flex pb="$spacing12">
-                  <Icons.EmptyStatePicture color={colors.neutral3.get()} size="$icon.70" />
+                  <Icons.NoNfts color="$neutral3" size="$icon.70" />
                 </Flex>
               }
               title={t('tokens.nfts.list.none.title')}

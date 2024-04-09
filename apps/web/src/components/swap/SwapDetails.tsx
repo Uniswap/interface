@@ -1,4 +1,3 @@
-import { t, Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { TraceEvent, useTrace } from 'analytics'
@@ -7,6 +6,7 @@ import Column from 'components/Column'
 import SpinningLoader from 'components/Loader/SpinningLoader'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult } from 'hooks/useSwapCallback'
+import { Trans, t } from 'i18n'
 import ms from 'ms'
 import { ReactNode, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -25,8 +25,8 @@ import { ReactComponent as ExpandoIconClosed } from '../../assets/svg/expando-ic
 import { ReactComponent as ExpandoIconOpened } from '../../assets/svg/expando-icon-opened.svg'
 import { ButtonError, SmallButtonPrimary } from '../Button'
 import Row, { AutoRow, RowBetween, RowFixed } from '../Row'
-import { SwapCallbackError, SwapShowAcceptChanges } from './styled'
 import SwapLineItem, { SwapLineItemProps, SwapLineItemType } from './SwapLineItem'
+import { SwapCallbackError, SwapShowAcceptChanges } from './styled'
 
 const DetailsContainer = styled(Column)`
   padding: 0px 12px 8px;

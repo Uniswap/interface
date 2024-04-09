@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
-import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea, isWeb } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType } from 'utilities/src/format/types'
@@ -74,37 +74,37 @@ function _TokenOptionItem({
           gap="$spacing8"
           justifyContent="space-between"
           py="$spacing12">
-          <Flex row shrink alignItems="center" gap="$spacing12">
+          <Flex row shrink alignItems="center" gap={isWeb ? '$spacing8' : '$spacing12'}>
             <TokenLogo
               chainId={currency.chainId}
               name={currency.name}
+              size={isWeb ? iconSizes.icon36 : undefined}
               symbol={currency.symbol}
               url={currencyInfo.logoUrl ?? undefined}
             />
             <Flex shrink alignItems="flex-start">
               <Flex centered row gap="$spacing8">
                 <Flex shrink>
-                  <Text color="$neutral1" numberOfLines={1} variant="body1">
+                  <Text color="$neutral1" numberOfLines={1} variant={isWeb ? 'body2' : 'body1'}>
                     {currency.name}
                   </Text>
                 </Flex>
                 {(safetyLevel === SafetyLevel.Blocked ||
                   safetyLevel === SafetyLevel.StrongWarning) && (
                   <WarningIcon
-                    height={iconSizes.icon16}
                     safetyLevel={safetyLevel}
+                    size="$icon.16"
                     strokeColorOverride="neutral3"
-                    width={iconSizes.icon16}
                   />
                 )}
               </Flex>
               <Flex centered row gap="$spacing8">
-                <Text color="$neutral2" numberOfLines={1} variant="subheading2">
+                <Text color="$neutral2" numberOfLines={1} variant="body3">
                   {getSymbolDisplayText(currency.symbol)}
                 </Text>
                 {!currency.isNative && showTokenAddress && (
                   <Flex shrink>
-                    <Text color="$neutral3" numberOfLines={1} variant="subheading2">
+                    <Text color="$neutral3" numberOfLines={1} variant="body3">
                       {shortenAddress(currency.address)}
                     </Text>
                   </Flex>
@@ -116,10 +116,10 @@ function _TokenOptionItem({
 
           {quantity && quantity !== 0 ? (
             <Flex alignItems="flex-end">
-              <Text variant="body1">
+              <Text variant={isWeb ? 'body2' : 'body1'}>
                 {formatNumberOrString({ value: quantity, type: NumberType.TokenTx })}
               </Text>
-              <Text color="$neutral2" variant="subheading2">
+              <Text color="$neutral2" variant={isWeb ? 'body3' : 'subheading2'}>
                 {balance}
               </Text>
             </Flex>

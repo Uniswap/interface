@@ -1,6 +1,6 @@
 import { isAddress } from '@ethersproject/address'
-import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { Trans } from 'i18n'
 import { ReactNode, useState } from 'react'
 import { X } from 'react-feather'
 import styled from 'styled-components'

@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { useOpenOffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import { signatureToActivity, transactionToActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
@@ -11,6 +10,7 @@ import { AutoRow } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
 import { useAllTokensMultichain } from 'hooks/Tokens'
 import useENSName from 'hooks/useENSName'
+import { Trans } from 'i18n'
 import { X } from 'react-feather'
 import { useOrder } from 'state/signatures/hooks'
 import { useTransaction } from 'state/transactions/hooks'
@@ -79,7 +79,7 @@ export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: ChainI
           </ThemedText.SubHeader>
 
           <ThemedText.BodySmall color="neutral2">
-            <Trans>To use Uniswap on {chainInfo.label}, switch the network in your wallet’s settings.</Trans>
+            <Trans>To use Uniswap on {{ label: chainInfo.label }}, switch the network in your wallet’s settings.</Trans>
           </ThemedText.BodySmall>
         </ColumnContainer>
       </RowNoFlex>

@@ -25,9 +25,9 @@ export function HiddenTokensRow({
         row
         alignItems="center"
         justifyContent="space-between"
-        px={padded ? '$spacing24' : '$none'}
+        px={padded ? '$spacing12' : '$none'}
         py="$spacing12">
-        <Text color="$neutral2" variant="subheading2">
+        <Text color="$neutral2" pl="$spacing8" variant="subheading2">
           {t('tokens.hidden.label', { numHidden })}
         </Text>
         {/* just used for opacity styling, the parent TouchableArea handles event */}
@@ -54,8 +54,8 @@ export function HiddenTokensRow({
               animation="semiBouncy"
               color="$neutral2"
               direction={isExpanded ? 'up' : 'down'}
-              height={iconSizes.icon20}
-              width={iconSizes.icon20}
+              height={iconSizes.icon16}
+              width={iconSizes.icon16}
             />
           </Flex>
         </TouchableArea>

@@ -1,12 +1,12 @@
-import { Trans } from '@lingui/macro'
 import { AppleLogo } from 'components/Icons/AppleLogo'
 import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
 import Row from 'components/Row'
+import { Trans } from 'i18n'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
 
-import { Text } from 'ui/src'
+import { Text } from 'ui/src/components/text/Text'
 import { Wiggle } from '../animations'
 
 const StyledButton = styled.button`

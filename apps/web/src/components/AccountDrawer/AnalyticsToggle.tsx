@@ -1,5 +1,5 @@
-import { t } from '@lingui/macro'
 import { allowAnalyticsAtom } from 'analytics'
+import { t } from 'i18n'
 import { useAtom } from 'jotai'
 
 import { SettingsToggle } from './SettingsToggle'

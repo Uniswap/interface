@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro'
+import { t } from 'i18n'
 import { createRef, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
@@ -95,7 +95,7 @@ export default function PillMultiToggle({
               onSelectOption(value)
             }}
           >
-            {display ?? <>{t`${value}`}</>}
+            {display ?? <>{t(`{{value}}`, { value })}</>}
           </OptionButton>
         )
       })}

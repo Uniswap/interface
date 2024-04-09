@@ -27,7 +27,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
       return new Response('Token not found.', { status: 404 })
     }
 
-    const [fontData, palette] = await Promise.all([getFont(origin), getRGBColor(data.ogImage)])
+    const [fontData, palette] = await Promise.all([getFont(origin), getRGBColor(data.ogImage, true)])
 
     const networkLogo = getNetworkLogoUrl(networkName.toUpperCase(), origin)
 
@@ -50,7 +50,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
           <div
             style={{
               display: 'flex',
-              backgroundColor: `rgba(${palette.red}, ${palette.blue}, ${palette.green})`,
+              backgroundColor: `rgba(${palette.red}, ${palette.green}, ${palette.blue})`,
               alignItems: 'center',
               height: '100%',
               padding: '72px',

@@ -11,6 +11,7 @@ import {
   RenderResult,
 } from '@testing-library/react-native'
 import React, { PropsWithChildren } from 'react'
+import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import type { MobileState } from 'src/app/reducer'
 import type { AppStore } from 'src/app/store'
@@ -56,7 +57,9 @@ export function renderWithProviders(
       <AutoMockedApolloProvider resolvers={resolvers}>
         <SharedProvider reduxStore={store}>
           <UnitagUpdaterContextProvider>
-            <NavigationContainer ref={navigationRef}>{children}</NavigationContainer>
+            <NavigationContainer ref={navigationRef}>
+              <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
+            </NavigationContainer>
           </UnitagUpdaterContextProvider>
         </SharedProvider>
       </AutoMockedApolloProvider>
@@ -123,7 +126,9 @@ export function renderHookWithProviders<P extends any[], R>(
       <AutoMockedApolloProvider resolvers={resolvers}>
         <NavigationContainer ref={navigationRef}>
           <SharedProvider reduxStore={store}>
-            <UnitagUpdaterContextProvider>{children}</UnitagUpdaterContextProvider>
+            <UnitagUpdaterContextProvider>
+              <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
+            </UnitagUpdaterContextProvider>
           </SharedProvider>
         </NavigationContainer>
       </AutoMockedApolloProvider>

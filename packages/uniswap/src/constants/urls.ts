@@ -38,7 +38,8 @@ export const uniswapUrls = {
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
   appUrl: `https://${UNISWAP_APP_HOSTNAME}`,
   interfaceUrl: `https://${UNISWAP_APP_HOSTNAME}/#/swap`,
-  extensionFeedbackFormUrl: 'https://forms.gle/RGFhKnABUjdPiYQH6', // TODO(EXT-668): Remove this after F&F launch
+  extensionFeedbackFormUrl:
+    'https://docs.google.com/forms/d/e/1FAIpQLSeL1l34nsuTfymPn5LVpovY7W57oc0oj53GNnpt0QG1qRAzqw/viewform', // TODO(EXT-668): Remove this after beta launch
   interfaceTokensUrl: `https://${UNISWAP_APP_HOSTNAME}/explore/tokens`,
   interfaceNftItemUrl: `https://${UNISWAP_APP_HOSTNAME}/nfts/asset`,
   unitagsApiUrl: getUnitagsApiUrl(),

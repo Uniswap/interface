@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -6,6 +5,7 @@ import { TraceEvent } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChainInfo } from 'constants/chainInfo'
+import { Trans } from 'i18n'
 import { CheckMarkIcon } from 'nft/components/icons'
 import styled, { useTheme } from 'styled-components'
 

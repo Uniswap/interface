@@ -43,6 +43,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   return (
     <TouchableArea
       hapticFeedback
+      hoverable
       alignItems="flex-start"
       backgroundColor="$surface1"
       borderRadius="$rounded16"
@@ -50,7 +51,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       hapticStyle={ImpactFeedbackStyle.Light}
       justifyContent="space-between"
       minHeight={TOKEN_BALANCE_ITEM_HEIGHT}
-      px={padded ? '$spacing24' : 0}
+      px={padded ? '$spacing24' : '$spacing8'}
       py="$spacing8"
       onLongPress={disableOnPress}
       onPress={onPress}>

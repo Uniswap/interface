@@ -157,7 +157,7 @@ const dark_primary_Button: BaseTheme = {
 // theme: light
 const light_secondary_Button: BaseTheme = {
   ...light,
-  background: colorsLight.surface2,
+  background: colorsLight.surface3,
   backgroundHover: hoverColor(colorsLight.surface2),
   backgroundPress: pressedColor(colorsLight.surface2),
   color: colorsLight.sporeBlack,
@@ -166,7 +166,7 @@ const light_secondary_Button: BaseTheme = {
 // theme: dark
 const dark_secondary_Button: BaseTheme = {
   ...dark,
-  background: colorsDark.surface2,
+  background: colorsDark.surface3,
   backgroundHover: hoverColor(colorsDark.surface2),
   backgroundPress: pressedColor(colorsDark.surface2),
   color: colorsDark.sporeWhite,

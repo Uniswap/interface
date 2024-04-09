@@ -1,4 +1,3 @@
-import { t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import Column from 'components/Column'
 import { Sign } from 'components/Icons/Sign'
@@ -8,7 +7,7 @@ import { SupportArticleURL } from 'constants/supportArticles'
 import { useBlockConfirmationTime } from 'hooks/useBlockConfirmationTime'
 import { useColor } from 'hooks/useColor'
 import { SwapResult } from 'hooks/useSwapCallback'
-import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
+import { t } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { useEffect, useMemo, useState } from 'react'
 import { InterfaceTrade, OffchainOrderType, TradeFillType } from 'state/routing/types'
@@ -18,6 +17,7 @@ import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/trans
 import styled, { useTheme } from 'styled-components'
 import { colors } from 'theme/colors'
 import { Divider } from 'theme/components'
+import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SignatureExpiredError } from 'utils/errors'
 
@@ -118,23 +118,23 @@ export default function ProgressIndicator({
       [ConfirmModalState.WRAPPING]: {
         icon: <CurrencyLogo currency={trade?.inputAmount.currency} />,
         rippleColor: inputTokenColor,
-        previewTitle: t`Wrap ${nativeCurrency.symbol}`,
-        actionRequiredTitle: t`Wrap  ${nativeCurrency.symbol} in wallet`,
-        inProgressTitle: t`Wrapping  ${nativeCurrency.symbol}...`,
-        learnMoreLinkText: t`Why do I have to wrap my ${nativeCurrency.symbol}?`,
+        previewTitle: t(`Wrap {{symbol}}`, { symbol: nativeCurrency.symbol }),
+        actionRequiredTitle: t(`Wrap  {{symbol}} in wallet`, { symbol: nativeCurrency.symbol }),
+        inProgressTitle: t(`Wrapping  {{symbol}}...`, { symbol: nativeCurrency.symbol }),
+        learnMoreLinkText: t(`Why do I have to wrap my {{symbol}}?`, { symbol: nativeCurrency.symbol }),
         learnMoreLinkHref: SupportArticleURL.WETH_EXPLAINER,
       },
       [ConfirmModalState.RESETTING_TOKEN_ALLOWANCE]: {
         icon: <CurrencyLogo currency={trade?.inputAmount.currency} />,
         rippleColor: inputTokenColor,
-        previewTitle: t`Reset ${trade?.inputAmount.currency.symbol} limit`,
-        actionRequiredTitle: t`Reset ${trade?.inputAmount.currency.symbol} limit in wallet`,
-        inProgressTitle: t`Resetting ${trade?.inputAmount.currency.symbol} limit...`,
+        previewTitle: t(`Reset {{symbol}} limit`, { symbol: trade?.inputAmount.currency.symbol }),
+        actionRequiredTitle: t(`Reset {{symbol}} limit in wallet`, { symbol: trade?.inputAmount.currency.symbol }),
+        inProgressTitle: t(`Resetting {{symbol}} limit...`, { symbol: trade?.inputAmount.currency.symbol }),
       },
       [ConfirmModalState.APPROVING_TOKEN]: {
         icon: <CurrencyLogo currency={trade?.inputAmount.currency} />,
         rippleColor: inputTokenColor,
-        previewTitle: t`Approve ${trade?.inputAmount.currency.symbol} spending`,
+        previewTitle: t(`Approve {{symbol}} spending`, { symbol: trade?.inputAmount.currency.symbol }),
         actionRequiredTitle: t`Approve in wallet`,
         inProgressTitle: t`Approval pending...`,
         learnMoreLinkText: t`Why do I have to approve a token?`,

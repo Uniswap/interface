@@ -70,18 +70,6 @@ export function isPricePoint(p: PricePoint | undefined): p is PricePoint {
   return p !== undefined
 }
 
-export const GQL_MAINNET_CHAINS_MUTABLE = [
-  Chain.Ethereum,
-  Chain.Polygon,
-  Chain.Celo,
-  Chain.Optimism,
-  Chain.Arbitrum,
-  Chain.Bnb,
-  Chain.Avalanche,
-  Chain.Base,
-  Chain.Blast,
-]
-
 const GQL_MAINNET_CHAINS = [
   Chain.Ethereum,
   Chain.Polygon,
@@ -93,6 +81,9 @@ const GQL_MAINNET_CHAINS = [
   Chain.Base,
   Chain.Blast,
 ] as const
+
+/** Used for making graphql queries to all chains supported by the graphql backend. Must be mutable for some apollo typechecking. */
+export const GQL_MAINNET_CHAINS_MUTABLE = GQL_MAINNET_CHAINS.map((c) => c)
 
 const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
 

@@ -1,9 +1,9 @@
-import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
 import { getChainInfo } from 'constants/chainInfo'
 import useSelectChain from 'hooks/useSelectChain'
+import { Trans } from 'i18n'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -73,12 +73,12 @@ export default function InvalidTokenDetails({
         <>
           {connectedChainLabel && (
             <InvalidDetailsText>
-              <Trans>This token doesn&apos;t exist on {connectedChainLabel}</Trans>
+              <Trans>This token doesn&apos;t exist on {{ connectedChainLabel }}</Trans>
             </InvalidDetailsText>
           )}
           <TokenExploreButton onClick={() => selectChain(pageChainId)}>
             <ThemedText.SubHeader>
-              <Trans>Switch to {getChainInfo(pageChainId).label}</Trans>
+              <Trans>Switch to {{ label: getChainInfo(pageChainId).label }}</Trans>
             </ThemedText.SubHeader>
           </TokenExploreButton>
         </>

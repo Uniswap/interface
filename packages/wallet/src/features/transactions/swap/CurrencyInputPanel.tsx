@@ -23,6 +23,7 @@ import {
   Text,
   TouchableArea,
   isWeb,
+  useIsShortMobileDevice,
   useSporeColors,
 } from 'ui/src'
 import { fonts } from 'ui/src/theme'
@@ -97,6 +98,7 @@ export const CurrencyInputPanel = memo(
     forwardedRef
   ): JSX.Element {
     const colors = useSporeColors()
+    const isShortMobileDevice = useIsShortMobileDevice()
     const { formatCurrencyAmount } = useLocalizationContext()
 
     const inputRef = useRef<TextInput>(null)
@@ -216,7 +218,11 @@ export const CurrencyInputPanel = memo(
     const fiatModeFeatureEnabled = false
     return (
       <TouchableArea hapticFeedback onPress={currencyInfo ? onPressIn : onShowTokenSelector}>
-        <Flex {...rest} overflow="hidden" px="$spacing16" py={isWeb ? '$spacing24' : '$spacing20'}>
+        <Flex
+          {...rest}
+          overflow="hidden"
+          px="$spacing16"
+          py={isWeb ? '$spacing24' : isShortMobileDevice ? '$spacing8' : '$spacing20'}>
           <Flex
             row
             alignItems="center"

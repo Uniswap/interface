@@ -11,7 +11,7 @@ export interface SplitOptions {
 }
 
 export function splitHiddenTokens(
-  tokenBalances: (PortfolioTokenBalancePartsFragment | undefined)[],
+  tokenBalances: readonly (PortfolioTokenBalancePartsFragment | undefined)[],
   { hideSmallBalances = true, hideSpam = true }: SplitOptions = {}
 ) {
   const visibleTokens: PortfolioTokenBalancePartsFragment[] = []

@@ -1,7 +1,7 @@
-import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { transparentize } from 'polished'
 import { useState } from 'react'
@@ -89,7 +89,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
                   <Trans>Loading</Trans>
                 </Dots>
               ) : (
-                `${currency0.symbol}/${currency1.symbol}`
+                `${{ sym0: currency0.symbol }}/${{ sym1: currency1.symbol }}`
               )}
             </Text>
           </AutoRow>
@@ -138,7 +138,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={535}>
-                  <Trans>Pooled {currency0.symbol}:</Trans>
+                  <Trans>Pooled {{ sym: currency0.symbol }}:</Trans>
                 </Text>
               </RowFixed>
               {token0Deposited ? (
@@ -156,7 +156,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
             <FixedHeightRow>
               <RowFixed>
                 <Text fontSize={16} fontWeight={535}>
-                  <Trans>Pooled {currency1.symbol}:</Trans>
+                  <Trans>Pooled {{ sym: currency1.symbol }}:</Trans>
                 </Text>
               </RowFixed>
               {token1Deposited ? (
