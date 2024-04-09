@@ -3,6 +3,7 @@ import { formatTickMarks } from 'components/Charts/utils'
 import Row from 'components/Row'
 import { MissingDataBars } from 'components/Table/icons'
 import { useActiveLocale } from 'hooks/useActiveLocale'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { useUpdateAtom } from 'jotai/utils'
 import {
@@ -253,6 +254,8 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
 
   // Chart model state should not affect React render cycles since the chart canvas is drawn outside of React, so we store via ref
   const chartModelRef = useRef<ChartModel<TDataType>>()
+  const chartTooltipRef = useRef(null)
+  useOnClickOutside(chartTooltipRef, () => setCrosshairData(undefined))
 
   // Creates the chart as soon as the chart div ref is defined
   useEffect(() => {
@@ -289,7 +292,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
     >
       {children && children(crosshairData)}
       {TooltipBody && crosshairData && (
-        <ChartTooltip id={chartModelRef.current?.tooltipId}>
+        <ChartTooltip id={chartModelRef.current?.tooltipId} ref={chartTooltipRef}>
           <TooltipBody data={crosshairData} />
         </ChartTooltip>
       )}
