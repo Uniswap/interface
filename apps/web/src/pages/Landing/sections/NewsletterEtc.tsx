@@ -1,5 +1,5 @@
-import { t, Trans } from '@lingui/macro'
 import { motion } from 'framer-motion'
+import { t, Trans } from 'i18n'
 import styled, { useTheme } from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 

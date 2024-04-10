@@ -49,6 +49,8 @@ export const changeLanguage = async (str: string): Promise<TFunction> => {
   return await i18n.changeLanguage(str)
 }
 
+export class MissingI18nInterpolationError extends Error {}
+
 i18n
   .use(initReactI18next)
   .init({
@@ -63,7 +65,7 @@ i18n
       transSupportBasicHtmlNodes: false, // disabling since this breaks for mobile
     },
     missingInterpolationHandler: (text) => {
-      logger.error(new Error(`Missing i18n interpolation value for text: ${text}`), {
+      logger.error(new MissingI18nInterpolationError(`Missing i18n interpolation value: ${text}`), {
         tags: {
           file: 'i18n.ts',
           function: 'init',

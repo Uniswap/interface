@@ -55,7 +55,7 @@ describe(useLineChartPrice, () => {
   })
 
   afterAll(() => {
-    jest.resetAllMocks()
+    jest.clearAllMocks()
   })
 
   it('returns correct initial values', () => {

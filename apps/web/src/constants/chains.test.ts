@@ -18,6 +18,7 @@ const chainPriorityTestCases: [ChainId, number][] = [
   [ChainId.AVALANCHE, 6],
   [ChainId.CELO, 7],
   [ChainId.CELO_ALFAJORES, 7],
+  [ChainId.BLAST, 8],
 ]
 
 test.each(chainPriorityTestCases)(

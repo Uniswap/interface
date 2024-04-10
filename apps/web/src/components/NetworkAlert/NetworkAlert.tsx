@@ -1,9 +1,9 @@
-import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { getChainUI } from 'components/Logo/ChainLogo'
 import { RowBetween } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
 import { isSupportedChain } from 'constants/chains'
+import { Trans } from 'i18n'
 import { ArrowUpRight } from 'react-feather'
 import styled from 'styled-components'
 import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
@@ -60,11 +60,11 @@ export function NetworkAlert() {
       <RowBetween>
         <Column>
           <TitleText $color={textColor}>
-            <Trans>{label} token bridge</Trans>
+            <Trans>{{ label }} token bridge</Trans>
           </TitleText>
           <HideSmall>
             <SubtitleText $color={textColor}>
-              <Trans>Deposit tokens to the {label} network.</Trans>
+              <Trans>Deposit tokens to the {{ label }} network.</Trans>
             </SubtitleText>
           </HideSmall>
         </Column>

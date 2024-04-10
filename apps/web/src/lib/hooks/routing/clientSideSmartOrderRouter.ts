@@ -9,13 +9,29 @@ import JSBI from 'jsbi'
 import { GetQuoteArgs, QuoteResult, QuoteState, SwapRouterNativeAssets } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
+const CLIENT_SIDE_ROUTING_ALLOW_LIST = [
+  ChainId.MAINNET,
+  ChainId.OPTIMISM,
+  ChainId.OPTIMISM_GOERLI,
+  ChainId.ARBITRUM_ONE,
+  ChainId.ARBITRUM_GOERLI,
+  ChainId.POLYGON,
+  ChainId.POLYGON_MUMBAI,
+  ChainId.GOERLI,
+  ChainId.SEPOLIA,
+  ChainId.CELO_ALFAJORES,
+  ChainId.CELO,
+  ChainId.BNB,
+  ChainId.AVALANCHE,
+  ChainId.BASE,
+]
 const routers = new Map<ChainId, AlphaRouter>()
 export function getRouter(chainId: ChainId): AlphaRouter {
   const router = routers.get(chainId)
   if (router) return router
 
   const supportedChainId = asSupportedChain(chainId)
-  if (supportedChainId) {
+  if (supportedChainId && CLIENT_SIDE_ROUTING_ALLOW_LIST.includes(chainId)) {
     const provider = RPC_PROVIDERS[supportedChainId]
     const router = new AlphaRouter({ chainId, provider })
     routers.set(chainId, router)

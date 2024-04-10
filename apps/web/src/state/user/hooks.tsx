@@ -8,10 +8,10 @@ import JSBI from 'jsbi'
 import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
-import { UserAddedToken } from 'types/tokens'
 
+import { useDefaultActiveTokens } from 'hooks/Tokens'
+import { deserializeToken, serializeToken } from 'state/user/utils'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
-import { useDefaultActiveTokens } from '../../hooks/Tokens'
 import {
   addSerializedPair,
   addSerializedToken,
@@ -21,27 +21,7 @@ import {
   updateUserRouterPreference,
   updateUserSlippageTolerance,
 } from './reducer'
-import { SerializedPair, SerializedToken, SlippageTolerance } from './types'
-
-export function serializeToken(token: Token): SerializedToken {
-  return {
-    chainId: token.chainId,
-    address: token.address,
-    decimals: token.decimals,
-    symbol: token.symbol,
-    name: token.name,
-  }
-}
-
-export function deserializeToken(serializedToken: SerializedToken, Class: typeof Token = Token): Token {
-  return new Class(
-    serializedToken.chainId,
-    serializedToken.address,
-    serializedToken.decimals,
-    serializedToken.symbol,
-    serializedToken.name
-  )
-}
+import { SerializedPair, SlippageTolerance } from './types'
 
 export function useUserLocale(): SupportedLocale | null {
   return useAppSelector((state) => state.user.userLocale)
@@ -169,22 +149,6 @@ export function useAddUserToken(): (token: Token) => void {
     },
     [dispatch]
   )
-}
-
-function useUserAddedTokensOnChain(chainId: number | undefined | null): Token[] {
-  const serializedTokensMap = useAppSelector(({ user: { tokens } }) => tokens)
-
-  return useMemo(() => {
-    if (!chainId) return []
-    const tokenMap: Token[] = serializedTokensMap?.[chainId]
-      ? Object.values(serializedTokensMap[chainId]).map((value) => deserializeToken(value, UserAddedToken))
-      : []
-    return tokenMap
-  }, [serializedTokensMap, chainId])
-}
-
-export function useUserAddedTokens(): Token[] {
-  return useUserAddedTokensOnChain(useWeb3React().chainId)
 }
 
 function serializePair(pair: Pair): SerializedPair {

@@ -4,9 +4,9 @@ import {
   CancellationState,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/CancelLimitsDialog'
 import { DAI } from 'constants/tokens'
-import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'
+import { UniswapXOrderStatus } from 'types/uniswapx'
 
 const mockOrderDetails: UniswapXOrderDetails = {
   type: SignatureType.SIGN_LIMIT,

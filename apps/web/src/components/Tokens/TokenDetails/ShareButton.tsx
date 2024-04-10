@@ -1,4 +1,3 @@
-import { Trans, t } from '@lingui/macro'
 import { DropdownSelector } from 'components/DropdownSelector'
 import { CheckMark } from 'components/Icons/CheckMark'
 import { Share as ShareIcon } from 'components/Icons/Share'
@@ -7,6 +6,7 @@ import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/Toke
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import { Trans, t } from 'i18n'
 import { useRef } from 'react'
 import { Link } from 'react-feather'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'

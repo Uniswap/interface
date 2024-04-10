@@ -1,5 +1,4 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Trans } from '@lingui/macro'
 import { Percent, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
@@ -10,6 +9,7 @@ import { RowBetween } from 'components/Row'
 import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { usePool } from 'hooks/usePools'
+import { Trans } from 'i18n'
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
@@ -215,9 +215,7 @@ export default function PositionListItem({
             &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
           </ThemedText.SubHeader>
 
-          <FeeTierText>
-            <Trans>{formatDelta(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant()))}</Trans>
-          </FeeTierText>
+          <FeeTierText>{formatDelta(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant()))}</FeeTierText>
         </PrimaryPositionIdData>
         <RangeBadge removed={removed} inRange={!outOfRange} />
       </RowBetween>
@@ -228,14 +226,14 @@ export default function PositionListItem({
             <ExtentsText>
               <Trans>Min: </Trans>
             </ExtentsText>
+            <span>
+              {formatTickPrice({
+                price: priceLower,
+                atLimit: tickAtLimit,
+                direction: Bound.LOWER,
+              })}{' '}
+            </span>
             <Trans>
-              <span>
-                {formatTickPrice({
-                  price: priceLower,
-                  atLimit: tickAtLimit,
-                  direction: Bound.LOWER,
-                })}{' '}
-              </span>
               <HoverInlineText text={currencyQuote?.symbol} /> per <HoverInlineText text={currencyBase?.symbol ?? ''} />
             </Trans>
           </RangeText>{' '}
@@ -249,14 +247,14 @@ export default function PositionListItem({
             <ExtentsText>
               <Trans>Max:</Trans>
             </ExtentsText>
+            <span>
+              {formatTickPrice({
+                price: priceUpper,
+                atLimit: tickAtLimit,
+                direction: Bound.UPPER,
+              })}{' '}
+            </span>
             <Trans>
-              <span>
-                {formatTickPrice({
-                  price: priceUpper,
-                  atLimit: tickAtLimit,
-                  direction: Bound.UPPER,
-                })}{' '}
-              </span>
               <HoverInlineText text={currencyQuote?.symbol} /> per{' '}
               <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />
             </Trans>

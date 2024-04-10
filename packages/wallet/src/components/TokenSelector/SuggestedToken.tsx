@@ -45,12 +45,10 @@ function _SuggestedToken({
           />
         }
         label={getSymbolDisplayText(currency.symbol)}
-        mr="$spacing8"
-        my="$spacing4"
         pl="$spacing4"
         pr="$spacing12"
         py="$spacing4"
-        textVariant={isWeb ? 'buttonLabel3' : 'body1'}
+        textVariant={isWeb ? 'buttonLabel4' : 'body1'}
       />
     </TouchableArea>
   )

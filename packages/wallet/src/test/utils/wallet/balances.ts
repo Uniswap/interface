@@ -1,4 +1,4 @@
-import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
+import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { portfolioBalances } from 'wallet/src/test/fixtures'
 
 export function portfolioBalancesById(

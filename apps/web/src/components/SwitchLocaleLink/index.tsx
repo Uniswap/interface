@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
+import { Trans } from 'i18n'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
@@ -38,12 +38,10 @@ export function SwitchLocaleLink() {
 
   return (
     <Container>
-      <Trans>
-        Uniswap available in:{' '}
-        <StyledInternalLink onClick={onClick} to={to}>
-          {LOCALE_LABEL[targetLocale]}
-        </StyledInternalLink>
-      </Trans>
+      <Trans>Uniswap available in: </Trans>
+      <StyledInternalLink onClick={onClick} to={to}>
+        {LOCALE_LABEL[targetLocale]}
+      </StyledInternalLink>
     </Container>
   )
 }

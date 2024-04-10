@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -12,16 +11,17 @@ import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS } from 'graphql/data/util'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
+import { Trans } from 'i18n'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
 import { GenieCollection } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
-import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { HistoryDuration, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
+import { useLocation } from 'react-router-dom'
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import { SuspendConditionally } from '../Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from '../Suspense/SuspenseWithPreviousRenderAsFallback'
@@ -149,7 +149,7 @@ function SearchBarDropdownContents({
   const shortenedHistory = useMemo(() => searchHistory?.slice(0, 2) ?? [...Array<SearchToken>(2)], [searchHistory])
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
-  const isTokenPage = pathname.includes('/tokens')
+  const isTokenPage = pathname.includes('/explore')
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   const { data: trendingCollections, loading: trendingCollectionsAreLoading } = useTrendingCollections(
@@ -176,7 +176,7 @@ function SearchBarDropdownContents({
 
   const { data: trendingTokenData } = useTrendingTokens(useWeb3React().chainId)
 
-  const trendingTokensLength = isTokenPage ? 3 : 2
+  const trendingTokensLength = !isNFTPage ? 3 : 2
   const trendingTokens = useMemo(
     () => trendingTokenData?.slice(0, trendingTokensLength) ?? [...Array<SearchToken>(trendingTokensLength)],
     [trendingTokenData, trendingTokensLength]
@@ -185,8 +185,8 @@ function SearchBarDropdownContents({
   const totalSuggestions = hasInput
     ? tokens.length + collections.length
     : Math.min(shortenedHistory.length, 2) +
-      (isNFTPage || !isTokenPage ? formattedTrendingCollections?.length ?? 0 : 0) +
-      (isTokenPage || !isNFTPage ? trendingTokens?.length ?? 0 : 0)
+      (isNFTPage ? formattedTrendingCollections?.length ?? 0 : 0) +
+      (!isNFTPage ? trendingTokens?.length ?? 0 : 0)
 
   // Navigate search results via arrow keys
   useEffect(() => {
@@ -217,8 +217,7 @@ function SearchBarDropdownContents({
 
   const hasVerifiedCollection = collections.some((collection) => collection.isVerified)
   const hasKnownToken = tokens.some(isKnownToken)
-  const showCollectionsFirst =
-    (isNFTPage && (hasVerifiedCollection || !hasKnownToken)) || (!isNFTPage && !hasKnownToken && hasVerifiedCollection)
+  const showCollectionsFirst = isNFTPage && (hasVerifiedCollection || !hasKnownToken)
 
   const trace = JSON.stringify(useTrace({ section: InterfaceSectionName.NAVBAR_SEARCH }))
 

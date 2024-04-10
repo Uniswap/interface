@@ -1,13 +1,13 @@
-import { Trans } from '@lingui/macro'
 import { ColumnCenter } from 'components/Column'
 import { useCurrency } from 'hooks/Tokens'
+import { Trans } from 'i18n'
 import { Swap } from 'pages/Swap'
 import { useEffect, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import styled, { css, keyframes } from 'styled-components'
 
 import { BREAKPOINTS } from 'theme'
-import { Text } from 'ui/src'
+import { Text } from 'ui/src/components/text/Text'
 import { heightBreakpoints } from 'ui/src/theme'
 import { Box, H1 } from '../components/Generics'
 import { TokenCloud } from '../components/TokenCloud/index'
@@ -22,9 +22,6 @@ const LandingSwapContainer = styled(Box)`
   padding: 8px;
   border-radius: 24px;
   background: ${({ theme }) => theme.surface1};
-  @media (max-width: 768px) {
-    width: 100%;
-  }
 `
 const LandingSwap = styled(Swap)`
   position: relative;
@@ -128,7 +125,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
         transition={transition}
         style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
       >
-        <Box direction="column" align="center">
+        <Box maxWidth="920px" direction="column" align="center">
           <StyledH1>
             <RiseInText delay={0.0}>
               <Trans>Swap</Trans>

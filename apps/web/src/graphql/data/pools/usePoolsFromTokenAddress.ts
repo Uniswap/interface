@@ -1,5 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { PoolTableSortState, TablePool, V2_BIPS, calculateTurnover, sortPools } from 'graphql/data/pools/useTopPools'
+import { PoolTableSortState, TablePool, V2_BIPS, calculateOneDayApr, sortPools } from 'graphql/data/pools/useTopPools'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useCallback, useMemo, useRef } from 'react'
 import {
@@ -92,7 +92,7 @@ export function usePoolsFromTokenAddress(tokenAddress: string, sortState: PoolTa
           tvl: pool.totalLiquidity?.value,
           volume24h: pool.volume24h?.value,
           volumeWeek: pool.volumeWeek?.value,
-          turnover: calculateTurnover(pool.volume24h?.value, pool.totalLiquidity?.value, pool.feeTier),
+          oneDayApr: calculateOneDayApr(pool.volume24h?.value, pool.totalLiquidity?.value, pool.feeTier),
           feeTier: pool.feeTier,
           protocolVersion: pool.protocolVersion,
         } as TablePool
@@ -107,7 +107,7 @@ export function usePoolsFromTokenAddress(tokenAddress: string, sortState: PoolTa
           tvl: pool.totalLiquidity?.value,
           volume24h: pool.volume24h?.value,
           volumeWeek: pool.volumeWeek?.value,
-          turnover: calculateTurnover(pool.volume24h?.value, pool.totalLiquidity?.value, V2_BIPS),
+          oneDayApr: calculateOneDayApr(pool.volume24h?.value, pool.totalLiquidity?.value, V2_BIPS),
           feeTier: V2_BIPS,
           protocolVersion: pool.protocolVersion,
         } as TablePool

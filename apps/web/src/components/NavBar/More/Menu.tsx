@@ -1,7 +1,7 @@
-import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
+import { Trans } from 'i18n'
 import { Socials } from 'pages/Landing/sections/Footer'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -11,7 +11,7 @@ import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ExternalLink, ThemedText } from 'theme/components'
 
-import { menuContent, MenuItem, MenuSection } from './menuContent'
+import { MenuItem, MenuSection, useMenuContent } from './menuContent'
 import { MobileAppLogo } from './MobileAppLogo'
 
 const Container = styled.div`
@@ -99,6 +99,7 @@ function Section({ title, items, closeMenu }: MenuSection) {
 }
 export function Menu({ close }: { close: () => void }) {
   const openGetTheAppModal = useOpenModal(ApplicationModal.GET_THE_APP)
+  const menuContent = useMenuContent()
 
   return (
     <Container data-testid="nav-more-menu">

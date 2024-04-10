@@ -39,7 +39,7 @@ exports[`EmptyState renders without error 1`] = `
           {
             "color": "#7D7D7D",
             "fontFamily": "Basel-Book",
-            "fontSize": 17,
+            "fontSize": 16,
             "lineHeight": 24,
             "textAlign": "center",
           }
@@ -105,7 +105,7 @@ exports[`ErrorState renders without error 1`] = `
           {
             "color": "#7D7D7D",
             "fontFamily": "Basel-Book",
-            "fontSize": 17,
+            "fontSize": 16,
             "lineHeight": 24,
             "textAlign": "center",
           }
@@ -193,7 +193,7 @@ exports[`Header renders without error 1`] = `
             {
               "color": "#7D7D7D",
               "fontFamily": "Basel-Book",
-              "fontSize": 17,
+              "fontSize": 16,
               "lineHeight": 24,
             }
           }
@@ -405,7 +405,7 @@ exports[`InlineErrorState renders without error 1`] = `
         {
           "color": "#222222",
           "fontFamily": "Basel-Book",
-          "fontSize": 17,
+          "fontSize": 16,
           "lineHeight": 24,
           "textAlign": "center",
         }

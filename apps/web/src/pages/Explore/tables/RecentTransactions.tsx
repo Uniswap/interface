@@ -1,5 +1,4 @@
 import { ApolloError } from '@apollo/client'
-import { Trans } from '@lingui/macro'
 import { createColumnHelper } from '@tanstack/react-table'
 import Row from 'components/Row'
 import { Table } from 'components/Table'
@@ -18,6 +17,7 @@ import { BETypeToTransactionType, TransactionType, useAllTransactions } from 'gr
 import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { OrderDirection, Transaction_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
+import { Trans } from 'i18n'
 import { useMemo, useReducer, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
@@ -108,7 +108,7 @@ export default function RecentTransactions() {
           <Cell loading={showLoadingSkeleton} minWidth={276} justifyContent="flex-start" grow>
             <Row gap="8px">
               <ThemedText.BodySecondary>
-                <Trans>{BETypeToTransactionType[transaction.getValue?.().type]}</Trans>
+                {BETypeToTransactionType[transaction.getValue?.().type]}
               </ThemedText.BodySecondary>
               <TokenLinkCell token={transaction.getValue?.().token0} />
               <ThemedText.BodySecondary>

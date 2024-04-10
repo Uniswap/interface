@@ -1,4 +1,6 @@
-import { ColorTokens, createTokens } from 'tamagui'
+// until the web app needs all of tamagui, avoid heavy imports there
+// eslint-disable-next-line no-restricted-imports
+import { ColorTokens, createTokens } from '@tamagui/core'
 import { borderRadii } from 'ui/src/theme/borderRadii'
 import { colors as color } from 'ui/src/theme/color/colors'
 import { fonts } from 'ui/src/theme/fonts'

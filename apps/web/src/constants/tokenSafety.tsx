@@ -1,5 +1,5 @@
-import { Plural, Trans } from '@lingui/macro'
 import { SearchToken } from 'graphql/data/SearchTokens'
+import { Plural, Trans, t } from 'i18n'
 import { TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ZERO_ADDRESS } from './misc'
 import tokenSafetyLookup, { TOKEN_LIST_TYPES } from './tokenSafetyLookup'
@@ -38,7 +38,9 @@ export function getWarningCopy(warning: Warning | undefined, plural = false, tok
         heading = (
           <Plural
             value={plural ? 2 : 1}
-            _1={`${tokenSymbol ?? 'This token'} isn't traded on leading U.S. centralized exchanges.`}
+            one={t(`{{name}} isn't traded on leading U.S. centralized exchanges.`, {
+              name: tokenSymbol ?? 'This token',
+            })}
             other="These tokens aren't traded on leading U.S. centralized exchanges."
           />
         )
@@ -48,9 +50,9 @@ export function getWarningCopy(warning: Warning | undefined, plural = false, tok
         heading = (
           <Plural
             value={plural ? 2 : 1}
-            _1={`${
-              tokenSymbol ?? 'This token'
-            } isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.`}
+            one={t(`{{name}} isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.`, {
+              name: tokenSymbol ?? 'This token',
+            })}
             other="These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap."
           />
         )
@@ -60,7 +62,9 @@ export function getWarningCopy(warning: Warning | undefined, plural = false, tok
         description = (
           <Plural
             value={plural ? 2 : 1}
-            _1={`You can't trade ${tokenSymbol ?? 'this token'} using the Uniswap App.`}
+            one={t(`You can't trade {{name}} using the Uniswap App.`, {
+              name: tokenSymbol ?? 'this token',
+            })}
             other="You can't trade these tokens using the Uniswap App."
           />
         )

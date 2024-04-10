@@ -84,11 +84,11 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     isLoading: widgetLoading,
     error: widgetError,
   } = useFiatOnRampAggregatorWidgetQuery(
-    serviceProvider && quoteCurrency?.currencyInfo?.currency.symbol && baseCurrencyInfo && amount
+    serviceProvider && quoteCurrency.meldCurrencyCode && baseCurrencyInfo && amount
       ? {
           serviceProvider: serviceProvider.serviceProvider,
           countryCode,
-          destinationCurrencyCode: quoteCurrency?.currencyInfo?.currency.symbol,
+          destinationCurrencyCode: quoteCurrency.meldCurrencyCode,
           sourceAmount: amount,
           sourceCurrencyCode: baseCurrencyInfo.code,
           walletAddress: activeAccountAddress,
@@ -113,7 +113,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
       dispatch(closeModal({ name: ModalName.FiatOnRampAggregator }))
       if (
         serviceProvider &&
-        quoteCurrency?.currencyInfo?.currency.symbol &&
+        quoteCurrency?.meldCurrencyCode &&
         baseCurrencyInfo &&
         quotesSections?.[0]?.data?.[0]
       ) {
@@ -124,7 +124,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
           countryCode,
           countryState,
           fiatCurrency: baseCurrencyInfo?.code.toLowerCase(),
-          cryptoCurrency: quoteCurrency?.currencyInfo?.currency.symbol?.toLowerCase(),
+          cryptoCurrency: quoteCurrency.meldCurrencyCode.toLowerCase(),
         })
       }
       dispatchAddTransaction()
@@ -147,7 +147,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     serviceProvider,
     dispatch,
     externalTransactionId,
-    quoteCurrency?.currencyInfo?.currency.symbol,
+    quoteCurrency.meldCurrencyCode,
     quotesSections,
     countryCode,
     countryState,

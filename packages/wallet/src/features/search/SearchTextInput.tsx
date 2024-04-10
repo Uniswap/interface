@@ -27,6 +27,8 @@ import { SHADOW_OFFSET_SMALL } from 'wallet/src/components/BaseCard/BaseCard'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { WalletEventName } from 'wallet/src/telemetry/constants'
 
+const DEFAULT_MIN_HEIGHT = 48
+
 export const springConfig = {
   stiffness: 1000,
   damping: 500,
@@ -46,6 +48,7 @@ export type SearchTextInputProps = InputProps & {
   py?: SpaceTokens
   px?: SpaceTokens
   hideIcon?: boolean
+  minHeight?: number
 }
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>(
@@ -69,6 +72,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       showShadow,
       value,
       hideIcon,
+      minHeight = DEFAULT_MIN_HEIGHT,
     } = props
 
     const inputRef = useRef<Input>(null)
@@ -129,7 +133,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           backgroundColor={backgroundColor}
           borderRadius="$roundedFull"
           gap="$spacing8"
-          minHeight={48}
+          minHeight={minHeight}
           mr={showCancelButton && isFocus ? cancelButtonWidth + spacing.spacing12 : 0}
           px={px}
           py={py}

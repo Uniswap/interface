@@ -1,7 +1,8 @@
-import { t, Trans } from '@lingui/macro'
 import { sendAnalyticsEvent } from 'analytics'
 import Row from 'components/Row'
-import { Expiry, useLimitContext } from 'state/limit/LimitContext'
+import { t, Trans } from 'i18n'
+import { useLimitContext } from 'state/limit/LimitContext'
+import { Expiry } from 'state/limit/types'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 

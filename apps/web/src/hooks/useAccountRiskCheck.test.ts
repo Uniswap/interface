@@ -6,6 +6,7 @@ import useAccountRiskCheck from './useAccountRiskCheck'
 // Mock the useAppDispatch hook
 const dispatchMock = jest.fn()
 jest.mock('state/hooks', () => ({
+  ...jest.requireActual('state/hooks'),
   useAppDispatch: () => dispatchMock,
 }))
 

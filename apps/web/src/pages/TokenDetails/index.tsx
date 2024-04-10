@@ -1,31 +1,25 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import PrefetchBalancesWrapper, {
-  useCachedPortfolioBalancesQuery,
-} from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import TokenDetails from 'components/Tokens/TokenDetails'
 import { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
 import InvalidTokenDetails from 'components/Tokens/TokenDetails/InvalidTokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
 import { checkWarning } from 'constants/tokenSafety'
 import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL, nativeOnChain } from 'constants/tokens'
+import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { gqlToCurrency, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useSrcColor } from 'hooks/useColor'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useLocation, useParams } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components'
+import { useTheme } from 'styled-components'
 import { ThemeProvider } from 'theme'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isAddress } from 'utilities/src/addresses'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 import { LoadedTDPContext, MultiChainMap, PendingTDPContext, TDPProvider } from './TDPContext'
 import { getTokenPageTitle } from './utils'
-
-const StyledPrefetchBalancesWrapper = styled(PrefetchBalancesWrapper)`
-  display: contents;
-`
 
 function useOnChainToken(address: string | undefined, chainId: ChainId, skip: boolean) {
   const token = useCurrency(!skip ? address : undefined, chainId)
@@ -63,10 +57,8 @@ function useTDPCurrency(
 
 /** Returns a map to store addresses and balances of the TDP token on other chains */
 function useMultiChainMap(tokenQuery: ReturnType<typeof useTokenWebQuery>) {
-  const { account } = useWeb3React()
-
   // Build map to store addresses and balances of this token on other chains
-  const { data: balanceQuery } = useCachedPortfolioBalancesQuery({ account })
+  const { data: balanceQuery } = useTokenBalancesQuery()
   return useMemo(() => {
     const tokenBalances = balanceQuery?.portfolios?.[0]?.tokenBalances
     const tokensAcrossChains = tokenQuery.data?.token?.project?.tokens
@@ -110,7 +102,8 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   const theme = useTheme()
   const { preloadedLogoSrc } = (useLocation().state as { preloadedLogoSrc?: string }) ?? {}
   const extractedColorSrc = tokenQuery.data?.token?.project?.logoUrl ?? preloadedLogoSrc
-  const extractedAccent1 = useSrcColor(extractedColorSrc, { backgroundColor: theme.surface2, darkMode: theme.darkMode })
+  const tokenColor =
+    useSrcColor(extractedColorSrc, tokenQuery.data?.token?.name, theme.surface2).tokenColor ?? undefined
 
   return useMemo(() => {
     return {
@@ -124,14 +117,14 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
       chartState,
       warning,
       multiChainMap,
-      extractedAccent1,
+      tokenColor,
     }
   }, [
     currency,
     currencyChain,
     currencyChainId,
     currencyWasFetchedOnChain,
-    extractedAccent1,
+    tokenColor,
     multiChainMap,
     warning,
     tokenAddress,
@@ -145,27 +138,25 @@ export default function TokenDetailsPage() {
   const contextValue = useCreateTDPContext()
 
   return (
-    <StyledPrefetchBalancesWrapper shouldFetchOnAccountUpdate={true} shouldFetchOnHover={false}>
-      <ThemeProvider accent1={contextValue.extractedAccent1}>
-        <Helmet>
-          <title>{getTokenPageTitle(contextValue?.currency)}</title>
-        </Helmet>
-        {(() => {
-          if (contextValue.currency) {
-            return (
-              <TDPProvider contextValue={contextValue}>
-                <TokenDetails />
-              </TDPProvider>
-            )
-          }
+    <ThemeProvider accent1={contextValue.tokenColor ?? undefined}>
+      <Helmet>
+        <title>{getTokenPageTitle(contextValue?.currency)}</title>
+      </Helmet>
+      {(() => {
+        if (contextValue.currency) {
+          return (
+            <TDPProvider contextValue={contextValue}>
+              <TokenDetails />
+            </TDPProvider>
+          )
+        }
 
-          if (contextValue.tokenQuery.loading) {
-            return <TokenDetailsPageSkeleton />
-          } else {
-            return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!isAddress(contextValue.address)} />
-          }
-        })()}
-      </ThemeProvider>
-    </StyledPrefetchBalancesWrapper>
+        if (contextValue.tokenQuery.loading) {
+          return <TokenDetailsPageSkeleton />
+        } else {
+          return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!isAddress(contextValue.address)} />
+        }
+      })()}
+    </ThemeProvider>
   )
 }

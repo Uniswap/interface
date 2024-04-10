@@ -1,10 +1,10 @@
-import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import Row from 'components/Row'
 import { SwapSkeleton } from 'components/swap/SwapSkeleton'
 import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
+import { Trans } from 'i18n'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useParams } from 'react-router-dom'
@@ -207,8 +207,8 @@ export function getLoadingTitle(
   )
   return (
     <Trans>
-      token data for {tokenLink}
-      {chainSuffix}
+      token data for {{ tokenLink }}
+      {{ chainSuffix }}
     </Trans>
   )
 }

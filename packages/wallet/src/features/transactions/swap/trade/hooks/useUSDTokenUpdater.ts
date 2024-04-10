@@ -68,7 +68,7 @@ export function useUSDTokenUpdater(
     const fiatPrice = parseFloat(usdPrice?.toExact() ?? '0') * conversionRate
 
     return dispatch(
-      updateExactAmountFiat({ amount: fiatPrice ? fiatPrice.toFixed(NUM_DECIMALS_DISPLAY) : '0' })
+      updateExactAmountFiat({ amount: fiatPrice ? fiatPrice.toFixed(NUM_DECIMALS_DISPLAY) : '' })
     )
   }, [
     dispatch,

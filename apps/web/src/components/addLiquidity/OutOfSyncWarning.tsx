@@ -1,8 +1,9 @@
-import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { Trans } from 'i18n'
 import styled from 'styled-components'
-import { Icons, Text } from 'ui/src'
+import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
+import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme'
 
 const Container = styled.div`
@@ -29,7 +30,7 @@ export function OutOfSyncWarning() {
       <Row gap="md" height="100%">
         <StyledColumn>
           <IconContainer>
-            <Icons.AlertTriangle color="$neutral2" size={iconSizes.icon20} />
+            <AlertTriangle color="$neutral2" size={iconSizes.icon20} />
           </IconContainer>
         </StyledColumn>
         <StyledColumn>

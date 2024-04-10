@@ -66,6 +66,7 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   )
   const [quoteCurrency, setQuoteCurrency] = useState<FiatOnRampCurrency>({
     currencyInfo: ethCurrencyInfo,
+    meldCurrencyCode: 'ETH',
   })
 
   return (

@@ -571,7 +571,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                           <div
                             class="c9 css-1urox24"
                           >
-                            Turnover
+                            1 day APR
                           </div>
                         </div>
                       </div>
@@ -1276,7 +1276,7 @@ exports[`TDPPoolTable renders error state 1`] = `
                           <div
                             class="c9 css-1urox24"
                           >
-                            Turnover
+                            1 day APR
                           </div>
                         </div>
                       </div>
@@ -2407,7 +2407,7 @@ exports[`TDPPoolTable renders loading state 1`] = `
                           <div
                             class="c9 css-1urox24"
                           >
-                            Turnover
+                            1 day APR
                           </div>
                         </div>
                       </div>

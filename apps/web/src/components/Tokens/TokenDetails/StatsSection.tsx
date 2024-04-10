@@ -1,8 +1,8 @@
-import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
 import { TokenQueryData } from 'graphql/data/Token'
+import { Trans } from 'i18n'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
@@ -160,7 +160,7 @@ export default function StatsSection(props: StatsSectionProps) {
         </Header>
         <ThemedText.BodySecondary pt="12px">
           <Trans>
-            Token stats and charts for {label} are available on{' '}
+            Token stats and charts for {{ label }} are available on{' '}
             <ExternalLink color="currentColor" href={`${infoLink}tokens/${address}`}>
               info.uniswap.org
             </ExternalLink>

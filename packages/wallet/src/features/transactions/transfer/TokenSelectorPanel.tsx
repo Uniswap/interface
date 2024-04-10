@@ -2,6 +2,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { NumberType } from 'utilities/src/format/types'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import {
@@ -9,7 +10,6 @@ import {
   TokenSelectorVariation,
 } from 'wallet/src/components/TokenSelector/TokenSelector'
 import { MaxAmountButton } from 'wallet/src/components/input/MaxAmountButton'
-import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -84,6 +84,7 @@ export function TokenSelectorPanel({
             <MaxAmountButton
               currencyAmount={currencyAmount}
               currencyBalance={currencyBalance}
+              currencyField={CurrencyField.INPUT}
               onSetMax={onSetMax}
             />
           )}

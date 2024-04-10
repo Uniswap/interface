@@ -23,6 +23,7 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { zIndices } from 'ui/src/theme'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
@@ -34,7 +35,6 @@ import {
   TokenBalanceListRow,
   useTokenBalanceListContext,
 } from 'wallet/src/features/portfolio/TokenBalanceListContext'
-import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 type TokenBalanceListProps = TabProps & {
   empty?: JSX.Element | null

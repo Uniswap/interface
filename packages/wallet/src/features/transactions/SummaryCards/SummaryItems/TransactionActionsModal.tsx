@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ColorTokens, Flex, Separator, Text } from 'ui/src'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import {
   ActionSheetModalContent,
   MenuItemProp,
@@ -20,7 +21,6 @@ import {
 import { useAppDispatch } from 'wallet/src/state'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 import { setClipboard } from 'wallet/src/utils/clipboard'
-import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { openMoonpayHelpLink, openUniswapHelpLink } from 'wallet/src/utils/linking'
 
 function renderOptionItem(label: string, textColorOverride?: ColorTokens): () => JSX.Element {

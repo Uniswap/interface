@@ -1,8 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@uniswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
@@ -11,6 +10,7 @@ import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { isSupportedChain } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
+import { Trans } from 'i18n'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { BodyWrapper } from 'pages/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
@@ -32,6 +32,8 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { OutOfSyncWarning } from 'components/addLiquidity/OutOfSyncWarning'
 import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
+import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { BlastRebasingAlert, BlastRebasingModal } from 'pages/AddLiquidity/blastAlerts'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -71,11 +73,18 @@ import { Review } from './Review'
 import { DynamicSection, MediumOnly, ResponsiveTwoColumns, ScrollablePage, StyledInput, Wrapper } from './styled'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
+const blastRebasingAlertAtom = atomWithStorage<boolean>('shouldShowBlastRebasingAlert', true)
 
 const StyledBodyWrapper = styled(BodyWrapper)<{ $hasExistingPosition: boolean }>`
   padding: ${({ $hasExistingPosition }) => ($hasExistingPosition ? '10px' : 0)};
   max-width: 640px;
 `
+
+const BLAST_REBASING_TOKENS = [
+  'ETH',
+  '0x4300000000000000000000000000000000000004',
+  '0x4300000000000000000000000000000000000003',
+]
 
 export default function AddLiquidityWrapper() {
   const { chainId } = useWeb3React()
@@ -513,10 +522,10 @@ function AddLiquidity() {
                 >
                   {approvalA === ApprovalState.PENDING ? (
                     <Dots>
-                      <Trans>Approving {currencies[Field.CURRENCY_A]?.symbol}</Trans>
+                      <Trans>Approving {{ amount: currencies[Field.CURRENCY_A]?.symbol }}</Trans>
                     </Dots>
                   ) : (
-                    <Trans>Approve {currencies[Field.CURRENCY_A]?.symbol}</Trans>
+                    <Trans>Approve {{ amount: currencies[Field.CURRENCY_A]?.symbol }}</Trans>
                   )}
                 </ButtonPrimary>
               )}
@@ -528,10 +537,10 @@ function AddLiquidity() {
                 >
                   {approvalB === ApprovalState.PENDING ? (
                     <Dots>
-                      <Trans>Approving {currencies[Field.CURRENCY_B]?.symbol}</Trans>
+                      <Trans>Approving {{ amount: currencies[Field.CURRENCY_B]?.symbol }}</Trans>
                     </Dots>
                   ) : (
-                    <Trans>Approve {currencies[Field.CURRENCY_B]?.symbol}</Trans>
+                    <Trans>Approve {{ amount: currencies[Field.CURRENCY_B]?.symbol }}</Trans>
                   )}
                 </ButtonPrimary>
               )}
@@ -574,6 +583,16 @@ function AddLiquidity() {
   const ownsNFT =
     addressesAreEquivalent(owner, account) || addressesAreEquivalent(existingPositionDetails?.operator, account)
   const showOwnershipWarning = Boolean(hasExistingPosition && account && !ownsNFT)
+  const showBlastRebasingWarning =
+    chainId === ChainId.BLAST &&
+    ((!!currencyIdA && BLAST_REBASING_TOKENS.includes(currencyIdA)) ||
+      (!!currencyIdB && BLAST_REBASING_TOKENS.includes(currencyIdB)))
+
+  const showBlastRebasingModal = useAtomValue(blastRebasingAlertAtom) && showBlastRebasingWarning
+  const updateShowBlastRebasingModal = useUpdateAtom(blastRebasingAlertAtom)
+  const handleBlastModalContinue = useCallback(() => {
+    updateShowBlastRebasingModal(false)
+  }, [updateShowBlastRebasingModal])
 
   const outOfSync = useIsPoolOutOfSync(price)
 
@@ -673,7 +692,7 @@ function AddLiquidity() {
                           id="add-liquidity-input-tokenb"
                         />
                       </RowBetween>
-
+                      {showBlastRebasingWarning && <BlastRebasingAlert />}
                       <FeeSelector
                         disabled={!quoteCurrency || !baseCurrency}
                         feeAmount={feeAmount}
@@ -690,6 +709,7 @@ function AddLiquidity() {
                     title={<Trans>Selected range</Trans>}
                     inRange={!outOfRange}
                     ticksAtLimit={ticksAtLimit}
+                    showBlastAlert={showBlastRebasingWarning}
                   />
                 )}
               </AutoColumn>
@@ -775,19 +795,17 @@ function AddLiquidity() {
                       <>
                         {Boolean(price && baseCurrency && quoteCurrency && !noLiquidity) && (
                           <AutoColumn gap="2px" style={{ marginTop: '0.5rem' }}>
-                            <Trans>
-                              <ThemedText.DeprecatedMain fontWeight={535} fontSize={12} color="text1">
-                                Current price:
-                              </ThemedText.DeprecatedMain>
-                              <ThemedText.DeprecatedBody fontWeight={535} fontSize={20} color="text1">
-                                {price && <HoverInlineText maxCharacters={20} text={formattedPrice} />}
+                            <ThemedText.DeprecatedMain fontWeight={535} fontSize={12} color="text1">
+                              <Trans>Current price:</Trans>
+                            </ThemedText.DeprecatedMain>
+                            <ThemedText.DeprecatedBody fontWeight={535} fontSize={20} color="text1">
+                              {price && <HoverInlineText maxCharacters={20} text={formattedPrice} />}
+                            </ThemedText.DeprecatedBody>
+                            {baseCurrency && (
+                              <ThemedText.DeprecatedBody color="text2" fontSize={12}>
+                                {quoteCurrency?.symbol} <Trans>per</Trans> {baseCurrency.symbol}
                               </ThemedText.DeprecatedBody>
-                              {baseCurrency && (
-                                <ThemedText.DeprecatedBody color="text2" fontSize={12}>
-                                  {quoteCurrency?.symbol} per {baseCurrency.symbol}
-                                </ThemedText.DeprecatedBody>
-                              )}
-                            </Trans>
+                            )}
                           </AutoColumn>
                         )}
                         <LiquidityChartRangeInput
@@ -845,7 +863,7 @@ function AddLiquidity() {
                           }}
                         >
                           <ThemedText.DeprecatedMain>
-                            <Trans>Starting {baseCurrency?.symbol} Price:</Trans>
+                            <Trans>Starting {{ sym: baseCurrency?.symbol }} Price:</Trans>
                           </ThemedText.DeprecatedMain>
                           <ThemedText.DeprecatedMain>
                             {price ? (
@@ -918,6 +936,9 @@ function AddLiquidity() {
         )}
       </ScrollablePage>
       <SwitchLocaleLink />
+      {showBlastRebasingModal && (
+        <BlastRebasingModal currencyIdA={currencyIdA} currencyIdB={currencyIdB} onContinue={handleBlastModalContinue} />
+      )}
     </>
   )
 }

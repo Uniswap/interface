@@ -8,6 +8,7 @@ import {
   TokenStandard,
   TransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { CurrencyIdToVisibility } from 'wallet/src/features/favorites/slice'
@@ -24,7 +25,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { CurrencyId, buildCurrencyId } from 'wallet/src/utils/currencyId'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 export interface AllFormattedTransactions {

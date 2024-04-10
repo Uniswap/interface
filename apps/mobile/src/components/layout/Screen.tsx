@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { NativeSafeAreaViewProps } from 'react-native-safe-area-context'
+import { Edge, NativeSafeAreaViewProps } from 'react-native-safe-area-context'
 import { Flex, FlexProps, useDeviceInsets } from 'ui/src'
 
 // Used to determine amount of top padding for short screens
@@ -9,7 +9,9 @@ type ScreenProps = FlexProps &
   // The SafeAreaView from react-native-safe-area-context also supports a `mode` prop which
   //  lets you choose if `edges` are added as margin or padding, but we don’t use that so
   // our Screen component doesn't need to support it
-  Omit<NativeSafeAreaViewProps, 'mode'> & { noInsets?: boolean }
+  Omit<NativeSafeAreaViewProps, 'mode' | 'edges'> & { edges?: readonly Edge[] } & {
+    noInsets?: boolean
+  }
 
 function SafeAreaWithInsets({ children, edges, noInsets, ...rest }: ScreenProps): JSX.Element {
   // Safe area insets are wrong (0 when they shouldn't be) when using the <SafeAreaView>

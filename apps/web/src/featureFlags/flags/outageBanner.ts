@@ -49,5 +49,9 @@ export function useOutageBanners(): Record<ChainId, boolean> {
     [ChainId.AVALANCHE]: false,
     [ChainId.BASE_GOERLI]: false,
     [ChainId.BASE]: false,
+    [ChainId.ZORA_SEPOLIA]: false,
+    [ChainId.ZORA]: false,
+    [ChainId.ROOTSTOCK]: false,
+    [ChainId.BLAST]: false,
   }
 }

@@ -1,10 +1,10 @@
 /* eslint-disable import/no-unused-modules */
 import { ImageResponse } from '@vercel/og'
 
-import { getColor } from '../../../../src/utils/getColor'
 import { WATERMARK_URL } from '../../../constants'
 import getFont from '../../../utils/getFont'
 import getNetworkLogoUrl from '../../../utils/getNetworkLogoURL'
+import { getRGBColor } from '../../../utils/getRGBColor'
 import { getRequest } from '../../../utils/getRequest'
 import getToken from '../../../utils/getToken'
 
@@ -27,7 +27,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
       return new Response('Token not found.', { status: 404 })
     }
 
-    const [fontData, palette] = await Promise.all([getFont(origin), getColor(data.ogImage, true)])
+    const [fontData, palette] = await Promise.all([getFont(origin), getRGBColor(data.ogImage, true)])
 
     const networkLogo = getNetworkLogoUrl(networkName.toUpperCase(), origin)
 
@@ -50,7 +50,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
           <div
             style={{
               display: 'flex',
-              backgroundColor: `rgba(${palette[0]}, ${palette[1]}, ${palette[2]})`,
+              backgroundColor: `rgba(${palette.red}, ${palette.green}, ${palette.blue})`,
               alignItems: 'center',
               height: '100%',
               padding: '72px',

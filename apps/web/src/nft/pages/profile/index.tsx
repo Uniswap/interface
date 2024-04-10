@@ -1,10 +1,10 @@
-import { t, Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonPrimary } from 'components/Button'
 import useENSName from 'hooks/useENSName'
+import { t, Trans } from 'i18n'
 import { XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { ListPage } from 'nft/components/profile/list/ListPage'
 import { ProfilePage } from 'nft/components/profile/view/ProfilePage'
@@ -68,10 +68,14 @@ function getProfilePageTitle(account: string | undefined, ENSName: string | null
   }
 
   if (!ENSName) {
-    return t`NFT collection on Uniswap - ${shortenAddress(account)}`
+    return t(`NFT collection on Uniswap - {{address}}`, {
+      address: shortenAddress(account),
+    })
   }
 
-  return t`${ENSName}'s NFT collection on Uniswap`
+  return t(`{{name}}'s NFT collection on Uniswap`, {
+    name: ENSName,
+  })
 }
 
 export default function Profile() {

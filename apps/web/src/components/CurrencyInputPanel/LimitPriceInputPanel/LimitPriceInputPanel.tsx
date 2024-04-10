@@ -7,17 +7,18 @@ import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { useCallback, useMemo, useState } from 'react'
 import { useLimitContext, useLimitPrice } from 'state/limit/LimitContext'
-import { CurrencyState, useSwapAndLimitContext } from 'state/swap/SwapContext'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { sendAnalyticsEvent } from 'analytics'
 import { useCurrentPriceAdjustment } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
-import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { ReversedArrowsIcon } from 'nft/components/icons'
 import { LIMIT_FORM_CURRENCY_SEARCH_FILTERS } from 'pages/Swap/Limit/LimitForm'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
+import { CurrencyState } from 'state/swap/types'
 import { formatCurrencySymbol } from '../utils'
 import { LimitCustomMarketPriceButton, LimitPresetPriceButton } from './LimitPriceButton'
 import { LimitPriceInputLabel } from './LimitPriceInputLabel'
@@ -161,7 +162,6 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
         <LimitPriceInputLabel
           currency={baseCurrency}
           showCurrencyMessage={!!formattedLimitPriceOutputAmount}
-          currencySearchModalOpen={currencySelectModalField === 'inputCurrency'}
           openCurrencySearchModal={() => setCurrencySelectModalField('inputCurrency')}
         />
         <ReverseIconContainer
@@ -195,7 +195,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
           $loading={false}
         />
         {quoteCurrency && (
-          <OutputCurrencyContainer shouldFetchOnAccountUpdate={currencySelectModalField === 'outputCurrency'}>
+          <OutputCurrencyContainer>
             <OutputCurrencyButton onClick={() => setCurrencySelectModalField('outputCurrency')}>
               <Row gap="xs" width="unset">
                 <CurrencyLogo currency={quoteCurrency} size="16px" />
@@ -218,7 +218,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
               if (presets.includes(currentPriceAdjustment)) {
                 return undefined
               }
-              return limitPriceInverted ? -currentPriceAdjustment : currentPriceAdjustment
+              return currentPriceAdjustment
             })()}
             disabled={!baseCurrency || !quoteCurrency}
             selected={Boolean(currentPriceAdjustment !== undefined && !presets.includes(currentPriceAdjustment))}

@@ -124,6 +124,14 @@ export const PUBLIC_RPC_URLS: Record<SupportedInterfaceChain, string[]> = {
     'https://1rpc.io/base',
     'https://base.meowrpc.com',
   ],
+  [ChainId.BLAST]: [
+    // "Safe" URLs
+    'https://rpc.blast.io/',
+    'https://rpc.ankr.com/blast',
+    'https://blast.din.dev/rpc',
+    'https://blastl2-mainnet.public.blastapi.io',
+    'https://blast.blockpi.network/v1/rpc/public',
+  ],
 }
 
 /**
@@ -145,6 +153,7 @@ export const APP_RPC_URLS: Record<SupportedInterfaceChain, string[]> = {
   [ChainId.BNB]: [QUICKNODE_BNB_RPC_URL],
   [ChainId.AVALANCHE]: [`https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`],
   [ChainId.BASE]: [`https://base-mainnet.infura.io/v3/${INFURA_KEY}`],
+  [ChainId.BLAST]: [`https://blast-mainnet.infura.io/v3/${INFURA_KEY}`],
 }
 
 export const INFURA_PREFIX_TO_CHAIN_ID: { [prefix: string]: ChainId } = {

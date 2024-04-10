@@ -1,7 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ChainId } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'
-import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import {
   FinalizedTransactionStatus,
   TransactionType,
@@ -138,6 +138,8 @@ export enum CopyNotificationType {
   Calldata = 'calldata',
   TransactionId = 'transactionId',
   Image = 'image',
+  TokenUrl = 'tokenUrl',
+  NftUrl = 'nftUrl',
 }
 
 export interface CopyNotification extends AppNotificationBase {

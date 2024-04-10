@@ -222,7 +222,7 @@ function SwapFormContent(): JSX.Element {
     [decimalPadControlledField, isFiatMode, updateSwapForm]
   )
 
-  const [decimalPadReady, setDecimalPadReady] = useState(true)
+  const [decimalPadReady, setDecimalPadReady] = useState(false)
 
   const onBottomScreenLayout = useCallback((event: LayoutChangeEvent): void => {
     decimalPadRef.current?.setMaxHeight(event.nativeEvent.layout.height)

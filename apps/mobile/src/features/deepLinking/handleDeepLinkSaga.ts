@@ -18,7 +18,7 @@ import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { closeAllModals, openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
+import { MobileEventName } from 'src/features/telemetry/constants'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
@@ -46,7 +46,7 @@ import {
   selectSignerMnemonicAccounts,
 } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import { ModalName } from 'wallet/src/telemetry/constants'
+import { ModalName, ShareableEntity } from 'wallet/src/telemetry/constants'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 import { UNISWAP_APP_NATIVE_TOKEN, openUri } from 'wallet/src/utils/linking'
 

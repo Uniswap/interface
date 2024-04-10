@@ -36,10 +36,11 @@
     <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
-    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff" as="font" type="font/woff" crossorigin />
     <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- Include <link rel="preload"> for js assets so that they are loaded with high priority. -->
+    <%= htmlWebpackPlugin.files.js.map((href) => `<link rel="preload" href="${href}" as="script" />`).join('\n    ') %>
    
     <style>
       * {
@@ -133,11 +134,7 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
-    <div id="root">
-      <!-- Triggers the font to load immediately and then is replaced by the app -->
-      <div>&emsp;</div>
-    </div>
-
+    <div id="root"></div>
     <div id="background-radial-gradient"></div>
   </body>
 </html>

@@ -1,4 +1,3 @@
-import { t } from '@lingui/macro'
 import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
@@ -6,13 +5,14 @@ import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
-import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
+import { t } from 'i18n'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import store from 'state'
 import { addSignature } from 'state/signatures/reducer'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { TransactionType as LocalTransactionType } from 'state/transactions/types'
+import { UniswapXOrderStatus } from 'types/uniswapx'
 import {
   AssetActivityPartsFragment,
   Currency as GQLCurrency,
@@ -31,7 +31,6 @@ import {
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { currencyId } from 'utils/currencyId'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
 import { MOONPAY_SENDER_ADDRESSES, OrderStatusTable, OrderTextTable } from '../constants'
 import { Activity } from './types'
 
@@ -293,7 +292,6 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
     offerer: activity.details.from,
     txHash: activity.details.hash,
     chainId,
-    type: SignatureType.SIGN_UNISWAPX_ORDER,
     status: UniswapXOrderStatus.FILLED,
     addedTime: activity.timestamp,
     swapInfo: {
@@ -455,8 +453,9 @@ function swapOrderTypeToSignatureType(swapOrderType: SwapOrderType): SignatureTy
     case SwapOrderType.Limit:
       return SignatureType.SIGN_LIMIT
     case SwapOrderType.Dutch:
-    default:
       return SignatureType.SIGN_UNISWAPX_ORDER
+    case SwapOrderType.DutchV2:
+      return SignatureType.SIGN_UNISWAPX_V2_ORDER
   }
 }
 
@@ -528,8 +527,8 @@ function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activ
     statusMessage,
     offchainOrderDetails: {
       id: details.id,
-      // TODO(limits): check type from backend and use SignatureType.SIGN_LIMIT here if necessary
-      type: SignatureType.SIGN_UNISWAPX_ORDER,
+      type: swapOrderTypeToSignatureType(details.swapOrderType),
+      encodedOrder: details.encodedOrder,
       txHash: details.hash,
       orderHash: details.hash,
       offerer: details.offerer,
@@ -569,6 +568,7 @@ function parseRemoteActivity(
     }
 
     if (assetActivity.details.__typename === 'SwapOrderDetails') {
+      // UniswapX orders are returned as SwapOrderDetails until they are filled onchain, at which point they are returned as TransactionDetails
       return parseUniswapXOrder(assetActivity as OrderActivity)
     }
 

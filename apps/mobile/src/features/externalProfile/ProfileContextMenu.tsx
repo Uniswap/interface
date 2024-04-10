@@ -4,8 +4,6 @@ import { NativeSyntheticEvent, Share } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { TripleDot } from 'src/components/icons/TripleDot'
-import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, HapticFeedback, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -15,6 +13,8 @@ import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
+import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
+import { ShareableEntity, WalletEventName } from 'wallet/src/telemetry/constants'
 import { setClipboard } from 'wallet/src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'wallet/src/utils/linking'
 
@@ -63,7 +63,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
       await Share.share({
         message: url,
       })
-      sendMobileAnalyticsEvent(MobileEventName.ShareButtonClicked, {
+      sendWalletAnalyticsEvent(WalletEventName.ShareButtonClicked, {
         entity: ShareableEntity.Wallet,
         url,
       })

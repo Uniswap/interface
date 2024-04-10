@@ -1,13 +1,13 @@
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, ImpactFeedbackStyle, Shine, Text, TouchableArea, isWeb } from 'ui/src'
+import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
-import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
-import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { disableOnPress } from 'wallet/src/utils/disableOnPress'
 
 interface TokenBalanceItemProps {
@@ -43,6 +43,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   return (
     <TouchableArea
       hapticFeedback
+      hoverable
       alignItems="flex-start"
       backgroundColor="$surface1"
       borderRadius="$rounded16"
@@ -50,7 +51,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       hapticStyle={ImpactFeedbackStyle.Light}
       justifyContent="space-between"
       minHeight={TOKEN_BALANCE_ITEM_HEIGHT}
-      px={padded ? '$spacing24' : 0}
+      px={padded ? '$spacing24' : '$spacing8'}
       py="$spacing8"
       onLongPress={disableOnPress}
       onPress={onPress}>

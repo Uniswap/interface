@@ -1,7 +1,7 @@
-import { t } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Trace } from 'analytics'
 import { useNftAssetDetails } from 'graphql/data/nft/Details'
+import { t } from 'i18n'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'

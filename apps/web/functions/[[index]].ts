@@ -22,12 +22,12 @@ export const onRequest: PagesFunction = async ({ request, next }) => {
     description: 'Swap or provide liquidity on the Uniswap Protocol',
   }
   const res = next()
-  try {
-    const content = new HTMLRewriter().on('head', new MetaTagInjector(data, request)).transform(await res).body
-    return new Response(content, {
-      status: doesMatchPath(requestURL.pathname) || requestURL.pathname.includes('.') ? 200 : 404,
-    })
-  } catch (e) {
-    return res
+  if (doesMatchPath(requestURL.pathname)) {
+    try {
+      return new HTMLRewriter().on('head', new MetaTagInjector(data, request)).transform(await res)
+    } catch (e) {
+      return res
+    }
   }
+  return res
 }

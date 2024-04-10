@@ -32,4 +32,5 @@ export type BottomSheetModalProps = PropsWithChildren<{
   isModalOpen?: boolean
   alignment?: 'center' | 'top' | 'bottom'
   hideScrim?: boolean
+  maxWidth?: number
 }>

@@ -20,6 +20,7 @@ import {
   Text,
   TouchableArea,
   getUniconV2Colors,
+  useExtractedColors,
   useIsDarkMode,
   useSporeColors,
   useUniconColors,
@@ -35,7 +36,6 @@ import { CurrencyField } from 'wallet/src/features/transactions/transactionState
 import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
-import { useExtractedColors } from 'wallet/src/utils/colors'
 import { openUri } from 'wallet/src/utils/linking'
 
 const HEADER_GRADIENT_HEIGHT = 144

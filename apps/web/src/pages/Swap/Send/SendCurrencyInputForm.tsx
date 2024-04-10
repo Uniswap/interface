@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
@@ -7,23 +6,25 @@ import Column from 'components/Column'
 import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { Input as NumericalInput } from 'components/NumericalInput'
-import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import Row, { RowBetween } from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { SupportedInterfaceChain, asSupportedChain } from 'constants/chains'
+import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useActiveLocalCurrency, useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
 import { STABLECOIN_AMOUNT_OUT } from 'hooks/useStablecoinPrice'
 import { useUSDPrice } from 'hooks/useUSDPrice'
+import { Trans } from 'i18n'
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react'
-import { SendInputError } from 'state/send/hooks'
 import { useSendContext } from 'state/send/SendContext'
-import { CurrencyState, useSwapAndLimitContext } from 'state/swap/SwapContext'
+import { SendInputError } from 'state/send/hooks'
+import { useSwapAndLimitContext } from 'state/swap/hooks'
+import { CurrencyState } from 'state/swap/types'
 import styled, { css } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
+import { Text } from 'ui/src'
+import useResizeObserver from 'use-resize-observer'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
-
-import { asSupportedChain, SupportedInterfaceChain } from 'constants/chains'
-import useResizeObserver from 'use-resize-observer'
 import { ReactComponent as DropDown } from '../../../assets/images/dropdown.svg'
 
 const Wrapper = styled(Column)<{ $disabled: boolean }>`
@@ -334,9 +335,9 @@ export default function SendCurrencyInputForm({
     <Wrapper $disabled={disabled}>
       <InputWrapper>
         <InputLabelContainer>
-          <ThemedText.SubHeaderSmall color="neutral2">
+          <Text variant="body3" userSelect="none" color="$neutral2">
             <Trans>You&apos;re sending</Trans>
-          </ThemedText.SubHeaderSmall>
+          </Text>
         </InputLabelContainer>
         <NumericalInputWrapper>
           {inputInFiat && (
@@ -358,7 +359,7 @@ export default function SendCurrencyInputForm({
         />
         <InputError />
       </InputWrapper>
-      <CurrencyInputWrapper shouldFetchOnAccountUpdate={tokenSelectorOpen}>
+      <CurrencyInputWrapper>
         <ClickableRowBetween onClick={() => setTokenSelectorOpen(true)}>
           <Row width="100%" gap="md">
             <CurrencySelectorRow width="100%" gap="md" onClick={() => setTokenSelectorOpen(true)}>

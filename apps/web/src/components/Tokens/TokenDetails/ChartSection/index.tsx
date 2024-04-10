@@ -7,7 +7,6 @@ import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { Trans } from '@lingui/macro'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import PillMultiToggle, { PillMultiToggleOption } from 'components/Toggle/PillMultiToggle'
@@ -17,6 +16,7 @@ import {
   ORDERED_TIMES,
   TimePeriodDisplay,
 } from 'components/Tokens/TokenTable/TimeSelector'
+import { Trans } from 'i18n'
 import { useAtomValue } from 'jotai/utils'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'

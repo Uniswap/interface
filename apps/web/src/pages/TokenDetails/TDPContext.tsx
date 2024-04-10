@@ -30,7 +30,7 @@ type BaseTDPContext = {
 
   multiChainMap: MultiChainMap
 
-  extractedAccent1?: string
+  tokenColor?: string
   warning?: Warning
 }
 /** Token details context with an unresolved currency field */

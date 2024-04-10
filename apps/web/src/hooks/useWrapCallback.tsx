@@ -1,8 +1,8 @@
-import { Trans } from '@lingui/macro'
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
+import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -40,14 +40,14 @@ export function WrapErrorText({ wrapInputError }: { wrapInputError: WrapInputErr
     case WrapInputError.NO_ERROR:
       return null
     case WrapInputError.ENTER_NATIVE_AMOUNT:
-      return <Trans>Enter {native?.symbol} amount</Trans>
+      return <Trans>Enter {{ sym: native?.symbol }} amount</Trans>
     case WrapInputError.ENTER_WRAPPED_AMOUNT:
-      return <Trans>Enter {wrapped?.symbol} amount</Trans>
+      return <Trans>Enter {{ sym: wrapped?.symbol }} amount</Trans>
 
     case WrapInputError.INSUFFICIENT_NATIVE_BALANCE:
-      return <Trans>Insufficient {native?.symbol} balance</Trans>
+      return <Trans>Insufficient {{ sym: native?.symbol }} balance</Trans>
     case WrapInputError.INSUFFICIENT_WRAPPED_BALANCE:
-      return <Trans>Insufficient {wrapped?.symbol} balance</Trans>
+      return <Trans>Insufficient {{ sym: wrapped?.symbol }} balance</Trans>
   }
 }
 

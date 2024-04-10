@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Icons, Text, TouchableArea, isWeb } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
-import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface SelectTokenButtonProps {
@@ -41,10 +41,24 @@ export function SelectTokenButton({
           )}
         </Flex>
       ) : (
-        <Flex centered row px="$spacing12" py="$spacing4">
+        <Flex
+          centered
+          row
+          gap="$spacing4"
+          pl="$spacing8"
+          pr={isWeb ? '$spacing4' : '$spacing8'}
+          py="$spacing4">
           <Text color="$sporeWhite" variant="buttonLabel2">
             {t('tokens.selector.button.choose')}
           </Text>
+          {isWeb && (
+            <Icons.RotatableChevron
+              color="$white"
+              direction="down"
+              height={iconSizes.icon20}
+              width={iconSizes.icon20}
+            />
+          )}
         </Flex>
       )}
     </TouchableArea>

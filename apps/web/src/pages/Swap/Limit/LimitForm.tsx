@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import {
   BrowserEvent,
   InterfaceElementName,
@@ -24,25 +23,30 @@ import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { STABLECOIN_AMOUNT_OUT } from 'hooks/useStablecoinPrice'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
+import { Trans } from 'i18n'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { Text } from 'rebass'
-import { LimitContextProvider, LimitState, useLimitContext } from 'state/limit/LimitContext'
+import { LimitContextProvider, useLimitContext } from 'state/limit/LimitContext'
+import { LimitState } from 'state/limit/types'
 import { LimitOrderTrade, TradeFillType } from 'state/routing/types'
-import { useSwapActionHandlers } from 'state/swap/hooks'
-import { CurrencyState, useSwapAndLimitContext } from 'state/swap/SwapContext'
+import { useSwapActionHandlers, useSwapAndLimitContext } from 'state/swap/hooks'
 import styled, { useTheme } from 'styled-components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
-import { useCurrentPriceAdjustment } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
+import {
+  LimitPriceErrorType,
+  useCurrentPriceAdjustment,
+} from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import Row from 'components/Row'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { useAtom } from 'jotai'
 import { LimitPriceError } from 'pages/Swap/Limit/LimitPriceError'
 import { getDefaultPriceInverted } from 'state/limit/hooks'
+import { CurrencyState } from 'state/swap/types'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { LimitExpirySection } from './LimitExpirySection'
@@ -345,8 +349,9 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         hasInsufficientFunds={hasInsufficientFunds}
         limitPriceError={priceError}
       />
-      {priceError && inputCurrency && outputCurrency && limitOrderTrade && (
+      {!!priceError && inputCurrency && outputCurrency && limitOrderTrade && (
         <LimitPriceError
+          priceError={priceError}
           priceAdjustmentPercentage={currentPriceAdjustment}
           inputCurrency={inputCurrency}
           outputCurrency={outputCurrency}
@@ -412,7 +417,7 @@ function SubmitOrderButton({
   handleContinueToReview: () => void
   inputCurrency?: Currency
   hasInsufficientFunds: boolean
-  limitPriceError?: boolean
+  limitPriceError?: LimitPriceErrorType
 }) {
   const toggleWalletDrawer = useToggleAccountDrawer()
   const { account } = useWeb3React()
@@ -430,7 +435,7 @@ function SubmitOrderButton({
       <ButtonError disabled>
         <Text fontSize={20}>
           {inputCurrency ? (
-            <Trans>Insufficient {inputCurrency.symbol} balance</Trans>
+            <Trans>Insufficient {{ sym: inputCurrency.symbol }} balance</Trans>
           ) : (
             <Trans>Insufficient balance</Trans>
           )}
@@ -445,7 +450,7 @@ function SubmitOrderButton({
         onClick={handleContinueToReview}
         id="submit-order-button"
         data-testid="submit-order-button"
-        disabled={!trade || limitPriceError}
+        disabled={!trade || !!limitPriceError}
       >
         <Text fontSize={20}>Confirm</Text>
       </ButtonError>

@@ -218,6 +218,8 @@ export const BTC_BSC = new Token(ChainId.BNB, '0x7130d2A12B9BCbFAe4f2634d864A1Ee
 export const BUSD_BSC = new Token(ChainId.BNB, '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', 18, 'BUSD', 'BUSD')
 export const DAI_BSC = new Token(ChainId.BNB, '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', 18, 'DAI', 'DAI')
 
+export const USDB_BLAST = new Token(ChainId.BLAST, '0x4300000000000000000000000000000000000003', 18, 'USDB', 'USDB')
+
 export const USDC_AVALANCHE = new Token(
   ChainId.AVALANCHE,
   '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E',
@@ -341,6 +343,7 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WAVAX',
     'Wrapped AVAX'
   ),
+  [ChainId.BLAST]: new Token(ChainId.BLAST, '0x4300000000000000000000000000000000000004', 18, 'WETH', 'Wrapped Ether'),
 }
 
 export function isCelo(chainId: number): chainId is ChainId.CELO | ChainId.CELO_ALFAJORES {
@@ -503,6 +506,10 @@ const STABLECOINS: { [chainId in ChainId]: Token[] } = {
   [ChainId.BASE_GOERLI]: [],
   [ChainId.OPTIMISM_SEPOLIA]: [USDC_SEPOLIA],
   [ChainId.ARBITRUM_SEPOLIA]: [],
+  [ChainId.ZORA_SEPOLIA]: [],
+  [ChainId.ZORA]: [],
+  [ChainId.ROOTSTOCK]: [],
+  [ChainId.BLAST]: [USDB_BLAST],
 }
 
 export function isStablecoin(currency?: Currency): boolean {

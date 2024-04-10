@@ -1,6 +1,5 @@
 import { CustomUserProperties, getBrowser, SharedEventName } from '@uniswap/analytics-events'
-import { useWeb3React } from '@web3-react/core'
-import { getDeviceId, sendAnalyticsEvent, sendInitializationEvent, Trace, user } from 'analytics'
+import { sendAnalyticsEvent, sendInitializationEvent, Trace, user } from 'analytics'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Loader from 'components/Icons/LoadingSpinner'
 import NavBar, { PageTabs } from 'components/NavBar'
@@ -8,29 +7,28 @@ import { UK_BANNER_HEIGHT, UK_BANNER_HEIGHT_MD, UK_BANNER_HEIGHT_SM, UkBanner } 
 import { useFeatureFlagURLOverrides } from 'featureFlags'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
-import { lazy, memo, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { lazy, memo, Suspense, useEffect, useLayoutEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 import { useAppSelector } from 'state/hooks'
 import { AppState } from 'state/reducer'
 import { useRouterPreference } from 'state/user/hooks'
-import { StatsigProvider, StatsigUser } from 'statsig-react'
 import styled from 'styled-components'
 import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { STATSIG_DUMMY_KEY } from 'tracing'
 import { isPathBlocked } from 'utils/blockedPaths'
-import { getEnvName } from 'utils/env'
 import { MICROSITE_LINK } from 'utils/openDownloadApp'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { findRouteByPath, RouteDefinition, routes, useRouterConfig } from './RouteDefinitions'
 
-const AppChrome = lazy(() => import('./AppChrome'))
+// The Chrome is always loaded, but is lazy-loaded because it is not needed without user interaction.
+// Annotating it with webpackPreload allows it to be ready when requested.
+const AppChrome = lazy(() => import(/* webpackPreload: true */ './AppChrome'))
 
 const BodyWrapper = styled.div<{ bannerIsVisible?: boolean }>`
   display: flex;
@@ -115,15 +113,6 @@ export default function App() {
 
   useFeatureFlagURLOverrides()
 
-  const { account } = useWeb3React()
-  const statsigUser: StatsigUser = useMemo(
-    () => ({
-      userID: getDeviceId(),
-      customIDs: { address: account ?? '' },
-    }),
-    [account]
-  )
-
   // redirect address to landing pages until implemented
   const shouldRedirectToAppInstall = pathname?.startsWith('/address/')
   useLayoutEffect(() => {
@@ -152,27 +141,14 @@ export default function App() {
         <Helmet>
           <title>{findRouteByPath(pathname)?.getTitle(pathname) ?? 'Uniswap Interface'}</title>
         </Helmet>
-        <StatsigProvider
-          user={statsigUser}
-          // TODO: replace with proxy and cycle key
-          sdkKey={STATSIG_DUMMY_KEY}
-          waitForInitialization={false}
-          options={{
-            environment: { tier: getEnvName() },
-            api: process.env.REACT_APP_STATSIG_PROXY_URL,
-            disableAutoMetricsLogging: true,
-            disableErrorLogging: true,
-          }}
-        >
-          <UserPropertyUpdater />
-          {renderUkBanner && <UkBanner />}
-          <Header />
-          <ResetPageScrollEffect />
-          <Body />
-          <MobileBottomBar>
-            <PageTabs />
-          </MobileBottomBar>
-        </StatsigProvider>
+        <UserPropertyUpdater />
+        {renderUkBanner && <UkBanner />}
+        <Header />
+        <ResetPageScrollEffect />
+        <Body />
+        <MobileBottomBar>
+          <PageTabs />
+        </MobileBottomBar>
       </Trace>
     </ErrorBoundary>
   )
@@ -267,10 +243,23 @@ function UserPropertyUpdater() {
 
     // Service Worker analytics
     const isServiceWorkerInstalled = Boolean(window.navigator.serviceWorker?.controller)
-    const isServiceWorkerHit = Boolean((window as any).__isDocumentCached)
-    const serviceWorkerProperty = isServiceWorkerInstalled ? (isServiceWorkerHit ? 'hit' : 'miss') : 'uninstalled'
+    const serviceWorkerProperty = isServiceWorkerInstalled ? 'installed' : 'uninstalled'
 
-    const pageLoadProperties = { service_worker: serviceWorkerProperty }
+    let cache = 'unknown'
+    try {
+      const timing = performance
+        .getEntriesByType('resource')
+        .find((timing) => timing.name.match(/\/static\/js\/main\.\w{8}\.js$/)) as PerformanceResourceTiming
+      if (timing.transferSize === 0) {
+        cache = 'hit'
+      } else {
+        cache = 'miss'
+      }
+    } catch {
+      // ignore
+    }
+
+    const pageLoadProperties = { service_worker: serviceWorkerProperty, cache }
     sendInitializationEvent(SharedEventName.APP_LOADED, pageLoadProperties)
     const sendWebVital =
       (metric: string) =>

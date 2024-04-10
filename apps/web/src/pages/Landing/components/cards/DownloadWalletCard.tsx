@@ -1,5 +1,5 @@
-import { t } from '@lingui/macro'
 import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
+import { t } from 'i18n'
 import styled, { useTheme } from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 

@@ -22,12 +22,12 @@ export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
         return sortState.sortDirection === OrderDirection.Desc
           ? b.volumeWeek - a.volumeWeek
           : a.volumeWeek - b.volumeWeek
-      case PoolSortFields.Turnover:
+      case PoolSortFields.OneDayApr:
         return sortState.sortDirection === OrderDirection.Desc
-          ? b.turnover.greaterThan(a.turnover)
+          ? b.oneDayApr.greaterThan(a.oneDayApr)
             ? 1
             : -1
-          : a.turnover.greaterThan(b.turnover)
+          : a.oneDayApr.greaterThan(b.oneDayApr)
           ? 1
           : -1
       default:
@@ -37,13 +37,13 @@ export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
 }
 
 /**
- * Calculate the turnover of a pool/pair which is the ratio of 24h fees to TVL expressed as a percent
+ * Calculate the 1 day APR of a pool/pair which is the ratio of 24h fees to TVL expressed as a percent
  * @param volume24h the 24h volume of the pool/pair
  * @param tvl the pool/pair's TVL
  * @param feeTier the feeTier of the pool or 300 for a v2 pair
- * @returns turnover expressed as a percent
+ * @returns 1 day APR expressed as a percent
  */
-export function calculateTurnover(volume24h?: number, tvl?: number, feeTier?: number): Percent {
+export function calculateOneDayApr(volume24h?: number, tvl?: number, feeTier?: number): Percent {
   if (!volume24h || !feeTier || !tvl || !Math.round(tvl)) return new Percent(0)
   return new Percent(Math.round(volume24h * (feeTier / BIPS_BASE)), Math.round(tvl))
 }
@@ -58,7 +58,7 @@ export interface TablePool {
   tvl: number
   volume24h: number
   volumeWeek: number
-  turnover: Percent
+  oneDayApr: Percent
   feeTier: number
   protocolVersion: ProtocolVersion
 }
@@ -67,7 +67,7 @@ export enum PoolSortFields {
   TVL = 'TVL',
   Volume24h = '1 day volume',
   VolumeWeek = '7 day volume',
-  Turnover = 'Turnover',
+  OneDayApr = '1 day APR',
   TxCount = 'Transactions',
 }
 
@@ -133,7 +133,7 @@ export function useTopPools(sortState: PoolTableSortState, chainId?: ChainId) {
           tvl: pool.totalLiquidity?.value,
           volume24h: pool.volume24h?.value,
           volumeWeek: pool.volumeWeek?.value,
-          turnover: calculateTurnover(pool.volume24h?.value, pool.totalLiquidity?.value, pool.feeTier),
+          oneDayApr: calculateOneDayApr(pool.volume24h?.value, pool.totalLiquidity?.value, pool.feeTier),
           feeTier: pool.feeTier,
           protocolVersion: pool.protocolVersion,
         } as TablePool
@@ -148,7 +148,7 @@ export function useTopPools(sortState: PoolTableSortState, chainId?: ChainId) {
           tvl: pool.totalLiquidity?.value,
           volume24h: pool.volume24h?.value,
           volumeWeek: pool.volumeWeek?.value,
-          turnover: calculateTurnover(pool.volume24h?.value, pool.totalLiquidity?.value, V2_BIPS),
+          oneDayApr: calculateOneDayApr(pool.volume24h?.value, pool.totalLiquidity?.value, V2_BIPS),
           feeTier: V2_BIPS,
           protocolVersion: pool.protocolVersion,
         } as TablePool

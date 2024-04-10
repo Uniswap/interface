@@ -10,6 +10,7 @@ exports[`renders a relative change 1`] = `
       "justifyContent": "flex-start",
     }
   }
+  testID="relative-change"
 >
   <RNSVGSvgView
     align="xMidYMid"
@@ -87,7 +88,7 @@ exports[`renders a relative change 1`] = `
         {
           "color": "#7D7D7D",
           "fontFamily": "Basel-Book",
-          "fontSize": 17,
+          "fontSize": 16,
           "lineHeight": 24,
         }
       }
@@ -109,6 +110,7 @@ exports[`renders placeholders with absolute change 1`] = `
       "justifyContent": "flex-start",
     }
   }
+  testID="relative-change"
 >
   <RNSVGSvgView
     align="xMidYMid"
@@ -186,7 +188,7 @@ exports[`renders placeholders with absolute change 1`] = `
         {
           "color": "#7D7D7D",
           "fontFamily": "Basel-Book",
-          "fontSize": 17,
+          "fontSize": 16,
           "lineHeight": 24,
         }
       }
@@ -208,6 +210,7 @@ exports[`renders placeholders without a change 1`] = `
       "justifyContent": "flex-start",
     }
   }
+  testID="relative-change"
 >
   <View
     style={
@@ -223,7 +226,7 @@ exports[`renders placeholders without a change 1`] = `
         {
           "color": "#7D7D7D",
           "fontFamily": "Basel-Book",
-          "fontSize": 17,
+          "fontSize": 16,
           "lineHeight": 24,
         }
       }

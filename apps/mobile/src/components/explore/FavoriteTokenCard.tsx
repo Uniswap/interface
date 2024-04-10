@@ -28,7 +28,7 @@ import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 114
 
-type FavoriteTokenCardProps = {
+export type FavoriteTokenCardProps = {
   currencyId: string
   isEditing?: boolean
   isTouched: SharedValue<boolean>

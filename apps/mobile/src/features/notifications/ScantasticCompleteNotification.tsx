@@ -20,7 +20,9 @@ export function ScantasticCompleteNotification({
           </Flex>
           <Flex
             backgroundColor="$statusSuccess"
+            borderColor="$surface1"
             borderRadius="$roundedFull"
+            borderWidth="$spacing2"
             bottom={0}
             p="$spacing4"
             position="absolute"

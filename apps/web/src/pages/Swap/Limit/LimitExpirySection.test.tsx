@@ -1,6 +1,7 @@
-import { Expiry, LimitContext } from 'state/limit/LimitContext'
+import { LimitContext } from 'state/limit/LimitContext'
 import { render } from 'test-utils/render'
 
+import { Expiry } from 'state/limit/types'
 import { LimitExpirySection } from './LimitExpirySection'
 
 const mockLimitContextValue = {

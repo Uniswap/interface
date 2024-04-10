@@ -16,7 +16,9 @@ import {
   Text,
   TouchableArea,
   isWeb,
+  largeShadowProps,
   mediumShadowProps,
+  styled,
   useDeviceInsets,
 } from 'ui/src'
 import { borderRadii, spacing } from 'ui/src/theme'
@@ -52,6 +54,22 @@ export interface NotificationToastProps extends NotificationContentProps {
   address?: string
   smallToast?: boolean // for compressed toasts with only icon and text
 }
+
+// TODO(EXT-931): Consolidate mobile and web animation styles
+const ToastEntryAnimation = styled(Flex, {
+  animation: 'semiBouncy',
+  y: 0,
+  top: '$spacing12',
+  position: 'absolute',
+  width: '100%',
+  zIndex: '$modal',
+  opacity: 1,
+
+  enterStyle: {
+    y: HIDE_OFFSET_Y,
+    opacity: 0,
+  },
+})
 
 export function NotificationToast({
   subtitle,
@@ -120,46 +138,52 @@ export function NotificationToast({
     actionButton?.onPress()
   }
 
+  const notificationContent = (
+    <Flex
+      {...(isWeb ? largeShadowProps : mediumShadowProps)}
+      borderColor="$surface3"
+      borderRadius={smallToast ? SMALL_TOAST_RADIUS : LARGE_TOAST_RADIUS}
+      borderWidth={TOAST_BORDER_WIDTH}
+      mx={smallToast ? 'auto' : '$spacing24'}>
+      {smallToast ? (
+        <NotificationContentSmall
+          icon={icon}
+          title={title}
+          onPress={onNotificationPress}
+          onPressIn={onPressIn}
+        />
+      ) : (
+        <NotificationContent
+          actionButton={
+            actionButton ? { title: actionButton.title, onPress: onActionButtonPress } : undefined
+          }
+          icon={icon}
+          subtitle={subtitle}
+          title={title}
+          onPress={onNotificationPress}
+          onPressIn={onPressIn}
+        />
+      )}
+    </Flex>
+  )
+
   return (
     <FlingGestureHandler direction={Directions.UP} onHandlerStateChange={onFling}>
-      <AnimatedFlex
-        centered
-        borderRadius={LARGE_TOAST_RADIUS}
-        pointerEvents="box-none"
-        position="absolute"
-        style={animatedStyle}
-        top={0}
-        width="100%"
-        zIndex="$modal">
-        <Flex
-          {...mediumShadowProps}
-          borderColor="$surface3"
-          borderRadius={smallToast ? SMALL_TOAST_RADIUS : LARGE_TOAST_RADIUS}
-          borderWidth={TOAST_BORDER_WIDTH}
-          mx={smallToast ? 'auto' : '$spacing24'}>
-          {smallToast ? (
-            <NotificationContentSmall
-              icon={icon}
-              title={title}
-              onPress={onNotificationPress}
-              onPressIn={onPressIn}
-            />
-          ) : (
-            <NotificationContent
-              actionButton={
-                actionButton
-                  ? { title: actionButton.title, onPress: onActionButtonPress }
-                  : undefined
-              }
-              icon={icon}
-              subtitle={subtitle}
-              title={title}
-              onPress={onNotificationPress}
-              onPressIn={onPressIn}
-            />
-          )}
-        </Flex>
-      </AnimatedFlex>
+      {isWeb ? (
+        <ToastEntryAnimation>{notificationContent}</ToastEntryAnimation>
+      ) : (
+        <AnimatedFlex
+          centered
+          borderRadius={LARGE_TOAST_RADIUS}
+          pointerEvents="box-none"
+          position="absolute"
+          style={animatedStyle}
+          top={0}
+          width="100%"
+          zIndex="$modal">
+          {notificationContent}
+        </AnimatedFlex>
+      )}
     </FlingGestureHandler>
   )
 }
@@ -193,10 +217,7 @@ function NotificationContent({
           justifyContent="flex-start">
           {icon}
           <Flex shrink alignItems="flex-start" flexDirection="column">
-            <Text
-              adjustsFontSizeToFit
-              numberOfLines={subtitle ? 1 : 2}
-              variant={`body${subtitle ? 3 : 2}`}>
+            <Text adjustsFontSizeToFit numberOfLines={subtitle ? 1 : 2} variant="subheading2">
               {title}
             </Text>
             {subtitle && (

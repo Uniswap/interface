@@ -16,6 +16,7 @@ export type WebBottomSheetProps = Pick<
   | 'isDismissible'
   | 'isModalOpen'
   | 'alignment'
+  | 'maxWidth'
 >
 
 export function BottomSheetModal(props: BottomSheetModalProps): JSX.Element {
@@ -28,6 +29,7 @@ export function BottomSheetModal(props: BottomSheetModalProps): JSX.Element {
     'isDismissible',
     'isModalOpen',
     'alignment',
+    'maxWidth',
   ])
 
   return <WebBottomSheetModal {...supportedProps} />
@@ -44,6 +46,7 @@ export function BottomSheetDetachedModal(props: BottomSheetModalProps): JSX.Elem
     'children',
     'isDismissible',
     'alignment',
+    'maxWidth',
   ])
 
   return <WebBottomSheetModal {...supportedProps} />
@@ -60,6 +63,7 @@ function WebBottomSheetModal({
   isDismissible = true,
   isModalOpen = true,
   alignment = 'center',
+  maxWidth,
 }: WebBottomSheetProps): JSX.Element {
   const colors = useSporeColors()
   const [fullyClosed, setFullyClosed] = useState(false)
@@ -109,12 +113,14 @@ function WebBottomSheetModal({
             }}
           />
           <Sheet.Frame
+            alignSelf="center"
             backgroundColor="$transparent"
             flex={1}
             height={fullScreen || !isBottomAligned ? '100%' : undefined}
             justifyContent={
               alignment === 'center' ? 'center' : alignment === 'top' ? 'flex-start' : 'flex-end'
             }
+            maxWidth={maxWidth}
             p="$spacing12">
             <Flex
               borderRadius="$rounded24"

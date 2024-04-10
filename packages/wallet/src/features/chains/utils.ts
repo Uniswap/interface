@@ -50,29 +50,11 @@ export function fromGraphQLChain(chain: Chain | undefined): ChainId | null {
       return ChainId.Base
     case Chain.Bnb:
       return ChainId.Bnb
+    case Chain.Blast:
+      return ChainId.Blast
   }
 
   return null
-}
-
-export function toGraphQLChain(chainId: ChainId): Chain | undefined {
-  switch (chainId) {
-    case ChainId.Mainnet:
-      return Chain.Ethereum
-    case ChainId.ArbitrumOne:
-      return Chain.Arbitrum
-    case ChainId.Goerli:
-      return Chain.EthereumGoerli
-    case ChainId.Optimism:
-      return Chain.Optimism
-    case ChainId.Polygon:
-      return Chain.Polygon
-    case ChainId.Base:
-      return Chain.Base
-    case ChainId.Bnb:
-      return Chain.Bnb
-  }
-  return undefined
 }
 
 export function getPollingIntervalByBlocktime(chainId?: ChainId): PollingInterval {
@@ -115,6 +97,8 @@ export function fromUniswapWebAppLink(network: string | null): ChainId | null {
       return ChainId.Base
     case Chain.Bnb.toLowerCase():
       return ChainId.Bnb
+    case Chain.Blast.toLowerCase():
+      return ChainId.Blast
     default:
       throw new Error(`Network "${network}" can not be mapped`)
   }
@@ -134,6 +118,8 @@ export function toUniswapWebAppLink(chainId: ChainId): string | null {
       return Chain.Base.toLowerCase()
     case ChainId.Bnb:
       return Chain.Bnb.toLowerCase()
+    case ChainId.Blast:
+      return Chain.Blast.toLowerCase()
     default:
       throw new Error(`ChainID "${chainId}" can not be mapped`)
   }

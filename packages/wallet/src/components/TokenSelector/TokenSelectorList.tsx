@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AnimatedFlex, Flex, isWeb, Loader, Skeleton, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
 import { renderSuggestedTokenItem } from 'wallet/src/components/TokenSelector/renderSuggestedTokenItem'
@@ -21,7 +22,6 @@ import {
   TokenSelectorListSections,
 } from 'wallet/src/components/TokenSelector/types'
 import { ChainId } from 'wallet/src/constants/chains'
-import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 function isSuggestedTokenItem(data: TokenOption | TokenOption[]): data is TokenOption[] {
   return Array.isArray(data)
@@ -202,7 +202,7 @@ export function SectionHeader({ title, rightElement }: SectionHeaderProps): JSX.
       justifyContent="space-between"
       pb="$spacing4"
       pt="$spacing12">
-      <Text color="$neutral2" variant="subheading2">
+      <Text color="$neutral2" variant={isWeb ? 'body2' : 'subheading2'}>
         {title}
       </Text>
       {rightElement}

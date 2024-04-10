@@ -4,7 +4,6 @@
     "keepClassNames": true,
     "experimental": {
       "plugins": [
-        ["@lingui/swc-plugin", {}],
         [
           "@swc/plugin-styled-components",
           {

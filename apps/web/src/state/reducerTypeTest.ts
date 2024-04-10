@@ -10,7 +10,7 @@ import { ApplicationModal, ApplicationState, PopupList, PopupType } from './appl
 import { Field as BurnField } from './burn/actions'
 import { BurnState } from './burn/reducer'
 import { BurnV3State } from './burn/v3/reducer'
-import { ListsState } from './lists/reducer'
+import { ListsState } from './lists/types'
 import { LogsState } from './logs/slice'
 import { Log } from './logs/utils'
 import { Field } from './mint/actions'

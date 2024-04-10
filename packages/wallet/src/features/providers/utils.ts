@@ -10,6 +10,7 @@ export type InfuraChainName =
   | 'optimism'
   | 'matic'
   | 'maticmum'
+  | 'blast'
 
 export function getInfuraChainName(chainId: ChainId): InfuraChainName {
   switch (chainId) {
@@ -29,6 +30,8 @@ export function getInfuraChainName(chainId: ChainId): InfuraChainName {
       return 'matic'
     case ChainId.PolygonMumbai:
       return 'maticmum'
+    case ChainId.Blast:
+      return 'blast'
     default:
       throw new Error(`Unsupported eth infura chainId for ${chainId}`)
   }

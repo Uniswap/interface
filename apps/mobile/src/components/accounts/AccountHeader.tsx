@@ -106,7 +106,7 @@ export function AccountHeader(): JSX.Element {
               hitSlop={20}
               testID="account-header/settings-button"
               onPress={onPressSettings}>
-              <Icons.Settings color="$neutral2" opacity={0.8} size="$icon.28" />
+              <Icons.Settings color="$neutral2" opacity={0.8} size="$icon.24" />
             </TouchableArea>
           </Flex>
           {walletHasName ? (

@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Fraction, Percent } from '@uniswap/sdk-core'
+import { Trans } from 'i18n'
 import { Text } from 'rebass'
 import { ThemedText } from 'theme/components'
 
@@ -23,11 +23,13 @@ export function ConfirmAddModalBottom({
   poolTokenPercentage?: Percent
   onAdd: () => void
 }) {
+  const depositedAmtA = currencies[Field.CURRENCY_A]?.symbol
+  const depositedAmtB = currencies[Field.CURRENCY_B]?.symbol
   return (
     <>
       <RowBetween>
         <ThemedText.DeprecatedBody>
-          <Trans>{currencies[Field.CURRENCY_A]?.symbol} Deposited</Trans>
+          <Trans>{{ depositedAmtA }} Deposited</Trans>
         </ThemedText.DeprecatedBody>
         <RowFixed>
           <CurrencyLogo currency={currencies[Field.CURRENCY_A]} style={{ marginRight: '8px' }} />
@@ -36,7 +38,7 @@ export function ConfirmAddModalBottom({
       </RowBetween>
       <RowBetween>
         <ThemedText.DeprecatedBody>
-          <Trans>{currencies[Field.CURRENCY_B]?.symbol} Deposited</Trans>
+          <Trans>{{ depositedAmtB }} Deposited</Trans>
         </ThemedText.DeprecatedBody>
         <RowFixed>
           <CurrencyLogo currency={currencies[Field.CURRENCY_B]} style={{ marginRight: '8px' }} />
@@ -65,7 +67,7 @@ export function ConfirmAddModalBottom({
           <Trans>Share of Pool:</Trans>
         </ThemedText.DeprecatedBody>
         <ThemedText.DeprecatedBody>
-          <Trans>{noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4)}%</Trans>
+          <Trans>{{ pct: noLiquidity ? '100' : poolTokenPercentage?.toSignificant(4) }}%</Trans>
         </ThemedText.DeprecatedBody>
       </RowBetween>
       <ButtonPrimary style={{ margin: '20px 0 0 0' }} onClick={onAdd}>

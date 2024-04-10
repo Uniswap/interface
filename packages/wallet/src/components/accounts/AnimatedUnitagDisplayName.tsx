@@ -50,44 +50,38 @@ export function AnimatedUnitagDisplayName({
   }
 
   return (
-    <Flex onPress={isUnitag ? onPressUnitag : undefined}>
-      <Flex row>
-        <Text color="$neutral1" variant="subheading1">
-          {displayName.name}
-        </Text>
-        <AnimatePresence>
-          <Flex row animation="semiBouncy" ml={-textWidth} x={showUnitagSuffix ? textWidth : 0}>
-            <Flex onLayout={onTextLayout}>
-              <Text
-                animation="semiBouncy"
-                color="$neutral3"
-                opacity={showUnitagSuffix ? 1 : 0}
-                variant="subheading1">
-                {UNITAG_SUFFIX}
-              </Text>
-            </Flex>
-            {isUnitag ? (
-              <Flex animation="semiBouncy" pl="$spacing4">
-                <Icons.Unitag size={unitagIconSize} />
-              </Flex>
-            ) : null}
-            {address && (
-              <TouchableArea
-                hapticFeedback
-                hitSlop={20}
-                pl="$spacing8"
-                onPress={onPressCopyAddress}>
-                <Flex row alignItems="center" gap="$spacing4">
-                  <Text color="$neutral3" numberOfLines={1} variant="body2">
-                    {sanitizeAddressText(shortenAddress(address))}
-                  </Text>
-                  <Icons.CopyAlt color="$neutral3" size="$icon.16" />
-                </Flex>
-              </TouchableArea>
-            )}
+    <Flex row shrink onPress={isUnitag ? onPressUnitag : undefined}>
+      <Text color="$neutral1" numberOfLines={1} variant="subheading1">
+        {displayName.name}
+      </Text>
+      <AnimatePresence>
+        <Flex row animation="semiBouncy" ml={-textWidth} x={showUnitagSuffix ? textWidth : 0}>
+          <Flex onLayout={onTextLayout}>
+            <Text
+              animation="semiBouncy"
+              color="$neutral3"
+              opacity={showUnitagSuffix ? 1 : 0}
+              variant="subheading1">
+              {UNITAG_SUFFIX}
+            </Text>
           </Flex>
-        </AnimatePresence>
-      </Flex>
+          {isUnitag ? (
+            <Flex animation="semiBouncy" pl="$spacing4">
+              <Icons.Unitag size={unitagIconSize} />
+            </Flex>
+          ) : null}
+          {address && (
+            <TouchableArea hapticFeedback hitSlop={20} pl="$spacing8" onPress={onPressCopyAddress}>
+              <Flex row alignItems="center" gap="$spacing4">
+                <Text color="$neutral3" numberOfLines={1} variant="body2">
+                  {sanitizeAddressText(shortenAddress(address))}
+                </Text>
+                <Icons.CopyAlt color="$neutral3" size="$icon.16" />
+              </Flex>
+            </TouchableArea>
+          )}
+        </Flex>
+      </AnimatePresence>
     </Flex>
   )
 }

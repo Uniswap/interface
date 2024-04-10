@@ -1,6 +1,6 @@
-import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { Trans } from 'i18n'
 import { getMarketplaceIcon } from 'nft/components/card/utils'
 import { CollectionSelectedAssetIcon } from 'nft/components/icons'
 import { Markets } from 'nft/types'

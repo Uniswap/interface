@@ -1,5 +1,4 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -8,6 +7,7 @@ import ExecuteModal from 'components/vote/ExecuteModal'
 import QueueModal from 'components/vote/QueueModal'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
+import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms'
@@ -304,7 +304,7 @@ export default function VotePage() {
               <RowBetween>
                 <ThemedText.DeprecatedMain>
                   {startDate && startDate > now ? (
-                    <Trans>Voting starts approximately {startDate.toLocaleString(locale, dateFormat)}</Trans>
+                    <Trans>Voting starts approximately {{ date: startDate.toLocaleString(locale, dateFormat) }}</Trans>
                   ) : null}
                 </ThemedText.DeprecatedMain>
               </RowBetween>
@@ -312,9 +312,9 @@ export default function VotePage() {
                 <ThemedText.DeprecatedMain>
                   {endDate &&
                     (endDate < now ? (
-                      <Trans>Voting ended {endDate.toLocaleString(locale, dateFormat)}</Trans>
+                      <Trans>Voting ended {{ date: endDate.toLocaleString(locale, dateFormat) }}</Trans>
                     ) : (
-                      <Trans>Voting ends approximately {endDate.toLocaleString(locale, dateFormat)}</Trans>
+                      <Trans>Voting ends approximately {{ date: endDate.toLocaleString(locale, dateFormat) }}</Trans>
                     ))}
                 </ThemedText.DeprecatedMain>
               </RowBetween>
@@ -323,7 +323,7 @@ export default function VotePage() {
                   <ThemedText.DeprecatedBlack>
                     <Trans>
                       Only UNI votes that were self delegated or delegated to another address before block{' '}
-                      {proposalData.startBlock} are eligible for voting.
+                      {{ startBlock: proposalData.startBlock }} are eligible for voting.
                     </Trans>{' '}
                     {showLinkForUnlock && (
                       <span>
@@ -379,7 +379,9 @@ export default function VotePage() {
                 {eta && (
                   <RowBetween>
                     <ThemedText.DeprecatedBlack>
-                      <Trans>This proposal may be executed after {eta.toLocaleString(locale, dateFormat)}.</Trans>
+                      <Trans>
+                        This proposal may be executed after {{ eta: eta.toLocaleString(locale, dateFormat) }}.
+                      </Trans>
                     </ThemedText.DeprecatedBlack>
                   </RowBetween>
                 )}

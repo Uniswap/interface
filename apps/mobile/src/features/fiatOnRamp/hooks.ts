@@ -7,6 +7,7 @@ import { Delay } from 'src/components/layout/Delayed'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { ColorTokens, useSporeColors } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { logger } from 'utilities/src/logger/logger'
 import { useDebounce } from 'utilities/src/time/timing'
@@ -17,7 +18,6 @@ import {
 import { BRIDGED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { fromMoonpayNetwork, toSupportedChainId } from 'wallet/src/features/chains/utils'
-import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import {
   useFiatOnRampAggregatorSupportedTokensQuery,
   useFiatOnRampBuyQuoteQuery,
@@ -410,6 +410,7 @@ export function useFiatOnRampSupportedTokens({
       (supportedTokensResponse?.supportedTokens || [])
         .map((fiatOnRampToken) => ({
           currencyInfo: findTokenOptionForFiatOnRampToken(currencies, fiatOnRampToken),
+          meldCurrencyCode: fiatOnRampToken.cryptoCurrencyCode,
         }))
         .filter((item) => !!item.currencyInfo),
     [currencies, supportedTokensResponse?.supportedTokens]

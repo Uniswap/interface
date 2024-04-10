@@ -251,6 +251,13 @@ export default function FeatureFlagModal() {
           <FeatureFlagOption flag={FeatureFlags.UniswapXSyntheticQuote} label="Force synthetic quotes for UniswapX" />
           <FeatureFlagOption flag={FeatureFlags.UniswapXv2} label="UniswapX v2" />
         </FeatureFlagGroup>
+        <FeatureFlagGroup name="Extension">
+          <FeatureFlagOption flag={FeatureFlags.ExtensionBetaLaunch} label="Beta phase of go-to-market campaign" />
+          <FeatureFlagOption
+            flag={FeatureFlags.ExtensionGeneralLaunch}
+            label="General phase of go-to-market campaign"
+          />
+        </FeatureFlagGroup>
         <FeatureFlagGroup name="Outage Banners">
           <FeatureFlagOption flag={FeatureFlags.OutageBannerArbitrum} label="Outage Banner for Arbitrum" />
           <FeatureFlagOption flag={FeatureFlags.OutageBannerOptimism} label="Outage Banner for Optimism" />

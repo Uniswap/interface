@@ -2,10 +2,10 @@
 import { ImageResponse } from '@vercel/og'
 
 import { blocklistedCollections } from '../../../../../src/nft/utils/blocklist'
-import { getColor } from '../../../../../src/utils/getColor'
 import { CHECK_URL, WATERMARK_URL } from '../../../../constants'
 import getCollection from '../../../../utils/getCollection'
 import getFont from '../../../../utils/getFont'
+import { getRGBColor } from '../../../../utils/getRGBColor'
 import { getRequest } from '../../../../utils/getRequest'
 
 export const onRequest: PagesFunction = async ({ params, request }) => {
@@ -30,7 +30,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
       return new Response('Collection not found.', { status: 404 })
     }
 
-    const [fontData, palette] = await Promise.all([getFont(origin), getColor(data.ogImage)])
+    const [fontData, palette] = await Promise.all([getFont(origin), getRGBColor(data.ogImage)])
 
     // Split name into words to wrap them since satori does not support inline text wrapping
     const words = data.name.split(' ')
@@ -49,7 +49,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
             style={{
               display: 'flex',
               alignItems: 'center',
-              backgroundColor: `rgba(${palette[0]}, ${palette[1]}, ${palette[2]}, 0.75)`,
+              backgroundColor: `rgba(${palette.red}, ${palette.green}, ${palette.blue}, 0.75)`,
               padding: '72px',
             }}
           >

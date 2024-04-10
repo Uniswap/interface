@@ -89,7 +89,7 @@
           "title": "<highlight>{{walletName}}</highlight>を削除します"
         },
         "mnemonic": {
-          "description": "<highlight>{{walletNames}}</highlight>と同じリカバリフレーズを共有します。残りのウォレットをすべて削除するまでリカバリフレーズは保存されたままになります。"
+          "description": "{{walletName}}と同じリカバリフレーズを共有します。残りのウォレットをすべて削除するまでリカバリフレーズは保存されたままになります。"
         }
       },
       "subtitle": {
@@ -118,12 +118,40 @@
         "restore": "ウォレットを復元",
         "watch": "ウォレットを閲覧"
       },
+      "create": {
+        "placeholder": "ウォレット {{index}}"
+      },
+      "edit": {
+        "label": {
+          "input": {
+            "placeholder": "ウォレットラベル"
+          }
+        }
+      },
       "header": {
+        "button": {
+          "disabled": {
+            "title": "プロファイル編集"
+          },
+          "title": "ラベルを編集する"
+        },
         "other": "他のウォレット",
         "viewOnly": "閲覧専用ウォレット"
       },
+      "menu": {
+        "copy": {
+          "title": "ウォレットアドレスをコピー"
+        },
+        "edit": {
+          "title": "ラベルを編集する"
+        },
+        "remove": {
+          "title": "ウォレットを削除"
+        }
+      },
       "remove": {
         "check": "私は回復フレーズをバックアップしましたが、バックアップに失敗した場合、Uniswap Labs がウォレットの回復を支援できないことを理解しています。",
+        "title": "削除 {{name}}",
         "viewOnly": "閲覧専用ウォレットはいつでもアドレスを入力しで追加できます。"
       },
       "restore": {
@@ -138,7 +166,6 @@
         "title_one_one": "ウォレットが見つかりました",
         "title_one_other": "インポートするウォレットを選択してください"
       },
-      "title": "あなたのウォレット",
       "viewOnly": {
         "button": "ウォレットをインポート",
         "description": "トークンを交換、購入、送信、受信するには、このウォレットのリカバリフレーズをインポートする必要があります。",
@@ -157,7 +184,6 @@
     }
   },
   "common": {
-    "app": "ユニスワップウォレット",
     "button": {
       "accept": "同意",
       "back": "戻る",
@@ -169,6 +195,7 @@
       "continue": "次へ",
       "copied": "コピーされました",
       "copy": "コピー",
+      "create": "作成する",
       "delete": "削除",
       "disconnect": "切断",
       "dismiss": "閉じる",
@@ -188,6 +215,7 @@
       "retry": "再試行",
       "review": "確認へ進む",
       "save": "保存",
+      "scrollDown": "下へスクロール",
       "sell": "売却",
       "send": "送金",
       "setup": "設定",
@@ -301,9 +329,20 @@
           "label": "送金"
         }
       },
+      "permit2": {
+        "description": "Permit2 は複数の dapp にわたるトークン承認を管理します。",
+        "header": "サイン許可証2",
+        "price": "なし"
+      },
       "signature": {
+        "containsUnrenderableCharacters": "このメッセージにはレンダリングできない文字が含まれています。このサイトが信頼できるかどうかを確認してください。",
         "error": {
           "712-spec-compliance": "SignTypedDataRequestContent は、EIP-712 仕様に準拠していない署名用のデータを受信しました。"
+        },
+        "header": "署名リクエスト",
+        "toggleDataView": {
+          "raw": "生データを表示",
+          "readable": "元のデータを表示"
         }
       },
       "warning": {
@@ -313,6 +352,10 @@
         }
       }
     }
+  },
+  "emptyTokenCard": {
+    "description": "始めるには、このウォレットにトークンを購入または転送してください",
+    "title": "トークンはまだありません"
   },
   "errors": {
     "crash": {
@@ -404,11 +447,6 @@
       "titleConnected": "接続されました",
       "titleNotConnected": "接続されていません"
     },
-    "dappRequest": {
-      "signatureRequest": {
-        "header": "署名リクエスト"
-      }
-    },
     "lock": {
       "button": {
         "forgot": "パスワードをお忘れですか？",
@@ -438,6 +476,13 @@
           "wrong": "間違ったパスワード"
         },
         "placeholder": "現在のパスワード"
+      }
+    },
+    "warning": {
+      "storage": {
+        "button": "バックアップ",
+        "message": "ウォレットと資金へのアクセスを失わないように、必ずリカバリフレーズをバックアップしてください。",
+        "title": "ブラウザのストレージ容量が不足しています"
       }
     }
   },
@@ -514,8 +559,7 @@
       "offline": "インターネットに接続されていません"
     },
     "extension": {
-      "error": "アカウントの読み込みエラー",
-      "pin": "<puzzleIcon />をクリックして、Uniswap Wallet をブラウザのツールバーに固定します"
+      "error": "アカウントの読み込みエラー"
     },
     "feed": {
       "empty": {
@@ -611,6 +655,8 @@
       "contractAddress": "契約アドレスをコピーしました",
       "failed": "クリップボードにコピーできませんでした",
       "image": "画像をコピー",
+      "nftUrl": "NFT URLをコピーしました",
+      "tokenUrl": "トークン URL をコピーしました",
       "transactionId": "取引IDをコピーしました"
     },
     "countryChange": "{{countryName}}に切り替えました",
@@ -680,7 +726,7 @@
   "notifications": {
     "scantastic": {
       "subtitle": "Uniswap 拡張機能を続行する",
-      "title": "成功"
+      "title": "成功!"
     }
   },
   "onboarding": {
@@ -733,23 +779,13 @@
       }
     },
     "complete": {
-      "card": {
-        "buy": {
-          "description": "カードで購入、または取引所から送金",
-          "title": "暗号通貨を購入または転送する"
-        },
-        "explore": {
-          "description": "トレンドのトークンと NFT を検索および閲覧する",
-          "title": "トークンとNFTを探索する"
-        },
-        "swap": {
-          "description": "カードで購入、または取引所から送金",
-          "title": "スワッピングの開始"
-        }
+      "button": "Uniswapウォレットを開く",
+      "description": "ウォレットは暗号通貨の交換、送信、受信の準備ができています。",
+      "pin": {
+        "description": "ツールバーのパズルアイコンをクリックし、リストからUniswap Walletを見つけます。",
+        "title": "Uniswapウォレットをピン留めする"
       },
-      "description": "財布の準備は完了です！まずは、暗号通貨を購入またはウォレットに転送して、ウォレットに資金を供給します。",
-      "footer": "Uniswap ウォレットの使用方法を学ぶ",
-      "pin": "<text> </text><puzzleIcon /><text> アイコンをクリックして、拡張機能をブラウザ ウィンドウ</text><container><text>に固定します。ピン</text></container>"
+      "title": "準備完了です"
     },
     "editName": {
       "button": {
@@ -766,7 +802,7 @@
         "title": "Uniswap アプリをお持ちですか?"
       },
       "getOnTheBetaWaitlist": {
-        "subtitle": "モバイルアプリをダウンロードしてユーザー名を取得します",
+        "subtitle": "モバイルアプリをダウンロードしてユーザー名を取得してください",
         "title": "ベータ版の待機リストに登録する"
       },
       "password": {
@@ -825,7 +861,7 @@
       },
       "checkEligibilityInstructions": "以下に <highlight>uni.eth</highlight> ユーザー名を入力して、ベータ版の利用資格があるかどうかを確認してください。",
       "eligible": {
-        "tagline": "ベータ版へようこそ — あなたは Uniswap ウォレットを最初に試した一人です。",
+        "tagline": "ベータ版へようこそ。あなたは Uniswap 拡張機能を試す最初の人の一人です。",
         "title": "あなたは順番待ちリストから外れました!"
       },
       "ineligibleExplanation": "あなたはまだ順番待ちリストに載っています。資格が得られたら、Uniswap モバイル アプリで通知します。",
@@ -885,7 +921,7 @@
         "subtitle": "Uniswap モバイル アプリで 6 文字のコードを確認してください",
         "title": "ワンタイムコードを入力してください"
       },
-      "subtitle": "Uniswap モバイル アプリで QR コードをスキャンして、ウォレットのインポートを開始します",
+      "subtitle": "Uniswap モバイル アプリで QR コードをスキャンして、ウォレットのインポートを開始します。",
       "title": "アプリからウォレットをインポートする"
     },
     "security": {
@@ -921,7 +957,7 @@
         "error": "ウォレットのインポート際エラーが発生しました"
       }
     },
-    "termsOfService": "<highlightTerms>利用規約</highlightTerms>と<highlightPrivacy>プライバシーポリシー</highlightPrivacy>に同意します",
+    "termsOfService": "続行すると、<highlightTerms> 利用規約 </highlightTerms>に同意し、<highlightPrivacy> プライバシーポリシー</highlightPrivacy>に同意したことになります。",
     "tooltip": {
       "recoveryPhrase": {
         "trigger": "リカバリフレーズとは？"
@@ -988,11 +1024,7 @@
     },
     "title": "QRコードをスキャン",
     "wallet": {
-      "networks": {
-        "description": "Uniswap Wallet は、Ethereum、Polygon、Arbitrum、Optimism、Base、および BNB チェーンのトークンをサポートしています。現時点では、イーサリアム上の NFT のみをサポートしています。",
-        "title": "サポートされているネットワーク"
-      },
-      "title": "サポートされているすべてのネットワークでこのアドレスにトークンを送信できます。"
+      "title": "Uniswap Wallet は、Ethereum、Polygon、Arbitrum、Optimism、Base、Blast、BNB Chain のトークンをサポートしています。現時点では、イーサリアム上の NFT のみをサポートしています。"
     }
   },
   "scantastic": {
@@ -1016,8 +1048,9 @@
         "browser": "ブラウザ",
         "device": "デバイス"
       },
-      "subtitle": "信頼できるデバイス上の Uniswap Extension と同期している場合にのみ続行してください。",
-      "title": "これはあなたのデバイスですか?"
+      "subtitle": "信頼できるデバイスで Uniswap Extension から QR コードをスキャンする場合にのみ続行してください。",
+      "title": "ウォレットをインポートしようとしていますか?",
+      "warning": "Uniswap を偽装するサイトやアプリには注意してください。そうしないと、ウォレットが侵害される可能性があります。"
     },
     "error": {
       "encryption": "シードフレーズの準備に失敗しました。",
@@ -1048,7 +1081,7 @@
         "title": "該当なし"
       },
       "networkCost": {
-        "title": "ネットワークコスト"
+        "title": "ネットワーク代"
       }
     },
     "input": {
@@ -1085,6 +1118,11 @@
       "title": "受信者"
     },
     "review": {
+      "input": {
+        "tokenAmount": {
+          "title": "{{currencyAmount}} / {{currencySymbol}}"
+        }
+      },
       "modal": {
         "title": "あなたが送っているのは"
       },
@@ -1128,6 +1166,10 @@
           "title": "ブロックされたアドレス"
         },
         "recipient": "受信者のウォレットはブロックされています"
+      },
+      "erc20": {
+        "message": "トークン アドレスに資金を送信しようとしています。このタイプのアドレスに暗号通貨を送信すると、資金が永久に失われる可能性があります。",
+        "title": "これはトークンアドレスです"
       },
       "insufficientFunds": {
         "message": "送金額を入力してから {{currencySymbol}} 残高が減少しました",
@@ -1206,7 +1248,7 @@
   },
   "settings": {
     "action": {
-      "feedback": "フィードバックを送信",
+      "feedback": "フィードバックを共有する",
       "help": "ヘルプセンター",
       "lock": "ウォレットをロック",
       "privacy": "プライバシーポリシー",
@@ -1313,7 +1355,7 @@
         }
       },
       "beta": {
-        "tooltip": "近日公開！"
+        "tooltip": "近日公開"
       },
       "biometrics": {
         "appAccess": {
@@ -1364,7 +1406,7 @@
         "title": "現地通貨"
       },
       "giveFeedback": {
-        "title": "フィードバックを与えます"
+        "title": "フィードバックを共有する"
       },
       "helpCenter": {
         "title": "ヘルプセンター"
@@ -1431,7 +1473,7 @@
   "swap": {
     "button": {
       "max": "最大額",
-      "review": "レビュー交換",
+      "review": "確認へ進む",
       "swap": "スワップ",
       "unwrap": "アンラップ",
       "view": "取引を表示",
@@ -1469,9 +1511,6 @@
       "wrap": "長押しでラップ"
     },
     "request": {
-      "details": {
-        "header": "スワップ確認"
-      },
       "title": {
         "full": "{{inputCurrencySymbol}} → {{outputCurrencySymbol}} スワップ",
         "short": "スワップトークン"
@@ -1515,7 +1554,7 @@
           "min": "0以上の値を入力してください"
         }
       },
-      "title": "スワップ設定"
+      "title": "設定を入れ替える"
     },
     "slippage": {
       "settings": {
@@ -2062,7 +2101,8 @@
     },
     "pending": {
       "button": {
-        "connect": "接続"
+        "connect": "接続",
+        "scrollDown": "接続するには下にスクロールしてください"
       },
       "switchAccount": "アカウントを切り替え",
       "switchNetwork": "ネットワークを切り替え",
@@ -2079,6 +2119,7 @@
     },
     "request": {
       "button": {
+        "scrollDown": "下にスクロールして署名する",
         "sign": "署名"
       },
       "details": {

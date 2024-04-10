@@ -1,7 +1,7 @@
 import { isAddress } from '@ethersproject/address'
-import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { Trans } from 'i18n'
 import { useState } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components'
@@ -93,6 +93,9 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
     onDismiss()
   }
 
+  const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')
+  const unclaimedUni = unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')
+
   return (
     <Modal isOpen={isOpen} onDismiss={wrappedOnDismiss} maxHeight={90}>
       {!attempting && (
@@ -108,7 +111,7 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
                 <CloseIcon onClick={wrappedOnDismiss} style={{ zIndex: 99 }} stroke="white" />
               </RowBetween>
               <ThemedText.DeprecatedWhite fontWeight={535} fontSize={36}>
-                <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
+                <Trans>{{ amount }} UNI</Trans>
               </ThemedText.DeprecatedWhite>
             </CardSection>
             <Break />
@@ -161,12 +164,12 @@ export default function AddressClaimModal({ isOpen, onDismiss }: { isOpen: boole
               </ThemedText.DeprecatedLargeHeader>
               {!claimConfirmed && (
                 <Text fontSize={36} color="#ff007a" fontWeight={535}>
-                  <Trans>{unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} UNI</Trans>
+                  <Trans>{{ unclaimedUni }} UNI</Trans>
                 </Text>
               )}
               {parsedAddress && (
                 <ThemedText.DeprecatedLargeHeader fontWeight={535} color="black">
-                  <Trans>for {shortenAddress(parsedAddress)}</Trans>
+                  <Trans>for {{ address: shortenAddress(parsedAddress) }}</Trans>
                 </ThemedText.DeprecatedLargeHeader>
               )}
             </AutoColumn>

@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro'
+import { t } from 'i18n'
 import { ReactElement } from 'react'
 
 import { ReactComponent as WinterUni } from '../../assets/svg/winter-uni.svg'

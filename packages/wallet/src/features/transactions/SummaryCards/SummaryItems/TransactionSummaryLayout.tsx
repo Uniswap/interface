@@ -2,9 +2,10 @@
 import { providers } from 'ethers'
 import { memo, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
@@ -25,7 +26,6 @@ import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
 import { ModalName } from 'wallet/src/telemetry/constants'
-import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { openMoonpayTransactionLink, openTransactionLink } from 'wallet/src/utils/linking'
 
 const LOADING_SPINNER_SIZE = 20
@@ -130,8 +130,16 @@ function TransactionSummaryLayout({
 
   return (
     <>
-      <TouchableArea mb="$spacing24" overflow="hidden" onPress={onPress}>
-        <Flex grow row backgroundColor="$surface1" gap="$spacing12">
+      <TouchableArea mb="$spacing4" overflow="hidden" onPress={onPress}>
+        <Flex
+          grow
+          row
+          backgroundColor="$surface1"
+          borderRadius="$rounded16"
+          gap="$spacing12"
+          hoverStyle={{ backgroundColor: '$surface2' }}
+          px={isWeb ? '$spacing8' : '$none'}
+          py="$spacing8">
           {icon && (
             <Flex centered width={TXN_HISTORY_ICON_SIZE}>
               {icon}

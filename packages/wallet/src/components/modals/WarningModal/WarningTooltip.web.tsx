@@ -2,8 +2,8 @@ import { PropsWithChildren } from 'react'
 import { Flex, Text, Tooltip } from 'ui/src'
 import { WarningTooltipProps } from 'wallet/src/components/modals/WarningModal/WarningTooltipProps'
 
-const TOOLTIP_REST_MS = 50
-const TOOLTIP_CLOSE_MS = 200
+const TOOLTIP_REST_MS = 20
+const TOOLTIP_CLOSE_MS = 100
 
 export function WarningTooltip({
   title,
@@ -23,13 +23,13 @@ export function WarningTooltip({
         restMs={TOOLTIP_REST_MS}>
         <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
         <Tooltip.Content maxWidth="100%" mx="$spacing24">
-          <Flex centered gap="$spacing8">
+          <Flex centered gap="$spacing4">
             {title && (
               <Text alignSelf="flex-start" variant="body3">
                 {title}
               </Text>
             )}
-            <Text color="$neutral2" variant="body4">
+            <Text color="$neutral2" variant="body3">
               {text}
             </Text>
             <Flex alignSelf="flex-start">{button}</Flex>

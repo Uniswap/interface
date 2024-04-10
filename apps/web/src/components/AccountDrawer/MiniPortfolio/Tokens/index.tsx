@@ -1,7 +1,6 @@
 import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
 import { TraceEvent } from 'analytics'
 import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
-import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { PortfolioToken } from 'graphql/data/portfolios'
@@ -15,19 +14,21 @@ import { EllipsisStyle, ThemedText } from 'theme/components'
 import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { splitHiddenTokens } from 'utils/splitHiddenTokens'
+
+import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
 import { ExpandoRow } from '../ExpandoRow'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
-import { useToggleAccountDrawer } from '../hooks'
+import { useAccountDrawer, useToggleAccountDrawer } from '../hooks'
 
-export default function Tokens({ account }: { account: string }) {
-  const toggleWalletDrawer = useToggleAccountDrawer()
+export default function Tokens() {
+  const [accountDrawerOpen, toggleAccountDrawer] = useAccountDrawer()
   const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
   const hideSpam = useAtomValue(hideSpamAtom)
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
-  const { data } = useCachedPortfolioBalancesQuery({ account })
+  const { data } = useTokenBalancesQuery({ skip: !accountDrawerOpen })
 
   const tokenBalances = data?.portfolios?.[0]?.tokenBalances
 
@@ -42,7 +43,7 @@ export default function Tokens({ account }: { account: string }) {
 
   if (tokenBalances?.length === 0) {
     // TODO: consider launching moonpay here instead of just closing the drawer
-    return <EmptyWalletModule type="token" onNavigateClick={toggleWalletDrawer} />
+    return <EmptyWalletModule type="token" onNavigateClick={toggleAccountDrawer} />
   }
 
   const toggleHiddenTokens = () => setShowHiddenTokens((showHiddenTokens) => !showHiddenTokens)

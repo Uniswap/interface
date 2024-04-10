@@ -242,6 +242,17 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_84531,
   },
+  [ChainId.BLAST]: {
+    networkType: NetworkType.L2,
+    bridge: 'https://blast.io/bridge',
+    defaultListUrl: '',
+    docs: 'https://docs.blast.io',
+    explorer: 'https://blastscan.io/',
+    infoLink: 'https://info.uniswap.org/#/blast/',
+    label: 'Blast',
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    color: darkTheme.chain_81457,
+  },
 } as const
 
 export function getChainInfo(

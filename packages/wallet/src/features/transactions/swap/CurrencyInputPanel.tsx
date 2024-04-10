@@ -20,23 +20,23 @@ import {
   Flex,
   FlexProps,
   Icons,
-  isWeb,
   Text,
   TouchableArea,
+  isWeb,
   useIsShortMobileDevice,
   useSporeColors,
 } from 'ui/src'
 import { fonts } from 'ui/src/theme'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { isDetoxBuild } from 'utilities/src/environment'
 import { NumberType } from 'utilities/src/format/types'
 import { useForwardRef, usePrevious } from 'utilities/src/react/hooks'
-import { AmountInput } from 'wallet/src/components/input/AmountInput'
 import { SelectTokenButton } from 'wallet/src/components/TokenSelector/SelectTokenButton'
-import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
+import { AmountInput } from 'wallet/src/components/input/AmountInput'
+import { MaxAmountButton } from 'wallet/src/components/input/MaxAmountButton'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useTokenAndFiatDisplayAmounts } from 'wallet/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
-import { MaxAmountButton } from 'wallet/src/features/transactions/swap/MaxAmountButton'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { ElementName } from 'wallet/src/telemetry/constants'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
@@ -207,6 +207,13 @@ export const CurrencyInputPanel = memo(
 
     const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
 
+    const handleSetMax = useCallback(
+      (amount: string) => {
+        onSetMax?.(amount, currencyField)
+      },
+      [currencyField, onSetMax]
+    )
+
     // TODO: Remove this when fiat mode is ready to be integrated, to small for feature flag.
     const fiatModeFeatureEnabled = false
     return (
@@ -312,7 +319,12 @@ export const CurrencyInputPanel = memo(
                   </Text>
                 )}
                 {showMaxButton && onSetMax && (
-                  <MaxAmountButton currencyField={currencyField} onSetMax={onSetMax} />
+                  <MaxAmountButton
+                    currencyAmount={currencyAmount}
+                    currencyBalance={currencyBalance}
+                    currencyField={currencyField}
+                    onSetMax={handleSetMax}
+                  />
                 )}
               </Flex>
             </Flex>

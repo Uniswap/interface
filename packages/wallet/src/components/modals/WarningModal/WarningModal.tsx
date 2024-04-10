@@ -1,7 +1,8 @@
 import { PropsWithChildren, ReactNode } from 'react'
 import { ColorValue } from 'react-native'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
-import { iconSizes, opacify } from 'ui/src/theme'
+import { opacify } from 'ui/src/theme'
+import { isWeb } from 'uniswap/src/utils/platform'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { WarningColor, WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { ElementName, ModalNameType } from 'wallet/src/telemetry/constants'
@@ -22,6 +23,7 @@ export type WarningModalProps = {
   // when icon is undefined we default it to triangle, this allows us to hide it
   hideIcon?: boolean
   backgroundIconColor?: ColorValue
+  maxWidth?: number
 }
 
 export function WarningModal({
@@ -40,6 +42,7 @@ export function WarningModal({
   icon,
   hideIcon,
   backgroundIconColor,
+  maxWidth,
 }: PropsWithChildren<WarningModalProps>): JSX.Element {
   const colors = useSporeColors()
   const alertColor = getAlertColor(severity)
@@ -50,31 +53,33 @@ export function WarningModal({
       backgroundColor={colors.surface1.get()}
       hideHandlebar={hideHandlebar}
       isDismissible={isDismissible}
+      maxWidth={maxWidth}
       name={modalName}
       onClose={onClose}>
       <Flex
         centered
         gap="$spacing12"
-        pb="$spacing12"
-        pt={hideHandlebar ? '$spacing24' : '$spacing12'}>
+        maxWidth={maxWidth}
+        pb={isWeb ? '$none' : '$spacing12'}
+        pt={hideHandlebar ? '$spacing24' : '$spacing12'}
+        px={isWeb ? '$none' : '$spacing24'}>
         {!hideIcon && (
           <Flex
             centered
             borderRadius="$rounded12"
-            height={iconSizes.icon48}
             mb="$spacing8"
-            minWidth={iconSizes.icon48}
+            p="$spacing12"
             style={{
               backgroundColor: backgroundIconColor ?? opacify(12, colors[alertColorValue].val),
             }}>
             {icon ?? <Icons.AlertTriangle color={alertColor.text} size="$icon.24" />}
           </Flex>
         )}
-        <Text textAlign="center" variant="body1">
+        <Text textAlign="center" variant={isWeb ? 'subheading2' : 'body1'}>
           {title}
         </Text>
         {caption && (
-          <Text color="$neutral2" textAlign="center" variant="body2">
+          <Text color="$neutral2" textAlign="center" variant={isWeb ? 'body3' : 'body2'}>
             {caption}
           </Text>
         )}

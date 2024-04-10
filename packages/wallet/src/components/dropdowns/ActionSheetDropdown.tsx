@@ -1,5 +1,6 @@
 import { PropsWithChildren, useMemo, useRef, useState } from 'react'
-import { Keyboard, Platform, ScrollView, View } from 'react-native'
+import { Keyboard, Platform, View } from 'react-native'
+import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 import {
   AnimatePresence,
   Flex,
@@ -7,6 +8,7 @@ import {
   ImpactFeedbackStyle,
   Portal,
   TouchableArea,
+  isWeb,
   styled,
   useDeviceDimensions,
   useDeviceInsets,
@@ -14,6 +16,7 @@ import {
 } from 'ui/src'
 import { spacing, zIndices } from 'ui/src/theme'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { Scrollbar } from 'wallet/src/components/misc/Scrollbar'
 import { MenuItemProp } from 'wallet/src/components/modals/ActionSheetModal'
 
 const DEFAULT_MIN_WIDTH = 225
@@ -137,8 +140,15 @@ function DropdownContent({
   handleClose,
   ...rest
 }: DropdownContentProps): JSX.Element {
-  const [overflowsContainer, setOverflowsContainer] = useState(false)
+  const insets = useDeviceInsets()
   const { fullWidth, fullHeight } = useDeviceDimensions()
+
+  const scrollOffset = useSharedValue(0)
+  const [contentHeight, setContentHight] = useState(0)
+
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    scrollOffset.value = event.contentOffset.y
+  })
 
   const containerProps = useMemo<FlexProps>(() => {
     if (alignment === 'left') {
@@ -153,8 +163,12 @@ function DropdownContent({
     }
   }, [alignment, fullWidth, toggleMeasurements])
 
-  const maxHeight =
-    fullHeight - toggleMeasurements.y - toggleMeasurements.height - spacing.spacing12
+  const bottomOffset = insets.bottom + spacing.spacing12
+  const maxHeight = Math.max(
+    fullHeight - toggleMeasurements.y - toggleMeasurements.height - bottomOffset,
+    0
+  )
+  const overflowsContainer = contentHeight > maxHeight
 
   return (
     <TouchableWhenOpen
@@ -180,35 +194,51 @@ function DropdownContent({
       testID="dropdown-content"
       top={toggleMeasurements.y + toggleMeasurements.height}
       {...containerProps}>
-      <BaseCard.Shadow backgroundColor="$surface2" p="$none" {...rest}>
-        <ScrollView
-          contentContainerStyle={{
-            padding: spacing.spacing8,
-          }}
-          scrollEnabled={overflowsContainer}
-          showsVerticalScrollIndicator={false}>
-          <Flex
-            onLayout={({
-              nativeEvent: {
-                layout: { height },
-              },
-            }) => {
-              setOverflowsContainer(height > maxHeight)
-            }}>
-            {options.map(({ key, onPress, render }: MenuItemProp) => (
-              <TouchableArea
-                key={key}
-                hapticFeedback
-                testID={key}
-                onPress={() => {
-                  onPress()
-                  handleClose?.()
-                }}>
-                {render()}
-              </TouchableArea>
-            ))}
-          </Flex>
-        </ScrollView>
+      <BaseCard.Shadow backgroundColor="$surface2" overflow="hidden" p="$none" {...rest}>
+        <Flex row>
+          <Animated.ScrollView
+            contentContainerStyle={{
+              padding: spacing.spacing8,
+            }}
+            scrollEnabled={overflowsContainer}
+            scrollEventThrottle={16}
+            showsVerticalScrollIndicator={isWeb}
+            onScroll={scrollHandler}>
+            <Flex
+              onLayout={({
+                nativeEvent: {
+                  layout: { height },
+                },
+              }) => {
+                setContentHight(height)
+              }}>
+              {options.map(({ key, onPress, render }: MenuItemProp) => (
+                <TouchableArea
+                  key={key}
+                  hapticFeedback
+                  testID={key}
+                  onPress={() => {
+                    onPress()
+                    handleClose?.()
+                  }}>
+                  {render()}
+                </TouchableArea>
+              ))}
+            </Flex>
+          </Animated.ScrollView>
+
+          {/* Custom scrollbar to ensure it is visible on iOS and Android even if not scrolling
+        and to be able to customize its appearance */}
+          {overflowsContainer && !isWeb && (
+            <Scrollbar
+              contentHeight={contentHeight}
+              mr="$spacing4"
+              py="$spacing12"
+              scrollOffset={scrollOffset}
+              visibleHeight={maxHeight}
+            />
+          )}
+        </Flex>
       </BaseCard.Shadow>
     </TouchableWhenOpen>
   )

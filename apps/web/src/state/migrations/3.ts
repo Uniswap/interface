@@ -1,7 +1,7 @@
 import { ChainId, Token } from '@uniswap/sdk-core'
 import { PersistState } from 'redux-persist'
-import { serializeToken } from 'state/user/hooks'
 import { UserState } from 'state/user/reducer'
+import { serializeToken } from 'state/user/utils'
 
 export type PersistAppStateV3 = {
   _persist: PersistState

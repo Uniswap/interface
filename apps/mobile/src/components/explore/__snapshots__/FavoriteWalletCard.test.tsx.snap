@@ -1,0 +1,402 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FavoriteWalletCard renders without error 1`] = `
+<View
+  animatedStyle={
+    {
+      "value": {
+        "opacity": 1,
+      },
+    }
+  }
+  collapsable={false}
+  style={
+    {
+      "flexDirection": "column",
+      "opacity": 1,
+    }
+  }
+>
+  <View
+    actions={
+      [
+        {
+          "systemIcon": "heart.fill",
+          "title": "Remove favorite",
+        },
+        {
+          "systemIcon": "square.and.pencil",
+          "title": "Edit favorites",
+        },
+      ]
+    }
+    disabled={false}
+    onPress={[Function]}
+    style={
+      {
+        "borderRadius": 16,
+      }
+    }
+  >
+    <View
+      cancelable={true}
+      disabled={false}
+      focusable={true}
+      hitSlop={[Function]}
+      minPressDuration={0}
+      onBlur={[Function]}
+      onFocus={[Function]}
+      onLongPress={[Function]}
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+      onPress={[Function]}
+      onPressIn={[Function]}
+      onPressOut={[Function]}
+      style={
+        {
+          "backgroundColor": "#F9F9F9",
+          "borderBottomLeftRadius": 16,
+          "borderBottomRightRadius": 16,
+          "borderTopLeftRadius": 16,
+          "borderTopRightRadius": 16,
+          "flexDirection": "column",
+          "marginBottom": 4,
+          "marginLeft": 4,
+          "marginRight": 4,
+          "marginTop": 4,
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        }
+      }
+      testID="favorite-wallet-card"
+    >
+      <View
+        style={
+          {
+            "backgroundColor": "#FFFFFFff",
+            "borderBottomLeftRadius": 16,
+            "borderBottomRightRadius": 16,
+            "borderTopLeftRadius": 16,
+            "borderTopRightRadius": 16,
+            "flexDirection": "column",
+            "paddingBottom": 12,
+            "paddingLeft": 12,
+            "paddingRight": 12,
+            "paddingTop": 12,
+            "shadowColor": "rgb(0,0,0)",
+            "shadowOffset": {
+              "height": 2,
+              "width": 0,
+            },
+            "shadowOpacity": 0.0075,
+            "shadowRadius": 10,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "flexDirection": "row",
+              "gap": 4,
+              "justifyContent": "space-between",
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "alignItems": "center",
+                "flexDirection": "row",
+                "flexShrink": 1,
+                "gap": 8,
+              }
+            }
+          >
+            <View
+              style={
+                {
+                  "backgroundColor": "transparent",
+                  "borderBottomColor": "transparent",
+                  "borderBottomLeftRadius": 999999,
+                  "borderBottomRightRadius": 999999,
+                  "borderBottomWidth": 0,
+                  "borderLeftColor": "transparent",
+                  "borderLeftWidth": 0,
+                  "borderRightColor": "transparent",
+                  "borderRightWidth": 0,
+                  "borderStyle": "solid",
+                  "borderTopColor": "transparent",
+                  "borderTopLeftRadius": 999999,
+                  "borderTopRightRadius": 999999,
+                  "borderTopWidth": 0,
+                  "flexDirection": "column",
+                  "position": "relative",
+                }
+              }
+              testID="account-icon"
+            >
+              <View
+                style={
+                  {
+                    "alignItems": "center",
+                    "borderBottomLeftRadius": 999999,
+                    "borderBottomRightRadius": 999999,
+                    "borderTopLeftRadius": 999999,
+                    "borderTopRightRadius": 999999,
+                    "flexDirection": "column",
+                    "height": 20,
+                    "justifyContent": "center",
+                    "paddingBottom": 0,
+                    "paddingLeft": 0,
+                    "paddingRight": 0,
+                    "paddingTop": 0,
+                    "width": 20,
+                  }
+                }
+              >
+                <View
+                  style={
+                    {
+                      "flexDirection": "column",
+                      "height": 20,
+                      "width": 20,
+                    }
+                  }
+                >
+                  <View
+                    style={
+                      {
+                        "flexDirection": "column",
+                        "height": 20,
+                        "width": 20,
+                      }
+                    }
+                  >
+                    <View
+                      style={
+                        {
+                          "flex": 1,
+                        }
+                      }
+                    >
+                      <View
+                        clip={true}
+                        mask={
+                          <UniconMask
+                            attributeData={
+                              {
+                                "0": "#6100FF",
+                                "1": "#76D191",
+                                "2": [
+                                  {
+                                    "fillType": "evenOdd",
+                                    "path": "M31 33V16C31 8.8203 25.1797 3 18 3C10.8203 3 5 8.8203 5 16V33H31ZM18 0C9.16344 0 2 7.16344 2 16V35.807C2 35.9136 2.08642 36 2.19303 36H33.807C33.9136 36 34 35.9136 34 35.807V16C34 7.16344 26.8366 0 18 0Z",
+                                  },
+                                ],
+                                "3": [
+                                  {
+                                    "path": "M8 8C8 8 13.1678 6.70089 14.2197 5.649C15.2716 4.59712 15.2583 2.87836 14.19 1.81004C13.1216 0.741719 11.4029 0.728395 10.351 1.78028C9.29911 2.83216 8 8 8 8Z",
+                                  },
+                                  {
+                                    "path": "M8 8C8 8 13.1678 9.29911 14.2197 10.351C15.2716 11.4029 15.2583 13.1216 14.19 14.19C13.1216 15.2583 11.4029 15.2716 10.351 14.2197C9.29911 13.1678 8 8 8 8Z",
+                                  },
+                                  {
+                                    "path": "M1.78028 10.351C2.83216 9.29911 8 8 8 8C8 8 6.70089 13.1678 5.649 14.2197C4.59712 15.2716 2.87836 15.2583 1.81004 14.19C0.741719 13.1216 0.728395 11.4029 1.78028 10.351Z",
+                                  },
+                                  {
+                                    "path": "M8 8C8 8 2.83216 6.70089 1.78028 5.649C0.728395 4.59712 0.741719 2.87836 1.81004 1.81004C2.87836 0.741719 4.59712 0.728395 5.649 1.78028C6.70089 2.83216 8 8 8 8Z",
+                                  },
+                                ],
+                              }
+                            }
+                            showBorder={false}
+                            size={20}
+                          />
+                        }
+                      >
+                        <View
+                          transform={
+                            [
+                              {
+                                "scale": 0.5405405405405406,
+                              },
+                            ]
+                          }
+                        >
+                          <View
+                            height={37}
+                            width={37}
+                            x={0}
+                            y={0}
+                          >
+                            <View
+                              colors={
+                                [
+                                  "#6100FF",
+                                  "#76D191",
+                                ]
+                              }
+                              end={null}
+                              start={null}
+                            />
+                          </View>
+                          <View
+                            color="#D3EBA3"
+                            cx={18.5}
+                            cy={-13.36111111111111}
+                            r={30.833333333333336}
+                          >
+                            <View
+                              blur={15}
+                            />
+                          </View>
+                        </View>
+                      </View>
+                      <View
+                        clip={true}
+                        mask={
+                          <UniconMask
+                            attributeData={
+                              {
+                                "0": "#6100FF",
+                                "1": "#76D191",
+                                "2": [
+                                  {
+                                    "fillType": "evenOdd",
+                                    "path": "M31 33V16C31 8.8203 25.1797 3 18 3C10.8203 3 5 8.8203 5 16V33H31ZM18 0C9.16344 0 2 7.16344 2 16V35.807C2 35.9136 2.08642 36 2.19303 36H33.807C33.9136 36 34 35.9136 34 35.807V16C34 7.16344 26.8366 0 18 0Z",
+                                  },
+                                ],
+                                "3": [
+                                  {
+                                    "path": "M8 8C8 8 13.1678 6.70089 14.2197 5.649C15.2716 4.59712 15.2583 2.87836 14.19 1.81004C13.1216 0.741719 11.4029 0.728395 10.351 1.78028C9.29911 2.83216 8 8 8 8Z",
+                                  },
+                                  {
+                                    "path": "M8 8C8 8 13.1678 9.29911 14.2197 10.351C15.2716 11.4029 15.2583 13.1216 14.19 14.19C13.1216 15.2583 11.4029 15.2716 10.351 14.2197C9.29911 13.1678 8 8 8 8Z",
+                                  },
+                                  {
+                                    "path": "M1.78028 10.351C2.83216 9.29911 8 8 8 8C8 8 6.70089 13.1678 5.649 14.2197C4.59712 15.2716 2.87836 15.2583 1.81004 14.19C0.741719 13.1216 0.728395 11.4029 1.78028 10.351Z",
+                                  },
+                                  {
+                                    "path": "M8 8C8 8 2.83216 6.70089 1.78028 5.649C0.728395 4.59712 0.741719 2.87836 1.81004 1.81004C2.87836 0.741719 4.59712 0.728395 5.649 1.78028C6.70089 2.83216 8 8 8 8Z",
+                                  },
+                                ],
+                              }
+                            }
+                            overlay={true}
+                            showBorder={false}
+                            size={20}
+                          />
+                        }
+                      >
+                        <View
+                          color="#000000"
+                          height={20}
+                          opacity={0.08}
+                          width={20}
+                          x={0}
+                          y={0}
+                        />
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <View
+              style={
+                {
+                  "alignItems": "center",
+                  "flexDirection": "row",
+                  "justifyContent": "center",
+                }
+              }
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                allowFontScaling={true}
+                maxFontSizeMultiplier={1.4}
+                numberOfLines={1}
+                style={
+                  {
+                    "color": "#222222",
+                    "flexShrink": 1,
+                    "fontFamily": "Basel-Book",
+                    "fontSize": 19,
+                    "lineHeight": 24,
+                  }
+                }
+                suppressHighlighting={true}
+              >
+                0x​82D5...3Fa6
+              </Text>
+            </View>
+          </View>
+          <View
+            animatedStyle={
+              {
+                "value": {
+                  "opacity": 0,
+                },
+              }
+            }
+            cancelable={true}
+            collapsable={false}
+            disabled={false}
+            focusable={true}
+            hitSlop={[Function]}
+            minPressDuration={0}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onMouseEnter={[Function]}
+            onMouseLeave={[Function]}
+            onPress={[Function]}
+            onPressIn={[Function]}
+            onPressOut={[Function]}
+            style={
+              {
+                "alignItems": "center",
+                "backgroundColor": "#CECECE",
+                "borderBottomLeftRadius": 999999,
+                "borderBottomRightRadius": 999999,
+                "borderTopLeftRadius": 999999,
+                "borderTopRightRadius": 999999,
+                "flexDirection": "column",
+                "height": 24,
+                "justifyContent": "center",
+                "opacity": 0,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+                "width": 24,
+                "zIndex": 1080,
+              }
+            }
+            testID="explore/remove-button"
+          >
+            <View
+              style={
+                {
+                  "backgroundColor": "#FFFFFF",
+                  "borderBottomLeftRadius": 12,
+                  "borderBottomRightRadius": 12,
+                  "borderTopLeftRadius": 12,
+                  "borderTopRightRadius": 12,
+                  "flexDirection": "column",
+                  "height": 2,
+                  "width": 10,
+                }
+              }
+            />
+          </View>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

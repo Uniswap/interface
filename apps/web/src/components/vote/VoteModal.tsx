@@ -1,5 +1,5 @@
-import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
+import { Trans } from 'i18n'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
@@ -86,26 +86,26 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
             <RowBetween>
               <ThemedText.DeprecatedMediumHeader fontWeight={535}>
                 {voteOption === VoteOption.Against ? (
-                  <Trans>Vote against proposal {proposalId}</Trans>
+                  <Trans>Vote against proposal {{ proposalId }}</Trans>
                 ) : voteOption === VoteOption.For ? (
-                  <Trans>Vote for proposal {proposalId}</Trans>
+                  <Trans>Vote for proposal {{ proposalId }}</Trans>
                 ) : (
-                  <Trans>Vote to abstain on proposal {proposalId}</Trans>
+                  <Trans>Vote to abstain on proposal {{ proposalId }}</Trans>
                 )}
               </ThemedText.DeprecatedMediumHeader>
               <StyledClosed onClick={wrappedOnDismiss} />
             </RowBetween>
             <ThemedText.DeprecatedLargeHeader>
-              <Trans>{formatCurrencyAmount(availableVotes, 4)} Votes</Trans>
+              <Trans>{{ amt: formatCurrencyAmount(availableVotes, 4) }} Votes</Trans>
             </ThemedText.DeprecatedLargeHeader>
             <ButtonPrimary onClick={onVote}>
               <ThemedText.DeprecatedMediumHeader color="white">
                 {voteOption === VoteOption.Against ? (
-                  <Trans>Vote against proposal {proposalId}</Trans>
+                  <Trans>Vote against proposal {{ proposalId }}</Trans>
                 ) : voteOption === VoteOption.For ? (
-                  <Trans>Vote for proposal {proposalId}</Trans>
+                  <Trans>Vote for proposal {{ proposalId }}</Trans>
                 ) : (
-                  <Trans>Vote to abstain on proposal {proposalId}</Trans>
+                  <Trans>Vote to abstain on proposal {{ proposalId }}</Trans>
                 )}
               </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>

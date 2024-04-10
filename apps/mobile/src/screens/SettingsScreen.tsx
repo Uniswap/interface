@@ -42,7 +42,6 @@ import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
 import FaceIdIcon from 'ui/src/assets/icons/faceid.svg'
 import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
-import LikeSquare from 'ui/src/assets/icons/like-square.svg'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import MessageQuestion from 'ui/src/assets/icons/message-question.svg'
 import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
@@ -241,7 +240,7 @@ export function SettingsScreen(): JSX.Element {
               headerTitle: t('settings.action.feedback'),
             },
             text: t('settings.action.feedback'),
-            icon: <LikeSquare {...svgProps} />,
+            icon: <Icons.Feedback color="$neutral2" size="$icon.24" />,
           },
           {
             screen: Screens.WebView,

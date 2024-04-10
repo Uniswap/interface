@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native'
+import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 import React from 'react'
@@ -134,11 +134,14 @@ export function WrappedHomeScreen(props: AppStackScreenProp<Screens.Home>): JSX.
   return <HomeScreen key={activeAccount.address} {...props} />
 }
 
+export const exploreNavigationRef = createNavigationContainerRef<ExploreStackParamList>()
+
 export function ExploreStackNavigator(): JSX.Element {
   const colors = useSporeColors()
 
   return (
     <NavigationContainer
+      ref={exploreNavigationRef}
       independent={true}
       theme={{
         dark: false,

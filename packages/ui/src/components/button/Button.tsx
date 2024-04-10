@@ -48,7 +48,7 @@ const CustomButtonFrame = styled(XStack, {
     size: {
       small: {
         padding: '$spacing8',
-        borderRadius: '$rounded8',
+        borderRadius: '$rounded12',
         gap: '$spacing4',
       },
       medium: {

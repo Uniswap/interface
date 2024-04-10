@@ -123,7 +123,7 @@ export function SwapFormButton(): JSX.Element {
           disabled={reviewButtonDisabled && !isHoldToSwapPressed && !isViewOnlyWallet}
           // Override opacity only for view only wallets
           opacity={isViewOnlyWallet ? 0.4 : undefined}
-          size={isShortMobileDevice ? 'small' : 'large'}
+          size={isShortMobileDevice ? 'small' : isWeb ? 'medium' : 'large'}
           testID={ElementName.ReviewSwap}
           width="100%"
           onLongPress={onLongPressHoldToSwap}

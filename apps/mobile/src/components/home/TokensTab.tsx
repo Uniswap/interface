@@ -3,20 +3,19 @@ import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
-import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { WalletEmptyState } from 'src/components/home/WalletEmptyState'
-import { NoTokens } from 'src/components/icons/NoTokens'
 import { TabContentProps, TabProps } from 'src/components/layout/TabHelpers'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Screens } from 'src/screens/Screens'
-import { Flex } from 'ui/src'
+import { Flex, Icons } from 'ui/src'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { CurrencyId } from 'uniswap/src/types/currency'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
+import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 import { ModalName } from 'wallet/src/telemetry/constants'
-import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 export const TOKENS_TAB_DATA_DEPENDENCIES = [GQLQueries.PortfolioBalances]
 
@@ -72,7 +71,7 @@ export const TokensTab = memo(
         return isExternalProfile ? (
           <BaseCard.EmptyState
             description={t('home.tokens.empty.description')}
-            icon={<NoTokens />}
+            icon={<Icons.NoTokens color="$neutral3" size="$icon.70" />}
             title={t('home.tokens.empty.title')}
             onPress={onPressAction}
           />

@@ -3,17 +3,17 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
-import { BackButton } from 'src/components/buttons/BackButton'
-import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { DappConnectedNetworkModal } from 'src/components/WalletConnect/ConnectedDapps/DappConnectedNetworksModal'
 import { DappConnectionItem } from 'src/components/WalletConnect/ConnectedDapps/DappConnectionItem'
+import { BackButton } from 'src/components/buttons/BackButton'
 import { openModal } from 'src/features/modals/modalSlice'
 import {
-  removePendingSession,
   WalletConnectSession,
+  removePendingSession,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useDeviceDimensions } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { ModalName } from 'wallet/src/telemetry/constants'
 
 type ConnectedDappsProps = {

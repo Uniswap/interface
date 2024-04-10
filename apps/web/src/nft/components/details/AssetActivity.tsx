@@ -1,6 +1,6 @@
-import { Trans } from '@lingui/macro'
 import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import { LoadingBubble } from 'components/Tokens/loading'
+import { Trans } from 'i18n'
 import { EventCell } from 'nft/components/collection/ActivityCells'
 import { ActivityEvent } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'

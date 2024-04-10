@@ -60,6 +60,13 @@ export function getSentryEnvironment(): SentryEnvironment {
   return SentryEnvironment.PROD
 }
 
+export function getSentryTracesSamplingRate(): number {
+  if (isDevBuild() || isBetaBuild()) {
+    return 1
+  }
+  return 0.2
+}
+
 enum SentryEnvironment {
   DEV = 'development',
   BETA = 'beta',

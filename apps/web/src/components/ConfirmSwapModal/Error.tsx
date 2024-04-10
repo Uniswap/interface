@@ -1,16 +1,16 @@
-import { Trans } from '@lingui/macro'
-import { ButtonPrimary } from 'components/Button'
 import { ColumnCenter } from 'components/Column'
 import { SupportArticleURL } from 'constants/supportArticles'
 import { SwapResult } from 'hooks/useSwapCallback'
-import { AlertTriangle } from 'react-feather'
+import { Trans } from 'i18n'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade } from 'state/routing/utils'
-import styled, { useTheme } from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme/components'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { useTheme } from 'styled-components'
 
-import { TradeSummary } from './TradeSummary'
+import { TradeSummary } from 'components/ConfirmSwapModal/TradeSummary'
+import { DialogButtonType, DialogContent } from 'components/Dialog/Dialog'
+import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
+import { ExternalLink } from 'theme/components'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 export enum PendingModalError {
   TOKEN_APPROVAL_ERROR,
@@ -65,9 +65,7 @@ function getErrorContent({
       } else {
         return {
           title: <Trans>Swap failed</Trans>,
-          message: (
-            <Trans>Try using higher than normal slippage and gas to ensure your transaction is completed.</Trans>
-          ),
+          message: <Trans>Try adjusting slippage to a higher value.</Trans>,
           supportArticleURL:
             swapResult?.type === TradeFillType.UniswapX
               ? SupportArticleURL.UNISWAP_X_FAILURE
@@ -96,50 +94,46 @@ function getErrorContent({
   }
 }
 
-const Container = styled(ColumnCenter)`
-  margin: 8px 0px;
-`
-const Section = styled(ColumnCenter)`
-  padding: 8px 16px;
-`
 export default function Error({ errorType, trade, swapResult, onRetry }: ErrorModalContentProps) {
   const theme = useTheme()
   const { title, message, supportArticleURL } = getErrorContent({ errorType, swapResult, trade })
 
   return (
-    <Container gap="md">
-      <Section gap="md">
-        <AlertTriangle
-          data-testid="pending-modal-failure-icon"
-          strokeWidth={1}
-          stroke={theme.surface1}
-          fill={theme.critical}
-          size="64px"
-        />
-        <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
-        {trade && <TradeSummary trade={trade} />}
-        <ThemedText.BodyPrimary>
-          {message}{' '}
+    <DialogContent
+      isVisible={true}
+      icon={<AlertTriangleFilled data-testid="pending-modal-failure-icon" fill={theme.neutral2} size="24px" />}
+      title={title}
+      description={message}
+      body={
+        <ColumnCenter gap="md">
+          {trade && <TradeSummary trade={trade} />}
           {supportArticleURL && (
             <ExternalLink href={supportArticleURL}>
               <Trans>Learn more</Trans>
             </ExternalLink>
           )}
-        </ThemedText.BodyPrimary>
-      </Section>
-      <Section>
-        <ButtonPrimary onClick={onRetry}>
-          <Trans>Try again</Trans>
-        </ButtonPrimary>
-        {swapResult && swapResult.type === TradeFillType.Classic && (
-          <ExternalLink
-            href={getExplorerLink(swapResult.response.chainId, swapResult.response.hash, ExplorerDataType.TRANSACTION)}
-            color="neutral2"
-          >
-            <Trans>View on Explorer</Trans>
-          </ExternalLink>
-        )}
-      </Section>
-    </Container>
+          {swapResult && swapResult.type === TradeFillType.Classic && (
+            <ExternalLink
+              href={getExplorerLink(
+                swapResult.response.chainId,
+                swapResult.response.hash,
+                ExplorerDataType.TRANSACTION
+              )}
+              color="neutral2"
+            >
+              <Trans>View on Explorer</Trans>
+            </ExternalLink>
+          )}
+        </ColumnCenter>
+      }
+      buttonsConfig={{
+        left: {
+          type: DialogButtonType.Accent,
+          title: <Trans>Try again</Trans>,
+          onClick: onRetry,
+        },
+      }}
+      onCancel={() => null}
+    />
   )
 }

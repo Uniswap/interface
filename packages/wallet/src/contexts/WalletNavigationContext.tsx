@@ -51,6 +51,22 @@ export type NavigateToNftItemArgs = {
   fallbackData?: NFTItem
 }
 
+export type NavigateToSendArgs =
+  | {
+      chainId: ChainId
+      currencyAddress: Address
+    }
+  | undefined
+
+export type ShareTokenArgs = {
+  currencyId: string
+}
+
+export type ShareNftArgs = {
+  contractAddress: string
+  tokenId: string
+}
+
 export type WalletNavigationContextState = {
   navigateToAccountActivityList: () => void
   navigateToAccountTokenList: () => void
@@ -59,6 +75,10 @@ export type WalletNavigationContextState = {
   navigateToNftDetails: (args: NavigateToNftItemArgs) => void
   navigateToSwapFlow: (args: NavigateToSwapFlowArgs) => void
   navigateToTokenDetails: (currencyId: string) => void
+  navigateToReceive: () => void
+  navigateToSend: (args: NavigateToSendArgs) => void
+  handleShareNft: (args: ShareNftArgs) => void
+  handleShareToken: (args: ShareTokenArgs) => void
 }
 
 export const WalletNavigationContext = createContext<WalletNavigationContextState | undefined>(

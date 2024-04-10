@@ -42,7 +42,7 @@ export function LinkButton({
       onPress={(): Promise<void> => openUri(url, openExternalBrowser, isSafeUri)}
       {...rest}>
       <Flex row alignItems="center" gap="$spacing4" justifyContent={justifyContent}>
-        <Text {...colorStyles} variant={textVariant}>
+        <Text {...colorStyles} flexShrink={1} variant={textVariant}>
           {label}
         </Text>
         {showIcon && (

@@ -1,7 +1,7 @@
-import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import SettingsTab from 'components/Settings'
+import { Trans } from 'i18n'
 import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Link, useNavigate } from 'react-router-dom'

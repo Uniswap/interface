@@ -1,6 +1,6 @@
-import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { Trans } from 'i18n'
 import { BrokenLinkIcon } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
 import { useUpdateInputAndWarnings } from 'nft/components/profile/list/utils'

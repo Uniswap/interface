@@ -125,6 +125,8 @@ module.exports = {
         alias: {
           ...webpackConfig.resolve.alias,
           'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
+          'react-native-svg$': require.resolve('@tamagui/react-native-svg'),
+          'react-native$': 'react-native-web',
         },
         plugins: webpackConfig.resolve.plugins.map((plugin) => {
           // Allow vanilla-extract in production builds.
@@ -209,15 +211,8 @@ module.exports = {
         webpackConfig.optimization,
         isProduction
           ? {
-              splitChunks: {
-                // Cap the chunk size to 5MB.
-                // react-scripts suggests a chunk size under 1MB after gzip, but we can only measure maxSize before gzip.
-                // react-scripts also caps cacheable chunks at 5MB, which gzips to below 1MB, so we cap chunk size there.
-                // See https://github.com/facebook/create-react-app/blob/d960b9e/packages/react-scripts/config/webpack.config.js#L713-L716.
-                maxSize: 5 * 1024 * 1024,
-                // Optimize over all chunks, instead of async chunks (the default), so that initial chunks are also optimized.
-                chunks: 'all',
-              },
+              // Optimize over all chunks, instead of async chunks (the default), so that initial chunks are also included.
+              splitChunks: { chunks: 'all' },
             }
           : {}
       )

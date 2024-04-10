@@ -68,7 +68,6 @@ import {
   v9Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
-import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { initialBiometricsSettingsState } from 'src/features/biometrics/slice'
 import { initialCloudBackupState } from 'src/features/CloudBackup/cloudBackupSlice'
 import { initialPasswordLockoutState } from 'src/features/CloudBackup/passwordLockoutSlice'
@@ -76,6 +75,7 @@ import { initialModalsState } from 'src/features/modals/modalSlice'
 import { initialTelemetryState } from 'src/features/telemetry/slice'
 import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
+import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { ChainId } from 'wallet/src/constants/chains'
 import {
   ExtensionOnboardingState,

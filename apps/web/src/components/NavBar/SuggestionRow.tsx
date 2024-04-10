@@ -14,12 +14,12 @@ import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Chain, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { Trans } from 'i18n'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
 
 const PriceChangeContainer = styled.div`
@@ -137,6 +137,7 @@ export const SuggestionRow = ({
       $isFocused={isHovered}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
+      data-testid={isToken ? `searchbar-token-row-${suggestion.chain}-${suggestion.address}` : ''}
     >
       <Row width="60%" gap="sm">
         {isToken ? (

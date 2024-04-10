@@ -1,0 +1,268 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FavoriteHeaderRow when editing renders without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 16,
+      "justifyContent": "space-between",
+      "marginBottom": 8,
+      "marginLeft": 8,
+      "marginRight": 8,
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#7D7D7D",
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    Editing Title
+  </Text>
+  <View
+    cancelable={true}
+    disabled={false}
+    focusable={true}
+    hitSlop={[Function]}
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
+    style={
+      {
+        "flexDirection": "column",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+  >
+    <Text
+      allowFontScaling={true}
+      maxFontSizeMultiplier={1.2}
+      style={
+        {
+          "color": "#FC72FF",
+          "fontFamily": "Basel-Medium",
+          "fontSize": 17,
+          "fontWeight": "500",
+          "lineHeight": 24,
+        }
+      }
+      suppressHighlighting={true}
+      testID="favorite-header-row/done-button"
+    >
+      Done
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "gap": 16,
+      "justifyContent": "space-between",
+      "marginBottom": 8,
+      "marginLeft": 8,
+      "marginRight": 8,
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#7D7D7D",
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    Title
+  </Text>
+  <View
+    cancelable={true}
+    disabled={false}
+    focusable={true}
+    hitSlop={[Function]}
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
+    style={
+      {
+        "flexDirection": "column",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+    testID="favorite-header-row/favorite-button"
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight="20"
+      bbWidth="20"
+      fill="currentColor"
+      focusable={false}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeWidth={1}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "color": "#7D7D7D",
+            "height": 20,
+            "width": 20,
+          },
+          {
+            "flex": 0,
+            "height": 20,
+            "width": 20,
+          },
+        ]
+      }
+      tintColor="#7D7D7D"
+      vbHeight={4}
+      vbWidth={18}
+    >
+      <RNSVGGroup
+        fill={
+          {
+            "type": 2,
+          }
+        }
+        propList={
+          [
+            "fill",
+            "stroke",
+            "strokeWidth",
+            "strokeLinecap",
+          ]
+        }
+        stroke={
+          {
+            "type": 2,
+          }
+        }
+        strokeLinecap={1}
+        strokeWidth="1"
+      >
+        <RNSVGPath
+          d="M9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+          fill={
+            {
+              "payload": 4278190080,
+              "type": 0,
+            }
+          }
+          propList={
+            [
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "type": 2,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth="2"
+        />
+        <RNSVGPath
+          d="M16 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+          fill={
+            {
+              "payload": 4278190080,
+              "type": 0,
+            }
+          }
+          propList={
+            [
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "type": 2,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth="2"
+        />
+        <RNSVGPath
+          d="M2 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+          fill={
+            {
+              "payload": 4278190080,
+              "type": 0,
+            }
+          }
+          propList={
+            [
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "type": 2,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth="2"
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+  </View>
+</View>
+`;

@@ -154,7 +154,7 @@ export function AddressDisplay({
 
   const name = displayName?.name ?? ''
 
-  // since adjustsFontSizeToFit doesnt really work adjusting line height properly
+  // since adjustsFontSizeToFit doesn't really work adjusting line height properly
   // manually adjust lineHeight things to keep vertical center
   const dynamicSizedTextVerticalStyles: TextProps =
     name.length > 20

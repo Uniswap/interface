@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FavoriteTokenCard renders without error 1`] = `
+<View
+  onLayout={[Function]}
+  style={
+    {
+      "flexDirection": "column",
+      "opacity": 0,
+    }
+  }
+  testID="shimmer-placeholder"
+>
+  <View
+    sentry-label="FlexLoader"
+    style={
+      {
+        "flexDirection": "column",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "backgroundColor": "#2222220D",
+          "borderBottomLeftRadius": 16,
+          "borderBottomRightRadius": 16,
+          "borderTopLeftRadius": 16,
+          "borderTopRightRadius": 16,
+          "flexDirection": "column",
+          "height": 114,
+          "width": "100%",
+        }
+      }
+      testID="loader/favorite"
+    />
+  </View>
+</View>
+`;

@@ -1,7 +1,7 @@
-import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
+import { Trans } from 'i18n'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import styled from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'

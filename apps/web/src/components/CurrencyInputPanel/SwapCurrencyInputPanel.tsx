@@ -1,4 +1,3 @@
-import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -8,9 +7,9 @@ import { AutoColumn } from 'components/Column'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
-import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import Tooltip from 'components/Tooltip'
 import { isSupportedChain } from 'constants/chains'
+import { Trans } from 'i18n'
 import ms from 'ms'
 import { darken } from 'polished'
 import { ReactNode, forwardRef, useCallback, useEffect, useState } from 'react'
@@ -21,7 +20,8 @@ import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
-import { Text } from 'ui/src'
+import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
+import { Text } from 'ui/src/components/text/Text'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ButtonGray } from '../Button'
@@ -58,13 +58,15 @@ const Container = styled.div<{ hideInput: boolean }>`
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
 `
 
-export const CurrencySelect = styled(ButtonGray)<{
+interface CurrencySelectProps {
   visible: boolean
   selected: boolean
   hideInput?: boolean
   disabled?: boolean
   animateShake?: boolean
-}>`
+}
+
+export const CurrencySelect = styled(ButtonGray)<CurrencySelectProps>`
   align-items: center;
   background-color: ${({ selected, theme }) => (selected ? theme.surface1 : theme.accent1)};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
@@ -145,6 +147,7 @@ const InputRow = styled.div`
   ${flexRowNoWrap};
   align-items: center;
   justify-content: space-between;
+  margin-top: 4px;
 `
 
 const LabelRow = styled.div`
@@ -302,7 +305,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
         )}
 
         <Container hideInput={hideInput}>
-          <Text variant="subheading2" userSelect="none">
+          <Text variant="body3" userSelect="none" color="$neutral2">
             {label}
           </Text>
           <InputRow style={hideInput ? { padding: '0', borderRadius: '8px' } : {}}>
@@ -320,7 +323,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                 />
               </div>
             )}
-            <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={modalOpen}>
+            <PrefetchBalancesWrapper>
               <Tooltip
                 show={tooltipVisible && !modalOpen}
                 placement="bottom"
@@ -391,10 +394,12 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                         ) : (
                           <Trans>
                             Balance:{' '}
-                            {formatCurrencyAmount({
-                              amount: selectedCurrencyBalance,
-                              type: NumberType.TokenNonTx,
-                            })}
+                            {{
+                              amount: formatCurrencyAmount({
+                                amount: selectedCurrencyBalance,
+                                type: NumberType.TokenNonTx,
+                              }),
+                            }}
                           </Trans>
                         )
                       ) : null}

@@ -1,7 +1,7 @@
-import { Trans } from '@lingui/macro'
 import { useCloseAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import { ActivationStatus, useActivationState } from 'connection/activate'
+import { Trans } from 'i18n'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'

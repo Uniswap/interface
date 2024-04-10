@@ -1,9 +1,9 @@
-import { Trans } from '@lingui/macro'
 import Expand from 'components/Expand'
 import QuestionHelper from 'components/QuestionHelper'
 import Row from 'components/Row'
 import { Input, InputContainer } from 'components/Settings/Input'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
+import { Trans } from 'i18n'
 import ms from 'ms'
 import { useState } from 'react'
 import { useUserTransactionTTL } from 'state/user/hooks'
@@ -72,7 +72,7 @@ export default function TransactionDeadlineSettings() {
           />
         </Row>
       }
-      button={<Trans>{deadline / 60}m</Trans>}
+      button={<Trans>{{ time: deadline / 60 }}m</Trans>}
     >
       <Row>
         <InputContainer gap="md" error={!!deadlineError}>

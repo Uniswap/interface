@@ -89,7 +89,7 @@
           "title": "You’re removing <highlight>{{walletName}}</highlight>"
         },
         "mnemonic": {
-          "description": "It shares the same recovery phrase as <highlight>{{walletNames}}</highlight>. Your recovery phrase will remain stored until you delete all remaining wallets."
+          "description": "It shares the same recovery phrase as {{walletName}}. Your recovery phrase will remain stored until you delete all remaining wallets."
         }
       },
       "subtitle": {
@@ -118,12 +118,40 @@
         "restore": "Restore wallet",
         "watch": "Watch a wallet"
       },
+      "create": {
+        "placeholder": "Wallet {{index}}"
+      },
+      "edit": {
+        "label": {
+          "input": {
+            "placeholder": "Wallet label"
+          }
+        }
+      },
       "header": {
+        "button": {
+          "disabled": {
+            "title": "Edit profile"
+          },
+          "title": "Edit label"
+        },
         "other": "Your other wallets",
         "viewOnly": "View only wallets"
       },
+      "menu": {
+        "copy": {
+          "title": "Copy wallet address"
+        },
+        "edit": {
+          "title": "Edit label"
+        },
+        "remove": {
+          "title": "Remove wallet"
+        }
+      },
       "remove": {
         "check": "I backed up my recovery phrase and understand that Uniswap Labs can’t help me recover my wallets if I failed to do so.",
+        "title": "Remove {{name}}",
         "viewOnly": "You can always add back view-only wallets by entering the wallet’s address."
       },
       "restore": {
@@ -138,7 +166,6 @@
         "title_one_one": "One wallet found",
         "title_one_other": "Select wallets to import"
       },
-      "title": "Your wallets",
       "viewOnly": {
         "button": "Import wallet",
         "description": "To swap, buy, send, and receive tokens, you need to import this wallet’s recovery phrase.",
@@ -157,7 +184,6 @@
     }
   },
   "common": {
-    "app": "Uniswap Wallet",
     "button": {
       "accept": "Accept",
       "back": "Back",
@@ -169,6 +195,7 @@
       "continue": "Continue",
       "copied": "Copied",
       "copy": "Copy",
+      "create": "Create",
       "delete": "Delete",
       "disconnect": "Disconnect",
       "dismiss": "Dismiss",
@@ -188,6 +215,7 @@
       "retry": "Retry",
       "review": "Review",
       "save": "Save",
+      "scrollDown": "Scroll down",
       "sell": "Sell",
       "send": "Send",
       "setup": "Set up",
@@ -301,9 +329,20 @@
           "label": "sending"
         }
       },
+      "permit2": {
+        "description": "Permit2 manages token approvals across multiple dapps.",
+        "header": "Sign Permit2",
+        "price": "None"
+      },
       "signature": {
+        "containsUnrenderableCharacters": "This message contains unrenderable characters. Make sure you trust this site.",
         "error": {
           "712-spec-compliance": "SignTypedDataRequestContent received data for signing which does not comply with the EIP-712 spec."
+        },
+        "header": "Signature request",
+        "toggleDataView": {
+          "raw": "View raw data",
+          "readable": "View original data"
         }
       },
       "warning": {
@@ -313,6 +352,10 @@
         }
       }
     }
+  },
+  "emptyTokenCard": {
+    "description": "Buy or transfer tokens to this wallet to get started",
+    "title": "No tokens yet"
   },
   "errors": {
     "crash": {
@@ -404,11 +447,6 @@
       "titleConnected": "Connected",
       "titleNotConnected": "Not connected"
     },
-    "dappRequest": {
-      "signatureRequest": {
-        "header": "Signature request"
-      }
-    },
     "lock": {
       "button": {
         "forgot": "Forgot password?",
@@ -438,6 +476,13 @@
           "wrong": "Wrong password"
         },
         "placeholder": "Current password"
+      }
+    },
+    "warning": {
+      "storage": {
+        "button": "Back up",
+        "message": "Make sure to back up your recovery phrase to prevent losing access to your wallet and funds.",
+        "title": "Your browser is running out of storage"
       }
     }
   },
@@ -514,8 +559,7 @@
       "offline": "You are in offline mode"
     },
     "extension": {
-      "error": "Error loading accounts",
-      "pin": "Pin Uniswap Wallet to your browser toolbar by clicking on the <puzzleIcon />"
+      "error": "Error loading accounts"
     },
     "feed": {
       "empty": {
@@ -611,6 +655,8 @@
       "contractAddress": "Contract address copied",
       "failed": "Failed to copy to clipboard",
       "image": "Image copied",
+      "nftUrl": "NFT URL copied",
+      "tokenUrl": "Token URL copied",
       "transactionId": "Transaction ID copied"
     },
     "countryChange": "Switched to {{countryName}}",
@@ -680,7 +726,7 @@
   "notifications": {
     "scantastic": {
       "subtitle": "Continue on Uniswap Extension",
-      "title": "Success"
+      "title": "Success!"
     }
   },
   "onboarding": {
@@ -733,23 +779,13 @@
       }
     },
     "complete": {
-      "card": {
-        "buy": {
-          "description": "Purchase with a card, or transfer from an exchange",
-          "title": "Buy or transfer crypto"
-        },
-        "explore": {
-          "description": "Search and browse trending tokens and NFTs",
-          "title": "Explore tokens & NFTs"
-        },
-        "swap": {
-          "description": "Purchase with a card, or transfer from an exchange",
-          "title": "Start swapping"
-        }
+      "button": "Open Uniswap Wallet",
+      "description": "Your wallet is ready to swap, send, and receive crypto.",
+      "pin": {
+        "description": "Click on the puzzle icon in your toolbar and find Uniswap Wallet in the list",
+        "title": "Pin Uniswap Wallet"
       },
-      "description": "Your wallet is ready! Start by funding your wallet by buying or transferring crypto to your wallet.",
-      "footer": "Learn how to use the Uniswap Wallet",
-      "pin": "<text>Pin the extension to your browser window</text><container><text>by clicking on the </text><puzzleIcon /><text> icon, and then the pin</text></container>"
+      "title": "You’re all set"
     },
     "editName": {
       "button": {
@@ -766,7 +802,7 @@
         "title": "Have the Uniswap mobile app?"
       },
       "getOnTheBetaWaitlist": {
-        "subtitle": "Download the mobile app and claim a username",
+        "subtitle": "Download the mobile app to claim a username",
         "title": "Get on the Beta waitlist"
       },
       "password": {
@@ -825,7 +861,7 @@
       },
       "checkEligibilityInstructions": "Enter your <highlight>uni.eth</highlight> username below to check if you’re eligible for the Beta.",
       "eligible": {
-        "tagline": "Welcome to the Beta — you’re one of the first to try out the Uniswap wallet.",
+        "tagline": "Welcome to the Beta — you’re one of the first to try out the Uniswap Extension.",
         "title": "You’re off the waitlist!"
       },
       "ineligibleExplanation": "You’re still on the waitlist. We’ll notify you in the Uniswap mobile app when you become eligible!",
@@ -885,7 +921,7 @@
         "subtitle": "Check your Uniswap mobile app for the 6-character code",
         "title": "Enter one-time code"
       },
-      "subtitle": "Scan the QR code with the Uniswap mobile app to begin importing your wallet(s)",
+      "subtitle": "Scan the QR code with the Uniswap mobile app to begin importing your wallet.",
       "title": "Import wallet from the app"
     },
     "security": {
@@ -921,7 +957,7 @@
         "error": "Error importing wallets"
       }
     },
-    "termsOfService": "By continuing, I agree to the<highlightTerms> Terms of Service </highlightTerms>and consent to the<highlightPrivacy> Privacy Policy</highlightPrivacy>.",
+    "termsOfService": "By continuing, I agree to the<highlightTerms> Terms of Service </highlightTerms>and consent to the<highlightPrivacy> Privacy Policy</highlightPrivacy>",
     "tooltip": {
       "recoveryPhrase": {
         "trigger": "What’s a recovery phrase?"
@@ -988,11 +1024,7 @@
     },
     "title": "Scan a QR code",
     "wallet": {
-      "networks": {
-        "description": "Uniswap Wallet supports tokens on Ethereum, Polygon, Arbitrum, Optimism, Base, and BNB Chain. Right now, we only support NFTs on Ethereum.",
-        "title": "Supported Networks"
-      },
-      "title": "You can send tokens on all of our supported networks to this address."
+      "title": "Uniswap Wallet supports tokens on Ethereum, Polygon, Arbitrum, Optimism, Base, Blast, and BNB Chain. Right now, we only support NFTs on Ethereum."
     }
   },
   "scantastic": {
@@ -1016,8 +1048,9 @@
         "browser": "Browser",
         "device": "Device"
       },
-      "subtitle": "Only continue if you are syncing with the Uniswap Extension on a trusted device.",
-      "title": "Is this your device?"
+      "subtitle": "Only continue if you are scanning a QR code from Uniswap Extension on a trusted device.",
+      "title": "Are you trying to import your wallet?",
+      "warning": "Beware of sites and apps impersonating Uniswap. Otherwise your wallet may be compromised."
     },
     "error": {
       "encryption": "Failed to prepare seed phrase.",
@@ -1048,7 +1081,7 @@
         "title": "N/A"
       },
       "networkCost": {
-        "title": "Network Cost"
+        "title": "Network cost"
       }
     },
     "input": {
@@ -1085,6 +1118,11 @@
       "title": "To"
     },
     "review": {
+      "input": {
+        "tokenAmount": {
+          "title": "{{currencyAmount}} of {{currencySymbol}}"
+        }
+      },
       "modal": {
         "title": "You’re sending"
       },
@@ -1128,6 +1166,10 @@
           "title": "Blocked address"
         },
         "recipient": "Recipient wallet is blocked"
+      },
+      "erc20": {
+        "message": "You are attempting to send funds to a token address. Sending crypto to this type of address may result in a permanent loss of funds.",
+        "title": "This is a token address"
       },
       "insufficientFunds": {
         "message": "Your {{currencySymbol}} balance has decreased since you entered the amount you’d like to send",
@@ -1206,7 +1248,7 @@
   },
   "settings": {
     "action": {
-      "feedback": "Send feedback",
+      "feedback": "Share feedback",
       "help": "Get help",
       "lock": "Lock wallet",
       "privacy": "Privacy policy",
@@ -1313,7 +1355,7 @@
         }
       },
       "beta": {
-        "tooltip": "Coming soon!"
+        "tooltip": "Coming soon"
       },
       "biometrics": {
         "appAccess": {
@@ -1364,7 +1406,7 @@
         "title": "Local currency"
       },
       "giveFeedback": {
-        "title": "Give feedback"
+        "title": "Share feedback"
       },
       "helpCenter": {
         "title": "Help center"
@@ -1431,7 +1473,7 @@
   "swap": {
     "button": {
       "max": "Max",
-      "review": "Review swap",
+      "review": "Review",
       "swap": "Swap",
       "unwrap": "Unwrap",
       "view": "View transaction",
@@ -1469,9 +1511,6 @@
       "wrap": "Hold to wrap"
     },
     "request": {
-      "details": {
-        "header": "You’re swapping"
-      },
       "title": {
         "full": "Swap {{inputCurrencySymbol}} → {{outputCurrencySymbol}}",
         "short": "Swap Tokens"
@@ -1515,11 +1554,11 @@
           "min": "Enter a value larger than 0"
         }
       },
-      "title": "Swap Settings"
+      "title": "Swap settings"
     },
     "slippage": {
       "settings": {
-        "title": "Slippage Settings"
+        "title": "Slippage settings"
       }
     },
     "warning": {
@@ -1565,8 +1604,8 @@
       },
       "uniswapFee": {
         "message": {
-          "default": "Fees are applied on a few select tokens to ensure the best experience with Uniswap. There is no fee associated with this swap.",
-          "included": "Fees are applied on a few select tokens to ensure the best experience with Uniswap, and have already been factored into this quote."
+          "default": "Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap.",
+          "included": "Fees are applied to ensure the best experience with Uniswap, and have already been factored into this quote."
         },
         "title": "Swap fee"
       },
@@ -1705,7 +1744,7 @@
     },
     "selector": {
       "button": {
-        "choose": "Choose token",
+        "choose": "Select token",
         "clear": "Clear all"
       },
       "empty": {
@@ -2062,7 +2101,8 @@
     },
     "pending": {
       "button": {
-        "connect": "Connect"
+        "connect": "Connect",
+        "scrollDown": "Scroll down to connect"
       },
       "switchAccount": "Switch Account",
       "switchNetwork": "Switch Network",
@@ -2079,6 +2119,7 @@
     },
     "request": {
       "button": {
+        "scrollDown": "Scroll down to sign",
         "sign": "Sign"
       },
       "details": {

@@ -1,6 +1,6 @@
-import { t } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { t } from 'i18n'
 import { PropsWithChildren } from 'react'
 import { ChevronDown } from 'react-feather'
 import styled from 'styled-components'

@@ -1,9 +1,9 @@
-import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { TraceEvent } from 'analytics'
 import searchIcon from 'assets/svg/search.svg'
 import xIcon from 'assets/svg/x.svg'
 import useDebounce from 'hooks/useDebounce'
+import { t } from 'i18n'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -87,30 +87,25 @@ export default function SearchBar({ tab }: { tab?: string }) {
 
   return (
     <SearchBarContainer>
-      <Trans
-        render={({ translation }) => (
-          <TraceEvent
-            events={[BrowserEvent.onFocus]}
-            name={InterfaceEventName.EXPLORE_SEARCH_SELECTED}
-            element={InterfaceElementName.EXPLORE_SEARCH_INPUT}
-          >
-            <SearchInput
-              data-testid="explore-tokens-search-input"
-              type="search"
-              placeholder={`${translation}`}
-              id="searchBar"
-              autoComplete="off"
-              value={localFilterString}
-              onChange={({ target: { value } }) => setLocalFilterString(value)}
-              isOpen={isOpen}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-            />
-          </TraceEvent>
-        )}
+      {/* TODO need to figure out new style for this */}
+      <TraceEvent
+        events={[BrowserEvent.onFocus]}
+        name={InterfaceEventName.EXPLORE_SEARCH_SELECTED}
+        element={InterfaceElementName.EXPLORE_SEARCH_INPUT}
       >
-        {tab === 'tokens' ? 'Search tokens' : 'Search pools'}
-      </Trans>
+        <SearchInput
+          data-testid="explore-tokens-search-input"
+          type="search"
+          placeholder={tab === 'tokens' ? t('Search tokens') : t('Search pools')}
+          id="searchBar"
+          autoComplete="off"
+          value={localFilterString}
+          onChange={({ target: { value } }) => setLocalFilterString(value)}
+          isOpen={isOpen}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+      </TraceEvent>
     </SearchBarContainer>
   )
 }

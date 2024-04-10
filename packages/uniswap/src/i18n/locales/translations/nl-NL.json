@@ -89,7 +89,7 @@
           "title": "Je verwijdert <highlight>{{walletName}}</highlight>"
         },
         "mnemonic": {
-          "description": "Het deelt dezelfde herstelzin als <highlight>{{walletNames}}</highlight>. Uw herstelzin blijft opgeslagen totdat u alle resterende portemonnees verwijdert."
+          "description": "Het deelt dezelfde herstelzin als {{walletName}}. Uw herstelzin blijft opgeslagen totdat u alle resterende portemonnees verwijdert."
         }
       },
       "subtitle": {
@@ -118,12 +118,40 @@
         "restore": "Portemonnee herstellen",
         "watch": "Let op een portemonnee"
       },
+      "create": {
+        "placeholder": "Portemonnee {{index}}"
+      },
+      "edit": {
+        "label": {
+          "input": {
+            "placeholder": "Portemonnee-label"
+          }
+        }
+      },
       "header": {
+        "button": {
+          "disabled": {
+            "title": "Bewerk profiel"
+          },
+          "title": "Etiket bewerken"
+        },
         "other": "Je andere portemonnees",
         "viewOnly": "Bekijk alleen portefeuilles"
       },
+      "menu": {
+        "copy": {
+          "title": "Portemonnee-adres kopiëren"
+        },
+        "edit": {
+          "title": "Etiket bewerken"
+        },
+        "remove": {
+          "title": "Portemonnee verwijderen"
+        }
+      },
       "remove": {
         "check": "Ik heb een back-up gemaakt van mijn herstelzin en begrijp dat Uniswap Labs mij niet kan helpen mijn portemonnee te herstellen als ik dit niet heb gedaan.",
+        "title": "Verwijder {{name}}",
         "viewOnly": "U kunt altijd back-view-portemonnees toevoegen door het adres van de portemonnee in te voeren."
       },
       "restore": {
@@ -138,7 +166,6 @@
         "title_one_one": "Eén portemonnee gevonden",
         "title_one_other": "Selecteer portefeuilles om te importeren"
       },
-      "title": "Je portemonnees",
       "viewOnly": {
         "button": "Portemonnee importeren",
         "description": "Om tokens te ruilen, kopen, verzenden en ontvangen, moet u de herstelzin van deze portemonnee importeren.",
@@ -157,7 +184,6 @@
     }
   },
   "common": {
-    "app": "Uniswap-portemonnee",
     "button": {
       "accept": "Aanvaarden",
       "back": "Terug",
@@ -169,6 +195,7 @@
       "continue": "Volgende",
       "copied": "Gekopieerd",
       "copy": "Kopieer",
+      "create": "Creëren",
       "delete": "Verwijder",
       "disconnect": "Ontkoppel",
       "dismiss": "Afwijzen",
@@ -188,6 +215,7 @@
       "retry": "Opnieuw proberen",
       "review": "Beoordeling",
       "save": "Redden",
+      "scrollDown": "Naar beneden scrollen",
       "sell": "Verkopen",
       "send": "Versturen",
       "setup": "Opgericht",
@@ -301,9 +329,20 @@
           "label": "bezig met verzenden"
         }
       },
+      "permit2": {
+        "description": "Permit2 beheert tokengoedkeuringen voor meerdere dapps.",
+        "header": "Onderteken vergunning 2",
+        "price": "Geen"
+      },
       "signature": {
+        "containsUnrenderableCharacters": "Dit bericht bevat niet-weergeefbare tekens. Zorg ervoor dat u deze site vertrouwt.",
         "error": {
           "712-spec-compliance": "SignTypedDataRequestContent heeft gegevens ontvangen voor ondertekening die niet voldoen aan de EIP-712-specificatie."
+        },
+        "header": "Handtekening verzoek",
+        "toggleDataView": {
+          "raw": "Bekijk onbewerkte gegevens",
+          "readable": "Bekijk originele gegevens"
         }
       },
       "warning": {
@@ -313,6 +352,10 @@
         }
       }
     }
+  },
+  "emptyTokenCard": {
+    "description": "Koop of draag tokens over naar deze portemonnee om aan de slag te gaan",
+    "title": "Nog geen tokens"
   },
   "errors": {
     "crash": {
@@ -404,11 +447,6 @@
       "titleConnected": "Gekoppeld",
       "titleNotConnected": "Niet verbonden"
     },
-    "dappRequest": {
-      "signatureRequest": {
-        "header": "Handtekening verzoek"
-      }
-    },
     "lock": {
       "button": {
         "forgot": "Wachtwoord vergeten?",
@@ -438,6 +476,13 @@
           "wrong": "Verkeerd wachtwoord"
         },
         "placeholder": "Huidig wachtwoord"
+      }
+    },
+    "warning": {
+      "storage": {
+        "button": "Maak een back-up",
+        "message": "Zorg ervoor dat u een back-up maakt van uw herstelzin om te voorkomen dat u de toegang tot uw portemonnee en geld verliest.",
+        "title": "Uw browser heeft bijna geen opslagruimte meer"
       }
     }
   },
@@ -514,8 +559,7 @@
       "offline": "U bevindt zich in de offlinemodus"
     },
     "extension": {
-      "error": "Fout bij het laden van accounts",
-      "pin": "Maak Uniswap Wallet vast aan de werkbalk van uw browser door op <puzzleIcon />te klikken"
+      "error": "Fout bij het laden van accounts"
     },
     "feed": {
       "empty": {
@@ -611,6 +655,8 @@
       "contractAddress": "Contractadres gekopieerd",
       "failed": "Kon niet naar klembord kopiëren",
       "image": "Afbeelding gekopieerd",
+      "nftUrl": "NFT-URL gekopieerd",
+      "tokenUrl": "Token-URL gekopieerd",
       "transactionId": "Transactie-ID gekopieerd"
     },
     "countryChange": "Overgeschakeld naar {{countryName}}",
@@ -680,7 +726,7 @@
   "notifications": {
     "scantastic": {
       "subtitle": "Ga verder op Uniswap-extensie",
-      "title": "Succes"
+      "title": "Succes!"
     }
   },
   "onboarding": {
@@ -733,23 +779,13 @@
       }
     },
     "complete": {
-      "card": {
-        "buy": {
-          "description": "Aankoop met een kaart of overboeking vanaf een beurs",
-          "title": "Crypto kopen of overdragen"
-        },
-        "explore": {
-          "description": "Zoek en blader door trending tokens en NFT's",
-          "title": "Ontdek tokens en NFT's"
-        },
-        "swap": {
-          "description": "Aankoop met een kaart of overboeking vanaf een beurs",
-          "title": "Begin met ruilen"
-        }
+      "button": "Open Uniswap-portemonnee",
+      "description": "Uw portemonnee is klaar om cryptovaluta te ruilen, verzenden en ontvangen.",
+      "pin": {
+        "description": "Klik op het puzzelpictogram in uw werkbalk en zoek Uniswap Wallet in de lijst",
+        "title": "Uniswap-portemonnee vastzetten"
       },
-      "description": "Je portemonnee is klaar! Begin met het financieren van uw portemonnee door cryptovaluta te kopen of naar uw portemonnee over te zetten.",
-      "footer": "Leer hoe u de Uniswap Wallet gebruikt",
-      "pin": "<text>Zet de extensie vast in uw browservenster</text><container><text>door op het pictogram </text><puzzleIcon /><text> te klikken en vervolgens de pen</text></container>"
+      "title": "Je bent klaar"
     },
     "editName": {
       "button": {
@@ -766,7 +802,7 @@
         "title": "Heb je de Uniswap mobiele app?"
       },
       "getOnTheBetaWaitlist": {
-        "subtitle": "Download de mobiele app en claim een gebruikersnaam",
+        "subtitle": "Download de mobiele app om een gebruikersnaam te claimen",
         "title": "Zet u op de bèta-wachtlijst"
       },
       "password": {
@@ -825,7 +861,7 @@
       },
       "checkEligibilityInstructions": "Voer hieronder uw <highlight>uni.eth</highlight> gebruikersnaam in om te controleren of u in aanmerking komt voor de bèta.",
       "eligible": {
-        "tagline": "Welkom bij de bèta: u bent een van de eersten die de Uniswap-portemonnee uitprobeert.",
+        "tagline": "Welkom bij de bèta. Je bent een van de eersten die de Uniswap-extensie uitprobeert.",
         "title": "Je bent van de wachtlijst verwijderd!"
       },
       "ineligibleExplanation": "Je staat nog steeds op de wachtlijst. We laten het je weten in de Uniswap mobiele app wanneer je in aanmerking komt!",
@@ -885,7 +921,7 @@
         "subtitle": "Controleer uw Uniswap mobiele app voor de code van 6 tekens",
         "title": "Voer eenmalige code in"
       },
-      "subtitle": "Scan de QR-code met de Uniswap mobiele app om te beginnen met het importeren van uw portemonnee(s)",
+      "subtitle": "Scan de QR-code met de Uniswap mobiele app om te beginnen met het importeren van uw portemonnee.",
       "title": "Importeer portemonnee vanuit de app"
     },
     "security": {
@@ -921,7 +957,7 @@
         "error": "Fout bij het importeren van portemonnees"
       }
     },
-    "termsOfService": "Als ik doorga, ga ik akkoord met de<highlightTerms> Servicevoorwaarden </highlightTerms>en ga ik akkoord met het<highlightPrivacy> Privacybeleid</highlightPrivacy>.",
+    "termsOfService": "Als ik doorga, ga ik akkoord met de<highlightTerms> Servicevoorwaarden </highlightTerms>en ga ik akkoord met het<highlightPrivacy> Privacybeleid</highlightPrivacy>",
     "tooltip": {
       "recoveryPhrase": {
         "trigger": "Wat is een herstelzin?"
@@ -988,11 +1024,7 @@
     },
     "title": "Scan een QR-code",
     "wallet": {
-      "networks": {
-        "description": "Uniswap Wallet ondersteunt tokens op Ethereum, Polygon, Arbitrum, Optimism, Base en BNB Chain. Op dit moment ondersteunen we alleen NFT's op Ethereum.",
-        "title": "Ondersteunde netwerken"
-      },
-      "title": "U kunt tokens op al onze ondersteunde netwerken naar dit adres sturen."
+      "title": "Uniswap Wallet ondersteunt tokens op Ethereum, Polygon, Arbitrum, Optimism, Base, Blast en BNB Chain. Op dit moment ondersteunen we alleen NFT's op Ethereum."
     }
   },
   "scantastic": {
@@ -1016,8 +1048,9 @@
         "browser": "Browser",
         "device": "Apparaat"
       },
-      "subtitle": "Ga alleen verder als u synchroniseert met de Uniswap-extensie op een vertrouwd apparaat.",
-      "title": "Is dit jouw apparaat?"
+      "subtitle": "Ga alleen verder als u een QR-code van Uniswap Extension op een vertrouwd apparaat scant.",
+      "title": "Probeert u uw portemonnee te importeren?",
+      "warning": "Pas op voor sites en apps die Uniswap nabootsen. Anders kan uw portemonnee in gevaar komen."
     },
     "error": {
       "encryption": "Kan zaadzin niet voorbereiden.",
@@ -1085,6 +1118,11 @@
       "title": "Naar"
     },
     "review": {
+      "input": {
+        "tokenAmount": {
+          "title": "{{currencyAmount}} van {{currencySymbol}}"
+        }
+      },
       "modal": {
         "title": "Je verzendt"
       },
@@ -1128,6 +1166,10 @@
           "title": "Geblokkeerd adres"
         },
         "recipient": "Ontvangerportemonnee is geblokkeerd"
+      },
+      "erc20": {
+        "message": "U probeert geld naar een tokenadres te sturen. Het verzenden van crypto naar dit type adres kan resulteren in een permanent verlies van geld.",
+        "title": "Dit is een tokenadres"
       },
       "insufficientFunds": {
         "message": "Uw {{currencySymbol}} saldo is afgenomen sinds u het bedrag heeft ingevoerd dat u wilt verzenden",
@@ -1206,7 +1248,7 @@
   },
   "settings": {
     "action": {
-      "feedback": "Stuur feedback",
+      "feedback": "Deel feedback",
       "help": "Hulp krijgen",
       "lock": "Portemonnee blokkeren",
       "privacy": "Privacybeleid",
@@ -1313,7 +1355,7 @@
         }
       },
       "beta": {
-        "tooltip": "Binnenkort beschikbaar!"
+        "tooltip": "Binnenkort beschikbaar"
       },
       "biometrics": {
         "appAccess": {
@@ -1364,7 +1406,7 @@
         "title": "Lokale munteenheid"
       },
       "giveFeedback": {
-        "title": "Geef feedback"
+        "title": "Deel feedback"
       },
       "helpCenter": {
         "title": "Helpcentrum"
@@ -1431,7 +1473,7 @@
   "swap": {
     "button": {
       "max": "Max",
-      "review": "Recensiewissel",
+      "review": "Beoordeling",
       "swap": "Ruil",
       "unwrap": "Uitpakken",
       "view": "Transactie bekijken",
@@ -1469,9 +1511,6 @@
       "wrap": "Houd vast om in te pakken"
     },
     "request": {
-      "details": {
-        "header": "Je bent aan het ruilen"
-      },
       "title": {
         "full": "Wissel {{inputCurrencySymbol}} → {{outputCurrencySymbol}}",
         "short": "Wissel tokens uit"
@@ -1515,11 +1554,11 @@
           "min": "Voer een waarde in die groter is dan 0"
         }
       },
-      "title": "Wissel instellingen"
+      "title": "Wissel instellingen uit"
     },
     "slippage": {
       "settings": {
-        "title": "Slippage-instellingen"
+        "title": "Slip-instellingen"
       }
     },
     "warning": {
@@ -1705,7 +1744,7 @@
     },
     "selector": {
       "button": {
-        "choose": "Kies token",
+        "choose": "Selecteer token",
         "clear": "Wis alles"
       },
       "empty": {
@@ -2062,7 +2101,8 @@
     },
     "pending": {
       "button": {
-        "connect": "Koppel"
+        "connect": "Koppel",
+        "scrollDown": "Scroll naar beneden om verbinding te maken"
       },
       "switchAccount": "Verwissel van profiel",
       "switchNetwork": "Schakel netwerk",
@@ -2079,6 +2119,7 @@
     },
     "request": {
       "button": {
+        "scrollDown": "Scroll naar beneden om te ondertekenen",
         "sign": "Teken"
       },
       "details": {

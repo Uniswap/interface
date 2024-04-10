@@ -6,6 +6,8 @@ import {
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/constants'
+import { DynamicConfigs } from 'uniswap/src/features/experiments/configs'
+import { useDynamicConfig } from 'uniswap/src/features/experiments/hooks'
 import { logger } from 'utilities/src/logger/logger'
 import { ScantasticParams, ScantasticParamsSchema } from 'wallet/src/features/scantastic/types'
 import { UwULinkRequest } from 'wallet/src/features/walletConnect/types'
@@ -30,19 +32,26 @@ interface EnabledFeatureFlags {
   isScantasticEnabled: boolean
 }
 
-const UNISNAP_CONTRACT_ADDRESS = '0xFd2308677A0eb48e2d0c4038c12AA7DCb703e8DC'
-const UWULINK_CONTRACT_ALLOWLIST = [UNISNAP_CONTRACT_ADDRESS]
+// This type must match the format in statsig dynamic config for uwulink
+// https://console.statsig.com/5HjUux4OvSGzgqWIfKFt8i/dynamic_configs/uwulink_config
+type UwuLinkAllowlistItem = {
+  chainId: number
+  contractAddress: string
+  name: string
+  icon?: string
+}
+type UwuLinkAllowlist = UwuLinkAllowlistItem[]
+
 const UWULINK_MAX_TXN_VALUE = '0.001'
 
 const EASTER_EGG_QR_CODE = 'DO_NOT_SCAN_OR_ELSE_YOU_WILL_GO_TO_MOBILE_TEAM_JAIL'
 export const CUSTOM_UNI_QR_CODE_PREFIX = 'hello_uniwallet:'
 export const UWULINK_PREFIX = 'uwulink'
-const MAX_DAPP_NAME_LENGTH = 60
 
-export function truncateDappName(name: string): string {
-  return name && name.length > MAX_DAPP_NAME_LENGTH
-    ? `${name.slice(0, MAX_DAPP_NAME_LENGTH)}...`
-    : name
+export const truncateQueryParams = (url: string): string => {
+  // In fact, the first element will be always returned below. url is
+  // added as a fallback just to satisfy TypeScript.
+  return url.split('?')[0] ?? url
 }
 
 export async function getSupportedURI(
@@ -121,6 +130,13 @@ function isUwULink(uri: string): boolean {
   return uri.startsWith(`${UWULINK_PREFIX}{`)
 }
 
+// Gets the UWULink contract allow list from statsig dynamic config.
+// We can safely cast as long as the statsig config format matches our `UwuLinkAllowlist` type.
+export function useUwuLinkContractAllowlist(): UwuLinkAllowlist {
+  const uwuLinkConfig = useDynamicConfig(DynamicConfigs.UwuLink)
+  return uwuLinkConfig.getValue('allowlist') as UwuLinkAllowlist
+}
+
 /**
  * Util function to check if a UwULinkRequest is valid.
  *
@@ -131,11 +147,14 @@ function isUwULink(uri: string): boolean {
  * @param request parsed UwULinkRequest
  * @returns boolean for whether the UwULinkRequest is allowed
  */
-export function isAllowedUwULinkRequest(request: UwULinkRequest): boolean {
+export function isAllowedUwuLinkRequest(
+  request: UwULinkRequest,
+  allowList: UwuLinkAllowlist
+): boolean {
   const { to, value } = request.value
   const belowMaximumValue =
     value && parseFloat(value) <= parseEther(UWULINK_MAX_TXN_VALUE).toNumber()
-  const isAllowedContractAddress = to && UWULINK_CONTRACT_ALLOWLIST.includes(to)
+  const isAllowedContractAddress = to && allowList.some((item) => item.contractAddress === to)
 
   if (!belowMaximumValue || !isAllowedContractAddress) {
     return false

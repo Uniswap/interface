@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { t, Trans } from '@lingui/macro'
 import { InterfacePageName, LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
@@ -26,6 +25,7 @@ import { PoolState, usePool } from 'hooks/usePools'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
+import { t, Trans } from 'i18n'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react'
@@ -204,7 +204,7 @@ function CurrentPriceCard({
         </ThemedText.DeprecatedMediumHeader>
         <ExtentsText>
           <Trans>
-            {currencyQuote?.symbol} per {currencyBase?.symbol}
+            {{ sym: currencyQuote?.symbol }} per {{ base: currencyBase?.symbol }}
           </Trans>
         </ExtentsText>
       </AutoColumn>
@@ -667,7 +667,12 @@ function PositionPageContent() {
     <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
       <>
         <Helmet>
-          <title>{t`Manage ${currencyQuote?.symbol}/${currencyBase?.symbol} pool liquidity on Uniswap`}</title>
+          <title>
+            {t(`Manage {{quoteSymbol}}/{{baseSymbol}} pool liquidity on Uniswap`, {
+              quoteSymbol: currencyQuote?.symbol,
+              baseSymbol: currencyBase?.symbol,
+            })}
+          </title>
         </Helmet>
         <PageWrapper>
           <TransactionConfirmationModal
@@ -704,9 +709,7 @@ function PositionPageContent() {
                     </PairHeader>
                   </StyledPoolLink>
                   <Badge style={{ marginRight: '8px' }}>
-                    <BadgeText>
-                      <Trans>{formatDelta(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant()))}</Trans>
-                    </BadgeText>
+                    <BadgeText>{formatDelta(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant()))}</BadgeText>
                   </Badge>
                   <RangeBadge removed={removed} inRange={inRange} />
                 </PositionLabelRow>
@@ -788,12 +791,10 @@ function PositionPageContent() {
                       </Label>
                       {fiatValueOfLiquidity?.greaterThan(new Fraction(1, 100)) ? (
                         <ThemedText.DeprecatedLargeHeader fontSize="36px" fontWeight={535}>
-                          <Trans>
-                            {formatCurrencyAmount({
-                              amount: fiatValueOfLiquidity,
-                              type: NumberType.FiatTokenPrice,
-                            })}
-                          </Trans>
+                          {formatCurrencyAmount({
+                            amount: fiatValueOfLiquidity,
+                            type: NumberType.FiatTokenPrice,
+                          })}
                         </ThemedText.DeprecatedLargeHeader>
                       ) : (
                         <ThemedText.DeprecatedLargeHeader color={theme.neutral1} fontSize="36px" fontWeight={535}>
@@ -812,7 +813,7 @@ function PositionPageContent() {
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
                                 <BadgeText>
-                                  <Trans>{inverted ? ratio : 100 - ratio}%</Trans>
+                                  <Trans>{{ pct: inverted ? ratio : 100 - ratio }}%</Trans>
                                 </BadgeText>
                               </Badge>
                             ) : null}
@@ -827,7 +828,7 @@ function PositionPageContent() {
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
                                 <BadgeText>
-                                  <Trans>{inverted ? 100 - ratio : ratio}%</Trans>
+                                  <Trans>{{ pct: inverted ? 100 - ratio : ratio }}%</Trans>
                                 </BadgeText>
                               </Badge>
                             ) : null}
@@ -847,13 +848,11 @@ function PositionPageContent() {
                           </Label>
                           {fiatValueOfFees?.greaterThan(new Fraction(1, 100)) ? (
                             <ThemedText.DeprecatedLargeHeader color={theme.success} fontSize="36px" fontWeight={535}>
-                              <Trans>
-                                {formatCurrencyAmount({ amount: fiatValueOfFees, type: NumberType.FiatTokenPrice })}
-                              </Trans>
+                              {formatCurrencyAmount({ amount: fiatValueOfFees, type: NumberType.FiatTokenPrice })}
                             </ThemedText.DeprecatedLargeHeader>
                           ) : (
                             <ThemedText.DeprecatedLargeHeader color={theme.neutral1} fontSize="36px" fontWeight={535}>
-                              <Trans>-</Trans>
+                              -
                             </ThemedText.DeprecatedLargeHeader>
                           )}
                         </AutoColumn>
@@ -928,7 +927,7 @@ function PositionPageContent() {
                       <AutoColumn gap="md">
                         <RowBetween>
                           <ThemedText.DeprecatedMain>
-                            <Trans>Collect as {nativeWrappedSymbol}</Trans>
+                            <Trans>Collect as {{ nativeWrappedSymbol }}</Trans>
                           </ThemedText.DeprecatedMain>
                           <Toggle
                             id="receive-as-weth"
@@ -984,13 +983,13 @@ function PositionPageContent() {
                       <ExtentsText>
                         {' '}
                         <Trans>
-                          {currencyQuote?.symbol} per {currencyBase?.symbol}
+                          {{ symbol: currencyQuote?.symbol }} per {{ base: currencyBase?.symbol }}
                         </Trans>
                       </ExtentsText>
 
                       {inRange && (
                         <ThemedText.DeprecatedSmall color={theme.neutral3}>
-                          <Trans>Your position will be 100% {currencyBase?.symbol} at this price.</Trans>
+                          <Trans>Your position will be 100% {{ symbol: currencyBase?.symbol }} at this price.</Trans>
                         </ThemedText.DeprecatedSmall>
                       )}
                     </AutoColumn>
@@ -1013,13 +1012,13 @@ function PositionPageContent() {
                       <ExtentsText>
                         {' '}
                         <Trans>
-                          {currencyQuote?.symbol} per {currencyBase?.symbol}
+                          {{ symbol: currencyQuote?.symbol }} per {{ base: currencyBase?.symbol }}
                         </Trans>
                       </ExtentsText>
 
                       {inRange && (
                         <ThemedText.DeprecatedSmall color={theme.neutral3}>
-                          <Trans>Your position will be 100% {currencyQuote?.symbol} at this price.</Trans>
+                          <Trans>Your position will be 100% {{ symbol: currencyQuote?.symbol }} at this price.</Trans>
                         </ThemedText.DeprecatedSmall>
                       )}
                     </AutoColumn>

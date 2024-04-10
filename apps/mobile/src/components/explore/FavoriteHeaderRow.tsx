@@ -2,7 +2,6 @@ import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { ElementName } from 'wallet/src/telemetry/constants'
 
 export function FavoriteHeaderRow({
   title,
@@ -28,7 +27,11 @@ export function FavoriteHeaderRow({
         {isEditing ? editingTitle : title}
       </Text>
       {!isEditing ? (
-        <TouchableArea hapticFeedback hitSlop={16} testID={ElementName.Edit} onPress={onPress}>
+        <TouchableArea
+          hapticFeedback
+          hitSlop={16}
+          testID="favorite-header-row/favorite-button"
+          onPress={onPress}>
           <Icons.TripleDots
             color="$neutral2"
             size={iconSizes.icon20}
@@ -38,7 +41,7 @@ export function FavoriteHeaderRow({
         </TouchableArea>
       ) : (
         <TouchableArea hitSlop={16} onPress={onPress}>
-          <Text color="$accent1" variant="buttonLabel3">
+          <Text color="$accent1" testID="favorite-header-row/done-button" variant="buttonLabel3">
             {t('common.button.done')}
           </Text>
         </TouchableArea>

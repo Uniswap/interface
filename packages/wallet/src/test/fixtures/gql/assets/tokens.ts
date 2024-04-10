@@ -11,14 +11,14 @@ import {
   TokenProject,
   TokenProjectMarket,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { toGraphQLChain } from 'wallet/src/features/chains/utils'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { amounts } from 'wallet/src/test/fixtures/gql/amounts'
 import {
   get24hPriceChange,
   getLatestPrice,
   priceHistory,
 } from 'wallet/src/test/fixtures/gql/history'
-import { GQL_CHAINS } from 'wallet/src/test/fixtures/gql/misc'
+import { GQL_CHAINS, image } from 'wallet/src/test/fixtures/gql/misc'
 import {
   DAI,
   ETH,
@@ -98,15 +98,20 @@ export const tokenProjectMarket = createFixture<TokenProjectMarket, TokenProject
   tokenProject: tokenProjectBase(),
 }))
 
-const tokenProjectBase = createFixture<TokenProject>()(() => ({
-  __typename: 'TokenProject',
-  id: faker.datatype.uuid(),
-  name: faker.lorem.word(),
-  tokens: [] as Token[],
-  safetyLevel: randomEnumValue(SafetyLevel),
-  logoUrl: faker.image.imageUrl(),
-  isSpam: faker.datatype.boolean(),
-}))
+const tokenProjectBase = createFixture<TokenProject>()(() => {
+  const logoUrl = faker.image.imageUrl()
+  return {
+    __typename: 'TokenProject',
+    id: faker.datatype.uuid(),
+    name: faker.lorem.word(),
+    tokens: [] as Token[],
+    safetyLevel: randomEnumValue(SafetyLevel),
+    // @deprecated
+    logoUrl,
+    isSpam: faker.datatype.boolean(),
+    logo: image({ url: logoUrl }),
+  }
+})
 
 type TokenProjectOptions = {
   priceHistory: (TimestampedAmount | undefined)[]

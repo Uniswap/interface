@@ -1,8 +1,8 @@
-import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { Trans } from 'i18n'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -56,7 +56,7 @@ export function FiatValue({
           <MouseoverTooltip
             text={<Trans>The estimated difference between the USD values of input and output amounts.</Trans>}
           >
-            (<Trans>{formatPercent(priceImpact.multiply(-1))}</Trans>)
+            ({formatPercent(priceImpact.multiply(-1))})
           </MouseoverTooltip>
         </ThemedText.BodySmall>
       )}

@@ -1,7 +1,15 @@
 import { useCallback, useState } from 'react'
 import { Keyboard } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, Text, TouchableArea, useIsShortMobileDevice, useMedia } from 'ui/src'
+import {
+  AnimatedFlex,
+  Flex,
+  Icons,
+  Text,
+  TouchableArea,
+  useIsShortMobileDevice,
+  useMedia,
+} from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
@@ -79,11 +87,12 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
 
         <Flex centered row>
           {showGasFee && (
-            <NetworkFeeWarning showGasIcon={true}>
+            <NetworkFeeWarning tooltipTrigger={<></>}>
               <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
                 <Text color="$neutral2" variant="body3">
                   {gasFeeFormatted}
                 </Text>
+                <Icons.Gas color="$neutral2" size="$icon.16" />
               </AnimatedFlex>
             </NetworkFeeWarning>
           )}

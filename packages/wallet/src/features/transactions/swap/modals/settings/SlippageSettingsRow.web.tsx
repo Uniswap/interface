@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent } from 'react-native'
 import { Flex, Input, Text } from 'ui/src'
 import { SlippageSettingsRowProps } from 'wallet/src/features/transactions/swap/modals/settings/SlippageSettingsRowProps'
-import { SwapSettingsMessage } from 'wallet/src/features/transactions/swap/modals/settings/SwapSettingsMessage'
 import { useSlippageSettings } from 'wallet/src/features/transactions/swap/modals/settings/useSlippageSettings'
 
 const INPUT_MIN_WIDTH = 44
@@ -16,14 +15,10 @@ export function SlippageSettingsRow({
 
   const [inputWidth, setInputWidth] = useState(0)
   const {
-    trade,
     isEditingSlippage,
     autoSlippageEnabled,
-    showSlippageWarning,
     inputSlippageTolerance,
-    inputWarning,
     autoSlippageTolerance,
-    currentSlippageTolerance,
     inputAnimatedStyle,
     onPressAutoSlippage,
     onChangeSlippageInput,
@@ -100,13 +95,6 @@ export function SlippageSettingsRow({
           </Flex>
         </Flex>
       </Flex>
-      <SwapSettingsMessage
-        inputWarning={inputWarning}
-        showEmpty={false}
-        showSlippageWarning={showSlippageWarning}
-        slippageTolerance={currentSlippageTolerance}
-        trade={trade}
-      />
     </Flex>
   )
 }

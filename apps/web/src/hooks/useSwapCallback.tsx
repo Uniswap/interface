@@ -5,7 +5,7 @@ import { useWeb3React } from '@web3-react/core'
 import { BigNumber } from 'ethers/lib/ethers'
 import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useCallback } from 'react'
-import { InterfaceTrade, TradeFillType } from 'state/routing/types'
+import { InterfaceTrade, OffchainOrderType, TradeFillType } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useAddOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
@@ -99,7 +99,7 @@ export function useSwapCallback(
         result.response.deadline,
         swapInfo as UniswapXOrderDetails['swapInfo'],
         result.response.encodedOrder,
-        isUniswapXTrade(trade) ? trade.offchainOrderType : undefined
+        isUniswapXTrade(trade) ? trade.offchainOrderType : OffchainOrderType.DUTCH_AUCTION // satisfying type-checker; isUniswapXTrade should always be true
       )
     } else {
       addTransaction(result.response, swapInfo, result.deadline?.toNumber())

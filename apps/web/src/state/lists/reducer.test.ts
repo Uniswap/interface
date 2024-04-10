@@ -2,9 +2,10 @@ import tokenSafetyLookup from 'constants/tokenSafetyLookup'
 import { createStore, Store } from 'redux'
 import { updateVersion } from 'state/global/actions'
 
+import { ListsState } from 'state/lists/types'
 import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
 import { acceptListUpdate, addList, fetchTokenList, removeList } from './actions'
-import reducer, { ListsState } from './reducer'
+import reducer from './reducer'
 
 const STUB_TOKEN_LIST = {
   name: '',

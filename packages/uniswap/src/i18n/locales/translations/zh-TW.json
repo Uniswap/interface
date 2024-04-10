@@ -89,7 +89,7 @@
           "title": "你正在刪除 <highlight>{{walletName}}</highlight>"
         },
         "mnemonic": {
-          "description": "它與 <highlight>{{walletNames}}</highlight> 共享相同的恢復短語。在刪除所有剩餘的錢包之前，你的恢復短語會被存儲在你的設備上。"
+          "description": "它與 {{walletName}} 共享相同的恢復短語。在刪除所有剩餘的錢包之前，你的恢復短語會被存儲在你的設備上。"
         }
       },
       "subtitle": {
@@ -118,12 +118,40 @@
         "restore": "恢復錢包",
         "watch": "添加僅查看錢包"
       },
+      "create": {
+        "placeholder": "錢包 {{index}}"
+      },
+      "edit": {
+        "label": {
+          "input": {
+            "placeholder": "錢包標籤"
+          }
+        }
+      },
       "header": {
+        "button": {
+          "disabled": {
+            "title": "編輯個人資料"
+          },
+          "title": "編輯標籤"
+        },
         "other": "你的其他錢包",
         "viewOnly": "僅查看錢包"
       },
+      "menu": {
+        "copy": {
+          "title": "複製錢包地址"
+        },
+        "edit": {
+          "title": "編輯標籤"
+        },
+        "remove": {
+          "title": "刪除錢包"
+        }
+      },
       "remove": {
         "check": "我備份了我的恢復短語，並了解如果我未能這樣做，Uniswap Labs 無法幫助我恢復錢包。",
+        "title": "刪除 {{name}}",
         "viewOnly": "你始終可以透過輸入錢包位址來新增僅返回查看的錢包。"
       },
       "restore": {
@@ -138,7 +166,6 @@
         "title_one_one": "找到一個錢包",
         "title_one_other": "選擇要導入的錢包"
       },
-      "title": "你的錢包",
       "viewOnly": {
         "button": "導入錢包",
         "description": "要交換、購買、發送和接收代幣，您需要匯入此錢包的恢復短語。",
@@ -157,7 +184,6 @@
     }
   },
   "common": {
-    "app": "Uniswap 錢包",
     "button": {
       "accept": "接受",
       "back": "後退",
@@ -169,6 +195,7 @@
       "continue": "繼續",
       "copied": "已複製",
       "copy": "複製",
+      "create": "創造",
       "delete": "刪除",
       "disconnect": "斷開",
       "dismiss": "關閉",
@@ -188,6 +215,7 @@
       "retry": "重試",
       "review": "預覽",
       "save": "保存",
+      "scrollDown": "向下捲動",
       "sell": "賣出",
       "send": "傳送",
       "setup": "設定",
@@ -301,9 +329,20 @@
           "label": "發送"
         }
       },
+      "permit2": {
+        "description": "Permit2 管理多個 dapp 的代幣核准。",
+        "header": "簽署許可證2",
+        "price": "沒有任何"
+      },
       "signature": {
+        "containsUnrenderableCharacters": "此訊息包含無法呈現的字元。確保您信任該網站。",
         "error": {
           "712-spec-compliance": "SignTypedDataRequestContent 收到的簽章資料不符合 EIP-712 規格。"
+        },
+        "header": "簽名請求",
+        "toggleDataView": {
+          "raw": "查看原始數據",
+          "readable": "查看原始數據"
         }
       },
       "warning": {
@@ -313,6 +352,10 @@
         }
       }
     }
+  },
+  "emptyTokenCard": {
+    "description": "購買代幣或將代幣轉移到此錢包即可開始使用",
+    "title": "還沒有代幣"
   },
   "errors": {
     "crash": {
@@ -360,7 +403,7 @@
       },
       "metadata": {
         "marketCap": "{{number}} MCap",
-        "totalValueLocked": "{{number}} 電視層",
+        "totalValueLocked": "{{number}} TVL",
         "volume": "{{number}} 卷"
       },
       "sort": {
@@ -404,11 +447,6 @@
       "titleConnected": "已連接",
       "titleNotConnected": "未連接"
     },
-    "dappRequest": {
-      "signatureRequest": {
-        "header": "簽名請求"
-      }
-    },
     "lock": {
       "button": {
         "forgot": "忘記密碼？",
@@ -438,6 +476,13 @@
           "wrong": "密碼錯誤"
         },
         "placeholder": "目前密碼"
+      }
+    },
+    "warning": {
+      "storage": {
+        "button": "備份",
+        "message": "請務必備份您的恢復短語，以防止無法存取您的錢包和資金。",
+        "title": "您的瀏覽器儲存空間不足"
       }
     }
   },
@@ -514,8 +559,7 @@
       "offline": "你處於離線模式"
     },
     "extension": {
-      "error": "載入帳戶時出錯",
-      "pin": "透過點擊將 Uniswap 錢包固定到瀏覽器工具列 <puzzleIcon />"
+      "error": "載入帳戶時出錯"
     },
     "feed": {
       "empty": {
@@ -611,6 +655,8 @@
       "contractAddress": "複製合約地址",
       "failed": "無法複製到剪貼簿",
       "image": "圖像已複製",
+      "nftUrl": "NFT URL 已複製",
+      "tokenUrl": "令牌 URL 已複製",
       "transactionId": "交易 ID 已複製"
     },
     "countryChange": "切換到 {{countryName}}",
@@ -680,7 +726,7 @@
   "notifications": {
     "scantastic": {
       "subtitle": "繼續使用 Uniswap 擴展",
-      "title": "成功"
+      "title": "成功!"
     }
   },
   "onboarding": {
@@ -733,23 +779,13 @@
       }
     },
     "complete": {
-      "card": {
-        "buy": {
-          "description": "用卡購買，或從交易所轉帳",
-          "title": "購買或轉移加密貨幣"
-        },
-        "explore": {
-          "description": "搜尋和瀏覽熱門代幣和 NFT",
-          "title": "探索代幣和 NFT"
-        },
-        "swap": {
-          "description": "用卡購買，或從交易所轉帳",
-          "title": "開始交換"
-        }
+      "button": "打開 Uniswap 錢包",
+      "description": "您的錢包已準備好交換、發送和接收加密貨幣。",
+      "pin": {
+        "description": "點擊工具列中的拼圖圖標，然後在清單中找到 Uniswap 錢包",
+        "title": "Pin Uniswap 錢包"
       },
-      "description": "你的錢包已經準備好了！首先透過購買加密貨幣或將加密貨幣轉移到您的錢包來為您的錢包提供資金。",
-      "footer": "了解如何使用 Uniswap 錢包",
-      "pin": "<text>將擴充程式固定到瀏覽器視窗</text><container><text>透過點選 </text><puzzleIcon /><text> 圖標，然後引腳</text></container>"
+      "title": "你已經準備好了"
     },
     "editName": {
       "button": {
@@ -766,7 +802,7 @@
         "title": "有 Uniswap 應用程式嗎？"
       },
       "getOnTheBetaWaitlist": {
-        "subtitle": "下載行動應用程式並索取用戶名",
+        "subtitle": "下載行動應用程式以索取用戶名",
         "title": "進入測試版候補名單"
       },
       "password": {
@@ -825,7 +861,7 @@
       },
       "checkEligibilityInstructions": "在下面輸入您的 <highlight>uni.eth</highlight> 用戶名，檢查您是否有資格參加測試版。",
       "eligible": {
-        "tagline": "歡迎來到 Beta 版——您是第一批嘗試 Uniswap 錢包的人之一。",
+        "tagline": "歡迎使用 Beta 版——您是第一批嘗試 Uniswap 擴充功能的人之一。",
         "title": "您已登出候補名單！"
       },
       "ineligibleExplanation": "您仍在候補名單上。當您符合資格時，我們將在 Uniswap 行動應用程式中通知您！",
@@ -885,7 +921,7 @@
         "subtitle": "檢查您的 Uniswap 行動應用程式中的 6 字元代碼",
         "title": "輸入一次性代碼"
       },
-      "subtitle": "使用 Uniswap 行動應用程式掃描二維碼開始匯入您的錢包",
+      "subtitle": "使用 Uniswap 行動應用程式掃描二維碼即可開始匯入您的錢包。",
       "title": "從應用程式導入錢包"
     },
     "security": {
@@ -921,7 +957,7 @@
         "error": "導入錢包時發生錯誤"
       }
     },
-    "termsOfService": "我同意<highlightTerms>服務條款</highlightTerms>和<highlightPrivacy>隱私權政策</highlightPrivacy>",
+    "termsOfService": "繼續操作即表示我同意<highlightTerms> 服務條款 </highlightTerms>並同意<highlightPrivacy> 隱私權政策</highlightPrivacy>",
     "tooltip": {
       "recoveryPhrase": {
         "trigger": "什麼是恢復短語？"
@@ -988,11 +1024,7 @@
     },
     "title": "掃二維碼",
     "wallet": {
-      "networks": {
-        "description": "Uniswap 錢包支援以太坊、Polygon、Arbitrum、Optimism、Base 和 BNB 鏈上的代幣。目前，我們僅支援以太坊上的 NFT。",
-        "title": "支援的網路"
-      },
-      "title": "您可以將我們所有支援的網路上的代幣發送到該地址。"
+      "title": "Uniswap 錢包支援以太坊、Polygon、Arbitrum、Optimism、Base、Blast 和 BNB 鏈上的代幣。目前，我們僅支援以太坊上的 NFT。"
     }
   },
   "scantastic": {
@@ -1016,8 +1048,9 @@
         "browser": "瀏覽器",
         "device": "設備"
       },
-      "subtitle": "僅當您在受信任的裝置上與 Uniswap 擴充功能同步時才繼續。",
-      "title": "這是您的設備嗎？"
+      "subtitle": "只有在您在受信任裝置上從 Uniswap Extension 掃描 QR 碼時才能繼續。",
+      "title": "您是否正在嘗試導入錢包？",
+      "warning": "謹防冒充 Uniswap 的網站和應用程式。否則你的錢包可能會受到損害。"
     },
     "error": {
       "encryption": "無法準備助記詞。",
@@ -1048,7 +1081,7 @@
         "title": "不適用"
       },
       "networkCost": {
-        "title": "網路成本"
+        "title": "網路費用"
       }
     },
     "input": {
@@ -1085,6 +1118,11 @@
       "title": "接收者"
     },
     "review": {
+      "input": {
+        "tokenAmount": {
+          "title": "{{currencyAmount}}{{currencySymbol}}"
+        }
+      },
       "modal": {
         "title": "你正在發送"
       },
@@ -1128,6 +1166,10 @@
           "title": "被屏蔽的地址"
         },
         "recipient": "收件者錢包被屏蔽"
+      },
+      "erc20": {
+        "message": "您正在嘗試將資金發送到代幣地址。將加密貨幣發送到此類地址可能會導致資金永久損失。",
+        "title": "這是一個代幣地址"
       },
       "insufficientFunds": {
         "message": "自從你輸入要發送的金額以來，你的餘額已減少 {{currencySymbol}}",
@@ -1206,7 +1248,7 @@
   },
   "settings": {
     "action": {
-      "feedback": "傳送回饋",
+      "feedback": "分享回饋",
       "help": "得到幫助",
       "lock": "鎖錢包",
       "privacy": "隱私權策",
@@ -1313,7 +1355,7 @@
         }
       },
       "beta": {
-        "tooltip": "即將推出！"
+        "tooltip": "即將推出"
       },
       "biometrics": {
         "appAccess": {
@@ -1364,7 +1406,7 @@
         "title": "當地貨幣"
       },
       "giveFeedback": {
-        "title": "給予回饋"
+        "title": "分享回饋"
       },
       "helpCenter": {
         "title": "幫助中心"
@@ -1431,7 +1473,7 @@
   "swap": {
     "button": {
       "max": "總餘額",
-      "review": "審查交換",
+      "review": "預覽",
       "swap": "兌換",
       "unwrap": "拆封",
       "view": "查看交易",
@@ -1469,9 +1511,6 @@
       "wrap": "長按可迅速封裝"
     },
     "request": {
-      "details": {
-        "header": "預覽兌換"
-      },
       "title": {
         "full": "兌換 {{inputCurrencySymbol}} → {{outputCurrencySymbol}}",
         "short": "交換代幣"
@@ -1515,7 +1554,7 @@
           "min": "輸入大於 0 的值"
         }
       },
-      "title": "兌換設定"
+      "title": "交換設定"
     },
     "slippage": {
       "settings": {
@@ -2062,7 +2101,8 @@
     },
     "pending": {
       "button": {
-        "connect": "連接"
+        "connect": "連接",
+        "scrollDown": "向下捲動以連接"
       },
       "switchAccount": "切換帳戶",
       "switchNetwork": "切換網絡",
@@ -2079,6 +2119,7 @@
     },
     "request": {
       "button": {
+        "scrollDown": "向下捲動以簽名",
         "sign": "签名"
       },
       "details": {

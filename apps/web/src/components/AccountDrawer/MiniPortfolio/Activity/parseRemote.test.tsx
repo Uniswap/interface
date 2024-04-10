@@ -222,7 +222,6 @@ describe('parseRemote', () => {
           type: 1,
         },
         txHash: '0xHashValue',
-        type: 'signUniswapXOrder',
         addedTime: 10000,
       })
     })

@@ -127,7 +127,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   } = useFiatOnRampQuotes({
     baseCurrencyAmount: debouncedAmount,
     baseCurrencyCode: meldSupportedFiatCurrency.code,
-    quoteCurrencyCode: quoteCurrency.currencyInfo?.currency.symbol,
+    quoteCurrencyCode: quoteCurrency.meldCurrencyCode,
     countryCode,
     countryState,
   })

@@ -30,6 +30,8 @@ export enum FeatureFlags {
   // Web
   Eip6936Enabled,
   ExitAnimation,
+  ExtensionBetaLaunch,
+  ExtensionGeneralLaunch,
   GqlTokenLists,
   LimitsEnabled,
   LimitsFees,
@@ -54,6 +56,8 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   // Web Specific
   [FeatureFlags.Eip6936Enabled, 'eip6963_enabled'],
   [FeatureFlags.ExitAnimation, 'exit_animation'],
+  [FeatureFlags.ExtensionBetaLaunch, 'extension_beta_launch'],
+  [FeatureFlags.ExtensionGeneralLaunch, 'extension_general_launch'],
   [FeatureFlags.GqlTokenLists, 'gql_token_lists'],
   [FeatureFlags.LimitsEnabled, 'limits_enabled'],
   [FeatureFlags.LimitsFees, 'limits_fees'],

@@ -10,10 +10,10 @@ import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function NetworkFeeWarning({
   children,
-  showGasIcon = false,
+  tooltipTrigger,
   placement = 'top',
 }: PropsWithChildren<{
-  showGasIcon?: boolean
+  tooltipTrigger?: WarningTooltipProps['trigger']
   placement?: WarningTooltipProps['placement']
 }>): JSX.Element {
   const colors = useSporeColors()
@@ -39,8 +39,7 @@ export function NetworkFeeWarning({
         title: t('transaction.networkCost.label'),
       }}
       tooltipProps={{ text: caption, placement }}
-      trigger={showGasIcon ? <Icons.Gas color="$neutral2" size="$icon.16" /> : undefined}
-      triggerPlacement={showGasIcon ? 'start' : undefined}>
+      trigger={tooltipTrigger}>
       {children}
     </WarningInfo>
   )

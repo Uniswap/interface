@@ -1,4 +1,4 @@
-import { t } from '@lingui/macro'
+import { t } from 'i18n'
 import { v4 as uuid } from 'uuid'
 
 // You may throw an instance of this class when the user rejects a request in their wallet.
