@@ -16,8 +16,7 @@ import {
   TransactionDirection,
   TransactionStatus,
   TransactionType,
-} from 'graphql/data/__generated__/types-and-hooks'
-
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { MOONPAY_SENDER_ADDRESSES } from '../../constants'
 
 const MockOrderTimestamp = 10000

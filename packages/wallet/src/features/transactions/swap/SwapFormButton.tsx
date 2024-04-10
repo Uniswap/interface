@@ -1,8 +1,8 @@
 /* eslint-disable complexity */
 import { TFunction } from 'i18next'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Icons, Text, isWeb } from 'ui/src'
+import { Button, Flex, Icons, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import {
   selectHasSubmittedHoldToSwap,
@@ -14,11 +14,12 @@ import {
   useSwapScreenContext,
 } from 'wallet/src/features/transactions/contexts/SwapScreenContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
-import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedSwapWarnings'
+import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import {
   HoldToSwapProgressCircle,
   PROGRESS_CIRCLE_SIZE,
 } from 'wallet/src/features/transactions/swap/HoldToSwapProgressCircle'
+import { ViewOnlyModal } from 'wallet/src/features/transactions/swap/modals/ViewOnlyModal'
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 import { WrapType } from 'wallet/src/features/transactions/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
@@ -32,12 +33,15 @@ export const HOLD_TO_SWAP_TIMEOUT = 3000
 
 export function SwapFormButton(): JSX.Element {
   const { t } = useTranslation()
+  const isShortMobileDevice = useIsShortMobileDevice()
   const activeAccount = useActiveAccountWithThrow()
 
   const { walletNeedsRestore } = useTransactionModalContext()
   const { screen, setScreen } = useSwapScreenContext()
   const { derivedSwapInfo, isSubmitting, updateSwapForm } = useSwapFormContext()
   const { blockingWarning } = useParsedSwapWarnings()
+
+  const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
 
   const { wrapType, trade } = derivedSwapInfo
 
@@ -59,13 +63,13 @@ export function SwapFormButton(): JSX.Element {
 
   const hasViewedReviewScreen = useAppSelector(selectHasViewedReviewScreen)
   const hasSubmittedHoldToSwap = useAppSelector(selectHasSubmittedHoldToSwap)
-  const showHoldToSwapTip =
-    hasViewedReviewScreen && !hasSubmittedHoldToSwap && activeAccount.type !== AccountType.Readonly
+
+  const isViewOnlyWallet = activeAccount.type === AccountType.Readonly
+  const showHoldToSwapTip = hasViewedReviewScreen && !hasSubmittedHoldToSwap && !isViewOnlyWallet
 
   // Force users to view regular review screen before enabling hold to swap
   // Disable for view only because onSwap action will fail
-  const enableHoldToSwap =
-    !isWeb && hasViewedReviewScreen && activeAccount.type !== AccountType.Readonly
+  const enableHoldToSwap = !isWeb && hasViewedReviewScreen && !isViewOnlyWallet
 
   const onReview = useCallback(
     (nextScreen: SwapScreen) => {
@@ -75,15 +79,21 @@ export function SwapFormButton(): JSX.Element {
     [setScreen, updateSwapForm]
   )
 
-  const onPress = useCallback(() => {
-    onReview(SwapScreen.SwapReview)
-  }, [onReview])
+  const onReviewPress = useCallback(() => {
+    if (isViewOnlyWallet) {
+      setShowViewOnlyModal(true)
+    } else {
+      onReview(SwapScreen.SwapReview)
+    }
+  }, [onReview, isViewOnlyWallet])
 
   const onLongPressHoldToSwap = useCallback(() => {
     if (enableHoldToSwap) {
       onReview(SwapScreen.SwapReviewHoldingToSwap)
+    } else if (isViewOnlyWallet) {
+      setShowViewOnlyModal(true)
     }
-  }, [enableHoldToSwap, onReview])
+  }, [enableHoldToSwap, onReview, isViewOnlyWallet])
 
   const onReleaseHoldToSwap = useCallback(() => {
     if (isHoldToSwapPressed && !isSubmitting) {
@@ -94,7 +104,7 @@ export function SwapFormButton(): JSX.Element {
   const holdButtonText = useMemo(() => getHoldButtonActionText(wrapType, t), [t, wrapType])
 
   const hasButtonWarning = !!blockingWarning?.buttonText
-  const buttonText = blockingWarning?.buttonText ?? t('common.button.review')
+  const buttonText = blockingWarning?.buttonText ?? t('swap.button.review')
   const buttonTextColor = hasButtonWarning ? '$neutral2' : '$white'
   const buttonBgColor = hasButtonWarning
     ? '$surface3'
@@ -103,19 +113,21 @@ export function SwapFormButton(): JSX.Element {
     : '$accent1'
 
   return (
-    <Flex alignItems="center" gap="$spacing16">
+    <Flex alignItems="center" gap={isShortMobileDevice ? '$spacing8' : '$spacing16'}>
       {!isWeb && !isHoldToSwapPressed && showHoldToSwapTip && <HoldToInstantSwapRow />}
 
       <Trace logPress element={ElementName.SwapReview}>
         <Button
           hapticFeedback
           backgroundColor={buttonBgColor}
-          disabled={reviewButtonDisabled && !isHoldToSwapPressed}
-          size="large"
+          disabled={reviewButtonDisabled && !isHoldToSwapPressed && !isViewOnlyWallet}
+          // Override opacity only for view only wallets
+          opacity={isViewOnlyWallet ? 0.4 : undefined}
+          size={isShortMobileDevice ? 'small' : 'large'}
           testID={ElementName.ReviewSwap}
           width="100%"
           onLongPress={onLongPressHoldToSwap}
-          onPress={onPress}
+          onPress={onReviewPress}
           onResponderRelease={onReleaseHoldToSwap}
           onResponderTerminate={onReleaseHoldToSwap}>
           {isHoldToSwapPressed ? (
@@ -138,17 +150,20 @@ export function SwapFormButton(): JSX.Element {
           )}
         </Button>
       </Trace>
+
+      {showViewOnlyModal && <ViewOnlyModal onDismiss={(): void => setShowViewOnlyModal(false)} />}
     </Flex>
   )
 }
 
 function HoldToInstantSwapRow(): JSX.Element {
   const { t } = useTranslation()
+  const isShortMobileDevice = useIsShortMobileDevice()
 
   return (
     <Flex centered row gap="$spacing4">
       <Icons.GraduationCap color="$neutral3" size="$icon.16" />
-      <Text color="$neutral3" variant="body3">
+      <Text color="$neutral3" variant={isShortMobileDevice ? 'body4' : 'body3'}>
         {t('swap.hold.tip')}
       </Text>
     </Flex>

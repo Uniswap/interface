@@ -1,4 +1,3 @@
-import { impactAsync } from 'expo-haptics'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
@@ -8,7 +7,7 @@ import { NotificationBadge } from 'src/components/notifications/Badge'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { Screens } from 'src/screens/Screens'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, HapticFeedback, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -75,7 +74,7 @@ export function AccountCardItem({
   const dispatch = useAppDispatch()
 
   const onPressCopyAddress = async (): Promise<void> => {
-    await impactAsync()
+    await HapticFeedback.impact()
     await setClipboard(address)
     dispatch(
       pushNotification({

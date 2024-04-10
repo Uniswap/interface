@@ -1,8 +1,8 @@
 import { INFURA_PREFIX_TO_CHAIN_ID } from 'constants/networks'
 import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
+import { isTracing, trace } from 'tracing/trace'
 import { TraceContext } from 'tracing/types'
-import { Chain } from '../graphql/data/__generated__/types-and-hooks'
-import { trace as startTrace } from './trace'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export function patchFetch(api: Pick<typeof globalThis, 'fetch'>) {
   const apiFetch = api.fetch
@@ -11,7 +11,6 @@ export function patchFetch(api: Pick<typeof globalThis, 'fetch'>) {
   function tracedFetch(input: RequestInfo, init?: RequestInit): Promise<Response>
   function tracedFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response>
   function tracedFetch(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
-    const zonedTrace = Zone.current.get('trace')
     let url
     try {
       // Hot-module reload passes a relative path to a local file, which is a technically malformed URL.
@@ -19,12 +18,12 @@ export function patchFetch(api: Pick<typeof globalThis, 'fetch'>) {
     } catch {
       return apiFetch(input, init)
     }
-    const traceContext = getTraceContext(url, init, !!zonedTrace)
+
+    const traceContext = getTraceContext(url, init, isTracing())
     if (traceContext) {
-      const trace = zonedTrace || startTrace
       return trace(traceContext, async (trace) => {
         const response = await apiFetch(input, init)
-        trace.setStatus(response.status)
+        trace.setHttpStatus(response.status)
         if (is2xx(response.status)) {
           try {
             // Check for 200 responses which wrap an error
@@ -91,7 +90,7 @@ export function getTraceContext(url: URL, init?: RequestInit, force = false): Tr
         data: { path: url.pathname },
       }
     }
-  } else if (url.host.endsWith('.infura.io')) {
+  } else if (url.host.endsWith('.infura.io') || url.host.endsWith('.quiknode.pro')) {
     let method: string | undefined
     let chain: Chain | undefined
     try {

@@ -116,6 +116,12 @@ export function getExplorerLink(chainId: ChainId, data: string, type: ExplorerDa
       return `${prefix}tx/${data}`
 
     case ExplorerDataType.TOKEN:
+      if (
+        data === CHAIN_INFO[chainId].nativeCurrency.address &&
+        CHAIN_INFO[chainId].nativeCurrency.explorerLink
+      ) {
+        return CHAIN_INFO[chainId].nativeCurrency.explorerLink ?? `${prefix}token/${data}`
+      }
       return `${prefix}token/${data}`
 
     case ExplorerDataType.BLOCK:
@@ -159,7 +165,7 @@ export function getTokenUrl(currencyId: string): string | undefined {
       // this is how web app handles native tokens
       tokenAddress = UNISWAP_APP_NATIVE_TOKEN
     }
-    return `${uniswapUrls.appUrl}/tokens/${network}/${tokenAddress}`
+    return `${uniswapUrls.interfaceTokensUrl}/${network}/${tokenAddress}`
   } catch (_) {
     return
   }

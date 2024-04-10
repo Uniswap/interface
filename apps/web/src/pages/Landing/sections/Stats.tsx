@@ -1,10 +1,13 @@
 import { t, Trans } from '@lingui/macro'
 import Row from 'components/Row'
-import { ProtocolVersion, useDailyProtocolVolumeQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useMemo } from 'react'
 import { ArrowRightCircle } from 'react-feather'
 import styled from 'styled-components'
 import { ClickableStyle, ExternalLink } from 'theme/components'
+import {
+  ProtocolVersion,
+  useDailyProtocolVolumeQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { Body1, Box, H2 } from '../components/Generics'

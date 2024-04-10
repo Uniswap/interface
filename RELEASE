@@ -1,8 +1,8 @@
-We are back with another round of small updates. Here’s what’s new:
+Excited to share some new updates! Here’s what’s new:
 
-Unicons Updates — these auto-generated icons are refreshed to be more visually appealing. You may have received a new one.
+Expanded Fiat On-ramp Providers — We’ve added more provider options to on-ramp to crypto from your wallet, dependent on your geography.
 
 Other changes:
 
-- Various UI fixes to our fiat-on ramp screens
-- Various bug fixes related to stale notifications
+- Polish around view-only wallets
+- Various bug fixes and performance improvements

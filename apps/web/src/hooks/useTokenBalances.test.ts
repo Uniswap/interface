@@ -1,8 +1,8 @@
 import { useWeb3React } from '@web3-react/core'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
-import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { mocked } from 'test-utils/mocked'
 import { renderHook } from 'test-utils/render'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useTokenBalances } from './useTokenBalances'

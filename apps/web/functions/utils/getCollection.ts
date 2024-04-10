@@ -1,4 +1,7 @@
-import { CollectionDocument, CollectionQuery } from '../../src/graphql/data/__generated__/types-and-hooks'
+import {
+  CollectionDocument,
+  CollectionQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import client from '../client'
 
 export default async function getCollection(collectionAddress: string, url: string) {

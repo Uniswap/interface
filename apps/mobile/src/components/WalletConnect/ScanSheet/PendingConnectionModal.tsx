@@ -53,55 +53,59 @@ enum PendingConnectionModalState {
 const SitePermissions = (): JSX.Element => {
   const { t } = useTranslation()
 
-  const normalInfoTextSize = 'body2'
-  const shortInfoTextSize = 'body3'
+  const infoTextSize = 'body3'
 
   return (
     <Flex
-      backgroundColor="$surface2"
+      borderColor="$surface3"
       borderTopLeftRadius="$rounded16"
       borderTopRightRadius="$rounded16"
-      gap="$spacing12"
-      p="$spacing16">
-      <Text
-        $short={{ variant: 'body3' }}
-        allowFontScaling={false}
-        color="$neutral2"
-        variant="subheading2">
-        {t('walletConnect.permissions.title')}
-      </Text>
-      <Flex centered row gap="$spacing8">
-        <Icons.Check color="$statusSuccess" size={iconSizes.icon16} />
+      borderWidth={1}
+      minHeight={44}
+      p="$spacing12">
+      <Flex centered row justifyContent="space-between">
         <Text
-          $short={{ variant: shortInfoTextSize }}
+          $short={{ variant: 'body3' }}
           allowFontScaling={false}
-          color="$neutral1"
-          flexGrow={1}
-          variant={normalInfoTextSize}>
-          {t('walletConnect.permissions.option.viewWalletAddress')}
+          color="$neutral2"
+          variant="body3">
+          {t('walletConnect.permissions.title')}
         </Text>
       </Flex>
-      <Flex centered row gap="$spacing8">
-        <Icons.Check color="$statusSuccess" size={iconSizes.icon16} />
-        <Text
-          $short={{ variant: shortInfoTextSize }}
-          allowFontScaling={false}
-          color="$neutral1"
-          flexGrow={1}
-          variant={normalInfoTextSize}>
-          {t('walletConnect.permissions.option.viewTokenBalances')}
-        </Text>
-      </Flex>
-      <Flex centered row gap="$spacing8">
-        <Icons.X color="$statusCritical" size={iconSizes.icon16} />
-        <Text
-          $short={{ variant: shortInfoTextSize }}
-          allowFontScaling={false}
-          color="$neutral1"
-          flexGrow={1}
-          variant={normalInfoTextSize}>
-          {t('walletConnect.permissions.option.transferAssets')}
-        </Text>
+      <Flex gap="$spacing8" pt="$spacing12">
+        <Flex centered row gap="$spacing4">
+          <Icons.Check color="$statusSuccess" size={iconSizes.icon16} />
+          <Text
+            $short={{ variant: infoTextSize }}
+            allowFontScaling={false}
+            color="$neutral1"
+            flexGrow={1}
+            variant={infoTextSize}>
+            {t('walletConnect.permissions.option.viewWalletAddress')}
+          </Text>
+        </Flex>
+        <Flex centered row gap="$spacing4">
+          <Icons.Check color="$statusSuccess" size={iconSizes.icon16} />
+          <Text
+            $short={{ variant: infoTextSize }}
+            allowFontScaling={false}
+            color="$neutral1"
+            flexGrow={1}
+            variant={infoTextSize}>
+            {t('walletConnect.permissions.option.viewTokenBalances')}
+          </Text>
+        </Flex>
+        <Flex centered row gap="$spacing4">
+          <Icons.X color="$statusCritical" size={iconSizes.icon16} />
+          <Text
+            $short={{ variant: infoTextSize }}
+            allowFontScaling={false}
+            color="$neutral1"
+            flexGrow={1}
+            variant={infoTextSize}>
+            {t('walletConnect.permissions.option.transferAssets')}
+          </Text>
+        </Flex>
       </Flex>
     </Flex>
   )
@@ -115,18 +119,21 @@ const NetworksRow = ({ chains }: { chains: ChainId[] }): JSX.Element => {
       row
       shrink
       alignItems="center"
-      backgroundColor="$surface2"
+      borderColor="$surface3"
+      borderEndWidth={1}
+      borderStartWidth={1}
+      height="$spacing48"
       justifyContent="space-between"
-      px="$spacing16"
+      px="$spacing12"
       py="$spacing12">
       <Text
         $short={{ variant: 'body3' }}
         allowFontScaling={false}
         color="$neutral2"
-        variant="subheading2">
+        variant="body3">
         {t('walletConnect.permissions.networks')}
       </Text>
-      <NetworkLogos chains={chains} />
+      <NetworkLogos negativeGap chains={chains} />
     </Flex>
   )
 }
@@ -146,12 +153,14 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps):
 
   return (
     <TouchableArea
-      backgroundColor="$surface2"
       borderBottomLeftRadius="$rounded16"
       borderBottomRightRadius="$rounded16"
+      borderColor="$surface3"
+      borderWidth={1}
       disabled={!accountIsSwitchable}
+      height="$spacing48"
       m="$none"
-      px="$spacing16"
+      px="$spacing12"
       py="$spacing12"
       testID={ElementName.WCDappSwitchAccount}
       onPress={onPress}>
@@ -159,6 +168,7 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps):
         address={activeAddress}
         allowFontScaling={false}
         chevron={accountIsSwitchable}
+        chevronColor="$neutral3"
       />
     </TouchableArea>
   )
@@ -263,20 +273,18 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
             })}{' '}
           </Text>
           <LinkButton
-            backgroundColor="$surface2"
-            borderRadius="$rounded16"
             color={colors.accent1.val}
-            iconColor={colors.accent1.val}
             label={pendingSession.dapp.url}
             mb="$spacing12"
             px="$spacing8"
             py="$spacing4"
+            showIcon={false}
             size={iconSizes.icon12}
             textVariant="buttonLabel4"
             url={pendingSession.dapp.url}
           />
         </Flex>
-        <Flex gap="$spacing1" px="$spacing24">
+        <Flex px="$spacing24">
           <SitePermissions />
           <NetworksRow chains={pendingSession.chains} />
           <SwitchAccountRow activeAddress={activeAddress} setModalState={setModalState} />

@@ -3,7 +3,7 @@ import FilterButton from 'components/DropdownSelector/FilterButton'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import React, { useRef } from 'react'
-import { ChevronDown, ChevronUp } from 'react-feather'
+import { ChevronDown } from 'react-feather'
 import styled, { css } from 'styled-components'
 import { dropdownSlideDown } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
@@ -59,8 +59,6 @@ const MenuFlyout = styled(Column)<{ menuFlyoutCss?: string }>`
     border-radius: 8px;
   }
 
-  ${({ menuFlyoutCss }) => menuFlyoutCss}
-
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
     position: fixed;
     top: unset;
@@ -74,6 +72,8 @@ const MenuFlyout = styled(Column)<{ menuFlyoutCss?: string }>`
     z-index: ${Z_INDEX.modal};
     animation: none;
   }
+
+  ${({ menuFlyoutCss }) => menuFlyoutCss}
 `
 const StyledMenu = styled.div`
   display: flex;
@@ -84,7 +84,7 @@ const StyledMenu = styled.div`
   text-align: left;
   width: 100%;
 `
-const StyledMenuContent = styled.div`
+export const StyledMenuContent = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 8px;
@@ -96,8 +96,10 @@ const StyledMenuContent = styled.div`
   white-space: nowrap;
 `
 const Chevron = styled.span<{ open: boolean }>`
-  padding-top: 1px;
+  display: flex;
   color: ${({ open, theme }) => (open ? theme.neutral1 : theme.neutral2)};
+  rotate: ${({ open }) => (open ? '180deg' : '0deg')};
+  transition: rotate ${({ theme }) => `${theme.transition.duration.fast} ${theme.transition.timing.inOut}`};
 `
 const StyledFilterButton = styled(FilterButton)<{ buttonCss?: string }>`
   ${({ buttonCss }) => buttonCss}
@@ -109,6 +111,7 @@ interface DropdownSelectorProps {
   menuLabel: JSX.Element
   internalMenuItems: JSX.Element
   dataTestId?: string
+  optionsContainerTestId?: string
   tooltipText?: string
   hideChevron?: boolean
   buttonCss?: any
@@ -121,6 +124,7 @@ export function DropdownSelector({
   menuLabel,
   internalMenuItems,
   dataTestId,
+  optionsContainerTestId,
   tooltipText,
   hideChevron,
   buttonCss,
@@ -149,17 +153,17 @@ export function DropdownSelector({
             {menuLabel}
             {!hideChevron && (
               <Chevron open={isOpen}>
-                {isOpen ? (
-                  <ChevronUp width={20} height={15} viewBox="0 0 24 20" />
-                ) : (
-                  <ChevronDown width={20} height={15} viewBox="0 0 24 20" />
-                )}
+                <ChevronDown width={20} height={20} />
               </Chevron>
             )}
           </StyledMenuContent>
         </StyledFilterButton>
       </MouseoverTooltip>
-      {isOpen && <MenuFlyout menuFlyoutCss={menuFlyoutCss}>{internalMenuItems}</MenuFlyout>}
+      {isOpen && (
+        <MenuFlyout data-testid={optionsContainerTestId} menuFlyoutCss={menuFlyoutCss}>
+          {internalMenuItems}
+        </MenuFlyout>
+      )}
     </StyledMenu>
   )
 }

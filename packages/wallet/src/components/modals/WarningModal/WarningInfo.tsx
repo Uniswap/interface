@@ -8,9 +8,11 @@ import { WarningTooltip } from 'wallet/src/components/modals/WarningModal/Warnin
 import { WarningTooltipProps } from 'wallet/src/components/modals/WarningModal/WarningTooltipProps'
 
 type WarningInfoProps = {
-  tooltipProps: Omit<WarningTooltipProps, 'button' | 'icon'>
+  tooltipProps: Omit<WarningTooltipProps, 'button' | 'trigger'>
   modalProps: Omit<WarningModalProps, 'onClose'>
-  infoButton: ReactNode
+  infoButton?: ReactNode
+  trigger?: ReactNode
+  triggerPlacement?: 'start' | 'end'
 }
 /**
  * Platform wrapper component used to display additional info either as a tooltip on web
@@ -21,14 +23,18 @@ export function WarningInfo({
   modalProps,
   infoButton,
   children,
+  trigger = <Icons.InfoCircle color="$neutral3" size="$icon.16" />,
+  triggerPlacement = 'end',
 }: PropsWithChildren<WarningInfoProps>): JSX.Element {
   const [showModal, setShowModal] = useState(false)
 
-  const icon = <Icons.InfoCircle color="$neutral3" size="$icon.16" />
-
   if (isWeb) {
     return (
-      <WarningTooltip {...tooltipProps} button={infoButton} icon={icon}>
+      <WarningTooltip
+        {...tooltipProps}
+        button={infoButton}
+        trigger={trigger}
+        triggerPlacement={triggerPlacement}>
         {children}
       </WarningTooltip>
     )
@@ -38,8 +44,9 @@ export function WarningInfo({
     <>
       <TouchableArea flexShrink={1} onPress={(): void => setShowModal(true)}>
         <Flex row shrink alignItems="center" gap="$spacing4">
+          {triggerPlacement === 'start' && trigger}
           {children}
-          {icon}
+          {triggerPlacement === 'end' && trigger}
         </Flex>
       </TouchableArea>
       {showModal && (

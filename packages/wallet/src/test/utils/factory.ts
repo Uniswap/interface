@@ -40,7 +40,7 @@ import { omit, pick } from 'lodash'
  *   id: faker.datatype.uuid(),
  *   name: faker.name.findName(),
  *   status: isActive ? 'active' : 'inactive',
- *   lastLogin: isActive ? new Date() : null,
+ *   lastLogin: isActive ? new Date() : undefined,
  * }));
  * ```
  *

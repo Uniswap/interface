@@ -1,7 +1,6 @@
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import { Pending } from 'components/ConfirmSwapModal/Pending'
 import { BigNumber } from 'ethers/lib/ethers'
-import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { TradeFillType } from 'state/routing/types'
@@ -11,6 +10,7 @@ import { useSwapTransactionStatus } from 'state/transactions/hooks'
 import { LIMIT_ORDER_TRADE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 jest.mock('state/transactions/hooks', () => ({
   useSwapTransactionStatus: jest.fn(),

@@ -3,15 +3,15 @@ import dayjs from 'dayjs'
 import { useEffect, useMemo } from 'react'
 import { View } from 'react-native'
 import { batch } from 'react-redux'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   TransactionHistoryUpdaterQueryResult,
   TransactionListQuery,
   useTransactionHistoryUpdaterQuery,
   useTransactionListLazyQuery,
-} from 'wallet/src/data/__generated__/types-and-hooks'
-import { GQLQueries } from 'wallet/src/data/queries'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
 import { selectLastTxNotificationUpdate } from 'wallet/src/features/notifications/selectors'
 import {

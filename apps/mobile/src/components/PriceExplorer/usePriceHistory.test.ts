@@ -6,7 +6,7 @@ import {
   HistoryDuration,
   TimestampedAmount,
   TokenProject as TokenProjectType,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   SAMPLE_CURRENCY_ID_1,
   getLatestPrice,
@@ -63,7 +63,7 @@ describe(useTokenPriceHistory, () => {
   it('returns on-chain spot price if off-chain spot price is not available', async () => {
     const market = tokenMarket()
     const { resolvers } = queryResolvers({
-      tokenProjects: () => [usdcTokenProject({ markets: null, tokens: [token({ market })] })],
+      tokenProjects: () => [usdcTokenProject({ markets: undefined, tokens: [token({ market })] })],
     })
     const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
       resolvers,
@@ -160,9 +160,9 @@ describe(useTokenPriceHistory, () => {
         tokenProjects: () => [
           usdcTokenProject({
             priceHistory: [
-              null,
+              undefined,
               timestampedAmount({ value: 1 }),
-              null,
+              undefined,
               timestampedAmount({ value: 2 }),
             ],
           }),

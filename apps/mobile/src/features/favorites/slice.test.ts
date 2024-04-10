@@ -17,8 +17,8 @@ describe(favoritesReducer, () => {
     store = createStore(favoritesReducer, {
       tokens: [],
       watchedAddresses: [],
-      nftsData: {},
       tokensVisibility: {},
+      nftsVisibility: {},
     })
   })
 

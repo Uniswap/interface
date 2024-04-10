@@ -1,4 +1,4 @@
-import { NftsTabQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { NftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 
 export function formatNftItems(data: NftsTabQuery | undefined): NFTItem[] | undefined {

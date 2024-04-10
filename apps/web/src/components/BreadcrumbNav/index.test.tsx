@@ -6,8 +6,6 @@ import { act, render, screen } from 'test-utils/render'
 
 import { CurrentPageBreadcrumb } from '.'
 
-jest.mock('featureFlags/flags/infoTDP', () => ({ useInfoTDPEnabled: () => true }))
-
 describe('BreadcrumbNav', () => {
   it('renders hover components correctly', async () => {
     const currency = new TokenFromList({

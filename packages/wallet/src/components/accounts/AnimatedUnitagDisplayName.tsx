@@ -1,7 +1,6 @@
-import { impactAsync } from 'expo-haptics'
 import { useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
-import { AnimatePresence, Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { AnimatePresence, Flex, HapticFeedback, Icons, Text, TouchableArea } from 'ui/src'
 import { IconSizeTokens } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
@@ -40,7 +39,7 @@ export function AnimatedUnitagDisplayName({
       return
     }
 
-    await impactAsync()
+    await HapticFeedback.impact()
     await setClipboard(address)
     dispatch(
       pushNotification({

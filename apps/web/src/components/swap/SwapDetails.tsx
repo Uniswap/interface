@@ -7,7 +7,6 @@ import Column from 'components/Column'
 import SpinningLoader from 'components/Loader/SpinningLoader'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult } from 'hooks/useSwapCallback'
-import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import ms from 'ms'
 import { ReactNode, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -124,7 +123,6 @@ export function SwapDetails({
   onAcceptChanges?: () => void
   isLoading: boolean
 }) {
-  const transactionDeadlineSecondsSinceEpoch = useTransactionDeadline()?.toNumber() // in seconds since epoch
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [routerPreference] = useRouterPreference()
   const routes = isClassicTrade(trade) ? getRoutingDiagramEntries(trade) : undefined
@@ -191,7 +189,6 @@ export function SwapDetails({
                 trade,
                 swapResult,
                 allowedSlippage,
-                transactionDeadlineSecondsSinceEpoch,
                 isAutoSlippage,
                 isAutoRouterApi: routerPreference === RouterPreference.API,
                 routes,

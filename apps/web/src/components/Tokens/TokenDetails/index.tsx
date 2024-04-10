@@ -6,14 +6,10 @@ import { Trace } from 'analytics'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
-import { AboutSection } from 'components/Tokens/TokenDetails/About'
-import AddressSection from 'components/Tokens/TokenDetails/AddressSection'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
 import { LeftPanel, RightPanel, TokenDetailsLayout, TokenInfoContainer } from 'components/Tokens/TokenDetails/Skeleton'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
-import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { getInitialUrl } from 'hooks/useAssetLogoSource'
@@ -22,7 +18,7 @@ import { useScreenSize } from 'hooks/useScreenSize'
 import { Swap } from 'pages/Swap'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
-import { ArrowLeft, ChevronRight } from 'react-feather'
+import { ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/SwapContext'
 import styled from 'styled-components'
@@ -46,11 +42,8 @@ const DividerLine = styled(Hr)`
 function TDPBreadcrumb() {
   const { address, currency, currencyChain } = useTDPContext()
 
-  const isInfoTDPEnabled = useInfoTDPEnabled()
-  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
-
-  return isInfoTDPEnabled ? (
-    <BreadcrumbNavContainer isInfoTDPEnabled aria-label="breadcrumb-nav">
+  return (
+    <BreadcrumbNavContainer aria-label="breadcrumb-nav">
       <BreadcrumbNavLink to={`/explore/${currencyChain.toLowerCase()}`}>
         <Trans>Explore</Trans> <ChevronRight size={14} />
       </BreadcrumbNavLink>
@@ -58,12 +51,6 @@ function TDPBreadcrumb() {
         <Trans>Tokens</Trans> <ChevronRight size={14} />
       </BreadcrumbNavLink>
       <CurrentPageBreadcrumb address={address} currency={currency} />
-    </BreadcrumbNavContainer>
-  ) : (
-    <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-      <BreadcrumbNavLink to={`${isInfoExplorePageEnabled ? '/explore' : ''}/tokens/${currencyChain.toLowerCase()}`}>
-        <ArrowLeft data-testid="token-details-return-button" size={14} /> Tokens
-      </BreadcrumbNavLink>
     </BreadcrumbNavContainer>
   )
 }
@@ -196,40 +183,28 @@ export default function TokenDetails() {
   const tokenQueryData = tokenQuery.data?.token
 
   const { lg: isLargeScreenSize } = useScreenSize()
-  const isInfoTDPEnabled = useInfoTDPEnabled()
 
   return (
     <TDPAnalytics>
       <TokenDetailsLayout>
         <LeftPanel>
           <TDPBreadcrumb />
-          <TokenInfoContainer isInfoTDPEnabled={isInfoTDPEnabled} data-testid="token-info-container">
+          <TokenInfoContainer data-testid="token-info-container">
             <TokenDetailsHeader />
           </TokenInfoContainer>
           <ChartSection />
           <StatsSection chainId={currency.chainId} address={address} tokenQueryData={tokenQueryData} />
-          {!isInfoTDPEnabled && (
-            <>
-              <Hr />
-              <AboutSection />
-              <AddressSection />
-            </>
-          )}
-          {isInfoTDPEnabled && (
-            <>
-              <DividerLine />
-              <ActivitySection />
-            </>
-          )}
+          <DividerLine />
+          <ActivitySection />
         </LeftPanel>
-        <RightPanel isInfoTDPEnabled={isInfoTDPEnabled}>
+        <RightPanel>
           {isLargeScreenSize && (
             <>
               <TDPSwapComponent />
               <BalanceSummary />
             </>
           )}
-          {isInfoTDPEnabled && <TokenDescription />}
+          <TokenDescription />
         </RightPanel>
         <MobileBalanceSummaryFooter />
       </TokenDetailsLayout>

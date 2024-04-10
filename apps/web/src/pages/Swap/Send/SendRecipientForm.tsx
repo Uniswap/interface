@@ -16,7 +16,9 @@ import { useSendContext } from 'state/send/SendContext'
 import styled, { css, keyframes } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
-import { Icons } from 'ui/src'
+import { Icons, UniconV2 } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import {
   useUnitagByAddressWithoutFlag,
   useUnitagByNameWithoutFlag,
@@ -125,6 +127,8 @@ const AutocompleteRow = ({
   const { ENSName } = useENSName(address)
   const cachedEnsName = ENSName || validatedEnsName
   const formattedAddress = shortenAddress(address)
+  const uniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
+
   const boundSelectRecipient = useCallback(
     () =>
       selectRecipient({
@@ -142,6 +146,8 @@ const AutocompleteRow = ({
           <UniTagProfilePicture account={address} size={36} />
         ) : cachedEnsName ? (
           <Identicon account={address} size={36} />
+        ) : uniconsV2Enabled ? (
+          <UniconV2 address={address} size={36} />
         ) : (
           <Unicon address={address} size={36} />
         )}
@@ -218,6 +224,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
   const { sendState, setSendState, derivedSendInfo } = useSendContext()
   const { recipient } = sendState
   const { recipientData } = derivedSendInfo
+  const unicodeV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   const unitagMetadata = useUnitagByNameWithoutFlag(recipientData?.unitag, Boolean(recipientData?.unitag)).unitag
     ?.metadata
@@ -340,6 +347,8 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
               <UniTagProfilePicture account={recipientData.address} size={36} />
             ) : recipientData.ensName ? (
               <Identicon account={recipientData.address} size={36} />
+            ) : unicodeV2Enabled ? (
+              <UniconV2 address={recipientData.address} size={36} />
             ) : (
               <Unicon address={recipientData.address} size={36} />
             )}

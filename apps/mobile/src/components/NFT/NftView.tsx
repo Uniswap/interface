@@ -1,7 +1,6 @@
-import { ImpactFeedbackStyle } from 'expo-haptics'
 import ContextMenu from 'react-native-context-menu-view'
 import { useNFTMenu } from 'src/features/nfts/hooks'
-import { Flex, TouchableArea } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, TouchableArea } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
 import noop from 'utilities/src/react/noop'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'

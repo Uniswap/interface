@@ -2,7 +2,6 @@ import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { StackedAreaSeriesOptions } from 'components/Charts/StackedLineChart/stacked-area-series/options'
 import { StackedAreaSeries } from 'components/Charts/StackedLineChart/stacked-area-series/stacked-area-series'
-import { PriceSource } from 'graphql/data/__generated__/types-and-hooks'
 import { getProtocolColor } from 'graphql/data/util'
 import {
   CustomStyleOptions,
@@ -15,6 +14,7 @@ import {
 } from 'lightweight-charts'
 import { useMemo } from 'react'
 import { useTheme } from 'styled-components'
+import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export interface StackedLineData extends WhitespaceData<UTCTimestamp> {
   values: number[]

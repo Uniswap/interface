@@ -149,7 +149,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
         onSetFontSize(text + UNITAG_SUFFIX_CHARS_ONLY)
       }
 
-      setUnitagInputValue(text?.trim().toLowerCase())
+      setUnitagInputValue(text?.trim())
     },
     [inputPlaceholder, onSetFontSize]
   )

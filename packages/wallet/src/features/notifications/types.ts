@@ -135,6 +135,7 @@ export type TransactionNotification =
 export enum CopyNotificationType {
   Address = 'address',
   ContractAddress = 'contractAddress',
+  Calldata = 'calldata',
   TransactionId = 'transactionId',
   Image = 'image',
 }

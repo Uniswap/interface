@@ -1,10 +1,10 @@
 import { NetworkStatus, WatchQueryFetchPolicy } from '@apollo/client'
-import { GqlResult } from 'uniswap/src/data/types'
 import {
   AccountListQuery,
   // eslint-disable-next-line no-restricted-imports
   useAccountListQuery,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GqlResult } from 'uniswap/src/data/types'
 // eslint-disable-next-line no-restricted-imports
 import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 

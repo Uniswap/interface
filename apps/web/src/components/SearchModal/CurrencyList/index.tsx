@@ -1,5 +1,5 @@
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
@@ -152,11 +152,11 @@ export function CurrencyRow({
   const { account } = useWeb3React()
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
-  const warning = currency.isNative ? null : checkWarning(currency.address)
+  const warning = currency.isNative ? undefined : checkWarning(currency.address)
   const isBlockedToken = !!warning && !warning.canProceed
   const blockedTokenOpacity = '0.6'
   const { data } = useCachedPortfolioBalancesQuery({ account })
-  const portfolioBalanceUsd = data?.portfolios?.[0].tokensTotalDenominatedValue?.value
+  const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
 
   const Wrapper = tooltip ? MouseoverTooltip : RowWrapper
 
@@ -221,14 +221,14 @@ interface TokenRowProps {
 }
 
 export const formatAnalyticsEventProperties = (
-  token: Token,
+  token: Currency,
   index: number,
   data: any[],
   searchQuery: string,
   isAddressSearch: string | false
 ) => ({
   token_symbol: token?.symbol,
-  token_address: token?.address,
+  token_address: token?.isToken ? token?.address : undefined,
   is_suggested_token: false,
   is_selected_from_list: true,
   scroll_position: '',

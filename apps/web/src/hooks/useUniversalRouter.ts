@@ -1,4 +1,3 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { t } from '@lingui/macro'
 import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
@@ -20,6 +19,9 @@ import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 import { getWalletMeta } from 'utils/walletMeta'
 
+import { TransactionResponse } from '@ethersproject/abstract-provider'
+import { BigNumber } from '@ethersproject/bignumber'
+import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { PermitSignature } from './usePermitAllowance'
 
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
@@ -43,7 +45,6 @@ class ModifiedSwapError extends Error {
 
 interface SwapOptions {
   slippageTolerance: Percent
-  deadline?: BigNumber
   permit?: PermitSignature
   feeOptions?: FeeOptions
   flatFeeOptions?: FlatFeeOptions
@@ -57,12 +58,13 @@ export function useUniversalRouterSwapCallback(
   const { account, chainId, provider, connector } = useWeb3React()
   const analyticsContext = useTrace()
   const blockNumber = useBlockNumber()
+  const getDeadline = useGetTransactionDeadline()
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const { data } = useCachedPortfolioBalancesQuery({ account })
   const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
 
   return useCallback(
-    () =>
+    (): Promise<{ type: TradeFillType.Classic; response: TransactionResponse; deadline?: BigNumber }> =>
       trace({ name: 'Swap (Classic)', op: 'swap.classic' }, async (trace) => {
         try {
           if (!account) throw new Error('missing account')
@@ -72,10 +74,12 @@ export function useUniversalRouterSwapCallback(
           const connectedChainId = await provider.getSigner().getChainId()
           if (chainId !== connectedChainId) throw new WrongChainError()
 
+          const deadline = await getDeadline()
+
           trace.setData('slippageTolerance', options.slippageTolerance.toFixed(2))
           const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
             slippageTolerance: options.slippageTolerance,
-            deadlineOrPreviousBlockhash: options.deadline?.toString(),
+            deadlineOrPreviousBlockhash: deadline?.toString(),
             inputTokenPermit: options.permit,
             fee: options.feeOptions,
             flatFee: options.flatFeeOptions,
@@ -88,27 +92,22 @@ export function useUniversalRouterSwapCallback(
             ...(value && !isZero(value) ? { value: toHex(value) } : {}),
           }
 
-          const gasEstimate = await trace.child(
-            { name: 'Estimate gas', op: 'wallet.estimate_gas' },
-            async (gasTrace) => {
-              try {
-                return await provider.estimateGas(tx)
-              } catch (gasError) {
-                gasTrace.setError(gasError, 'failed_precondition')
-                sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
-                  ...formatCommonPropertiesForTrade(trade, options.slippageTolerance),
-                  ...analyticsContext,
-                  client_block_number: blockNumber,
-                  tx,
-                  isAutoSlippage,
-                })
-                console.warn(gasError)
-                throw new GasEstimationError()
-              }
-            }
-          )
-          const gasLimit = calculateGasMargin(gasEstimate)
-          trace.setData('gasLimit', gasLimit.toNumber())
+          let gasLimit: BigNumber
+          try {
+            const gasEstimate = await provider.estimateGas(tx)
+            gasLimit = calculateGasMargin(gasEstimate)
+            trace.setData('gasLimit', gasLimit.toNumber())
+          } catch (gasError) {
+            sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+              ...formatCommonPropertiesForTrade(trade, options.slippageTolerance),
+              ...analyticsContext,
+              client_block_number: blockNumber,
+              tx,
+              isAutoSlippage,
+            })
+            console.warn(gasError)
+            throw new GasEstimationError()
+          }
 
           const response = await trace.child(
             { name: 'Send transaction', op: 'wallet.send_transaction' },
@@ -149,16 +148,15 @@ export function useUniversalRouterSwapCallback(
               throw new ModifiedSwapError()
             }
           }
-          return { type: TradeFillType.Classic as const, response }
+          return { type: TradeFillType.Classic as const, response, deadline }
         } catch (error: unknown) {
           if (error instanceof GasEstimationError) {
-            trace.setStatus('failed_precondition')
             throw error
           } else if (error instanceof UserRejectedRequestError) {
             trace.setStatus('cancelled')
             throw error
           } else if (error instanceof ModifiedSwapError) {
-            trace.setStatus('data_loss')
+            trace.setError(error, 'data_loss')
             throw error
           } else {
             trace.setError(error)
@@ -171,17 +169,17 @@ export function useUniversalRouterSwapCallback(
       chainId,
       provider,
       trade,
+      getDeadline,
       options.slippageTolerance,
-      options.deadline,
       options.permit,
       options.feeOptions,
       options.flatFeeOptions,
-      analyticsContext,
-      blockNumber,
-      isAutoSlippage,
       fiatValues,
       portfolioBalanceUsd,
+      analyticsContext,
       connector,
+      blockNumber,
+      isAutoSlippage,
     ]
   )
 }

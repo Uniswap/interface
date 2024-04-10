@@ -3,7 +3,7 @@ import {
   NftAssetTrait,
   NftCollection,
   NftContract,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQL_CHAINS, image } from 'wallet/src/test/fixtures/gql/misc'
 import { faker } from 'wallet/src/test/shared'
 import { createArray, createFixture, randomChoice } from 'wallet/src/test/utils'

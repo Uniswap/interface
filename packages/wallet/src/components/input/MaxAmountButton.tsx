@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
-import { StyleProp, ViewStyle } from 'react-native'
+import { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native'
 import { Text, TouchableArea } from 'ui/src'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { ElementName } from 'wallet/src/telemetry/constants'
@@ -29,7 +29,9 @@ export function MaxAmountButton({
     !maxInputAmount.greaterThan(0) ||
     currencyAmount?.toExact() === maxInputAmount.toExact()
 
-  const onPress = (): void => {
+  const onPress = (event: GestureResponderEvent): void => {
+    event.stopPropagation()
+
     if (disableMaxButton) {
       return
     }

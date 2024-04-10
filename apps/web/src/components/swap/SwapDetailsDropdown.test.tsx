@@ -8,10 +8,7 @@ import {
   TEST_TRADE_FEE_ON_SELL,
 } from 'test-utils/constants'
 import { act, render, screen } from 'test-utils/render'
-
 import SwapDetailsDropdown from './SwapDetailsDropdown'
-
-jest.mock('../../featureFlags/flags/useFees', () => ({ useFeesEnabled: () => true }))
 
 describe('SwapDetailsDropdown.tsx', () => {
   it('renders a trade', () => {

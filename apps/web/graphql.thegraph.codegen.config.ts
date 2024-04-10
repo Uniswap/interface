@@ -7,7 +7,7 @@ import type { CodegenConfig } from '@graphql-codegen/cli'
 const config: CodegenConfig = {
   overwrite: true,
   schema: './src/graphql/thegraph/schema.graphql',
-  documents: ['!./src/graphql/data/**', '!./src/graphql/thegraph/__generated__/**', './src/graphql/thegraph/**'],
+  documents: ['./src/graphql/thegraph/**', '!./src/graphql/thegraph/__generated__/**'],
   generates: {
     'src/graphql/thegraph/__generated__/types-and-hooks.ts': {
       plugins: ['typescript', 'typescript-operations', 'typescript-react-apollo'],

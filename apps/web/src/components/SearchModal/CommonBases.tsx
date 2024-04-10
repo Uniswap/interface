@@ -67,7 +67,7 @@ export default function CommonBases({
   const bases = chainId !== undefined ? COMMON_BASES[chainId] ?? [] : []
   const { account } = useWeb3React()
   const { data } = useCachedPortfolioBalancesQuery({ account })
-  const portfolioBalanceUsd = data?.portfolios?.[0].tokensTotalDenominatedValue?.value
+  const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
 
   return bases.length > 0 ? (
     <AutoRow gap="4px">

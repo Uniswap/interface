@@ -5,7 +5,7 @@ import ErrorBoundary from 'components/ErrorBoundary'
 import Loader from 'components/Icons/LoadingSpinner'
 import NavBar, { PageTabs } from 'components/NavBar'
 import { UK_BANNER_HEIGHT, UK_BANNER_HEIGHT_MD, UK_BANNER_HEIGHT_SM, UkBanner } from 'components/NavBar/UkBanner'
-import { useFeatureFlagsIsLoaded, useFeatureFlagURLOverrides } from 'featureFlags'
+import { useFeatureFlagURLOverrides } from 'featureFlags'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
 import { lazy, memo, Suspense, useEffect, useLayoutEffect, useMemo, useState } from 'react'
@@ -179,7 +179,6 @@ export default function App() {
 }
 
 const Body = memo(function Body() {
-  const isLoaded = useFeatureFlagsIsLoaded()
   const routerConfig = useRouterConfig()
   const renderUkBanner = useRenderUkBanner()
 
@@ -189,25 +188,21 @@ const Body = memo(function Body() {
         <AppChrome />
       </Suspense>
       <Suspense fallback={<Loader />}>
-        {isLoaded ? (
-          <Routes>
-            {routes.map((route: RouteDefinition) =>
-              route.enabled(routerConfig) ? (
-                <Route key={route.path} path={route.path} element={route.getElement(routerConfig)}>
-                  {route.nestedPaths.map((nestedPath) => (
-                    <Route
-                      path={nestedPath}
-                      element={route.getElement(routerConfig)}
-                      key={`${route.path}/${nestedPath}`}
-                    />
-                  ))}
-                </Route>
-              ) : null
-            )}
-          </Routes>
-        ) : (
-          <Loader />
-        )}
+        <Routes>
+          {routes.map((route: RouteDefinition) =>
+            route.enabled(routerConfig) ? (
+              <Route key={route.path} path={route.path} element={route.getElement(routerConfig)}>
+                {route.nestedPaths.map((nestedPath) => (
+                  <Route
+                    path={nestedPath}
+                    element={route.getElement(routerConfig)}
+                    key={`${route.path}/${nestedPath}`}
+                  />
+                ))}
+              </Route>
+            ) : null
+          )}
+        </Routes>
       </Suspense>
     </BodyWrapper>
   )

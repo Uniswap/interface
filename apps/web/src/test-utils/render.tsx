@@ -4,10 +4,10 @@ import { I18nProvider } from '@lingui/react'
 import { queries } from '@testing-library/dom'
 import { render, renderHook, RenderHookOptions, RenderOptions } from '@testing-library/react'
 import { DEFAULT_LOCALE } from 'constants/locales'
-import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
+import { BlockNumberContext } from 'lib/hooks/useBlockNumber'
 import catalog from 'locales/en-US'
 import { en } from 'make-plural/plurals'
-import { ReactElement, ReactNode } from 'react'
+import { PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { HelmetProvider } from 'react-helmet-async/lib/index'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
@@ -28,6 +28,11 @@ const MockedI18nProvider = ({ children }: any) => <I18nProvider i18n={i18n}>{chi
 
 const queryClient = new QueryClient()
 
+const BLOCK_NUMBER_CONTEXT = { fastForward: () => {}, block: 1234, mainnetBlock: 1234 }
+function MockedBlockNumberProvider({ children }: PropsWithChildren) {
+  return <BlockNumberContext.Provider value={BLOCK_NUMBER_CONTEXT}>{children}</BlockNumberContext.Provider>
+}
+
 const WithProviders = ({ children }: { children?: ReactNode }) => {
   return (
     <HelmetProvider>
@@ -40,13 +45,13 @@ const WithProviders = ({ children }: { children?: ReactNode }) => {
                * To test behavior that depends on Web3Provider, use jest.unmock('@web3-react/core')
                */}
               <MockedProvider showWarnings={false}>
-                <BlockNumberProvider>
+                <MockedBlockNumberProvider>
                   <UnitagUpdaterContextProvider>
                     <ThemeProvider>
                       <TamaguiProvider>{children}</TamaguiProvider>
                     </ThemeProvider>
                   </UnitagUpdaterContextProvider>
-                </BlockNumberProvider>
+                </MockedBlockNumberProvider>
               </MockedProvider>
             </BrowserRouter>
           </QueryClientProvider>

@@ -26,7 +26,7 @@ describe('hooks', () => {
         )
       ).toEqual({
         inputCurrencyId: 'ETH',
-        outputCurrencyId: null,
+        outputCurrencyId: undefined,
       })
     })
 
@@ -37,7 +37,7 @@ describe('hooks', () => {
         )
       ).toEqual({
         outputCurrencyId: 'ETH',
-        inputCurrencyId: null,
+        inputCurrencyId: undefined,
       })
     })
 
@@ -48,7 +48,7 @@ describe('hooks', () => {
         )
       ).toEqual({
         outputCurrencyId: 'ETH',
-        inputCurrencyId: null,
+        inputCurrencyId: undefined,
       })
     })
   })

@@ -3,5 +3,5 @@ node_modules/
 THUMBS_DB
 tsconfig.tsbuildinfo
 
-# generated graphql and api files
+# generated trading api files
 src/**/__generated__

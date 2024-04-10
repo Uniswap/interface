@@ -4,7 +4,7 @@ import { navigate as rootNavigate } from 'src/app/navigation/rootNavigation'
 import { useAppStackNavigation, useExploreStackNavigation } from 'src/app/navigation/types'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { Screens } from 'src/screens/Screens'
-import { useTransactionListLazyQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useTransactionListLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 /**
  * Utility hook to simplify navigating to Activity screen.

@@ -2,15 +2,15 @@ import { connections, eip6963Connection } from 'connection'
 import { useInjectedProviderDetails } from 'connection/eip6963/providers'
 import { Connection, ConnectionType, RecentConnectionMeta } from 'connection/types'
 import { shouldUseDeprecatedInjector } from 'connection/utils'
-import { useEip6963Enabled } from 'featureFlags/flags/eip6963'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
-
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import Option from './Option'
 
 function useEIP6963Connections() {
   const eip6963Injectors = useInjectedProviderDetails()
-  const eip6963Enabled = useEip6963Enabled()
+  const eip6963Enabled = useFeatureFlag(FeatureFlags.Eip6936Enabled)
 
   return useMemo(() => {
     if (!eip6963Enabled) return { eip6963Connections: [], showDeprecatedMessage: false }

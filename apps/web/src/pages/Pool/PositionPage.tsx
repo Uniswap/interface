@@ -2,7 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { t, Trans } from '@lingui/macro'
 import { InterfacePageName, LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, Fraction, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager, Pool, Position } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace } from 'analytics'
@@ -18,7 +18,7 @@ import { Dots } from 'components/swap/styled'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
-import { chainIdToBackendName, getTokenDetailsURL, isGqlSupportedChain } from 'graphql/data/util'
+import { chainIdToBackendName, getPoolDetailsURL, getTokenDetailsURL, isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -34,7 +34,7 @@ import { Link, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components'
-import { ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme/components'
+import { ClickableStyle, ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme/components'
 import { currencyId } from 'utils/currencyId'
 import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -167,6 +167,11 @@ const NFTImage = styled.img`
   z-index: 1;
 `
 
+const StyledPoolLink = styled(Link)`
+  text-decoration: none;
+  ${ClickableStyle}
+`
+
 const PairHeader = styled(ThemedText.H1Medium)`
   margin-right: 10px;
 `
@@ -220,26 +225,17 @@ const ExternalTokenLink = ({ children, chainId, address }: PropsWithChildren<{ c
   return <ExternalLink href={getExplorerLink(chainId, address, ExplorerDataType.TOKEN)}>{children}</ExternalLink>
 }
 
-function LinkedCurrency({ chainId, currency }: { chainId?: number; currency?: Currency }) {
+function LinkedCurrency({ chainId, currency }: { chainId: number; currency?: Currency }) {
   const address = (currency as Token)?.address
 
-  if (typeof chainId === 'number' && address) {
-    const Link = isGqlSupportedChain(chainId) ? TokenLink : ExternalTokenLink
-    return (
-      <Link chainId={chainId} address={address}>
-        <RowFixed>
-          <CurrencyLogo currency={currency} size="20px" style={{ marginRight: '0.5rem' }} />
-          <ThemedText.DeprecatedMain>{currency?.symbol} ↗</ThemedText.DeprecatedMain>
-        </RowFixed>
-      </Link>
-    )
-  }
-
+  const Link = isGqlSupportedChain(chainId) ? TokenLink : ExternalTokenLink
   return (
-    <RowFixed>
-      <CurrencyLogo currency={currency} size="20px" style={{ marginRight: '0.5rem' }} />
-      <ThemedText.DeprecatedMain>{currency?.symbol}</ThemedText.DeprecatedMain>
-    </RowFixed>
+    <Link chainId={chainId} address={address}>
+      <RowFixed>
+        <CurrencyLogo currency={currency} size="20px" style={{ marginRight: '0.5rem' }} />
+        <ThemedText.DeprecatedMain>{currency?.symbol} ↗</ThemedText.DeprecatedMain>
+      </RowFixed>
+    </Link>
   )
 }
 
@@ -430,6 +426,9 @@ function PositionPageContent() {
   const [receiveWETH, setReceiveWETH] = useState(false)
   const nativeCurrency = useNativeCurrency(chainId)
   const nativeWrappedSymbol = nativeCurrency.wrapped.symbol
+
+  // get pool address from details returned
+  const poolAddress = token0 && token1 && feeAmount ? Pool.getAddress(token0, token1, feeAmount) : undefined
 
   // construct Position from details returned
   const [poolState, pool] = usePool(token0 ?? undefined, token1 ?? undefined, feeAmount)
@@ -699,9 +698,11 @@ function PositionPageContent() {
               <ResponsiveRow>
                 <PositionLabelRow>
                   <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={24} margin={true} />
-                  <PairHeader>
-                    &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
-                  </PairHeader>
+                  <StyledPoolLink to={poolAddress ? getPoolDetailsURL(poolAddress, chainIdToBackendName(chainId)) : ''}>
+                    <PairHeader>
+                      &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
+                    </PairHeader>
+                  </StyledPoolLink>
                   <Badge style={{ marginRight: '8px' }}>
                     <BadgeText>
                       <Trans>{formatDelta(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant()))}</Trans>
@@ -803,7 +804,7 @@ function PositionPageContent() {
                     <LightCard padding="12px 16px">
                       <AutoColumn gap="md">
                         <RowBetween>
-                          <LinkedCurrency chainId={chainId} currency={currencyQuote} />
+                          <LinkedCurrency chainId={chainId ?? ChainId.MAINNET} currency={currencyQuote} />
                           <RowFixed>
                             <ThemedText.DeprecatedMain>
                               {formatCurrencyAmount({ amount: inverted ? position?.amount0 : position?.amount1 })}
@@ -818,7 +819,7 @@ function PositionPageContent() {
                           </RowFixed>
                         </RowBetween>
                         <RowBetween>
-                          <LinkedCurrency chainId={chainId} currency={currencyBase} />
+                          <LinkedCurrency chainId={chainId ?? ChainId.MAINNET} currency={currencyBase} />
                           <RowFixed>
                             <ThemedText.DeprecatedMain>
                               {formatCurrencyAmount({ amount: inverted ? position?.amount1 : position?.amount0 })}

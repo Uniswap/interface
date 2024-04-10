@@ -5,10 +5,7 @@ import {
   TEST_TRADE_EXACT_INPUT,
 } from 'test-utils/constants'
 import { render, screen, within } from 'test-utils/render'
-
 import { SwapDetails } from './SwapDetails'
-
-jest.mock('../../featureFlags/flags/useFees', () => ({ useFeesEnabled: () => true }))
 
 describe('SwapDetails.tsx', () => {
   it('matches base snapshot, test trade exact input', () => {

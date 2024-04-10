@@ -5,7 +5,7 @@ import { AddressZero } from '@ethersproject/constants'
 import { keccak256 } from '@ethersproject/keccak256'
 import type { Web3Provider } from '@ethersproject/providers'
 import { randomBytes } from '@ethersproject/random'
-import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
+import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 const dataParamType = `tuple(address token, uint256 tokenId, uint256 amount)[]`
 const orderItemParamType = `tuple(uint256 price, bytes data)`

@@ -1,32 +1,13 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { Connector } from '@web3-react/types'
-import {
-  deprecatedNetworkConnection,
-  networkConnection,
-  uniwalletWCV2ConnectConnection,
-  walletConnectV2Connection,
-} from 'connection'
+import { networkConnection, uniwalletWCV2ConnectConnection, walletConnectV2Connection } from 'connection'
 import { getChainInfo } from 'constants/chainInfo'
-import { CHAIN_IDS_TO_NAMES, SupportedInterfaceChain, isSupportedChain } from 'constants/chains'
-import { FALLBACK_URLS, RPC_URLS } from 'constants/networks'
+import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
+import { PUBLIC_RPC_URLS } from 'constants/networks'
 import { useCallback } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import { endSwitchingChain, startSwitchingChain } from 'state/wallets/reducer'
 import { trace } from 'tracing/trace'
-
-function getRpcUrl(chainId: SupportedInterfaceChain): string {
-  switch (chainId) {
-    case ChainId.MAINNET:
-    case ChainId.GOERLI:
-    case ChainId.SEPOLIA:
-      return RPC_URLS[chainId][0]
-    // Attempting to add a chain using an infura URL will not work, as the URL will be unreachable from the MetaMask background page.
-    // MetaMask allows switching to any publicly reachable URL, but for novel chains, it will display a warning if it is not on the "Safe" list.
-    // See the definition of FALLBACK_URLS for more details.
-    default:
-      return FALLBACK_URLS[chainId][0]
-  }
-}
 
 export function useSwitchChain() {
   const dispatch = useAppDispatch()
@@ -44,7 +25,6 @@ export function useSwitchChain() {
                 walletConnectV2Connection.connector,
                 uniwalletWCV2ConnectConnection.connector,
                 networkConnection.connector,
-                deprecatedNetworkConnection.connector,
               ].includes(connector)
             ) {
               await connector.activate(chainId)
@@ -53,7 +33,10 @@ export function useSwitchChain() {
               const addChainParameter = {
                 chainId,
                 chainName: info.label,
-                rpcUrls: [getRpcUrl(chainId)],
+                // Attempting to add a chain using an application-specific URL will not work, as the URL will be unreachable from the MetaMask background page.
+                // MetaMask allows switching to any publicly reachable URL, but for novel chains, it will display a warning if it is not on the "Safe" list.
+                // See the definition of PUBLIC_RPC_URLS for more details.
+                rpcUrls: [PUBLIC_RPC_URLS[chainId][0]],
                 nativeCurrency: info.nativeCurrency,
                 blockExplorerUrls: [info.explorer],
               }

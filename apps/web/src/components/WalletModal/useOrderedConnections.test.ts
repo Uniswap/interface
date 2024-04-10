@@ -3,13 +3,13 @@ import { EIP6963_PROVIDER_MANAGER } from 'connection/eip6963/providers'
 import { EIP6963Event, EIP6963ProviderInfo } from 'connection/eip6963/types'
 import { getRecentConnectionMeta } from 'connection/meta'
 import { ConnectionType } from 'connection/types'
-import { useEip6963Enabled } from 'featureFlags/flags/eip6963'
 import { useAppDispatch } from 'state/hooks'
 import { updateRecentConnectionMeta } from 'state/user/reducer'
 import { mocked } from 'test-utils/mocked'
 import { act, render, renderHook } from 'test-utils/render'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { v4 as uuidv4 } from 'uuid'
-
 import { useOrderedConnections } from './useOrderedConnections'
 
 const listenersToClearAfterTests: (() => void)[] = []
@@ -50,10 +50,9 @@ function announceProvider(rdns: string, provider: MockEIP1193Provider) {
 }
 
 jest.mock('connection/meta')
-jest.mock('featureFlags/flags/eip6963')
 
 beforeEach(() => {
-  mocked(useEip6963Enabled).mockReturnValue(true)
+  mocked(useFeatureFlag).mockImplementation((f) => f === FeatureFlags.Eip6936Enabled)
   mocked(getRecentConnectionMeta).mockReturnValue({
     type: ConnectionType.EIP_6963_INJECTED,
     rdns: 'MetaMask',

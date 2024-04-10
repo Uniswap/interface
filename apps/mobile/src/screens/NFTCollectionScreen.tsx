@@ -1,6 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
 import { useScrollToTop } from '@react-navigation/native'
-import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { ReactElement, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo } from 'react-native'
@@ -22,18 +21,19 @@ import {
   AnimatedBottomSheetFlashList,
   AnimatedFlashList,
   Flex,
+  ImpactFeedbackStyle,
   Text,
   TouchableArea,
   useDeviceDimensions,
   useDeviceInsets,
 } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { isIOS } from 'uniswap/src/utils/platform'
-import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import {
   NftCollectionScreenQuery,
   useNftCollectionScreenQuery,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { isIOS } from 'uniswap/src/utils/platform'
+import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { isError } from 'wallet/src/data/utils'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { NFTItem } from 'wallet/src/features/nfts/types'

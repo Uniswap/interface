@@ -1,0 +1,86 @@
+query TokenWeb($chain: Chain!, $address: String = null) {
+  token(chain: $chain, address: $address) {
+    id
+    decimals
+    name
+    chain
+    address
+    symbol
+    standard
+    market(currency: USD) {
+      id
+      totalValueLocked {
+        id
+        value
+        currency
+      }
+      price {
+        id
+        value
+        currency
+      }
+      volume24H: volume(duration: DAY) {
+        id
+        value
+        currency
+      }
+      priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+        id
+        value
+      }
+      priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+        id
+        value
+      }
+    }
+    project {
+      id
+      description
+      homepageUrl
+      twitterName
+      logoUrl
+      tokens {
+        id
+        chain
+        address
+      }
+      markets(currencies: [USD]) {
+        id
+        fullyDilutedValuation {
+          id
+          value
+          currency
+        }
+        marketCap {
+          id
+          value
+          currency
+        }
+      }
+    }
+  }
+}
+
+query TokenProjectWeb($chain: Chain!, $address: String = null) {
+  token(chain: $chain, address: $address) {
+    id
+    decimals
+    name
+    chain
+    address
+    symbol
+    standard
+    project {
+      id
+      description
+      homepageUrl
+      twitterName
+      logoUrl
+      tokens {
+        id
+        chain
+        address
+      }
+    }
+  }
+}

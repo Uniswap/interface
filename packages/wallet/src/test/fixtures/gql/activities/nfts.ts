@@ -4,7 +4,7 @@ import {
   NftStandard,
   NftTransfer,
   TransactionDirection,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { nftAsset } from 'wallet/src/test/fixtures/gql/assets'
 import { faker } from 'wallet/src/test/shared'
 import { createFixture, randomEnumValue } from 'wallet/src/test/utils'

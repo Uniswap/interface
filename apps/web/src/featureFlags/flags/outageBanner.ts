@@ -1,35 +1,37 @@
+import { ApolloError } from '@apollo/client'
 import { ChainId } from '@uniswap/sdk-core'
-import { BaseVariant, FeatureFlag, useBaseFlag } from '../index'
+import { atomWithReset, useResetAtom, useUpdateAtom } from 'jotai/utils'
+import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 
-export function useOutageBannerOptimism(): BaseVariant {
-  return useBaseFlag(FeatureFlag.outageBannerOptimism)
+export type ChainOutageData = {
+  chainId: ChainId
+  version?: ProtocolVersion
 }
 
-function useShowOutageBannerOptimism(): boolean {
-  return useOutageBannerOptimism() === BaseVariant.Enabled
-}
-
-export function useOutageBannerArbitrum(): BaseVariant {
-  return useBaseFlag(FeatureFlag.outageBannerArbitrum)
-}
-
-function useShowOutageBannerArbitrum(): boolean {
-  return useOutageBannerArbitrum() === BaseVariant.Enabled
-}
-
-export function useOutageBannerPolygon(): BaseVariant {
-  return useBaseFlag(FeatureFlag.outageBannerPolygon)
-}
-
-function useShowOutageBannerPolygon(): boolean {
-  return useOutageBannerPolygon() === BaseVariant.Enabled
+export const manualChainOutageAtom = atomWithReset<ChainOutageData | undefined>(undefined)
+export function useUpdateManualOutage({
+  chainId,
+  errorV3,
+  errorV2,
+}: {
+  chainId?: ChainId
+  errorV3?: ApolloError
+  errorV2?: ApolloError
+}) {
+  const setManualOutage = useUpdateAtom(manualChainOutageAtom)
+  const resetManualOutage = useResetAtom(manualChainOutageAtom)
+  resetManualOutage()
+  if (errorV3 && chainId) setManualOutage({ chainId })
+  if (errorV2 && chainId) setManualOutage({ chainId, version: ProtocolVersion.V2 })
 }
 
 export function useOutageBanners(): Record<ChainId, boolean> {
   return {
-    [ChainId.OPTIMISM]: useShowOutageBannerOptimism(),
-    [ChainId.ARBITRUM_ONE]: useShowOutageBannerArbitrum(),
-    [ChainId.POLYGON]: useShowOutageBannerPolygon(),
+    [ChainId.OPTIMISM]: useFeatureFlag(FeatureFlags.OutageBannerOptimism),
+    [ChainId.ARBITRUM_ONE]: useFeatureFlag(FeatureFlags.OutageBannerArbitrum),
+    [ChainId.POLYGON]: useFeatureFlag(FeatureFlags.OutageBannerPolygon),
 
     [ChainId.MAINNET]: false,
     [ChainId.GOERLI]: false,

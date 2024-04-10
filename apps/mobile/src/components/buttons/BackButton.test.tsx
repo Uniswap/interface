@@ -1,7 +1,7 @@
 import React from 'react'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { fireEvent, render, screen } from 'src/test/test-utils'
 import { ON_PRESS_EVENT_PAYLOAD } from 'wallet/src/test/fixtures'
+import { BackButton } from './BackButton'
 
 const mockedGoBack = jest.fn()
 jest.mock('@react-navigation/native', () => {
@@ -17,8 +17,9 @@ jest.mock('@react-navigation/native', () => {
 
 describe(BackButton, () => {
   it('renders without error', async () => {
-    render(<BackButton showButtonLabel />)
+    const tree = render(<BackButton showButtonLabel />)
 
+    expect(tree).toMatchSnapshot()
     expect(await screen.findByText('Back')).toBeDefined()
   })
 

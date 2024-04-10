@@ -17,10 +17,9 @@ import SettingsTab from 'components/Settings'
 import { Dots } from 'components/swap/styled'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
-import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PoolState, usePool } from 'hooks/usePools'
-import useTransactionDeadline from 'hooks/useTransactionDeadline'
+import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import JSBI from 'jsbi'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
@@ -135,8 +134,7 @@ function V2PairMigration({
   const pairFactory = useSingleCallResult(pair, 'factory')
   const isNotUniswap = pairFactory.result?.[0] && pairFactory.result[0] !== v2FactoryAddress
 
-  const deadline = useTransactionDeadline() // custom from users settings
-  const blockTimestamp = useCurrentBlockTimestamp()
+  const getDeadline = useGetTransactionDeadline() // custom from users settings
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE) // custom from users
 
   const currency0 = unwrappedToken(token0)
@@ -269,12 +267,10 @@ function V2PairMigration({
 
   const networkSupportsV2 = useNetworkSupportsV2()
 
-  const migrate = useCallback(() => {
+  const migrate = useCallback(async () => {
     if (
       !migrator ||
       !account ||
-      !deadline ||
-      !blockTimestamp ||
       typeof tickLower !== 'number' ||
       typeof tickUpper !== 'number' ||
       !v3Amount0Min ||
@@ -284,7 +280,8 @@ function V2PairMigration({
     )
       return
 
-    const deadlineToUse = signatureData?.deadline ?? deadline
+    const deadline = signatureData?.deadline ?? (await getDeadline())
+    if (!deadline) throw new Error('could not get deadline')
 
     const data: string[] = []
 
@@ -294,7 +291,7 @@ function V2PairMigration({
         migrator.interface.encodeFunctionData('selfPermit', [
           pair.address,
           `0x${pairBalance.quotient.toString(16)}`,
-          deadlineToUse,
+          deadline,
           signatureData.v,
           signatureData.r,
           signatureData.s,
@@ -329,7 +326,7 @@ function V2PairMigration({
           amount0Min: `0x${v3Amount0Min.toString(16)}`,
           amount1Min: `0x${v3Amount1Min.toString(16)}`,
           recipient: account,
-          deadline: deadlineToUse,
+          deadline,
           refundAsETH: true, // hard-code this for now
         },
       ])
@@ -364,8 +361,6 @@ function V2PairMigration({
   }, [
     migrator,
     account,
-    deadline,
-    blockTimestamp,
     tickLower,
     tickUpper,
     v3Amount0Min,
@@ -373,6 +368,7 @@ function V2PairMigration({
     chainId,
     networkSupportsV2,
     signatureData,
+    getDeadline,
     noLiquidity,
     pair.address,
     pairBalance.quotient,

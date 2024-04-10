@@ -21,7 +21,7 @@ export const MissingImageLogo = styled.div<{ size?: string }>`
 
 export type AssetLogoBaseProps = {
   symbol?: string | null
-  backupImg?: string | null
+  primaryImg?: string | null
   size?: string
   style?: React.CSSProperties
   currency?: Currency | null

@@ -74,6 +74,7 @@ exports[`AccountCardItem renders correctly 1`] = `
             {
               "alignItems": "center",
               "flexDirection": "row",
+              "flexShrink": 1,
               "gap": 12,
             }
           }

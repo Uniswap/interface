@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { Container, PopupContainer, StyledXButton, TextContainer } from 'components/Banner/shared/styled'
+import { ChainOutageData } from 'featureFlags/flags/outageBanner'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useState } from 'react'
 import { Globe } from 'react-feather'
@@ -37,7 +38,7 @@ export function getOutageBannerSessionStorageKey(chainId: ChainId) {
   return `hideOutageBanner-${chainId}`
 }
 
-export function OutageBanner({ chainId }: { chainId: ChainId }) {
+export function OutageBanner({ chainId, version }: ChainOutageData) {
   const [hidden, setHidden] = useState(false)
   const theme = useTheme()
 
@@ -51,16 +52,17 @@ export function OutageBanner({ chainId }: { chainId: ChainId }) {
         </IconContainer>
         <OutageTextContainer>
           <ThemedText.BodySmall lineHeight="20px">
-            <Trans>Data will be back soon</Trans>
+            <Trans>{version ? version.toString().toLowerCase() + ' data' : 'Data'} will be back soon</Trans>
           </ThemedText.BodySmall>
           <ThemedText.LabelMicro>
             <Trans>
-              {capitalize(chainIdToBackendName(chainId).toLowerCase())} data is unavailable right now, but we expect the
+              {capitalize(chainIdToBackendName(chainId).toLowerCase())}
+              {version ? ' ' + version.toString().toLowerCase() : ''} data is unavailable right now, but we expect the
               issue to be resolved shortly.
             </Trans>
           </ThemedText.LabelMicro>
           <ThemedText.LabelMicro>
-            <Trans>You can still swap and provide liquidity for this token without issue.</Trans>
+            <Trans>You can still swap and provide liquidity on this chain without issue.</Trans>
           </ThemedText.LabelMicro>
           <HelpCenterLink href="https://support.uniswap.org/hc/en-us/articles/23952001935373-Subgraph-downtime">
             <Trans>Learn more</Trans>

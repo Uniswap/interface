@@ -1,11 +1,11 @@
 import { ApolloError } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
-import { ChainId } from 'wallet/src/constants/chains'
 import {
   Chain,
   Token as GQLToken,
   TokenProject,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ChainId } from 'wallet/src/constants/chains'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'

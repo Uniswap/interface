@@ -1,6 +1,5 @@
-import { ImpactFeedbackStyle } from 'expo-haptics'
 import { useTranslation } from 'react-i18next'
-import { Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Flex, Icons, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 export function HiddenTokensRow({

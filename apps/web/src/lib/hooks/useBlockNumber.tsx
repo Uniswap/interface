@@ -1,12 +1,11 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
-import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
+import { RPC_PROVIDERS } from 'constants/providers'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
-import { ReactNode, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
 const MISSING_PROVIDER = Symbol()
-const BlockNumberContext = createContext<
+export const BlockNumberContext = createContext<
   | {
       fastForward(block: number): void
       block?: number
@@ -36,7 +35,7 @@ export function useMainnetBlockNumber(): number | undefined {
   return useBlockNumberContext().mainnetBlock
 }
 
-export function BlockNumberProvider({ children }: { children: ReactNode }) {
+export function BlockNumberProvider({ children }: PropsWithChildren) {
   const { chainId: activeChainId, provider } = useWeb3React()
   const [{ chainId, block, mainnetBlock }, setChainBlock] = useState<{
     chainId?: number
@@ -61,6 +60,7 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
     })
   }, [])
 
+  // Poll for block number on the active provider.
   const windowVisible = useIsWindowVisible()
   useEffect(() => {
     if (provider && activeChainId && windowVisible) {
@@ -81,29 +81,26 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
     return
   }, [activeChainId, provider, windowVisible, onChainBlock])
 
-  const networkProviders = useFallbackProviderEnabled() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
+  // Poll once for the mainnet block number using the network provider.
   useEffect(() => {
-    networkProviders[ChainId.MAINNET]
+    RPC_PROVIDERS[ChainId.MAINNET]
       .getBlockNumber()
-      .then((block) => {
-        onChainBlock(ChainId.MAINNET, block)
-      })
+      .then((block) => onChainBlock(ChainId.MAINNET, block))
       // swallow errors - it's ok if this fails, as we'll try again if we activate mainnet
       .catch(() => undefined)
-  }, [networkProviders, onChainBlock])
+  }, [onChainBlock])
 
   const value = useMemo(
     () => ({
       fastForward: (update: number) => {
-        if (activeBlock && update > activeBlock) {
-          const mainnetUpdate = activeChainId === ChainId.MAINNET ? update : mainnetBlock
-          setChainBlock({ chainId: activeChainId, block: update, mainnetBlock: mainnetUpdate })
+        if (activeChainId) {
+          onChainBlock(activeChainId, update)
         }
       },
       block: activeBlock,
       mainnetBlock,
     }),
-    [activeBlock, activeChainId, mainnetBlock]
+    [activeBlock, activeChainId, mainnetBlock, onChainBlock]
   )
   return <BlockNumberContext.Provider value={value}>{children}</BlockNumberContext.Provider>
 }

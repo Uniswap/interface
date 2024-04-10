@@ -65,7 +65,7 @@ export const AnimatedDecimalNumber = memo(function AnimatedDecimalNumber(
     return {
       color: number.value.value < decimalThreshold ? wholePartColor : decimalPartColor,
     }
-  }, [decimalThreshold, wholePartColor, decimalPartColor])
+  }, [number.value, decimalThreshold, wholePartColor, decimalPartColor])
 
   const fontSize = fonts[variant].fontSize * fontScale
   // Choose the arbitrary value that looks good for the font used

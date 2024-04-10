@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { StyleProp, ViewStyle } from 'react-native'
+import { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native'
 import { Text, TouchableArea } from 'ui/src'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
@@ -35,8 +35,9 @@ export function MaxAmountButton({
     !maxInputAmount.greaterThan(0) ||
     inputCurrencyAmount?.toExact() === maxInputAmount.toExact()
 
-  const onPress = (): void => {
+  const onPress = (event: GestureResponderEvent): void => {
     if (!disableMaxButton) {
+      event.stopPropagation()
       onSetMax(maxInputAmount.toExact(), currencyField)
     }
   }
@@ -56,6 +57,9 @@ export function MaxAmountButton({
         px="$spacing4"
         py="$spacing2"
         style={style}
+        testID={
+          currencyField === CurrencyField.INPUT ? ElementName.SetMaxInput : ElementName.SetMaxOutput
+        }
         onPress={onPress}>
         <Text color="$accent1" variant="buttonLabel4">
           {t('swap.button.max')}

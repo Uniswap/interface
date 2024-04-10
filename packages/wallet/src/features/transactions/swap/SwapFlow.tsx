@@ -1,9 +1,9 @@
 import { Dispatch, ReactNode, SetStateAction, useEffect, useState } from 'react'
 import { isWeb } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import {
   SwapFormContextProvider,
   SwapFormState,
@@ -40,7 +40,7 @@ export function SwapFlow({
   const fullscreen = screen === SwapScreen.SwapForm
 
   const showStickyReviewButton =
-    screen === SwapScreen.SwapForm || screen === SwapScreen.SwapReviewHoldingToSwap
+    !isWeb && (screen === SwapScreen.SwapForm || screen === SwapScreen.SwapReviewHoldingToSwap)
 
   return (
     <TransactionModal fullscreen={fullscreen} modalName={ModalName.Swap} {...transactionModalProps}>
@@ -87,7 +87,7 @@ function CurrentScreen({
               We only render `SwapReviewScreen` once the user is truly on that step though.
             */}
             <BottomSheetModal
-              isCentered={false}
+              alignment="top"
               isModalOpen={screen === SwapScreen.SwapReview}
               name={ModalName.SwapReview}>
               <Trace logImpression section={SectionName.SwapReview}>
@@ -150,7 +150,7 @@ function SwapContextsContainer({
   children?: ReactNode
 }): JSX.Element {
   // conditionally render a different provider based on the active api gate. Each uses different hooks for data fetching.
-  const isTradingApiEnabled = useFeatureFlag(FEATURE_FLAGS.TradingApi)
+  const isTradingApiEnabled = useFeatureFlag(FeatureFlags.TradingApi)
   const SwapTxContextProviderWrapper = isTradingApiEnabled
     ? SwapTxContextProviderTradingApi
     : SwapTxContextProviderLegacyApi

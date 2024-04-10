@@ -27,6 +27,8 @@ import {
   useUniconColors,
 } from 'ui/src'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { ProfileMetadata } from 'uniswap/src/features/unitags/types'
 import { isIOS } from 'uniswap/src/utils/platform'
@@ -36,8 +38,6 @@ import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { updateUnitagMetadata } from 'wallet/src/features/unitags/api'
@@ -141,7 +141,7 @@ export function EditUnitagProfileScreen({
 
   const uniconV1Colors = useUniconColors(address)
   const { color: uniconV2Color } = getUniconV2Colors(address)
-  const isUniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
+  const isUniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
   const uniconColors = isUniconsV2Enabled
     ? { gradientStart: uniconV2Color, gradientEnd: uniconV2Color, glow: uniconV2Color }
     : uniconV1Colors

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { BiometricsIcon } from 'src/components/icons/BiometricsIcon'
 import {
@@ -8,9 +8,8 @@ import {
 } from 'src/features/biometrics/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { getFocusOnCurrencyFieldFromInitialState } from 'src/features/transactions/swap/utils'
 import { useWalletRestore } from 'src/features/wallet/hooks'
-import { SwapFormState } from 'wallet/src/features/transactions/contexts/SwapFormContext'
+import { useSwapPrefilledState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
 import { SwapFlow } from 'wallet/src/features/transactions/swap/SwapFlow'
 import { ModalName } from 'wallet/src/telemetry/constants'
 import { updateSwapStartTimestamp } from 'wallet/src/telemetry/timing/slice'
@@ -30,25 +29,7 @@ export function SwapModal(): JSX.Element {
 
   const { openWalletRestoreModal, walletNeedsRestore } = useWalletRestore()
 
-  const swapPrefilledState = useMemo(
-    (): SwapFormState | undefined =>
-      initialState
-        ? {
-            customSlippageTolerance: initialState.customSlippageTolerance,
-            exactAmountFiat: initialState.exactAmountFiat,
-            exactAmountToken: initialState.exactAmountToken,
-            exactCurrencyField: initialState.exactCurrencyField,
-            focusOnCurrencyField: getFocusOnCurrencyFieldFromInitialState(initialState),
-            input: initialState.input ?? undefined,
-            output: initialState.output ?? undefined,
-            selectingCurrencyField: initialState.selectingCurrencyField,
-            txId: initialState.txId,
-            isFiatMode: false,
-            isSubmitting: false,
-          }
-        : undefined,
-    [initialState]
-  )
+  const swapPrefilledState = useSwapPrefilledState(initialState)
 
   const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
   const { trigger: biometricsTrigger } = useBiometricPrompt()

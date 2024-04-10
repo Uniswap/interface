@@ -1,7 +1,7 @@
 import { Span } from '@sentry/core'
 import * as Sentry from '@sentry/react'
-import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { mocked } from 'test-utils/mocked'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getTraceContext, patchFetch } from './request'
 import { trace } from './trace'
 import { OpCode, TraceContext } from './types'
@@ -49,14 +49,14 @@ describe('request', () => {
         it('captures wrapped `error`', async () => {
           fetch.mockResolvedValue(new Response(JSON.stringify({ error: { foo: 'bar' } })))
           await api.fetch(GATEWAY_URL)
-          expect(span!.status).toBe('unknown_error')
+          expect(span!.status).toBe('internal_error')
           expect(span!.data).toHaveProperty('error', { foo: 'bar' })
         })
 
         it('captures wrapped `errors`', async () => {
           fetch.mockResolvedValue(new Response(JSON.stringify({ errors: [{ foo: 'bar' }] })))
           await api.fetch(GATEWAY_URL)
-          expect(span!.status).toBe('unknown_error')
+          expect(span!.status).toBe('internal_error')
           expect(span!.data).toHaveProperty('error', [{ foo: 'bar' }])
         })
       })
@@ -65,14 +65,14 @@ describe('request', () => {
         it('captures json', async () => {
           fetch.mockResolvedValue(new Response(JSON.stringify({ foo: 'bar' }), { status: 500 }))
           await api.fetch(GATEWAY_URL)
-          expect(span!.status).toBe('unknown_error')
+          expect(span!.status).toBe('internal_error')
           expect(span!.data).toHaveProperty('error', { foo: 'bar' })
         })
 
         it('captures text', async () => {
           fetch.mockResolvedValue(new Response('foobar', { status: 500 }))
           await api.fetch(GATEWAY_URL)
-          expect(span!.status).toBe('unknown_error')
+          expect(span!.status).toBe('internal_error')
           expect(span!.data).toHaveProperty('error', 'foobar')
         })
       })

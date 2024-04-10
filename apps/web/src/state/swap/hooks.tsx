@@ -281,8 +281,8 @@ export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCu
   }
 
   return {
-    inputCurrencyId: inputCurrency === '' ? null : inputCurrency ?? null,
-    outputCurrencyId: outputCurrency === '' ? null : outputCurrency ?? null,
+    inputCurrencyId: inputCurrency === '' ? undefined : inputCurrency ?? undefined,
+    outputCurrencyId: outputCurrency === '' ? undefined : outputCurrency ?? undefined,
   }
 }
 

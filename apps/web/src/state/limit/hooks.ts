@@ -12,8 +12,8 @@ import { LimitOrderTrade, RouterPreference, SubmittableTrade, SwapFeeInfo, WrapI
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getUSDCostPerGas, isClassicTrade } from 'state/routing/utils'
 import { useSwapAndLimitContext } from 'state/swap/SwapContext'
-
-import { useLimitsFeesEnabled } from 'featureFlags/flags/limitsFees'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { Expiry, LimitState } from './LimitContext'
 
 export type LimitInfo = {
@@ -281,7 +281,7 @@ function useMarketPriceAndFee(
     return priceA.multiply(priceB)
   }, [inputCurrency, outputCurrency, skip, tradeA, tradeB])
 
-  const feesEnabled = useLimitsFeesEnabled()
+  const feesEnabled = useFeatureFlag(FeatureFlags.LimitsFees)
   const fee = useMemo(() => {
     if (!marketPrice || !inputCurrency || !outputCurrency || !feesEnabled) return undefined
 

@@ -20,7 +20,6 @@ import { Loader } from 'src/components/loading'
 import { useTokenContextMenu } from 'src/features/balances/hooks'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { useNavigateToSend } from 'src/features/send/hooks'
-import { useNavigateToSwap } from 'src/features/swap/hooks'
 import { Screens } from 'src/screens/Screens'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { useSkeletonLoading } from 'src/utils/useSkeletonLoading'
@@ -36,16 +35,17 @@ import {
 } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import {
+  SafetyLevel,
+  TokenDetailsScreenQuery,
+  useTokenDetailsScreenQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType } from 'utilities/src/format/types'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import {
-  SafetyLevel,
-  TokenDetailsScreenQuery,
-  useTokenDetailsScreenQuery,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
@@ -214,7 +214,7 @@ function TokenDetails({
     retry()
   }, [error, retry])
 
-  const navigateToSwap = useNavigateToSwap()
+  const { navigateToSwapFlow } = useWalletNavigation()
   const navigateToSend = useNavigateToSend()
 
   // set if attempting buy or sell, use for warning modal
@@ -237,10 +237,10 @@ function TokenDetails({
         setShowWarningModal(true)
       } else {
         setActiveTransactionType(undefined)
-        navigateToSwap(currencyField, currencyAddress, currencyChainId)
+        navigateToSwapFlow({ currencyField, currencyAddress, currencyChainId })
       }
     },
-    [currencyAddress, currencyChainId, navigateToSwap, safetyLevel, tokenWarningDismissed]
+    [currencyAddress, currencyChainId, navigateToSwapFlow, safetyLevel, tokenWarningDismissed]
   )
 
   const onPressSend = useCallback(() => {
@@ -252,14 +252,14 @@ function TokenDetails({
     dismissWarningCallback()
     setShowWarningModal(false)
     if (activeTransactionType !== undefined) {
-      navigateToSwap(activeTransactionType, currencyAddress, currencyChainId)
+      navigateToSwapFlow({ currencyField: activeTransactionType, currencyAddress, currencyChainId })
     }
   }, [
     activeTransactionType,
     currencyAddress,
     currencyChainId,
     dismissWarningCallback,
-    navigateToSwap,
+    navigateToSwapFlow,
   ])
 
   const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen

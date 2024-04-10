@@ -1,24 +1,27 @@
 import { useWeb3React } from '@web3-react/core'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
-import { PortfolioTokenBalancePartsFragment } from 'graphql/data/__generated__/types-and-hooks'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import { useMemo } from 'react'
+import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export function useTokenBalances(): {
   balanceMap: TokenBalances
-  balanceList: readonly PortfolioTokenBalancePartsFragment[]
+  balanceList: (PortfolioTokenBalancePartsFragment | undefined)[]
   loading: boolean
 } {
   const { account, chainId } = useWeb3React()
   const { data, loading } = useCachedPortfolioBalancesQuery({ account })
   return useMemo(() => {
-    const balanceList = data?.portfolios?.[0].tokenBalances ?? []
+    const balanceList = data?.portfolios?.[0]?.tokenBalances ?? []
     const balanceMap =
       balanceList?.reduce((balanceMap, tokenBalance) => {
-        const address = tokenBalance.token?.standard === 'ERC20' ? tokenBalance.token?.address?.toLowerCase() : 'ETH'
+        const address =
+          tokenBalance?.token?.standard === 'ERC20'
+            ? tokenBalance.token?.address?.toLowerCase()
+            : tokenBalance?.token?.symbol ?? 'ETH'
         if (
-          tokenBalance.token?.chain &&
+          tokenBalance?.token?.chain &&
           supportedChainIdFromGQLChain(tokenBalance.token?.chain) === chainId &&
           address &&
           tokenBalance.denominatedValue?.value !== undefined

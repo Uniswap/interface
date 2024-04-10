@@ -36,7 +36,7 @@ import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { usePairContract, useV2RouterContract } from '../../hooks/useContract'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
-import useTransactionDeadline from '../../hooks/useTransactionDeadline'
+import { useGetTransactionDeadline } from '../../hooks/useTransactionDeadline'
 import { Field } from '../../state/burn/actions'
 import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -87,7 +87,7 @@ function RemoveLiquidity() {
 
   // txn values
   const [txHash, setTxHash] = useState<string>('')
-  const deadline = useTransactionDeadline()
+  const getDeadline = useGetTransactionDeadline()
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE)
 
   const formattedAmounts = {
@@ -119,7 +119,7 @@ function RemoveLiquidity() {
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], router?.address)
 
   async function onAttemptToApprove() {
-    if (!pairContract || !pair || !provider || !deadline) throw new Error('missing dependencies')
+    if (!pairContract || !pair || !provider) throw new Error('missing dependencies')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
@@ -164,7 +164,7 @@ function RemoveLiquidity() {
   const networkSupportsV2 = useNetworkSupportsV2()
 
   async function onRemove() {
-    if (!chainId || !provider || !account || !deadline || !router || !networkSupportsV2) {
+    if (!chainId || !provider || !account || !router || !networkSupportsV2) {
       throw new Error('missing dependencies')
     }
     const { [Field.CURRENCY_A]: currencyAmountA, [Field.CURRENCY_B]: currencyAmountB } = parsedAmounts
@@ -185,6 +185,9 @@ function RemoveLiquidity() {
     const oneCurrencyIsETH = currencyA.isNative || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
+
+    const deadline = await getDeadline()
+    if (!deadline) throw new Error('could not get deadline')
 
     let methodNames: string[], args: Array<string | string[] | number | boolean>
     // we have approval, use normal remove liquidity

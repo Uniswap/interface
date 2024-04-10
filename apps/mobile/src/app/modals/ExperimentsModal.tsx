@@ -22,15 +22,19 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import {
+  EXPERIMENT_VALUES_BY_EXPERIMENT,
+  ExperimentsWallet,
+} from 'uniswap/src/features/experiments/constants'
+import {
+  FeatureFlags,
+  WALLET_FEATURE_FLAG_NAMES,
+  getFeatureFlagName,
+} from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/experiments/hooks'
 import { Switch } from 'wallet/src/components/buttons/Switch'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import {
-  EXPERIMENT_NAMES,
-  EXPERIMENT_VALUES_BY_EXPERIMENT,
-  FEATURE_FLAGS,
-} from 'wallet/src/features/experiments/constants'
-import { useFeatureFlagWithExposureLoggingDisabled } from 'wallet/src/features/experiments/hooks'
 import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function ExperimentsModal(): JSX.Element {
@@ -59,6 +63,11 @@ export function ExperimentsModal(): JSX.Element {
     } else {
       clearEndpoint()
     }
+  }
+
+  const featureFlagRows = []
+  for (const [flag, flagName] of WALLET_FEATURE_FLAG_NAMES.entries()) {
+    featureFlagRows.push(<FeatureFlagRow key={flagName} flag={flag} />)
   }
 
   return (
@@ -127,9 +136,7 @@ export function ExperimentsModal(): JSX.Element {
               </Text>
 
               <Flex gap="$spacing12" mt="$spacing12">
-                {Object.values(FEATURE_FLAGS).map((featureFlag) => {
-                  return <FeatureFlagRow key={featureFlag} featureFlag={featureFlag} />
-                })}
+                {featureFlagRows}
               </Flex>
             </Accordion.Content>
           </Accordion.Item>
@@ -143,7 +150,7 @@ export function ExperimentsModal(): JSX.Element {
               </Text>
 
               <Flex gap="$spacing24" mt="$spacing12">
-                {Object.values(EXPERIMENT_NAMES).map((experiment) => {
+                {Object.values(ExperimentsWallet).map((experiment) => {
                   return <ExperimentRow key={experiment} name={experiment} />
                 })}
               </Flex>
@@ -172,16 +179,17 @@ function AccordionHeader({ title }: { title: React.ReactNode }): JSX.Element {
   )
 }
 
-function FeatureFlagRow({ featureFlag }: { featureFlag: FEATURE_FLAGS }): JSX.Element {
-  const status = useFeatureFlagWithExposureLoggingDisabled(featureFlag)
+function FeatureFlagRow({ flag }: { flag: FeatureFlags }): JSX.Element {
+  const status = useFeatureFlagWithExposureLoggingDisabled(flag)
+  const name = getFeatureFlagName(flag)
 
   return (
     <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between">
-      <Text variant="body1">{featureFlag}</Text>
+      <Text variant="body1">{name}</Text>
       <Switch
         value={status}
         onValueChange={(newValue: boolean): void => {
-          Statsig.overrideGate(featureFlag, newValue)
+          Statsig.overrideGate(name, newValue)
         }}
       />
     </Flex>

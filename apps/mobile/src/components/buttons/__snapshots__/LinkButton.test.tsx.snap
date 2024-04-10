@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LinkButton renders without error 1`] = `
+<View
+  cancelable={true}
+  disabled={false}
+  focusable={true}
+  hitSlop={[Function]}
+  minPressDuration={0}
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+  onPress={[Function]}
+  onPressIn={[Function]}
+  onPressOut={[Function]}
+  style={
+    {
+      "flexDirection": "column",
+      "opacity": 1,
+      "transform": [
+        {
+          "scale": 1,
+        },
+      ],
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 4,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <Text
+      allowFontScaling={true}
+      style={
+        {
+          "color": "#222222",
+          "fontFamily": "Basel-Book",
+        }
+      }
+      suppressHighlighting={true}
+    >
+      link text
+    </Text>
+    <svg
+      color="#FC72FF"
+      data-file-name="SvgExternalLink"
+      height={20}
+      strokeWidth={1.5}
+      width={20}
+    />
+  </View>
+</View>
+`;

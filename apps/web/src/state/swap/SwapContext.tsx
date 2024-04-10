@@ -18,8 +18,8 @@ import { TradeState } from 'state/routing/types'
 import { queryParametersToSwapState, SwapInfo, useDerivedSwapInfo } from './hooks'
 
 export interface SerializedCurrencyState {
-  inputCurrencyId?: string | null
-  outputCurrencyId?: string | null
+  inputCurrencyId?: string
+  outputCurrencyId?: string
 }
 
 // shared state between Swap and Limit

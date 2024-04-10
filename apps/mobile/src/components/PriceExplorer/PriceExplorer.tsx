@@ -1,4 +1,3 @@
-import { ImpactFeedbackStyle } from 'expo-haptics'
 import { memo, useMemo } from 'react'
 import { I18nManager } from 'react-native'
 import { SharedValue, useDerivedValue } from 'react-native-reanimated'
@@ -11,10 +10,9 @@ import { CURSOR_INNER_SIZE, CURSOR_SIZE } from 'src/components/PriceExplorer/con
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import { useLineChartPrice } from 'src/components/PriceExplorer/usePrice'
 import { Loader } from 'src/components/loading'
-import { invokeImpact } from 'src/utils/haptic'
-import { Flex } from 'ui/src'
+import { Flex, HapticFeedback } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { HistoryDuration } from 'wallet/src/data/__generated__/types-and-hooks'
+import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { CurrencyId } from 'wallet/src/utils/currencyId'
@@ -127,7 +125,7 @@ export const PriceExplorer = memo(function PriceExplorer({
   return (
     <LineChartProvider
       data={convertedPriceHistory ?? []}
-      onCurrentIndexChange={invokeImpact[ImpactFeedbackStyle.Light]}>
+      onCurrentIndexChange={HapticFeedback.light}>
       <Flex gap="$spacing8" overflow="hidden">
         <PriceTextSection
           loading={loading}
@@ -191,8 +189,8 @@ function PriceExplorerChart({
           minDurationMs={150}
           outerSize={CURSOR_SIZE}
           size={CURSOR_INNER_SIZE}
-          onActivated={invokeImpact[ImpactFeedbackStyle.Light]}
-          onEnded={invokeImpact[ImpactFeedbackStyle.Light]}
+          onActivated={HapticFeedback.light}
+          onEnded={HapticFeedback.light}
         />
       </LineChart>
     </Flex>

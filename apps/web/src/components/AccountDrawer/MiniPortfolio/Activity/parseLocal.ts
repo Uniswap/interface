@@ -3,7 +3,6 @@ import { t } from '@lingui/macro'
 import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import { nativeOnChain } from 'constants/tokens'
-import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { ChainTokenMap, useAllTokensMultichain } from 'hooks/Tokens'
 import { useMemo } from 'react'
 import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
@@ -24,6 +23,7 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'state/transactions/types'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 

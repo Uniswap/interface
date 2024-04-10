@@ -1,4 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
+import { chainIdToBackendName } from 'graphql/data/util'
+import { useCallback, useMemo, useRef } from 'react'
 import {
   PoolTransactionType,
   ProtocolVersion,
@@ -7,9 +9,7 @@ import {
   V3PoolTransactionsQuery,
   useV2PairTransactionsQuery,
   useV3PoolTransactionsQuery,
-} from 'graphql/data/__generated__/types-and-hooks'
-import { chainIdToBackendName } from 'graphql/data/util'
-import { useCallback, useMemo, useRef } from 'react'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export enum PoolTableTransactionType {
   BUY = 'Buy',
@@ -122,6 +122,9 @@ export function usePoolTransactions(
   const filteredTransactions = useMemo(() => {
     return (transactions ?? [])
       ?.map((tx) => {
+        if (!tx) {
+          return undefined
+        }
         const tokenIn = parseFloat(tx.token0Quantity) > 0 ? tx.token0 : tx.token1
         const isSell = tokenIn?.address?.toLowerCase() === token0?.address?.toLowerCase()
         const type =

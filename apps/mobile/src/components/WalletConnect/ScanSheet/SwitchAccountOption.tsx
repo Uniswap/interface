@@ -1,9 +1,9 @@
 import React from 'react'
 import { Flex, Separator, Text, Unicon, UniconV2, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
-import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
-import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { shortenAddress } from 'wallet/src/utils/addresses'
@@ -17,7 +17,7 @@ const ICON_SIZE = 24
 
 export const SwitchAccountOption = ({ account, activeAccount }: Props): JSX.Element => {
   const colors = useSporeColors()
-  const isUniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
+  const isUniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   const displayName = useDisplayName(account.address)
   return (

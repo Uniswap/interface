@@ -4,11 +4,11 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { LongText } from 'src/components/text/LongText'
 import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType } from 'utilities/src/format/types'
-import { TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Language } from 'wallet/src/features/language/constants'
 import { useCurrentLanguage, useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 function StatsRow({
   label,

@@ -60,6 +60,7 @@ export function useTransactionGasWarning({
           })
         : undefined,
       message: undefined,
+      currency: nativeCurrencyBalance.currency,
     }
   }, [gasFee, balanceInsufficient, nativeCurrencyBalance, hasGasFunds, t])
 }

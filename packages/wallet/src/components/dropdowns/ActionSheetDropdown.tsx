@@ -1,10 +1,10 @@
-import { ImpactFeedbackStyle } from 'expo-haptics'
 import { PropsWithChildren, useMemo, useRef, useState } from 'react'
 import { Keyboard, Platform, ScrollView, View } from 'react-native'
 import {
   AnimatePresence,
   Flex,
   FlexProps,
+  ImpactFeedbackStyle,
   Portal,
   TouchableArea,
   styled,

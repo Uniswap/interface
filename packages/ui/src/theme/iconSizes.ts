@@ -7,6 +7,7 @@ export const iconSizes = {
   icon28: 28,
   icon36: 36,
   icon40: 40,
+  icon48: 40,
   icon64: 64,
   icon70: 70,
   icon100: 100,

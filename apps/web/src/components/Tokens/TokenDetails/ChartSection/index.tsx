@@ -1,10 +1,8 @@
-import { ParentSize } from '@visx/responsive'
 import { PriceChart, PriceChartData } from 'components/Charts/PriceChart'
 import { LineChart, StackedLineData } from 'components/Charts/StackedLineChart'
-import TimePeriodSelector, { refitChartContentAtom } from 'components/Charts/TimeSelector'
+import { refitChartContentAtom } from 'components/Charts/TimeSelector'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
 import { VolumeChart } from 'components/Charts/VolumeChart'
-import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
@@ -19,10 +17,9 @@ import {
   ORDERED_TIMES,
   TimePeriodDisplay,
 } from 'components/Tokens/TokenTable/TimeSelector'
-import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { useAtomValue } from 'jotai/utils'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
-import { PriceChart as OldPriceChart } from '../../../Charts/PriceChart/OldPriceChart'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AdvancedPriceChartToggle } from './AdvancedPriceChartToggle'
 import { ChartTypeDropdown } from './ChartTypeSelector'
 import { useTDPPriceChartData, useTDPTVLChartData, useTDPVolumeChartData } from './hooks'
@@ -36,15 +33,6 @@ export const DEFAULT_PILL_TIME_SELECTOR_OPTIONS = ORDERED_TIMES.map((time: TimeP
   value: DISPLAYS[time],
 })) as PillMultiToggleOption[]
 
-export const OldChartContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 436px;
-  margin-bottom: 24px;
-  align-items: flex-start;
-  width: 100%;
-  position: relative;
-`
 export const ChartActionsContainer = styled.div`
   display: flex;
   flex-direction: row-reverse;
@@ -134,26 +122,7 @@ export function useCreateTDPChartState(tokenDBAddress: string | undefined, curre
 }
 
 export default function ChartSection() {
-  const { activeQuery, timePeriod, setTimePeriod, priceChartType } = useTDPContext().chartState
-
-  const isInfoTDPEnabled = useInfoTDPEnabled()
-
-  // Backwards compatibility for old chart
-  const priceQuery = activeQuery.chartType === ChartType.PRICE ? activeQuery : undefined
-  const prices = priceQuery?.entries ?? undefined
-
-  if (!isInfoTDPEnabled) {
-    return (
-      <OldChartContainer data-testid="chart-container">
-        <ParentSize>
-          {({ width }) => (
-            <OldPriceChart prices={prices} width={width} height={TDP_CHART_HEIGHT_PX} timePeriod={timePeriod} />
-          )}
-        </ParentSize>
-        <TimePeriodSelector timePeriod={timePeriod} onChangeTimePeriod={setTimePeriod} />
-      </OldChartContainer>
-    )
-  }
+  const { activeQuery, timePeriod, priceChartType } = useTDPContext().chartState
 
   return (
     <div data-cy={`tdp-${activeQuery.chartType}-chart-container`}>

@@ -2,6 +2,8 @@ import { PriceChartData } from 'components/Charts/PriceChart'
 import { StackedLineData } from 'components/Charts/StackedLineChart'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
+import { UTCTimestamp } from 'lightweight-charts'
+import { useMemo, useReducer } from 'react'
 import {
   CandlestickOhlcFragment,
   Chain,
@@ -10,9 +12,7 @@ import {
   useTokenHistoricalTvlsQuery,
   useTokenHistoricalVolumesQuery,
   useTokenPriceQuery,
-} from 'graphql/data/__generated__/types-and-hooks'
-import { UTCTimestamp } from 'lightweight-charts'
-import { useMemo, useReducer } from 'react'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ChartQueryResult, DataQuality, checkDataQuality, withUTCTimestamp } from './util'
 
 type TDPChartQueryVariables = { chain: Chain; address?: string; duration: HistoryDuration }
@@ -42,7 +42,12 @@ export function useTDPPriceChartData(
 
   return useMemo(() => {
     const { ohlc, priceHistory, price } = data?.token?.market ?? {}
-    let entries = (ohlc ? ohlc?.map(toPriceChartData) : priceHistory?.map(fallbackToPriceChartData)) ?? []
+    let entries =
+      (ohlc
+        ? ohlc?.filter((v): v is CandlestickOhlcFragment => v !== undefined).map(toPriceChartData)
+        : priceHistory
+            ?.filter((v): v is PriceHistoryFallbackFragment => v !== undefined)
+            .map(fallbackToPriceChartData)) ?? []
     const currentPrice = price?.value
 
     if (ohlc) {
@@ -139,7 +144,10 @@ export function useTDPVolumeChartData(
 ): ChartQueryResult<SingleHistogramData, ChartType.VOLUME> {
   const { data, loading } = useTokenHistoricalVolumesQuery({ variables, skip })
   return useMemo(() => {
-    const entries = data?.token?.market?.historicalVolume?.map(withUTCTimestamp) ?? []
+    const entries =
+      data?.token?.market?.historicalVolume
+        ?.filter((v): v is PriceHistoryFallbackFragment => v !== undefined)
+        .map(withUTCTimestamp) ?? []
     const dataQuality = checkDataQuality(entries, ChartType.VOLUME, variables.duration)
     return { chartType: ChartType.VOLUME, entries, loading, dataQuality }
   }, [data?.token?.market?.historicalVolume, loading, variables.duration])
@@ -156,7 +164,8 @@ export function useTDPTVLChartData(
   const { data, loading } = useTokenHistoricalTvlsQuery({ variables, skip })
   return useMemo(() => {
     const { historicalTvl, totalValueLocked } = data?.token?.market ?? {}
-    const entries = historicalTvl?.map(toStackedLineData) ?? []
+    const entries =
+      historicalTvl?.filter((v): v is PriceHistoryFallbackFragment => v !== undefined).map(toStackedLineData) ?? []
     const currentTvl = totalValueLocked?.value
 
     // Append current tvl to end of array to ensure data freshness and that each time period ends with same tvl

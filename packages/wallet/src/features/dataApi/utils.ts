@@ -1,14 +1,14 @@
 import { ApolloError } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
 import { useRef } from 'react'
-import { ChainId } from 'wallet/src/constants/chains'
 import {
   Chain,
   ContractInput,
   SafetyLevel,
   TokenProjectsQuery,
   TopTokensQuery,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ChainId } from 'wallet/src/constants/chains'
 import { fromGraphQLChain, toGraphQLChain } from 'wallet/src/features/chains/utils'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import {
@@ -33,7 +33,7 @@ type BuildCurrencyParams = {
 export function currencyIdToContractInput(id: CurrencyId): ContractInput {
   return {
     chain: toGraphQLChain(currencyIdToChain(id) ?? ChainId.Mainnet) ?? Chain.Ethereum,
-    address: currencyIdToGraphQLAddress(id),
+    address: currencyIdToGraphQLAddress(id) ?? undefined,
   }
 }
 

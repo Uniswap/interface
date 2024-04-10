@@ -1,7 +1,6 @@
 ignores: [
     # Dependencies that depcheck thinks are unused but are actually used
     "jest-presets",
-    "i18next-resources-for-ts",
     # Dependencies that depcheck thinks are missing but are actually present or never used
     ## Internal packages / workspaces
     "wallet",
@@ -9,7 +8,4 @@ ignores: [
     "tsconfig",
     # types
     "@types/chrome",
-    ## GraphQL
-    "@graphql-codegen/*",
-    "get-graphql-schema",
   ]

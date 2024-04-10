@@ -21,15 +21,15 @@ describe('getPriorityWarning', () => {
 
   it('returns token0Warning when only token0Warning exists', () => {
     const token0Warning = StrongWarning
-    expect(getPriorityWarning(token0Warning, null)).toBe(token0Warning)
+    expect(getPriorityWarning(token0Warning, undefined)).toBe(token0Warning)
   })
 
   it('returns token1Warning when only token1Warning exists', () => {
     const token1Warning = BlockedWarning
-    expect(getPriorityWarning(null, token1Warning)).toBe(token1Warning)
+    expect(getPriorityWarning(undefined, token1Warning)).toBe(token1Warning)
   })
 
-  it('returns null when both warnings are null', () => {
-    expect(getPriorityWarning(null, null)).toBeNull()
+  it('returns undefined when both warnings are undefined', () => {
+    expect(getPriorityWarning(undefined, undefined)).toBeUndefined()
   })
 })

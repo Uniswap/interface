@@ -42,7 +42,7 @@ const StatusWrapper = styled(Row)<{ status: PositionStatus }>`
   width: max-content;
   margin-right: 0;
   margin-left: auto;
-  color ${({ theme, status }) =>
+  color: ${({ theme, status }) =>
     status === PositionStatus.IN_RANGE
       ? theme.success
       : status === PositionStatus.OUT_OF_RANGE

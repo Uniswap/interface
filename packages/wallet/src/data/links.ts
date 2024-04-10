@@ -3,7 +3,7 @@ import { onError } from '@apollo/client/link/error'
 import { RestLink } from 'apollo-link-rest'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { REQUEST_SOURCE } from 'uniswap/src/data/constants'
+import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
 import { logger } from 'utilities/src/logger/logger'
 import {
   EnsLookupParams,
@@ -58,6 +58,7 @@ export const getRestLink = (customRestUri?: string): ApolloLink => {
       'Content-Type': 'application/json',
       'X-API-KEY': config.uniswapApiKey,
       'x-request-source': REQUEST_SOURCE,
+      'x-app-version': getVersionHeader(),
       Origin: config.uniswapAppUrl,
     },
   })
@@ -75,6 +76,7 @@ export const getCustomGraphqlHttpLink = (endpoint: CustomEndpoint): ApolloLink =
       'Content-Type': 'application/json',
       'X-API-KEY': endpoint.key,
       'x-request-source': REQUEST_SOURCE,
+      'x-app-version': getVersionHeader(),
       // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
       Origin: uniswapUrls.apiBaseUrl,
     },
@@ -87,6 +89,7 @@ export const getGraphqlHttpLink = (): ApolloLink =>
       'Content-Type': 'application/json',
       'X-API-KEY': config.uniswapApiKey,
       'x-request-source': REQUEST_SOURCE,
+      'x-app-version': getVersionHeader(),
       // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
       Origin: uniswapUrls.apiBaseUrl,
     },

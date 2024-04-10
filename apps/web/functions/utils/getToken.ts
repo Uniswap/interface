@@ -1,5 +1,9 @@
+import {
+  Chain,
+  TokenWebDocument,
+  TokenWebQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NATIVE_CHAIN_ID } from '../../src/constants/tokens'
-import { Chain, TokenDocument, TokenQuery } from '../../src/graphql/data/__generated__/types-and-hooks'
 import client from '../client'
 
 function formatTitleName(symbol: string | undefined, name: string | undefined) {
@@ -31,8 +35,8 @@ export default async function getToken(networkName: string, tokenAddress: string
   const image = origin + '/api/image/tokens/' + networkName + '/' + tokenAddress
   const uppercaseNetworkName = networkName.toUpperCase()
   const convertedTokenAddress = convertTokenAddress(uppercaseNetworkName, tokenAddress)
-  const { data } = await client.query<TokenQuery>({
-    query: TokenDocument,
+  const { data } = await client.query<TokenWebQuery>({
+    query: TokenWebDocument,
     variables: {
       chain: uppercaseNetworkName,
       address: convertedTokenAddress,

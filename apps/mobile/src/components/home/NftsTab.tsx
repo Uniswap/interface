@@ -7,9 +7,9 @@ import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { Screens } from 'src/screens/Screens'
 import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
+import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
-import { GQLQueries } from 'wallet/src/data/queries'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 
 export const NFTS_TAB_DATA_DEPENDENCIES = [GQLQueries.NftsTab]

@@ -1,7 +1,6 @@
 import { Plural, Trans } from '@lingui/macro'
 import { SearchToken } from 'graphql/data/SearchTokens'
-import { TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
-
+import { TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ZERO_ADDRESS } from './misc'
 import tokenSafetyLookup, { TOKEN_LIST_TYPES } from './tokenSafetyLookup'
 import { NATIVE_CHAIN_ID } from './tokens'
@@ -17,7 +16,7 @@ export enum WARNING_LEVEL {
 /**
  * Determine which warning to display based on the priority of the warnings. Prioritize blocked, than unknown, followed by the rest. Accepts two warnings passed in.
  */
-export function getPriorityWarning(token0Warning: Warning | null, token1Warning: Warning | null) {
+export function getPriorityWarning(token0Warning: Warning | undefined, token1Warning: Warning | undefined) {
   if (token0Warning && token1Warning) {
     if (
       token1Warning?.level === WARNING_LEVEL.BLOCKED ||
@@ -30,7 +29,7 @@ export function getPriorityWarning(token0Warning: Warning | null, token1Warning:
   return token0Warning ?? token1Warning
 }
 
-export function getWarningCopy(warning: Warning | null, plural = false, tokenSymbol?: string) {
+export function getWarningCopy(warning: Warning | undefined, plural = false, tokenSymbol?: string) {
   let heading = null,
     description = null
   if (warning) {
@@ -104,11 +103,11 @@ export const NotFoundWarning: Warning = {
 
 export function checkWarning(tokenAddress: string, chainId?: number | null) {
   if (tokenAddress === NATIVE_CHAIN_ID || tokenAddress === ZERO_ADDRESS) {
-    return null
+    return undefined
   }
   switch (tokenSafetyLookup.checkToken(tokenAddress.toLowerCase(), chainId)) {
     case TOKEN_LIST_TYPES.UNI_DEFAULT:
-      return null
+      return undefined
     case TOKEN_LIST_TYPES.UNI_EXTENDED:
       return MediumWarning
     case TOKEN_LIST_TYPES.UNKNOWN:
@@ -123,11 +122,11 @@ export function checkWarning(tokenAddress: string, chainId?: number | null) {
 // TODO(cartcrom): Replace all usage of WARNING_LEVEL with SafetyLevel
 export function checkSearchTokenWarning(token: SearchToken) {
   if (!token.address) {
-    return token.standard === TokenStandard.Native ? null : StrongWarning
+    return token.standard === TokenStandard.Native ? undefined : StrongWarning
   }
   return checkWarning(token.address)
 }
 
-export function displayWarningLabel(warning: Warning | null) {
+export function displayWarningLabel(warning: Warning | undefined) {
   return warning && warning.level !== WARNING_LEVEL.MEDIUM
 }

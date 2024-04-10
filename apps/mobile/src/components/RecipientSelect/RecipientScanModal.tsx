@@ -1,4 +1,3 @@
-import { selectionAsync } from 'expo-haptics'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
@@ -8,7 +7,7 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { WalletQRCode } from 'src/components/QRCodeScanner/WalletQRCode'
 import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet/util'
-import { Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, HapticFeedback, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -36,7 +35,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
       return
     }
 
-    await selectionAsync()
+    await HapticFeedback.selection()
     setShouldFreezeCamera(true)
     const supportedURI = await getSupportedURI(uri)
 

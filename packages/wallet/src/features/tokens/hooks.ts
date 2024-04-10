@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
-import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
-import { ChainId } from 'wallet/src/constants/chains'
 import {
   Chain,
   SearchPopularTokensQuery,
   useSearchPopularTokensQuery,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
+import { ChainId } from 'wallet/src/constants/chains'
 import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export type TopToken = NonNullable<NonNullable<SearchPopularTokensQuery['topTokens']>[0]>

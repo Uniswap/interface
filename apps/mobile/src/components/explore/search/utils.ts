@@ -1,6 +1,9 @@
 import { SEARCH_RESULT_HEADER_KEY } from 'src/components/explore/search/constants'
 import { SearchResultOrHeader } from 'src/components/explore/search/types'
-import { Chain, ExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import {
+  Chain,
+  ExploreSearchQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {
   NFTCollectionSearchResult,

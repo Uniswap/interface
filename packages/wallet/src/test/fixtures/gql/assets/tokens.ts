@@ -10,7 +10,7 @@ import {
   TokenMarket,
   TokenProject,
   TokenProjectMarket,
-} from 'wallet/src/data/__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { toGraphQLChain } from 'wallet/src/features/chains/utils'
 import { amounts } from 'wallet/src/test/fixtures/gql/amounts'
 import {
@@ -48,7 +48,7 @@ export const token = createFixture<Token, TokenOptions>({ sdkToken: null })(({ s
   decimals: sdkToken?.decimals ?? faker.datatype.number({ min: 1, max: 18 }),
   chain: (sdkToken ? toGraphQLChain(sdkToken.chainId) : null) ?? randomChoice(GQL_CHAINS),
   address: sdkToken?.address.toLocaleLowerCase() ?? faker.finance.ethereumAddress(),
-  market: null,
+  market: undefined,
   project: tokenProjectBase(),
 }))
 
@@ -65,7 +65,7 @@ export const tokenBalance = createFixture<TokenBalance>()(() => ({
 }))
 
 type TokenMarketOptions = {
-  priceHistory: (TimestampedAmount | null)[]
+  priceHistory: (TimestampedAmount | undefined)[]
 }
 
 export const tokenMarket = createFixture<TokenMarket, TokenMarketOptions>(() => ({
@@ -76,12 +76,12 @@ export const tokenMarket = createFixture<TokenMarket, TokenMarketOptions>(() => 
   token: ethToken(),
   priceSource: randomEnumValue(PriceSource),
   priceHistory: history,
-  price: history ? getLatestPrice(history) : null,
-  pricePercentChange: history ? get24hPriceChange(history) : null,
+  price: history ? getLatestPrice(history) : undefined,
+  pricePercentChange: history ? get24hPriceChange(history) : undefined,
 }))
 
 type TokenProjectMarketOptions = {
-  priceHistory: (TimestampedAmount | null)[]
+  priceHistory: (TimestampedAmount | undefined)[]
 }
 
 export const tokenProjectMarket = createFixture<TokenProjectMarket, TokenProjectMarketOptions>(
@@ -109,7 +109,7 @@ const tokenProjectBase = createFixture<TokenProject>()(() => ({
 }))
 
 type TokenProjectOptions = {
-  priceHistory: (TimestampedAmount | null)[]
+  priceHistory: (TimestampedAmount | undefined)[]
 }
 
 export const tokenProject = createFixture<TokenProject, TokenProjectOptions>(() => ({

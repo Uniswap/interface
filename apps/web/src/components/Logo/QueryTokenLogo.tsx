@@ -16,6 +16,9 @@ export default function QueryTokenLogo(
   const chainId =
     (props.token?.chain ? supportedChainIdFromGQLChain(props.token?.chain) : ChainId.MAINNET) ?? ChainId.MAINNET
   const currency = props.token ? gqlToCurrency(props.token) : undefined
+  const logoUrl = props.token?.project?.logoUrl
 
-  return <PortfolioLogo currencies={useMemo(() => [currency], [currency])} chainId={chainId} {...props} />
+  return (
+    <PortfolioLogo currencies={useMemo(() => [currency], [currency])} chainId={chainId} images={[logoUrl]} {...props} />
+  )
 }

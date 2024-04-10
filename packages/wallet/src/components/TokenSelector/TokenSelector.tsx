@@ -192,6 +192,7 @@ function TokenSelectorContent({
           borderBottomWidth={isWeb ? '$spacing1' : undefined}
           py="$spacing8">
           <SearchTextInput
+            autoFocus={isWeb}
             backgroundColor={isWeb ? '$surface1' : '$surface2'}
             endAdornment={hasClipboardString ? <PasteButton inline onPress={handlePaste} /> : null}
             placeholder={t('tokens.selector.search.placeholder')}

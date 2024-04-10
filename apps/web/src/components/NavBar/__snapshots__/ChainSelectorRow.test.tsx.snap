@@ -51,7 +51,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 1 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -179,7 +179,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 5 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -291,7 +291,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 10 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -403,7 +403,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 56 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -515,7 +515,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 137 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -627,7 +627,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 420 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -739,7 +739,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 8453 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -851,7 +851,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 42161 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -963,7 +963,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 42220 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -1075,7 +1075,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 43114 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -1187,7 +1187,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 44787 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -1299,7 +1299,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 80001 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -1404,7 +1404,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 84531 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -1481,7 +1481,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 421613 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -1586,7 +1586,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 421614 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -1663,7 +1663,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 11155111 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }
@@ -1768,7 +1768,7 @@ exports[`ChainSelectorRow should match snapshot for chainId 11155420 1`] = `
   width: 20px;
 }
 
-@media only screen and (max-width:640px) {
+@media only screen and (max-width:396px) {
   .c0 {
     width: 100%;
   }

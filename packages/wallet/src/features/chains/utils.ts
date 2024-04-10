@@ -8,7 +8,7 @@ import {
 } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 
-import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 // Some code from the web app uses chainId types as numbers
 // This validates them as coerces into SupportedChainId
@@ -55,7 +55,7 @@ export function fromGraphQLChain(chain: Chain | undefined): ChainId | null {
   return null
 }
 
-export function toGraphQLChain(chainId: ChainId): Chain | null {
+export function toGraphQLChain(chainId: ChainId): Chain | undefined {
   switch (chainId) {
     case ChainId.Mainnet:
       return Chain.Ethereum
@@ -72,7 +72,7 @@ export function toGraphQLChain(chainId: ChainId): Chain | null {
     case ChainId.Bnb:
       return Chain.Bnb
   }
-  return null
+  return undefined
 }
 
 export function getPollingIntervalByBlocktime(chainId?: ChainId): PollingInterval {

@@ -4,7 +4,6 @@ import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { PortfolioTokenBalancePartsFragment } from 'graphql/data/__generated__/types-and-hooks'
 import { PortfolioToken } from 'graphql/data/portfolios'
 import { getTokenDetailsURL, gqlToCurrency, logSentryErrorForUnsupportedChain } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
@@ -13,14 +12,14 @@ import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
+import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { splitHiddenTokens } from 'utils/splitHiddenTokens'
-
 import { hideSmallBalancesAtom } from '../../SmallBalanceToggle'
 import { ExpandoRow } from '../ExpandoRow'
-import { useToggleAccountDrawer } from '../hooks'
 import { PortfolioLogo } from '../PortfolioLogo'
 import PortfolioRow, { PortfolioSkeleton, PortfolioTabWrapper } from '../PortfolioRow'
+import { useToggleAccountDrawer } from '../hooks'
 
 export default function Tokens({ account }: { account: string }) {
   const toggleWalletDrawer = useToggleAccountDrawer()
@@ -30,7 +29,7 @@ export default function Tokens({ account }: { account: string }) {
 
   const { data } = useCachedPortfolioBalancesQuery({ account })
 
-  const tokenBalances = data?.portfolios?.[0].tokenBalances
+  const tokenBalances = data?.portfolios?.[0]?.tokenBalances
 
   const { visibleTokens, hiddenTokens } = useMemo(
     () => splitHiddenTokens(tokenBalances ?? [], { hideSmallBalances, hideSpam }),
@@ -105,7 +104,14 @@ function TokenRow({
       properties={{ chain_id: currency.chainId, token_name: token?.name, address: token?.address }}
     >
       <PortfolioRow
-        left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size="40px" />}
+        left={
+          <PortfolioLogo
+            chainId={currency.chainId}
+            currencies={[currency]}
+            images={[tokenProjectMarket?.tokenProject.logoUrl]}
+            size="40px"
+          />
+        }
         title={<TokenNameText>{token?.name}</TokenNameText>}
         descriptor={
           <TokenBalanceText>

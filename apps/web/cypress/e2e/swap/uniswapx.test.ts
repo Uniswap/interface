@@ -1,8 +1,6 @@
 import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
 import { CyHttpMessages } from 'cypress/types/net-stubbing'
-
-import { FeatureFlag } from 'featureFlags'
-import { DAI, nativeOnChain, USDC_MAINNET } from '../../../src/constants/tokens'
+import { DAI, USDC_MAINNET, nativeOnChain } from '../../../src/constants/tokens'
 import { getTestSelector } from '../../utils'
 
 const QuoteWhereUniswapXIsBetter = 'uniswapx/quote1.json'
@@ -68,10 +66,12 @@ describe('UniswapX Orders', () => {
 
     stubSwapTxReceipt()
 
-    cy.hardhat().then((hardhat) => hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8)))
-    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
-      featureFlags: [{ name: FeatureFlag.gatewayDNSUpdate, value: false }],
+    cy.hardhat().then(async (hardhat) => {
+      await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8))
+      await hardhat.approval.setPermit2Allowance({ owner: hardhat.wallet, token: USDC_MAINNET })
+      await hardhat.approval.setTokenAllowanceForPermit2({ owner: hardhat.wallet, token: USDC_MAINNET })
     })
+    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
   })
 
   it('can swap exact-in trades using uniswapX', () => {
@@ -90,7 +90,7 @@ describe('UniswapX Orders', () => {
     cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
 
     // Verify swap success
-    cy.contains('Swapped')
+    cy.contains('Swap success!')
   })
 
   it('can swap exact-out trades using uniswapX', () => {
@@ -109,7 +109,7 @@ describe('UniswapX Orders', () => {
     cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
 
     // Verify swap success
-    cy.contains('Swapped')
+    cy.contains('Swap success!')
   })
 
   it('renders proper view if uniswapx order expires', () => {
@@ -125,7 +125,7 @@ describe('UniswapX Orders', () => {
     cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/expiredStatusResponse.json' })
 
     // Verify swap failure message
-    cy.contains('Swap expired')
+    cy.contains('Order expired')
   })
 
   it('renders proper view if uniswapx order has insufficient funds', () => {
@@ -141,7 +141,7 @@ describe('UniswapX Orders', () => {
     cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/insufficientFundsStatusResponse.json' })
 
     // Verify swap failure message
-    cy.contains('Insufficient funds')
+    cy.contains('Insufficient balance')
   })
 
   it('cancels a pending uniswapx order', () => {
@@ -202,14 +202,14 @@ describe('UniswapX Eth Input', () => {
 
     // Prompt ETH wrap to use for order
     cy.get('#swap-button').click()
-    cy.contains('Confirm swap').click()
+    cy.contains('Approve and swap').click()
     cy.contains('Wrap ETH')
 
     // Wrap ETH
     cy.wait('@eth_sendRawTransaction')
-    cy.contains('Pending...')
+    cy.contains('Wrapping ETH...')
     cy.hardhat().then((hardhat) => hardhat.mine())
-    cy.contains('Wrapped')
+    cy.contains('Wrap ETH')
 
     // Approve WETH spend
     cy.wait('@eth_sendRawTransaction')
@@ -217,14 +217,13 @@ describe('UniswapX Eth Input', () => {
 
     // Verify signed order submission
     cy.wait('@eth_signTypedData_v4')
-    cy.contains('Swap submitted')
-    cy.contains('Learn more about swapping with UniswapX')
+    cy.contains('Swap pending')
 
     // Return filled order status from uniswapx api
     cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
 
     // Verify swap success
-    cy.contains('Swapped')
+    cy.contains('Swap success!')
   })
 
   it('keeps ETH as the input currency before wrap completes', () => {
@@ -234,7 +233,7 @@ describe('UniswapX Eth Input', () => {
 
     // Prompt ETH wrap and confirm
     cy.get('#swap-button').click()
-    cy.contains('Confirm swap').click()
+    cy.contains('Approve and swap').click()
     cy.wait('@eth_sendRawTransaction')
 
     // Close review modal before wrap is confirmed on chain
@@ -250,12 +249,12 @@ describe('UniswapX Eth Input', () => {
 
     // Prompt ETH wrap and confirm
     cy.get('#swap-button').click()
-    cy.contains('Confirm swap').click()
+    cy.contains('Approve and swap').click()
     cy.wait('@eth_sendRawTransaction')
     cy.hardhat().then((hardhat) => hardhat.mine())
 
     // Confirm wrap is successful and WETH is now input token
-    cy.contains('Wrapped')
+    cy.contains('Wrap ETH')
     cy.contains('WETH')
 
     // Approve WETH spend
@@ -264,14 +263,13 @@ describe('UniswapX Eth Input', () => {
 
     // Submit uniswapx order signature
     cy.wait('@eth_signTypedData_v4')
-    cy.contains('Swap submitted')
-    cy.contains('Learn more about swapping with UniswapX')
+    cy.contains('Swap pending...')
 
     // Return filled order status from uniswapx api
     cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
 
     // Verify swap success
-    cy.contains('Swapped')
+    cy.contains('Swap success!')
 
     // Close modal
     cy.get(getTestSelector('confirmation-close-icon')).click()
@@ -288,10 +286,12 @@ describe('UniswapX activity history', () => {
 
     stubSwapTxReceipt()
 
-    cy.hardhat().then((hardhat) => hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8)))
-    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`, {
-      featureFlags: [{ name: FeatureFlag.gatewayDNSUpdate, value: false }],
+    cy.hardhat().then(async (hardhat) => {
+      await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDC_MAINNET, 3e8))
+      await hardhat.approval.setPermit2Allowance({ owner: hardhat.wallet, token: USDC_MAINNET })
+      await hardhat.approval.setTokenAllowanceForPermit2({ owner: hardhat.wallet, token: USDC_MAINNET })
     })
+    cy.visit(`/swap/?inputCurrency=${USDC_MAINNET.address}&outputCurrency=${DAI.address}`)
   })
 
   it('can view UniswapX order status progress in activity', () => {

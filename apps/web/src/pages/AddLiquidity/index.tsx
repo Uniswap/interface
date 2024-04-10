@@ -30,6 +30,8 @@ import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { OutOfSyncWarning } from 'components/addLiquidity/OutOfSyncWarning'
+import { useIsPoolOutOfSync } from 'hooks/useIsPoolOutOfSync'
 import { ButtonError, ButtonLight, ButtonPrimary, ButtonText } from '../../components/Button'
 import { BlueCard, OutlineCard, YellowCard } from '../../components/Card'
 import { AutoColumn } from '../../components/Column'
@@ -54,7 +56,7 @@ import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { useDerivedPositionInfo } from '../../hooks/useDerivedPositionInfo'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
-import useTransactionDeadline from '../../hooks/useTransactionDeadline'
+import { useGetTransactionDeadline } from '../../hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from '../../hooks/useV3Positions'
 import { Bound, Field } from '../../state/mint/v3/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -120,6 +122,7 @@ function AddLiquidity() {
 
   const baseCurrency = useCurrency(currencyIdA)
   const currencyB = useCurrency(currencyIdB)
+
   // prevent an error if they input ETH/WETH
   const quoteCurrency =
     baseCurrency && currencyB && baseCurrency.wrapped.equals(currencyB.wrapped) ? undefined : currencyB
@@ -170,7 +173,7 @@ function AddLiquidity() {
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
 
   // txn values
-  const deadline = useTransactionDeadline() // custom from users settings
+  const getDeadline = useGetTransactionDeadline() // custom from users settings
 
   const [txHash, setTxHash] = useState<string>('')
 
@@ -228,6 +231,8 @@ function AddLiquidity() {
     if (!positionManager || !baseCurrency || !quoteCurrency) {
       return
     }
+
+    const deadline = await getDeadline()
 
     if (position && account && deadline) {
       const useNative = baseCurrency.isNative ? baseCurrency : quoteCurrency.isNative ? quoteCurrency : undefined
@@ -570,6 +575,8 @@ function AddLiquidity() {
     addressesAreEquivalent(owner, account) || addressesAreEquivalent(existingPositionDetails?.operator, account)
   const showOwnershipWarning = Boolean(hasExistingPosition && account && !ownsNFT)
 
+  const outOfSync = useIsPoolOutOfSync(price)
+
   return (
     <>
       <ScrollablePage>
@@ -629,6 +636,11 @@ function AddLiquidity() {
                 {!hasExistingPosition && (
                   <>
                     <AutoColumn gap="md">
+                      {outOfSync && (
+                        <RowBetween paddingBottom="20px">
+                          <OutOfSyncWarning />
+                        </RowBetween>
+                      )}
                       <RowBetween paddingBottom="20px">
                         <ThemedText.DeprecatedLabel>
                           <Trans>Select pair</Trans>

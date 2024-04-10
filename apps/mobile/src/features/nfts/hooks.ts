@@ -7,9 +7,9 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { selectNftsData } from 'wallet/src/features/favorites/selectors'
+import { selectNftsVisibility } from 'wallet/src/features/favorites/selectors'
 import { toggleNftVisibility } from 'wallet/src/features/favorites/slice'
-import { shouldHideNft } from 'wallet/src/features/nfts/hooks'
+import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
@@ -40,12 +40,10 @@ export function useNFTMenu({
   const accounts = useAccounts()
   const isLocalAccount = owner && !!accounts[owner]
 
-  const isAddressAndTokenOk = contractAddress && tokenId
-  const nftsData = useAppSelector(selectNftsData)
-  const hidden =
-    owner &&
-    isAddressAndTokenOk &&
-    shouldHideNft({ nftsData, owner, contractAddress, tokenId, isSpam })
+  const nftVisibility = useAppSelector(selectNftsVisibility)
+  const nftKey = contractAddress && tokenId ? getNFTAssetKey(contractAddress, tokenId) : undefined
+  const nftVisibilityOverride = !!nftKey && !!nftVisibility[nftKey]?.isVisible
+  const hidden = isSpam && !nftVisibilityOverride
 
   const onPressShare = useCallback(async (): Promise<void> => {
     if (!contractAddress || !tokenId) {
@@ -66,17 +64,12 @@ export function useNFTMenu({
   }, [contractAddress, tokenId])
 
   const onPressHiddenStatus = useCallback(() => {
-    if (!owner || !contractAddress || !tokenId) {
+    if (!nftKey) {
       return
     }
-    dispatch(
-      toggleNftVisibility({
-        owner,
-        contractAddress,
-        tokenId,
-        isSpam,
-      })
-    )
+
+    dispatch(toggleNftVisibility({ nftKey, isSpam }))
+
     if (showNotification) {
       dispatch(
         pushNotification({
@@ -87,11 +80,11 @@ export function useNFTMenu({
         })
       )
     }
-  }, [contractAddress, dispatch, hidden, isSpam, owner, showNotification, tokenId])
+  }, [nftKey, dispatch, hidden, showNotification, isSpam])
 
   const menuActions = useMemo(
     () =>
-      isAddressAndTokenOk
+      nftKey
         ? [
             {
               title: t('common.button.share'),
@@ -111,7 +104,7 @@ export function useNFTMenu({
               []),
           ]
         : [],
-    [isAddressAndTokenOk, t, onPressShare, isLocalAccount, hidden, onPressHiddenStatus]
+    [nftKey, t, onPressShare, isLocalAccount, hidden, onPressHiddenStatus]
   )
 
   const onContextMenuPress = useCallback(
@@ -121,5 +114,5 @@ export function useNFTMenu({
     [menuActions]
   )
 
-  return { menuActions, onContextMenuPress, onlyShare: !!isAddressAndTokenOk && !isLocalAccount }
+  return { menuActions, onContextMenuPress, onlyShare: !!nftKey && !isLocalAccount }
 }

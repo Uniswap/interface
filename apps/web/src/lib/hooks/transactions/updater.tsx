@@ -1,13 +1,14 @@
 import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
 import ms from 'ms'
 import { useCallback, useEffect } from 'react'
 import { useTransactionRemover } from 'state/transactions/hooks'
 import { TransactionDetails } from 'state/transactions/types'
 
+import { NEVER_RELOAD } from '@uniswap/redux-multicall'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { CanceledError, retry, RetryableError, RetryOptions } from './retry'
 
 interface Transaction {
@@ -51,11 +52,12 @@ interface UpdaterProps {
 
 export default function Updater({ pendingTransactions, onCheck, onReceipt }: UpdaterProps): null {
   const { account, chainId, provider } = useWeb3React()
-
+  const hasPending = Object.keys(pendingTransactions).length > 0
   const lastBlockNumber = useBlockNumber()
+  const blockTimestamp = useCurrentBlockTimestamp(hasPending ? undefined : NEVER_RELOAD)
+
   const fastForwardBlockNumber = useFastForwardBlockNumber()
   const removeTransaction = useTransactionRemover()
-  const blockTimestamp = useCurrentBlockTimestamp()
 
   const getReceipt = useCallback(
     (hash: string) => {
@@ -88,7 +90,7 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
   )
 
   useEffect(() => {
-    if (!chainId || !provider || !lastBlockNumber) return
+    if (!chainId || !provider || !lastBlockNumber || !hasPending) return
 
     const cancels = Object.keys(pendingTransactions)
       .filter((hash) => shouldCheck(lastBlockNumber, pendingTransactions[hash]))
@@ -109,7 +111,17 @@ export default function Updater({ pendingTransactions, onCheck, onReceipt }: Upd
     return () => {
       cancels.forEach((cancel) => cancel())
     }
-  }, [chainId, provider, lastBlockNumber, getReceipt, onReceipt, onCheck, pendingTransactions, fastForwardBlockNumber])
+  }, [
+    chainId,
+    provider,
+    lastBlockNumber,
+    getReceipt,
+    onReceipt,
+    onCheck,
+    pendingTransactions,
+    fastForwardBlockNumber,
+    hasPending,
+  ])
 
   return null
 }

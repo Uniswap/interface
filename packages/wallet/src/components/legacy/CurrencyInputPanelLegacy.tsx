@@ -16,6 +16,7 @@ import { SelectTokenButton } from 'wallet/src/components/TokenSelector/SelectTok
 import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Warning, WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
+import { ElementName } from 'wallet/src/telemetry/constants'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 type CurrentInputPanelProps = {
@@ -25,7 +26,6 @@ type CurrentInputPanelProps = {
   onShowTokenSelector: () => void
   onSetExactAmount: (amount: string) => void
   value?: string
-  showNonZeroBalancesOnly?: boolean
   showSoftInputOnFocus?: boolean
   autoFocus?: boolean
   focus?: boolean
@@ -97,7 +97,6 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
     onSetMax,
     onShowTokenSelector,
     value,
-    showNonZeroBalancesOnly = true,
     showSoftInputOnFocus = false,
     focus,
     autoFocus,
@@ -236,7 +235,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
               returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
               showCurrencySign={isFiatInput}
               showSoftInputOnFocus={showSoftInputOnFocus}
-              testID={isOutput ? 'amount-input-out' : 'amount-input-in'}
+              testID={isOutput ? ElementName.AmountInputOut : ElementName.AmountInputIn}
               value={value}
               onChangeText={onChangeText}
               onPressIn={onPressIn}
@@ -245,11 +244,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
           </Flex>
         )}
         <Flex row alignItems="center">
-          <SelectTokenButton
-            selectedCurrencyInfo={currencyInfo}
-            showNonZeroBalancesOnly={showNonZeroBalancesOnly}
-            onPress={onShowTokenSelector}
-          />
+          <SelectTokenButton selectedCurrencyInfo={currencyInfo} onPress={onShowTokenSelector} />
         </Flex>
       </Flex>
 

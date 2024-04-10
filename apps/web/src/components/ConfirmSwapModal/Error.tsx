@@ -60,7 +60,7 @@ function getErrorContent({
       if (isLimitTrade(trade)) {
         return {
           title: <Trans>Limit failed</Trans>,
-          supportArticleURL: SupportArticleURL.UNISWAP_X_FAILURE,
+          supportArticleURL: SupportArticleURL.LIMIT_FAILURE,
         }
       } else {
         return {

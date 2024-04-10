@@ -11,9 +11,13 @@ import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import {
+  ExtensionOnboardingState,
+  setExtensionOnboardingState,
+} from 'wallet/src/features/behaviorHistory/slice'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { ModalName } from 'wallet/src/telemetry/constants'
 import { getOtpDurationString } from 'wallet/src/utils/duration'
 import { getEncryptedMnemonic } from './ScantasticEncryption'
@@ -33,18 +37,27 @@ export function ScantasticModal(): JSX.Element | null {
   const colors = useSporeColors()
   const dispatch = useAppDispatch()
 
-  const account = useActiveAccount()
+  // Use the first mnemonic account because zero-balance mnemonic accounts will fail to retrieve the mnemonic from rnEthers
+  const account = useNonPendingSignerAccounts().sort(
+    (account1, account2) => account1.derivationIndex - account2.derivationIndex
+  )[0]
+
+  if (!account) {
+    throw new Error('This should not be accessed with no mnemonic accounts')
+  }
 
   const { initialState } = useAppSelector(selectModalState(ModalName.Scantastic))
+  const params = initialState?.params
+
   const [OTP, setOTP] = useState('')
   // Once a user has scanned a QR they have 6 minutes to correctly input the OTP
   const [expirationTimestamp, setExpirationTimestamp] = useState<number>(
     Date.now() + 6 * ONE_MINUTE_MS
   )
-  const pubKey: JsonWebKey = initialState?.pubKey ? JSON.parse(initialState?.pubKey) : undefined
-  const uuid = initialState?.uuid
-  const device = (initialState?.vendor + ' ' + initialState?.model || '').trim()
-  const browser = initialState?.browser || ''
+  const pubKey = params?.publicKey
+  const uuid = params?.uuid
+  const device = (params?.vendor + ' ' + params?.model || '').trim()
+  const browser = params?.browser || ''
 
   const [expired, setExpired] = useState(false)
   const [redeemed, setRedeemed] = useState(false)
@@ -64,6 +77,7 @@ export function ScantasticModal(): JSX.Element | null {
         hideDelay: 6 * ONE_SECOND_MS,
       })
     )
+    dispatch(setExtensionOnboardingState(ExtensionOnboardingState.Completed))
     dispatch(closeAllModals())
   }
 
@@ -81,13 +95,14 @@ export function ScantasticModal(): JSX.Element | null {
   }, [dispatch])
 
   const onEncryptSeedphrase = async (): Promise<void> => {
+    if (!pubKey) {
+      return
+    }
+
     setError('')
     let encryptedSeedphrase = ''
     const { n, e } = pubKey
     try {
-      if (!n || !e) {
-        throw new Error('Invalid public key.')
-      }
       encryptedSeedphrase = await getEncryptedMnemonic(account?.address || '', n, e)
     } catch (err) {
       setError(t('scantastic.error.encryption'))
@@ -274,7 +289,7 @@ export function ScantasticModal(): JSX.Element | null {
   return (
     <BottomSheetModal
       backgroundColor={colors.surface1.get()}
-      name={ModalName.RemoveSeedPhraseWarningModal}
+      name={ModalName.Scantastic}
       onClose={onClose}>
       <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
         <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">

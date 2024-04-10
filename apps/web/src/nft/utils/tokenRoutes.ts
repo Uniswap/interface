@@ -2,8 +2,12 @@ import { IRoute, Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool } from '@uniswap/v3-sdk'
-import { TokenAmountInput, TokenTradeRouteInput, TradePoolInput } from 'graphql/data/__generated__/types-and-hooks'
 import { ClassicTrade } from 'state/routing/types'
+import {
+  TokenAmountInput,
+  TokenTradeRouteInput,
+  TradePoolInput,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 interface SwapAmounts {
   inputAmount: CurrencyAmount<Currency>

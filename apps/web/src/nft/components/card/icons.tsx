@@ -1,13 +1,13 @@
 import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { getMarketplaceIcon } from 'nft/components/card/utils'
 import { CollectionSelectedAssetIcon } from 'nft/components/icons'
 import { Markets } from 'nft/types'
 import { AlertTriangle, Check, Tag } from 'react-feather'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const StyledMarketplaceContainer = styled.div<{ isText?: boolean }>`

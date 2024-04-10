@@ -20,10 +20,9 @@ import {
 } from './types'
 import { isExactInput, transformQuoteToTrade } from './utils'
 
-const UNISWAP_API_URL = process.env.REACT_APP_UNISWAP_API_URL
 const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
-if (UNISWAP_API_URL === undefined || UNISWAP_GATEWAY_DNS_URL === undefined) {
-  throw new Error(`UNISWAP_API_URL and UNISWAP_GATEWAY_DNS_URL must be defined environment variables`)
+if (UNISWAP_GATEWAY_DNS_URL === undefined) {
+  throw new Error(`UNISWAP_GATEWAY_DNS_URL must be defined environment variables`)
 }
 
 const CLIENT_PARAMS = {
@@ -40,9 +39,10 @@ const DEFAULT_QUERY_PARAMS = {
 }
 
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
-  const { account, tokenInChainId, routerPreference } = args
+  const { account, tokenInChainId, uniswapXForceSyntheticQuotes, routerPreference } = args
 
   const uniswapx = {
+    useSyntheticQuotes: uniswapXForceSyntheticQuotes,
     // Protocol supports swap+send to different destination address, but
     // for now recipient === swapper
     recipient: account,
@@ -85,7 +85,6 @@ export const routingApi = createApi({
             amount,
             tradeType,
             sendPortionEnabled,
-            gatewayDNSUpdateEnabled,
           } = args
 
           const requestBody = {
@@ -101,12 +100,11 @@ export const routingApi = createApi({
             configs: getRoutingAPIConfig(args),
           }
 
-          const baseURL = gatewayDNSUpdateEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
           try {
-            return trace.child({ name: 'Quote on server', op: 'quote.server' }, async (serverTrace) => {
+            return trace.child({ name: 'Quote on server', op: 'quote.server' }, async () => {
               const response = await fetch({
                 method: 'POST',
-                url: `${baseURL}/quote`,
+                url: `${UNISWAP_GATEWAY_DNS_URL}/quote`,
                 body: JSON.stringify(requestBody),
                 headers: {
                   'x-request-source': 'uniswap-web',
@@ -122,8 +120,6 @@ export const routingApi = createApi({
                     typeof errorData === 'object' &&
                     (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
                   ) {
-                    serverTrace.setStatus('not_found')
-                    trace.setStatus('not_found')
                     sendAnalyticsEvent('No quote received from routing API', {
                       requestBody,
                       response,
@@ -151,7 +147,7 @@ export const routingApi = createApi({
           }
 
           try {
-            return trace.child({ name: 'Quote on client', op: 'quote.client' }, async (clientTrace) => {
+            return trace.child({ name: 'Quote on client', op: 'quote.client' }, async () => {
               const { getRouter, getClientSideQuote } = await import('lib/hooks/routing/clientSideSmartOrderRouter')
               const router = getRouter(args.tokenInChainId)
               const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
@@ -161,8 +157,6 @@ export const routingApi = createApi({
                   data: { ...trade, latencyMs: trace.now() },
                 }
               } else {
-                clientTrace.setStatus('not_found')
-                trace.setStatus('not_found')
                 return { data: { ...quoteResult, latencyMs: trace.now() } }
               }
             })

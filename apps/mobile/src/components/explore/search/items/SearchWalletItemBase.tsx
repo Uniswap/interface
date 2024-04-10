@@ -1,4 +1,3 @@
-import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { PropsWithChildren, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
@@ -8,15 +7,15 @@ import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { TouchableArea } from 'ui/src'
+import { ImpactFeedbackStyle, TouchableArea } from 'ui/src'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
-import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 import {
-  extractDomain,
   SearchResultType,
   WalletSearchResult,
+  extractDomain,
 } from 'wallet/src/features/search/SearchResult'
+import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 
 type SearchWalletItemBaseProps = {
   searchResult: WalletSearchResult

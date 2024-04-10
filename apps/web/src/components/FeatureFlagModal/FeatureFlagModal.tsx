@@ -1,38 +1,18 @@
 import { ChainId } from '@uniswap/sdk-core'
+import { SmallButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
-import { BaseVariant, FeatureFlag, featureFlagSettings, useUpdateConfig, useUpdateFlag } from 'featureFlags'
-import { DynamicConfigName } from 'featureFlags/dynamicConfig'
-import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
-import { useCurrencyConversionFlag } from 'featureFlags/flags/currencyConversion'
-import { useEip6963EnabledFlag } from 'featureFlags/flags/eip6963'
-import { useFallbackProviderEnabledFlag } from 'featureFlags/flags/fallbackProvider'
-import { useGatewayDNSUpdateAllEnabledFlag, useGatewayDNSUpdateEnabledFlag } from 'featureFlags/flags/gatewayDNSUpdate'
-import { useInfoExploreFlag } from 'featureFlags/flags/infoExplore'
-import { useInfoLiveViewsFlag } from 'featureFlags/flags/infoLiveViews'
-import { useInfoPoolPageFlag } from 'featureFlags/flags/infoPoolPage'
-import { useInfoTDPFlag } from 'featureFlags/flags/infoTDP'
-import { useExitAnimationFlag, useLandingPageV2Flag } from 'featureFlags/flags/landingPageV2'
-import { useLimitsEnabledFlag } from 'featureFlags/flags/limits'
-import { useLimitsFeeesEnabledFlag } from 'featureFlags/flags/limitsFees'
-import { useMultichainUXFlag } from 'featureFlags/flags/multichainUx'
-import {
-  useOutageBannerArbitrum,
-  useOutageBannerOptimism,
-  useOutageBannerPolygon,
-} from 'featureFlags/flags/outageBanner'
-import { useQuickRouteMainnetFlag } from 'featureFlags/flags/quickRouteMainnet'
-import { useSendEnabledFlag } from 'featureFlags/flags/send'
-import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
-import { useFeesEnabledFlag } from 'featureFlags/flags/useFees'
-import { useV2EverywhereFlag } from 'featureFlags/flags/v2Everywhere'
-import { useUpdateAtom } from 'jotai/utils'
-import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
+import { QUICK_ROUTE_CONFIG_KEY, useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
+import { PropsWithChildren, ReactNode } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
+import { Statsig } from 'statsig-react'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { DynamicConfigs, getConfigName } from 'uniswap/src/features/experiments/configs'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/experiments/hooks'
 
 const StyledModal = styled.div`
   position: fixed;
@@ -86,18 +66,12 @@ const CloseButton = styled.button`
   color: ${({ theme }) => theme.neutral1};
 `
 
-const ToggleButton = styled.button`
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  color: ${({ theme }) => theme.neutral1};
-`
-
 const Header = styled(Row)`
   padding: 0px 16px 8px;
   font-weight: 535;
   font-size: 16px;
   border-bottom: 1px solid ${({ theme }) => theme.surface3};
+  justify-content: space-between;
 `
 const FlagName = styled.span`
   font-size: 16px;
@@ -116,20 +90,6 @@ const FlagDescription = styled.span`
   color: ${({ theme }) => theme.neutral2};
   display: flex;
   align-items: center;
-`
-const FlagVariantSelection = styled.select`
-  border-radius: 12px;
-  padding: 8px;
-  background: ${({ theme }) => theme.surface3};
-  font-weight: 535;
-  font-size: 16px;
-  border: none;
-  color: ${({ theme }) => theme.neutral1};
-  cursor: pointer;
-
-  :hover {
-    background: ${({ theme }) => theme.surface3};
-  }
 `
 
 const FlagInfo = styled.div`
@@ -154,75 +114,57 @@ const SaveButton = styled.button`
   }
 `
 
-function Variant({ option }: { option: string }) {
-  return <option value={option}>{option}</option>
-}
-
 interface FeatureFlagProps {
-  variant: Record<string, string>
-  featureFlag: FeatureFlag
-  value: string
   label: string
+  flag: FeatureFlags
 }
 
 function FeatureFlagGroup({ name, children }: PropsWithChildren<{ name: string }>) {
-  // type FeatureFlagOption = { props: FeatureFlagProps }
-  const togglableOptions = Children.toArray(children)
-    .filter<ReactElement<FeatureFlagProps>>(
-      (child): child is ReactElement<FeatureFlagProps> =>
-        child instanceof Object && 'type' in child && child.type === FeatureFlagOption
-    )
-    .map(({ props }) => props)
-    .filter(({ variant }) => {
-      const values = Object.values(variant)
-      return values.includes(BaseVariant.Control) && values.includes(BaseVariant.Enabled)
-    })
-
-  const setFeatureFlags = useUpdateAtom(featureFlagSettings)
-  const allEnabled = togglableOptions.every(({ value }) => value === BaseVariant.Enabled)
-  const onToggle = useCallback(() => {
-    setFeatureFlags((flags) => ({
-      ...flags,
-      ...togglableOptions.reduce(
-        (flags, { featureFlag }) => ({
-          ...flags,
-          [featureFlag]: allEnabled ? BaseVariant.Control : BaseVariant.Enabled,
-        }),
-        {}
-      ),
-    }))
-  }, [allEnabled, setFeatureFlags, togglableOptions])
-
   return (
     <>
       <Row key={name}>
         <FlagGroupName>{name}</FlagGroupName>
-        <ToggleButton onClick={onToggle}>{allEnabled ? 'Disable' : 'Enable'} group</ToggleButton>
       </Row>
       {children}
     </>
   )
 }
 
-function FeatureFlagOption({ value, variant, featureFlag, label }: FeatureFlagProps) {
-  const updateFlag = useUpdateFlag()
-  const [count, setCount] = useState(0)
+const FlagVariantSelection = styled.select`
+  border-radius: 12px;
+  padding: 8px;
+  background: ${({ theme }) => theme.surface3};
+  font-weight: 535;
+  font-size: 16px;
+  border: none;
+  color: ${({ theme }) => theme.neutral1};
+  cursor: pointer;
+  :hover {
+    background: ${({ theme }) => theme.surface3};
+  }
+`
 
+function Variant({ option }: { option: string }) {
+  return <option value={option}>{option}</option>
+}
+
+function FeatureFlagOption({ flag, label }: FeatureFlagProps) {
+  const enabled = useFeatureFlagWithExposureLoggingDisabled(flag)
+  const name = getFeatureFlagName(flag)
   return (
-    <Row key={featureFlag}>
+    <Row key={flag}>
       <FlagInfo>
-        <FlagName>{featureFlag}</FlagName>
+        <FlagName>{name}</FlagName>
         <FlagDescription>{label}</FlagDescription>
       </FlagInfo>
       <FlagVariantSelection
-        id={featureFlag}
+        id={name}
         onChange={(e) => {
-          updateFlag(featureFlag, e.target.value)
-          setCount(count + 1)
+          Statsig.overrideGate(name, e.target.value === 'Enabled' ? true : false)
         }}
-        value={value}
+        value={enabled ? 'Enabled' : 'Disabled'}
       >
-        {Object.values(variant).map((variant) => (
+        {['Enabled', 'Disabled'].map((variant) => (
           <Variant key={variant} option={variant} />
         ))}
       </FlagVariantSelection>
@@ -231,19 +173,18 @@ function FeatureFlagOption({ value, variant, featureFlag, label }: FeatureFlagPr
 }
 
 interface DynamicConfigDropdownProps {
-  configName: DynamicConfigName
+  config: DynamicConfigs
   label: string
   options: any[]
   selected: any[]
   parser: (opt: string) => any
 }
 
-function DynamicConfigDropdown({ configName, label, options, selected, parser }: DynamicConfigDropdownProps) {
-  const updateConfig = useUpdateConfig()
+function DynamicConfigDropdown({ config, label, options, selected, parser }: DynamicConfigDropdownProps) {
+  const configName = getConfigName(config)
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValues = Array.from(e.target.selectedOptions, (opt) => parser(opt.value))
-    // Saved to atom as { [configName]: { [configName]: values } } to match Statsig return format
-    updateConfig(configName, { [configName]: selectedValues })
+    Statsig.overrideConfig(configName, { [QUICK_ROUTE_CONFIG_KEY]: selectedValues })
   }
   return (
     <Row key={configName}>
@@ -269,158 +210,54 @@ export default function FeatureFlagModal() {
   return (
     <Modal open={open}>
       <Header>
-        Feature Flag Settings
+        <span>Feature Flag Settings</span>
+        <SmallButtonPrimary
+          onClick={() => {
+            Statsig.removeGateOverride()
+            Statsig.removeConfigOverride()
+          }}
+        >
+          Clear Overrides
+        </SmallButtonPrimary>
         <CloseButton onClick={toggleModal}>
           <X size={24} />
         </CloseButton>
       </Header>
       <FlagsColumn>
+        <FeatureFlagOption flag={FeatureFlags.SendEnabled} label="Send on swap component" />
         <FeatureFlagOption
-          variant={BaseVariant}
-          value={useGatewayDNSUpdateEnabledFlag()}
-          featureFlag={FeatureFlag.gatewayDNSUpdate}
-          label="Use gateway URL for routing api"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useSendEnabledFlag()}
-          featureFlag={FeatureFlag.sendEnabled}
-          label="Send on swap component"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useGatewayDNSUpdateAllEnabledFlag()}
-          featureFlag={FeatureFlag.gatewayDNSUpdateAll}
-          label="Use gateway URL for all /v2 endpoints"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useEip6963EnabledFlag()}
-          featureFlag={FeatureFlag.eip6963Enabled}
+          flag={FeatureFlags.Eip6936Enabled}
           label="Enable EIP-6963: Multi Injected Provider Discovery"
         />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useFeesEnabledFlag()}
-          featureFlag={FeatureFlag.feesEnabled}
-          label="Enable Swap Fees"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useLimitsEnabledFlag()}
-          featureFlag={FeatureFlag.limitsEnabled}
-          label="Enable Limits"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useLimitsFeeesEnabledFlag()}
-          featureFlag={FeatureFlag.limitsFees}
-          label="Enable Limits fees"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useFallbackProviderEnabledFlag()}
-          featureFlag={FeatureFlag.fallbackProvider}
-          label="Enable fallback provider"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useCurrencyConversionFlag()}
-          featureFlag={FeatureFlag.currencyConversion}
-          label="Enable currency conversion"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useMultichainUXFlag()}
-          featureFlag={FeatureFlag.multichainUX}
-          label="Updated Multichain UX"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useLandingPageV2Flag()}
-          featureFlag={FeatureFlag.landingPageV2}
-          label="Refreshed landing page"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useExitAnimationFlag()}
-          featureFlag={FeatureFlag.exitAnimation}
-          label="Landing page exit animation"
-        />
-        <FeatureFlagOption
-          variant={BaseVariant}
-          value={useV2EverywhereFlag()}
-          featureFlag={FeatureFlag.v2Everywhere}
-          label="Enable V2 Everywhere"
-        />
+        <FeatureFlagOption flag={FeatureFlags.LimitsEnabled} label="Enable Limits" />
+        <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
+        <FeatureFlagOption flag={FeatureFlags.CurrencyConversion} label="Enable currency conversion" />
+        <FeatureFlagOption flag={FeatureFlags.UniconsV2} label="Unicon V2" />
+        <FeatureFlagOption flag={FeatureFlags.ExitAnimation} label="Landing page exit animation" />
+        <FeatureFlagOption flag={FeatureFlags.V2Everywhere} label="Enable V2 Everywhere" />
+        <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
+        <FeatureFlagOption flag={FeatureFlags.GqlTokenLists} label="Enable GQL Token Lists" />
         <FeatureFlagGroup name="Quick routes">
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useQuickRouteMainnetFlag()}
-            featureFlag={FeatureFlag.quickRouteMainnet}
-            label="Enable quick routes for Mainnet"
-          />
+          <FeatureFlagOption flag={FeatureFlags.QuickRouteMainnet} label="Enable quick routes for Mainnet" />
           <DynamicConfigDropdown
             selected={useQuickRouteChains()}
             options={Object.values(ChainId).filter((v) => !isNaN(Number(v))) as ChainId[]}
             parser={Number.parseInt}
-            configName={DynamicConfigName.quickRouteChains}
+            config={DynamicConfigs.QuickRouteChains}
             label="Enable quick routes for these chains"
           />
         </FeatureFlagGroup>
-        <FeatureFlagGroup name="Info Site Migration">
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useInfoExploreFlag()}
-            featureFlag={FeatureFlag.infoExplore}
-            label="Info site migration - Updating Token Explore Page"
-          />
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useInfoTDPFlag()}
-            featureFlag={FeatureFlag.infoTDP}
-            label="Info site migration - Updating Token Details Page"
-          />
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useInfoPoolPageFlag()}
-            featureFlag={FeatureFlag.infoPoolPage}
-            label="Info site migration - Adding Pool Details Page"
-          />
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useInfoLiveViewsFlag()}
-            featureFlag={FeatureFlag.infoLiveViews}
-            label="Info site migration - Support live view graphs"
-          />
+        <FeatureFlagGroup name="UniswapX Flags">
+          <FeatureFlagOption flag={FeatureFlags.UniswapXSyntheticQuote} label="Force synthetic quotes for UniswapX" />
+          <FeatureFlagOption flag={FeatureFlags.UniswapXv2} label="UniswapX v2" />
         </FeatureFlagGroup>
         <FeatureFlagGroup name="Outage Banners">
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useOutageBannerArbitrum()}
-            featureFlag={FeatureFlag.outageBannerArbitrum}
-            label="Outage Banner for Arbitrum"
-          />
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useOutageBannerPolygon()}
-            featureFlag={FeatureFlag.outageBannerPolygon}
-            label="Outage Banner for Polygon"
-          />
-          <FeatureFlagOption
-            variant={BaseVariant}
-            value={useOutageBannerOptimism()}
-            featureFlag={FeatureFlag.outageBannerOptimism}
-            label="Outage Banner for Optimism"
-          />
+          <FeatureFlagOption flag={FeatureFlags.OutageBannerArbitrum} label="Outage Banner for Arbitrum" />
+          <FeatureFlagOption flag={FeatureFlags.OutageBannerOptimism} label="Outage Banner for Optimism" />
+          <FeatureFlagOption flag={FeatureFlags.OutageBannerPolygon} label="Outage Banner for Polygon" />
         </FeatureFlagGroup>
         <FeatureFlagGroup name="Debug">
-          <FeatureFlagOption
-            variant={TraceJsonRpcVariant}
-            value={useTraceJsonRpcFlag()}
-            featureFlag={FeatureFlag.traceJsonRpc}
-            label="Enables JSON-RPC tracing"
-          />
+          <FeatureFlagOption flag={FeatureFlags.TraceJsonRpc} label="Enables JSON-RPC tracing" />
         </FeatureFlagGroup>
       </FlagsColumn>
       <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>

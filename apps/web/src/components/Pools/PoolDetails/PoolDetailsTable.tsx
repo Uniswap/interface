@@ -5,12 +5,12 @@ import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools
 import Column from 'components/Column'
 import { PoolDetailsPositionsTable } from 'components/Pools/PoolDetails/PoolDetailsPositionsTable'
 import Row from 'components/Row'
-import { ProtocolVersion, Token } from 'graphql/data/__generated__/types-and-hooks'
 import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { useMemo, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
+import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { PoolDetailsTransactionsTable } from './PoolDetailsTransactionsTable'
 

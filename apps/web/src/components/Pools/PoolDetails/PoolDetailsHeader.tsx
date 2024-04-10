@@ -3,16 +3,19 @@ import { ChainId, Percent } from '@uniswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import Column from 'components/Column'
+import { DropdownSelector } from 'components/DropdownSelector'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
+import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
+import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/TokenDetails/shared'
 import { StyledExternalLink } from 'components/Tokens/TokenDetails/TokenDetailsHeader'
 import { BIPS_BASE } from 'constants/misc'
-import { ProtocolVersion, Token } from 'graphql/data/__generated__/types-and-hooks'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { chainIdToBackendName, getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -23,14 +26,10 @@ import { Link } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
 import { ClickableStyle, EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
+import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { shortenAddress } from 'utilities/src/addresses'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
-import { DropdownSelector } from 'components/DropdownSelector'
-import { ReverseArrow } from 'components/Icons/ReverseArrow'
-import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/TokenDetails/shared'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useFormatter } from 'utils/formatNumbers'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import { DetailBubble } from './shared'
 
 const HeaderContainer = styled.div`
@@ -73,7 +72,7 @@ export function PoolDetailsBreadcrumb({ chainId, poolAddress, token0, token1, lo
   const poolsOrigin = `/explore/pools/${chainName.toLowerCase()}`
 
   return (
-    <BreadcrumbNavContainer isInfoPDPEnabled aria-label="breadcrumb-nav">
+    <BreadcrumbNavContainer aria-label="breadcrumb-nav">
       <BreadcrumbNavLink to={exploreOrigin}>
         <Trans>Explore</Trans> <ChevronRight size={14} />
       </BreadcrumbNavLink>

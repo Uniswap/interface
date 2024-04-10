@@ -1,8 +1,8 @@
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import { TokenInfo } from '@uniswap/token-lists'
 import { nativeOnChain } from 'constants/tokens'
-import { PortfolioTokenBalancePartsFragment } from 'graphql/data/__generated__/types-and-hooks'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SplitOptions, splitHiddenTokens } from 'utils/splitHiddenTokens'
 
 /** Sorts currency amounts (descending). */
@@ -37,7 +37,7 @@ function tokenComparator(balances: TokenBalances, a: Token, b: Token) {
 
 /** Given the results of the PortfolioTokenBalances query, returns a filtered list of tokens sorted by USD value. */
 export function getSortedPortfolioTokens(
-  portfolioTokenBalances: readonly PortfolioTokenBalancePartsFragment[] | undefined,
+  portfolioTokenBalances: (PortfolioTokenBalancePartsFragment | undefined)[] | undefined,
   balances: TokenBalances,
   chainId: ChainId | undefined,
   splitOptions?: SplitOptions
@@ -72,7 +72,7 @@ export function getSortedPortfolioTokens(
   return validVisiblePortfolioTokens.sort(tokenComparator.bind(null, balances))
 }
 
-export function tokenQuerySortComparator<T extends Token | TokenInfo>(query: string): (a: T, b: T) => number {
+export function tokenQuerySortComparator<T extends Currency | TokenInfo>(query: string): (a: T, b: T) => number {
   const trimmedQuery = query.toLowerCase().trim()
 
   return (a: T, b: T) => {

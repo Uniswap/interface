@@ -6,7 +6,7 @@ import {
   gqlNFTToNFTCollectionSearchResult,
 } from 'src/components/explore/search/utils'
 import { Inset, Loader } from 'ui/src'
-import { useSearchPopularNftCollectionsQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { useSearchPopularNftCollectionsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   NFTCollectionSearchResult,
   SearchResultType,

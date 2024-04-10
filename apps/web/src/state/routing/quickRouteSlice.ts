@@ -21,15 +21,7 @@ export const quickRouteApi = createApi({
       queryFn(args, _api, _extraOptions, fetch) {
         return trace({ name: 'QuickRoute', op: 'quote.quick_route' }, async (trace) => {
           logSwapQuoteRequest(args.tokenInChainId, RouterPreference.API, true)
-          const {
-            tokenInAddress,
-            tokenInChainId,
-            tokenOutAddress,
-            tokenOutChainId,
-            amount,
-            tradeType,
-            gatewayDNSUpdateAllEnabled,
-          } = args
+          const { tokenInAddress, tokenInChainId, tokenOutAddress, tokenOutChainId, amount, tradeType } = args
           const type = isExactInput(tradeType) ? 'EXACT_IN' : 'EXACT_OUT'
 
           const requestBody = {
@@ -41,10 +33,9 @@ export const quickRouteApi = createApi({
             tradeType: type,
           }
 
-          const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
           const response = await fetch({
             method: 'GET',
-            url: `${baseURL}/quickroute`,
+            url: `${UNISWAP_GATEWAY_DNS_URL}/quickroute`,
             params: requestBody,
           })
 
@@ -56,7 +47,6 @@ export const quickRouteApi = createApi({
               typeof errorData === 'object' &&
               (errorData?.errorCode === 'NO_ROUTE' || errorData?.detail === 'No quotes available')
             ) {
-              trace.setStatus('not_found')
               sendAnalyticsEvent('No quote received from quickroute API', {
                 requestBody,
                 response,

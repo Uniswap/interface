@@ -5,8 +5,9 @@ import { useNftAssetDetails } from 'graphql/data/nft/Details'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
 import { AssetPriceDetails } from 'nft/components/details/AssetPriceDetails'
+import { blocklistedCollections } from 'nft/utils'
 import { Helmet } from 'react-helmet-async/lib/index'
-import { useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 
 const AssetContainer = styled.div`
@@ -41,6 +42,10 @@ const AssetPage = () => {
   const { data, loading } = useNftAssetDetails(contractAddress, tokenId)
 
   const [asset, collection] = data
+
+  if (blocklistedCollections.includes(contractAddress)) {
+    return <Navigate to="/nfts" replace />
+  }
 
   if (loading) return <AssetDetailsLoading />
   return (

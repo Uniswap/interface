@@ -1,5 +1,4 @@
 import { DISPLAYS, ORDERED_TIMES } from 'components/Tokens/TokenTable/TimeSelector'
-import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TimePeriod } from 'graphql/data/util'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
@@ -32,17 +31,17 @@ const TimeOptionsContainer = styled.div`
     border: none;
   }
 `
-const TimeButton = styled.button<{ isInfoTDPEnabled: boolean; active: boolean }>`
+const TimeButton = styled.button<{ active: boolean }>`
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: ${({ theme, active }) => (active ? theme.surface3 : 'transparent')};
   font-weight: 535;
-  font-size: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '14px' : '16px')};
+  font-size: 14px;
   padding: 6px 12px;
   border-radius: 12px;
-  line-height: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '16px' : '20px')};
+  line-height: 16px;
   border: none;
   cursor: pointer;
   color: ${({ theme, active }) => (active ? theme.neutral1 : theme.neutral2)};
@@ -69,7 +68,6 @@ export default function TimePeriodSelector({
   className?: string
 }) {
   const refitChartContent = useAtomValue(refitChartContentAtom)
-  const isInfoTDPEnabled = useInfoTDPEnabled()
 
   return (
     <TimeOptionsWrapper>
@@ -77,7 +75,6 @@ export default function TimePeriodSelector({
         {options.map(({ time, display }) => (
           <TimeButton
             key={display}
-            isInfoTDPEnabled={isInfoTDPEnabled}
             active={timePeriod === time}
             onClick={() => {
               if (timePeriod === time) {

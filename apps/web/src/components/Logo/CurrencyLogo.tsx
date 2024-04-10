@@ -15,7 +15,7 @@ export default function CurrencyLogo(
       chainId={props.currency?.chainId}
       address={props.currency?.wrapped.address}
       symbol={props.symbol ?? props.currency?.symbol}
-      backupImg={(props.currency as TokenInfo)?.logoURI}
+      primaryImg={(props.currency as TokenInfo)?.logoURI}
       {...props}
     />
   )

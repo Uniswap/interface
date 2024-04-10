@@ -21,6 +21,7 @@ import {
 } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
+import { ensureLeading0x } from 'wallet/src/utils/addresses'
 import { areCurrencyIdsEqual, buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function usePendingTransactions(
@@ -144,7 +145,7 @@ export function useMergeLocalAndRemoteTransactions(
     const remoteTxMap: Map<string, TransactionDetails> = new Map()
     remoteTransactions.forEach((tx) => {
       if (tx.hash) {
-        const txHash = tx.hash.toLowerCase()
+        const txHash = ensureLeading0x(tx.hash.toLowerCase())
         remoteTxMap.set(txHash, tx)
         txHashes.add(txHash)
       } else {
@@ -155,7 +156,7 @@ export function useMergeLocalAndRemoteTransactions(
     const localTxMap: Map<string, TransactionDetails> = new Map()
     localTransactions.forEach((tx) => {
       if (tx.hash) {
-        const txHash = tx.hash.toLowerCase()
+        const txHash = ensureLeading0x(tx.hash.toLowerCase())
         localTxMap.set(txHash, tx)
         txHashes.add(txHash)
       } else {

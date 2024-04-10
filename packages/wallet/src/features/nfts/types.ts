@@ -1,4 +1,4 @@
-import { IAmount } from 'wallet/src/data/__generated__/types-and-hooks'
+import { IAmount } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export type NFTItem = {
   name?: string
@@ -13,9 +13,4 @@ export type NFTItem = {
   ownerAddress?: string
   listPrice?: IAmount
   isSpam?: boolean
-}
-
-export type NftData = {
-  isSpamIgnored?: boolean
-  isHidden?: boolean
 }

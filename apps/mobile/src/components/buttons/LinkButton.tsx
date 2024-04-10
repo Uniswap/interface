@@ -11,6 +11,7 @@ interface LinkButtonProps extends Omit<TouchableAreaProps, 'onPress'> {
   isSafeUri?: boolean
   color?: string
   iconColor?: string
+  showIcon?: boolean
   size?: number
   textVariant?: TextVariantTokens
 }
@@ -21,6 +22,7 @@ export function LinkButton({
   textVariant,
   color,
   iconColor,
+  showIcon = true,
   openExternalBrowser = false,
   isSafeUri = false,
   size = iconSizes.icon20,
@@ -43,12 +45,14 @@ export function LinkButton({
         <Text {...colorStyles} variant={textVariant}>
           {label}
         </Text>
-        <ExternalLinkIcon
-          color={iconColor ?? color ?? colors.accent1.get()}
-          height={size}
-          strokeWidth={1.5}
-          width={size}
-        />
+        {showIcon && (
+          <ExternalLinkIcon
+            color={iconColor ?? color ?? colors.accent1.get()}
+            height={size}
+            strokeWidth={1.5}
+            width={size}
+          />
+        )}
       </Flex>
     </TouchableArea>
   )

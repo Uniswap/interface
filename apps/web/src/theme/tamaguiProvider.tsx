@@ -5,7 +5,7 @@ export function TamaguiProvider({ children, ...rest }: Omit<TamaguiProviderProps
   const darkMode = useIsDarkMode()
 
   return (
-    <OGTamaguiProvider config={tamaguiConfig} defaultTheme={darkMode ? 'dark' : 'light'} disableInjectCSS {...rest}>
+    <OGTamaguiProvider config={tamaguiConfig} defaultTheme={darkMode ? 'dark' : 'light'} {...rest}>
       {children}
     </OGTamaguiProvider>
   )

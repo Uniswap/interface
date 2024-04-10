@@ -15,7 +15,7 @@ export type WebBottomSheetProps = Pick<
   | 'backgroundColor'
   | 'isDismissible'
   | 'isModalOpen'
-  | 'isCentered'
+  | 'alignment'
 >
 
 export function BottomSheetModal(props: BottomSheetModalProps): JSX.Element {
@@ -27,7 +27,7 @@ export function BottomSheetModal(props: BottomSheetModalProps): JSX.Element {
     'children',
     'isDismissible',
     'isModalOpen',
-    'isCentered',
+    'alignment',
   ])
 
   return <WebBottomSheetModal {...supportedProps} />
@@ -43,7 +43,7 @@ export function BottomSheetDetachedModal(props: BottomSheetModalProps): JSX.Elem
     'isModalOpen',
     'children',
     'isDismissible',
-    'isCentered',
+    'alignment',
   ])
 
   return <WebBottomSheetModal {...supportedProps} />
@@ -59,7 +59,7 @@ function WebBottomSheetModal({
   backgroundColor,
   isDismissible = true,
   isModalOpen = true,
-  isCentered = true,
+  alignment = 'center',
 }: WebBottomSheetProps): JSX.Element {
   const colors = useSporeColors()
   const [fullyClosed, setFullyClosed] = useState(false)
@@ -82,6 +82,8 @@ function WebBottomSheetModal({
     }
   }, [isModalOpen])
 
+  const isBottomAligned = alignment === 'bottom'
+
   return (
     <Trace logImpression={isModalOpen} modal={name}>
       <BottomSheetContextProvider isSheetReady={true}>
@@ -92,7 +94,7 @@ function WebBottomSheetModal({
           dismissOnOverlayPress={false}
           dismissOnSnapToBottom={false}
           open={isModalOpen}
-          snapPoints={fullScreen || isCentered ? [100] : undefined}
+          snapPoints={fullScreen || !isBottomAligned ? [100] : undefined}
           onOpenChange={(open: boolean): void => {
             !open && onClose?.()
           }}>
@@ -109,8 +111,10 @@ function WebBottomSheetModal({
           <Sheet.Frame
             backgroundColor="$transparent"
             flex={1}
-            height={fullScreen || isCentered ? '100%' : undefined}
-            justifyContent={isCentered ? 'center' : 'flex-end'}
+            height={fullScreen || !isBottomAligned ? '100%' : undefined}
+            justifyContent={
+              alignment === 'center' ? 'center' : alignment === 'top' ? 'flex-start' : 'flex-end'
+            }
             p="$spacing12">
             <Flex
               borderRadius="$rounded24"

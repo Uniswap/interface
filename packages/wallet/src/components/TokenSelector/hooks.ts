@@ -42,7 +42,11 @@ const baseCurrencyIds = [
 ]
 
 export function useAllCommonBaseCurrencies(): GqlResult<CurrencyInfo[]> {
-  const { data: baseCurrencyInfos, loading, error, refetch } = useTokenProjects(baseCurrencyIds)
+  return useCurrencies(baseCurrencyIds)
+}
+
+export function useCurrencies(currencyIds: string[]): GqlResult<CurrencyInfo[]> {
+  const { data: baseCurrencyInfos, loading, error, refetch } = useTokenProjects(currencyIds)
   const persistedError = usePersistedError(loading, error)
 
   // TokenProjects returns tokens on every network, so filter out native assets that have a

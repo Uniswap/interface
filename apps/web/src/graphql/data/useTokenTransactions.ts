@@ -1,12 +1,13 @@
 import { ChainId } from '@uniswap/sdk-core'
+import { chainIdToBackendName } from 'graphql/data/util'
+import { useCallback, useMemo, useRef } from 'react'
 import {
   Chain,
+  PoolTransaction,
   PoolTransactionType,
   useV2TokenTransactionsQuery,
   useV3TokenTransactionsQuery,
-} from 'graphql/data/__generated__/types-and-hooks'
-import { chainIdToBackendName } from 'graphql/data/util'
-import { useCallback, useMemo, useRef } from 'react'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export enum TokenTransactionType {
   BUY = 'Buy',
@@ -107,6 +108,9 @@ export function useTokenTransactions(
     () =>
       [
         ...(dataV3?.token?.v3Transactions?.filter((tx) => {
+          if (!tx) {
+            return false
+          }
           const tokenBeingSold = parseFloat(tx.token0Quantity) < 0 ? tx.token0 : tx.token1
           const isSell = tokenBeingSold.address?.toLowerCase() === address.toLowerCase()
           return (
@@ -115,6 +119,9 @@ export function useTokenTransactions(
           )
         }) ?? []),
         ...(dataV2?.token?.v2Transactions?.filter((tx) => {
+          if (!tx) {
+            return false
+          }
           const tokenBeingSold = parseFloat(tx.token0Quantity) < 0 ? tx.token0 : tx.token1
           const isSell = tokenBeingSold.address?.toLowerCase() === address.toLowerCase()
           return (
@@ -123,17 +130,20 @@ export function useTokenTransactions(
           )
         }) ?? []),
       ]
-        .sort((a, b) => b.timestamp - a.timestamp)
+        .sort((a, b): number =>
+          a?.timestamp && b?.timestamp ? b.timestamp - a.timestamp : a?.timestamp === null ? -1 : 1
+        )
         .slice(0, querySizeRef.current),
     [address, dataV2?.token?.v2Transactions, dataV3?.token?.v3Transactions, filter]
   )
 
   return useMemo(() => {
     return {
-      transactions,
+      transactions: transactions as PoolTransaction[],
       loading: loadingV3 || loadingV2,
       loadMore,
-      error: errorV2 || errorV3,
+      errorV2,
+      errorV3,
     }
   }, [transactions, loadingV3, loadingV2, loadMore, errorV2, errorV3])
 }

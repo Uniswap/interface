@@ -1,7 +1,10 @@
 // TODO(MOB-203): reduce component complexity
 /* eslint-disable complexity */
 import { BigNumber } from 'ethers'
-import { TokenStandard, TransactionDirection } from 'wallet/src/data/__generated__/types-and-hooks'
+import {
+  TokenStandard,
+  TransactionDirection,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {
   deriveCurrencyAmountFromAssetResponse,

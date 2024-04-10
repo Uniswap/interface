@@ -5,8 +5,8 @@ import {
   LocalAuthenticationResult,
 } from 'expo-local-authentication'
 import { NativeModulesProxy } from 'expo-modules-core'
+import i18n from 'uniswap/src/i18n/i18n'
 import { logger } from 'utilities/src/logger/logger'
-import i18n from 'wallet/src/i18n/i18n'
 
 const ELA = NativeModulesProxy.ExpoLocalAuthentication
 

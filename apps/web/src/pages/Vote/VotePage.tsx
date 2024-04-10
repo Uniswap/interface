@@ -18,6 +18,7 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
 
+import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { isAddress } from 'utilities/src/addresses'
 import { ButtonPrimary } from '../../components/Button'
 import { GrayCard } from '../../components/Card'
@@ -193,7 +194,7 @@ export default function VotePage() {
   const toggleExecuteModal = useToggleExecuteModal()
 
   // get and format date from data
-  const currentTimestamp = useCurrentBlockTimestamp()
+  const currentTimestamp = useCurrentBlockTimestamp(NEVER_RELOAD)
   const currentBlock = useBlockNumber()
   const startDate = getDateFromBlock(
     proposalData?.startBlock,

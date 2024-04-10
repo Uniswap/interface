@@ -5,11 +5,11 @@ import { Swap } from 'pages/Swap'
 import { useEffect, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import styled, { css, keyframes } from 'styled-components'
-import { ThemedText } from 'theme/components'
 
 import { BREAKPOINTS } from 'theme'
+import { Text } from 'ui/src'
 import { heightBreakpoints } from 'ui/src/theme'
-import { Box, H1, Subheading } from '../components/Generics'
+import { Box, H1 } from '../components/Generics'
 import { TokenCloud } from '../components/TokenCloud/index'
 import { Hover, RiseIn, RiseInText } from '../components/animations'
 
@@ -151,9 +151,17 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
         </RiseIn>
 
         <RiseIn delay={0.3}>
-          <Subheading>
+          <Text
+            variant="body1"
+            textAlign="center"
+            maxWidth={430}
+            color="$neutral2"
+            $short={{
+              variant: 'body2',
+            }}
+          >
             <Trans>The largest onchain marketplace. Buy and sell crypto on Ethereum and 7+ other chains.</Trans>
-          </Subheading>
+          </Text>
         </RiseIn>
       </Center>
       <LearnMoreContainer
@@ -175,9 +183,9 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
           >
             <Hover>
               <ColumnCenter>
-                <ThemedText.BodySecondary>
+                <Text variant="body2">
                   <Trans>Scroll to learn more</Trans>
-                </ThemedText.BodySecondary>
+                </Text>
                 <ChevronDown />
               </ColumnCenter>
             </Hover>

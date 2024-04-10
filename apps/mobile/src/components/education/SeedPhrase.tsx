@@ -7,7 +7,7 @@ import { CloseButton } from 'src/components/buttons/CloseButton'
 import { CarouselContext } from 'src/components/carousel/Carousel'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { Flex, Text, useDeviceDimensions } from 'ui/src'
-import { getCloudProviderName } from 'uniswap/src/utils/platform'
+import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 
 function Page({
   text,

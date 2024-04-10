@@ -5,10 +5,13 @@ import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { Screens } from 'src/screens/Screens'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import {
   NavigateToNftItemArgs,
   NavigateToSwapFlowArgs,
   WalletNavigationProvider,
+  getNavigateToSwapFlowArgsInitialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
 import { useFiatOnRampIpAddressQuery } from 'wallet/src/features/fiatOnRamp/api'
 import { ModalName } from 'wallet/src/telemetry/constants'
@@ -47,8 +50,7 @@ function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
 
   return useCallback(
     (args: NavigateToSwapFlowArgs): void => {
-      const initialState = args?.initialState
-
+      const initialState = getNavigateToSwapFlowArgsInitialState(args)
       dispatch(closeModal({ name: ModalName.Swap }))
       dispatch(openModal({ name: ModalName.Swap, initialState }))
     },
@@ -88,12 +90,15 @@ function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {
   const dispatch = useAppDispatch()
 
   const { data } = useFiatOnRampIpAddressQuery()
-  const fiatOnRampEligible = Boolean(data?.isBuyAllowed)
+  const moonpayFiatOnRampEligible = Boolean(data?.isBuyAllowed)
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
 
   return useCallback((): void => {
     dispatch(closeModal({ name: ModalName.Send }))
 
-    if (fiatOnRampEligible) {
+    if (forAggregatorEnabled) {
+      dispatch(openModal({ name: ModalName.FiatOnRampAggregator }))
+    } else if (moonpayFiatOnRampEligible) {
       dispatch(openModal({ name: ModalName.FiatOnRamp }))
     } else {
       dispatch(
@@ -103,5 +108,5 @@ function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {
         })
       )
     }
-  }, [dispatch, fiatOnRampEligible])
+  }, [dispatch, forAggregatorEnabled, moonpayFiatOnRampEligible])
 }

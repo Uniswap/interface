@@ -5,4 +5,4 @@ import { SEARCH_RESULT_HEADER_KEY } from './constants'
 
 export type SearchResultOrHeader =
   | SearchResult
-  | { type: typeof SEARCH_RESULT_HEADER_KEY; title: string }
+  | { type: typeof SEARCH_RESULT_HEADER_KEY; title: string; icon?: JSX.Element }

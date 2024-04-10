@@ -1,4 +1,4 @@
-import { Portfolio } from 'wallet/src/data/__generated__/types-and-hooks'
+import { Portfolio } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { assetActivity } from 'wallet/src/test/fixtures/gql/activities'
 import { amount } from 'wallet/src/test/fixtures/gql/amounts'
 import { tokenBalance } from 'wallet/src/test/fixtures/gql/assets'

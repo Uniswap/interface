@@ -6,12 +6,12 @@ import { useAppDispatch } from 'src/app/hooks'
 import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { openModal } from 'src/features/modals/modalSlice'
 import { useNavigateToSend } from 'src/features/send/hooks'
-import { useNavigateToSwap } from 'src/features/swap/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { usePortfolioCacheUpdater } from 'wallet/src/features/dataApi/balances'
 import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { toggleTokenVisibility } from 'wallet/src/features/favorites/slice'
@@ -47,7 +47,8 @@ export function useTokenContextMenu({
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
-  const navigateToSwap = useNavigateToSwap()
+
+  const { navigateToSwapFlow } = useWalletNavigation()
   const navigateToSend = useNavigateToSend()
 
   const activeAccountHoldsToken =
@@ -73,9 +74,9 @@ export function useTokenContextMenu({
   const onPressSwap = useCallback(
     (currencyField: CurrencyField) => {
       // Do not show warning modal speed-bump if user is trying to swap tokens they own
-      navigateToSwap(currencyField, currencyAddress, currencyChainId)
+      navigateToSwapFlow({ currencyField, currencyAddress, currencyChainId })
     },
-    [currencyAddress, currencyChainId, navigateToSwap]
+    [currencyAddress, currencyChainId, navigateToSwapFlow]
   )
 
   const onPressShare = useCallback(async () => {
@@ -107,13 +108,8 @@ export function useTokenContextMenu({
      */
     updateCache(!isHidden, portfolioBalance ?? undefined)
 
-    dispatch(
-      toggleTokenVisibility({
-        accountAddress: activeAccountAddress,
-        currencyId: currencyId.toLowerCase(),
-        currentlyVisible: !isHidden,
-      })
-    )
+    dispatch(toggleTokenVisibility({ currencyId: currencyId.toLowerCase(), isSpam: isHidden }))
+
     if (tokenSymbolForNotification) {
       dispatch(
         pushNotification({
@@ -124,26 +120,13 @@ export function useTokenContextMenu({
         })
       )
     }
-  }, [
-    activeAccountAddress,
-    currencyId,
-    dispatch,
-    isHidden,
-    tokenSymbolForNotification,
-    updateCache,
-    portfolioBalance,
-  ])
+  }, [currencyId, dispatch, isHidden, tokenSymbolForNotification, updateCache, portfolioBalance])
 
   const menuActions = useMemo(
     (): MenuAction[] => [
       {
-        title: t('common.button.buy'),
-        systemIcon: 'arrow.down',
-        onPress: () => onPressSwap(CurrencyField.OUTPUT),
-      },
-      {
-        title: t('common.button.sell'),
-        systemIcon: 'arrow.up',
+        title: t('common.button.swap'),
+        systemIcon: 'rectangle.2.swap',
         onPress: () => onPressSwap(CurrencyField.INPUT),
       },
       {

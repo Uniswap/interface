@@ -13,7 +13,6 @@ import Column from 'components/Column'
 import { RowBetween } from 'components/Row'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { HistoryDuration, PriceSource } from 'graphql/data/__generated__/types-and-hooks'
 import { useDailyProtocolTVL, useHistoricalProtocolVolume } from 'graphql/data/protocolStats'
 import {
   TimePeriod,
@@ -27,6 +26,7 @@ import { useExploreParams } from 'pages/Explore/redirects'
 import { ReactNode, useMemo, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
+import { HistoryDuration, PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const EXPLORE_CHART_HEIGHT_PX = 368

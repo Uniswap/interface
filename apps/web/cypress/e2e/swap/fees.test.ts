@@ -1,13 +1,11 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { FeatureFlag } from 'featureFlags'
-
 import { USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
 describe('Swap with fees', () => {
   describe('Classic swaps', () => {
     beforeEach(() => {
-      cy.visit('/swap', { featureFlags: [{ name: FeatureFlag.feesEnabled, value: true }] })
+      cy.visit('/swap')
 
       // Store trade quote into alias
       cy.intercept({ url: 'https://interface.gateway.uniswap.org/v2/quote' }, (req) => {
@@ -119,9 +117,7 @@ describe('Swap with fees', () => {
 
   describe('UniswapX swaps', () => {
     it('displays UniswapX fee in UI', () => {
-      cy.visit('/swap', {
-        featureFlags: [{ name: FeatureFlag.feesEnabled, value: true }],
-      })
+      cy.visit('/swap')
 
       // Intercept the trade quote
       cy.intercept({ url: 'https://interface.gateway.uniswap.org/v2/quote' }, (req) => {

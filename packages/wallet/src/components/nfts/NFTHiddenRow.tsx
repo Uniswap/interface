@@ -1,8 +1,7 @@
-import { ImpactFeedbackStyle } from 'expo-haptics'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Flex, Icons, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 export function HiddenNftsRowLeft({ numHidden }: { numHidden: number }): JSX.Element {

@@ -21,7 +21,6 @@ import Toggle from 'components/Toggle'
 import { isSupportedChain } from 'constants/chains'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
-import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
@@ -36,6 +35,7 @@ import { ThemedText } from 'theme/components'
 import { WrongChainError } from 'utils/errors'
 import { useFormatter } from 'utils/formatNumbers'
 
+import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { TransactionType } from '../../state/transactions/types'
@@ -100,7 +100,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   // boilerplate for the slider
   const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
 
-  const deadline = useTransactionDeadline() // custom from users settings
+  const getDeadline = useGetTransactionDeadline() // custom from users settings
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE) // custom from users
 
   const [showConfirm, setShowConfirm] = useState(false)
@@ -114,7 +114,6 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       !positionManager ||
       !liquidityValue0 ||
       !liquidityValue1 ||
-      !deadline ||
       !account ||
       !chainId ||
       !positionSDK ||
@@ -123,6 +122,9 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     ) {
       return
     }
+
+    const deadline = await getDeadline()
+    if (!deadline) throw new Error('could not get deadline')
 
     // we fall back to expecting 0 fees in case the fetch fails, which is safe in the
     // vast majority of cases
@@ -184,12 +186,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     positionManager,
     liquidityValue0,
     liquidityValue1,
-    deadline,
     account,
     chainId,
     positionSDK,
     liquidityPercentage,
     provider,
+    getDeadline,
     tokenId,
     allowedSlippage,
     feeValue0,

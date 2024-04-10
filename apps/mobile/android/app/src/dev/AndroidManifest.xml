@@ -7,22 +7,5 @@
     tools:ignore="GoogleAppIndexingWarning"
     tools:targetApi="28"
     android:networkSecurityConfig="@xml/network_security_config">
-    <activity
-      android:name=".MainActivity"
-      android:exported="true">
-      <intent-filter android:autoVerify="true" android:priority="2">
-        <action android:name="android.intent.action.VIEW" />
-
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-
-        <data android:scheme="https" />
-        <data android:host="uniswap.org" />
-        <data android:host="app.uniswap.org" />
-        <data android:host="uniswap.com" />
-        <data android:host="app.uniswap.com" />
-      </intent-filter>
-    </activity>
-
   </application>
 </manifest>

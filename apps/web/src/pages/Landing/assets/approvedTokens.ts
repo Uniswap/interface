@@ -1,6 +1,6 @@
 import ethereumLogo from 'assets/images/ethereum-logo.png'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { Chain } from 'graphql/data/__generated__/types-and-hooks'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export enum TokenStandard {
   ERC20,

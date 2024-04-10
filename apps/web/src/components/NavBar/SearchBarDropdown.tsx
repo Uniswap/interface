@@ -8,7 +8,6 @@ import Badge from 'components/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
-import { HistoryDuration, SafetyLevel } from 'graphql/data/__generated__/types-and-hooks'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS } from 'graphql/data/util'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
@@ -16,26 +15,23 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { subheadSmall } from 'nft/css/common.css'
-import { GenieCollection, TrendingCollection } from 'nft/types'
+import { GenieCollection } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { HistoryDuration, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { ClockIcon, TrendingArrow } from '../../nft/components/icons'
 import { SuspendConditionally } from '../Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from '../Suspense/SuspenseWithPreviousRenderAsFallback'
 import { useRecentlySearchedAssets } from './RecentlySearchedAssets'
 import * as styles from './SearchBar.css'
-import { CollectionRow, SkeletonRow, TokenRow } from './SuggestionRow'
-
-function isCollection(suggestion: GenieCollection | SearchToken | TrendingCollection) {
-  return (suggestion as SearchToken).decimals === undefined
-}
+import { SkeletonRow, SuggestionRow } from './SuggestionRow'
 
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
-  suggestions: (GenieCollection | SearchToken)[]
+  suggestions: (GenieCollection | SearchToken | undefined)[]
   header: JSX.Element
   headerIcon?: JSX.Element
   hoveredIndex?: number
@@ -66,25 +62,10 @@ const SearchBarDropdownSection = ({
         {suggestions.map((suggestion, index) =>
           isLoading || !suggestion ? (
             <SkeletonRow key={index} />
-          ) : isCollection(suggestion) ? (
-            <CollectionRow
-              key={suggestion.address}
-              collection={suggestion as GenieCollection}
-              isHovered={hoveredIndex === index + startingIndex}
-              setHoveredIndex={setHoveredIndex}
-              toggleOpen={toggleOpen}
-              index={index + startingIndex}
-              eventProperties={{
-                position: index + startingIndex,
-                selected_search_result_name: suggestion.name,
-                selected_search_result_address: suggestion.address,
-                ...eventProperties,
-              }}
-            />
           ) : (
-            <TokenRow
+            <SuggestionRow
               key={suggestion.address}
-              token={suggestion as SearchToken}
+              suggestion={suggestion}
               isHovered={hoveredIndex === index + startingIndex}
               setHoveredIndex={setHoveredIndex}
               toggleOpen={toggleOpen}

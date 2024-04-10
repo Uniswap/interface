@@ -3,9 +3,9 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 import { ColorTokens, Flex, FlexProps, Logos, SpaceTokens, Text, useSporeColors } from 'ui/src'
 import { TextVariantTokens, borderRadii, iconSizes, spacing } from 'ui/src/theme'
+import { IAmount } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isIOS } from 'uniswap/src/utils/platform'
 import { NumberType } from 'utilities/src/format/types'
-import { IAmount } from 'wallet/src/data/__generated__/types-and-hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 type ListPriceProps = FlexProps & {

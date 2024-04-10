@@ -12,7 +12,6 @@ import { SwapWrapperOuter } from 'components/swap/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import { checkWarning, getPriorityWarning, NotFoundWarning } from 'constants/tokenSafety'
-import { Token } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName, gqlToCurrency } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { useSwitchChain } from 'hooks/useSwitchChain'
@@ -25,6 +24,7 @@ import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
+import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { currencyId } from 'utils/currencyId'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -163,11 +163,11 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
   // Mobile Balance Data
   const { data: balanceQuery } = useCachedPortfolioBalancesQuery({ account })
   const { balance0, balance1, balance0Fiat, balance1Fiat } = useMemo(() => {
-    const filteredBalances = balanceQuery?.portfolios?.[0].tokenBalances?.filter(
-      (tokenBalance) => tokenBalance.token?.chain === chainIdToBackendName(chainId)
+    const filteredBalances = balanceQuery?.portfolios?.[0]?.tokenBalances?.filter(
+      (tokenBalance) => tokenBalance?.token?.chain === chainIdToBackendName(chainId)
     )
-    const tokenBalance0 = filteredBalances?.find((tokenBalance) => tokenBalance.token?.address === token0?.address)
-    const tokenBalance1 = filteredBalances?.find((tokenBalance) => tokenBalance.token?.address === token1?.address)
+    const tokenBalance0 = filteredBalances?.find((tokenBalance) => tokenBalance?.token?.address === token0?.address)
+    const tokenBalance1 = filteredBalances?.find((tokenBalance) => tokenBalance?.token?.address === token1?.address)
     return {
       balance0: tokenBalance0?.quantity ?? 0,
       balance1: tokenBalance1?.quantity ?? 0,
@@ -200,8 +200,8 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
   const isScreenSize = useScreenSize()
   const screenSizeLargerThanTablet = isScreenSize['lg']
   const isMobile = !isScreenSize['sm']
-  const token0Warning = token0?.address ? checkWarning(token0?.address) : null
-  const token1Warning = token1?.address ? checkWarning(token1?.address) : null
+  const token0Warning = token0?.address ? checkWarning(token0?.address) : undefined
+  const token1Warning = token1?.address ? checkWarning(token1?.address) : undefined
   const priorityWarning = getPriorityWarning(token0Warning, token1Warning)
 
   if (loading || !currency0 || !currency1)

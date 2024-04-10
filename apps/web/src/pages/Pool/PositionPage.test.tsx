@@ -52,8 +52,8 @@ describe('position page', () => {
     mocked(useV3Positions.useV3PositionFromTokenId).mockImplementation(() => {
       return { loading: false, position: positionDetails }
     })
-    mocked(useToken).mockImplementation((tokenAddress?: string | null | undefined) => {
-      if (!tokenAddress) return null
+    mocked(useToken).mockImplementation((tokenAddress?: string | undefined) => {
+      if (!tokenAddress) return undefined
 
       if (tokenAddress === USDC_MAINNET.address) {
         return USDC_MAINNET

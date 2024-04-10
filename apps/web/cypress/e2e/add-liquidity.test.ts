@@ -1,5 +1,6 @@
 import { CyHttpMessages } from 'cypress/types/net-stubbing'
 
+import { getTestSelector } from '../utils'
 import { aliasQuery, hasQuery } from '../utils/graphql-test-utils'
 
 describe('Add Liquidity', () => {
@@ -20,7 +21,7 @@ describe('Add Liquidity', () => {
     cy.visit('/add/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/ETH/500')
     cy.get('#add-liquidity-input-tokena .token-symbol-container').should('contain.text', 'UNI')
     cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'ETH')
-    cy.get('[data-testid="chain-selector"]').last().click()
+    cy.get(getTestSelector('chain-selector')).last().click()
     cy.contains('Polygon').click()
     cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'ETH')
     cy.get('#add-liquidity-input-tokena .token-symbol-container').should('not.contain.text', 'UNI')
@@ -74,20 +75,20 @@ describe('Add Liquidity', () => {
     cy.get('.start-price-input').type('1000')
 
     // Min Price increment / decrement buttons should be disabled
-    cy.get('[data-testid="increment-price-range"]').eq(0).should('be.disabled')
-    cy.get('[data-testid="decrement-price-range"]').eq(0).should('be.disabled')
+    cy.get(getTestSelector('increment-price-range')).eq(0).should('be.disabled')
+    cy.get(getTestSelector('decrement-price-range')).eq(0).should('be.disabled')
     // Enter min price, which should enable the buttons
     cy.get('.rate-input-0').eq(0).type('900').blur()
-    cy.get('[data-testid="increment-price-range"]').eq(0).should('not.be.disabled')
-    cy.get('[data-testid="decrement-price-range"]').eq(0).should('not.be.disabled')
+    cy.get(getTestSelector('increment-price-range')).eq(0).should('not.be.disabled')
+    cy.get(getTestSelector('decrement-price-range')).eq(0).should('not.be.disabled')
 
     // Repeat for Max Price step counter
-    cy.get('[data-testid="increment-price-range"]').eq(1).should('be.disabled')
-    cy.get('[data-testid="decrement-price-range"]').eq(1).should('be.disabled')
+    cy.get(getTestSelector('increment-price-range')).eq(1).should('be.disabled')
+    cy.get(getTestSelector('decrement-price-range')).eq(1).should('be.disabled')
     // Enter max price, which should enable the buttons
     cy.get('.rate-input-0').eq(1).type('1100').blur()
-    cy.get('[data-testid="increment-price-range"]').eq(1).should('not.be.disabled')
-    cy.get('[data-testid="decrement-price-range"]').eq(1).should('not.be.disabled')
+    cy.get(getTestSelector('increment-price-range')).eq(1).should('not.be.disabled')
+    cy.get(getTestSelector('decrement-price-range')).eq(1).should('not.be.disabled')
   })
 
   it('allows full range selection on new pool creation', () => {

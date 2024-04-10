@@ -6,7 +6,6 @@ import {
   sortMethodAtom,
   TokenSortMethod,
 } from 'components/Tokens/state'
-import gql from 'graphql-tag'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 
@@ -15,7 +14,7 @@ import {
   TopTokens100Query,
   useTopTokens100Query,
   useTopTokensSparklineQuery,
-} from './__generated__/types-and-hooks'
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   isPricePoint,
   PollingInterval,
@@ -26,94 +25,13 @@ import {
   usePollQueryWhileMounted,
 } from './util'
 
-gql`
-  query TopTokens100($duration: HistoryDuration!, $chain: Chain!) {
-    topTokens(pageSize: 100, page: 1, chain: $chain, orderBy: VOLUME) {
-      id
-      name
-      chain
-      address
-      symbol
-      standard
-      market(currency: USD) {
-        id
-        totalValueLocked {
-          id
-          value
-          currency
-        }
-        price {
-          id
-          value
-          currency
-        }
-        pricePercentChange(duration: $duration) {
-          id
-          currency
-          value
-        }
-        pricePercentChange1Hour: pricePercentChange(duration: HOUR) {
-          id
-          currency
-          value
-        }
-        pricePercentChange1Day: pricePercentChange(duration: DAY) {
-          id
-          currency
-          value
-        }
-        volume(duration: $duration) {
-          id
-          value
-          currency
-        }
-      }
-      project {
-        id
-        logoUrl
-        markets(currencies: [USD]) {
-          id
-          fullyDilutedValuation {
-            id
-            value
-            currency
-          }
-        }
-      }
-    }
-  }
-`
-
-// We separately query sparkline data so that the large download time does not block Token Explore rendering
-gql`
-  query TopTokensSparkline($duration: HistoryDuration!, $chain: Chain!) {
-    topTokens(pageSize: 100, page: 1, chain: $chain, orderBy: VOLUME) {
-      id
-      address
-      chain
-      market(currency: USD) {
-        id
-        priceHistory(duration: $duration) {
-          id
-          timestamp
-          value
-        }
-      }
-    }
-  }
-`
-
 const TokenSortMethods = {
   [TokenSortMethod.PRICE]: (a: TopToken, b: TopToken) =>
     (b?.market?.price?.value ?? 0) - (a?.market?.price?.value ?? 0),
-  [TokenSortMethod.DEPRECATE_PERCENT_CHANGE]: (a: TopToken, b: TopToken) =>
-    (b?.market?.pricePercentChange?.value ?? 0) - (a?.market?.pricePercentChange?.value ?? 0),
   [TokenSortMethod.DAY_CHANGE]: (a: TopToken, b: TopToken) =>
     (b?.market?.pricePercentChange1Day?.value ?? 0) - (a?.market?.pricePercentChange1Day?.value ?? 0),
   [TokenSortMethod.HOUR_CHANGE]: (a: TopToken, b: TopToken) =>
     (b?.market?.pricePercentChange1Hour?.value ?? 0) - (a?.market?.pricePercentChange1Hour?.value ?? 0),
-  [TokenSortMethod.DEPRECATE_TOTAL_VALUE_LOCKED]: (a: TopToken, b: TopToken) =>
-    (b?.market?.totalValueLocked?.value ?? 0) - (a?.market?.totalValueLocked?.value ?? 0),
   [TokenSortMethod.VOLUME]: (a: TopToken, b: TopToken) =>
     (b?.market?.volume?.value ?? 0) - (a?.market?.volume?.value ?? 0),
   [TokenSortMethod.FULLY_DILUTED_VALUATION]: (a: TopToken, b: TopToken) =>
@@ -178,9 +96,11 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const sparklines = useMemo(() => {
     const unwrappedTokens = chainId && sparklineQuery?.topTokens?.map((topToken) => unwrapToken(chainId, topToken))
     const map: SparklineMap = {}
-    unwrappedTokens?.forEach(
-      (current) => current?.address && (map[current.address] = current?.market?.priceHistory?.filter(isPricePoint))
-    )
+    unwrappedTokens?.forEach((current) => {
+      if (current?.address !== undefined) {
+        map[current.address] = current?.market?.priceHistory?.filter(isPricePoint) as PricePoint[]
+      }
+    })
     return map
   }, [chainId, sparklineQuery?.topTokens])
 
@@ -203,7 +123,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const tokenSortRank = useMemo(
     () =>
       sortedTokens?.reduce((acc, cur, i) => {
-        if (!cur.address) return acc
+        if (!cur?.address) return acc
         return {
           ...acc,
           [cur.address]: i + 1,

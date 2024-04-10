@@ -23,7 +23,7 @@ export const BlockedIcon = styled(Slash)`
   color: ${({ theme }) => theme.neutral2};
 `
 
-export default function TokenSafetyIcon({ warning }: { warning: Warning | null }) {
+export default function TokenSafetyIcon({ warning }: { warning?: Warning }) {
   switch (warning?.level) {
     case WARNING_LEVEL.BLOCKED:
       return (

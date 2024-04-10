@@ -1,4 +1,8 @@
-import { Amount, Currency, TimestampedAmount } from 'wallet/src/data/__generated__/types-and-hooks'
+import {
+  Amount,
+  Currency,
+  TimestampedAmount,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { MAX_FIXTURE_TIMESTAMP, faker } from 'wallet/src/test/shared'
 import { createFixture, randomEnumValue } from 'wallet/src/test/utils'
 

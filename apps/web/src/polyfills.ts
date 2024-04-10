@@ -14,6 +14,10 @@ declare global {
   }
 }
 
+if (!window.__DEV__) {
+  window.__DEV__ = process.env.NODE_ENV === 'development'
+}
+
 if (!window.Buffer) {
   window.Buffer = Buffer
 }

@@ -7,7 +7,6 @@ import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { getConnection } from 'connection'
-import { useGatewayDNSUpdateAllEnabled } from 'featureFlags/flags/gatewayDNSUpdate'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
 import { DutchOrderTrade, LimitOrderTrade, OffchainOrderType, TradeFillType } from 'state/routing/types'
@@ -34,15 +33,10 @@ if (UNISWAP_API_URL === undefined || UNISWAP_GATEWAY_DNS_URL === undefined) {
 // The `nonce` exists as part of the Swap quote response already, but if a user submits back-to-back
 // swaps without refreshing the quote (and therefore uses the same nonce), then the subsequent swaps will fail.
 //
-async function getUpdatedNonce(
-  swapper: string,
-  chainId: number,
-  gatewayDNSUpdateAllEnabled: boolean
-): Promise<BigNumber | null> {
-  const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
+async function getUpdatedNonce(swapper: string, chainId: number): Promise<BigNumber | null> {
   try {
     // endpoint fetches current nonce
-    const res = await fetch(`${baseURL}/nonce?address=${swapper.toLowerCase()}&chainId=${chainId}`)
+    const res = await fetch(`${UNISWAP_GATEWAY_DNS_URL}/nonce?address=${swapper.toLowerCase()}&chainId=${chainId}`)
     const { nonce } = await res.json()
     return BigNumber.from(nonce).add(1)
   } catch (e) {
@@ -66,7 +60,6 @@ export function useUniswapXSwapCallback({
 }) {
   const { account, provider, connector } = useWeb3React()
   const analyticsContext = useTrace()
-  const gatewayDNSUpdateAllEnabled = useGatewayDNSUpdateAllEnabled()
 
   const { data } = useCachedPortfolioBalancesQuery({ account })
   const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
@@ -89,11 +82,7 @@ export function useUniswapXSwapCallback({
         })
 
         try {
-          const updatedNonce = await getUpdatedNonce(
-            account,
-            trade.inputAmount.currency.chainId,
-            gatewayDNSUpdateAllEnabled
-          )
+          const updatedNonce = await getUpdatedNonce(account, trade.inputAmount.currency.chainId)
           // TODO(limits): WEB-3434 - add error state for missing nonce
           if (!updatedNonce) throw new Error('missing nonce')
 
@@ -145,13 +134,13 @@ export function useUniswapXSwapCallback({
             [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
           })
 
-          const baseURL = gatewayDNSUpdateAllEnabled ? UNISWAP_GATEWAY_DNS_URL : UNISWAP_API_URL
           const endpoint = trade.offchainOrderType === OffchainOrderType.LIMIT_ORDER ? 'limit-order' : 'order'
           const encodedOrder = updatedOrder.serialize()
-          const res = await fetch(`${baseURL}/${endpoint}`, {
+          const res = await fetch(`${UNISWAP_GATEWAY_DNS_URL}/${endpoint}`, {
             method: 'POST',
             body: JSON.stringify({
               encodedOrder,
+              orderType: trade.offchainOrderType,
               signature,
               chainId: updatedOrder.chainId,
               quoteId: trade.quoteId,
@@ -194,7 +183,7 @@ export function useUniswapXSwapCallback({
             trace.setStatus('cancelled')
             throw error
           } else if (error instanceof SignatureExpiredError) {
-            trace.setStatus('deadline_exceeded')
+            trace.setStatus('unknown_error')
             throw error
           } else {
             trace.setError(error)
@@ -202,16 +191,6 @@ export function useUniswapXSwapCallback({
           }
         }
       }),
-    [
-      account,
-      provider,
-      trade,
-      allowedSlippage,
-      fiatValues,
-      portfolioBalanceUsd,
-      analyticsContext,
-      connector,
-      gatewayDNSUpdateAllEnabled,
-    ]
+    [account, provider, trade, allowedSlippage, fiatValues, portfolioBalanceUsd, analyticsContext, connector]
   )
 }

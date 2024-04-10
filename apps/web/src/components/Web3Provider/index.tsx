@@ -4,13 +4,13 @@ import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, useTrace, user } from 'analytics'
 import { connections, getConnection } from 'connection'
 import { isSupportedChain } from 'constants/chains'
-import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from 'constants/providers'
-import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
-import { TraceJsonRpcVariant, useTraceJsonRpcFlag } from 'featureFlags/flags/traceJsonRpc'
+import { RPC_PROVIDERS } from 'constants/providers'
 import usePrevious from 'hooks/usePrevious'
 import { ReactNode, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useConnectedWallets } from 'state/wallets/hooks'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getWalletMeta } from 'utils/walletMeta'
 
@@ -31,12 +31,10 @@ function Updater() {
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
   const analyticsContext = useTrace()
-
-  const providers = useFallbackProviderEnabled() ? RPC_PROVIDERS : DEPRECATED_RPC_PROVIDERS
+  const networkProvider = isSupportedChain(chainId) ? RPC_PROVIDERS[chainId] : undefined
 
   // Trace RPC calls (for debugging).
-  const networkProvider = isSupportedChain(chainId) ? providers[chainId] : undefined
-  const shouldTrace = useTraceJsonRpcFlag() === TraceJsonRpcVariant.Enabled
+  const shouldTrace = useFeatureFlag(FeatureFlags.TraceJsonRpc)
   useEffect(() => {
     if (shouldTrace) {
       provider?.on('debug', trace)

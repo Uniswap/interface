@@ -15,7 +15,8 @@ import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
 import { getServiceProviderForQuote } from 'src/features/fiatOnRamp/utils'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { FiatOnRampScreens } from 'src/screens/Screens'
-import { Flex, useIsDarkMode } from 'ui/src'
+import { Flex, Text, useIsDarkMode } from 'ui/src'
+import { spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -27,6 +28,7 @@ import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { forceFetchFiatOnRampTransactions } from 'wallet/src/features/transactions/slice'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { FiatOnRampEventName, ModalName } from 'wallet/src/telemetry/constants'
@@ -49,6 +51,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     quotesSections,
     serviceProviders,
     countryCode,
+    countryState,
     baseCurrencyInfo,
     quoteCurrency,
     amount,
@@ -119,12 +122,14 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
           serviceProvider: serviceProvider.serviceProvider,
           preselectedServiceProvider: serviceProvider.serviceProvider,
           countryCode,
+          countryState,
           fiatCurrency: baseCurrencyInfo?.code.toLowerCase(),
           cryptoCurrency: quoteCurrency?.currencyInfo?.currency.symbol?.toLowerCase(),
         })
       }
-      await openUri(widgetUrl).catch(onError)
       dispatchAddTransaction()
+      await openUri(widgetUrl).catch(onError)
+      dispatch(forceFetchFiatOnRampTransactions())
     }
 
     if (timeoutElapsed && !widgetLoading && widgetData) {
@@ -145,6 +150,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     quoteCurrency?.currencyInfo?.currency.symbol,
     quotesSections,
     countryCode,
+    countryState,
   ])
 
   const isDarkMode = useIsDarkMode()
@@ -153,24 +159,35 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
   return (
     <Screen>
       {baseCurrencyInfo && serviceProvider ? (
-        <FiatOnRampConnectingView
-          amount={addFiatSymbolToNumber({
-            value: amount,
-            currencyCode: baseCurrencyInfo?.code,
-            currencySymbol: baseCurrencyInfo?.symbol,
-          })}
-          quoteCurrencyCode={quoteCurrency.currencyInfo?.currency.symbol}
-          serviceProviderLogo={
-            <Flex
-              alignItems="center"
-              height={SERVICE_PROVIDER_ICON_SIZE}
-              justifyContent="center"
-              width={SERVICE_PROVIDER_ICON_SIZE}>
-              <ImageUri imageStyle={ServiceProviderLogoStyles.icon} uri={logoUrl} />
-            </Flex>
-          }
-          serviceProviderName={serviceProvider.name}
-        />
+        <>
+          <FiatOnRampConnectingView
+            amount={addFiatSymbolToNumber({
+              value: amount,
+              currencyCode: baseCurrencyInfo?.code,
+              currencySymbol: baseCurrencyInfo?.symbol,
+            })}
+            quoteCurrencyCode={quoteCurrency.currencyInfo?.currency.symbol}
+            serviceProviderLogo={
+              <Flex
+                alignItems="center"
+                height={SERVICE_PROVIDER_ICON_SIZE}
+                justifyContent="center"
+                width={SERVICE_PROVIDER_ICON_SIZE}>
+                <ImageUri imageStyle={ServiceProviderLogoStyles.icon} uri={logoUrl} />
+              </Flex>
+            }
+            serviceProviderName={serviceProvider.name}
+          />
+          <Text
+            bottom={spacing.spacing8}
+            color="$neutral3"
+            position="absolute"
+            px="$spacing24"
+            textAlign="center"
+            variant="body3">
+            {t('fiatOnRamp.connection.terms', { serviceProvider: serviceProvider.name })}
+          </Text>
+        </>
       ) : null}
     </Screen>
   )
