@@ -21,15 +21,15 @@ describe('reanimated numberToLocaleStringWorklet', function () {
     expect(typeof numberToLocaleStringWorklet(num, locale)).toBe('string')
   })
 
-  it('returns <$<0.0000000000000001 if the value is below that amount', function () {
-    const num = 0.00000000000000001
+  it('returns <$0.00000001 if the value is below that amount', function () {
+    const num = 0.000000001
 
     expect(
       numberToLocaleStringWorklet(num, 'en-US', {
         style: 'currency',
         currency: 'USD',
       })
-    ).toBe('<$0.0000000000000001')
+    ).toBe('<$0.00000001')
   })
 
   it('returns a string with 3 sig figs if it is between 0.00000001 and 1,', function () {

@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { Scrim } from 'components/AccountDrawer'
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
@@ -5,16 +6,16 @@ import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools
 import Column from 'components/Column'
 import { CurrencySelect } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { ReverseArrow } from 'components/Icons/ReverseArrow'
+import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import Row from 'components/Row'
 import { SwapWrapperOuter } from 'components/swap/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
 import { checkWarning, getPriorityWarning, NotFoundWarning } from 'constants/tokenSafety'
-import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
+import { Token } from 'graphql/data/__generated__/types-and-hooks'
 import { chainIdToBackendName, gqlToCurrency } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { useSwitchChain } from 'hooks/useSwitchChain'
-import { Trans } from 'i18n'
 import { Swap } from 'pages/Swap'
 import { useMemo, useReducer } from 'react'
 import { Plus, X } from 'react-feather'
@@ -24,7 +25,6 @@ import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
-import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { currencyId } from 'utils/currencyId'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -70,7 +70,6 @@ const PoolButton = styled.button<{ $open?: boolean; $hideOnMobile?: boolean; $fi
   ${ClickableStyle}
   @media (max-width: ${BREAKPOINTS.lg}px) {
     width: ${({ $fixedWidth }) => $fixedWidth && '120px'};
-  }
   @media (max-width: ${BREAKPOINTS.sm}px) {
     display: ${({ $hideOnMobile }) => $hideOnMobile && 'none'};
     width: ${({ $fixedWidth }) => !$fixedWidth && '100%'};
@@ -162,13 +161,13 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
   const currency1 = token1 && gqlToCurrency(token1)
 
   // Mobile Balance Data
-  const { data: balanceQuery } = useTokenBalancesQuery()
+  const { data: balanceQuery } = useCachedPortfolioBalancesQuery({ account })
   const { balance0, balance1, balance0Fiat, balance1Fiat } = useMemo(() => {
-    const filteredBalances = balanceQuery?.portfolios?.[0]?.tokenBalances?.filter(
-      (tokenBalance) => tokenBalance?.token?.chain === chainIdToBackendName(chainId)
+    const filteredBalances = balanceQuery?.portfolios?.[0].tokenBalances?.filter(
+      (tokenBalance) => tokenBalance.token?.chain === chainIdToBackendName(chainId)
     )
-    const tokenBalance0 = filteredBalances?.find((tokenBalance) => tokenBalance?.token?.address === token0?.address)
-    const tokenBalance1 = filteredBalances?.find((tokenBalance) => tokenBalance?.token?.address === token1?.address)
+    const tokenBalance0 = filteredBalances?.find((tokenBalance) => tokenBalance.token?.address === token0?.address)
+    const tokenBalance1 = filteredBalances?.find((tokenBalance) => tokenBalance.token?.address === token1?.address)
     return {
       balance0: tokenBalance0?.quantity ?? 0,
       balance1: tokenBalance1?.quantity ?? 0,
@@ -201,8 +200,8 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
   const isScreenSize = useScreenSize()
   const screenSizeLargerThanTablet = isScreenSize['lg']
   const isMobile = !isScreenSize['sm']
-  const token0Warning = token0?.address ? checkWarning(token0?.address) : undefined
-  const token1Warning = token1?.address ? checkWarning(token1?.address) : undefined
+  const token0Warning = token0?.address ? checkWarning(token0?.address) : null
+  const token1Warning = token1?.address ? checkWarning(token1?.address) : null
   const priorityWarning = getPriorityWarning(token0Warning, token1Warning)
 
   if (loading || !currency0 || !currency1)

@@ -1,8 +1,9 @@
+import { Trans } from '@lingui/macro'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { Trans } from 'i18n'
+import { NftActivityType, NftMarketplace, OrderStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import {
@@ -29,11 +30,6 @@ import { getTimeDifference } from 'nft/utils/date'
 import { MouseEvent, ReactNode, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
-import {
-  NftActivityType,
-  NftMarketplace,
-  OrderStatus,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'

@@ -1,6 +1,6 @@
+import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { OutlineCard } from 'components/Card'
-import { Trans } from 'i18n'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'

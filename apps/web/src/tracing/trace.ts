@@ -26,20 +26,15 @@ interface TraceCallbackContext {
    */
   setData(key: string, value: unknown): void
   /**
-   * Sets the status of a trace from an HTTP status.
-   * If unset, the status will be set to 'ok' (or 'internal_error' if the callback throws).
-   */
-  setHttpStatus(status: number): void
-  /**
    * Sets the status of a trace. If unset, the status will be set to 'ok' (or 'internal_error' if the callback throws).
-   * Note that `ok`, `cancelled`, and `unknown_error` are considered non-failing; all others must use `setError`.
+   * @param status - If a number is passed, the corresponding http status will be used.
    */
-  setStatus(status: 'ok' | 'cancelled' | 'unknown_error'): void
+  setStatus(status: number | SpanStatusType): void
   /**
    * Sets the error data of a trace.
    * If unset and the callback throws, the thrown error will automatically be set for the trace.
    */
-  setError(error: unknown, status?: Exclude<SpanStatusType, 'ok' | 'cancelled' | 'unknown_error'>): void
+  setError(error: unknown, status?: number | SpanStatusType): void
 
   /** The elapsed time (in ms) since this trace was started. This mirrors `performance.now()`. */
   now(): number
@@ -48,27 +43,24 @@ type TraceCallback<T> = (options: TraceCallbackContext) => Promise<T>
 
 async function sentryAdaptor<T>(context: TraceContext, callback: TraceCallback<T>, span: Span | undefined): Promise<T> {
   const start = performance.now()
-  let isStatusSet = false
   const callbackContext: TraceCallbackContext = {
     child(context, callback) {
       const { name, op, tags, data } = context
-      const sentryContext: TransactionContext = { name, description: name, op, tags, data }
-      return sentryAdaptor(context, callback, span?.startChild(sentryContext))
+      return sentryAdaptor(context, callback, span?.startChild({ description: name, op, tags, data }))
     },
     setData(key, value) {
       span?.setData(key, value)
     },
-    setHttpStatus(status) {
-      span?.setHttpStatus(status)
-    },
     setStatus(status) {
-      span?.setStatus(status)
-      isStatusSet = true
+      if (typeof status === 'number') {
+        span?.setHttpStatus(status)
+      } else {
+        span?.setStatus(status)
+      }
     },
-    setError(error, status) {
+    setError(error, status = 'unknown_error') {
+      callbackContext.setStatus(status)
       span?.setData('error', error)
-      if (!isStatusSet && !status) status = 'internal_error'
-      if (status) span?.setStatus(status)
     },
     now() {
       return performance.now() - start
@@ -99,21 +91,11 @@ async function sentryAdaptor<T>(context: TraceContext, callback: TraceCallback<T
   }
 }
 
-export function isTracing(): boolean {
-  const parentTrace = Zone.current.get('trace')
-  return !!parentTrace
-}
-
 /** Traces the callback. */
 export async function trace<T>(context: TraceContext, callback: TraceCallback<T>): Promise<T> {
-  const parentTrace = Zone.current.get('trace')
-  if (parentTrace) {
-    return parentTrace?.(context, callback)
-  } else {
-    const { name, op, tags, data } = context
-    const sentryContext: TransactionContext = { name, description: name, op, tags, data }
-    // We use inactive spans so that we can measure two distinct flows at once, without mingling them.
-    const span = Sentry.startInactiveSpan(sentryContext)
-    return sentryAdaptor(context, callback, span)
-  }
+  const { name, op, tags, data } = context
+  const sentryContext: TransactionContext = { name, description: name, op, tags, data }
+  // We use inactive spans so that we can measure two distinct flows at once, without mingling them.
+  const span = Sentry.startInactiveSpan(sentryContext)
+  return sentryAdaptor(context, callback, span)
 }

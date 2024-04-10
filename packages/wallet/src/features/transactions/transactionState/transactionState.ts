@@ -126,9 +126,6 @@ const slice = createSlice({
     toggleShowRecipientSelector: (state) => {
       state.showRecipientSelector = !state.showRecipientSelector
     },
-    setShowRecipientSelector: (state, action: PayloadAction<boolean>) => {
-      state.showRecipientSelector = action.payload
-    },
   },
 })
 
@@ -144,6 +141,5 @@ export const {
   setTxId,
   showTokenSelector,
   toggleShowRecipientSelector,
-  setShowRecipientSelector,
 } = slice.actions
 export const { reducer: transactionStateReducer, actions: transactionStateActions } = slice

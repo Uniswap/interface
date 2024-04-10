@@ -1,7 +1,17 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { isSupportedChain } from 'constants/chains'
-import { useNftUniversalRouterAddressQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import gql from 'graphql-tag'
+
+import { useNftUniversalRouterAddressQuery } from '../__generated__/types-and-hooks'
+
+gql`
+  query NftUniversalRouterAddress($chain: Chain = ETHEREUM) {
+    nftRoute(chain: $chain, senderAddress: "", nftTrades: []) {
+      toAddress
+    }
+  }
+`
 
 export function getURAddress(chainId?: number, nftURAddress?: string): string | undefined {
   if (!chainId) return undefined

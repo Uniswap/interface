@@ -1,3 +1,4 @@
+import { t, Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { LoadingRow } from 'components/Loader/styled'
@@ -5,10 +6,10 @@ import RouterLabel from 'components/RouterLabel'
 import Row from 'components/Row'
 import { TooltipSize } from 'components/Tooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
+import { useFeesEnabled } from 'featureFlags/flags/useFees'
 import { useUSDPrice } from 'hooks/useUSDPrice'
-import { Trans, t } from 'i18n'
 import React, { useEffect, useState } from 'react'
-import { SpringValue, animated } from 'react-spring'
+import { animated, SpringValue } from 'react-spring'
 import { InterfaceTrade, SubmittableTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
@@ -17,6 +18,7 @@ import styled, { DefaultTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { getPriceImpactColor } from 'utils/prices'
+
 import { DetailLineItem, LineItemData } from './DetailLineItem'
 import { GasBreakdownTooltip, UniswapXDescription } from './GasBreakdownTooltip'
 import GasEstimateTooltip from './GasEstimateTooltip'
@@ -43,13 +45,11 @@ const ColorWrapper = styled.span<{ textColor?: keyof DefaultTheme }>`
 `
 
 const AutoBadge = styled(ThemedText.LabelMicro).attrs({ fontWeight: 535 })`
-  display: flex;
   background: ${({ theme }) => theme.surface3};
   border-radius: 8px;
   color: ${({ theme }) => theme.neutral2};
   height: 20px;
   padding: 0 6px;
-  align-items: center;
 
   ::after {
     content: '${t`Auto`}';
@@ -124,6 +124,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   const { trade, syncing, allowedSlippage, type } = props
   const { formatPercent } = useFormatter()
   const isAutoSlippage = useUserSlippageTolerance()[0] === SlippageTolerance.Auto
+  const feesEnabled = useFeesEnabled()
 
   const isUniswapX = isUniswapXTrade(trade)
   const isPreview = isPreviewTrade(trade)
@@ -172,6 +173,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         ),
       }
     case SwapLineItemType.SWAP_FEE: {
+      if (!feesEnabled) return
       if (isPreview) return { Label: () => <Trans>Fee</Trans>, Value: () => <Loading /> }
       return {
         Label: () => (
@@ -239,7 +241,7 @@ function getFOTLineItem({ type, trade }: SwapLineItemProps): LineItemData | unde
   if (tax.equalTo(0)) return
 
   return {
-    Label: () => <>{t(`{{name}} fee`, { name: currency.symbol ?? currency.name ?? t`Token` })}</>,
+    Label: () => <>{t`${currency.symbol ?? currency.name ?? t`Token`} fee`}</>,
     TooltipBody: FOTTooltipContent,
     Value: () => <ColoredPercentRow percent={tax} />,
   }

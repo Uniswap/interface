@@ -271,19 +271,11 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
 }
 
 .c18 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
   background: #22222212;
   border-radius: 8px;
   color: #7D7D7D;
   height: 20px;
   padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .c18::after {
@@ -1227,19 +1219,11 @@ exports[`SwapLineItem.tsx exact input 1`] = `
 }
 
 .c17 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
   background: #22222212;
   border-radius: 8px;
   color: #7D7D7D;
   height: 20px;
   padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .c17::after {
@@ -1768,7 +1752,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                   <div
                     class="c11 css-obwv3p"
                   >
-                    Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+                    Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
                   </div>
                 </div>
               </div>
@@ -2277,19 +2261,11 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
 }
 
 .c17 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
   background: #22222212;
   border-radius: 8px;
   color: #7D7D7D;
   height: 20px;
   padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .c17::after {
@@ -2818,7 +2794,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                   <div
                     class="c11 css-obwv3p"
                   >
-                    Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+                    Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
                   </div>
                 </div>
               </div>
@@ -3327,19 +3303,11 @@ exports[`SwapLineItem.tsx exact output 1`] = `
 }
 
 .c17 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
   background: #22222212;
   border-radius: 8px;
   color: #7D7D7D;
   height: 20px;
   padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .c17::after {
@@ -4377,19 +4345,11 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
 }
 
 .c17 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
   background: #22222212;
   border-radius: 8px;
   color: #7D7D7D;
   height: 20px;
   padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .c17::after {
@@ -4971,7 +4931,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                   <div
                     class="c11 css-obwv3p"
                   >
-                    Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+                    Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
                   </div>
                 </div>
               </div>
@@ -5480,19 +5440,11 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
 }
 
 .c17 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
   background: #22222212;
   border-radius: 8px;
   color: #7D7D7D;
   height: 20px;
   padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .c17::after {
@@ -6074,7 +6026,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                   <div
                     class="c11 css-obwv3p"
                   >
-                    Best price route costs ~$1.00 in gas.  This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
+                    Best price route costs ~$1.00 in gas. This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each step.
                   </div>
                 </div>
               </div>
@@ -6314,19 +6266,11 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
 }
 
 .c14 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
   background: #22222212;
   border-radius: 8px;
   color: #7D7D7D;
   height: 20px;
   padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .c14::after {

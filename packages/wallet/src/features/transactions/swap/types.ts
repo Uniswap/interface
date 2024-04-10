@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ChainId } from 'wallet/src/constants/chains'
+import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { useTrade } from 'wallet/src/features/transactions/swap/trade/legacy/hooks/useTrade'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { BaseDerivedInfo } from 'wallet/src/features/transactions/transfer/types'

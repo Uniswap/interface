@@ -1,13 +1,10 @@
+import { t, Trans } from '@lingui/macro'
 import Row from 'components/Row'
-import { t, Trans } from 'i18n'
+import { ProtocolVersion, useDailyProtocolVolumeQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useMemo } from 'react'
 import { ArrowRightCircle } from 'react-feather'
 import styled from 'styled-components'
 import { ClickableStyle, ExternalLink } from 'theme/components'
-import {
-  ProtocolVersion,
-  useDailyProtocolVolumeQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { Body1, Box, H2 } from '../components/Generics'
@@ -227,7 +224,7 @@ function Cards({ inView }: { inView: boolean }) {
       <LeftTop>
         <StatCard
           title={t`All time volume`}
-          value={formatNumber({ input: 2 * 10 ** 12, type: NumberType.FiatTokenStats })}
+          value={formatNumber({ input: 1.8 * 10 ** 12, type: NumberType.FiatTokenStats })}
           delay={0}
           inView={inView}
         />
@@ -235,7 +232,7 @@ function Cards({ inView }: { inView: boolean }) {
       <RightTop>
         <StatCard
           title={t`All time swappers`}
-          value={formatNumber({ input: 16.6 * 10 ** 6, type: NumberType.TokenQuantityStats })}
+          value={formatNumber({ input: 14.9 * 10 ** 6, type: NumberType.TokenQuantityStats })}
           delay={0.2}
           inView={inView}
         />
@@ -243,7 +240,7 @@ function Cards({ inView }: { inView: boolean }) {
       <LeftBottom>
         <StatCard
           title={t`All time LP fees `}
-          value={formatNumber({ input: 3.4 * 10 ** 9, type: NumberType.FiatTokenStats })}
+          value={formatNumber({ input: 3.2 * 10 ** 9, type: NumberType.FiatTokenStats })}
           delay={0.4}
           inView={inView}
         />

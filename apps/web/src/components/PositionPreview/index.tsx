@@ -1,17 +1,16 @@
+import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
+import { Break } from 'components/earn/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import RateToggle from 'components/RateToggle'
 import { RowBetween, RowFixed } from 'components/Row'
-import { Break } from 'components/earn/styled'
 import { BIPS_BASE } from 'constants/misc'
-import { Trans } from 'i18n'
 import JSBI from 'jsbi'
-import { BlastRebasingAlert } from 'pages/AddLiquidity/blastAlerts'
 import { ReactNode, useCallback, useState } from 'react'
 import { Bound } from 'state/mint/v3/actions'
 import { useTheme } from 'styled-components'
@@ -25,14 +24,12 @@ export const PositionPreview = ({
   inRange,
   baseCurrencyDefault,
   ticksAtLimit,
-  showBlastAlert,
 }: {
   position: Position
   title?: ReactNode
   inRange: boolean
   baseCurrencyDefault?: Currency
   ticksAtLimit: { [bound: string]: boolean | undefined }
-  showBlastAlert?: boolean
 }) => {
   const theme = useTheme()
   const { formatCurrencyAmount, formatDelta, formatPrice, formatTickPrice } = useFormatter()
@@ -81,7 +78,7 @@ export const PositionPreview = ({
         </RowFixed>
         <RangeBadge removed={removed} inRange={inRange} />
       </RowBetween>
-      {showBlastAlert && <BlastRebasingAlert />}
+
       <LightCard>
         <AutoColumn gap="md">
           <RowBetween>
@@ -111,10 +108,13 @@ export const PositionPreview = ({
             <ThemedText.DeprecatedLabel>
               <Trans>Fee tier</Trans>
             </ThemedText.DeprecatedLabel>
-            <ThemedText.DeprecatedLabel>{formatDelta(position?.pool?.fee / BIPS_BASE)}</ThemedText.DeprecatedLabel>
+            <ThemedText.DeprecatedLabel>
+              <Trans>{formatDelta(position?.pool?.fee / BIPS_BASE)}</Trans>
+            </ThemedText.DeprecatedLabel>
           </RowBetween>
         </AutoColumn>
       </LightCard>
+
       <AutoColumn gap="md">
         <RowBetween>
           {title ? <ThemedText.DeprecatedMain>{title}</ThemedText.DeprecatedMain> : <div />}
@@ -140,11 +140,11 @@ export const PositionPreview = ({
               </ThemedText.DeprecatedMediumHeader>
               <ThemedText.DeprecatedMain textAlign="center" fontSize="12px">
                 <Trans>
-                  {{ sym: quoteCurrency.symbol }} per {{ symB: baseCurrency.symbol }}
+                  {quoteCurrency.symbol} per {baseCurrency.symbol}
                 </Trans>
               </ThemedText.DeprecatedMain>
               <ThemedText.DeprecatedSmall textAlign="center" color={theme.neutral3} style={{ marginTop: '4px' }}>
-                <Trans>Your position will be 100% composed of {{ sym: baseCurrency?.symbol }} at this price</Trans>
+                <Trans>Your position will be 100% composed of {baseCurrency?.symbol} at this price</Trans>
               </ThemedText.DeprecatedSmall>
             </AutoColumn>
           </LightCard>
@@ -163,11 +163,11 @@ export const PositionPreview = ({
               </ThemedText.DeprecatedMediumHeader>
               <ThemedText.DeprecatedMain textAlign="center" fontSize="12px">
                 <Trans>
-                  {{ sym: quoteCurrency.symbol }} per {{ symB: baseCurrency.symbol }}
+                  {quoteCurrency.symbol} per {baseCurrency.symbol}
                 </Trans>
               </ThemedText.DeprecatedMain>
               <ThemedText.DeprecatedSmall textAlign="center" color={theme.neutral3} style={{ marginTop: '4px' }}>
-                <Trans>Your position will be 100% composed of {{ sym: quoteCurrency?.symbol }} at this price</Trans>
+                <Trans>Your position will be 100% composed of {quoteCurrency?.symbol} at this price</Trans>
               </ThemedText.DeprecatedSmall>
             </AutoColumn>
           </LightCard>
@@ -183,7 +183,7 @@ export const PositionPreview = ({
             })} `}</ThemedText.DeprecatedMediumHeader>
             <ThemedText.DeprecatedMain textAlign="center" fontSize="12px">
               <Trans>
-                {{ sym: quoteCurrency.symbol }} per {{ symB: baseCurrency.symbol }}
+                {quoteCurrency.symbol} per {baseCurrency.symbol}
               </Trans>
             </ThemedText.DeprecatedMain>
           </AutoColumn>

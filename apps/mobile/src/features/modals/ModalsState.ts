@@ -1,9 +1,8 @@
 import { ExploreModalState } from 'src/app/modals/ExploreModalState'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
-import { ExtensionWaitlistModalState } from 'src/features/scantastic/ExtensionWaitlistModalState'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
 import { Screens } from 'src/screens/Screens'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { FORTransferInstitution } from 'wallet/src/features/fiatOnRamp/types'
 import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { ModalName } from 'wallet/src/telemetry/constants'
@@ -28,7 +27,6 @@ export interface ModalsState {
   [ModalName.RemoveWallet]: AppModalState<RemoveWalletModalState>
   [ModalName.RestoreWallet]: AppModalState<undefined>
   [ModalName.Scantastic]: AppModalState<ScantasticModalState>
-  [ModalName.ExtensionWaitlistModal]: AppModalState<ExtensionWaitlistModalState>
   [ModalName.Send]: AppModalState<TransactionState>
   [ModalName.Swap]: AppModalState<TransactionState>
   [ModalName.UnitagsIntro]: AppModalState<{

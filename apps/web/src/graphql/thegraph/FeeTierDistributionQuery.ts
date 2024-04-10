@@ -1,7 +1,37 @@
 import { ApolloError, useQuery } from '@apollo/client'
+import gql from 'graphql-tag'
 import { useMemo } from 'react'
-import { FeeTierDistributionDocument, FeeTierDistributionQuery } from './__generated__/types-and-hooks'
+
+import { FeeTierDistributionQuery } from './__generated__/types-and-hooks'
 import { apolloClient } from './apollo'
+
+const query = gql`
+  query FeeTierDistribution($token0: String!, $token1: String!) {
+    _meta {
+      block {
+        number
+      }
+    }
+    asToken0: pools(
+      orderBy: totalValueLockedToken0
+      orderDirection: desc
+      where: { token0: $token0, token1: $token1 }
+    ) {
+      feeTier
+      totalValueLockedToken0
+      totalValueLockedToken1
+    }
+    asToken1: pools(
+      orderBy: totalValueLockedToken0
+      orderDirection: desc
+      where: { token0: $token1, token1: $token0 }
+    ) {
+      feeTier
+      totalValueLockedToken0
+      totalValueLockedToken1
+    }
+  }
+`
 
 export default function useFeeTierDistributionQuery(
   token0: string | undefined,
@@ -12,7 +42,7 @@ export default function useFeeTierDistributionQuery(
     data,
     loading: isLoading,
     error,
-  } = useQuery(FeeTierDistributionDocument, {
+  } = useQuery(query, {
     variables: {
       token0: token0?.toLowerCase(),
       token1: token1?.toLowerCase(),

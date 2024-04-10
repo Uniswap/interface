@@ -1,14 +1,13 @@
 export enum WalletEventName {
   ExploreSearchCancel = 'Explore Search Cancel',
-  NFTsLoaded = 'NFTs Loaded',
   NetworkFilterSelected = 'Network Filter Selected',
+  NFTsLoaded = 'NFTs Loaded',
   PortfolioBalanceFreshnessLag = 'Portfolio Balance Freshness Lag',
-  SendRecipientSelected = 'Send Recipient Selected',
-  ShareButtonClicked = 'Share Button Clicked',
   SwapSubmitted = 'Swap Submitted to Provider',
-  TokenSelected = 'Token Selected',
-  TransferCompleted = 'Transfer Completed',
+  SendRecipientSelected = 'Send Recipient Selected',
   TransferSubmitted = 'Transfer Submitted',
+  TransferCompleted = 'Transfer Completed',
+  TokenSelected = 'Token Selected',
 }
 
 // MOB-2816: move these to analytics-events package
@@ -20,10 +19,6 @@ export enum UnitagEventName {
   UnitagMetadataUpdated = 'Unitag Metadata Updated',
   UnitagChanged = 'Unitag Changed',
   UnitagRemoved = 'Unitag Removed',
-}
-
-export enum ExtensionOnboardingEventName {
-  PromoBannerActionTaken = 'Extension Promo Banner Action Taken',
 }
 
 export enum FiatOnRampEventName {
@@ -46,7 +41,6 @@ export enum WalletAppsFlyerEvents {
 
 export const ModalName = {
   AccountEdit: 'account-edit-modal',
-  AccountEditLabel: 'account-edit--label-modal',
   AccountSwitcher: 'account-switcher-modal',
   AddWallet: 'add-wallet-modal',
   BlockedAddress: 'blocked-address',
@@ -57,8 +51,6 @@ export const ModalName = {
   ExchangeTransferModal: 'exchange-transfer-modal',
   Experiments: 'experiments',
   Explore: 'explore-modal',
-  ExtensionPromoModal: 'extension-promo',
-  ExtensionWaitlistModal: 'extension-waitlist',
   FaceIDWarning: 'face-id-warning',
   FOTInfo: 'fee-on-transfer',
   FiatCurrencySelector: 'fiat-currency-selector',
@@ -84,14 +76,11 @@ export const ModalName = {
   Send: 'send-modal',
   SeedPhraseWarningModal: 'seed-phrase-warning-modal',
   SendWarning: 'send-warning-modal',
-  SendReview: 'send-review-modal',
   SlippageInfo: 'slippage-info-modal',
-  StorageWarning: 'storage-warning-modal',
   Swap: 'swap-modal',
   SwapReview: 'swap-review-modal',
   SwapSettings: 'swap-settings-modal',
   SwapWarning: 'swap-warning-modal',
-  ViewOnlyRecipientWarning: 'view-only-recipient-warning-modal',
   SwapProtection: 'swap-protection-modal',
   TokenSelector: 'token-selector',
   TokenWarningModal: 'token-warning-modal',
@@ -124,13 +113,9 @@ export const ElementName = {
   AddManualBackup: 'add-manual-backup',
   AddViewOnlyWallet: 'add-view-only-wallet',
   AddCloudBackup: 'add-cloud-backup',
-  AmountInputIn: 'amount-input-in',
-  AmountInputOut: 'amount-input-out',
   Back: 'back',
   Buy: 'buy',
   Cancel: 'cancel',
-  ChooseInputToken: 'choose-input-token',
-  ChooseOutputToken: 'choose-output-token',
   Confirm: 'confirm',
   Continue: 'continue',
   Copy: 'copy',
@@ -149,7 +134,6 @@ export const ElementName = {
   GetHelp: 'get-help',
   GetStarted: 'get-started',
   ImportAccount: 'import',
-  ImportAccountInput: 'import-account-input',
   Manage: 'manage',
   MoonpayExplorerView: 'moonpay-explorer-view',
   NetworkButton: 'network-button',
@@ -181,9 +165,7 @@ export const ElementName = {
   Skip: 'skip',
   Submit: 'submit',
   Swap: 'swap',
-  SwapFormHeader: 'swap-form-header',
   SwapReview: 'swap-review',
-  SendReview: 'send-review',
   SwapSettings: 'swap-settings',
   SwitchCurrenciesButton: 'switch-currencies-button',
   TimeFrame1H: 'time-frame-1H',
@@ -200,7 +182,6 @@ export const ElementName = {
   TokenSelectorToggle: 'token-selector-toggle',
   TokenWarningAccept: 'token-warning-accept',
   Unwrap: 'unwrap',
-  WatchWallet: 'watch-wallet',
   WCDappSwitchAccount: 'wc-dapp-switch-account',
   WCDappNetworks: 'wc-dapp-networks',
   WalletCard: 'wallet-card',
@@ -243,10 +224,3 @@ export const SectionName = {
 } as const
 
 export type SectionNameType = (typeof SectionName)[keyof typeof SectionName]
-
-export enum ShareableEntity {
-  NftItem = 'NftItem',
-  NftCollection = 'NftCollection',
-  Token = 'Token',
-  Wallet = 'Wallet',
-}

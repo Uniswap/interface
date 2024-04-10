@@ -2,10 +2,10 @@ import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { LimitDetailActivityRow } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitDetailActivityRow'
 import { DAI } from 'constants/tokens'
+import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'
-import { UniswapXOrderStatus } from 'types/uniswapx'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => {
   return {

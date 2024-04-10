@@ -1,5 +1,5 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
-import { TokenSortableField } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TokenSortableField } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   Account,
   AccountType,

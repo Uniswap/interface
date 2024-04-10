@@ -1,8 +1,8 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import TokenSafety from 'components/TokenSafety'
 import { memo, useCallback, useEffect, useState } from 'react'
+import { useUserAddedTokens } from 'state/user/hooks'
 
-import { useUserAddedTokens } from 'state/user/userAddedTokens'
 import useLast from '../../hooks/useLast'
 import { useWindowSize } from '../../hooks/useWindowSize'
 import Modal from '../Modal'

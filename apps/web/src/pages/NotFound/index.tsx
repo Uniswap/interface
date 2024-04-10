@@ -1,7 +1,7 @@
+import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Trace } from 'analytics'
 import { SmallButtonPrimary } from 'components/Button'
-import { Trans } from 'i18n'
 import { useIsMobile } from 'nft/hooks'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'

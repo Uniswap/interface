@@ -1,11 +1,12 @@
+import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
+import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { isSupportedChain } from 'constants/chains'
-import { Trans } from 'i18n'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
@@ -15,7 +16,6 @@ import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ButtonGray } from '../Button'
@@ -242,7 +242,7 @@ export default function CurrencyInputPanel({
                 />
               )}
 
-              <StyledPrefetchBalancesWrapper $fullWidth={hideInput}>
+              <StyledPrefetchBalancesWrapper shouldFetchOnAccountUpdate={modalOpen} $fullWidth={hideInput}>
                 <CurrencySelect
                   disabled={!chainAllowed}
                   visible={currency !== undefined}
@@ -306,12 +306,10 @@ export default function CurrencyInputPanel({
                           (renderBalance?.(selectedCurrencyBalance as CurrencyAmount<Currency>) || (
                             <Trans>
                               Balance:{' '}
-                              {{
-                                amount: formatCurrencyAmount({
-                                  amount: selectedCurrencyBalance,
-                                  type: NumberType.TokenNonTx,
-                                }),
-                              }}
+                              {formatCurrencyAmount({
+                                amount: selectedCurrencyBalance,
+                                type: NumberType.TokenNonTx,
+                              })}
                             </Trans>
                           ))}
                       </ThemedText.DeprecatedBody>

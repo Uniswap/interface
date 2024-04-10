@@ -1,3 +1,4 @@
+import { t } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { CoinbaseWallet } from '@web3-react/coinbase-wallet'
 import { initializeConnector } from '@web3-react/core'
@@ -10,12 +11,11 @@ import UNISWAP_LOGO from 'assets/svg/logo.svg'
 import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
-import { t } from 'i18n'
 import { useSyncExternalStore } from 'react'
-import { isMobile, isTouchable, isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
+import { isMobile, isNonSupportedDevice } from 'uniswap/src/utils/platform'
 
-import { APP_RPC_URLS } from '../constants/networks'
-import { RPC_PROVIDERS } from '../constants/providers'
+import { RPC_URLS } from '../constants/networks'
+import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from '../constants/providers'
 import { EIP6963 } from './eip6963'
 import { Connection, ConnectionType, ProviderInfo } from './types'
 import { getDeprecatedInjection, getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
@@ -65,6 +65,22 @@ export const networkConnection: Connection = {
   getProviderInfo: () => ({ name: 'Network' }),
   connector: web3Network,
   hooks: web3NetworkHooks,
+  type: ConnectionType.NETWORK,
+  shouldDisplay: () => false,
+}
+
+const [deprecatedWeb3Network, deprecatedWeb3NetworkHooks] = initializeConnector<Network>(
+  (actions) =>
+    new Network({
+      actions,
+      urlMap: DEPRECATED_RPC_PROVIDERS,
+      defaultChainId: 1,
+    })
+)
+export const deprecatedNetworkConnection: Connection = {
+  getProviderInfo: () => ({ name: 'Network' }),
+  connector: deprecatedWeb3Network,
+  hooks: deprecatedWeb3NetworkHooks,
   type: ConnectionType.NETWORK,
   shouldDisplay: () => false,
 }
@@ -169,9 +185,6 @@ export const walletConnectV2Connection: Connection = new (class implements Conne
 const [web3WCV2UniwalletConnect, web3WCV2UniwalletConnectHooks] = initializeConnector<UniwalletWCV2Connect>(
   (actions) => new UniwalletWCV2Connect({ actions, onError })
 )
-
-const isNonSupportedDevice = !isWebIOS && !isWebAndroid && isTouchable
-
 export const uniwalletWCV2ConnectConnection: Connection = {
   getProviderInfo: () => ({ name: 'Uniswap Wallet', icon: UNIWALLET_ICON }),
   connector: web3WCV2UniwalletConnect,
@@ -185,7 +198,7 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
     new CoinbaseWallet({
       actions,
       options: {
-        url: APP_RPC_URLS[ChainId.MAINNET][0],
+        url: RPC_URLS[ChainId.MAINNET][0],
         appName: 'Uniswap',
         appLogoUrl: UNISWAP_LOGO,
         reloadOnDisconnect: false,
@@ -219,6 +232,7 @@ export const connections = [
   eip6963Connection,
   // network connector should be last in the list, as it should be the fallback if no other connector is active
   networkConnection,
+  deprecatedNetworkConnection,
 ]
 
 export function getConnection(c: Connector | ConnectionType) {
@@ -240,6 +254,8 @@ export function getConnection(c: Connector | ConnectionType) {
         return uniwalletWCV2ConnectConnection
       case ConnectionType.NETWORK:
         return networkConnection
+      case ConnectionType.DEPRECATED_NETWORK:
+        return deprecatedNetworkConnection
       case ConnectionType.GNOSIS_SAFE:
         return gnosisSafeConnection
       case ConnectionType.EIP_6963_INJECTED:

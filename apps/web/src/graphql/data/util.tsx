@@ -1,23 +1,16 @@
 import { OperationVariables, QueryResult } from '@apollo/client'
-import { DeepPartial } from '@apollo/client/utilities'
 import * as Sentry from '@sentry/react'
 import { ChainId, Currency, Token } from '@uniswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'constants/tokens'
 import ms from 'ms'
-import { ExploreTab } from 'pages/Explore'
 import { useEffect } from 'react'
 import { DefaultTheme } from 'styled-components'
 import { ThemeColors } from 'theme/colors'
-import {
-  Chain,
-  ContractInput,
-  Token as GqlToken,
-  HistoryDuration,
-  PriceSource,
-  TokenStandard,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
+
+import { ExploreTab } from 'pages/Explore'
+import { Chain, ContractInput, HistoryDuration, PriceSource, TokenStandard } from './__generated__/types-and-hooks'
 
 export enum PollingInterval {
   Slow = ms(`5m`),
@@ -66,11 +59,11 @@ export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
 
 export type PricePoint = { timestamp: number; value: number }
 
-export function isPricePoint(p: PricePoint | undefined): p is PricePoint {
-  return p !== undefined
+export function isPricePoint(p: PricePoint | null): p is PricePoint {
+  return p !== null
 }
 
-const GQL_MAINNET_CHAINS = [
+export const GQL_MAINNET_CHAINS = [
   Chain.Ethereum,
   Chain.Polygon,
   Chain.Celo,
@@ -79,11 +72,7 @@ const GQL_MAINNET_CHAINS = [
   Chain.Bnb,
   Chain.Avalanche,
   Chain.Base,
-  Chain.Blast,
 ] as const
-
-/** Used for making graphql queries to all chains supported by the graphql backend. Must be mutable for some apollo typechecking. */
-export const GQL_MAINNET_CHAINS_MUTABLE = GQL_MAINNET_CHAINS.map((c) => c)
 
 const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
 
@@ -105,7 +94,6 @@ export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
   [ChainId.BNB]: Chain.Bnb,
   [ChainId.AVALANCHE]: Chain.Avalanche,
   [ChainId.BASE]: Chain.Base,
-  [ChainId.BLAST]: Chain.Blast,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
@@ -126,20 +114,19 @@ export function toContractInput(currency: Currency): ContractInput {
   return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
 }
 
-export function gqlToCurrency(token: DeepPartial<GqlToken>): Currency | undefined {
-  if (!token.chain) return undefined
+export function gqlToCurrency(token: {
+  address?: string
+  chain: Chain
+  standard?: TokenStandard
+  decimals?: number
+  name?: string
+  symbol?: string
+}): Currency | undefined {
   const chainId = supportedChainIdFromGQLChain(token.chain)
   if (!chainId) return undefined
   if (token.standard === TokenStandard.Native || token.address === NATIVE_CHAIN_ID || !token.address)
     return nativeOnChain(chainId)
-  else
-    return new Token(
-      chainId,
-      token.address,
-      token.decimals ?? 18,
-      token.symbol ?? undefined,
-      token.name ?? token.project?.name ?? undefined
-    )
+  else return new Token(chainId, token.address, token.decimals ?? 18, token.symbol, token.name)
 }
 
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
@@ -151,7 +138,6 @@ const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
   bnb: Chain.Bnb,
   avalanche: Chain.Avalanche,
   base: Chain.Base,
-  blast: Chain.Blast,
 }
 
 /**
@@ -194,7 +180,6 @@ const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: ChainId } = {
   [Chain.Bnb]: ChainId.BNB,
   [Chain.Avalanche]: ChainId.AVALANCHE,
   [Chain.Base]: ChainId.BASE,
-  [Chain.Blast]: ChainId.BLAST,
 }
 
 export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
@@ -231,7 +216,6 @@ export const BACKEND_SUPPORTED_CHAINS = [
   Chain.Base,
   Chain.Bnb,
   Chain.Celo,
-  Chain.Blast,
 ] as const
 export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [ChainId.AVALANCHE] as const
 
@@ -259,17 +243,10 @@ export function getTokenDetailsURL({
   return `/explore/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
 }
 
-export function getPoolDetailsURL(address: string, chain: Chain) {
-  const chainName = chain.toLowerCase()
-  return `/explore/pools/${chainName}/${address}`
-}
-
 export function unwrapToken<
-  T extends
-    | {
-        address?: string | null
-      }
-    | undefined
+  T extends {
+    address?: string | null
+  } | null
 >(chainId: number, token: T): T {
   if (!token?.address) return token
 

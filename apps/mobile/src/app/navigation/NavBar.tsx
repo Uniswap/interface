@@ -1,5 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { BlurView } from 'expo-blur'
+import { impactAsync } from 'expo-haptics'
 import React, { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
@@ -20,7 +21,6 @@ import {
   AnimatedFlex,
   Flex,
   FlexProps,
-  HapticFeedback,
   Icons,
   LinearGradient,
   Text,
@@ -122,7 +122,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
       })
     )
 
-    await HapticFeedback.impact()
+    await impactAsync()
   }, [dispatch, inputCurrencyId])
 
   const scale = useSharedValue(1)

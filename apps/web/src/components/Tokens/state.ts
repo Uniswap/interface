@@ -9,11 +9,13 @@ export enum TokenSortMethod {
   VOLUME = 'Volume',
   HOUR_CHANGE = '1 hour',
   DAY_CHANGE = '1 day',
+  // TODO(WEB-3726): Deprecate with launch of info_explore flag
+  DEPRECATE_PERCENT_CHANGE = 'Change',
+  DEPRECATE_TOTAL_VALUE_LOCKED = 'TVL',
 }
 
 export const exploreSearchStringAtom = atomWithReset<string>('')
 export const filterTimeAtom = atom<TimePeriod>(TimePeriod.DAY)
-
 export const sortMethodAtom = atom<TokenSortMethod>(TokenSortMethod.VOLUME)
 export const sortAscendingAtom = atom<boolean>(false)
 

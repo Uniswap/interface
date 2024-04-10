@@ -1,4 +1,4 @@
-import { createNavigationContainerRef, NavigationContainer } from '@react-navigation/native'
+import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 import React from 'react'
@@ -64,8 +64,8 @@ import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
 import { Icons, useDeviceInsets, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
@@ -134,14 +134,11 @@ export function WrappedHomeScreen(props: AppStackScreenProp<Screens.Home>): JSX.
   return <HomeScreen key={activeAccount.address} {...props} />
 }
 
-export const exploreNavigationRef = createNavigationContainerRef<ExploreStackParamList>()
-
 export function ExploreStackNavigator(): JSX.Element {
   const colors = useSporeColors()
 
   return (
     <NavigationContainer
-      ref={exploreNavigationRef}
       independent={true}
       theme={{
         dark: false,
@@ -218,7 +215,7 @@ const renderHeaderBackImage = (): JSX.Element => (
 export function OnboardingStackNavigator(): JSX.Element {
   const colors = useSporeColors()
   const insets = useDeviceInsets()
-  const seedPhraseRefactorEnabled = useFeatureFlag(FeatureFlags.SeedPhraseRefactorNative)
+  const seedPhraseRefactorEnabled = useFeatureFlag(FEATURE_FLAGS.SeedPhraseRefactorNative)
   const SeedPhraseInputComponent = seedPhraseRefactorEnabled
     ? SeedPhraseInputScreenV2
     : SeedPhraseInputScreen

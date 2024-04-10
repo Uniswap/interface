@@ -11,11 +11,12 @@ import {
   Icons,
   Loader,
   useDeviceDimensions,
+  useSporeColors,
 } from 'ui/src'
-import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { HiddenNftsRowLeft, HiddenNftsRowRight } from 'wallet/src/components/nfts/NFTHiddenRow'
+import { useNftsTabQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { GQLQueries } from 'wallet/src/data/queries'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import {
   EMPTY_NFT_ITEM,
@@ -78,6 +79,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
   ref
 ) {
   const { t } = useTranslation()
+  const colors = useSporeColors()
   const { fullHeight } = useDeviceDimensions()
 
   const [hiddenNftsExpanded, setHiddenNftsExpanded] = useState(false)
@@ -105,7 +107,11 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     })
   }, [data?.nftBalances?.pageInfo?.endCursor, data?.nftBalances?.pageInfo?.hasNextPage, fetchMore])
 
-  const { nfts, numHidden, numShown } = useGroupNftsByVisibility(nftDataItems, hiddenNftsExpanded)
+  const { nfts, numHidden, numShown } = useGroupNftsByVisibility(
+    nftDataItems,
+    hiddenNftsExpanded,
+    owner
+  )
 
   const onHiddenRowPressed = useCallback((): void => {
     if (hiddenNftsExpanded && footerHeight) {
@@ -173,7 +179,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
           </Flex>
         ) : (
           // empty view
-          <Flex centered pt="$spacing48" px="$spacing36" style={emptyStateStyle}>
+          <Flex centered grow style={emptyStateStyle}>
             <BaseCard.EmptyState
               buttonLabel={
                 isExternalProfile || !onPressEmptyState
@@ -187,7 +193,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
               }
               icon={
                 <Flex pb="$spacing12">
-                  <Icons.NoNfts color="$neutral3" size="$icon.70" />
+                  <Icons.EmptyStatePicture color={colors.neutral3.get()} size="$icon.70" />
                 </Flex>
               }
               title={t('tokens.nfts.list.none.title')}

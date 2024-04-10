@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { useOpenOffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import { signatureToActivity, transactionToActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
@@ -8,15 +9,14 @@ import Column, { AutoColumn } from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { AutoRow } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
+import { TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { useAllTokensMultichain } from 'hooks/Tokens'
 import useENSName from 'hooks/useENSName'
-import { Trans } from 'i18n'
 import { X } from 'react-feather'
 import { useOrder } from 'state/signatures/hooks'
 import { useTransaction } from 'state/transactions/hooks'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -79,7 +79,7 @@ export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: ChainI
           </ThemedText.SubHeader>
 
           <ThemedText.BodySmall color="neutral2">
-            <Trans>To use Uniswap on {{ label: chainInfo.label }}, switch the network in your wallet’s settings.</Trans>
+            <Trans>To use Uniswap on {chainInfo.label}, switch the network in your wallet’s settings.</Trans>
           </ThemedText.BodySmall>
         </ColumnContainer>
       </RowNoFlex>

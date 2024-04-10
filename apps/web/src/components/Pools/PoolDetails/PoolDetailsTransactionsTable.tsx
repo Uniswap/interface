@@ -1,9 +1,11 @@
+import { Trans } from '@lingui/macro'
 import { createColumnHelper } from '@tanstack/react-table'
 import Row from 'components/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
 import { FilterHeaderRow, HeaderArrow, HeaderSortText, TimestampCell } from 'components/Table/styled'
+import { ProtocolVersion, Token } from 'graphql/data/__generated__/types-and-hooks'
 import {
   PoolTableTransaction,
   PoolTableTransactionType,
@@ -12,12 +14,10 @@ import {
 import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { OrderDirection, Transaction_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { Trans } from 'i18n'
 import { useMemo, useReducer, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -174,7 +174,9 @@ export function PoolDetailsTransactionsTable({
         id: 'fiat-value',
         header: () => (
           <Cell minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.FiatValue]} justifyContent="flex-end" grow>
-            <ThemedText.BodySecondary>{activeLocalCurrency}</ThemedText.BodySecondary>
+            <ThemedText.BodySecondary>
+              <Trans>{activeLocalCurrency}</Trans>
+            </ThemedText.BodySecondary>
           </Cell>
         ),
         cell: (fiat) => (

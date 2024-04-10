@@ -30,6 +30,14 @@ exports[`GetTheAppButton displays a button with call to action text and icons 1`
   gap: 12px;
 }
 
+.c3 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c0 {
   height: 40px;
   background: #FFFFFF;
@@ -43,7 +51,12 @@ exports[`GetTheAppButton displays a button with call to action text and icons 1`
   background: #F9F9F9;
 }
 
-.c3 {
+.c4 {
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.c5 {
   -webkit-flex: 0;
   -ms-flex: 0;
   flex: 0;
@@ -63,6 +76,12 @@ exports[`GetTheAppButton displays a button with call to action text and icons 1`
   align-items: center;
 }
 
+@media screen and (max-width:640px) {
+  .c4 {
+    display: none;
+  }
+}
+
 <div>
   <span
     class="t_light is_inversed _dsp_contents"
@@ -77,14 +96,14 @@ exports[`GetTheAppButton displays a button with call to action text and icons 1`
           class="c1 c2"
           width="fit-content"
         >
-          <span
-            class="font_body _display-_lg_none _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-0px _fontWeight-400 _whiteSpace-nowrap"
+          <div
+            class="c3 c4 css-1urox24"
             data-testid="get-the-app-cta"
           >
             Get the app
-          </span>
+          </div>
           <div
-            class="c3"
+            class="c5"
             style="transform: none;"
           >
             <svg
@@ -106,7 +125,7 @@ exports[`GetTheAppButton displays a button with call to action text and icons 1`
             </svg>
           </div>
           <div
-            class="c3"
+            class="c5"
             style="transform: none;"
           >
             <svg

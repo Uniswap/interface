@@ -1,6 +1,7 @@
+import { selectionAsync } from 'expo-haptics'
 import { useCallback, useMemo, useState } from 'react'
 import { LayoutAnimation, StyleSheet, VirtualizedList } from 'react-native'
-import { Flex, HapticFeedback, Icons } from 'ui/src'
+import { Flex, Icons, isWeb } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import { colors, iconSizes } from 'ui/src/theme'
 import {
@@ -13,10 +14,15 @@ import { ChainId } from 'wallet/src/constants/chains'
 
 const ELLIPSIS = 'ellipsis'
 const NETWORK_ICON_SIZE = iconSizes.icon20
-const NETWORK_ICON_SHIFT = 8
+const NETWORK_ICON_SHIFT = 10
 // Array of logos to show when "all networks" are visible. Don't want to show all
 // logos because there are too many
-const NETWORK_LOGOS_TO_SHOW = [ChainId.Mainnet, ChainId.ArbitrumOne, ChainId.Optimism, ChainId.Base]
+const NETWORK_LOGOS_TO_SHOW = [
+  ChainId.Mainnet,
+  ChainId.Polygon,
+  ChainId.ArbitrumOne,
+  ChainId.Optimism,
+]
 
 interface NetworkFilterProps {
   selectedChain: ChainId | null
@@ -51,7 +57,7 @@ function keyExtractor(item: ListItem): string {
   return item.toString()
 }
 
-export function NetworksInSeries({
+function NetworksInSeries({
   networks,
   ellipsisPosition,
 }: {
@@ -76,7 +82,6 @@ export function NetworksInSeries({
   return (
     <Flex>
       <VirtualizedList<ListItem>
-        horizontal
         contentContainerStyle={styles.networkListContainer}
         getItem={getItem}
         getItemCount={getItemCount}
@@ -100,7 +105,9 @@ export function NetworkFilter({
   const onPress = useCallback(
     async (chainId: ChainId | null) => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
-      await HapticFeedback.selection()
+      if (!isWeb) {
+        await selectionAsync()
+      }
       if (showEllipsisIcon && chainId !== selectedChain) {
         setShowEllipsisIcon(false)
       }
@@ -117,7 +124,7 @@ export function NetworkFilter({
 
   return (
     <ActionSheetDropdown alignment="right" options={networkOptions}>
-      <Flex centered row gap="$spacing4">
+      <Flex centered row gap="$spacing4" py="$spacing8">
         <NetworksInSeries
           // show ellipsis as the last item when all networks is selected
           ellipsisPosition={!selectedChain ? 'end' : undefined}

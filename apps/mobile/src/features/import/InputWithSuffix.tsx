@@ -9,7 +9,6 @@ import { ColorTokens, Flex, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { TextInput } from 'wallet/src/components/input/TextInput'
-import { ElementName } from 'wallet/src/telemetry/constants'
 
 interface Props {
   alwaysShowInputSuffix?: boolean
@@ -123,7 +122,7 @@ function Inputs({
           scrollEnabled={false}
           selectionColor={colors.neutral1.val}
           spellCheck={false}
-          testID={ElementName.ImportAccountInput}
+          testID="import_account_form/input"
           textAlign={isInputEmpty ? 'left' : backgroundTextAlignment}
           textAlignVertical="bottom"
           value={value}

@@ -1,8 +1,8 @@
+import { ChainId } from 'wallet/src/constants/chains'
 import {
   TransactionStatus as RemoteTransactionStatus,
   TransactionType as RemoteTransactionType,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ChainId } from 'wallet/src/constants/chains'
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { SpamCode } from 'wallet/src/data/types'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {

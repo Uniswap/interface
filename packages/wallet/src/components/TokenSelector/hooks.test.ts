@@ -2,10 +2,10 @@
 import { ApolloError } from '@apollo/client'
 import { toIncludeSameMembers } from 'jest-extended'
 import { PreloadedState } from 'redux'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { createEmptyBalanceOption } from 'wallet/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
+import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { tokenProjectToCurrencyInfos } from 'wallet/src/features/dataApi/utils'
 import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
@@ -64,7 +64,7 @@ const preloadedState: PreloadedState<SharedState> = {
     tokens: favoriteCurrencyIds,
     watchedAddresses: [],
     tokensVisibility: {},
-    nftsVisibility: {},
+    nftsData: {},
   },
 }
 
@@ -99,7 +99,7 @@ describe(useAllCommonBaseCurrencies, () => {
   const cases = [
     {
       test: 'returns undefined if there is no data',
-      input: undefined,
+      input: null,
       output: {},
     },
     {
@@ -156,7 +156,7 @@ describe(useFavoriteCurrencies, () => {
   const cases = [
     {
       test: 'returns undefined when there is no data',
-      input: undefined,
+      input: null,
       output: {},
     },
     {
@@ -341,7 +341,7 @@ describe(usePortfolioBalancesForAddressById, () => {
   const cases = [
     {
       test: 'returns undefined when there is no data',
-      input: undefined,
+      input: null,
       output: {},
     },
     {
@@ -385,7 +385,7 @@ describe(usePortfolioTokenOptions, () => {
     const cases = [
       {
         test: 'returns undefined when there is no data',
-        input: undefined,
+        input: null,
         output: { data: undefined },
       },
       {

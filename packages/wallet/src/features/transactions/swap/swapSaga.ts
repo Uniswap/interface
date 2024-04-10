@@ -1,9 +1,10 @@
 import { providers } from 'ethers'
 import { Statsig } from 'statsig-react-native'
 import { call, select } from 'typed-redux-saga'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/experiments/flags'
+import { isWeb } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { RPCType } from 'wallet/src/constants/chains'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { makeSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
 import {
@@ -117,7 +118,8 @@ function* getNonceForApproveAndSwap(
 function* shouldSubmitViaPrivateRpc(chainId: number) {
   const swapProtectionSetting = yield* select(selectWalletSwapProtectionSetting)
   const swapProtectionOn = swapProtectionSetting === SwapProtectionSetting.On
-  const mevBlockerFeatureEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.MevBlocker))
+  // TODO(EXT-460): remove this once Statsig is set up in the Extension
+  const mevBlockerFeatureEnabled = isWeb ? true : Statsig.checkGate(FEATURE_FLAGS.MevBlocker)
   const privateRpcSupportedOnChain = chainId ? isPrivateRpcSupportedOnChain(chainId) : false
   return Boolean(swapProtectionOn && privateRpcSupportedOnChain && mevBlockerFeatureEnabled)
 }

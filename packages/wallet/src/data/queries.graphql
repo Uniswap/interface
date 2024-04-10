@@ -1,0 +1,907 @@
+query Nfts($ownerAddress: String!) {
+  portfolios(ownerAddresses: [$ownerAddress]) {
+    id
+    nftBalances {
+      id
+      ownedAsset {
+        id
+        collection {
+          id
+          collectionId
+          description
+          image {
+            id
+            url
+          }
+          isVerified
+          name
+          numAssets
+          markets(currencies: [USD]) {
+            id
+            floorPrice {
+              value
+            }
+            owners
+            volume24h {
+              value
+            }
+            totalVolume {
+              value
+            }
+          }
+        }
+        description
+        image {
+          id
+          url
+        }
+        name
+        nftContract {
+          id
+          address
+          chain
+          standard
+        }
+        thumbnail {
+          id
+          url
+        }
+        tokenId
+        creator {
+          id
+          address
+          username
+        }
+      }
+    }
+  }
+}
+
+query NFTItemScreen(
+  $contractAddress: String!
+  $filter: NftAssetsFilterInput
+  $activityFilter: NftActivityFilterInput
+) {
+  nftAssets(address: $contractAddress, filter: $filter) {
+    edges {
+      node {
+        id
+        ownerAddress
+        collection {
+          id
+          collectionId
+          description
+          image {
+            id
+            url
+          }
+          isVerified
+          name
+          numAssets
+          markets(currencies: [USD]) {
+            id
+            floorPrice {
+              value
+            }
+            owners
+            totalVolume {
+              value
+            }
+          }
+          nftContracts {
+            id
+            address
+          }
+        }
+        description
+        image {
+          id
+          url
+          dimensions {
+            width
+            height
+          }
+        }
+        name
+        nftContract {
+          id
+          address
+          chain
+          standard
+        }
+        tokenId
+        creator {
+          id
+          address
+          username
+        }
+        traits {
+          id
+          name
+          rarity
+          value
+        }
+        listings(first: 1) {
+          edges {
+            node {
+              id
+              price {
+                currency
+                value
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  nftActivity(filter: $activityFilter) {
+    edges {
+      node {
+        id
+        quantity
+        price {
+          currency
+          value
+        }
+      }
+    }
+  }
+}
+
+query NftCollectionScreen(
+  $contractAddress: String!
+  $first: Int
+  $after: String
+) {
+  nftCollections(filter: { addresses: [$contractAddress] }) {
+    edges {
+      node {
+        id
+        bannerImage {
+          id
+          url
+        }
+        isVerified
+        numAssets
+        description
+        homepageUrl
+        twitterName
+        image {
+          id
+          url
+        }
+        name
+        markets(currencies: [USD]) {
+          id
+          floorPrice {
+            value
+          }
+          owners
+          volume24h {
+            value
+          }
+          totalVolume {
+            value
+          }
+        }
+      }
+    }
+  }
+  nftAssets(
+    address: $contractAddress
+    first: $first
+    after: $after
+    orderBy: PRICE
+    asc: true
+  ) {
+    edges {
+      node {
+        ownerAddress
+        id
+        name
+        tokenId
+        nftContract {
+          id
+          address
+        }
+        collection {
+          id
+          collectionId
+          name
+        }
+        image {
+          id
+          url
+          dimensions {
+            width
+            height
+          }
+        }
+        listings(first: 1) {
+          edges {
+            node {
+              id
+              price {
+                currency
+                value
+              }
+            }
+          }
+        }
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
+  }
+}
+
+query NftsTab(
+  $ownerAddress: String!
+  $first: Int
+  $after: String
+  $filter: NftBalancesFilterInput
+) {
+  nftBalances(
+    ownerAddress: $ownerAddress
+    first: $first
+    after: $after
+    filter: $filter
+  ) {
+    edges {
+      node {
+        ownedAsset {
+          id
+          collection {
+            id
+            name
+            isVerified
+            markets(currencies: [ETH]) {
+              id
+              floorPrice {
+                value
+              }
+            }
+          }
+          image {
+            id
+            url
+            dimensions {
+              width
+              height
+            }
+          }
+          name
+          tokenId
+          description
+          nftContract {
+            id
+            address
+          }
+          isSpam
+        }
+      }
+    }
+    pageInfo {
+      endCursor
+      hasNextPage
+      hasPreviousPage
+      startCursor
+    }
+  }
+}
+
+query PortfolioBalances(
+  $ownerAddress: String!
+  $valueModifiers: [PortfolioValueModifier!]
+) {
+  portfolios(
+    ownerAddresses: [$ownerAddress]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+    valueModifiers: $valueModifiers
+  ) {
+    id
+    # Total portfolio balance for header
+    tokensTotalDenominatedValue {
+      value
+    }
+    tokensTotalDenominatedValueChange(duration: DAY) {
+      absolute {
+        value
+      }
+      percentage {
+        value
+      }
+    }
+
+    # Individual portfolio token balances
+    tokenBalances {
+      id
+      quantity
+      isHidden
+      denominatedValue {
+        currency
+        value
+      }
+      token {
+        chain
+        address
+        symbol
+        decimals
+        project {
+          id
+          name
+          logoUrl
+          safetyLevel
+          isSpam
+        }
+      }
+      tokenProjectMarket {
+        relativeChange24: pricePercentChange(duration: DAY) {
+          value
+        }
+      }
+    }
+  }
+}
+
+query MultiplePortfolioBalances(
+  $ownerAddresses: [String!]!
+  $valueModifiers: [PortfolioValueModifier!]
+) {
+  portfolios(
+    ownerAddresses: $ownerAddresses
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+    valueModifiers: $valueModifiers
+  ) {
+    id
+
+    # Total portfolio balance for header
+    tokensTotalDenominatedValue {
+      value
+    }
+    tokensTotalDenominatedValueChange(duration: DAY) {
+      absolute {
+        value
+      }
+      percentage {
+        value
+      }
+    }
+
+    # Individual portfolio token balances
+    tokenBalances {
+      id
+      quantity
+      isHidden
+      denominatedValue {
+        currency
+        value
+      }
+      token {
+        chain
+        address
+        symbol
+        decimals
+        project {
+          id
+          name
+          logoUrl
+          safetyLevel
+          isSpam
+        }
+      }
+      tokenProjectMarket {
+        relativeChange24: pricePercentChange(duration: DAY) {
+          value
+        }
+      }
+    }
+  }
+}
+
+query SelectWalletScreen($ownerAddresses: [String!]!) {
+  portfolios(
+    ownerAddresses: $ownerAddresses
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+  ) {
+    id
+    ownerAddress
+    tokensTotalDenominatedValue {
+      value
+    }
+  }
+}
+
+query TransactionHistoryUpdater($addresses: [String!]!) {
+  portfolios(
+    ownerAddresses: $addresses
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+  ) {
+    id
+    ownerAddress
+    assetActivities(pageSize: 1, page: 1) {
+      id
+      timestamp
+      details {
+        ... on TransactionDetails {
+          id
+          hash
+        }
+      }
+    }
+  }
+}
+
+query Token($chain: Chain!, $address: String) {
+  token(chain: $chain, address: $address) {
+    symbol
+    decimals
+    chain
+    address
+    project {
+      id
+      name
+      logoUrl
+      safetyLevel
+      isSpam
+    }
+  }
+}
+
+query TokenDetailsScreen(
+  $chain: Chain!,
+  $address: String,
+  $includeSpanish: Boolean = false,
+  $includeFrench: Boolean = false,
+  $includeJapanese: Boolean = false,
+  $includePortuguese: Boolean = false,
+  $includeChineseSimplified: Boolean = false,
+  $includeChineseTraditional: Boolean = false,
+) {
+  token(chain: $chain, address: $address) {
+    address
+    chain
+    symbol
+    name
+    market(currency: USD) {
+      id
+      volume(duration: DAY) {
+        value
+      }
+      price {
+        value
+      }
+      priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+        value
+      }
+      priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+        value
+      }
+    }
+    project {
+      id
+      name
+      description
+      descriptionTranslations {
+        descriptionEsEs @include(if: $includeSpanish)
+        descriptionFrFr @include(if: $includeFrench)
+        descriptionJaJp @include(if: $includeJapanese)
+        descriptionPtPt @include(if: $includePortuguese)
+        descriptionZhHans @include(if: $includeChineseSimplified)
+        descriptionZhHant @include(if: $includeChineseTraditional)
+      }
+      homepageUrl
+      twitterName
+      safetyLevel
+      logoUrl
+      markets(currencies: [USD]) {
+        id
+        price {
+          value
+        }
+        marketCap {
+          value
+        }
+        fullyDilutedValuation {
+          value
+        }
+        priceHigh52W: priceHighLow(duration: YEAR, highLow: HIGH) {
+          value
+        }
+        priceLow52W: priceHighLow(duration: YEAR, highLow: LOW) {
+          value
+        }
+      }
+      tokens {
+        chain
+        address
+      }
+    }
+  }
+}
+
+query TokenProjects($contracts: [ContractInput!]!) {
+  tokenProjects(contracts: $contracts) {
+    id
+    name
+    logoUrl
+    safetyLevel
+    tokens {
+      chain
+      address
+      decimals
+      symbol
+    }
+  }
+}
+
+query TransactionList($address: String!) {
+  portfolios(
+    ownerAddresses: [$address]
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+  ) {
+    id
+    assetActivities(
+      pageSize: 100
+      page: 1
+      chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+    ) {
+      id
+      timestamp
+      chain
+      details {
+        ... on TransactionDetails {
+          id
+          to
+          type
+          hash
+          from
+          status
+          assetChanges {
+            __typename
+            ... on TokenTransfer {
+              id
+              asset {
+                id
+                symbol
+                address
+                decimals
+                chain
+                project {
+                  id
+                  isSpam
+                  spamCode
+                }
+              }
+              tokenStandard
+              quantity
+              sender
+              recipient
+              direction
+              transactedValue {
+                id
+                currency
+                value
+              }
+            }
+            ... on NftTransfer {
+              id
+              asset {
+                id
+                name
+                isSpam
+                nftContract {
+                  id
+                  chain
+                  address
+                }
+                tokenId
+                image {
+                  id
+                  url
+                }
+                collection {
+                  id
+                  name
+                }
+              }
+              nftStandard
+              sender
+              recipient
+              direction
+            }
+            ... on TokenApproval {
+              id
+              asset {
+                id
+                symbol
+                decimals
+                address
+                chain
+              }
+              tokenStandard
+              approvedAddress
+              quantity
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query FeedTransactionList($addresses: [String!]!) {
+  portfolios(
+    ownerAddresses: $addresses
+    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+  ) {
+    id
+    ownerAddress
+    assetActivities(
+      pageSize: 30
+      page: 1
+      chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+    ) {
+      id
+      timestamp
+      chain
+      details {
+        ... on TransactionDetails {
+          id
+          to
+          type
+          hash
+          from
+          status
+          assetChanges {
+            __typename
+            ... on TokenTransfer {
+              id
+              asset {
+                id
+                symbol
+                address
+                decimals
+                chain
+                project {
+                  id
+                  isSpam
+                  spamCode
+                }
+              }
+              tokenStandard
+              quantity
+              sender
+              recipient
+              direction
+              transactedValue {
+                currency
+                value
+              }
+            }
+            ... on NftTransfer {
+              id
+              asset {
+                id
+                name
+                isSpam
+                nftContract {
+                  id
+                  chain
+                  address
+                }
+                tokenId
+                image {
+                  id
+                  url
+                }
+                collection {
+                  id
+                  name
+                }
+              }
+              nftStandard
+              sender
+              recipient
+              direction
+            }
+            ... on TokenApproval {
+              id
+              asset {
+                id
+                symbol
+                decimals
+                address
+                chain
+              }
+              tokenStandard
+              approvedAddress
+              quantity
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query TopTokens(
+  $chain: Chain
+  $page: Int = 1
+  $pageSize: Int = 100
+  $orderBy: TokenSortableField = POPULARITY
+) {
+  topTokens(
+    chain: $chain
+    page: $page
+    pageSize: $pageSize
+    orderBy: $orderBy
+  ) {
+    address
+    chain
+    decimals
+    symbol
+    project {
+      id
+      name
+      isSpam
+      logoUrl
+      safetyLevel
+    }
+  }
+}
+
+query SearchTokens($searchQuery: String!, $chains: [Chain!]) {
+  searchTokens(searchQuery: $searchQuery, chains: $chains) {
+    id
+    chain
+    address
+    decimals
+    symbol
+    project {
+      id
+      name
+      logoUrl
+      safetyLevel
+    }
+  }
+}
+
+query ExploreSearch(
+  $searchQuery: String!
+  $nftCollectionsFilter: NftCollectionsFilterInput!
+) {
+  searchTokens(searchQuery: $searchQuery) {
+    chain
+    address
+    decimals
+    symbol
+    # Use 1D volume to determine which token to show when results include the same token on multiple chains
+    market {
+      volume(duration: DAY) {
+        value
+      }
+    }
+    project {
+      id
+      name
+      logoUrl
+      safetyLevel
+    }
+  }
+  nftCollections(filter: $nftCollectionsFilter, first: 4) {
+    edges {
+      node {
+        id
+        name
+        collectionId
+        isVerified
+        nftContracts {
+          id
+          chain
+          address
+        }
+        image {
+          id
+          url
+        }
+      }
+    }
+  }
+}
+
+fragment TopTokenParts on Token {
+  symbol
+  chain
+  address
+  market {
+    id
+    totalValueLocked {
+      value
+    }
+    volume(duration: DAY) {
+      value
+    }
+  }
+  project {
+    id
+    name
+    logoUrl
+    markets(currencies: [USD]) {
+      id
+      price {
+        value
+      }
+      pricePercentChange24h {
+        value
+      }
+      marketCap {
+        value
+      }
+    }
+  }
+}
+
+query ExploreTokensTab($topTokensOrderBy: TokenSortableField!) {
+  topTokens(
+    chain: ETHEREUM
+    page: 1
+    pageSize: 100
+    orderBy: $topTokensOrderBy
+  ) {
+    ...TopTokenParts
+  }
+  # `topTokens` returns WETH rather than ETH
+  # here we retrieve ETH information to swap out in the UI
+  eth: token(address: null, chain: ETHEREUM) {
+    ...TopTokenParts
+  }
+}
+
+query FavoriteTokenCard($chain: Chain!, $address: String) {
+  token(chain: $chain, address: $address) {
+    symbol
+    chain
+    address
+    project {
+      id
+      name
+      logoUrl
+      markets(currencies: [USD]) {
+        id
+        price {
+          value
+        }
+        pricePercentChange24h {
+          value
+        }
+      }
+    }
+  }
+}
+
+query Tokens($contracts: [ContractInput!]!) {
+  tokens(contracts: $contracts) {
+    symbol
+    chain
+    address
+    project {
+      name
+    }
+  }
+}
+
+query Convert($fromCurrency: Currency!, $toCurrency: Currency!) {
+  convert(
+    fromAmount: { currency: $fromCurrency, value: 1.0 }
+    toCurrency: $toCurrency
+  ) {
+    value
+    currency
+  }
+}

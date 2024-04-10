@@ -1,5 +1,7 @@
-import { ScantasticParams } from 'wallet/src/features/scantastic/types'
-
 export interface ScantasticModalState {
-  params: ScantasticParams
+  uuid: string
+  pubKey: string
+  vendor: string
+  model: string
+  browser: string
 }

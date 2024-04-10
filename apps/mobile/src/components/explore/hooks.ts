@@ -1,7 +1,7 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeSyntheticEvent, ViewStyle } from 'react-native'
+import { NativeSyntheticEvent, Share, ViewStyle } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import {
   AnimateStyle,
@@ -11,13 +11,13 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { useSelectHasTokenFavorited, useToggleFavoriteCallback } from 'src/features/favorites/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { CurrencyId } from 'uniswap/src/types/currency'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
+import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
+import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
-import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { AssetType } from 'wallet/src/entities/assets'
 import {
   CurrencyField,
@@ -25,7 +25,8 @@ import {
 } from 'wallet/src/features/transactions/transactionState/types'
 import { useAppDispatch } from 'wallet/src/state'
 import { ElementName, ModalName, SectionNameType } from 'wallet/src/telemetry/constants'
-import { currencyIdToAddress } from 'wallet/src/utils/currencyId'
+import { CurrencyId, currencyIdToAddress } from 'wallet/src/utils/currencyId'
+import { getTokenUrl } from 'wallet/src/utils/linking'
 
 interface TokenMenuParams {
   currencyId: CurrencyId
@@ -49,8 +50,6 @@ export function useExploreTokenContextMenu({
   const isFavorited = useSelectHasTokenFavorited(currencyId)
   const dispatch = useAppDispatch()
 
-  const { handleShareToken } = useWalletNavigation()
-
   // `address` is undefined for native currencies, so we want to extract it from
   // currencyId, where we have hardcoded addresses for native currencies
   const currencyAddress = currencyIdToAddress(currencyId)
@@ -64,8 +63,22 @@ export function useExploreTokenContextMenu({
   )
 
   const onPressShare = useCallback(async () => {
-    handleShareToken({ currencyId })
-  }, [currencyId, handleShareToken])
+    const tokenUrl = getTokenUrl(currencyId)
+    if (!tokenUrl) {
+      return
+    }
+    try {
+      await Share.share({
+        message: tokenUrl,
+      })
+      sendMobileAnalyticsEvent(MobileEventName.ShareButtonClicked, {
+        entity: ShareableEntity.Token,
+        url: tokenUrl,
+      })
+    } catch (error) {
+      logger.error(error, { tags: { file: 'balances/hooks.ts', function: 'onPressShare' } })
+    }
+  }, [currencyId])
 
   const toggleFavoriteToken = useToggleFavoriteCallback(currencyId, isFavorited)
 

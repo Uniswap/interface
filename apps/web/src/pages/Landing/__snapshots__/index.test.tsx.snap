@@ -1,0 +1,5189 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`disable nft on landing page does not render nft information and card 1`] = `
+.c7 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c28 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c47 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+  font-weight: 535;
+}
+
+.c8 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c9 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c11 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.c24 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c13 {
+  outline: none;
+  border: none;
+  font-size: inherit;
+  padding: 0;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  -webkit-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+  -webkit-transition-property: opacity,color,background-color;
+  transition-property: opacity,color,background-color;
+}
+
+.c13:hover {
+  opacity: 0.6;
+}
+
+.c13:focus {
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.c98 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c98:hover {
+  opacity: 0.6;
+}
+
+.c98:active {
+  opacity: 0.4;
+}
+
+.c96 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c96:hover {
+  opacity: 0.6;
+}
+
+.c96:active {
+  opacity: 0.4;
+}
+
+.c89 {
+  height: 32px;
+  width: 32px;
+  fill: #98A1C0;
+  opacity: 1;
+}
+
+.c90 {
+  height: 32px;
+  width: 32px;
+  fill: #98A1C0;
+  opacity: 1;
+}
+
+.c91 {
+  height: 32px;
+  width: 32px;
+  fill: #98A1C0;
+  opacity: 1;
+}
+
+.c83 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  gap: 48px;
+  max-width: 1440px;
+}
+
+.c84 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.c85 {
+  display: none;
+}
+
+.c100 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c86 {
+  width: 72px;
+  height: 72px;
+  display: none;
+}
+
+.c87 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 20px;
+  margin: 20px 0 0 0;
+}
+
+.c88 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c93 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.c94 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 12px;
+  width: 200px;
+  margin: 20px 0 0 0;
+}
+
+.c95 {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 535;
+}
+
+.c99 {
+  font-size: 16px;
+  line-height: 20px;
+  color: #7D7D7D;
+}
+
+.c97 {
+  font-size: 16px;
+  line-height: 20px;
+  color: #7D7D7D;
+}
+
+.c92 {
+  font-size: 16px;
+  line-height: 20px;
+  margin: 1rem 0 0 0;
+  color: #CECECE;
+}
+
+.c66 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background: white url(swapCard.png);
+  background-size: auto 100%;
+  background-position: right;
+  background-repeat: no-repeat;
+  background-origin: border-box;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #222222;
+  padding: 24px;
+  height: 212px;
+  border-radius: 24px;
+  border: 1px solid transparent;
+  -webkit-transition: 250ms ease border;
+  transition: 250ms ease border;
+}
+
+.c66:hover {
+  border: 1px solid #CECECE;
+}
+
+.c72 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background: #F9F9F9 url(undefined);
+  background-size: auto 100%;
+  background-position: right;
+  background-repeat: no-repeat;
+  background-origin: border-box;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #222222;
+  padding: 24px;
+  height: 212px;
+  border-radius: 24px;
+  border: 1px solid #22222212;
+  -webkit-transition: 250ms ease border;
+  transition: 250ms ease border;
+}
+
+.c72:hover {
+  border: 1px solid #CECECE;
+}
+
+.c67 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c68 {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 535;
+}
+
+.c69 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  font-size: 16px;
+  line-height: 20px;
+  color: #222222;
+  padding: 0 40px 0 0;
+  max-width: 480px;
+}
+
+.c73 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  font-size: 16px;
+  line-height: 20px;
+  color: #7D7D7D;
+  padding: 0 40px 0 0;
+  max-width: 480px;
+}
+
+.c70 {
+  color: #FC72FF;
+  font-weight: 535;
+  margin: 24px 0 0;
+  cursor: pointer;
+  -webkit-transition: 250ms ease opacity;
+  transition: 250ms ease opacity;
+}
+
+.c70:hover {
+  opacity: 0.6;
+}
+
+.c74 {
+  min-width: 20px;
+  min-height: 20px;
+  max-height: 48px;
+  max-width: 48px;
+}
+
+.c50 {
+  background-color: transparent;
+  bottom: 0;
+  border-radius: inherit;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-transition: 150ms ease background-color;
+  transition: 150ms ease background-color;
+  width: 100%;
+}
+
+.c29 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c29:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c29 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c29 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c80 {
+  padding: 16px;
+  width: 200px;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c80:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c80 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c80 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c48 {
+  background-color: #FFEFFF;
+  color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+}
+
+.c48:focus {
+  box-shadow: 0 0 0 1pt #FFEFFF;
+  background-color: #FFEFFF;
+}
+
+.c48:hover {
+  background-color: #FFEFFF;
+}
+
+.c48:active {
+  box-shadow: 0 0 0 1pt #FFEFFF;
+  background-color: #FFEFFF;
+}
+
+.c48:hover .c49 {
+  background-color: #98A1C014;
+}
+
+.c48:active .c49 {
+  background-color: #B8C0DC3d;
+}
+
+.c48:disabled {
+  opacity: 0.4;
+}
+
+.c48:disabled:hover {
+  cursor: auto;
+  background-color: transparent;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.c30 {
+  background-color: #FFFFFF;
+  color: #7D7D7D;
+  border: 1px solid #22222212;
+  font-size: 16px;
+  font-weight: 535;
+}
+
+.c30:hover {
+  background-color: #ececec;
+}
+
+.c30:active {
+  background-color: #e0e0e0;
+}
+
+.c81 {
+  background-color: transparent;
+  color: #FC72FF;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c81:focus {
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.c81:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c81:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c81:disabled {
+  opacity: 50%;
+  cursor: auto;
+}
+
+.c75 {
+  height: 340px;
+  width: 100%;
+  border-radius: 32px;
+  max-width: 1440px;
+  margin: 80px 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 32px 48px;
+  box-shadow: 0px 10px 24px rgba(51,53,72,0.04);
+  background: url(Mesh.png),linear-gradient(93.06deg,#FF00C7 2.66%,#FF9FFB 98.99%);
+}
+
+.c76 {
+  color: white;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.c77 {
+  font-weight: 535;
+  font-size: 28px;
+  line-height: 36px;
+}
+
+.c78 {
+  margin: 10px 10px 0 0;
+  font-weight: 535;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.c79 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-transition: 250ms ease opacity;
+  transition: 250ms ease opacity;
+}
+
+.c79:hover {
+  opacity: 0.6;
+}
+
+.c82 {
+  color: white;
+  border: 1px solid white;
+}
+
+.c43 {
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: 4px;
+}
+
+.c3 {
+  padding: 68px 8px 0px;
+  max-width: 480px;
+  width: 100%;
+}
+
+.c4 {
+  position: relative;
+  z-index: 1;
+  -webkit-transition: -webkit-transform 250ms ease;
+  -webkit-transition: transform 250ms ease;
+  transition: transform 250ms ease;
+  border-radius: 24px;
+}
+
+.c6 {
+  border-radius: 24px;
+  z-index: -1;
+}
+
+.c41 {
+  border-radius: 12px;
+  height: 40px;
+  width: 40px;
+  position: relative;
+  margin-top: -18px;
+  margin-bottom: -18px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #F9F9F9;
+  border: 4px solid;
+  border-color: #FFFFFF;
+  z-index: 2;
+}
+
+.c41:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.c21 {
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  color: #7D7D7D;
+  font-size: 14px;
+  font-weight: 500;
+  height: 120px;
+  line-height: 20px;
+  padding: 16px;
+  position: relative;
+}
+
+.c21:before {
+  box-sizing: border-box;
+  background-size: 100%;
+  border-radius: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  content: '';
+  border: 1px solid #F9F9F9;
+}
+
+.c21:hover:before {
+  border-color: #98A1C014;
+}
+
+.c21:focus-within:before {
+  border-color: #B8C0DC3d;
+}
+
+.c44 {
+  border-bottom: 1px solid #FFFFFF;
+}
+
+.c42 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.c14 {
+  color: #222222;
+  background-color: #22222212;
+  padding: 8px 16px;
+  border-radius: 20px;
+  gap: 4px;
+  font-weight: 485;
+}
+
+.c14:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c14:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c16 {
+  color: #7D7D7D;
+  padding: 8px 16px;
+  border-radius: 20px;
+  gap: 4px;
+  font-weight: 485;
+}
+
+.c16:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c16:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c40 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c15 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c34 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c35 {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.c33 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c20 {
+  height: 24px;
+  width: 24px;
+}
+
+.c20 > * {
+  fill: #7D7D7D;
+}
+
+.c18 {
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.c18:not([disabled]):hover {
+  opacity: 0.7;
+}
+
+.c19 {
+  padding: 6px 12px;
+  border-radius: 16px;
+}
+
+.c17 {
+  position: relative;
+}
+
+.c10 {
+  margin-bottom: 12px;
+  padding-right: 4px;
+  color: #7D7D7D;
+}
+
+.c12 {
+  gap: 16px;
+}
+
+.c26 {
+  color: #222222;
+  pointer-events: auto;
+  width: 0;
+  position: relative;
+  font-weight: 485;
+  outline: none;
+  border: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  background-color: transparent;
+  font-size: 28px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0px;
+  -webkit-appearance: textfield;
+  text-align: right;
+}
+
+.c26::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.c26 [type='number'] {
+  -moz-appearance: textfield;
+}
+
+.c26::-webkit-outer-spin-button,
+.c26::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.c26::-webkit-input-placeholder {
+  color: #CECECE;
+}
+
+.c26::-moz-placeholder {
+  color: #CECECE;
+}
+
+.c26:-ms-input-placeholder {
+  color: #CECECE;
+}
+
+.c26::placeholder {
+  color: #CECECE;
+}
+
+.c27 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+  text-align: left;
+  font-size: 36px;
+  font-weight: 485;
+  max-height: 44px;
+}
+
+.c22 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  position: relative;
+  border-radius: 20px;
+  z-index: 1;
+  width: initial;
+  -webkit-transition: height 1s ease;
+  transition: height 1s ease;
+  will-change: height;
+}
+
+.c23 {
+  min-height: 44px;
+  border-radius: 20px;
+  width: initial;
+}
+
+.c31 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #FFFFFF;
+  opacity: 1;
+  color: #222222;
+  cursor: pointer;
+  height: 36px;
+  border-radius: 18px;
+  outline: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid #22222212;
+  font-size: 24px;
+  font-weight: 485;
+  width: initial;
+  padding: 4px 8px 4px 4px;
+  gap: 8px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  margin-left: 12px;
+  box-shadow: 0px 0px 10px 0px rgba(34,34,34,0.04);
+  visibility: visible;
+  -webkit-animation: none;
+  animation: none;
+}
+
+.c31:hover,
+.c31:active {
+  background-color: #F9F9F9;
+}
+
+.c31:before {
+  background-size: 100%;
+  border-radius: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: '';
+}
+
+.c31:hover:before {
+  background-color: #98A1C014;
+}
+
+.c31:active:before {
+  background-color: #B8C0DC3d;
+}
+
+.c45 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #FC72FF;
+  opacity: 1;
+  color: #FFFFFF;
+  cursor: pointer;
+  height: 36px;
+  border-radius: 18px;
+  outline: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid #FC72FF;
+  font-size: 24px;
+  font-weight: 485;
+  width: initial;
+  padding: 6px 6px 6px 8px;
+  gap: 8px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  margin-left: 12px;
+  box-shadow: 0px 0px 10px 0px rgba(34,34,34,0.04);
+  visibility: visible;
+  -webkit-animation: none;
+  animation: none;
+}
+
+.c45:hover,
+.c45:active {
+  background-color: #FC72FF;
+}
+
+.c45:before {
+  background-size: 100%;
+  border-radius: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: '';
+}
+
+.c45:hover:before {
+  background-color: #98A1C014;
+}
+
+.c45:active:before {
+  background-color: #B8C0DC3d;
+}
+
+.c25 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c38 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #7D7D7D;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.c38 span:hover {
+  cursor: pointer;
+  color: #4a4a4a;
+}
+
+.c39 {
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  min-height: 24px;
+  padding: 8px 0px 0px 0px;
+}
+
+.c32 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.c37 {
+  margin: 0 0.25rem 0 0.35rem;
+  height: 35%;
+  margin-left: 8px;
+}
+
+.c37 path {
+  stroke: #222222;
+  stroke-width: 2px;
+}
+
+.c46 {
+  margin: 0 0.25rem 0 0.35rem;
+  height: 35%;
+  margin-left: 8px;
+}
+
+.c46 path {
+  stroke: #FFFFFF;
+  stroke-width: 2px;
+}
+
+.c36 {
+  margin: 0 0.25rem 0 0.25rem;
+  font-size: 20px;
+  font-weight: 535;
+}
+
+.c0 {
+  padding: 72px 0px 0px 0px;
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+.c51 {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  min-height: 550px;
+  background: linear-gradient(rgba(255,255,255,0) 0%,rgb(255 255 255 /100%) 45%);
+  z-index: 990;
+  pointer-events: none;
+  height: calc(100vh - 48px);
+}
+
+.c52 {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  overflow-y: hidden;
+  height: calc(100vh - 48px);
+}
+
+.c53 {
+  position: absolute;
+  top: 68px;
+  bottom: 0;
+  background: radial-gradient(72.04% 72.04% at 50% 3.99%,#ff37eb 0%,rgba(166,151,255,0) 100%);
+  -webkit-filter: blur(72px);
+  filter: blur(72px);
+  border-radius: 24px;
+  max-width: 480px;
+  width: 100%;
+  height: 100%;
+}
+
+.c54 {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 0 0 40px;
+  max-width: min(720px,90%);
+  min-height: 535px;
+  z-index: 990;
+  -webkit-transition: 250ms ease opacity;
+  transition: 250ms ease opacity;
+  height: calc(100vh - 120px);
+  pointer-events: none;
+}
+
+.c54 * {
+  pointer-events: auto;
+}
+
+.c63 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 24px;
+  color: #7D7D7D;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c63:hover {
+  color: #CECECE;
+}
+
+.c55 {
+  color: transparent;
+  font-size: 36px;
+  line-height: 44px;
+  font-weight: 535;
+  text-align: center;
+  margin: 0 0 24px;
+  background: linear-gradient(10deg,rgba(255,79,184,1) 0%,rgba(255,159,251,1) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.c57 {
+  color: #7D7D7D;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  max-width: 500px;
+  margin: 0 0 32px;
+}
+
+.c56 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c59 {
+  padding: 16px 0px;
+  border-radius: 24px;
+}
+
+.c60 {
+  background: linear-gradient(93.06deg,#ff00c7 2.66%,#ff9ffb 98.99%);
+  border: none;
+  color: #FFFFFF;
+  -webkit-transition: all 250ms ease;
+  transition: all 250ms ease;
+}
+
+.c60:hover {
+  box-shadow: 0px 0px 16px 0px #ff00c7;
+}
+
+.c61 {
+  margin: 0px;
+  font-size: 16px;
+  font-weight: 535;
+  white-space: nowrap;
+}
+
+.c58 {
+  max-width: 300px;
+  width: 100%;
+  pointer-events: auto;
+}
+
+.c62 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #CECECE;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 535;
+  margin: 18px 0 36px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  visibility: hidden;
+  pointer-events: auto;
+  -webkit-transition: 250ms ease opacity;
+  transition: 250ms ease opacity;
+}
+
+.c62:hover {
+  opacity: 0.6;
+}
+
+.c64 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 24px 5rem;
+  width: 100%;
+  background: linear-gradient(179.82deg,rgba(255,255,255,0) 0.16%,#eaeaea 99.85%);
+}
+
+.c65 {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  padding: 24px 0 0;
+  max-width: 1440px;
+  -webkit-scroll-margin: 72px 0 0;
+  -moz-scroll-margin: 72px 0 0;
+  -ms-scroll-margin: 72px 0 0;
+  scroll-margin: 72px 0 0;
+  grid-template-columns: 1fr;
+}
+
+.c71 {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  padding: 24px 0 0;
+  max-width: 1440px;
+  -webkit-scroll-margin: 72px 0 0;
+  -moz-scroll-margin: 72px 0 0;
+  -ms-scroll-margin: 72px 0 0;
+  scroll-margin: 72px 0 0;
+  grid-template-columns: 1fr;
+}
+
+.c1 {
+  height: calc(100vh - 48px);
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.c5 * {
+  pointer-events: none;
+}
+
+.c5:hover {
+  -webkit-transform: translateY(-4px);
+  -ms-transform: translateY(-4px);
+  transform: translateY(-4px);
+  -webkit-transition: -webkit-transform 250ms ease;
+  -webkit-transition: transform 250ms ease;
+  transition: transform 250ms ease;
+}
+
+.c2 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  max-width: 480px;
+  width: 100%;
+}
+
+@media screen and (min-width:1024px) {
+  .c83 {
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c85 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c100 {
+    display: none;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c86 {
+    display: block;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c93 {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 24px;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c94 {
+    margin: 0;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c66 {
+    height: 360px;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c66 {
+    padding: 32px;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c72 {
+    height: 260px;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c72 {
+    padding: 32px;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c68 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c69 {
+    font-size: 20px;
+    line-height: 28px;
+    max-width: 480px;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c73 {
+    font-size: 20px;
+    line-height: 28px;
+    max-width: 480px;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c75 {
+    height: 140px;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c77 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c78 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c79 {
+    width: auto;
+  }
+}
+
+@media only screen and (max-width:768px) {
+  .c3 {
+    padding-top: 48px;
+  }
+}
+
+@media only screen and (max-width:640px) {
+  .c3 {
+    padding-top: 20px;
+  }
+}
+
+@media screen and (min-width:768px) {
+  .c51 {
+    height: 100vh;
+  }
+}
+
+@media screen and (min-width:768px) {
+  .c52 {
+    height: 100vh;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c55 {
+    font-size: 48px;
+    line-height: 56px;
+  }
+}
+
+@media screen and (min-width:768px) {
+  .c55 {
+    font-size: 64px;
+    line-height: 72px;
+  }
+}
+
+@media screen and (min-width:768px) {
+  .c57 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c61 {
+    font-size: 20px;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c62 {
+    visibility: visible;
+  }
+}
+
+@media screen and (min-width:768px) {
+  .c64 {
+    padding: 0 96px 5rem;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c65 {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c65 {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c71 {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c71 {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+<div>
+  <span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+        data-testid="landing-page"
+      >
+        <div
+          class="c1"
+        >
+          <a
+            class="c2"
+            href="/swap"
+          >
+            <div
+              class="c3"
+            >
+              <main
+                class="c4 c5"
+                id="swap-page"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 c8 c9 c10"
+                  >
+                    <div
+                      class="c7 c8 c11 c12"
+                    >
+                      <button
+                        class="c13 c14"
+                        role="button"
+                        tabindex="0"
+                      >
+                        Swap
+                      </button>
+                      <div
+                        class="c15"
+                      >
+                        <div>
+                          <button
+                            class="c13 c16"
+                            data-testid="buy-fiat-button"
+                          >
+                            Buy
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c7 c8 c11"
+                    >
+                      <div
+                        class="c17"
+                      >
+                        <button
+                          aria-label="Transaction Settings"
+                          class="c18"
+                          data-testid="open-settings-dialog-button"
+                          id="open-settings-dialog-button"
+                        >
+                          <div
+                            class="c7 c8 c19"
+                          >
+                            <svg
+                              class="c20"
+                              fill="none"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              width="24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20.83 14.6C19.9 14.06 19.33 13.07 19.33 12C19.33 10.93 19.9 9.93999 20.83 9.39999C20.99 9.29999 21.05 9.1 20.95 8.94L19.28 6.06C19.22 5.95 19.11 5.89001 19 5.89001C18.94 5.89001 18.88 5.91 18.83 5.94C18.37 6.2 17.85 6.34 17.33 6.34C16.8 6.34 16.28 6.19999 15.81 5.92999C14.88 5.38999 14.31 4.41 14.31 3.34C14.31 3.15 14.16 3 13.98 3H10.02C9.83999 3 9.69 3.15 9.69 3.34C9.69 4.41 9.12 5.38999 8.19 5.92999C7.72 6.19999 7.20001 6.34 6.67001 6.34C6.15001 6.34 5.63001 6.2 5.17001 5.94C5.01001 5.84 4.81 5.9 4.72 6.06L3.04001 8.94C3.01001 8.99 3 9.05001 3 9.10001C3 9.22001 3.06001 9.32999 3.17001 9.39999C4.10001 9.93999 4.67001 10.92 4.67001 11.99C4.67001 13.07 4.09999 14.06 3.17999 14.6H3.17001C3.01001 14.7 2.94999 14.9 3.04999 15.06L4.72 17.94C4.78 18.05 4.89 18.11 5 18.11C5.06 18.11 5.12001 18.09 5.17001 18.06C6.11001 17.53 7.26 17.53 8.19 18.07C9.11 18.61 9.67999 19.59 9.67999 20.66C9.67999 20.85 9.82999 21 10.02 21H13.98C14.16 21 14.31 20.85 14.31 20.66C14.31 19.59 14.88 18.61 15.81 18.07C16.28 17.8 16.8 17.66 17.33 17.66C17.85 17.66 18.37 17.8 18.83 18.06C18.99 18.16 19.19 18.1 19.28 17.94L20.96 15.06C20.99 15.01 21 14.95 21 14.9C21 14.78 20.94 14.67 20.83 14.6ZM12 15C10.34 15 9 13.66 9 12C9 10.34 10.34 9 12 9C13.66 9 15 10.34 15 12C15 13.66 13.66 15 12 15Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style="display: relative;"
+                  >
+                    <div
+                      class="c21"
+                    >
+                      <div
+                        class="c22"
+                        id="swap-currency-input"
+                      >
+                        <div
+                          class="c23"
+                        >
+                          <div
+                            class="c24 css-142zc9n"
+                            style="user-select: none;"
+                          >
+                            You pay
+                          </div>
+                          <div
+                            class="c25"
+                          >
+                            <div
+                              style="display: flex; flex-grow: 1;"
+                            >
+                              <input
+                                autocomplete="off"
+                                autocorrect="off"
+                                class="c26 c27 token-amount-input"
+                                id="swap-currency-input"
+                                inputmode="decimal"
+                                maxlength="79"
+                                minlength="1"
+                                pattern="^[0-9]*[.,]?[0-9]*$"
+                                placeholder="0"
+                                spellcheck="false"
+                                type="text"
+                                value=""
+                              />
+                            </div>
+                            <div>
+                              <div
+                                class="c15"
+                              >
+                                <button
+                                  class="c28 c29 c30 c31 open-currency-select-button"
+                                >
+                                  <span
+                                    class="c32"
+                                  >
+                                    <div
+                                      class="c7 c8 c11"
+                                    >
+                                      <div
+                                        class="c33"
+                                        style="height: 24px; width: 24px; margin-right: 2px;"
+                                      >
+                                        <div
+                                          class="c34"
+                                        >
+                                          <img
+                                            class="c35"
+                                            src="ethereum-logo.png"
+                                          />
+                                        </div>
+                                      </div>
+                                      <span
+                                        class="c36 token-symbol-container"
+                                      >
+                                        ETH
+                                      </span>
+                                    </div>
+                                    <svg
+                                      class="c37"
+                                    >
+                                      dropdown.svg
+                                    </svg>
+                                  </span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="c38 c39"
+                          >
+                            <div
+                              class="c7 c8 c9"
+                            >
+                              <div
+                                class="c40"
+                              />
+                              <span />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c41"
+                    >
+                      <div
+                        class="c42"
+                        color="#222222"
+                        data-testid="swap-currency-button"
+                      >
+                        <svg
+                          fill="none"
+                          height="16"
+                          stroke="#222222"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <line
+                            x1="12"
+                            x2="12"
+                            y1="5"
+                            y2="19"
+                          />
+                          <polyline
+                            points="19 12 12 19 5 12"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c43"
+                  >
+                    <div>
+                      <div
+                        class="c21 c44"
+                      >
+                        <div
+                          class="c22"
+                          id="swap-currency-output"
+                        >
+                          <div
+                            class="c23"
+                          >
+                            <div
+                              class="c24 css-142zc9n"
+                              style="user-select: none;"
+                            >
+                              You receive
+                            </div>
+                            <div
+                              class="c25"
+                            >
+                              <div
+                                style="display: flex; flex-grow: 1;"
+                              >
+                                <input
+                                  autocomplete="off"
+                                  autocorrect="off"
+                                  class="c26 c27 token-amount-input"
+                                  id="swap-currency-output"
+                                  inputmode="decimal"
+                                  maxlength="79"
+                                  minlength="1"
+                                  pattern="^[0-9]*[.,]?[0-9]*$"
+                                  placeholder="0"
+                                  spellcheck="false"
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
+                              <div>
+                                <div
+                                  class="c15"
+                                >
+                                  <button
+                                    class="c28 c29 c30 c45 open-currency-select-button"
+                                  >
+                                    <span
+                                      class="c32"
+                                    >
+                                      <div
+                                        class="c7 c8 c11"
+                                      >
+                                        <span
+                                          class="c36 token-symbol-container"
+                                        >
+                                          Select token
+                                        </span>
+                                      </div>
+                                      <svg
+                                        class="c46"
+                                      >
+                                        dropdown.svg
+                                      </svg>
+                                    </span>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              class="c38 c39"
+                            >
+                              <div
+                                class="c7 c8 c9"
+                              >
+                                <div
+                                  class="c40"
+                                />
+                                <span />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        class="c47 c29 c48"
+                        font-weight="535"
+                      >
+                        <div
+                          class="c49 c50"
+                        />
+                        Connect wallet
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </main>
+            </div>
+          </a>
+        </div>
+        <div
+          class="c51"
+        />
+        <div
+          class="c52"
+        >
+          <div
+            class="c53"
+          />
+        </div>
+        <div
+          class="c54"
+        >
+          <h1
+            class="c55"
+          >
+            Trade crypto with confidence
+          </h1>
+          <div
+            class="c56"
+          >
+            <div
+              class="c57"
+            >
+              Buy, sell, and explore tokens
+            </div>
+          </div>
+          <span
+            class="c58"
+          >
+            <a
+              class="c2 c29 c59 c60"
+              href="/swap"
+            >
+              <p
+                class="c61"
+              >
+                Get started
+              </p>
+            </a>
+          </span>
+          <div
+            class="c62"
+          >
+            Learn more
+          </div>
+          <a
+            class="c63"
+            href="https://uniswapwallet.onelink.me/8q3y/79gveilz"
+          >
+            <svg
+              height="20"
+              width="20"
+            >
+              uniswap_app_logo.svg
+            </svg>
+            Download the Uniswap app
+          </a>
+        </div>
+        <div
+          class="c64"
+        >
+          <div
+            class="c65"
+            cols="1"
+          >
+            <a
+              class="c66"
+              href="/swap"
+            >
+              <div
+                class="c67"
+              >
+                <div
+                  class="c68"
+                >
+                  Swap tokens
+                </div>
+              </div>
+              <div
+                class="c69"
+                type="Primary"
+              >
+                Buy, sell, and explore tokens on Ethereum, Polygon, Optimism, and more.
+                <div
+                  class="c69 c70"
+                  type="Primary"
+                >
+                  Trade tokens
+                </div>
+              </div>
+            </a>
+          </div>
+          <div
+            class="c71"
+            cols="3"
+          >
+            <a
+              class="c72"
+              href="https://support.uniswap.org/hc/en-us/articles/11306574799117-How-to-use-Moon-Pay-on-the-Uniswap-web-app-"
+              rel="noopenener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c67"
+              >
+                <div
+                  class="c68"
+                >
+                  Buy crypto
+                </div>
+                <svg
+                  fill="none"
+                  height="48"
+                  stroke="#CECECE"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="48"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <line
+                    x1="12"
+                    x2="12"
+                    y1="1"
+                    y2="23"
+                  />
+                  <path
+                    d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+                  />
+                </svg>
+              </div>
+              <div
+                class="c73"
+                type="Secondary"
+              >
+                Buy crypto with your credit card or bank account at the best rates.
+                <div
+                  class="c73 c70"
+                  type="Secondary"
+                >
+                  Buy now
+                </div>
+              </div>
+            </a>
+            <a
+              class="c72"
+              href="/pool"
+            >
+              <div
+                class="c67"
+              >
+                <div
+                  class="c68"
+                >
+                  Earn
+                </div>
+                <img
+                  alt="Analytics"
+                  class="c74"
+                  src="aboutArrowLight.png"
+                />
+              </div>
+              <div
+                class="c73"
+                type="Secondary"
+              >
+                Provide liquidity to pools on Uniswap and earn fees on swaps.
+                <div
+                  class="c73 c70"
+                  type="Secondary"
+                >
+                  Provide liquidity
+                </div>
+              </div>
+            </a>
+            <a
+              class="c72"
+              href="https://docs.uniswap.org"
+              rel="noopenener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c67"
+              >
+                <div
+                  class="c68"
+                >
+                  Build dApps
+                </div>
+                <svg
+                  fill="none"
+                  height="48"
+                  stroke="#CECECE"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="48"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polyline
+                    points="4 17 10 11 4 5"
+                  />
+                  <line
+                    x1="12"
+                    x2="20"
+                    y1="19"
+                    y2="19"
+                  />
+                </svg>
+              </div>
+              <div
+                class="c73"
+                type="Secondary"
+              >
+                Build apps and tools on the largest DeFi protocol on Ethereum.
+                <div
+                  class="c73 c70"
+                  type="Secondary"
+                >
+                  Developer docs
+                </div>
+              </div>
+            </a>
+          </div>
+          <div
+            class="c75"
+          >
+            <div
+              class="c76"
+            >
+              <div
+                class="c77"
+              >
+                Powered by the Uniswap Protocol
+              </div>
+              <div
+                class="c78"
+              >
+                The leading decentralized crypto trading protocol, governed by a global community.
+              </div>
+            </div>
+            <div
+              class="c79"
+            >
+              <a
+                class="c80 c81 c82"
+                href="https://uniswap.org"
+                rel="noopener noreferrer"
+                target="_blank"
+                width="200px"
+              >
+                Learn more
+              </a>
+            </div>
+          </div>
+          <div
+            class="c83"
+          >
+            <div
+              class="c84 c85"
+            >
+              <img
+                alt="Uniswap Logo"
+                class="c86"
+                src="unicornEmbossLight.png"
+              />
+              <div
+                class="c87"
+              >
+                <a
+                  class="c88"
+                  href="https://discord.gg/FCfyBSbCU5"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    class="c89"
+                    size="32"
+                  >
+                    discord.svg
+                  </svg>
+                </a>
+                <a
+                  class="c88"
+                  href="https://twitter.com/uniswap"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    class="c90"
+                    size="32"
+                  >
+                    twitter-safe.svg
+                  </svg>
+                </a>
+                <a
+                  class="c88"
+                  href="https://github.com/Uniswap"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    class="c91"
+                    size="32"
+                  >
+                    github.svg
+                  </svg>
+                </a>
+              </div>
+              <span
+                class="c92"
+              >
+                © 
+                2024
+                 Uniswap Labs
+              </span>
+            </div>
+            <div
+              class="c93"
+            >
+              <div
+                class="c94"
+              >
+                <span
+                  class="c95"
+                >
+                  App
+                </span>
+                <a
+                  class="c96 c97"
+                  href="/swap"
+                >
+                  Swap
+                </a>
+                <a
+                  class="c96 c97"
+                  href="/tokens"
+                >
+                  Tokens
+                </a>
+                <a
+                  class="c96 c97"
+                  href="/pool"
+                >
+                  Pool
+                </a>
+              </div>
+              <div
+                class="c94"
+              >
+                <span
+                  class="c95"
+                >
+                  Protocol
+                </span>
+                <a
+                  class="c98 c99"
+                  href="https://uniswap.org/community"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Community
+                </a>
+                <a
+                  class="c98 c99"
+                  href="https://uniswap.org/governance"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Governance
+                </a>
+                <a
+                  class="c98 c99"
+                  href="https://uniswap.org/developers"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Developers
+                </a>
+              </div>
+              <div
+                class="c94"
+              >
+                <span
+                  class="c95"
+                >
+                  Company
+                </span>
+                <a
+                  class="c98 c99"
+                  href="https://boards.greenhouse.io/uniswaplabs"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Careers
+                </a>
+                <a
+                  class="c98 c99"
+                  href="https://uniswap.org/blog"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Blog
+                </a>
+              </div>
+              <div
+                class="c94"
+              >
+                <span
+                  class="c95"
+                >
+                  Get Help
+                </span>
+                <a
+                  class="c98 c99"
+                  href="https://support.uniswap.org/hc/en-us/requests/new"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Contact Us
+                </a>
+                <a
+                  class="c98 c99"
+                  href="https://support.uniswap.org/hc/en-us"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Help Center
+                </a>
+              </div>
+            </div>
+            <div
+              class="c84 c100"
+            >
+              <img
+                alt="Uniswap Logo"
+                class="c86"
+                src="unicornEmbossLight.png"
+              />
+              <div
+                class="c87"
+              >
+                <a
+                  class="c88"
+                  href="https://discord.gg/FCfyBSbCU5"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    class="c89"
+                    size="32"
+                  >
+                    discord.svg
+                  </svg>
+                </a>
+                <a
+                  class="c88"
+                  href="https://twitter.com/uniswap"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    class="c90"
+                    size="32"
+                  >
+                    twitter-safe.svg
+                  </svg>
+                </a>
+                <a
+                  class="c88"
+                  href="https://github.com/Uniswap"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    class="c91"
+                    size="32"
+                  >
+                    github.svg
+                  </svg>
+                </a>
+              </div>
+              <span
+                class="c92"
+              >
+                © 
+                2024
+                 Uniswap Labs
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</div>
+`;
+
+exports[`disable nft on landing page renders nft information and card 1`] = `
+.c7 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c28 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c47 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+  font-weight: 535;
+}
+
+.c8 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c9 {
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c11 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.c24 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c13 {
+  outline: none;
+  border: none;
+  font-size: inherit;
+  padding: 0;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  -webkit-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+  -webkit-transition-property: opacity,color,background-color;
+  transition-property: opacity,color,background-color;
+}
+
+.c13:hover {
+  opacity: 0.6;
+}
+
+.c13:focus {
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.c99 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c99:hover {
+  opacity: 0.6;
+}
+
+.c99:active {
+  opacity: 0.4;
+}
+
+.c97 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c97:hover {
+  opacity: 0.6;
+}
+
+.c97:active {
+  opacity: 0.4;
+}
+
+.c90 {
+  height: 32px;
+  width: 32px;
+  fill: #98A1C0;
+  opacity: 1;
+}
+
+.c91 {
+  height: 32px;
+  width: 32px;
+  fill: #98A1C0;
+  opacity: 1;
+}
+
+.c92 {
+  height: 32px;
+  width: 32px;
+  fill: #98A1C0;
+  opacity: 1;
+}
+
+.c84 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 100%;
+  gap: 48px;
+  max-width: 1440px;
+}
+
+.c85 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.c86 {
+  display: none;
+}
+
+.c101 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c87 {
+  width: 72px;
+  height: 72px;
+  display: none;
+}
+
+.c88 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 20px;
+  margin: 20px 0 0 0;
+}
+
+.c89 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c94 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.c95 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 12px;
+  width: 200px;
+  margin: 20px 0 0 0;
+}
+
+.c96 {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 535;
+}
+
+.c100 {
+  font-size: 16px;
+  line-height: 20px;
+  color: #7D7D7D;
+}
+
+.c98 {
+  font-size: 16px;
+  line-height: 20px;
+  color: #7D7D7D;
+}
+
+.c93 {
+  font-size: 16px;
+  line-height: 20px;
+  margin: 1rem 0 0 0;
+  color: #CECECE;
+}
+
+.c66 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background: white url(swapCard.png);
+  background-size: auto 100%;
+  background-position: right;
+  background-repeat: no-repeat;
+  background-origin: border-box;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #222222;
+  padding: 24px;
+  height: 212px;
+  border-radius: 24px;
+  border: 1px solid transparent;
+  -webkit-transition: 250ms ease border;
+  transition: 250ms ease border;
+}
+
+.c66:hover {
+  border: 1px solid #CECECE;
+}
+
+.c71 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background: white url(nftCard.png);
+  background-size: auto 100%;
+  background-position: right;
+  background-repeat: no-repeat;
+  background-origin: border-box;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #222222;
+  padding: 24px;
+  height: 212px;
+  border-radius: 24px;
+  border: 1px solid transparent;
+  -webkit-transition: 250ms ease border;
+  transition: 250ms ease border;
+}
+
+.c71:hover {
+  border: 1px solid #CECECE;
+}
+
+.c73 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  background: #F9F9F9 url(undefined);
+  background-size: auto 100%;
+  background-position: right;
+  background-repeat: no-repeat;
+  background-origin: border-box;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #222222;
+  padding: 24px;
+  height: 212px;
+  border-radius: 24px;
+  border: 1px solid #22222212;
+  -webkit-transition: 250ms ease border;
+  transition: 250ms ease border;
+}
+
+.c73:hover {
+  border: 1px solid #CECECE;
+}
+
+.c67 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c68 {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 535;
+}
+
+.c69 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  font-size: 16px;
+  line-height: 20px;
+  color: #222222;
+  padding: 0 40px 0 0;
+  max-width: 480px;
+}
+
+.c74 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  font-size: 16px;
+  line-height: 20px;
+  color: #7D7D7D;
+  padding: 0 40px 0 0;
+  max-width: 480px;
+}
+
+.c70 {
+  color: #FC72FF;
+  font-weight: 535;
+  margin: 24px 0 0;
+  cursor: pointer;
+  -webkit-transition: 250ms ease opacity;
+  transition: 250ms ease opacity;
+}
+
+.c70:hover {
+  opacity: 0.6;
+}
+
+.c75 {
+  min-width: 20px;
+  min-height: 20px;
+  max-height: 48px;
+  max-width: 48px;
+}
+
+.c50 {
+  background-color: transparent;
+  bottom: 0;
+  border-radius: inherit;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  -webkit-transition: 150ms ease background-color;
+  transition: 150ms ease background-color;
+  width: 100%;
+}
+
+.c29 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c29:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c29 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c29 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c81 {
+  padding: 16px;
+  width: 200px;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c81:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c81 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c81 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c48 {
+  background-color: #FFEFFF;
+  color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+}
+
+.c48:focus {
+  box-shadow: 0 0 0 1pt #FFEFFF;
+  background-color: #FFEFFF;
+}
+
+.c48:hover {
+  background-color: #FFEFFF;
+}
+
+.c48:active {
+  box-shadow: 0 0 0 1pt #FFEFFF;
+  background-color: #FFEFFF;
+}
+
+.c48:hover .c49 {
+  background-color: #98A1C014;
+}
+
+.c48:active .c49 {
+  background-color: #B8C0DC3d;
+}
+
+.c48:disabled {
+  opacity: 0.4;
+}
+
+.c48:disabled:hover {
+  cursor: auto;
+  background-color: transparent;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.c30 {
+  background-color: #FFFFFF;
+  color: #7D7D7D;
+  border: 1px solid #22222212;
+  font-size: 16px;
+  font-weight: 535;
+}
+
+.c30:hover {
+  background-color: #ececec;
+}
+
+.c30:active {
+  background-color: #e0e0e0;
+}
+
+.c82 {
+  background-color: transparent;
+  color: #FC72FF;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c82:focus {
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.c82:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c82:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c82:disabled {
+  opacity: 50%;
+  cursor: auto;
+}
+
+.c76 {
+  height: 340px;
+  width: 100%;
+  border-radius: 32px;
+  max-width: 1440px;
+  margin: 80px 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding: 32px 48px;
+  box-shadow: 0px 10px 24px rgba(51,53,72,0.04);
+  background: url(Mesh.png),linear-gradient(93.06deg,#FF00C7 2.66%,#FF9FFB 98.99%);
+}
+
+.c77 {
+  color: white;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.c78 {
+  font-weight: 535;
+  font-size: 28px;
+  line-height: 36px;
+}
+
+.c79 {
+  margin: 10px 10px 0 0;
+  font-weight: 535;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.c80 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-transition: 250ms ease opacity;
+  transition: 250ms ease opacity;
+}
+
+.c80:hover {
+  opacity: 0.6;
+}
+
+.c83 {
+  color: white;
+  border: 1px solid white;
+}
+
+.c43 {
+  display: grid;
+  grid-auto-rows: auto;
+  grid-row-gap: 4px;
+}
+
+.c3 {
+  padding: 68px 8px 0px;
+  max-width: 480px;
+  width: 100%;
+}
+
+.c4 {
+  position: relative;
+  z-index: 1;
+  -webkit-transition: -webkit-transform 250ms ease;
+  -webkit-transition: transform 250ms ease;
+  transition: transform 250ms ease;
+  border-radius: 24px;
+}
+
+.c6 {
+  border-radius: 24px;
+  z-index: -1;
+}
+
+.c41 {
+  border-radius: 12px;
+  height: 40px;
+  width: 40px;
+  position: relative;
+  margin-top: -18px;
+  margin-bottom: -18px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #F9F9F9;
+  border: 4px solid;
+  border-color: #FFFFFF;
+  z-index: 2;
+}
+
+.c41:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.c21 {
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  color: #7D7D7D;
+  font-size: 14px;
+  font-weight: 500;
+  height: 120px;
+  line-height: 20px;
+  padding: 16px;
+  position: relative;
+}
+
+.c21:before {
+  box-sizing: border-box;
+  background-size: 100%;
+  border-radius: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  content: '';
+  border: 1px solid #F9F9F9;
+}
+
+.c21:hover:before {
+  border-color: #98A1C014;
+}
+
+.c21:focus-within:before {
+  border-color: #B8C0DC3d;
+}
+
+.c44 {
+  border-bottom: 1px solid #FFFFFF;
+}
+
+.c42 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.c14 {
+  color: #222222;
+  background-color: #22222212;
+  padding: 8px 16px;
+  border-radius: 20px;
+  gap: 4px;
+  font-weight: 485;
+}
+
+.c14:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c14:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c16 {
+  color: #7D7D7D;
+  padding: 8px 16px;
+  border-radius: 20px;
+  gap: 4px;
+  font-weight: 485;
+}
+
+.c16:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c16:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c40 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c15 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c34 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c35 {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.c33 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c20 {
+  height: 24px;
+  width: 24px;
+}
+
+.c20 > * {
+  fill: #7D7D7D;
+}
+
+.c18 {
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+}
+
+.c18:not([disabled]):hover {
+  opacity: 0.7;
+}
+
+.c19 {
+  padding: 6px 12px;
+  border-radius: 16px;
+}
+
+.c17 {
+  position: relative;
+}
+
+.c10 {
+  margin-bottom: 12px;
+  padding-right: 4px;
+  color: #7D7D7D;
+}
+
+.c12 {
+  gap: 16px;
+}
+
+.c26 {
+  color: #222222;
+  pointer-events: auto;
+  width: 0;
+  position: relative;
+  font-weight: 485;
+  outline: none;
+  border: none;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  background-color: transparent;
+  font-size: 28px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0px;
+  -webkit-appearance: textfield;
+  text-align: right;
+}
+
+.c26::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+.c26 [type='number'] {
+  -moz-appearance: textfield;
+}
+
+.c26::-webkit-outer-spin-button,
+.c26::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.c26::-webkit-input-placeholder {
+  color: #CECECE;
+}
+
+.c26::-moz-placeholder {
+  color: #CECECE;
+}
+
+.c26:-ms-input-placeholder {
+  color: #CECECE;
+}
+
+.c26::placeholder {
+  color: #CECECE;
+}
+
+.c27 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+  text-align: left;
+  font-size: 36px;
+  font-weight: 485;
+  max-height: 44px;
+}
+
+.c22 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  position: relative;
+  border-radius: 20px;
+  z-index: 1;
+  width: initial;
+  -webkit-transition: height 1s ease;
+  transition: height 1s ease;
+  will-change: height;
+}
+
+.c23 {
+  min-height: 44px;
+  border-radius: 20px;
+  width: initial;
+}
+
+.c31 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #FFFFFF;
+  opacity: 1;
+  color: #222222;
+  cursor: pointer;
+  height: 36px;
+  border-radius: 18px;
+  outline: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid #22222212;
+  font-size: 24px;
+  font-weight: 485;
+  width: initial;
+  padding: 4px 8px 4px 4px;
+  gap: 8px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  margin-left: 12px;
+  box-shadow: 0px 0px 10px 0px rgba(34,34,34,0.04);
+  visibility: visible;
+  -webkit-animation: none;
+  animation: none;
+}
+
+.c31:hover,
+.c31:active {
+  background-color: #F9F9F9;
+}
+
+.c31:before {
+  background-size: 100%;
+  border-radius: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: '';
+}
+
+.c31:hover:before {
+  background-color: #98A1C014;
+}
+
+.c31:active:before {
+  background-color: #B8C0DC3d;
+}
+
+.c45 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: #FC72FF;
+  opacity: 1;
+  color: #FFFFFF;
+  cursor: pointer;
+  height: 36px;
+  border-radius: 18px;
+  outline: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 1px solid #FC72FF;
+  font-size: 24px;
+  font-weight: 485;
+  width: initial;
+  padding: 6px 6px 6px 8px;
+  gap: 8px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  margin-left: 12px;
+  box-shadow: 0px 0px 10px 0px rgba(34,34,34,0.04);
+  visibility: visible;
+  -webkit-animation: none;
+  animation: none;
+}
+
+.c45:hover,
+.c45:active {
+  background-color: #FC72FF;
+}
+
+.c45:before {
+  background-size: 100%;
+  border-radius: inherit;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  content: '';
+}
+
+.c45:hover:before {
+  background-color: #98A1C014;
+}
+
+.c45:active:before {
+  background-color: #B8C0DC3d;
+}
+
+.c25 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c38 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #7D7D7D;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.c38 span:hover {
+  cursor: pointer;
+  color: #4a4a4a;
+}
+
+.c39 {
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  min-height: 24px;
+  padding: 8px 0px 0px 0px;
+}
+
+.c32 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.c37 {
+  margin: 0 0.25rem 0 0.35rem;
+  height: 35%;
+  margin-left: 8px;
+}
+
+.c37 path {
+  stroke: #222222;
+  stroke-width: 2px;
+}
+
+.c46 {
+  margin: 0 0.25rem 0 0.35rem;
+  height: 35%;
+  margin-left: 8px;
+}
+
+.c46 path {
+  stroke: #FFFFFF;
+  stroke-width: 2px;
+}
+
+.c36 {
+  margin: 0 0.25rem 0 0.25rem;
+  font-size: 20px;
+  font-weight: 535;
+}
+
+.c0 {
+  padding: 72px 0px 0px 0px;
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+.c51 {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  min-height: 550px;
+  background: linear-gradient(rgba(255,255,255,0) 0%,rgb(255 255 255 /100%) 45%);
+  z-index: 990;
+  pointer-events: none;
+  height: calc(100vh - 48px);
+}
+
+.c52 {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  overflow-y: hidden;
+  height: calc(100vh - 48px);
+}
+
+.c53 {
+  position: absolute;
+  top: 68px;
+  bottom: 0;
+  background: radial-gradient(72.04% 72.04% at 50% 3.99%,#ff37eb 0%,rgba(166,151,255,0) 100%);
+  -webkit-filter: blur(72px);
+  filter: blur(72px);
+  border-radius: 24px;
+  max-width: 480px;
+  width: 100%;
+  height: 100%;
+}
+
+.c54 {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 0 0 40px;
+  max-width: min(720px,90%);
+  min-height: 535px;
+  z-index: 990;
+  -webkit-transition: 250ms ease opacity;
+  transition: 250ms ease opacity;
+  height: calc(100vh - 120px);
+  pointer-events: none;
+}
+
+.c54 * {
+  pointer-events: auto;
+}
+
+.c63 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  gap: 8px;
+  margin-top: 24px;
+  color: #7D7D7D;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c63:hover {
+  color: #CECECE;
+}
+
+.c55 {
+  color: transparent;
+  font-size: 36px;
+  line-height: 44px;
+  font-weight: 535;
+  text-align: center;
+  margin: 0 0 24px;
+  background: linear-gradient(10deg,rgba(255,79,184,1) 0%,rgba(255,159,251,1) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.c57 {
+  color: #7D7D7D;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  max-width: 500px;
+  margin: 0 0 32px;
+}
+
+.c56 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c59 {
+  padding: 16px 0px;
+  border-radius: 24px;
+}
+
+.c60 {
+  background: linear-gradient(93.06deg,#ff00c7 2.66%,#ff9ffb 98.99%);
+  border: none;
+  color: #FFFFFF;
+  -webkit-transition: all 250ms ease;
+  transition: all 250ms ease;
+}
+
+.c60:hover {
+  box-shadow: 0px 0px 16px 0px #ff00c7;
+}
+
+.c61 {
+  margin: 0px;
+  font-size: 16px;
+  font-weight: 535;
+  white-space: nowrap;
+}
+
+.c58 {
+  max-width: 300px;
+  width: 100%;
+  pointer-events: auto;
+}
+
+.c62 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #CECECE;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 535;
+  margin: 18px 0 36px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  visibility: hidden;
+  pointer-events: auto;
+  -webkit-transition: 250ms ease opacity;
+  transition: 250ms ease opacity;
+}
+
+.c62:hover {
+  opacity: 0.6;
+}
+
+.c64 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 24px 5rem;
+  width: 100%;
+  background: linear-gradient(179.82deg,rgba(255,255,255,0) 0.16%,#eaeaea 99.85%);
+}
+
+.c65 {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  padding: 24px 0 0;
+  max-width: 1440px;
+  -webkit-scroll-margin: 72px 0 0;
+  -moz-scroll-margin: 72px 0 0;
+  -ms-scroll-margin: 72px 0 0;
+  scroll-margin: 72px 0 0;
+  grid-template-columns: 1fr;
+}
+
+.c72 {
+  display: grid;
+  gap: 12px;
+  width: 100%;
+  padding: 24px 0 0;
+  max-width: 1440px;
+  -webkit-scroll-margin: 72px 0 0;
+  -moz-scroll-margin: 72px 0 0;
+  -ms-scroll-margin: 72px 0 0;
+  scroll-margin: 72px 0 0;
+  grid-template-columns: 1fr;
+}
+
+.c1 {
+  height: calc(100vh - 48px);
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.c5 * {
+  pointer-events: none;
+}
+
+.c5:hover {
+  -webkit-transform: translateY(-4px);
+  -ms-transform: translateY(-4px);
+  transform: translateY(-4px);
+  -webkit-transition: -webkit-transform 250ms ease;
+  -webkit-transition: transform 250ms ease;
+  transition: transform 250ms ease;
+}
+
+.c2 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  max-width: 480px;
+  width: 100%;
+}
+
+@media screen and (min-width:1024px) {
+  .c84 {
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c86 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c101 {
+    display: none;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c87 {
+    display: block;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c94 {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 24px;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c95 {
+    margin: 0;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c66 {
+    height: 360px;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c66 {
+    padding: 32px;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c71 {
+    height: 360px;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c71 {
+    padding: 32px;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c73 {
+    height: 260px;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c73 {
+    padding: 32px;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c68 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c69 {
+    font-size: 20px;
+    line-height: 28px;
+    max-width: 480px;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c74 {
+    font-size: 20px;
+    line-height: 28px;
+    max-width: 480px;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c76 {
+    height: 140px;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c78 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+}
+
+@media screen and (min-width:1280px) {
+  .c79 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c80 {
+    width: auto;
+  }
+}
+
+@media only screen and (max-width:768px) {
+  .c3 {
+    padding-top: 48px;
+  }
+}
+
+@media only screen and (max-width:640px) {
+  .c3 {
+    padding-top: 20px;
+  }
+}
+
+@media screen and (min-width:768px) {
+  .c51 {
+    height: 100vh;
+  }
+}
+
+@media screen and (min-width:768px) {
+  .c52 {
+    height: 100vh;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c55 {
+    font-size: 48px;
+    line-height: 56px;
+  }
+}
+
+@media screen and (min-width:768px) {
+  .c55 {
+    font-size: 64px;
+    line-height: 72px;
+  }
+}
+
+@media screen and (min-width:768px) {
+  .c57 {
+    font-size: 20px;
+    line-height: 28px;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c61 {
+    font-size: 20px;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c62 {
+    visibility: visible;
+  }
+}
+
+@media screen and (min-width:768px) {
+  .c64 {
+    padding: 0 96px 5rem;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c65 {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c65 {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+@media screen and (min-width:640px) {
+  .c72 {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+@media screen and (min-width:1024px) {
+  .c72 {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+  }
+}
+
+<div>
+  <span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+        data-testid="landing-page"
+      >
+        <div
+          class="c1"
+        >
+          <a
+            class="c2"
+            href="/swap"
+          >
+            <div
+              class="c3"
+            >
+              <main
+                class="c4 c5"
+                id="swap-page"
+              >
+                <div
+                  class="c6"
+                >
+                  <div
+                    class="c7 c8 c9 c10"
+                  >
+                    <div
+                      class="c7 c8 c11 c12"
+                    >
+                      <button
+                        class="c13 c14"
+                        role="button"
+                        tabindex="0"
+                      >
+                        Swap
+                      </button>
+                      <div
+                        class="c15"
+                      >
+                        <div>
+                          <button
+                            class="c13 c16"
+                            data-testid="buy-fiat-button"
+                          >
+                            Buy
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c7 c8 c11"
+                    >
+                      <div
+                        class="c17"
+                      >
+                        <button
+                          aria-label="Transaction Settings"
+                          class="c18"
+                          data-testid="open-settings-dialog-button"
+                          id="open-settings-dialog-button"
+                        >
+                          <div
+                            class="c7 c8 c19"
+                          >
+                            <svg
+                              class="c20"
+                              fill="none"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              width="24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M20.83 14.6C19.9 14.06 19.33 13.07 19.33 12C19.33 10.93 19.9 9.93999 20.83 9.39999C20.99 9.29999 21.05 9.1 20.95 8.94L19.28 6.06C19.22 5.95 19.11 5.89001 19 5.89001C18.94 5.89001 18.88 5.91 18.83 5.94C18.37 6.2 17.85 6.34 17.33 6.34C16.8 6.34 16.28 6.19999 15.81 5.92999C14.88 5.38999 14.31 4.41 14.31 3.34C14.31 3.15 14.16 3 13.98 3H10.02C9.83999 3 9.69 3.15 9.69 3.34C9.69 4.41 9.12 5.38999 8.19 5.92999C7.72 6.19999 7.20001 6.34 6.67001 6.34C6.15001 6.34 5.63001 6.2 5.17001 5.94C5.01001 5.84 4.81 5.9 4.72 6.06L3.04001 8.94C3.01001 8.99 3 9.05001 3 9.10001C3 9.22001 3.06001 9.32999 3.17001 9.39999C4.10001 9.93999 4.67001 10.92 4.67001 11.99C4.67001 13.07 4.09999 14.06 3.17999 14.6H3.17001C3.01001 14.7 2.94999 14.9 3.04999 15.06L4.72 17.94C4.78 18.05 4.89 18.11 5 18.11C5.06 18.11 5.12001 18.09 5.17001 18.06C6.11001 17.53 7.26 17.53 8.19 18.07C9.11 18.61 9.67999 19.59 9.67999 20.66C9.67999 20.85 9.82999 21 10.02 21H13.98C14.16 21 14.31 20.85 14.31 20.66C14.31 19.59 14.88 18.61 15.81 18.07C16.28 17.8 16.8 17.66 17.33 17.66C17.85 17.66 18.37 17.8 18.83 18.06C18.99 18.16 19.19 18.1 19.28 17.94L20.96 15.06C20.99 15.01 21 14.95 21 14.9C21 14.78 20.94 14.67 20.83 14.6ZM12 15C10.34 15 9 13.66 9 12C9 10.34 10.34 9 12 9C13.66 9 15 10.34 15 12C15 13.66 13.66 15 12 15Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                          </div>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style="display: relative;"
+                  >
+                    <div
+                      class="c21"
+                    >
+                      <div
+                        class="c22"
+                        id="swap-currency-input"
+                      >
+                        <div
+                          class="c23"
+                        >
+                          <div
+                            class="c24 css-142zc9n"
+                            style="user-select: none;"
+                          >
+                            You pay
+                          </div>
+                          <div
+                            class="c25"
+                          >
+                            <div
+                              style="display: flex; flex-grow: 1;"
+                            >
+                              <input
+                                autocomplete="off"
+                                autocorrect="off"
+                                class="c26 c27 token-amount-input"
+                                id="swap-currency-input"
+                                inputmode="decimal"
+                                maxlength="79"
+                                minlength="1"
+                                pattern="^[0-9]*[.,]?[0-9]*$"
+                                placeholder="0"
+                                spellcheck="false"
+                                type="text"
+                                value=""
+                              />
+                            </div>
+                            <div>
+                              <div
+                                class="c15"
+                              >
+                                <button
+                                  class="c28 c29 c30 c31 open-currency-select-button"
+                                >
+                                  <span
+                                    class="c32"
+                                  >
+                                    <div
+                                      class="c7 c8 c11"
+                                    >
+                                      <div
+                                        class="c33"
+                                        style="height: 24px; width: 24px; margin-right: 2px;"
+                                      >
+                                        <div
+                                          class="c34"
+                                        >
+                                          <img
+                                            class="c35"
+                                            src="ethereum-logo.png"
+                                          />
+                                        </div>
+                                      </div>
+                                      <span
+                                        class="c36 token-symbol-container"
+                                      >
+                                        ETH
+                                      </span>
+                                    </div>
+                                    <svg
+                                      class="c37"
+                                    >
+                                      dropdown.svg
+                                    </svg>
+                                  </span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            class="c38 c39"
+                          >
+                            <div
+                              class="c7 c8 c9"
+                            >
+                              <div
+                                class="c40"
+                              />
+                              <span />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c41"
+                    >
+                      <div
+                        class="c42"
+                        color="#222222"
+                        data-testid="swap-currency-button"
+                      >
+                        <svg
+                          fill="none"
+                          height="16"
+                          stroke="#222222"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          viewBox="0 0 24 24"
+                          width="16"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <line
+                            x1="12"
+                            x2="12"
+                            y1="5"
+                            y2="19"
+                          />
+                          <polyline
+                            points="19 12 12 19 5 12"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c43"
+                  >
+                    <div>
+                      <div
+                        class="c21 c44"
+                      >
+                        <div
+                          class="c22"
+                          id="swap-currency-output"
+                        >
+                          <div
+                            class="c23"
+                          >
+                            <div
+                              class="c24 css-142zc9n"
+                              style="user-select: none;"
+                            >
+                              You receive
+                            </div>
+                            <div
+                              class="c25"
+                            >
+                              <div
+                                style="display: flex; flex-grow: 1;"
+                              >
+                                <input
+                                  autocomplete="off"
+                                  autocorrect="off"
+                                  class="c26 c27 token-amount-input"
+                                  id="swap-currency-output"
+                                  inputmode="decimal"
+                                  maxlength="79"
+                                  minlength="1"
+                                  pattern="^[0-9]*[.,]?[0-9]*$"
+                                  placeholder="0"
+                                  spellcheck="false"
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
+                              <div>
+                                <div
+                                  class="c15"
+                                >
+                                  <button
+                                    class="c28 c29 c30 c45 open-currency-select-button"
+                                  >
+                                    <span
+                                      class="c32"
+                                    >
+                                      <div
+                                        class="c7 c8 c11"
+                                      >
+                                        <span
+                                          class="c36 token-symbol-container"
+                                        >
+                                          Select token
+                                        </span>
+                                      </div>
+                                      <svg
+                                        class="c46"
+                                      >
+                                        dropdown.svg
+                                      </svg>
+                                    </span>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              class="c38 c39"
+                            >
+                              <div
+                                class="c7 c8 c9"
+                              >
+                                <div
+                                  class="c40"
+                                />
+                                <span />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        class="c47 c29 c48"
+                        font-weight="535"
+                      >
+                        <div
+                          class="c49 c50"
+                        />
+                        Connect wallet
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </main>
+            </div>
+          </a>
+        </div>
+        <div
+          class="c51"
+        />
+        <div
+          class="c52"
+        >
+          <div
+            class="c53"
+          />
+        </div>
+        <div
+          class="c54"
+        >
+          <h1
+            class="c55"
+          >
+            Trade crypto and NFTs with confidence
+          </h1>
+          <div
+            class="c56"
+          >
+            <div
+              class="c57"
+            >
+              Buy, sell, and explore tokens and NFTs
+            </div>
+          </div>
+          <span
+            class="c58"
+          >
+            <a
+              class="c2 c29 c59 c60"
+              href="/swap"
+            >
+              <p
+                class="c61"
+              >
+                Get started
+              </p>
+            </a>
+          </span>
+          <div
+            class="c62"
+          >
+            Learn more
+          </div>
+          <a
+            class="c63"
+            href="https://uniswapwallet.onelink.me/8q3y/79gveilz"
+          >
+            <svg
+              height="20"
+              width="20"
+            >
+              uniswap_app_logo.svg
+            </svg>
+            Download the Uniswap app
+          </a>
+        </div>
+        <div
+          class="c64"
+        >
+          <div
+            class="c65"
+            cols="2"
+          >
+            <a
+              class="c66"
+              href="/swap"
+            >
+              <div
+                class="c67"
+              >
+                <div
+                  class="c68"
+                >
+                  Swap tokens
+                </div>
+              </div>
+              <div
+                class="c69"
+                type="Primary"
+              >
+                Buy, sell, and explore tokens on Ethereum, Polygon, Optimism, and more.
+                <div
+                  class="c69 c70"
+                  type="Primary"
+                >
+                  Trade tokens
+                </div>
+              </div>
+            </a>
+            <a
+              class="c71"
+              href="/nfts"
+            >
+              <div
+                class="c67"
+              >
+                <div
+                  class="c68"
+                >
+                  Trade NFTs
+                </div>
+              </div>
+              <div
+                class="c69"
+                type="Primary"
+              >
+                Buy and sell NFTs across marketplaces to find more listings at better prices.
+                <div
+                  class="c69 c70"
+                  type="Primary"
+                >
+                  Explore NFTs
+                </div>
+              </div>
+            </a>
+          </div>
+          <div
+            class="c72"
+            cols="3"
+          >
+            <a
+              class="c73"
+              href="https://support.uniswap.org/hc/en-us/articles/11306574799117-How-to-use-Moon-Pay-on-the-Uniswap-web-app-"
+              rel="noopenener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c67"
+              >
+                <div
+                  class="c68"
+                >
+                  Buy crypto
+                </div>
+                <svg
+                  fill="none"
+                  height="48"
+                  stroke="#CECECE"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="48"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <line
+                    x1="12"
+                    x2="12"
+                    y1="1"
+                    y2="23"
+                  />
+                  <path
+                    d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+                  />
+                </svg>
+              </div>
+              <div
+                class="c74"
+                type="Secondary"
+              >
+                Buy crypto with your credit card or bank account at the best rates.
+                <div
+                  class="c74 c70"
+                  type="Secondary"
+                >
+                  Buy now
+                </div>
+              </div>
+            </a>
+            <a
+              class="c73"
+              href="/pool"
+            >
+              <div
+                class="c67"
+              >
+                <div
+                  class="c68"
+                >
+                  Earn
+                </div>
+                <img
+                  alt="Analytics"
+                  class="c75"
+                  src="aboutArrowLight.png"
+                />
+              </div>
+              <div
+                class="c74"
+                type="Secondary"
+              >
+                Provide liquidity to pools on Uniswap and earn fees on swaps.
+                <div
+                  class="c74 c70"
+                  type="Secondary"
+                >
+                  Provide liquidity
+                </div>
+              </div>
+            </a>
+            <a
+              class="c73"
+              href="https://docs.uniswap.org"
+              rel="noopenener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="c67"
+              >
+                <div
+                  class="c68"
+                >
+                  Build dApps
+                </div>
+                <svg
+                  fill="none"
+                  height="48"
+                  stroke="#CECECE"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="48"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polyline
+                    points="4 17 10 11 4 5"
+                  />
+                  <line
+                    x1="12"
+                    x2="20"
+                    y1="19"
+                    y2="19"
+                  />
+                </svg>
+              </div>
+              <div
+                class="c74"
+                type="Secondary"
+              >
+                Build apps and tools on the largest DeFi protocol on Ethereum.
+                <div
+                  class="c74 c70"
+                  type="Secondary"
+                >
+                  Developer docs
+                </div>
+              </div>
+            </a>
+          </div>
+          <div
+            class="c76"
+          >
+            <div
+              class="c77"
+            >
+              <div
+                class="c78"
+              >
+                Powered by the Uniswap Protocol
+              </div>
+              <div
+                class="c79"
+              >
+                The leading decentralized crypto trading protocol, governed by a global community.
+              </div>
+            </div>
+            <div
+              class="c80"
+            >
+              <a
+                class="c81 c82 c83"
+                href="https://uniswap.org"
+                rel="noopener noreferrer"
+                target="_blank"
+                width="200px"
+              >
+                Learn more
+              </a>
+            </div>
+          </div>
+          <div
+            class="c84"
+          >
+            <div
+              class="c85 c86"
+            >
+              <img
+                alt="Uniswap Logo"
+                class="c87"
+                src="unicornEmbossLight.png"
+              />
+              <div
+                class="c88"
+              >
+                <a
+                  class="c89"
+                  href="https://discord.gg/FCfyBSbCU5"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    class="c90"
+                    size="32"
+                  >
+                    discord.svg
+                  </svg>
+                </a>
+                <a
+                  class="c89"
+                  href="https://twitter.com/uniswap"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    class="c91"
+                    size="32"
+                  >
+                    twitter-safe.svg
+                  </svg>
+                </a>
+                <a
+                  class="c89"
+                  href="https://github.com/Uniswap"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    class="c92"
+                    size="32"
+                  >
+                    github.svg
+                  </svg>
+                </a>
+              </div>
+              <span
+                class="c93"
+              >
+                © 
+                2024
+                 Uniswap Labs
+              </span>
+            </div>
+            <div
+              class="c94"
+            >
+              <div
+                class="c95"
+              >
+                <span
+                  class="c96"
+                >
+                  App
+                </span>
+                <a
+                  class="c97 c98"
+                  href="/swap"
+                >
+                  Swap
+                </a>
+                <a
+                  class="c97 c98"
+                  href="/tokens"
+                >
+                  Tokens
+                </a>
+                <a
+                  class="c97 c98"
+                  href="/nfts"
+                >
+                  NFTs
+                </a>
+                <a
+                  class="c97 c98"
+                  href="/pool"
+                >
+                  Pool
+                </a>
+              </div>
+              <div
+                class="c95"
+              >
+                <span
+                  class="c96"
+                >
+                  Protocol
+                </span>
+                <a
+                  class="c99 c100"
+                  href="https://uniswap.org/community"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Community
+                </a>
+                <a
+                  class="c99 c100"
+                  href="https://uniswap.org/governance"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Governance
+                </a>
+                <a
+                  class="c99 c100"
+                  href="https://uniswap.org/developers"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Developers
+                </a>
+              </div>
+              <div
+                class="c95"
+              >
+                <span
+                  class="c96"
+                >
+                  Company
+                </span>
+                <a
+                  class="c99 c100"
+                  href="https://boards.greenhouse.io/uniswaplabs"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Careers
+                </a>
+                <a
+                  class="c99 c100"
+                  href="https://uniswap.org/blog"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Blog
+                </a>
+              </div>
+              <div
+                class="c95"
+              >
+                <span
+                  class="c96"
+                >
+                  Get Help
+                </span>
+                <a
+                  class="c99 c100"
+                  href="https://support.uniswap.org/hc/en-us/requests/new"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Contact Us
+                </a>
+                <a
+                  class="c99 c100"
+                  href="https://support.uniswap.org/hc/en-us"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Help Center
+                </a>
+              </div>
+            </div>
+            <div
+              class="c85 c101"
+            >
+              <img
+                alt="Uniswap Logo"
+                class="c87"
+                src="unicornEmbossLight.png"
+              />
+              <div
+                class="c88"
+              >
+                <a
+                  class="c89"
+                  href="https://discord.gg/FCfyBSbCU5"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    class="c90"
+                    size="32"
+                  >
+                    discord.svg
+                  </svg>
+                </a>
+                <a
+                  class="c89"
+                  href="https://twitter.com/uniswap"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    class="c91"
+                    size="32"
+                  >
+                    twitter-safe.svg
+                  </svg>
+                </a>
+                <a
+                  class="c89"
+                  href="https://github.com/Uniswap"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <svg
+                    class="c92"
+                    size="32"
+                  >
+                    github.svg
+                  </svg>
+                </a>
+              </div>
+              <span
+                class="c93"
+              >
+                © 
+                2024
+                 Uniswap Labs
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</div>
+`;

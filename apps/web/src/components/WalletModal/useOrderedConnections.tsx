@@ -2,15 +2,15 @@ import { connections, eip6963Connection } from 'connection'
 import { useInjectedProviderDetails } from 'connection/eip6963/providers'
 import { Connection, ConnectionType, RecentConnectionMeta } from 'connection/types'
 import { shouldUseDeprecatedInjector } from 'connection/utils'
+import { useEip6963Enabled } from 'featureFlags/flags/eip6963'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+
 import Option from './Option'
 
-export function useEIP6963Connections() {
+function useEIP6963Connections() {
   const eip6963Injectors = useInjectedProviderDetails()
-  const eip6963Enabled = useFeatureFlag(FeatureFlags.Eip6936Enabled)
+  const eip6963Enabled = useEip6963Enabled()
 
   return useMemo(() => {
     if (!eip6963Enabled) return { eip6963Connections: [], showDeprecatedMessage: false }
@@ -39,20 +39,11 @@ function mergeConnections(connections: Connection[], eip6963Connections: Connect
 
 // TODO(WEB-3244) Improve ordering logic to make less brittle, as it is spread across connections/index.ts and here
 /** Returns an array of all connection Options that should be displayed, where the recent connection is first in the array */
-function getOrderedConnections(
-  connections: Connection[],
-  recentConnection: RecentConnectionMeta | undefined,
-  excludeUniswapConnections: boolean
-) {
+function getOrderedConnections(connections: Connection[], recentConnection: RecentConnectionMeta | undefined) {
   const list: JSX.Element[] = []
   for (const connection of connections) {
     if (!connection.shouldDisplay()) continue
     const { name, rdns } = connection.getProviderInfo()
-
-    // Uniswap options may be displayed separately
-    if (excludeUniswapConnections && name.includes('Uniswap')) {
-      continue
-    }
 
     // For eip6963 injectors, we need to check rdns in addition to connection type to ensure it's the recent connection
     const isRecent = connection.type === recentConnection?.type && (!rdns || rdns === recentConnection.rdns)
@@ -66,13 +57,13 @@ function getOrderedConnections(
   return list
 }
 
-export function useOrderedConnections(excludeUniswapConnections?: boolean) {
+export function useOrderedConnections() {
   const { eip6963Connections, showDeprecatedMessage } = useEIP6963Connections()
   const recentConnection = useAppSelector((state) => state.user.recentConnectionMeta)
   const orderedConnections = useMemo(() => {
     const allConnections = mergeConnections(connections, eip6963Connections)
-    return getOrderedConnections(allConnections, recentConnection, excludeUniswapConnections ?? false)
-  }, [eip6963Connections, excludeUniswapConnections, recentConnection])
+    return getOrderedConnections(allConnections, recentConnection)
+  }, [eip6963Connections, recentConnection])
 
   return { orderedConnections, showDeprecatedMessage }
 }

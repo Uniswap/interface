@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
@@ -10,7 +11,6 @@ import { RowBetween } from 'components/Row'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState, usePools } from 'hooks/usePools'
 import usePrevious from 'hooks/usePrevious'
-import { Trans } from 'i18n'
 import { DynamicSection } from 'pages/AddLiquidity/styled'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Box } from 'rebass'
@@ -163,7 +163,7 @@ export default function FeeSelector({
               ) : (
                 <>
                   <ThemedText.DeprecatedLabel className="selected-fee-label">
-                    <Trans>{{ fee: formatDelta(parseFloat(FEE_AMOUNT_DETAIL[feeAmount].label)) }} fee tier</Trans>
+                    <Trans>{formatDelta(parseFloat(FEE_AMOUNT_DETAIL[feeAmount].label))} fee tier</Trans>
                   </ThemedText.DeprecatedLabel>
                   {distributions && (
                     <Box style={{ width: 'fit-content', marginTop: '8px' }} className="selected-fee-percentage">

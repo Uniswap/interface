@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { Token } from '@uniswap/sdk-core'
 import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
@@ -12,7 +13,6 @@ import {
   Warning,
 } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
-import { Trans } from 'i18n'
 import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
 import { useAddUserToken } from 'state/user/hooks'
@@ -196,7 +196,7 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 
 export interface TokenSafetyProps {
-  tokenAddress?: string
+  tokenAddress: string | null
   secondTokenAddress?: string
   onContinue: () => void
   onCancel: () => void
@@ -215,9 +215,9 @@ export default function TokenSafety({
   const logos = []
   const urls = []
 
-  const token1Warning = tokenAddress ? checkWarning(tokenAddress) : undefined
+  const token1Warning = tokenAddress ? checkWarning(tokenAddress) : null
   const token1 = useToken(tokenAddress)
-  const token2Warning = secondTokenAddress ? checkWarning(secondTokenAddress) : undefined
+  const token2Warning = secondTokenAddress ? checkWarning(secondTokenAddress) : null
   const token2 = useToken(secondTokenAddress)
 
   const token1Unsupported = !token1Warning?.canProceed
@@ -225,11 +225,11 @@ export default function TokenSafety({
 
   // Logic for only showing the 'unsupported' warning if one is supported and other isn't
   if (token1 && token1Warning && (token1Unsupported || !(token2Warning && token2Unsupported))) {
-    logos.push(<CurrencyLogo key={token1.address} currency={token1} size="48px" />)
+    logos.push(<CurrencyLogo currency={token1} size="48px" />)
     urls.push(<ExplorerView token={token1} />)
   }
   if (token2 && token2Warning && (token2Unsupported || !(token1Warning && token1Unsupported))) {
-    logos.push(<CurrencyLogo key={token2.address} currency={token2} size="48px" />)
+    logos.push(<CurrencyLogo currency={token2} size="48px" />)
     urls.push(<ExplorerView token={token2} />)
   }
 

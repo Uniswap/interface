@@ -5,7 +5,6 @@ import { GeneratedIcon, Logos } from 'ui/src'
 import {
   ARBITRUM_LOGO,
   BASE_LOGO,
-  BLAST_LOGO,
   BNB_LOGO,
   ETHEREUM_LOGO,
   GOERLI_LOGO,
@@ -34,7 +33,6 @@ export enum ChainId {
   Optimism = 10,
   Polygon = 137,
   PolygonMumbai = 80001,
-  Blast = 81457,
   Bnb = 56,
 }
 
@@ -49,7 +47,6 @@ export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [
   ChainId.Optimism,
   ChainId.Base,
   ChainId.Bnb,
-  ChainId.Blast,
 ]
 
 export const TESTNET_CHAIN_IDS = [ChainId.Goerli, ChainId.PolygonMumbai]
@@ -66,7 +63,6 @@ export const L2_CHAIN_IDS = [
   ChainId.Polygon,
   ChainId.PolygonMumbai,
   ChainId.Bnb,
-  ChainId.Blast,
 ] as const
 
 // Renamed from SupportedL2ChainId in web app
@@ -92,7 +88,6 @@ export interface L1ChainInfo {
     symbol: string // 'gorETH',
     decimals: number // 18,
     address: string // '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
-    explorerLink?: string // Special override for native ETH explorer link
   }
   readonly wrappedNativeCurrency: {
     name: string // 'Wrapped Ether',
@@ -129,7 +124,6 @@ export const CHAIN_INFO: ChainInfo = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
-      explorerLink: 'https://arbiscan.io/chart/etherprice',
     },
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
@@ -156,7 +150,6 @@ export const CHAIN_INFO: ChainInfo = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
-      explorerLink: 'https://etherscan.io/chart/etherprice',
     },
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
@@ -183,7 +176,6 @@ export const CHAIN_INFO: ChainInfo = {
       symbol: 'görETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
-      explorerLink: 'https://etherscan.io/chart/etherprice', // goerli.etherscan.io doesn't work
     },
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
@@ -210,7 +202,6 @@ export const CHAIN_INFO: ChainInfo = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
-      explorerLink: 'https://basescan.org/chart/etherprice',
     },
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
@@ -265,7 +256,6 @@ export const CHAIN_INFO: ChainInfo = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
-      explorerLink: 'https://optimistic.etherscan.io/chart/etherprice',
     },
     wrappedNativeCurrency: {
       name: 'Wrapped Ether',
@@ -329,32 +319,5 @@ export const CHAIN_INFO: ChainInfo = {
       address: '0x9c3c9283d3e44854697cd22d3faa240cfb032889',
     },
     rpcUrls: { [RPCType.PublicAlt]: 'https://rpc-endpoints.superfluid.dev/mumbai' },
-  },
-  [ChainId.Blast]: {
-    blockWaitMsBeforeWarning: 600000,
-    bridge: 'https://blast.io/en/bridge/',
-    docs: 'https://docs.blast.io/about-blast/',
-    explorer: {
-      name: 'BlastScan',
-      url: 'https://blastscan.io/',
-      logoLight: Logos.EtherscanLogoLight,
-      logoDark: Logos.EtherscanLogoDark,
-    },
-    infoLink: 'https://info.uniswap.org/#/blast', // Not live yet
-    label: 'Blast',
-    logo: BLAST_LOGO,
-    nativeCurrency: {
-      name: 'Blast ETH', // Is this right?
-      symbol: 'ETH',
-      decimals: 18,
-      address: DEFAULT_NATIVE_ADDRESS,
-    },
-    wrappedNativeCurrency: {
-      name: 'Wrapped Ether', // Is this right?
-      symbol: 'WETH',
-      decimals: 18,
-      address: '0x4300000000000000000000000000000000000004',
-    },
-    rpcUrls: { [RPCType.Public]: 'https://rpc.blast.io' },
   },
 }

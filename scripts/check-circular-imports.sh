@@ -5,26 +5,15 @@ expected=$2
 
 out=$(npx madge -c $entry 2>&1)
 
-if [[ "$expected" == "0" ]]; then
-    if [[ "$out" == *"No circular dependency found"* ]]; then
-        echo "Passed!"
-        echo ""
-        echo "$out"
-        exit 0
-    else
-        echo "Failed: expected $expected circular deps, but found some"
-        echo ""
-        echo "$out"
-        exit 1
-    fi
-elif [[ "$out" == *"Found $expected circular dependencies"* ]]; then
-    echo "Passed!"
-    echo ""
-    echo "$out"
-    exit 0
+
+if [[ "$out" == *"Found $expected circular dependencies"* ]]; then
+  echo "Passed!"
+  echo ""
+  echo "$out"
+  exit 0
 else
-    echo "Failed: expected $expected circular deps"
-    echo ""
-    echo "$out"
-    exit 1
+  echo "Failed: expected $2 circular deps"
+  echo ""
+  echo "$out"
+  exit 1
 fi

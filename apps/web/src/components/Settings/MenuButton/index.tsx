@@ -1,6 +1,6 @@
+import { t, Trans } from '@lingui/macro'
 import { Settings } from 'components/Icons/Settings'
 import Row from 'components/Row'
-import { t, Trans } from 'i18n'
 import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
@@ -67,7 +67,7 @@ const ButtonContent = ({ trade, compact }: { trade?: InterfaceTrade; compact: bo
         {compact ? (
           formatPercent(userSlippageTolerance)
         ) : (
-          <Trans>{{ amt: formatPercent(userSlippageTolerance) }} slippage</Trans>
+          <Trans>{formatPercent(userSlippageTolerance)} slippage</Trans>
         )}
       </ThemedText.Caption>
       <Icon />

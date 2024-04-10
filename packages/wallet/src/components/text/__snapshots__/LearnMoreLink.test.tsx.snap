@@ -33,7 +33,7 @@ exports[`LearnMoreLink renders without error 1`] = `
       {
         "color": "#FC72FF",
         "fontFamily": "Basel-Medium",
-        "fontSize": 16,
+        "fontSize": 17,
         "fontWeight": "500",
         "lineHeight": 24,
       }

@@ -1,7 +1,7 @@
+import { Trans } from '@lingui/macro'
 import { getLocalCurrencyIcon, SUPPORTED_LOCAL_CURRENCIES, SupportedLocalCurrency } from 'constants/localCurrencies'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useLocalCurrencyLinkProps } from 'hooks/useLocalCurrencyLinkProps'
-import { Trans } from 'i18n'
 import { useMemo } from 'react'
 import styled from 'styled-components'
 

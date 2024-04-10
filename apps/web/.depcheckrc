@@ -2,6 +2,9 @@ ignores: [
     # Dependencies that depcheck thinks are unused but are actually used
     "@web3-react/eip1193",
     "@web3-react/empty",
+    "workbox-navigation-preload",
+    "@lingui/cli",
+    "@lingui/swc-plugin",
     "@swc/core",
     "@swc/jest",
     "@swc/plugin-styled-components",
@@ -11,11 +14,11 @@ ignores: [
     "swc-loader",
     "postinstall-postinstall",
     "process",
-    "madge",
     # Dependencies that depcheck thinks are missing but are actually present or never used
     ## GraphQL
     "@graphql-codegen/*",
     "get-graphql-schema",
+    "graphql-tag",
     ## React Scripts and subpackages used from within it
     "case-sensitive-paths-webpack-plugin",
     "react-dev-utils",
@@ -32,9 +35,6 @@ ignores: [
     "terser-webpack-plugin",
     ## Testing
     "@types/testing-library__cypress",
-    ## i18n
-    "dotenv-cli",
-    "@crowdin/cli",
     ## sub-packages
     "@ethersproject/*",
     "@walletconnect/ethereum-provider",
@@ -58,11 +58,11 @@ ignores: [
     "pages",
     "polyfills",
     "rpc",
+    "serviceWorker",
     "state",
     "test-utils",
     "theme",
     "tracing",
     "types",
     "utils",
-    "i18n",
   ]

@@ -107,13 +107,6 @@ module.exports = {
     // 'react/jsx-uses-react': 'off',
     'react/display-name': 'error',
     'react/react-in-jsx-scope': 'off',
-    'react-hooks/exhaustive-deps': [
-      'error',
-      {
-        // https://docs.swmansion.com/react-native-reanimated/docs/guides/web-support/
-        additionalHooks: '(useAnimatedStyle|useDerivedValue|useAnimatedProps)',
-      },
-    ],
     'no-restricted-imports': [
       'error',
       {
@@ -154,17 +147,12 @@ module.exports = {
             message: 'Use our internal `useDeviceInsets` hook instead.',
           },
           {
-            name: 'react-native',
-            importNames: ['Switch'],
-            message: 'Use our custom Switch component instead.',
-          },
-          {
             name: 'wallet/src/data/__generated__/types-and-hooks',
             importNames: ['usePortfolioBalancesQuery'],
             message: 'Use `usePortfolioBalances` instead.',
           },
           {
-            name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
+            name: 'wallet/src/data/__generated__/types-and-hooks',
             importNames: ['useAccountListQuery'],
             message: 'Use `useAccountList` instead.',
           },
@@ -184,10 +172,6 @@ module.exports = {
             name: 'expo-localization',
             message:
               'Avoid using due to issue with unsupported locales. Use utilties/src/device/locales.ts getDeviceLocales instead',
-          },
-          {
-            name: 'expo-haptics',
-            message: "Use our internal `HapticFeedback` wrapper instead: `import { HapticFeedback } from 'ui/src'`",
           },
           {
             name: 'src/data/usePersistedApolloClient',

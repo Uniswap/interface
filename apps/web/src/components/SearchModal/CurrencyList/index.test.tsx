@@ -55,7 +55,7 @@ it('renders currency rows correctly when currencies list is non-empty', () => {
   render(
     <CurrencyList
       height={10}
-      currencies={[DAI, USDC_MAINNET, WBTC].map((token) => new CurrencyListRow(token))}
+      currencies={[DAI, USDC_MAINNET, WBTC].map((token) => new CurrencyListRow(token, false))}
       onCurrencySelect={noOp}
       isLoading={false}
       searchQuery=""
@@ -76,7 +76,7 @@ it('renders currency rows correctly with balances', () => {
   render(
     <CurrencyList
       height={10}
-      currencies={[DAI, USDC_MAINNET, WBTC].map((token) => new CurrencyListRow(token))}
+      currencies={[DAI, USDC_MAINNET, WBTC].map((token) => new CurrencyListRow(token, false))}
       onCurrencySelect={noOp}
       isLoading={false}
       searchQuery=""

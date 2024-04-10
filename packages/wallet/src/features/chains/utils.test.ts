@@ -1,13 +1,14 @@
 import { BigNumber } from 'ethers'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ChainId, TESTNET_CHAIN_IDS } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { Chain } from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   fromGraphQLChain,
   fromMoonpayNetwork,
   fromUniswapWebAppLink,
   getPollingIntervalByBlocktime,
   isTestnet,
+  toGraphQLChain,
   toSupportedChainId,
   toUniswapWebAppLink,
 } from 'wallet/src/features/chains/utils'
@@ -47,6 +48,16 @@ describe(fromGraphQLChain, () => {
 
   it('handles unsupported chain', () => {
     expect(fromGraphQLChain(Chain.Celo)).toEqual(null)
+  })
+})
+
+describe(toGraphQLChain, () => {
+  it('handles supported chain', () => {
+    expect(toGraphQLChain(ChainId.Mainnet)).toEqual(Chain.Ethereum)
+  })
+
+  it('handle unsupported chain', () => {
+    expect(toGraphQLChain(ChainId.PolygonMumbai)).toEqual(null)
   })
 })
 

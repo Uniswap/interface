@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 // eslint-disable-next-line no-restricted-imports
 import { FiatCurrencyComponents, getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { useCurrentLocale } from 'wallet/src/features/language/hooks'
 import { useAppSelector } from 'wallet/src/state'
@@ -92,7 +92,7 @@ export function useFiatCurrencyInfo(currency: FiatCurrency): FiatCurrencyInfo {
  * @returns currently selected fiat currency
  */
 export function useAppFiatCurrency(): FiatCurrency {
-  const featureEnabled = useFeatureFlag(FeatureFlags.CurrencyConversion)
+  const featureEnabled = useFeatureFlag(FEATURE_FLAGS.CurrencyConversion)
   const { currentCurrency } = useAppSelector((state) => state.fiatCurrencySettings)
   return featureEnabled ? currentCurrency : FiatCurrency.UnitedStatesDollar
 }

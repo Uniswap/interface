@@ -1,11 +1,12 @@
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { DAI, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { Maybe } from 'graphql/jsutils/Maybe'
 import { useCurrency } from 'hooks/Tokens'
+import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { SignatureType } from 'state/signatures/types'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
-import { UniswapXOrderStatus } from 'types/uniswapx'
 
 import { OrderContent } from './OffchainActivityModal'
 

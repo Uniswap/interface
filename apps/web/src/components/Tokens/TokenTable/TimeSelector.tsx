@@ -1,6 +1,6 @@
+import { Trans } from '@lingui/macro'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { TimePeriod } from 'graphql/data/util'
-import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
 import { useReducer } from 'react'
 import { Check } from 'react-feather'

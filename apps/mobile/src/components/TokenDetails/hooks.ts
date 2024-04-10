@@ -5,12 +5,12 @@ import { Screens } from 'src/screens/Screens'
 import {
   Chain,
   useTokenDetailsScreenLazyQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { CurrencyId } from 'uniswap/src/types/currency'
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import {
+  CurrencyId,
   buildCurrencyId,
   buildNativeCurrencyId,
   currencyIdToChain,

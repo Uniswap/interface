@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import React from 'react'
 import { Trans } from 'react-i18next'
+import { truncateDappName } from 'src/components/WalletConnect/ScanSheet/util'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { Text } from 'ui/src'
 import { EthMethod } from 'wallet/src/features/walletConnect/types'
@@ -69,7 +70,7 @@ export function HeaderText({
 
   return (
     <Text textAlign="center" variant="heading3">
-      {getReadableMethodName(method, dapp.name || dapp.url)}
+      {getReadableMethodName(method, truncateDappName(dapp.name || dapp.url))}
     </Text>
   )
 }

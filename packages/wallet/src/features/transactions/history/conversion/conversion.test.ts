@@ -1,4 +1,7 @@
 /* eslint-disable max-lines */
+import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
+import { ChainId } from 'wallet/src/constants/chains'
+import { DAI } from 'wallet/src/constants/tokens'
 import {
   Chain,
   Currency,
@@ -7,10 +10,7 @@ import {
   TokenStandard,
   TransactionDirection,
   TransactionStatus,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
-import { ChainId } from 'wallet/src/constants/chains'
-import { DAI } from 'wallet/src/constants/tokens'
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   NFTTradeType,
   TransactionListQueryResponse,
@@ -352,7 +352,6 @@ describe(parseSendTransaction, () => {
     expect(parseSendTransaction(MOCK_ERC721_SEND)).toEqual({
       type: TransactionType.Send,
       assetType: 'erc-721',
-      isSpam: false,
       tokenAddress: 'nft_contract_address',
       recipient: TO_ADDRESS,
       nftSummaryInfo: {
@@ -497,7 +496,7 @@ describe(parseTradeTransaction, () => {
 
 describe(extractTransactionDetails, () => {
   it('Empty transaction', () => {
-    expect(extractTransactionDetails(undefined)).toEqual(null)
+    expect(extractTransactionDetails(null)).toEqual(null)
   })
   it('Approve', () => {
     const txn = extractTransactionDetails(MOCK_ERC20_APPROVE)

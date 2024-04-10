@@ -14,7 +14,6 @@ import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { Button, Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'ui/src/assets'
-import i18n from 'uniswap/src/i18n/i18n'
 import { isIOS } from 'uniswap/src/utils/platform'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import {
@@ -23,6 +22,7 @@ import {
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
+import i18n from 'wallet/src/i18n/i18n'
 import { ElementName } from 'wallet/src/telemetry/constants'
 import { openSettings } from 'wallet/src/utils/linking'
 

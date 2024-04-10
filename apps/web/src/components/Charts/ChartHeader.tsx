@@ -1,6 +1,7 @@
 import { useHeaderDateFormatter } from 'components/Charts/hooks'
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { PriceSource } from 'graphql/data/__generated__/types-and-hooks'
 import { getProtocolColor, getProtocolName } from 'graphql/data/util'
 import { UTCTimestamp } from 'lightweight-charts'
 import { ReactElement, ReactNode } from 'react'
@@ -8,7 +9,6 @@ import styled, { useTheme } from 'styled-components'
 import { EllipsisStyle } from 'theme/components'
 import { ThemedText } from 'theme/components/text'
 import { textFadeIn } from 'theme/styles'
-import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export type ChartHeaderProtocolInfo = { protocol: PriceSource; value?: number }

@@ -2,7 +2,7 @@
 // For example: https://reactnavigation.org/docs/testing/
 
 import 'core-js' // necessary so setImmediate works in tests
-import 'uniswap/src/i18n/i18n' // Uses real translations for tests
+import 'wallet/src/i18n/i18n' // Uses real translations for tests
 
 import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
 import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
@@ -76,7 +76,6 @@ jest.mock('react-native', () => {
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),
-  useSafeAreaFrame: jest.fn().mockImplementation(() => ({})),
   SafeAreaProvider: jest.fn(({ children }) => children),
 }))
 
@@ -126,8 +125,3 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
     useSelectedColorScheme: () => 'light',
   }
 })
-
-jest.mock('wallet/src/features/fiatOnRamp/api', () => ({
-  ...jest.requireActual('wallet/src/features/fiatOnRamp/api'),
-  useFiatOnRampIpAddressQuery: jest.fn().mockReturnValue({}),
-}))

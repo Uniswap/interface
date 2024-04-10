@@ -1,16 +1,16 @@
+import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { LOCALE_LABEL } from 'constants/locales'
+import { useCurrencyConversionFlagEnabled } from 'featureFlags/flags/currencyConversion'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { Trans } from 'i18n'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import ThemeToggle from 'theme/components/ThemeToggle'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+
 import { AnalyticsToggle } from './AnalyticsToggle'
 import { GitVersionRow } from './GitVersionRow'
 import { LanguageMenuItems } from './LanguageMenu'
@@ -78,7 +78,7 @@ export default function SettingsMenu({
   openLanguageSettings: () => void
   openLocalCurrencySettings: () => void
 }) {
-  const currencyConversionEnabled = useFeatureFlag(FeatureFlags.CurrencyConversion)
+  const currencyConversionEnabled = useCurrencyConversionFlagEnabled()
   const activeLocale = useActiveLocale()
   const activeLocalCurrency = useActiveLocalCurrency()
 

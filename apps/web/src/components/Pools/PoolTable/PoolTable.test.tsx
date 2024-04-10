@@ -1,11 +1,11 @@
 import { ApolloError } from '@apollo/client'
 import { Percent } from '@uniswap/sdk-core'
+import { ProtocolVersion } from 'graphql/data/__generated__/types-and-hooks'
 import { useTopPools } from 'graphql/data/pools/useTopPools'
 import Router from 'react-router-dom'
 import { mocked } from 'test-utils/mocked'
 import { validBEPoolToken0, validBEPoolToken1, validParams } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
-import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { TopPoolTable } from './PoolTable'
 
@@ -23,8 +23,7 @@ describe('PoolTable', () => {
   it('renders loading state', () => {
     mocked(useTopPools).mockReturnValue({
       loading: true,
-      errorV3: undefined,
-      errorV2: undefined,
+      error: undefined,
       topPools: [],
     })
 
@@ -36,8 +35,7 @@ describe('PoolTable', () => {
   it('renders error state', () => {
     mocked(useTopPools).mockReturnValue({
       loading: false,
-      errorV3: new ApolloError({ errorMessage: 'error fetching data' }),
-      errorV2: new ApolloError({ errorMessage: 'error fetching data' }),
+      error: new ApolloError({ errorMessage: 'error fetching data' }),
       topPools: [],
     })
 
@@ -57,15 +55,14 @@ describe('PoolTable', () => {
         tvl: 300,
         volume24h: 400,
         volumeWeek: 500,
-        oneDayApr: new Percent(6, 100),
+        turnover: new Percent(6, 100),
         protocolVersion: ProtocolVersion.V3,
       },
     ]
     mocked(useTopPools).mockReturnValue({
       topPools: mockData,
       loading: false,
-      errorV3: undefined,
-      errorV2: undefined,
+      error: undefined,
     })
 
     const { asFragment } = render(<TopPoolTable />)

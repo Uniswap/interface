@@ -1,11 +1,11 @@
-import { Suspense, lazy, memo, useRef } from 'react'
+import { memo, useRef } from 'react'
 import styled from 'styled-components'
 
+import { DirectToDefi } from './sections/DirectToDefi'
+import { Footer } from './sections/Footer'
 import { Hero } from './sections/Hero'
-
-// The Fold is always loaded, but is lazy-loaded because it is not seen without user interaction.
-// Annotating it with webpackPreload allows it to be ready when requested.
-const Fold = lazy(() => import(/* webpackPreload: true */ './Fold'))
+import { NewsletterEtc } from './sections/NewsletterEtc'
+import { Stats } from './sections/Stats'
 
 const Container = styled.div`
   position: relative;
@@ -50,9 +50,12 @@ function LandingV2({ transition }: { transition?: boolean }) {
       <Grain />
       <Container data-testid="landing-page">
         <Hero scrollToRef={scrollToRef} transition={transition} />
-        <Suspense>
-          <Fold ref={scrollAnchor} />
-        </Suspense>
+        <div ref={scrollAnchor}>
+          <DirectToDefi />
+        </div>
+        <Stats />
+        <NewsletterEtc />
+        <Footer />
       </Container>
     </>
   )

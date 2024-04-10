@@ -1,3 +1,4 @@
+export * from './animations'
 export * from './borderRadii'
 export * from './breakpoints'
 export * from './color'

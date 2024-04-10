@@ -8,7 +8,6 @@ export { ApprovalState } from 'lib/hooks/useApproval'
 
 function useGetAndTrackApproval(getApproval: ReturnType<typeof useApproval>[1]) {
   const addTransaction = useTransactionAdder()
-
   return useCallback(() => {
     return getApproval().then((pending) => {
       if (pending) {

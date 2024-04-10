@@ -1,5 +1,5 @@
+import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { Trans } from 'i18n'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
@@ -81,7 +81,7 @@ export default function ExecuteModal({ isOpen, onDismiss, proposalId }: ExecuteM
           <AutoColumn gap="lg" justify="center">
             <RowBetween>
               <ThemedText.DeprecatedMediumHeader fontWeight={535}>
-                <Trans>Execute proposal {{ proposalId }}</Trans>
+                <Trans>Execute proposal {proposalId}</Trans>
               </ThemedText.DeprecatedMediumHeader>
               <StyledClosed onClick={wrappedOnDismiss} />
             </RowBetween>

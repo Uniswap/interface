@@ -1,6 +1,7 @@
+import { impactAsync } from 'expo-haptics'
 import { useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
-import { AnimatePresence, Flex, HapticFeedback, Icons, Text, TouchableArea } from 'ui/src'
+import { AnimatePresence, Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { IconSizeTokens } from 'ui/src/theme'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
@@ -39,7 +40,7 @@ export function AnimatedUnitagDisplayName({
       return
     }
 
-    await HapticFeedback.impact()
+    await impactAsync()
     await setClipboard(address)
     dispatch(
       pushNotification({
@@ -50,38 +51,44 @@ export function AnimatedUnitagDisplayName({
   }
 
   return (
-    <Flex row shrink onPress={isUnitag ? onPressUnitag : undefined}>
-      <Text color="$neutral1" numberOfLines={1} variant="subheading1">
-        {displayName.name}
-      </Text>
-      <AnimatePresence>
-        <Flex row animation="semiBouncy" ml={-textWidth} x={showUnitagSuffix ? textWidth : 0}>
-          <Flex onLayout={onTextLayout}>
-            <Text
-              animation="semiBouncy"
-              color="$neutral3"
-              opacity={showUnitagSuffix ? 1 : 0}
-              variant="subheading1">
-              {UNITAG_SUFFIX}
-            </Text>
-          </Flex>
-          {isUnitag ? (
-            <Flex animation="semiBouncy" pl="$spacing4">
-              <Icons.Unitag size={unitagIconSize} />
+    <Flex onPress={isUnitag ? onPressUnitag : undefined}>
+      <Flex row>
+        <Text color="$neutral1" variant="subheading1">
+          {displayName.name}
+        </Text>
+        <AnimatePresence>
+          <Flex row animation="semiBouncy" ml={-textWidth} x={showUnitagSuffix ? textWidth : 0}>
+            <Flex onLayout={onTextLayout}>
+              <Text
+                animation="semiBouncy"
+                color="$neutral3"
+                opacity={showUnitagSuffix ? 1 : 0}
+                variant="subheading1">
+                {UNITAG_SUFFIX}
+              </Text>
             </Flex>
-          ) : null}
-          {address && (
-            <TouchableArea hapticFeedback hitSlop={20} pl="$spacing8" onPress={onPressCopyAddress}>
-              <Flex row alignItems="center" gap="$spacing4">
-                <Text color="$neutral3" numberOfLines={1} variant="body2">
-                  {sanitizeAddressText(shortenAddress(address))}
-                </Text>
-                <Icons.CopyAlt color="$neutral3" size="$icon.16" />
+            {isUnitag ? (
+              <Flex animation="semiBouncy" pl="$spacing4">
+                <Icons.Unitag size={unitagIconSize} />
               </Flex>
-            </TouchableArea>
-          )}
-        </Flex>
-      </AnimatePresence>
+            ) : null}
+            {address && (
+              <TouchableArea
+                hapticFeedback
+                hitSlop={20}
+                pl="$spacing8"
+                onPress={onPressCopyAddress}>
+                <Flex row alignItems="center" gap="$spacing4">
+                  <Text color="$neutral3" numberOfLines={1} variant="body2">
+                    {sanitizeAddressText(shortenAddress(address))}
+                  </Text>
+                  <Icons.CopyAlt color="$neutral3" size="$icon.16" />
+                </Flex>
+              </TouchableArea>
+            )}
+          </Flex>
+        </AnimatePresence>
+      </Flex>
     </Flex>
   )
 }

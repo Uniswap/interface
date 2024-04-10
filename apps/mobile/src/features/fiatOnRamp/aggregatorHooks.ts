@@ -60,13 +60,11 @@ export function useFiatOnRampQuotes({
   baseCurrencyCode,
   quoteCurrencyCode,
   countryCode,
-  countryState,
 }: {
   baseCurrencyAmount?: number
   baseCurrencyCode: string | undefined
   quoteCurrencyCode: string | undefined
   countryCode: string | undefined
-  countryState: string | undefined
 }): {
   loading: boolean
   error?: FetchBaseQueryError | SerializedError
@@ -87,7 +85,6 @@ export function useFiatOnRampQuotes({
           destinationCurrencyCode: quoteCurrencyCode,
           countryCode,
           walletAddress: walletAddress ?? '',
-          state: countryState,
         }
       : skipToken,
     {

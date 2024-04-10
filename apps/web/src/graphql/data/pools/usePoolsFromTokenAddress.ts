@@ -1,11 +1,8 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { PoolTableSortState, TablePool, V2_BIPS, calculateOneDayApr, sortPools } from 'graphql/data/pools/useTopPools'
+import { useTopV2PairsQuery, useTopV3PoolsQuery } from 'graphql/data/__generated__/types-and-hooks'
+import { PoolTableSortState, TablePool, V2_BIPS, calculateTurnover, sortPools } from 'graphql/data/pools/useTopPools'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useCallback, useMemo, useRef } from 'react'
-import {
-  useTopV2PairsQuery,
-  useTopV3PoolsQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 const DEFAULT_QUERY_SIZE = 20
 
@@ -36,6 +33,7 @@ export function usePoolsFromTokenAddress(tokenAddress: string, sortState: PoolTa
     skip: chainId !== ChainId.MAINNET,
   })
   const loading = loadingV3 || loadingV2
+  const error = errorV3 || errorV2
 
   const loadingMoreV3 = useRef(false)
   const loadingMoreV2 = useRef(false)
@@ -92,7 +90,7 @@ export function usePoolsFromTokenAddress(tokenAddress: string, sortState: PoolTa
           tvl: pool.totalLiquidity?.value,
           volume24h: pool.volume24h?.value,
           volumeWeek: pool.volumeWeek?.value,
-          oneDayApr: calculateOneDayApr(pool.volume24h?.value, pool.totalLiquidity?.value, pool.feeTier),
+          turnover: calculateTurnover(pool.volume24h?.value, pool.totalLiquidity?.value, pool.feeTier),
           feeTier: pool.feeTier,
           protocolVersion: pool.protocolVersion,
         } as TablePool
@@ -107,13 +105,13 @@ export function usePoolsFromTokenAddress(tokenAddress: string, sortState: PoolTa
           tvl: pool.totalLiquidity?.value,
           volume24h: pool.volume24h?.value,
           volumeWeek: pool.volumeWeek?.value,
-          oneDayApr: calculateOneDayApr(pool.volume24h?.value, pool.totalLiquidity?.value, V2_BIPS),
+          turnover: calculateTurnover(pool.volume24h?.value, pool.totalLiquidity?.value, V2_BIPS),
           feeTier: V2_BIPS,
           protocolVersion: pool.protocolVersion,
         } as TablePool
       }) ?? []
 
     const pools = sortPools([...topV3Pools, ...topV2Pairs], sortState).slice(0, sizeRef.current)
-    return { loading, errorV2, errorV3, pools, loadMore }
-  }, [dataV2?.topV2Pairs, dataV3?.topV3Pools, errorV2, errorV3, loadMore, loading, sortState])
+    return { loading, error, pools, loadMore }
+  }, [dataV2?.topV2Pairs, dataV3?.topV3Pools, error, loadMore, loading, sortState])
 }

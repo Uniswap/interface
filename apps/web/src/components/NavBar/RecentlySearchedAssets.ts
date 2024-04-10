@@ -1,15 +1,11 @@
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { SearchToken } from 'graphql/data/SearchTokens'
+import { Chain, NftCollection, useRecentlySearchedAssetsQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { GenieCollection } from 'nft/types'
 import { useCallback, useMemo } from 'react'
-import {
-  Chain,
-  NftCollection,
-  useRecentlySearchedAssetsQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 type RecentlySearchedAsset = {
@@ -82,9 +78,7 @@ export function useRecentlySearchedAssets() {
     )
     collections?.forEach((collection) => (resultsMap[collection.address] = collection))
     queryData.tokens?.filter(Boolean).forEach((token) => {
-      if (token) {
-        resultsMap[token.address ?? `NATIVE-${token.chain}`] = token
-      }
+      resultsMap[token.address ?? `NATIVE-${token.chain}`] = token
     })
 
     const data: (SearchToken | GenieCollection)[] = []

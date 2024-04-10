@@ -3,17 +3,18 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Icons, Text, useDeviceInsets, useSporeColors } from 'ui/src'
-import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
+import { NoTransactions } from 'ui/src/components/icons/NoTransactions'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
+import { GQLQueries } from 'wallet/src/data/queries'
 import { useFormattedTransactionDataForFeed } from 'wallet/src/features/activity/hooks'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
@@ -86,7 +87,7 @@ export const FeedTab = memo(
       <Flex grow style={containerProps?.emptyContainerStyle}>
         <BaseCard.EmptyState
           description={t('home.feed.empty.description')}
-          icon={<Icons.NoTransactions color="$neutral3" size="$icon.70" />}
+          icon={<NoTransactions />}
           title={t('home.feed.empty.title')}
           onPress={onPressReceive}
         />

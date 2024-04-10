@@ -20,7 +20,6 @@ export default function RemoveButton({ visible = true, ...rest }: RemoveButtonPr
       height={imageSizes.image24}
       justifyContent="center"
       style={animatedVisibilityStyle}
-      testID="explore/remove-button"
       width={imageSizes.image24}
       zIndex="$tooltip"
       {...rest}>

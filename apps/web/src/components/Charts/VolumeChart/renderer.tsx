@@ -3,6 +3,7 @@
  * Modifications are called out with comments.
  */
 import { BitmapCoordinatesRenderingScope, CanvasRenderingTarget2D } from 'fancy-canvas'
+import { PriceSource } from 'graphql/data/__generated__/types-and-hooks'
 import {
   CustomData,
   CustomSeriesOptions,
@@ -12,7 +13,6 @@ import {
   Time,
   UTCTimestamp,
 } from 'lightweight-charts'
-import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { calculateColumnPositionsInPlace, ColumnPosition, isStackedHistogramData, positionsBox } from './utils'
 

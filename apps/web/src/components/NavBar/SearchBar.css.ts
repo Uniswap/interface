@@ -1,5 +1,5 @@
 import { style } from '@vanilla-extract/css'
-import { subheadSmall } from 'nft/css/common.css'
+import { subhead, subheadSmall } from 'nft/css/common.css'
 
 import { breakpoints, sprinkles, vars } from '../../nft/css/sprinkles.css'
 
@@ -117,6 +117,81 @@ export const searchBarDropdownNft = style([
 
 export const searchBarScrollable = sprinkles({
   overflowY: 'auto',
+})
+
+export const suggestionRow = style([
+  sprinkles({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingY: '8',
+    paddingX: '16',
+    cursor: 'pointer',
+  }),
+  {
+    ':hover': {
+      background: vars.color.lightGrayOverlay,
+    },
+    textDecoration: 'none',
+  },
+])
+
+export const suggestionImage = sprinkles({
+  width: '36',
+  height: '36',
+  borderRadius: 'round',
+  marginRight: '8',
+})
+
+export const suggestionPrimaryContainer = style([
+  sprinkles({
+    alignItems: 'flex-start',
+  }),
+  {
+    width: '90%',
+  },
+])
+
+export const suggestionSecondaryContainer = sprinkles({
+  textAlign: 'right',
+  alignItems: 'flex-end',
+})
+
+export const primaryText = style([
+  subhead,
+  sprinkles({
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    color: 'neutral1',
+  }),
+  {
+    lineHeight: '24px',
+  },
+])
+
+export const secondaryText = style([
+  subheadSmall,
+  sprinkles({
+    color: 'neutral2',
+  }),
+  {
+    lineHeight: '20px',
+  },
+])
+
+export const imageHolder = style([
+  suggestionImage,
+  sprinkles({
+    background: 'surface2',
+    flexShrink: '0',
+  }),
+])
+
+export const suggestionIcon = sprinkles({
+  display: 'flex',
+  flexShrink: '0',
 })
 
 export const sectionHeader = style([

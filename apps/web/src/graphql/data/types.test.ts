@@ -1,12 +1,7 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { DAI, NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { Chain, SafetyLevel, Token, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
-import {
-  Chain,
-  SafetyLevel,
-  Token,
-  TokenStandard,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 const MAINNET_NATIVE_GQL_TOKEN = {
   __typename: 'Token',

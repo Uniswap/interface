@@ -3,14 +3,9 @@ import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 
-export enum LimitPriceErrorType {
-  CALCULATION_ERROR = 'CALCULATION_ERROR',
-  BELOW_MARKET = 'BELOW_MARKET',
-}
-
 type CurrentPriceAdjustmentResult =
-  | { currentPriceAdjustment: number; priceError?: LimitPriceErrorType.BELOW_MARKET }
-  | { currentPriceAdjustment: undefined; priceError: LimitPriceErrorType.CALCULATION_ERROR }
+  | { currentPriceAdjustment: number; priceError: boolean }
+  | { currentPriceAdjustment: undefined; priceError: false }
 
 export function useCurrentPriceAdjustment({
   parsedLimitPrice,
@@ -33,7 +28,7 @@ export function useCurrentPriceAdjustment({
       !quoteCurrency ||
       !parsedLimitPrice.baseCurrency.equals(baseCurrency)
     ) {
-      return { currentPriceAdjustment: undefined, priceError: LimitPriceErrorType.CALCULATION_ERROR }
+      return { currentPriceAdjustment: undefined, priceError: false }
     }
     const oneUnitOfBaseCurrency = CurrencyAmount.fromRawAmount(
       baseCurrency,
@@ -51,12 +46,9 @@ export function useCurrentPriceAdjustment({
     const percentageChange = new Fraction(difference, scaledMarketQuote)
 
     const currentPriceAdjustment = Math.round(Number(percentageChange.multiply(100).toFixed(2)))
-
-    const priceBelowMarket = limitPriceInverted ? currentPriceAdjustment > 0 : currentPriceAdjustment < 0
-
     return {
       currentPriceAdjustment,
-      priceError: priceBelowMarket ? LimitPriceErrorType.BELOW_MARKET : undefined,
+      priceError: limitPriceInverted ? (currentPriceAdjustment ?? 0) > 0 : (currentPriceAdjustment ?? 0) < 0,
     }
   }, [parsedLimitPrice, marketPrice, baseCurrency, quoteCurrency, limitPriceInverted])
 }

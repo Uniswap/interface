@@ -1,22 +1,22 @@
+import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ButtonLight } from 'components/Button'
 import Column from 'components/Column'
 import { HideScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
-import { useAbbreviatedTimeString } from 'components/Table/utils'
+import { getAbbreviatedTimeString } from 'components/Table/utils'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { Token } from 'graphql/data/__generated__/types-and-hooks'
 import { OrderDirection, getTokenDetailsURL, supportedChainIdFromGQLChain, unwrapToken } from 'graphql/data/util'
 import { OrderDirection as TheGraphOrderDirection } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { Trans } from 'i18n'
 import { ArrowDown, CornerLeftUp, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export const SHOW_RETURN_TO_TOP_OFFSET = 500
 export const LOAD_MORE_BOTTOM_OFFSET = 50
@@ -218,13 +218,10 @@ export const TimestampCell = ({ timestamp, link }: { timestamp: number; link: st
     .toLocaleString(locale, options)
     .toLocaleLowerCase(locale)
     .replace(/\s(am|pm)/, '$1')
-
-  const abbreviatedTime = useAbbreviatedTimeString(timestamp * 1000)
-
   return (
     <StyledTimestampRow href={link}>
       <MouseoverTooltip text={fullDate} placement="top" size={TooltipSize.Max}>
-        <ThemedText.BodySecondary>{abbreviatedTime}</ThemedText.BodySecondary>
+        <ThemedText.BodySecondary>{getAbbreviatedTimeString(timestamp * 1000)}</ThemedText.BodySecondary>
       </MouseoverTooltip>
       <StyledExternalLinkIcon />
     </StyledTimestampRow>

@@ -13,7 +13,7 @@ import {
   TokenInRoute as TradingApiTokenInRoute,
   V2PoolInRoute as TradingApiV2PoolInRoute,
   V3PoolInRoute as TradingApiV3PoolInRoute,
-} from 'wallet/src/data/tradingApi/__generated__/index'
+} from 'wallet/src/data/tradingApi/__generated__/api'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
@@ -232,9 +232,7 @@ export function getTokenAddressForApiRequest(currency: Maybe<Currency>): string 
   return currency.isNative ? NATIVE_ADDRESS_FOR_TRADING_API : currency.address
 }
 
-const SUPPORTED_TRADING_API_CHAIN_IDS: number[] = Object.values(TradingApiChainId).filter(
-  (value): value is number => typeof value === 'number'
-)
+const SUPPORTED_TRADING_API_CHAIN_IDS: number[] = Object.values(TradingApiChainId).map((c) => c)
 
 // Parse any chain id to check if its supported by the API ChainId type
 function isTradingApiSupportedChainId(chainId?: number): chainId is TradingApiChainId {

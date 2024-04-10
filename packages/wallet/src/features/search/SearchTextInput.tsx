@@ -27,8 +27,6 @@ import { SHADOW_OFFSET_SMALL } from 'wallet/src/components/BaseCard/BaseCard'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { WalletEventName } from 'wallet/src/telemetry/constants'
 
-const DEFAULT_MIN_HEIGHT = 48
-
 export const springConfig = {
   stiffness: 1000,
   damping: 500,
@@ -47,8 +45,6 @@ export type SearchTextInputProps = InputProps & {
   showShadow?: boolean
   py?: SpaceTokens
   px?: SpaceTokens
-  hideIcon?: boolean
-  minHeight?: number
 }
 
 export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>(
@@ -71,8 +67,6 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       px = '$spacing16',
       showShadow,
       value,
-      hideIcon,
-      minHeight = DEFAULT_MIN_HEIGHT,
     } = props
 
     const inputRef = useRef<Input>(null)
@@ -133,7 +127,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           backgroundColor={backgroundColor}
           borderRadius="$roundedFull"
           gap="$spacing8"
-          minHeight={minHeight}
+          minHeight={48}
           mr={showCancelButton && isFocus ? cancelButtonWidth + spacing.spacing12 : 0}
           px={px}
           py={py}
@@ -147,11 +141,9 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
               shadowColor: '$sporeBlack',
             },
           })}>
-          {!hideIcon && (
-            <Flex py="$spacing4">
-              <Icons.Search color="$neutral2" size="$icon.20" />
-            </Flex>
-          )}
+          <Flex py="$spacing4">
+            <Icons.Search color="$neutral2" size="$icon.20" />
+          </Flex>
 
           <Flex grow alignSelf="stretch" mr="$spacing8" overflow="hidden">
             <Input
@@ -186,7 +178,6 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
               {...(Platform.OS === 'android' && {
                 width: value ? undefined : 9999,
               })}
-              width="100%"
               onChangeText={onChangeTextInput}
               onFocus={onTextInputFocus}
               onSubmitEditing={onTextInputSubmitEditing}

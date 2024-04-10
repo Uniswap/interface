@@ -1,6 +1,6 @@
+import { Trans } from '@lingui/macro'
 import { Fraction, TradeType } from '@uniswap/sdk-core'
 import { BigNumber } from 'ethers/lib/ethers'
-import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 
 import { nativeOnChain } from '../../constants/tokens'
@@ -72,13 +72,13 @@ function FormattedCurrencyAmountManaged({
 
 function ClaimSummary({ info: { recipient, uniAmountRaw } }: { info: ClaimTransactionInfo }) {
   const { ENSName } = useENSName()
-  const name = ENSName ?? recipient
   return typeof uniAmountRaw === 'string' ? (
     <Trans>
-      Claim <FormattedCurrencyAmount rawAmount={uniAmountRaw} symbol="UNI" decimals={18} sigFigs={4} /> for {{ name }}
+      Claim <FormattedCurrencyAmount rawAmount={uniAmountRaw} symbol="UNI" decimals={18} sigFigs={4} /> for{' '}
+      {ENSName ?? recipient}
     </Trans>
   ) : (
-    <Trans>Claim UNI reward for {{ name }}</Trans>
+    <Trans>Claim UNI reward for {ENSName ?? recipient}</Trans>
   )
 }
 
@@ -90,9 +90,9 @@ function ApprovalSummary({ info }: { info: ApproveTransactionInfo }) {
   const token = useToken(info.tokenAddress)
 
   return BigNumber.from(info.amount)?.eq(0) ? (
-    <Trans>Revoke {{ sym: token?.symbol }}</Trans>
+    <Trans>Revoke {token?.symbol}</Trans>
   ) : (
-    <Trans>Approve {{ sym: token?.symbol }}</Trans>
+    <Trans>Approve {token?.symbol}</Trans>
   )
 }
 
@@ -101,30 +101,30 @@ function VoteSummary({ info }: { info: VoteTransactionInfo }) {
   if (info.reason && info.reason.trim().length > 0) {
     switch (info.decision) {
       case VoteOption.For:
-        return <Trans>Vote for proposal {{ proposalKey }}</Trans>
+        return <Trans>Vote for proposal {proposalKey}</Trans>
       case VoteOption.Abstain:
-        return <Trans>Vote to abstain on proposal {{ proposalKey }}</Trans>
+        return <Trans>Vote to abstain on proposal {proposalKey}</Trans>
       case VoteOption.Against:
-        return <Trans>Vote against proposal {{ proposalKey }}</Trans>
+        return <Trans>Vote against proposal {proposalKey}</Trans>
     }
   } else {
     switch (info.decision) {
       case VoteOption.For:
         return (
           <Trans>
-            Vote for proposal {{ proposalKey }} with reason &quot;{{ reason: info.reason }}&quot;
+            Vote for proposal {proposalKey} with reason &quot;{info.reason}&quot;
           </Trans>
         )
       case VoteOption.Abstain:
         return (
           <Trans>
-            Vote to abstain on proposal {{ proposalKey }} with reason &quot;{{ reason: info.reason }}&quot;
+            Vote to abstain on proposal {proposalKey} with reason &quot;{info.reason}&quot;
           </Trans>
         )
       case VoteOption.Against:
         return (
           <Trans>
-            Vote against proposal {{ proposalKey }} with reason &quot;{{ reason: info.reason }}&quot;
+            Vote against proposal {proposalKey} with reason &quot;{info.reason}&quot;
           </Trans>
         )
     }
@@ -133,18 +133,17 @@ function VoteSummary({ info }: { info: VoteTransactionInfo }) {
 
 function QueueSummary({ info }: { info: QueueTransactionInfo }) {
   const proposalKey = `${info.governorAddress}/${info.proposalId}`
-  return <Trans>Queue proposal {{ proposalKey }}.</Trans>
+  return <Trans>Queue proposal {proposalKey}.</Trans>
 }
 
 function ExecuteSummary({ info }: { info: ExecuteTransactionInfo }) {
   const proposalKey = `${info.governorAddress}/${info.proposalId}`
-  return <Trans>Execute proposal {{ proposalKey }}.</Trans>
+  return <Trans>Execute proposal {proposalKey}.</Trans>
 }
 
 function DelegateSummary({ info: { delegatee } }: { info: DelegateTransactionInfo }) {
   const { ENSName } = useENSName(delegatee)
-  const name = ENSName ?? delegatee
-  return <Trans>Delegate voting power to {{ name }}</Trans>
+  return <Trans>Delegate voting power to {ENSName ?? delegatee}</Trans>
 }
 
 function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info: WrapTransactionInfo }) {
@@ -160,7 +159,7 @@ function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info
           decimals={18}
           sigFigs={6}
         />{' '}
-        to {{ symbol: native?.symbol ?? 'ETH' }}
+        to {native?.symbol ?? 'ETH'}
       </Trans>
     )
   } else {
@@ -173,7 +172,7 @@ function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info
           decimals={18}
           sigFigs={6}
         />{' '}
-        to {{ symbol: native?.wrapped?.symbol ?? 'WETH' }}
+        to {native?.wrapped?.symbol ?? 'WETH'}
       </Trans>
     )
   }
@@ -199,7 +198,7 @@ function MigrateLiquidityToV3Summary({
 
   return (
     <Trans>
-      Migrate {{ baseSymbol: baseCurrency?.symbol }}/{{ quoteSymbol: quoteCurrency?.symbol }} liquidity to V3
+      Migrate {baseCurrency?.symbol}/{quoteCurrency?.symbol} liquidity to V3
     </Trans>
   )
 }
@@ -210,7 +209,7 @@ function CreateV3PoolSummary({ info: { quoteCurrencyId, baseCurrencyId } }: { in
 
   return (
     <Trans>
-      Create {{ baseSymbol: baseCurrency?.symbol }}/{{ quoteSymbol: quoteCurrency?.symbol }} V3 pool
+      Create {baseCurrency?.symbol}/{quoteCurrency?.symbol} V3 pool
     </Trans>
   )
 }
@@ -221,7 +220,7 @@ function CollectFeesSummary({ info: { currencyId0, currencyId1 } }: { info: Coll
 
   return (
     <Trans>
-      Collect {{ symbol0: currency0?.symbol }}/{{ symbol1: currency1?.symbol }} fees
+      Collect {currency0?.symbol}/{currency1?.symbol} fees
     </Trans>
   )
 }
@@ -250,11 +249,11 @@ function AddLiquidityV3PoolSummary({
 
   return createPool ? (
     <Trans>
-      Create pool and add {{ baseSymbol: baseCurrency?.symbol }}/{{ quoteSymbol: quoteCurrency?.symbol }} V3 liquidity
+      Create pool and add {baseCurrency?.symbol}/{quoteCurrency?.symbol} V3 liquidity
     </Trans>
   ) : (
     <Trans>
-      Add {{ baseSymbol: baseCurrency?.symbol }}/{{ quoteSymbol: quoteCurrency?.symbol }} V3 liquidity
+      Add {baseCurrency?.symbol}/{quoteCurrency?.symbol} V3 liquidity
     </Trans>
   )
 }
@@ -278,7 +277,7 @@ function SendSummary({ info }: { info: SendTransactionInfo }) {
     <Trans>
       Sent
       <FormattedCurrencyAmountManaged rawAmount={info.amount} currencyId={info.currencyId} sigFigs={6} /> to{' '}
-      {{ recipient: info.recipient }}
+      {info.recipient}
     </Trans>
   )
 }

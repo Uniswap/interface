@@ -1,23 +1,22 @@
+import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import IconButton from 'components/AccountDrawer/IconButton'
 import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Column from 'components/Column'
 import { Settings } from 'components/Icons/Settings'
 import Row, { AutoRow } from 'components/Row'
-import { networkConnection } from 'connection'
+import { deprecatedNetworkConnection, networkConnection } from 'connection'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { isSupportedChain } from 'constants/chains'
-import { useUniswapWalletOptions } from 'hooks/useUniswapWalletOptions'
-import { Trans } from 'i18n'
+import { useFallbackProviderEnabled } from 'featureFlags/flags/fallbackProvider'
 import { useEffect } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
-import { Text } from 'ui/src/components/text/Text'
+
 import ConnectionErrorView from './ConnectionErrorView'
 import { DeprecatedInjectorMessage } from './Option'
 import PrivacyPolicyNotice from './PrivacyPolicyNotice'
-import { UniswapWalletOptions } from './UniswapWalletOptions'
 import { useOrderedConnections } from './useOrderedConnections'
 
 const Wrapper = styled.div`
@@ -26,7 +25,6 @@ const Wrapper = styled.div`
   width: 100%;
   padding: 14px 16px 16px;
   flex: 1;
-  gap: 16px;
 `
 
 const OptionGrid = styled.div`
@@ -44,10 +42,9 @@ const TextSectionWrapper = styled.div`
   padding: 0 4px;
 `
 
-const Line = styled.div`
-  height: 1px;
+const Line = styled.hr`
   width: 100%;
-  background: ${({ theme }) => theme.surface3};
+  border-color: ${({ theme }) => theme.surface3};
 `
 
 export default function WalletModal({ openSettings }: { openSettings: () => void }) {
@@ -55,34 +52,26 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   const showMoonpayText = useShowMoonpayText()
 
   const { activationState } = useActivationState()
+  const fallbackProviderEnabled = useFallbackProviderEnabled()
   // Keep the network connector in sync with any active user connector to prevent chain-switching on wallet disconnection.
   useEffect(() => {
     if (chainId && isSupportedChain(chainId) && connector !== networkConnection.connector) {
-      networkConnection.connector.activate(chainId)
+      if (fallbackProviderEnabled) {
+        networkConnection.connector.activate(chainId)
+      } else {
+        deprecatedNetworkConnection.connector.activate(chainId)
+      }
     }
-  }, [chainId, connector])
+  }, [chainId, connector, fallbackProviderEnabled])
 
-  const showUniswapWalletOptions = useUniswapWalletOptions()
-  const { orderedConnections, showDeprecatedMessage } = useOrderedConnections(!!showUniswapWalletOptions)
+  const { orderedConnections, showDeprecatedMessage } = useOrderedConnections()
 
   return (
     <Wrapper data-testid="wallet-modal">
-      <AutoRow justify="space-between" width="100%">
+      <AutoRow justify="space-between" width="100%" marginBottom="16px">
         <ThemedText.SubHeader>Connect a wallet</ThemedText.SubHeader>
         <IconButton Icon={Settings} onClick={openSettings} data-testid="wallet-settings" />
       </AutoRow>
-      {showUniswapWalletOptions && (
-        <>
-          <UniswapWalletOptions />
-          <Row align="center" padding="8px 0px">
-            <Line />
-            <Text variant="body3" color="$neutral2" mx={18} whiteSpace="nowrap">
-              <Trans>Other wallets</Trans>
-            </Text>
-            <Line />
-          </Row>
-        </>
-      )}
       {activationState.status === ActivationStatus.ERROR ? (
         <ConnectionErrorView />
       ) : (

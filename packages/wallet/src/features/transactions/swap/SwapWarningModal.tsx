@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { iconSizes } from 'ui/src/theme'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
+import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedSwapWarnings'
 import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function SwapWarningModal({

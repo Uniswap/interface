@@ -2,12 +2,13 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Icons, Text, TouchableArea } from 'ui/src'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { NumberType } from 'utilities/src/format/types'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
+import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { FeeOnTransferFeeGroupProps } from 'wallet/src/features/transactions/TransactionDetails/FeeOnTransferFee'
+import { FeeOnTransferInfo } from 'wallet/src/features/transactions/TransactionDetails/FeeOnTransferInfo'
+import { OnShowSwapFeeInfo } from 'wallet/src/features/transactions/TransactionDetails/SwapFee'
 import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
 import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRatio'
@@ -51,8 +52,10 @@ interface SwapDetailsProps {
   outputCurrencyPricePerUnitExact?: string
   warning?: Warning
   onAcceptTrade: () => void
+  onShowSwapFeeInfo: OnShowSwapFeeInfo
   onShowWarning?: () => void
   onShowSlippageModal: () => void
+  onShowFOTInfo: () => void
 }
 
 export function SwapDetails({
@@ -65,8 +68,10 @@ export function SwapDetails({
   outputCurrencyPricePerUnitExact,
   warning,
   onAcceptTrade,
+  onShowSwapFeeInfo,
   onShowWarning,
   onShowSlippageModal,
+  onShowFOTInfo,
 }: SwapDetailsProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -103,7 +108,7 @@ export function SwapDetails({
     ? acceptedTrade.slippageTolerance > autoSlippageTolerance
     : false
 
-  const feeOnTransferProps: FeeOnTransferFeeGroupProps = useMemo(
+  const feeOnTransferInfo: FeeOnTransferInfo = useMemo(
     () => ({
       inputTokenInfo: {
         fee: acceptedTrade.inputTax,
@@ -113,12 +118,14 @@ export function SwapDetails({
         fee: acceptedTrade.outputTax,
         tokenSymbol: acceptedTrade.outputAmount.currency.symbol ?? 'Token buy',
       },
+      onShowInfo: onShowFOTInfo,
     }),
     [
       acceptedTrade.inputAmount.currency.symbol,
       acceptedTrade.inputTax,
       acceptedTrade.outputAmount.currency.symbol,
       acceptedTrade.outputTax,
+      onShowFOTInfo,
     ]
   )
 
@@ -135,12 +142,13 @@ export function SwapDetails({
         )
       }
       chainId={acceptedTrade.inputAmount.currency.chainId}
-      feeOnTransferProps={feeOnTransferProps}
+      feeOnTransferInfo={feeOnTransferInfo}
       gasFee={gasFee}
       showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeRequiresAcceptance}
       swapFeeInfo={swapFeeInfo}
       warning={warning}
+      onShowSwapFeeInfo={onShowSwapFeeInfo}
       onShowWarning={onShowWarning}>
       <Flex row alignItems="center" justifyContent="space-between">
         <Text color="$neutral2" variant="body3">

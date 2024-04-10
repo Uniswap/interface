@@ -1,22 +1,14 @@
-import { SCREEN_WIDTH } from '@gorhom/bottom-sheet'
 import _ from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import Animated, {
   SharedValue,
-  useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withSpring,
   withTiming,
 } from 'react-native-reanimated'
-import { ValueAndFormattedWithAnimation } from 'src/components/PriceExplorer/usePrice'
-import { PriceNumberOfDigits } from 'src/components/PriceExplorer/usePriceHistory'
-import { useSporeColors } from 'ui/src'
-import { TextLoaderWrapper } from 'ui/src/components/text/Text'
-import { fonts } from 'ui/src/theme'
-import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import {
   ADDITIONAL_WIDTH_FOR_ANIMATIONS,
   AnimatedCharStyles,
@@ -24,7 +16,13 @@ import {
   NUMBER_ARRAY,
   NUMBER_WIDTH_ARRAY,
   TopAndBottomGradient,
-} from 'wallet/src/features/portfolio/AnimatedNumber'
+} from 'src/components/AnimatedNumber'
+import { ValueAndFormattedWithAnimation } from 'src/components/PriceExplorer/usePrice'
+import { PriceNumberOfDigits } from 'src/components/PriceExplorer/usePriceHistory'
+import { useSporeColors } from 'ui/src'
+import { TextLoaderWrapper } from 'ui/src/components/text/Text'
+import { fonts } from 'ui/src/theme'
+import { FiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
 // if price per token has > 3 numbers before the decimal, start showing decimals in neutral3
 // otherwise, show entire price in neutral1
@@ -137,7 +135,7 @@ const RollNumber = ({
     const char = chars.value[index - (commaIndex - decimalPlace.value)]
     const number = char ? parseFloat(char) : undefined
     return Number.isNaN(number) ? undefined : number
-  }, [chars, commaIndex, decimalPlace, index])
+  }, [chars])
 
   const animatedFontStyle = useAnimatedStyle(() => {
     return {
@@ -158,7 +156,7 @@ const RollNumber = ({
           restSpeedThreshold: 2,
         })
       : endValue
-  }, [animatedDigit, shouldAnimate])
+  }, [shouldAnimate])
 
   const animatedWrapperStyle = useAnimatedStyle(() => {
     const digitWidth =
@@ -263,7 +261,7 @@ const Numbers = ({
 
   const decimalPlace = useDerivedValue(() => {
     return price.formatted.value.indexOf(currency.decimalSeparator)
-  }, [currency.decimalSeparator, price.formatted])
+  }, [price])
 
   const commaIndex = numberOfDigits.left + Math.floor((numberOfDigits.left - 1) / 3)
 
@@ -296,8 +294,6 @@ const LoadingWrapper = (): JSX.Element | null => {
   )
 }
 
-const SCREEN_WIDTH_BUFFER = 50
-
 const PriceExplorerAnimatedNumber = ({
   price,
   numberOfDigits,
@@ -309,8 +305,6 @@ const PriceExplorerAnimatedNumber = ({
 }): JSX.Element => {
   const colors = useSporeColors()
   const hideShimmer = useSharedValue(false)
-  const scale = useSharedValue(1)
-  const offset = useSharedValue(0)
   const animatedWrapperStyle = useAnimatedStyle(() => {
     return {
       opacity: price.value.value > 0 && hideShimmer.value ? 0 : 1,
@@ -325,31 +319,6 @@ const PriceExplorerAnimatedNumber = ({
       width: price.formatted.value[0] === '<' ? withTiming(22) : withTiming(0),
     }
   })
-
-  useAnimatedReaction(
-    () => {
-      return Number(
-        [0, ...price.formatted.value.split('')].reduce((accumulator, currentValue) => {
-          if (NUMBER_WIDTH_ARRAY[Number(currentValue)]) {
-            return Number(accumulator) + Number(NUMBER_WIDTH_ARRAY[Number(currentValue)])
-          }
-          return accumulator
-        })
-      )
-    },
-    (priceWidth: number) => {
-      const newScale = (SCREEN_WIDTH - SCREEN_WIDTH_BUFFER) / priceWidth
-
-      if (newScale < 1) {
-        const newOffset = (priceWidth - priceWidth * newScale) / 2
-        scale.value = withTiming(newScale)
-        offset.value = withTiming(-newOffset)
-      } else if (scale.value < 1) {
-        scale.value = withTiming(1)
-        offset.value = withTiming(0)
-      }
-    }
-  )
 
   const hidePlaceholder = (): void => {
     hideShimmer.value = true
@@ -375,18 +344,8 @@ const PriceExplorerAnimatedNumber = ({
     </Animated.Text>
   )
 
-  const scaleWraper = useAnimatedStyle(() => {
-    return {
-      transform: [
-        { translateX: -SCREEN_WIDTH / 2 },
-        { scale: scale.value },
-        { translateX: SCREEN_WIDTH / 2 },
-      ],
-    }
-  })
-
   return (
-    <Animated.View style={scaleWraper}>
+    <>
       <Animated.View style={animatedWrapperStyle}>
         <LoadingWrapper />
       </Animated.View>
@@ -397,7 +356,7 @@ const PriceExplorerAnimatedNumber = ({
         {Numbers({ price, hidePlaceholder, numberOfDigits, currency })}
         {!currency.symbolAtFront && currencySymbol}
       </View>
-    </Animated.View>
+    </>
   )
 }
 

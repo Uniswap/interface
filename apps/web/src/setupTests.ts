@@ -11,7 +11,6 @@ import React from 'react'
 import { Readable } from 'stream'
 import { toBeVisible } from 'test-utils/matchers'
 import { mocked } from 'test-utils/mocked'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { TextDecoder, TextEncoder } from 'util'
 
 // Sets origin to the production origin, because some tests depend on this.
@@ -41,7 +40,6 @@ globalThis.origin = 'https://app.uniswap.org'
     })
 
   globalThis.performance.measure = jest.fn()
-  globalThis.performance.mark = jest.fn()
 
   globalThis.React = React
 }
@@ -119,8 +117,6 @@ jest.mock('state/routing/quickRouteSlice', () => {
   }
 })
 
-jest.mock('uniswap/src/features/experiments/hooks')
-
 // Mocks are configured to reset between tests (by CRA), so they must be set in a beforeEach.
 beforeEach(() => {
   // Mock window.getComputedStyle, because it is otherwise too computationally expensive to unit test.
@@ -132,9 +128,6 @@ beforeEach(() => {
 
   // Disable network connections by default.
   disableNetConnect()
-
-  // Mock feature flags
-  mocked(useFeatureFlag).mockReturnValue(false)
 })
 
 afterEach(() => {

@@ -1,5 +1,6 @@
 import { defaultAbiCoder } from '@ethersproject/abi'
 import { getAddress, isAddress } from '@ethersproject/address'
+import { Trans } from '@lingui/macro'
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -7,7 +8,6 @@ import { Trace } from 'analytics'
 import { ButtonError } from 'components/Button'
 import { BlueCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { Wrapper } from 'pages/Pool/styled'
@@ -95,7 +95,7 @@ const CreateProposalButton = ({
       ) : !hasEnoughVote ? (
         <>
           {formattedProposalThreshold ? (
-            <Trans>You must have {{ formattedProposalThreshold }} votes to submit a proposal</Trans>
+            <Trans>You must have {formattedProposalThreshold} votes to submit a proposal</Trans>
           ) : (
             <Trans>You don&apos;t have enough votes to submit a proposal</Trans>
           )}

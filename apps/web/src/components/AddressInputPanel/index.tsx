@@ -1,7 +1,7 @@
-import { Trans } from 'i18n'
+import { Trans } from '@lingui/macro'
 // eslint-disable-next-line no-restricted-imports
+import { t } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { t } from 'i18n'
 import { ChangeEvent, ReactNode, useCallback } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'

@@ -1,11 +1,11 @@
 import { createStore, Store } from '@reduxjs/toolkit'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import {
   closeModal,
   initialModalsState,
   modalsReducer,
   openModal,
 } from 'src/features/modals/modalSlice'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { ModalName } from 'wallet/src/telemetry/constants'
 import { ModalsState } from './ModalsState'
 

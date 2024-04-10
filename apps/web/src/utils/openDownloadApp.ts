@@ -1,6 +1,6 @@
 import { AppDownloadPlatform, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { sendAnalyticsEvent } from 'analytics'
-import { isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
+import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
 
 // OneLink will direct to App/Play Store or microsite depending on user agent
 const APP_DOWNLOAD_LINKS: Partial<{ [key in InterfaceElementName]: string }> = {
@@ -28,13 +28,23 @@ type OpenDownloadAppOptions = {
  * I've added a helper `getDownloadAppLinkProps` that unifies this behavior into one thing.
  */
 export function openDownloadApp({ element }: OpenDownloadAppOptions) {
-  if (isWebIOS) {
+  if (isIOS) {
     openDownloadStore({ element, appPlatform: AppDownloadPlatform.IOS, linkTarget: 'uniswap_wallet_appstore' })
-  } else if (isWebAndroid) {
+  } else if (isAndroid) {
     openDownloadStore({ element, appPlatform: AppDownloadPlatform.ANDROID, linkTarget: 'uniswap_wallet_playstore' })
   } else {
     sendAnalyticsEvent(InterfaceEventName.UNISWAP_WALLET_MICROSITE_OPENED, { element })
     window.open(APP_DOWNLOAD_LINKS[element], /* target = */ 'uniswap_wallet_microsite')
+  }
+}
+
+export const getDownloadAppLinkProps = ({ element }: OpenDownloadAppOptions) => {
+  return {
+    href: APP_DOWNLOAD_LINKS[element],
+    onClick(e: { preventDefault: () => void }) {
+      e.preventDefault()
+      openDownloadApp({ element })
+    },
   }
 }
 

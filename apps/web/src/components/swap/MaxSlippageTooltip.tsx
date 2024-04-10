@@ -1,22 +1,22 @@
+import { Trans } from '@lingui/macro'
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import { RowBetween } from 'components/Row'
-import { Trans } from 'i18n'
 import { InterfaceTrade } from 'state/routing/types'
 import { ExternalLink, Separator, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const ExactInMessage = ({ amount }: { amount: string }) => (
   <Trans>
-    If the price moves so that you will receive less than {{ amount }}, your transaction will be reverted. This is the
+    If the price moves so that you will receive less than {amount}, your transaction will be reverted. This is the
     minimum amount you are guaranteed to receive.
   </Trans>
 )
 
 const ExactOutMessage = ({ amount }: { amount: string }) => (
   <Trans>
-    If the price moves so that you will pay more than {{ amount }}, your transaction will be reverted. This is the
-    maximum amount you are guaranteed to pay.
+    If the price moves so that you will pay more than {amount}, your transaction will be reverted. This is the maximum
+    amount you are guaranteed to pay.
   </Trans>
 )
 

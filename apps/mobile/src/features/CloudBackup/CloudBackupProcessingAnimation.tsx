@@ -9,7 +9,7 @@ import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudSt
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
+import { getCloudProviderName } from 'uniswap/src/utils/platform'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { promiseMinDelay } from 'utilities/src/time/timing'

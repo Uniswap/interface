@@ -1,4 +1,3 @@
-import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
 import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -308,7 +307,7 @@ export const v45Schema = {
 }
 
 const v45SchemaIntermediate = {
-  ...v45Schema,
+  ...v44Schema,
   ENS: undefined,
   ens: undefined,
   gasApi: undefined,
@@ -451,30 +450,6 @@ export const v60Schema = {
     hasViewedUniconV2IntroModal: false,
   },
 }
-
-const v61SchemaIntermediate = {
-  ...v60Schema,
-  favorites: { ...v60Schema.favorites, nftsData: undefined },
-}
-
-delete v61SchemaIntermediate.favorites.nftsData
-
-export const v61Schema = {
-  ...v61SchemaIntermediate,
-  favorites: {
-    ...v61SchemaIntermediate.favorites,
-    nftsVisibility: {},
-  },
-}
-
-export const v62Schema = {
-  ...v61Schema,
-  behaviorHistory: {
-    ...v61Schema.behaviorHistory,
-    extensionOnboardingState: ExtensionOnboardingState.Undefined,
-  },
-}
-
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v62Schema => v62Schema
+export const getSchema = (): typeof v59Schema => v59Schema

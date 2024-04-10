@@ -40,30 +40,23 @@ import {
   setI18NUserDefaults,
 } from 'src/features/widgets/widgets'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
-import {
-  getSentryEnvironment,
-  getSentryTracesSamplingRate,
-  getStatsigEnvironmentTier,
-} from 'src/utils/version'
+import { getSentryEnvironment, getStatsigEnvironmentTier } from 'src/utils/version'
 import { Statsig, StatsigProvider } from 'statsig-react-native'
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import {
-  DUMMY_STATSIG_SDK_KEY,
-  ExperimentsWallet,
-} from 'uniswap/src/features/experiments/constants'
-import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/experiments/flags'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
-import i18n from 'uniswap/src/i18n/i18n'
-import { CurrencyId } from 'uniswap/src/types/currency'
-import { isDetoxBuild } from 'utilities/src/environment'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { initFirebaseAppCheck } from 'wallet/src/features/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
+import {
+  DUMMY_STATSIG_SDK_KEY,
+  EXPERIMENT_NAMES,
+  FEATURE_FLAGS,
+} from 'wallet/src/features/experiments/constants'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
@@ -74,7 +67,9 @@ import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/Tran
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import i18n from 'wallet/src/i18n/i18n'
 import { SharedProvider } from 'wallet/src/provider'
+import { CurrencyId } from 'wallet/src/utils/currencyId'
 import { beforeSend } from 'wallet/src/utils/sentry'
 
 enableFreeze(true)
@@ -86,13 +81,15 @@ if (__DEV__) {
 // Construct a new instrumentation instance. This is needed to communicate between the integration and React
 const routingInstrumentation = new Sentry.ReactNavigationInstrumentation()
 
-if (!__DEV__ && !isDetoxBuild) {
+if (!__DEV__ && !process.env.DETOX_MODE) {
   Sentry.init({
     environment: getSentryEnvironment(),
     dsn: config.sentryDsn,
     attachViewHierarchy: true,
     enableCaptureFailedRequests: true,
-    tracesSampleRate: getSentryTracesSamplingRate(),
+    tracesSampler: (_) => {
+      return 0.2
+    },
     integrations: [
       new Sentry.ReactNativeTracing({
         enableUserInteractionTracing: true,
@@ -111,7 +108,7 @@ if (!__DEV__ && !isDetoxBuild) {
 
 // Log boxes on simulators can block detox tap event when they cover buttons placed at
 // the bottom of the screen and cause tests to fail.
-if (isDetoxBuild) {
+if (process.env.DETOX_MODE) {
   LogBox.ignoreAllLogs()
 }
 
@@ -170,12 +167,14 @@ function App(): JSX.Element | null {
 
 function SentryTags({ children }: PropsWithChildren): JSX.Element {
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (const [_, flagKey] of WALLET_FEATURE_FLAG_NAMES.entries()) {
-      Sentry.setTag(`featureFlag.${flagKey}`, Statsig.checkGateWithExposureLoggingDisabled(flagKey))
-    }
+    Object.entries(FEATURE_FLAGS).map(([_, featureFlagName]) => {
+      Sentry.setTag(
+        `featureFlag.${featureFlagName}`,
+        Statsig.checkGateWithExposureLoggingDisabled(featureFlagName)
+      )
+    })
 
-    Object.entries(ExperimentsWallet).map(([_, experimentName]) => {
+    Object.entries(EXPERIMENT_NAMES).map(([_, experimentName]) => {
       Sentry.setTag(
         `experiment.${experimentName}`,
         Statsig.getExperimentWithExposureLoggingDisabled(experimentName).getGroupName()

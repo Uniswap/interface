@@ -1,11 +1,11 @@
-import { TamaguiProvider as OGTamaguiProvider, TamaguiProviderProps } from '@tamagui/core'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import config from '../tamagui.config'
+import { TamaguiProvider as OGTamaguiProvider, TamaguiProviderProps, tamaguiConfig } from 'ui/src'
 
 export function TamaguiProvider({ children, ...rest }: Omit<TamaguiProviderProps, 'config'>): JSX.Element {
   const darkMode = useIsDarkMode()
+
   return (
-    <OGTamaguiProvider config={config} defaultTheme={darkMode ? 'dark' : 'light'} {...rest}>
+    <OGTamaguiProvider config={tamaguiConfig} defaultTheme={darkMode ? 'dark' : 'light'} disableInjectCSS {...rest}>
       {children}
     </OGTamaguiProvider>
   )

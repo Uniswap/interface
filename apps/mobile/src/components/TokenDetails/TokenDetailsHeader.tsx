@@ -1,11 +1,9 @@
 import React from 'react'
 import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
-import {
-  SafetyLevel,
-  TokenDetailsScreenQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { iconSizes, imageSizes } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'wallet/src/components/icons/WarningIcon'
+import { SafetyLevel, TokenDetailsScreenQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 
 export interface TokenDetailsHeaderProps {
@@ -44,9 +42,10 @@ export function TokenDetailsHeader({
           tokenProject?.safetyLevel === SafetyLevel.Blocked) && (
           <TouchableArea onPress={onPressWarningIcon}>
             <WarningIcon
+              height={iconSizes.icon20}
               safetyLevel={tokenProject?.safetyLevel}
-              size="$icon.20"
               strokeColorOverride="neutral3"
+              width={imageSizes.image20}
             />
           </TouchableArea>
         )}

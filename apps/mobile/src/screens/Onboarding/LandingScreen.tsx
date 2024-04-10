@@ -1,20 +1,21 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { selectionAsync } from 'expo-haptics'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import Trace from 'src/components/Trace/Trace'
 import { LandingBackground } from 'src/components/gradients/LandingBackground'
 import { Screen } from 'src/components/layout/Screen'
+import Trace from 'src/components/Trace/Trace'
 import { openModal } from 'src/features/modals/modalSlice'
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
 import { OnboardingScreens, UnitagScreens } from 'src/screens/Screens'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { isDevBuild } from 'src/utils/version'
-import { Button, Flex, HapticFeedback, Text, TouchableArea, useIsDarkMode } from 'ui/src'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { Button, Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { useTimeout } from 'utilities/src/time/timing'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { createAccountActions } from 'wallet/src/features/wallet/create/createAccountSaga'
@@ -31,7 +32,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
 
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
   const { canClaimUnitag } = useCanAddressClaimUnitag()
 
   const onPressCreateWallet = useCallback((): void => {
@@ -102,7 +103,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                 testID={ElementName.ImportAccount}
                 onLongPress={async (): Promise<void> => {
                   if (isDevBuild()) {
-                    await HapticFeedback.selection()
+                    await selectionAsync()
                     dispatch(openModal({ name: ModalName.Experiments }))
                   }
                 }}

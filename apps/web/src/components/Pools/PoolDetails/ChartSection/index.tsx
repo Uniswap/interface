@@ -1,3 +1,4 @@
+import { Trans, t } from '@lingui/macro'
 import { ChainId, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ChartHeader } from 'components/Charts/ChartHeader'
@@ -16,16 +17,15 @@ import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/C
 import { ChartQueryResult, DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import { DISPLAYS, TimePeriodDisplay, getTimePeriodFromDisplay } from 'components/Tokens/TokenTable/TimeSelector'
+import { Chain, ProtocolVersion } from 'graphql/data/__generated__/types-and-hooks'
 import { PoolData } from 'graphql/data/pools/usePoolData'
 import { TimePeriod, gqlToCurrency, supportedChainIdFromGQLChain, toHistoryDuration } from 'graphql/data/util'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
-import { Trans, t } from 'i18n'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
-import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { usePDPPriceChartData, usePDPVolumeChartData } from './hooks'
 
@@ -326,12 +326,8 @@ function LiquidityTooltipDisplay({
 
   return (
     <>
-      <ThemedText.BodySmall>
-        {t(`{{token}} liquidity: {{name}}`, { token: tokenADescriptor, name: displayValue0 })}
-      </ThemedText.BodySmall>
-      <ThemedText.BodySmall>
-        {t(`{{token}} liquidity: {{name}}`, { token: tokenBDescriptor, name: displayValue1 })}
-      </ThemedText.BodySmall>
+      <ThemedText.BodySmall>{t`${tokenADescriptor} liquidity: ${displayValue0}`}</ThemedText.BodySmall>
+      <ThemedText.BodySmall>{t`${tokenBDescriptor} liquidity: ${displayValue1}`}</ThemedText.BodySmall>
     </>
   )
 }

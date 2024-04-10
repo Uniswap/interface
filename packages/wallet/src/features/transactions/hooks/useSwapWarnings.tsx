@@ -2,14 +2,9 @@ import { useNetInfo } from '@react-native-community/netinfo'
 import { Percent } from '@uniswap/sdk-core'
 import { TFunction } from 'i18next'
 import _ from 'lodash'
-import { useTranslation } from 'react-i18next'
 import { isWeb } from 'ui/src'
-import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
+import { formatPriceImpact } from 'utilities/src/format/formatPriceImpact'
 import { useMemoCompare } from 'utilities/src/react/hooks'
-import {
-  LocalizationContextState,
-  useLocalizationContext,
-} from 'wallet/src/features/language/LocalizationContext'
 import { getNetworkWarning } from 'wallet/src/features/transactions/WarningModal/getNetworkWarning'
 import {
   Warning,
@@ -31,7 +26,6 @@ const PRICE_IMPACT_THRESHOLD_HIGH = new Percent(5, 100) // 5%
 
 export function getSwapWarnings(
   t: TFunction,
-  formatPercent: LocalizationContextState['formatPercent'],
   derivedSwapInfo: DerivedSwapInfo,
   offline: boolean
 ): Warning[] {
@@ -117,7 +111,7 @@ export function getSwapWarnings(
       severity: highImpact ? WarningSeverity.High : WarningSeverity.Medium,
       action: WarningAction.WarnBeforeSubmit,
       title: t('swap.warning.priceImpact.title', {
-        priceImpactValue: formatPercent(normalizePriceImpact(priceImpact)),
+        priceImpactValue: formatPriceImpact(priceImpact),
       }),
       message: t('swap.warning.priceImpact.message', {
         outputCurrencySymbol: currencies[CurrencyField.INPUT]?.currency.symbol,
@@ -129,10 +123,7 @@ export function getSwapWarnings(
   return warnings
 }
 
-export function useSwapWarnings(derivedSwapInfo: DerivedSwapInfo): Warning[] {
-  const { t } = useTranslation()
-  const { formatPercent } = useLocalizationContext()
-
+export function useSwapWarnings(t: TFunction, derivedSwapInfo: DerivedSwapInfo): Warning[] {
   const networkStatus = useNetInfo()
   // First `useNetInfo` call always results with unknown state,
   // which we want to ignore here until state is determined,
@@ -141,10 +132,7 @@ export function useSwapWarnings(derivedSwapInfo: DerivedSwapInfo): Warning[] {
   // See for more here: https://github.com/react-native-netinfo/react-native-netinfo/pull/444
   const offline = isOffline(networkStatus)
 
-  return useMemoCompare(
-    () => getSwapWarnings(t, formatPercent, derivedSwapInfo, offline),
-    _.isEqual
-  )
+  return useMemoCompare(() => getSwapWarnings(t, derivedSwapInfo, offline), _.isEqual)
 }
 
 const formIncomplete = (derivedSwapInfo: DerivedSwapInfo): boolean => {

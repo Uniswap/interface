@@ -42,11 +42,6 @@ module.exports = {
             paths: [
               ...restrictedImports.paths,
               {
-                name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
-                importNames: ['usePortfolioBalancesQuery', 'usePortfolioBalancesWebLazyQuery'],
-                message: 'Import cached/subscription-based balance hooks from `TokenBalancesProvider.tsx` instead.',
-              },
-              {
                 name: '@uniswap/smart-order-router',
                 message: 'Only import types, unless you are in the client-side SOR, to preserve lazy-loading.',
                 allowTypeImports: true,
@@ -65,12 +60,6 @@ module.exports = {
                 name: 'zustand',
                 importNames: ['default'],
                 message: 'Default import from zustand is deprecated. Import `{ create }` instead.',
-              },
-              {
-                name: 'uniswap/src/utils/platform',
-                importNames: ['isIOS', 'isAndroid'],
-                message:
-                  'Importing isIOS and isAndroid from platform is not allowed. Use isWebIOS and isWebAndroid instead.',
               },
             ],
           },

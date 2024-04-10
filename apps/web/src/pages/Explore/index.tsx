@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
 import { Trace, TraceEvent } from 'analytics'
 import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
@@ -7,18 +8,15 @@ import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { Trans } from 'i18n'
 import { ExploreChartsSection } from 'pages/Explore/charts/ExploreChartsSection'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 
-import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenExploreURL, isBackendSupportedChain, validateUrlChainParam } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
-import { useResetAtom } from 'jotai/utils'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useExploreParams } from './redirects'
 import RecentTransactions from './tables/RecentTransactions'
 
@@ -105,7 +103,6 @@ const Pages: Array<Page> = [
 
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const tabNavRef = useRef<HTMLDivElement>(null)
-  const resetManualOutage = useResetAtom(manualChainOutageAtom)
 
   const initialKey: number = useMemo(() => {
     const key = initialTab && Pages.findIndex((page) => page.key === initialTab)
@@ -134,8 +131,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
     if (tabIndex !== -1) {
       setCurrentTab(tabIndex)
     }
-    resetManualOutage()
-  }, [resetManualOutage, tab])
+  }, [tab])
 
   const { component: Page, key: currentKey } = Pages[currentTab]
 

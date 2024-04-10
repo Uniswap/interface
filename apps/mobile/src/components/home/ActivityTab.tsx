@@ -2,6 +2,7 @@ import { ForwardedRef, forwardRef, memo, useMemo } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { useAppDispatch } from 'src/app/hooks'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import {
   AnimatedBottomSheetFlatList,
@@ -12,9 +13,8 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
-import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { isAndroid } from 'uniswap/src/utils/platform'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
+import { GQLQueries } from 'wallet/src/data/queries'
 import { useActivityData } from 'wallet/src/features/activity/useActivityData'
 import { ModalName } from 'wallet/src/telemetry/constants'
 

@@ -30,7 +30,7 @@ export function NetworkOption({
           borderRadius={6}
           height={NETWORK_OPTION_ICON_SIZE}
           width={NETWORK_OPTION_ICON_SIZE}>
-          <Icons.Ellipsis color={colors.sporeWhite.val} size="$icon.12" />
+          <Icons.Ellipsis color={colors.sporeWhite.val} size="$icon.16" />
         </Flex>
         <Text color="$neutral1" variant="body2">
           {t('transaction.network.all')}

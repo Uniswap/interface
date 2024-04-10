@@ -9,12 +9,16 @@ import { useDebounce } from 'utilities/src/time/timing'
 import { ElementName } from 'wallet/src/telemetry/constants'
 import {
   PASSWORD_VALIDATION_DEBOUNCE_MS,
-  PasswordErrors,
   PasswordStrength,
   getPasswordStrength,
   getPasswordStrengthTextAndColor,
   isPasswordStrongEnough,
 } from 'wallet/src/utils/password'
+
+export enum PasswordErrors {
+  WeakPassword = 'WeakPassword',
+  PasswordsDoNotMatch = 'PasswordsDoNotMatch',
+}
 
 export type CloudBackupPasswordProps = {
   navigateToNextScreen: ({ password }: { password: string }) => void

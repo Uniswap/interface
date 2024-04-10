@@ -3,7 +3,6 @@ import { useMemo } from 'react'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import {
-  USDB,
   USDBC_BASE,
   USDC,
   USDC_ARBITRUM,
@@ -25,7 +24,6 @@ export const STABLECOIN_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Token> }
   [ChainId.Bnb]: CurrencyAmount.fromRawAmount(USDT_BNB, 10_000e6),
   [ChainId.Polygon]: CurrencyAmount.fromRawAmount(USDC_POLYGON, 10_000e6),
   [ChainId.Optimism]: CurrencyAmount.fromRawAmount(USDC_OPTIMISM, 10_000e6),
-  [ChainId.Blast]: CurrencyAmount.fromRawAmount(USDB, 10_000e18),
 }
 
 /**

@@ -1,4 +1,4 @@
-import { Trans } from 'i18n'
+import { Trans } from '@lingui/macro'
 import { TickMarkType, UTCTimestamp } from 'lightweight-charts'
 
 /** Compatible with ISeriesApi<'Area' | 'Candlestick'> */

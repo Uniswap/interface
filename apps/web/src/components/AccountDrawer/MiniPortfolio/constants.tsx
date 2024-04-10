@@ -1,10 +1,7 @@
-import { t } from 'i18n'
+import { t } from '@lingui/macro'
+import { SwapOrderStatus, TransactionStatus } from 'graphql/data/__generated__/types-and-hooks'
+import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { TransactionType } from 'state/transactions/types'
-import { UniswapXOrderStatus } from 'types/uniswapx'
-import {
-  SwapOrderStatus,
-  TransactionStatus,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 // use even number because rows are in groups of 2
 export const DEFAULT_NFT_QUERY_AMOUNT = 26
@@ -221,7 +218,7 @@ export const OrderTextTable: {
   },
   [UniswapXOrderStatus.INSUFFICIENT_FUNDS]: {
     title: t`Insufficient funds`,
-    statusMessage: t`Your account had insufficient funds to complete this swap.`,
+    statusMessage: t`Your account had insufficent funds to complete this swap.`,
     status: TransactionStatus.Failed,
   },
   [UniswapXOrderStatus.CANCELLED]: {
@@ -253,7 +250,7 @@ export const LimitOrderTextTable: {
   },
   [UniswapXOrderStatus.INSUFFICIENT_FUNDS]: {
     title: LimitTitleTable.FAILED,
-    statusMessage: t`Your account had insufficient funds to complete this swap.`,
+    statusMessage: t`Your account had insufficent funds to complete this swap.`,
     status: TransactionStatus.Failed,
   },
   [UniswapXOrderStatus.CANCELLED]: {
@@ -277,5 +274,4 @@ export const OrderStatusTable: { [key in SwapOrderStatus]: UniswapXOrderStatus }
   [SwapOrderStatus.Error]: UniswapXOrderStatus.ERROR,
   [SwapOrderStatus.InsufficientFunds]: UniswapXOrderStatus.INSUFFICIENT_FUNDS,
   [SwapOrderStatus.Filled]: UniswapXOrderStatus.FILLED,
-  [SwapOrderStatus.Cancelled]: UniswapXOrderStatus.CANCELLED,
 }

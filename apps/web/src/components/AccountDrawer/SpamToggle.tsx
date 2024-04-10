@@ -1,4 +1,4 @@
-import { Trans } from 'i18n'
+import { Trans } from '@lingui/macro'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 

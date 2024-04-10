@@ -1,4 +1,4 @@
-import { concatStrings, escapeRegExp, normalizeTextInput, trimToLength } from './string'
+import { escapeRegExp, normalizeTextInput, trimToLength } from './string'
 
 describe(trimToLength, () => {
   it('handles empty string', () => {
@@ -47,27 +47,5 @@ describe(escapeRegExp, () => {
 
   it('handles escaped characters', () => {
     expect(escapeRegExp('/*?')).toBe('/\\*\\?')
-  })
-})
-
-describe(concatStrings, () => {
-  it('formats no account', () => {
-    expect(concatStrings([], 'and')).toEqual('')
-  })
-
-  it('formats 1 account', () => {
-    expect(concatStrings(['1'], 'and')).toEqual('1')
-  })
-
-  it('formats 2 accounts', () => {
-    expect(concatStrings(['1', '2'], 'and')).toEqual('1 and 2')
-  })
-
-  it('formats 3 accounts', () => {
-    expect(concatStrings(['1', '2', '3'], 'and')).toEqual('1, 2 and 3')
-  })
-
-  it('formats more than 3 accounts', () => {
-    expect(concatStrings(['1', '2', '3', '4'], 'and')).toEqual('1, 2, 3 and 4')
   })
 })

@@ -107,9 +107,9 @@ android {
             include (*reactNativeArchitectures())
         }
     }
-    lintOptions {
-      abortOnError false
-    }
+    lintOptions { 
+      abortOnError false 
+    } 
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
@@ -131,17 +131,17 @@ android {
       dev {
         isDefault(true)
         applicationIdSuffix ".dev"
-        versionName "1.26"
+        versionName "1.23"
         dimension "variant"
       }
       beta {
         applicationIdSuffix ".beta"
-        versionName "1.26"
+        versionName "1.23"
         dimension "variant"
       }
       prod {
         dimension "variant"
-        versionName "1.26"
+        versionName "1.23"
       }
     }
 

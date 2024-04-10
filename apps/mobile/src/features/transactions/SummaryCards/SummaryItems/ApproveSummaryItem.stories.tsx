@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { TokenDocument } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ChainId } from 'wallet/src/constants/chains'
+import { TokenDocument } from 'wallet/src/data/__generated__/types-and-hooks'
 import { ApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ApproveSummaryItem'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import {

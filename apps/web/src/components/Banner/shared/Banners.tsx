@@ -1,9 +1,9 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
+import WalletAppPromoBanner from 'components/Banner/MobileAppAnnouncementBanner'
 import { OutageBanner, getOutageBannerSessionStorageKey } from 'components/Banner/Outage/OutageBanner'
-import { manualChainOutageAtom, useOutageBanners } from 'featureFlags/flags/outageBanner'
+import { useOutageBanners } from 'featureFlags/flags/outageBanner'
 import { getValidUrlChainId } from 'graphql/data/util'
-import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
@@ -13,7 +13,6 @@ export function Banners() {
   const currentPage = getCurrentPageFromLocation(pathname)
 
   const outageBanners = useOutageBanners()
-  const manualOutage = useAtomValue(manualChainOutageAtom)
 
   // Calculate the chainId for the current page's contextual chain (e.g. /tokens/ethereum or /tokens/arbitrum), if it exists.
   const pageChainId = useMemo(() => {
@@ -21,15 +20,14 @@ export function Banners() {
       const validatedChainId = getValidUrlChainId(maybeChainName)
       return validatedChainId !== undefined
     })
-    return chainName ? getValidUrlChainId(chainName) : ChainId.MAINNET
+    return chainName ? getValidUrlChainId(chainName) : undefined
   }, [pathname])
-  const currentPageHasManualOutage = manualOutage?.chainId === pageChainId
 
   const showOutageBanner = useMemo(() => {
     return (
       currentPage &&
       pageChainId &&
-      (outageBanners[pageChainId as ChainId] || currentPageHasManualOutage) &&
+      outageBanners[pageChainId as ChainId] &&
       !sessionStorage.getItem(getOutageBannerSessionStorageKey(pageChainId)) &&
       [
         InterfacePageName.EXPLORE_PAGE,
@@ -38,14 +36,12 @@ export function Banners() {
         InterfacePageName.TOKENS_PAGE,
       ].includes(currentPage)
     )
-  }, [currentPage, currentPageHasManualOutage, outageBanners, pageChainId])
+  }, [currentPage, outageBanners, pageChainId])
 
-  // Outage Banners should take precedence over other promotional banners
+  // Outage Banners should take precedence over the Wallet Download Banner
   if (pageChainId && showOutageBanner) {
-    return (
-      <OutageBanner chainId={pageChainId} version={currentPageHasManualOutage ? manualOutage?.version : undefined} />
-    )
+    return <OutageBanner chainId={pageChainId} />
   }
 
-  return null
+  return <WalletAppPromoBanner />
 }

@@ -1,9 +1,13 @@
+import { FeatureFlag } from 'featureFlags'
+
 import { getTestSelector } from '../utils'
 
 describe('Navigation', () => {
   beforeEach(() => {
     cy.viewport(1400, 900)
-    cy.visit('/?intro=true')
+    cy.visit('/?intro=true', {
+      featureFlags: [{ name: FeatureFlag.landingPageV2, value: true }],
+    })
   })
   it('displays Swap tab', () => {
     cy.get('nav').within(() => {
@@ -42,7 +46,9 @@ describe('Navigation', () => {
 
     it('moves pools tab to more menu on smaller screen sizes', () => {
       cy.viewport(1200, 900)
-      cy.visit('/?intro=true')
+      cy.visit('/?intro=true', {
+        featureFlags: [{ name: FeatureFlag.landingPageV2, value: true }],
+      })
       cy.get('nav').within(() => {
         cy.contains('Pool').should('not.be.visible')
         cy.get(getTestSelector('nav-more-button')).should('be.visible').click()

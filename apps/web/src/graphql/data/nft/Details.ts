@@ -1,14 +1,102 @@
 import { parseEther } from '@ethersproject/units'
+import gql from 'graphql-tag'
 import { CollectionInfoForAsset, GenieAsset, Markets, SellOrder } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
 import { useMemo } from 'react'
-import { NftAsset, useNftDetailsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+
+import { NftAsset, useDetailsQuery } from '../__generated__/types-and-hooks'
+
+gql`
+  query Details($address: String!, $tokenId: String!) {
+    nftAssets(address: $address, filter: { listed: false, tokenIds: [$tokenId] }) {
+      edges {
+        node {
+          id
+          name
+          ownerAddress
+          image {
+            url
+          }
+          smallImage {
+            url
+          }
+          originalImage {
+            url
+          }
+          tokenId
+          description
+          animationUrl
+          suspiciousFlag
+          creator {
+            address
+            profileImage {
+              url
+            }
+            isVerified
+          }
+          collection {
+            name
+            isVerified
+            numAssets
+            twitterName
+            discordUrl
+            homepageUrl
+            image {
+              url
+            }
+            nftContracts {
+              address
+              standard
+            }
+            description
+          }
+          listings(first: 1) {
+            edges {
+              node {
+                address
+                createdAt
+                endAt
+                id
+                maker
+                marketplace
+                marketplaceUrl
+                orderHash
+                price {
+                  currency
+                  value
+                }
+                quantity
+                startAt
+                status
+                taker
+                tokenId
+                type
+                protocolParameters
+              }
+              cursor
+            }
+          }
+          rarities {
+            provider
+            rank
+            score
+          }
+          metadataUrl
+          traits {
+            name
+            value
+          }
+        }
+      }
+    }
+  }
+`
 
 export function useNftAssetDetails(
   address: string,
   tokenId: string
 ): { data: [GenieAsset, CollectionInfoForAsset]; loading: boolean } {
-  const { data: queryData, loading } = useNftDetailsQuery({
+  const { data: queryData, loading } = useDetailsQuery({
     variables: {
       address,
       tokenId,

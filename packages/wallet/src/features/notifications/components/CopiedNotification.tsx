@@ -14,9 +14,6 @@ export function CopiedNotification({
     case CopyNotificationType.Address:
       title = t('notification.copied.address')
       break
-    case CopyNotificationType.Calldata:
-      title = t('notification.copied.calldata')
-      break
     case CopyNotificationType.ContractAddress:
       title = t('notification.copied.contractAddress')
       break
@@ -25,12 +22,6 @@ export function CopiedNotification({
       break
     case CopyNotificationType.Image:
       title = t('notification.copied.image')
-      break
-    case CopyNotificationType.TokenUrl:
-      title = t('notification.copied.tokenUrl')
-      break
-    case CopyNotificationType.NftUrl:
-      title = t('notification.copied.nftUrl')
       break
   }
 

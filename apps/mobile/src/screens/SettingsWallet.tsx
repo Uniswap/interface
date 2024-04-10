@@ -11,20 +11,20 @@ import {
   SettingsStackNavigationProp,
   SettingsStackParamList,
 } from 'src/app/navigation/types'
+import { BackHeader } from 'src/components/layout/BackHeader'
+import { Screen } from 'src/components/layout/Screen'
 import {
   SettingsRow,
   SettingsSection,
   SettingsSectionItem,
   SettingsSectionItemComponent,
 } from 'src/components/Settings/SettingsRow'
-import { BackHeader } from 'src/components/layout/BackHeader'
-import { Screen } from 'src/components/layout/Screen'
 import { openModal } from 'src/features/modals/modalSlice'
-import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
+import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
@@ -34,12 +34,12 @@ import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { Switch } from 'wallet/src/components/buttons/Switch'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
 import {
   EditAccountAction,
@@ -74,7 +74,7 @@ export function SettingsWallet({
   const [notificationSwitchEnabled, setNotificationSwitchEnabled] = useState<boolean>(
     notificationsEnabledOnFirebase
   )
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
 
   const showEditProfile = unitagsFeatureFlagEnabled && !readonly
 

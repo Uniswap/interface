@@ -1,12 +1,10 @@
 import axios from 'axios'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
+import { REQUEST_SOURCE } from 'uniswap/src/data/constants'
 import { useRestQuery } from 'uniswap/src/data/rest'
 import { addQueryParamsToEndpoint, unitagsApolloClient } from 'uniswap/src/features/unitags/api'
 import {
   ProfileMetadata,
-  UnitagAddressResponse,
-  UnitagAddressesResponse,
   UnitagChangeUsernameRequestBody,
   UnitagClaimEligibilityParams,
   UnitagClaimEligibilityResponse,
@@ -16,26 +14,20 @@ import {
   UnitagResponse,
   UnitagUpdateMetadataRequestBody,
   UnitagUpdateMetadataResponse,
-  UnitagWaitlistPositionResponse,
 } from 'uniswap/src/features/unitags/types'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { createSignedRequestBody, createSignedRequestParams } from 'wallet/src/data/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 
-const BASE_HEADERS = {
-  'x-request-source': REQUEST_SOURCE,
-  'x-app-version': getVersionHeader(),
-  Origin: uniswapUrls.apiBaseUrl,
-}
-
 const generateAxiosHeaders = async (
   signature: string,
   firebaseAppCheckToken?: string
 ): Promise<Record<string, string>> => {
   return {
-    ...BASE_HEADERS,
     'x-uni-sig': signature,
+    'x-request-source': REQUEST_SOURCE,
+    Origin: uniswapUrls.apiBaseUrl,
     ...(firebaseAppCheckToken && { 'x-firebase-app-check': firebaseAppCheckToken }),
   }
 }
@@ -187,66 +179,4 @@ export async function changeUnitag({
   return await axios.post<UnitagResponse>(changeUnitagUrl, requestBody, {
     headers,
   })
-}
-
-export async function fetchUnitagByAddresses(addresses: Address[]): Promise<{
-  data?: {
-    [address: Address]: UnitagAddressResponse
-  }
-  error?: unknown
-}> {
-  const unitagAddressesUrl = `${uniswapUrls.unitagsApiUrl}/addresses?addresses=${encodeURIComponent(
-    addresses.join(',')
-  )}`
-
-  try {
-    const response = await axios.get<UnitagAddressesResponse>(unitagAddressesUrl, {
-      headers: BASE_HEADERS,
-    })
-    return {
-      data: response.data.usernames,
-    }
-  } catch (error) {
-    return { error }
-  }
-}
-
-export async function fetchExtensionWaitlistEligibity(username: string): Promise<{
-  data?: UnitagWaitlistPositionResponse
-  error?: unknown
-}> {
-  const unitagWaitlistPositionUrl = `${
-    uniswapUrls.unitagsApiUrl
-  }/waitlist/position?username=${encodeURIComponent(username)}`
-
-  try {
-    const response = await axios.get<UnitagWaitlistPositionResponse>(unitagWaitlistPositionUrl, {
-      headers: BASE_HEADERS,
-    })
-    return {
-      data: response.data,
-    }
-  } catch (error) {
-    return { error }
-  }
-}
-
-export async function fetchExtensionEligibityByAddresses(addresses: Address[]): Promise<{
-  data?: UnitagWaitlistPositionResponse
-  error?: unknown
-}> {
-  const unitagWaitlistPositionUrl = `${
-    uniswapUrls.unitagsApiUrl
-  }/waitlist/position?addresses=${encodeURIComponent(addresses.join(','))}`
-
-  try {
-    const response = await axios.get<UnitagWaitlistPositionResponse>(unitagWaitlistPositionUrl, {
-      headers: BASE_HEADERS,
-    })
-    return {
-      data: response.data,
-    }
-  } catch (error) {
-    return { error }
-  }
 }

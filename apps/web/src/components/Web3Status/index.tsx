@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent, sendAnalyticsEvent } from 'analytics'
@@ -6,13 +7,13 @@ import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activ
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Loader, { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import { IconWrapper } from 'components/Identicon/StatusIcon'
+import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { getConnection } from 'connection'
 import { useConnectionReady } from 'connection/eagerlyConnect'
 import { getRecentConnectionMeta } from 'connection/meta'
 import useENSName from 'hooks/useENSName'
 import useLast from 'hooks/useLast'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
-import { Trans } from 'i18n'
 import { Portal } from 'nft/components/common/Portal'
 import { darken } from 'polished'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
@@ -22,8 +23,7 @@ import styled from 'styled-components'
 import { flexRowNoWrap } from 'theme/styles'
 import { shortenAddress } from 'utilities/src/addresses'
 
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
-import { Unitag } from 'ui/src/components/icons/Unitag'
+import { Icons } from 'ui/src'
 import { useUnitagByAddressWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import { ButtonSecondary } from '../Button'
 import StatusIcon from '../Identicon/StatusIcon'
@@ -214,14 +214,14 @@ function Web3StatusInner() {
           {hasPendingActivity ? (
             <RowBetween>
               <Text>
-                <Trans>{{ pendingActivityCount }} Pending</Trans>
+                <Trans>{pendingActivityCount} Pending</Trans>
               </Text>{' '}
               <Loader stroke="white" />
             </RowBetween>
           ) : (
             <AddressAndChevronContainer>
               <Text>{unitag?.username ?? ENSName ?? shortenAddress(account)}</Text>
-              {unitag?.username && <Unitag size={18} />}
+              {unitag?.username && <Icons.Unitag size={18} />}
             </AddressAndChevronContainer>
           )}
         </Web3StatusConnected>
@@ -249,8 +249,9 @@ function Web3StatusInner() {
 }
 
 export default function Web3Status() {
+  const [isDrawerOpen] = useAccountDrawer()
   return (
-    <PrefetchBalancesWrapper>
+    <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={isDrawerOpen}>
       <Web3StatusInner />
       <Portal>
         <PortfolioDrawer />

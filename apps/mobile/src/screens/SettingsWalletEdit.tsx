@@ -14,11 +14,11 @@ import { Screen } from 'src/components/layout/Screen'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { Button, Flex, Icons, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { isIOS } from 'uniswap/src/utils/platform'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import {
   EditAccountAction,
@@ -42,7 +42,7 @@ export function SettingsWalletEdit({
   const displayName = useDisplayName(address)
   const [nickname, setNickname] = useState(displayName?.name)
   const [showEditButton, setShowEditButton] = useState(true)
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FEATURE_FLAGS.Unitags)
   const { canClaimUnitag } = useCanAddressClaimUnitag(address)
   const showUnitagBanner =
     unitagsFeatureFlagEnabled &&

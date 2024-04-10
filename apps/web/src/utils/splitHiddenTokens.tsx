@@ -1,7 +1,4 @@
-import {
-  PortfolioTokenBalancePartsFragment,
-  TokenStandard,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { PortfolioTokenBalancePartsFragment, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 
 const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
 
@@ -11,17 +8,13 @@ export interface SplitOptions {
 }
 
 export function splitHiddenTokens(
-  tokenBalances: readonly (PortfolioTokenBalancePartsFragment | undefined)[],
+  tokenBalances: readonly PortfolioTokenBalancePartsFragment[],
   { hideSmallBalances = true, hideSpam = true }: SplitOptions = {}
 ) {
   const visibleTokens: PortfolioTokenBalancePartsFragment[] = []
   const hiddenTokens: PortfolioTokenBalancePartsFragment[] = []
 
   for (const tokenBalance of tokenBalances) {
-    if (!tokenBalance) {
-      continue
-    }
-
     const isSpam = tokenBalance.tokenProjectMarket?.tokenProject?.isSpam
     if ((hideSpam && isSpam) || (hideSmallBalances && isNegligibleBalance(tokenBalance))) {
       hiddenTokens.push(tokenBalance)

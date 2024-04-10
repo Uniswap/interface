@@ -1,4 +1,5 @@
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { FeatureFlag } from 'featureFlags'
+
 import { getTestSelector } from '../utils'
 
 describe('Wallet Dropdown', () => {
@@ -31,11 +32,11 @@ describe('Wallet Dropdown', () => {
       }
 
       cy.get(getTestSelector('wallet-language-item')).contains('Afrikaans').click({ force: true })
-      cy.location('search').should('include', 'lng=af-ZA')
+      cy.location('search').should('match', /\?lng=af-ZA$/)
       cy.contains('Uniswap available in: English')
 
       cy.get(getTestSelector('wallet-language-item')).contains('English').click({ force: true })
-      cy.location('search').should('include', 'lng=en-US')
+      cy.location('search').should('match', /\?lng=en-US$/)
       cy.contains('Uniswap available in: English').should('not.exist')
     })
   }
@@ -80,7 +81,7 @@ describe('Wallet Dropdown', () => {
 
   describe('should change locale with feature flag', () => {
     beforeEach(() => {
-      cy.visit('/', { featureFlags: [{ flag: FeatureFlags.CurrencyConversion, value: true }] })
+      cy.visit('/', { featureFlags: [{ name: FeatureFlag.currencyConversion, value: true }] })
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
     })
@@ -118,8 +119,7 @@ describe('Wallet Dropdown', () => {
     itChangesLocale()
   })
 
-  // TODO(WEB-3905): Fix tamagui error causing these tests to fail.
-  describe.skip('with color theme', () => {
+  describe('with color theme', () => {
     function visitSwapWithColorTheme({ dark }: { dark: boolean }) {
       cy.visit('/swap', {
         onBeforeLoad(win) {
@@ -168,37 +168,37 @@ describe('Wallet Dropdown', () => {
 
     it('should use a bottom sheet and dismiss when on a mobile screen size', () => {
       cy.get(getTestSelector('web3-status-connected')).click()
-      cy.root().click(15, 20)
+      cy.root().click(15, 40)
       cy.get(getTestSelector('wallet-settings')).should('not.be.visible')
     })
   })
 
   describe('local currency', () => {
     it('loads local currency from the query param', () => {
-      cy.visit('/', { featureFlags: [{ flag: FeatureFlags.CurrencyConversion, value: true }] })
+      cy.visit('/', { featureFlags: [{ name: FeatureFlag.currencyConversion, value: true }] })
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
       cy.contains('USD')
 
-      cy.visit('/?cur=AUD', { featureFlags: [{ flag: FeatureFlags.CurrencyConversion, value: true }] })
+      cy.visit('/?cur=AUD', { featureFlags: [{ name: FeatureFlag.currencyConversion, value: true }] })
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
       cy.contains('AUD')
     })
 
     it('loads local currency from menu', () => {
-      cy.visit('/', { featureFlags: [{ flag: FeatureFlags.CurrencyConversion, value: true }] })
+      cy.visit('/', { featureFlags: [{ name: FeatureFlag.currencyConversion, value: true }] })
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
       cy.contains('USD')
 
       cy.get(getTestSelector('local-currency-settings-button')).click()
       cy.get(getTestSelector('wallet-local-currency-item')).contains('AUD').click({ force: true })
-      cy.location('search').should('include', 'cur=AUD')
+      cy.location('search').should('match', /\?cur=AUD$/)
       cy.contains('AUD')
 
       cy.get(getTestSelector('wallet-local-currency-item')).contains('USD').click({ force: true })
-      cy.location('search').should('include', 'cur=USD')
+      cy.location('search').should('match', /\?cur=USD$/)
       cy.contains('USD')
     })
   })

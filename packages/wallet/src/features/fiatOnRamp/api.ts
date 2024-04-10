@@ -11,7 +11,6 @@ import {
   FORGetCountryResponse,
   FORQuoteRequest,
   FORQuoteResponse,
-  FORServiceProvidersRequest,
   FORServiceProvidersResponse,
   FORSupportedCountriesResponse,
   FORSupportedFiatCurrenciesRequest,
@@ -44,7 +43,6 @@ import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { RootState } from 'wallet/src/state'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { transformPaymentMethods } from './utils'
 
 const COMMON_QUERY_PARAMS = serializeQueryParams({ apiKey: config.moonpayApiKey })
 const TRANSACTION_NOT_FOUND = 404
@@ -239,17 +237,8 @@ export const fiatOnRampAggregatorApi = createApi({
       }),
       keepUnusedDataFor: 0,
     }),
-    fiatOnRampAggregatorServiceProviders: builder.query<
-      FORServiceProvidersResponse,
-      FORServiceProvidersRequest
-    >({
-      query: (request) => `/service-providers?${new URLSearchParams(request).toString()}`,
-      transformResponse: (response: FORServiceProvidersResponse) => ({
-        serviceProviders: response.serviceProviders.map((sp) => ({
-          ...sp,
-          paymentMethods: transformPaymentMethods(sp.paymentMethods),
-        })),
-      }),
+    fiatOnRampAggregatorServiceProviders: builder.query<FORServiceProvidersResponse, void>({
+      query: () => '/service-providers',
     }),
     fiatOnRampAggregatorSupportedTokens: builder.query<
       FORSupportedTokensResponse,

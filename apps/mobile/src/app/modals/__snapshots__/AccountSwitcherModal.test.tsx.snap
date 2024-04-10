@@ -25,7 +25,6 @@ exports[`AccountSwitcher renders correctly 1`] = `
         {
           "alignItems": "center",
           "flexDirection": "column",
-          "flexShrink": 1,
           "gap": 8,
         }
       }
@@ -418,10 +417,10 @@ exports[`AccountSwitcher renders correctly 1`] = `
         style={
           {
             "alignItems": "center",
-            "backgroundColor": "#2222220D",
+            "backgroundColor": "#F9F9F9",
             "borderBottomColor": "transparent",
-            "borderBottomLeftRadius": 12,
-            "borderBottomRightRadius": 12,
+            "borderBottomLeftRadius": 8,
+            "borderBottomRightRadius": 8,
             "borderBottomWidth": 1,
             "borderLeftColor": "transparent",
             "borderLeftWidth": 1,
@@ -429,8 +428,8 @@ exports[`AccountSwitcher renders correctly 1`] = `
             "borderRightWidth": 1,
             "borderStyle": "solid",
             "borderTopColor": "transparent",
-            "borderTopLeftRadius": 12,
-            "borderTopRightRadius": 12,
+            "borderTopLeftRadius": 8,
+            "borderTopRightRadius": 8,
             "borderTopWidth": 1,
             "flexDirection": "row",
             "gap": 4,

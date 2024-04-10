@@ -8,7 +8,7 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
+import { NetworkFeeInfo } from 'wallet/src/features/transactions/swap/modals/NetworkFeeInfo'
 
 export function NetworkFee({
   chainId,
@@ -25,11 +25,11 @@ export function NetworkFee({
 
   return (
     <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
-      <NetworkFeeWarning>
+      <NetworkFeeInfo>
         <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body3">
           {t('transaction.networkCost.label')}
         </Text>
-      </NetworkFeeWarning>
+      </NetworkFeeInfo>
       <Flex row alignItems="center" gap="$spacing8">
         <NetworkLogo chainId={chainId} shape="square" size={iconSizes.icon16} />
         {gasFee.loading ? (

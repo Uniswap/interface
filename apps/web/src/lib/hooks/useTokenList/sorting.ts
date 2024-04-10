@@ -1,7 +1,8 @@
 import { ChainId, Token } from '@uniswap/sdk-core'
+import { TokenInfo } from '@uniswap/token-lists'
 import { nativeOnChain } from 'constants/tokens'
+import { PortfolioTokenBalancePartsFragment } from 'graphql/data/__generated__/types-and-hooks'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
-import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SplitOptions, splitHiddenTokens } from 'utils/splitHiddenTokens'
 
 /** Sorts currency amounts (descending). */
@@ -36,7 +37,7 @@ function tokenComparator(balances: TokenBalances, a: Token, b: Token) {
 
 /** Given the results of the PortfolioTokenBalances query, returns a filtered list of tokens sorted by USD value. */
 export function getSortedPortfolioTokens(
-  portfolioTokenBalances: readonly (PortfolioTokenBalancePartsFragment | undefined)[] | undefined,
+  portfolioTokenBalances: readonly PortfolioTokenBalancePartsFragment[] | undefined,
   balances: TokenBalances,
   chainId: ChainId | undefined,
   splitOptions?: SplitOptions
@@ -69,4 +70,32 @@ export function getSortedPortfolioTokens(
     })
     .filter((token) => !!token) as Token[]
   return validVisiblePortfolioTokens.sort(tokenComparator.bind(null, balances))
+}
+
+export function tokenQuerySortComparator<T extends Token | TokenInfo>(query: string): (a: T, b: T) => number {
+  const trimmedQuery = query.toLowerCase().trim()
+
+  return (a: T, b: T) => {
+    const aSymbol = a.symbol?.toLowerCase()
+    const bSymbol = b.symbol?.toLowerCase()
+
+    // Check for exact matches
+    if (aSymbol === trimmedQuery && bSymbol !== trimmedQuery) {
+      return -1 // a comes first
+    }
+    if (bSymbol === trimmedQuery && aSymbol !== trimmedQuery) {
+      return 1 // b comes first
+    }
+
+    // Check for substring matches
+    const aStartsWith = aSymbol?.startsWith(trimmedQuery) ? 1 : 0
+    const bStartsWith = bSymbol?.startsWith(trimmedQuery) ? 1 : 0
+
+    if (aStartsWith !== bStartsWith) {
+      return bStartsWith - aStartsWith // The one with substring match comes first
+    }
+
+    // If none of the above conditions are met, maintain original order
+    return 0
+  }
 }

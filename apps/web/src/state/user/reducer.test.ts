@@ -9,6 +9,7 @@ import reducer, {
   clearRecentConnectionMeta,
   initialState,
   setRecentConnectionDisconnected,
+  updateHideAppPromoBanner,
   updateHideClosedPositions,
   updateRecentConnectionMeta,
   updateUserDeadline,
@@ -96,6 +97,13 @@ describe('swap reducer', () => {
     it('updates the userHideClosedPositions', () => {
       store.dispatch(updateHideClosedPositions({ userHideClosedPositions: true }))
       expect(store.getState().userHideClosedPositions).toEqual(true)
+    })
+  })
+
+  describe('updateHideAppPromoBanner', () => {
+    it('updates the updateHideAppPromoBanner', () => {
+      store.dispatch(updateHideAppPromoBanner({ hideAppPromoBanner: true }))
+      expect(store.getState().hideAppPromoBanner).toEqual(true)
     })
   })
 

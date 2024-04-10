@@ -1,6 +1,7 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { _TypedDataEncoder } from '@ethersproject/hash'
-import { Signer, UnsignedTransaction, providers, utils } from 'ethers'
+import { Bytes, Signer, UnsignedTransaction, providers, utils } from 'ethers'
+import { hexlify } from 'ethers/lib/utils'
 import { ChainId } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
@@ -26,8 +27,13 @@ export class NativeSigner extends Signer {
     return Promise.resolve(this.address)
   }
 
-  signMessage(message: string): Promise<string> {
-    return Keyring.signMessageForAddress(this.address, message)
+  signMessage(message: string | Bytes): Promise<string> {
+    if (typeof message === 'string') {
+      return Keyring.signMessageForAddress(this.address, message)
+    }
+
+    // chainID isn't available here, but is not needed for signing hashes so just default to Mainnet
+    return Keyring.signHashForAddress(this.address, hexlify(message).slice(2), ChainId.Mainnet)
   }
 
   // reference: https://github.com/ethers-io/ethers.js/blob/ce8f1e4015c0f27bf178238770b1325136e3351a/packages/wallet/src.ts/index.ts#L135

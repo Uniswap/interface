@@ -1,7 +1,7 @@
+import { Trans } from '@lingui/macro'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import Column, { AutoColumn } from 'components/Column'
 import { useUSDPrice } from 'hooks/useUSDPrice'
-import { Trans } from 'i18n'
 import { InterfaceTrade } from 'state/routing/types'
 import { isPreviewTrade } from 'state/routing/utils'
 import styled from 'styled-components'
@@ -49,13 +49,9 @@ export function SwapPreview({
               <ThemedText.Caption>
                 <Trans>
                   Output is estimated. You will receive at least{' '}
-                  {{
-                    amount: (
-                      <b>
-                        {trade.minimumAmountOut(allowedSlippage).toSignificant(6)} {trade.outputAmount.currency.symbol}
-                      </b>
-                    ),
-                  }}{' '}
+                  <b>
+                    {trade.minimumAmountOut(allowedSlippage).toSignificant(6)} {trade.outputAmount.currency.symbol}
+                  </b>{' '}
                   or the transaction will revert.
                 </Trans>
               </ThemedText.Caption>
@@ -63,13 +59,9 @@ export function SwapPreview({
               <ThemedText.Caption>
                 <Trans>
                   Input is estimated. You will sell at most{' '}
-                  {{
-                    amount: (
-                      <b>
-                        {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {trade.inputAmount.currency.symbol}
-                      </b>
-                    ),
-                  }}{' '}
+                  <b>
+                    {trade.maximumAmountIn(allowedSlippage).toSignificant(6)} {trade.inputAmount.currency.symbol}
+                  </b>{' '}
                   or the transaction will revert.
                 </Trans>
               </ThemedText.Caption>

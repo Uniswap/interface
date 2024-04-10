@@ -1,7 +1,7 @@
+import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import AddressInputPanel from 'components/AddressInputPanel'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import { Trans } from 'i18n'
 import styled from 'styled-components'
 
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'

@@ -3,6 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppStackParamList, OnboardingStackParamList } from 'src/app/navigation/types'
+import AnimatedNumber from 'src/components/AnimatedNumber'
 import { Screen } from 'src/components/layout/Screen'
 import Trace from 'src/components/Trace/Trace'
 import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePicture'
@@ -18,7 +19,6 @@ import { Arrow } from 'wallet/src/components/icons/Arrow'
 import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
-import AnimatedNumber from 'wallet/src/features/portfolio/AnimatedNumber'
 import {
   PendingAccountActions,
   pendingAccountActions,

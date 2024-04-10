@@ -1,18 +1,9 @@
+import { impactAsync } from 'expo-haptics'
 import { PropsWithChildren, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { FlexAlignType } from 'react-native'
-import {
-  ColorTokens,
-  Flex,
-  HapticFeedback,
-  Icons,
-  SpaceTokens,
-  Text,
-  TextProps,
-  TouchableArea,
-} from 'ui/src'
+import { ColorTokens, Flex, Icons, SpaceTokens, Text, TextProps, TouchableArea } from 'ui/src'
 import { fonts } from 'ui/src/theme'
-import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
+import { AccountIcon, AccountIconProps } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
@@ -51,9 +42,7 @@ type AddressDisplayProps = {
     address: string
   }) => JSX.Element
   gapBetweenLines?: SpaceTokens
-  showViewOnlyLabel?: boolean
-  showViewOnlyBadge?: boolean
-}
+} & Pick<AccountIconProps, 'showViewOnlyBadge'>
 
 type CopyButtonWrapperProps = {
   onPress?: () => void
@@ -106,12 +95,10 @@ export function AddressDisplay({
   showIconBorder,
   horizontalGap = '$spacing12',
   showViewOnlyBadge = false,
-  showViewOnlyLabel = false,
   notificationsBadgeContainer,
   includeUnitagSuffix = false,
   gapBetweenLines = '$none',
 }: AddressDisplayProps): JSX.Element {
-  const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const displayName = useDisplayName(address, { includeUnitagSuffix, overrideDisplayName })
   const { avatar } = useAvatar(address)
@@ -123,7 +110,7 @@ export function AddressDisplay({
     if (!address) {
       return
     }
-    await HapticFeedback.impact()
+    await impactAsync()
     await setClipboard(address)
     dispatch(
       pushNotification({
@@ -154,7 +141,7 @@ export function AddressDisplay({
 
   const name = displayName?.name ?? ''
 
-  // since adjustsFontSizeToFit doesn't really work adjusting line height properly
+  // since adjustsFontSizeToFit doesnt really work adjusting line height properly
   // manually adjust lineHeight things to keep vertical center
   const dynamicSizedTextVerticalStyles: TextProps =
     name.length > 20
@@ -167,7 +154,7 @@ export function AddressDisplay({
         }
 
   return (
-    <Flex shrink alignItems={contentAlign} flexDirection={direction} gap={horizontalGap}>
+    <Flex alignItems={contentAlign} flexDirection={direction} gap={horizontalGap}>
       {showAccountIcon &&
         (notificationsBadgeContainer
           ? notificationsBadgeContainer({ children: icon, address })
@@ -210,16 +197,6 @@ export function AddressDisplay({
           />
         )}
       </Flex>
-
-      {showViewOnlyLabel && (
-        <Flex grow alignItems="flex-end" mr="$spacing8">
-          <Flex backgroundColor="$surface2" borderRadius="$rounded12" px="$spacing8" py="$spacing4">
-            <Text color="$neutral2" variant="body4">
-              {t('settings.section.wallet.label.viewOnly')}
-            </Text>
-          </Flex>
-        </Flex>
-      )}
     </Flex>
   )
 }

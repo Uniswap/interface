@@ -8,17 +8,16 @@ import {
   checkDataQuality,
   withUTCTimestamp,
 } from 'components/Tokens/TokenDetails/ChartSection/util'
-import { PoolData } from 'graphql/data/pools/usePoolData'
-import { UTCTimestamp } from 'lightweight-charts'
-import { useMemo } from 'react'
+
 import {
   Chain,
   HistoryDuration,
-  TimestampedAmount,
-  TimestampedPoolPrice,
   usePoolPriceHistoryQuery,
   usePoolVolumeHistoryQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+} from 'graphql/data/__generated__/types-and-hooks'
+import { PoolData } from 'graphql/data/pools/usePoolData'
+import { UTCTimestamp } from 'lightweight-charts'
+import { useMemo } from 'react'
 
 type PDPChartQueryVars = { address: string; chain: Chain; duration: HistoryDuration; isV3: boolean }
 export function usePDPPriceChartData(
@@ -35,21 +34,19 @@ export function usePDPPriceChartData(
     const referenceToken = isReversed ? tokenA : tokenB
 
     const entries =
-      priceHistory
-        ?.filter((price): price is TimestampedPoolPrice => price !== null)
-        .map((price) => {
-          const value =
-            poolData?.token0.address === referenceToken?.address.toLowerCase() ? price?.token0Price : price?.token1Price
+      priceHistory?.map((price) => {
+        const value =
+          poolData?.token0.address === referenceToken?.address.toLowerCase() ? price.token0Price : price.token1Price
 
-          return {
-            time: price.timestamp as UTCTimestamp,
-            value,
-            open: value,
-            high: value,
-            low: value,
-            close: value,
-          }
-        }) ?? []
+        return {
+          time: price.timestamp as UTCTimestamp,
+          value,
+          open: value,
+          high: value,
+          low: value,
+          close: value,
+        }
+      }) ?? []
 
     // TODO(WEB-3769): Append current price based on active tick to entries
     /* const dataQuality = checkDataQuality(entries, ChartType.PRICE, variables.duration) */
@@ -66,8 +63,7 @@ export function usePDPVolumeChartData(
 
   return useMemo(() => {
     const { historicalVolume } = data?.v2Pair ?? data?.v3Pool ?? {}
-    const entries =
-      historicalVolume?.filter((amt): amt is TimestampedAmount => amt !== null).map(withUTCTimestamp) ?? []
+    const entries = historicalVolume?.map(withUTCTimestamp) ?? []
 
     const dataQuality = checkDataQuality(entries, ChartType.VOLUME, variables.duration)
 

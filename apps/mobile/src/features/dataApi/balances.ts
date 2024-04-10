@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
-import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { CurrencyId } from 'uniswap/src/types/currency'
 import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
+import { PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { CurrencyId } from 'wallet/src/utils/currencyId'
 
 /** Helper hook to retrieve balances for a set of currencies for the active account. */
 export function useBalances(currencies: CurrencyId[] | undefined): PortfolioBalance[] | null {

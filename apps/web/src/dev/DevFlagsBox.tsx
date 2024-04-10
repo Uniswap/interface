@@ -1,11 +1,18 @@
 import { ColumnCenter } from 'components/Column'
 import { RowBetween } from 'components/Row'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { useState } from 'react'
+import {
+  BaseVariant,
+  dynamicConfigSettings as dynamicConfigSettingsAtom,
+  FeatureFlag,
+  featureFlagSettings as featureFlagSettingsAtom,
+} from 'featureFlags'
+import { DynamicConfigName, useDynamicConfig } from 'featureFlags/dynamicConfig'
+import { useAtomValue } from 'jotai/utils'
+import { useMemo, useState } from 'react'
 import { Flag, Settings } from 'react-feather'
 import { useCloseModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { Statsig } from 'statsig-react'
+import { useGate } from 'statsig-react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
@@ -28,12 +35,37 @@ const Box = styled.div`
     bottom: 70px;
   }
 `
-const Override = (name: string, value: any) => {
-  return (
-    <ThemedText.LabelSmall key={name}>
-      {name}: {JSON.stringify(value)}
-    </ThemedText.LabelSmall>
-  )
+const Gate = (flagName: FeatureFlag, featureFlagSettings: Record<string, string>) => {
+  const gateResult = useGate(flagName)
+  if (gateResult) {
+    const { value: statsigValue }: { value: boolean } = gateResult
+    const flagSetting = featureFlagSettings[flagName]
+    const settingValue: boolean = flagSetting === BaseVariant.Enabled
+    if (flagSetting && statsigValue !== settingValue) {
+      return (
+        <ThemedText.LabelSmall key={flagName}>
+          {flagName}: {flagSetting}
+        </ThemedText.LabelSmall>
+      )
+    }
+  }
+  return null
+}
+
+const Config = (name: DynamicConfigName, savedSettings: Record<string, any>) => {
+  const statsigConfig = useDynamicConfig(name)
+  if (statsigConfig) {
+    const statsigValue = statsigConfig.getValue()
+    const setting = savedSettings[name]
+    if (setting && statsigValue !== setting) {
+      return (
+        <ThemedText.LabelSmall key={name}>
+          {name}: {JSON.stringify(setting[name])}
+        </ThemedText.LabelSmall>
+      )
+    }
+  }
+  return null
 }
 
 const SettingsContainer = styled(ColumnCenter)`
@@ -47,13 +79,13 @@ const SettingsContainer = styled(ColumnCenter)`
 `
 
 export default function DevFlagsBox() {
-  const statsigOverrides = Statsig.initializeCalled()
-    ? Statsig.getAllOverrides()
-    : { gates: {}, configs: {}, layers: {} }
-  const configOverrides = Object.entries(statsigOverrides.configs)
-  const gateOverrides = Object.entries(statsigOverrides.gates)
+  const featureFlagsAtom = useAtomValue(featureFlagSettingsAtom)
+  const featureFlags = useMemo(() => Object.values(FeatureFlag), [])
+  const dynamicConfigsAtom = useAtomValue(dynamicConfigSettingsAtom)
+  const dynamicConfigs = useMemo(() => Object.values(DynamicConfigName), [])
 
-  const overrides = [...gateOverrides, ...configOverrides].map(([name, value]) => Override(name, value))
+  const overrides = featureFlags.map((flagName) => Gate(flagName, featureFlagsAtom))
+  dynamicConfigs.forEach((configName) => overrides.push(Config(configName, dynamicConfigsAtom)))
 
   const hasOverrides = overrides.some((g) => g !== null)
 
@@ -75,19 +107,14 @@ export default function DevFlagsBox() {
             {isDevelopmentEnv() && 'Local Overrides'}
             {isStagingEnv() && 'Staging Overrides'}
           </ThemedText.SubHeader>
-          <MouseoverTooltip
-            size={TooltipSize.Small}
-            text="Protip: Set feature flags by adding '?featureFlagOverride={flag_name}' to the URL"
+          <SettingsContainer
+            onClick={(e) => {
+              e.stopPropagation()
+              toggleFeatureFlagsModal()
+            }}
           >
-            <SettingsContainer
-              onClick={(e) => {
-                e.stopPropagation()
-                toggleFeatureFlagsModal()
-              }}
-            >
-              <Settings width={15} height={15} />
-            </SettingsContainer>
-          </MouseoverTooltip>
+            <Settings width={15} height={15} />
+          </SettingsContainer>
         </RowBetween>
       ) : (
         <Flag />

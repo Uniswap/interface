@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useAppSelector } from 'src/app/hooks'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { AppModalState } from 'src/features/modals/ModalsState'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import {
@@ -13,7 +14,6 @@ import {
   WalletConnectRequest,
   WalletConnectSession,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { ModalName } from 'wallet/src/telemetry/constants'
 
 interface WalletConnect {

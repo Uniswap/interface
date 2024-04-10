@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
+import { Trans } from '@lingui/macro'
 import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { NonfungiblePositionManager } from '@uniswap/v3-sdk'
@@ -10,18 +11,18 @@ import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
+import { Break } from 'components/earn/styled'
 import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Slider from 'components/Slider'
 import Toggle from 'components/Toggle'
-import { Break } from 'components/earn/styled'
 import { isSupportedChain } from 'constants/chains'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'
+import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
-import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useMemo, useState } from 'react'
@@ -35,7 +36,6 @@ import { ThemedText } from 'theme/components'
 import { WrongChainError } from 'utils/errors'
 import { useFormatter } from 'utils/formatNumbers'
 
-import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { TransactionType } from '../../state/transactions/types'
@@ -100,7 +100,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
   // boilerplate for the slider
   const [percentForSlider, onPercentSelectForSlider] = useDebouncedChangeHandler(percent, onPercentSelect)
 
-  const getDeadline = useGetTransactionDeadline() // custom from users settings
+  const deadline = useTransactionDeadline() // custom from users settings
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_V3_LIQUIDITY_SLIPPAGE_TOLERANCE) // custom from users
 
   const [showConfirm, setShowConfirm] = useState(false)
@@ -114,6 +114,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       !positionManager ||
       !liquidityValue0 ||
       !liquidityValue1 ||
+      !deadline ||
       !account ||
       !chainId ||
       !positionSDK ||
@@ -122,9 +123,6 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     ) {
       return
     }
-
-    const deadline = await getDeadline()
-    if (!deadline) throw new Error('could not get deadline')
 
     // we fall back to expecting 0 fees in case the fetch fails, which is safe in the
     // vast majority of cases
@@ -186,12 +184,12 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
     positionManager,
     liquidityValue0,
     liquidityValue1,
+    deadline,
     account,
     chainId,
     positionSDK,
     liquidityPercentage,
     provider,
-    getDeadline,
     tokenId,
     allowedSlippage,
     feeValue0,
@@ -212,8 +210,8 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
 
   const pendingText = (
     <Trans>
-      Removing {{ amt: liquidityValue0?.toSignificant(6) }} {{ sym: liquidityValue0?.currency?.symbol }} and{' '}
-      {{ amt2: liquidityValue1?.toSignificant(6) }} {{ sym2: liquidityValue1?.currency?.symbol }}
+      Removing {liquidityValue0?.toSignificant(6)} {liquidityValue0?.currency?.symbol} and{' '}
+      {liquidityValue1?.toSignificant(6)} {liquidityValue1?.currency?.symbol}
     </Trans>
   )
 
@@ -222,7 +220,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
       <AutoColumn gap="sm" style={{ padding: '16px' }}>
         <RowBetween align="flex-end">
           <Text fontSize={16} fontWeight={535}>
-            <Trans>Pooled {{ sym: liquidityValue0?.currency?.symbol }}:</Trans>
+            <Trans>Pooled {liquidityValue0?.currency?.symbol}:</Trans>
           </Text>
           <RowFixed>
             <Text fontSize={16} fontWeight={535} marginLeft="6px">
@@ -233,7 +231,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
         </RowBetween>
         <RowBetween align="flex-end">
           <Text fontSize={16} fontWeight={535}>
-            <Trans>Pooled {{ sym: liquidityValue1?.currency?.symbol }}:</Trans>
+            <Trans>Pooled {liquidityValue1?.currency?.symbol}:</Trans>
           </Text>
           <RowFixed>
             <Text fontSize={16} fontWeight={535} marginLeft="6px">
@@ -249,7 +247,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
             </ThemedText.DeprecatedItalic>
             <RowBetween>
               <Text fontSize={16} fontWeight={535}>
-                <Trans>{{ sym: feeValue0?.currency?.symbol }} Fees Earned:</Trans>
+                <Trans>{feeValue0?.currency?.symbol} Fees Earned:</Trans>
               </Text>
               <RowFixed>
                 <Text fontSize={16} fontWeight={535} marginLeft="6px">
@@ -260,7 +258,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
             </RowBetween>
             <RowBetween>
               <Text fontSize={16} fontWeight={535}>
-                <Trans>{{ sym: feeValue1?.currency?.symbol }} Fees Earned:</Trans>
+                <Trans>{feeValue1?.currency?.symbol} Fees Earned:</Trans>
               </Text>
               <RowFixed>
                 <Text fontSize={16} fontWeight={535} marginLeft="6px">
@@ -330,7 +328,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                   </ThemedText.DeprecatedMain>
                   <RowBetween>
                     <ResponsiveHeaderText>
-                      <Trans>{{ percentForSlider }}%</Trans>
+                      <Trans>{percentForSlider}%</Trans>
                     </ResponsiveHeaderText>
                     <AutoRow gap="4px" justify="flex-end">
                       <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">
@@ -354,7 +352,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                 <AutoColumn gap="md">
                   <RowBetween>
                     <Text fontSize={16} fontWeight={535} id="remove-pooled-tokena-symbol">
-                      <Trans>Pooled {{ symbol: liquidityValue0?.currency?.symbol }}:</Trans>
+                      <Trans>Pooled {liquidityValue0?.currency?.symbol}:</Trans>
                     </Text>
                     <RowFixed>
                       <Text fontSize={16} fontWeight={535} marginLeft="6px">
@@ -365,7 +363,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                   </RowBetween>
                   <RowBetween>
                     <Text fontSize={16} fontWeight={535} id="remove-pooled-tokenb-symbol">
-                      <Trans>Pooled {{ symbol: liquidityValue1?.currency?.symbol }}:</Trans>
+                      <Trans>Pooled {liquidityValue1?.currency?.symbol}:</Trans>
                     </Text>
                     <RowFixed>
                       <Text fontSize={16} fontWeight={535} marginLeft="6px">
@@ -379,7 +377,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       <Break />
                       <RowBetween>
                         <Text fontSize={16} fontWeight={535}>
-                          <Trans>{{ symbol: feeValue0?.currency?.symbol }} Fees Earned:</Trans>
+                          <Trans>{feeValue0?.currency?.symbol} Fees Earned:</Trans>
                         </Text>
                         <RowFixed>
                           <Text fontSize={16} fontWeight={535} marginLeft="6px">
@@ -390,7 +388,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       </RowBetween>
                       <RowBetween>
                         <Text fontSize={16} fontWeight={535}>
-                          <Trans>{{ symbol: feeValue1?.currency?.symbol }} Fees Earned:</Trans>
+                          <Trans>{feeValue1?.currency?.symbol} Fees Earned:</Trans>
                         </Text>
                         <RowFixed>
                           <Text fontSize={16} fontWeight={535} marginLeft="6px">
@@ -407,7 +405,7 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
               {showCollectAsWeth && (
                 <RowBetween>
                   <ThemedText.DeprecatedMain>
-                    <Trans>Collect as {{ nativeWrappedSymbol }}</Trans>
+                    <Trans>Collect as {nativeWrappedSymbol}</Trans>
                   </ThemedText.DeprecatedMain>
                   <Toggle
                     id="receive-as-weth"

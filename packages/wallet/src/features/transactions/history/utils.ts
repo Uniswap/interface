@@ -1,5 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import dayjs from 'dayjs'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import {
   Amount,
   Chain,
@@ -7,11 +8,8 @@ import {
   FeedTransactionListQuery,
   TokenStandard,
   TransactionListQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { CurrencyId } from 'uniswap/src/types/currency'
-import { getNativeAddress } from 'wallet/src/constants/addresses'
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
-import { CurrencyIdToVisibility } from 'wallet/src/features/favorites/slice'
 import {
   FORMAT_DATE_MONTH,
   FORMAT_DATE_MONTH_YEAR,
@@ -23,9 +21,7 @@ import {
   TransactionDetails,
   TransactionListQueryResponse,
   TransactionStatus,
-  TransactionType,
 } from 'wallet/src/features/transactions/types'
-import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 export interface AllFormattedTransactions {
@@ -102,18 +98,15 @@ export function formatTransactionsByDate(
  */
 export function parseDataResponseToTransactionDetails(
   data: TransactionListQuery,
-  hideSpamTokens: boolean,
-  tokenVisibilityOverrides?: CurrencyIdToVisibility
+  hideSpamTokens?: boolean
 ): TransactionDetails[] | undefined {
   if (data.portfolios?.[0]?.assetActivities) {
     return data.portfolios[0].assetActivities.reduce((accum: TransactionDetails[], t) => {
       if (t?.details?.__typename === 'TransactionDetails') {
         const parsed = extractTransactionDetails(t as TransactionListQueryResponse)
         const isSpam = parsed?.typeInfo.isSpam
-        const currencyId = extractCurrencyIdFromTx(parsed)
-        const spamOverride = currencyId ? tokenVisibilityOverrides?.[currencyId]?.isVisible : false
 
-        if (parsed && !(hideSpamTokens && isSpam && !spamOverride)) {
+        if (parsed && !(hideSpamTokens && isSpam)) {
           accum.push(parsed)
         }
       }
@@ -225,23 +218,4 @@ export function parseUSDValueFromAssetChange(
   transactedValue: Maybe<Partial<Amount>>
 ): number | undefined {
   return transactedValue?.currency === Currency.Usd ? transactedValue.value ?? undefined : undefined
-}
-
-function extractCurrencyIdFromTx(transaction: TransactionDetails | null): CurrencyId | undefined {
-  if (!transaction) {
-    return undefined
-  }
-
-  if (
-    transaction.typeInfo.type === TransactionType.Approve ||
-    transaction.typeInfo.type === TransactionType.Send ||
-    transaction.typeInfo.type === TransactionType.Receive
-  ) {
-    return buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)
-  }
-
-  if (transaction.typeInfo.type === TransactionType.Swap) {
-    // We only care about output currency because that's the net new asset
-    return transaction.typeInfo.outputCurrencyId
-  }
 }

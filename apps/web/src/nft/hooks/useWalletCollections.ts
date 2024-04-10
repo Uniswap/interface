@@ -1,4 +1,4 @@
-import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 

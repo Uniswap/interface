@@ -3,20 +3,15 @@ import { RetryLink } from '@apollo/client/link/retry'
 import { RestLink } from 'apollo-link-rest'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { createNewInMemoryCache } from 'uniswap/src/data/cache'
-import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
+import { REQUEST_SOURCE } from 'uniswap/src/data/constants'
 import { useRestQuery } from 'uniswap/src/data/rest'
-import {
-  UnitagAddressResponse,
-  UnitagUsernameResponse,
-  UnitagWaitlistPositionResponse,
-} from 'uniswap/src/features/unitags/types'
+import { UnitagAddressResponse, UnitagUsernameResponse } from 'uniswap/src/features/unitags/types'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 const restLink = new RestLink({
   uri: `${uniswapUrls.unitagsApiUrl}`,
   headers: {
     'x-request-source': REQUEST_SOURCE,
-    'x-app-version': getVersionHeader(),
     Origin: uniswapUrls.apiBaseUrl,
   },
 })
@@ -37,7 +32,7 @@ export const unitagsApolloClient = new ApolloClient({
 
 export function addQueryParamsToEndpoint(
   endpoint: string,
-  params: Record<string, string[] | string | number | boolean | undefined>
+  params: Record<string, string | number | boolean | undefined>
 ): string {
   const url = new URL(endpoint, uniswapUrls.appBaseUrl) // dummy base URL, we only need the path with query params
   Object.entries(params).forEach(([key, value]) => {
@@ -74,24 +69,6 @@ export function useUnitagByAddressQuery(
     ['username', 'metadata'], // return all fields
     {
       skip: !address, // skip if address is not provided
-      ttlMs: ONE_MINUTE_MS * 2,
-    },
-    'GET',
-    unitagsApolloClient
-  )
-}
-
-export function useWaitlistPositionQuery(
-  accounts: Address[],
-  skip: boolean
-): ReturnType<typeof useRestQuery<UnitagWaitlistPositionResponse>> {
-  const addresses = accounts.join(',')
-  return useRestQuery<UnitagWaitlistPositionResponse, Record<string, unknown>>(
-    addQueryParamsToEndpoint('/waitlist/position', { addresses }),
-    { addresses }, // dummy body so that cache key is unique per query params
-    ['isAccepted', 'waitlistPosition'], // return all fields
-    {
-      skip,
       ttlMs: ONE_MINUTE_MS * 2,
     },
     'GET',

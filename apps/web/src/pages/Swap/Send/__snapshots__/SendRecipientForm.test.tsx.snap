@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SendCurrencyInputform should render correctly with no verified recipient 1`] = `
-.c2 {
+.c3 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c3 {
+.c4 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -24,7 +24,7 @@ exports[`SendCurrencyInputform should render correctly with no verified recipien
   justify-content: space-between;
 }
 
-.c5 {
+.c6 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -39,6 +39,14 @@ exports[`SendCurrencyInputform should render correctly with no verified recipien
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+}
+
+.c2 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c0 {
@@ -65,11 +73,11 @@ exports[`SendCurrencyInputform should render correctly with no verified recipien
   pointer-events: initial;
 }
 
-.c4 {
+.c5 {
   color: #7D7D7D;
 }
 
-.c6 {
+.c7 {
   background: none;
   width: 100%;
   color: #222222;
@@ -80,19 +88,19 @@ exports[`SendCurrencyInputform should render correctly with no verified recipien
   line-height: 24px;
 }
 
-.c6::-webkit-input-placeholder {
+.c7::-webkit-input-placeholder {
   color: #CECECE;
 }
 
-.c6::-moz-placeholder {
+.c7::-moz-placeholder {
   color: #CECECE;
 }
 
-.c6:-ms-input-placeholder {
+.c7:-ms-input-placeholder {
   color: #CECECE;
 }
 
-.c6::placeholder {
+.c7::placeholder {
   color: #CECECE;
 }
 
@@ -105,22 +113,22 @@ exports[`SendCurrencyInputform should render correctly with no verified recipien
     <div
       class="c0 c1"
     >
-      <span
-        class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
+      <div
+        class="c2 css-fy6j1c"
       >
         To
-      </span>
+      </div>
       <div
-        class="c2 c3 c4"
+        class="c3 c4 c5"
       >
         <div
-          class="c2 c5"
+          class="c3 c6"
         >
           <input
             autocapitalize="off"
             autocomplete="off"
             autocorrect="off"
-            class="c6"
+            class="c7"
             pattern="^(0x[a-fA-F0-9]{40})$"
             placeholder="Wallet address or ENS name"
             spellcheck="false"
@@ -664,13 +672,13 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
 `;
 
 exports[`SendCurrencyInputform should render placeholder values 1`] = `
-.c2 {
+.c3 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c3 {
+.c4 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -687,7 +695,7 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   justify-content: space-between;
 }
 
-.c5 {
+.c6 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -702,6 +710,14 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+}
+
+.c2 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
 }
 
 .c0 {
@@ -728,11 +744,11 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   pointer-events: initial;
 }
 
-.c4 {
+.c5 {
   color: #7D7D7D;
 }
 
-.c6 {
+.c7 {
   background: none;
   width: 100%;
   color: #222222;
@@ -743,19 +759,19 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   line-height: 24px;
 }
 
-.c6::-webkit-input-placeholder {
+.c7::-webkit-input-placeholder {
   color: #CECECE;
 }
 
-.c6::-moz-placeholder {
+.c7::-moz-placeholder {
   color: #CECECE;
 }
 
-.c6:-ms-input-placeholder {
+.c7:-ms-input-placeholder {
   color: #CECECE;
 }
 
-.c6::placeholder {
+.c7::placeholder {
   color: #CECECE;
 }
 
@@ -768,22 +784,22 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
     <div
       class="c0 c1"
     >
-      <span
-        class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
+      <div
+        class="c2 css-fy6j1c"
       >
         To
-      </span>
+      </div>
       <div
-        class="c2 c3 c4"
+        class="c3 c4 c5"
       >
         <div
-          class="c2 c5"
+          class="c3 c6"
         >
           <input
             autocapitalize="off"
             autocomplete="off"
             autocorrect="off"
-            class="c6"
+            class="c7"
             pattern="^(0x[a-fA-F0-9]{40})$"
             placeholder="Wallet address or ENS name"
             spellcheck="false"

@@ -1,6 +1,7 @@
 /* eslint-disable complexity */
 import { ApolloQueryResult } from '@apollo/client'
 import { isAddress } from 'ethers/lib/utils'
+import { impactAsync } from 'expo-haptics'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native'
@@ -19,28 +20,19 @@ import { CollectionPreviewCard } from 'src/features/nfts/item/CollectionPreviewC
 import { NFTTraitList } from 'src/features/nfts/item/traits'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
 import { Screens } from 'src/screens/Screens'
-import {
-  Flex,
-  HapticFeedback,
-  Text,
-  Theme,
-  TouchableArea,
-  getTokenValue,
-  passesContrast,
-  useSporeColors,
-} from 'ui/src'
+import { Flex, Text, Theme, TouchableArea, getTokenValue, useSporeColors } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
-import {
-  NftActivityType,
-  NftItemScreenQuery,
-  useNftItemScreenQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import {
+  NftActivityType,
+  NftItemScreenQuery,
+  useNftItemScreenQuery,
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -51,6 +43,7 @@ import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { setClipboardImage } from 'wallet/src/utils/clipboard'
 import {
   MIN_COLOR_CONTRAST_THRESHOLD,
+  passesContrast,
   useNearestThemeColorFromImageUri,
 } from 'wallet/src/utils/colors'
 
@@ -183,7 +176,7 @@ function NFTItemScreenContents({
 
   const onLongPressNFTImage = async (): Promise<void> => {
     await setClipboardImage(imageUrl)
-    await HapticFeedback.impact()
+    await impactAsync()
     dispatch(
       pushNotification({
         type: AppNotificationType.Copied,

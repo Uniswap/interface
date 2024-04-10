@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-import { Trans } from 'i18n'
+import { Trans } from '@lingui/macro'
 import { Box, H2 } from '../components/Generics'
 import { DocumentationCard } from '../components/cards/DocumentationCard'
 import { DownloadWalletCard } from '../components/cards/DownloadWalletCard'

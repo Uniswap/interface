@@ -2,8 +2,7 @@ import {
   Amount,
   HistoryDuration,
   TimestampedAmount,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ONE_DAY_MS, ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { amount, timestampedAmount } from 'wallet/src/test/fixtures/gql/amounts'
 import { faker } from 'wallet/src/test/shared'
 import { createArray, createFixture, randomEnumValue } from 'wallet/src/test/utils'
@@ -11,14 +10,16 @@ import { createArray, createFixture, randomEnumValue } from 'wallet/src/test/uti
 /**
  * Constants
  */
-export const weekMs = 7 * ONE_DAY_MS
-export const monthMs = 30 * ONE_DAY_MS
-export const yearMs = 365 * ONE_DAY_MS
+
+export const hourMs = 60 * 60 * 1000
+export const dayMs = 24 * hourMs
+export const weekMs = 7 * dayMs
+export const monthMs = 30 * dayMs
+export const yearMs = 365 * dayMs
 
 export const historyDurationsMs: Record<HistoryDuration, number> = {
-  [HistoryDuration.FiveMinute]: ONE_MINUTE_MS * 5,
-  [HistoryDuration.Hour]: ONE_HOUR_MS,
-  [HistoryDuration.Day]: ONE_DAY_MS,
+  [HistoryDuration.Hour]: hourMs,
+  [HistoryDuration.Day]: dayMs,
   [HistoryDuration.Week]: weekMs,
   [HistoryDuration.Month]: monthMs,
   [HistoryDuration.Year]: yearMs,
@@ -68,7 +69,7 @@ export const get24hPriceChange = (history: Maybe<TimestampedAmount>[]): Amount =
   const timeDiff = priceTimestamp - prevPriceTimestamp
   const priceDiff = price - prevPrice
 
-  const dayPriceDiff = timeDiff > 0 ? priceDiff * (ONE_DAY_MS / timeDiff) * 100 : 0
+  const dayPriceDiff = timeDiff > 0 ? priceDiff * (dayMs / timeDiff) * 100 : 0
 
   return amount({ value: prevPrice > 0 ? dayPriceDiff / prevPrice : 0 })
 }

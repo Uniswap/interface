@@ -16,37 +16,31 @@ import {
   formatTokenSearchResults,
   getSearchResultId,
 } from 'src/components/explore/search/utils'
-import { AnimatedFlex, Flex, Icons, Text } from 'ui/src'
-import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import i18n from 'uniswap/src/i18n/i18n'
+import { AnimatedFlex, Flex, Text } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
+import { SafetyLevel, useExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import {
   NFTCollectionSearchResult,
   SearchResultType,
   TokenSearchResult,
 } from 'wallet/src/features/search/SearchResult'
+import i18n from 'wallet/src/i18n/i18n'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 import { SEARCH_RESULT_HEADER_KEY } from './constants'
 import { SearchResultOrHeader } from './types'
 
-const ICON_SIZE = '$icon.24'
-const ICON_COLOR = '$neutral2'
-
 const WalletHeaderItem: SearchResultOrHeader = {
-  icon: <Icons.Person color={ICON_COLOR} size={ICON_SIZE} />,
   type: SEARCH_RESULT_HEADER_KEY,
   title: i18n.t('explore.search.section.wallets'),
 }
 const TokenHeaderItem: SearchResultOrHeader = {
-  icon: <Icons.Coin color={ICON_COLOR} size={ICON_SIZE} />,
   type: SEARCH_RESULT_HEADER_KEY,
   title: i18n.t('explore.search.section.tokens'),
 }
 const NFTHeaderItem: SearchResultOrHeader = {
-  icon: <Icons.Gallery color={ICON_COLOR} size={ICON_SIZE} />,
   type: SEARCH_RESULT_HEADER_KEY,
   title: i18n.t('explore.search.section.nft'),
 }
@@ -115,15 +109,17 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     isPrefixTokenMatch(res, searchQuery)
   )
 
+  const hasVerifiedTokenResults = Boolean(
+    tokenResults?.some(
+      (res) =>
+        res.safetyLevel === SafetyLevel.Verified || res.safetyLevel === SafetyLevel.MediumWarning
+    )
+  )
+
   const hasVerifiedNFTResults = Boolean(nftCollectionResults?.some((res) => res.isVerified))
 
-  const isUsernameSearch = useMemo(() => {
-    return searchQuery.includes('.')
-  }, [searchQuery])
-
-  const showWalletSectionFirst =
-    isUsernameSearch && (exactUnitagMatch || (exactENSMatch && !prefixTokenMatch))
-  const showNftCollectionsBeforeTokens = hasVerifiedNFTResults && !tokenResults?.length
+  const showWalletSectionFirst = exactUnitagMatch || (exactENSMatch && !prefixTokenMatch)
+  const showNftCollectionsBeforeTokens = hasVerifiedNFTResults && !hasVerifiedTokenResults
 
   const sortedSearchResults: SearchResultOrHeader[] = useMemo(() => {
     // Format results arrays with header, and handle empty results
@@ -134,17 +130,18 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     const walletsWithHeader =
       walletSearchResults.length > 0 ? [WalletHeaderItem, ...walletSearchResults] : []
 
-    let searchResultItems: SearchResultOrHeader[] = []
+    // Rank token and nft results
+    const searchResultItems: SearchResultOrHeader[] = showNftCollectionsBeforeTokens
+      ? [...nftsWithHeader, ...tokensWithHeader]
+      : [...tokensWithHeader, ...nftsWithHeader]
 
-    if (showWalletSectionFirst) {
-      // Wallets first, then tokens, then NFTs
-      searchResultItems = [...walletsWithHeader, ...tokensWithHeader, ...nftsWithHeader]
-    } else if (showNftCollectionsBeforeTokens) {
-      // NFTs, then wallets, then tokens
-      searchResultItems = [...nftsWithHeader, ...walletsWithHeader, ...tokensWithHeader]
-    } else {
-      // Tokens, then NFTs, then wallets
-      searchResultItems = [...tokensWithHeader, ...nftsWithHeader, ...walletsWithHeader]
+    // Add wallet results at beginning or end
+    if (walletsWithHeader.length > 0) {
+      if (showWalletSectionFirst) {
+        searchResultItems.unshift(...walletsWithHeader)
+      } else {
+        searchResultItems.push(...walletsWithHeader)
+      }
     }
 
     // Add etherscan items at end
@@ -182,7 +179,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   }
 
   return (
-    <Flex grow gap="$spacing8" pb="$spacing36">
+    <Flex grow gap="$spacing8">
       <FlatList
         ListEmptyComponent={
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing8" mx="$spacing8">
@@ -190,7 +187,6 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
               <Trans
                 components={{ highlight: <Text color="$neutral1" variant="body1" /> }}
                 i18nKey="explore.search.empty.full"
-                values={{ searchQuery }}
               />
             </Text>
           </AnimatedFlex>
@@ -222,6 +218,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 }
 
 // Render function for FlatList of SearchResult items
+
 export const renderSearchItem = ({
   item: searchResult,
   searchContext,
@@ -232,11 +229,7 @@ export const renderSearchItem = ({
   switch (searchResult.type) {
     case SEARCH_RESULT_HEADER_KEY:
       return (
-        <SectionHeaderText
-          icon={searchResult.icon}
-          mt={index === 0 ? '$none' : '$spacing8'}
-          title={searchResult.title}
-        />
+        <SectionHeaderText mt={index === 0 ? '$none' : '$spacing8'} title={searchResult.title} />
       )
     case SearchResultType.Token:
       return <SearchTokenItem searchContext={searchContext} token={searchResult} />

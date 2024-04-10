@@ -2,8 +2,8 @@
 
 
 # generated contract types
-/src/i18n/locales/translations
-/src/i18n/locales/source/en-US_old.json
+/src/locales/**/*.js
+/src/locales/**/*.po
 
 # generated files
 /src/**/__generated__

@@ -1,15 +1,15 @@
+import { Trans } from '@lingui/macro'
 import { ColumnCenter } from 'components/Column'
 import { useCurrency } from 'hooks/Tokens'
-import { Trans } from 'i18n'
 import { Swap } from 'pages/Swap'
 import { useEffect, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import styled, { css, keyframes } from 'styled-components'
+import { ThemedText } from 'theme/components'
 
 import { BREAKPOINTS } from 'theme'
-import { Text } from 'ui/src/components/text/Text'
 import { heightBreakpoints } from 'ui/src/theme'
-import { Box, H1 } from '../components/Generics'
+import { Box, H1, Subheading } from '../components/Generics'
 import { TokenCloud } from '../components/TokenCloud/index'
 import { Hover, RiseIn, RiseInText } from '../components/animations'
 
@@ -22,6 +22,9 @@ const LandingSwapContainer = styled(Box)`
   padding: 8px;
   border-radius: 24px;
   background: ${({ theme }) => theme.surface1};
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `
 const LandingSwap = styled(Swap)`
   position: relative;
@@ -125,7 +128,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
         transition={transition}
         style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
       >
-        <Box maxWidth="920px" direction="column" align="center">
+        <Box direction="column" align="center">
           <StyledH1>
             <RiseInText delay={0.0}>
               <Trans>Swap</Trans>
@@ -148,17 +151,9 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
         </RiseIn>
 
         <RiseIn delay={0.3}>
-          <Text
-            variant="body1"
-            textAlign="center"
-            maxWidth={430}
-            color="$neutral2"
-            $short={{
-              variant: 'body2',
-            }}
-          >
+          <Subheading>
             <Trans>The largest onchain marketplace. Buy and sell crypto on Ethereum and 7+ other chains.</Trans>
-          </Text>
+          </Subheading>
         </RiseIn>
       </Center>
       <LearnMoreContainer
@@ -180,9 +175,9 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
           >
             <Hover>
               <ColumnCenter>
-                <Text variant="body2">
+                <ThemedText.BodySecondary>
                   <Trans>Scroll to learn more</Trans>
-                </Text>
+                </ThemedText.BodySecondary>
                 <ChevronDown />
               </ColumnCenter>
             </Hover>

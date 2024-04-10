@@ -2,8 +2,7 @@ import { StackedLineData } from 'components/Charts/StackedLineChart'
 import { StackedHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType } from 'components/Charts/utils'
 import { ChartQueryResult, checkDataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
-import { UTCTimestamp } from 'lightweight-charts'
-import { useMemo } from 'react'
+import gql from 'graphql-tag'
 import {
   Chain,
   HistoryDuration,
@@ -12,7 +11,36 @@ import {
   TimestampedAmount,
   useDailyProtocolTvlQuery,
   useHistoricalProtocolVolumeQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+} from 'graphql/data/__generated__/types-and-hooks'
+import { UTCTimestamp } from 'lightweight-charts'
+import { useMemo } from 'react'
+
+gql`
+  query HistoricalProtocolVolume($chain: Chain!, $duration: HistoryDuration!) {
+    v3HistoricalProtocolVolume: historicalProtocolVolume(chain: $chain, version: V3, duration: $duration) {
+      id
+      timestamp
+      value
+    }
+    v2HistoricalProtocolVolume: historicalProtocolVolume(chain: $chain, version: V2, duration: $duration) {
+      id
+      timestamp
+      value
+    }
+  }
+  query DailyProtocolTVL($chain: Chain!) {
+    v3DailyProtocolTvl: dailyProtocolTvl(chain: $chain, version: V3) {
+      id
+      timestamp
+      value
+    }
+    v2DailyProtocolTvl: dailyProtocolTvl(chain: $chain, version: V2) {
+      id
+      timestamp
+      value
+    }
+  }
+`
 
 function mapDataByTimestamp(
   v2Data?: readonly TimestampedAmount[],

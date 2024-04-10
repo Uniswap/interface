@@ -1,7 +1,3 @@
-// Adds global types for functions/
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
-/// <reference path="../../../index.d.ts" />
-
 /* eslint-disable import/no-unused-modules */
 import { paths } from '../src/pages/paths'
 import { MetaTagInjector } from './components/metaTagInjector'
@@ -22,12 +18,12 @@ export const onRequest: PagesFunction = async ({ request, next }) => {
     description: 'Swap or provide liquidity on the Uniswap Protocol',
   }
   const res = next()
-  if (doesMatchPath(requestURL.pathname)) {
-    try {
-      return new HTMLRewriter().on('head', new MetaTagInjector(data, request)).transform(await res)
-    } catch (e) {
-      return res
-    }
+  try {
+    const content = new HTMLRewriter().on('head', new MetaTagInjector(data, request)).transform(await res).body
+    return new Response(content, {
+      status: doesMatchPath(requestURL.pathname) || requestURL.pathname.includes('.') ? 200 : 404,
+    })
+  } catch (e) {
+    return res
   }
-  return res
 }

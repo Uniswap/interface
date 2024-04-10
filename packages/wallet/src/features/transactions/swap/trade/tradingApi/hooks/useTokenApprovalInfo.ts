@@ -5,7 +5,7 @@ import { useRestQuery } from 'uniswap/src/data/rest'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { ChainId } from 'wallet/src/constants/chains'
-import { ApprovalRequest, ApprovalResponse } from 'wallet/src/data/tradingApi/__generated__/index'
+import { ApprovalRequest, ApprovalResponse } from 'wallet/src/data/tradingApi/__generated__/api'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 import {
   getTokenAddressForApiRequest,

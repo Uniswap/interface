@@ -19,8 +19,6 @@ interface FiatOnRampContextType {
   setSelectedQuote: (quote: FORQuote | undefined) => void
   countryCode: string
   setCountryCode: (countryCode: string) => void
-  countryState: string | undefined
-  setCountryState: (countryCode: string | undefined) => void
   baseCurrencyInfo?: FiatCurrencyInfo
   setBaseCurrencyInfo: (baseCurrency: FiatCurrencyInfo | undefined) => void
   quoteCurrency: FiatOnRampCurrency
@@ -35,13 +33,11 @@ const initialState: FiatOnRampContextType = {
   setQuotesSections: () => undefined,
   setSelectedQuote: () => undefined,
   setCountryCode: () => undefined,
-  setCountryState: () => undefined,
   setBaseCurrencyInfo: () => undefined,
   setQuoteCurrency: () => undefined,
   setAmount: () => undefined,
   setServiceProviders: () => undefined,
   countryCode: '',
-  countryState: undefined,
   quoteCurrency: { currencyInfo: undefined },
 }
 
@@ -55,7 +51,6 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   const [quotesSections, setQuotesSections] = useState<FiatOnRampContextType['quotesSections']>()
   const [selectedQuote, setSelectedQuote] = useState<FORQuote | undefined>()
   const [countryCode, setCountryCode] = useState<string>(getCountry())
-  const [countryState, setCountryState] = useState<string | undefined>()
   const [baseCurrencyInfo, setBaseCurrencyInfo] = useState<FiatCurrencyInfo>()
   const [amount, setAmount] = useState<number>()
   const [serviceProviders, setServiceProviders] = useState<FORServiceProvider[]>()
@@ -66,7 +61,6 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   )
   const [quoteCurrency, setQuoteCurrency] = useState<FiatOnRampCurrency>({
     currencyInfo: ethCurrencyInfo,
-    meldCurrencyCode: 'ETH',
   })
 
   return (
@@ -78,8 +72,6 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
         setQuotesSections,
         countryCode,
         setCountryCode,
-        countryState,
-        setCountryState,
         baseCurrencyInfo,
         setBaseCurrencyInfo,
         quoteCurrency,

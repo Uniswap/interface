@@ -1,4 +1,4 @@
-import { t } from 'i18n'
+import { t } from '@lingui/macro'
 import { Box } from 'nft/components/Box'
 import { ReactNode } from 'react'
 

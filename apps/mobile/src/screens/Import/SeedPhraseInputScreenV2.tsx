@@ -97,8 +97,7 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
             : t('account.recoveryPhrase.helpText.import'),
           [StringKey.InputPlaceholder]: t('account.recoveryPhrase.input'),
           [StringKey.PasteButton]: t('common.button.paste'),
-          // No good way to pass interpolated strings to native code, but an empty string is okay here
-          [StringKey.ErrorInvalidWord]: t('account.recoveryPhrase.error.invalidWord', { word: '' }),
+          [StringKey.ErrorInvalidWord]: t('account.recoveryPhrase.error.invalidWord'),
           [StringKey.ErrorPhraseLength]: t('account.recoveryPhrase.error.phraseLength'),
           [StringKey.ErrorWrongPhrase]: t('account.recoveryPhrase.error.wrong'),
           [StringKey.ErrorInvalidPhrase]: t('account.recoveryPhrase.error.invalid'),

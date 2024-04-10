@@ -1,7 +1,7 @@
 import { TokenLinkCell } from 'components/Table/styled'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 import { validBEPoolToken0 } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 jest.mock('hooks/Tokens')
 

@@ -1,8 +1,9 @@
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
+import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkWarning } from 'constants/tokenSafety'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
@@ -14,8 +15,6 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
-import { shortenAddress } from 'utilities/src/addresses'
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
 import { TokenFromList } from '../../../state/lists/tokenFromList'
 import Column, { AutoColumn } from '../../Column'
@@ -124,7 +123,7 @@ function TokenTags({ currency }: { currency: Currency }) {
 }
 
 const RowWrapper = styled(Row)`
-  height: 60px;
+  height: 56px;
 `
 
 export function CurrencyRow({
@@ -138,7 +137,6 @@ export function CurrencyRow({
   balance,
   disabled,
   tooltip,
-  showAddress,
 }: {
   currency: Currency
   onSelect: (hasWarning: boolean) => void
@@ -150,15 +148,15 @@ export function CurrencyRow({
   balance?: CurrencyAmount<Currency>
   disabled?: boolean
   tooltip?: string
-  showAddress?: boolean
 }) {
   const { account } = useWeb3React()
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
-  const warning = currency.isNative ? undefined : checkWarning(currency.address)
+  const warning = currency.isNative ? null : checkWarning(currency.address)
   const isBlockedToken = !!warning && !warning.canProceed
   const blockedTokenOpacity = '0.6'
-  const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
+  const { data } = useCachedPortfolioBalancesQuery({ account })
+  const portfolioBalanceUsd = data?.portfolios?.[0].tokensTotalDenominatedValue?.value
 
   const Wrapper = tooltip ? MouseoverTooltip : RowWrapper
 
@@ -191,21 +189,14 @@ export function CurrencyRow({
               style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}
             />
           </Column>
-          <AutoColumn style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} gap="xs">
+          <AutoColumn style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}>
             <Row>
               <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
               <WarningContainer>
                 <TokenSafetyIcon warning={warning} />
               </WarningContainer>
             </Row>
-            <Row gap="sm">
-              <ThemedText.Caption ml="0px" color="neutral2">
-                {currency.symbol}
-              </ThemedText.Caption>
-              {showAddress && currency.isToken && (
-                <ThemedText.Caption color="neutral3">{shortenAddress(currency.address)}</ThemedText.Caption>
-              )}
-            </Row>
+            <ThemedText.LabelMicro ml="0px">{currency.symbol}</ThemedText.LabelMicro>
           </AutoColumn>
           <Column>
             <RowFixed style={{ justifySelf: 'flex-end' }}>
@@ -230,14 +221,14 @@ interface TokenRowProps {
 }
 
 export const formatAnalyticsEventProperties = (
-  token: Currency,
+  token: Token,
   index: number,
   data: any[],
   searchQuery: string,
   isAddressSearch: string | false
 ) => ({
   token_symbol: token?.symbol,
-  token_address: token?.isToken ? token?.address : undefined,
+  token_address: token?.address,
   is_suggested_token: false,
   is_selected_from_list: true,
   scroll_position: '',
@@ -262,11 +253,8 @@ const LoadingRow = () => (
 export class CurrencyListRow {
   constructor(
     public readonly currency: Currency | undefined,
-    public readonly options?: {
-      disabled?: boolean
-      showAddress?: boolean
-      tooltip?: string
-    }
+    public readonly disabled: boolean,
+    public readonly tooltip?: string
   ) {}
 }
 
@@ -276,7 +264,7 @@ export class CurrencyListRow {
  */
 export class CurrencyListSectionTitle extends CurrencyListRow {
   constructor(public readonly label: string) {
-    super(undefined)
+    super(undefined, false)
   }
 }
 
@@ -349,9 +337,8 @@ export default function CurrencyList({
             showCurrencyAmount={showCurrencyAmount && balance.greaterThan(0)}
             eventProperties={formatAnalyticsEventProperties(token, index, data, searchQuery, isAddressSearch)}
             balance={balance}
-            disabled={row.options?.disabled}
-            tooltip={row.options?.tooltip}
-            showAddress={row.options?.showAddress}
+            disabled={row.disabled}
+            tooltip={row.tooltip}
           />
         )
       } else {

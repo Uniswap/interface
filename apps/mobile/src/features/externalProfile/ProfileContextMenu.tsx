@@ -1,11 +1,14 @@
+import { impactAsync } from 'expo-haptics'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, Share } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
 import { TripleDot } from 'src/components/icons/TripleDot'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, HapticFeedback, TouchableArea } from 'ui/src'
+import { Flex, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { logger } from 'utilities/src/logger/logger'
@@ -13,8 +16,6 @@ import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
-import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
-import { ShareableEntity, WalletEventName } from 'wallet/src/telemetry/constants'
 import { setClipboard } from 'wallet/src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'wallet/src/utils/linking'
 
@@ -33,7 +34,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
     if (!address) {
       return
     }
-    await HapticFeedback.impact()
+    await impactAsync()
     await setClipboard(address)
     dispatch(
       pushNotification({ type: AppNotificationType.Copied, copyType: CopyNotificationType.Address })
@@ -63,7 +64,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
       await Share.share({
         message: url,
       })
-      sendWalletAnalyticsEvent(WalletEventName.ShareButtonClicked, {
+      sendMobileAnalyticsEvent(MobileEventName.ShareButtonClicked, {
         entity: ShareableEntity.Wallet,
         url,
       })

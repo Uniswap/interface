@@ -173,7 +173,6 @@ export type MoonpayTransactionResponseItem = MoonpayQuote & {
 export type FORCountry = {
   countryCode: string
   displayName: string
-  state: string | undefined
 }
 
 // /get-country
@@ -194,7 +193,6 @@ export type FORQuoteRequest = {
   sourceAmount: number
   sourceCurrencyCode: string
   walletAddress: string
-  state?: string
 }
 
 export type FORQuote = {
@@ -225,11 +223,6 @@ export type FORServiceProvider = {
   name: string
   url: string
   logos: FORLogo
-  paymentMethods: string[]
-}
-
-export type FORServiceProvidersRequest = {
-  countryCode: string
 }
 
 export type FORServiceProvidersResponse = {

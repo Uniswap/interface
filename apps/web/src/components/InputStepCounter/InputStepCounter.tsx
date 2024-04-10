@@ -1,8 +1,8 @@
+import { Trans } from '@lingui/macro'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ButtonGray } from 'components/Button'
 import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { Trans } from 'i18n'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import styled, { keyframes } from 'styled-components'
@@ -156,7 +156,7 @@ const StepCounter = ({
           />
           <InputTitle fontSize={12} textAlign="left">
             <Trans>
-              {{ tokenB }} per {{ tokenA }}
+              {tokenB} per {tokenA}
             </Trans>
           </InputTitle>
         </InputColumn>

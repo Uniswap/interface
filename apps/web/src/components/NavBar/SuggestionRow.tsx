@@ -1,26 +1,27 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { sendAnalyticsEvent } from 'analytics'
+import clsx from 'clsx'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { checkSearchTokenWarning } from 'constants/tokenSafety'
 import { SearchToken } from 'graphql/data/SearchTokens'
+import { Chain, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL } from 'graphql/data/util'
+import { Box } from 'nft/components/Box'
+import { Column, Row } from 'nft/components/Flex'
 import { VerifiedIcon } from 'nft/components/icons'
+import { vars } from 'nft/css/sprinkles.css'
 import { GenieCollection } from 'nft/types'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import styled, { css } from 'styled-components'
-import { EllipsisStyle, ThemedText } from 'theme/components'
-import { Chain, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import styled from 'styled-components'
+import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-import Column from 'components/Column'
-import Row from 'components/Row'
-import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
-import { LoadingBubble } from 'components/Tokens/loading'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { Trans } from 'i18n'
+import { DeltaArrow, DeltaText } from '../Tokens/TokenDetails/Delta'
 import { useAddRecentlySearchedAsset } from './RecentlySearchedAssets'
+import * as styles from './SearchBar.css'
 
 const PriceChangeContainer = styled.div`
   display: flex;
@@ -28,55 +29,9 @@ const PriceChangeContainer = styled.div`
   padding-top: 4px;
   gap: 2px;
 `
-const SuggestionRowStyles = css<{ $isFocused: boolean }>`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  text-decoration: none;
-  padding: 8px 16px;
-  :hover {
-    background: ${({ theme }) => theme.surface2};
-  }
-  ${({ $isFocused, theme }) =>
-    $isFocused &&
-    `
-  background: ${theme.surface2};
-`}
-`
-const StyledLink = styled(Link)`
-  ${SuggestionRowStyles}
-`
-const SkeletonSuggestionRow = styled.div`
-  ${SuggestionRowStyles}
-`
-const PrimaryContainer = styled(Column)`
-  align-items: flex-start;
-  width: 90%;
-`
-const CollectionImageStyles = css`
-  width: 36px;
-  height: 36px;
-  border-radius: 9999px;
-  background: ${({ theme }) => theme.surface3};
-  flex-shrink: 0;
-`
-const CollectionImage = styled.img`
-  ${CollectionImageStyles}
-`
-const BrokenCollectionImage = styled.div`
-  ${CollectionImageStyles}
-`
-const PrimaryText = styled(ThemedText.SubHeader)`
-  ${EllipsisStyle}
-`
-const SecondaryContainer = styled(Column)`
-  text-align: right;
-  align-items: flex-end;
-`
 
-interface SuggestionRowProps {
-  suggestion: GenieCollection | SearchToken
+interface CollectionRowProps {
+  collection: GenieCollection
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
@@ -84,43 +39,33 @@ interface SuggestionRowProps {
   eventProperties: Record<string, unknown>
 }
 
-function suggestionIsToken(suggestion: GenieCollection | SearchToken): suggestion is SearchToken {
-  return (suggestion as SearchToken).decimals !== undefined
-}
-
-export const SuggestionRow = ({
-  suggestion,
+export const CollectionRow = ({
+  collection,
   isHovered,
   setHoveredIndex,
   toggleOpen,
   index,
   eventProperties,
-}: SuggestionRowProps) => {
-  const isToken = suggestionIsToken(suggestion)
+}: CollectionRowProps) => {
+  const { formatNumberOrString } = useFormatter()
+
+  const [brokenImage, setBrokenImage] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+
   const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
   const navigate = useNavigate()
-  const { formatFiatPrice, formatDelta, formatNumberOrString } = useFormatter()
-  const [brokenCollectionImage, setBrokenCollectionImage] = useState(false)
 
   const handleClick = useCallback(() => {
-    const address =
-      !suggestion.address && suggestion.standard === TokenStandard.Native ? NATIVE_CHAIN_ID : suggestion.address
-    const asset = isToken
-      ? address && { address, chain: suggestion.chain }
-      : { ...suggestion, isNft: true, chain: Chain.Ethereum }
-    asset && addRecentlySearchedAsset(asset)
-
+    addRecentlySearchedAsset({ ...collection, isNft: true, chain: Chain.Ethereum })
     toggleOpen()
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
-  }, [suggestion, isToken, addRecentlySearchedAsset, toggleOpen, eventProperties])
+  }, [addRecentlySearchedAsset, collection, toggleOpen, eventProperties])
 
-  const path = isToken ? getTokenDetailsURL({ ...suggestion }) : `/nfts/collection/${suggestion.address}`
-  // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
       if (event.key === 'Enter' && isHovered) {
         event.preventDefault()
-        navigate(path)
+        navigate(`/nfts/collection/${collection.address}`)
         handleClick()
       }
     }
@@ -128,107 +73,157 @@ export const SuggestionRow = ({
     return () => {
       document.removeEventListener('keydown', keyDownHandler)
     }
-  }, [toggleOpen, isHovered, suggestion, navigate, handleClick, path])
+  }, [toggleOpen, isHovered, collection, navigate, handleClick])
 
   return (
-    <StyledLink
-      to={path}
+    <Link
+      to={`/nfts/collection/${collection.address}`}
       onClick={handleClick}
-      $isFocused={isHovered}
       onMouseEnter={() => !isHovered && setHoveredIndex(index)}
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
-      data-testid={isToken ? `searchbar-token-row-${suggestion.chain}-${suggestion.address}` : ''}
+      className={styles.suggestionRow}
+      style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
     >
-      <Row width="60%" gap="sm">
-        {isToken ? (
-          <QueryTokenLogo
-            token={suggestion}
-            symbol={suggestion.symbol}
-            size="36px"
-            primaryImg={suggestion.project?.logoUrl}
+      <Row style={{ width: '60%' }}>
+        {!brokenImage && collection.imageUrl ? (
+          <Box
+            as="img"
+            src={collection.imageUrl}
+            alt={collection.name}
+            className={clsx(loaded ? styles.suggestionImage : styles.imageHolder)}
+            onError={() => setBrokenImage(true)}
+            onLoad={() => setLoaded(true)}
           />
-        ) : brokenCollectionImage ? (
-          <BrokenCollectionImage />
         ) : (
-          <CollectionImage
-            src={suggestion.imageUrl}
-            alt={suggestion.name}
-            onError={() => setBrokenCollectionImage(true)}
-          />
+          <Box className={styles.imageHolder} />
         )}
-        <PrimaryContainer>
-          <Row gap="xs">
-            <PrimaryText lineHeight="24px">{suggestion.name}</PrimaryText>
-            {isToken ? (
-              <TokenSafetyIcon warning={checkSearchTokenWarning(suggestion)} />
-            ) : (
-              suggestion.isVerified && <VerifiedIcon />
-            )}
+        <Column className={styles.suggestionPrimaryContainer}>
+          <Row gap="4" width="full">
+            <Box className={styles.primaryText}>{collection.name}</Box>
+            {collection.isVerified && <VerifiedIcon className={styles.suggestionIcon} />}
           </Row>
-          <ThemedText.SubHeaderSmall lineHeight="20px">
-            {isToken ? (
-              suggestion.symbol
-            ) : (
-              <>
-                {formatNumberOrString({ input: suggestion?.stats?.total_supply, type: NumberType.WholeNumber })}&nbsp;
-                <Trans>items</Trans>
-              </>
-            )}
-          </ThemedText.SubHeaderSmall>
-        </PrimaryContainer>
+          <Box className={styles.secondaryText}>
+            {formatNumberOrString({ input: collection?.stats?.total_supply, type: NumberType.WholeNumber })} items
+          </Box>
+        </Column>
       </Row>
-
-      <SecondaryContainer>
-        <Row gap="xs">
-          <PrimaryText width="100%">
-            {isToken
-              ? formatFiatPrice({ price: suggestion.market?.price?.value })
-              : `${formatNumberOrString({ input: suggestion.stats?.floor_price, type: NumberType.NFTToken })} ETH`}
-          </PrimaryText>
-        </Row>
-
-        <PriceChangeContainer>
-          {isToken ? (
-            <>
-              <DeltaArrow delta={suggestion.market?.pricePercentChange?.value} />
-              <ThemedText.BodySmall>
-                <DeltaText delta={suggestion.market?.pricePercentChange?.value}>
-                  {formatDelta(Math.abs(suggestion.market?.pricePercentChange?.value ?? 0))}
-                </DeltaText>
-              </ThemedText.BodySmall>
-            </>
-          ) : (
-            <ThemedText.BodySmall color="neutral2">
-              <Trans>Floor</Trans>
-            </ThemedText.BodySmall>
-          )}
-        </PriceChangeContainer>
-      </SecondaryContainer>
-    </StyledLink>
+      {collection.stats?.floor_price ? (
+        <Column className={styles.suggestionSecondaryContainer}>
+          <Row gap="4">
+            <Box className={styles.primaryText}>
+              {formatNumberOrString({ input: collection.stats?.floor_price, type: NumberType.NFTToken })} ETH
+            </Box>
+          </Row>
+          <Box className={styles.secondaryText}>Floor</Box>
+        </Column>
+      ) : null}
+    </Link>
   )
 }
 
-const SkeletonContent = styled(Column)`
-  width: 100%;
-`
+interface TokenRowProps {
+  token: SearchToken
+  isHovered: boolean
+  setHoveredIndex: (index: number | undefined) => void
+  toggleOpen: () => void
+  index: number
+  eventProperties: Record<string, unknown>
+}
+
+export const TokenRow = ({ token, isHovered, setHoveredIndex, toggleOpen, index, eventProperties }: TokenRowProps) => {
+  const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
+  const navigate = useNavigate()
+  const { formatFiatPrice, formatDelta } = useFormatter()
+
+  const handleClick = useCallback(() => {
+    const address = !token.address && token.standard === TokenStandard.Native ? NATIVE_CHAIN_ID : token.address
+    address && addRecentlySearchedAsset({ address, chain: token.chain })
+
+    toggleOpen()
+    sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
+  }, [addRecentlySearchedAsset, token, toggleOpen, eventProperties])
+
+  const tokenDetailsPath = getTokenDetailsURL({ ...token })
+  // Close the modal on escape
+  useEffect(() => {
+    const keyDownHandler = (event: KeyboardEvent) => {
+      if (event.key === 'Enter' && isHovered) {
+        event.preventDefault()
+        navigate(tokenDetailsPath)
+        handleClick()
+      }
+    }
+    document.addEventListener('keydown', keyDownHandler)
+    return () => {
+      document.removeEventListener('keydown', keyDownHandler)
+    }
+  }, [toggleOpen, isHovered, token, navigate, handleClick, tokenDetailsPath])
+
+  return (
+    <Link
+      data-testid={`searchbar-token-row-${token.chain}-${token.address ?? NATIVE_CHAIN_ID}`}
+      to={tokenDetailsPath}
+      onClick={handleClick}
+      onMouseEnter={() => !isHovered && setHoveredIndex(index)}
+      onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
+      className={styles.suggestionRow}
+      style={{ background: isHovered ? vars.color.lightGrayOverlay : 'none' }}
+    >
+      <Row style={{ width: '65%' }}>
+        <QueryTokenLogo
+          token={token}
+          symbol={token.symbol}
+          size="36px"
+          backupImg={token.project?.logoUrl}
+          style={{ marginRight: '8px' }}
+        />
+        <Column className={styles.suggestionPrimaryContainer}>
+          <Row gap="4" width="full">
+            <Box className={styles.primaryText}>{token.name}</Box>
+            <TokenSafetyIcon warning={checkSearchTokenWarning(token)} />
+          </Row>
+          <Box className={styles.secondaryText}>{token.symbol}</Box>
+        </Column>
+      </Row>
+
+      <Column className={styles.suggestionSecondaryContainer}>
+        {!!token.market?.price?.value && (
+          <>
+            <Row gap="4">
+              <Box className={styles.primaryText}>{formatFiatPrice({ price: token.market.price.value })}</Box>
+            </Row>
+            <PriceChangeContainer>
+              <DeltaArrow delta={token.market?.pricePercentChange?.value} />
+              <ThemedText.BodySmall>
+                <DeltaText delta={token.market?.pricePercentChange?.value}>
+                  {formatDelta(Math.abs(token.market?.pricePercentChange?.value ?? 0))}
+                </DeltaText>
+              </ThemedText.BodySmall>
+            </PriceChangeContainer>
+          </>
+        )}
+      </Column>
+    </Link>
+  )
+}
 
 export const SkeletonRow = () => {
   return (
-    <SkeletonSuggestionRow $isFocused={false}>
-      <Row>
-        <BrokenCollectionImage />
-        <SkeletonContent gap="sm">
-          <Row justify="space-between">
-            <LoadingBubble height="20px" width="180px" />
-            <LoadingBubble height="20px" width="48px" />
+    <Row className={styles.suggestionRow}>
+      <Row width="full">
+        <Box className={styles.imageHolder} />
+        <Column gap="4" width="full">
+          <Row justifyContent="space-between">
+            <Box borderRadius="round" height="20" background="surface2" style={{ width: '180px' }} />
+            <Box borderRadius="round" height="20" width="48" background="surface2" />
           </Row>
 
-          <Row justify="space-between">
-            <LoadingBubble height="16px" width="120px" />
-            <LoadingBubble height="16px" width="48px" />
+          <Row justifyContent="space-between">
+            <Box borderRadius="round" height="16" width="120" background="surface2" />
+            <Box borderRadius="round" height="16" width="48" background="surface2" />
           </Row>
-        </SkeletonContent>
+        </Column>
       </Row>
-    </SkeletonSuggestionRow>
+    </Row>
   )
 }

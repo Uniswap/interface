@@ -1,4 +1,4 @@
-import { Trans } from 'i18n'
+import { Trans } from '@lingui/macro'
 import { headlineMedium } from 'nft/css/common.css'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'

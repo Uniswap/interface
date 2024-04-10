@@ -36,9 +36,9 @@
     "cypress": "12.12.0",
     "@babel/preset-env": "7.23.3",
     "immer": "9.0.21",
-    "@uniswap/v2-sdk": "4.3.0",
+    "@uniswap/v2-sdk": "4.1.0",
     "@apollo/client": "3.9.6",
-    "@uniswap/sdk-core": "4.2.0",
+    "@uniswap/sdk-core": "4.1.2",
     "@react-navigation/routers": "6.1.9",
     "@react-navigation/core": "6.2.2",
     "@sideway/formula": "3.0.1",
@@ -49,6 +49,7 @@
     "multicodec": "3.0.1",
     "multihashes": "4.0.2",
     "@ethersproject/hash": "5.7.0",
+    "jpeg-js": "0.4.4",
     "json5": "2.2.2",
     "is-core-module": "2.13.0",
     "qs": "6.11.0",
@@ -63,7 +64,6 @@
     "@sentry/types": "7.45.0",
     "@sentry/tracing": "7.45.0",
     "xml2js": "0.5.0",
-    "moti": "0.27.2",
     "yaml": "2.2.2",
     "@shopify/flash-list@1.4.3": "patch:@shopify/flash-list@npm%3A1.4.3#./.yarn/patches/@shopify-flash-list-npm-1.4.3-dc03c28fdd.patch",
     "react-native@0.71.13": "patch:react-native@npm%3A0.71.13#./.yarn/patches/react-native-npm-0.71.13-e260a84bbf.patch",
@@ -79,7 +79,7 @@
     "@web3-react/metamask@8.2.4": "patch:@web3-react/metamask@npm%3A8.2.4#./.yarn/patches/@web3-react-metamask-npm-8.2.4-84b10de2d2.patch",
     "@web3-react/walletconnect-v2@8.5.1": "patch:@web3-react/walletconnect-v2@npm%3A8.5.1#./.yarn/patches/@web3-react-walletconnect-v2-npm-8.5.1-933cac0534.patch",
     "lightweight-charts@4.1.1": "patch:lightweight-charts@npm%3A4.1.1#./.yarn/patches/lightweight-charts-npm-4.1.1-01f161d9b6.patch",
-    "@tamagui/animations-moti@1.92.0": "patch:@tamagui/animations-moti@npm%3A1.92.0#./.yarn/patches/@tamagui-animations-moti-npm-1.92.0-a8dde990ec.patch"
+    "zone.js@0.14.4": "patch:zone.js@npm%3A0.14.4#./.yarn/patches/zone.js-npm-0.14.4-2d2e93cd7c.patch"
   },
   "scripts": {
     "g:build": "turbo run build --concurrency=100%",
@@ -116,9 +116,7 @@
     "upgrade:tamagui": "yarn up '*tamagui*' '@tamagui/*'",
     "upgrade:tamagui:canary": "yarn up '*tamagui*'@canary '@tamagui/*'@canary",
     "wallet": "yarn workspace wallet",
-    "web": "yarn workspace @uniswap/interface",
-    "uniswap": "yarn workspace uniswap",
-    "utilities": "yarn workspace utilities"
+    "web": "yarn workspace @uniswap/interface"
   },
   "workspaces": [
     "apps/*",

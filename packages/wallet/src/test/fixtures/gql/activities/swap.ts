@@ -1,8 +1,4 @@
-import {
-  SwapOrderDetails,
-  SwapOrderStatus,
-  SwapOrderType,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { SwapOrderDetails, SwapOrderStatus } from 'wallet/src/data/__generated__/types-and-hooks'
 import { daiToken, ethToken } from 'wallet/src/test/fixtures/gql/assets'
 import { faker } from 'wallet/src/test/shared'
 import { createFixture, randomEnumValue } from 'wallet/src/test/utils'
@@ -20,6 +16,4 @@ export const swapOrderDetails = createFixture<SwapOrderDetails>()(() => ({
   /** @deprecated use swapOrderStatus to disambiguate from transactionStatus */
   status: randomEnumValue(SwapOrderStatus),
   swapOrderStatus: randomEnumValue(SwapOrderStatus),
-  encodedOrder: faker.datatype.string(),
-  swapOrderType: SwapOrderType.Dutch,
 }))

@@ -1,7 +1,7 @@
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback, useMemo } from 'react'
@@ -192,11 +192,11 @@ export function useDerivedMintInfo(
   const { [Field.CURRENCY_A]: currencyAAmount, [Field.CURRENCY_B]: currencyBAmount } = parsedAmounts
 
   if (currencyAAmount && currencyBalances?.[Field.CURRENCY_A]?.lessThan(currencyAAmount)) {
-    error = <Trans>Insufficient {{ symbol: currencies[Field.CURRENCY_A]?.symbol }} balance</Trans>
+    error = <Trans>Insufficient {currencies[Field.CURRENCY_A]?.symbol} balance</Trans>
   }
 
   if (currencyBAmount && currencyBalances?.[Field.CURRENCY_B]?.lessThan(currencyBAmount)) {
-    error = <Trans>Insufficient {{ symbol: currencies[Field.CURRENCY_B]?.symbol }} balance</Trans>
+    error = <Trans>Insufficient {currencies[Field.CURRENCY_B]?.symbol} balance</Trans>
   }
 
   return {

@@ -2,15 +2,19 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { Flex, Icons, isWeb, Text, TouchableArea, useSporeColors } from 'ui/src'
+import EyeIcon from 'ui/src/assets/icons/eye.svg'
+import SettingsIcon from 'ui/src/assets/icons/settings.svg'
+import XIcon from 'ui/src/assets/icons/x.svg'
 import { iconSizes } from 'ui/src/theme'
+import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
-import { SwapSettingsModal } from 'wallet/src/features/transactions/swap/modals/settings/SwapSettingsModal'
-import { ViewOnlyModal } from 'wallet/src/features/transactions/swap/modals/ViewOnlyModal'
+import { SwapSettingsModal } from 'wallet/src/features/transactions/swap/modals/SwapSettingsModal'
+import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { ElementName } from 'wallet/src/telemetry/constants'
+import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 export function SwapFormHeader(): JSX.Element {
   const { t } = useTranslation()
@@ -52,26 +56,31 @@ export function SwapFormHeader(): JSX.Element {
         row
         alignItems="center"
         justifyContent="space-between"
-        mb={isWeb ? '$spacing16' : '$spacing12'}
+        mb={isWeb ? '$spacing24' : '$spacing12'}
         mt={isWeb ? '$spacing4' : '$spacing8'}
-        pl={isWeb ? '$none' : '$spacing12'}
-        pr={isWeb ? '$spacing4' : customSlippageTolerance ? '$spacing4' : '$spacing16'}
-        testID={ElementName.SwapFormHeader}>
+        pl={isWeb ? '$spacing4' : '$spacing12'}
+        pr={isWeb ? '$spacing4' : customSlippageTolerance ? '$spacing8' : '$spacing16'}>
         {isWeb && (
           <TouchableArea hapticFeedback testID={ElementName.SwapSettings} onPress={onClose}>
             <Flex
               centered
               row
-              backgroundColor={isWeb ? undefined : '$surface2'}
+              backgroundColor="$surface2"
               borderRadius="$roundedFull"
               px="$spacing4"
               py="$spacing4">
-              <Icons.X color={colors.neutral2.get()} size={iconSizes.icon24} />
+              <XIcon
+                color={colors.neutral2.get()}
+                height={iconSizes.icon24}
+                width={iconSizes.icon24}
+              />
             </Flex>
           </TouchableArea>
         )}
 
-        <Text variant="subheading1">{t('swap.form.header')}</Text>
+        <Text $sm={{ variant: 'subheading1' }} $xs={{ variant: 'subheading2' }}>
+          {t('swap.form.header')}
+        </Text>
 
         <Flex row gap="$spacing4">
           {isViewOnlyWallet && (
@@ -83,7 +92,11 @@ export function SwapFormHeader(): JSX.Element {
               py="$spacing4"
               onPress={onPressViewOnlyModal}>
               <Flex row alignItems="center" gap="$spacing4">
-                <Icons.Eye color={colors.neutral2.get()} size={iconSizes.icon16} />
+                <EyeIcon
+                  color={colors.neutral2.get()}
+                  height={iconSizes.icon16}
+                  width={iconSizes.icon16}
+                />
                 <Text color="$neutral2" variant="buttonLabel3">
                   {t('swap.header.viewOnly')}
                 </Text>
@@ -99,7 +112,7 @@ export function SwapFormHeader(): JSX.Element {
               <Flex
                 centered
                 row
-                backgroundColor={customSlippageTolerance ? '$surface2' : '$transparent'}
+                backgroundColor={customSlippageTolerance || isWeb ? '$surface2' : '$transparent'}
                 borderRadius="$roundedFull"
                 gap="$spacing4"
                 px={customSlippageTolerance ? '$spacing8' : '$spacing4'}
@@ -111,9 +124,10 @@ export function SwapFormHeader(): JSX.Element {
                     })}
                   </Text>
                 ) : null}
-                <Icons.Settings
+                <SettingsIcon
                   color={colors.neutral2.get()}
-                  size={isWeb ? iconSizes.icon20 : iconSizes.icon24}
+                  height={isWeb ? iconSizes.icon24 : iconSizes.icon28}
+                  width={isWeb ? iconSizes.icon24 : iconSizes.icon28}
                 />
               </Flex>
             </TouchableArea>
@@ -130,5 +144,21 @@ export function SwapFormHeader(): JSX.Element {
       )}
       {showViewOnlyModal && <ViewOnlyModal onDismiss={(): void => setShowViewOnlyModal(false)} />}
     </>
+  )
+}
+
+const ViewOnlyModal = ({ onDismiss }: { onDismiss: () => void }): JSX.Element => {
+  const { t } = useTranslation()
+  return (
+    <WarningModal
+      caption={t('swap.warning.viewOnly.message')}
+      confirmText={t('common.button.dismiss')}
+      icon={<Icons.Eye color="$neutral2" size={iconSizes.icon24} />}
+      modalName={ModalName.SwapWarning}
+      severity={WarningSeverity.Low}
+      title={t('account.wallet.viewOnly.title')}
+      onClose={onDismiss}
+      onConfirm={onDismiss}
+    />
   )
 }

@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
+import { t, Trans } from '@lingui/macro'
 import { ResizingTextArea, TextInput } from 'components/TextInput'
-import { Trans, t } from 'i18n'
 import { memo } from 'react'
 import { Text } from 'rebass'
 import styled from 'styled-components'

@@ -1,3 +1,4 @@
+import { Plural, t, Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import Column, { AutoColumn } from 'components/Column'
 import Identicon from 'components/Identicon'
@@ -8,7 +9,6 @@ import useENSName from 'hooks/useENSName'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
-import { Plural, t, Trans } from 'i18n'
 import { ChangeEvent, ForwardedRef, forwardRef, KeyboardEvent, useCallback, useRef, useState } from 'react'
 import { X } from 'react-feather'
 import { RecipientData } from 'state/send/hooks'
@@ -16,11 +16,7 @@ import { useSendContext } from 'state/send/SendContext'
 import styled, { css, keyframes } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
-import { Unitag } from 'ui/src/components/icons/Unitag'
-import { Text } from 'ui/src/components/text/Text'
-import { UniconV2 } from 'ui/src/components/UniconV2'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { Icons } from 'ui/src'
 import {
   useUnitagByAddressWithoutFlag,
   useUnitagByNameWithoutFlag,
@@ -129,8 +125,6 @@ const AutocompleteRow = ({
   const { ENSName } = useENSName(address)
   const cachedEnsName = ENSName || validatedEnsName
   const formattedAddress = shortenAddress(address)
-  const uniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
-
   const boundSelectRecipient = useCallback(
     () =>
       selectRecipient({
@@ -148,8 +142,6 @@ const AutocompleteRow = ({
           <UniTagProfilePicture account={address} size={36} />
         ) : cachedEnsName ? (
           <Identicon account={address} size={36} />
-        ) : uniconsV2Enabled ? (
-          <UniconV2 address={address} size={36} />
         ) : (
           <Unicon address={address} size={36} />
         )}
@@ -158,7 +150,7 @@ const AutocompleteRow = ({
             <ThemedText.BodyPrimary lineHeight="24px">
               {unitag?.username ?? cachedEnsName ?? formattedAddress}
             </ThemedText.BodyPrimary>
-            {unitag?.username && <Unitag size={18} />}
+            {unitag?.username && <Icons.Unitag size={18} />}
           </Row>
           {(unitag || cachedEnsName) && (
             <ThemedText.LabelSmall lineHeight="20px">{formattedAddress}</ThemedText.LabelSmall>
@@ -167,7 +159,7 @@ const AutocompleteRow = ({
       </Row>
       {account && (
         <StyledTransferText>
-          {numberOfTransfers} <Plural value={numberOfTransfers} one={t`transfer`} other={t`transfers`} />
+          {numberOfTransfers} <Plural value={numberOfTransfers} _1="transfer" other="transfers" />
         </StyledTransferText>
       )}
     </StyledAutocompleteRow>
@@ -226,7 +218,6 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
   const { sendState, setSendState, derivedSendInfo } = useSendContext()
   const { recipient } = sendState
   const { recipientData } = derivedSendInfo
-  const unicodeV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   const unitagMetadata = useUnitagByNameWithoutFlag(recipientData?.unitag, Boolean(recipientData?.unitag)).unitag
     ?.metadata
@@ -311,9 +302,9 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
     <RecipientWrapper $disabled={disabled}>
       {showInputField ? (
         <>
-          <Text variant="body3" userSelect="none" color="$neutral2">
+          <ThemedText.SubHeaderSmall lineHeight="24px">
             <Trans>To</Trans>
-          </Text>
+          </ThemedText.SubHeaderSmall>
           <StyledRecipientInputRow justify="space-between">
             <Row ref={inputWrapperNode}>
               <StyledRecipientInput
@@ -349,8 +340,6 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
               <UniTagProfilePicture account={recipientData.address} size={36} />
             ) : recipientData.ensName ? (
               <Identicon account={recipientData.address} size={36} />
-            ) : unicodeV2Enabled ? (
-              <UniconV2 address={recipientData.address} size={36} />
             ) : (
               <Unicon address={recipientData.address} size={36} />
             )}
@@ -359,7 +348,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
                 <ThemedText.BodyPrimary lineHeight="24px">
                   {recipientData.unitag ?? recipientData.ensName ?? shortenAddress(recipientData.address)}
                 </ThemedText.BodyPrimary>
-                {recipientData.unitag && <Unitag size={18} />}
+                {recipientData.unitag && <Icons.Unitag size={18} />}
               </Row>
               {Boolean(recipientData.ensName) && (
                 <ThemedText.LabelMicro lineHeight="16px">{shortenAddress(recipientData.address)}</ThemedText.LabelMicro>

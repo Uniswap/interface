@@ -10,7 +10,7 @@ import { ApplicationModal, ApplicationState, PopupList, PopupType } from './appl
 import { Field as BurnField } from './burn/actions'
 import { BurnState } from './burn/reducer'
 import { BurnV3State } from './burn/v3/reducer'
-import { ListsState } from './lists/types'
+import { ListsState } from './lists/reducer'
 import { LogsState } from './logs/slice'
 import { Log } from './logs/utils'
 import { Field } from './mint/actions'
@@ -31,7 +31,6 @@ import { Wallet } from './wallets/types'
 
 /**
  * WARNING:
- *
  * Any changes made to the types of the Redux store could potentially require a migration.
  *
  * If you're making a change that alters the structure or types of the Redux state,
@@ -43,7 +42,8 @@ import { Wallet } from './wallets/types'
  * the new types, or otherwise adjust the user's persisted state in some way
  * to prevent undesirable behavior.
  *
- * See state/README.md for more information on creating a migration.
+ * This migration function should be added to the `migrations` object
+ * in our Redux store configuration.
  *
  * If no migration is needed, just update the expected types here to fix the typecheck.
  */
@@ -87,6 +87,7 @@ interface ExpectedUserState {
     }
   }
   timestamp: number
+  hideAppPromoBanner: boolean
   showSurveyPopup?: boolean
   originCountry?: string
 }

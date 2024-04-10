@@ -1,14 +1,10 @@
 import { Percent } from '@uniswap/sdk-core'
+import { PermitInput, TokenTradeRoutesInput, TokenTradeType } from 'graphql/data/__generated__/types-and-hooks'
 import { Allowance } from 'hooks/usePermit2Allowance'
 import { buildAllTradeRouteInputs } from 'nft/utils/tokenRoutes'
 import { useEffect } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
-import {
-  PermitInput,
-  TokenTradeRoutesInput,
-  TokenTradeType,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { useTokenInput } from './useTokenInput'
 

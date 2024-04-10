@@ -3,8 +3,8 @@ import { getTestSelector } from '../../utils'
 describe('Mini Portfolio account drawer', () => {
   beforeEach(() => {
     const portfolioSpy = cy.spy().as('portfolioSpy')
-    cy.intercept(/[beta|interface].gateway.uniswap.org\/v1\/graphql/, (req) => {
-      if (req.body.operationName === 'PortfolioBalancesWeb') {
+    cy.intercept(/interface.gateway.uniswap.org\/v1\/graphql/, (req) => {
+      if (req.body.operationName === 'PortfolioBalances') {
         portfolioSpy(req)
       }
     })

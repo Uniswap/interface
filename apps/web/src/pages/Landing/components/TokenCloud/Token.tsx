@@ -1,13 +1,10 @@
 import { motion } from 'framer-motion'
+import { useCollectionPromoQuery, useTokenPromoQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { TokenStandard } from 'pages/Landing/assets/approvedTokens'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
-import {
-  useCollectionPromoQuery,
-  useTokenPromoQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { TokenPoint } from '.'

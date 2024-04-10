@@ -1,13 +1,13 @@
+import { Trans, t } from '@lingui/macro'
 import { ButtonGray } from 'components/Button'
 import { Pool } from 'components/Icons/Pool'
 import { FlyoutAlignment, Menu } from 'components/Menu'
-import { Trans, t } from 'i18n'
+import { ProtocolVersion } from 'graphql/data/__generated__/types-and-hooks'
 import { ChevronDown } from 'react-feather'
 import { useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 const PoolVersionItem = styled.div`
   align-items: center;

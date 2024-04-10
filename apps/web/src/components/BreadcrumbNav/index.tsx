@@ -1,21 +1,29 @@
+import { t, Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import Tooltip, { TooltipSize } from 'components/Tooltip'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useScreenSize } from 'hooks/useScreenSize'
-import { t, Trans } from 'i18n'
 import { useCallback, useState } from 'react'
 import { Copy } from 'react-feather'
 import { Link } from 'react-router-dom'
-import styled, { useTheme } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { ClickableStyle } from 'theme/components'
 import { shortenAddress } from 'utilities/src/addresses'
 
-export const BreadcrumbNavContainer = styled.nav`
+export const BreadcrumbNavContainer = styled.nav<{ isInfoTDPEnabled?: boolean; isInfoPDPEnabled?: boolean }>`
   display: flex;
   color: ${({ theme }) => theme.neutral2};
-  font-size: 16px;
-  line-height: 24px;
+  ${({ isInfoTDPEnabled, isInfoPDPEnabled }) =>
+    isInfoTDPEnabled || isInfoPDPEnabled
+      ? css`
+          font-size: 16px;
+          line-height: 24px;
+        `
+      : css`
+          font-size: 14px;
+          line-height: 20px;
+        `}
   align-items: center;
   gap: 4px;
   margin-bottom: 20px;

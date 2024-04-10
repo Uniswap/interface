@@ -2,13 +2,13 @@ import { maxBy } from 'lodash'
 import { Dispatch, SetStateAction, useCallback, useMemo, useRef, useState } from 'react'
 import { SharedValue } from 'react-native-reanimated'
 import { TLineChartData } from 'react-native-wagmi-charts'
+import { GqlResult } from 'uniswap/src/data/types'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   HistoryDuration,
   TimestampedAmount,
   useTokenPriceHistoryQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GqlResult } from 'uniswap/src/data/types'
-import { PollingInterval } from 'wallet/src/constants/misc'
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -100,13 +100,12 @@ export function useTokenPriceHistory(
     if (!maxPriceInHistory && price === undefined) {
       return lastNumberOfDigits.current
     }
-
     const maxPrice = Math.max(maxPriceInHistory || 0, price || 0)
     const convertedMaxValue = convertFiatAmount(maxPrice).amount
 
     const newNumberOfDigits = {
       left: String(convertedMaxValue).split('.')[0]?.length || 10,
-      right: Number(String(convertedMaxValue.toFixed(16)).split('.')[0]) > 0 ? 2 : 16,
+      right: Number(String(convertedMaxValue.toFixed(10)).split('.')[0]) > 0 ? 2 : 10,
     }
     lastNumberOfDigits.current = newNumberOfDigits
 

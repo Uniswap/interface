@@ -1,5 +1,5 @@
+import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
-import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 

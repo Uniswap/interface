@@ -1,13 +1,13 @@
+import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import Column from 'components/Column'
-import { DoubleTokenLogo } from 'components/Pools/PoolDetails/PoolDetailsHeader'
 import { ClosedCircle, DoubleArrow } from 'components/Pools/PoolDetails/icons'
+import { DoubleTokenLogo } from 'components/Pools/PoolDetails/PoolDetailsHeader'
 import Row from 'components/Row'
 import { BIPS_BASE } from 'constants/misc'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useSwitchChain } from 'hooks/useSwitchChain'
-import { Trans } from 'i18n'
 import { useCallback } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
@@ -42,7 +42,7 @@ const StatusWrapper = styled(Row)<{ status: PositionStatus }>`
   width: max-content;
   margin-right: 0;
   margin-left: auto;
-  color: ${({ theme, status }) =>
+  color ${({ theme, status }) =>
     status === PositionStatus.IN_RANGE
       ? theme.success
       : status === PositionStatus.OUT_OF_RANGE

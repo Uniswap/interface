@@ -2,15 +2,13 @@ import { useWeb3React } from '@web3-react/core'
 import { Unicon } from 'components/Unicon'
 import { Connection } from 'connection/types'
 import useENSAvatar from 'hooks/useENSAvatar'
-import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
 import styled from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap } from 'theme/styles'
-import { UniconV2 } from 'ui/src/components/UniconV2'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
-import { useUnitagByAddressWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import { getWalletMeta } from 'utils/walletMeta'
+
+import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
+import { useUnitagByAddressWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import sockImg from '../../assets/svg/socks.svg'
 import { useHasSocks } from '../../hooks/useSocksBalance'
 import Identicon from '../Identicon'
@@ -99,7 +97,6 @@ const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'l
 const MainWalletIcon = ({ account, connection, size }: { account: string; connection: Connection; size: number }) => {
   const { unitag } = useUnitagByAddressWithoutFlag(account, Boolean(account))
   const { avatar } = useENSAvatar(account ?? undefined)
-  const uniconV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   if (!account) return null
 
@@ -112,13 +109,7 @@ const MainWalletIcon = ({ account, connection, size }: { account: string; connec
   }
 
   const hasIdenticon = avatar || connection.getProviderInfo().name === 'MetaMask'
-  return hasIdenticon ? (
-    <Identicon account={account} size={size} />
-  ) : uniconV2Enabled ? (
-    <UniconV2 address={account} size={size} />
-  ) : (
-    <Unicon address={account} size={size} />
-  )
+  return hasIdenticon ? <Identicon account={account} size={size} /> : <Unicon address={account} size={size} />
 }
 
 export default function StatusIcon({

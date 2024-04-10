@@ -12,9 +12,9 @@ export const SectionHeaderText = ({
   ...rest
 }: SectionHeaderTextProps & TextProps): JSX.Element => {
   return (
-    <Flex row alignItems="center" gap="$spacing8" mb="$spacing4" mx="$spacing4" {...rest}>
+    <Flex row alignItems="center" gap="$spacing12" mb="$spacing4" mx="$spacing4">
       {icon && icon}
-      <Text color="$neutral2" variant="subheading2">
+      <Text color="$neutral2" variant="subheading2" {...rest}>
         {title}
       </Text>
     </Flex>

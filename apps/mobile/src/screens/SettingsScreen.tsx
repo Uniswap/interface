@@ -42,19 +42,19 @@ import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
 import FaceIdIcon from 'ui/src/assets/icons/faceid.svg'
 import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
+import LikeSquare from 'ui/src/assets/icons/like-square.svg'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import MessageQuestion from 'ui/src/assets/icons/message-question.svg'
 import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
-import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
-import { isAndroid } from 'uniswap/src/utils/platform'
+import { getCloudProviderName, isAndroid } from 'uniswap/src/utils/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
@@ -85,7 +85,7 @@ export function SettingsScreen(): JSX.Element {
   const { deviceSupportsBiometrics } = useBiometricContext()
   const { t } = useTranslation()
 
-  const currencyConversionEnabled = useFeatureFlag(FeatureFlags.CurrencyConversion)
+  const currencyConversionEnabled = useFeatureFlag(FEATURE_FLAGS.CurrencyConversion)
 
   // check if device supports biometric authentication, if not, hide option
   const { touchId: isTouchIdSupported, faceId: isFaceIdSupported } =
@@ -240,7 +240,7 @@ export function SettingsScreen(): JSX.Element {
               headerTitle: t('settings.action.feedback'),
             },
             text: t('settings.action.feedback'),
-            icon: <Icons.Feedback color="$neutral2" size="$icon.24" />,
+            icon: <LikeSquare {...svgProps} />,
           },
           {
             screen: Screens.WebView,
@@ -425,35 +425,32 @@ function WalletSettings(): JSX.Element {
       </Flex>
       {allAccounts
         .slice(0, showAll ? allAccounts.length : DEFAULT_ACCOUNTS_TO_DISPLAY)
-        .map((account) => {
-          const isViewOnlyWallet = account.type === AccountType.Readonly
-
-          return (
-            <TouchableArea
-              key={account.address}
-              pl="$spacing4"
-              py="$spacing12"
-              onPress={(): void => handleNavigation(account.address)}>
-              <Flex row alignItems="center" justifyContent="space-between">
+        .map((account) => (
+          <TouchableArea
+            key={account.address}
+            pl="$spacing4"
+            py="$spacing12"
+            onPress={(): void => handleNavigation(account.address)}>
+            <Flex row alignItems="center" justifyContent="space-between">
+              <Flex shrink>
                 <AddressDisplay
-                  showIconBackground
                   address={account.address}
                   captionVariant="subheading2"
-                  showViewOnlyBadge={isViewOnlyWallet}
-                  showViewOnlyLabel={isViewOnlyWallet}
+                  showIconBackground={true}
+                  showViewOnlyBadge={account.type === AccountType.Readonly}
                   size={iconSizes.icon40}
                   variant="body1"
                 />
-                <Icons.RotatableChevron
-                  color="$neutral3"
-                  direction="end"
-                  height={iconSizes.icon24}
-                  width={iconSizes.icon24}
-                />
               </Flex>
-            </TouchableArea>
-          )
-        })}
+              <Icons.RotatableChevron
+                color="$neutral3"
+                direction="end"
+                height={iconSizes.icon24}
+                width={iconSizes.icon24}
+              />
+            </Flex>
+          </TouchableArea>
+        ))}
       {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
         <Button theme="tertiary" onPress={toggleViewAll}>
           <Text color="$neutral1" variant="buttonLabel4">

@@ -1,6 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
+import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { createStore, Store } from 'redux'
-import { UniswapXOrderStatus } from 'types/uniswapx'
+
 import { TransactionType } from '../transactions/types'
 import reducer, { addSignature, initialState, removeSignature, SignatureState, updateSignature } from './reducer'
 import { SignatureDetails, SignatureType } from './types'

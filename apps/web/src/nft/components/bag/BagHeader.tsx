@@ -1,5 +1,5 @@
+import { Trans } from '@lingui/macro'
 import { OpacityHoverState } from 'components/Common'
-import { Trans } from 'i18n'
 import { BagCloseIcon } from 'nft/components/icons'
 import { useMemo } from 'react'
 import styled from 'styled-components'

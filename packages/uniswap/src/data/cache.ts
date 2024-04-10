@@ -63,21 +63,16 @@ export function setupWalletCache(): InMemoryCache {
            * see https://music.youtube.com/watch?v=twd4Pb4o_fU&feature=share
            */
 
-          // Cache redirects don't work in test environment, so we don't use them in tests
-          ...(process.env.NODE_ENV !== 'test'
-            ? {
-                // simply use chain / address pair as id instead for tokens
-                token: {
-                  read(_, { args, toReference }): Reference | undefined {
-                    return toReference({
-                      __typename: 'Token',
-                      chain: args?.chain,
-                      address: args?.address?.toLowerCase(),
-                    })
-                  },
-                },
-              }
-            : {}),
+          // simply use chain / address pair as id instead for tokens
+          token: {
+            read(_, { args, toReference }): Reference | undefined {
+              return toReference({
+                __typename: 'Token',
+                chain: args?.chain,
+                address: args?.address?.toLowerCase(),
+              })
+            },
+          },
 
           // Ignore `valueModifiers` when caching `portfolios`.
           // IMPORTANT: This assumes that `valueModifiers` are always the same when querying `portfolios` across the entire app.

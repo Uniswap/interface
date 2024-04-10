@@ -41,8 +41,8 @@ yarn-error.log*
 dist/out-tsc/*
 
 # Locale backup/generated files
-packages/uniswap/src/i18n/locales/source/*_old.json
-packages/uniswap/src/i18n/locales/@types/resources.d.ts
+packages/wallet/src/i18n/locales/source/*_old.json
+packages/wallet/src/i18n/locales/@types/resources.d.ts
 
 # ci
 .ci-cache/

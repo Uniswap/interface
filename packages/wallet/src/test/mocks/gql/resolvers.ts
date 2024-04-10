@@ -1,8 +1,5 @@
 import { GraphQLJSON } from 'graphql-scalars'
-import {
-  HistoryDuration,
-  Resolvers,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { HistoryDuration, Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
 import { priceHistory, tokenProject } from 'wallet/src/test/fixtures'
 
 export const defaultResolvers: Resolvers = {
@@ -53,7 +50,7 @@ export const defaultResolvers: Resolvers = {
         }
       }
 
-      return undefined
+      return null
     },
   },
 }

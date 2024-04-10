@@ -1,6 +1,6 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
 import { unique } from 'utilities/src/primitives/array'
-import { CurrencyIdToVisibility, NFTKeyToVisibility } from 'wallet/src/features/favorites/slice'
+import { AccountToNftData, AccountToTokenVisibility } from 'wallet/src/features/favorites/slice'
 import { RootState } from 'wallet/src/state'
 
 export const selectFavoriteTokens = (state: RootState): string[] => unique(state.favorites.tokens)
@@ -26,8 +26,6 @@ export const selectHasWatchedWallets = createSelector(selectWatchedAddresses, (w
   Boolean(watched?.length > 0)
 )
 
-export const selectNftsVisibility = (state: RootState): NFTKeyToVisibility =>
-  state.favorites.nftsVisibility
-
-export const selectTokensVisibility = (state: RootState): CurrencyIdToVisibility =>
+export const selectNftsData = (state: RootState): AccountToNftData => state.favorites.nftsData
+export const selectTokensVisibility = (state: RootState): AccountToTokenVisibility =>
   state.favorites.tokensVisibility

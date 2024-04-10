@@ -1,5 +1,5 @@
+import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
-import { Trans } from 'i18n'
 import { X } from 'react-feather'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'

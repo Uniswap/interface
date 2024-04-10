@@ -1,18 +1,19 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import { default as React } from 'react'
 import { useAppDispatch } from 'src/app/hooks'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Icons, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
+import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 import {
   NFTCollectionSearchResult,
   SearchResultType,
 } from 'wallet/src/features/search/SearchResult'
-import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 import { ElementName } from 'wallet/src/telemetry/constants'
 
 type NFTCollectionItemProps = {

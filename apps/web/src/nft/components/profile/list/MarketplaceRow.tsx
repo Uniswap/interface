@@ -1,7 +1,7 @@
+import { t } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { t } from 'i18n'
 import { RowsCollpsedIcon, RowsExpandedIcon } from 'nft/components/icons'
 import { getRoyalty, useHandleGlobalPriceToggle, useSyncPriceWithGlobalMethod } from 'nft/components/profile/list/utils'
 import { useSellAsset } from 'nft/hooks'

@@ -1,6 +1,6 @@
+import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import Row from 'components/Row'
-import { Trans } from 'i18n'
 import { X } from 'react-feather'
 import styled, { css } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
@@ -75,7 +75,6 @@ export function LimitPresetPriceButton({
   onSelect,
 }: LimitPriceButtonProps) {
   const { formatPercent } = useFormatter()
-  const sign = priceAdjustmentPercentage > 0 ? '+' : '-'
   return (
     <Container
       $selected={selected}
@@ -89,8 +88,7 @@ export function LimitPresetPriceButton({
         </ThemedText.BodySecondary>
       ) : (
         <ThemedText.BodySecondary fontWeight={535} color="inherit">
-          {sign}
-          {formatPercent(new Percent(Math.abs(priceAdjustmentPercentage), 100))}
+          +{formatPercent(new Percent(Math.abs(priceAdjustmentPercentage), 100))}
         </ThemedText.BodySecondary>
       )}
     </Container>

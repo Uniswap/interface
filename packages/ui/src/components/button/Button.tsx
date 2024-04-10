@@ -1,3 +1,4 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import { createContext, Fragment, FunctionComponent, useContext } from 'react'
 import {
   ButtonText,
@@ -15,7 +16,7 @@ import {
   XStack,
 } from 'tamagui'
 import { IconProps } from 'ui/src/components/factories/createIcon'
-import { HapticFeedback, HapticFeedbackStyle } from 'ui/src/utils/haptics/HapticFeedback'
+import { hapticFeedback } from 'ui/src/components/haptics/hapticFeedback'
 
 type ButtonSize = 'small' | 'medium' | 'large'
 
@@ -48,7 +49,7 @@ const CustomButtonFrame = styled(XStack, {
     size: {
       small: {
         padding: '$spacing8',
-        borderRadius: '$rounded12',
+        borderRadius: '$rounded8',
         gap: '$spacing4',
       },
       medium: {
@@ -160,7 +161,7 @@ export type ButtonProps = CustomButtonProps &
      * use haptic feedback on press (native)
      */
     hapticFeedback?: boolean
-    hapticStyle?: HapticFeedbackStyle
+    hapticStyle?: ImpactFeedbackStyle
 
     /**
      * add icon before, passes color and size automatically if Component
@@ -189,7 +190,7 @@ const ButtonComponent = CustomButtonFrame.styleable<ButtonProps>((props, ref) =>
         buttonProps.hapticFeedback
           ? (): void => {
               // eslint-disable-next-line no-void
-              void HapticFeedback.impact(buttonProps.hapticStyle)
+              void hapticFeedback(buttonProps.hapticStyle)
             }
           : undefined
       }

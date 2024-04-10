@@ -1,6 +1,6 @@
 import React from 'react'
 import { Image, ImageResizeMode, StyleSheet } from 'react-native'
-import { Flex, FlexProps, useSporeColors } from 'ui/src'
+import { Flex, FlexProps } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CHAIN_INFO, ChainId } from 'wallet/src/constants/chains'
 
@@ -29,10 +29,9 @@ function _NetworkLogo({
   size = iconSizes.icon20,
 }: NetworkLogoProps): JSX.Element | null {
   const { logo } = CHAIN_INFO[chainId]
-  const colors = useSporeColors()
   const borderRadius = shape === 'circle' ? size / 2 : SQUARE_BORDER_RADIUS
   return logo ? (
-    <Flex style={{ borderColor: colors.surface1.get(), borderRadius, ...styles.iconWrapper }}>
+    <Flex style={{ borderRadius, ...styles.iconWrapper }}>
       <Image source={logo} style={{ ...style.image, width: size, height: size }} />
     </Flex>
   ) : null

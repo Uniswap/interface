@@ -1,14 +1,11 @@
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
-import { memo, useCallback, useState } from 'react'
-import { Keyboard, ListRenderItemInfo, SectionList, SectionListData } from 'react-native'
+import { ListRenderItemInfo, SectionList, SectionListData } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { AnimatedFlex, Text, TouchableArea, isWeb, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { ViewOnlyRecipientModal } from 'wallet/src/components/RecipientSearch/ViewOnlyRecipientModal'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { SearchResultType, extractDomain } from 'wallet/src/features/search/SearchResult'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { WalletEventName } from 'wallet/src/telemetry/constants'
 
@@ -24,26 +21,12 @@ export function RecipientList({
   renderedInModal = false,
 }: RecipientListProps): JSX.Element {
   const insets = useDeviceInsets()
-  const [selectedViewOnlyRecipient, setSelectedViewOnlyRecipient] =
-    useState<SearchableRecipient | null>(null)
-
-  const onRecipientPress = useCallback(
-    (recipient: SearchableRecipient) => {
-      if (recipient.type === AccountType.Readonly) {
-        Keyboard.dismiss()
-        setSelectedViewOnlyRecipient(recipient)
-      } else {
-        onPress(recipient.address)
-      }
-    },
-    [onPress]
-  )
 
   const renderItem = function ({ item }: ListRenderItemInfo<SearchableRecipient>): JSX.Element {
     return (
       // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
       <AnimatedFlex entering={FadeIn} exiting={isWeb ? undefined : FadeOut} py="$spacing12">
-        <RecipientRow recipient={item} onPress={onRecipientPress} />
+        <RecipientRow recipient={item} onPress={onPress} />
       </AnimatedFlex>
     )
   }
@@ -51,27 +34,18 @@ export function RecipientList({
   const List = renderedInModal ? BottomSheetSectionList : SectionList
 
   return (
-    <>
-      <List
-        contentContainerStyle={{
-          paddingBottom: insets.bottom + spacing.spacing12,
-        }}
-        keyExtractor={key}
-        keyboardDismissMode="on-drag"
-        keyboardShouldPersistTaps="always"
-        renderItem={renderItem}
-        renderSectionHeader={SectionHeader}
-        sections={sections}
-        showsVerticalScrollIndicator={false}
-      />
-
-      {selectedViewOnlyRecipient && (
-        <ViewOnlyRecipientModal
-          onCancel={(): void => setSelectedViewOnlyRecipient(null)}
-          onConfirm={(): void => onPress(selectedViewOnlyRecipient.address)}
-        />
-      )}
-    </>
+    <List
+      contentContainerStyle={{
+        paddingBottom: insets.bottom + spacing.spacing12,
+      }}
+      keyExtractor={key}
+      keyboardDismissMode="on-drag"
+      keyboardShouldPersistTaps="always"
+      renderItem={renderItem}
+      renderSectionHeader={SectionHeader}
+      sections={sections}
+      showsVerticalScrollIndicator={false}
+    />
   )
 }
 
@@ -96,13 +70,10 @@ function key(recipient: SearchableRecipient): string {
 
 interface RecipientProps {
   recipient: SearchableRecipient
-  onPress: (recipient: SearchableRecipient) => void
+  onPress: (recipient: string) => void
 }
 
-export const RecipientRow = memo(function RecipientRow({
-  recipient,
-  onPress,
-}: RecipientProps): JSX.Element {
+export function RecipientRow({ recipient, onPress }: RecipientProps): JSX.Element {
   const domain = recipient.name
     ? extractDomain(
         recipient.name,
@@ -116,10 +87,9 @@ export const RecipientRow = memo(function RecipientRow({
         domain,
       })
     }
-    onPress(recipient)
+    onPress(recipient.address)
   }
 
-  const isViewOnlyWallet = recipient.type === AccountType.Readonly
   const isNonUnitagSubdomain = !recipient.isUnitag && domain !== undefined && domain !== '.eth'
 
   return (
@@ -127,9 +97,8 @@ export const RecipientRow = memo(function RecipientRow({
       <AddressDisplay
         address={recipient.address}
         overrideDisplayName={isNonUnitagSubdomain && recipient.name ? recipient.name : undefined}
-        showViewOnlyBadge={isViewOnlyWallet}
         size={35}
       />
     </TouchableArea>
   )
-})
+}

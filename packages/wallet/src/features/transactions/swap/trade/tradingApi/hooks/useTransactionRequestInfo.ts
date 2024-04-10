@@ -9,7 +9,7 @@ import {
   CreateSwapRequest,
   CreateSwapResponse,
   TransactionFailureReason,
-} from 'wallet/src/data/tradingApi/__generated__/index'
+} from 'wallet/src/data/tradingApi/__generated__/api'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult, GasSpeed } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -114,7 +114,7 @@ export function useTransactionRequestInfo({
 
   // This is a case where simulation fails on backend, meaning txn is expected to fail
   const simulationError = swapQuote?.txFailureReasons?.includes(
-    TransactionFailureReason.SIMULATION_ERROR
+    TransactionFailureReason.SimulationError
   )
   const gasEstimateError = useMemo(
     () => (simulationError ? new Error(UNKNOWN_SIM_ERROR) : error),

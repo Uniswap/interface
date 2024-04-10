@@ -1,7 +1,7 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { nativeOnChain } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
 import useENSAddress from 'hooks/useENSAddress'
 import useENSName from 'hooks/useENSName'
@@ -84,7 +84,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
     unitag?.username,
   ])
 
-  const nativeCurrency = useCurrency(NATIVE_CHAIN_ID)
+  const nativeCurrency = useCurrency('ETH')
   const [inputCurrencyBalance, nativeCurencyBalance] = useCurrencyBalances(
     account,
     useMemo(() => [inputCurrency, nativeCurrency], [inputCurrency, nativeCurrency])

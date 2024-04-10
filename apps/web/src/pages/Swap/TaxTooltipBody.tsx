@@ -1,4 +1,4 @@
-import { Trans } from 'i18n'
+import { Trans } from '@lingui/macro'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 
@@ -20,7 +20,7 @@ export function OutputTaxTooltipBody({ currencySymbol }: { currencySymbol?: stri
       <ThemedText.LabelMicro color="textPrimary">
         {currencySymbol ? (
           <Trans>
-            {{ currencySymbol }} fees don&apos;t allow for accurate exact outputs. Use the `You pay` field instead.
+            {currencySymbol} fees don&apos;t allow for accurate exact outputs. Use the `You pay` field instead.
           </Trans>
         ) : (
           <Trans>

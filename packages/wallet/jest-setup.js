@@ -1,4 +1,4 @@
-import 'uniswap/src/i18n/i18n' // Uses real translations for tests
+import 'wallet/src/i18n/i18n' // Uses real translations for tests
 
 import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
@@ -22,23 +22,10 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
 
 jest.mock('react-native-safe-area-context', () => ({
   useSafeAreaInsets: jest.fn().mockImplementation(() => ({})),
-  useSafeAreaFrame: jest.fn().mockImplementation(() => ({})),
   SafeAreaProvider: jest.fn(({ children }) => children),
 }))
 
-// Always use the web version, which is a no-op.
-jest.mock('ui/src/utils/haptics/HapticFeedback', () => {
-  return jest.requireActual('ui/src/utils/haptics/HapticFeedback.web.ts')
+// Mock feature flag tests to use native implementation as we already mock the native implementation of the statsig library
+jest.mock('./src/features/experiments/hooks.ts', () => {
+  return jest.requireActual('./src/features/experiments/hooks.native.ts')
 })
-
-import crypto from "crypto"
-Object.defineProperty(global, "crypto", {
-  value: {
-    getRandomValues: (arr) => crypto.randomBytes(arr.length),
-    subtle: crypto.webcrypto.subtle,
-  },
-});
-
-import { TextEncoder, TextDecoder } from 'util';
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;

@@ -2,7 +2,6 @@ import '@testing-library/jest-dom/extend-expect'
 
 import { Dialog, DialogButtonType } from 'components/Dialog/Dialog'
 import { fireEvent, render, screen } from 'test-utils/render'
-import { Gap } from 'theme'
 
 const mockIcon = <div>Mock Icon</div>
 const mockTitle = <div>Mock Title</div>
@@ -22,7 +21,6 @@ const mockButtonsConfig = {
     title: <div>Right Button</div>,
     onClick: mockRightClick,
   },
-  gap: 'md' as Gap,
 }
 
 describe('<Dialog />', () => {

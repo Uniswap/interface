@@ -1,8 +1,8 @@
+import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import Expand from 'components/Expand'
 import QuestionHelper from 'components/QuestionHelper'
 import Row, { RowBetween } from 'components/Row'
-import { Trans } from 'i18n'
 import { useState } from 'react'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
@@ -176,7 +176,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
           <ThemedText.BodySmall color="deprecated_accentWarning">
             {tooLow ? (
               <Trans>
-                Slippage below {{ amt: formatPercent(MINIMUM_RECOMMENDED_SLIPPAGE) }} may result in a failed transaction
+                Slippage below {formatPercent(MINIMUM_RECOMMENDED_SLIPPAGE)} may result in a failed transaction
               </Trans>
             ) : (
               <Trans>Your transaction may be frontrun and result in an unfavorable trade.</Trans>

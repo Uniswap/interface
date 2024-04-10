@@ -20,6 +20,7 @@ const persistUserState: PersistAppStateV6['user'] = {
   tokens: {},
   pairs: {},
   timestamp: Date.now(),
+  hideAppPromoBanner: false,
 }
 
 const previousStateUnselected: PersistAppStateV6 = {

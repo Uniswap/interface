@@ -2,13 +2,14 @@ import { ChainId } from '@uniswap/sdk-core'
 import { URI_AVAILABLE, WalletConnect, WalletConnectConstructorArgs } from '@web3-react/walletconnect-v2'
 import { sendAnalyticsEvent } from 'analytics'
 import { L1_CHAIN_IDS, L2_CHAIN_IDS } from 'constants/chains'
-import { APP_RPC_URLS } from 'constants/networks'
 import { Z_INDEX } from 'theme/zIndex'
-import { isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
+import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
+
+import { RPC_URLS } from '../constants/networks'
 
 // Avoid testing for the best URL by only passing a single URL per chain.
 // Otherwise, WC will not initialize until all URLs have been tested (see getBestUrl in web3-react).
-const WC_RPC_URLS = Object.entries(APP_RPC_URLS).reduce(
+const RPC_URLS_WITHOUT_FALLBACKS = Object.entries(RPC_URLS).reduce(
   (map, [chainId, urls]) => ({
     ...map,
     [chainId]: urls[0],
@@ -37,7 +38,7 @@ export class WalletConnectV2 extends WalletConnect {
         },
         optionalChains: [...L1_CHAIN_IDS, ...L2_CHAIN_IDS],
         showQrModal: qrcode,
-        rpcMap: WC_RPC_URLS,
+        rpcMap: RPC_URLS_WITHOUT_FALLBACKS,
         // as of 6/16/2023 there are no docs for `optionalMethods`
         // this set of optional methods fixes a bug we encountered where permit2 signatures were never received from the connected wallet
         // source: https://uniswapteam.slack.com/archives/C03R5G8T8BH/p1686858618164089?thread_ts=1686778867.145689&cid=C03R5G8T8BH
@@ -88,7 +89,7 @@ export class UniwalletConnect extends WalletConnectV2 {
       this.events.emit(UniwalletConnect.UNI_URI_AVAILABLE, `https://uniswap.org/app/wc?uri=${uri}`)
 
       // Opens deeplink to Uniswap Wallet if on iOS
-      if (isWebIOS || isWebAndroid) {
+      if (isIOS || isAndroid) {
         // Using window.location.href to open the deep link ensures smooth navigation and leverages OS handling for installed apps,
         // avoiding potential popup blockers or inconsistent behavior associated with window.open
         window.location.href = `uniswap://wc?uri=${encodeURIComponent(uri)}`

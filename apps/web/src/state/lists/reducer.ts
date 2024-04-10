@@ -1,11 +1,23 @@
 import { createReducer } from '@reduxjs/toolkit'
-import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
+import { getVersionUpgrade, TokenList, VersionUpgrade } from '@uniswap/token-lists'
 import tokenSafetyLookup from 'constants/tokenSafetyLookup'
 
-import { ListsState } from 'state/lists/types'
 import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList } from './actions'
+
+export interface ListsState {
+  readonly byUrl: {
+    readonly [url: string]: {
+      readonly current: TokenList | null
+      readonly pendingUpdate: TokenList | null
+      readonly loadingRequestId: string | null
+      readonly error: string | null
+    }
+  }
+  // this contains the default list of lists from the last time the updateVersion was called, i.e. the app was reloaded
+  readonly lastInitializedDefaultListOfLists?: string[]
+}
 
 type ListState = ListsState['byUrl'][string]
 

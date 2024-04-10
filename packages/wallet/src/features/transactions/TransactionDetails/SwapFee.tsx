@@ -1,24 +1,32 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { NumberType } from 'utilities/src/format/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { SwapFeeWarning } from 'wallet/src/features/transactions/swap/modals/SwapFeeWarning'
 import { SwapFeeInfo } from 'wallet/src/features/transactions/swap/trade/types'
 
-export function SwapFee({ swapFeeInfo }: { swapFeeInfo: SwapFeeInfo }): JSX.Element {
+export type OnShowSwapFeeInfo = (noFee: boolean) => void
+
+export function SwapFee({
+  swapFeeInfo,
+  onShowSwapFeeInfo,
+}: {
+  swapFeeInfo: SwapFeeInfo
+  onShowSwapFeeInfo: OnShowSwapFeeInfo
+}): JSX.Element {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">
-      <SwapFeeWarning noFee={swapFeeInfo.noFeeCharged}>
+      <TouchableArea onPress={(): void => onShowSwapFeeInfo(swapFeeInfo.noFeeCharged)}>
         <Flex centered row gap="$spacing4">
           <Text color="$neutral2" variant="body3">
             {t('swap.details.uniswapFee')}
             {!swapFeeInfo.noFeeCharged && ` (${swapFeeInfo.formattedPercent})`}
           </Text>
+          <Icons.InfoCircleFilled color="$neutral3" size="$icon.16" />
         </Flex>
-      </SwapFeeWarning>
+      </TouchableArea>
       <Flex row alignItems="center" gap="$spacing8">
         <Flex row alignItems="center" justifyContent="space-between">
           <Text color="$neutral1" variant="body3">

@@ -5,7 +5,7 @@ import {
   Chain,
   TransactionStatus,
   TransactionType,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import {
   erc20ApproveAssetChange,
   erc20TransferIn,

@@ -1,7 +1,7 @@
+import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { DetailLineItem, LineItemData } from 'components/swap/DetailLineItem'
 import TradePrice from 'components/swap/TradePrice'
-import { Trans } from 'i18n'
 import { UniswapXOrderDetails } from 'state/signatures/types'
 import { ExternalLink } from 'theme/components'
 import { ellipseMiddle } from 'utilities/src/addresses'

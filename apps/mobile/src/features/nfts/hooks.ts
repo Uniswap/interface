@@ -1,16 +1,19 @@
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeSyntheticEvent } from 'react-native'
+import { NativeSyntheticEvent, Share } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
+import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
+import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { selectNftsVisibility } from 'wallet/src/features/favorites/selectors'
+import { selectNftsData } from 'wallet/src/features/favorites/selectors'
 import { toggleNftVisibility } from 'wallet/src/features/favorites/slice'
-import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
+import { shouldHideNft } from 'wallet/src/features/nfts/hooks'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { getNftUrl } from 'wallet/src/utils/linking'
 
 interface NFTMenuParams {
   tokenId?: string
@@ -34,30 +37,46 @@ export function useNFTMenu({
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
 
-  const { handleShareNft } = useWalletNavigation()
-
   const accounts = useAccounts()
   const isLocalAccount = owner && !!accounts[owner]
 
-  const nftVisibility = useAppSelector(selectNftsVisibility)
-  const nftKey = contractAddress && tokenId ? getNFTAssetKey(contractAddress, tokenId) : undefined
-  const nftVisibilityOverride = !!nftKey && !!nftVisibility[nftKey]?.isVisible
-  const hidden = isSpam && !nftVisibilityOverride
+  const isAddressAndTokenOk = contractAddress && tokenId
+  const nftsData = useAppSelector(selectNftsData)
+  const hidden =
+    owner &&
+    isAddressAndTokenOk &&
+    shouldHideNft({ nftsData, owner, contractAddress, tokenId, isSpam })
 
   const onPressShare = useCallback(async (): Promise<void> => {
     if (!contractAddress || !tokenId) {
       return
     }
-    handleShareNft({ contractAddress, tokenId })
-  }, [contractAddress, handleShareNft, tokenId])
+    try {
+      const url = getNftUrl(contractAddress, tokenId)
+      await Share.share({
+        message: url,
+      })
+      sendMobileAnalyticsEvent(MobileEventName.ShareButtonClicked, {
+        entity: ShareableEntity.NftItem,
+        url,
+      })
+    } catch (error) {
+      logger.error(error, { tags: { file: 'nfts/hooks', function: 'useNFTMenu' } })
+    }
+  }, [contractAddress, tokenId])
 
   const onPressHiddenStatus = useCallback(() => {
-    if (!nftKey) {
+    if (!owner || !contractAddress || !tokenId) {
       return
     }
-
-    dispatch(toggleNftVisibility({ nftKey, isSpam }))
-
+    dispatch(
+      toggleNftVisibility({
+        owner,
+        contractAddress,
+        tokenId,
+        isSpam,
+      })
+    )
     if (showNotification) {
       dispatch(
         pushNotification({
@@ -68,11 +87,11 @@ export function useNFTMenu({
         })
       )
     }
-  }, [nftKey, dispatch, hidden, showNotification, isSpam])
+  }, [contractAddress, dispatch, hidden, isSpam, owner, showNotification, tokenId])
 
   const menuActions = useMemo(
     () =>
-      nftKey
+      isAddressAndTokenOk
         ? [
             {
               title: t('common.button.share'),
@@ -92,7 +111,7 @@ export function useNFTMenu({
               []),
           ]
         : [],
-    [nftKey, t, onPressShare, isLocalAccount, hidden, onPressHiddenStatus]
+    [isAddressAndTokenOk, t, onPressShare, isLocalAccount, hidden, onPressHiddenStatus]
   )
 
   const onContextMenuPress = useCallback(
@@ -102,5 +121,5 @@ export function useNFTMenu({
     [menuActions]
   )
 
-  return { menuActions, onContextMenuPress, onlyShare: !!nftKey && !isLocalAccount }
+  return { menuActions, onContextMenuPress, onlyShare: !!isAddressAndTokenOk && !isLocalAccount }
 }

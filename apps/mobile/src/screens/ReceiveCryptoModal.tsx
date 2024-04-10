@@ -1,19 +1,11 @@
+import { ImpactFeedbackStyle, impactAsync } from 'expo-haptics'
 import { useTranslation } from 'react-i18next'
+import { ScannerModalState } from 'src/components/QRCodeScanner/constants'
 import { TransferInstitutionSelector } from 'src/features/fiatOnRamp/FiatOnRampTransferInstitutionSelector'
 import { FOR_MODAL_SNAP_POINTS } from 'src/features/fiatOnRamp/constants'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
-import {
-  Flex,
-  HapticFeedback,
-  Icons,
-  ImpactFeedbackStyle,
-  Separator,
-  Text,
-  TouchableArea,
-  useSporeColors,
-} from 'ui/src'
+import { Flex, Icons, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -32,7 +24,7 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
   const onPressCopyAddress = async (): Promise<void> => {
-    await HapticFeedback.impact()
+    await impactAsync()
     await setClipboard(activeAccountAddress)
     dispatch(
       pushNotification({

@@ -1,3 +1,4 @@
+import { Plural, Trans } from '@lingui/macro'
 import { ChainId, CurrencyAmount } from '@uniswap/sdk-core'
 import { ConfirmedIcon, LogoContainer, SubmittedIcon } from 'components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { useCancelLimitsGasEstimate } from 'components/AccountDrawer/MiniPortfolio/Limits/hooks/useCancelLimitsGasEstimate'
@@ -10,7 +11,6 @@ import Row from 'components/Row'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { nativeOnChain } from 'constants/tokens'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
-import { Plural, Trans, t } from 'i18n'
 import { Slash } from 'react-feather'
 import { UniswapXOrderDetails } from 'state/signatures/types'
 import styled, { useTheme } from 'styled-components'
@@ -44,11 +44,7 @@ function useCancelLimitsDialogContent(
     case CancellationState.REVIEWING_CANCELLATION:
       return {
         title: (
-          <Plural
-            value={orders.length}
-            one={t`Cancel limit`}
-            other={t(`Cancel {{count}} limits`, { count: orders.length })}
-          />
+          <Plural id="cancelling" value={orders.length} one="Cancel limit" other={`Cancel ${orders.length} limits`} />
         ),
         icon: <Slash />,
       }
@@ -134,9 +130,10 @@ export function CancelLimitsDialog(
         description={
           <Column>
             <Plural
+              id="cancelling-confirmation"
               value={orders.length}
-              one={t`Your swap could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?`}
-              other={t`Your swaps could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?`}
+              one="Your swap could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?"
+              other="Your swaps could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?"
             />
             <GasEstimateDisplay chainId={orders[0].chainId} gasEstimateValue={gasEstimate.value} />
           </Column>

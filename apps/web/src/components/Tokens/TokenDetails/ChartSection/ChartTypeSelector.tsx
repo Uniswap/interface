@@ -1,7 +1,7 @@
+import { Trans } from '@lingui/macro'
 import { CHART_TYPE_LABELS, ChartType, PriceChartType } from 'components/Charts/utils'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { Trans } from 'i18n'
 import { useReducer } from 'react'
 import { Check, Info } from 'react-feather'
 import { css, useTheme } from 'styled-components'

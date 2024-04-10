@@ -34,7 +34,6 @@ export default function parseSendTransaction(
       const collectionName = change.asset?.collection?.name
       const imageURL = change.asset?.image?.url
       const tokenId = change.asset?.tokenId
-      const isSpam = Boolean(change.asset?.isSpam)
       if (!(recipient && tokenAddress && collectionName && imageURL && name && tokenId)) {
         return undefined
       }
@@ -43,7 +42,6 @@ export default function parseSendTransaction(
         assetType,
         tokenAddress,
         recipient,
-        isSpam,
         nftSummaryInfo: {
           name,
           collectionName,
@@ -60,7 +58,6 @@ export default function parseSendTransaction(
       address: change.asset.address,
       tokenStandard: change.tokenStandard,
     })
-
     const recipient = change.recipient
     const currencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       change.tokenStandard,
@@ -71,11 +68,8 @@ export default function parseSendTransaction(
     )
     const transactedUSDValue = parseUSDValueFromAssetChange(change.transactedValue)
 
-    // Filter out send transactions with tokens that are either marked `isSpam` or with spam code 2 (token with URL name)
-    // because send txs can be spoofed with spam tokens
-    const isSpam = Boolean(
-      change.asset.project?.isSpam || change.asset.project?.spamCode === SpamCode.HIGH
-    )
+    // Filter out send transactions with tokens that have spamCode 2 (token with URL name)
+    const isSpam = Boolean(change.asset.project?.spamCode === SpamCode.HIGH)
 
     if (!(recipient && tokenAddress)) {
       return undefined

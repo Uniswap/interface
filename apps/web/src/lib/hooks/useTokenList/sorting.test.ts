@@ -1,14 +1,8 @@
 import { ChainId, Token as InterfaceToken } from '@uniswap/sdk-core'
 import { DAI, USDC_MAINNET, USDT, WBTC, nativeOnChain } from 'constants/tokens'
-import {
-  Chain,
-  Currency,
-  Token,
-  TokenBalance,
-  TokenStandard,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain, Currency, Token, TokenBalance, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 
-import { getSortedPortfolioTokens } from './sorting'
+import { getSortedPortfolioTokens, tokenQuerySortComparator } from './sorting'
 
 const nativeToken: Token = {
   id: 'native-token',
@@ -152,5 +146,32 @@ describe('sorting', () => {
 
       expect(result).toEqual([nativeOnChain(ChainId.MAINNET), USDT, WBTC])
     })
+  })
+})
+
+describe('tokenQuerySortComparator', () => {
+  it('should return the input array if query is undefined', () => {
+    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator(''))
+    expect(result).toEqual([DAI, USDC_MAINNET, USDT])
+  })
+  it('should return tokens that start with "us" first', () => {
+    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator('us'))
+    expect(result).toEqual([USDC_MAINNET, USDT, DAI])
+  })
+  it('should return tokens that start with "us" first, regardless of case', () => {
+    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator('US'))
+    expect(result).toEqual([USDC_MAINNET, USDT, DAI])
+  })
+  it('should return tokens that start with "da" first', () => {
+    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator('da'))
+    expect(result).toEqual([DAI, USDC_MAINNET, USDT])
+  })
+  it('should return an exact match for DAI', () => {
+    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator('dai'))
+    expect(result).toEqual([DAI, USDC_MAINNET, USDT])
+  })
+  it('should return an exact match for USDC and otherwise leave the order unchanged', () => {
+    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator('usdc'))
+    expect(result).toEqual([USDC_MAINNET, DAI, USDT])
   })
 })

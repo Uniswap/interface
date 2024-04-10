@@ -3,7 +3,7 @@ const GRAPHQL_ENDPOINT = 'https://interface.gateway.uniswap.org/v1/graphql'
 
 //TODO: Figure out how to make ApolloClient global variable
 export default new ApolloClient({
-  connectToDevTools: false,
+  connectToDevTools: true,
   uri: GRAPHQL_ENDPOINT,
   headers: {
     'Content-Type': 'application/json',

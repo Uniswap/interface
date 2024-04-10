@@ -1,5 +1,4 @@
-import { isEqual } from 'lodash'
-import React, { CSSProperties, Key, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { CSSProperties, Key, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList as List } from 'react-window'
 import { Flex, useWindowDimensions } from 'ui/src'
@@ -22,7 +21,7 @@ type BaseListItemRowInfo = ItemRowInfo &
   BaseListRowInfo &
   Pick<TokenSectionBaseListProps, 'renderItem'>
 
-type BaseListData = BaseListItemRowInfo | BaseListSectionRowInfo
+type BaseListData = (BaseListItemRowInfo | BaseListSectionRowInfo)[]
 
 function isSectionHeader(
   rowInfo: BaseListSectionRowInfo | BaseListItemRowInfo
@@ -61,7 +60,7 @@ export function TokenSectionBaseList({
   }, [sectionListRef, sections])
 
   const items = useMemo(() => {
-    return sections.reduce((acc: BaseListData[], section) => {
+    return sections.reduce((acc: BaseListData, section) => {
       const sectionInfo: BaseListSectionRowInfo = {
         section: { title: section.title, rightElement: section.rightElement },
         key: section.title,
@@ -82,7 +81,7 @@ export function TokenSectionBaseList({
         })
       )
     }, [])
-  }, [sections, renderSectionHeader, keyExtractor, renderItem])
+  }, [sections, keyExtractor, renderSectionHeader, renderItem])
 
   const activeSessionIndex = useMemo(() => {
     return items.slice(0, firstVisibleIndex + 1).findLastIndex((item) => isSectionHeader(item))
@@ -114,21 +113,6 @@ export function TokenSectionBaseList({
     [items]
   )
 
-  const ListContent = useCallback(
-    ({ data, index, style }: { data: BaseListData[]; index: number; style: CSSProperties }) => {
-      return (
-        <TokenSectionBaseListRow
-          data={data}
-          index={index}
-          style={style}
-          updateRowHeight={updateRowHeight}
-          windowWidth={windowWidth}
-        />
-      )
-    },
-    [updateRowHeight, windowWidth]
-  )
-
   return (
     <Flex grow>
       {!sections.length && ListEmptyComponent}
@@ -157,7 +141,15 @@ export function TokenSectionBaseList({
                 onItemsRendered={({ visibleStartIndex }): void => {
                   setFirstVisibleIndex(visibleStartIndex)
                 }}>
-                {ListContent}
+                {({ data, index, style }) => (
+                  <TokenSectionBaseListRow
+                    data={data}
+                    index={index}
+                    style={style}
+                    updateRowHeight={updateRowHeight}
+                    windowWidth={windowWidth}
+                  />
+                )}
               </List>
             </Flex>
           )
@@ -175,7 +167,7 @@ function TokenSectionBaseListRow({
   updateRowHeight,
 }: {
   index: number
-  data: BaseListData[]
+  data: BaseListData
   style?: CSSProperties
   windowWidth: number
   updateRowHeight?: (index: number, height: number) => void
@@ -197,14 +189,19 @@ function TokenSectionBaseListRow({
   )
 }
 
-type RowProps = {
+function _Row({
+  index,
+  itemData,
+  style,
+  windowWidth,
+  updateRowHeight,
+}: {
   index: number
   itemData: BaseListItemRowInfo | BaseListSectionRowInfo
   style?: CSSProperties
   windowWidth: number
   updateRowHeight?: (index: number, height: number) => void
-}
-function _Row({ index, itemData, style, windowWidth, updateRowHeight }: RowProps): JSX.Element {
+}): JSX.Element {
   const rowRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -226,4 +223,4 @@ function _Row({ index, itemData, style, windowWidth, updateRowHeight }: RowProps
   )
 }
 
-const Row = React.memo(_Row, isEqual)
+const Row = memo(_Row)

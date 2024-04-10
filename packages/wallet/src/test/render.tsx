@@ -11,8 +11,8 @@ import {
   RenderResult,
 } from '@testing-library/react-native'
 import React, { PropsWithChildren } from 'react'
-import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
+import { Resolvers } from 'wallet/src/data/__generated__/types-and-hooks'
 import { SharedProvider } from 'wallet/src/provider'
 import { sharedRootReducer, type SharedState } from 'wallet/src/state/reducer'
 import { AutoMockedApolloProvider } from 'wallet/src/test/mocks'

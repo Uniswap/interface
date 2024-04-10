@@ -1,6 +1,6 @@
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -14,7 +14,7 @@ import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
  *
  */
 export function useShouldUseMEVBlocker(chainId: Maybe<ChainId>): boolean {
-  const isMevBlockerFeatureEnabled = useFeatureFlag(FeatureFlags.MevBlocker)
+  const isMevBlockerFeatureEnabled = useFeatureFlag(FEATURE_FLAGS.MevBlocker)
   const isSwapProtectionSettingEnabled = useSwapProtectionSetting() === SwapProtectionSetting.On
   const isMevBlockerSupportedOnChain = chainId ? isPrivateRpcSupportedOnChain(chainId) : false
 

@@ -1,11 +1,10 @@
 import { RenderPassReport } from '@shopify/react-native-performance'
 import { SharedEventName } from '@uniswap/analytics-events'
-import { MobileEventName } from 'src/features/telemetry/constants'
+import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { WidgetEvent, WidgetType } from 'src/features/widgets/widgets'
 import { TraceProps } from 'utilities/src/telemetry/trace/Trace'
 import { ImportType } from 'wallet/src/features/onboarding/types'
 import { EthMethod, WCEventType, WCRequestOutcome } from 'wallet/src/features/walletConnect/types'
-import { ShareableEntity } from 'wallet/src/telemetry/constants'
 
 // Events related to Moonpay internal transactions
 // NOTE: we do not currently have access to the full life cycle of these txs
@@ -77,6 +76,10 @@ export type MobileEventProperties = {
     duration: number
     operationName: string
     operationType?: string
+  }
+  [MobileEventName.ShareButtonClicked]: {
+    entity: ShareableEntity
+    url: string
   }
   [MobileEventName.ShareLinkOpened]: {
     entity: ShareableEntity

@@ -1,4 +1,4 @@
-import { t } from 'i18n'
+import { t } from '@lingui/macro'
 import { useAtom } from 'jotai'
 import { lazy, ReactNode, Suspense, useMemo } from 'react'
 import { matchPath, Navigate, useLocation } from 'react-router-dom'

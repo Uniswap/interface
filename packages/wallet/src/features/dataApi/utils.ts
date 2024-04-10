@@ -1,25 +1,24 @@
 import { ApolloError } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
 import { useRef } from 'react'
+import { ChainId } from 'wallet/src/constants/chains'
 import {
   Chain,
   ContractInput,
   SafetyLevel,
   TokenProjectsQuery,
   TopTokensQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { CurrencyId } from 'uniswap/src/types/currency'
-import { ChainId } from 'wallet/src/constants/chains'
-import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+} from 'wallet/src/data/__generated__/types-and-hooks'
+import { fromGraphQLChain, toGraphQLChain } from 'wallet/src/features/chains/utils'
 import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import {
+  CurrencyId,
   currencyId,
   currencyIdToChain,
   currencyIdToGraphQLAddress,
   isNativeCurrencyAddress,
 } from 'wallet/src/utils/currencyId'
+import { CurrencyInfo } from './types'
 
 type BuildCurrencyParams = {
   chainId?: Nullable<ChainId>
@@ -34,7 +33,7 @@ type BuildCurrencyParams = {
 export function currencyIdToContractInput(id: CurrencyId): ContractInput {
   return {
     chain: toGraphQLChain(currencyIdToChain(id) ?? ChainId.Mainnet) ?? Chain.Ethereum,
-    address: currencyIdToGraphQLAddress(id) ?? undefined,
+    address: currencyIdToGraphQLAddress(id),
   }
 }
 

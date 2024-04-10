@@ -1,6 +1,7 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import { memo, useMemo } from 'react'
 import { I18nManager, TextInputProps } from 'react-native'
-import { AnimatedFlex, Flex, Icons, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
 enum KeyAction {
@@ -173,7 +174,7 @@ function KeyButton({
   }
 
   const handleDelete = (): void => {
-    if (start === undefined || end === undefined || (start === end && end === value.length)) {
+    if (start === undefined || end === undefined) {
       // has no text selection, cursor is at the end of the text input
       setValue(value.slice(0, -1))
     } else if (start < end) {

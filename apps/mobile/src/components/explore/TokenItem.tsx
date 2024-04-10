@@ -1,13 +1,14 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
-import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
+import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { AnimatedFlex, Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Flex, Text, TouchableArea } from 'ui/src'
 import { NumberType } from 'utilities/src/format/types'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
@@ -125,17 +126,13 @@ export const TokenItem = memo(function _TokenItem({
             <Text numberOfLines={1} variant="body1">
               {name}
             </Text>
-            <Text
-              color="$neutral2"
-              numberOfLines={1}
-              testID="token-item/metadata-subtitle"
-              variant="subheading2">
+            <Text color="$neutral2" numberOfLines={1} variant="subheading2">
               {getMetadataSubtitle()}
             </Text>
           </Flex>
           <Flex grow row alignItems="center" justifyContent="flex-end">
             <TokenMetadata>
-              <Text lineHeight={24} testID="token-item/price" variant="body1">
+              <Text lineHeight={24} variant="body1">
                 {convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)}
               </Text>
               <RelativeChange change={pricePercentChange24h} variant="body2" />

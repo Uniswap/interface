@@ -1,5 +1,5 @@
+import { t } from '@lingui/macro'
 import { getValidUrlChainName } from 'graphql/data/util'
-import { t } from 'i18n'
 import { capitalize } from 'tsafe/capitalize'
 
 import { ExploreTab } from './Explore'
@@ -11,8 +11,5 @@ export const getExploreTitle = (path?: string) => {
 
   const network = parts?.find((part) => getValidUrlChainName(part)) ?? 'ethereum'
 
-  return t(`Explore top {{tab}} on {{network}} on Uniswap`, {
-    tab,
-    network: capitalize(network),
-  })
+  return t`Explore top ${tab} on ${capitalize(network)} on Uniswap`
 }

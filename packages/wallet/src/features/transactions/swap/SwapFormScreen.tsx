@@ -4,14 +4,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, StyleSheet, TextInput, TextInputProps } from 'react-native'
 import {
-  Flex,
-  Icons,
-  Text,
-  TouchableArea,
-  isWeb,
-  useIsShortMobileDevice,
-  useSporeColors,
-} from 'ui/src'
+  FadeIn,
+  FadeOut,
+  interpolateColor,
+  useAnimatedStyle,
+  useDerivedValue,
+  withTiming,
+} from 'react-native-reanimated'
+import { AnimatedFlex, Flex, Icons, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
@@ -31,27 +31,14 @@ import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { ElementName, SectionName } from 'wallet/src/telemetry/constants'
+
 // eslint-disable-next-line no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
-import { SwapFormButton } from 'wallet/src/features/transactions/swap/SwapFormButton'
 import { SwapTokenSelector } from 'wallet/src/features/transactions/swap/SwapTokenSelector'
 
-const SWAP_DIRECTION_BUTTON_SIZE = {
-  size: {
-    regular: iconSizes.icon24,
-    small: iconSizes.icon12,
-  },
-  innerPadding: {
-    regular: spacing.spacing8 + spacing.spacing2,
-    small: spacing.spacing8,
-  },
-  borderWidth: {
-    regular: spacing.spacing4,
-    small: spacing.spacing1,
-  },
-} as const
-
-const WEB_CURRENCY_PANEL_INACTIVE_OPACITY = 0.6
+const SWAP_DIRECTION_BUTTON_SIZE = iconSizes.icon24
+const SWAP_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing8 + spacing.spacing2
+const SWAP_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
 
 const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
 
@@ -75,7 +62,6 @@ export function SwapFormScreen({ hideContent }: { hideContent: boolean }): JSX.E
 function SwapFormContent(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const isShortMobileDevice = useIsShortMobileDevice()
 
   const { walletNeedsRestore, openWalletRestoreModal } = useTransactionModalContext()
 
@@ -222,13 +208,19 @@ function SwapFormContent(): JSX.Element {
     [decimalPadControlledField, isFiatMode, updateSwapForm]
   )
 
-  const [decimalPadReady, setDecimalPadReady] = useState(false)
+  const [decimalPadReady, setDecimalPadReady] = useState(true)
 
   const onBottomScreenLayout = useCallback((event: LayoutChangeEvent): void => {
     decimalPadRef.current?.setMaxHeight(event.nativeEvent.layout.height)
   }, [])
 
   const onDecimalPadReady = useCallback(() => setDecimalPadReady(true), [])
+
+  const decimalPadAndButtonAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(decimalPadReady ? 1 : 0, { duration: 250 }),
+    }
+  }, [decimalPadReady])
 
   const onInputSelectionChange = useCallback(
     (start: number, end: number) => {
@@ -373,24 +365,34 @@ function SwapFormContent(): JSX.Element {
   const decimalPadValueRef =
     decimalPadControlledField === exactCurrencyField ? exactValueRef : formattedDerivedValueRef
 
-  const containerShadowProps = {
-    shadowColor: colors.surface3.val,
-    shadowRadius: 10,
-  }
-  const inputShadowProps = isWeb
-    ? {
-        ...containerShadowProps,
-        shadowOpacity: showWebInputTokenSelector ? 0.08 : 0.04,
-        zIndex: 1,
-      }
-    : undefined
-  const outputShadowProps = isWeb
-    ? {
-        ...containerShadowProps,
-        shadowOpacity: showWebOutputTokenSelector ? 0.08 : 0.04,
-        zIndex: 2,
-      }
-    : undefined
+  // Animated background color on input panels based on focus
+  const inputColorTransitionProgress = useDerivedValue(() => {
+    return withTiming(focusOnCurrencyField === CurrencyField.INPUT ? 0 : 1, { duration: 250 })
+  }, [focusOnCurrencyField])
+
+  const outputColorTransitionProgress = useDerivedValue(() => {
+    return withTiming(focusOnCurrencyField === CurrencyField.OUTPUT ? 0 : 1, { duration: 250 })
+  }, [focusOnCurrencyField])
+
+  const inputBackgroundStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        inputColorTransitionProgress.value,
+        [0, 1],
+        [colors.surface1.val, colors.surface2.val]
+      ),
+    }
+  }, [inputColorTransitionProgress])
+
+  const outputBackgroundStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(
+        outputColorTransitionProgress.value,
+        [0, 1],
+        [colors.surface1.val, colors.surface2.val]
+      ),
+    }
+  }, [outputColorTransitionProgress])
 
   return (
     <Flex
@@ -398,28 +400,22 @@ function SwapFormContent(): JSX.Element {
       grow={!isWeb}
       height={isWeb ? '100%' : undefined}
       justifyContent="space-between">
-      <Flex
-        animation="quick"
-        enterStyle={{ opacity: 0 }}
-        exitStyle={{ opacity: 0 }}
+      {/* TODO(EXT-526): re-enable `exiting` animation when it's fixed. */}
+      <AnimatedFlex
+        entering={FadeIn}
+        exiting={isWeb ? undefined : FadeOut}
         gap="$spacing2"
         grow={isWeb}>
         <Trace section={SectionName.CurrencyInputPanel}>
-          <Flex
-            {...inputShadowProps}
+          <AnimatedFlex
             shrink
-            animateOnly={['backgroundColor', 'opacity', 'shadowOpacity']}
-            animation="quick"
-            backgroundColor={
-              isWeb || focusOnCurrencyField === CurrencyField.INPUT ? '$surface1' : '$surface2'
-            }
             borderColor="$surface3"
             borderRadius="$rounded20"
             borderWidth={1}
             grow={showWebInputTokenSelector}
-            opacity={showWebOutputTokenSelector ? WEB_CURRENCY_PANEL_INACTIVE_OPACITY : 1}
-            overflow="hidden"
-            pb={currencies[CurrencyField.INPUT] ? '$spacing4' : '$none'}>
+            overflow="scroll"
+            pb={currencies[CurrencyField.INPUT] ? '$spacing4' : '$none'}
+            style={inputBackgroundStyle}>
             {showWebInputTokenSelector ? (
               <SwapTokenSelector />
             ) : (
@@ -444,7 +440,7 @@ function SwapFormContent(): JSX.Element {
                 onToggleIsFiatMode={onToggleIsFiatMode}
               />
             )}
-          </Flex>
+          </AnimatedFlex>
         </Trace>
 
         {showSwitchCurrencies ? (
@@ -456,22 +452,16 @@ function SwapFormContent(): JSX.Element {
         {!showWebInputTokenSelector && (
           <>
             <Trace section={SectionName.CurrencyOutputPanel}>
-              <Flex
-                {...outputShadowProps}
+              <AnimatedFlex
                 shrink
-                animateOnly={['backgroundColor', 'opacity', 'shadowOpacity']}
-                animation="quick"
-                backgroundColor={
-                  isWeb || focusOnCurrencyField === CurrencyField.OUTPUT ? '$surface1' : '$surface2'
-                }
                 borderColor="$surface3"
                 borderRadius="$rounded20"
                 borderWidth={1}
                 grow={showWebOutputTokenSelector}
-                opacity={showWebInputTokenSelector ? WEB_CURRENCY_PANEL_INACTIVE_OPACITY : 1}
-                overflow="hidden"
+                overflow="scroll"
                 position="relative"
-                pt={currencies[CurrencyField.OUTPUT] ? '$spacing4' : '$none'}>
+                pt={currencies[CurrencyField.OUTPUT] ? '$spacing4' : '$none'}
+                style={outputBackgroundStyle}>
                 {showWebOutputTokenSelector ? (
                   <Flex grow>
                     <SwapTokenSelector />
@@ -487,6 +477,7 @@ function SwapFormContent(): JSX.Element {
                     isFiatMode={isFiatMode && exactFieldIsOutput}
                     isLoading={!exactFieldIsOutput && isSwapDataLoading}
                     resetSelection={resetSelection}
+                    showNonZeroBalancesOnly={false}
                     showSoftInputOnFocus={false}
                     usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
                     value={exactFieldIsOutput ? exactValue : formattedDerivedValue}
@@ -523,25 +514,20 @@ function SwapFormContent(): JSX.Element {
                     </Flex>
                   </TouchableArea>
                 )}
-              </Flex>
+              </AnimatedFlex>
             </Trace>
 
             {!showWebOutputTokenSelector && (
-              <Flex>
-                {isWeb && (
-                  <Flex pt="$spacing12">
-                    <SwapFormButton />
-                  </Flex>
-                )}
-                <Flex pt={isShortMobileDevice ? '$spacing8' : '$spacing12'}>
-                  <GasAndWarningRows renderEmptyRows={!isWeb} />
+              <>
+                <Flex fill={isWeb} mt={isWeb ? '$spacing8' : '$spacing12'}>
+                  <GasAndWarningRows renderEmptyRows />
                 </Flex>
-              </Flex>
+              </>
             )}
           </>
         )}
         {isWeb && <Flex mt="$spacing48" />}
-      </Flex>
+      </AnimatedFlex>
       {!isWeb && (
         <>
           {/*
@@ -550,20 +536,15 @@ function SwapFormContent(): JSX.Element {
           putting it inside this container in order to avoid any overflows while the `DecimalPad`
           is automatically resizing to find the right size for the screen.
           */}
-          <Flex
-            fill
-            mt={isShortMobileDevice ? '$spacing2' : '$spacing8'}
-            onLayout={onBottomScreenLayout}
-          />
-          <Flex
+          <Flex fill mt="$spacing8" onLayout={onBottomScreenLayout} />
+          <AnimatedFlex
             $short={{ gap: '$none' }}
-            animation="quick"
             bottom={0}
             gap="$spacing8"
             left={0}
-            opacity={decimalPadReady ? 1 : 0}
             position="absolute"
-            right={0}>
+            right={0}
+            style={decimalPadAndButtonAnimatedStyle}>
             <Flex grow justifyContent="flex-end">
               <DecimalPadInput
                 ref={decimalPadRef}
@@ -574,7 +555,7 @@ function SwapFormContent(): JSX.Element {
                 onReady={onDecimalPadReady}
               />
             </Flex>
-          </Flex>
+          </AnimatedFlex>
         </>
       )}
     </Flex>
@@ -586,9 +567,6 @@ const SwitchCurrenciesButton = ({
 }: {
   onSwitchCurrencies: () => void
 }): JSX.Element => {
-  const isShortMobileDevice = useIsShortMobileDevice()
-  const smallOrRegular = isShortMobileDevice ? 'small' : 'regular'
-
   return (
     <Flex zIndex="$popover">
       <Flex alignItems="center" height={0} style={StyleSheet.absoluteFill}>
@@ -599,9 +577,9 @@ const SwitchCurrenciesButton = ({
               // (icon size + (top + bottom padding) + (top + bottom border)) / 2
               // to center the swap direction button vertically
               (
-                SWAP_DIRECTION_BUTTON_SIZE.size[smallOrRegular] +
-                SWAP_DIRECTION_BUTTON_SIZE.innerPadding[smallOrRegular] * 2 +
-                SWAP_DIRECTION_BUTTON_SIZE.borderWidth[smallOrRegular] * 2
+                SWAP_DIRECTION_BUTTON_SIZE +
+                SWAP_DIRECTION_BUTTON_INNER_PADDING * 2 +
+                SWAP_DIRECTION_BUTTON_BORDER_WIDTH * 2
               )
             ) / 2
           }
@@ -609,8 +587,7 @@ const SwitchCurrenciesButton = ({
           <Trace logPress element={ElementName.SwitchCurrenciesButton}>
             <SwapArrowButton
               backgroundColor="$surface1"
-              size={SWAP_DIRECTION_BUTTON_SIZE.size[smallOrRegular]}
-              testID={ElementName.SwitchCurrenciesButton}
+              size={SWAP_DIRECTION_BUTTON_SIZE}
               onPress={onSwitchCurrencies}
             />
           </Trace>

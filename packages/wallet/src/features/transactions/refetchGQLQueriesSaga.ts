@@ -1,18 +1,18 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { call, delay } from 'typed-redux-saga'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import {
   PortfolioBalancesDocument,
   PortfolioBalancesQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
-import { CurrencyId } from 'uniswap/src/types/currency'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { getNativeAddress } from 'wallet/src/constants/addresses'
+} from 'wallet/src/data/__generated__/types-and-hooks'
+import { GQLQueries } from 'wallet/src/data/queries'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { WalletEventName } from 'wallet/src/telemetry/constants'
 import {
+  CurrencyId,
   buildCurrencyId,
   buildNativeCurrencyId,
   buildWrappedNativeCurrencyId,

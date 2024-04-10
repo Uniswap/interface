@@ -1,8 +1,8 @@
+import { Trans } from '@lingui/macro'
 import { Percent } from '@uniswap/sdk-core'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { ColumnCenter } from 'components/Column'
 import Row from 'components/Row'
-import { Trans } from 'i18n'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
@@ -38,7 +38,6 @@ interface PriceImpactModalProps {
 
 export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }: PriceImpactModalProps) {
   const { formatPercent } = useFormatter()
-  const impact = `~${formatPercent(priceImpact)}`
 
   return (
     <Modal isOpen onDismiss={onDismiss}>
@@ -57,7 +56,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
             <Trans>
               This transaction will result in a{' '}
               <ThemedText.BodyPrimary lineHeight="24px" color="critical" display="inline">
-                {impact}
+                ~{formatPercent(priceImpact)}
               </ThemedText.BodyPrimary>{' '}
               price impact on the market price of this pool. Do you wish to continue?
             </Trans>

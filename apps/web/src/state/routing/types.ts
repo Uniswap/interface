@@ -6,7 +6,6 @@ import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 import { ZERO_PERCENT } from 'constants/misc'
 import { BigNumber } from 'ethers/lib/ethers'
-import { SignatureType } from 'state/signatures/types'
 
 export enum TradeState {
   LOADING = 'loading',
@@ -51,8 +50,8 @@ export interface GetQuoteArgs {
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
   tradeType: TradeType
   needsWrapIfUniswapX: boolean
-  uniswapXForceSyntheticQuotes: boolean
   sendPortionEnabled: boolean
+  gatewayDNSUpdateEnabled: boolean
 }
 
 export type GetQuickQuoteArgs = {
@@ -68,6 +67,7 @@ export type GetQuickQuoteArgs = {
   tradeType: TradeType
   inputTax: Percent
   outputTax: Percent
+  gatewayDNSUpdateAllEnabled: boolean
 }
 
 // from https://github.com/Uniswap/routing-api/blob/main/lib/handlers/schema.ts
@@ -277,15 +277,8 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
 }
 
 export enum OffchainOrderType {
-  DUTCH_AUCTION = 'Dutch',
-  DUTCH_V2_AUCTION = 'Dutch_V2',
-  LIMIT_ORDER = 'Limit',
-}
-
-export const OFFCHAIN_ORDER_TYPE_TO_SIGNATURE_TYPE: Record<OffchainOrderType, SignatureType> = {
-  [OffchainOrderType.DUTCH_AUCTION]: SignatureType.SIGN_UNISWAPX_ORDER,
-  [OffchainOrderType.DUTCH_V2_AUCTION]: SignatureType.SIGN_UNISWAPX_V2_ORDER,
-  [OffchainOrderType.LIMIT_ORDER]: SignatureType.SIGN_LIMIT,
+  DUTCH_AUCTION = 'dutch_auction',
+  LIMIT_ORDER = 'limit_order',
 }
 
 export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeType> {

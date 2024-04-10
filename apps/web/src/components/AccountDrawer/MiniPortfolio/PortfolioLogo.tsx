@@ -9,11 +9,6 @@ import useENSAvatar from 'hooks/useENSAvatar'
 import React from 'react'
 import { Loader } from 'react-feather'
 import styled from 'styled-components'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { UniconV2 } from 'ui/src/components/UniconV2'
-import { useLogolessColorScheme } from 'ui/src/utils/colors'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 
 const UnknownContract = styled(UnknownStatus)`
   color: ${({ theme }) => theme.neutral2};
@@ -94,22 +89,22 @@ function DoubleLogo({ logo1, onError1, logo2, onError2, size }: DoubleLogoProps)
 interface DoubleCurrencyLogoProps {
   chainId: ChainId
   currencies: Array<Currency | undefined>
-  images?: Array<string | undefined>
+  backupImages?: Array<string | undefined>
   size: string
 }
 
-function DoubleCurrencyLogo({ chainId, currencies, images, size }: DoubleCurrencyLogoProps) {
+function DoubleCurrencyLogo({ chainId, currencies, backupImages, size }: DoubleCurrencyLogoProps) {
   const [src, nextSrc] = useTokenLogoSource({
     address: currencies?.[0]?.wrapped.address,
     chainId,
     isNative: currencies?.[0]?.isNative,
-    primaryImg: images?.[0],
+    backupImg: backupImages?.[0],
   })
   const [src2, nextSrc2] = useTokenLogoSource({
     address: currencies?.[1]?.wrapped.address,
     chainId,
     isNative: currencies?.[1]?.isNative,
-    primaryImg: images?.[1],
+    backupImg: backupImages?.[1],
   })
 
   if (currencies.length === 1 && src) {
@@ -118,24 +113,15 @@ function DoubleCurrencyLogo({ chainId, currencies, images, size }: DoubleCurrenc
   if (currencies.length > 1) {
     return <DoubleLogo logo1={src} onError1={nextSrc} logo2={src2} onError2={nextSrc2} size={size} />
   }
-  return <LogolessPlaceholder currency={currencies?.[0]} size={size} />
-}
-
-function LogolessPlaceholder({ currency, size }: { currency?: Currency; size: string }) {
-  const isDarkMode = useIsDarkMode()
-  const logolessColorScheme = useLogolessColorScheme(currency?.name ?? currency?.symbol ?? '')
-  const { foreground, background } = isDarkMode ? logolessColorScheme.dark : logolessColorScheme.light
-
   return (
-    <MissingImageLogo $size={size} $textColor={foreground} $backgroundColor={background}>
-      {currency?.symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
+    <MissingImageLogo size={size}>
+      {currencies[0]?.symbol?.toUpperCase().replace('$', '').replace(/\s+/g, '').slice(0, 3)}
     </MissingImageLogo>
   )
 }
 
 function PortfolioAvatar({ accountAddress, size }: { accountAddress: string; size: string }) {
   const { avatar, loading } = useENSAvatar(accountAddress, false)
-  const uniconV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   if (loading) {
     return <Loader size={size} />
@@ -143,15 +129,7 @@ function PortfolioAvatar({ accountAddress, size }: { accountAddress: string; siz
   if (avatar) {
     return <ENSAvatarImg src={avatar} alt="avatar" />
   }
-  return (
-    <>
-      {uniconV2Enabled ? (
-        <UniconV2 address={accountAddress} size={40} />
-      ) : (
-        <Unicon address={accountAddress} size={40} />
-      )}
-    </>
-  )
+  return <Unicon size={40} address={accountAddress} />
 }
 
 interface PortfolioLogoProps {
@@ -191,7 +169,7 @@ function getLogo({ chainId, accountAddress, currencies, images, size = '40px' }:
     return <PortfolioAvatar accountAddress={accountAddress} size={size} />
   }
   if (currencies && currencies.length) {
-    return <DoubleCurrencyLogo chainId={chainId} currencies={currencies} images={images} size={size} />
+    return <DoubleCurrencyLogo chainId={chainId} currencies={currencies} backupImages={images} size={size} />
   }
   if (images?.length === 1) {
     return <CircleLogoImage size={size} src={images[0] ?? blankTokenUrl} />

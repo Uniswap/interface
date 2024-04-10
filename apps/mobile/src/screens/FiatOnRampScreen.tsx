@@ -79,8 +79,6 @@ function preloadServiceProviderLogos(
   )
 }
 
-const PREDEFINED_AMOUNTS_SUPPORTED_CURRENCIES = ['usd', 'eur', 'gbp', 'aud', 'cad', 'sgd']
-
 export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
@@ -99,8 +97,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     setQuotesSections,
     countryCode,
     setCountryCode,
-    countryState,
-    setCountryState,
     amount,
     setAmount,
     setBaseCurrencyInfo,
@@ -127,9 +123,8 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   } = useFiatOnRampQuotes({
     baseCurrencyAmount: debouncedAmount,
     baseCurrencyCode: meldSupportedFiatCurrency.code,
-    quoteCurrencyCode: quoteCurrency.meldCurrencyCode,
+    quoteCurrencyCode: quoteCurrency.currencyInfo?.currency.symbol,
     countryCode,
-    countryState,
   })
 
   const selectTokenLoading = quotesLoading || amount !== debouncedAmount
@@ -139,15 +134,14 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   useEffect(() => {
     if (ipCountryData) {
       setCountryCode(ipCountryData.countryCode)
-      setCountryState(ipCountryData.state)
     }
-  }, [ipCountryData, setCountryCode, setCountryState])
+  }, [ipCountryData, setCountryCode])
 
   const {
     currentData: serviceProvidersResponse,
     isFetching: serviceProvidersLoading,
     error: serviceProvidersError,
-  } = useFiatOnRampAggregatorServiceProvidersQuery({ countryCode })
+  } = useFiatOnRampAggregatorServiceProvidersQuery()
 
   // preload service provider logos for given quotes for the next screen
   useEffect(() => {
@@ -176,15 +170,11 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
       if (!quote) {
         return
       }
-      if (type === InitialQuoteSelection.MostRecent) {
-        const otherQuotes = quotes.filter((item) => item !== quote)
-        setQuotesSections([
-          { data: [quote], type },
-          ...(otherQuotes.length ? [{ data: otherQuotes }] : []),
-        ])
-      } else {
-        setQuotesSections([{ data: quotes, type }])
-      }
+      const otherQuotes = quotes.filter((item) => item !== quote)
+      setQuotesSections([
+        { data: [quote], type },
+        ...(otherQuotes.length ? [{ data: otherQuotes }] : []),
+      ])
       setSelectedQuote(quote)
     }
   }, [
@@ -215,8 +205,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
       })
     )
     setSelectingCountry(false)
-    // UI does not allow to set the state
-    setCountryState(undefined)
     setCountryCode(country.countryCode)
   }
 
@@ -280,11 +268,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     }
   }
 
-  // We only support predefined amounts for certain currencies.
-  const predefinedAmountsSupported = PREDEFINED_AMOUNTS_SUPPORTED_CURRENCIES.includes(
-    meldSupportedFiatCurrency.code.toLowerCase()
-  )
-
   return (
     <Screen edges={['top']}>
       <HandleBar backgroundColor="none" />
@@ -306,13 +289,13 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               />
             </Flex>
             <FiatOnRampAmountSection
+              predefinedAmountsSupported
               appFiatCurrencySupported={appFiatCurrencySupportedInMeld}
               currency={quoteCurrency}
               errorColor={errorColor}
               errorText={errorText}
               fiatCurrencyInfo={meldSupportedFiatCurrency}
               inputRef={inputRef}
-              predefinedAmountsSupported={predefinedAmountsSupported}
               quoteAmount={selectedQuote?.destinationAmount ?? 0}
               quoteCurrencyAmountReady={Boolean(amount && selectedQuote)}
               selectTokenLoading={selectTokenLoading}
@@ -340,7 +323,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               onLayout={onDecimalPadLayout}>
               {!showNativeKeyboard && (
                 <DecimalPadLegacy
-                  hasCurrencyPrefix
                   resetSelection={resetSelection}
                   selection={selection}
                   setValue={onChangeValue('textInput')}

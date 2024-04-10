@@ -5,8 +5,8 @@
 
 import dayjs from 'dayjs'
 import { ChainId } from 'wallet/src/constants/chains'
-import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
+import { AccountToNftData } from 'wallet/src/features/favorites/slice'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
 import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
@@ -609,11 +609,6 @@ export const migrations = {
 
     const accountAddresses = Object.keys(state.favorites?.hiddenNfts ?? {})
 
-    type AccountToNftData = Record<
-      Address,
-      Record<string, { isSpamIgnored?: boolean; isHidden?: boolean }>
-    >
-
     const nftsData: AccountToNftData = {}
     for (const accountAddress of accountAddresses) {
       nftsData[accountAddress] ??= {}
@@ -816,61 +811,6 @@ export const migrations = {
     newState.behaviorHistory = {
       ...state.behaviorHistory,
       hasViewedUniconV2IntroModal: false,
-    }
-
-    return newState
-  },
-
-  61: function flattenTokenVisibility(state: any) {
-    const newState = { ...state }
-
-    type AccountToNftData = Record<
-      Address,
-      Record<string, { isSpamIgnored?: boolean; isHidden?: boolean }>
-    >
-    type NFTKeyToVisibility = Record<string, { isVisible: boolean }>
-
-    type AccountToTokenVisibility = Record<Address, Record<string, { isVisible: boolean }>>
-    type CurrencyIdToVisibility = Record<string, { isVisible: boolean }>
-
-    const tokenVisibilityByAccount: AccountToTokenVisibility = state.favorites.tokensVisibility
-    const flattenedTokenVisibility: CurrencyIdToVisibility = Object.values(
-      tokenVisibilityByAccount
-    ).reduce((acc, currencyIdToVisibility) => ({ ...acc, ...currencyIdToVisibility }), {})
-
-    const nftDataByAccount: AccountToNftData = state.favorites.nftsData
-    const flattenedNFTData = Object.values(nftDataByAccount).reduce(
-      (acc, nftIdToVisibility) => ({ ...acc, ...nftIdToVisibility }),
-      {}
-    )
-
-    const flattenedTransformedNFTData: NFTKeyToVisibility = Object.keys(
-      flattenedNFTData
-    ).reduce<NFTKeyToVisibility>((acc, nftKey) => {
-      const { isHidden, isSpamIgnored } = flattenedNFTData[nftKey] ?? {}
-      return {
-        ...acc,
-        [nftKey]: { isVisible: isHidden === false || isSpamIgnored === true },
-      }
-    }, {})
-
-    newState.favorites = {
-      ...state.favorites,
-      tokensVisibility: flattenedTokenVisibility,
-      nftsVisibility: flattenedTransformedNFTData,
-    }
-
-    delete newState.favorites.nftsData
-
-    return newState
-  },
-
-  62: function addExtensionOnboardingState(state: any) {
-    const newState = { ...state }
-
-    newState.behaviorHistory = {
-      ...state.behaviorHistory,
-      extensionOnboardingState: ExtensionOnboardingState.Undefined,
     }
 
     return newState

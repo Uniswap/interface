@@ -47,7 +47,7 @@ function useTokenSectionsForSend(chainFilter: ChainId | null): GqlResult<TokenSe
   )
 }
 
-function EmptyList({ onEmptyActionPress }: { onEmptyActionPress?: () => void }): JSX.Element {
+function EmptyList({ onEmptyActionPress }: { onEmptyActionPress: () => void }): JSX.Element {
   const { t } = useTranslation()
 
   const { data: ipAddressData, isLoading } = useFiatOnRampIpAddressQuery(
@@ -68,7 +68,7 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress?: () => void }):
         ) : (
           <BaseCard.EmptyState
             buttonLabel={
-              fiatOnRampEligible && onEmptyActionPress
+              fiatOnRampEligible
                 ? t('tokens.selector.empty.buy.title')
                 : t('tokens.selector.empty.receive.title')
             }

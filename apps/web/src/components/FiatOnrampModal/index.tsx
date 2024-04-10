@@ -1,5 +1,5 @@
+import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { Trans } from 'i18n'
 import { useCallback, useEffect, useState } from 'react'
 import { useHref } from 'react-router-dom'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'

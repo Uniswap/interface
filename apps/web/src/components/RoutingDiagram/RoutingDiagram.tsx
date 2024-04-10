@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
@@ -7,7 +8,6 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row, { AutoRow } from 'components/Row'
 import { BIPS_BASE } from 'constants/misc'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
-import { Trans } from 'i18n'
 import { Box } from 'rebass'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -142,7 +142,7 @@ function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; curren
   // TODO - link pool icon to info.uniswap.org via query params
   return (
     <MouseoverTooltip
-      text={<Trans>{{ pct: tokenInfo0?.symbol + '/' + tokenInfo1?.symbol + ' ' + feeAmount / 10000 }}% pool</Trans>}
+      text={<Trans>{tokenInfo0?.symbol + '/' + tokenInfo1?.symbol + ' ' + feeAmount / 10000}% pool</Trans>}
       size={TooltipSize.ExtraSmall}
     >
       <PoolBadge>

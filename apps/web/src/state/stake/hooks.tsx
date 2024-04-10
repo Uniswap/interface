@@ -73,7 +73,7 @@ export function useStakingInfo(pairToFilterBy?: Pair | null): StakingInfo[] {
   const { chainId, account } = useWeb3React()
 
   // detect if staking is ended
-  const currentBlockTimestamp = useCurrentBlockTimestamp(NEVER_RELOAD)
+  const currentBlockTimestamp = useCurrentBlockTimestamp()
 
   const info = useMemo(
     () =>

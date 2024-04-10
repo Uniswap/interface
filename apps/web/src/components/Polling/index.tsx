@@ -1,17 +1,13 @@
+import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
 import { RowFixed } from 'components/Row'
-import {
-  AVERAGE_L1_BLOCK_TIME,
-  DEFAULT_MS_BEFORE_WARNING,
-  getBlocksPerMainnetEpochForChainId,
-  getChainInfo,
-} from 'constants/chainInfo'
+import { getChainInfo } from 'constants/chainInfo'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import useMachineTimeMs from 'hooks/useMachineTime'
-import { Trans } from 'i18n'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
+import ms from 'ms'
 import { useEffect, useMemo, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
@@ -101,22 +97,22 @@ const Spinner = styled.div<{ warning: boolean }>`
   top: -3px;
 `
 
+const DEFAULT_MS_BEFORE_WARNING = ms(`10m`)
+const NETWORK_HEALTH_CHECK_MS = ms(`10s`)
+
 export default function Polling() {
   const { chainId } = useWeb3React()
   const blockNumber = useBlockNumber()
   const [isMounting, setIsMounting] = useState(false)
   const [isHover, setIsHover] = useState(false)
+  const machineTime = useMachineTimeMs(NETWORK_HEALTH_CHECK_MS)
+  const blockTime = useCurrentBlockTimestamp()
   const isNftPage = useIsNftPage()
   const isLandingPage = useIsLandingPage()
 
-  const waitMsBeforeWarning = useMemo(
-    () => (chainId ? getChainInfo(chainId)?.blockWaitMsBeforeWarning : undefined) ?? DEFAULT_MS_BEFORE_WARNING,
-    [chainId]
-  )
-  const machineTime = useMachineTimeMs(AVERAGE_L1_BLOCK_TIME)
-  const blockTime = useCurrentBlockTimestamp(
-    useMemo(() => ({ blocksPerFetch: /* 5m / 12s = */ 25 * getBlocksPerMainnetEpochForChainId(chainId) }), [chainId])
-  )
+  const waitMsBeforeWarning =
+    (chainId ? getChainInfo(chainId)?.blockWaitMsBeforeWarning : DEFAULT_MS_BEFORE_WARNING) ?? DEFAULT_MS_BEFORE_WARNING
+
   const warning = Boolean(!!blockTime && machineTime - blockTime.mul(1000).toNumber() > waitMsBeforeWarning)
 
   useEffect(

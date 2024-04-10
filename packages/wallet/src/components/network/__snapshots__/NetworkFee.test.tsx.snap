@@ -56,7 +56,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
             "color": "#7D7D7D",
             "flexShrink": 1,
             "fontFamily": "Basel-Book",
-            "fontSize": 14,
+            "fontSize": 15,
             "lineHeight": 20,
           }
         }
@@ -135,7 +135,6 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
     <View
       style={
         {
-          "borderColor": "#FFFFFF",
           "borderRadius": 6,
           "flexDirection": "column",
           "overflow": "hidden",
@@ -310,7 +309,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
             "color": "#7D7D7D",
             "flexShrink": 1,
             "fontFamily": "Basel-Book",
-            "fontSize": 14,
+            "fontSize": 15,
             "lineHeight": 20,
           }
         }
@@ -389,7 +388,6 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
     <View
       style={
         {
-          "borderColor": "#FFFFFF",
           "borderRadius": 6,
           "flexDirection": "column",
           "overflow": "hidden",
@@ -418,7 +416,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
         {
           "color": "#7D7D7D",
           "fontFamily": "Basel-Book",
-          "fontSize": 14,
+          "fontSize": 15,
           "lineHeight": 20,
         }
       }
@@ -486,7 +484,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
             "color": "#7D7D7D",
             "flexShrink": 1,
             "fontFamily": "Basel-Book",
-            "fontSize": 14,
+            "fontSize": 15,
             "lineHeight": 20,
           }
         }
@@ -565,7 +563,6 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
     <View
       style={
         {
-          "borderColor": "#FFFFFF",
           "borderRadius": 6,
           "flexDirection": "column",
           "overflow": "hidden",
@@ -594,7 +591,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
         {
           "color": "#222222",
           "fontFamily": "Basel-Book",
-          "fontSize": 14,
+          "fontSize": 15,
           "lineHeight": 20,
         }
       }

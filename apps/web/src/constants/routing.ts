@@ -103,7 +103,6 @@ export const COMMON_BASES: ChainCurrencyList = {
   [ChainId.OPTIMISM_GOERLI]: [nativeOnChain(ChainId.OPTIMISM_GOERLI), USDC_OPTIMISM_GOERLI],
 
   [ChainId.BASE]: [nativeOnChain(ChainId.BASE), WRAPPED_NATIVE_CURRENCY[ChainId.BASE] as Token, USDC_BASE],
-  [ChainId.BLAST]: [nativeOnChain(ChainId.BLAST), WRAPPED_NATIVE_CURRENCY[ChainId.BLAST] as Token],
 
   [ChainId.POLYGON]: [
     nativeOnChain(ChainId.POLYGON),

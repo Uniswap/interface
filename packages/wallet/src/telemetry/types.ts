@@ -11,10 +11,8 @@ import { ImportType } from 'wallet/src/features/onboarding/types'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { QuoteType } from 'wallet/src/features/transactions/utils'
 import {
-  ExtensionOnboardingEventName,
   FiatOnRampEventName,
   InstitutionTransferEventName,
-  ShareableEntity,
   UnitagEventName,
   WalletAppsFlyerEvents,
   WalletEventName,
@@ -97,7 +95,6 @@ export type WalletEventProperties = {
   }
   [FiatOnRampEventName.FiatOnRampWidgetOpened]: TraceProps & {
     countryCode: string
-    countryState?: string
     cryptoCurrency: string
     externalTransactionId: string
     fiatCurrency: string
@@ -128,10 +125,6 @@ export type WalletEventProperties = {
   }
   [WalletEventName.SendRecipientSelected]: {
     domain: string
-  }
-  [WalletEventName.ShareButtonClicked]: {
-    entity: ShareableEntity
-    url: string
   }
   [WalletEventName.SwapSubmitted]: {
     transaction_hash: string
@@ -186,9 +179,6 @@ export type WalletEventProperties = {
     twitter: boolean
   }
   [UnitagEventName.UnitagRemoved]: undefined
-  [ExtensionOnboardingEventName.PromoBannerActionTaken]: {
-    action: 'join' | 'dismiss'
-  }
 }
 
 export type WalletAppsFlyerEventProperties = {

@@ -1,10 +1,4 @@
-import {
-  Chain,
-  Currency,
-  Token,
-  TokenBalance,
-  TokenStandard,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain, Currency, Token, TokenBalance, TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
 
 import { splitHiddenTokens } from './splitHiddenTokens'
 

@@ -24,7 +24,6 @@ import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningM
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult, GasSpeed } from 'wallet/src/features/gas/types'
 import { WarningAction, WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
-import { useParsedSendWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { useTokenSelectorActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenSelectorActionHandlers'
 import { useTransactionGasWarning } from 'wallet/src/features/transactions/hooks/useTransactionGasWarning'
 import {
@@ -103,8 +102,6 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
     return !gasWarning ? warnings : [...warnings, gasWarning]
   }, [warnings, gasWarning])
 
-  const parsedSendWarnings = useParsedSendWarnings(allWarnings)
-
   const { onSelectCurrency, onHideTokenSelector } = useTokenSelectorActionHandlers(
     dispatch,
     TokenSelectorFlow.Transfer
@@ -160,12 +157,11 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
                   dispatch={dispatch}
                   exactValue={exactValue}
                   gasFee={gasFee}
-                  setShowViewOnlyModal={setShowViewOnlyModal}
                   setStep={setStep}
                   showingSelectorScreen={!!showRecipientSelector}
                   step={step}
                   txRequest={transferTxWithGasSettings}
-                  warnings={parsedSendWarnings}
+                  warnings={allWarnings}
                   onClose={onClose}
                   onFormNext={onFormNext}
                   onRetrySubmit={onRetrySubmit}
@@ -229,7 +225,6 @@ type TransferInnerContentProps = {
   onReviewNext: () => void
   onReviewPrev: () => void
   onRetrySubmit: () => void
-  setShowViewOnlyModal: (show: boolean) => void
 } & Pick<
   TransferFlowProps,
   'derivedInfo' | 'onClose' | 'dispatch' | 'gasFee' | 'txRequest' | 'warnings' | 'exactValue'
@@ -248,7 +243,6 @@ function TransferInnerContent({
   onRetrySubmit,
   onReviewNext,
   onReviewPrev,
-  setShowViewOnlyModal,
 }: TransferInnerContentProps): JSX.Element | null {
   // TODO: move this up in the tree to mobile specific flow
   const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
@@ -310,7 +304,6 @@ function TransferInnerContent({
             dispatch={dispatch}
             isLayoutPending={isLayoutPending}
             openWalletRestoreModal={openWalletRestoreModal}
-            setShowViewOnlyModal={setShowViewOnlyModal}
             showNativeKeyboard={showNativeKeyboard}
             showingSelectorScreen={showingSelectorScreen}
             walletNeedsRestore={!!walletNeedsRestore}

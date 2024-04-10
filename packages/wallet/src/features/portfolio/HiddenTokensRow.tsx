@@ -1,5 +1,6 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import { useTranslation } from 'react-i18next'
-import { Flex, Icons, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Flex, Icons, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 
 export function HiddenTokensRow({
@@ -25,9 +26,9 @@ export function HiddenTokensRow({
         row
         alignItems="center"
         justifyContent="space-between"
-        px={padded ? '$spacing12' : '$none'}
+        px={padded ? '$spacing24' : '$none'}
         py="$spacing12">
-        <Text color="$neutral2" pl="$spacing8" variant="subheading2">
+        <Text color="$neutral2" variant="subheading2">
           {t('tokens.hidden.label', { numHidden })}
         </Text>
         {/* just used for opacity styling, the parent TouchableArea handles event */}
@@ -54,8 +55,8 @@ export function HiddenTokensRow({
               animation="semiBouncy"
               color="$neutral2"
               direction={isExpanded ? 'up' : 'down'}
-              height={iconSizes.icon16}
-              width={iconSizes.icon16}
+              height={iconSizes.icon20}
+              width={iconSizes.icon20}
             />
           </Flex>
         </TouchableArea>

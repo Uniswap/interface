@@ -1,5 +1,8 @@
 import { NetworkStatus, Reference, useApolloClient, WatchQueryFetchPolicy } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
+import { GqlResult } from 'uniswap/src/data/types'
+import { logger } from 'utilities/src/logger/logger'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   ContractInput,
   IAmount,
@@ -7,24 +10,20 @@ import {
   PortfolioBalanceDocument,
   PortfolioValueModifier,
   usePortfolioBalancesQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GqlResult } from 'uniswap/src/data/types'
-import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { CurrencyId } from 'uniswap/src/types/currency'
-import { logger } from 'utilities/src/logger/logger'
-import { PollingInterval } from 'wallet/src/constants/misc'
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import { CurrencyInfo, PortfolioBalance } from 'wallet/src/features/dataApi/types'
 import {
   buildCurrency,
   currencyIdToContractInput,
   usePersistedError,
 } from 'wallet/src/features/dataApi/utils'
-import { useCurrencyIdToVisibility } from 'wallet/src/features/transactions/selectors'
+import { useAccountToTokenVisibility } from 'wallet/src/features/transactions/selectors'
 import {
   useHideSmallBalancesSetting,
   useHideSpamTokensSetting,
 } from 'wallet/src/features/wallet/hooks'
-import { currencyId } from 'wallet/src/utils/currencyId'
+import { CurrencyId, currencyId } from 'wallet/src/utils/currencyId'
 
 type SortedPortfolioBalances = {
   balances: PortfolioBalance[]
@@ -37,11 +36,6 @@ export type PortfolioTotalValue = {
   absoluteChangeUSD: number | undefined
 }
 
-interface TokenOverrides {
-  tokenIncludeOverrides: ContractInput[]
-  tokenExcludeOverrides: ContractInput[]
-}
-
 export type PortfolioCacheUpdater = (hidden: boolean, portfolioBalance?: PortfolioBalance) => void
 
 export function usePortfolioValueModifiers(
@@ -52,44 +46,47 @@ export function usePortfolioValueModifiers(
     () => (!address ? [] : Array.isArray(address) ? address : [address]),
     [address]
   )
-  const currencyIdToTokenVisibility = useCurrencyIdToVisibility()
+  const accountToTokensVisibility = useAccountToTokenVisibility(addressArray)
 
   const hideSpamTokens = useHideSpamTokensSetting()
   const hideSmallBalances = useHideSmallBalancesSetting()
 
-  const { tokenIncludeOverrides, tokenExcludeOverrides } = Object.entries(
-    currencyIdToTokenVisibility
-  ).reduce(
-    (acc: TokenOverrides, [key, tokenVisibility]) => {
-      const contractInput = currencyIdToContractInput(key)
-      if (tokenVisibility.isVisible) {
-        acc.tokenIncludeOverrides.push(contractInput)
-      } else {
-        acc.tokenExcludeOverrides.push(contractInput)
-      }
-      return acc
-    },
-    {
-      tokenIncludeOverrides: [],
-      tokenExcludeOverrides: [],
-    }
-  )
-
   const modifiers = useMemo<PortfolioValueModifier[]>(() => {
-    return addressArray.map((addr) => ({
-      ownerAddress: addr,
-      tokenIncludeOverrides,
-      tokenExcludeOverrides,
-      includeSmallBalances: !hideSmallBalances,
-      includeSpamTokens: !hideSpamTokens,
-    }))
-  }, [
-    addressArray,
-    tokenIncludeOverrides,
-    tokenExcludeOverrides,
-    hideSmallBalances,
-    hideSpamTokens,
-  ])
+    return addressArray.map((addr) => {
+      const tokenOverrides = accountToTokensVisibility[addr] || {}
+
+      interface TokenOverrides {
+        tokenIncludeOverrides: ContractInput[]
+        tokenExcludeOverrides: ContractInput[]
+      }
+
+      const { tokenIncludeOverrides, tokenExcludeOverrides } = Object.entries(
+        tokenOverrides
+      ).reduce(
+        (acc: TokenOverrides, [key, tokenVisibility]) => {
+          const contractInput = currencyIdToContractInput(key)
+          if (tokenVisibility.isVisible) {
+            acc.tokenIncludeOverrides.push(contractInput)
+          } else {
+            acc.tokenExcludeOverrides.push(contractInput)
+          }
+          return acc
+        },
+        {
+          tokenIncludeOverrides: [],
+          tokenExcludeOverrides: [],
+        }
+      )
+
+      return {
+        ownerAddress: addr,
+        tokenIncludeOverrides,
+        tokenExcludeOverrides,
+        includeSmallBalances: !hideSmallBalances,
+        includeSpamTokens: !hideSpamTokens,
+      }
+    })
+  }, [accountToTokensVisibility, addressArray, hideSmallBalances, hideSpamTokens])
 
   return modifiers.length > 0 ? modifiers : undefined
 }

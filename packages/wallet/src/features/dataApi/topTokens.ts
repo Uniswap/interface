@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
+import { GqlResult } from 'uniswap/src/data/types'
+import { ChainId } from 'wallet/src/constants/chains'
 import {
   TokenSortableField,
   useTopTokensQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GqlResult } from 'uniswap/src/data/types'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ChainId } from 'wallet/src/constants/chains'
+} from 'wallet/src/data/__generated__/types-and-hooks'
+import { toGraphQLChain } from 'wallet/src/features/chains/utils'
+import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { gqlTokenToCurrencyInfo, usePersistedError } from 'wallet/src/features/dataApi/utils'
 
 export function usePopularTokens(chainFilter: ChainId): GqlResult<CurrencyInfo[]> {

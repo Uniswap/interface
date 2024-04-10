@@ -26,8 +26,11 @@ import { TextInputProps } from 'wallet/src/components/input/TextInput'
 import { CurrencyInputPanelLegacy } from 'wallet/src/components/legacy/CurrencyInputPanelLegacy'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
 import { WarningModal, getAlertColor } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { WarningAction, WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
-import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
+import {
+  Warning,
+  WarningAction,
+  WarningSeverity,
+} from 'wallet/src/features/transactions/WarningModal/types'
 import { useTokenFormActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenFormActionHandlers'
 import { useTokenSelectorActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenSelectorActionHandlers'
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
@@ -44,15 +47,13 @@ import {
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 interface TransferTokenProps {
   dispatch: React.Dispatch<AnyAction>
   derivedTransferInfo: DerivedTransferInfo
   onNext: () => void
-  warnings: ParsedWarnings
+  warnings: Warning[]
   showingSelectorScreen: boolean
   walletNeedsRestore: boolean
   openWalletRestoreModal?: () => void
@@ -60,7 +61,6 @@ interface TransferTokenProps {
   onDecimalPadLayout?: (event: LayoutChangeEvent) => void
   isLayoutPending: boolean
   onInputPanelLayout?: (event: LayoutChangeEvent) => void
-  setShowViewOnlyModal: (show: boolean) => void
 }
 
 export function TransferTokenForm({
@@ -75,12 +75,10 @@ export function TransferTokenForm({
   onDecimalPadLayout,
   isLayoutPending,
   onInputPanelLayout,
-  setShowViewOnlyModal,
 }: TransferTokenProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const { fullHeight } = useDeviceDimensions()
-  const account = useActiveAccountWithThrow()
 
   const {
     currencyAmounts,
@@ -135,9 +133,8 @@ export function TransferTokenForm({
     openWalletRestoreModal()
   }
 
-  const isViewOnlyWallet = account.type === AccountType.Readonly
   const actionButtonDisabled =
-    warnings.warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
+    warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
     transferSpeedbump.loading ||
     isBlocked ||
     isBlockedLoading ||
@@ -150,14 +147,12 @@ export function TransferTokenForm({
   }, [dispatch, onNext])
 
   const onPressReview = useCallback(() => {
-    if (isViewOnlyWallet) {
-      setShowViewOnlyModal(true)
-    } else if (transferSpeedbump.hasWarning) {
+    if (transferSpeedbump.hasWarning) {
       setShowSpeedbumpModal(true)
     } else {
       goToNext()
     }
-  }, [goToNext, transferSpeedbump.hasWarning, isViewOnlyWallet, setShowViewOnlyModal])
+  }, [goToNext, transferSpeedbump.hasWarning])
 
   const onSetTransferSpeedbump = useCallback(({ hasWarning, loading }: TransferSpeedbump) => {
     setTransferSpeedbump({ hasWarning, loading })
@@ -221,9 +216,7 @@ export function TransferTokenForm({
     setShowWarningModal(true)
   }
 
-  const transferWarning = warnings.warnings.find(
-    (warning) => warning.severity >= WarningSeverity.Low
-  )
+  const transferWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Low)
   const transferWarningColor = getAlertColor(transferWarning?.severity)
 
   const TRANSFER_DIRECTION_BUTTON_SIZE = iconSizes.icon20
@@ -280,7 +273,7 @@ export function TransferTokenForm({
                 showSoftInputOnFocus={showNativeKeyboard}
                 usdValue={inputCurrencyUSDValue}
                 value={isFiatInput ? exactAmountFiat : exactAmountToken}
-                warnings={warnings.warnings}
+                warnings={warnings}
                 onPressIn={(): void => setCurrencyFieldFocused(true)}
                 onSelectionChange={
                   showNativeKeyboard
@@ -426,9 +419,7 @@ export function TransferTokenForm({
             />
           )}
           <Button
-            disabled={actionButtonDisabled && !isViewOnlyWallet}
-            // Override opacity only for view only wallets
-            opacity={isViewOnlyWallet ? 0.4 : undefined}
+            disabled={actionButtonDisabled}
             size="large"
             testID={ElementName.ReviewTransfer}
             onPress={onPressReview}>

@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
-import { CurrencyId } from 'uniswap/src/types/currency'
 import {
   makeSelectHasTokenFavorited,
   selectWatchedAddressSet,
@@ -15,7 +14,7 @@ import {
 } from 'wallet/src/features/favorites/slice'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
+import { CurrencyId, currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
 export function useToggleFavoriteCallback(id: CurrencyId, isFavoriteToken: boolean): () => void {
   const dispatch = useAppDispatch()

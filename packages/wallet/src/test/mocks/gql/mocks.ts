@@ -4,7 +4,7 @@ import {
   SafetyLevel,
   SwapOrderStatus,
   TransactionStatus,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { GQL_CHAINS } from 'wallet/src/test/fixtures'
 import { MAX_FIXTURE_TIMESTAMP, faker } from 'wallet/src/test/shared'
 import { randomChoice, randomEnumValue } from 'wallet/src/test/utils'
@@ -17,7 +17,6 @@ export const mocks = {
     name: () => faker.lorem.word(),
     safetyLevel: () => SafetyLevel.Verified,
     tokens: () => new Array(4),
-    markets: () => null,
   },
   TokenProjectMarket: {
     currency: () => Currency.Eth,
@@ -27,7 +26,7 @@ export const mocks = {
   },
   Token: {
     id: () => faker.datatype.uuid(),
-    address: () => null,
+    address: () => faker.finance.ethereumAddress(),
     chain: () => randomChoice(GQL_CHAINS),
     decimals: () => 6,
     symbol: () => faker.lorem.word(),

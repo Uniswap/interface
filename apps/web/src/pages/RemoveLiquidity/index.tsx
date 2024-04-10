@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
+import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -10,7 +11,6 @@ import { V2Unsupported } from 'components/V2Unsupported'
 import { isSupportedChain } from 'constants/chains'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
-import { Trans } from 'i18n'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
@@ -36,7 +36,7 @@ import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { usePairContract, useV2RouterContract } from '../../hooks/useContract'
 import useDebouncedChangeHandler from '../../hooks/useDebouncedChangeHandler'
-import { useGetTransactionDeadline } from '../../hooks/useTransactionDeadline'
+import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { Field } from '../../state/burn/actions'
 import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from '../../state/burn/hooks'
 import { useTransactionAdder } from '../../state/transactions/hooks'
@@ -87,7 +87,7 @@ function RemoveLiquidity() {
 
   // txn values
   const [txHash, setTxHash] = useState<string>('')
-  const getDeadline = useGetTransactionDeadline()
+  const deadline = useTransactionDeadline()
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE)
 
   const formattedAmounts = {
@@ -119,7 +119,7 @@ function RemoveLiquidity() {
   const [approval, approveCallback] = useApproveCallback(parsedAmounts[Field.LIQUIDITY], router?.address)
 
   async function onAttemptToApprove() {
-    if (!pairContract || !pair || !provider) throw new Error('missing dependencies')
+    if (!pairContract || !pair || !provider || !deadline) throw new Error('missing dependencies')
     const liquidityAmount = parsedAmounts[Field.LIQUIDITY]
     if (!liquidityAmount) throw new Error('missing liquidity amount')
 
@@ -164,7 +164,7 @@ function RemoveLiquidity() {
   const networkSupportsV2 = useNetworkSupportsV2()
 
   async function onRemove() {
-    if (!chainId || !provider || !account || !router || !networkSupportsV2) {
+    if (!chainId || !provider || !account || !deadline || !router || !networkSupportsV2) {
       throw new Error('missing dependencies')
     }
     const { [Field.CURRENCY_A]: currencyAmountA, [Field.CURRENCY_B]: currencyAmountB } = parsedAmounts
@@ -185,9 +185,6 @@ function RemoveLiquidity() {
     const oneCurrencyIsETH = currencyA.isNative || currencyBIsETH
 
     if (!tokenA || !tokenB) throw new Error('could not wrap')
-
-    const deadline = await getDeadline()
-    if (!deadline) throw new Error('could not get deadline')
 
     let methodNames: string[], args: Array<string | string[] | number | boolean>
     // we have approval, use normal remove liquidity
@@ -340,8 +337,8 @@ function RemoveLiquidity() {
 
         <ThemedText.DeprecatedItalic fontSize={12} color={theme.neutral2} textAlign="left" padding="12px 0 0 0">
           <Trans>
-            Output is estimated. If the price changes by more than {{ allowed: allowedSlippage.toSignificant(4) }}% your
-            transaction will revert.
+            Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your transaction
+            will revert.
           </Trans>
         </ThemedText.DeprecatedItalic>
       </AutoColumn>
@@ -354,7 +351,7 @@ function RemoveLiquidity() {
         <RowBetween>
           <Text color={theme.neutral2} fontWeight={535} fontSize={16}>
             <Trans>
-              UNI {{ a: currencyA?.symbol }}/{{ b: currencyB?.symbol }} Burned
+              UNI {currencyA?.symbol}/{currencyB?.symbol} Burned
             </Trans>
           </Text>
           <RowFixed>
@@ -393,8 +390,8 @@ function RemoveLiquidity() {
 
   const pendingText = (
     <Trans>
-      Removing {{ amtA: parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) }} {{ symA: currencyA?.symbol }} and
-      {{ amtB: parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) }} {{ symB: currencyB?.symbol }}
+      Removing {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} {currencyA?.symbol} and
+      {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} {currencyB?.symbol}
     </Trans>
   )
 

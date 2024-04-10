@@ -5,7 +5,6 @@ import Modal from 'components/Modal'
 import Row from 'components/Row'
 import { ReactNode } from 'react'
 import styled, { DefaultTheme } from 'styled-components'
-import { Gap } from 'theme'
 import { CloseIcon, ThemedText } from 'theme/components'
 
 export const Container = styled(ColumnCenter)`
@@ -52,15 +51,12 @@ const StyledButton = styled(ThemeButton)<{ $color?: keyof DefaultTheme }>`
 export enum DialogButtonType {
   Primary = 'primary',
   Error = 'error',
-  Accent = 'accent',
 }
 
 function getButtonEmphasis(type?: DialogButtonType) {
   switch (type) {
     case DialogButtonType.Error:
       return ButtonEmphasis.destructive
-    case DialogButtonType.Accent:
-      return ButtonEmphasis.high
     default:
       return ButtonEmphasis.medium
   }
@@ -77,7 +73,6 @@ type ButtonConfig = {
 type ButtonsConfig = {
   left?: ButtonConfig
   right?: ButtonConfig
-  gap?: Gap
 }
 
 export interface DialogProps {
@@ -88,48 +83,6 @@ export interface DialogProps {
   body?: ReactNode
   onCancel: () => void
   buttonsConfig?: ButtonsConfig
-}
-
-/**
- * All the content of the dialog that doesn't relate to the modal presentation.
- * Use this if you want to use the dialog within a different modal.
- */
-export function DialogContent({ icon, title, description, body, buttonsConfig }: DialogProps) {
-  const { left, right, gap } = buttonsConfig ?? {}
-  return (
-    <>
-      <ColumnCenter gap="md">
-        <IconContainer>{icon}</IconContainer>
-        <TitleText>{title}</TitleText>
-        <DescriptionText>{description}</DescriptionText>
-        {body}
-      </ColumnCenter>
-      <Row align="center" justify="center" gap={gap ?? 'md'}>
-        {left && (
-          <StyledButton
-            size={ButtonSize.small}
-            onClick={left.onClick}
-            disabled={left.disabled}
-            emphasis={getButtonEmphasis(left.type)}
-            $color={left.textColor}
-          >
-            {left.title}
-          </StyledButton>
-        )}
-        {right && (
-          <StyledButton
-            size={ButtonSize.small}
-            onClick={right.onClick}
-            disabled={right.disabled}
-            emphasis={getButtonEmphasis(right.type)}
-            $color={right.textColor}
-          >
-            {right.title}
-          </StyledButton>
-        )}
-      </Row>
-    </>
-  )
 }
 
 /**
@@ -145,15 +98,45 @@ export function DialogContent({ icon, title, description, body, buttonsConfig }:
  * |   left | right   |
  *  ------------------
  */
-export function Dialog(props: DialogProps) {
+export function Dialog({ isVisible, buttonsConfig, icon, title, onCancel, description, body }: DialogProps) {
+  const { left, right } = buttonsConfig ?? {}
   return (
-    <Modal $scrollOverlay isOpen={props.isVisible} onDismiss={props.onCancel}>
+    <Modal $scrollOverlay isOpen={isVisible} onDismiss={onCancel}>
       <Container gap="lg">
         <Row gap="10px" width="100%" padding="4px 0px" justify="end" align="center">
           <GetHelp />
-          <CloseIcon data-testid="Dialog-closeButton" onClick={props.onCancel} />
+          <CloseIcon data-testid="Dialog-closeButton" onClick={onCancel} />
         </Row>
-        <DialogContent {...props} />
+        <ColumnCenter gap="md">
+          <IconContainer>{icon}</IconContainer>
+          <TitleText>{title}</TitleText>
+          <DescriptionText>{description}</DescriptionText>
+          {body}
+        </ColumnCenter>
+        <Row align="center" justify="center" gap="md">
+          {left && (
+            <StyledButton
+              size={ButtonSize.small}
+              onClick={left.onClick}
+              disabled={left.disabled}
+              emphasis={getButtonEmphasis(left.type)}
+              $color={left.textColor}
+            >
+              {left.title}
+            </StyledButton>
+          )}
+          {right && (
+            <StyledButton
+              size={ButtonSize.small}
+              onClick={right.onClick}
+              disabled={right.disabled}
+              emphasis={getButtonEmphasis(right.type)}
+              $color={right.textColor}
+            >
+              {right.title}
+            </StyledButton>
+          )}
+        </Row>
       </Container>
     </Modal>
   )

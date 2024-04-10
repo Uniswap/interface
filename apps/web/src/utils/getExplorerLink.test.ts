@@ -38,7 +38,4 @@ describe('#getExplorerLink', () => {
   it('base', () => {
     expect(getExplorerLink(ChainId.BASE, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://basescan.org/address/abc')
   })
-  it('blast', () => {
-    expect(getExplorerLink(ChainId.BLAST, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://blastscan.io/address/abc')
-  })
 })

@@ -1,4 +1,4 @@
-import { useTranslation } from 'i18n'
+import { t } from '@lingui/macro'
 
 /**
  * Displays the time as a human-readable string.
@@ -7,8 +7,7 @@ import { useTranslation } from 'i18n'
  * @param {number} locale - BCP 47 language tag (e.g. en-US).
  * @returns {string} Message to display.
  */
-export function useAbbreviatedTimeString(timestamp: number) {
-  const { t } = useTranslation()
+export function getAbbreviatedTimeString(timestamp: number) {
   const now = Date.now()
   const timeSince = now - timestamp
   const secondsPassed = Math.floor(timeSince / 1000)
@@ -18,14 +17,14 @@ export function useAbbreviatedTimeString(timestamp: number) {
   const monthsPassed = Math.floor(daysPassed / 30)
 
   if (monthsPassed > 0) {
-    return t(`{{monthsPassed}}mo ago`, { monthsPassed })
+    return t`${monthsPassed}mo ago`
   } else if (daysPassed > 0) {
-    return t(`{{daysPassed}}d ago`, { daysPassed })
+    return t`${daysPassed}d ago`
   } else if (hoursPassed > 0) {
-    return t(`{{hoursPassed}}h ago`, { hoursPassed })
+    return t`${hoursPassed}h ago`
   } else if (minutesPassed > 0) {
-    return t(`{{minutesPassed}}m ago`, { minutesPassed })
+    return t`${minutesPassed}m ago`
   } else {
-    return t(`{{secondsPassed}}s ago`, { secondsPassed })
+    return t`${secondsPassed}s ago`
   }
 }

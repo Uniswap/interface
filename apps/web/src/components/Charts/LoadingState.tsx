@@ -1,7 +1,7 @@
+import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { MissingDataIcon } from 'components/Table/icons'
-import { Trans } from 'i18n'
 import { lighten } from 'polished'
 import { PropsWithChildren, ReactNode } from 'react'
 import styled, { useTheme } from 'styled-components'

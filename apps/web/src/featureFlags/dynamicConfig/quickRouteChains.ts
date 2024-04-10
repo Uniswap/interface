@@ -1,16 +1,21 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { DynamicConfigs } from 'uniswap/src/features/experiments/configs'
-import { useDynamicConfig } from 'uniswap/src/features/experiments/hooks'
+import { useFeatureFlagsContext } from 'featureFlags'
 
-export const QUICK_ROUTE_CONFIG_KEY = 'quick_route_chains'
+import { DynamicConfigName, useDynamicConfig } from '.'
 
 export function useQuickRouteChains(): ChainId[] {
-  const statsigConfig = useDynamicConfig(DynamicConfigs.QuickRouteChains)
-  const chains = statsigConfig.get(QUICK_ROUTE_CONFIG_KEY, []) as ChainId[]
+  const statsigConfig = useDynamicConfig(DynamicConfigName.quickRouteChains)
+  const featureFlagsContext = useFeatureFlagsContext()
+
+  const remoteConfigChains = statsigConfig.get(DynamicConfigName.quickRouteChains, []) as ChainId[]
+  const localConfigChains =
+    featureFlagsContext.configs[DynamicConfigName.quickRouteChains]?.[DynamicConfigName.quickRouteChains]
+
+  const chains = Array.isArray(localConfigChains) ? localConfigChains : remoteConfigChains
   if (chains.every((c) => Object.values(ChainId).includes(c))) {
     return chains
   } else {
-    console.error('dynamic config chains contain invalid ChainId')
+    console.error('feature flag config chains contain invalid ChainId')
     return []
   }
 }

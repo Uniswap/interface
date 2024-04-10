@@ -10,9 +10,6 @@
     {
       "path": "../ui"
     },
-    {
-      "path": "../utilities"
-    },
   ],
   "compilerOptions": {
     "types": [

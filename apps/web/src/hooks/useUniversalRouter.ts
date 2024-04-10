@@ -1,15 +1,13 @@
-import { TransactionResponse } from '@ethersproject/abstract-provider'
 import { BigNumber } from '@ethersproject/bignumber'
+import { t } from '@lingui/macro'
 import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { FlatFeeOptions, SwapRouter, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions, toHex } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
+import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import { getConnection } from 'connection'
-import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
-import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
-import { t } from 'i18n'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { useCallback } from 'react'
@@ -21,6 +19,7 @@ import { UserRejectedRequestError, WrongChainError } from 'utils/errors'
 import isZero from 'utils/isZero'
 import { didUserReject, swapErrorToUserReadableMessage } from 'utils/swapErrorToUserReadableMessage'
 import { getWalletMeta } from 'utils/walletMeta'
+
 import { PermitSignature } from './usePermitAllowance'
 
 /** Thrown when gas estimation fails. This class of error usually requires an emulator to determine the root cause. */
@@ -44,6 +43,7 @@ class ModifiedSwapError extends Error {
 
 interface SwapOptions {
   slippageTolerance: Percent
+  deadline?: BigNumber
   permit?: PermitSignature
   feeOptions?: FeeOptions
   flatFeeOptions?: FlatFeeOptions
@@ -57,12 +57,12 @@ export function useUniversalRouterSwapCallback(
   const { account, chainId, provider, connector } = useWeb3React()
   const analyticsContext = useTrace()
   const blockNumber = useBlockNumber()
-  const getDeadline = useGetTransactionDeadline()
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
-  const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
+  const { data } = useCachedPortfolioBalancesQuery({ account })
+  const portfolioBalanceUsd = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
 
   return useCallback(
-    (): Promise<{ type: TradeFillType.Classic; response: TransactionResponse; deadline?: BigNumber }> =>
+    () =>
       trace({ name: 'Swap (Classic)', op: 'swap.classic' }, async (trace) => {
         try {
           if (!account) throw new Error('missing account')
@@ -72,12 +72,10 @@ export function useUniversalRouterSwapCallback(
           const connectedChainId = await provider.getSigner().getChainId()
           if (chainId !== connectedChainId) throw new WrongChainError()
 
-          const deadline = await getDeadline()
-
           trace.setData('slippageTolerance', options.slippageTolerance.toFixed(2))
           const { calldata: data, value } = SwapRouter.swapERC20CallParameters(trade, {
             slippageTolerance: options.slippageTolerance,
-            deadlineOrPreviousBlockhash: deadline?.toString(),
+            deadlineOrPreviousBlockhash: options.deadline?.toString(),
             inputTokenPermit: options.permit,
             fee: options.feeOptions,
             flatFee: options.flatFeeOptions,
@@ -90,22 +88,27 @@ export function useUniversalRouterSwapCallback(
             ...(value && !isZero(value) ? { value: toHex(value) } : {}),
           }
 
-          let gasLimit: BigNumber
-          try {
-            const gasEstimate = await provider.estimateGas(tx)
-            gasLimit = calculateGasMargin(gasEstimate)
-            trace.setData('gasLimit', gasLimit.toNumber())
-          } catch (gasError) {
-            sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
-              ...formatCommonPropertiesForTrade(trade, options.slippageTolerance),
-              ...analyticsContext,
-              client_block_number: blockNumber,
-              tx,
-              isAutoSlippage,
-            })
-            console.warn(gasError)
-            throw new GasEstimationError()
-          }
+          const gasEstimate = await trace.child(
+            { name: 'Estimate gas', op: 'wallet.estimate_gas' },
+            async (gasTrace) => {
+              try {
+                return await provider.estimateGas(tx)
+              } catch (gasError) {
+                gasTrace.setError(gasError, 'failed_precondition')
+                sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+                  ...formatCommonPropertiesForTrade(trade, options.slippageTolerance),
+                  ...analyticsContext,
+                  client_block_number: blockNumber,
+                  tx,
+                  isAutoSlippage,
+                })
+                console.warn(gasError)
+                throw new GasEstimationError()
+              }
+            }
+          )
+          const gasLimit = calculateGasMargin(gasEstimate)
+          trace.setData('gasLimit', gasLimit.toNumber())
 
           const response = await trace.child(
             { name: 'Send transaction', op: 'wallet.send_transaction' },
@@ -146,15 +149,16 @@ export function useUniversalRouterSwapCallback(
               throw new ModifiedSwapError()
             }
           }
-          return { type: TradeFillType.Classic as const, response, deadline }
+          return { type: TradeFillType.Classic as const, response }
         } catch (error: unknown) {
           if (error instanceof GasEstimationError) {
+            trace.setStatus('failed_precondition')
             throw error
           } else if (error instanceof UserRejectedRequestError) {
             trace.setStatus('cancelled')
             throw error
           } else if (error instanceof ModifiedSwapError) {
-            trace.setError(error, 'data_loss')
+            trace.setStatus('data_loss')
             throw error
           } else {
             trace.setError(error)
@@ -167,17 +171,17 @@ export function useUniversalRouterSwapCallback(
       chainId,
       provider,
       trade,
-      getDeadline,
       options.slippageTolerance,
+      options.deadline,
       options.permit,
       options.feeOptions,
       options.flatFeeOptions,
-      fiatValues,
-      portfolioBalanceUsd,
       analyticsContext,
-      connector,
       blockNumber,
       isAutoSlippage,
+      fiatValues,
+      portfolioBalanceUsd,
+      connector,
     ]
   )
 }

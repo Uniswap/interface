@@ -17,15 +17,15 @@ import {
 } from 'src/features/explore/utils'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { Flex, Loader, Text, useDeviceInsets } from 'ui/src'
-import {
-  Chain,
-  ExploreTokensTabQuery,
-  useExploreTokensTabQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import {
+  Chain,
+  ExploreTokensTabQuery,
+  useExploreTokensTabQuery,
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import {

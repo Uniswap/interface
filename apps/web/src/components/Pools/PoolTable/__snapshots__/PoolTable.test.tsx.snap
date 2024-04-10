@@ -605,7 +605,7 @@ exports[`PoolTable renders data filled state 1`] = `
                           <div
                             class="c10 css-1urox24"
                           >
-                            1 day APR
+                            Turnover
                           </div>
                         </div>
                       </div>
@@ -1357,7 +1357,7 @@ exports[`PoolTable renders error state 1`] = `
                           <div
                             class="c10 css-1urox24"
                           >
-                            1 day APR
+                            Turnover
                           </div>
                         </div>
                       </div>
@@ -2606,7 +2606,7 @@ exports[`PoolTable renders loading state 1`] = `
                           <div
                             class="c10 css-1urox24"
                           >
-                            1 day APR
+                            Turnover
                           </div>
                         </div>
                       </div>

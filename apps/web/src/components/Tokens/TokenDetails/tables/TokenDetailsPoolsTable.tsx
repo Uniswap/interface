@@ -1,7 +1,5 @@
-import { ApolloError } from '@apollo/client'
 import { ChainId, Token } from '@uniswap/sdk-core'
 import { PoolTableColumns, PoolsTable, sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
-import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { usePoolsFromTokenAddress } from 'graphql/data/pools/usePoolsFromTokenAddress'
 import { OrderDirection } from 'graphql/data/util'
 import { useAtomValue, useResetAtom } from 'jotai/utils'
@@ -16,19 +14,7 @@ export function TokenDetailsPoolsTable({ chainId, referenceToken }: { chainId: C
     () => ({ sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc }),
     [sortAscending, sortMethod]
   )
-  const { pools, loading, errorV2, errorV3, loadMore } = usePoolsFromTokenAddress(
-    referenceToken.address,
-    sortState,
-    chainId
-  )
-  const combinedError =
-    errorV2 && errorV3
-      ? new ApolloError({
-          errorMessage: `Could not retrieve V2 and V3 Pools for token ${referenceToken.address} on chain: ${chainId}`,
-        })
-      : undefined
-  const allDataStillLoading = loading && !pools.length
-  useUpdateManualOutage({ chainId, errorV3, errorV2 })
+  const { pools, loading, error, loadMore } = usePoolsFromTokenAddress(referenceToken.address, sortState, chainId)
 
   const resetSortMethod = useResetAtom(sortMethodAtom)
   const resetSortAscending = useResetAtom(sortAscendingAtom)
@@ -41,8 +27,8 @@ export function TokenDetailsPoolsTable({ chainId, referenceToken }: { chainId: C
     <div data-testid={`tdp-pools-table-${referenceToken.address.toLowerCase()}`}>
       <PoolsTable
         pools={pools}
-        loading={allDataStillLoading}
-        error={combinedError}
+        loading={loading}
+        error={error}
         chainId={chainId}
         maxHeight={600}
         hiddenColumns={HIDDEN_COLUMNS}

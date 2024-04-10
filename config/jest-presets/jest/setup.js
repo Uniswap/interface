@@ -43,7 +43,7 @@ jest.mock('expo-clipboard', () => ({
 jest.mock('expo-blur', () => ({ BlurView: {} }))
 jest.mock('expo-barcode-scanner', () => ({}))
 jest.mock('expo-av', () => ({}))
-jest.mock('expo-haptics', () => ({ impactAsync: jest.fn(), notificationAsync: jest.fn(), ImpactFeedbackStyle: jest.fn() }))
+jest.mock('expo-haptics', () => ({ impactAsync: jest.fn(), ImpactFeedbackStyle: jest.fn() }))
 jest.mock('expo-linear-gradient', () => ({ LinearGradient: () => 'ExpoLinearGradient' }))
 jest.mock('expo-screen-capture', () => ({ addScreenshotListener: jest.fn() }))
 

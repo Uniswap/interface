@@ -1,6 +1,5 @@
 import { BigNumber, providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
-import i18n from 'uniswap/src/i18n/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -13,6 +12,7 @@ import {
 } from 'wallet/src/features/transactions/utils'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
+import i18n from 'wallet/src/i18n/i18n'
 import { appSelect } from 'wallet/src/state'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 

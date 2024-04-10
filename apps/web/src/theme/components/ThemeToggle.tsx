@@ -1,5 +1,5 @@
+import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
-import { Trans } from 'i18n'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import ms from 'ms'

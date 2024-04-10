@@ -1,17 +1,15 @@
 import { useMemo } from 'react'
-import {
-  NftsQuery,
-  useNftsQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { PollingInterval } from 'wallet/src/constants/misc'
-import { selectNftsVisibility } from 'wallet/src/features/favorites/selectors'
+import { NftsQuery, useNftsQuery } from 'wallet/src/data/__generated__/types-and-hooks'
+import { selectNftsData } from 'wallet/src/features/favorites/selectors'
+import { AccountToNftData } from 'wallet/src/features/favorites/slice'
 import {
   EMPTY_NFT_ITEM,
   HIDDEN_NFTS_ROW_LEFT_ITEM,
   HIDDEN_NFTS_ROW_RIGHT_ITEM,
 } from 'wallet/src/features/nfts/constants'
-import { NFTItem } from 'wallet/src/features/nfts/types'
+import { NFTItem, NftData } from 'wallet/src/features/nfts/types'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { useAppSelector } from 'wallet/src/state'
 
@@ -44,31 +42,56 @@ export function useNFT(
   return { data: nft, loading, refetch }
 }
 
+export function isNftHidden(nftData: NftData, isSpam?: boolean): boolean {
+  return Boolean(nftData.isHidden || (isSpam && !nftData.isSpamIgnored))
+}
+
+export function shouldHideNft({
+  nftsData,
+  owner,
+  contractAddress,
+  tokenId,
+  isSpam,
+}: {
+  nftsData: AccountToNftData
+  owner: Address
+  contractAddress: Address
+  tokenId: string
+  isSpam?: boolean
+}): boolean {
+  const nftKey = getNFTAssetKey(contractAddress, tokenId)
+  const nftData = nftsData[owner]?.[nftKey] ?? {}
+  return isNftHidden(nftData, isSpam)
+}
+
 // Apply to NFTs fetched from API hidden filter, which is stored in Redux
 export function useGroupNftsByVisibility(
   nftDataItems: Array<NFTItem> | undefined,
-  showHidden: boolean
+  showHidden: boolean,
+  owner: Address
 ): {
   nfts: Array<NFTItem | string>
   numHidden: number
   numShown: number
 } {
-  const nftVisibility = useAppSelector(selectNftsVisibility)
+  const nftsData = useAppSelector(selectNftsData)
   return useMemo(() => {
     const { shown, hidden } = (nftDataItems ?? []).reduce<{
       shown: NFTItem[]
       hidden: NFTItem[]
     }>(
       (acc, item) => {
-        const { contractAddress, tokenId, isSpam } = item
-        if (!contractAddress || !tokenId) {
-          acc.hidden.push(item)
-          return acc
-        }
-
-        const nftKey = getNFTAssetKey(contractAddress, tokenId)
-        const nftVisibilityOverride = !!nftVisibility[nftKey]?.isVisible
-        if (isSpam && !nftVisibilityOverride) {
+        if (
+          item.contractAddress &&
+          item.tokenId &&
+          shouldHideNft({
+            nftsData,
+            owner,
+            contractAddress: item.contractAddress,
+            tokenId: item.tokenId,
+            isSpam: item.isSpam,
+          })
+        ) {
           acc.hidden.push(item)
         } else {
           acc.shown.push(item)
@@ -92,5 +115,5 @@ export function useGroupNftsByVisibility(
       numHidden: hidden.length,
       numShown: shown.length,
     }
-  }, [nftDataItems, nftVisibility, showHidden])
+  }, [nftDataItems, nftsData, owner, showHidden])
 }

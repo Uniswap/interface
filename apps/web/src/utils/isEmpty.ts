@@ -1,6 +1,3 @@
-export function isEmptyObject(obj?: object) {
-  if (!obj) {
-    return true
-  }
+export function isEmptyObject(obj: object) {
   return Object.keys(obj).length === 0
 }

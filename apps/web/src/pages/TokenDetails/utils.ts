@@ -1,5 +1,5 @@
+import { t } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
-import { t } from 'i18n'
 
 export const getTokenPageTitle = (currency?: Currency) => {
   const tokenName = currency?.name
@@ -9,10 +9,10 @@ export const getTokenPageTitle = (currency?: Currency) => {
     return baseTitle
   }
   if (!tokenName && tokenSymbol) {
-    return `${tokenSymbol}: ${baseTitle}`
+    return t`${tokenSymbol}: ${baseTitle}`
   }
   if (tokenName && !tokenSymbol) {
-    return `${tokenName}: ${baseTitle}`
+    return t`${tokenName}: ${baseTitle}`
   }
-  return `${tokenName} (${tokenSymbol}): ${baseTitle}`
+  return t`${tokenName} (${tokenSymbol}): ${baseTitle}`
 }

@@ -1,20 +1,30 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Ether } from '@uniswap/sdk-core'
-import { CurrencyId } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { WBTC } from 'wallet/src/constants/tokens'
-import { currencyId as idFromCurrency } from 'wallet/src/utils/currencyId'
+import { NftData } from 'wallet/src/features/nfts/types'
+import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
+import { removeAccount } from 'wallet/src/features/wallet/slice'
+import { CurrencyId, currencyId as idFromCurrency } from 'wallet/src/utils/currencyId'
 
-export type Visibility = { isVisible: boolean }
-export type CurrencyIdToVisibility = Record<CurrencyId, Visibility>
-export type NFTKeyToVisibility = Record<string, Visibility>
+export type TokenVisibility = { isVisible: boolean }
+
+type AccountToData<K extends string, T> = Record<Address, Record<K, T>>
+
+export type AccountToNftData = AccountToData<ReturnType<typeof getNFTAssetKey>, NftData>
+
+export type AccountToTokenVisibility = AccountToData<CurrencyId, TokenVisibility>
 
 export interface FavoritesState {
+  // to store if a token is favorited across all wallets
   tokens: CurrencyId[]
+  // to store tokens visibility per wallet
+  tokensVisibility: AccountToTokenVisibility
   watchedAddresses: Address[]
-  tokensVisibility: CurrencyIdToVisibility
-  nftsVisibility: NFTKeyToVisibility
+  // to store if a NFT is hidden, or its spam field should be ignored per wallet
+  nftsData: AccountToNftData
+  // add other types of assets here, e.g. nfts
 }
 
 // Default currency ids, need to be in lowercase to match slice add and remove behavior
@@ -23,13 +33,16 @@ const ETH_CURRENCY_ID = idFromCurrency(Ether.onChain(ChainId.Mainnet)).toLowerCa
 
 const VITALIK_ETH_ADDRESS = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
 const HAYDEN_ETH_ADDRESS = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
-export const DEFAULT_WATCHED_ADDRESSES = [VITALIK_ETH_ADDRESS, HAYDEN_ETH_ADDRESS]
 
 export const initialFavoritesState: FavoritesState = {
   tokens: [ETH_CURRENCY_ID, WBTC_CURRENCY_ID],
-  watchedAddresses: DEFAULT_WATCHED_ADDRESSES,
+  watchedAddresses: [VITALIK_ETH_ADDRESS, HAYDEN_ETH_ADDRESS],
   tokensVisibility: {},
-  nftsVisibility: {},
+  nftsData: {},
+}
+
+export function isNftHidden(nftData: NftData, isSpam?: boolean): boolean {
+  return Boolean(nftData.isHidden || (isSpam && !nftData.isSpamIgnored))
 }
 
 export const slice = createSlice({
@@ -105,20 +118,69 @@ export const slice = createSlice({
     ) => {
       state.watchedAddresses = addresses
     },
+    // if user has ever toggled token visibility manually, record it here
+    // and use it instead of dynamic visibility filtering
     toggleTokenVisibility: (
       state,
-      { payload: { currencyId, isSpam } }: PayloadAction<{ currencyId: string; isSpam?: boolean }>
+      {
+        payload: { currencyId, accountAddress, currentlyVisible },
+      }: PayloadAction<{
+        currencyId: string
+        accountAddress: Address
+        currentlyVisible: boolean
+      }>
     ) => {
-      const isVisible = state.tokensVisibility[currencyId]?.isVisible ?? isSpam === false
-      state.tokensVisibility[currencyId] = { isVisible: !isVisible }
+      state.tokensVisibility[accountAddress] ??= {}
+      const accountTokensData = state.tokensVisibility[accountAddress] ?? {}
+      const tokenData = accountTokensData[currencyId]
+      // flip existing or create new visibility record
+      if (tokenData) {
+        tokenData.isVisible = !tokenData.isVisible
+      } else {
+        accountTokensData[currencyId] = { isVisible: !currentlyVisible }
+      }
     },
+
     toggleNftVisibility: (
       state,
-      { payload: { nftKey, isSpam } }: PayloadAction<{ nftKey: string; isSpam?: boolean }>
+      {
+        payload: { owner, contractAddress, tokenId, isSpam },
+      }: PayloadAction<{
+        owner: Address
+        contractAddress: Address
+        tokenId: string
+        isSpam?: boolean
+      }>
     ) => {
-      const isVisible = state.nftsVisibility[nftKey]?.isVisible ?? isSpam === false
-      state.nftsVisibility[nftKey] = { isVisible: !isVisible }
+      const nftKey = getNFTAssetKey(contractAddress, tokenId)
+
+      state.nftsData[owner] ??= {}
+      const ownerNftsData = state.nftsData[owner] ?? {}
+
+      ownerNftsData[nftKey] ??= {}
+      const nftData = ownerNftsData[nftKey] ?? {}
+
+      if (isNftHidden(nftData, isSpam)) {
+        if (nftData.isHidden) {
+          delete nftData.isHidden
+        }
+        if (isSpam) {
+          nftData.isSpamIgnored = true
+        }
+      } else {
+        nftData.isHidden = true
+      }
+      // remove nftData if it's empty
+      if (Object.keys(nftData).length === 0) {
+        delete ownerNftsData[nftKey]
+      }
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(removeAccount, (state, { payload: owner }) => {
+      delete state.nftsData[owner]
+      delete state.tokensVisibility[owner]
+    })
   },
 })
 

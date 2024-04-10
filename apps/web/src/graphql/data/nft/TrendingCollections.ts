@@ -1,9 +1,55 @@
+import gql from 'graphql-tag'
 import { TrendingCollection } from 'nft/types'
 import { useMemo } from 'react'
-import {
-  HistoryDuration,
-  useTrendingCollectionsQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+
+import { HistoryDuration, useTrendingCollectionsQuery } from '../__generated__/types-and-hooks'
+
+gql`
+  query TrendingCollections($size: Int, $timePeriod: HistoryDuration) {
+    topCollections(first: $size, duration: $timePeriod) {
+      edges {
+        node {
+          name
+          nftContracts {
+            address
+            totalSupply
+          }
+          image {
+            url
+          }
+          bannerImage {
+            url
+          }
+          isVerified
+          markets(currencies: ETH) {
+            floorPrice {
+              value
+            }
+            owners
+            totalVolume {
+              value
+            }
+            volume(duration: $timePeriod) {
+              value
+            }
+            volumePercentChange(duration: $timePeriod) {
+              value
+            }
+            floorPricePercentChange(duration: $timePeriod) {
+              value
+            }
+            sales {
+              value
+            }
+            listings {
+              value
+            }
+          }
+        }
+      }
+    }
+  }
+`
 
 export function useTrendingCollections(size: number, timePeriod: HistoryDuration) {
   const { data, loading, error } = useTrendingCollectionsQuery({

@@ -1,5 +1,5 @@
 import { ConnectionType } from 'connection/types'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain } from 'graphql/data/__generated__/types-and-hooks'
 
 /**
  * A short code identifying the type of operation, typically following [OpenTelemetry's semantic conventions][1].
@@ -26,6 +26,7 @@ export type OpCode =
   | 'wallet.approve'
   | 'wallet.connect'
   | 'wallet.connect.eager'
+  | 'wallet.estimate_gas'
   | 'wallet.send_transaction'
   | 'wallet.sign'
   | 'wallet.switch_chain'

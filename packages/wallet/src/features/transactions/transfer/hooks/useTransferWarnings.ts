@@ -1,9 +1,9 @@
 import { useNetInfo } from '@react-native-community/netinfo'
 import { TFunction } from 'i18next'
 import _ from 'lodash'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
+import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { getNetworkWarning } from 'wallet/src/features/transactions/WarningModal/getNetworkWarning'
 import {

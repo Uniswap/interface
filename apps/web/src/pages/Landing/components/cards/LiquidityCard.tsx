@@ -1,6 +1,6 @@
+import { t } from '@lingui/macro'
 import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
 import { useScreenSize } from 'hooks/useScreenSize'
-import { t } from 'i18n'
 import styled from 'styled-components'
 
 import { Bars } from '../Icons'

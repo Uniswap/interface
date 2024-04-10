@@ -1,5 +1,4 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { SupportedInterfaceChain } from 'constants/chains'
 
 const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
 if (typeof INFURA_KEY === 'undefined') {
@@ -19,7 +18,7 @@ if (typeof QUICKNODE_BNB_RPC_URL === 'undefined') {
 }
 
 /**
- * Public JSON-RPC endpoints.
+ * Fallback JSON-RPC endpoints.
  * These are used if the integrator does not provide an endpoint, or if the endpoint does not work.
  *
  * MetaMask allows switching to any URL, but displays a warning if it is not on the "Safe" list:
@@ -28,7 +27,7 @@ if (typeof QUICKNODE_BNB_RPC_URL === 'undefined') {
  *
  * These "Safe" URLs are listed first, followed by other fallback URLs, which are taken from chainlist.org.
  */
-export const PUBLIC_RPC_URLS: Record<SupportedInterfaceChain, string[]> = {
+export const FALLBACK_URLS = {
   [ChainId.MAINNET]: [
     // "Safe" URLs
     'https://api.mycryptoapi.com/eth',
@@ -124,36 +123,44 @@ export const PUBLIC_RPC_URLS: Record<SupportedInterfaceChain, string[]> = {
     'https://1rpc.io/base',
     'https://base.meowrpc.com',
   ],
-  [ChainId.BLAST]: [
-    // "Safe" URLs
-    'https://rpc.blast.io/',
-    'https://rpc.ankr.com/blast',
-    'https://blast.din.dev/rpc',
-    'https://blastl2-mainnet.public.blastapi.io',
-    'https://blast.blockpi.network/v1/rpc/public',
-  ],
 }
 
 /**
- * Application-specific JSON-RPC endpoints.
- * These are URLs which may only be used by the interface, due to origin policies, &c.
+ * Known JSON-RPC endpoints.
+ * These are the URLs used by the interface when there is not another available source of chain data.
  */
-export const APP_RPC_URLS: Record<SupportedInterfaceChain, string[]> = {
-  [ChainId.MAINNET]: [`https://mainnet.infura.io/v3/${INFURA_KEY}`, QUICKNODE_MAINNET_RPC_URL],
-  [ChainId.GOERLI]: [`https://goerli.infura.io/v3/${INFURA_KEY}`],
-  [ChainId.SEPOLIA]: [`https://sepolia.infura.io/v3/${INFURA_KEY}`],
-  [ChainId.OPTIMISM]: [`https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`],
-  [ChainId.OPTIMISM_GOERLI]: [`https://optimism-goerli.infura.io/v3/${INFURA_KEY}`],
-  [ChainId.ARBITRUM_ONE]: [`https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`, QUICKNODE_ARBITRUM_RPC_URL],
-  [ChainId.ARBITRUM_GOERLI]: [`https://arbitrum-goerli.infura.io/v3/${INFURA_KEY}`],
-  [ChainId.POLYGON]: [`https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`],
-  [ChainId.POLYGON_MUMBAI]: [`https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`],
-  [ChainId.CELO]: [`https://celo-mainnet.infura.io/v3/${INFURA_KEY}`],
-  [ChainId.CELO_ALFAJORES]: [`https://celo-alfajores.infura.io/v3/${INFURA_KEY}`],
-  [ChainId.BNB]: [QUICKNODE_BNB_RPC_URL],
-  [ChainId.AVALANCHE]: [`https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`],
-  [ChainId.BASE]: [`https://base-mainnet.infura.io/v3/${INFURA_KEY}`],
-  [ChainId.BLAST]: [`https://blast-mainnet.infura.io/v3/${INFURA_KEY}`],
+export const RPC_URLS = {
+  [ChainId.MAINNET]: [
+    `https://mainnet.infura.io/v3/${INFURA_KEY}`,
+    QUICKNODE_MAINNET_RPC_URL,
+    ...FALLBACK_URLS[ChainId.MAINNET],
+  ],
+  [ChainId.GOERLI]: [`https://goerli.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.GOERLI]],
+  [ChainId.SEPOLIA]: [`https://sepolia.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.SEPOLIA]],
+  [ChainId.OPTIMISM]: [`https://optimism-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.OPTIMISM]],
+  [ChainId.OPTIMISM_GOERLI]: [
+    `https://optimism-goerli.infura.io/v3/${INFURA_KEY}`,
+    ...FALLBACK_URLS[ChainId.OPTIMISM_GOERLI],
+  ],
+  [ChainId.ARBITRUM_ONE]: [
+    `https://arbitrum-mainnet.infura.io/v3/${INFURA_KEY}`,
+    QUICKNODE_ARBITRUM_RPC_URL,
+    ...FALLBACK_URLS[ChainId.ARBITRUM_ONE],
+  ],
+  [ChainId.ARBITRUM_GOERLI]: [
+    `https://arbitrum-goerli.infura.io/v3/${INFURA_KEY}`,
+    ...FALLBACK_URLS[ChainId.ARBITRUM_GOERLI],
+  ],
+  [ChainId.POLYGON]: [`https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.POLYGON]],
+  [ChainId.POLYGON_MUMBAI]: [
+    `https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`,
+    ...FALLBACK_URLS[ChainId.POLYGON_MUMBAI],
+  ],
+  [ChainId.CELO]: FALLBACK_URLS[ChainId.CELO],
+  [ChainId.CELO_ALFAJORES]: FALLBACK_URLS[ChainId.CELO_ALFAJORES],
+  [ChainId.BNB]: [QUICKNODE_BNB_RPC_URL, ...FALLBACK_URLS[ChainId.BNB]],
+  [ChainId.AVALANCHE]: [`https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.AVALANCHE]],
+  [ChainId.BASE]: [`https://base-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.BASE]],
 }
 
 export const INFURA_PREFIX_TO_CHAIN_ID: { [prefix: string]: ChainId } = {

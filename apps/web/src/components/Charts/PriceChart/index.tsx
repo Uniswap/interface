@@ -1,10 +1,10 @@
+import { Trans } from '@lingui/macro'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartHoverData, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { getCandlestickPriceBounds } from 'components/Charts/PriceChart/utils'
 import { PriceChartType } from 'components/Charts/utils'
 import { RowBetween } from 'components/Row'
 import { DeltaArrow, DeltaText, calculateDelta } from 'components/Tokens/TokenDetails/Delta'
-import { Trans } from 'i18n'
 import {
   AreaData,
   AreaSeriesPartialOptions,

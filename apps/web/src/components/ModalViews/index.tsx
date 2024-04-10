@@ -1,5 +1,5 @@
+import { Trans } from '@lingui/macro'
 import { useWeb3React } from '@web3-react/core'
-import { Trans } from 'i18n'
 import { ArrowUpCircle } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, CustomLightSpinner, ThemedText } from 'theme/components'

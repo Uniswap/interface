@@ -1,5 +1,5 @@
+import { NftStandard } from 'graphql/data/__generated__/types-and-hooks'
 import { BagItem, BagItemStatus, BagStatus, UpdatedGenieAsset } from 'nft/types'
-import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { v4 as uuidv4 } from 'uuid'
 import { devtools } from 'zustand/middleware'
 import { shallow } from 'zustand/shallow'

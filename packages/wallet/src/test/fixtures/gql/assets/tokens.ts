@@ -10,15 +10,15 @@ import {
   TokenMarket,
   TokenProject,
   TokenProjectMarket,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+} from 'wallet/src/data/__generated__/types-and-hooks'
+import { toGraphQLChain } from 'wallet/src/features/chains/utils'
 import { amounts } from 'wallet/src/test/fixtures/gql/amounts'
 import {
   get24hPriceChange,
   getLatestPrice,
   priceHistory,
 } from 'wallet/src/test/fixtures/gql/history'
-import { GQL_CHAINS, image } from 'wallet/src/test/fixtures/gql/misc'
+import { GQL_CHAINS } from 'wallet/src/test/fixtures/gql/misc'
 import {
   DAI,
   ETH,
@@ -48,7 +48,7 @@ export const token = createFixture<Token, TokenOptions>({ sdkToken: null })(({ s
   decimals: sdkToken?.decimals ?? faker.datatype.number({ min: 1, max: 18 }),
   chain: (sdkToken ? toGraphQLChain(sdkToken.chainId) : null) ?? randomChoice(GQL_CHAINS),
   address: sdkToken?.address.toLocaleLowerCase() ?? faker.finance.ethereumAddress(),
-  market: undefined,
+  market: null,
   project: tokenProjectBase(),
 }))
 
@@ -65,7 +65,7 @@ export const tokenBalance = createFixture<TokenBalance>()(() => ({
 }))
 
 type TokenMarketOptions = {
-  priceHistory: (TimestampedAmount | undefined)[]
+  priceHistory: (TimestampedAmount | null)[]
 }
 
 export const tokenMarket = createFixture<TokenMarket, TokenMarketOptions>(() => ({
@@ -76,12 +76,12 @@ export const tokenMarket = createFixture<TokenMarket, TokenMarketOptions>(() => 
   token: ethToken(),
   priceSource: randomEnumValue(PriceSource),
   priceHistory: history,
-  price: history ? getLatestPrice(history) : undefined,
-  pricePercentChange: history ? get24hPriceChange(history) : undefined,
+  price: history ? getLatestPrice(history) : null,
+  pricePercentChange: history ? get24hPriceChange(history) : null,
 }))
 
 type TokenProjectMarketOptions = {
-  priceHistory: (TimestampedAmount | undefined)[]
+  priceHistory: (TimestampedAmount | null)[]
 }
 
 export const tokenProjectMarket = createFixture<TokenProjectMarket, TokenProjectMarketOptions>(
@@ -98,23 +98,18 @@ export const tokenProjectMarket = createFixture<TokenProjectMarket, TokenProject
   tokenProject: tokenProjectBase(),
 }))
 
-const tokenProjectBase = createFixture<TokenProject>()(() => {
-  const logoUrl = faker.image.imageUrl()
-  return {
-    __typename: 'TokenProject',
-    id: faker.datatype.uuid(),
-    name: faker.lorem.word(),
-    tokens: [] as Token[],
-    safetyLevel: randomEnumValue(SafetyLevel),
-    // @deprecated
-    logoUrl,
-    isSpam: faker.datatype.boolean(),
-    logo: image({ url: logoUrl }),
-  }
-})
+const tokenProjectBase = createFixture<TokenProject>()(() => ({
+  __typename: 'TokenProject',
+  id: faker.datatype.uuid(),
+  name: faker.lorem.word(),
+  tokens: [] as Token[],
+  safetyLevel: randomEnumValue(SafetyLevel),
+  logoUrl: faker.image.imageUrl(),
+  isSpam: faker.datatype.boolean(),
+}))
 
 type TokenProjectOptions = {
-  priceHistory: (TimestampedAmount | undefined)[]
+  priceHistory: (TimestampedAmount | null)[]
 }
 
 export const tokenProject = createFixture<TokenProject, TokenProjectOptions>(() => ({

@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, isWeb, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { ThemeNames, imageSizes, opacify } from 'ui/src/theme'
+import { ThemeNames, iconSizes, imageSizes, opacify } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'wallet/src/components/icons/WarningIcon'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
+import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { useTokenSafetyLevelColors } from 'wallet/src/features/tokens/safetyHooks'
 import { getTokenSafetyHeaderText } from 'wallet/src/features/tokens/utils'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
@@ -64,7 +64,7 @@ export default function TokenWarningModal({
 
   return (
     <BottomSheetModal name={ModalName.TokenWarningModal} onClose={onClose}>
-      <Flex centered gap="$spacing16" pb={isWeb ? '$none' : '$spacing12'} pt="$spacing12">
+      <Flex centered gap="$spacing16" p="$spacing12">
         {showWarningIcon ? (
           <Flex centered gap="$spacing16">
             <Flex
@@ -74,7 +74,7 @@ export default function TokenWarningModal({
               style={{
                 backgroundColor: opacify(12, colors[warningColor].val),
               }}>
-              <WarningIcon safetyLevel={safetyLevel} size="$icon.24" />
+              <WarningIcon safetyLevel={safetyLevel} width={iconSizes.icon24} />
             </Flex>
             <Text variant="subheading1">{getTokenSafetyHeaderText(safetyLevel, t)}</Text>
           </Flex>
@@ -87,7 +87,7 @@ export default function TokenWarningModal({
           </Text>
           <LearnMoreLink url={uniswapUrls.helpArticleUrls.tokenWarning} />
         </Flex>
-        <Flex centered row gap="$spacing12" mt="$spacing16" width="100%">
+        <Flex centered row gap="$spacing16" mt="$spacing16">
           <Button fill testID={ElementName.Cancel} theme="tertiary" onPress={onClose}>
             {closeButtonText}
           </Button>

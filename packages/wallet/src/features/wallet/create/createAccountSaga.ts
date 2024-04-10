@@ -75,7 +75,7 @@ async function getNewAccountParams(
   }
 }
 
-export function getNextDerivationIndex(sortedAccounts: SignerMnemonicAccount[]): number {
+function getNextDerivationIndex(sortedAccounts: SignerMnemonicAccount[]): number {
   // if there is a missing index in the series (0, 1, _, 3), return this missing index
   let nextIndex = 0
   for (const account of sortedAccounts) {

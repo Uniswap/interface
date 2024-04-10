@@ -1,4 +1,5 @@
 import { parseEther } from 'ethers/lib/utils'
+import gql from 'graphql-tag'
 import { GenieAsset, Markets, Trait } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
@@ -11,7 +12,92 @@ import {
   NftAssetTraitInput,
   NftMarketplace,
   useAssetQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+} from '../__generated__/types-and-hooks'
+
+gql`
+  query Asset(
+    $address: String!
+    $orderBy: NftAssetSortableField
+    $asc: Boolean
+    $filter: NftAssetsFilterInput
+    $first: Int
+    $after: String
+    $last: Int
+    $before: String
+  ) {
+    nftAssets(
+      address: $address
+      orderBy: $orderBy
+      asc: $asc
+      filter: $filter
+      first: $first
+      after: $after
+      last: $last
+      before: $before
+    ) {
+      edges {
+        node {
+          id
+          name
+          image {
+            url
+          }
+          smallImage {
+            url
+          }
+          tokenId
+          animationUrl
+          suspiciousFlag
+          collection {
+            name
+            isVerified
+            nftContracts {
+              address
+              standard
+            }
+          }
+          listings(first: 1) {
+            edges {
+              node {
+                address
+                createdAt
+                endAt
+                id
+                maker
+                marketplace
+                marketplaceUrl
+                orderHash
+                price {
+                  currency
+                  value
+                }
+                quantity
+                startAt
+                status
+                taker
+                tokenId
+                type
+                protocolParameters
+              }
+              cursor
+            }
+          }
+          rarities {
+            rank
+          }
+        }
+        cursor
+      }
+      totalCount
+      pageInfo {
+        endCursor
+        hasNextPage
+        hasPreviousPage
+        startCursor
+      }
+    }
+  }
+`
 
 function formatAssetQueryData(queryAsset: NftAssetEdge, totalCount?: number) {
   const asset = queryAsset.node

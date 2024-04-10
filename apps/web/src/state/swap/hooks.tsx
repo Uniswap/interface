@@ -1,4 +1,5 @@
-import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Trans } from '@lingui/macro'
+import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Field } from 'components/swap/constants'
 import { useConnectionReady } from 'connection/eagerlyConnect'
@@ -6,10 +7,10 @@ import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { useUSDPrice } from 'hooks/useUSDPrice'
-import { Trans } from 'i18n'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
-import { ReactNode, useCallback, useContext, useMemo } from 'react'
+import { ReactNode, useCallback, useMemo } from 'react'
+import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { isAddress } from 'utilities/src/addresses'
@@ -19,20 +20,10 @@ import { useCurrencyBalances } from '../connection/hooks'
 import {
   CurrencyState,
   SerializedCurrencyState,
-  SwapAndLimitContext,
-  SwapContext,
-  SwapInfo,
   SwapState,
-  parseIndependentFieldURLParameter,
-} from './types'
-
-export function useSwapContext() {
-  return useContext(SwapContext)
-}
-
-export function useSwapAndLimitContext() {
-  return useContext(SwapAndLimitContext)
-}
+  useSwapAndLimitContext,
+  useSwapContext,
+} from './SwapContext'
 
 export function useSwapActionHandlers(): {
   onCurrencySelection: (field: Field, currency: Currency) => void
@@ -113,6 +104,25 @@ export function useSwapActionHandlers(): {
     onCurrencySelection,
     onUserInput,
   }
+}
+
+export type SwapInfo = {
+  currencies: { [field in Field]?: Currency }
+  currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
+  inputTax: Percent
+  outputTax: Percent
+  outputFeeFiatValue?: number
+  parsedAmount?: CurrencyAmount<Currency>
+  inputError?: ReactNode
+  trade: {
+    trade?: InterfaceTrade
+    state: TradeState
+    uniswapXGasUseEstimateUSD?: number
+    error?: any
+    swapQuoteLatency?: number
+  }
+  allowedSlippage: Percent
+  autoSlippage: Percent
 }
 
 // from the current swap inputs, compute the best trade and return it.
@@ -204,7 +214,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     const [balanceIn, maxAmountIn] = [currencyBalances[Field.INPUT], trade?.trade?.maximumAmountIn(allowedSlippage)]
 
     if (balanceIn && maxAmountIn && balanceIn.lessThan(maxAmountIn)) {
-      inputError = <Trans>Insufficient {{ symbol: balanceIn.currency.symbol }} balance</Trans>
+      inputError = <Trans>Insufficient {balanceIn.currency.symbol} balance</Trans>
     }
 
     return inputError
@@ -249,6 +259,14 @@ function parseCurrencyFromURLParameter(urlParam: ParsedQs[string]): string {
   return ''
 }
 
+function parseTokenAmountURLParameter(urlParam: any): string {
+  return typeof urlParam === 'string' && !isNaN(parseFloat(urlParam)) ? urlParam : ''
+}
+
+function parseIndependentFieldURLParameter(urlParam: any): Field {
+  return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output' ? Field.OUTPUT : Field.INPUT
+}
+
 export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCurrencyState {
   let inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency ?? parsedQs.inputcurrency)
   let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency ?? parsedQs.outputcurrency)
@@ -263,7 +281,17 @@ export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCu
   }
 
   return {
-    inputCurrencyId: inputCurrency === '' ? undefined : inputCurrency ?? undefined,
-    outputCurrencyId: outputCurrency === '' ? undefined : outputCurrency ?? undefined,
+    inputCurrencyId: inputCurrency === '' ? null : inputCurrency ?? null,
+    outputCurrencyId: outputCurrency === '' ? null : outputCurrency ?? null,
+  }
+}
+
+export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
+  const typedValue = parseTokenAmountURLParameter(parsedQs.exactAmount)
+  const independentField = parseIndependentFieldURLParameter(parsedQs.exactField)
+
+  return {
+    typedValue,
+    independentField,
   }
 }

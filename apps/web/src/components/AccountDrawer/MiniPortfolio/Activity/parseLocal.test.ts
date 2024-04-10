@@ -1,8 +1,8 @@
 import { ChainId, TradeType as MockTradeType, Token } from '@uniswap/sdk-core'
 import { PERMIT2_ADDRESS } from '@uniswap/universal-router-sdk'
 import { DAI as MockDAI, USDC_MAINNET as MockUSDC_MAINNET, USDT as MockUSDT, nativeOnChain } from 'constants/tokens'
+import { TransactionStatus as MockTxStatus } from 'graphql/data/__generated__/types-and-hooks'
 import { ChainTokenMap } from 'hooks/Tokens'
-import { SignatureDetails, SignatureType } from 'state/signatures/types'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -11,9 +11,10 @@ import {
   TransactionInfo,
 } from 'state/transactions/types'
 import { renderHook } from 'test-utils/render'
-import { UniswapXOrderStatus } from 'types/uniswapx'
-import { TransactionStatus as MockTxStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useFormatter } from 'utils/formatNumbers'
+
+import { UniswapXOrderStatus } from '../../../../lib/hooks/orders/types'
+import { SignatureDetails, SignatureType } from '../../../../state/signatures/types'
 import { signatureToActivity, transactionToActivity, useLocalActivities } from './parseLocal'
 
 function mockSwapInfo(
@@ -108,7 +109,6 @@ jest.mock('../../../../hooks/Tokens', () => ({
 
 jest.mock('../../../../state/transactions/hooks', () => {
   return {
-    ...jest.requireActual('../../../../state/transactions/hooks'),
     useMultichainTransactions: (): [TransactionDetails, number][] => {
       return [
         [

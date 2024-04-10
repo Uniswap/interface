@@ -2,8 +2,8 @@ import { StyleSheet } from 'react-native'
 import Svg, { Defs, RadialGradient as RadialGradientSVG, Rect, Stop } from 'react-native-svg'
 import { ColorTokens, Flex, Icons, Unicon, UniconV2, useUniconColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
+import { useFeatureFlag } from 'wallet/src/features/experiments/hooks'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
 // Determines view only icon size in relation to Account Icon size
@@ -43,7 +43,7 @@ export function AccountIcon({
 
   // Color for gradient background.
   const { gradientEnd: uniconColor } = useUniconColors(address)
-  const isUniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
+  const isUniconsV2Enabled = useFeatureFlag(FEATURE_FLAGS.UniconsV2)
 
   const uniconImage = (
     <>

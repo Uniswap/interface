@@ -1,11 +1,10 @@
+import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import PrefetchBalancesWrapper from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
 import Row from 'components/Row'
-import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
-import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
-import { Text } from 'ui/src'
 
 const CurrencySymbolContainer = styled.span`
   display: inline-block;
@@ -20,9 +19,11 @@ export function LimitPriceInputLabel({
   currency,
   showCurrencyMessage,
   openCurrencySearchModal,
+  currencySearchModalOpen,
 }: {
   currency?: Currency
   showCurrencyMessage: boolean
+  currencySearchModalOpen: boolean
   openCurrencySearchModal: () => void
 }) {
   if (!currency || !showCurrencyMessage) {
@@ -33,11 +34,11 @@ export function LimitPriceInputLabel({
     )
   }
   return (
-    <Text variant="body3" userSelect="none" color="$neutral2">
+    <ThemedText.LabelSmall style={{ userSelect: 'none' }}>
       <Row align="center">
         <Trans>When 1</Trans>{' '}
         <CurrencySymbolContainer>
-          <PrefetchBalancesWrapper>
+          <PrefetchBalancesWrapper shouldFetchOnAccountUpdate={currencySearchModalOpen}>
             <TokenSelectorRow gap="xs" align="center" height="100%" onClick={openCurrencySearchModal}>
               <CurrencyLogo currency={currency} size="16px" />
               <ThemedText.BodyPrimary display="inline">{currency.symbol}</ThemedText.BodyPrimary>
@@ -46,6 +47,6 @@ export function LimitPriceInputLabel({
         </CurrencySymbolContainer>{' '}
         <Trans>is worth</Trans>
       </Row>
-    </Text>
+    </ThemedText.LabelSmall>
   )
 }

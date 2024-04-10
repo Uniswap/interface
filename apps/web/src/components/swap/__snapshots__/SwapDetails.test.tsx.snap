@@ -298,19 +298,11 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 }
 
 .c15 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
   background: #22222212;
   border-radius: 8px;
   color: #7D7D7D;
   height: 20px;
   padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .c15::after {
@@ -953,19 +945,11 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
 }
 
 .c17 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
   background: #22222212;
   border-radius: 8px;
   color: #7D7D7D;
   height: 20px;
   padding: 0 6px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
 }
 
 .c17::after {

@@ -1,4 +1,3 @@
-import { Percent } from '@uniswap/sdk-core'
 import { InterfaceTrade } from 'state/routing/types'
 import {
   LIMIT_ORDER_TRADE,
@@ -12,7 +11,8 @@ import {
   TEST_TRADE_FEE_ON_SELL,
 } from 'test-utils/constants'
 import { render, screen } from 'test-utils/render'
-import SwapLineItem, { SwapLineItemType } from './SwapLineItem'
+
+jest.mock('../../featureFlags/flags/useFees', () => ({ useFeesEnabled: () => true }))
 
 // Forces tooltips to render in snapshots
 jest.mock('react-dom', () => {
@@ -27,6 +27,10 @@ jest.mock('react-dom', () => {
 jest.mock('uuid', () => ({
   v4: () => 'fixed-uuid-value',
 }))
+
+import { Percent } from '@uniswap/sdk-core'
+
+import SwapLineItem, { SwapLineItemType } from './SwapLineItem'
 
 const AllLineItemsTypes = Object.keys(SwapLineItemType).map(Number).filter(Boolean)
 const lineItemProps = {

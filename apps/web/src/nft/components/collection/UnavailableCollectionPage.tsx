@@ -1,6 +1,6 @@
+import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import { SupportArticleURL } from 'constants/supportArticles'
-import { Trans } from 'i18n'
 import { AlertTriangle } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'

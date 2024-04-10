@@ -9,11 +9,11 @@ import { getAlertColor } from 'wallet/src/components/modals/WarningModal/Warning
 import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
 import { ChainId } from 'wallet/src/constants/chains'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
+import { FeeOnTransferInfo } from 'wallet/src/features/transactions/TransactionDetails/FeeOnTransferInfo'
 import {
-  FeeOnTransferFeeGroup,
-  FeeOnTransferFeeGroupProps,
-} from 'wallet/src/features/transactions/TransactionDetails/FeeOnTransferFee'
-import { SwapFee } from 'wallet/src/features/transactions/TransactionDetails/SwapFee'
+  OnShowSwapFeeInfo,
+  SwapFee,
+} from 'wallet/src/features/transactions/TransactionDetails/SwapFee'
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
 import { SwapFeeInfo } from 'wallet/src/features/transactions/swap/trade/types'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
@@ -26,7 +26,8 @@ interface TransactionDetailsProps {
   swapFeeInfo?: SwapFeeInfo
   showWarning?: boolean
   warning?: Warning
-  feeOnTransferProps?: FeeOnTransferFeeGroupProps
+  feeOnTransferInfo?: FeeOnTransferInfo
+  onShowSwapFeeInfo?: OnShowSwapFeeInfo
   onShowWarning?: () => void
   isSwap?: boolean
   AccountDetails?: JSX.Element
@@ -41,7 +42,8 @@ export function TransactionDetails({
   swapFeeInfo,
   showWarning,
   warning,
-  feeOnTransferProps,
+  feeOnTransferInfo,
+  onShowSwapFeeInfo,
   onShowWarning,
   isSwap,
   AccountDetails,
@@ -59,7 +61,7 @@ export function TransactionDetails({
     setShowChildren(!showChildren)
   }
 
-  const displaySwapFeeInfo = isSwap && swapFeeInfo
+  const displaySwapFeeInfo = isSwap && swapFeeInfo && onShowSwapFeeInfo
 
   return (
     <Flex>
@@ -124,8 +126,10 @@ export function TransactionDetails({
       ) : null}
       <Flex gap="$spacing8" pb="$spacing8" px="$spacing12">
         {showChildren ? <Flex gap="$spacing12">{children}</Flex> : null}
-        {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
-        {displaySwapFeeInfo && <SwapFee swapFeeInfo={swapFeeInfo} />}
+        {feeOnTransferInfo && <FeeOnTransferInfo {...feeOnTransferInfo} />}
+        {displaySwapFeeInfo && (
+          <SwapFee swapFeeInfo={swapFeeInfo} onShowSwapFeeInfo={onShowSwapFeeInfo} />
+        )}
         <NetworkFee chainId={chainId} gasFee={gasFee} />
         {AccountDetails}
       </Flex>

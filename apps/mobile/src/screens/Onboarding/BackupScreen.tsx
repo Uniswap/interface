@@ -19,8 +19,7 @@ import { OnboardingScreens, Screens } from 'src/screens/Screens'
 import { Button, Flex, Icons, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import PaperIcon from 'ui/src/assets/icons/paper-stack.svg'
 import { iconSizes } from 'ui/src/theme'
-import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
-import { isAndroid } from 'uniswap/src/utils/platform'
+import { getCloudProviderName, isAndroid } from 'uniswap/src/utils/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ImportType } from 'wallet/src/features/onboarding/types'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
@@ -174,7 +173,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
           )}
           {showSkipOption && (
             <Trace logPress element={ElementName.Next}>
-              <Button testID={ElementName.Next} theme="tertiary" onPress={onPressNext}>
+              <Button theme="tertiary" onPress={onPressNext}>
                 {t('common.button.later')}
               </Button>
             </Trace>

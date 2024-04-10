@@ -1,4 +1,4 @@
-import { AssetDocument, AssetQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { AssetDocument, AssetQuery } from '../../src/graphql/data/__generated__/types-and-hooks'
 import client from '../client'
 
 function formatTitleName(name: string | undefined, collectionName: string | undefined, tokenId: string) {

@@ -4,49 +4,30 @@ import { Alert } from 'react-native'
 import { URL } from 'react-native-url-polyfill'
 import { appSelect } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import {
-  getScantasticQueryParams,
-  parseScantasticParams,
-} from 'src/components/WalletConnect/ScanSheet/util'
-import {
-  UNISWAP_URL_SCHEME,
-  UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
-  UNISWAP_WALLETCONNECT_URL,
-} from 'src/features/deepLinking/constants'
 import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLinkSaga'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
-import { closeAllModals, openModal } from 'src/features/modals/modalSlice'
+import { openModal } from 'src/features/modals/modalSlice'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
-import { MobileEventName } from 'src/features/telemetry/constants'
+import { MobileEventName, ShareableEntity } from 'src/features/telemetry/constants'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { WidgetType } from 'src/features/widgets/widgets'
 import { Screens } from 'src/screens/Screens'
-import { Statsig } from 'statsig-react-native'
 import { call, put, takeLatest } from 'typed-redux-saga'
-import { UNISWAP_APP_HOSTNAME } from 'uniswap/src/constants/urls'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/experiments/flags'
-import i18n from 'uniswap/src/i18n/i18n'
+import { UNISWAP_APP_HOSTNAME, uniswapUrls } from 'uniswap/src/constants/urls'
 import { logger } from 'utilities/src/logger/logger'
-import { selectExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/selectors'
-import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { fromUniswapWebAppLink } from 'wallet/src/features/chains/utils'
-import { ScantasticParams } from 'wallet/src/features/scantastic/types'
-import {
-  fetchExtensionEligibityByAddresses,
-  fetchUnitagByAddresses,
-} from 'wallet/src/features/unitags/api'
 import {
   selectAccounts,
   selectActiveAccount,
   selectActiveAccountAddress,
   selectNonPendingAccounts,
-  selectSignerMnemonicAccounts,
 } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import { ModalName, ShareableEntity } from 'wallet/src/telemetry/constants'
+import i18n from 'wallet/src/i18n/i18n'
+import { ModalName } from 'wallet/src/telemetry/constants'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 import { UNISWAP_APP_NATIVE_TOKEN, openUri } from 'wallet/src/utils/linking'
 
@@ -60,7 +41,10 @@ export enum LinkSource {
   Share = 'Share',
 }
 
+export const UNISWAP_URL_SCHEME = 'uniswap://'
+export const UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM = 'uniswap://wc?uri='
 const UNISWAP_URL_SCHEME_WIDGET = 'uniswap://widget/'
+export const UNISWAP_WALLETCONNECT_URL = uniswapUrls.appBaseUrl + '/wc?uri='
 const WALLETCONNECT_URI_SCHEME = 'wc:' // https://eips.ethereum.org/EIPS/eip-1328
 
 const NFT_ITEM_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/asset\/(0x[a-fA-F0-9]{40})\/(\d+)$/
@@ -82,7 +66,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
   // which causes the bottom sheet to break
   navigate(Screens.Home)
 
-  // Handle NFT Item share (ex. https://app.uniswap.org/nfts/asset/0x.../123)
+  // Handle NFT Item share (ex. https://app.uniswap.org/#/nfts/asset/0x.../123)
   if (NFT_ITEM_SHARE_LINK_HASH_REGEX.test(path)) {
     const [, , contractAddress, tokenId] = path.match(NFT_ITEM_SHARE_LINK_HASH_REGEX) || []
     if (!contractAddress || !tokenId) {
@@ -108,7 +92,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
     return
   }
 
-  // Handle NFT collection share (ex. https://app.uniswap.org/nfts/collection/0x...)
+  // Handle NFT collection share (ex. https://app.uniswap.org/#/nfts/collection/0x...)
   if (NFT_COLLECTION_SHARE_LINK_HASH_REGEX.test(path)) {
     const [, , contractAddress] = path.match(NFT_COLLECTION_SHARE_LINK_HASH_REGEX) || []
     if (!contractAddress) {
@@ -132,7 +116,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
     return
   }
 
-  // Handle Token share (ex. https://app.uniswap.org/tokens/ethereum/0x...)
+  // Handle Token share (ex. https://app.uniswap.org/#/tokens/ethereum/0x...)
   if (TOKEN_SHARE_LINK_HASH_REGEX.test(path)) {
     const [, , network, contractAddress] = path.match(TOKEN_SHARE_LINK_HASH_REGEX) || []
     const chainId = network && fromUniswapWebAppLink(network)
@@ -168,7 +152,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
     return
   }
 
-  // Handle Address share (ex. https://app.uniswap.org/address/0x...)
+  // Handle Address share (ex. https://app.uniswap.org/#/address/0x...)
   if (ADDRESS_SHARE_LINK_HASH_REGEX.test(path)) {
     const [, , accountAddress] = path.match(ADDRESS_SHARE_LINK_HASH_REGEX) || []
     if (!accountAddress) {
@@ -253,13 +237,6 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
     // Handles deep links from Uniswap Widgets (ex. uniswap://widget/#/tokens/ethereum/0x...)
     if (action.payload.url.startsWith(UNISWAP_URL_SCHEME_WIDGET)) {
       yield* call(handleUniswapAppDeepLink, url.hash, action.payload.url, LinkSource.Widget)
-      return
-    }
-
-    // Handle scantastic deep links in the format uniswap://scantastic?${PARAMS}
-    const maybeScantasticQueryParams = getScantasticQueryParams(action.payload.url)
-    if (maybeScantasticQueryParams) {
-      yield* call(handleScantasticDeepLink, maybeScantasticQueryParams)
       return
     }
 
@@ -381,72 +358,4 @@ export function* parseAndValidateUserAddress(userAddress: string | null) {
   }
 
   return matchingAccount.address
-}
-
-export function* handleScantasticDeepLink(scantasticQueryParams: string): Generator {
-  const params = parseScantasticParams(scantasticQueryParams)
-  const extensionOnboardingEnabled = Statsig.checkGate(
-    getFeatureFlagName(FeatureFlags.ExtensionOnboarding)
-  )
-  const scantasticEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.Scantastic))
-
-  if (!params || !scantasticEnabled) {
-    Alert.alert(
-      i18n.t('walletConnect.error.scantastic.title'),
-      i18n.t('walletConnect.error.scantastic.message'),
-      [{ text: i18n.t('common.button.ok') }]
-    )
-    return
-  }
-
-  const extensionOnboardingState = yield* appSelect(selectExtensionOnboardingState)
-
-  if (
-    extensionOnboardingEnabled &&
-    extensionOnboardingState !== ExtensionOnboardingState.Undefined
-  ) {
-    // User has already passed extension onboarding eligibility check
-    yield* call(launchScantastic, params)
-    return
-  }
-
-  const signerAccounts = yield* appSelect(selectSignerMnemonicAccounts)
-
-  const waitlistPositionResponse = (yield* call(
-    fetchExtensionEligibityByAddresses,
-    signerAccounts.map((account) => account.address)
-  )).data
-
-  if (extensionOnboardingEnabled && waitlistPositionResponse?.isAccepted) {
-    yield* call(launchScantastic, params)
-  } else {
-    const activeAccount = yield* appSelect(selectActiveAccount)
-
-    const activeAccountUnitag = activeAccount
-      ? (yield* call(fetchUnitagByAddresses, [activeAccount.address])).data?.[activeAccount.address]
-          ?.username
-      : undefined
-
-    yield* put(closeAllModals())
-    yield* put(
-      openModal({
-        name: ModalName.ExtensionWaitlistModal,
-        initialState: {
-          isUserOnWaitlist: activeAccountUnitag !== undefined,
-        },
-      })
-    )
-  }
-}
-
-function* launchScantastic(params: ScantasticParams): Generator {
-  yield* put(closeAllModals())
-  yield* put(
-    openModal({
-      name: ModalName.Scantastic,
-      initialState: {
-        params,
-      },
-    })
-  )
 }

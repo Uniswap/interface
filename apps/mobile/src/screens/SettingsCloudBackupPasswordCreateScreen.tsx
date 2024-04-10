@@ -8,7 +8,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
 import { Screens } from 'src/screens/Screens'
 import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
-import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
+import { getCloudProviderName } from 'uniswap/src/utils/platform'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 

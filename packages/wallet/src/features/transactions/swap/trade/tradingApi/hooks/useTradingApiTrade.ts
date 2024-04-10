@@ -12,7 +12,7 @@ import {
   QuoteRequest as TradingApiQuoteRequest,
   QuoteResponse as TradingApiQuoteResponse,
   TradeType as TradingApiTradeType,
-} from 'wallet/src/data/tradingApi/__generated__/index'
+} from 'wallet/src/data/tradingApi/__generated__/api'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 import {
@@ -79,9 +79,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
   const tokenOutAddress = getTokenAddressForApiRequest(currencyOut)
 
   const requestTradeType =
-    tradeType === TradeType.EXACT_INPUT
-      ? TradingApiTradeType.EXACT_INPUT
-      : TradingApiTradeType.EXACT_OUTPUT
+    tradeType === TradeType.EXACT_INPUT ? TradingApiTradeType.Input : TradingApiTradeType.Output
 
   const skipQuery =
     skip ||
@@ -106,7 +104,7 @@ export function useTradingApiTrade(args: UseTradeArgs): TradeWithStatus {
       tokenOut: tokenOutAddress,
       slippageTolerance: customSlippageTolerance,
       includeGasInfo: true,
-      routingPreference: RoutingPreference.CLASSIC,
+      routingPreference: RoutingPreference.Classic,
       deadline: inXMinutesUnix(DEFAULT_SWAP_VALIDITY_TIME_MINS),
     }
   }, [

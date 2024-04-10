@@ -1,3 +1,4 @@
+import { t, Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
@@ -9,7 +10,6 @@ import { NoInfoAvailable, truncateDescription, TruncateDescriptionButton } from 
 import Tooltip, { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
-import { t, Trans } from 'i18n'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useCallback, useReducer } from 'react'
 import { Copy } from 'react-feather'

@@ -1,6 +1,6 @@
+import { Trans } from '@lingui/macro'
 import { ChainId, SUPPORTED_CHAINS } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { Trans } from 'i18n'
 import type { ReactNode } from 'react'
 
 export const FEE_AMOUNT_DETAIL: Record<
@@ -21,7 +21,6 @@ export const FEE_AMOUNT_DETAIL: Record<
       ChainId.POLYGON_MUMBAI,
       ChainId.AVALANCHE,
       ChainId.BASE,
-      ChainId.BLAST,
     ],
   },
   [FeeAmount.LOW]: {

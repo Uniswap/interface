@@ -1,16 +1,18 @@
+import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import Row from 'components/Row'
 import { SwapSkeleton } from 'components/swap/SwapSkeleton'
+import { useInfoExplorePageEnabled } from 'featureFlags/flags/infoExplore'
+import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
-import { Trans } from 'i18n'
 import { ReactNode } from 'react'
-import { ChevronRight } from 'react-feather'
+import { ArrowLeft, ChevronRight } from 'react-feather'
 import { useParams } from 'react-router-dom'
-import styled, { css } from 'styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
-import { ClickableStyle } from 'theme/components'
+import { ClickableStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { capitalize } from 'tsafe'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -20,7 +22,7 @@ import { ChartType } from 'components/Charts/utils'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { LoadingBubble } from '../loading'
 import { AboutContainer, AboutHeader } from './About'
-import { TDP_CHART_HEIGHT_PX } from './ChartSection'
+import { OldChartContainer, TDP_CHART_HEIGHT_PX } from './ChartSection'
 import { StatPair, StatWrapper, StatsWrapper } from './StatsSection'
 import { Hr } from './shared'
 
@@ -51,11 +53,11 @@ export const LeftPanel = styled.div`
   overflow: hidden;
   width: 100%;
 `
-export const RightPanel = styled.div`
+export const RightPanel = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
   padding-top: 53px;
   flex-direction: column;
-  gap: 40px;
+  gap: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? 40 : 20)}px;
   width: ${SWAP_COMPONENT_WIDTH}px;
 
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
@@ -63,29 +65,42 @@ export const RightPanel = styled.div`
     max-width: 780px;
   }
 `
-
-export const TokenInfoContainer = styled.div`
+const LoadingChartContainer = styled.div<{ isInfoTDPEnabled?: boolean }>`
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  height: 100%;
+  padding-bottom: 66px;
+  overflow: hidden;
+  margin-bottom: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '14' : '44')}px;
+`
+export const TokenInfoContainer = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 8px;
-  margin-bottom: 20px;
+  padding-top: ${({ isInfoTDPEnabled }) => isInfoTDPEnabled && '8px'};
+  margin-bottom: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '20' : '4')}px;
   gap: 20px;
   ${textFadeIn};
   animation-duration: ${({ theme }) => theme.transition.duration.medium};
 `
-export const TokenNameCell = styled.div`
+export const TokenNameCell = styled.div<{ isInfoTDPEnabled?: boolean }>`
   display: flex;
-  gap: 12px;
+  gap: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '12' : '8')}px;
   font-size: 20px;
   line-height: 28px;
   align-items: center;
-  padding-top: 4px;
-  min-width: 32px;
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+
+  ${({ isInfoTDPEnabled }) =>
+    isInfoTDPEnabled &&
+    css`
+      padding-top: 4px;
+      min-width: 32px;
+      @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    `}
 `
 /* Loading state bubbles */
 const DetailBubble = styled(LoadingBubble)`
@@ -104,9 +119,14 @@ const TokenLogoBubble = styled(DetailBubble)`
   height: 32px;
   border-radius: 50%;
 `
-const TitleBubble = styled(DetailBubble)`
-  height: 36px;
+const TitleBubble = styled(DetailBubble)<{ $isInfoTDPEnabled?: boolean }>`
+  ${({ $isInfoTDPEnabled }) => $isInfoTDPEnabled && 'height: 36px;'}
   width: 136px;
+`
+const PriceBubble = styled(SquaredBubble)`
+  margin-top: 4px;
+  height: 40px;
+  width: 162px;
 `
 
 const SectionBubble = styled(SquaredBubble)`
@@ -142,6 +162,21 @@ const ExtraDetailsContainer = styled.div`
   padding-top: 24px;
 `
 
+const ChartAnimation = styled.div`
+  animation: wave 8s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+  display: flex;
+  overflow: hidden;
+  margin-top: 90px;
+
+  @keyframes wave {
+    0% {
+      margin-left: 0;
+    }
+    100% {
+      margin-left: -800px;
+    }
+  }
+`
 const Space = styled.div<{ heightSize: number }>`
   height: ${({ heightSize }) => `${heightSize}px`};
 `
@@ -207,14 +242,46 @@ export function getLoadingTitle(
   )
   return (
     <Trans>
-      token data for {{ tokenLink }}
-      {{ chainSuffix }}
+      token data for {tokenLink}
+      {chainSuffix}
     </Trans>
   )
 }
 
+function Wave() {
+  const theme = useTheme()
+  return (
+    <svg width="416" height="160" xmlns="http://www.w3.org/2000/svg">
+      <path d="M 0 80 Q 104 10, 208 80 T 416 80" stroke={theme.surface3} fill="transparent" strokeWidth="2" />
+    </svg>
+  )
+}
+
 export function LoadingChart() {
-  return <ChartSkeleton dim type={ChartType.PRICE} height={TDP_CHART_HEIGHT_PX} />
+  const isInfoTDPEnabled = useInfoTDPEnabled()
+
+  if (isInfoTDPEnabled) {
+    return <ChartSkeleton dim type={ChartType.PRICE} height={TDP_CHART_HEIGHT_PX} />
+  }
+  return (
+    <OldChartContainer>
+      <ThemedText.HeadlineLarge>
+        <PriceBubble />
+      </ThemedText.HeadlineLarge>
+      <Space heightSize={6} />
+      <LoadingChartContainer isInfoTDPEnabled={isInfoTDPEnabled}>
+        <div>
+          <ChartAnimation>
+            <Wave />
+            <Wave />
+            <Wave />
+            <Wave />
+            <Wave />
+          </ChartAnimation>
+        </div>
+      </LoadingChartContainer>
+    </OldChartContainer>
+  )
 }
 
 function LoadingStats() {
@@ -250,24 +317,36 @@ function LoadingStats() {
 /* Loading State: row component with loading bubbles */
 function TokenDetailsSkeleton() {
   const { chainName, tokenAddress } = useParams<{ chainName?: string; tokenAddress?: string }>()
+  const isInfoExplorePageEnabled = useInfoExplorePageEnabled()
+  const isInfoTDPEnabled = useInfoTDPEnabled()
   const chainId = supportedChainIdFromGQLChain(validateUrlChainParam(chainName))
   const token = useCurrency(tokenAddress === NATIVE_CHAIN_ID ? 'ETH' : tokenAddress, chainId)
 
   return (
     <LeftPanel>
-      <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-        <BreadcrumbNavLink to={`/explore/${chainName}`}>
-          <Trans>Explore</Trans> <ChevronRight size={14} />
-        </BreadcrumbNavLink>
-        <BreadcrumbNavLink to={`/explore/tokens/${chainName}`}>
-          <Trans>Tokens</Trans> <ChevronRight size={14} />
-        </BreadcrumbNavLink>
-        <NavBubble />
-      </BreadcrumbNavContainer>
-      <TokenInfoContainer>
+      {isInfoTDPEnabled ? (
+        <BreadcrumbNavContainer isInfoTDPEnabled aria-label="breadcrumb-nav">
+          <BreadcrumbNavLink to={`/explore/${chainName}`}>
+            <Trans>Explore</Trans> <ChevronRight size={14} />
+          </BreadcrumbNavLink>
+          <BreadcrumbNavLink to={`/explore/tokens/${chainName}`}>
+            <Trans>Tokens</Trans> <ChevronRight size={14} />
+          </BreadcrumbNavLink>
+          <NavBubble />
+        </BreadcrumbNavContainer>
+      ) : (
+        <BreadcrumbNavContainer>
+          <BreadcrumbNavLink
+            to={(isInfoExplorePageEnabled ? '/explore' : '') + (chainName ? `/tokens/${chainName}` : `/tokens`)}
+          >
+            <ArrowLeft size={14} /> Tokens
+          </BreadcrumbNavLink>
+        </BreadcrumbNavContainer>
+      )}
+      <TokenInfoContainer isInfoTDPEnabled={isInfoTDPEnabled}>
         <TokenNameCell>
           <TokenLogoBubble />
-          <TitleBubble />
+          <TitleBubble $isInfoTDPEnabled={isInfoTDPEnabled} />
         </TokenNameCell>
       </TokenInfoContainer>
       <LoadingChart />

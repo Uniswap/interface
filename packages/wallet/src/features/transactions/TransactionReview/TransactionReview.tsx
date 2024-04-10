@@ -2,21 +2,21 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInUp, FadeOut } from 'react-native-reanimated'
-import { AnimatedFlex, Button, Flex, Text, isWeb, useDeviceDimensions, useMedia } from 'ui/src'
+import { AnimatedFlex, Button, Flex, isWeb, Text, useDeviceDimensions, useMedia } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { fonts, iconSizes } from 'ui/src/theme'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { NumberType } from 'utilities/src/format/types'
-import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
-import { NFTTransfer } from 'wallet/src/components/NFT/NFTTransfer'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { TransferArrowButton } from 'wallet/src/components/buttons/TransferArrowButton'
+import { CurrencyLogo } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
 import { RecipientPrevTransfers } from 'wallet/src/components/input/RecipientInputPanel'
 import { TextInputProps } from 'wallet/src/components/input/TextInput'
+import { NFTTransfer } from 'wallet/src/components/NFT/NFTTransfer'
+import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
-import { ElementName, ElementNameType } from 'wallet/src/telemetry/constants'
+import { ElementNameType } from 'wallet/src/telemetry/constants'
 import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 interface BaseReviewProps {
@@ -174,7 +174,7 @@ export function TransactionReview({
                 py="$none"
                 showCurrencySign={isFiatInput}
                 showSoftInputOnFocus={false}
-                testID={ElementName.AmountInputOut}
+                testID="amount-input-out"
                 textAlign="center"
                 value={formattedAmountOut}
               />

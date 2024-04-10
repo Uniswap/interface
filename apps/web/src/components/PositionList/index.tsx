@@ -1,5 +1,5 @@
+import { Trans } from '@lingui/macro'
 import PositionListItem from 'components/PositionListItem'
-import { Trans } from 'i18n'
 import React from 'react'
 import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'

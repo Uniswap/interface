@@ -1,0 +1,589 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should inject metadata for valid tokens 1`] = `
+"<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+
+    <!--
+       will be replaced with the URL of the \`public\` folder during build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+    -->
+    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/images/192x192_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#fff" />
+    
+    <meta
+      http-equiv="Content-Security-Policy" 
+      content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://vercel.com https://vercel.live/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * 'self' blob: data: https://assets.coingecko.com/ https://cdn.center.app/ https://ethereum-optimism.github.io/ https://explorer-api.walletconnect.com/ https://i.seadn.io/ https://lh3.googleusercontent.com/ https://openseauserdata.com/ https://raw.githubusercontent.com/ https://raw.seadn.io/ https://s2.coinmarketcap.com/ https://static.optimism.io/ https://vercel.com https://vercel.live/ https://trustwallet.com/ https://cloudflare-ipfs.com/; frame-src 'self' https://buy.moonpay.com/ https://vercel.com https://vercel.live/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src * 'self' blob: data: https://*.gateway.uniswap.org https://gateway.uniswap.org https://statsigapi.net https://api.moonpay.com/ https://api.opensea.io https://api.thegraph.com/ https://api.uniswap.org https://arbitrum-mainnet.infura.io/ https://avalanche-mainnet.infura.io/ https://base-mainnet.infura.io/ https://bridge.arbitrum.io https://celo-org.github.io https://cloudflare-ipfs.com https://explorer-api.walletconnect.com https://forno.celo.org/ https://gateway.ipfs.io/ https://interface.gateway.uniswap.org https://mainnet.infura.io https://o1037921.ingest.sentry.io https://old-wispy-arrow.bsc.quiknode.pro/ https://optimism-mainnet.infura.io/ https://polygon-mainnet.infura.io/ https://raw.githubusercontent.com https://static.optimism.io https://temp.api.uniswap.org/ https://tokenlist.arbitrum.io https://tokens.coingecko.com https://ultra-blue-flower.quiknode.pro https://us-central1-uniswap-mobile.cloudfunctions.net/ https://vercel.com https://vercel.live/ https://www.gemini.com wss://relay.walletconnect.com/ wss://www.walletlink.org/rpc; worker-src 'self' blob:;"
+    >
+    
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
+
+    <!--
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
+
+    <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
+   
+    <style>
+      * {
+        font-family: 'Basel', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /**
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
+        */
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 535;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Grotesk-Medium.woff') format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 485;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
+          url('/fonts/Basel-Grotesk-Book.woff') format('woff');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Basel', sans-serif;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      button {
+        user-select: none;
+      }
+
+      html {
+        font-size: 16px;
+        font-weight: 485;
+        font-variant: none;
+        font-smooth: always;
+        text-rendering: optimizeLegibility !important;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html {
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
+        }
+      }
+    </style>
+  <script defer src="/static/js/bundle.js"></script></head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
+    <div id="background-radial-gradient"></div>
+  </body>
+</html>
+"
+`;
+
+exports[`should inject metadata for valid tokens 2`] = `
+"<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+
+    <!--
+       will be replaced with the URL of the \`public\` folder during build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+    -->
+    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/images/192x192_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#fff" />
+    
+    <meta
+      http-equiv="Content-Security-Policy" 
+      content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://vercel.com https://vercel.live/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * 'self' blob: data: https://assets.coingecko.com/ https://cdn.center.app/ https://ethereum-optimism.github.io/ https://explorer-api.walletconnect.com/ https://i.seadn.io/ https://lh3.googleusercontent.com/ https://openseauserdata.com/ https://raw.githubusercontent.com/ https://raw.seadn.io/ https://s2.coinmarketcap.com/ https://static.optimism.io/ https://vercel.com https://vercel.live/ https://trustwallet.com/ https://cloudflare-ipfs.com/; frame-src 'self' https://buy.moonpay.com/ https://vercel.com https://vercel.live/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src * 'self' blob: data: https://*.gateway.uniswap.org https://gateway.uniswap.org https://statsigapi.net https://api.moonpay.com/ https://api.opensea.io https://api.thegraph.com/ https://api.uniswap.org https://arbitrum-mainnet.infura.io/ https://avalanche-mainnet.infura.io/ https://base-mainnet.infura.io/ https://bridge.arbitrum.io https://celo-org.github.io https://cloudflare-ipfs.com https://explorer-api.walletconnect.com https://forno.celo.org/ https://gateway.ipfs.io/ https://interface.gateway.uniswap.org https://mainnet.infura.io https://o1037921.ingest.sentry.io https://old-wispy-arrow.bsc.quiknode.pro/ https://optimism-mainnet.infura.io/ https://polygon-mainnet.infura.io/ https://raw.githubusercontent.com https://static.optimism.io https://temp.api.uniswap.org/ https://tokenlist.arbitrum.io https://tokens.coingecko.com https://ultra-blue-flower.quiknode.pro https://us-central1-uniswap-mobile.cloudfunctions.net/ https://vercel.com https://vercel.live/ https://www.gemini.com wss://relay.walletconnect.com/ wss://www.walletlink.org/rpc; worker-src 'self' blob:;"
+    >
+    
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
+
+    <!--
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
+
+    <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
+   
+    <style>
+      * {
+        font-family: 'Basel', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /**
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
+        */
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 535;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Grotesk-Medium.woff') format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 485;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
+          url('/fonts/Basel-Grotesk-Book.woff') format('woff');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Basel', sans-serif;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      button {
+        user-select: none;
+      }
+
+      html {
+        font-size: 16px;
+        font-weight: 485;
+        font-variant: none;
+        font-smooth: always;
+        text-rendering: optimizeLegibility !important;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html {
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
+        }
+      }
+    </style>
+  <script defer src="/static/js/bundle.js"></script></head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
+    <div id="background-radial-gradient"></div>
+  </body>
+</html>
+"
+`;
+
+exports[`should inject metadata for valid tokens 3`] = `
+"<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+
+    <!--
+       will be replaced with the URL of the \`public\` folder during build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+    -->
+    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/images/192x192_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#fff" />
+    
+    <meta
+      http-equiv="Content-Security-Policy" 
+      content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://vercel.com https://vercel.live/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * 'self' blob: data: https://assets.coingecko.com/ https://cdn.center.app/ https://ethereum-optimism.github.io/ https://explorer-api.walletconnect.com/ https://i.seadn.io/ https://lh3.googleusercontent.com/ https://openseauserdata.com/ https://raw.githubusercontent.com/ https://raw.seadn.io/ https://s2.coinmarketcap.com/ https://static.optimism.io/ https://vercel.com https://vercel.live/ https://trustwallet.com/ https://cloudflare-ipfs.com/; frame-src 'self' https://buy.moonpay.com/ https://vercel.com https://vercel.live/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src * 'self' blob: data: https://*.gateway.uniswap.org https://gateway.uniswap.org https://statsigapi.net https://api.moonpay.com/ https://api.opensea.io https://api.thegraph.com/ https://api.uniswap.org https://arbitrum-mainnet.infura.io/ https://avalanche-mainnet.infura.io/ https://base-mainnet.infura.io/ https://bridge.arbitrum.io https://celo-org.github.io https://cloudflare-ipfs.com https://explorer-api.walletconnect.com https://forno.celo.org/ https://gateway.ipfs.io/ https://interface.gateway.uniswap.org https://mainnet.infura.io https://o1037921.ingest.sentry.io https://old-wispy-arrow.bsc.quiknode.pro/ https://optimism-mainnet.infura.io/ https://polygon-mainnet.infura.io/ https://raw.githubusercontent.com https://static.optimism.io https://temp.api.uniswap.org/ https://tokenlist.arbitrum.io https://tokens.coingecko.com https://ultra-blue-flower.quiknode.pro https://us-central1-uniswap-mobile.cloudfunctions.net/ https://vercel.com https://vercel.live/ https://www.gemini.com wss://relay.walletconnect.com/ wss://www.walletlink.org/rpc; worker-src 'self' blob:;"
+    >
+    
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
+
+    <!--
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
+
+    <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
+   
+    <style>
+      * {
+        font-family: 'Basel', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /**
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
+        */
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 535;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Grotesk-Medium.woff') format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 485;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
+          url('/fonts/Basel-Grotesk-Book.woff') format('woff');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Basel', sans-serif;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      button {
+        user-select: none;
+      }
+
+      html {
+        font-size: 16px;
+        font-weight: 485;
+        font-variant: none;
+        font-smooth: always;
+        text-rendering: optimizeLegibility !important;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html {
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
+        }
+      }
+    </style>
+  <script defer src="/static/js/bundle.js"></script></head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
+    <div id="background-radial-gradient"></div>
+  </body>
+</html>
+"
+`;
+
+exports[`should inject metadata for valid tokens 4`] = `
+"<!DOCTYPE html>
+<html translate="no">
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Uniswap Interface</title>
+
+    <!--
+       will be replaced with the URL of the \`public\` folder during build.
+      Only files inside the \`public\` folder can be referenced from the HTML.
+    -->
+    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/images/192x192_App_Icon.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="/images/512x512_App_Icon.png" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#fff" />
+    
+    <meta
+      http-equiv="Content-Security-Policy" 
+      content="default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' 'wasm-unsafe-eval' data: https://translate.googleapis.com/ https://vercel.com https://vercel.live/ https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * 'self' blob: data: https://assets.coingecko.com/ https://cdn.center.app/ https://ethereum-optimism.github.io/ https://explorer-api.walletconnect.com/ https://i.seadn.io/ https://lh3.googleusercontent.com/ https://openseauserdata.com/ https://raw.githubusercontent.com/ https://raw.seadn.io/ https://s2.coinmarketcap.com/ https://static.optimism.io/ https://vercel.com https://vercel.live/ https://trustwallet.com/ https://cloudflare-ipfs.com/; frame-src 'self' https://buy.moonpay.com/ https://vercel.com https://vercel.live/ https://verify.walletconnect.com/ https://verify.walletconnect.org/; connect-src * 'self' blob: data: https://*.gateway.uniswap.org https://gateway.uniswap.org https://statsigapi.net https://api.moonpay.com/ https://api.opensea.io https://api.thegraph.com/ https://api.uniswap.org https://arbitrum-mainnet.infura.io/ https://avalanche-mainnet.infura.io/ https://base-mainnet.infura.io/ https://bridge.arbitrum.io https://celo-org.github.io https://cloudflare-ipfs.com https://explorer-api.walletconnect.com https://forno.celo.org/ https://gateway.ipfs.io/ https://interface.gateway.uniswap.org https://mainnet.infura.io https://o1037921.ingest.sentry.io https://old-wispy-arrow.bsc.quiknode.pro/ https://optimism-mainnet.infura.io/ https://polygon-mainnet.infura.io/ https://raw.githubusercontent.com https://static.optimism.io https://temp.api.uniswap.org/ https://tokenlist.arbitrum.io https://tokens.coingecko.com https://ultra-blue-flower.quiknode.pro https://us-central1-uniswap-mobile.cloudfunctions.net/ https://vercel.com https://vercel.live/ https://www.gemini.com wss://relay.walletconnect.com/ wss://www.walletlink.org/rpc; worker-src 'self' blob:;"
+    >
+    
+    <!-- 
+      Apple Smart App Banner for Safari on iOS
+      https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
+     -->
+    <meta name="apple-itunes-app" content="app-id=6443944476">
+
+    <!--
+      manifest.json provides metadata used when the app is installed as a PWA.
+      See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
+
+    <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
+   
+    <style>
+      * {
+        font-family: 'Basel', sans-serif;
+        box-sizing: border-box;
+      }
+
+      /**
+          Explicitly load Basel var from public/ so it does not block LCP's critical path.
+        */
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 535;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
+          url('/fonts/Basel-Grotesk-Medium.woff') format('woff');
+      }
+
+      @font-face {
+        font-family: 'Basel';
+        font-weight: 485;
+        font-style: normal;
+        font-display: block;
+        src: 
+          url('/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
+          url('/fonts/Basel-Grotesk-Book.woff') format('woff');
+      }
+
+      @supports (font-variation-settings: normal) {
+        * {
+          font-family: 'Basel', sans-serif;
+        }
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      button {
+        user-select: none;
+      }
+
+      html {
+        font-size: 16px;
+        font-weight: 485;
+        font-variant: none;
+        font-smooth: always;
+        text-rendering: optimizeLegibility !important;
+        -webkit-font-smoothing: antialiased !important;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      }
+
+      /* Use this to apply network-specific gradient backgrounds, in RadialGradientByChainUpdater.ts */
+      #background-radial-gradient {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+        width: 200vw;
+        height: 200vh;
+        transform: translate(-50vw, -100vh);
+        z-index: -1;
+      }
+
+      html,
+      body,
+      #root {
+        min-height: 100%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        html {
+          background: linear-gradient(rgb(19, 19, 19) 0%, rgb(19, 19, 19) 100%);
+        }
+      }
+
+      @media (prefers-color-scheme: light) {
+        html {
+          background: radial-gradient(100% 100% at 50% 0%, rgba(255, 184, 226, 0) 0%, rgba(255, 255, 255, 0) 100%), rgb(255, 255, 255);
+        }
+      }
+    </style>
+  <script defer src="/static/js/bundle.js"></script></head>
+
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
+    <div id="background-radial-gradient"></div>
+  </body>
+</html>
+"
+`;

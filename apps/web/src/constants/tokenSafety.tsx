@@ -1,6 +1,7 @@
+import { Plural, Trans } from '@lingui/macro'
 import { SearchToken } from 'graphql/data/SearchTokens'
-import { Plural, Trans, t } from 'i18n'
-import { TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TokenStandard } from 'graphql/data/__generated__/types-and-hooks'
+
 import { ZERO_ADDRESS } from './misc'
 import tokenSafetyLookup, { TOKEN_LIST_TYPES } from './tokenSafetyLookup'
 import { NATIVE_CHAIN_ID } from './tokens'
@@ -16,7 +17,7 @@ export enum WARNING_LEVEL {
 /**
  * Determine which warning to display based on the priority of the warnings. Prioritize blocked, than unknown, followed by the rest. Accepts two warnings passed in.
  */
-export function getPriorityWarning(token0Warning: Warning | undefined, token1Warning: Warning | undefined) {
+export function getPriorityWarning(token0Warning: Warning | null, token1Warning: Warning | null) {
   if (token0Warning && token1Warning) {
     if (
       token1Warning?.level === WARNING_LEVEL.BLOCKED ||
@@ -29,7 +30,7 @@ export function getPriorityWarning(token0Warning: Warning | undefined, token1War
   return token0Warning ?? token1Warning
 }
 
-export function getWarningCopy(warning: Warning | undefined, plural = false, tokenSymbol?: string) {
+export function getWarningCopy(warning: Warning | null, plural = false, tokenSymbol?: string) {
   let heading = null,
     description = null
   if (warning) {
@@ -38,9 +39,7 @@ export function getWarningCopy(warning: Warning | undefined, plural = false, tok
         heading = (
           <Plural
             value={plural ? 2 : 1}
-            one={t(`{{name}} isn't traded on leading U.S. centralized exchanges.`, {
-              name: tokenSymbol ?? 'This token',
-            })}
+            _1={`${tokenSymbol ?? 'This token'} isn't traded on leading U.S. centralized exchanges.`}
             other="These tokens aren't traded on leading U.S. centralized exchanges."
           />
         )
@@ -50,9 +49,9 @@ export function getWarningCopy(warning: Warning | undefined, plural = false, tok
         heading = (
           <Plural
             value={plural ? 2 : 1}
-            one={t(`{{name}} isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.`, {
-              name: tokenSymbol ?? 'This token',
-            })}
+            _1={`${
+              tokenSymbol ?? 'This token'
+            } isn't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap.`}
             other="These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap."
           />
         )
@@ -62,9 +61,7 @@ export function getWarningCopy(warning: Warning | undefined, plural = false, tok
         description = (
           <Plural
             value={plural ? 2 : 1}
-            one={t(`You can't trade {{name}} using the Uniswap App.`, {
-              name: tokenSymbol ?? 'this token',
-            })}
+            _1={`You can't trade ${tokenSymbol ?? 'this token'} using the Uniswap App.`}
             other="You can't trade these tokens using the Uniswap App."
           />
         )
@@ -107,11 +104,11 @@ export const NotFoundWarning: Warning = {
 
 export function checkWarning(tokenAddress: string, chainId?: number | null) {
   if (tokenAddress === NATIVE_CHAIN_ID || tokenAddress === ZERO_ADDRESS) {
-    return undefined
+    return null
   }
   switch (tokenSafetyLookup.checkToken(tokenAddress.toLowerCase(), chainId)) {
     case TOKEN_LIST_TYPES.UNI_DEFAULT:
-      return undefined
+      return null
     case TOKEN_LIST_TYPES.UNI_EXTENDED:
       return MediumWarning
     case TOKEN_LIST_TYPES.UNKNOWN:
@@ -126,11 +123,11 @@ export function checkWarning(tokenAddress: string, chainId?: number | null) {
 // TODO(cartcrom): Replace all usage of WARNING_LEVEL with SafetyLevel
 export function checkSearchTokenWarning(token: SearchToken) {
   if (!token.address) {
-    return token.standard === TokenStandard.Native ? undefined : StrongWarning
+    return token.standard === TokenStandard.Native ? null : StrongWarning
   }
   return checkWarning(token.address)
 }
 
-export function displayWarningLabel(warning: Warning | undefined) {
+export function displayWarningLabel(warning: Warning | null) {
   return warning && warning.level !== WARNING_LEVEL.MEDIUM
 }

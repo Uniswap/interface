@@ -1,72 +1,67 @@
-import { Flex, Shine, Text, isWeb } from 'ui/src'
-import { NumberType } from 'utilities/src/format/types'
-import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
-import { PollingInterval } from 'wallet/src/constants/misc'
+import { Flex, Icons, Shine, Skeleton, Text, isWeb, useSporeColors } from 'ui/src'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 import { usePortfolioTotalValue } from 'wallet/src/features/dataApi/balances'
-import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
-import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import AnimatedNumber from 'wallet/src/features/portfolio/AnimatedNumber'
-
-const BALANCE_FONT_WEIGHT = 535
-
-interface PortfolioBalanceProps {
-  owner: Address
+type WalletBalanceProps = {
+  address: Address
 }
 
-export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element {
-  const { data, loading, networkStatus } = usePortfolioTotalValue({
-    address: owner,
-    // TransactionHistoryUpdater will refetch this query on new transaction.
-    // No need to be super aggressive with polling here.
-    pollInterval: PollingInterval.Normal,
-  })
-  const currency = useAppFiatCurrency()
-  const currencyComponents = useAppFiatCurrencyInfo()
-  const { convertFiatAmount, convertFiatAmountFormatted } = useLocalizationContext()
+export function PortfolioBalance({ address }: WalletBalanceProps): JSX.Element {
+  const { data, loading, error, networkStatus } = usePortfolioTotalValue({ address })
+  const { balanceUSD, percentChange } = data || {}
 
-  const isLoading = loading && !data
-  const isWarmLoading = !!data && isWarmLoadingStatus(networkStatus)
+  // TODO (EXT-297): encapsulate to share better
+  const change = percentChange ?? 0
 
-  const { percentChange, absoluteChangeUSD, balanceUSD } = data || {}
+  const isPositiveChange = change !== undefined ? change >= 0 : undefined
+  const colors = useSporeColors()
+  const arrowColor = isPositiveChange ? colors.statusSuccess : colors.statusCritical
 
-  const totalBalance = convertFiatAmountFormatted(balanceUSD, NumberType.PortfolioBalance)
-  const { amount: absoluteChange } = convertFiatAmount(absoluteChangeUSD)
-  // TODO gary re-enabling this for USD/Euros only, replace with more scalable approach
-  const shouldFadePortfolioDecimals =
-    (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) &&
-    currencyComponents.symbolAtFront
-
+  const formattedChange = change !== undefined ? `${Math.abs(change).toFixed(2)}%` : '-'
   return (
-    <Flex gap="$spacing4">
-      {/* Web currently doesnt support reanimated, so can not use the annimated number component */}
-      {isWeb ? (
-        <Text style={{ fontWeight: BALANCE_FONT_WEIGHT }} variant="heading2">
-          {totalBalance}
+    <Flex>
+      {!data && loading ? (
+        <Flex>
+          <Skeleton>
+            <Text
+              loading="no-shimmer"
+              loadingPlaceholderText="$-,---.--"
+              numberOfLines={1}
+              variant={isWeb ? 'heading2' : 'heading1'}
+            />
+          </Skeleton>
+
+          <Text
+            loading="no-shimmer"
+            loadingPlaceholderText="--%"
+            numberOfLines={1}
+            variant="body1"
+          />
+        </Flex>
+      ) : error ? (
+        <Text color="$statusCritical" variant="body1">
+          {/* TODO(EXT-626): add proper error state */}
+          Error: {JSON.stringify(error)}
         </Text>
       ) : (
-        <AnimatedNumber
-          disableAnimations
-          colorIndicationDuration={2000}
-          loading={isLoading}
-          loadingPlaceholderText="000000.00"
-          shouldFadeDecimals={shouldFadePortfolioDecimals}
-          value={totalBalance}
-          warmLoading={isWarmLoading}
-        />
+        <Flex gap="$spacing12">
+          <Shine disabled={!isWarmLoadingStatus(networkStatus)}>
+            <Flex>
+              <Text variant={isWeb ? 'heading2' : 'heading1'}>${balanceUSD?.toFixed(2)}</Text>
+              <Flex row alignItems="center">
+                <Icons.ArrowChange
+                  color={arrowColor.get()}
+                  rotation={isPositiveChange ? 180 : 0}
+                  size={isWeb ? '$icon.16' : '$icon.20'}
+                />
+                <Text color="$neutral2" variant={isWeb ? 'body2' : 'body1'}>
+                  {/* TODO(EXT-298): add absolute change here too, share from mobile */}
+                  {formattedChange}
+                </Text>
+              </Flex>
+            </Flex>
+          </Shine>
+        </Flex>
       )}
-      <Shine disabled={!isWarmLoading}>
-        <RelativeChange
-          absoluteChange={absoluteChange}
-          arrowSize="$icon.16"
-          change={percentChange}
-          loading={isLoading}
-          negativeChangeColor={isWarmLoading ? '$neutral2' : '$statusCritical'}
-          positiveChangeColor={isWarmLoading ? '$neutral2' : '$statusSuccess'}
-          variant="body3"
-        />
-      </Shine>
     </Flex>
   )
 }

@@ -1,11 +1,11 @@
 import { OpacityHoverState } from 'components/Common'
+import { HistoryDuration } from 'graphql/data/__generated__/types-and-hooks'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { useNativeUsdPrice } from 'nft/hooks'
 import { CollectionTableColumn, Denomination, TimePeriod, VolumeType } from 'nft/types'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useFormatterLocales } from 'utils/formatNumbers'
 
 import CollectionTable from './CollectionTable'

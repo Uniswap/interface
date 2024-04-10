@@ -79,22 +79,17 @@ export default function useClassicAutoSlippageTolerance(trade?: ClassicTrade): P
   const outputUSD = useUSDPrice(trade?.outputAmount)
   const outputDollarValue = useStablecoinAmountFromFiatValue(outputUSD.data)
 
-  // Prefer the USD estimate, if it is supported.
-  const supportsGasEstimate = useMemo(() => chainId && SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId), [chainId])
-  const gasEstimateUSD =
-    useStablecoinAmountFromFiatValue(supportsGasEstimate ? trade?.gasUseEstimateUSD : undefined) ?? null
-
-  // Skip the gas estimate if we already have a USD estimate, or if there is no trade.
-  const skipNativeEstimate = Boolean(gasEstimateUSD || !trade)
-  const nativeGasPrice = useGasPrice(/* skip= */ skipNativeEstimate)
-  const nativeCurrency = useNativeCurrency(chainId)
+  const nativeGasPrice = useGasPrice()
   const gasEstimate = guesstimateGas(trade)
+  const gasEstimateUSD = useStablecoinAmountFromFiatValue(trade?.gasUseEstimateUSD) ?? null
+  const nativeCurrency = useNativeCurrency(chainId)
+
   const nativeGasCost =
     nativeGasPrice && typeof gasEstimate === 'number'
       ? JSBI.multiply(nativeGasPrice, JSBI.BigInt(gasEstimate))
       : undefined
   const gasCostUSD = useUSDPrice(
-    nativeCurrency && nativeGasCost ? CurrencyAmount.fromRawAmount(nativeCurrency, nativeGasCost) : undefined
+    trade && nativeCurrency && nativeGasCost ? CurrencyAmount.fromRawAmount(nativeCurrency, nativeGasCost) : undefined
   )
   const gasCostStablecoinAmount = useStablecoinAmountFromFiatValue(gasCostUSD.data)
 

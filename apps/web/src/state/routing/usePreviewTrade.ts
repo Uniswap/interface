@@ -1,10 +1,11 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { ZERO_PERCENT } from 'constants/misc'
+import { useGatewayDNSUpdateAllEnabled } from 'featureFlags/flags/gatewayDNSUpdate'
+import { useQuickRouteMainnetEnabled } from 'featureFlags/flags/quickRouteMainnet'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useMemo } from 'react'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+
 import { useGetQuickRouteQuery, useGetQuickRouteQueryState } from './quickRouteSlice'
 import { GetQuickQuoteArgs, PreviewTrade, QuoteState, TradeState } from './types'
 import { currencyAddressForSwapQuote } from './utils'
@@ -27,7 +28,8 @@ function useQuickRouteArguments({
   inputTax: Percent
   outputTax: Percent
 }): GetQuickQuoteArgs | typeof skipToken {
-  const enabledMainnet = useFeatureFlag(FeatureFlags.QuickRouteMainnet)
+  const enabledMainnet = useQuickRouteMainnetEnabled()
+  const gatewayDNSUpdateAllEnabled = useGatewayDNSUpdateAllEnabled()
 
   return useMemo(() => {
     if (!tokenIn || !tokenOut || !amount) return skipToken
@@ -46,8 +48,9 @@ function useQuickRouteArguments({
       tradeType,
       inputTax,
       outputTax,
+      gatewayDNSUpdateAllEnabled,
     }
-  }, [amount, enabledMainnet, inputTax, outputTax, tokenIn, tokenOut, tradeType])
+  }, [amount, enabledMainnet, gatewayDNSUpdateAllEnabled, inputTax, outputTax, tokenIn, tokenOut, tradeType])
 }
 
 export function usePreviewTrade(

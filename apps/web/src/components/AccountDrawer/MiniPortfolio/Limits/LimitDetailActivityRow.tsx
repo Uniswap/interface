@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { CurrencyAmount, Price } from '@uniswap/sdk-core'
 import {
   useOpenOffchainActivityModal,
@@ -11,7 +12,6 @@ import Row from 'components/Row'
 import { parseUnits } from 'ethers/lib/utils'
 import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import { useScreenSize } from 'hooks/useScreenSize'
-import { Trans } from 'i18n'
 import { Checkbox } from 'nft/components/layout/Checkbox'
 import { useMemo, useState } from 'react'
 import { ArrowRight } from 'react-feather'
@@ -90,9 +90,7 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
         title={
           offchainOrderDetails?.expiry ? (
             <ThemedText.LabelMicro fontWeight={500}>
-              <Trans>
-                Expires {{ timestamp: formatTimestamp(offchainOrderDetails.expiry * 1000, true, FormatType.Short) }}
-              </Trans>
+              <Trans>Expires {formatTimestamp(offchainOrderDetails.expiry * 1000, true, FormatType.Short)}</Trans>
             </ThemedText.LabelMicro>
           ) : undefined
         }
@@ -112,9 +110,8 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
             {displayPrice && (
               <ThemedText.SubHeaderSmall color={theme.neutral1}>
                 <Trans>
-                  when {{ price: formatReviewSwapCurrencyAmount(displayPrice) }}{' '}
-                  {{ outSymbol: amounts.outputAmount.currency.symbol }}/
-                  {{ inSymbol: amounts.inputAmount.currency.symbol }}
+                  when {formatReviewSwapCurrencyAmount(displayPrice)} {amounts.outputAmount.currency.symbol}/
+                  {amounts.inputAmount.currency.symbol}
                 </Trans>
               </ThemedText.SubHeaderSmall>
             )}

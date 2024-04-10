@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { Currency, Price } from '@uniswap/sdk-core'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -59,12 +60,14 @@ export default function TradePrice({ price }: TradePriceProps) {
       <ThemedText.BodySmall>{text}</ThemedText.BodySmall>{' '}
       {usdPrice && (
         <ThemedText.BodySmall color="neutral2">
-          (
-          {formatNumber({
-            input: usdPrice,
-            type: NumberType.FiatTokenPrice,
-          })}
-          )
+          <Trans>
+            (
+            {formatNumber({
+              input: usdPrice,
+              type: NumberType.FiatTokenPrice,
+            })}
+            )
+          </Trans>
         </ThemedText.BodySmall>
       )}
     </StyledPriceContainer>

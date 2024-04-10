@@ -1,15 +1,12 @@
 import { useLocalActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
+import { TransactionStatus, useActivityQuery } from 'graphql/data/__generated__/types-and-hooks'
 import { useEffect, useMemo } from 'react'
 import { usePendingOrders } from 'state/signatures/hooks'
 import { SignatureType } from 'state/signatures/types'
 import { usePendingTransactions, useTransactionCanceller } from 'state/transactions/hooks'
-import {
-  TransactionStatus,
-  useActivityWebQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useFormatter } from 'utils/formatNumbers'
 
-import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
+import { GQL_MAINNET_CHAINS } from 'graphql/data/util'
 import { parseRemoteActivities } from './parseRemote'
 import { Activity, ActivityMap } from './types'
 
@@ -62,15 +59,15 @@ function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = 
 
 export function useAllActivities(account: string) {
   const { formatNumberOrString } = useFormatter()
-  const { data, loading, refetch } = useActivityWebQuery({
-    variables: { account, chains: GQL_MAINNET_CHAINS_MUTABLE },
+  const { data, loading, refetch } = useActivityQuery({
+    variables: { account, chains: GQL_MAINNET_CHAINS },
     errorPolicy: 'all',
     fetchPolicy: 'cache-first',
   })
 
   const localMap = useLocalActivities(account)
   const remoteMap = useMemo(
-    () => parseRemoteActivities(data?.portfolios?.[0]?.assetActivities, account, formatNumberOrString),
+    () => parseRemoteActivities(data?.portfolios?.[0].assetActivities, account, formatNumberOrString),
     [account, data?.portfolios, formatNumberOrString]
   )
   const updateCancelledTx = useTransactionCanceller()

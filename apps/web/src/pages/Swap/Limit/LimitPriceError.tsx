@@ -1,8 +1,7 @@
+import { Trans } from '@lingui/macro'
 import { Currency } from '@uniswap/sdk-core'
 import Column from 'components/Column'
-import { LimitPriceErrorType } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import Row from 'components/Row'
-import { Trans } from 'i18n'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
@@ -29,47 +28,36 @@ const LogoContainer = styled.div`
 `
 
 interface LimitPriceErrorProps {
-  priceError: LimitPriceErrorType
   inputCurrency: Currency
   outputCurrency: Currency
   priceInverted: boolean
-  priceAdjustmentPercentage?: number
+  priceAdjustmentPercentage: number
 }
 
-function getTitle({ inputCurrency, outputCurrency, priceInverted, priceError }: LimitPriceErrorProps): ReactNode {
-  if (priceError === LimitPriceErrorType.CALCULATION_ERROR) {
-    return <Trans>Market price not available</Trans>
-  } else if (priceInverted) {
-    return <Trans>Buying {{ symbol: outputCurrency.symbol }} above market price</Trans>
+function getTitle({ inputCurrency, outputCurrency, priceInverted }: LimitPriceErrorProps): ReactNode {
+  if (priceInverted) {
+    return <Trans>Buying {outputCurrency.symbol} above market price</Trans>
   } else {
-    return <Trans>Selling {{ symbol: inputCurrency.symbol }} below market price</Trans>
+    return <Trans>Selling {inputCurrency.symbol} below market price</Trans>
   }
 }
 
-function getDescription({ priceInverted, priceAdjustmentPercentage, priceError }: LimitPriceErrorProps): ReactNode {
-  if (priceError === LimitPriceErrorType.CALCULATION_ERROR) {
+function getDescription({ priceInverted, priceAdjustmentPercentage }: LimitPriceErrorProps): ReactNode {
+  if (priceInverted) {
     return (
       <Trans>
-        We are unable to calculate the current market price. To avoid submitting an order below market price, please
-        check your network connection and try again.
+        Your limit price is {Math.abs(priceAdjustmentPercentage)}% higher than market. Adjust your limit price to
+        proceed.
       </Trans>
     )
-  } else if (priceInverted && !!priceAdjustmentPercentage) {
+  } else {
     return (
       <Trans>
-        Your limit price is {{ pct: Math.abs(priceAdjustmentPercentage) }}% higher than market. Adjust your limit price
-        to proceed.
-      </Trans>
-    )
-  } else if (priceAdjustmentPercentage) {
-    return (
-      <Trans>
-        Your limit price is {{ pct: Math.abs(priceAdjustmentPercentage) }}% lower than market. Adjust your limit price
-        to proceed.
+        Your limit price is {Math.abs(priceAdjustmentPercentage)}% lower than market. Adjust your limit price to
+        proceed.
       </Trans>
     )
   }
-  return null
 }
 
 export function LimitPriceError(props: LimitPriceErrorProps) {

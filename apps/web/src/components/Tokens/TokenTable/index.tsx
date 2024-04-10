@@ -1,6 +1,8 @@
+import { Trans } from '@lingui/macro'
 import { createColumnHelper } from '@tanstack/react-table'
 import { ChainId } from '@uniswap/sdk-core'
 import { ParentSize } from '@visx/responsive'
+import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import Row from 'components/Row'
 import { Table } from 'components/Table'
@@ -14,24 +16,14 @@ import {
   supportedChainIdFromGQLChain,
   validateUrlChainParam,
 } from 'graphql/data/util'
-import { Trans } from 'i18n'
 import { ReactElement, ReactNode, useMemo } from 'react'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { ApolloError } from '@apollo/client'
-import { InterfaceElementName } from '@uniswap/analytics-events'
-import SparklineChart from 'components/Charts/SparklineChart'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Table/styled'
-import {
-  TokenSortMethod,
-  exploreSearchStringAtom,
-  filterTimeAtom,
-  sortAscendingAtom,
-  sortMethodAtom,
-  useSetSortMethod,
-} from 'components/Tokens/state'
+import { TokenSortMethod, sortAscendingAtom, sortMethodAtom, useSetSortMethod } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useAtomValue } from 'jotai/utils'
@@ -73,8 +65,8 @@ function TokenDescription({ token }: { token: TopToken }) {
   return (
     <Row gap="sm">
       <QueryTokenLogo token={token} size="28px" />
-      <NameText data-testid="token-name">{token?.name}</NameText>
-      <ThemedText.BodySecondary style={{ minWidth: 'fit-content' }}>{token?.symbol}</ThemedText.BodySecondary>
+      <NameText data-testid="token-name">{token.name}</NameText>
+      <ThemedText.BodySecondary style={{ minWidth: 'fit-content' }}>{token.symbol}</ThemedText.BodySecondary>
     </Row>
   )
 }
@@ -104,12 +96,20 @@ const HEADER_TEXT: Record<TokenSortMethod, ReactNode> = {
   [TokenSortMethod.VOLUME]: <Trans>Volume</Trans>,
   [TokenSortMethod.HOUR_CHANGE]: <Trans>1 hour</Trans>,
   [TokenSortMethod.DAY_CHANGE]: <Trans>1 day</Trans>,
+  [TokenSortMethod.DEPRECATE_PERCENT_CHANGE]: <Trans>Change</Trans>,
+  [TokenSortMethod.DEPRECATE_TOTAL_VALUE_LOCKED]: <Trans>TVL</Trans>,
 }
 
 export const HEADER_DESCRIPTIONS: Record<TokenSortMethod, ReactNode | undefined> = {
   [TokenSortMethod.PRICE]: undefined,
+  [TokenSortMethod.DEPRECATE_PERCENT_CHANGE]: undefined,
   [TokenSortMethod.DAY_CHANGE]: undefined,
   [TokenSortMethod.HOUR_CHANGE]: undefined,
+  [TokenSortMethod.DEPRECATE_TOTAL_VALUE_LOCKED]: (
+    <Trans>
+      Total value locked (TVL) is the aggregate amount of the asset available across all Uniswap v3 liquidity pools.
+    </Trans>
+  ),
   [TokenSortMethod.FULLY_DILUTED_VALUATION]: (
     <Trans>
       Fully diluted valuation (FDV) calculates the total market value assuming all tokens are in circulation.
@@ -162,21 +162,17 @@ function TokenTable({
   const sortAscending = useAtomValue(sortAscendingAtom)
   const orderDirection = sortAscending ? OrderDirection.Asc : OrderDirection.Desc
   const sortMethod = useAtomValue(sortMethodAtom)
-  const filterString = useAtomValue(exploreSearchStringAtom)
-  const timePeriod = useAtomValue(filterTimeAtom)
 
   const tokenTableValues: TokenTableValue[] | undefined = useMemo(
     () =>
-      tokens?.map((token, i) => {
-        const delta1hr = token?.market?.pricePercentChange1Hour?.value
-        const delta1d = token?.market?.pricePercentChange1Day?.value
-        const tokenSortIndex = tokenSortRank[token?.address ?? NATIVE_CHAIN_ID]
-
+      tokens?.map((token) => {
+        const delta1hr = token.market?.pricePercentChange1Hour?.value
+        const delta1d = token.market?.pricePercentChange1Day?.value
         return {
-          index: tokenSortIndex,
+          index: tokenSortRank[token.address ?? NATIVE_CHAIN_ID],
           tokenDescription: <TokenDescription token={token} />,
-          price: token?.market?.price?.value ?? 0,
-          testId: `token-table-row-${token?.address}`,
+          price: token.market?.price?.value ?? 0,
+          testId: `token-table-row-${token.address}`,
           percentChange1hr: (
             <>
               <DeltaArrow delta={delta1hr} />
@@ -190,7 +186,7 @@ function TokenTable({
             </>
           ),
           fdv: token?.project?.markets?.[0]?.fullyDilutedValuation?.value ?? 0,
-          volume: token?.market?.volume?.value ?? 0,
+          volume: token.market?.volume?.value ?? 0,
           sparkline: (
             <SparklineContainer>
               <ParentSize>
@@ -200,7 +196,7 @@ function TokenTable({
                       width={width}
                       height={height}
                       tokenData={token}
-                      pricePercentChange={token?.market?.pricePercentChange?.value}
+                      pricePercentChange={token.market?.pricePercentChange?.value}
                       sparklineMap={sparklines}
                     />
                   )
@@ -209,26 +205,13 @@ function TokenTable({
             </SparklineContainer>
           ),
           link: getTokenDetailsURL({
-            address: token?.address,
+            address: token.address,
             chain: chainIdToBackendName(chainId),
           }),
-          analytics: {
-            elementName: InterfaceElementName.TOKENS_TABLE_ROW,
-            properties: {
-              chain_id: chainId,
-              token_address: token?.address,
-              token_symbol: token?.symbol,
-              token_list_index: i,
-              token_list_rank: tokenSortIndex,
-              token_list_length: tokens.length,
-              time_frame: timePeriod,
-              search_token_address_input: filterString,
-            },
-          },
-          linkState: { preloadedLogoSrc: token?.project?.logoUrl },
+          linkState: { preloadedLogoSrc: token.project?.logoUrl },
         }
       }) ?? [],
-    [chainId, filterString, formatDelta, sparklines, timePeriod, tokenSortRank, tokens]
+    [chainId, formatDelta, sparklines, tokenSortRank, tokens]
   )
 
   const showLoadingSkeleton = loading || !!error

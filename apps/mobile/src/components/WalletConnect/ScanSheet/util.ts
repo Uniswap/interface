@@ -2,14 +2,10 @@ import { parseUri } from '@walletconnect/utils'
 import { parseEther } from 'ethers/lib/utils'
 import {
   UNISWAP_URL_SCHEME,
-  UNISWAP_URL_SCHEME_SCANTASTIC,
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
   UNISWAP_WALLETCONNECT_URL,
-} from 'src/features/deepLinking/constants'
-import { DynamicConfigs } from 'uniswap/src/features/experiments/configs'
-import { useDynamicConfig } from 'uniswap/src/features/experiments/hooks'
-import { logger } from 'utilities/src/logger/logger'
-import { ScantasticParams, ScantasticParamsSchema } from 'wallet/src/features/scantastic/types'
+} from 'src/features/deepLinking/handleDeepLinkSaga'
+import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
 import { UwULinkRequest } from 'wallet/src/features/walletConnect/types'
 import { getValidAddress } from 'wallet/src/utils/addresses'
 
@@ -32,26 +28,19 @@ interface EnabledFeatureFlags {
   isScantasticEnabled: boolean
 }
 
-// This type must match the format in statsig dynamic config for uwulink
-// https://console.statsig.com/5HjUux4OvSGzgqWIfKFt8i/dynamic_configs/uwulink_config
-type UwuLinkAllowlistItem = {
-  chainId: number
-  contractAddress: string
-  name: string
-  icon?: string
-}
-type UwuLinkAllowlist = UwuLinkAllowlistItem[]
-
+const UNISNAP_CONTRACT_ADDRESS = '0xFd2308677A0eb48e2d0c4038c12AA7DCb703e8DC'
+const UWULINK_CONTRACT_ALLOWLIST = [UNISNAP_CONTRACT_ADDRESS]
 const UWULINK_MAX_TXN_VALUE = '0.001'
 
 const EASTER_EGG_QR_CODE = 'DO_NOT_SCAN_OR_ELSE_YOU_WILL_GO_TO_MOBILE_TEAM_JAIL'
 export const CUSTOM_UNI_QR_CODE_PREFIX = 'hello_uniwallet:'
 export const UWULINK_PREFIX = 'uwulink'
+const MAX_DAPP_NAME_LENGTH = 60
 
-export const truncateQueryParams = (url: string): string => {
-  // In fact, the first element will be always returned below. url is
-  // added as a fallback just to satisfy TypeScript.
-  return url.split('?')[0] ?? url
+export function truncateDappName(name: string): string {
+  return name && name.length > MAX_DAPP_NAME_LENGTH
+    ? `${name.slice(0, MAX_DAPP_NAME_LENGTH)}...`
+    : name
 }
 
 export async function getSupportedURI(
@@ -72,9 +61,9 @@ export async function getSupportedURI(
     return { type: URIType.Address, value: maybeMetamaskAddress }
   }
 
-  const maybeScantasticQueryParams = getScantasticQueryParams(uri)
-  if (enabledFeatureFlags?.isScantasticEnabled && maybeScantasticQueryParams) {
-    return { type: URIType.Scantastic, value: maybeScantasticQueryParams }
+  const maybeScantasticAddress = getScantasticAddress(uri)
+  if (enabledFeatureFlags?.isScantasticEnabled && maybeScantasticAddress) {
+    return { type: URIType.Scantastic, value: maybeScantasticAddress }
   }
 
   // The check for custom prefixes must be before the parseUri version 2 check because
@@ -130,13 +119,6 @@ function isUwULink(uri: string): boolean {
   return uri.startsWith(`${UWULINK_PREFIX}{`)
 }
 
-// Gets the UWULink contract allow list from statsig dynamic config.
-// We can safely cast as long as the statsig config format matches our `UwuLinkAllowlist` type.
-export function useUwuLinkContractAllowlist(): UwuLinkAllowlist {
-  const uwuLinkConfig = useDynamicConfig(DynamicConfigs.UwuLink)
-  return uwuLinkConfig.getValue('allowlist') as UwuLinkAllowlist
-}
-
 /**
  * Util function to check if a UwULinkRequest is valid.
  *
@@ -147,14 +129,11 @@ export function useUwuLinkContractAllowlist(): UwuLinkAllowlist {
  * @param request parsed UwULinkRequest
  * @returns boolean for whether the UwULinkRequest is allowed
  */
-export function isAllowedUwuLinkRequest(
-  request: UwULinkRequest,
-  allowList: UwuLinkAllowlist
-): boolean {
+export function isAllowedUwULinkRequest(request: UwULinkRequest): boolean {
   const { to, value } = request.value
   const belowMaximumValue =
     value && parseFloat(value) <= parseEther(UWULINK_MAX_TXN_VALUE).toNumber()
-  const isAllowedContractAddress = to && allowList.some((item) => item.contractAddress === to)
+  const isAllowedContractAddress = to && UWULINK_CONTRACT_ALLOWLIST.includes(to)
 
   if (!belowMaximumValue || !isAllowedContractAddress) {
     return false
@@ -173,13 +152,13 @@ function getMetamaskAddress(uri: string): Nullable<string> {
   return getValidAddress(uriParts[1], /*withChecksum=*/ true, /*log=*/ false)
 }
 
-// format is uniswap://scantastic?<params>
-export function getScantasticQueryParams(uri: string): Nullable<string> {
-  if (!uri.startsWith(UNISWAP_URL_SCHEME_SCANTASTIC)) {
+// format is scantastic://<uri>
+function getScantasticAddress(uri: string): Nullable<string> {
+  if (!uri.startsWith('scantastic://')) {
     return null
   }
 
-  const uriParts = uri.split('://scantastic?')
+  const uriParts = uri.split('://')
 
   if (uriParts.length < 2) {
     return null
@@ -188,53 +167,12 @@ export function getScantasticQueryParams(uri: string): Nullable<string> {
   return uriParts[1] || null
 }
 
-const PARAM_PUB_KEY = 'pubKey'
-const PARAM_UUID = 'uuid'
-const PARAM_VENDOR = 'vendor'
-const PARAM_MODEL = 'model'
-const PARAM_BROWSER = 'browser'
-
 /** parses scantastic params for a valid scantastic URI. */
-export function parseScantasticParams(uri: string): ScantasticParams | undefined {
-  const uriParams = new URLSearchParams(uri)
-  const paramKeys = [PARAM_PUB_KEY, PARAM_UUID, PARAM_VENDOR, PARAM_MODEL, PARAM_BROWSER]
-
-  // Validate all keys are unique for security
-  for (const paramKey of paramKeys) {
-    if (uriParams.getAll(paramKey).length > 1) {
-      logger.error(new Error('Invalid scantastic params due to duplicate keys'), {
-        tags: {
-          file: 'util.ts',
-          function: 'parseScantasticParams',
-        },
-        extra: { uri },
-      })
-      return
-    }
-  }
-
-  const publicKey = uriParams.get(PARAM_PUB_KEY)
-  const uuid = uriParams.get(PARAM_UUID)
-  const vendor = uriParams.get(PARAM_VENDOR)
-  const model = uriParams.get(PARAM_MODEL)
-  const browser = uriParams.get(PARAM_BROWSER)
-
-  try {
-    return ScantasticParamsSchema.parse({
-      publicKey: publicKey ? JSON.parse(publicKey) : undefined,
-      uuid: uuid ? decodeURIComponent(uuid) : undefined,
-      vendor: vendor ? decodeURIComponent(vendor) : undefined,
-      model: model ? decodeURIComponent(model) : undefined,
-      browser: browser ? decodeURIComponent(browser) : undefined,
-    })
-  } catch (e) {
-    const wrappedError = new Error('Invalid scantastic params')
-    wrappedError.cause = e
-    logger.error(wrappedError, {
-      tags: {
-        file: 'util.ts',
-        function: 'parseScantasticParams',
-      },
-    })
-  }
+export function parseScantasticParams(uri: string): ScantasticModalState {
+  const pubKey = new URLSearchParams(uri).get('pubKey') || ''
+  const uuid = new URLSearchParams(uri).get('uuid') || ''
+  const vendor = new URLSearchParams(uri).get('vendor') || ''
+  const model = new URLSearchParams(uri).get('model') || ''
+  const browser = new URLSearchParams(uri).get('browser') || ''
+  return { pubKey, uuid, vendor, model, browser }
 }

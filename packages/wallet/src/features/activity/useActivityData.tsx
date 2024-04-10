@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
-import { Flex, Icons, Loader, Text, isWeb } from 'ui/src'
+import { Flex, Icons, Loader, Text } from 'ui/src'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
@@ -23,7 +23,7 @@ import { TransactionDetails } from 'wallet/src/features/transactions/types'
 import { useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
 
 const SectionTitle = ({ title }: { title: string }): JSX.Element => (
-  <Flex px={isWeb ? '$spacing8' : '$none'} py="$spacing8">
+  <Flex pb="$spacing12">
     <Text color="$neutral2" variant="subheading2">
       {title}
     </Text>
@@ -102,17 +102,15 @@ export function useActivityData({
   )
 
   const emptyListView = (
-    <Flex grow pt="$spacing48" px="$spacing36" style={emptyContainerStyle}>
+    <Flex grow style={emptyContainerStyle}>
       <BaseCard.EmptyState
-        buttonLabel={
-          isExternalProfile || !onPressEmptyState ? undefined : t('home.activity.empty.button')
-        }
+        buttonLabel={isExternalProfile ? undefined : t('home.activity.empty.button')}
         description={
           isExternalProfile
             ? t('home.activity.empty.description.external')
             : t('home.activity.empty.description.default')
         }
-        icon={<Icons.NoTransactions color="$neutral3" size="$icon.100" />}
+        icon={<Icons.NoTransactions size="$icon.100" />}
         title={t('home.activity.empty.title')}
         onPress={onPressEmptyState}
       />

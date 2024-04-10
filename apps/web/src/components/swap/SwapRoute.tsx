@@ -1,9 +1,9 @@
+import { Trans } from '@lingui/macro'
 import Column from 'components/Column'
 import RoutingDiagram from 'components/RoutingDiagram/RoutingDiagram'
 import { RowBetween } from 'components/Row'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
-import { Trans } from 'i18n'
 import { ClassicTrade, SubmittableTrade } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 import { Separator, ThemedText } from 'theme/components'
@@ -69,7 +69,7 @@ export function SwapRoute({ trade }: { trade: ClassicTrade }) {
     <Column gap="md">
       <RoutingDiagram routes={routes} currencyIn={inputAmount.currency} currencyOut={outputAmount.currency} />
       <ThemedText.Caption color="neutral2">
-        {Boolean(gasPrice) && <Trans>Best price route costs ~{{ gasPrice }} in gas. </Trans>}
+        {Boolean(gasPrice) && <Trans>Best price route costs ~{gasPrice} in gas. </Trans>}
         {Boolean(gasPrice) && ' '}
         <Trans>
           This route optimizes your total output by considering split routes, multiple hops, and the gas cost of each

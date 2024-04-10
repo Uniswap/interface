@@ -5,22 +5,22 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { Flex, isWeb, useSporeColors } from 'ui/src'
 import { zIndices } from 'ui/src/theme'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import { useDebounce } from 'utilities/src/time/timing'
+import PasteButton from 'wallet/src/components/buttons/PasteButton'
+import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
+import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
+import { NetworkFilter } from 'wallet/src/components/network/NetworkFilter'
+import { useFilterCallbacks } from 'wallet/src/components/TokenSelector/hooks'
 import { TokenSelectorEmptySearchList } from 'wallet/src/components/TokenSelector/TokenSelectorEmptySearchList'
 import { TokenSelectorSearchResultsList } from 'wallet/src/components/TokenSelector/TokenSelectorSearchResultsList'
 import { TokenSelectorSendList } from 'wallet/src/components/TokenSelector/TokenSelectorSendList'
 import { TokenSelectorSwapInputList } from 'wallet/src/components/TokenSelector/TokenSelectorSwapInputList'
 import { TokenSelectorSwapOutputList } from 'wallet/src/components/TokenSelector/TokenSelectorSwapOutputList'
-import { useFilterCallbacks } from 'wallet/src/components/TokenSelector/hooks'
 import { SuggestedTokenSection, TokenSection } from 'wallet/src/components/TokenSelector/types'
-import PasteButton from 'wallet/src/components/buttons/PasteButton'
-import { useBottomSheetContext } from 'wallet/src/components/modals/BottomSheetContext'
-import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { NetworkFilter } from 'wallet/src/components/network/NetworkFilter'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { CurrencyInfo } from 'wallet/src/features/dataApi/types'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -192,7 +192,6 @@ function TokenSelectorContent({
           borderBottomWidth={isWeb ? '$spacing1' : undefined}
           py="$spacing8">
           <SearchTextInput
-            autoFocus={isWeb}
             backgroundColor={isWeb ? '$surface1' : '$surface2'}
             endAdornment={hasClipboardString ? <PasteButton inline onPress={handlePaste} /> : null}
             placeholder={t('tokens.selector.search.placeholder')}
@@ -210,7 +209,7 @@ function TokenSelectorContent({
             {tokenSelector}
 
             {(!searchInFocus || searchFilter) && (
-              <Flex position="absolute" right={0} top={5} zIndex={zIndices.fixed}>
+              <Flex position="absolute" right={0} zIndex={zIndices.fixed}>
                 <NetworkFilter
                   includeAllNetworks
                   selectedChain={chainFilter}

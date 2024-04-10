@@ -1,8 +1,9 @@
+import { Trans } from '@lingui/macro'
 import { ChainId } from '@uniswap/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { getChainInfo } from 'constants/chainInfo'
+import { useInfoTDPEnabled } from 'featureFlags/flags/infoTDP'
 import { TokenQueryData } from 'graphql/data/Token'
-import { Trans } from 'i18n'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
@@ -13,13 +14,13 @@ import { HEADER_DESCRIPTIONS } from 'components/Tokens/TokenTable'
 import { UNSUPPORTED_METADATA_CHAINS } from '../constants'
 import { TokenSortMethod } from '../state'
 
-export const StatWrapper = styled.div`
+export const StatWrapper = styled.div<{ isInfoTDPEnabled?: boolean }>`
   color: ${({ theme }) => theme.neutral2};
   font-size: 14px;
   min-width: 121px;
   flex: 1;
   padding-top: 24px;
-  padding-bottom: 0px;
+  padding-bottom: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '0px' : '24px')};
 
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
     min-width: 168px;
@@ -35,9 +36,9 @@ export const StatPair = styled.div`
   flex-wrap: wrap;
 `
 
-const Header = styled(ThemedText.MediumHeader)`
+const Header = styled(ThemedText.MediumHeader)<{ isInfoTDPEnabled?: boolean }>`
   font-size: 28px !important;
-  padding-top: 40px;
+  padding-top: ${({ isInfoTDPEnabled }) => (isInfoTDPEnabled ? '40' : '24')}px;
 `
 
 const StatPrice = styled.div`
@@ -45,9 +46,9 @@ const StatPrice = styled.div`
   font-size: 28px;
   color: ${({ theme }) => theme.neutral1};
 `
-const NoData = styled.div`
+const NoData = styled.div<{ isInfoTDPEnabled?: boolean }>`
   color: ${({ theme }) => theme.neutral3};
-  padding-top: 40px;
+  ${({ isInfoTDPEnabled }) => isInfoTDPEnabled && 'padding-top: 40px;'}
 `
 export const StatsWrapper = styled.div`
   gap: 16px;
@@ -68,9 +69,10 @@ function Stat({
   description?: ReactNode
 }) {
   const { formatNumber } = useFormatter()
+  const isInfoTDPEnabled = useInfoTDPEnabled()
 
   return (
-    <StatWrapper data-cy={`${dataCy}`}>
+    <StatWrapper data-cy={`${dataCy}`} isInfoTDPEnabled={isInfoTDPEnabled}>
       <MouseoverTooltip disabled={!description} text={description}>
         {title}
       </MouseoverTooltip>
@@ -92,6 +94,7 @@ type StatsSectionProps = {
 export default function StatsSection(props: StatsSectionProps) {
   const { chainId, address, tokenQueryData } = props
   const { label, infoLink } = getChainInfo(chainId)
+  const isInfoTDPEnabled = useInfoTDPEnabled()
 
   const tokenMarketInfo = tokenQueryData?.market
   const tokenProjectMarketInfo = tokenQueryData?.project?.markets?.[0] // aggregated market price from CoinGecko
@@ -100,67 +103,98 @@ export default function StatsSection(props: StatsSectionProps) {
   const marketCap = tokenProjectMarketInfo?.marketCap?.value
   const TVL = tokenMarketInfo?.totalValueLocked?.value
   const volume24H = tokenMarketInfo?.volume24H?.value
+  const priceHigh52W = tokenMarketInfo?.priceHigh52W?.value
+  const priceLow52W = tokenMarketInfo?.priceLow52W?.value
 
-  const hasStats = TVL || FDV || marketCap || volume24H
+  const hasStats = isInfoTDPEnabled
+    ? TVL || FDV || marketCap || volume24H
+    : TVL || volume24H || priceLow52W || priceHigh52W
 
   if (hasStats) {
     return (
       <StatsWrapper data-testid="token-details-stats">
-        <Header>
+        <Header isInfoTDPEnabled={isInfoTDPEnabled}>
           <Trans>Stats</Trans>
         </Header>
         <TokenStatsSection>
-          <StatPair>
-            <Stat
-              dataCy="tvl"
-              value={TVL}
-              description={
-                <Trans>
-                  Total value locked (TVL) is the aggregate amount of the asset available across all Uniswap v3
-                  liquidity pools.
-                </Trans>
-              }
-              title={<Trans>TVL</Trans>}
-            />
-            <Stat
-              dataCy="market-cap"
-              value={marketCap}
-              description={
-                <Trans>Market capitalization is the total market value of an asset&apos;s circulating supply.</Trans>
-              }
-              title={<Trans>Market cap</Trans>}
-            />
-          </StatPair>
-          <StatPair>
-            <Stat
-              dataCy="fdv"
-              value={FDV}
-              description={HEADER_DESCRIPTIONS[TokenSortMethod.FULLY_DILUTED_VALUATION]}
-              title={<Trans>FDV</Trans>}
-            />
-            <Stat
-              dataCy="volume-24h"
-              value={volume24H}
-              description={
-                <Trans>
-                  1 day volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
-                </Trans>
-              }
-              title={<Trans>1 day volume</Trans>}
-            />
-          </StatPair>
+          {isInfoTDPEnabled ? (
+            <>
+              <StatPair>
+                <Stat
+                  dataCy="tvl"
+                  value={TVL}
+                  description={HEADER_DESCRIPTIONS[TokenSortMethod.DEPRECATE_TOTAL_VALUE_LOCKED]}
+                  title={<Trans>TVL</Trans>}
+                />
+                <Stat
+                  dataCy="market-cap"
+                  value={marketCap}
+                  description={
+                    <Trans>
+                      Market capitalization is the total market value of an asset&apos;s circulating supply.
+                    </Trans>
+                  }
+                  title={<Trans>Market cap</Trans>}
+                />
+              </StatPair>
+              <StatPair>
+                <Stat
+                  dataCy="fdv"
+                  value={FDV}
+                  description={HEADER_DESCRIPTIONS[TokenSortMethod.FULLY_DILUTED_VALUATION]}
+                  title={<Trans>FDV</Trans>}
+                />
+                <Stat
+                  dataCy="volume-24h"
+                  value={volume24H}
+                  description={
+                    <Trans>
+                      1 day volume is the amount of the asset that has been traded on Uniswap v3 during the past 24
+                      hours.
+                    </Trans>
+                  }
+                  title={<Trans>1 day volume</Trans>}
+                />
+              </StatPair>
+            </>
+          ) : (
+            <>
+              <StatPair>
+                <Stat
+                  dataCy="tvl"
+                  value={TVL}
+                  description={HEADER_DESCRIPTIONS[TokenSortMethod.DEPRECATE_TOTAL_VALUE_LOCKED]}
+                  title={<Trans>TVL</Trans>}
+                />
+                <Stat
+                  dataCy="volume-24h"
+                  value={volume24H}
+                  description={
+                    <Trans>
+                      24H volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.
+                    </Trans>
+                  }
+                  title={<Trans>24H volume</Trans>}
+                />
+              </StatPair>
+              <StatPair>
+                <Stat dataCy="52w-low" value={priceLow52W} title={<Trans>52W low</Trans>} />
+                <Stat dataCy="52w-high" value={priceHigh52W} title={<Trans>52W high</Trans>} />
+              </StatPair>
+            </>
+          )}
         </TokenStatsSection>
       </StatsWrapper>
     )
   } else {
     return UNSUPPORTED_METADATA_CHAINS.includes(chainId) ? (
       <>
-        <Header>
+        <Header isInfoTDPEnabled={isInfoTDPEnabled}>
           <Trans>Stats</Trans>
         </Header>
         <ThemedText.BodySecondary pt="12px">
           <Trans>
-            Token stats and charts for {{ label }} are available on{' '}
+            Token stats and charts for {label} are available on{' '}
             <ExternalLink color="currentColor" href={`${infoLink}tokens/${address}`}>
               info.uniswap.org
             </ExternalLink>
@@ -168,7 +202,9 @@ export default function StatsSection(props: StatsSectionProps) {
         </ThemedText.BodySecondary>
       </>
     ) : (
-      <NoData data-cy="token-details-no-stats-data">No stats available</NoData>
+      <NoData data-cy="token-details-no-stats-data" isInfoTDPEnabled={isInfoTDPEnabled}>
+        No stats available
+      </NoData>
     )
   }
 }

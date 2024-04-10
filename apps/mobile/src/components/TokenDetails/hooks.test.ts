@@ -121,7 +121,7 @@ describe(useCrossChainBalances, () => {
 
 describe(useTokenDetailsNavigation, () => {
   afterEach(() => {
-    jest.clearAllMocks()
+    jest.resetAllMocks()
   })
 
   it('returns correct result', () => {

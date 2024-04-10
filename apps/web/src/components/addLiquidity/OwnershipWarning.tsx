@@ -1,4 +1,4 @@
-import { Trans } from 'i18n'
+import { Trans } from '@lingui/macro'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
@@ -37,7 +37,7 @@ const OwnershipWarning = ({ ownerAddress }: OwnershipWarningProps) => (
     <ExplainerText>
       <Trans>
         You are not the owner of this LP position. You will not be able to withdraw the liquidity from this position
-        unless you own the following address: {{ ownerAddress }}
+        unless you own the following address: {ownerAddress}
       </Trans>
     </ExplainerText>
   </Wrapper>

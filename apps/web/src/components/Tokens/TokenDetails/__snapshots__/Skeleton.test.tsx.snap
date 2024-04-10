@@ -214,6 +214,12 @@ exports[`TDP Skeleton should render correctly 1`] = `
   background-size: 400%;
 }
 
+.c22 {
+  background-color: #22222212;
+  border: none;
+  height: 0.5px;
+}
+
 .c23 {
   gap: 16px;
   padding: 24px 0px;
@@ -225,12 +231,6 @@ exports[`TDP Skeleton should render correctly 1`] = `
   font-size: 28px !important;
 }
 
-.c22 {
-  background-color: #22222212;
-  border: none;
-  height: 0.5px;
-}
-
 .c19 {
   color: #7D7D7D;
   font-size: 14px;
@@ -239,7 +239,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   -ms-flex: 1;
   flex: 1;
   padding-top: 24px;
-  padding-bottom: 0px;
+  padding-bottom: 24px;
 }
 
 .c18 {
@@ -293,7 +293,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
-  gap: 40px;
+  gap: 20px;
   width: 360px;
 }
 
@@ -324,15 +324,13 @@ exports[`TDP Skeleton should render correctly 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  gap: 12px;
+  gap: 8px;
   font-size: 20px;
   line-height: 28px;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding-top: 4px;
-  min-width: 32px;
 }
 
 .c5 {
@@ -439,18 +437,6 @@ exports[`TDP Skeleton should render correctly 1`] = `
   .c30 {
     width: 100%;
     max-width: 780px;
-  }
-}
-
-@media screen and (max-width:640px) {
-  .c8 {
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    -webkit-align-items: flex-start;
-    -webkit-box-align: flex-start;
-    -ms-flex-align: flex-start;
-    align-items: flex-start;
   }
 }
 
@@ -909,13 +895,44 @@ exports[`TDP Skeleton should render correctly 1`] = `
 
 exports[`getLoadingTitle should return correct title 1`] = `
 <DocumentFragment>
-  <span
+  .c0 {
+  color: #CECECE;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c0:hover {
+  opacity: 0.6;
+}
+
+.c0:active {
+  opacity: 0.4;
+}
+
+<span
     class=" _dsp_contents"
   >
     <span
       class=" t_light _dsp_contents is_Theme"
     >
-      token data for [object Object] on Ethereum
+      token data for 
+      <a
+        class="c0"
+        href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        USD//C (USDC)
+      </a>
+       on Ethereum
     </span>
   </span>
 </DocumentFragment>

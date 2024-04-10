@@ -8,7 +8,7 @@ import { queryResolvers } from 'wallet/src/test/utils'
 describe(useTokenProjects, () => {
   it('returns undefined when there is no data', async () => {
     const { resolvers } = queryResolvers({
-      tokenProjects: () => undefined,
+      tokenProjects: () => null,
     })
     const { result } = renderHook(() => useTokenProjects([SAMPLE_CURRENCY_ID_1]), {
       resolvers,

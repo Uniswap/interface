@@ -1,18 +1,20 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import { default as React } from 'react'
 import ContextMenu from 'react-native-context-menu-view'
 import { useAppDispatch } from 'src/app/hooks'
-import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
+import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useIsDarkMode } from 'ui/src'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'wallet/src/components/icons/WarningIcon'
+import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
-import { SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
+import { SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
 import { ElementName, SectionName } from 'wallet/src/telemetry/constants'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
@@ -86,9 +88,10 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
               {(safetyLevel === SafetyLevel.Blocked ||
                 safetyLevel === SafetyLevel.StrongWarning) && (
                 <WarningIcon
+                  height={iconSizes.icon16}
                   safetyLevel={safetyLevel}
-                  size="$icon.16"
                   strokeColorOverride="neutral3"
+                  width={iconSizes.icon16}
                 />
               )}
             </Flex>

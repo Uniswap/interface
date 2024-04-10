@@ -1,4 +1,4 @@
-import { Trans } from 'i18n'
+import { Trans } from '@lingui/macro'
 import { AlertTriangle, Slash } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 

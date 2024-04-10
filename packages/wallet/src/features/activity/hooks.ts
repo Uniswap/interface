@@ -1,10 +1,10 @@
 import { ApolloError, NetworkStatus } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   useFeedTransactionListQuery,
   useTransactionListQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { PollingInterval } from 'wallet/src/constants/misc'
+} from 'wallet/src/data/__generated__/types-and-hooks'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { useLocalizedDayjs } from 'wallet/src/features/language/localizedDayjs'
@@ -13,7 +13,6 @@ import {
   parseDataResponseToFeedTransactionDetails,
   parseDataResponseToTransactionDetails,
 } from 'wallet/src/features/transactions/history/utils'
-import { useCurrencyIdToVisibility } from 'wallet/src/features/transactions/selectors'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
 import { LoadingItem, SectionHeader, isLoadingItem, isSectionHeader } from './utils'
 
@@ -145,8 +144,6 @@ export function useFormattedTransactionDataForActivity(
     pollInterval: undefined,
   })
 
-  const tokenVisibilityOverrides = useCurrencyIdToVisibility()
-
   const keyExtractor = useCallback(
     (info: TransactionDetails | SectionHeader | LoadingItem) => {
       // for loading items, use the index as the key
@@ -168,8 +165,8 @@ export function useFormattedTransactionDataForActivity(
       return
     }
 
-    return parseDataResponseToTransactionDetails(data, hideSpamTokens, tokenVisibilityOverrides)
-  }, [data, hideSpamTokens, tokenVisibilityOverrides])
+    return parseDataResponseToTransactionDetails(data, hideSpamTokens)
+  }, [data, hideSpamTokens])
 
   const transactions = useMergeLocalFunction(address, formattedTransactions)
 

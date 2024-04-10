@@ -1,9 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
-import { CurrencyId } from 'uniswap/src/types/currency'
 import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
 import { ChainId, DEFAULT_NATIVE_ADDRESS } from 'wallet/src/constants/chains'
 import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { areAddressesEqual } from './addresses'
+
+export type CurrencyId = string
 
 // swap router API special cases these strings to represent native currencies
 // all chains have "ETH" as native currency symbol except for polygon and bnb

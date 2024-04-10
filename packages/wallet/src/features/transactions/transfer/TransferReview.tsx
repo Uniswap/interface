@@ -10,8 +10,11 @@ import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
 import { TransactionReview } from 'wallet/src/features/transactions/TransactionReview/TransactionReview'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
-import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
+import {
+  Warning,
+  WarningAction,
+  WarningSeverity,
+} from 'wallet/src/features/transactions/WarningModal/types'
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
@@ -28,7 +31,7 @@ interface TransferFormProps {
   gasFee: GasFeeResult
   onReviewSubmit: () => void
   onPrev: () => void
-  warnings: ParsedWarnings
+  warnings: Warning[]
 }
 
 export function TransferReview({
@@ -67,10 +70,14 @@ export function TransferReview({
 
   const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
 
-  const { blockingWarning } = warnings
+  const blockingWarning = warnings.some(
+    (warning) =>
+      warning.action === WarningAction.DisableSubmit ||
+      warning.action === WarningAction.DisableReview
+  )
 
   const actionButtonDisabled =
-    !!blockingWarning ||
+    blockingWarning ||
     !gasFee.value ||
     !!gasFee.error ||
     !txRequest ||
@@ -83,9 +90,7 @@ export function TransferReview({
     onPress: onReviewSubmit,
   }
 
-  const transferWarning = warnings.warnings.find(
-    (warning) => warning.severity >= WarningSeverity.Medium
-  )
+  const transferWarning = warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
 
   const formattedCurrencyAmount = formatCurrencyAmount({
     value: currencyAmounts[CurrencyField.INPUT],

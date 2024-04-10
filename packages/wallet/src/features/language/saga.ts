@@ -2,10 +2,9 @@ import { I18nManager } from 'react-native'
 import RNRestart from 'react-native-restart'
 import { Statsig } from 'statsig-react-native'
 import { call, put, select, takeLatest } from 'typed-redux-saga'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/experiments/flags'
-import i18n from 'uniswap/src/i18n/i18n'
 import { getDeviceLocales } from 'utilities/src/device/locales'
 import { logger } from 'utilities/src/logger/logger'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import {
   Language,
   Locale,
@@ -19,13 +18,14 @@ import {
   setCurrentLanguage,
   updateLanguage,
 } from 'wallet/src/features/language/slice'
+import i18n from 'wallet/src/i18n/i18n'
 
 export function* appLanguageWatcherSaga() {
   yield* takeLatest(updateLanguage.type, appLanguageSaga)
 }
 
 function* appLanguageSaga(action: ReturnType<typeof updateLanguage>) {
-  const featureEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.LanguageSelection))
+  const featureEnabled = Statsig.checkGate(FEATURE_FLAGS.LanguageSelection)
   if (!featureEnabled) {
     return
   }

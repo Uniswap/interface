@@ -1,5 +1,5 @@
+import { Trans } from '@lingui/macro'
 import Row from 'components/Row'
-import { Trans } from 'i18n'
 import { getHeightFromAspectRatio, getMediaAspectRatio, handleUniformAspectRatio } from 'nft/components/card/utils'
 import { UniformAspectRatio, UniformAspectRatios } from 'nft/types'
 import { ReactNode, useEffect, useRef, useState } from 'react'

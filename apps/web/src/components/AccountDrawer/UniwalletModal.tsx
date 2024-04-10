@@ -1,3 +1,4 @@
+import { Trans } from '@lingui/macro'
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { WalletConnect as WalletConnectv2 } from '@web3-react/walletconnect-v2'
 import { sendAnalyticsEvent } from 'analytics'
@@ -5,15 +6,14 @@ import Column, { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
 import { uniwalletWCV2ConnectConnection } from 'connection'
-import { UniwalletConnect as UniwalletConnectV2 } from 'connection/WalletConnectV2'
 import { ActivationStatus, useActivationState } from 'connection/activate'
 import { ConnectionType } from 'connection/types'
-import { Trans } from 'i18n'
+import { UniwalletConnect as UniwalletConnectV2 } from 'connection/WalletConnectV2'
 import { QRCodeSVG } from 'qrcode.react'
 import { useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
-import { isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
+import { isAndroid, isIOS } from 'uniswap/src/utils/platform'
 
 import uniPng from '../../assets/images/uniwallet_modal_icon.png'
 import { DownloadButton } from './DownloadButton'
@@ -43,7 +43,7 @@ export default function UniwalletModal() {
   const [uri, setUri] = useState<string>()
 
   // Displays the modal if not on iOS/Android, a Uniswap Wallet Connection is pending, & qrcode URI is available
-  const onLaunchedMobilePlatform = isWebIOS || isWebAndroid
+  const onLaunchedMobilePlatform = isIOS || isAndroid
   const open =
     !onLaunchedMobilePlatform &&
     activationState.status === ActivationStatus.PENDING &&

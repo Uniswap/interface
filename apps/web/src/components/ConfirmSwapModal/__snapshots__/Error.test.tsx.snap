@@ -2,13 +2,36 @@
 
 exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0 1`] = `
 <DocumentFragment>
-  .c8 {
+  .c5 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c9 {
+.c12 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c6 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -26,24 +49,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   gap: 8px;
 }
 
-.c14 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 12px;
-}
-
 .c4 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -52,15 +57,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   letter-spacing: -0.01em;
 }
 
-.c6 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c13 {
+.c10 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -71,12 +68,100 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   font-weight: 500;
 }
 
-.c13:hover {
+.c10:hover {
   opacity: 0.6;
 }
 
-.c13:active {
+.c10:active {
   opacity: 0.4;
+}
+
+.c13 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c13:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c13 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c13 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c14 {
+  background-color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+  padding: 16px;
+  color: #FFFFFF;
+}
+
+.c14:focus {
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
+}
+
+.c14:hover {
+  background-color: #fb58ff;
+}
+
+.c14:active {
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
+}
+
+.c14:disabled {
+  background-color: #22222212;
+  color: #7D7D7D;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
 }
 
 .c0 {
@@ -94,6 +179,20 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   gap: 12px;
 }
 
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
 .c1 {
   width: 100%;
   -webkit-align-items: center;
@@ -102,7 +201,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   align-items: center;
 }
 
-.c11 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -116,150 +215,26 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   left: 0;
 }
 
-.c12 {
+.c9 {
   width: 16px;
   height: 16px;
   border-radius: 50%;
 }
 
-.c10 {
+.c7 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-}
-
-.c18 {
-  background-color: transparent;
-  bottom: 0;
-  border-radius: inherit;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  -webkit-transition: 150ms ease background-color;
-  transition: 150ms ease background-color;
-  width: 100%;
-}
-
-.c15 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background-color: #FC72FF;
-  border-radius: 16px;
-  border: 0;
-  color: #FFFFFF;
-  cursor: pointer;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  font-size: 14px;
-  font-weight: 535;
-  gap: 12px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  line-height: 16px;
-  padding: 8px;
-  position: relative;
-  -webkit-transition: 150ms ease opacity;
-  transition: 150ms ease opacity;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.c15:active .c17 {
-  background-color: #B8C0DC3d;
-}
-
-.c15:focus .c17 {
-  background-color: #B8C0DC3d;
-}
-
-.c15:hover .c17 {
-  background-color: #98A1C014;
-}
-
-.c15:disabled {
-  cursor: default;
-  opacity: 0.6;
-}
-
-.c15:disabled:active .c17,
-.c15:disabled:focus .c17,
-.c15:disabled:hover .c17 {
-  background-color: transparent;
 }
 
 .c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background-color: #22222212;
-  width: 48px;
-  height: 48px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border-radius: 12px;
-}
-
-.c5 {
-  font-size: 24px;
-  line-height: 32px;
-  text-align: center;
-  font-weight: 500;
-}
-
-.c7 {
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  -webkit-letter-spacing: 0em;
-  -moz-letter-spacing: 0em;
-  -ms-letter-spacing: 0em;
-  letter-spacing: 0em;
-  text-align: center;
-}
-
-.c16 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  height: 40px;
-  border-radius: 12px;
+  margin: 8px 0px;
 }
 
 .c3 {
-  height: 24px;
-  width: 24px;
-}
-
-.c3 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
+  padding: 8px 16px;
 }
 
 <span
@@ -269,48 +244,56 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
       class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c0 c1"
+        class="c0 c1 c2"
       >
         <div
-          class="c2"
+          class="c0 c1 c3"
         >
           <svg
-            class="c3"
             data-testid="pending-modal-failure-icon"
-            fill="#7D7D7D"
-            viewBox="0 0 16 16"
+            fill="#FF5F52"
+            height="64px"
+            stroke="#FFFFFF"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1"
+            viewBox="0 0 24 24"
+            width="64px"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2a1 1 0 0 1 0-2z"
+              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+            />
+            <line
+              x1="12"
+              x2="12"
+              y1="9"
+              y2="13"
+            />
+            <line
+              x1="12"
+              x2="12.01"
+              y1="17"
+              y2="17"
             />
           </svg>
-        </div>
-        <div
-          class="c4 c5 css-4kpdx7"
-        >
-          Token approval failed
-        </div>
-        <div
-          class="c6 c7 css-1urox24"
-        >
-          This provides the Uniswap protocol access to your token for trading. For security, it expires after 30 days.
-        </div>
-        <div
-          class="c0 c1"
-        >
           <div
-            class="c8 c9"
+            class="c4 css-n8z49y"
+          >
+            Token approval failed
+          </div>
+          <div
+            class="c5 c6"
           >
             <div
-              class="c10"
+              class="c7"
               style="height: 16px; width: 16px;"
             >
               <div
-                class="c11"
+                class="c8"
               >
                 <img
-                  class="c12"
+                  class="c9"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                 />
               </div>
@@ -342,14 +325,14 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
               />
             </svg>
             <div
-              class="c10"
+              class="c7"
               style="height: 16px; width: 16px;"
             >
               <div
-                class="c11"
+                class="c8"
               >
                 <img
-                  class="c12"
+                  class="c9"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                 />
               </div>
@@ -360,27 +343,29 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
               &lt;0.00001 DEF
             </div>
           </div>
-          <a
-            class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Learn more
-          </a>
-        </div>
-      </div>
-      <div
-        class="c8 c14"
-      >
-        <button
-          class="c15 c16"
-        >
           <div
-            class="c17 c18"
-          />
-          Try again
-        </button>
+            class="c4 css-1urox24"
+          >
+            This provides the Uniswap protocol access to your token for trading. For security, it expires after 30 days. 
+            <a
+              class="c10"
+              href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c11 c1 c3"
+        >
+          <button
+            class="c12 c13 c14"
+          >
+            Try again
+          </button>
+        </div>
       </div>
     </span>
   </span>
@@ -389,13 +374,36 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
 
 exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1 1`] = `
 <DocumentFragment>
-  .c8 {
+  .c5 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c9 {
+.c12 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c6 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -413,24 +421,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   gap: 8px;
 }
 
-.c14 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 12px;
-}
-
 .c4 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -439,15 +429,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   letter-spacing: -0.01em;
 }
 
-.c6 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c13 {
+.c10 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -458,12 +440,100 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   font-weight: 500;
 }
 
-.c13:hover {
+.c10:hover {
   opacity: 0.6;
 }
 
-.c13:active {
+.c10:active {
   opacity: 0.4;
+}
+
+.c13 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c13:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c13 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c13 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c14 {
+  background-color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+  padding: 16px;
+  color: #FFFFFF;
+}
+
+.c14:focus {
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
+}
+
+.c14:hover {
+  background-color: #fb58ff;
+}
+
+.c14:active {
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
+}
+
+.c14:disabled {
+  background-color: #22222212;
+  color: #7D7D7D;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
 }
 
 .c0 {
@@ -481,6 +551,20 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   gap: 12px;
 }
 
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
 .c1 {
   width: 100%;
   -webkit-align-items: center;
@@ -489,7 +573,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   align-items: center;
 }
 
-.c11 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -503,150 +587,26 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   left: 0;
 }
 
-.c12 {
+.c9 {
   width: 16px;
   height: 16px;
   border-radius: 50%;
 }
 
-.c10 {
+.c7 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-}
-
-.c18 {
-  background-color: transparent;
-  bottom: 0;
-  border-radius: inherit;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  -webkit-transition: 150ms ease background-color;
-  transition: 150ms ease background-color;
-  width: 100%;
-}
-
-.c15 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background-color: #FC72FF;
-  border-radius: 16px;
-  border: 0;
-  color: #FFFFFF;
-  cursor: pointer;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  font-size: 14px;
-  font-weight: 535;
-  gap: 12px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  line-height: 16px;
-  padding: 8px;
-  position: relative;
-  -webkit-transition: 150ms ease opacity;
-  transition: 150ms ease opacity;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.c15:active .c17 {
-  background-color: #B8C0DC3d;
-}
-
-.c15:focus .c17 {
-  background-color: #B8C0DC3d;
-}
-
-.c15:hover .c17 {
-  background-color: #98A1C014;
-}
-
-.c15:disabled {
-  cursor: default;
-  opacity: 0.6;
-}
-
-.c15:disabled:active .c17,
-.c15:disabled:focus .c17,
-.c15:disabled:hover .c17 {
-  background-color: transparent;
 }
 
 .c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background-color: #22222212;
-  width: 48px;
-  height: 48px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border-radius: 12px;
-}
-
-.c5 {
-  font-size: 24px;
-  line-height: 32px;
-  text-align: center;
-  font-weight: 500;
-}
-
-.c7 {
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  -webkit-letter-spacing: 0em;
-  -moz-letter-spacing: 0em;
-  -ms-letter-spacing: 0em;
-  letter-spacing: 0em;
-  text-align: center;
-}
-
-.c16 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  height: 40px;
-  border-radius: 12px;
+  margin: 8px 0px;
 }
 
 .c3 {
-  height: 24px;
-  width: 24px;
-}
-
-.c3 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
+  padding: 8px 16px;
 }
 
 <span
@@ -656,48 +616,56 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
       class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c0 c1"
+        class="c0 c1 c2"
       >
         <div
-          class="c2"
+          class="c0 c1 c3"
         >
           <svg
-            class="c3"
             data-testid="pending-modal-failure-icon"
-            fill="#7D7D7D"
-            viewBox="0 0 16 16"
+            fill="#FF5F52"
+            height="64px"
+            stroke="#FFFFFF"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1"
+            viewBox="0 0 24 24"
+            width="64px"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2a1 1 0 0 1 0-2z"
+              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+            />
+            <line
+              x1="12"
+              x2="12"
+              y1="9"
+              y2="13"
+            />
+            <line
+              x1="12"
+              x2="12.01"
+              y1="17"
+              y2="17"
             />
           </svg>
-        </div>
-        <div
-          class="c4 c5 css-4kpdx7"
-        >
-          Permit approval failed
-        </div>
-        <div
-          class="c6 c7 css-1urox24"
-        >
-          Permit2 allows token approvals to be shared and managed across different applications.
-        </div>
-        <div
-          class="c0 c1"
-        >
           <div
-            class="c8 c9"
+            class="c4 css-n8z49y"
+          >
+            Permit approval failed
+          </div>
+          <div
+            class="c5 c6"
           >
             <div
-              class="c10"
+              class="c7"
               style="height: 16px; width: 16px;"
             >
               <div
-                class="c11"
+                class="c8"
               >
                 <img
-                  class="c12"
+                  class="c9"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                 />
               </div>
@@ -729,14 +697,14 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
               />
             </svg>
             <div
-              class="c10"
+              class="c7"
               style="height: 16px; width: 16px;"
             >
               <div
-                class="c11"
+                class="c8"
               >
                 <img
-                  class="c12"
+                  class="c9"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                 />
               </div>
@@ -747,27 +715,29 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
               &lt;0.00001 DEF
             </div>
           </div>
-          <a
-            class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Learn more
-          </a>
-        </div>
-      </div>
-      <div
-        class="c8 c14"
-      >
-        <button
-          class="c15 c16"
-        >
           <div
-            class="c17 c18"
-          />
-          Try again
-        </button>
+            class="c4 css-1urox24"
+          >
+            Permit2 allows token approvals to be shared and managed across different applications. 
+            <a
+              class="c10"
+              href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c11 c1 c3"
+        >
+          <button
+            class="c12 c13 c14"
+          >
+            Try again
+          </button>
+        </div>
       </div>
     </span>
   </span>
@@ -776,13 +746,36 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
 
 exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2 1`] = `
 <DocumentFragment>
-  .c8 {
+  .c5 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c9 {
+.c12 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c6 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -800,24 +793,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
   gap: 8px;
 }
 
-.c14 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 12px;
-}
-
 .c4 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -826,15 +801,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
   letter-spacing: -0.01em;
 }
 
-.c6 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c13 {
+.c10 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -845,12 +812,100 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
   font-weight: 500;
 }
 
-.c13:hover {
+.c10:hover {
   opacity: 0.6;
 }
 
-.c13:active {
+.c10:active {
   opacity: 0.4;
+}
+
+.c13 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c13:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c13 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c13 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c14 {
+  background-color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+  padding: 16px;
+  color: #FFFFFF;
+}
+
+.c14:focus {
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
+}
+
+.c14:hover {
+  background-color: #fb58ff;
+}
+
+.c14:active {
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
+}
+
+.c14:disabled {
+  background-color: #22222212;
+  color: #7D7D7D;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
 }
 
 .c0 {
@@ -868,6 +923,20 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
   gap: 12px;
 }
 
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
 .c1 {
   width: 100%;
   -webkit-align-items: center;
@@ -876,7 +945,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
   align-items: center;
 }
 
-.c11 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -890,150 +959,26 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
   left: 0;
 }
 
-.c12 {
+.c9 {
   width: 16px;
   height: 16px;
   border-radius: 50%;
 }
 
-.c10 {
+.c7 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-}
-
-.c18 {
-  background-color: transparent;
-  bottom: 0;
-  border-radius: inherit;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  -webkit-transition: 150ms ease background-color;
-  transition: 150ms ease background-color;
-  width: 100%;
-}
-
-.c15 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background-color: #FC72FF;
-  border-radius: 16px;
-  border: 0;
-  color: #FFFFFF;
-  cursor: pointer;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  font-size: 14px;
-  font-weight: 535;
-  gap: 12px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  line-height: 16px;
-  padding: 8px;
-  position: relative;
-  -webkit-transition: 150ms ease opacity;
-  transition: 150ms ease opacity;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.c15:active .c17 {
-  background-color: #B8C0DC3d;
-}
-
-.c15:focus .c17 {
-  background-color: #B8C0DC3d;
-}
-
-.c15:hover .c17 {
-  background-color: #98A1C014;
-}
-
-.c15:disabled {
-  cursor: default;
-  opacity: 0.6;
-}
-
-.c15:disabled:active .c17,
-.c15:disabled:focus .c17,
-.c15:disabled:hover .c17 {
-  background-color: transparent;
 }
 
 .c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background-color: #22222212;
-  width: 48px;
-  height: 48px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border-radius: 12px;
-}
-
-.c5 {
-  font-size: 24px;
-  line-height: 32px;
-  text-align: center;
-  font-weight: 500;
-}
-
-.c7 {
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  -webkit-letter-spacing: 0em;
-  -moz-letter-spacing: 0em;
-  -ms-letter-spacing: 0em;
-  letter-spacing: 0em;
-  text-align: center;
-}
-
-.c16 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  height: 40px;
-  border-radius: 12px;
+  margin: 8px 0px;
 }
 
 .c3 {
-  height: 24px;
-  width: 24px;
-}
-
-.c3 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
+  padding: 8px 16px;
 }
 
 <span
@@ -1043,48 +988,56 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
       class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c0 c1"
+        class="c0 c1 c2"
       >
         <div
-          class="c2"
+          class="c0 c1 c3"
         >
           <svg
-            class="c3"
             data-testid="pending-modal-failure-icon"
-            fill="#7D7D7D"
-            viewBox="0 0 16 16"
+            fill="#FF5F52"
+            height="64px"
+            stroke="#FFFFFF"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1"
+            viewBox="0 0 24 24"
+            width="64px"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2a1 1 0 0 1 0-2z"
+              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+            />
+            <line
+              x1="12"
+              x2="12"
+              y1="9"
+              y2="13"
+            />
+            <line
+              x1="12"
+              x2="12.01"
+              y1="17"
+              y2="17"
             />
           </svg>
-        </div>
-        <div
-          class="c4 c5 css-4kpdx7"
-        >
-          Swap failed
-        </div>
-        <div
-          class="c6 c7 css-1urox24"
-        >
-          Try adjusting slippage to a higher value.
-        </div>
-        <div
-          class="c0 c1"
-        >
           <div
-            class="c8 c9"
+            class="c4 css-n8z49y"
+          >
+            Swap failed
+          </div>
+          <div
+            class="c5 c6"
           >
             <div
-              class="c10"
+              class="c7"
               style="height: 16px; width: 16px;"
             >
               <div
-                class="c11"
+                class="c8"
               >
                 <img
-                  class="c12"
+                  class="c9"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                 />
               </div>
@@ -1116,14 +1069,14 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
               />
             </svg>
             <div
-              class="c10"
+              class="c7"
               style="height: 16px; width: 16px;"
             >
               <div
-                class="c11"
+                class="c8"
               >
                 <img
-                  class="c12"
+                  class="c9"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                 />
               </div>
@@ -1134,27 +1087,29 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
               &lt;0.00001 DEF
             </div>
           </div>
-          <a
-            class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/8643975058829-Why-did-my-transaction-fail-"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Learn more
-          </a>
-        </div>
-      </div>
-      <div
-        class="c8 c14"
-      >
-        <button
-          class="c15 c16"
-        >
           <div
-            class="c17 c18"
-          />
-          Try again
-        </button>
+            class="c4 css-1urox24"
+          >
+            Try using higher than normal slippage and gas to ensure your transaction is completed. 
+            <a
+              class="c10"
+              href="https://support.uniswap.org/hc/en-us/articles/8643975058829-Why-did-my-transaction-fail-"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c11 c1 c3"
+        >
+          <button
+            class="c12 c13 c14"
+          >
+            Try again
+          </button>
+        </div>
       </div>
     </span>
   </span>
@@ -1163,13 +1118,36 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 2
 
 exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3 1`] = `
 <DocumentFragment>
-  .c8 {
+  .c5 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c9 {
+.c12 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c6 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1187,24 +1165,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   gap: 8px;
 }
 
-.c14 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 12px;
-}
-
 .c4 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -1213,15 +1173,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   letter-spacing: -0.01em;
 }
 
-.c6 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c13 {
+.c10 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -1232,12 +1184,100 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   font-weight: 500;
 }
 
-.c13:hover {
+.c10:hover {
   opacity: 0.6;
 }
 
-.c13:active {
+.c10:active {
   opacity: 0.4;
+}
+
+.c13 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c13:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c13 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c13 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c14 {
+  background-color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+  padding: 16px;
+  color: #FFFFFF;
+}
+
+.c14:focus {
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
+}
+
+.c14:hover {
+  background-color: #fb58ff;
+}
+
+.c14:active {
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
+}
+
+.c14:disabled {
+  background-color: #22222212;
+  color: #7D7D7D;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
 }
 
 .c0 {
@@ -1255,6 +1295,20 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   gap: 12px;
 }
 
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
 .c1 {
   width: 100%;
   -webkit-align-items: center;
@@ -1263,7 +1317,7 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   align-items: center;
 }
 
-.c11 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1277,150 +1331,26 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   left: 0;
 }
 
-.c12 {
+.c9 {
   width: 16px;
   height: 16px;
   border-radius: 50%;
 }
 
-.c10 {
+.c7 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-}
-
-.c18 {
-  background-color: transparent;
-  bottom: 0;
-  border-radius: inherit;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  -webkit-transition: 150ms ease background-color;
-  transition: 150ms ease background-color;
-  width: 100%;
-}
-
-.c15 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background-color: #FC72FF;
-  border-radius: 16px;
-  border: 0;
-  color: #FFFFFF;
-  cursor: pointer;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  font-size: 14px;
-  font-weight: 535;
-  gap: 12px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  line-height: 16px;
-  padding: 8px;
-  position: relative;
-  -webkit-transition: 150ms ease opacity;
-  transition: 150ms ease opacity;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.c15:active .c17 {
-  background-color: #B8C0DC3d;
-}
-
-.c15:focus .c17 {
-  background-color: #B8C0DC3d;
-}
-
-.c15:hover .c17 {
-  background-color: #98A1C014;
-}
-
-.c15:disabled {
-  cursor: default;
-  opacity: 0.6;
-}
-
-.c15:disabled:active .c17,
-.c15:disabled:focus .c17,
-.c15:disabled:hover .c17 {
-  background-color: transparent;
 }
 
 .c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background-color: #22222212;
-  width: 48px;
-  height: 48px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border-radius: 12px;
-}
-
-.c5 {
-  font-size: 24px;
-  line-height: 32px;
-  text-align: center;
-  font-weight: 500;
-}
-
-.c7 {
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  -webkit-letter-spacing: 0em;
-  -moz-letter-spacing: 0em;
-  -ms-letter-spacing: 0em;
-  letter-spacing: 0em;
-  text-align: center;
-}
-
-.c16 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  height: 40px;
-  border-radius: 12px;
+  margin: 8px 0px;
 }
 
 .c3 {
-  height: 24px;
-  width: 24px;
-}
-
-.c3 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
+  padding: 8px 16px;
 }
 
 <span
@@ -1430,48 +1360,56 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
       class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c0 c1"
+        class="c0 c1 c2"
       >
         <div
-          class="c2"
+          class="c0 c1 c3"
         >
           <svg
-            class="c3"
             data-testid="pending-modal-failure-icon"
-            fill="#7D7D7D"
-            viewBox="0 0 16 16"
+            fill="#FF5F52"
+            height="64px"
+            stroke="#FFFFFF"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1"
+            viewBox="0 0 24 24"
+            width="64px"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2a1 1 0 0 1 0-2z"
+              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+            />
+            <line
+              x1="12"
+              x2="12"
+              y1="9"
+              y2="13"
+            />
+            <line
+              x1="12"
+              x2="12.01"
+              y1="17"
+              y2="17"
             />
           </svg>
-        </div>
-        <div
-          class="c4 c5 css-4kpdx7"
-        >
-          Wrap failed
-        </div>
-        <div
-          class="c6 c7 css-1urox24"
-        >
-          Swaps on the Uniswap Protocol can start and end with ETH. However, during the swap ETH is wrapped into WETH.
-        </div>
-        <div
-          class="c0 c1"
-        >
           <div
-            class="c8 c9"
+            class="c4 css-n8z49y"
+          >
+            Wrap failed
+          </div>
+          <div
+            class="c5 c6"
           >
             <div
-              class="c10"
+              class="c7"
               style="height: 16px; width: 16px;"
             >
               <div
-                class="c11"
+                class="c8"
               >
                 <img
-                  class="c12"
+                  class="c9"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
                 />
               </div>
@@ -1503,14 +1441,14 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
               />
             </svg>
             <div
-              class="c10"
+              class="c7"
               style="height: 16px; width: 16px;"
             >
               <div
-                class="c11"
+                class="c8"
               >
                 <img
-                  class="c12"
+                  class="c9"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
                 />
               </div>
@@ -1521,27 +1459,29 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
               &lt;0.00001 DEF
             </div>
           </div>
-          <a
-            class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Learn more
-          </a>
-        </div>
-      </div>
-      <div
-        class="c8 c14"
-      >
-        <button
-          class="c15 c16"
-        >
           <div
-            class="c17 c18"
-          />
-          Try again
-        </button>
+            class="c4 css-1urox24"
+          >
+            Swaps on the Uniswap Protocol can start and end with ETH. However, during the swap ETH is wrapped into WETH. 
+            <a
+              class="c10"
+              href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c11 c1 c3"
+        >
+          <button
+            class="c12 c13 c14"
+          >
+            Try again
+          </button>
+        </div>
       </div>
     </span>
   </span>
@@ -1550,13 +1490,36 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
 
 exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1`] = `
 <DocumentFragment>
-  .c8 {
+  .c5 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c9 {
+.c12 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c6 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1574,24 +1537,6 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
   gap: 8px;
 }
 
-.c14 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 12px;
-}
-
 .c4 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -1600,15 +1545,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
   letter-spacing: -0.01em;
 }
 
-.c6 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c13 {
+.c10 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -1619,12 +1556,100 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
   font-weight: 500;
 }
 
-.c13:hover {
+.c10:hover {
   opacity: 0.6;
 }
 
-.c13:active {
+.c10:active {
   opacity: 0.4;
+}
+
+.c13 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c13:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c13 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c13 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c14 {
+  background-color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+  padding: 16px;
+  color: #FFFFFF;
+}
+
+.c14:focus {
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
+}
+
+.c14:hover {
+  background-color: #fb58ff;
+}
+
+.c14:active {
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
+}
+
+.c14:disabled {
+  background-color: #22222212;
+  color: #7D7D7D;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
 }
 
 .c0 {
@@ -1642,6 +1667,20 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
   gap: 12px;
 }
 
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
 .c1 {
   width: 100%;
   -webkit-align-items: center;
@@ -1650,7 +1689,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
   align-items: center;
 }
 
-.c11 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1664,150 +1703,26 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
   left: 0;
 }
 
-.c12 {
+.c9 {
   width: 16px;
   height: 16px;
   border-radius: 50%;
 }
 
-.c10 {
+.c7 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-}
-
-.c18 {
-  background-color: transparent;
-  bottom: 0;
-  border-radius: inherit;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  -webkit-transition: 150ms ease background-color;
-  transition: 150ms ease background-color;
-  width: 100%;
-}
-
-.c15 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background-color: #FC72FF;
-  border-radius: 16px;
-  border: 0;
-  color: #FFFFFF;
-  cursor: pointer;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  font-size: 14px;
-  font-weight: 535;
-  gap: 12px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  line-height: 16px;
-  padding: 8px;
-  position: relative;
-  -webkit-transition: 150ms ease opacity;
-  transition: 150ms ease opacity;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.c15:active .c17 {
-  background-color: #B8C0DC3d;
-}
-
-.c15:focus .c17 {
-  background-color: #B8C0DC3d;
-}
-
-.c15:hover .c17 {
-  background-color: #98A1C014;
-}
-
-.c15:disabled {
-  cursor: default;
-  opacity: 0.6;
-}
-
-.c15:disabled:active .c17,
-.c15:disabled:focus .c17,
-.c15:disabled:hover .c17 {
-  background-color: transparent;
 }
 
 .c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background-color: #22222212;
-  width: 48px;
-  height: 48px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border-radius: 12px;
-}
-
-.c5 {
-  font-size: 24px;
-  line-height: 32px;
-  text-align: center;
-  font-weight: 500;
-}
-
-.c7 {
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  -webkit-letter-spacing: 0em;
-  -moz-letter-spacing: 0em;
-  -ms-letter-spacing: 0em;
-  letter-spacing: 0em;
-  text-align: center;
-}
-
-.c16 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  height: 40px;
-  border-radius: 12px;
+  margin: 8px 0px;
 }
 
 .c3 {
-  height: 24px;
-  width: 24px;
-}
-
-.c3 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
+  padding: 8px 16px;
 }
 
 <span
@@ -1817,46 +1732,56 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
       class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c0 c1"
+        class="c0 c1 c2"
       >
         <div
-          class="c2"
+          class="c0 c1 c3"
         >
           <svg
-            class="c3"
             data-testid="pending-modal-failure-icon"
-            fill="#7D7D7D"
-            viewBox="0 0 16 16"
+            fill="#FF5F52"
+            height="64px"
+            stroke="#FFFFFF"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1"
+            viewBox="0 0 24 24"
+            width="64px"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2a1 1 0 0 1 0-2z"
+              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+            />
+            <line
+              x1="12"
+              x2="12"
+              y1="9"
+              y2="13"
+            />
+            <line
+              x1="12"
+              x2="12.01"
+              y1="17"
+              y2="17"
             />
           </svg>
-        </div>
-        <div
-          class="c4 c5 css-4kpdx7"
-        >
-          Limit failed
-        </div>
-        <div
-          class="c6 c7 css-1urox24"
-        />
-        <div
-          class="c0 c1"
-        >
           <div
-            class="c8 c9"
+            class="c4 css-n8z49y"
+          >
+            Limit failed
+          </div>
+          <div
+            class="c5 c6"
           >
             <div
-              class="c10"
+              class="c7"
               style="height: 16px; width: 16px;"
             >
               <div
-                class="c11"
+                class="c8"
               >
                 <img
-                  class="c12"
+                  class="c9"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
                 />
               </div>
@@ -1888,14 +1813,14 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
               />
             </svg>
             <div
-              class="c10"
+              class="c7"
               style="height: 16px; width: 16px;"
             >
               <div
-                class="c11"
+                class="c8"
               >
                 <img
-                  class="c12"
+                  class="c9"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                 />
               </div>
@@ -1906,27 +1831,29 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
               0.0001 USDC
             </div>
           </div>
-          <a
-            class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Learn more
-          </a>
-        </div>
-      </div>
-      <div
-        class="c8 c14"
-      >
-        <button
-          class="c15 c16"
-        >
           <div
-            class="c17 c18"
-          />
-          Try again
-        </button>
+            class="c4 css-1urox24"
+          >
+             
+            <a
+              class="c10"
+              href="https://support.uniswap.org/hc/en-us/articles/17515489874189-Why-can-my-swap-not-be-filled-"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c11 c1 c3"
+        >
+          <button
+            class="c12 c13 c14"
+          >
+            Try again
+          </button>
+        </div>
       </div>
     </span>
   </span>
@@ -1935,13 +1862,36 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 2 1
 
 exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1`] = `
 <DocumentFragment>
-  .c8 {
+  .c5 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c9 {
+.c12 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c6 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1959,24 +1909,6 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   gap: 8px;
 }
 
-.c14 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  gap: 12px;
-}
-
 .c4 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
@@ -1985,15 +1917,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   letter-spacing: -0.01em;
 }
 
-.c6 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c13 {
+.c10 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -2004,12 +1928,100 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   font-weight: 500;
 }
 
-.c13:hover {
+.c10:hover {
   opacity: 0.6;
 }
 
-.c13:active {
+.c10:active {
   opacity: 0.4;
+}
+
+.c13 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c13:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c13 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c13 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c14 {
+  background-color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+  padding: 16px;
+  color: #FFFFFF;
+}
+
+.c14:focus {
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
+}
+
+.c14:hover {
+  background-color: #fb58ff;
+}
+
+.c14:active {
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
+}
+
+.c14:disabled {
+  background-color: #22222212;
+  color: #7D7D7D;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
 }
 
 .c0 {
@@ -2027,6 +2039,20 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   gap: 12px;
 }
 
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
 .c1 {
   width: 100%;
   -webkit-align-items: center;
@@ -2035,7 +2061,7 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   align-items: center;
 }
 
-.c11 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2049,150 +2075,26 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   left: 0;
 }
 
-.c12 {
+.c9 {
   width: 16px;
   height: 16px;
   border-radius: 50%;
 }
 
-.c10 {
+.c7 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-}
-
-.c18 {
-  background-color: transparent;
-  bottom: 0;
-  border-radius: inherit;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  -webkit-transition: 150ms ease background-color;
-  transition: 150ms ease background-color;
-  width: 100%;
-}
-
-.c15 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background-color: #FC72FF;
-  border-radius: 16px;
-  border: 0;
-  color: #FFFFFF;
-  cursor: pointer;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  font-size: 14px;
-  font-weight: 535;
-  gap: 12px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  line-height: 16px;
-  padding: 8px;
-  position: relative;
-  -webkit-transition: 150ms ease opacity;
-  transition: 150ms ease opacity;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.c15:active .c17 {
-  background-color: #B8C0DC3d;
-}
-
-.c15:focus .c17 {
-  background-color: #B8C0DC3d;
-}
-
-.c15:hover .c17 {
-  background-color: #98A1C014;
-}
-
-.c15:disabled {
-  cursor: default;
-  opacity: 0.6;
-}
-
-.c15:disabled:active .c17,
-.c15:disabled:focus .c17,
-.c15:disabled:hover .c17 {
-  background-color: transparent;
 }
 
 .c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  background-color: #22222212;
-  width: 48px;
-  height: 48px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border-radius: 12px;
-}
-
-.c5 {
-  font-size: 24px;
-  line-height: 32px;
-  text-align: center;
-  font-weight: 500;
-}
-
-.c7 {
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  -webkit-letter-spacing: 0em;
-  -moz-letter-spacing: 0em;
-  -ms-letter-spacing: 0em;
-  letter-spacing: 0em;
-  text-align: center;
-}
-
-.c16 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  height: 40px;
-  border-radius: 12px;
+  margin: 8px 0px;
 }
 
 .c3 {
-  height: 24px;
-  width: 24px;
-}
-
-.c3 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
+  padding: 8px 16px;
 }
 
 <span
@@ -2202,48 +2104,56 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
       class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c0 c1"
+        class="c0 c1 c2"
       >
         <div
-          class="c2"
+          class="c0 c1 c3"
         >
           <svg
-            class="c3"
             data-testid="pending-modal-failure-icon"
-            fill="#7D7D7D"
-            viewBox="0 0 16 16"
+            fill="#FF5F52"
+            height="64px"
+            stroke="#FFFFFF"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="1"
+            viewBox="0 0 24 24"
+            width="64px"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
-              d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2a1 1 0 0 1 0-2z"
+              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+            />
+            <line
+              x1="12"
+              x2="12"
+              y1="9"
+              y2="13"
+            />
+            <line
+              x1="12"
+              x2="12.01"
+              y1="17"
+              y2="17"
             />
           </svg>
-        </div>
-        <div
-          class="c4 c5 css-4kpdx7"
-        >
-          Wrap failed
-        </div>
-        <div
-          class="c6 c7 css-1urox24"
-        >
-          Swaps on the Uniswap Protocol can start and end with ETH. However, during the swap ETH is wrapped into WETH.
-        </div>
-        <div
-          class="c0 c1"
-        >
           <div
-            class="c8 c9"
+            class="c4 css-n8z49y"
+          >
+            Wrap failed
+          </div>
+          <div
+            class="c5 c6"
           >
             <div
-              class="c10"
+              class="c7"
               style="height: 16px; width: 16px;"
             >
               <div
-                class="c11"
+                class="c8"
               >
                 <img
-                  class="c12"
+                  class="c9"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
                 />
               </div>
@@ -2275,14 +2185,14 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
               />
             </svg>
             <div
-              class="c10"
+              class="c7"
               style="height: 16px; width: 16px;"
             >
               <div
-                class="c11"
+                class="c8"
               >
                 <img
-                  class="c12"
+                  class="c9"
                   src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                 />
               </div>
@@ -2293,27 +2203,29 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
               0.0001 USDC
             </div>
           </div>
-          <a
-            class="c13"
-            href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Learn more
-          </a>
-        </div>
-      </div>
-      <div
-        class="c8 c14"
-      >
-        <button
-          class="c15 c16"
-        >
           <div
-            class="c17 c18"
-          />
-          Try again
-        </button>
+            class="c4 css-1urox24"
+          >
+            Swaps on the Uniswap Protocol can start and end with ETH. However, during the swap ETH is wrapped into WETH. 
+            <a
+              class="c10"
+              href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c11 c1 c3"
+        >
+          <button
+            class="c12 c13 c14"
+          >
+            Try again
+          </button>
+        </div>
       </div>
     </span>
   </span>

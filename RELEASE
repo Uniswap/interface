@@ -1,61 +1,8 @@
-IPFS hash of the deployment:
-- CIDv0: `QmeLuyYmQQCSzTEYryna85cJBTcjHnjbDcjJtBSccphwUj`
-- CIDv1: `bafybeihnzraj4jalegaxyrcq7ihscy2uetpcz6acu5m5iagwpqv6qva2ga`
+We are back with another round of small updates. Here’s what’s new:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Unicons Updates — these auto-generated icons are refreshed to be more visually appealing. You may have received a new one.
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Other changes:
 
-IPFS gateways:
-- https://bafybeihnzraj4jalegaxyrcq7ihscy2uetpcz6acu5m5iagwpqv6qva2ga.ipfs.dweb.link/
-- https://bafybeihnzraj4jalegaxyrcq7ihscy2uetpcz6acu5m5iagwpqv6qva2ga.ipfs.cf-ipfs.com/
-- [ipfs://QmeLuyYmQQCSzTEYryna85cJBTcjHnjbDcjJtBSccphwUj/](ipfs://QmeLuyYmQQCSzTEYryna85cJBTcjHnjbDcjJtBSccphwUj/)
-
-## 5.23.0 (2024-04-09)
-
-
-### Features
-
-* **web:** [info] Rename Turnover to 1 day APR and update tooltip (#7086) ce58465
-* **web:** add eslint rule to disallow isIOS and isAndroid (#7230) 88a6a14
-* **web:** add Uniswap connect options for extension beta launch (#7189) 83f54de
-* **web:** display address in search results (#7225) 30f8964
-* **web:** fallback to token lists when no gql results (#7194) 3992111
-* **web:** improve performance on web by avoiding importing all of tamagui and only using core (#7175) bec8b1d
-* **web:** madge check for unit test code in CI (#7191) 11ce479
-* **web:** optimize size and lazy-loading on initial renders (#7295) cb198cd
-* **web:** rm the service worker (#7156) 7e4dee3
-* **web:** sort tokens like mobile does (#7213) 729dad8
-* **web:** update designs of Error state in ConfirmSwapModal (#7254) 6559d7b
-
-
-### Bug Fixes
-
-* **web:** add crowdin secrets anywhere we run build:production (#7288) db34eac
-* **web:** add realtime gateway to connectSrc CSP (#7228) 306c2c1
-* **web:** alias react-native in web with react-native-web (#7239) 6901e34
-* **web:** allow prod to download crowdin t9n (#7345) 8fd106b
-* **web:** avoid react-native import for wrangler (#7263) 4a3ff62
-* **web:** bug with user-added tokens in currency search (#7202) e40ffbb
-* **web:** fix rich link previews (#6753) 3bac3ed
-* **web:** fix translations with JSX rendering as [object Object] (#7337) 4cb17f0
-* **web:** functions pass-through (#7340) 7d5213d
-* **web:** limit toast notification bug (#7283) dee776d
-* **web:** limits price bug (#7324) cb95d8a
-* **web:** mv statsig above apollo providers to enable realtime (#7224) f98a6f2
-* **web:** only call into StatSig once initialized (#7327) 5a07fc0
-* **web:** only show limit disclaimer on limit version of OffchainActivityModal (#7262) bc215ab
-* **web:** remove old locale files (#7259) e546de8
-* **web:** rich link preview average color extraction (#7305) f651da3
-* **web:** rich link preview image rbg color bug (#7326) d36a812
-
-
-### Code Refactoring
-
-* **web:** [subscriptions] activity updater flow (#7171) d517540
-* **web:** use subscriptions endpoint for triggering token balances updates (#7131) adaf259
-
-
+- Various UI fixes to our fiat-on ramp screens
+- Various bug fixes related to stale notifications

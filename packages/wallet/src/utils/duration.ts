@@ -1,5 +1,5 @@
-import i18n from 'uniswap/src/i18n/i18n'
 import { getDurationRemaining } from 'utilities/src/time/duration'
+import i18n from 'wallet/src/i18n/i18n'
 
 export function getOtpDurationString(expirationTime: number): string {
   const timeLeft = expirationTime - Date.now()

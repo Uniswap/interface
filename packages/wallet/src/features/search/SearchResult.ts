@@ -1,5 +1,5 @@
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ChainId } from 'wallet/src/constants/chains'
+import { SafetyLevel } from 'wallet/src/data/__generated__/types-and-hooks'
 
 export type SearchResult =
   | TokenSearchResult

@@ -2,13 +2,13 @@ import { QueryResult } from '@apollo/client'
 import { ChainId, Currency } from '@uniswap/sdk-core'
 import { TDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
 import { Warning } from 'constants/tokenSafety'
-import { PropsWithChildren, createContext, useContext } from 'react'
 import {
   Chain,
   Exact,
   PortfolioTokenBalancePartsFragment,
-  TokenWebQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+  TokenQuery,
+} from 'graphql/data/__generated__/types-and-hooks'
+import { PropsWithChildren, createContext, useContext } from 'react'
 
 export type MultiChainMap = {
   [chain in Chain]?: { address?: string; balance?: PortfolioTokenBalancePartsFragment } | undefined
@@ -25,13 +25,13 @@ type BaseTDPContext = {
   /** True if this token did not exist in GQL backend and was instead fetched from on-chain */
   currencyWasFetchedOnChain: boolean
 
-  tokenQuery: QueryResult<TokenWebQuery, Exact<{ chain: Chain; address?: string }>>
+  tokenQuery: QueryResult<TokenQuery, Exact<{ chain: Chain; address?: string }>>
   chartState: TDPChartState
 
   multiChainMap: MultiChainMap
 
-  tokenColor?: string
-  warning?: Warning
+  extractedAccent1?: string
+  warning: Warning | null
 }
 /** Token details context with an unresolved currency field */
 export type PendingTDPContext = BaseTDPContext & { currency: undefined }

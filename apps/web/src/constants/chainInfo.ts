@@ -6,36 +6,6 @@ import { SupportedL1ChainId, SupportedL2ChainId } from './chains'
 import { ARBITRUM_LIST, AVALANCHE_LIST, BASE_LIST, CELO_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
 
 export const AVERAGE_L1_BLOCK_TIME = ms(`12s`)
-export const DEFAULT_MS_BEFORE_WARNING = ms(`10m`)
-
-/**
- *
- * @param chainId
- * @returns The approximate whole number of blocks written to the corresponding chainId per Ethereum mainnet epoch.
- */
-export function getBlocksPerMainnetEpochForChainId(chainId: number | undefined): number {
-  // Average block times were pulled from https://dune.com/jacobdcastro/avg-block-times on 2024-03-14,
-  // and corroborated with that chain's documentation/explorer.
-  // Blocks per mainnet epoch is computed as `Math.floor(12s / AVG_BLOCK_TIME)` and hard-coded.
-  switch (chainId) {
-    case ChainId.ARBITRUM_ONE:
-      return 46
-    case ChainId.OPTIMISM:
-      return 6
-    case ChainId.POLYGON:
-      return 5
-    case ChainId.BASE:
-      return 6
-    case ChainId.BNB:
-      return 4
-    case ChainId.AVALANCHE:
-      return 6
-    case ChainId.CELO:
-      return 2
-    default:
-      return 1
-  }
-}
 
 export enum NetworkType {
   L1,
@@ -241,17 +211,6 @@ const CHAIN_INFO: ChainInfoMap = {
     statusPage: 'https://status.base.org/',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_84531,
-  },
-  [ChainId.BLAST]: {
-    networkType: NetworkType.L2,
-    bridge: 'https://blast.io/bridge',
-    defaultListUrl: '',
-    docs: 'https://docs.blast.io',
-    explorer: 'https://blastscan.io/',
-    infoLink: 'https://info.uniswap.org/#/blast/',
-    label: 'Blast',
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-    color: darkTheme.chain_81457,
   },
 } as const
 

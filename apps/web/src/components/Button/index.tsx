@@ -460,7 +460,6 @@ function pickThemeButtonPadding({ size }: { size: ButtonSize }) {
 function pickThemeButtonTextColor({ theme, emphasis }: { theme: DefaultTheme; emphasis: ButtonEmphasis }) {
   switch (emphasis) {
     case ButtonEmphasis.high:
-      return theme.white
     case ButtonEmphasis.promotional:
       return theme.accent1
     case ButtonEmphasis.highSoft:

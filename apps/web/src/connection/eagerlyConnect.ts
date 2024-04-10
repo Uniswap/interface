@@ -4,7 +4,7 @@ import store from 'state'
 import { clearRecentConnectionMeta } from 'state/user/reducer'
 
 import { trace } from 'tracing/trace'
-import { eip6963Connection, getConnection, gnosisSafeConnection, networkConnection } from './index'
+import { deprecatedNetworkConnection, eip6963Connection, getConnection, gnosisSafeConnection } from './index'
 import { getRecentConnectionMeta } from './meta'
 import { ConnectionType } from './types'
 
@@ -47,7 +47,7 @@ function connect(connector: Connector, type: ConnectionType) {
 if (window !== window.parent) {
   connect(gnosisSafeConnection.connector, ConnectionType.GNOSIS_SAFE)
 }
-connect(networkConnection.connector, ConnectionType.NETWORK)
+connect(deprecatedNetworkConnection.connector, ConnectionType.DEPRECATED_NETWORK)
 
 // Get the persisted wallet type from the last session.
 const recentConnectionMeta = getRecentConnectionMeta()

@@ -4,10 +4,7 @@ import {
   formatTokenSearchResults,
   gqlNFTToNFTCollectionSearchResult,
 } from 'src/components/explore/search/utils'
-import {
-  Chain,
-  ExploreSearchQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain, ExploreSearchQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { SearchResultType } from 'wallet/src/features/search/SearchResult'
 import {
@@ -25,7 +22,7 @@ type ExploreSearchResult = NonNullable<ExploreSearchQuery>
 
 describe(formatTokenSearchResults, () => {
   it('returns undefined if there is no data', () => {
-    expect(formatTokenSearchResults(undefined, '')).toEqual(undefined)
+    expect(formatTokenSearchResults(null, '')).toEqual(undefined)
   })
 
   it('filters out duplicate results', () => {
@@ -98,7 +95,7 @@ describe(formatTokenSearchResults, () => {
     })
 
     it('returns null if required data is missing', () => {
-      expect(gqlNFTToNFTCollectionSearchResult({ ...collection, name: undefined })).toEqual(null)
+      expect(gqlNFTToNFTCollectionSearchResult({ ...collection, name: null })).toEqual(null)
       expect(gqlNFTToNFTCollectionSearchResult({ ...collection, nftContracts: undefined })).toEqual(
         null
       )
@@ -119,7 +116,7 @@ describe(formatTokenSearchResults, () => {
 
   describe(formatNFTCollectionSearchResults, () => {
     it('returns undefined if there is no data', () => {
-      expect(formatNFTCollectionSearchResults(undefined)).toEqual(undefined)
+      expect(formatNFTCollectionSearchResults(null)).toEqual(undefined)
     })
 
     it('filters out nfts that cannot be formatted', () => {
@@ -127,7 +124,7 @@ describe(formatTokenSearchResults, () => {
       const nftSearchResult = {
         edges: [
           ...topNFTCollections.map((nft) => ({ node: nft })),
-          { node: nftCollection({ name: undefined }) },
+          { node: nftCollection({ name: null }) },
         ],
       }
 

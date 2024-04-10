@@ -1,3 +1,4 @@
+import { ImpactFeedbackStyle } from 'expo-haptics'
 import React, { memo, useCallback } from 'react'
 import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
@@ -9,15 +10,15 @@ import { useAnimatedCardDragStyle, useExploreTokenContextMenu } from 'src/compon
 import { Loader } from 'src/components/loading'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
-import { AnimatedFlex, AnimatedTouchableArea, Flex, ImpactFeedbackStyle, Text } from 'ui/src'
+import { AnimatedFlex, AnimatedTouchableArea, Flex, Text } from 'ui/src'
 import { borderRadii, imageSizes } from 'ui/src/theme'
-import { useFavoriteTokenCardQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType } from 'utilities/src/format/types'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { TokenLogo } from 'wallet/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { useFavoriteTokenCardQuery } from 'wallet/src/data/__generated__/types-and-hooks'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
@@ -28,7 +29,7 @@ import { getSymbolDisplayText } from 'wallet/src/utils/currency'
 
 export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 114
 
-export type FavoriteTokenCardProps = {
+type FavoriteTokenCardProps = {
   currencyId: string
   isEditing?: boolean
   isTouched: SharedValue<boolean>

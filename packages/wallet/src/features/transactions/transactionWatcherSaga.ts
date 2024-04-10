@@ -4,11 +4,10 @@ import { TradeType } from '@uniswap/sdk-core'
 import { BigNumberish, providers } from 'ethers'
 import { Statsig } from 'statsig-react-native'
 import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/experiments/flags'
-import i18n from 'uniswap/src/i18n/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { PollingInterval } from 'wallet/src/constants/misc'
+import { FEATURE_FLAGS } from 'wallet/src/features/experiments/constants'
 import {
   fetchFiatOnRampTransaction,
   fetchMoonpayTransaction,
@@ -43,6 +42,7 @@ import {
 import { getFinalizedTransactionStatus } from 'wallet/src/features/transactions/utils'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
+import i18n from 'wallet/src/i18n/i18n'
 import { appSelect } from 'wallet/src/state'
 import { sendWalletAnalyticsEvent, sendWalletAppsFlyerEvent } from 'wallet/src/telemetry'
 import {
@@ -123,9 +123,7 @@ export function* fetchUpdatedMoonpayTransaction(transaction: FiatOnRampTransacti
 export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDetails) {
   // we want to re-fetch this every time we've added a transaction,
   // as this feature flag could be changed after the app has started
-  const useOldMoonpayIntegration = !Statsig.checkGate(
-    getFeatureFlagName(FeatureFlags.ForAggregator)
-  )
+  const useOldMoonpayIntegration = !Statsig.checkGate(FEATURE_FLAGS.ForAggregator)
 
   const { id } = transaction
 
@@ -200,7 +198,9 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
       // try again after a waiting period or when we've come back WebView
       yield* race({
         forceFetch: take(forceFetchFiatOnRampTransactions),
-        timeout: delay(useOldMoonpayIntegration ? PollingInterval.Normal : PollingInterval.Fast),
+        timeout: delay(
+          useOldMoonpayIntegration ? PollingInterval.Normal : PollingInterval.KindaFast
+        ),
       })
     }
   } catch (error) {

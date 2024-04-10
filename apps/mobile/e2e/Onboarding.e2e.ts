@@ -1,18 +1,10 @@
-import { CreateNewWallet } from 'e2e/usecases/onboarding/CreateNewWallet'
-import { ImportWallet } from 'e2e/usecases/onboarding/ImportWallet'
-import { WatchWallet } from 'e2e/usecases/onboarding/WatchWallet'
+import { CreateNewWallet } from './usecases/CreateNewWallet'
 
 describe('Onboarding', () => {
-  beforeEach(async () => {
+  beforeAll(async () => {
     await device.launchApp({ newInstance: true })
+    await device.reloadReactNative()
   })
 
-  afterEach(async () => {
-    await device.uninstallApp()
-    await device.installApp()
-  })
-
-  it('creates a new wallet', CreateNewWallet)
-  it('watches wallet', WatchWallet)
-  it('imports a testing wallet using recovery phrase', ImportWallet)
+  describe(CreateNewWallet, CreateNewWallet)
 })

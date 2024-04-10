@@ -1,8 +1,8 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import Trace from 'src/components/Trace/Trace'
-import { Button, Flex, useSporeColors } from 'ui/src'
-import { opacify, validColor } from 'ui/src/theme'
+import { Button, Flex } from 'ui/src'
+import { validColor } from 'ui/src/theme'
 import { ElementName, ElementNameType, SectionName } from 'wallet/src/telemetry/constants'
 import { getContrastPassingTextColor } from 'wallet/src/utils/colors'
 
@@ -17,15 +17,13 @@ function CTAButton({
   onPress: () => void
   tokenColor?: Maybe<string>
 }): JSX.Element {
-  const colors = useSporeColors()
-
   return (
     <Trace logPress element={element} section={SectionName.TokenDetails}>
       <Button
         fill
         hapticFeedback
         color={tokenColor ? getContrastPassingTextColor(tokenColor) : '$sporeWhite'}
-        pressStyle={{ backgroundColor: validColor(opacify(60, tokenColor ?? colors.accent1.val)) }}
+        pressStyle={{ opacity: 0.6 }}
         // idk why this eslint warning is coming up because it auto-sorts it back on format to invalid order
         // eslint-disable-next-line react/jsx-sort-props
         onPress={onPress}

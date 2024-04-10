@@ -1,15 +1,15 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
+import { Trans } from '@lingui/macro'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
+import { sendAnalyticsEvent, TraceEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { V2Unsupported } from 'components/V2Unsupported'
-import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
-import { Trans } from 'i18n'
 import { useCallback, useState } from 'react'
 import { Plus } from 'react-feather'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -32,7 +32,7 @@ import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
 import { useV2RouterContract } from '../../hooks/useContract'
 import { useIsSwapUnsupported } from '../../hooks/useIsSwapUnsupported'
-import { useGetTransactionDeadline } from '../../hooks/useTransactionDeadline'
+import useTransactionDeadline from '../../hooks/useTransactionDeadline'
 import { PairState } from '../../hooks/useV2Pairs'
 import { Field } from '../../state/mint/actions'
 import { useDerivedMintInfo, useMintActionHandlers, useMintState } from '../../state/mint/hooks'
@@ -101,7 +101,7 @@ export default function AddLiquidity() {
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
 
   // txn values
-  const getDeadline = useGetTransactionDeadline() // custom from users settings
+  const deadline = useTransactionDeadline() // custom from users settings
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_ADD_V2_SLIPPAGE_TOLERANCE) // custom from users
   const [txHash, setTxHash] = useState<string>('')
 
@@ -145,8 +145,6 @@ export default function AddLiquidity() {
     if (!chainId || !provider || !account || !router || !networkSupportsV2) return
 
     const { [Field.CURRENCY_A]: parsedAmountA, [Field.CURRENCY_B]: parsedAmountB } = parsedAmounts
-    const deadline = await getDeadline()
-
     if (!parsedAmountA || !parsedAmountB || !currencyA || !currencyB || !deadline) {
       return
     }
@@ -261,8 +259,8 @@ export default function AddLiquidity() {
             </Row>
             <ThemedText.DeprecatedItalic fontSize={12} textAlign="left" padding="8px 0 0 0 ">
               <Trans>
-                Output is estimated. If the price changes by more than {{ allowed: allowedSlippage.toSignificant(4) }}%
-                your transaction will revert.
+                Output is estimated. If the price changes by more than {allowedSlippage.toSignificant(4)}% your
+                transaction will revert.
               </Trans>
             </ThemedText.DeprecatedItalic>
           </>
@@ -286,9 +284,8 @@ export default function AddLiquidity() {
 
   const pendingText = (
     <Trans>
-      Supplying {{ amtA: parsedAmounts[Field.CURRENCY_A]?.toSignificant(6) }}{' '}
-      {{ symA: currencies[Field.CURRENCY_A]?.symbol }} and {{ amtB: parsedAmounts[Field.CURRENCY_B]?.toSignificant(6) }}{' '}
-      {{ symB: currencies[Field.CURRENCY_B]?.symbol }}
+      Supplying {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)} {currencies[Field.CURRENCY_A]?.symbol} and{' '}
+      {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)} {currencies[Field.CURRENCY_B]?.symbol}
     </Trans>
   )
 
@@ -474,10 +471,10 @@ export default function AddLiquidity() {
                         >
                           {approvalA === ApprovalState.PENDING ? (
                             <Dots>
-                              <Trans>Approving {{ sym: currencies[Field.CURRENCY_A]?.symbol }}</Trans>
+                              <Trans>Approving {currencies[Field.CURRENCY_A]?.symbol}</Trans>
                             </Dots>
                           ) : (
-                            <Trans>Approve {{ sym: currencies[Field.CURRENCY_A]?.symbol }}</Trans>
+                            <Trans>Approve {currencies[Field.CURRENCY_A]?.symbol}</Trans>
                           )}
                         </ButtonPrimary>
                       )}
@@ -489,10 +486,10 @@ export default function AddLiquidity() {
                         >
                           {approvalB === ApprovalState.PENDING ? (
                             <Dots>
-                              <Trans>Approving {{ sym: currencies[Field.CURRENCY_B]?.symbol }}</Trans>
+                              <Trans>Approving {currencies[Field.CURRENCY_B]?.symbol}</Trans>
                             </Dots>
                           ) : (
-                            <Trans>Approve {{ sym: currencies[Field.CURRENCY_B]?.symbol }}</Trans>
+                            <Trans>Approve {currencies[Field.CURRENCY_B]?.symbol}</Trans>
                           )}
                         </ButtonPrimary>
                       )}

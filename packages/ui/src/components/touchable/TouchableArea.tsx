@@ -1,10 +1,10 @@
+import { impactAsync } from 'expo-haptics'
 import { forwardRef, useCallback, useMemo, useRef } from 'react'
 import { GestureResponderEvent } from 'react-native'
-import { TamaguiElement, YStack } from 'tamagui'
+import { TamaguiElement, YStack, isWeb } from 'tamagui'
 import { withAnimated } from 'ui/src/components/factories/animated'
 import { TouchableAreaProps } from 'ui/src/components/touchable/types'
 import { defaultHitslopInset } from 'ui/src/theme'
-import { HapticFeedback } from 'ui/src/utils/haptics/HapticFeedback'
 
 /**
  * If you are trying to implement a standard button DO NOT USE this component. Use the Button component instead with the desired size and emphasis.
@@ -58,8 +58,8 @@ export const TouchableArea = forwardRef<TamaguiElement, TouchableAreaProps>(func
 
       onPress(event)
 
-      if (hapticFeedback) {
-        await HapticFeedback.impact(hapticStyle)
+      if (hapticFeedback && !isWeb) {
+        await impactAsync(hapticStyle)
       }
     },
     [onPress, ignoreDragEvents, hapticFeedback, hapticStyle]

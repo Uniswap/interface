@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client'
+import { Trans } from '@lingui/macro'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import { ChainId, Percent } from '@uniswap/sdk-core'
 import { DoubleTokenAndChainLogo } from 'components/Pools/PoolDetails/PoolDetailsHeader'
 import Row from 'components/Row'
@@ -9,10 +9,9 @@ import { Cell } from 'components/Table/Cell'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Table/styled'
 import { NameText } from 'components/Tokens/TokenTable'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
-import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { BIPS_BASE } from 'constants/misc'
-import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
+import { ProtocolVersion, Token } from 'graphql/data/__generated__/types-and-hooks'
 import { PoolSortFields, TablePool, useTopPools } from 'graphql/data/pools/useTopPools'
 import {
   OrderDirection,
@@ -21,14 +20,12 @@ import {
   unwrapToken,
   validateUrlChainParam,
 } from 'graphql/data/util'
-import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { ReactElement, ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
@@ -36,9 +33,9 @@ const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
   [PoolSortFields.Volume24h]: undefined,
   [PoolSortFields.VolumeWeek]: undefined,
   [PoolSortFields.TxCount]: undefined,
-  [PoolSortFields.OneDayApr]: (
+  [PoolSortFields.Turnover]: (
     <Trans>
-      1 day APR refers to the amount of trading fees relative to total value locked (TVL) within a pool. 1 day APR = 24H
+      Turnover refers to the amount of trading volume relative to total value locked (TVL) within a pool. Turnover = 24H
       Fees / TVL
     </Trans>
   ),
@@ -62,7 +59,7 @@ interface PoolTableValues {
   tvl: number
   volume24h: number
   volumeWeek: number
-  oneDayApr: Percent
+  turnover: Percent
   link: string
 }
 
@@ -73,7 +70,7 @@ export enum PoolTableColumns {
   TVL,
   Volume24h,
   VolumeWeek,
-  OneDayApr,
+  Turnover,
 }
 
 function PoolDescription({
@@ -125,7 +122,7 @@ const HEADER_TEXT: Record<PoolSortFields, ReactNode> = {
   [PoolSortFields.TVL]: <Trans>TVL</Trans>,
   [PoolSortFields.Volume24h]: <Trans>1 day volume</Trans>,
   [PoolSortFields.VolumeWeek]: <Trans>7 day volume</Trans>,
-  [PoolSortFields.OneDayApr]: <Trans>1 day APR</Trans>,
+  [PoolSortFields.Turnover]: <Trans>Turnover</Trans>,
   [PoolSortFields.TxCount]: <Trans>Transactions</Trans>,
 }
 
@@ -162,26 +159,14 @@ export function TopPoolTable() {
     resetSortAscending()
   }, [resetSortAscending, resetSortMethod])
 
-  const { topPools, loading, errorV3, errorV2 } = useTopPools(
+  const { topPools, loading, error } = useTopPools(
     { sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc },
     chainId
   )
-  const combinedError =
-    errorV2 && errorV3
-      ? new ApolloError({ errorMessage: `Could not retrieve V2 and V3 Top Pools on chain: ${chainId}` })
-      : undefined
-  const allDataStillLoading = loading && !topPools.length
-  useUpdateManualOutage({ chainId, errorV3, errorV2 })
 
   return (
     <TableWrapper data-testid="top-pools-explore-table">
-      <PoolsTable
-        pools={topPools}
-        loading={allDataStillLoading}
-        error={combinedError}
-        chainId={chainId}
-        maxWidth={1200}
-      />
+      <PoolsTable pools={topPools} loading={loading} error={error} chainId={chainId} maxWidth={1200} />
     </TableWrapper>
   )
 }
@@ -209,15 +194,12 @@ export function PoolsTable({
   const sortAscending = useAtomValue(sortAscendingAtom)
   const orderDirection = sortAscending ? OrderDirection.Asc : OrderDirection.Desc
   const sortMethod = useAtomValue(sortMethodAtom)
-  const filterString = useAtomValue(exploreSearchStringAtom)
 
   const poolTableValues: PoolTableValues[] | undefined = useMemo(
     () =>
       pools?.map((pool, index) => {
-        const poolSortRank = index + 1
-
         return {
-          index: poolSortRank,
+          index: index + 1,
           poolDescription: (
             <PoolDescription
               token0={unwrapToken(chainId, pool.token0)}
@@ -231,29 +213,15 @@ export function PoolsTable({
           tvl: pool.tvl,
           volume24h: pool.volume24h,
           volumeWeek: pool.volumeWeek,
-          oneDayApr: pool.oneDayApr,
+          turnover: pool.turnover,
           link: `/explore/pools/${chainIdToBackendName(chainId).toLowerCase()}/${pool.hash}`,
-          analytics: {
-            elementName: InterfaceElementName.POOLS_TABLE_ROW,
-            properties: {
-              chain_id: chainId,
-              pool_address: pool.hash,
-              token0_address: pool.token0.address,
-              token0_symbol: pool.token0.symbol,
-              token1_address: pool.token1.address,
-              token1_symbol: pool.token1.symbol,
-              pool_list_index: index,
-              pool_list_rank: poolSortRank,
-              pool_list_length: pools.length,
-              search_pool_input: filterString,
-            },
-          },
         }
       }) ?? [],
-    [chainId, filterString, pools]
+    [chainId, pools]
   )
 
   const showLoadingSkeleton = loading || !!error
+  // TODO(WEB-3236): once GQL BE Pool query add 1 day, 7 day, turnover sort support
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolTableValues>()
     return [
@@ -373,21 +341,21 @@ export function PoolsTable({
             ),
           })
         : null,
-      !hiddenColumns?.includes(PoolTableColumns.OneDayApr)
-        ? columnHelper.accessor((row) => row.oneDayApr, {
-            id: 'oneDayApr',
+      !hiddenColumns?.includes(PoolTableColumns.Turnover)
+        ? columnHelper.accessor((row) => row.turnover, {
+            id: 'turnover',
             header: () => (
               <Cell minWidth={100} grow>
                 <PoolTableHeader
-                  category={PoolSortFields.OneDayApr}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.OneDayApr}
+                  category={PoolSortFields.Turnover}
+                  isCurrentSortMethod={sortMethod === PoolSortFields.Turnover}
                   direction={orderDirection}
                 />
               </Cell>
             ),
-            cell: (oneDayApr) => (
+            cell: (turnover) => (
               <Cell minWidth={100} loading={showLoadingSkeleton} grow>
-                <ThemedText.BodyPrimary>{formatPercent(oneDayApr.getValue?.())}</ThemedText.BodyPrimary>
+                <ThemedText.BodyPrimary>{formatPercent(turnover.getValue?.())}</ThemedText.BodyPrimary>
               </Cell>
             ),
           })

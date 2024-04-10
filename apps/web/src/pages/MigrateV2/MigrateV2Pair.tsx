@@ -1,8 +1,9 @@
 import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
+import { Select, Trans } from '@lingui/macro'
 import { LiquidityEventName, LiquiditySource } from '@uniswap/analytics-events'
 import { CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
-import { FeeAmount, Pool, Position, TickMath, priceToClosestTick } from '@uniswap/v3-sdk'
+import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import Badge from 'components/Badge'
@@ -13,14 +14,14 @@ import FeeSelector from 'components/FeeSelector'
 import RangeSelector from 'components/RangeSelector'
 import RateToggle from 'components/RateToggle'
 import SettingsTab from 'components/Settings'
-import { V2Unsupported } from 'components/V2Unsupported'
 import { Dots } from 'components/swap/styled'
+import { V2Unsupported } from 'components/V2Unsupported'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
+import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PoolState, usePool } from 'hooks/usePools'
-import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
+import useTransactionDeadline from 'hooks/useTransactionDeadline'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
-import { Trans, t } from 'i18n'
 import JSBI from 'jsbi'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
@@ -134,7 +135,8 @@ function V2PairMigration({
   const pairFactory = useSingleCallResult(pair, 'factory')
   const isNotUniswap = pairFactory.result?.[0] && pairFactory.result[0] !== v2FactoryAddress
 
-  const getDeadline = useGetTransactionDeadline() // custom from users settings
+  const deadline = useTransactionDeadline() // custom from users settings
+  const blockTimestamp = useCurrentBlockTimestamp()
   const allowedSlippage = useUserSlippageToleranceWithDefault(DEFAULT_MIGRATE_SLIPPAGE_TOLERANCE) // custom from users
 
   const currency0 = unwrappedToken(token0)
@@ -267,10 +269,12 @@ function V2PairMigration({
 
   const networkSupportsV2 = useNetworkSupportsV2()
 
-  const migrate = useCallback(async () => {
+  const migrate = useCallback(() => {
     if (
       !migrator ||
       !account ||
+      !deadline ||
+      !blockTimestamp ||
       typeof tickLower !== 'number' ||
       typeof tickUpper !== 'number' ||
       !v3Amount0Min ||
@@ -280,8 +284,7 @@ function V2PairMigration({
     )
       return
 
-    const deadline = signatureData?.deadline ?? (await getDeadline())
-    if (!deadline) throw new Error('could not get deadline')
+    const deadlineToUse = signatureData?.deadline ?? deadline
 
     const data: string[] = []
 
@@ -291,7 +294,7 @@ function V2PairMigration({
         migrator.interface.encodeFunctionData('selfPermit', [
           pair.address,
           `0x${pairBalance.quotient.toString(16)}`,
-          deadline,
+          deadlineToUse,
           signatureData.v,
           signatureData.r,
           signatureData.s,
@@ -326,7 +329,7 @@ function V2PairMigration({
           amount0Min: `0x${v3Amount0Min.toString(16)}`,
           amount1Min: `0x${v3Amount1Min.toString(16)}`,
           recipient: account,
-          deadline,
+          deadline: deadlineToUse,
           refundAsETH: true, // hard-code this for now
         },
       ])
@@ -361,6 +364,8 @@ function V2PairMigration({
   }, [
     migrator,
     account,
+    deadline,
+    blockTimestamp,
     tickLower,
     tickUpper,
     v3Amount0Min,
@@ -368,7 +373,6 @@ function V2PairMigration({
     chainId,
     networkSupportsV2,
     signatureData,
-    getDeadline,
     noLiquidity,
     pair.address,
     pairBalance.quotient,
@@ -391,8 +395,8 @@ function V2PairMigration({
     <AutoColumn gap="20px">
       <ThemedText.DeprecatedBody my={9} style={{ fontWeight: 485, textAlign: 'center' }}>
         <Trans>
-          This tool will safely migrate your {{ noun: isNotUniswap ? `SushiSwap` : `V2` }} liquidity to V3. The process
-          is completely trustless thanks to the
+          This tool will safely migrate your <Select value={isNotUniswap} _true="SushiSwap" _false="V2" other="V2" />{' '}
+          liquidity to V3. The process is completely trustless thanks to the
         </Trans>{' '}
         {chainId && migrator && (
           <ExternalLink href={getExplorerLink(chainId, migrator.address, ExplorerDataType.ADDRESS)}>
@@ -411,7 +415,7 @@ function V2PairMigration({
               <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={false} size={20} />
               <ThemedText.DeprecatedMediumHeader style={{ marginLeft: '8px' }}>
                 <Trans>
-                  {{ symA: currency0.symbol }}/{{ symB: currency1.symbol }} LP Tokens
+                  {currency0.symbol}/{currency1.symbol} LP Tokens
                 </Trans>
               </ThemedText.DeprecatedMediumHeader>
             </RowFixed>
@@ -432,7 +436,7 @@ function V2PairMigration({
               <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={false} size={20} />
               <ThemedText.DeprecatedMediumHeader style={{ marginLeft: '8px' }}>
                 <Trans>
-                  {{ symA: currency0.symbol }}/{{ symB: currency1.symbol }} LP NFT
+                  {currency0.symbol}/{currency1.symbol} LP NFT
                 </Trans>
               </ThemedText.DeprecatedMediumHeader>
             </RowFixed>
@@ -450,7 +454,7 @@ function V2PairMigration({
               >
                 <Trans>
                   You are the first liquidity provider for this Uniswap V3 pool. Your liquidity will migrate at the
-                  current {{ name: isNotUniswap ? 'SushiSwap' : 'V2' }} price.
+                  current {isNotUniswap ? 'SushiSwap' : 'V2'} price.
                 </Trans>
               </ThemedText.DeprecatedBody>
 
@@ -468,8 +472,7 @@ function V2PairMigration({
                   <RowBetween>
                     <ThemedText.DeprecatedBody fontWeight={535} fontSize={14}>
                       <Trans>
-                        {{ name: { name: isNotUniswap ? 'SushiSwap' : 'V2' } }}{' '}
-                        {{ sym: invertPrice ? currency1.symbol : currency0.symbol }} Price:
+                        {isNotUniswap ? 'SushiSwap' : 'V2'} {invertPrice ? currency1.symbol : currency0.symbol} Price:
                       </Trans>{' '}
                       {invertPrice
                         ? `${v2SpotPrice?.invert()?.toSignificant(6)} ${currency0.symbol}`
@@ -487,8 +490,7 @@ function V2PairMigration({
                 <RowBetween>
                   <ThemedText.DeprecatedBody fontSize={14}>
                     <Trans>
-                      {{ name: isNotUniswap ? 'SushiSwap' : 'V2' }}{' '}
-                      {{ sym: invertPrice ? currency1.symbol : currency0.symbol }} Price:
+                      {isNotUniswap ? 'SushiSwap' : 'V2'} {invertPrice ? currency1.symbol : currency0.symbol} Price:
                     </Trans>
                   </ThemedText.DeprecatedBody>
                   <ThemedText.DeprecatedBlack fontSize={14}>
@@ -500,7 +502,7 @@ function V2PairMigration({
 
                 <RowBetween>
                   <ThemedText.DeprecatedBody fontSize={14}>
-                    V3 {invertPrice ? currency1.symbol : currency0.symbol} {t(`Price`)}:
+                    <Trans>V3 {invertPrice ? currency1.symbol : currency0.symbol} Price:</Trans>
                   </ThemedText.DeprecatedBody>
                   <ThemedText.DeprecatedBlack fontSize={14}>
                     {invertPrice
@@ -514,7 +516,7 @@ function V2PairMigration({
                     <Trans>Price difference:</Trans>
                   </ThemedText.DeprecatedBody>
                   <ThemedText.DeprecatedBlack fontSize={14} color="inherit">
-                    {priceDifferenceFraction?.toSignificant(4)}%
+                    <Trans>{priceDifferenceFraction?.toSignificant(4)}%</Trans>
                   </ThemedText.DeprecatedBlack>
                 </RowBetween>
               </AutoColumn>
@@ -529,7 +531,7 @@ function V2PairMigration({
           ) : !noLiquidity && v3SpotPrice ? (
             <RowBetween>
               <ThemedText.DeprecatedBody fontSize={14}>
-                <Trans>V3 {{ sym: invertPrice ? currency1.symbol : currency0.symbol }} Price:</Trans>
+                <Trans>V3 {invertPrice ? currency1.symbol : currency0.symbol} Price:</Trans>
               </ThemedText.DeprecatedBody>
               <ThemedText.DeprecatedBlack fontSize={14}>
                 {invertPrice
@@ -600,11 +602,11 @@ function V2PairMigration({
                 {chainId && refund0 && refund1 ? (
                   <ThemedText.DeprecatedBlack fontSize={12}>
                     <Trans>
-                      At least {{ amtA: formatCurrencyAmount(refund0, 4) }}{' '}
-                      {{ symA: chainId && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(token0) ? 'ETH' : token0.symbol }}{' '}
-                      and {{ amtB: formatCurrencyAmount(refund1, 4) }}{' '}
-                      {{ symB: chainId && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(token1) ? 'ETH' : token1.symbol }}{' '}
-                      will be refunded to your wallet due to selected price range.
+                      At least {formatCurrencyAmount(refund0, 4)}{' '}
+                      {chainId && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(token0) ? 'ETH' : token0.symbol} and{' '}
+                      {formatCurrencyAmount(refund1, 4)}{' '}
+                      {chainId && WRAPPED_NATIVE_CURRENCY[chainId]?.equals(token1) ? 'ETH' : token1.symbol} will be
+                      refunded to your wallet due to selected price range.
                     </Trans>
                   </ThemedText.DeprecatedBlack>
                 ) : null}

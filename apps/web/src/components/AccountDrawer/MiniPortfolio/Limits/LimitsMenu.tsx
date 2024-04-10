@@ -1,3 +1,4 @@
+import { Plural, Trans } from '@lingui/macro'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent } from 'analytics'
@@ -15,9 +16,8 @@ import Column from 'components/Column'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import { ContractTransaction } from 'ethers/lib/ethers'
 import { useContract } from 'hooks/useContract'
-import { Plural, Trans, t } from 'i18n'
 import { useCallback, useMemo, useState } from 'react'
-import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
+import { UniswapXOrderDetails } from 'state/signatures/types'
 import styled from 'styled-components'
 import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
 import { Permit2 } from 'uniswap/src/abis/types/Permit2'
@@ -28,9 +28,13 @@ const Container = styled(Column)`
 `
 
 const StyledCancelButton = styled(ThemeButton)`
+  position: absolute;
   bottom: 0;
   width: 100%;
-  margin: 24px 0 0;
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    position: relative;
+    margin: 24px 0 24px;
+  }
 `
 
 const StyledLimitsDisclaimer = styled(LimitDisclaimer)`
@@ -48,9 +52,7 @@ function useCancelMultipleOrders(orders?: UniswapXOrderDetails[]): () => Promise
     })
 
     return cancelMultipleUniswapXOrders({
-      orders: orders.map((order) => {
-        return { encodedOrder: order.encodedOrder as string, type: order.type as SignatureType }
-      }),
+      encodedOrders: orders.map((order) => order.encodedOrder as string),
       permit2,
       provider,
       chainId: orders?.[0].chainId,
@@ -100,9 +102,10 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
             disabled={cancelState !== CancellationState.NOT_STARTED || selectedOrders.length === 0}
           >
             <Plural
+              id="cancelling"
               value={selectedOrders.length}
-              one={t`Cancel limit`}
-              other={t(`Cancel {{count}} limits`, { count: selectedOrders.length })}
+              one="Cancel limit"
+              other={`Cancel ${selectedOrders.length} limits`}
             />
           </StyledCancelButton>
         )}

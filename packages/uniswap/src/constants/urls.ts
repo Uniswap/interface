@@ -11,15 +11,14 @@ export const uniswapUrls = {
   helpUrl,
   helpRequestUrl: `${helpUrl}/hc/en-us/requests/new`,
   helpArticleUrls: {
-    extensionWaitlist: `${helpUrl}/hc/en-us/articles/24458735271181-Get-started-with-the-Uniswap-Extension`,
     feeOnTransferHelp: `${helpUrl}/hc/en-us/articles/18673568523789-What-is-a-token-fee-`,
     moonpayHelp: `${helpUrl}/hc/en-us/articles/11306574799117-How-to-use-Moon-Pay-on-the-Uniswap-web-app-`,
     networkFeeInfo: `${helpUrl}/hc/en-us/articles/8370337377805-What-is-a-network-fee-`,
-    recoveryPhraseHelp: `${helpUrl}/hc/en-us/articles/11380692567949-How-to-import-my-recovery-phrase-`,
-    supportedNetworks: `${helpUrl}/hc/en-us/articles/14569415293325`,
     swapFeeInfo: `${helpUrl}/hc/en-us/articles/20131678274957`,
-    swapProtection: `${helpUrl}/hc/en-us/articles/18814993155853`,
+    recoveryPhraseHelp: `${helpUrl}/hc/en-us/articles/11380692567949-How-to-import-my-recovery-phrase-`,
     swapSlippage: `${helpUrl}/hc/en-us/articles/8643879653261-What-is-Price-Slippage-`,
+    swapProtection: `${helpUrl}/hc/en-us/articles/18814993155853`,
+    supportedNetworks: `${helpUrl}/hc/en-us/articles/14569415293325`,
     tokenWarning: `${helpUrl}/hc/en-us/articles/8723118437133-What-are-token-warnings-`,
     unitagClaimPeriod: `${helpUrl}/hc/en-us/articles/24009960408589`,
     walletHelp: `${helpUrl}/hc/en-us/categories/11301970439565-Uniswap-Wallet`,
@@ -38,8 +37,7 @@ export const uniswapUrls = {
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
   appUrl: `https://${UNISWAP_APP_HOSTNAME}`,
   interfaceUrl: `https://${UNISWAP_APP_HOSTNAME}/#/swap`,
-  extensionFeedbackFormUrl:
-    'https://docs.google.com/forms/d/e/1FAIpQLSeL1l34nsuTfymPn5LVpovY7W57oc0oj53GNnpt0QG1qRAzqw/viewform', // TODO(EXT-668): Remove this after beta launch
+  extensionFeedbackFormUrl: 'https://forms.gle/RGFhKnABUjdPiYQH6', // TODO(EXT-668): Remove this after F&F launch
   interfaceTokensUrl: `https://${UNISWAP_APP_HOSTNAME}/explore/tokens`,
   interfaceNftItemUrl: `https://${UNISWAP_APP_HOSTNAME}/nfts/asset`,
   unitagsApiUrl: getUnitagsApiUrl(),

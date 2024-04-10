@@ -5,16 +5,16 @@ import { isStablecoin, nativeOnChain } from 'constants/tokens'
 import JSBI from 'jsbi'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
+import ms from 'ms'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { LimitState } from 'state/limit/types'
 import { getWrapInfo } from 'state/routing/gas'
 import { LimitOrderTrade, RouterPreference, SubmittableTrade, SwapFeeInfo, WrapInfo } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getUSDCostPerGas, isClassicTrade } from 'state/routing/utils'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
-import { expiryToDeadlineSeconds } from './expiryToDeadlineSeconds'
+import { useSwapAndLimitContext } from 'state/swap/SwapContext'
+
+import { useLimitsFeesEnabled } from 'featureFlags/flags/limitsFees'
+import { Expiry, LimitState } from './LimitContext'
 
 export type LimitInfo = {
   currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
@@ -23,6 +23,21 @@ export type LimitInfo = {
   limitOrderTrade?: LimitOrderTrade
   marketPrice?: Price<Currency, Currency>
   fee?: SwapFeeInfo
+}
+
+const DAY_SECS = ms('1d') / 1000
+
+export function expiryToDeadlineSeconds(expiry: Expiry): number {
+  switch (expiry) {
+    case Expiry.Day:
+      return DAY_SECS
+    case Expiry.Week:
+      return DAY_SECS * 7
+    case Expiry.Month:
+      return DAY_SECS * 30
+    case Expiry.Year:
+      return DAY_SECS * 365
+  }
 }
 
 // By default, inputCurrency is base currency and outputCurrency is quote currency
@@ -266,7 +281,7 @@ function useMarketPriceAndFee(
     return priceA.multiply(priceB)
   }, [inputCurrency, outputCurrency, skip, tradeA, tradeB])
 
-  const feesEnabled = useFeatureFlag(FeatureFlags.LimitsFees)
+  const feesEnabled = useLimitsFeesEnabled()
   const fee = useMemo(() => {
     if (!marketPrice || !inputCurrency || !outputCurrency || !feesEnabled) return undefined
 

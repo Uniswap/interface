@@ -76,14 +76,6 @@ export const USDT = new Token(
   'Tether USD'
 )
 
-export const USDB = new Token(
-  ChainId.Blast,
-  '0x4300000000000000000000000000000000000003',
-  18,
-  'USDB',
-  'USDB'
-)
-
 export const WBTC = new Token(
   ChainId.Mainnet,
   '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
