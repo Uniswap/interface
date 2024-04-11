@@ -1,6 +1,6 @@
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
-import { DEFAULT_LIST_OF_LISTS, UNSUPPORTED_LIST_URLS } from 'constants/lists'
+import { DEFAULT_LIST_OF_LISTS } from 'constants/lists'
 import TokenSafetyLookupTable from 'constants/tokenSafetyLookup'
 import { useStateRehydrated } from 'hooks/useStateRehydrated'
 import useInterval from 'lib/hooks/useInterval'
@@ -32,8 +32,8 @@ export default function Updater(): null {
     if (!isWindowVisible) return
     DEFAULT_LIST_OF_LISTS.forEach((url) => {
       // Skip validation on unsupported lists
-      const isUnsupportedList = UNSUPPORTED_LIST_URLS.includes(url)
-      fetchList(url, isUnsupportedList).catch((error) => console.debug('interval list fetching error', error))
+      // const isUnsupportedList = UNSUPPORTED_LIST_URLS.includes(url)
+      fetchList(url, true).catch((error) => console.debug('interval list fetching error', error))
     })
   }, [fetchList, isWindowVisible])
 
@@ -50,14 +50,14 @@ export default function Updater(): null {
         fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
       }
     })
-    UNSUPPORTED_LIST_URLS.forEach((listUrl) => {
-      const list = lists[listUrl]
-      if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
-        fetchList(listUrl, /* isUnsupportedList= */ true).catch((error) =>
-          console.debug('list added fetching error', error)
-        )
-      }
-    })
+    // UNSUPPORTED_LIST_URLS.forEach((listUrl) => {
+    //   const list = lists[listUrl]
+    //   if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
+    //     fetchList(listUrl, /* isUnsupportedList= */ true).catch((error) =>
+    //       console.debug('list added fetching error', error)
+    //     )
+    //   }
+    // })
   }, [dispatch, fetchList, lists, rehydrated])
 
   // automatically update lists for every version update

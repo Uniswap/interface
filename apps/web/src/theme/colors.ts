@@ -127,6 +127,8 @@ export const colors = {
   critical: '#FF5F52',
   critical2_dark: '#2E0805',
   critical2_light: '#FFF2F1',
+  nero12_dark: '#484848',
+  nero12_light: '#484848',
   scrim: 'rgba(0, 0, 0, 0.60)',
   borderColor: 'rgba(255, 255, 255, 0.12)'
 }
@@ -194,7 +196,8 @@ export const darkTheme = {
 
   warning2: colors.gold200,
 
-  borderColor: colors.borderColor
+  borderColor: colors.borderColor,
+  nero12: colors.nero12_dark
 }
 
 export const lightTheme: ThemeColors = {
@@ -228,5 +231,6 @@ export const lightTheme: ThemeColors = {
 
   warning2: colors.gold200,
 
-  borderColor: colors.borderColor
+  borderColor: colors.borderColor,
+  nero12: colors.nero12_light
 }

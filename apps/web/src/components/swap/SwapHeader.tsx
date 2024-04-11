@@ -20,7 +20,7 @@ const StyledSwapHeader = styled(RowBetween)`
   color: ${({ theme }) => theme.neutral2};
 `
 
-const HeaderButtonContainer = styled(RowFixed)<{ compact: boolean }>`
+const HeaderButtonContainer = styled(RowFixed) <{ compact: boolean }>`
   gap: ${({ compact }) => (compact ? 0 : 16)}px;
 
   ${SwapHeaderTabButton} {
@@ -35,7 +35,7 @@ const PathnameToTab: { [key: string]: SwapTab } = {
 }
 
 export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean; syncTabToUrl: boolean }) {
-  const limitsEnabled = useFeatureFlag(FeatureFlags.LimitsEnabled)
+  // const limitsEnabled = useFeatureFlag(FeatureFlags.LimitsEnabled)
   const sendEnabled = useFeatureFlag(FeatureFlags.SendEnabled) && !isIFramed()
   const { chainId, currentTab, setCurrentTab } = useSwapAndLimitContext()
   const {
@@ -45,16 +45,16 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (PathnameToTab[pathname] === SwapTab.Limit && (!limitsEnabled || chainId !== ChainId.MAINNET)) {
+    if (PathnameToTab[pathname] === SwapTab.Limit && chainId !== ChainId.X1_TESTNET) {
       navigate(`/${SwapTab.Swap}`, { replace: true })
       return
     }
 
     setCurrentTab(PathnameToTab[pathname] ?? SwapTab.Swap)
-  }, [chainId, limitsEnabled, navigate, pathname, setCurrentTab])
+  }, [chainId, navigate, pathname, setCurrentTab])
 
   // Limits is only available on mainnet for now
-  if (chainId !== ChainId.MAINNET && currentTab === SwapTab.Limit) {
+  if (chainId !== ChainId.X1_TESTNET && currentTab === SwapTab.Limit) {
     setCurrentTab(SwapTab.Swap)
   }
 
@@ -84,17 +84,17 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
         >
           <Trans>Swap</Trans>
         </SwapHeaderTabButton>
-        {limitsEnabled && chainId === ChainId.MAINNET && (
-          <SwapHeaderTabButton
-            $isActive={currentTab === SwapTab.Limit}
-            onClick={() => {
-              onTab(SwapTab.Limit)
-            }}
-          >
-            <Trans>Limit</Trans>
-          </SwapHeaderTabButton>
-        )}
-        {sendEnabled && (
+        {/* {limitsEnabled && chainId === ChainId.X1_TESTNET && ( */}
+        <SwapHeaderTabButton
+          $isActive={currentTab === SwapTab.Limit}
+          onClick={() => {
+            onTab(SwapTab.Limit)
+          }}
+        >
+          <Trans>Limit</Trans>
+        </SwapHeaderTabButton>
+        {/* )} */}
+        {/* {sendEnabled && (
           <SwapHeaderTabButton
             $isActive={currentTab === SwapTab.Send}
             onClick={() => {
@@ -104,7 +104,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
             <Trans>Send</Trans>
           </SwapHeaderTabButton>
         )}
-        <SwapBuyFiatButton />
+        <SwapBuyFiatButton /> */}
       </HeaderButtonContainer>
       {currentTab === SwapTab.Swap && (
         <RowFixed>

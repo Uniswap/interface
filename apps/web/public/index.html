@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html translate="no">
-  <head>
-    <meta charset="utf-8" />
 
-    <title>Uniswap Interface</title>
+<head>
+  <meta charset="utf-8" />
 
-    <!--
+  <title>Uniswap Interface</title>
+
+  <!--
       %PUBLIC_URL% will be replaced with the URL of the `public` folder during build.
       Only files inside the `public` folder can be referenced from the HTML.
     -->
-    <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/images/192x192_App_Icon.png" />
-    <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/images/512x512_App_Icon.png" />
+  <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/images/192x192_App_Icon.png" />
+  <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/images/512x512_App_Icon.png" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#fff" />
-    <% const cspConfig = require('./csp.json'); %>
-    <meta
-      http-equiv="Content-Security-Policy" 
-      content="default-src <%= cspConfig.defaultSrc.join(' ') %>; script-src <%= cspConfig.scriptSrc.join(' ') %>; style-src <%= cspConfig.styleSrc.join(' ') %>; img-src <%= cspConfig.imgSrc.join(' ') %>; frame-src <%= cspConfig.frameSrc.join(' ') %>; connect-src <%= cspConfig.connectSrc.join(' ') %>; worker-src <%= cspConfig.workerSrc.join(' ') %>;"
-    >
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#fff" />
+  <% const cspConfig=require('./csp.json'); %>
+    <meta http-equiv="Content-Security-Policy"
+      content="default-src <%= cspConfig.defaultSrc.join(' ') %>; script-src <%= cspConfig.scriptSrc.join(' ') %>; style-src <%= cspConfig.styleSrc.join(' ') %>; img-src <%= cspConfig.imgSrc.join(' ') %>; frame-src <%= cspConfig.frameSrc.join(' ') %>; connect-src <%= cspConfig.connectSrc.join(' ') %>; worker-src <%= cspConfig.workerSrc.join(' ') %>;">
+
     <!-- 
       Apple Smart App Banner for Safari on iOS
       https://developer.apple.com/documentation/webkit/promoting_apps_with_smart_app_banners
@@ -33,8 +32,8 @@
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
-    <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
-    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
+    <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin />
+    <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin />
 
     <link rel="preload" href="%PUBLIC_URL%/fonts/Roboto-Black.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="%PUBLIC_URL%/fonts/Roboto-BlackItalic.ttf" as="font" type="font/ttf" crossorigin />
@@ -48,7 +47,7 @@
     <link rel="preload" href="%PUBLIC_URL%/fonts/Roboto-Regular.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="%PUBLIC_URL%/fonts/Thin.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="preload" href="%PUBLIC_URL%/fonts/ThinItalic.ttf" as="font" type="font/ttf" crossorigin />
-   
+
     <style>
       * {
         font-family: 'Roboto';
@@ -63,7 +62,7 @@
         font-weight: 535;
         font-style: normal;
         font-display: block;
-        src: 
+        src:
           url('%PUBLIC_URL%/fonts/Roboto-Medium.ttf') format('truetype');
       }
 
@@ -72,7 +71,7 @@
         font-weight: 485;
         font-style: normal;
         font-display: block;
-        src: 
+        src:
           url('%PUBLIC_URL%/fonts/Roboto-Medium.ttf') format('truetype');
       }
 
@@ -122,7 +121,7 @@
         min-height: 100%;
       }
 
-      .bg-icon{
+      .bg-icon {
         position: absolute;
         right: 0;
         bottom: 0;
@@ -140,16 +139,26 @@
         }
       }
     </style>
-  </head>
+</head>
 
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
 
-    <div id="root">
-      <!-- Triggers the font to load immediately and then is replaced by the app -->
-      <div>&emsp;</div>
-    </div>
-    <img class="bg-icon" src='./images/background_icon.svg'/>
-    <div id="background-radial-gradient"></div>
-  </body>
+  <div id="root">
+    <!-- Triggers the font to load immediately and then is replaced by the app -->
+    <div>&emsp;</div>
+  </div>
+  <img class="bg-icon" src='./images/background_icon.svg' />
+  <div id="background-radial-gradient"></div>
+</body>
+<script>
+  if (typeof window !== "undefined") {
+    // @ts-ignore
+    window.Browser = {
+      T: () => {
+      }
+    };
+  }
+</script>
+
 </html>

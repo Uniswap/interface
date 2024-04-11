@@ -18,15 +18,15 @@ export interface InteractiveToken {
 }
 
 export const approvedERC20: InteractiveToken[] = [
-  {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    address: NATIVE_CHAIN_ID,
-    chain: Chain.Ethereum,
-    standard: TokenStandard.ERC20,
-    color: '#627EEA',
-    logoUrl: ethereumLogo,
-  },
+  // {
+  //   name: 'Ethereum',
+  //   symbol: 'ETH',
+  //   address: NATIVE_CHAIN_ID,
+  //   chain: Chain.Ethereum,
+  //   standard: TokenStandard.ERC20,
+  //   color: '#627EEA',
+  //   logoUrl: ethereumLogo,
+  // },
   {
     name: 'USDCoin',
     symbol: 'USDC',

@@ -5,7 +5,7 @@ import { AppState } from 'state/reducer'
 import sortByListPriority from 'utils/listSort'
 
 import BROKEN_LIST from '../../constants/tokenLists/broken.tokenlist.json'
-import { DEFAULT_ACTIVE_LIST_URLS, UNSUPPORTED_LIST_URLS } from './../../constants/lists'
+import { DEFAULT_ACTIVE_LIST_URLS } from './../../constants/lists'
 import EXTENDED_TOKEN_LIST from './../../constants/extendedList.json';
 
 type Mutable<T> = {
@@ -67,7 +67,6 @@ export function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAd
 
 // get all the tokens from active lists, combine with local default tokens
 export function useCombinedActiveList(): TokenAddressMap {
-  console.log('activeTokens---', EXTENDED_TOKEN_LIST)
   let activeTokens = useCombinedTokenMapFromUrls(DEFAULT_ACTIVE_LIST_URLS)
   const extendedList = tokensToChainTokenMap(EXTENDED_TOKEN_LIST);
   activeTokens = { ...activeTokens, ...extendedList}
@@ -80,8 +79,8 @@ export function useUnsupportedTokenList(): TokenAddressMap {
   const brokenListMap = useMemo(() => tokensToChainTokenMap(BROKEN_LIST), [])
 
   // get dynamic list of unsupported tokens
-  const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
+  // const loadedUnsupportedListMap = useCombinedTokenMapFromUrls(UNSUPPORTED_LIST_URLS)
 
   // format into one token address map
-  return useMemo(() => combineMaps(brokenListMap, loadedUnsupportedListMap), [brokenListMap, loadedUnsupportedListMap])
+  return useMemo(() => (brokenListMap), [brokenListMap])
 }

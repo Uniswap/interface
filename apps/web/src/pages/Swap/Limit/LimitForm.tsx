@@ -17,7 +17,7 @@ import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { Field } from 'components/swap/constants'
-import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
+import { ArrowContainer, ArrowWrapper, SwapSection, OutputSwapSection, SwapWrapperContainer } from 'components/swap/styled'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
@@ -52,8 +52,7 @@ const CustomHeightSwapSection = styled(SwapSection)`
 `
 
 const ShortArrowWrapper = styled(ArrowWrapper)`
-  margin-top: -22px;
-  margin-bottom: -22px;
+  margin-bottom: -20px;
 `
 
 const StyledAlertIcon = styled(AlertTriangle)`
@@ -64,7 +63,8 @@ const StyledAlertIcon = styled(AlertTriangle)`
 `
 
 const LimitDisclaimerContainer = styled(Row)`
-  background-color: ${({ theme }) => theme.surface2};
+  background-color: ${({ theme }) => theme.surface3};
+  border: 1px solid ${({ theme }) => theme.nero12};
   border-radius: 12px;
   padding: 12px;
   margin-top: 12px;
@@ -72,6 +72,15 @@ const LimitDisclaimerContainer = styled(Row)`
 
 const DisclaimerText = styled(ThemedText.LabelSmall)`
   line-height: 20px;
+`
+
+const FeeContainer = styled(ThemedText.LabelSmall)`
+  display: flex;
+  gap: 4px;
+  color: ${({ theme }) => theme.neutral2};
+`
+const Fee = styled(ThemedText.LabelSmall)`
+  color: #40B66B;
 `
 
 export const LIMIT_FORM_CURRENCY_SEARCH_FILTERS: CurrencySearchFilters = {
@@ -221,7 +230,8 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   const allowance = usePermit2Allowance(
     parsedAmounts.INPUT?.currency?.isNative ? undefined : (parsedAmounts.INPUT as CurrencyAmount<Token>),
-    isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
+    // isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
+    undefined,
     TradeFillType.UniswapX
   )
 
@@ -240,16 +250,16 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
     const formattedInput = limitState.isInputAmountFixed
       ? limitState.inputAmount
       : formatCurrencyAmount({
-          amount: derivedLimitInfo.parsedAmounts[Field.INPUT],
-          type: NumberType.SwapTradeAmount,
-          placeholder: '',
-        })
+        amount: derivedLimitInfo.parsedAmounts[Field.INPUT],
+        type: NumberType.SwapTradeAmount,
+        placeholder: '',
+      })
     const formattedOutput = limitState.isInputAmountFixed
       ? formatCurrencyAmount({
-          amount: derivedLimitInfo.parsedAmounts[Field.OUTPUT],
-          type: NumberType.SwapTradeAmount,
-          placeholder: '',
-        })
+        amount: derivedLimitInfo.parsedAmounts[Field.OUTPUT],
+        type: NumberType.SwapTradeAmount,
+        placeholder: '',
+      })
       : limitState.outputAmount
 
     return {
@@ -290,113 +300,123 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   return (
     <Column gap="xs">
-      <CustomHeightSwapSection>
-        <LimitPriceInputPanel onCurrencySelect={onSelectCurrency} />
-      </CustomHeightSwapSection>
-      <SwapSection>
-        <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
-          <SwapCurrencyInputPanel
-            label={<Trans>You pay</Trans>}
-            value={formattedAmounts[Field.INPUT]}
-            showMaxButton={showMaxButton}
-            currency={inputCurrency ?? null}
-            onUserInput={onTypeInput('inputAmount')}
-            onCurrencySelect={(currency) => onSelectCurrency('inputCurrency', currency)}
-            otherCurrency={outputCurrency}
-            onMax={handleMaxInput}
-            currencySearchFilters={LIMIT_FORM_CURRENCY_SEARCH_FILTERS}
-            id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
+      <SwapWrapperContainer>
+        <CustomHeightSwapSection>
+          <LimitPriceInputPanel onCurrencySelect={onSelectCurrency} />
+        </CustomHeightSwapSection>
+        <SwapSection>
+          <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
+            <SwapCurrencyInputPanel
+              label={<Trans>You pay</Trans>}
+              value={formattedAmounts[Field.INPUT]}
+              showMaxButton={showMaxButton}
+              currency={inputCurrency ?? null}
+              onUserInput={onTypeInput('inputAmount')}
+              onCurrencySelect={(currency) => onSelectCurrency('inputCurrency', currency)}
+              otherCurrency={outputCurrency}
+              onMax={handleMaxInput}
+              currencySearchFilters={LIMIT_FORM_CURRENCY_SEARCH_FILTERS}
+              id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
+            />
+          </Trace>
+        </SwapSection>
+        <ShortArrowWrapper clickable={isSupportedChain(chainId)}>
+          <TraceEvent
+            events={[BrowserEvent.onClick]}
+            name={SwapEventName.SWAP_TOKENS_REVERSED}
+            element={InterfaceElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
+          >
+            <ArrowContainer data-testid="swap-currency-button" onClick={switchTokens} color={theme.neutral1}>
+              <ArrowDown size="16" color={theme.neutral1} />
+            </ArrowContainer>
+          </TraceEvent>
+        </ShortArrowWrapper>
+        <OutputSwapSection>
+          <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
+            <SwapCurrencyInputPanel
+              label={<Trans>You receive</Trans>}
+              value={formattedAmounts[Field.OUTPUT]}
+              showMaxButton={false}
+              currency={outputCurrency ?? null}
+              onUserInput={onTypeInput('outputAmount')}
+              onCurrencySelect={(currency) => onSelectCurrency('outputCurrency', currency)}
+              otherCurrency={inputCurrency}
+              currencySearchFilters={LIMIT_FORM_CURRENCY_SEARCH_FILTERS}
+              id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
+            />
+          </Trace>
+        </OutputSwapSection>
+        <div style={{ padding: '0px 16px 16px 16px' }}>
+          {parsedLimitPrice && <LimitExpirySection />}
+          <SubmitOrderButton
+            inputCurrency={inputCurrency}
+            handleContinueToReview={() => {
+              setShowConfirm(true)
+            }}
+            trade={limitOrderTrade}
+            hasInsufficientFunds={hasInsufficientFunds}
+            limitPriceError={priceError}
           />
-        </Trace>
-      </SwapSection>
-      <ShortArrowWrapper clickable={isSupportedChain(chainId)}>
-        <TraceEvent
-          events={[BrowserEvent.onClick]}
-          name={SwapEventName.SWAP_TOKENS_REVERSED}
-          element={InterfaceElementName.SWAP_TOKENS_REVERSE_ARROW_BUTTON}
-        >
-          <ArrowContainer data-testid="swap-currency-button" onClick={switchTokens} color={theme.neutral1}>
-            <ArrowDown size="16" color={theme.neutral1} />
-          </ArrowContainer>
-        </TraceEvent>
-      </ShortArrowWrapper>
-      <SwapSection>
-        <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
-          <SwapCurrencyInputPanel
-            label={<Trans>You receive</Trans>}
-            value={formattedAmounts[Field.OUTPUT]}
-            showMaxButton={false}
-            currency={outputCurrency ?? null}
-            onUserInput={onTypeInput('outputAmount')}
-            onCurrencySelect={(currency) => onSelectCurrency('outputCurrency', currency)}
-            otherCurrency={inputCurrency}
-            currencySearchFilters={LIMIT_FORM_CURRENCY_SEARCH_FILTERS}
-            id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
+          {priceError && inputCurrency && outputCurrency && limitOrderTrade && (
+            <LimitPriceError
+              priceAdjustmentPercentage={currentPriceAdjustment}
+              inputCurrency={inputCurrency}
+              outputCurrency={outputCurrency}
+              priceInverted={limitState.limitPriceInverted}
+            />
+          )}
+          {account && (
+            <OpenLimitOrdersButton
+              account={account}
+              openLimitsMenu={() => {
+                setMenu(MenuState.LIMITS)
+                openAccountDrawer()
+              }}
+            />
+          )}
+        </div>
+        <div style={{ padding: '16px' }}>
+          <FeeContainer>
+            <Trans>Platform fee: <Fee>0.1%</Fee></Trans>
+          </FeeContainer>
+          <LimitDisclaimerContainer>
+            {/* <StyledAlertIcon size={20} color={theme.neutral2} /> */}
+            <DisclaimerText>
+              <Trans>
+                You will receive exactly what you have specified, minus platform fees.{' '}
+                <ExternalLink href="#">
+                  <Trans>Learn more</Trans>
+                </ExternalLink>
+              </Trans>
+            </DisclaimerText>
+          </LimitDisclaimerContainer>
+        </div>
+        {limitOrderTrade && showConfirm && (
+          <ConfirmSwapModal
+            allowance={allowance}
+            trade={limitOrderTrade}
+            inputCurrency={inputCurrency}
+            allowedSlippage={ZERO_PERCENT}
+            clearSwapState={() => {
+              setSwapError(undefined)
+              setSwapResult(undefined)
+            }}
+            fiatValueInput={fiatValueTradeInput}
+            fiatValueOutput={fiatValueTradeOutput}
+            onCurrencySelection={(field: Field, currency) => {
+              onSelectCurrency(field === Field.INPUT ? 'inputCurrency' : 'outputCurrency', currency)
+            }}
+            onConfirm={handleSubmit}
+            onDismiss={() => {
+              setShowConfirm(false)
+              setSwapResult(undefined)
+            }}
+            swapResult={swapResult}
+            swapError={swapError}
           />
-        </Trace>
-      </SwapSection>
-      {parsedLimitPrice && <LimitExpirySection />}
-      <SubmitOrderButton
-        inputCurrency={inputCurrency}
-        handleContinueToReview={() => {
-          setShowConfirm(true)
-        }}
-        trade={limitOrderTrade}
-        hasInsufficientFunds={hasInsufficientFunds}
-        limitPriceError={priceError}
-      />
-      {priceError && inputCurrency && outputCurrency && limitOrderTrade && (
-        <LimitPriceError
-          priceAdjustmentPercentage={currentPriceAdjustment}
-          inputCurrency={inputCurrency}
-          outputCurrency={outputCurrency}
-          priceInverted={limitState.limitPriceInverted}
-        />
-      )}
-      {account && (
-        <OpenLimitOrdersButton
-          account={account}
-          openLimitsMenu={() => {
-            setMenu(MenuState.LIMITS)
-            openAccountDrawer()
-          }}
-        />
-      )}
-      <LimitDisclaimerContainer>
-        <StyledAlertIcon size={20} color={theme.neutral2} />
-        <DisclaimerText>
-          <Trans>
-            Limits may not execute exactly when tokens reach the specified price.{' '}
-            <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/24300813697933">
-              <Trans>Learn more</Trans>
-            </ExternalLink>
-          </Trans>
-        </DisclaimerText>
-      </LimitDisclaimerContainer>
-      {limitOrderTrade && showConfirm && (
-        <ConfirmSwapModal
-          allowance={allowance}
-          trade={limitOrderTrade}
-          inputCurrency={inputCurrency}
-          allowedSlippage={ZERO_PERCENT}
-          clearSwapState={() => {
-            setSwapError(undefined)
-            setSwapResult(undefined)
-          }}
-          fiatValueInput={fiatValueTradeInput}
-          fiatValueOutput={fiatValueTradeOutput}
-          onCurrencySelection={(field: Field, currency) => {
-            onSelectCurrency(field === Field.INPUT ? 'inputCurrency' : 'outputCurrency', currency)
-          }}
-          onConfirm={handleSubmit}
-          onDismiss={() => {
-            setShowConfirm(false)
-            setSwapResult(undefined)
-          }}
-          swapResult={swapResult}
-          swapError={swapError}
-        />
-      )}
+        )}
+
+      </SwapWrapperContainer>
     </Column>
   )
 }

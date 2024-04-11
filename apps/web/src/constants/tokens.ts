@@ -64,6 +64,11 @@ export const USDC_POLYGON_MUMBAI = new Token(
 export const USDC_CELO = new Token(ChainId.CELO, '0xceba9300f2b948710d2653dd7b07f33a8b32118c', 6, 'USDC', 'USD Coin')
 export const USDC_BASE = new Token(ChainId.BASE, '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913', 6, 'USDC', 'USD Coin')
 
+
+export const USDC_X1_TestNet = new Token(ChainId.X1_TESTNET, '0x04292af1cf8687235a83766d55b307880fc5e76d', 6, 'USDC', 'USD Coin')
+export const USDT_X1_TestNet = new Token(ChainId.X1_TESTNET, '0xded3ac2a172a21a729063c39da55c030ec4a8cc9', 6, 'USDT', 'Tether USD')
+export const DAI_X1_TestNet = new Token(ChainId.X1_TESTNET, '0x1b981e783d8d139e74ebbd7be5d99d8a0a7eeb0a', 18, 'DAI', 'Dai Stablecoin')
+
 export const DAI = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin')
 export const DAI_ARBITRUM_ONE = new Token(
   ChainId.ARBITRUM_ONE,
@@ -217,7 +222,6 @@ export const ETH_BSC = new Token(ChainId.BNB, '0x2170Ed0880ac9A755fd29B2688956BD
 export const BTC_BSC = new Token(ChainId.BNB, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'BTCB')
 export const BUSD_BSC = new Token(ChainId.BNB, '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', 18, 'BUSD', 'BUSD')
 export const DAI_BSC = new Token(ChainId.BNB, '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', 18, 'DAI', 'DAI')
-export const OKB_BSC = new Token(ChainId.BNB, '0x75231f58b43240c9718dd58b4967c5114342a86c', 18, 'OKB', 'OKB')
 
 export const USDC_AVALANCHE = new Token(
   ChainId.AVALANCHE,
@@ -370,6 +374,27 @@ export function isPolygon(chainId: number): chainId is ChainId.POLYGON | ChainId
   return chainId === ChainId.POLYGON_MUMBAI || chainId === ChainId.POLYGON
 }
 
+export function isX1Testnet(chainId: number): chainId is ChainId.X1_TESTNET {
+  return chainId === ChainId.X1_TESTNET
+}
+
+class X1TestnetNativeCurrency extends NativeCurrency {
+  equals(other: Currency): boolean {
+    return other.isNative && other.chainId === this.chainId
+  }
+
+  get wrapped(): Token {
+    if (!isX1Testnet(this.chainId)) throw new Error('Not X1 Testnet')
+    const wrapped = WRAPPED_NATIVE_CURRENCY[this.chainId]
+    invariant(wrapped instanceof Token)
+    return wrapped
+  }
+
+  public constructor(chainId: number) {
+    if (!isX1Testnet(chainId)) throw new Error('Not X1 Testnet')
+    super(chainId, 18, 'OKB', 'Wrapped OKB')
+  }
+}
 class PolygonNativeCurrency extends NativeCurrency {
   equals(other: Currency): boolean {
     return other.isNative && other.chainId === this.chainId
@@ -466,6 +491,8 @@ export function nativeOnChain(chainId: number): NativeCurrency | Token {
     nativeCurrency = new BscNativeCurrency(chainId)
   } else if (isAvalanche(chainId)) {
     nativeCurrency = new AvaxNativeCurrency(chainId)
+  } else if (isX1Testnet(chainId)) {
+    nativeCurrency = new X1TestnetNativeCurrency(chainId)
   } else {
     nativeCurrency = ExtendedEther.onChain(chainId)
   }
@@ -488,6 +515,7 @@ export const TOKEN_SHORTHANDS: { [shorthand: string]: { [chainId in ChainId]?: s
     [ChainId.GOERLI]: USDC_GOERLI.address,
     [ChainId.SEPOLIA]: USDC_SEPOLIA.address,
     [ChainId.AVALANCHE]: USDC_AVALANCHE.address,
+    [ChainId.X1_TESTNET]: USDC_X1_TestNet.address,
   },
 }
 
@@ -511,6 +539,7 @@ const STABLECOINS: { [chainId in ChainId]: Token[] } = {
   [ChainId.BASE_GOERLI]: [],
   [ChainId.OPTIMISM_SEPOLIA]: [USDC_SEPOLIA],
   [ChainId.ARBITRUM_SEPOLIA]: [],
+  [ChainId.X1_TESTNET]: [USDC_X1_TestNet, USDT_X1_TestNet, DAI_X1_TestNet],
 }
 
 export function isStablecoin(currency?: Currency): boolean {

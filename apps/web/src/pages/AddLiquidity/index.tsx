@@ -541,8 +541,8 @@ function AddLiquidity() {
           }}
           disabled={
             !isValid ||
-            (!argentWalletContract && approvalA !== ApprovalState.APPROVED && !depositADisabled) ||
-            (!argentWalletContract && approvalB !== ApprovalState.APPROVED && !depositBDisabled)
+            (approvalA !== ApprovalState.APPROVED && !depositADisabled) ||
+            (approvalB !== ApprovalState.APPROVED && !depositBDisabled)
           }
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
         >

@@ -47,7 +47,6 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   height: 40px;
   width: 40px;
   position: relative;
-  margin-top: -18px;
   margin-bottom: -20px;
   margin-left: auto;
   margin-right: auto;
@@ -166,7 +165,7 @@ export const SwapSection = styled.div`
 `
 
 export const OutputSwapSection = styled(SwapSection)`
-  border-top: ${({ theme }) => `2px solid ${theme.borderColor}`};
+  border-top: ${({ theme }) => `1px solid ${theme.borderColor}`};
   border-radius: 0px;
 `
 

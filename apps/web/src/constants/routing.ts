@@ -44,6 +44,11 @@ import {
   WETH_POLYGON,
   WETH_POLYGON_MUMBAI,
   WRAPPED_NATIVE_CURRENCY,
+
+  OKB,
+  USDC_X1_TestNet,
+  USDT_X1_TestNet,
+  DAI_X1_TestNet,
   nativeOnChain,
 } from './tokens'
 
@@ -130,6 +135,13 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDC_AVALANCHE,
     USDT_AVALANCHE,
     WETH_AVALANCHE,
+  ],
+
+  [ChainId.X1_TESTNET]: [
+    nativeOnChain(ChainId.X1_TESTNET),
+    DAI_X1_TestNet,
+    USDC_X1_TestNet,
+    USDT_X1_TestNet,
   ],
 }
 
