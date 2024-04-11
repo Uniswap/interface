@@ -150,7 +150,10 @@ export function useDerivedMarketInfo(
 } {
   const { account, chainId } = useActiveWeb3React()
   const isGaslessMode =
-    useIsGaslessMode() && chainId !== SupportedChainId.MAINNET && chainId !== SupportedChainId.OPTIMISM
+    useIsGaslessMode() &&
+    chainId !== SupportedChainId.OPTIMISM &&
+    chainId !== SupportedChainId.BASE &&
+    chainId !== SupportedChainId.MAINNET
 
   const {
     independentField,

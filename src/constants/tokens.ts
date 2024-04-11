@@ -52,9 +52,32 @@ export const USDC_POLYGON = new Token(
   'USDC',
   'USD//C'
 )
+
+export const USDC_BASE = new Token(
+  SupportedChainId.BASE,
+  '0x833589fcd6edb6e08f4c7c32d4f71b54bda02913',
+  6,
+  'USDC',
+  'USD//C'
+)
 export const DAI_POLYGON = new Token(
   SupportedChainId.POLYGON,
   '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
+  18,
+  'DAI',
+  'Dai Stablecoin'
+)
+
+export const USDBC_BASE = new Token(
+  SupportedChainId.BASE,
+  '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
+  6,
+  'USDbC',
+  'USDbC Stablecoin'
+)
+export const DAI_BASE = new Token(
+  SupportedChainId.BASE,
+  '0x50c5725949A6F0c72E6C4a641F24049A917DB0Cb',
   18,
   'DAI',
   'Dai Stablecoin'
@@ -214,6 +237,13 @@ export const KROM: { [chainId: number]: Token } = {
     'KROM',
     'Kromatika'
   ),
+  [SupportedChainId.BASE]: new Token( // todo*: edit this when KROM is deployed on BASE
+    SupportedChainId.BASE,
+    KROM_TOKEN_ADDRESSES[SupportedChainId.BASE],
+    18,
+    'KROM',
+    'Kromatika'
+  ),
 }
 
 export const WETH: { [chainId: number]: Token } = {
@@ -245,12 +275,20 @@ export const WETH: { [chainId: number]: Token } = {
     'WETH',
     'Wrapped Ether'
   ),
+  [SupportedChainId.BASE]: new Token(
+    SupportedChainId.BASE,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
+  ),
 }
 
 export const CHAIN_NATIVE_TOKEN_SYMBOL: { [chainId: number]: string } = {
   [SupportedChainId.OPTIMISM]: 'ETH',
   [SupportedChainId.ARBITRUM_ONE]: 'ETH',
   [SupportedChainId.MAINNET]: 'ETH',
+  [SupportedChainId.BASE]: 'ETH',
   [SupportedChainId.POLYGON]: 'MATIC',
 }
 
@@ -271,6 +309,15 @@ export const WETH_POLYGON = new Token(
   'WETH',
   'Wrapped Ether'
 )
+
+export const WETH_BASE = new Token(
+  SupportedChainId.BASE,
+  '0x4200000000000000000000000000000000000006',
+  18,
+  'WETH',
+  'Wrapped Ether'
+)
+
 export const UNI: { [chainId: number]: Token } = {
   [SupportedChainId.MAINNET]: new Token(SupportedChainId.MAINNET, UNI_ADDRESS[1], 18, 'UNI', 'Uniswap'),
   [SupportedChainId.RINKEBY]: new Token(SupportedChainId.RINKEBY, UNI_ADDRESS[4], 18, 'UNI', 'Uniswap'),
@@ -322,6 +369,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
     18,
     'WMATIC',
     'Wrapped MATIC'
+  ),
+  [SupportedChainId.BASE]: new Token(
+    SupportedChainId.BASE,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether'
   ),
 }
 

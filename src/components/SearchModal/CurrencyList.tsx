@@ -2,6 +2,7 @@ import { Trans } from '@lingui/macro'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { LightGreyCard } from 'components/Card'
 import QuestionHelper from 'components/QuestionHelper'
+import { SupportedChainId } from 'constants/chains'
 import { KROM, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import useTheme from 'hooks/useTheme'
 import { CSSProperties, MutableRefObject, useCallback, useMemo } from 'react'
@@ -217,7 +218,7 @@ export default function CurrencyList({
   }, [currencies, otherListTokens])
   const { chainId } = useActiveWeb3React()
 
-  if (chainId && currencies[0]?.wrapped == WRAPPED_NATIVE_CURRENCY[chainId]) {
+  if (chainId && chainId !== SupportedChainId.BASE && currencies[0]?.wrapped == WRAPPED_NATIVE_CURRENCY[chainId]) {
     chainId && itemData.unshift(KROM[chainId].wrapped)
   }
 

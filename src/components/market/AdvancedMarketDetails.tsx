@@ -55,7 +55,10 @@ export function AdvancedMarketDetails({
   const theme = useContext(ThemeContext)
   const { chainId } = useActiveWeb3React()
   const isGaslessMode =
-    useIsGaslessMode() && chainId !== SupportedChainId.MAINNET && chainId !== SupportedChainId.OPTIMISM
+    useIsGaslessMode() &&
+    chainId !== SupportedChainId.OPTIMISM &&
+    chainId !== SupportedChainId.BASE &&
+    chainId !== SupportedChainId.MAINNET
 
   return !trade ? null : (
     <AutoColumn gap="8px">

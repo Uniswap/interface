@@ -170,6 +170,8 @@ const BridgeLabel = ({ chainId }: { chainId: SupportedChainId }) => {
     case SupportedChainId.POLYGON:
     case SupportedChainId.POLYGON_MUMBAI:
       return <Trans>Polygon Bridge</Trans>
+    case SupportedChainId.BASE:
+      return <Trans>Base Bridge</Trans>
     default:
       return <Trans>Bridge</Trans>
   }
@@ -185,6 +187,8 @@ const ExplorerLabel = ({ chainId }: { chainId: SupportedChainId }) => {
     case SupportedChainId.POLYGON:
     case SupportedChainId.POLYGON_MUMBAI:
       return <Trans>Polygonscan</Trans>
+    case SupportedChainId.BASE:
+      return <Trans>Basescan</Trans>
     default:
       return <Trans>Etherscan</Trans>
   }
@@ -284,6 +288,7 @@ export default function NetworkSelector() {
           <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.POLYGON} />
           <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.OPTIMISM} />
           <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.ARBITRUM_ONE} />
+          <Row onSelectChain={handleRowClick} targetChain={SupportedChainId.BASE} />
         </FlyoutMenu>
       )}
     </SelectorWrapper>

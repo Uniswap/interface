@@ -1,10 +1,11 @@
+import baseLogo from 'assets/images/base-logo.png'
 import ethereumLogoUrl from 'assets/images/ethereum-logo.png'
 import arbitrumLogoUrl from 'assets/svg/arbitrum_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
 import ms from 'ms.macro'
 
-import { ARBITRUM_LIST, OPTIMISM_LIST } from './lists'
+import { ARBITRUM_LIST, BASE_LIST, OPTIMISM_LIST } from './lists'
 
 export enum SupportedChainId {
   MAINNET = 1,
@@ -12,7 +13,7 @@ export enum SupportedChainId {
   RINKEBY = 4,
   GOERLI = 5,
   KOVAN = 42,
-
+  BASE = 8453,
   ARBITRUM_ONE = 42161,
   ARBITRUM_RINKEBY = 421611,
   OPTIMISM = 10,
@@ -41,6 +42,7 @@ export enum ChainName {
   smartbch = 10000,
   arbitrumrinkeby = 421611,
   kovan = 42,
+  base = 8453,
 }
 
 const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
@@ -50,16 +52,13 @@ if (typeof INFURA_KEY === 'undefined') {
 
 export const ALL_SUPPORTED_CHAIN_IDS: SupportedChainId[] = [
   SupportedChainId.MAINNET,
-  // SupportedChainId.ROPSTEN,
-  // SupportedChainId.RINKEBY,
-  // SupportedChainId.GOERLI,
   SupportedChainId.KOVAN,
 
   SupportedChainId.ARBITRUM_ONE,
   SupportedChainId.ARBITRUM_RINKEBY,
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,
-
+  SupportedChainId.BASE,
   SupportedChainId.POLYGON,
   SupportedChainId.POLYGON_MUMBAI,
 ]
@@ -81,6 +80,7 @@ export const L2_CHAIN_IDS = [
   SupportedChainId.ARBITRUM_RINKEBY,
   SupportedChainId.OPTIMISM,
   SupportedChainId.OPTIMISTIC_KOVAN,
+  SupportedChainId.BASE,
 ] as const
 
 export type SupportedL2ChainId = typeof L2_CHAIN_IDS[number]
@@ -97,6 +97,7 @@ export const INFURA_NETWORK_URLS: { [key in SupportedChainId]: string } = {
   [SupportedChainId.ARBITRUM_RINKEBY]: `https://arbitrum-rinkeby.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.POLYGON]: `https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`,
   [SupportedChainId.POLYGON_MUMBAI]: `https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`,
+  [SupportedChainId.BASE]: `https://base-mainnet.infura.io/v3/${INFURA_KEY}`,
 }
 
 interface AddNetworkInfo {
@@ -295,6 +296,22 @@ export const CHAIN_INFO: ChainInfo = {
     addNetworkInfo: {
       nativeCurrency: { name: 'Polygon Mumbai Matic', symbol: 'mMATIC', decimals: 18 },
       rpcUrl: 'https://rpc-endpoints.superfluid.dev/mumbai',
+    },
+  },
+  [SupportedChainId.BASE]: {
+    networkType: NetworkType.L2,
+    blockWaitMsBeforeWarning: ms`10m`,
+    bridge: 'https://bridge.base.org/deposit',
+    docs: 'https://docs.base.org/',
+    explorer: 'https://basescan.org/',
+    infoLink: 'https://info.uniswap.org/#/base',
+    label: 'Base',
+    logoUrl: baseLogo,
+    defaultListUrl: BASE_LIST,
+    helpCenterUrl: 'https://support.uniswap.org/hc/en-us',
+    addNetworkInfo: {
+      nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+      rpcUrl: 'https://base.llamarpc.com',
     },
   },
 }

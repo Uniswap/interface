@@ -260,7 +260,10 @@ export default function SwapWidget() {
 
   // for expert mode
   const isGaslessMode =
-    useIsGaslessMode() && chainId !== SupportedChainId.MAINNET && chainId !== SupportedChainId.OPTIMISM
+    useIsGaslessMode() &&
+    chainId !== SupportedChainId.OPTIMISM &&
+    chainId !== SupportedChainId.BASE &&
+    chainId !== SupportedChainId.MAINNET
 
   const obj = sessionStorage.getItem('referral')
 

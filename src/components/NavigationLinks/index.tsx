@@ -1,4 +1,5 @@
 import { Trans } from '@lingui/macro'
+import { useActiveWeb3React } from 'hooks/web3'
 import { darken } from 'polished'
 import { NavLink } from 'react-router-dom'
 import { Text } from 'rebass'
@@ -134,6 +135,7 @@ const StyledNavLinkAlt = styled.button`
 
 export default function NavigationLinks() {
   const togglePerpModal = useTogglePerpModal()
+  const { chainId } = useActiveWeb3React()
 
   const handleTogglePerpModal = () => {
     const tickingDate = localStorage.getItem('KromTOUTicked')
@@ -154,11 +156,20 @@ export default function NavigationLinks() {
   return (
     <NavFrame>
       <NavLinks>
-        <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
-          <Text fontSize={16} fontWeight={400}>
-            <Trans>Limit/FELO</Trans>
+        {chainId !== 8453 ? (
+          <StyledNavLink id={`swap-nav-link`} to={'/limitorder'}>
+            <Text fontSize={16} fontWeight={400}>
+              <Trans>Limit/FELO</Trans>
+            </Text>
+          </StyledNavLink>
+        ) : (
+          <Text fontSize={16} fontWeight={400} alt="Coming Soon" style={{ color: '#696969' }}>
+            <Trans>
+              {' '}
+              Limit/FELO <sub>Soon</sub>
+            </Trans>
           </Text>
-        </StyledNavLink>
+        )}
         <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
           <Text fontSize={16} fontWeight={400}>
             <Trans>Swap</Trans>
