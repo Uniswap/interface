@@ -64,10 +64,10 @@ function useHasAccountUpdate() {
 
   const isRealtime = useIsRealtime()
 
-  const { data, variables } = useAssetActivitySubscription()
+  const { data } = useAssetActivitySubscription()
   const prevData = usePrevious(data)
 
-  const { account } = variables ?? {}
+  const { account } = useWeb3React()
   const prevAccount = usePrevious(account)
 
   return useMemo(() => {
