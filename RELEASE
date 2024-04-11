@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmRUQggwPRvjCrAusfxoEh4X2CNdUX8UTNvJD386JDbwZG`
-- CIDv1: `bafybeibor7myvk5yzfdx7k3orreuxitxtseyd2zh5zaaqczjo5i4gmyrk4`
+- CIDv0: `QmchdAPH9uqVLCC1ioK17YJLEvjrGv5K4JLjkL7vowb1em`
+- CIDv1: `bafybeigvmmijtkdmusl7u22jm76purvb4vyrqihztbb5c7h4ragsc2irhy`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeibor7myvk5yzfdx7k3orreuxitxtseyd2zh5zaaqczjo5i4gmyrk4.ipfs.dweb.link/
-- https://bafybeibor7myvk5yzfdx7k3orreuxitxtseyd2zh5zaaqczjo5i4gmyrk4.ipfs.cf-ipfs.com/
-- [ipfs://QmRUQggwPRvjCrAusfxoEh4X2CNdUX8UTNvJD386JDbwZG/](ipfs://QmRUQggwPRvjCrAusfxoEh4X2CNdUX8UTNvJD386JDbwZG/)
+- https://bafybeigvmmijtkdmusl7u22jm76purvb4vyrqihztbb5c7h4ragsc2irhy.ipfs.dweb.link/
+- https://bafybeigvmmijtkdmusl7u22jm76purvb4vyrqihztbb5c7h4ragsc2irhy.ipfs.cf-ipfs.com/
+- [ipfs://QmchdAPH9uqVLCC1ioK17YJLEvjrGv5K4JLjkL7vowb1em/](ipfs://QmchdAPH9uqVLCC1ioK17YJLEvjrGv5K4JLjkL7vowb1em/)
 
-### 5.23.2 (2024-04-11)
+### 5.23.3 (2024-04-11)
 
 
 ### Bug Fixes
 
-* **web:** TokenBalanceProvider account change [prod] (#7433) ae7d54b
+* **web:** set usePoolData errorPolicy to all a94ce7a
 
 

@@ -80,6 +80,7 @@ export function usePoolData(
     data: dataV3,
   } = useV3PoolQuery({
     variables: { chain: chainIdToBackendName(chainId), address: poolAddress },
+    errorPolicy: 'all',
   })
   const {
     loading: loadingV2,
@@ -88,6 +89,7 @@ export function usePoolData(
   } = useV2PairQuery({
     variables: { address: poolAddress },
     skip: chainId !== ChainId.MAINNET,
+    errorPolicy: 'all',
   })
 
   return useMemo(() => {
