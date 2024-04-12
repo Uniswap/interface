@@ -26,7 +26,7 @@ import { ThemedText } from 'theme/components'
 import { useUnitagByAddressWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import { isPathBlocked } from 'utils/blockedPaths'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
+import { useCloseModal, useOpenModal, useToggleModal } from '../../state/application/hooks'
 import { ApplicationModal } from '../../state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from '../../state/claim/hooks'
 import { useCachedPortfolioBalancesQuery } from '../PrefetchBalancesWrapper/PrefetchBalancesWrapper'
@@ -108,8 +108,9 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
 
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
-  const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
-  const isUnclaimed = useUserHasAvailableClaim(account)
+  // const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)
+
+  // const isUnclaimed = useUserHasAvailableClaim(account)
   const connection = getConnection(connector)
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const disconnect = useCallback(() => {
@@ -137,23 +138,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   }, [openFiatOnrampModal, toggleWalletDrawer])
 
   const [shouldCheck, setShouldCheck] = useState(false)
-  const {
-    available: fiatOnrampAvailable,
-    availabilityChecked: fiatOnrampAvailabilityChecked,
-    error,
-    loading: fiatOnrampAvailabilityLoading,
-  } = useFiatOnrampAvailability(shouldCheck, openFoRModalWithAnalytics)
-
-  const handleBuyCryptoClick = useCallback(() => {
-    if (!fiatOnrampAvailabilityChecked) {
-      setShouldCheck(true)
-    } else if (fiatOnrampAvailable) {
-      openFoRModalWithAnalytics()
-    }
-  }, [fiatOnrampAvailabilityChecked, fiatOnrampAvailable, openFoRModalWithAnalytics])
-  const disableBuyCryptoButton = Boolean(
-    error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading
-  )
 
   const { data: portfolioBalances } = useCachedPortfolioBalancesQuery({ account })
   const portfolio = portfolioBalances?.portfolios?.[0]
@@ -220,35 +204,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <LoadingBubble height="16px" width="100px" margin="4px 0 20px 0" />
           </Column>
         )}
-        <Row gap="8px" marginBottom={!fiatOnrampAvailable && fiatOnrampAvailabilityChecked ? '20px' : '0px'}>
-          {shouldShowBuyFiatButton && (
-            <ActionTile
-              dataTestId="wallet-buy-crypto"
-              Icon={<CreditCardIcon />}
-              name={t`Buy`}
-              onClick={handleBuyCryptoClick}
-              disabled={disableBuyCryptoButton}
-              loading={fiatOnrampAvailabilityLoading}
-              error={Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked)}
-              errorMessage={t`Restricted region`}
-              errorTooltip={t`Moonpay is not available in some regions. Click to learn more.`}
-            />
-          )}
-          {!shouldDisableNFTRoutes && (
-            <ActionTile
-              dataTestId="nft-view-self-nfts"
-              Icon={<ImagesIcon />}
-              name={t`View NFTs`}
-              onClick={navigateToProfile}
-            />
-          )}
-        </Row>
         <MiniPortfolio account={account} />
-        {isUnclaimed && (
+        {/* {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
             <Trans>Claim</Trans> {unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')} <Trans>reward</Trans>
           </UNIButton>
-        )}
+        )} */}
       </PortfolioDrawerContainer>
     </AuthenticatedHeaderWrapper>
   )

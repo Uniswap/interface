@@ -21,7 +21,7 @@ import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexRowNoWrap } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { STATSIG_DUMMY_KEY } from 'tracing'
+// import { STATSIG_DUMMY_KEY } from 'tracing'
 import { isPathBlocked } from 'utils/blockedPaths'
 import { getEnvName } from 'utils/env'
 import { MICROSITE_LINK } from 'utils/openDownloadApp'
@@ -152,7 +152,7 @@ export default function App() {
         <Helmet>
           <title>{findRouteByPath(pathname)?.getTitle(pathname) ?? 'Uniswap Interface'}</title>
         </Helmet>
-        <StatsigProvider
+        {/* <StatsigProvider
           user={statsigUser}
           // TODO: replace with proxy and cycle key
           sdkKey={STATSIG_DUMMY_KEY}
@@ -163,7 +163,7 @@ export default function App() {
             disableAutoMetricsLogging: true,
             disableErrorLogging: true,
           }}
-        >
+        > */}
           <UserPropertyUpdater />
           {renderUkBanner && <UkBanner />}
           <Header />
@@ -172,7 +172,7 @@ export default function App() {
           <MobileBottomBar>
             <PageTabs />
           </MobileBottomBar>
-        </StatsigProvider>
+        {/* </StatsigProvider> */}
       </Trace>
     </ErrorBoundary>
   )

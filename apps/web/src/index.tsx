@@ -3,7 +3,8 @@
 import '@reach/dialog/styles.css'
 import 'inter-ui'
 import 'polyfills'
-import 'tracing'
+// FIXME: 如果后面需要可以加上 tracing
+// import 'tracing'
 import 'connection/eagerlyConnect'
 /* eslint-enable prettier/prettier */
 
