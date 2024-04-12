@@ -201,8 +201,9 @@ const [web3CoinbaseWallet, web3CoinbaseWalletHooks] = initializeConnector<Coinba
     new CoinbaseWallet({
       actions,
       options: {
-        url: APP_RPC_URLS[ChainId.MAINNET][0],
-        appName: 'Uniswap',
+        // FIXME: 替换成主网， 和logo
+        url: APP_RPC_URLS[ChainId.X1_TESTNET][0],
+        appName: 'Jaguar swap',
         appLogoUrl: UNISWAP_LOGO,
         reloadOnDisconnect: false,
       },

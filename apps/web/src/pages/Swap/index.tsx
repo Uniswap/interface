@@ -111,14 +111,14 @@ export function Swap({
         {({ currentTab }) => (
           <SwapContextProvider>
             <SwapWrapper isDark={isDark} className={className} id="swap-page">
-              <SwapHeader compact={compact} syncTabToUrl={syncTabToUrl} />
+              {/* <SwapHeader compact={compact} syncTabToUrl={syncTabToUrl} /> */}
               {currentTab === SwapTab.Swap && (
                 <SwapForm onCurrencyChange={onCurrencyChange} disableTokenInputs={disableTokenInputs} />
               )}
-              {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
+              {/* {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
               {currentTab === SwapTab.Send && (
                 <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
-              )}
+              )} */}
             </SwapWrapper>
           </SwapContextProvider>
         )}
