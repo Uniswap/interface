@@ -443,6 +443,7 @@ query Token($chain: Chain!, $address: String) {
     decimals
     chain
     address
+    standard
     project {
       id
       name
@@ -746,6 +747,7 @@ query TopTokens(
     chain
     decimals
     symbol
+    standard
     project {
       id
       name

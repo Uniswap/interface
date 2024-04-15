@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmRoHL76PbHqywdR8tKiFb2TUHLMLAmHBRxP54PD3goYD9`
-- CIDv1: `bafybeibtmwi2m3lg3iq23af4un2rsms3glxcrrx2apuumxwnbwfgldqc7q`
+- CIDv0: `QmXAfrFgiMF3naNbfoknu5e6H1ussSDJbvb1C1Paw5Ugpi`
+- CIDv1: `bafybeiedfku63hfv4tr7zi3kx357dkdjvcoxp4wfv5i75y3qfabtwo3eym`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeibtmwi2m3lg3iq23af4un2rsms3glxcrrx2apuumxwnbwfgldqc7q.ipfs.dweb.link/
-- https://bafybeibtmwi2m3lg3iq23af4un2rsms3glxcrrx2apuumxwnbwfgldqc7q.ipfs.cf-ipfs.com/
-- [ipfs://QmRoHL76PbHqywdR8tKiFb2TUHLMLAmHBRxP54PD3goYD9/](ipfs://QmRoHL76PbHqywdR8tKiFb2TUHLMLAmHBRxP54PD3goYD9/)
+- https://bafybeiedfku63hfv4tr7zi3kx357dkdjvcoxp4wfv5i75y3qfabtwo3eym.ipfs.dweb.link/
+- https://bafybeiedfku63hfv4tr7zi3kx357dkdjvcoxp4wfv5i75y3qfabtwo3eym.ipfs.cf-ipfs.com/
+- [ipfs://QmXAfrFgiMF3naNbfoknu5e6H1ussSDJbvb1C1Paw5Ugpi/](ipfs://QmXAfrFgiMF3naNbfoknu5e6H1ussSDJbvb1C1Paw5Ugpi/)
 
-### 5.23.4 (2024-04-15)
+### 5.23.5 (2024-04-15)
 
 
 ### Bug Fixes
 
-* **web:** allow TrustWallet nodes in CSP (#7514) c3c2db5
+* **web:** parse native MATIC correctly (#7523) 12a6205
 
 
