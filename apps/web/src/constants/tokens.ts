@@ -15,7 +15,8 @@ export const WBTC = new Token(ChainId.X1, '0x04292af1cf8687235a83766d55b307880fc
 
 export const USDC_X1_TestNet = new Token(ChainId.X1_TESTNET, '0x04292af1cf8687235a83766d55b307880fc5e76d', 6, 'USDC', 'USD Coin')
 export const USDT_X1_TestNet = new Token(ChainId.X1_TESTNET, '0xded3ac2a172a21a729063c39da55c030ec4a8cc9', 6, 'USDT', 'Tether USD')
-export const DAI_X1_TestNet = new Token(ChainId.X1_TESTNET, '0x1b981e783d8d139e74ebbd7be5d99d8a0a7eeb0a', 18, 'DAI', 'Dai Stablecoin')
+export const DAI_X1_TestNet = new Token(ChainId.X1_TESTNET, '0x1b981e783d8d139e74ebbd7be5d99d8a0a7eeb0a', 18, 'DAI3', 'Dai Stablecoin3')
+export const WOKB_X1_TestNet = new Token(ChainId.X1_TESTNET, '0xee1a9629cce8f26deb1ecffbd8f306bef2117423', 18, 'WOKB', 'Wrapped OKB')
 
 export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } = {
   ...(WETH9 as Record<ChainId, Token>),
