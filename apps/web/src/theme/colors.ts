@@ -119,7 +119,7 @@ export const colors = {
   surface3_light: '#22222212',
   surface4_light: '#FFFFFF64',
   surface5_light: '#00000004',
-  surface6_light: '#1B1B1B',
+  surface6_light: '#FFFFFF',
   accent1_light: '#FFC552',
   accent2_light: '#FFEFFF',
   accent3_light: '#4C82FB',
@@ -197,6 +197,7 @@ export const darkTheme = {
   warning2: colors.gold200,
 
   borderColor: colors.borderColor,
+  inputBoxColor: colors.neutral1_light,
   nero12: colors.nero12_dark
 }
 
@@ -232,5 +233,6 @@ export const lightTheme: ThemeColors = {
   warning2: colors.gold200,
 
   borderColor: colors.borderColor,
+  inputBoxColor: colors.neutral1_dark,
   nero12: colors.nero12_light
 }
