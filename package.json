@@ -44,7 +44,7 @@
     "immer": "9.0.21",
     "@uniswap/v2-sdk": "4.1.0",
     "@apollo/client": "3.9.6",
-    "@jaguarswap/sdk-core": "4.2.0",
+    "@jaguarswap/sdk-core": "4.3.0",
     "@react-navigation/routers": "6.1.9",
     "@react-navigation/core": "6.2.2",
     "@sideway/formula": "3.0.1",
