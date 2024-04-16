@@ -26,7 +26,7 @@ export async function approveCollectionRow(
   const callback = () => approveCollectionRow(collectionRow, signer, setCollectionStatusAndCallback)
   setCollectionStatusAndCallback(collectionRow, ListingStatus.SIGNING, callback)
   const { marketplace, collectionAddress, nftStandard } = collectionRow
-  const addresses = addressesByNetwork[SupportedChainId.MAINNET]
+  const addresses = addressesByNetwork[SupportedChainId.X1]
   const spender =
     marketplace.name === 'OpenSea'
       ? OPENSEA_CROSS_CHAIN_CONDUIT

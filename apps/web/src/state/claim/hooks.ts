@@ -7,7 +7,6 @@ import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useEffect, useState } from 'react'
 
 import { isAddress } from 'utilities/src/addresses'
-import { UNI } from '../../constants/tokens'
 import { useContract } from '../../hooks/useContract'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { useTransactionAdder } from '../transactions/hooks'
@@ -34,9 +33,7 @@ let FETCH_CLAIM_MAPPING_PROMISE: Promise<ClaimAddressMapping> | null = null
 function fetchClaimMapping(): Promise<ClaimAddressMapping> {
   return (
     FETCH_CLAIM_MAPPING_PROMISE ??
-    (FETCH_CLAIM_MAPPING_PROMISE = fetch(
-      `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/mapping.json`
-    )
+    (FETCH_CLAIM_MAPPING_PROMISE = fetch(`https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/mapping.json`)
       .then((res) => res.json())
       .catch((error) => {
         console.error('Failed to get claims mapping', error)
@@ -49,9 +46,7 @@ const FETCH_CLAIM_FILE_PROMISES: { [startingAddress: string]: Promise<{ [address
 function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData }> {
   return (
     FETCH_CLAIM_FILE_PROMISES[key] ??
-    (FETCH_CLAIM_FILE_PROMISES[key] = fetch(
-      `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/${key}.json`
-    )
+    (FETCH_CLAIM_FILE_PROMISES[key] = fetch(`https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/${key}.json`)
       .then((res) => res.json())
       .catch((error) => {
         console.error(`Failed to get claim file mapping for starting address ${key}`, error)
@@ -138,11 +133,11 @@ export function useUserHasAvailableClaim(account: string | null | undefined): bo
 }
 
 export function useUserUnclaimedAmount(account: string | null | undefined): CurrencyAmount<Token> | undefined {
-  const { chainId } = useWeb3React()
+  // const { chainId } = useWeb3React()
   const userClaimData = useUserClaimData(account)
   const canClaim = useUserHasAvailableClaim(account)
 
-  const uni = chainId ? UNI[chainId] : undefined
+  const uni = undefined
   if (!uni) return undefined
   if (!canClaim || !userClaimData) {
     return CurrencyAmount.fromRawAmount(uni, JSBI.BigInt(0))
@@ -168,16 +163,14 @@ export function useClaimCallback(account: string | null | undefined): {
     const args = [claimData.index, account, claimData.amount, claimData.proof]
 
     return distributorContract.estimateGas['claim'](...args, {}).then((estimatedGasLimit) => {
-      return distributorContract
-        .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
-        .then((response: TransactionResponse) => {
-          addTransaction(response, {
-            type: TransactionType.CLAIM,
-            recipient: account,
-            uniAmountRaw: unclaimedAmount?.quotient.toString(),
-          })
-          return response.hash
+      return distributorContract.claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) }).then((response: TransactionResponse) => {
+        addTransaction(response, {
+          type: TransactionType.CLAIM,
+          recipient: account,
+          uniAmountRaw: unclaimedAmount?.quotient.toString(),
         })
+        return response.hash
+      })
     })
   }
 

@@ -57,7 +57,7 @@ export function useCurrencySearchResults({
    */
   const { data: searchResults, loading: searchResultsLoading } = useSearchTokens(
     gqlTokenListsEnabled ? searchQuery : undefined, // skip if gql token lists are disabled
-    chainId ?? ChainId.MAINNET
+    chainId ?? ChainId.X1
   )
   const { data: popularTokens, loading: popularTokensLoading } = useSearchPopularTokensWebQuery({
     variables: {

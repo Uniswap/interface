@@ -2,7 +2,7 @@ import { t } from '@lingui/macro'
 import { ChainId } from '@jaguarswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { LDO, NATIVE_CHAIN_ID, UNI, USDC_BASE } from 'constants/tokens'
+import {  NATIVE_CHAIN_ID } from 'constants/tokens'
 import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/useScreenSize'
@@ -172,20 +172,8 @@ const primary = '#2ABDFF'
 
 const tokens = [
   {
-    chainId: ChainId.MAINNET,
+    chainId: ChainId.X1,
     address: 'ETH',
-  },
-  {
-    chainId: ChainId.BASE,
-    address: USDC_BASE.address,
-  },
-  {
-    chainId: ChainId.MAINNET,
-    address: UNI[ChainId.MAINNET].address,
-  },
-  {
-    chainId: ChainId.MAINNET,
-    address: LDO.address,
   },
 ]
 

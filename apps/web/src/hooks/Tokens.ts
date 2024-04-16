@@ -257,13 +257,13 @@ export function useUnsupportedTokens(): { [address: string]: Token } {
       const bridgeInfo = tokenInfo.extensions?.bridgeInfo as unknown as BridgeInfo
       if (
         bridgeInfo &&
-        bridgeInfo[ChainId.MAINNET] &&
-        bridgeInfo[ChainId.MAINNET].tokenAddress &&
-        unsupportedSet.has(bridgeInfo[ChainId.MAINNET].tokenAddress)
+        bridgeInfo[ChainId.X1] &&
+        bridgeInfo[ChainId.X1].tokenAddress &&
+        unsupportedSet.has(bridgeInfo[ChainId.X1].tokenAddress)
       ) {
-        const address = bridgeInfo[ChainId.MAINNET].tokenAddress
+        const address = bridgeInfo[ChainId.X1].tokenAddress
         // don't rely on decimals--it's possible that a token could be bridged w/ different decimals on the L2
-        return { ...acc, [address]: new Token(ChainId.MAINNET, address, tokenInfo.decimals) }
+        return { ...acc, [address]: new Token(ChainId.X1, address, tokenInfo.decimals) }
       }
       return acc
     }, {})

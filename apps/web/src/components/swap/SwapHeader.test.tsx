@@ -24,7 +24,7 @@ function Wrapper(props: PropsWithChildren<WrapperProps>) {
           inputCurrency: undefined,
           outputCurrency: undefined,
         },
-        chainId: props.chainId ?? ChainId.MAINNET,
+        chainId: props.chainId ?? ChainId.X1,
         currentTab: SwapTab.Swap,
         setCurrentTab: props.setCurrentTab ?? jest.fn(),
       }}

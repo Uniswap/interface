@@ -1,6 +1,6 @@
 import { ChainId, TradeType as MockTradeType, Token } from '@jaguarswap/sdk-core'
 import { PERMIT2_ADDRESS } from '@uniswap/universal-router-sdk'
-import { DAI as MockDAI, USDC_MAINNET as MockUSDC_MAINNET, USDT as MockUSDT, nativeOnChain } from 'constants/tokens'
+import { DAI as MockDAI, USDC as MockUSDC, USDT as MockUSDT, nativeOnChain } from 'constants/tokens'
 import { ChainTokenMap } from 'hooks/Tokens'
 import {
   ExactInputSwapTransactionInfo,
@@ -51,7 +51,7 @@ function mockSwapInfo(
 
 const mockAccount1 = '0x000000000000000000000000000000000000000001'
 const mockAccount2 = '0x000000000000000000000000000000000000000002'
-const mockChainId = ChainId.MAINNET
+const mockChainId = ChainId.X1
 const mockSpenderAddress = PERMIT2_ADDRESS[mockChainId]
 const mockCurrencyAmountRaw = '1000000000000000000'
 const mockCurrencyAmountRawUSDC = '1000000'
@@ -98,7 +98,7 @@ function mockMultiStatus(info: TransactionInfo, id: string): [TransactionDetails
 const mockTokenAddressMap: ChainTokenMap = {
   [mockChainId]: {
     [MockDAI.address]: MockDAI,
-    [MockUSDC_MAINNET.address]: MockUSDC_MAINNET,
+    [MockUSDC.address]: MockUSDC,
     [MockUSDT.address]: MockUSDT,
   },
 }
@@ -115,7 +115,7 @@ jest.mock('../../../../state/transactions/hooks', () => {
           {
             info: mockSwapInfo(
               MockTradeType.EXACT_INPUT,
-              MockUSDC_MAINNET,
+              MockUSDC,
               mockCurrencyAmountRawUSDC,
               MockDAI,
               mockCurrencyAmountRaw
@@ -127,7 +127,7 @@ jest.mock('../../../../state/transactions/hooks', () => {
         ...mockMultiStatus(
           mockSwapInfo(
             MockTradeType.EXACT_OUTPUT,
-            MockUSDC_MAINNET,
+            MockUSDC,
             mockCurrencyAmountRawUSDC,
             MockDAI,
             mockCurrencyAmountRaw
@@ -137,7 +137,7 @@ jest.mock('../../../../state/transactions/hooks', () => {
         ...mockMultiStatus(
           mockSwapInfo(
             MockTradeType.EXACT_INPUT,
-            MockUSDC_MAINNET,
+            MockUSDC,
             mockCurrencyAmountRawUSDC,
             MockDAI,
             mockCurrencyAmountRaw
@@ -184,7 +184,7 @@ jest.mock('../../../../state/transactions/hooks', () => {
           {
             type: MockTxType.ADD_LIQUIDITY_V3_POOL,
             createPool: false,
-            baseCurrencyId: MockUSDC_MAINNET.address,
+            baseCurrencyId: MockUSDC.address,
             quoteCurrencyId: MockDAI.address,
             feeAmount: 500,
             expectedAmountBaseRaw: mockCurrencyAmountRawUSDC,
@@ -195,7 +195,7 @@ jest.mock('../../../../state/transactions/hooks', () => {
         ...mockMultiStatus(
           {
             type: MockTxType.REMOVE_LIQUIDITY_V3,
-            baseCurrencyId: MockUSDC_MAINNET.address,
+            baseCurrencyId: MockUSDC.address,
             quoteCurrencyId: MockDAI.address,
             expectedAmountBaseRaw: mockCurrencyAmountRawUSDC,
             expectedAmountQuoteRaw: mockCurrencyAmountRaw,
@@ -205,7 +205,7 @@ jest.mock('../../../../state/transactions/hooks', () => {
         ...mockMultiStatus(
           {
             type: MockTxType.ADD_LIQUIDITY_V2_POOL,
-            baseCurrencyId: MockUSDC_MAINNET.address,
+            baseCurrencyId: MockUSDC.address,
             quoteCurrencyId: MockDAI.address,
             expectedAmountBaseRaw: mockCurrencyAmountRawUSDC,
             expectedAmountQuoteRaw: mockCurrencyAmountRaw,
@@ -215,7 +215,7 @@ jest.mock('../../../../state/transactions/hooks', () => {
         ...mockMultiStatus(
           {
             type: MockTxType.COLLECT_FEES,
-            currencyId0: MockUSDC_MAINNET.address,
+            currencyId0: MockUSDC.address,
             currencyId1: MockDAI.address,
             expectedCurrencyOwed0: mockCurrencyAmountRawUSDC,
             expectedCurrencyOwed1: mockCurrencyAmountRaw,
@@ -225,7 +225,7 @@ jest.mock('../../../../state/transactions/hooks', () => {
         ...mockMultiStatus(
           {
             type: MockTxType.MIGRATE_LIQUIDITY_V3,
-            baseCurrencyId: MockUSDC_MAINNET.address,
+            baseCurrencyId: MockUSDC.address,
             quoteCurrencyId: MockDAI.address,
             isFork: false,
           },
@@ -243,7 +243,7 @@ describe('parseLocalActivity', () => {
     const details = {
       info: mockSwapInfo(
         MockTradeType.EXACT_INPUT,
-        MockUSDC_MAINNET,
+        MockUSDC,
         mockCurrencyAmountRawUSDC,
         MockDAI,
         mockCurrencyAmountRaw
@@ -253,10 +253,10 @@ describe('parseLocalActivity', () => {
         status: 1,
       },
     } as TransactionDetails
-    const chainId = ChainId.MAINNET
+    const chainId = ChainId.X1
     expect(transactionToActivity(details, chainId, mockTokenAddressMap, formatNumber)).toEqual({
       chainId: 1,
-      currencies: [MockUSDC_MAINNET, MockDAI],
+      currencies: [MockUSDC, MockDAI],
       descriptor: '1.00 USDC for 1.00 DAI',
       hash: undefined,
       from: undefined,
@@ -272,7 +272,7 @@ describe('parseLocalActivity', () => {
     const details = {
       info: mockSwapInfo(
         MockTradeType.EXACT_OUTPUT,
-        MockUSDC_MAINNET,
+        MockUSDC,
         mockCurrencyAmountRawUSDC,
         MockDAI,
         mockCurrencyAmountRaw
@@ -282,10 +282,10 @@ describe('parseLocalActivity', () => {
         status: 1,
       },
     } as TransactionDetails
-    const chainId = ChainId.MAINNET
+    const chainId = ChainId.X1
     expect(transactionToActivity(details, chainId, mockTokenAddressMap, formatNumber)).toMatchObject({
       chainId: 1,
-      currencies: [MockUSDC_MAINNET, MockDAI],
+      currencies: [MockUSDC, MockDAI],
       descriptor: '1.00 USDC for 1.00 DAI',
       status: 'CONFIRMED',
       title: 'Swapped',
@@ -298,7 +298,7 @@ describe('parseLocalActivity', () => {
     const details = {
       info: mockSwapInfo(
         MockTradeType.EXACT_INPUT,
-        MockUSDC_MAINNET,
+        MockUSDC,
         mockCurrencyAmountRawUSDC,
         MockDAI,
         mockCurrencyAmountRaw
@@ -308,7 +308,7 @@ describe('parseLocalActivity', () => {
         status: 1,
       },
     } as TransactionDetails
-    const chainId = ChainId.MAINNET
+    const chainId = ChainId.X1
     const tokens = {} as ChainTokenMap
     expect(transactionToActivity(details, chainId, tokens, formatNumber)).toMatchObject({
       chainId: 1,
@@ -341,9 +341,9 @@ describe('parseLocalActivity', () => {
 
     expect(activity).toMatchObject({
       chainId: mockChainId,
-      currencies: [MockUSDC_MAINNET, MockDAI],
+      currencies: [MockUSDC, MockDAI],
       title: 'Swapped',
-      descriptor: `1.00 ${MockUSDC_MAINNET.symbol} for 1.00 ${MockDAI.symbol}`,
+      descriptor: `1.00 ${MockUSDC.symbol} for 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
       from: mockAccount2,
@@ -356,9 +356,9 @@ describe('parseLocalActivity', () => {
 
     expect(activity).toMatchObject({
       chainId: mockChainId,
-      currencies: [MockUSDC_MAINNET, MockDAI],
+      currencies: [MockUSDC, MockDAI],
       title: 'Swapped',
-      descriptor: `1.00 ${MockUSDC_MAINNET.symbol} for 1.00 ${MockDAI.symbol}`,
+      descriptor: `1.00 ${MockUSDC.symbol} for 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
       from: mockAccount2,
@@ -433,9 +433,9 @@ describe('parseLocalActivity', () => {
 
     expect(activity).toMatchObject({
       chainId: mockChainId,
-      currencies: [MockUSDC_MAINNET, MockDAI],
+      currencies: [MockUSDC, MockDAI],
       title: 'Added liquidity',
-      descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
+      descriptor: `1.00 ${MockUSDC.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
       from: mockAccount2,
@@ -448,9 +448,9 @@ describe('parseLocalActivity', () => {
 
     expect(activity).toMatchObject({
       chainId: mockChainId,
-      currencies: [MockUSDC_MAINNET, MockDAI],
+      currencies: [MockUSDC, MockDAI],
       title: 'Removed liquidity',
-      descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
+      descriptor: `1.00 ${MockUSDC.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
       from: mockAccount2,
@@ -463,9 +463,9 @@ describe('parseLocalActivity', () => {
 
     expect(activity).toMatchObject({
       chainId: mockChainId,
-      currencies: [MockUSDC_MAINNET, MockDAI],
+      currencies: [MockUSDC, MockDAI],
       title: 'Added V2 liquidity',
-      descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
+      descriptor: `1.00 ${MockUSDC.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
       from: mockAccount2,
@@ -478,9 +478,9 @@ describe('parseLocalActivity', () => {
 
     expect(activity).toMatchObject({
       chainId: mockChainId,
-      currencies: [MockUSDC_MAINNET, MockDAI],
+      currencies: [MockUSDC, MockDAI],
       title: 'Collected fees',
-      descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
+      descriptor: `1.00 ${MockUSDC.symbol} and 1.00 ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
       from: mockAccount2,
@@ -493,9 +493,9 @@ describe('parseLocalActivity', () => {
 
     expect(activity).toMatchObject({
       chainId: mockChainId,
-      currencies: [MockUSDC_MAINNET, MockDAI],
+      currencies: [MockUSDC, MockDAI],
       title: 'Migrated liquidity',
-      descriptor: `${MockUSDC_MAINNET.symbol} and ${MockDAI.symbol}`,
+      descriptor: `${MockUSDC.symbol} and ${MockDAI.symbol}`,
       hash,
       status: MockTxStatus.Confirmed,
       from: mockAccount2,
@@ -525,18 +525,18 @@ describe('parseLocalActivity', () => {
         {
           type: SignatureType.SIGN_UNISWAPX_ORDER,
           status: UniswapXOrderStatus.CANCELLED,
-          chainId: ChainId.MAINNET,
+          chainId: ChainId.X1,
           swapInfo: mockSwapInfo(
             MockTradeType.EXACT_INPUT,
-            MockUSDC_MAINNET,
+            MockUSDC,
             mockCurrencyAmountRawUSDC,
             MockDAI,
             mockCurrencyAmountRaw
           ),
         } as SignatureDetails,
         {
-          [ChainId.MAINNET]: {
-            [MockUSDC_MAINNET.address]: MockUSDC_MAINNET,
+          [ChainId.X1]: {
+            [MockUSDC.address]: MockUSDC,
             [MockDAI.address]: MockDAI,
           },
         },
@@ -544,7 +544,7 @@ describe('parseLocalActivity', () => {
       )
     ).toEqual({
       chainId: 1,
-      currencies: [MockUSDC_MAINNET, MockDAI],
+      currencies: [MockUSDC, MockDAI],
       descriptor: '1.00 USDC for 1.00 DAI',
       from: undefined,
       hash: undefined,

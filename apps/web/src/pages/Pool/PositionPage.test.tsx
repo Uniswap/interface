@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, WETH9 } from '@jaguarswap/sdk-core'
 import { FeeAmount, Pool } from '@jaguarswap/v3-sdk'
-import { USDC_MAINNET } from 'constants/tokens'
+import { USDC } from 'constants/tokens'
 import { useToken } from 'hooks/Tokens'
 import { PoolState, usePool } from 'hooks/usePools'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
@@ -36,7 +36,7 @@ const positionDetails: PositionDetails = {
 }
 
 const pool = new Pool(
-  USDC_MAINNET,
+  USDC,
   WETH9[1],
   FeeAmount.LOW,
   '1829845065927797685282268152898194',
@@ -44,7 +44,7 @@ const pool = new Pool(
   200958
 )
 
-const USDC_AMOUNT = CurrencyAmount.fromRawAmount(USDC_MAINNET, '1224156977')
+const USDC_AMOUNT = CurrencyAmount.fromRawAmount(USDC, '1224156977')
 const WETH_AMOUNT = CurrencyAmount.fromRawAmount(WETH9[1], '500807669662847869')
 
 describe('position page', () => {
@@ -55,8 +55,8 @@ describe('position page', () => {
     mocked(useToken).mockImplementation((tokenAddress?: string | undefined) => {
       if (!tokenAddress) return undefined
 
-      if (tokenAddress === USDC_MAINNET.address) {
-        return USDC_MAINNET
+      if (tokenAddress === USDC.address) {
+        return USDC
       } else {
         return WETH9[1]
       }

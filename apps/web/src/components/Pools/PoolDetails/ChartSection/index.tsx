@@ -163,7 +163,7 @@ export default function ChartSection(props: ChartSectionProps) {
       timePeriod,
       tokenA: currencyA.wrapped,
       tokenB: currencyB.wrapped,
-      chainId: supportedChainIdFromGQLChain(props.chain) ?? ChainId.MAINNET,
+      chainId: supportedChainIdFromGQLChain(props.chain) ?? ChainId.X1,
     }
 
     // TODO(WEB-3740): Integrate BE tick query, remove special casing for liquidity chart

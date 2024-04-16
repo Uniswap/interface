@@ -49,7 +49,7 @@ export function getSortedPortfolioTokens(
         return undefined
       }
 
-      const tokenChainId = supportedChainIdFromGQLChain(tokenBalance.token?.chain) ?? ChainId.MAINNET
+      const tokenChainId = supportedChainIdFromGQLChain(tokenBalance.token?.chain) ?? ChainId.X1
       if (tokenChainId !== chainId) {
         return undefined
       }

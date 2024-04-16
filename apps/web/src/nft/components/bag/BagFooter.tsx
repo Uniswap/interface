@@ -301,7 +301,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const isPending = PENDING_BAG_STATUSES.includes(bagStatus)
   const activeCurrency = inputCurrency ?? defaultCurrency
-  const usingPayWithAnyToken = !!inputCurrency && chainId === ChainId.MAINNET
+  const usingPayWithAnyToken = !!inputCurrency && chainId === ChainId.X1
   const { universalRouterAddress, universalRouterAddressIsLoading } = useNftUniversalRouterAddress()
 
   useSubscribeTransactionState(setModalIsOpen)
@@ -331,7 +331,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
 
   const { balance: balanceInEth } = useWalletBalance()
   const sufficientBalance = useMemo(() => {
-    if (!connected || chainId !== ChainId.MAINNET) {
+    if (!connected || chainId !== ChainId.X1) {
       return undefined
     }
 
@@ -364,8 +364,8 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
     handleClick,
     buttonColor,
   } = useMemo((): BuyButtonStateData => {
-    if (connected && chainId !== ChainId.MAINNET) {
-      const handleClick = () => switchChain(connector, ChainId.MAINNET)
+    if (connected && chainId !== ChainId.X1) {
+      const handleClick = () => switchChain(connector, ChainId.X1)
       return getBuyButtonStateData(BuyButtonStates.NOT_SUPPORTED_CHAIN, theme, handleClick)
     }
 

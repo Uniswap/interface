@@ -59,10 +59,10 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
       if (chainBlock.chainId === chainId) {
         if (!chainBlock.block || chainBlock.block < block) {
           const mainnetBlock =
-            chainId === ChainId.MAINNET ? block : chainBlock.mainnetBlock;
+            chainId === ChainId.X1 ? block : chainBlock.mainnetBlock;
           return { chainId, block, mainnetBlock };
         }
-      } else if (chainId === ChainId.MAINNET) {
+      } else if (chainId === ChainId.X1) {
         if (!chainBlock.mainnetBlock || chainBlock.mainnetBlock < block) {
           return { ...chainBlock, mainnetBlock: block };
         }

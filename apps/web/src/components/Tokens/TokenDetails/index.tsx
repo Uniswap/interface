@@ -77,7 +77,7 @@ function useSwapInitialInputCurrency() {
 
 function TDPSwapComponent() {
   const { address, currency, currencyChain, warning } = useTDPContext()
-  const appChainId = useWeb3React().chainId ?? ChainId.MAINNET
+  const appChainId = useWeb3React().chainId ?? ChainId.X1
   const navigate = useNavigate()
 
   const handleCurrencyChange = useCallback(

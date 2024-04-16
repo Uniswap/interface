@@ -4,7 +4,7 @@ import { getValidUrlChainName, isSupportedGQLChain, supportedChainIdFromGQLChain
 
 describe('fromGraphQLChain', () => {
   it('should return the corresponding chain ID for supported chains', () => {
-    expect(supportedChainIdFromGQLChain(Chain.Ethereum)).toBe(ChainId.MAINNET)
+    expect(supportedChainIdFromGQLChain(Chain.Ethereum)).toBe(ChainId.X1)
 
     for (const chain of Object.values(Chain)) {
       if (!isSupportedGQLChain(chain)) continue

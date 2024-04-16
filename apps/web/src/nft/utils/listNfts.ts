@@ -164,7 +164,7 @@ export async function signListing(
         return false
       }
     case 'LooksRare': {
-      const addresses = addressesByNetwork[SupportedChainId.MAINNET]
+      const addresses = addressesByNetwork[SupportedChainId.X1]
       const currentTime = Math.round(Date.now() / 1000)
       const makerOrder: MakerOrder = {
         // true --> ask / false --> bid
@@ -201,7 +201,7 @@ export async function signListing(
       try {
         const signatureHash = await signMakerOrder(
           signer,
-          SupportedChainId.MAINNET,
+          SupportedChainId.X1,
           makerOrder,
           LOOKSRARE_MARKETPLACE_CONTRACT_721
         )

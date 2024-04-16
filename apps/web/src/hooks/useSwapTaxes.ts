@@ -31,7 +31,8 @@ function useFeeOnTransferDetectorContract(): FeeOnTransferDetector | null {
 }
 
 // TODO(WEB-2787): add tax-fetching for other chains
-const WETH_ADDRESS = getWethAddress(ChainId.MAINNET)
+// FIXME: 临时写死确认地址之后替换
+const WETH_ADDRESS = "0x75231f58b43240c9718dd58b4967c5114342a86c"
 const AMOUNT_TO_BORROW = 10000 // smallest amount that has full precision over bps
 
 const FEE_CACHE: { [address in string]?: { sellTax?: Percent; buyTax?: Percent } } = {}
@@ -78,7 +79,7 @@ export function useSwapTaxes(inputTokenAddress?: string, outputTokenAddress?: st
   const { chainId } = useWeb3React()
 
   useEffect(() => {
-    if (!fotDetector || chainId !== ChainId.MAINNET) return
+    if (!fotDetector || chainId !== ChainId.X1) return
     getSwapTaxes(fotDetector, inputTokenAddress, outputTokenAddress).then(setTaxes)
   }, [fotDetector, inputTokenAddress, outputTokenAddress, chainId])
 

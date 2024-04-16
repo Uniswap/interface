@@ -168,7 +168,7 @@ export const TokenDetailsHeader = () => {
               <MouseoverTooltip text={t`Explorer`} placement="top" size={TooltipSize.Max} disabled={isMobileScreen}>
                 <StyledExternalLink href={explorerUrl}>
                   <ActionButton>
-                    {currency.chainId === ChainId.MAINNET ? (
+                    {currency.chainId === ChainId.X1 ? (
                       <EtherscanLogo width="18px" height="18px" fill={theme.neutral1} />
                     ) : (
                       <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />

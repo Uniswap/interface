@@ -1,5 +1,5 @@
 import { ChainId } from '@jaguarswap/sdk-core'
-import { USDC_MAINNET } from 'constants/tokens'
+import { USDC } from 'constants/tokens'
 import { render } from 'test-utils/render'
 
 import { getLoadingTitle, TokenDetailsPageSkeleton } from './Skeleton'
@@ -14,7 +14,7 @@ describe('TDP Skeleton', () => {
 describe('getLoadingTitle', () => {
   it('should return correct title', () => {
     const { asFragment } = render(
-      <>{getLoadingTitle(USDC_MAINNET, USDC_MAINNET.address, ChainId.MAINNET, 'ethereum')}</>
+      <>{getLoadingTitle(USDC, USDC.address, ChainId.X1, 'ethereum')}</>
     )
     expect(asFragment()).toMatchSnapshot()
     expect(asFragment().textContent).toContain('token data for')

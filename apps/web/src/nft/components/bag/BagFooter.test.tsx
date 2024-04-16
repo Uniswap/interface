@@ -87,7 +87,7 @@ describe('BagFooter.tsx', () => {
       allowedSlippage: new Percent(10, 100),
     })
     mocked(usePayWithAnyTokenSwap).mockReturnValue()
-    mocked(useCurrency).mockReturnValue(nativeOnChain(ChainId.MAINNET))
+    mocked(useCurrency).mockReturnValue(nativeOnChain(ChainId.X1))
     mocked(useTokenInput).mockReturnValue({
       inputCurrency: undefined,
       setInputCurrency: () => undefined,
@@ -420,8 +420,8 @@ describe('BagFooter.tsx', () => {
 
   it('should use the correct UR address', () => {
     expect(getURAddress(undefined)).toBe(undefined)
-    expect(getURAddress(ChainId.MAINNET)).toBe(UNIVERSAL_ROUTER_ADDRESS(ChainId.MAINNET))
-    expect(getURAddress(ChainId.MAINNET, 'test_nft_ur_address')).toBe('test_nft_ur_address')
+    expect(getURAddress(ChainId.X1)).toBe(UNIVERSAL_ROUTER_ADDRESS(ChainId.X1))
+    expect(getURAddress(ChainId.X1, 'test_nft_ur_address')).toBe('test_nft_ur_address')
     expect(getURAddress(ChainId.OPTIMISM)).toBe(UNIVERSAL_ROUTER_ADDRESS(ChainId.OPTIMISM))
     expect(getURAddress(10101010)).toBe(undefined)
   })

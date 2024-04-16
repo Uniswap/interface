@@ -1,5 +1,5 @@
 import { Price, WETH9 } from '@jaguarswap/sdk-core'
-import { USDC_MAINNET } from 'constants/tokens'
+import { USDC } from 'constants/tokens'
 import { Field } from 'state/mint/actions'
 import { render, screen } from 'test-utils/render'
 
@@ -7,7 +7,7 @@ import { PoolPriceBar } from './PoolPriceBar'
 
 const currencies = {
   [Field.CURRENCY_A]: WETH9[1],
-  [Field.CURRENCY_B]: USDC_MAINNET,
+  [Field.CURRENCY_B]: USDC,
 }
 
 const price = new Price(currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B], 1234, 1)

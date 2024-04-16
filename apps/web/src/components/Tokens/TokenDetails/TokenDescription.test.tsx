@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event'
-import { USDC_MAINNET } from 'constants/tokens'
+import { USDC } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { mocked } from 'test-utils/mocked'
@@ -27,8 +27,8 @@ describe('TokenDescription', () => {
 
   it('renders token information correctly with defaults', () => {
     mocked(useTDPContext).mockReturnValue({
-      address: USDC_MAINNET.address,
-      currency: USDC_MAINNET,
+      address: USDC.address,
+      currency: USDC,
       currencyChainName: Chain.Ethereum,
       tokenQuery: validTokenProjectResponse,
     } as any)
@@ -44,8 +44,8 @@ describe('TokenDescription', () => {
 
   it('truncates description and shows more', async () => {
     mocked(useTDPContext).mockReturnValue({
-      address: USDC_MAINNET.address,
-      currency: USDC_MAINNET,
+      address: USDC.address,
+      currency: USDC,
       currencyChainName: Chain.Ethereum,
       tokenQuery: validTokenProjectResponse,
     } as any)
@@ -66,8 +66,8 @@ describe('TokenDescription', () => {
 
   it('no description or social buttons shown when not available', async () => {
     mocked(useTDPContext).mockReturnValue({
-      address: USDC_MAINNET.address,
-      currency: USDC_MAINNET,
+      address: USDC.address,
+      currency: USDC,
       currencyChainName: Chain.Ethereum,
       tokenQuery: { data: undefined, loading: false, error: undefined },
     } as any)

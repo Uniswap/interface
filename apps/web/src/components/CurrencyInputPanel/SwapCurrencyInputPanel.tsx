@@ -284,7 +284,6 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
     const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
     const theme = useTheme()
     const { formatCurrencyAmount } = useFormatter()
-    console.log(currency)
     const handleDismissSearch = useCallback(() => {
       setModalOpen(false)
     }, [setModalOpen])

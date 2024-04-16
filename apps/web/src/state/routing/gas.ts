@@ -26,16 +26,10 @@ export async function getApproveInfo(
   // If any of these arguments aren't provided, then we cannot generate approval cost info
   if (!account || !usdCostPerGas) return { needsApprove: false }
 
-  // routing-api under estimates gas for Arbitrum swaps so it inflates cost per gas by a lot
-  // so disable showing approves for Arbitrum until routing-api gives more accurate gas estimates
-  if (currency.chainId === ChainId.ARBITRUM_ONE || currency.chainId === ChainId.ARBITRUM_GOERLI) {
-    return { needsApprove: false }
-  }
-
   const provider = DEPRECATED_RPC_PROVIDERS[currency.chainId as SupportedInterfaceChain]
   const tokenContract = getContract(currency.address, ERC20_ABI, provider) as Erc20
 
-  let approveGasUseEstimate
+  let approveGasUseEstimate: number
   try {
     const allowance = await tokenContract.callStatic.allowance(account, PERMIT2_ADDRESS)
     if (!allowance.lt(amount)) return { needsApprove: false }

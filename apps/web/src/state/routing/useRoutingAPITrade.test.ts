@@ -2,7 +2,7 @@ import { skipToken } from '@reduxjs/toolkit/query/react'
 import { renderHook } from '@testing-library/react'
 import { CurrencyAmount, TradeType } from '@jaguarswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
-import { USDC_MAINNET } from 'constants/tokens'
+import { USDC } from 'constants/tokens'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import ms from 'ms'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
@@ -13,7 +13,7 @@ import { useGetQuoteQuery, useGetQuoteQueryState } from './slice'
 import { useRoutingAPITrade } from './useRoutingAPITrade'
 import { currencyAddressForSwapQuote } from './utils'
 
-const USDCAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '10000')
+const USDCAmount = CurrencyAmount.fromRawAmount(USDC, '10000')
 
 jest.mock('hooks/useIsWindowVisible')
 jest.mock('state/routing/usePreviewTrade')

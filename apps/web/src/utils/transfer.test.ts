@@ -27,7 +27,7 @@ describe('useCreateTransfer', () => {
       account: wallet,
       chainId: 1,
       toAddress: '0xaDd287e6d0213e662D400d815C481b4b2ddE5d65',
-      currencyAmount: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.MAINNET), 1e18),
+      currencyAmount: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.X1), 1e18),
     }
     const transaction = renderHook(() => useCreateTransferTransaction(transferInfo)).result
 

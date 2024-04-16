@@ -117,7 +117,7 @@ export function TokenDescription() {
         <ExternalLink href={explorerUrl}>
           <TokenInfoButton>
             <EtherscanLogo width="18px" height="18px" fill={neutral2} />
-            {currency.chainId === ChainId.MAINNET ? <Trans>Etherscan</Trans> : <Trans>Explorer</Trans>}
+            {currency.chainId === ChainId.X1 ? <Trans>Etherscan</Trans> : <Trans>Explorer</Trans>}
           </TokenInfoButton>
         </ExternalLink>
         {homepageUrl && (

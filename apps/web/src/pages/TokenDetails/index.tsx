@@ -45,7 +45,7 @@ function useTDPCurrency(
   isNative: boolean
 ) {
   const { chainId } = useWeb3React()
-  const appChainId = chainId ?? ChainId.MAINNET
+  const appChainId = chainId ?? ChainId.X1
 
   const queryCurrency = useMemo(() => {
     if (isNative) return nativeOnChain(currencyChainId)
@@ -141,7 +141,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
 }
 
 export default function TokenDetailsPage() {
-  const pageChainId = useWeb3React().chainId ?? ChainId.MAINNET
+  const pageChainId = useWeb3React().chainId ?? ChainId.X1
   const contextValue = useCreateTDPContext()
 
   return (

@@ -22,7 +22,7 @@
     "noUnusedLocals": false,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "strict": true,
     "strictNullChecks": true,
     "target": "ESNext",

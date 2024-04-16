@@ -114,7 +114,7 @@ function TransactionSubmittedContent({
       .catch(() => setSuccess(false))
   }, [connector, logoURL, token])
 
-  const explorerText = chainId === ChainId.MAINNET ? t`View on  Etherscan` : t`View on Block Explorer`
+  const explorerText = chainId === ChainId.X1 ? t`View on  Etherscan` : t`View on Block Explorer`
 
   return (
     <Wrapper>

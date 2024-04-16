@@ -1,5 +1,5 @@
 import { ChainId } from '@jaguarswap/sdk-core'
-import { USDC_MAINNET } from 'constants/tokens'
+import { USDC } from 'constants/tokens'
 import store from 'state'
 import { addSerializedToken } from 'state/user/reducer'
 import { usdcWethPoolAddress, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
@@ -37,7 +37,7 @@ describe('PoolDetailsHeader', () => {
     const { asFragment } = render(
       <PoolDetailsLink
         address={usdcWethPoolAddress}
-        chainId={ChainId.MAINNET}
+        chainId={ChainId.X1}
         tokens={[validBEPoolToken0, validBEPoolToken1]}
       />
     )
@@ -51,13 +51,13 @@ describe('PoolDetailsHeader', () => {
 
   it('renders link for token address', async () => {
     const { asFragment } = render(
-      <PoolDetailsLink address={USDC_MAINNET.address} chainId={ChainId.MAINNET} tokens={[validBEPoolToken0]} />
+      <PoolDetailsLink address={USDC.address} chainId={ChainId.X1} tokens={[validBEPoolToken0]} />
     )
     expect(asFragment()).toMatchSnapshot()
 
     expect(screen.getByText('USDC')).toBeInTheDocument()
     expect(screen.getByTestId('pdp-token-logo-USDC')).toBeInTheDocument()
-    expect(screen.getByTestId(`copy-address-${USDC_MAINNET.address}`)).toBeInTheDocument()
-    expect(screen.getByTestId(`explorer-url-https://etherscan.io/token/${USDC_MAINNET.address}`)).toBeInTheDocument()
+    expect(screen.getByTestId(`copy-address-${USDC.address}`)).toBeInTheDocument()
+    expect(screen.getByTestId(`explorer-url-https://etherscan.io/token/${USDC.address}`)).toBeInTheDocument()
   })
 })

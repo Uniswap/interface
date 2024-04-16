@@ -1,4 +1,4 @@
-import { DAI, USDC_MAINNET } from 'constants/tokens'
+import { DAI, USDC } from 'constants/tokens'
 import { render } from 'test-utils/render'
 import { LimitPriceError } from './LimitPriceError'
 
@@ -12,7 +12,7 @@ describe('LimitPriceError', () => {
     const { container } = render(
       <LimitPriceError
         inputCurrency={DAI}
-        outputCurrency={USDC_MAINNET}
+        outputCurrency={USDC}
         priceInverted={inverted}
         priceAdjustmentPercentage={change}
       />

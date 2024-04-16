@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react'
 import { CurrencyAmount, Percent } from '@jaguarswap/sdk-core'
 import { DEFAULT_LOCAL_CURRENCY } from 'constants/localCurrencies'
-import { USDC_MAINNET } from 'constants/tokens'
+import { USDC } from 'constants/tokens'
 import { useLocalCurrencyConversionRate } from 'graphql/data/ConversionRate'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -399,7 +399,7 @@ describe('formatReviewSwapCurrencyAmount', () => {
   it('should use TokenTx formatting under a default length', () => {
     const { formatReviewSwapCurrencyAmount } = renderHook(() => useFormatter()).result.current
 
-    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000') // 2,000 USDC
+    const currencyAmount = CurrencyAmount.fromRawAmount(USDC, '2000000000') // 2,000 USDC
     expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2,000')
   })
 
@@ -407,14 +407,14 @@ describe('formatReviewSwapCurrencyAmount', () => {
     mocked(useActiveLocale).mockReturnValue('fr-FR')
     const { formatReviewSwapCurrencyAmount } = renderHook(() => useFormatter()).result.current
 
-    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000') // 2,000 USDC
+    const currencyAmount = CurrencyAmount.fromRawAmount(USDC, '2000000000') // 2,000 USDC
     expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2\u202f000')
   })
 
   it('should use SwapTradeAmount formatting over the default length', () => {
     const { formatReviewSwapCurrencyAmount } = renderHook(() => useFormatter()).result.current
 
-    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000000') // 2,000,000 USDC
+    const currencyAmount = CurrencyAmount.fromRawAmount(USDC, '2000000000000') // 2,000,000 USDC
     expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2000000')
   })
 
@@ -422,7 +422,7 @@ describe('formatReviewSwapCurrencyAmount', () => {
     mocked(useActiveLocale).mockReturnValue('fr-FR')
     const { formatReviewSwapCurrencyAmount } = renderHook(() => useFormatter()).result.current
 
-    const currencyAmount = CurrencyAmount.fromRawAmount(USDC_MAINNET, '2000000000000') // 2,000,000 USDC
+    const currencyAmount = CurrencyAmount.fromRawAmount(USDC, '2000000000000') // 2,000,000 USDC
     expect(formatReviewSwapCurrencyAmount(currencyAmount)).toBe('2000000')
   })
 })

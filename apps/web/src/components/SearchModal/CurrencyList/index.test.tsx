@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react'
 import { Currency, CurrencyAmount as mockCurrencyAmount, Token as mockToken } from '@jaguarswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { DAI, USDC_MAINNET, WBTC } from 'constants/tokens'
+import { DAI, USDC, WBTC } from 'constants/tokens'
 import * as mockJSBI from 'jsbi'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
@@ -14,7 +14,7 @@ const noOp = function () {
 
 const mockCurrencyAmt = {
   [DAI.address]: mockCurrencyAmount.fromRawAmount(DAI, mockJSBI.default.BigInt(100)),
-  [USDC_MAINNET.address]: mockCurrencyAmount.fromRawAmount(USDC_MAINNET, mockJSBI.default.BigInt(10)),
+  [USDC.address]: mockCurrencyAmount.fromRawAmount(USDC, mockJSBI.default.BigInt(10)),
   [WBTC.address]: mockCurrencyAmount.fromRawAmount(WBTC, mockJSBI.default.BigInt(1)),
 }
 
@@ -55,7 +55,7 @@ it('renders currency rows correctly when currencies list is non-empty', () => {
   render(
     <CurrencyList
       height={10}
-      currencies={[DAI, USDC_MAINNET, WBTC].map((token) => new CurrencyListRow(token, false))}
+      currencies={[DAI, USDC, WBTC].map((token) => new CurrencyListRow(token, false))}
       onCurrencySelect={noOp}
       isLoading={false}
       searchQuery=""
@@ -76,7 +76,7 @@ it('renders currency rows correctly with balances', () => {
   render(
     <CurrencyList
       height={10}
-      currencies={[DAI, USDC_MAINNET, WBTC].map((token) => new CurrencyListRow(token, false))}
+      currencies={[DAI, USDC, WBTC].map((token) => new CurrencyListRow(token, false))}
       onCurrencySelect={noOp}
       isLoading={false}
       searchQuery=""
