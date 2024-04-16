@@ -5,14 +5,14 @@ import { validPoolDataResponse } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
 import { BREAKPOINTS } from 'theme'
 
-import { USDC_MAINNET } from 'constants/tokens'
+import { USDC } from 'constants/tokens'
 import { PoolDetailsStats } from './PoolDetailsStats'
 
 jest.mock('hooks/Tokens', () => {
   return {
     useCurrency: (address?: string) => {
-      if (address?.toLowerCase() === USDC_MAINNET.address.toLowerCase()) {
-        return USDC_MAINNET
+      if (address?.toLowerCase() === USDC.address.toLowerCase()) {
+        return USDC
       }
       return undefined
     },

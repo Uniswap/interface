@@ -1,7 +1,7 @@
 import { Price, WETH9 } from '@jaguarswap/sdk-core'
 import { FeeAmount, Pool } from '@jaguarswap/v3-sdk'
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
-import { USDC_MAINNET } from 'constants/tokens'
+import { USDC } from 'constants/tokens'
 import { render, screen } from 'test-utils/render'
 
 import { PoolDetailsPositionsTable } from './PoolDetailsPositionsTable'
@@ -11,16 +11,16 @@ const mockPositionInfo: PositionInfo = {
   chainId: 1,
   pool: {
     token0: WETH9[1],
-    token1: USDC_MAINNET,
+    token1: USDC,
     fee: 5000 as FeeAmount,
   } as Pool,
   details: {
     token0: WETH9[1].address,
-    token1: USDC_MAINNET.address,
+    token1: USDC.address,
   },
   position: {
-    token0PriceLower: new Price(WETH9[1], USDC_MAINNET, 1000000000000, 1),
-    token0PriceUpper: new Price(WETH9[1], USDC_MAINNET, 1, 1000000000000),
+    token0PriceLower: new Price(WETH9[1], USDC, 1000000000000, 1),
+    token0PriceUpper: new Price(WETH9[1], USDC, 1, 1000000000000),
   },
   inRange: true,
   closed: false,

@@ -30,7 +30,6 @@ const PoolFinder = lazy(() => import('pages/PoolFinder'))
 const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
 const RemoveLiquidityV3 = lazy(() => import('pages/RemoveLiquidity/V3'))
 const TokenDetails = lazy(() => import('pages/TokenDetails'))
-const Vote = lazy(() => import('pages/Vote'))
 
 // this is the same svg defined in assets/images/blue-loader.svg
 // it is defined here because the remote asset may not have had time to load when this file is executing
@@ -134,20 +133,6 @@ export const routes: RouteDefinition[] = [
         <PoolDetails />
       </Suspense>
     ),
-  }),
-  createRouteDefinition({
-    path: '/vote/*',
-    getTitle: () => t`Vote on governance proposals on Uniswap`,
-    getElement: () => (
-      <Suspense fallback={<LazyLoadSpinner />}>
-        <Vote />
-      </Suspense>
-    ),
-  }),
-  createRouteDefinition({
-    path: '/create-proposal',
-    getTitle: () => t`Create a new governance proposal on Uniswap`,
-    getElement: () => <Navigate to="/vote/create-proposal" replace />,
   }),
   createRouteDefinition({
     path: '/send',

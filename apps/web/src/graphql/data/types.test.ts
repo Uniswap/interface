@@ -31,7 +31,7 @@ const MAINNET_NATIVE_GQL_TOKEN = {
 } as Token
 
 const MAINNET_NATIVE_CURRENCY_INFO = {
-  currency: nativeOnChain(ChainId.MAINNET),
+  currency: nativeOnChain(ChainId.X1),
   currencyId: 'ETH',
   isSpam: false,
   logoUrl: 'eth_url',

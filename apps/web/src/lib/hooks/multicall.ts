@@ -25,7 +25,7 @@ export function useSingleCallResult(...args: SkipFirstTwoParams<typeof multicall
 
 export function useMainnetSingleCallResult(...args: SkipFirstTwoParams<typeof multicall.hooks.useSingleCallResult>) {
   const latestMainnetBlock = useMainnetBlockNumber()
-  return multicall.hooks.useSingleCallResult(ChainId.MAINNET, latestMainnetBlock, ...args)
+  return multicall.hooks.useSingleCallResult(ChainId.X1, latestMainnetBlock, ...args)
 }
 
 export function useSingleContractMultipleData(

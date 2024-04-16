@@ -1,5 +1,5 @@
 import { SwapTab } from 'components/swap/constants'
-import { DAI, USDC_MAINNET } from 'constants/tokens'
+import { DAI, USDC } from 'constants/tokens'
 import { Expiry, LimitContext } from 'state/limit/LimitContext'
 import { SwapAndLimitContext } from 'state/swap/SwapContext'
 import { render, screen } from 'test-utils/render'
@@ -80,7 +80,7 @@ describe('LimitPriceInputPanel', () => {
           ...mockSwapAndLimitContextValue,
           currencyState: {
             ...mockSwapAndLimitContextValue.currencyState,
-            outputCurrency: USDC_MAINNET,
+            outputCurrency: USDC,
           },
         }}
       >

@@ -117,8 +117,8 @@ export function Pending({
   const wrapPending = wrapTxHash != undefined && !wrapConfirmed
   const transactionPending = revocationPending || tokenApprovalPending || wrapPending || swapPending
 
-  const showSubmitted = swapPending && !swapConfirmed && chainId === ChainId.MAINNET
-  const showSuccess = swapConfirmed || (chainId !== ChainId.MAINNET && swapPending)
+  const showSubmitted = swapPending && !swapConfirmed && chainId === ChainId.X1
+  const showSuccess = swapConfirmed || (chainId !== ChainId.X1 && swapPending)
 
   const currentStepContainerRef = useRef<HTMLDivElement>(null)
   useUnmountingAnimation(currentStepContainerRef, () => AnimationType.EXITING)
@@ -132,7 +132,7 @@ export function Pending({
     } else {
       return
     }
-    return getExplorerLink(chainId || ChainId.MAINNET, txHash, ExplorerDataType.TRANSACTION)
+    return getExplorerLink(chainId || ChainId.X1, txHash, ExplorerDataType.TRANSACTION)
   }, [chainId, swapResult, uniswapXOrder])
 
   // Handle special statuses for UniswapX orders

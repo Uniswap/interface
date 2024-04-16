@@ -50,7 +50,7 @@ function getBackupCurrencySrcs(currency?: Currency) {
   if (wrappedToken?.logoURI) {
     srcs.push(wrappedToken.logoURI)
   }
-  if (currency?.chainId === ChainId.MAINNET) {
+  if (currency?.chainId === ChainId.X1) {
     srcs.push(URIForEthToken(wrappedToken.address))
   }
 

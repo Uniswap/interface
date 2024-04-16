@@ -804,7 +804,7 @@ function PositionPageContent() {
                     <LightCard padding="12px 16px">
                       <AutoColumn gap="md">
                         <RowBetween>
-                          <LinkedCurrency chainId={chainId ?? ChainId.MAINNET} currency={currencyQuote} />
+                          <LinkedCurrency chainId={chainId ?? ChainId.X1} currency={currencyQuote} />
                           <RowFixed>
                             <ThemedText.DeprecatedMain>
                               {formatCurrencyAmount({ amount: inverted ? position?.amount0 : position?.amount1 })}
@@ -819,7 +819,7 @@ function PositionPageContent() {
                           </RowFixed>
                         </RowBetween>
                         <RowBetween>
-                          <LinkedCurrency chainId={chainId ?? ChainId.MAINNET} currency={currencyBase} />
+                          <LinkedCurrency chainId={chainId ?? ChainId.X1} currency={currencyBase} />
                           <RowFixed>
                             <ThemedText.DeprecatedMain>
                               {formatCurrencyAmount({ amount: inverted ? position?.amount1 : position?.amount0 })}

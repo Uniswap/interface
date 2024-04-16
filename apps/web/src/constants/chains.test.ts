@@ -4,7 +4,7 @@ import { getChainPriority } from './chains'
 
 // Define an array of test cases with chainId and expected priority
 const chainPriorityTestCases: [ChainId, number][] = [
-  [ChainId.MAINNET, 0],
+  [ChainId.X1, 0],
   [ChainId.GOERLI, 0],
   [ChainId.SEPOLIA, 0],
   [ChainId.ARBITRUM_ONE, 1],

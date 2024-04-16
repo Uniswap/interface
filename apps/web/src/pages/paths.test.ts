@@ -80,7 +80,7 @@ describe('getDefaultTokensTitle', () => {
   })
 
   it('should return the correct title for /tokens/ethereum/<weth address>', () => {
-    expect(getDefaultTokensTitle(`/tokens/ethereum/${WETH9[ChainId.MAINNET].address}`)).toBe(
+    expect(getDefaultTokensTitle(`/tokens/ethereum/${WETH9[ChainId.X1].address}`)).toBe(
       'Explore top tokens on Ethereum on Uniswap'
     )
   })

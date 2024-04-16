@@ -1,6 +1,6 @@
 import { act } from '@testing-library/react'
 import { Percent } from '@jaguarswap/sdk-core'
-import { USDC_MAINNET } from 'constants/tokens'
+import { USDC } from 'constants/tokens'
 import store from 'state'
 import { RouterPreference } from 'state/routing/types'
 import { renderHook } from 'test-utils/render'
@@ -11,7 +11,7 @@ import { SlippageTolerance } from './types'
 
 describe('serializeToken', () => {
   it('serializes the token', () => {
-    expect(serializeToken(USDC_MAINNET)).toEqual({
+    expect(serializeToken(USDC)).toEqual({
       chainId: 1,
       decimals: 6,
       name: 'USD//C',
@@ -23,7 +23,7 @@ describe('serializeToken', () => {
 
 describe('deserializeToken', () => {
   it('deserializes the token', () => {
-    expect(deserializeToken(serializeToken(USDC_MAINNET))).toEqual(USDC_MAINNET)
+    expect(deserializeToken(serializeToken(USDC))).toEqual(USDC)
   })
 })
 

@@ -1,5 +1,5 @@
 import { ChainId, CurrencyAmount, WETH9 } from '@jaguarswap/sdk-core'
-import { DAI, USDC_MAINNET } from 'constants/tokens'
+import { DAI, USDC } from 'constants/tokens'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { SignatureType } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'
@@ -13,7 +13,7 @@ describe('OffchainOrderLineItem', () => {
         type={OffchainOrderLineItemType.EXCHANGE_RATE}
         amounts={{
           inputAmount: CurrencyAmount.fromRawAmount(DAI, 1),
-          outputAmount: CurrencyAmount.fromRawAmount(USDC_MAINNET, 1),
+          outputAmount: CurrencyAmount.fromRawAmount(USDC, 1),
         }}
       />
     )
@@ -38,7 +38,7 @@ describe('OffchainOrderLineItem', () => {
             type: 1,
             tradeType: 0,
             inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
-            outputCurrencyId: WETH9[ChainId.MAINNET].address,
+            outputCurrencyId: WETH9[ChainId.X1].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',
@@ -76,7 +76,7 @@ describe('OffchainOrderLineItem', () => {
             type: 1,
             tradeType: 0,
             inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
-            outputCurrencyId: WETH9[ChainId.MAINNET].address,
+            outputCurrencyId: WETH9[ChainId.X1].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',

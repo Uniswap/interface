@@ -5,7 +5,7 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { GenieAsset } from 'nft/types'
 
-export const useNativeUsdPrice = (chainId: number = ChainId.MAINNET): number => {
+export const useNativeUsdPrice = (chainId: number = ChainId.X1): number => {
   const nativeCurrency = useNativeCurrency(chainId)
   const parsedAmount = tryParseCurrencyAmount('1', nativeCurrency)
   const usdcValue = useUSDPrice(parsedAmount)?.data ?? 0

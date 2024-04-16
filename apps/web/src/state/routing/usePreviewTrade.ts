@@ -31,7 +31,7 @@ function useQuickRouteArguments({
 
   return useMemo(() => {
     if (!tokenIn || !tokenOut || !amount) return skipToken
-    if (!enabledMainnet || tokenIn.chainId !== ChainId.MAINNET) return skipToken
+    if (!enabledMainnet || tokenIn.chainId !== ChainId.X1) return skipToken
 
     return {
       amount: amount.quotient.toString(),

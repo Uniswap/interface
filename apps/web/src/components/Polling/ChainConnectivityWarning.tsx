@@ -64,7 +64,7 @@ export function ChainConnectivityWarning() {
         </TitleText>
       </TitleRow>
       <BodyRow>
-        {chainId === ChainId.MAINNET ? (
+        {chainId === ChainId.X1 ? (
           <Trans>You may have lost your network connection.</Trans>
         ) : (
           <Trans>{label} might be down right now, or you may have lost your network connection.</Trans>

@@ -14,7 +14,7 @@ export default function QueryTokenLogo(
   }
 ) {
   const chainId =
-    (props.token?.chain ? supportedChainIdFromGQLChain(props.token?.chain) : ChainId.MAINNET) ?? ChainId.MAINNET
+    (props.token?.chain ? supportedChainIdFromGQLChain(props.token?.chain) : ChainId.X1) ?? ChainId.X1
   const currency = props.token ? gqlToCurrency(props.token) : undefined
   const logoUrl = props.token?.project?.logoUrl
 

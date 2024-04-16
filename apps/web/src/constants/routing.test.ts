@@ -5,7 +5,7 @@ import { COMMON_BASES } from './routing'
 describe('Routing', () => {
   describe('COMMON_BASES', () => {
     it('contains all coins for mainnet', () => {
-      const symbols = COMMON_BASES[ChainId.MAINNET].map((coin) => coin.symbol)
+      const symbols = COMMON_BASES[ChainId.X1].map((coin) => coin.symbol)
       expect(symbols).toEqual(['ETH', 'DAI', 'USDC', 'USDT', 'WBTC', 'WETH'])
     })
     it('contains all coins for arbitrum', () => {

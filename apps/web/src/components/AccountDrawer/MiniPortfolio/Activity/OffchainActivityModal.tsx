@@ -230,7 +230,7 @@ export function OrderContent({
     <Column>
       <Row gap="md">
         <PortfolioLogo
-          chainId={amounts?.inputAmount.currency.chainId ?? ChainId.MAINNET}
+          chainId={amounts?.inputAmount.currency.chainId ?? ChainId.X1}
           currencies={currencies}
           images={[logos?.inputLogo, logos?.outputLogo]}
         />

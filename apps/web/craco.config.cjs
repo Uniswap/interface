@@ -92,6 +92,8 @@ module.exports = {
       }),
     ],
     configure: (webpackConfig) => {
+      webpackConfig.devtool = false;
+      webpackConfig.cache = false;
       // Configure webpack plugins:
       webpackConfig.plugins = webpackConfig.plugins
         .map((plugin) => {
@@ -229,7 +231,7 @@ module.exports = {
       )
 
       // Configure webpack resolution. webpackConfig.cache is unused with swc-loader, but the resolver can still cache:
-      webpackConfig.resolve = Object.assign(webpackConfig.resolve, { unsafeCache: true })
+      webpackConfig.resolve = Object.assign(webpackConfig.resolve, { unsafeCache: false })
 
       return webpackConfig
     },

@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, Currency, WETH9 } from '@jaguarswap/sdk-core'
 import { FeeAmount, Pool, Position } from '@jaguarswap/v3-sdk'
-import { USDC_MAINNET } from 'constants/tokens'
+import { USDC } from 'constants/tokens'
 import { PoolData } from 'graphql/data/pools/usePoolData'
 import { Token } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { Token as BEToken } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -56,8 +56,8 @@ export const validBEPoolToken1 = {
 export const owner = '0xf5b6bb25f5beaea03dd014c6ef9fa9f3926bf36c'
 
 const pool = new Pool(
-  USDC_MAINNET,
-  WETH9[ChainId.MAINNET],
+  USDC,
+  WETH9[ChainId.X1],
   FeeAmount.MEDIUM,
   '1851127709498178402383049949138810',
   '7076437181775065414',
@@ -74,8 +74,8 @@ const details = {
   nonce: BigNumber.from('0'),
   tokenId: BigNumber.from('0'),
   operator: '0x0',
-  token0: USDC_MAINNET.address,
-  token1: WETH9[ChainId.MAINNET].address,
+  token0: USDC.address,
+  token1: WETH9[ChainId.X1].address,
   fee: FeeAmount.MEDIUM,
   tickLower: -100,
   tickUpper: 100,
@@ -89,7 +89,7 @@ export const useMultiChainPositionsReturnValue = {
   positions: [
     {
       owner,
-      chainId: ChainId.MAINNET,
+      chainId: ChainId.X1,
       position,
       pool,
       details,

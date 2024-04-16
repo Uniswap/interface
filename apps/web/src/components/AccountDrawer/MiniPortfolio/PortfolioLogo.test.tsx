@@ -1,12 +1,12 @@
 import { ChainId } from '@jaguarswap/sdk-core'
-import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET } from 'constants/tokens'
+import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC } from 'constants/tokens'
 import { render } from 'test-utils/render'
 
 import { PortfolioLogo } from './PortfolioLogo'
 
 describe('PortfolioLogo', () => {
   it('renders without L2 icon', () => {
-    const { container } = render(<PortfolioLogo chainId={ChainId.MAINNET} currencies={[DAI, USDC_MAINNET]} />)
+    const { container } = render(<PortfolioLogo chainId={ChainId.X1} currencies={[DAI, USDC]} />)
     expect(container).toMatchSnapshot()
   })
 

@@ -245,7 +245,7 @@ const PoolDetailsHeaderActions = ({
           isOpen={contractsModalIsOpen}
           toggleOpen={toggleContractsModal}
           menuLabel={
-            chainId === ChainId.MAINNET ? (
+            chainId === ChainId.X1 ? (
               <EtherscanLogo width="18px" height="18px" fill={theme.neutral1} />
             ) : (
               <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />
@@ -406,7 +406,7 @@ const L2LogoContainer = styled.div<{ size: number }>`
 `
 
 function SquareL2Logo({ chainId, size }: { chainId: ChainId; size: number }) {
-  if (chainId === ChainId.MAINNET) return null
+  if (chainId === ChainId.X1) return null
 
   return (
     <L2LogoContainer size={size}>

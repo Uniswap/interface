@@ -19,8 +19,8 @@ jest.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => ({
 describe('OrderContent', () => {
   beforeEach(() => {
     mocked(useCurrency).mockImplementation((currencyId: Maybe<string>) => {
-      if (currencyId === WETH9[ChainId.MAINNET].address) {
-        return WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET]
+      if (currencyId === WETH9[ChainId.X1].address) {
+        return WRAPPED_NATIVE_CURRENCY[ChainId.X1]
       } else {
         return DAI
       }
@@ -46,7 +46,7 @@ describe('OrderContent', () => {
             type: 1,
             tradeType: 0,
             inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
-            outputCurrencyId: WETH9[ChainId.MAINNET].address,
+            outputCurrencyId: WETH9[ChainId.X1].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',
@@ -75,7 +75,7 @@ describe('OrderContent', () => {
             type: 1,
             tradeType: 0,
             inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
-            outputCurrencyId: WETH9[ChainId.MAINNET].address,
+            outputCurrencyId: WETH9[ChainId.X1].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',
@@ -106,7 +106,7 @@ describe('OrderContent', () => {
             type: 1,
             tradeType: 0,
             inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
-            outputCurrencyId: WETH9[ChainId.MAINNET].address,
+            outputCurrencyId: WETH9[ChainId.X1].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',
             minimumOutputCurrencyAmountRaw: '106841079134757921',

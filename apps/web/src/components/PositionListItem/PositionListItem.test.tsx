@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { ChainId, Token, WETH9 } from '@jaguarswap/sdk-core'
 import { FeeAmount, Pool } from '@jaguarswap/v3-sdk'
-import { USDC_MAINNET } from 'constants/tokens'
+import { USDC } from 'constants/tokens'
 import { useToken } from 'hooks/Tokens'
 import { PoolState, usePool } from 'hooks/usePools'
 import { mocked } from 'test-utils/mocked'
@@ -23,8 +23,8 @@ beforeEach(() => {
     PoolState.EXISTS,
     // tokenA: Token, tokenB: Token, fee: FeeAmount, sqrtRatioX96: BigintIsh, liquidity: BigintIsh, tickCurrent: number
     new Pool(
-      USDC_MAINNET,
-      WETH9[ChainId.MAINNET],
+      USDC,
+      WETH9[ChainId.X1],
       FeeAmount.MEDIUM,
       '1745948049099224684665158875285708',
       '4203610460178577802',
@@ -35,8 +35,8 @@ beforeEach(() => {
 
 test('PositionListItem should render a position', () => {
   const positionDetails = {
-    token0: USDC_MAINNET.address,
-    token1: WETH9[ChainId.MAINNET].address,
+    token0: USDC.address,
+    token1: WETH9[ChainId.X1].address,
     tokenId: BigNumber.from(479689),
     fee: FeeAmount.MEDIUM,
     liquidity: BigNumber.from('1341008833950736'),

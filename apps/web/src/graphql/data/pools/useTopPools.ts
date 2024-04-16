@@ -118,7 +118,7 @@ export function useTopPools(sortState: PoolTableSortState, chainId?: ChainId) {
     data: dataV2,
   } = useTopV2PairsQuery({
     variables: { first: 100 },
-    skip: chainId !== ChainId.MAINNET,
+    skip: chainId !== ChainId.X1,
   })
   const loading = loadingV3 || loadingV2
 

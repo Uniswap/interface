@@ -27,12 +27,12 @@ export function MulticallUpdater() {
   return (
     <>
       <multicall.Updater
-        chainId={ChainId.MAINNET}
+        chainId={ChainId.X1}
         latestBlockNumber={latestMainnetBlockNumber}
         contract={mainnetContract}
         listenerOptions={MAINNET_LISTENER_OPTIONS}
       />
-      {chainId !== ChainId.MAINNET && (
+      {chainId !== ChainId.X1 && (
         <multicall.Updater
           chainId={chainId}
           latestBlockNumber={latestBlockNumber}

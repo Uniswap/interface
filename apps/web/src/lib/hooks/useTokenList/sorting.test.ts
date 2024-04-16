@@ -1,5 +1,5 @@
 import { ChainId, Token as InterfaceToken } from '@jaguarswap/sdk-core'
-import { DAI, USDC_MAINNET, USDT, WBTC, nativeOnChain } from 'constants/tokens'
+import { DAI, USDC, USDT, WBTC, nativeOnChain } from 'constants/tokens'
 import {
   Chain,
   Currency,
@@ -84,11 +84,11 @@ const tokens: TokenBalance[] = [
       currency: Currency.Eth,
       tokenProject: {
         id: '',
-        tokens: [nonnativeToken(USDC_MAINNET)],
+        tokens: [nonnativeToken(USDC)],
         isSpam: true,
       },
     },
-    token: nonnativeToken(USDC_MAINNET),
+    token: nonnativeToken(USDC),
   },
   // 100 USDT
   {
@@ -136,7 +136,7 @@ const tokens: TokenBalance[] = [
 describe('sorting', () => {
   describe('getSortedPortfolioTokens', () => {
     it('should return an empty array if portfolioTokenBalances is undefined', () => {
-      const result = getSortedPortfolioTokens(undefined, {}, ChainId.MAINNET)
+      const result = getSortedPortfolioTokens(undefined, {}, ChainId.X1)
       expect(result).toEqual([])
     })
     it('should return only visible tokens, sorted by balances', () => {
@@ -147,37 +147,37 @@ describe('sorting', () => {
           [DAI.address]: { usdValue: 100, balance: 100 },
           [USDT.address]: { usdValue: 100, balance: 100 },
         },
-        ChainId.MAINNET
+        ChainId.X1
       )
 
-      expect(result).toEqual([nativeOnChain(ChainId.MAINNET), USDT, WBTC])
+      expect(result).toEqual([nativeOnChain(ChainId.X1), USDT, WBTC])
     })
   })
 })
 
 describe('tokenQuerySortComparator', () => {
   it('should return the input array if query is undefined', () => {
-    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator(''))
-    expect(result).toEqual([DAI, USDC_MAINNET, USDT])
+    const result = [DAI, USDC, USDT].sort(tokenQuerySortComparator(''))
+    expect(result).toEqual([DAI, USDC, USDT])
   })
   it('should return tokens that start with "us" first', () => {
-    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator('us'))
-    expect(result).toEqual([USDC_MAINNET, USDT, DAI])
+    const result = [DAI, USDC, USDT].sort(tokenQuerySortComparator('us'))
+    expect(result).toEqual([USDC, USDT, DAI])
   })
   it('should return tokens that start with "us" first, regardless of case', () => {
-    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator('US'))
-    expect(result).toEqual([USDC_MAINNET, USDT, DAI])
+    const result = [DAI, USDC, USDT].sort(tokenQuerySortComparator('US'))
+    expect(result).toEqual([USDC, USDT, DAI])
   })
   it('should return tokens that start with "da" first', () => {
-    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator('da'))
-    expect(result).toEqual([DAI, USDC_MAINNET, USDT])
+    const result = [DAI, USDC, USDT].sort(tokenQuerySortComparator('da'))
+    expect(result).toEqual([DAI, USDC, USDT])
   })
   it('should return an exact match for DAI', () => {
-    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator('dai'))
-    expect(result).toEqual([DAI, USDC_MAINNET, USDT])
+    const result = [DAI, USDC, USDT].sort(tokenQuerySortComparator('dai'))
+    expect(result).toEqual([DAI, USDC, USDT])
   })
   it('should return an exact match for USDC and otherwise leave the order unchanged', () => {
-    const result = [DAI, USDC_MAINNET, USDT].sort(tokenQuerySortComparator('usdc'))
-    expect(result).toEqual([USDC_MAINNET, DAI, USDT])
+    const result = [DAI, USDC, USDT].sort(tokenQuerySortComparator('usdc'))
+    expect(result).toEqual([USDC, DAI, USDT])
   })
 })

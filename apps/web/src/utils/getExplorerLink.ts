@@ -1,20 +1,9 @@
 import { ChainId } from '@jaguarswap/sdk-core'
 
 const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
-  [ChainId.MAINNET]: 'https://etherscan.io',
-  [ChainId.GOERLI]: 'https://goerli.etherscan.io',
-  [ChainId.SEPOLIA]: 'https://sepolia.etherscan.io',
-  [ChainId.ARBITRUM_ONE]: 'https://arbiscan.io',
-  [ChainId.ARBITRUM_GOERLI]: 'https://goerli.arbiscan.io',
-  [ChainId.OPTIMISM]: 'https://optimistic.etherscan.io',
-  [ChainId.OPTIMISM_GOERLI]: 'https://goerli-optimism.etherscan.io',
-  [ChainId.POLYGON]: 'https://polygonscan.com',
-  [ChainId.POLYGON_MUMBAI]: 'https://mumbai.polygonscan.com',
-  [ChainId.CELO]: 'https://celoscan.io',
-  [ChainId.CELO_ALFAJORES]: 'https://alfajores-blockscout.celo-testnet.org',
-  [ChainId.BNB]: 'https://bscscan.com',
-  [ChainId.AVALANCHE]: 'https://snowtrace.io',
-  [ChainId.BASE]: 'https://basescan.org',
+  // FIXME： 替换成实际浏览器地址
+  [ChainId.X1]: 'https://www.oklink.com/xlayer',
+  [ChainId.X1_TESTNET]: 'https://www.okx.com/explorer/xlayer-test',
 }
 
 export enum ExplorerDataType {
