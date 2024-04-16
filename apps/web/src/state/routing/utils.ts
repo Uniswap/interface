@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { MixedRouteSDK } from '@uniswap/router-sdk'
+import { MixedRouteSDK } from '@jaguarswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, Token, TradeType } from '@jaguarswap/sdk-core'
 import { DutchOrderInfo, DutchOrderInfoJSON } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'

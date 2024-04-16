@@ -5343,6 +5343,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jaguarswap/router-sdk@npm:1.10.0":
+  version: 1.10.0
+  resolution: "@jaguarswap/router-sdk@npm:1.10.0"
+  dependencies:
+    "@ethersproject/abi": ^5.5.0
+    "@jaguarswap/sdk-core": ^4.3.0
+    "@jaguarswap/v3-sdk": ^3.11.0
+    "@uniswap/swap-router-contracts": ^1.1.0
+    "@uniswap/v2-sdk": ^4.3.0
+  checksum: b120c47af0817b7420b6e8d0d217092b1aeb9b440c12d142118bbc3d04c792dbdc14c4deeb9d357a7f643084d2a5aff29e41c2e460474f2f44f328859850823e
+  languageName: node
+  linkType: hard
+
 "@jaguarswap/sdk-core@npm:4.2.0":
   version: 4.2.0
   resolution: "@jaguarswap/sdk-core@npm:4.2.0"
@@ -5393,7 +5406,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jaguarswap/v3-sdk@npm:3.11.0":
+"@jaguarswap/v3-sdk@npm:3.11.0, @jaguarswap/v3-sdk@npm:^3.11.0":
   version: 3.11.0
   resolution: "@jaguarswap/v3-sdk@npm:3.11.0"
   dependencies:
@@ -13785,6 +13798,7 @@ __metadata:
     "@graphql-codegen/typescript-operations": ^3.0.2
     "@graphql-codegen/typescript-react-apollo": ^3.3.7
     "@graphql-codegen/typescript-resolvers": ^3.2.1
+    "@jaguarswap/router-sdk": 1.10.0
     "@jaguarswap/sdk-core": 4.2.0
     "@jaguarswap/smart-order-router": 3.26.5
     "@jaguarswap/v3-sdk": 3.11.0
@@ -13849,7 +13863,6 @@ __metadata:
     "@uniswap/merkle-distributor": 1.0.1
     "@uniswap/permit2-sdk": 1.2.0
     "@uniswap/redux-multicall": 1.1.8
-    "@uniswap/router-sdk": 1.8.0
     "@uniswap/token-lists": 1.0.0-beta.33
     "@uniswap/uniswapx-sdk": 1.4.1
     "@uniswap/universal-router-sdk": 1.7.1

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { Protocol } from '@uniswap/router-sdk'
+import { Protocol } from '@jaguarswap/router-sdk'
 import { sendAnalyticsEvent } from 'analytics'
 import { isUniswapXSupportedChain } from 'constants/chains'
 import ms from 'ms'

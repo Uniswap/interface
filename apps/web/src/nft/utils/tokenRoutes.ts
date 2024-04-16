@@ -1,4 +1,4 @@
-import { IRoute, Protocol } from '@uniswap/router-sdk'
+import { IRoute, Protocol } from '@jaguarswap/router-sdk'
 import { Currency, CurrencyAmount } from '@jaguarswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool } from '@jaguarswap/v3-sdk'

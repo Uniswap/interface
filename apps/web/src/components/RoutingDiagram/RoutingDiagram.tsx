@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { Protocol } from '@uniswap/router-sdk'
+import { Protocol } from '@jaguarswap/router-sdk'
 import { Currency } from '@jaguarswap/sdk-core'
 import { FeeAmount } from '@jaguarswap/v3-sdk'
 import Badge from 'components/Badge'
