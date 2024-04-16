@@ -1,4 +1,4 @@
-import { MixedRoute, partitionMixedRouteByProtocol, Protocol, Trade } from '@uniswap/router-sdk'
+import { MixedRoute, partitionMixedRouteByProtocol, Protocol, Trade } from '@jaguarswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@jaguarswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool } from '@jaguarswap/v3-sdk'

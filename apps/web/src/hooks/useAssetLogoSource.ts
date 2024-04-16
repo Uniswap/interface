@@ -48,6 +48,7 @@ export function getInitialUrl(
   const checksummedAddress = isAddress(address)
 
   if (checksummedAddress) {
+    // FIXME： 替换成主网的logo
     return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${checksummedAddress}/logo.png`
   } else {
     return backupImg ?? undefined

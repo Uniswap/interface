@@ -1,4 +1,4 @@
-import { Protocol } from '@uniswap/router-sdk'
+import { Protocol } from '@jaguarswap/router-sdk'
 import { Currency, Percent, TradeType } from '@jaguarswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount } from '@jaguarswap/v3-sdk'
