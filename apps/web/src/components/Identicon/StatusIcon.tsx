@@ -12,7 +12,7 @@ import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { useUnitagByAddressWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import { getWalletMeta } from 'utils/walletMeta'
 import sockImg from '../../assets/svg/socks.svg'
-import { useHasSocks } from '../../hooks/useSocksBalance'
+// import { useHasSocks } from '../../hooks/useSocksBalance'
 import Identicon from '../Identicon'
 
 export const IconWrapper = styled.div<{ size?: number }>`
@@ -132,13 +132,12 @@ export default function StatusIcon({
   size?: number
   showMiniIcons?: boolean
 }) {
-  const hasSocks = useHasSocks()
+  // const hasSocks = useHasSocks()
 
   return (
     <IconWrapper size={size} data-testid="StatusIconRoot">
       <MainWalletIcon account={account} connection={connection} size={size} />
       {showMiniIcons && <MiniWalletIcon connection={connection} side="right" />}
-      {hasSocks && showMiniIcons && <Socks />}
     </IconWrapper>
   )
 }
