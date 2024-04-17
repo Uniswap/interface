@@ -7,7 +7,7 @@ import {
   SharedEventName,
   SwapEventName,
 } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Token } from '@jaguarswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, SWAP_ROUTER_02_ADDRESSES, Token } from '@jaguarswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
@@ -318,7 +318,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
       ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
       : undefined),
     // isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
-    undefined,
+    SWAP_ROUTER_02_ADDRESSES(chainId),
     trade?.fillType
   )
 
