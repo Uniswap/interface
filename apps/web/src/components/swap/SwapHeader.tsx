@@ -93,14 +93,14 @@ export default function SwapHeader({
           <Trans>Swap</Trans>
         </SwapHeaderTabButton>
         {/* {limitsEnabled && chainId === ChainId.X1_TESTNET && ( */}
-        <SwapHeaderTabButton
+        {/* <SwapHeaderTabButton
           $isActive={currentTab === SwapTab.Limit}
           onClick={() => {
             onTab(SwapTab.Limit);
           }}
         >
           <Trans>Limit</Trans>
-        </SwapHeaderTabButton>
+        </SwapHeaderTabButton> */}
       </HeaderButtonContainer>
       {currentTab === SwapTab.Swap && (
         <RowFixed>

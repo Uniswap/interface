@@ -44,11 +44,7 @@ export type Allowance =
     }
   | AllowanceRequired
 
-export default function usePermit2Allowance(
-  amount?: CurrencyAmount<Token>,
-  spender?: string,
-  tradeFillType?: TradeFillType
-): Allowance {
+export default function usePermit2Allowance(amount?: CurrencyAmount<Token>, spender?: string, tradeFillType?: TradeFillType): Allowance {
   const { account } = useWeb3React()
   const token = amount?.currency
 
@@ -132,7 +128,7 @@ export default function usePermit2Allowance(
 
   return useMemo(() => {
     if (token) {
-      if (!tokenAllowance || !permitAllowance) {
+      if (!tokenAllowance) {
         return { state: AllowanceState.LOADING }
       } else if (shouldRequestSignature) {
         return {
@@ -182,7 +178,6 @@ export default function usePermit2Allowance(
     isPermitted,
     isSigned,
     updatePermitAllowance,
-    permitAllowance,
     revoke,
     isRevocationPending,
     shouldRequestSignature,

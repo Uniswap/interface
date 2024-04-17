@@ -136,13 +136,13 @@ export function Pending({
   }, [chainId, swapResult, uniswapXOrder])
 
   // Handle special statuses for UniswapX orders
-  if (
-    uniswapXOrder &&
-    uniswapXOrder.status !== UniswapXOrderStatus.OPEN &&
-    uniswapXOrder.status !== UniswapXOrderStatus.FILLED
-  ) {
-    return <OrderContent order={uniswapXOrder} />
-  }
+  // if (
+  //   uniswapXOrder &&
+  //   uniswapXOrder.status !== UniswapXOrderStatus.OPEN &&
+  //   uniswapXOrder.status !== UniswapXOrderStatus.FILLED
+  // ) {
+  //   return <OrderContent order={uniswapXOrder} />
+  // }
 
   return (
     <Container gap="lg">
@@ -175,7 +175,7 @@ export function Pending({
           </Row>
         )}
         {/* Display while UniswapX order is still pending */}
-        {uniswapXOrder && uniswapXOrder.status === UniswapXOrderStatus.OPEN && (
+        {/* {uniswapXOrder && uniswapXOrder.status === UniswapXOrderStatus.OPEN && (
           <Row justify="center" marginTop="32px" minHeight="24px">
             <ThemedText.BodySmall color="neutral2">
               <ExternalLink
@@ -193,7 +193,7 @@ export function Pending({
               </ExternalLink>
             </ThemedText.BodySmall>
           </Row>
-        )}
+        )} */}
         {/* Display after submitting Classic swap or after filling UniswapX order */}
         {explorerLink && (
           <Row justify="center" marginTop="32px" minHeight="24px">
