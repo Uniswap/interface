@@ -5287,9 +5287,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jaguarswap/smart-order-router@npm:3.18.1":
-  version: 3.18.1
-  resolution: "@jaguarswap/smart-order-router@npm:3.18.1"
+"@jaguarswap/smart-order-router@npm:3.18.2":
+  version: 3.18.2
+  resolution: "@jaguarswap/smart-order-router@npm:3.18.2"
   dependencies:
     "@jaguarswap/router-sdk": ^1.6.0
     "@jaguarswap/sdk-core": ^4.3.0
@@ -5315,7 +5315,7 @@ __metadata:
     stats-lite: ^2.2.0
   peerDependencies:
     jsbi: ^3.2.0
-  checksum: 2ea0d191508664db6dc1a7afb813872ad88d85ee010d8d460dab15965cf751c97df5f84cd966f15583af8d18c646e75f0ec4bafd45672e4c04aa48d2d206a79b
+  checksum: da5ee88ab10c835cb65424417ecd705ffed0976563de7318c22fe48c3c0ad29f951a5793d918adca9864066c2330260dc9c709c7aab48e81b6a79ac1eed557b5
   languageName: node
   linkType: hard
 
@@ -13711,7 +13711,7 @@ __metadata:
     "@graphql-codegen/typescript-resolvers": ^3.2.1
     "@jaguarswap/router-sdk": 1.10.0
     "@jaguarswap/sdk-core": 4.3.1
-    "@jaguarswap/smart-order-router": 3.18.1
+    "@jaguarswap/smart-order-router": 3.18.2
     "@jaguarswap/v3-sdk": 3.11.0
     "@juggle/resize-observer": 3.4.0
     "@lingui/cli": 4.5.0
