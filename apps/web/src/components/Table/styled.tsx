@@ -6,9 +6,10 @@ import { HideScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { useAbbreviatedTimeString } from 'components/Table/utils'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { OrderDirection, getTokenDetailsURL, supportedChainIdFromGQLChain, unwrapToken } from 'graphql/data/util'
 import { OrderDirection as TheGraphOrderDirection } from 'graphql/thegraph/__generated__/types-and-hooks'
+import { useCurrency } from 'hooks/Tokens'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { Trans } from 'i18n'
 import { ArrowDown, CornerLeftUp, ExternalLink as ExternalLinkIcon } from 'react-feather'
@@ -142,12 +143,12 @@ export const CellContainer = styled.div`
 export const StyledExternalLink = styled(ExternalLink)`
   text-decoration: none;
   ${ClickableStyle}
-  color: ${({ theme }) => theme.neutral1}
+  color: ${({ theme }) => theme.neutral1};
 `
 const StyledInternalLink = styled(Link)`
   text-decoration: none;
   ${ClickableStyle}
-  color: ${({ theme }) => theme.neutral1}
+  color: ${({ theme }) => theme.neutral1};
 `
 
 export const TableRowLink = styled(Link)`
@@ -243,7 +244,7 @@ export const TokenLinkCell = ({ token }: { token: Token }) => {
   const chainId = supportedChainIdFromGQLChain(token.chain) ?? ChainId.MAINNET
   const unwrappedToken = unwrapToken(chainId, token)
   const isNative = unwrappedToken.address === NATIVE_CHAIN_ID
-  const nativeCurrency = nativeOnChain(chainId)
+  const nativeCurrency = useCurrency(NATIVE_CHAIN_ID, chainId)
   return (
     <StyledInternalLink
       to={getTokenDetailsURL({

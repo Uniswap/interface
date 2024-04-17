@@ -4,7 +4,12 @@ import { MobileEventName } from 'src/features/telemetry/constants'
 import { WidgetEvent, WidgetType } from 'src/features/widgets/widgets'
 import { TraceProps } from 'utilities/src/telemetry/trace/Trace'
 import { ImportType } from 'wallet/src/features/onboarding/types'
-import { EthMethod, WCEventType, WCRequestOutcome } from 'wallet/src/features/walletConnect/types'
+import {
+  EthMethod,
+  UwULinkMethod,
+  WCEventType,
+  WCRequestOutcome,
+} from 'wallet/src/features/walletConnect/types'
 import { ShareableEntity } from 'wallet/src/telemetry/constants'
 
 // Events related to Moonpay internal transactions
@@ -86,7 +91,7 @@ export type MobileEventProperties = {
   [MobileEventName.WalletAdded]: OnboardingCompletedProps & TraceProps
   [MobileEventName.WalletConnectSheetCompleted]: {
     request_type: WCEventType
-    eth_method?: EthMethod
+    eth_method?: EthMethod | UwULinkMethod
     dapp_url: string
     dapp_name: string
     wc_version: string

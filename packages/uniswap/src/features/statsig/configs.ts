@@ -8,6 +8,7 @@ import { logger } from 'utilities/src/logger/logger'
 export enum DynamicConfigs {
   // Wallet
   MobileForceUpgrade,
+  Slippage,
   UwuLink,
 
   // Web
@@ -21,6 +22,7 @@ export const WEB_CONFIG_NAMES = new Map<DynamicConfigs, string>([
 export const WALLET_CONFIG_NAMES = new Map<DynamicConfigs, string>([
   [DynamicConfigs.MobileForceUpgrade, 'force_upgrade'],
   [DynamicConfigs.UwuLink, 'uwulink_config'],
+  [DynamicConfigs.Slippage, 'slippage_configs'],
 ])
 
 export function getConfigName(config: DynamicConfigs): string {

@@ -1,4 +1,3 @@
-import { TransactionReceipt } from '@ethersproject/abstract-provider'
 import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
@@ -6,33 +5,20 @@ import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
-import { ActivityUpdaterFn } from 'state/activity/updater'
 import { useAppDispatch } from 'state/hooks'
 import { isPendingTx, useMultichainTransactions, useTransactionRemover } from 'state/transactions/hooks'
 import { checkedTransaction } from 'state/transactions/reducer'
-import { SerializableTransactionReceipt, TransactionDetails } from 'state/transactions/types'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { TransactionDetails } from 'state/transactions/types'
+import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
+import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
+import { OnActivityUpdate } from '../types'
 import { CanceledError, RetryOptions, RetryableError, retry } from './retry'
 
 interface Transaction {
   addedTime: number
   receipt?: unknown
   lastCheckedBlockNumber?: number
-}
-
-export function toSerializableReceipt(receipt: TransactionReceipt): SerializableTransactionReceipt {
-  return {
-    blockHash: receipt.blockHash,
-    blockNumber: receipt.blockNumber,
-    contractAddress: receipt.contractAddress,
-    from: receipt.from,
-    status: receipt.status,
-    to: receipt.to,
-    transactionHash: receipt.transactionHash,
-    transactionIndex: receipt.transactionIndex,
-  }
 }
 
 export function shouldCheck(lastBlockNumber: number, tx: Transaction): boolean {
@@ -63,27 +49,32 @@ const RETRY_OPTIONS_BY_CHAIN_ID: { [chainId: number]: RetryOptions } = {
 }
 const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 1, minWait: 0, maxWait: 0 }
 
-export function usePollPendingTransactions(onReceiveUpdate: ActivityUpdaterFn) {
-  const realtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
-  const { chainId: appChainId } = useWeb3React()
-
+function usePendingTransactions(chainId?: ChainId) {
   const multichainTransactions = useMultichainTransactions()
-  const pendingTransactions = useMemo(() => {
-    // We can skip polling when the app's current chain is supported by the subscription service.
-    if (realtimeEnabled && appChainId && SUBSCRIPTION_CHAINIDS.includes(appChainId)) {
-      return []
-    }
+  return useMemo(() => {
+    if (!chainId) return []
+    return multichainTransactions.flatMap(([tx, txChainId]) => {
+      if (isPendingTx(tx) && txChainId === chainId) {
+        return tx
+      } else {
+        return []
+      }
+    })
+  }, [chainId, multichainTransactions])
+}
 
-    return multichainTransactions.flatMap(
-      ([tx, chainId]) => (chainId === appChainId && isPendingTx(tx) ? tx : []) // Only use pending transactions on the current chain.
-    )
-  }, [appChainId, multichainTransactions, realtimeEnabled])
-
+export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
+  const realtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
   const { account, chainId, provider } = useWeb3React()
+
+  const pendingTransactions = usePendingTransactions(
+    // We can skip polling when the app's current chain is supported by the subscription service.
+    realtimeEnabled && chainId && SUBSCRIPTION_CHAINIDS.includes(chainId) ? undefined : chainId
+  )
   const hasPending = pendingTransactions.length > 0
-  const lastBlockNumber = useBlockNumber()
   const blockTimestamp = useCurrentBlockTimestamp(hasPending ? undefined : NEVER_RELOAD)
 
+  const lastBlockNumber = useBlockNumber()
   const fastForwardBlockNumber = useFastForwardBlockNumber()
   const removeTransaction = useTransactionRemover()
   const dispatch = useAppDispatch()
@@ -127,7 +118,7 @@ export function usePollPendingTransactions(onReceiveUpdate: ActivityUpdaterFn) {
         promise
           .then((receipt) => {
             fastForwardBlockNumber(receipt.blockNumber)
-            onReceiveUpdate({
+            onActivityUpdate({
               type: 'transaction',
               originalTransaction: tx,
               receipt,
@@ -152,7 +143,7 @@ export function usePollPendingTransactions(onReceiveUpdate: ActivityUpdaterFn) {
     pendingTransactions,
     fastForwardBlockNumber,
     hasPending,
-    onReceiveUpdate,
     dispatch,
+    onActivityUpdate,
   ])
 }

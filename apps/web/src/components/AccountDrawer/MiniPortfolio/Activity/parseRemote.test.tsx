@@ -1,15 +1,14 @@
 import { act, renderHook } from '@testing-library/react'
 import ms from 'ms'
 
+import { MockExpiredUniswapXOrder, MockFilledUniswapXOrder, MockOpenUniswapXOrder } from 'state/signatures/fixtures'
 import {
-  MockClosedUniswapXOrder,
   MockMint,
   MockMoonpayPurchase,
   MockNFTApproval,
   MockNFTApprovalForAll,
   MockNFTPurchase,
   MockNFTReceive,
-  MockOpenUniswapXOrder,
   MockRemoveLiquidity,
   MockSenderAddress,
   MockSpamMint,
@@ -19,10 +18,10 @@ import {
   MockTokenApproval,
   MockTokenReceive,
   MockTokenSend,
+  MockWrap,
   mockTokenTransferInPartsFragment,
   mockTokenTransferOutPartsFragment,
   mockTransactionDetailsPartsFragment,
-  MockWrap,
 } from './fixtures/activity'
 import {
   offchainOrderDetailsFromGraphQLTransactionActivity,
@@ -48,8 +47,12 @@ describe('parseRemote', () => {
       const result = parseRemoteActivities([MockOpenUniswapXOrder], '', jest.fn())
       expect(result).toEqual({})
     })
-    it('should parse closed UniswapX order', () => {
-      const result = parseRemoteActivities([MockClosedUniswapXOrder], '', jest.fn())
+    it('should parse expired UniswapX order', () => {
+      const result = parseRemoteActivities([MockExpiredUniswapXOrder], '', jest.fn())
+      expect(result?.['someHash']).toMatchSnapshot()
+    })
+    it('should parse filledUniswapX order', () => {
+      const result = parseRemoteActivities([MockFilledUniswapXOrder], '', jest.fn())
       expect(result?.['someHash']).toMatchSnapshot()
     })
     it('should parse NFT approval', () => {

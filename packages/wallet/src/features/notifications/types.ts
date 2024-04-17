@@ -24,6 +24,8 @@ export enum AppNotificationType {
   SwapPending,
   TransferCurrencyPending,
   ScantasticComplete,
+  DappConnected,
+  DappDisconnected,
 }
 
 export interface AppNotificationBase {
@@ -45,7 +47,7 @@ export interface WalletConnectNotification extends AppNotificationBase {
   type: AppNotificationType.WalletConnect
   event: WalletConnectEvent
   dappName: string
-  imageUrl: string | null
+  imageUrl: Maybe<string>
   chainId?: number
 }
 
@@ -187,6 +189,14 @@ export interface TransferCurrencyPendingNotification extends AppNotificationBase
 export interface ScantasticCompleteNotification extends AppNotificationBase {
   type: AppNotificationType.ScantasticComplete
 }
+export interface DappConnectedNotification extends AppNotificationBase {
+  type: AppNotificationType.DappConnected
+  dappIconUrl: Maybe<string>
+}
+export interface DappDisconnectedNotification extends AppNotificationBase {
+  type: AppNotificationType.DappDisconnected
+  dappIconUrl: Maybe<string>
+}
 
 export type AppNotification =
   | AppNotificationDefault
@@ -202,3 +212,5 @@ export type AppNotification =
   | ChangeAssetVisibilityNotification
   | SuccessNotification
   | ScantasticCompleteNotification
+  | DappConnectedNotification
+  | DappDisconnectedNotification

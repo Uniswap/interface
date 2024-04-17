@@ -10,4 +10,5 @@ export enum SupportArticleURL {
   MOONPAY_REGIONAL_AVAILABILITY = 'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-',
   LEARN_ABOUT_LIMITS = 'https://support.uniswap.org/hc/en-us/sections/24372644881293',
   LIMIT_FAILURE = 'https://support.uniswap.org/hc/en-us/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute',
+  IMPERMANENT_LOSS = 'https://support.uniswap.org/hc/en-us/articles/20904453751693-What-is-Impermanent-Loss',
 }

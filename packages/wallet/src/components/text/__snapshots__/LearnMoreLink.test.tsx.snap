@@ -27,7 +27,7 @@ exports[`LearnMoreLink renders without error 1`] = `
   }
 >
   <Text
-    allowFontScaling={true}
+    allowFontScaling={false}
     maxFontSizeMultiplier={1.2}
     style={
       {

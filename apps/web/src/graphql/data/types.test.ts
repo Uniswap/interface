@@ -1,5 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { DAI, NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { DAI, NATIVE_CHAIN_ID, USDC_MAINNET, nativeOnChain } from 'constants/tokens'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import {
   Chain,
@@ -140,6 +140,26 @@ describe('gqlTokenToCurrencyInfo', () => {
       isSpam: false,
       logoUrl: 'dai_url',
       safetyLevel: SafetyLevel.Verified,
+    })
+  })
+
+  it('should return a CurrencyInfo with fields missing', () => {
+    const result = gqlTokenToCurrencyInfo({
+      id: USDC_MAINNET.address,
+      address: USDC_MAINNET.address,
+      chain: Chain.Ethereum,
+    })
+    expect(result).toEqual({
+      currency: {
+        ...USDC_MAINNET,
+        decimals: 18, // default since it's missing
+        name: undefined, // default since it's missing
+        symbol: undefined, // default since it's missing
+      },
+      currencyId: USDC_MAINNET.address,
+      isSpam: false,
+      logoUrl: undefined,
+      safetyLevel: SafetyLevel.StrongWarning,
     })
   })
 })

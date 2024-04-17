@@ -253,25 +253,6 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   text-decoration: underline;
 }
 
-.c57 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
-  font-weight: 500;
-}
-
-.c57:hover {
-  opacity: 0.6;
-}
-
-.c57:active {
-  opacity: 0.4;
-}
-
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -476,7 +457,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   display: flex;
 }
 
-.c59 {
+.c53 {
   z-index: 1020;
   overflow: hidden;
   top: 0;
@@ -840,46 +821,6 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   text-decoration: none;
 }
 
-.c53 {
-  width: 100%;
-  padding: 12px 20px 16px;
-  background-color: #FF5F521f;
-  border-radius: 16px;
-  border: 1px solid #22222212;
-  color: #FF5F52;
-}
-
-.c54 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-weight: 535;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-}
-
-.c55 {
-  font-weight: 535;
-  font-size: 16px;
-  line-height: 24px;
-  margin-left: 7px;
-}
-
-.c56 {
-  margin-top: 8px;
-  font-size: 12px;
-  line-height: 16px;
-  color: #7D7D7D;
-}
-
-.c58 {
-  color: #222222;
-  font-weight: 535;
-}
-
 .c24 {
   height: 24px;
   width: 24px;
@@ -1022,7 +963,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
 }
 
 @media only screen and (max-width:1024px) {
-  .c59 {
+  .c53 {
     opacity: 0;
     pointer-events: none;
     -webkit-transition: opacity 250ms ease-in-out;
@@ -1441,64 +1382,9 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
               </div>
             </div>
           </main>
-          <div
-            class="c53"
-            color="#FF5F52"
-            data-cy="token-safety-message"
-          >
-            <div
-              class="c54"
-            >
-              <svg
-                fill="none"
-                height="16px"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                width="16px"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-                />
-                <line
-                  x1="12"
-                  x2="12"
-                  y1="9"
-                  y2="13"
-                />
-                <line
-                  x1="12"
-                  x2="12.01"
-                  y1="17"
-                  y2="17"
-                />
-              </svg>
-              <div
-                class="c55 css-7o920z"
-              >
-                Warning
-              </div>
-            </div>
-            <div
-              class="c56"
-            >
-              These tokens aren't traded on leading U.S. centralized exchanges or frequently swapped on Uniswap. Always conduct your own research before trading. 
-              <a
-                class="c57 c58"
-                href="https://support.uniswap.org/hc/en-us/articles/8723118437133"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Learn more
-              </a>
-            </div>
-          </div>
         </div>
         <div
-          class="c59"
+          class="c53"
         />
       </div>
     </span>

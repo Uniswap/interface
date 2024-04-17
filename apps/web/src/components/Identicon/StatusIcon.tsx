@@ -7,8 +7,8 @@ import styled from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap } from 'theme/styles'
 import { UniconV2 } from 'ui/src/components/UniconV2'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
+import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
 import { useUnitagByAddressWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import { getWalletMeta } from 'utils/walletMeta'
 import sockImg from '../../assets/svg/socks.svg'
@@ -98,7 +98,7 @@ const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'l
 
 const MainWalletIcon = ({ account, connection, size }: { account: string; connection: Connection; size: number }) => {
   const { unitag } = useUnitagByAddressWithoutFlag(account, Boolean(account))
-  const { avatar } = useENSAvatar(account ?? undefined)
+  const { avatar } = useENSAvatar(account)
   const uniconV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
   if (!account) return null

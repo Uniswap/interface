@@ -4,7 +4,7 @@
 
 /* eslint-disable import/no-unused-modules */
 import { paths } from '../src/pages/paths'
-import { MetaTagInjector } from './components/metaTagInjector'
+import { transformResponse } from './utils/transformResponse'
 
 function doesMatchPath(path: string): boolean {
   const regexPaths = paths.map((p) => '^' + p.replace(/:[^/]+/g, '[^/]+').replace(/\*/g, '.*') + '$')
@@ -21,13 +21,13 @@ export const onRequest: PagesFunction = async ({ request, next }) => {
     url: request.url,
     description: 'Swap or provide liquidity on the Uniswap Protocol',
   }
-  const res = next()
+  const response = next()
   if (doesMatchPath(requestURL.pathname)) {
     try {
-      return new HTMLRewriter().on('head', new MetaTagInjector(data, request)).transform(await res)
+      return transformResponse(request, await response, data)
     } catch (e) {
-      return res
+      return response
     }
   }
-  return res
+  return response
 }

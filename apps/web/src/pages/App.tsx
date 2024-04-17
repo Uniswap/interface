@@ -23,7 +23,6 @@ import { isPathBlocked } from 'utils/blockedPaths'
 import { MICROSITE_LINK } from 'utils/openDownloadApp'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
-
 import { findRouteByPath, RouteDefinition, routes, useRouterConfig } from './RouteDefinitions'
 
 // The Chrome is always loaded, but is lazy-loaded because it is not needed without user interaction.

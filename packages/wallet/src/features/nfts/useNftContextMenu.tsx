@@ -2,7 +2,6 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { selectNftsVisibility } from 'wallet/src/features/favorites/selectors'
@@ -11,6 +10,7 @@ import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { useAppDispatch, useAppSelector } from 'wallet/src/state'
 
 interface NFTMenuParams {
   tokenId?: string
@@ -20,7 +20,7 @@ interface NFTMenuParams {
   isSpam?: boolean
 }
 
-export function useNFTMenu({
+export function useNFTContextMenu({
   contractAddress,
   tokenId,
   owner,

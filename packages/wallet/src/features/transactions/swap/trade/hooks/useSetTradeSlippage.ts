@@ -1,4 +1,6 @@
 import { useMemo } from 'react'
+import { DynamicConfigs } from 'uniswap/src/features/statsig/configs'
+import { useDynamicConfig } from 'uniswap/src/features/statsig/hooks'
 import {
   MAX_AUTO_SLIPPAGE_TOLERANCE,
   MIN_AUTO_SLIPPAGE_TOLERANCE,
@@ -83,12 +85,21 @@ function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
 
   const outputAmountUSD = useUSDCValue(trade?.outputAmount)?.toExact()
 
+  const minAutoSlippageToleranceL2 = useSlippageValueFromDynamicConfig(
+    SlippageConfigName.MinAutoSlippageToleranceL2
+  )
+
   return useMemo<number>(() => {
     if (isLegacyQuote) {
       const chainId = trade.quoteData.quote?.route[0]?.[0]?.tokenIn?.chainId
       const onL2 = isL2Chain(chainId)
       const gasCostUSD = trade.quoteData.quote?.gasUseEstimateUSD
-      return calculateAutoSlippage({ onL2, gasCostUSD, outputAmountUSD })
+      return calculateAutoSlippage({
+        onL2,
+        minAutoSlippageToleranceL2,
+        gasCostUSD,
+        outputAmountUSD,
+      })
     } else {
       // TODO:api remove this during Uniswap X integration
       const quote = isClassicQuote(trade?.quoteData?.quote?.quote)
@@ -97,21 +108,32 @@ function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
       const chainId = toSupportedChainId(quote?.chainId) ?? undefined
       const onL2 = isL2Chain(chainId)
       const gasCostUSD = quote?.gasFeeUSD
-      return calculateAutoSlippage({ onL2, gasCostUSD, outputAmountUSD })
+      return calculateAutoSlippage({
+        onL2,
+        minAutoSlippageToleranceL2,
+        gasCostUSD,
+        outputAmountUSD,
+      })
     }
-  }, [isLegacyQuote, outputAmountUSD, trade])
+  }, [isLegacyQuote, minAutoSlippageToleranceL2, outputAmountUSD, trade])
 }
 
 function calculateAutoSlippage({
   onL2,
+  minAutoSlippageToleranceL2,
   gasCostUSD,
   outputAmountUSD,
 }: {
   onL2: boolean
+  minAutoSlippageToleranceL2: number
   gasCostUSD?: string
   outputAmountUSD?: string
 }): number {
-  if (onL2 || !gasCostUSD || !outputAmountUSD) {
+  if (onL2) {
+    return minAutoSlippageToleranceL2
+  }
+
+  if (!gasCostUSD || !outputAmountUSD) {
     return MIN_AUTO_SLIPPAGE_TOLERANCE
   }
 
@@ -126,4 +148,23 @@ function calculateAutoSlippage({
   }
 
   return Number(suggestedSlippageTolerance.toFixed(2))
+}
+
+enum SlippageConfigName {
+  MinAutoSlippageToleranceL2,
+}
+
+// Allows us to type the values stored in the JSON dynamic config object for slippage params.
+// Names in mapping should exatcly match the JSON object in statsig.
+export const SLIPPAGE_CONFIG_NAMES = new Map<SlippageConfigName, string>([
+  [SlippageConfigName.MinAutoSlippageToleranceL2, 'minAutoSlippageToleranceL2'],
+])
+
+function useSlippageValueFromDynamicConfig(configName: SlippageConfigName): number {
+  const slippageConfig = useDynamicConfig(DynamicConfigs.Slippage)
+
+  const slippageValue = slippageConfig.getValue(SLIPPAGE_CONFIG_NAMES.get(configName)) as string
+
+  // Format as % number
+  return parseInt(slippageValue, 10)
 }

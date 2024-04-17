@@ -19,8 +19,8 @@ import {
   useSearchTokensWebQuery,
   useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
+import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
 import { isSameAddress } from 'utilities/src/addresses'
 
 interface CurrencySearchParams {
@@ -68,6 +68,7 @@ export function useCurrencySearchResults({
     skip: !searchQuery || !gqlTokenListsEnabled,
   })
   const { data: popularTokens, loading: popularTokensLoading } = useTopTokensQuery({
+    fetchPolicy: 'cache-first',
     variables: {
       chain: chainIdToBackendName(chainId) ?? Chain.Ethereum,
       orderBy: TokenSortableField.Popularity,

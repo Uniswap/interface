@@ -4,7 +4,7 @@ import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction
 import { MissingImageLogo } from 'components/Logo/AssetLogo'
 import { ChainLogo, getDefaultBorderRadius } from 'components/Logo/ChainLogo'
 import { Unicon } from 'components/Unicon'
-import useTokenLogoSource from 'hooks/useAssetLogoSource'
+import { useCurrencyInfo } from 'hooks/Tokens'
 import useENSAvatar from 'hooks/useENSAvatar'
 import React from 'react'
 import { Loader } from 'react-feather'
@@ -12,8 +12,8 @@ import styled from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { UniconV2 } from 'ui/src/components/UniconV2'
 import { useLogolessColorScheme } from 'ui/src/utils/colors'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
+import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
 
 const UnknownContract = styled(UnknownStatus)`
   color: ${({ theme }) => theme.neutral2};
@@ -94,29 +94,19 @@ function DoubleLogo({ logo1, onError1, logo2, onError2, size }: DoubleLogoProps)
 interface DoubleCurrencyLogoProps {
   chainId: ChainId
   currencies: Array<Currency | undefined>
-  images?: Array<string | undefined>
+  backupImages?: Array<string | undefined>
   size: string
 }
 
-function DoubleCurrencyLogo({ chainId, currencies, images, size }: DoubleCurrencyLogoProps) {
-  const [src, nextSrc] = useTokenLogoSource({
-    address: currencies?.[0]?.wrapped.address,
-    chainId,
-    isNative: currencies?.[0]?.isNative,
-    primaryImg: images?.[0],
-  })
-  const [src2, nextSrc2] = useTokenLogoSource({
-    address: currencies?.[1]?.wrapped.address,
-    chainId,
-    isNative: currencies?.[1]?.isNative,
-    primaryImg: images?.[1],
-  })
-
-  if (currencies.length === 1 && src) {
-    return <CircleLogoImage size={size} src={src} onError={nextSrc} />
+function DoubleCurrencyLogo({ currencies, size, backupImages }: DoubleCurrencyLogoProps) {
+  const currencyInfos = [useCurrencyInfo(currencies?.[0]), useCurrencyInfo(currencies?.[1])]
+  if (currencies.length === 1 && currencyInfos[0]?.logoUrl) {
+    return <CircleLogoImage size={size} src={currencyInfos[0].logoUrl} />
   }
-  if (currencies.length > 1) {
-    return <DoubleLogo logo1={src} onError1={nextSrc} logo2={src2} onError2={nextSrc2} size={size} />
+  const logo1 = currencyInfos[0]?.logoUrl ?? backupImages?.[0]
+  const logo2 = currencyInfos[1]?.logoUrl ?? backupImages?.[1]
+  if (currencies.length > 1 && (logo1 || logo2)) {
+    return <DoubleLogo logo1={logo1} logo2={logo2} size={size} />
   }
   return <LogolessPlaceholder currency={currencies?.[0]} size={size} />
 }
@@ -191,7 +181,7 @@ function getLogo({ chainId, accountAddress, currencies, images, size = '40px' }:
     return <PortfolioAvatar accountAddress={accountAddress} size={size} />
   }
   if (currencies && currencies.length) {
-    return <DoubleCurrencyLogo chainId={chainId} currencies={currencies} images={images} size={size} />
+    return <DoubleCurrencyLogo chainId={chainId} currencies={currencies} size={size} />
   }
   if (images?.length === 1) {
     return <CircleLogoImage size={size} src={images[0] ?? blankTokenUrl} />

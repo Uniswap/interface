@@ -1,4 +1,4 @@
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { ChainId, Currency, Percent } from '@uniswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import Column from 'components/Column'
@@ -16,7 +16,6 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { BIPS_BASE } from 'constants/misc'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { chainIdToBackendName, getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
-import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { Trans, t } from 'i18n'
@@ -28,8 +27,11 @@ import { ClickableStyle, EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { shortenAddress } from 'utilities/src/addresses'
-import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+
+import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
+import { useCurrencyInfo } from 'hooks/Tokens'
+import { useFormatter } from 'utils/formatNumbers'
 import { DetailBubble } from './shared'
 
 const HeaderContainer = styled.div`
@@ -383,7 +385,7 @@ export function DoubleTokenAndChainLogo({
 }) {
   return (
     <StyledLogoParentContainer>
-      <DoubleTokenLogo chainId={chainId} tokens={tokens} size={size} />
+      <DoubleTokenLogo tokens={tokens} size={size} />
       <SquareL2Logo chainId={chainId} size={size} />
     </StyledLogoParentContainer>
   )
@@ -415,31 +417,44 @@ function SquareL2Logo({ chainId, size }: { chainId: ChainId; size: number }) {
   )
 }
 
-export function DoubleTokenLogo({
-  chainId,
-  tokens,
+function DoubleTokenLogo({ tokens, size = 32 }: { tokens: Array<Token | undefined>; size?: number }) {
+  const currencyInfos = [gqlTokenToCurrencyInfo(tokens?.[0]), gqlTokenToCurrencyInfo(tokens?.[1])]
+
+  if (!currencyInfos[0]?.logoUrl && !currencyInfos[1]?.logoUrl) {
+    return null
+  }
+  if (!currencyInfos[0]?.logoUrl && currencyInfos[1]?.logoUrl) {
+    return <DoubleLogo logo1={currencyInfos[1]?.logoUrl} size={size} />
+  }
+  if (currencyInfos[0]?.logoUrl && !currencyInfos[1]?.logoUrl) {
+    return <DoubleLogo logo1={currencyInfos[0]?.logoUrl} size={size} />
+  }
+  return (
+    <DoubleLogo logo1={currencyInfos[0]?.logoUrl as string} logo2={currencyInfos[1]?.logoUrl as string} size={size} />
+  )
+}
+
+export function DoubleCurrencyLogo({
+  currencies,
   size = 32,
 }: {
-  chainId: number
-  tokens: Array<Token | undefined>
+  currencies: Array<Currency | undefined>
   size?: number
 }) {
-  const token0IsNative = tokens?.[0]?.address === NATIVE_CHAIN_ID
-  const token1IsNative = tokens?.[1]?.address === NATIVE_CHAIN_ID
-  const [src, nextSrc] = useTokenLogoSource({
-    address: tokens?.[0]?.address,
-    chainId,
-    primaryImg: token0IsNative ? undefined : tokens?.[0]?.project?.logo?.url,
-    isNative: token0IsNative,
-  })
-  const [src2, nextSrc2] = useTokenLogoSource({
-    address: tokens?.[1]?.address,
-    chainId,
-    primaryImg: token1IsNative ? undefined : tokens?.[1]?.project?.logo?.url,
-    isNative: token1IsNative,
-  })
+  const currencyInfos = [useCurrencyInfo(currencies?.[0]), useCurrencyInfo(currencies?.[1])]
 
-  return <DoubleLogo logo1={src} onError1={nextSrc} logo2={src2} onError2={nextSrc2} size={size} />
+  if (!currencyInfos[0]?.logoUrl && !currencyInfos[1]?.logoUrl) {
+    return null
+  }
+  if (!currencyInfos[0]?.logoUrl && currencyInfos[1]?.logoUrl) {
+    return <DoubleLogo logo1={currencyInfos[1]?.logoUrl} size={size} />
+  }
+  if (currencyInfos[0]?.logoUrl && !currencyInfos[1]?.logoUrl) {
+    return <DoubleLogo logo1={currencyInfos[0]?.logoUrl} size={size} />
+  }
+  return (
+    <DoubleLogo logo1={currencyInfos[0]?.logoUrl as string} logo2={currencyInfos[1]?.logoUrl as string} size={size} />
+  )
 }
 
 const DoubleLogoContainer = styled.div<{ size: number }>`

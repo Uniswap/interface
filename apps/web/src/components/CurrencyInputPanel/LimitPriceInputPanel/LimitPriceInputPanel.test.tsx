@@ -69,7 +69,7 @@ describe('LimitPriceInputPanel', () => {
         </LimitContext.Provider>
       </SwapAndLimitContext.Provider>
     )
-    expect(screen.getByText('DAI')).toBeVisible()
+    expect(screen.getAllByText('DAI')).toHaveLength(2) // subheader and token symbol
     expect(screen.getByPlaceholderText('0')).toBeVisible()
   })
 
@@ -90,7 +90,7 @@ describe('LimitPriceInputPanel', () => {
         </LimitContext.Provider>
       </SwapAndLimitContext.Provider>
     )
-    expect(screen.getByText('DAI')).toBeVisible() // subheader
+    expect(screen.getAllByText('DAI')).toHaveLength(2) // subheader and token symbol
     expect(container.querySelector('.token-symbol-container')).toHaveTextContent('USDC')
     expect(screen.getByPlaceholderText('0')).toBeVisible()
   })

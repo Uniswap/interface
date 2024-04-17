@@ -1,5 +1,6 @@
 query TrendingTokens($chain: Chain!) {
   topTokens(pageSize: 4, page: 1, chain: $chain, orderBy: VOLUME) {
+    ...SimpleTokenDetails
     id
     decimals
     name
@@ -34,6 +35,7 @@ query TrendingTokens($chain: Chain!) {
 
 query SearchTokensWeb($searchQuery: String!, $chains: [Chain!]) {
   searchTokens(searchQuery: $searchQuery, chains: $chains) {
+    ...SimpleTokenDetails
     id
     decimals
     name
@@ -69,12 +71,26 @@ query SearchTokensWeb($searchQuery: String!, $chains: [Chain!]) {
 
 query TopTokens100($duration: HistoryDuration!, $chain: Chain!) {
   topTokens(pageSize: 100, page: 1, chain: $chain, orderBy: VOLUME) {
-    id
-    name
-    chain
-    address
-    symbol
-    standard
+    ...SimpleTokenDetails
+    project {
+      id
+      name
+      logo {
+        id
+        url
+      }
+      safetyLevel
+      logoUrl
+      isSpam
+      markets(currencies: [USD]) {
+        id
+        fullyDilutedValuation {
+          id
+          value
+          currency
+        }
+      }
+    }
     market(currency: USD) {
       id
       totalValueLocked {
@@ -126,9 +142,7 @@ query TopTokens100($duration: HistoryDuration!, $chain: Chain!) {
 # We separately query sparkline data so that the large download time does not block Token Explore rendering
 query TopTokensSparkline($duration: HistoryDuration!, $chain: Chain!) {
   topTokens(pageSize: 100, page: 1, chain: $chain, orderBy: VOLUME) {
-    id
-    address
-    chain
+    ...SimpleTokenDetails
     market(currency: USD) {
       id
       priceHistory(duration: $duration) {

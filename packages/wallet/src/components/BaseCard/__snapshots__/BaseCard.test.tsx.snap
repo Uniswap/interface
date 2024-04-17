@@ -33,7 +33,7 @@ exports[`EmptyState renders without error 1`] = `
       }
     >
       <Text
-        allowFontScaling={true}
+        allowFontScaling={false}
         maxFontSizeMultiplier={1.4}
         style={
           {
@@ -99,7 +99,7 @@ exports[`ErrorState renders without error 1`] = `
       }
     >
       <Text
-        allowFontScaling={true}
+        allowFontScaling={false}
         maxFontSizeMultiplier={1.4}
         style={
           {
@@ -187,7 +187,7 @@ exports[`Header renders without error 1`] = `
         }
       >
         <Text
-          allowFontScaling={true}
+          allowFontScaling={false}
           maxFontSizeMultiplier={1.4}
           style={
             {
@@ -397,7 +397,7 @@ exports[`InlineErrorState renders without error 1`] = `
       </RNSVGGroup>
     </RNSVGSvgView>
     <Text
-      allowFontScaling={true}
+      allowFontScaling={false}
       ellipsizeMode="tail"
       maxFontSizeMultiplier={1.4}
       numberOfLines={1}

@@ -1,6 +1,5 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
-import tokenSafetyLookup from 'constants/tokenSafetyLookup'
 
 import { ListsState } from 'state/lists/types'
 import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
@@ -65,7 +64,6 @@ export default createReducer(initialState, (builder) =>
           loadingRequestId: null,
           error: null,
         }
-        tokenSafetyLookup.update(state)
       }
     })
     .addCase(fetchTokenList.rejected, (state, { payload: { url, requestId, errorMessage } }) => {

@@ -1,15 +1,15 @@
 /* eslint-disable import/no-unused-modules */
 import getAsset from '../../utils/getAsset'
-import { getMetadataRequest } from '../../utils/getRequest'
+import { transformResponse } from '../../utils/transformResponse'
 
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
-  const res = next()
+  const response = next()
   try {
     const { index } = params
     const collectionAddress = index[0]?.toString()
     const tokenId = index[1]?.toString()
-    return getMetadataRequest(res, request, () => getAsset(collectionAddress, tokenId, request.url))
+    return transformResponse(request, await response, () => getAsset(collectionAddress, tokenId, request.url))
   } catch (e) {
-    return res
+    return response
   }
 }

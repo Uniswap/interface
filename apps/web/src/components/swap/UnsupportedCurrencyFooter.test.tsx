@@ -12,7 +12,7 @@ const unsupportedTokenSymbol = 'ALTDOM-MAR2021'
 const unsupportedToken = new Token(1, unsupportedTokenAddress, 18, 'ALTDOM-MAR2021')
 const unsupportedTokenExplorerLink = 'www.blahblah.com'
 
-jest.mock('../../hooks/Tokens')
+jest.mock('hooks/Tokens')
 jest.mock('../../utils/getExplorerLink')
 jest.setTimeout(15_000)
 

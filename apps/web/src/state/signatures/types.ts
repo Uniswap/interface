@@ -1,3 +1,4 @@
+import { SupportedInterfaceChain } from 'constants/chains'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { ExactInputSwapTransactionInfo, ExactOutputSwapTransactionInfo } from '../transactions/types'
 
@@ -11,7 +12,7 @@ interface BaseSignatureFields {
   type?: SignatureType
   id: string
   addedTime: number
-  chainId: number
+  chainId: SupportedInterfaceChain
   expiry?: number
   offerer: string
 }

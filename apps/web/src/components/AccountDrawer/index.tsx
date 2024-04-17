@@ -62,6 +62,7 @@ export const Scrim = (props: ScrimBackgroundProps) => {
 
 const AccountDrawerScrollWrapper = styled.div`
   overflow-y: auto;
+  overflow-x: hidden;
 
   ${ScrollBarStyles}
 
@@ -111,10 +112,12 @@ const AccountDrawerWrapper = styled.div<{ open: boolean }>`
   @media screen and (min-width: 1440px) {
     margin-right: ${({ open }) => (open ? 0 : `-${DRAWER_WIDTH_XL}`)};
     width: ${DRAWER_WIDTH_XL};
+    max-width: ${DRAWER_WIDTH_XL};
   }
 
   border-radius: 12px;
   width: ${DRAWER_WIDTH};
+  max-width: ${DRAWER_WIDTH};
   font-size: 16px;
   background-color: ${({ theme }) => theme.surface1};
   border: ${({ theme }) => `1px solid ${theme.surface3}`};

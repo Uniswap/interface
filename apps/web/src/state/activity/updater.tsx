@@ -5,41 +5,40 @@ import { useAddPopup } from 'state/application/hooks'
 import { PopupType } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { updateSignature } from 'state/signatures/reducer'
-import { SignatureDetails, SignatureType } from 'state/signatures/types'
+import { SignatureType } from 'state/signatures/types'
 import { logSwapSuccess } from 'tracing/swapFlowLoggers'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { isL2ChainId } from 'utils/chains'
 import { addTransaction, finalizeTransaction } from '../transactions/reducer'
-import {
-  SerializableTransactionReceipt,
-  TransactionDetails,
-  TransactionInfo,
-  TransactionType,
-} from '../transactions/types'
-import { usePollPendingOrders } from './orders'
-import { usePollPendingTransactions } from './transactions'
+import { TransactionInfo, TransactionType } from '../transactions/types'
+import { usePollPendingOrders } from './polling/orders'
+import { usePollPendingTransactions } from './polling/transactions'
+import { useOnAssetActivity } from './subscription'
+import { ActivityUpdate, OnActivityUpdate } from './types'
 
-type TransactionUpdate<T extends TransactionInfo> = {
-  type: 'transaction'
-  originalTransaction: TransactionDetails & { info: T }
-  receipt: SerializableTransactionReceipt
-  chainId: number
-  updatedTransactionInfo?: T
+export function ActivityStateUpdater() {
+  const onActivityUpdate = useOnActivityUpdate()
+  return (
+    <>
+      <SubscriptionActivityStateUpdater onActivityUpdate={onActivityUpdate} />
+      {/* The polling updater is present to update activity states for chains that are not supported by the subscriptions service. */}
+      <PollingActivityStateUpdater onActivityUpdate={onActivityUpdate} />
+    </>
+  )
 }
 
-type OrderUpdate = {
-  type: 'signature'
-  updatedStatus: UniswapXOrderStatus
-  originalSignature: SignatureDetails
-  receipt?: SerializableTransactionReceipt
-  chainId: number
-  updatedSwapInfo?: SignatureDetails['swapInfo']
+function SubscriptionActivityStateUpdater({ onActivityUpdate }: { onActivityUpdate: OnActivityUpdate }) {
+  useOnAssetActivity(onActivityUpdate)
+  return null
 }
 
-type ActivityUpdate<T extends TransactionInfo> = TransactionUpdate<T> | OrderUpdate
-export type ActivityUpdaterFn = <T extends TransactionInfo>(update: ActivityUpdate<T>) => void
+function PollingActivityStateUpdater({ onActivityUpdate }: { onActivityUpdate: OnActivityUpdate }) {
+  usePollPendingTransactions(onActivityUpdate)
+  usePollPendingOrders(onActivityUpdate)
+  return null
+}
 
-function useUpdateActivityState() {
+function useOnActivityUpdate() {
   const dispatch = useAppDispatch()
   const addPopup = useAddPopup()
   const analyticsContext = useTrace()
@@ -62,7 +61,12 @@ function useUpdateActivityState() {
         const { originalSignature, updatedStatus, receipt, chainId, updatedSwapInfo } = update
         const info = updatedSwapInfo ?? originalSignature.swapInfo
 
-        const updatedOrder = { ...originalSignature, status: updatedStatus, swapInfo: info }
+        const updatedOrder = {
+          ...originalSignature,
+          status: updatedStatus,
+          swapInfo: info,
+          txHash: receipt?.transactionHash,
+        }
         dispatch(updateSignature(updatedOrder))
 
         if (receipt && updatedStatus === UniswapXOrderStatus.FILLED) {
@@ -84,30 +88,4 @@ function useUpdateActivityState() {
     },
     [addPopup, analyticsContext, dispatch]
   )
-}
-
-export function ActivityStateUpdater() {
-  return (
-    <>
-      <SubscriptionBasedUpdater />
-      {/* The polling updater is present to update activity states for chains that are not supported by the subscriptions service. */}
-      <PollingBasedUpdater />
-    </>
-  )
-}
-
-function SubscriptionBasedUpdater() {
-  // TODO(subs): Implement subscription-based activity state updates
-  // const updateActivityState = useUpdateActivityState()
-  // useOnReceiveActivityFromSubscription(updateActivityState)
-
-  return null
-}
-
-function PollingBasedUpdater() {
-  const updateActivityState = useUpdateActivityState()
-  usePollPendingTransactions(updateActivityState)
-  usePollPendingOrders(updateActivityState)
-
-  return null
 }

@@ -63,56 +63,6 @@ const mockAssetActivityPartsFragment = {
   },
 }
 
-const mockSwapOrderDetailsPartsFragment = {
-  __typename: 'SwapOrderDetails',
-  id: 'someId',
-  offerer: 'someOfferer',
-  hash: 'someHash',
-  inputTokenQuantity: '100',
-  outputTokenQuantity: '200',
-  orderStatus: SwapOrderStatus.Open,
-  inputToken: {
-    __typename: 'Token',
-    id: DAI.address,
-    name: 'DAI',
-    symbol: DAI.symbol,
-    address: DAI.address,
-    decimals: 18,
-    chain: Chain.Ethereum,
-    standard: TokenStandard.Erc20,
-    project: {
-      __typename: 'TokenProject',
-      id: 'projectId',
-      isSpam: false,
-      logo: {
-        __typename: 'Image',
-        id: 'imageId',
-        url: 'someUrl',
-      },
-    },
-  },
-  outputToken: {
-    __typename: 'Token',
-    id: WETH9[1].address,
-    name: 'Wrapped Ether',
-    symbol: 'WETH',
-    address: WETH9[1].address,
-    decimals: 18,
-    chain: Chain.Ethereum,
-    standard: TokenStandard.Erc20,
-    project: {
-      __typename: 'TokenProject',
-      id: 'projectId',
-      isSpam: false,
-      logo: {
-        __typename: 'Image',
-        id: 'imageId',
-        url: 'someUrl',
-      },
-    },
-  },
-}
-
 const mockNftApprovalPartsFragment: NftApprovalPartsFragment = {
   __typename: 'NftApproval',
   id: 'approvalId',
@@ -394,19 +344,6 @@ const mockTokenApprovalPartsFragment: TokenApprovalPartsFragment = {
     },
   },
 }
-
-export const MockOpenUniswapXOrder = {
-  ...mockAssetActivityPartsFragment,
-  details: mockSwapOrderDetailsPartsFragment,
-} as AssetActivityPartsFragment
-
-export const MockClosedUniswapXOrder = {
-  ...mockAssetActivityPartsFragment,
-  details: {
-    ...mockSwapOrderDetailsPartsFragment,
-    orderStatus: SwapOrderStatus.Expired,
-  },
-} as AssetActivityPartsFragment
 
 const commonTransactionDetailsFields = {
   __typename: 'TransactionDetails',

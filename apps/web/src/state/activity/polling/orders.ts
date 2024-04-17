@@ -2,13 +2,13 @@ import { TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
-import { ActivityUpdaterFn } from 'state/activity/updater'
 import { isFinalizedOrder, usePendingOrders } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { OrderQueryResponse, UniswapXBackendOrder, UniswapXOrderStatus } from 'types/uniswapx'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
-import { toSerializableReceipt } from './transactions'
+import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
+import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
+import { OnActivityUpdate } from '../types'
+import { toSerializableReceipt } from '../utils'
 
 const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
 if (UNISWAP_GATEWAY_DNS_URL === undefined) {
@@ -48,7 +48,7 @@ async function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[
 
 const OFF_CHAIN_ORDER_STATUS_POLLING_INITIAL_INTERVAL = ms(`2s`)
 
-export function usePollPendingOrders(onReceiveUpdate: ActivityUpdaterFn) {
+export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
   const realtimeEnabled = useFeatureFlag(FeatureFlags.Realtime)
 
   const { account, provider } = useWeb3React()
@@ -92,7 +92,7 @@ export function usePollPendingOrders(onReceiveUpdate: ActivityUpdaterFn) {
               receipt = toSerializableReceipt(await provider?.getTransactionReceipt(updatedOrder.txHash))
             }
           }
-          onReceiveUpdate({
+          onActivityUpdate({
             type: 'signature',
             updatedStatus: updatedOrder.orderStatus,
             originalSignature: pendingOrder,
@@ -113,7 +113,7 @@ export function usePollPendingOrders(onReceiveUpdate: ActivityUpdaterFn) {
       return () => clearTimeout(timeout)
     }
     return
-  }, [account, currentDelay, onReceiveUpdate, pendingOrders, provider, realtimeEnabled])
+  }, [account, currentDelay, onActivityUpdate, pendingOrders, provider, realtimeEnabled])
 
   return null
 }

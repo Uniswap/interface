@@ -22,8 +22,8 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
+import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { ActionSheetModal, MenuItemProp } from 'wallet/src/components/modals/ActionSheetModal'

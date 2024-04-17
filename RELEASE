@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmXAfrFgiMF3naNbfoknu5e6H1ussSDJbvb1C1Paw5Ugpi`
-- CIDv1: `bafybeiedfku63hfv4tr7zi3kx357dkdjvcoxp4wfv5i75y3qfabtwo3eym`
+- CIDv0: `QmbEmY4ebbPrQirzx9PNZGKqyjK7pgUMVce2F2tMtJHbJ5`
+- CIDv1: `bafybeif7uyvbcyhd5ib6xkikxoyvm4voodg4pgagjckny4m52o7qtclpsy`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,51 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiedfku63hfv4tr7zi3kx357dkdjvcoxp4wfv5i75y3qfabtwo3eym.ipfs.dweb.link/
-- https://bafybeiedfku63hfv4tr7zi3kx357dkdjvcoxp4wfv5i75y3qfabtwo3eym.ipfs.cf-ipfs.com/
-- [ipfs://QmXAfrFgiMF3naNbfoknu5e6H1ussSDJbvb1C1Paw5Ugpi/](ipfs://QmXAfrFgiMF3naNbfoknu5e6H1ussSDJbvb1C1Paw5Ugpi/)
+- https://bafybeif7uyvbcyhd5ib6xkikxoyvm4voodg4pgagjckny4m52o7qtclpsy.ipfs.dweb.link/
+- https://bafybeif7uyvbcyhd5ib6xkikxoyvm4voodg4pgagjckny4m52o7qtclpsy.ipfs.cf-ipfs.com/
+- [ipfs://QmbEmY4ebbPrQirzx9PNZGKqyjK7pgUMVce2F2tMtJHbJ5/](ipfs://QmbEmY4ebbPrQirzx9PNZGKqyjK7pgUMVce2F2tMtJHbJ5/)
 
-### 5.23.5 (2024-04-15)
+## 5.24.0 (2024-04-17)
+
+
+### Features
+
+* **web:** [wagmi] Add viem to ethers adapters (#7237) 276faae
+* **web:** deprecate token logo lookups (#6921) 0ade412
+* **web:** deprecate+delete token safety lookups (#7132) b4642e9
+* **web:** update signatures from subscription (#7389) f867870
 
 
 ### Bug Fixes
 
-* **web:** parse native MATIC correctly (#7523) 12a6205
+* **web:** allow TrustWallet nodes in CSP (#7515) 0a5b28d
+* **web:** change background color of LP warning banner (#7491) f543ab0
+* **web:** change warning icon color; add learn more link (#7483) 352be3b
+* **web:** checkbox color on open-limits drawer (#7410) 05dfaed
+* **web:** dismiss chart tooltip when clicking outside of chart (#7285) 3d97a14
+* **web:** ellipsis on unitag text in side drawer (#7386) 471661c
+* **web:** fix cypress tests (#7347) e54ceb9
+* **web:** fix icon cutoff  (#7583) a01e106
+* **web:** fix translations with JSX rendering as [object Object] (#7336) 67df76c
+* **web:** fix uniswapx e2e tests (#7458) c6de35e
+* **web:** fix x-chain token logos (#7374) 4367e3a
+* **web:** functions pass-through (#7338) ace3062
+* **web:** make sure SimpleToken hits the cache in all cases (#7488) 1be2954
+* **web:** parse matic correctly from gql response (#7519) 800eae5
+* **web:** remove assets repo fallback for all tokens (#7476) 8e2142c
+* **web:** Send crashing on useENSAvatar while disconnected (#7595) 131c6a3
+* **web:** set usePoolData errorPolicy to all (#7466) 55e3e8a
+* **web:** SimpleTokenDetails fragment to be used in all queries (#7549) 678e624
+* **web:** switch currency when input equals output (staging) 20277d2
+* **web:** TokenBalanceProvider account change (#7432) 516b781
+* **web:** use accent warning soft for outage banner icon wrapper (#7428) cda7ea9
+* **web:** use cache-first policy for TopTokens query (#7484) 25d0950
+
+
+### Code Refactoring
+
+* **web:** isolate the subscription updater (#7387) 6caabbd
+* **web:** split out parseRemote signature (#7388) 223e766
+* **web:** use a single codepath for functions response transform (#7363) 60471a8
 
 

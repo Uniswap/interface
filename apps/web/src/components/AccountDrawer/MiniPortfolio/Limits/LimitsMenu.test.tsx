@@ -1,3 +1,5 @@
+import 'test-utils/tokens/mocks'
+
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -18,20 +20,6 @@ jest.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => ({
   ...jest.requireActual('components/AccountDrawer/MiniPortfolio/formatTimestamp'),
   formatTimestamp: () => 'January 26, 2024 at 1:52PM',
 }))
-
-jest.mock('hooks/Tokens', () => {
-  return {
-    useCurrency: (address?: string) => {
-      if (address?.toLowerCase() === DAI.address.toLowerCase()) {
-        return DAI
-      }
-      if (address?.toLowerCase() === WETH9[ChainId.MAINNET].address.toLowerCase()) {
-        return WETH9[ChainId.MAINNET]
-      }
-      return undefined
-    },
-  }
-})
 
 const mockOrderDetails: UniswapXOrderDetails = {
   type: SignatureType.SIGN_LIMIT,

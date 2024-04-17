@@ -2,6 +2,7 @@ import { useWeb3React } from '@web3-react/core'
 import Column, { AutoColumn } from 'components/Column'
 import Identicon from 'components/Identicon'
 import Row from 'components/Row'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { Unicon } from 'components/Unicon'
 import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
 import useENSName from 'hooks/useENSName'
@@ -19,8 +20,8 @@ import { AnimationType } from 'theme/components/FadePresence'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { Text } from 'ui/src/components/text/Text'
 import { UniconV2 } from 'ui/src/components/UniconV2'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
+import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
 import {
   useUnitagByAddressWithoutFlag,
   useUnitagByNameWithoutFlag,
@@ -130,6 +131,7 @@ const AutocompleteRow = ({
   const cachedEnsName = ENSName || validatedEnsName
   const formattedAddress = shortenAddress(address)
   const uniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
+  const shouldShowAddress = !unitag?.username && !cachedEnsName
 
   const boundSelectRecipient = useCallback(
     () =>
@@ -155,13 +157,21 @@ const AutocompleteRow = ({
         )}
         <Column>
           <Row gap="xs">
-            <ThemedText.BodyPrimary lineHeight="24px">
-              {unitag?.username ?? cachedEnsName ?? formattedAddress}
-            </ThemedText.BodyPrimary>
+            {shouldShowAddress ? (
+              <MouseoverTooltip text={address} placement="top-start" size={TooltipSize.Max}>
+                <ThemedText.BodyPrimary lineHeight="24px">{formattedAddress}</ThemedText.BodyPrimary>
+              </MouseoverTooltip>
+            ) : (
+              <ThemedText.BodyPrimary lineHeight="24px">{unitag?.username ?? cachedEnsName}</ThemedText.BodyPrimary>
+            )}
             {unitag?.username && <Unitag size={18} />}
           </Row>
-          {(unitag || cachedEnsName) && (
-            <ThemedText.LabelSmall lineHeight="20px">{formattedAddress}</ThemedText.LabelSmall>
+          {!shouldShowAddress && (
+            <ThemedText.LabelSmall lineHeight="20px">
+              <MouseoverTooltip text={address} placement="top-start" size={TooltipSize.Max}>
+                {formattedAddress}
+              </MouseoverTooltip>
+            </ThemedText.LabelSmall>
           )}
         </Column>
       </Row>

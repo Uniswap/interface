@@ -171,7 +171,6 @@
     "@uniswap/eslint-config": "workspace:^",
     "@walletconnect/types": "2.11.2",
     "@welldone-software/why-did-you-render": "7.0.1",
-    "babel-jest": "29.6.1",
     "babel-loader": "8.2.3",
     "babel-plugin-react-native-web": "0.17.5",
     "babel-plugin-react-require": "4.0.0",

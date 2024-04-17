@@ -10,8 +10,8 @@ import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHe
 import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ClockIcon from 'ui/src/assets/icons/clock.svg'
 import { iconSizes } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
+import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
 import { clearSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 import {
   SearchResult,

@@ -96,12 +96,12 @@ export type WalletEventProperties = {
     serviceProvider: string
   }
   [FiatOnRampEventName.FiatOnRampWidgetOpened]: TraceProps & {
-    countryCode: string
+    countryCode?: string
     countryState?: string
     cryptoCurrency: string
     externalTransactionId: string
     fiatCurrency: string
-    preselectedServiceProvider: string
+    preselectedServiceProvider?: string
     serviceProvider: string
   }
   [SharedEventName.ANALYTICS_SWITCH_TOGGLED]: {

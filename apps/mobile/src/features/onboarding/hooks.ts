@@ -4,8 +4,8 @@ import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
+import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import {
   setHasSkippedUnitagPrompt,

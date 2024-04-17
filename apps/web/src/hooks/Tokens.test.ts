@@ -24,7 +24,7 @@ jest.mock('../state/lists/hooks.ts', () => {
   }
 })
 
-jest.mock('../state/hooks.ts', () => {
+jest.mock('state/hooks.ts', () => {
   return {
     useAppSelector: () => ({
       [MockChainId.MAINNET]: {

@@ -131,6 +131,14 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
   useTimeout(
     async () => {
       if (fiatOnRampHostUrl) {
+        if (currency?.moonpayCurrencyCode) {
+          sendWalletAnalyticsEvent(FiatOnRampEventName.FiatOnRampWidgetOpened, {
+            externalTransactionId,
+            serviceProvider: 'MOONPAY',
+            fiatCurrency: moonpaySupportedFiatCurrency.code.toLowerCase(),
+            cryptoCurrency: currency.moonpayCurrencyCode.toLowerCase(),
+          })
+        }
         await openUri(fiatOnRampHostUrl)
         dispatchAddTransaction()
         onClose()
@@ -241,7 +249,6 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                   />
                 )}
                 <FiatOnRampCtaButton
-                  analyticsProperties={{ externalTransactionId }}
                   continueButtonText={
                     appFiatCurrencySupportedInMoonpay
                       ? t('fiatOnRamp.button.continueCheckout')

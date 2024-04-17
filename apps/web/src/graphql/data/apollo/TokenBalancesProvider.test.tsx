@@ -3,8 +3,8 @@ import { useWeb3React } from '@web3-react/core'
 import { mocked } from 'test-utils/mocked'
 import { render, renderHook } from 'test-utils/render'
 import { useOnAssetActivitySubscription } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
+import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
 import { PrefetchBalancesWrapper, useTokenBalancesQuery } from './TokenBalancesProvider'
 
 const mockLazyFetch = jest.fn()
@@ -85,11 +85,7 @@ describe('ApolloProvider', () => {
       const { rerender } = renderHook(() => useTokenBalancesQuery())
 
       // Balances should refetch when account changes
-      mocked(useOnAssetActivitySubscription).mockReturnValue({
-        data: undefined,
-        loading: false,
-        variables: { account: '0xaddress2', subscriptionId: '456' },
-      })
+      mocked(useWeb3React).mockReturnValue({ account: '0xaddress2', chainId: 1 } as any)
       rerender()
       expect(mockLazyFetch).toHaveBeenCalledTimes(2)
     })

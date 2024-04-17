@@ -4,11 +4,11 @@ import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import TokenSafetyLabel from 'components/TokenSafety/TokenSafetyLabel'
 import {
-  checkWarning,
   displayWarningLabel,
   getWarningCopy,
-  NotFoundWarning,
+  StrongWarning,
   TOKEN_SAFETY_ARTICLE,
+  useTokenWarning,
   Warning,
 } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
@@ -215,10 +215,10 @@ export default function TokenSafety({
   const logos = []
   const urls = []
 
-  const token1Warning = tokenAddress ? checkWarning(tokenAddress) : undefined
   const token1 = useToken(tokenAddress)
-  const token2Warning = secondTokenAddress ? checkWarning(secondTokenAddress) : undefined
+  const token1Warning = useTokenWarning(tokenAddress, token1?.chainId)
   const token2 = useToken(secondTokenAddress)
+  const token2Warning = useTokenWarning(secondTokenAddress, token2?.chainId)
 
   const token1Unsupported = !token1Warning?.canProceed
   const token2Unsupported = !token2Warning?.canProceed
@@ -289,14 +289,14 @@ export default function TokenSafety({
     <Wrapper>
       <Container>
         <ShortColumn>
-          <SafetyLabel warning={NotFoundWarning} />
+          <SafetyLabel warning={StrongWarning} />
         </ShortColumn>
         <ShortColumn>
           <InfoText>
             {heading} {description} {learnMoreUrl}
           </InfoText>
         </ShortColumn>
-        <Buttons warning={NotFoundWarning} onCancel={onCancel} showCancel={true} />
+        <Buttons warning={StrongWarning} onCancel={onCancel} showCancel={true} />
       </Container>
     </Wrapper>
   )

@@ -67,7 +67,6 @@
     "redux": "4.2.1",
     "redux-saga": "1.2.2",
     "redux-saga-test-plan": "4.0.4",
-    "statsig-react-native": "4.11.0",
     "typed-redux-saga": "1.5.0",
     "ui": "workspace:^",
     "uniswap": "workspace:^",

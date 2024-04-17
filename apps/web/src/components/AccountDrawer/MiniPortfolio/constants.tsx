@@ -1,10 +1,7 @@
 import { t } from 'i18n'
 import { TransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import {
-  SwapOrderStatus,
-  TransactionStatus,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 // use even number because rows are in groups of 2
 export const DEFAULT_NFT_QUERY_AMOUNT = 26
@@ -269,13 +266,3 @@ export const MOONPAY_SENDER_ADDRESSES = [
   '0xb287eac48ab21c5fb1d3723830d60b4c797555b0',
   '0xd108fd0e8c8e71552a167e7a44ff1d345d233ba6',
 ]
-
-// Converts GQL backend orderStatus enum to the enum used by the frontend and UniswapX backend
-export const OrderStatusTable: { [key in SwapOrderStatus]: UniswapXOrderStatus } = {
-  [SwapOrderStatus.Open]: UniswapXOrderStatus.OPEN,
-  [SwapOrderStatus.Expired]: UniswapXOrderStatus.EXPIRED,
-  [SwapOrderStatus.Error]: UniswapXOrderStatus.ERROR,
-  [SwapOrderStatus.InsufficientFunds]: UniswapXOrderStatus.INSUFFICIENT_FUNDS,
-  [SwapOrderStatus.Filled]: UniswapXOrderStatus.FILLED,
-  [SwapOrderStatus.Cancelled]: UniswapXOrderStatus.CANCELLED,
-}

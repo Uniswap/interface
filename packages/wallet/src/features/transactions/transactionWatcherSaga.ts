@@ -2,9 +2,9 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumberish, providers } from 'ethers'
-import { Statsig } from 'statsig-react-native'
 import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/experiments/flags'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/statsig/flags'
+import { Statsig } from 'uniswap/src/features/statsig/sdk/statsig'
 import i18n from 'uniswap/src/i18n/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -138,6 +138,9 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
     useOldMoonpayIntegration
   )
 
+  let latestStatus = transaction.status
+  let syncWithBackend = transaction.typeInfo.syncedWithBackend
+
   try {
     while (true) {
       const updatedTransaction = yield* useOldMoonpayIntegration
@@ -149,12 +152,16 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
         return
       }
       // Transaction has been updated
-      if (JSON.stringify(updatedTransaction) !== JSON.stringify(transaction)) {
+      if (
+        latestStatus !== updatedTransaction.status ||
+        (!syncWithBackend && updatedTransaction.typeInfo.syncedWithBackend)
+      ) {
         logger.debug(
           'transactionWatcherSaga',
           'watchFiatOnRampTransaction',
           `Updating transaction with id ${id} from status ${transaction.status} to ${updatedTransaction.status}`
         )
+
         const isTransfer =
           updatedTransaction.typeInfo.inputSymbol === updatedTransaction.typeInfo.outputSymbol
         if (isTransfer && transaction.typeInfo.institution) {
@@ -174,25 +181,28 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
             serviceProvider: transaction.typeInfo.serviceProvider,
           })
         }
+      }
 
-        // Stale transaction
-        if (updatedTransaction.status === TransactionStatus.Unknown) {
-          yield* call(deleteTransaction, updatedTransaction)
-          break // stop polling
-        }
+      latestStatus = updatedTransaction.status
+      syncWithBackend = updatedTransaction.typeInfo.syncedWithBackend
 
-        // Update transaction
-        yield* put(upsertFiatOnRampTransaction(updatedTransaction))
+      // Stale transaction
+      if (updatedTransaction.status === TransactionStatus.Unknown) {
+        yield* call(deleteTransaction, updatedTransaction)
+        break // stop polling
+      }
 
-        // Finished transaction
-        if (
-          updatedTransaction.status === TransactionStatus.Failed ||
-          updatedTransaction.status === TransactionStatus.Success
-        ) {
-          // Show notification badge
-          yield* put(setNotificationStatus({ address: transaction.from, hasNotifications: true }))
-          break // stop polling
-        }
+      // Update transaction
+      yield* put(upsertFiatOnRampTransaction(updatedTransaction))
+
+      // Finished transaction
+      if (
+        updatedTransaction.status === TransactionStatus.Failed ||
+        updatedTransaction.status === TransactionStatus.Success
+      ) {
+        // Show notification badge
+        yield* put(setNotificationStatus({ address: transaction.from, hasNotifications: true }))
+        break // stop polling
       }
 
       // at this point, we received a response from backend

@@ -5,10 +5,10 @@ import { useState } from 'react'
 import { Flag, Settings } from 'react-feather'
 import { useCloseModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { Statsig } from 'statsig-react'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { Statsig } from 'uniswap/src/features/statsig/sdk/statsig'
 import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
 const Box = styled.div`

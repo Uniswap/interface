@@ -120,7 +120,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
         sendWalletAnalyticsEvent(FiatOnRampEventName.FiatOnRampWidgetOpened, {
           externalTransactionId,
           serviceProvider: serviceProvider.serviceProvider,
-          preselectedServiceProvider: serviceProvider.serviceProvider,
+          preselectedServiceProvider: quotesSections?.[0]?.data?.[0]?.serviceProvider,
           countryCode,
           countryState,
           fiatCurrency: baseCurrencyInfo?.code.toLowerCase(),

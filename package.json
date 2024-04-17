@@ -112,7 +112,7 @@
     "local:check": "./scripts/local-version-check.sh",
     "postinstall": "husky install && yarn g:prepare",
     "stretch": "yarn workspace @uniswap/stretch",
-    "ui:build:icons": "yarn workspace ui build:icons",
+    "ui": "yarn workspace ui",
     "upgrade:tamagui": "yarn up '*tamagui*' '@tamagui/*'",
     "upgrade:tamagui:canary": "yarn up '*tamagui*'@canary '@tamagui/*'@canary",
     "wallet": "yarn workspace wallet",

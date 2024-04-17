@@ -315,7 +315,7 @@ exports[`renders wallet preview card 1`] = `
           >
             <Text
               adjustsFontSizeToFit={true}
-              allowFontScaling={true}
+              allowFontScaling={false}
               ellipsizeMode="tail"
               maxFontSizeMultiplier={1.4}
               numberOfLines={1}

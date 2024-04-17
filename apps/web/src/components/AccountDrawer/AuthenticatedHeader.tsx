@@ -65,6 +65,7 @@ const UNIButton = styled(WalletButton)`
 
 const IconContainer = styled.div`
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   & > a,
   & > button {

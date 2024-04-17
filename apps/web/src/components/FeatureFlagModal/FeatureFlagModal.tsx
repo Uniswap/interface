@@ -6,13 +6,13 @@ import { PropsWithChildren, ReactNode } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { Statsig } from 'statsig-react'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { DynamicConfigs, getConfigName } from 'uniswap/src/features/experiments/configs'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/experiments/hooks'
+import { DynamicConfigs, getConfigName } from 'uniswap/src/features/statsig/configs'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/statsig/flags'
+import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/statsig/hooks'
+import { Statsig } from 'uniswap/src/features/statsig/sdk/statsig'
 
 const StyledModal = styled.div`
   position: fixed;

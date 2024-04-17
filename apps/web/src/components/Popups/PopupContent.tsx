@@ -101,7 +101,7 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
       <StyledClose $padding={16} onClick={onClose} />
       <PortfolioRow
         left={
-          success ? (
+          success || !!activity.offchainOrderDetails ? (
             <Column>
               <PortfolioLogo
                 chainId={activity.chainId}

@@ -48,6 +48,7 @@
   "scripts": {
     "build": "tamagui-build --ignore-base-url",
     "build:icons": "node -r esbuild-register ./src/scripts/componentize-icons.ts",
+    "build:icons:missing": "yarn build:icons --skip-existing",
     "check:deps:usage": "depcheck",
     "lint": "eslint src --max-warnings=0",
     "lint:fix": "eslint src --fix",

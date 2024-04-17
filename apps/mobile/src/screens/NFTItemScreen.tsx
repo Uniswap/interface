@@ -13,7 +13,6 @@ import { Loader } from 'src/components/loading'
 import { LongMarkdownText } from 'src/components/text/LongMarkdownText'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
-import { useNFTMenu } from 'src/features/nfts/hooks'
 import { BlurredImageBackground } from 'src/features/nfts/item/BlurredImageBackground'
 import { CollectionPreviewCard } from 'src/features/nfts/item/CollectionPreviewCard'
 import { NFTTraitList } from 'src/features/nfts/item/traits'
@@ -43,6 +42,7 @@ import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
+import { useNFTContextMenu } from 'wallet/src/features/nfts/useNftContextMenu'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -422,7 +422,7 @@ function RightElement({
 }): JSX.Element {
   const colors = useSporeColors()
 
-  const { menuActions, onContextMenuPress, onlyShare } = useNFTMenu({
+  const { menuActions, onContextMenuPress, onlyShare } = useNFTContextMenu({
     contractAddress: asset?.nftContract?.address,
     tokenId: asset?.tokenId,
     owner,

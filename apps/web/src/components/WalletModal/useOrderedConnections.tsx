@@ -4,8 +4,8 @@ import { Connection, ConnectionType, RecentConnectionMeta } from 'connection/typ
 import { shouldUseDeprecatedInjector } from 'connection/utils'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
+import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
 import Option from './Option'
 
 export function useEIP6963Connections() {

@@ -6,6 +6,7 @@
   },
   "devDependencies": {
     "@testing-library/jest-native": "5.4.2",
+    "babel-jest": "29.6.1",
     "jest-svg-transformer": "1.0.0",
     "jest-transform-stub": "2.0.0",
     "mem-storage-area": "1.0.3"

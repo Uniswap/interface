@@ -128,7 +128,9 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
   }, [permissionStatus, requestPermissionResponse, t])
 
   const overlayWidth = (overlayLayout?.height ?? 0) / CAMERA_ASPECT_RATIO
-  const scannerSize = Math.min(overlayWidth, dimensions.fullWidth) * SCAN_ICON_WIDTH_RATIO
+  const cameraWidth = dimensions.fullWidth
+  const cameraHeight = CAMERA_ASPECT_RATIO * cameraWidth
+  const scannerSize = Math.min(overlayWidth, cameraWidth) * SCAN_ICON_WIDTH_RATIO
 
   return (
     <AnimatedFlex
@@ -138,10 +140,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
       exiting={FadeOut}
       overflow="hidden">
       <Flex justifyContent="center" style={StyleSheet.absoluteFill}>
-        <Flex
-          height={Math.max(dimensions.fullHeight, CAMERA_ASPECT_RATIO * dimensions.fullWidth)}
-          overflow="hidden"
-          width={dimensions.fullWidth}>
+        <Flex height={cameraHeight} overflow="hidden" width={cameraWidth}>
           {permissionStatus === PermissionStatus.GRANTED && !isReadingImageFile && (
             <Camera
               barCodeScannerSettings={{

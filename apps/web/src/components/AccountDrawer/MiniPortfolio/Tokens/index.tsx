@@ -105,14 +105,7 @@ function TokenRow({
       properties={{ chain_id: currency.chainId, token_name: token?.name, address: token?.address }}
     >
       <PortfolioRow
-        left={
-          <PortfolioLogo
-            chainId={currency.chainId}
-            currencies={[currency]}
-            images={[tokenProjectMarket?.tokenProject.logoUrl]}
-            size="40px"
-          />
-        }
+        left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size="40px" />}
         title={<TokenNameText>{token?.name}</TokenNameText>}
         descriptor={
           <TokenBalanceText>

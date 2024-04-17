@@ -209,6 +209,7 @@
       "notNow": "Not now",
       "ok": "OK",
       "paste": "Paste",
+      "pay": "Pay",
       "receive": "Receive",
       "remove": "Remove",
       "restore": "Restore",
@@ -266,6 +267,8 @@
       "systemSettings": "Settings"
     },
     "text": {
+      "connected": "Connected",
+      "disconnected": "Disconnected",
       "error": "Error",
       "loading": "Loading",
       "notAvailable": "N/A",
@@ -1266,11 +1269,6 @@
       "security": "Security",
       "support": "Support",
       "wallet": {
-        "action": {
-          "hide": "Hide wallets",
-          "showAll_one": "Show one wallet",
-          "showAll_other": "Show all {{count}} wallets"
-        },
         "button": {
           "viewAll": "View all",
           "viewLess": "View less"
@@ -2057,6 +2055,11 @@
         "min": "Usernames must be at least {{number}} characters",
         "uppercase": "Usernames can only contain lowercase letters and numbers"
       }
+    }
+  },
+  "uwulink": {
+    "error": {
+      "insufficientTokens": "Not enough {{tokenSymbol}} on {{chain}}"
     }
   },
   "walletConnect": {

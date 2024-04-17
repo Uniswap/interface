@@ -31,19 +31,22 @@ fragment NFTTransferParts on NftTransfer {
 
 fragment TokenAssetParts on Token {
   id
-  name
-  symbol
   address
-  decimals
   chain
+  symbol
+  name
+  decimals
   standard
   project {
     id
-    isSpam
+    name
     logo {
       id
       url
     }
+    safetyLevel
+    logoUrl
+    isSpam
   }
 }
 

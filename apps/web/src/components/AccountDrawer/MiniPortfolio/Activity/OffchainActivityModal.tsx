@@ -101,7 +101,7 @@ const InsufficientFundsCopyContainer = styled(Row)`
 const AlertIconContainer = styled.div`
   display: flex;
   flex-shrink: 0;
-  background-color: #1f1e02;
+  background-color: ${({ theme }) => theme.deprecated_accentWarningSoft};
   width: 40px;
   height: 40px;
   justify-content: center;

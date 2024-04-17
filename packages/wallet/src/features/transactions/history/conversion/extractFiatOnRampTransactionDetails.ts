@@ -17,6 +17,7 @@ function parseFiatPurchaseTransaction(
     destinationCurrencyCode: outputCurrency,
     destinationAmount: outputCurrencyAmount,
     cryptoDetails,
+    serviceProvider,
   } = transaction
 
   const chainId = toSupportedChainId(cryptoDetails?.chainId)
@@ -34,6 +35,7 @@ function parseFiatPurchaseTransaction(
     // this marks the tx as 'valid' / ready to display in the ui
     syncedWithBackend: true,
     chainId,
+    serviceProvider,
   }
 }
 

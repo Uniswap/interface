@@ -18,7 +18,7 @@ const StyledAvatar = styled.img`
 `
 
 export default function Identicon({ account, size }: { account: string; size?: number }) {
-  const { avatar } = useENSAvatar(account ?? undefined)
+  const { avatar } = useENSAvatar(account)
   const [fetchable, setFetchable] = useState(true)
   const iconSize = size ?? 24
 

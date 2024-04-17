@@ -45,15 +45,14 @@ import {
   getSentryTracesSamplingRate,
   getStatsigEnvironmentTier,
 } from 'src/utils/version'
-import { Statsig, StatsigProvider } from 'statsig-react-native'
+import { StatsigProvider } from 'statsig-react-native'
 import { flexStyles, useIsDarkMode } from 'ui/src'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import {
-  DUMMY_STATSIG_SDK_KEY,
-  ExperimentsWallet,
-} from 'uniswap/src/features/experiments/constants'
-import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/experiments/flags'
+import { DUMMY_STATSIG_SDK_KEY } from 'uniswap/src/features/statsig/constants'
+import { WALLET_EXPERIMENTS } from 'uniswap/src/features/statsig/experiments'
+import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/statsig/flags'
+import { Statsig } from 'uniswap/src/features/statsig/sdk/statsig'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -175,12 +174,13 @@ function SentryTags({ children }: PropsWithChildren): JSX.Element {
       Sentry.setTag(`featureFlag.${flagKey}`, Statsig.checkGateWithExposureLoggingDisabled(flagKey))
     }
 
-    Object.entries(ExperimentsWallet).map(([_, experimentName]) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    for (const [_, experimentDef] of WALLET_EXPERIMENTS.entries()) {
       Sentry.setTag(
-        `experiment.${experimentName}`,
-        Statsig.getExperimentWithExposureLoggingDisabled(experimentName).getGroupName()
+        `experiment.${experimentDef.name}`,
+        Statsig.getExperimentWithExposureLoggingDisabled(experimentDef.name).getGroupName()
       )
-    })
+    }
   }, [])
 
   return <>{children}</>

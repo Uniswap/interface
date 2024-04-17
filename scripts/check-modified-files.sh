@@ -6,7 +6,7 @@ echo "${DIFF}"
 
 # Fail if working tree has changes
 if [ "$DIFF" ]; then
-    echo "This branch has not updated our generated strings/translations file. Please run yarn i18n:extract"
+    echo "This step has modified files when it should not have!"
     exit 1;
 fi
 

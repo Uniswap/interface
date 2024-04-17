@@ -1,11 +1,11 @@
 import { useWeb3React } from '@web3-react/core'
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import Column from 'components/Column'
-import { DoubleTokenLogo } from 'components/Pools/PoolDetails/PoolDetailsHeader'
+import { DoubleCurrencyLogo } from 'components/Pools/PoolDetails/PoolDetailsHeader'
 import { ClosedCircle, DoubleArrow } from 'components/Pools/PoolDetails/icons'
 import Row from 'components/Row'
 import { BIPS_BASE } from 'constants/misc'
-import { chainIdToBackendName } from 'graphql/data/util'
+import { useCurrency } from 'hooks/Tokens'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { Trans } from 'i18n'
 import { useCallback } from 'react'
@@ -86,16 +86,8 @@ enum PositionStatus {
 
 function PositionRow({ positionInfo }: { positionInfo: PositionInfo }) {
   const tokens = [
-    {
-      id: positionInfo.details.token0,
-      address: positionInfo.details.token0,
-      chain: chainIdToBackendName(positionInfo.chainId),
-    },
-    {
-      id: positionInfo.details.token0,
-      address: positionInfo.details.token1,
-      chain: chainIdToBackendName(positionInfo.chainId),
-    },
+    useCurrency(positionInfo.details.token0, positionInfo.chainId),
+    useCurrency(positionInfo.details.token1, positionInfo.chainId),
   ]
   const { chainId: walletChainId, connector } = useWeb3React()
   const navigate = useNavigate()
@@ -125,7 +117,7 @@ function PositionRow({ positionInfo }: { positionInfo: PositionInfo }) {
   return (
     <PositionWrapper onClick={onClick}>
       <Row gap="8px">
-        <DoubleTokenLogo chainId={positionInfo.chainId} tokens={tokens} size={16} />
+        <DoubleCurrencyLogo currencies={tokens} size={16} />
         <ThemedText.SubHeader>
           {positionInfo.pool.token0.symbol}/{positionInfo.pool.token1.symbol}
         </ThemedText.SubHeader>

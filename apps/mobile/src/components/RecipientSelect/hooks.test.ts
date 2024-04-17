@@ -61,7 +61,6 @@ const getPreloadedState = (props?: PreloadedStateProps): PreloadedState<MobileSt
         ...(hasInactiveAccounts && { [inactiveAccount.address]: inactiveAccount }),
       },
       activeAccountAddress: activeAccount.address,
-      isUnlocked: true,
       settings: {
         swapProtection: SwapProtectionSetting.On,
         hideSmallBalances: false,

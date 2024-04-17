@@ -25,7 +25,7 @@ import { ActivityStateUpdater } from 'state/activity/updater'
 import { StatsigProvider as BaseStatsigProvider, StatsigUser } from 'statsig-react'
 import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
-import { STATSIG_DUMMY_KEY } from 'tracing'
+import { DUMMY_STATSIG_SDK_KEY } from 'uniswap/src/features/statsig/constants'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { getEnvName, isBrowserRouterEnabled } from 'utils/env'
 import { unregister as unregisterServiceWorker } from 'utils/serviceWorker'
@@ -85,7 +85,7 @@ function StatsigProvider({ children }: PropsWithChildren) {
   return (
     <BaseStatsigProvider
       user={statsigUser}
-      sdkKey={STATSIG_DUMMY_KEY}
+      sdkKey={DUMMY_STATSIG_SDK_KEY}
       waitForInitialization={false}
       options={{
         environment: { tier: getEnvName() },

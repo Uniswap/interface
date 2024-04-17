@@ -5,7 +5,6 @@ import {
   addAccounts,
   restoreMnemonicComplete,
   setAccountAsActive,
-  unlockWallet,
 } from 'wallet/src/features/wallet/slice'
 import {
   SAMPLE_PASSWORD,
@@ -75,7 +74,6 @@ describe(importAccount, () => {
         },
       ]),
       setAccountAsActive(SAMPLE_SEED_ADDRESS_1),
-      unlockWallet(),
     ])
   })
 
@@ -154,7 +152,6 @@ describe(importAccount, () => {
         },
       ]),
       setAccountAsActive(SAMPLE_SEED_ADDRESS_1),
-      unlockWallet(),
     ])
   })
 })

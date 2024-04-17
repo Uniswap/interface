@@ -7,6 +7,7 @@ import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { createSignedRequestParams, objectToQueryString } from 'wallet/src/data/utils'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
 
+import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
 import {
   FORGetCountryResponse,
   FORQuoteRequest,
@@ -223,6 +224,13 @@ export const fiatOnRampAggregatorApi = createApi({
   reducerPath: 'fiatOnRampAggregatorApi',
   baseQuery: fetchBaseQuery({
     baseUrl: config.fiatOnRampApiUrl,
+    headers: {
+      'Content-Type': 'application/json',
+      'X-API-KEY': config.uniswapApiKey,
+      'x-request-source': REQUEST_SOURCE,
+      'x-app-version': getVersionHeader(),
+      Origin: config.uniswapAppUrl,
+    },
   }),
   endpoints: (builder) => ({
     fiatOnRampAggregatorCountryList: builder.query<FORSupportedCountriesResponse, void>({

@@ -1,13 +1,11 @@
 import { PropsWithChildren } from 'react'
-import { useWindowDimensions } from 'react-native'
 import { GetProps, styled, Text as TamaguiText } from 'tamagui'
 import { withAnimated } from 'ui/src/components/factories/animated'
 import { Flex } from 'ui/src/components/layout'
 import { HiddenFromScreenReaders } from 'ui/src/components/text/HiddenFromScreenReaders'
 import { Skeleton } from 'ui/src/loading/Skeleton'
 import { fonts } from 'ui/src/theme/fonts'
-
-export const DEFAULT_FONT_SCALE = 1
+import { useEnableFontScaling } from './useEnableFontScaling'
 
 export const TextFrame = styled(TamaguiText, {
   fontFamily: '$body',
@@ -180,8 +178,7 @@ export const Text = ({
   loadingPlaceholderText = '000.00',
   ...rest
 }: TextProps): JSX.Element => {
-  const { fontScale } = useWindowDimensions()
-  const enableFontScaling = allowFontScaling ?? fontScale > DEFAULT_FONT_SCALE
+  const enableFontScaling = useEnableFontScaling(allowFontScaling)
 
   if (loading) {
     return (

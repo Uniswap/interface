@@ -29,7 +29,7 @@ exports[`renders a Pill with border 1`] = `
   }
 >
   <Text
-    allowFontScaling={true}
+    allowFontScaling={false}
     maxFontSizeMultiplier={1.4}
     style={
       {
@@ -44,7 +44,7 @@ exports[`renders a Pill with border 1`] = `
     Icon
   </Text>
   <Text
-    allowFontScaling={true}
+    allowFontScaling={false}
     maxFontSizeMultiplier={1.4}
     style={
       {
@@ -92,7 +92,7 @@ exports[`renders a Pill without image 1`] = `
   }
 >
   <Text
-    allowFontScaling={true}
+    allowFontScaling={false}
     maxFontSizeMultiplier={1.4}
     style={
       {

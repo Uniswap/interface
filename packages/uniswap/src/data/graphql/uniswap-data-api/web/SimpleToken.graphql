@@ -1,20 +1,26 @@
-query SimpleToken($chain: Chain!, $address: String = null) {
-    token(chain: $chain, address: $address) {
+fragment SimpleTokenDetails on Token {
+  id
+  address
+  chain
+  symbol
+  name
+  decimals
+  standard
+  project {
+    id
+    name
+    logo {
       id
-      address
-      chain
-      symbol
-      name
-      decimals
-      standard
-      project {
-        id
-        logo {
-          id
-          url
-        }
-        safetyLevel
-        isSpam
-      }
+      url
     }
+    safetyLevel
+    logoUrl
+    isSpam
   }
+}
+
+query SimpleToken($chain: Chain!, $address: String = null) {
+  token(chain: $chain, address: $address) {
+    ...SimpleTokenDetails
+  }
+}

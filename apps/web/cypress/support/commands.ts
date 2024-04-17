@@ -2,7 +2,7 @@ import 'cypress-hardhat/lib/browser'
 
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 
-import { FeatureFlagClient, FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/experiments/flags'
+import { FeatureFlagClient, FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/statsig/flags'
 import { UserState, initialState } from '../../src/state/user/reducer'
 import { CONNECTED_WALLET_USER_STATE, setInitialUserState } from '../utils/user-state'
 
