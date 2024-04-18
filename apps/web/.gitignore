@@ -6,8 +6,7 @@
 /src/i18n/locales/source/en-US_old.json
 
 # generated files
-/src/**/__generated__
-
+/src/**/__generated__/*
 # dependencies
 /node_modules
 
