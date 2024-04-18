@@ -111,7 +111,7 @@ export function Swap({
         {({ currentTab }) => (
           <SwapContextProvider>
             <SwapWrapper isDark={isDark} className={className} id="swap-page">
-              {/* <SwapHeader compact={compact} syncTabToUrl={syncTabToUrl} /> */}
+              <SwapHeader compact={compact} syncTabToUrl={syncTabToUrl} />
               {currentTab === SwapTab.Swap && (
                 <SwapForm onCurrencyChange={onCurrencyChange} disableTokenInputs={disableTokenInputs} />
               )}

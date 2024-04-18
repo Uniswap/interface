@@ -1,39 +1,36 @@
 import { Percent, TradeType } from '@jaguarswap/sdk-core'
-import { FlatFeeOptions } from '@uniswap/universal-router-sdk'
-import { FeeOptions } from '@jaguarswap/v3-sdk'
+// import { FlatFeeOptions } from '@uniswap/universal-router-sdk'
+// import { FeeOptions } from '@jaguarswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { BigNumber } from 'ethers/lib/ethers'
+// import { BigNumber } from 'ethers/lib/ethers'
 import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useCallback } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
-import { useAddOrder } from 'state/signatures/hooks'
-import { UniswapXOrderDetails } from 'state/signatures/types'
+// import { useAddOrder } from 'state/signatures/hooks'
+// import { UniswapXOrderDetails } from 'state/signatures/types'
 
 import { useTransactionAdder } from '../state/transactions/hooks'
-import {
-  ExactInputSwapTransactionInfo,
-  ExactOutputSwapTransactionInfo,
-  TransactionType,
-} from '../state/transactions/types'
+import { ExactInputSwapTransactionInfo, ExactOutputSwapTransactionInfo, TransactionType } from '../state/transactions/types'
 import { currencyId } from '../utils/currencyId'
 import { useUniswapXSwapCallback } from './useUniswapXSwapCallback'
 import { useUniversalRouterSwapCallback } from './useUniversalRouter'
+import { useSwapRouterV2Callback } from './useSwapRouterV2'
 
 export type SwapResult = Awaited<ReturnType<ReturnType<typeof useSwapCallback>>>
 
-type UniversalRouterFeeField = { feeOptions: FeeOptions } | { flatFeeOptions: FlatFeeOptions }
+// type UniversalRouterFeeField = { feeOptions: FeeOptions } | { flatFeeOptions: FlatFeeOptions }
 
-function getUniversalRouterFeeFields(trade?: InterfaceTrade): UniversalRouterFeeField | undefined {
-  if (!isClassicTrade(trade)) return undefined
-  if (!trade.swapFee) return undefined
+// function getUniversalRouterFeeFields(trade?: InterfaceTrade): UniversalRouterFeeField | undefined {
+//   if (!isClassicTrade(trade)) return undefined
+//   if (!trade.swapFee) return undefined
 
-  if (trade.tradeType === TradeType.EXACT_INPUT) {
-    return { feeOptions: { fee: trade.swapFee.percent, recipient: trade.swapFee.recipient } }
-  } else {
-    return { flatFeeOptions: { amount: BigNumber.from(trade.swapFee.amount), recipient: trade.swapFee.recipient } }
-  }
-}
+//   if (trade.tradeType === TradeType.EXACT_INPUT) {
+//     return { feeOptions: { fee: trade.swapFee.percent, recipient: trade.swapFee.recipient } }
+//   } else {
+//     return { flatFeeOptions: { amount: BigNumber.from(trade.swapFee.amount), recipient: trade.swapFee.recipient } }
+//   }
+// }
 
 // Returns a function that will execute a swap, if the parameters are all valid
 // and the user has approved the slippage adjusted input amount for the trade
@@ -44,26 +41,29 @@ export function useSwapCallback(
   permitSignature: PermitSignature | undefined
 ) {
   const addTransaction = useTransactionAdder()
-  const addOrder = useAddOrder()
+  // const addOrder = useAddOrder()
   const { account, chainId } = useWeb3React()
 
-  const uniswapXSwapCallback = useUniswapXSwapCallback({
-    trade: isUniswapXTrade(trade) ? trade : undefined,
-    allowedSlippage,
-    fiatValues,
+  // const uniswapXSwapCallback = useUniswapXSwapCallback({
+  //   trade: isUniswapXTrade(trade) ? trade : undefined,
+  //   allowedSlippage,
+  //   fiatValues,
+  // })
+  // const universalRouterSwapCallback = useUniversalRouterSwapCallback(
+  //   isClassicTrade(trade) ? trade : undefined,
+  //   fiatValues,
+  //   {
+  //     slippageTolerance: allowedSlippage,
+  //     permit: permitSignature,
+  //     ...getUniversalRouterFeeFields(trade),
+  //   }
+  // )
+
+  // const swapCallback = isUniswapXTrade(trade) ? uniswapXSwapCallback : useUniversalRouterSwapCallback
+  const swapCallback = useSwapRouterV2Callback(trade, {
+    slippageTolerance: allowedSlippage,
+    permit: permitSignature,
   })
-
-  const universalRouterSwapCallback = useUniversalRouterSwapCallback(
-    isClassicTrade(trade) ? trade : undefined,
-    fiatValues,
-    {
-      slippageTolerance: allowedSlippage,
-      permit: permitSignature,
-      ...getUniversalRouterFeeFields(trade),
-    }
-  )
-
-  const swapCallback = isUniswapXTrade(trade) ? uniswapXSwapCallback : universalRouterSwapCallback
 
   return useCallback(async () => {
     if (!trade) throw new Error('missing trade')
@@ -91,20 +91,8 @@ export function useSwapCallback(
           }),
     }
 
-    if (result.type === TradeFillType.UniswapX) {
-      addOrder(
-        account,
-        result.response.orderHash,
-        chainId,
-        result.response.deadline,
-        swapInfo as UniswapXOrderDetails['swapInfo'],
-        result.response.encodedOrder,
-        isUniswapXTrade(trade) ? trade.offchainOrderType : undefined
-      )
-    } else {
-      addTransaction(result.response, swapInfo, result.deadline?.toNumber())
-    }
+    addTransaction(result.response, swapInfo, result.deadline?.toNumber())
 
     return result
-  }, [account, addOrder, addTransaction, allowedSlippage, chainId, swapCallback, trade])
+  }, [account, addTransaction, allowedSlippage, chainId, swapCallback, trade])
 }

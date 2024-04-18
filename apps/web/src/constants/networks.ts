@@ -1,5 +1,5 @@
-import { ChainId } from "@jaguarswap/sdk-core";
-import type { SupportedInterfaceChain } from "constants/chains";
+import { ChainId } from '@jaguarswap/sdk-core'
+import type { SupportedInterfaceChain } from 'constants/chains'
 
 /**
  * Public JSON-RPC endpoints.
@@ -12,28 +12,28 @@ import type { SupportedInterfaceChain } from "constants/chains";
  * These "Safe" URLs are listed first, followed by other fallback URLs, which are taken from chainlist.org.
  */
 export const PUBLIC_RPC_URLS: Record<SupportedInterfaceChain, string[]> = {
-	[ChainId.X1]: [
-	  // "Safe" URLs
-	  'https://x1testrpc.okx.com',
-	  'https://testrpc.x1.tech',
-	],
-	[ChainId.X1_TESTNET]: [
-		// "Safe" URLs
-		"https://x1testrpc.okx.com",
-		"https://testrpc.x1.tech",
-	],
-};
+  [ChainId.X1]: [
+    // "Safe" URLs
+    'https://x1testrpc.okx.com',
+    'https://testrpc.x1.tech',
+  ],
+  [ChainId.X1_TESTNET]: [
+    // "Safe" URLs
+    'https://x1testrpc.okx.com',
+    'https://testrpc.x1.tech',
+  ],
+}
 
 /**
  * Application-specific JSON-RPC endpoints.
  * These are URLs which may only be used by the interface, due to origin policies, &c.
  */
 export const APP_RPC_URLS: Record<SupportedInterfaceChain, string[]> = {
-	[ChainId.X1]: [`https://x1rpc.okx.com`],
-	[ChainId.X1_TESTNET]: ["https://x1testrpc.okx.com"],
-};
+  [ChainId.X1]: [`https://x1rpc.okx.com`],
+  [ChainId.X1_TESTNET]: ['https://x1testrpc.okx.com'],
+}
 
 export const INFURA_PREFIX_TO_CHAIN_ID: { [prefix: string]: ChainId } = {
-	x1: ChainId.X1_TESTNET,
-	"x1-testnet": ChainId.X1_TESTNET,
-};
+  x1: ChainId.X1_TESTNET,
+  'x1-testnet': ChainId.X1_TESTNET,
+}

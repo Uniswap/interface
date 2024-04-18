@@ -59,18 +59,18 @@ export function isPricePoint(p: PricePoint | undefined): p is PricePoint {
   return p !== undefined
 }
 
-export const GQL_MAINNET_CHAINS_MUTABLE = [Chain.Ethereum, Chain.Polygon, Chain.Celo, Chain.Optimism, Chain.Arbitrum, Chain.Bnb, Chain.Avalanche, Chain.Base]
+export const GQL_MAINNET_CHAINS_MUTABLE = [Chain.X1, Chain.X1Testnet]
 
-const GQL_MAINNET_CHAINS = [Chain.Ethereum, Chain.Polygon, Chain.Celo, Chain.Optimism, Chain.Arbitrum, Chain.Bnb, Chain.Avalanche, Chain.Base] as const
+const GQL_MAINNET_CHAINS = [Chain.X1] as const
 
-const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
+const GQL_TESTNET_CHAINS = [Chain.X1Testnet] as const
 
 const UX_SUPPORTED_GQL_CHAINS = [...GQL_MAINNET_CHAINS, ...GQL_TESTNET_CHAINS] as const
 type InterfaceGqlChain = (typeof UX_SUPPORTED_GQL_CHAINS)[number]
 
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
-  [ChainId.X1]: Chain.Ethereum,
-  [ChainId.X1_TESTNET]: Chain.Ethereum,
+  [ChainId.X1]: Chain.X1,
+  [ChainId.X1_TESTNET]: Chain.X1Testnet,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
@@ -97,14 +97,9 @@ export function gqlToCurrency(token: { address?: string; chain: Chain; standard?
 }
 
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
-  ethereum: Chain.Ethereum,
-  polygon: Chain.Polygon,
-  celo: Chain.Celo,
-  arbitrum: Chain.Arbitrum,
-  optimism: Chain.Optimism,
-  bnb: Chain.Bnb,
-  avalanche: Chain.Avalanche,
-  base: Chain.Base,
+
+  x1: Chain.X1,
+  x1Testnet: Chain.X1Testnet,
 }
 
 /**
@@ -132,11 +127,12 @@ export function getValidUrlChainId(chainName: string | undefined): ChainId | und
 export function validateUrlChainParam(chainName: string | undefined) {
   const isValidChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
   const isValidBackEndChain = isValidChainName && (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(isValidChainName)
-  return isValidBackEndChain ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
+  return isValidBackEndChain ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.X1
 }
 
 const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: ChainId } = {
-  [Chain.Ethereum]: ChainId.X1,
+  [Chain.X1]: ChainId.X1,
+  [Chain.X1Testnet]: ChainId.X1_TESTNET,
 }
 
 export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {

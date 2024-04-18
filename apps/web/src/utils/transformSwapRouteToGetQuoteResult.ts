@@ -1,9 +1,6 @@
 import { Protocol } from '@jaguarswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@jaguarswap/sdk-core'
-// This file is lazy-loaded, so the import of smart-order-router is intentional.
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { routeAmountsToString, SwapRoute } from '@jaguarswap/smart-order-router'
-import { Pool } from '@jaguarswap/v3-sdk'
 import {
   ClassicQuoteData,
   QuoteResult,
@@ -51,7 +48,7 @@ export function transformSwapRouteToGetQuoteResult(
         edgeAmountOut = tradeType === TradeType.EXACT_INPUT ? quote.quotient.toString() : amount.quotient.toString()
       }
 
-      if (nextPool instanceof Pool) {
+      if (subRoute.protocol === Protocol.V3) {
         curRoute.push({
           type: 'v3-pool',
           tokenIn: {
