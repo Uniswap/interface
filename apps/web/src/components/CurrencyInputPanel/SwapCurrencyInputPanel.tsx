@@ -145,7 +145,7 @@ const InputRow = styled.div`
   ${flexRowNoWrap};
   align-items: center;
   justify-content: space-between;
-  background-color: #222;
+  background-color: ${({ theme }) => theme.inputBoxColor};
   padding: 17px;
   border-radius: 12px;
   margin-top: 5px;
@@ -222,6 +222,7 @@ const WalletBox = styled.span<{ active?: boolean }>`
   display: flex;
   gap: 5px;
   align-items: center;
+  color: ${({ theme }) => theme.neutral2};
 `
 
 
@@ -317,7 +318,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
 
         <Container hideInput={hideInput}>
           <WalletContainer>
-            <Text variant="subheading2" userSelect="none">
+            <Text variant="subheading2" userSelect="none" fontWeight={600}>
               {label}
             </Text>
             {Boolean(!hideInput && !hideBalance) && (

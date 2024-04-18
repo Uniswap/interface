@@ -78,12 +78,12 @@ const Pages: Array<Page> = [
     component: Tokens,
     loggingElementName: InterfaceElementName.MINI_PORTFOLIO_TOKENS_TAB,
   },
-  {
-    title: <Trans>NFTs</Trans>,
-    key: 'nfts',
-    component: NFTs,
-    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB,
-  },
+  // {
+  //   title: <Trans>NFTs</Trans>,
+  //   key: 'nfts',
+  //   component: NFTs,
+  //   loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB,
+  // },
   {
     title: <Trans>Pools</Trans>,
     key: 'pools',

@@ -30,6 +30,9 @@ import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 import { findRouteByPath, RouteDefinition, routes, useRouterConfig } from './RouteDefinitions'
 
+import { ReactComponent as LightBgIcon } from '../assets/images/background_light_icon.svg'
+import { ReactComponent as DarkBgIcon } from '../assets/images/background_dark_icon.svg'
+
 const AppChrome = lazy(() => import('./AppChrome'))
 
 const BodyWrapper = styled.div<{ bannerIsVisible?: boolean }>`
@@ -104,6 +107,8 @@ export default function App() {
   const currentPage = getCurrentPageFromLocation(pathname)
   const renderUkBanner = useRenderUkBanner()
 
+  const isDarkMode = useIsDarkMode()
+
   const [searchParams] = useSearchParams()
   useEffect(() => {
     if (searchParams.get('disableNFTs') === 'true') {
@@ -173,6 +178,11 @@ export default function App() {
             <PageTabs />
           </MobileBottomBar>
         {/* </StatsigProvider> */}
+
+        <ImageWrapper>
+          {isDarkMode ? <DarkBgIcon/> : <LightBgIcon/>}
+        </ImageWrapper>
+
       </Trace>
     </ErrorBoundary>
   )
@@ -292,3 +302,9 @@ function UserPropertyUpdater() {
   }, [routerPreference, rehydrated])
   return null
 }
+
+const ImageWrapper = styled.div`
+  position: fixed;
+  right: 0;
+  bottom: 0;
+`

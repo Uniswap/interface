@@ -535,7 +535,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
           </div>
 
           {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
-          <div style={{ padding: '0px 16px 16px 16px' }}>
+          <div style={{ paddingBottom: '16px' }}>
             {swapIsUnsupported ? (
               <ButtonPrimary $borderRadius="16px" disabled={true}>
                 <ThemedText.DeprecatedMain mb="4px">

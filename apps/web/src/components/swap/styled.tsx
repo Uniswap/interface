@@ -138,6 +138,7 @@ export const SwapShowAcceptChanges = styled(AutoColumn)`
 export const SwapWrapperContainer = styled.div`
   background-color: ${({ theme }) => theme.surface2};
   border-radius: 16px;
+  padding: 0px 16px;
 `
 export const SwapSection = styled.div`
   background-color: ${({ theme }) => theme.surface2};
@@ -147,7 +148,7 @@ export const SwapSection = styled.div`
   font-weight: 500;
   height: 100%;
   line-height: 20px;
-  padding: 16px;
+  padding: 16px 0px;
   position: relative;
   &:before {
     box-sizing: border-box;

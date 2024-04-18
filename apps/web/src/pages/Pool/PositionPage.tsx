@@ -49,6 +49,8 @@ import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
+import { ReactComponent as BackIcon } from '../../assets/svg/back-icon.svg'
+import { ReactComponent as ArrowUpRightIcon } from '../../assets/svg/arrow-rightup-icon.svg'
 import { LoadingRows } from './styled'
 
 const PositionPageButtonPrimary = styled(ButtonPrimary)`
@@ -176,6 +178,13 @@ const PairHeader = styled(ThemedText.H1Medium)`
   margin-right: 10px;
 `
 
+const CurrencyWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  stroke: ${({ theme }) => `${theme.neutral3}`};
+`
+
 function CurrentPriceCard({
   inverted,
   pool,
@@ -233,7 +242,7 @@ function LinkedCurrency({ chainId, currency }: { chainId: number; currency?: Cur
     <Link chainId={chainId} address={address}>
       <RowFixed>
         <CurrencyLogo currency={currency} size="20px" style={{ marginRight: '0.5rem' }} />
-        <ThemedText.DeprecatedMain>{currency?.symbol} ↗</ThemedText.DeprecatedMain>
+        <ThemedText.DeprecatedMain><CurrencyWrapper>{currency?.symbol} <ArrowUpRightIcon/></CurrencyWrapper></ThemedText.DeprecatedMain>
       </RowFixed>
     </Link>
   )
@@ -691,8 +700,8 @@ function PositionPageContent() {
                 style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }}
                 to="/pool"
               >
-                <HoverText>
-                  <Trans>← Back to Pool</Trans>
+                <HoverText style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
+                  <Trans><CurrencyWrapper><BackIcon/> Back to Pool</CurrencyWrapper></Trans>
                 </HoverText>
               </Link>
               <ResponsiveRow>
