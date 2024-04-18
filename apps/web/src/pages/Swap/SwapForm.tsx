@@ -51,7 +51,9 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { largerPercentValue } from 'utils/percent'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-import { ReactComponent as ArrowUpDown } from '../../assets/svg/arrowUpDown.svg'
+import { useIsDarkMode } from 'ui/src'
+import { ReactComponent as ArrowUpDownDark } from '../../assets/svg/arrowUpDown_dark.svg'
+import { ReactComponent as ArrowUpDownLight } from '../../assets/svg/arrowUpDown_light.svg'
 
 import { getIsReviewableQuote } from '.'
 import { OutputTaxTooltipBody } from './TaxTooltipBody'
@@ -69,6 +71,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const connectionReady = useConnectionReady()
   const { account, chainId: connectedChainId, connector } = useWeb3React()
   const trace = useTrace()
+  const isDarkMode = useIsDarkMode()
 
   const { chainId, prefilledState, currencyState } = useSwapAndLimitContext()
   const { swapState, setSwapState, derivedSwapInfo } = useSwapContext()
@@ -498,7 +501,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 }}
                 color={theme.neutral1}
               >
-                <ArrowUpDown />
+                {isDarkMode ? <ArrowUpDownDark/> : <ArrowUpDownLight />}
               </ArrowContainer>
             </TraceEvent>
           </ArrowWrapper>

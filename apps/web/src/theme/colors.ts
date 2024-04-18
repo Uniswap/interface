@@ -111,11 +111,12 @@ export const colors = {
   accent1_dark: '#FFC552',
   accent2_dark: '#31291C',
   accent3_dark: '#4C82FB',
+  input_dark: '#222222',
   neutral1_light: '#222222',
   neutral2_light: '#7D7D7D',
   neutral3_light: '#CECECE',
   surface1_light: '#FFFFFF',
-  surface2_light: '#F9F9F9',
+  surface2_light: '#F6F6F6',
   surface3_light: '#22222212',
   surface4_light: '#FFFFFF64',
   surface5_light: '#00000004',
@@ -123,6 +124,7 @@ export const colors = {
   accent1_light: '#FFC552',
   accent2_light: '#FFEFFF',
   accent3_light: '#4C82FB',
+  input_light: '#EDEDED',
   success: '#40B66B',
   critical: '#FF5F52',
   critical2_dark: '#2E0805',
@@ -130,7 +132,8 @@ export const colors = {
   nero12_dark: '#484848',
   nero12_light: '#484848',
   scrim: 'rgba(0, 0, 0, 0.60)',
-  borderColor: 'rgba(255, 255, 255, 0.12)'
+  switcher_dark: 'rgba(255, 255, 255, 0.12)',
+  switcher_light: '#D2D2D2'
 }
 
 export type ThemeColors = typeof darkTheme
@@ -196,8 +199,8 @@ export const darkTheme = {
 
   warning2: colors.gold200,
 
-  borderColor: colors.borderColor,
-  inputBoxColor: colors.neutral1_light,
+  borderColor: colors.switcher_dark,
+  inputBoxColor: colors.input_dark,
   nero12: colors.nero12_dark
 }
 
@@ -232,7 +235,7 @@ export const lightTheme: ThemeColors = {
 
   warning2: colors.gold200,
 
-  borderColor: colors.borderColor,
-  inputBoxColor: colors.neutral1_dark,
+  borderColor: colors.switcher_light,
+  inputBoxColor: colors.input_light,
   nero12: colors.nero12_light
 }

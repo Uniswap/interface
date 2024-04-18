@@ -53,6 +53,7 @@ export const ArrowWrapper = styled.div<{ clickable: boolean }>`
   background-color: ${({ theme }) => theme.surface2};
   border: 4px solid;
   border-color: ${({ theme }) => theme.borderColor};
+  color: ${({ theme }) => theme.neutral1};
 
   z-index: 2;
   ${({ clickable }) =>
@@ -139,6 +140,7 @@ export const SwapWrapperContainer = styled.div`
   background-color: ${({ theme }) => theme.surface2};
   border-radius: 16px;
   padding: 0px 16px;
+  box-shadow: 0px 20px 40px 0px rgba(0, 0, 0, 0.10);
 `
 export const SwapSection = styled.div`
   background-color: ${({ theme }) => theme.surface2};
