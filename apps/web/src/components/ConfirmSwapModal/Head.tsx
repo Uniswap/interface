@@ -22,10 +22,10 @@ export function SwapHead({ onDismiss, isLimitTrade }: { onDismiss: () => void; i
           </ThemedText.SubHeader>
         </FadePresence>
       </Row>
-      <Row justify="right" gap="10px">
+      {/* <Row justify="right" gap="10px">
         <GetHelpButton />
         <CloseIcon onClick={onDismiss} data-testid="confirmation-close-icon" />
-      </Row>
+      </Row> */}
     </Row>
   )
 }

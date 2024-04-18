@@ -177,7 +177,6 @@ export function PortfolioLogo(props: PortfolioLogoProps) {
 }
 
 function getLogo({ chainId, accountAddress, currencies, images, size = '40px' }: PortfolioLogoProps) {
-  console.log('chainId, accountAddress, currencies, images,------', chainId, accountAddress, currencies, images)
   if (accountAddress) {
     return <PortfolioAvatar accountAddress={accountAddress} size={size} />
   }
