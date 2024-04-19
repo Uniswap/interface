@@ -11,6 +11,7 @@ import UNISWAP_LOGO from 'assets/svg/logo.svg'
 import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import WALLET_CONNECT_ICON from 'assets/wallets/walletconnect-icon.svg'
+import OKXWALLET_ICON from 'assets/wallets/okxwallet-icon.svg'
 import { useSyncExternalStore } from 'react'
 import { isMobile, isTouchable, isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
 
@@ -18,7 +19,7 @@ import { APP_RPC_URLS } from '../constants/networks'
 import { DEPRECATED_RPC_PROVIDERS, RPC_PROVIDERS } from '../constants/providers'
 import { EIP6963 } from './eip6963'
 import { Connection, ConnectionType, ProviderInfo } from './types'
-import { getDeprecatedInjection, getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
+import { getDeprecatedInjection, getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet, getIsOKXWallet } from './utils'
 import { UniwalletConnect as UniwalletWCV2Connect, WalletConnectV2 } from './WalletConnectV2'
 
 function onError(error: Error) {
@@ -105,6 +106,22 @@ export const deprecatedInjectedConnection: Connection = {
   overrideActivate: () => {
     if (getShouldAdvertiseMetaMask()) {
       window.open('https://metamask.io/', 'inst_metamask')
+      return true
+    }
+    return false
+  },
+}
+
+export const OKXConnection: Connection = {
+  getProviderInfo: () => ({ name: 'OKX Wallet', icon: OKXWALLET_ICON }),
+  connector: web3Injected,
+  hooks: web3InjectedHooks,
+  type: ConnectionType.OKX_WALLET,
+  shouldDisplay: () => getIsOKXWallet(),
+  // If on non-injected, non-mobile browser, prompt user to install OKX Wallet
+  overrideActivate: () => {
+    if (getShouldAdvertiseMetaMask()) {
+      window.open('https://okx.com/', 'inst_okxwallet')
       return true
     }
     return false
@@ -228,15 +245,16 @@ const coinbaseWalletConnection: Connection = {
 }
 
 export const connections = [
-  gnosisSafeConnection,
-  uniwalletWCV2ConnectConnection,
+  // gnosisSafeConnection,
+  // uniwalletWCV2ConnectConnection,
   deprecatedInjectedConnection,
   walletConnectV2Connection,
-  coinbaseWalletConnection,
-  eip6963Connection,
+  OKXConnection,
+  // coinbaseWalletConnection,
+  // eip6963Connection,
   // network connector should be last in the list, as it should be the fallback if no other connector is active
-  networkConnection,
-  deprecatedNetworkConnection,
+  // networkConnection,
+  // deprecatedNetworkConnection,
 ]
 
 export function getConnection(c: Connector | ConnectionType) {
@@ -250,20 +268,22 @@ export function getConnection(c: Connector | ConnectionType) {
     switch (c) {
       case ConnectionType.INJECTED:
         return deprecatedInjectedConnection
-      case ConnectionType.COINBASE_WALLET:
-        return coinbaseWalletConnection
+      // case ConnectionType.COINBASE_WALLET:
+      //   return coinbaseWalletConnection
       case ConnectionType.WALLET_CONNECT_V2:
         return walletConnectV2Connection
-      case ConnectionType.UNISWAP_WALLET_V2:
-        return uniwalletWCV2ConnectConnection
-      case ConnectionType.NETWORK:
-        return networkConnection
-      case ConnectionType.DEPRECATED_NETWORK:
-        return deprecatedNetworkConnection
-      case ConnectionType.GNOSIS_SAFE:
-        return gnosisSafeConnection
-      case ConnectionType.EIP_6963_INJECTED:
-        return eip6963Connection
+      // case ConnectionType.UNISWAP_WALLET_V2:
+      //   return uniwalletWCV2ConnectConnection
+      // case ConnectionType.NETWORK:
+      //   return networkConnection
+      // case ConnectionType.DEPRECATED_NETWORK:
+      //   return deprecatedNetworkConnection
+      // case ConnectionType.GNOSIS_SAFE:
+      //   return gnosisSafeConnection
+      // case ConnectionType.EIP_6963_INJECTED:
+      //   return eip6963Connection
+      case ConnectionType.OKX_WALLET:
+        return OKXConnection
     }
   }
 }
