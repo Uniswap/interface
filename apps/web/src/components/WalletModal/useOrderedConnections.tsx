@@ -46,7 +46,9 @@ function getOrderedConnections(connections: Connection[], recentConnection: Rece
     const { name, rdns } = connection.getProviderInfo()
 
     // For eip6963 injectors, we need to check rdns in addition to connection type to ensure it's the recent connection
-    const isRecent = connection.type === recentConnection?.type && (!rdns || rdns === recentConnection.rdns)
+    // let isRecent = connection.type === recentConnection?.type && (!rdns || rdns === recentConnection.rdns);
+
+    const isRecent = false
 
     const option = <Option key={name} connection={connection} isRecent={isRecent} />
 

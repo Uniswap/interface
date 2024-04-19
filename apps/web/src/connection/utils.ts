@@ -4,6 +4,7 @@ import INJECTED_DARK_ICON from 'assets/wallets/browser-wallet-dark.svg'
 import INJECTED_LIGHT_ICON from 'assets/wallets/browser-wallet-light.svg'
 import LEDGER_ICON from 'assets/wallets/ledger-icon.svg'
 import METAMASK_ICON from 'assets/wallets/metamask-icon.svg'
+import OKXWALLET_ICON from 'assets/wallets/okxwallet-icon.svg'
 import RABBY_ICON from 'assets/wallets/rabby-icon.svg'
 import TRUST_WALLET_ICON from 'assets/wallets/trustwallet-icon.svg'
 import { EIP6963ProviderDetail } from 'connection/eip6963/types'
@@ -66,6 +67,12 @@ export function getDeprecatedInjection(isDarkMode?: boolean): ProviderInfo | und
  * https://wallet-docs.brave.com/ethereum/wallet-detection#compatability-with-metamask
  */
 export const getIsMetaMaskWallet = () => getDeprecatedInjection()?.name === 'MetaMask'
+
+export const getIsOKXWallet = () => {
+  // Prompt MetaMask install when no window.ethereum or eip6963 injection is present, or the only injection detected is coinbase (CB has separate entry point in UI)
+  // if (typeof window.okxwallet !== 'undefined') 
+  return { name: 'OKX Wallet', icon: OKXWALLET_ICON }
+}
 
 export const getIsCoinbaseWallet = () => Boolean(window.ethereum?.isCoinbaseWallet)
 
