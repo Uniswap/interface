@@ -14,14 +14,8 @@ import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { BIPS_BASE } from 'constants/misc'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
-import { PoolSortFields, TablePool, useTopPools } from 'graphql/data/pools/useTopPools'
-import {
-  OrderDirection,
-  chainIdToBackendName,
-  supportedChainIdFromGQLChain,
-  unwrapToken,
-  validateUrlChainParam,
-} from 'graphql/data/util'
+import { PoolSortFields, TablePool, useV3Pools } from 'graphql/data/pools/useV3Pools'
+import { OrderDirection, chainIdToBackendName, supportedChainIdFromGQLChain, unwrapToken, validateUrlChainParam } from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { ReactElement, ReactNode, useCallback, useEffect, useMemo } from 'react'
@@ -30,18 +24,14 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import React from 'react'
 
 const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
   [PoolSortFields.TVL]: undefined,
   [PoolSortFields.Volume24h]: undefined,
   [PoolSortFields.VolumeWeek]: undefined,
   [PoolSortFields.TxCount]: undefined,
-  [PoolSortFields.Turnover]: (
-    <Trans>
-      Turnover refers to the amount of trading volume relative to total value locked (TVL) within a pool. Turnover = 24H
-      Fees / TVL
-    </Trans>
-  ),
+  [PoolSortFields.Turnover]: <Trans>Turnover refers to the amount of trading volume relative to total value locked (TVL) within a pool. Turnover = 24H Fees / TVL</Trans>,
 }
 
 const TableWrapper = styled.div`
@@ -61,19 +51,20 @@ interface PoolTableValues {
   txCount: number
   tvl: number
   volume24h: number
+  volumeChange: number
   volumeWeek: number
-  turnover: Percent
   link: string
 }
 
+// biome-ignore lint/style/useEnumInitializers: <explanation>
 export enum PoolTableColumns {
   Index,
   PoolDescription,
   Transactions,
   TVL,
   Volume24h,
+  VolumeChange,
   VolumeWeek,
-  Turnover,
 }
 
 function PoolDescription({
@@ -125,19 +116,10 @@ const HEADER_TEXT: Record<PoolSortFields, ReactNode> = {
   [PoolSortFields.TVL]: <Trans>TVL</Trans>,
   [PoolSortFields.Volume24h]: <Trans>1 day volume</Trans>,
   [PoolSortFields.VolumeWeek]: <Trans>7 day volume</Trans>,
-  [PoolSortFields.Turnover]: <Trans>Turnover</Trans>,
   [PoolSortFields.TxCount]: <Trans>Transactions</Trans>,
 }
 
-function PoolTableHeader({
-  category,
-  isCurrentSortMethod,
-  direction,
-}: {
-  category: PoolSortFields
-  isCurrentSortMethod: boolean
-  direction: OrderDirection
-}) {
+function PoolTableHeader({ category, isCurrentSortMethod, direction }: { category: PoolSortFields; isCurrentSortMethod: boolean; direction: OrderDirection }) {
   const handleSortCategory = useSetSortMethod(category)
   return (
     <MouseoverTooltip disabled={!HEADER_DESCRIPTIONS[category]} text={HEADER_DESCRIPTIONS[category]} placement="top">
@@ -162,26 +144,14 @@ export function TopPoolTable() {
     resetSortAscending()
   }, [resetSortAscending, resetSortMethod])
 
-  const { topPools, loading, errorV3, errorV2 } = useTopPools(
-    { sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc },
-    chainId
-  )
-  const combinedError =
-    errorV2 && errorV3
-      ? new ApolloError({ errorMessage: `Could not retrieve V2 and V3 Top Pools on chain: ${chainId}` })
-      : undefined
-  const allDataStillLoading = loading && !topPools.length
-  useUpdateManualOutage({ chainId, errorV3, errorV2 })
+  const { data: topPools, loading, error } = useV3Pools({ sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc }, chainId)
+  const combinedError = error ? new ApolloError({ errorMessage: `Could not V3 Top Pools on chain: ${chainId}` }) : undefined
+  const allDataStillLoading = loading && !topPools?.length
+  useUpdateManualOutage({ chainId, error })
 
   return (
     <TableWrapper data-testid="top-pools-explore-table">
-      <PoolsTable
-        pools={topPools}
-        loading={allDataStillLoading}
-        error={combinedError}
-        chainId={chainId}
-        maxWidth={1200}
-      />
+      <PoolsTable pools={topPools} loading={allDataStillLoading} error={combinedError} chainId={chainId} maxWidth={1200} />
     </TableWrapper>
   )
 }
@@ -219,19 +189,13 @@ export function PoolsTable({
         return {
           index: poolSortRank,
           poolDescription: (
-            <PoolDescription
-              token0={unwrapToken(chainId, pool.token0)}
-              token1={unwrapToken(chainId, pool.token1)}
-              feeTier={pool.feeTier}
-              chainId={chainId}
-              protocolVersion={pool.protocolVersion}
-            />
+            <PoolDescription token0={unwrapToken(chainId, pool.token0)} token1={unwrapToken(chainId, pool.token1)} feeTier={pool.feeTier} chainId={chainId} protocolVersion={pool.protocolVersion} />
           ),
           txCount: pool.txCount,
           tvl: pool.tvl,
           volume24h: pool.volume24h,
+          volumeChange: pool.volumeChange,
           volumeWeek: pool.volumeWeek,
-          turnover: pool.turnover,
           link: `/explore/pools/${chainIdToBackendName(chainId).toLowerCase()}/${pool.hash}`,
           analytics: {
             elementName: InterfaceElementName.POOLS_TABLE_ROW,
@@ -295,18 +259,12 @@ export function PoolsTable({
             id: 'transactions',
             header: () => (
               <Cell justifyContent="flex-end" minWidth={120} grow>
-                <PoolTableHeader
-                  category={PoolSortFields.TxCount}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.TxCount}
-                  direction={orderDirection}
-                />
+                <PoolTableHeader category={PoolSortFields.TxCount} isCurrentSortMethod={sortMethod === PoolSortFields.TxCount} direction={orderDirection} />
               </Cell>
             ),
             cell: (txCount) => (
               <Cell justifyContent="flex-end" loading={showLoadingSkeleton} minWidth={120} grow>
-                <ThemedText.BodyPrimary>
-                  {formatNumber({ input: txCount.getValue?.(), type: NumberType.NFTCollectionStats })}
-                </ThemedText.BodyPrimary>
+                <ThemedText.BodyPrimary>{formatNumber({ input: txCount.getValue?.(), type: NumberType.NFTCollectionStats })}</ThemedText.BodyPrimary>
               </Cell>
             ),
           })
@@ -316,18 +274,12 @@ export function PoolsTable({
             id: 'tvl',
             header: () => (
               <Cell minWidth={120} grow>
-                <PoolTableHeader
-                  category={PoolSortFields.TVL}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.TVL}
-                  direction={orderDirection}
-                />
+                <PoolTableHeader category={PoolSortFields.TVL} isCurrentSortMethod={sortMethod === PoolSortFields.TVL} direction={orderDirection} />
               </Cell>
             ),
             cell: (tvl) => (
               <Cell loading={showLoadingSkeleton} minWidth={120} grow>
-                <ThemedText.BodyPrimary>
-                  {formatNumber({ input: tvl.getValue?.(), type: NumberType.FiatTokenStats })}
-                </ThemedText.BodyPrimary>
+                <ThemedText.BodyPrimary>{formatNumber({ input: tvl.getValue?.(), type: NumberType.FiatTokenStats })}</ThemedText.BodyPrimary>
               </Cell>
             ),
           })
@@ -337,18 +289,27 @@ export function PoolsTable({
             id: 'volume24h',
             header: () => (
               <Cell minWidth={120} grow>
-                <PoolTableHeader
-                  category={PoolSortFields.Volume24h}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.Volume24h}
-                  direction={orderDirection}
-                />
+                <PoolTableHeader category={PoolSortFields.Volume24h} isCurrentSortMethod={sortMethod === PoolSortFields.Volume24h} direction={orderDirection} />
               </Cell>
             ),
             cell: (volume24h) => (
               <Cell minWidth={120} loading={showLoadingSkeleton} grow>
-                <ThemedText.BodyPrimary>
-                  {formatNumber({ input: volume24h.getValue?.(), type: NumberType.FiatTokenStats })}
-                </ThemedText.BodyPrimary>
+                <ThemedText.BodyPrimary>{formatNumber({ input: volume24h.getValue?.(), type: NumberType.FiatTokenStats })}</ThemedText.BodyPrimary>
+              </Cell>
+            ),
+          })
+        : null,
+      !hiddenColumns?.includes(PoolTableColumns.VolumeChange)
+        ? columnHelper.accessor((row) => row.volumeChange, {
+            id: 'volumeChange',
+            header: () => (
+              <Cell minWidth={120} grow>
+                <PoolTableHeader category={PoolSortFields.VolumeChange} isCurrentSortMethod={sortMethod === PoolSortFields.VolumeChange} direction={orderDirection} />
+              </Cell>
+            ),
+            cell: (volumeChange) => (
+              <Cell minWidth={120} loading={showLoadingSkeleton} grow>
+                <ThemedText.BodyPrimary>{formatNumber({ input: volumeChange.getValue?.(), type: NumberType.FiatTokenStats })}</ThemedText.BodyPrimary>
               </Cell>
             ),
           })
@@ -358,37 +319,12 @@ export function PoolsTable({
             id: 'volumeWeek',
             header: () => (
               <Cell minWidth={120} grow>
-                <PoolTableHeader
-                  category={PoolSortFields.VolumeWeek}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.VolumeWeek}
-                  direction={orderDirection}
-                />
+                <PoolTableHeader category={PoolSortFields.VolumeWeek} isCurrentSortMethod={sortMethod === PoolSortFields.VolumeWeek} direction={orderDirection} />
               </Cell>
             ),
             cell: (volumeWeek) => (
               <Cell minWidth={120} loading={showLoadingSkeleton} grow>
-                <ThemedText.BodyPrimary>
-                  {formatNumber({ input: volumeWeek.getValue?.(), type: NumberType.FiatTokenStats })}
-                </ThemedText.BodyPrimary>
-              </Cell>
-            ),
-          })
-        : null,
-      !hiddenColumns?.includes(PoolTableColumns.Turnover)
-        ? columnHelper.accessor((row) => row.turnover, {
-            id: 'turnover',
-            header: () => (
-              <Cell minWidth={100} grow>
-                <PoolTableHeader
-                  category={PoolSortFields.Turnover}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.Turnover}
-                  direction={orderDirection}
-                />
-              </Cell>
-            ),
-            cell: (turnover) => (
-              <Cell minWidth={100} loading={showLoadingSkeleton} grow>
-                <ThemedText.BodyPrimary>{formatPercent(turnover.getValue?.())}</ThemedText.BodyPrimary>
+                <ThemedText.BodyPrimary>{formatNumber({ input: volumeWeek.getValue?.(), type: NumberType.FiatTokenStats })}</ThemedText.BodyPrimary>
               </Cell>
             ),
           })
@@ -397,15 +333,5 @@ export function PoolsTable({
     ].filter(Boolean) as ColumnDef<PoolTableValues, any>[]
   }, [formatNumber, formatPercent, hiddenColumns, orderDirection, showLoadingSkeleton, sortMethod])
 
-  return (
-    <Table
-      columns={columns}
-      data={poolTableValues}
-      loading={loading}
-      error={error}
-      loadMore={loadMore}
-      maxWidth={maxWidth}
-      maxHeight={maxHeight}
-    />
-  )
+  return <Table columns={columns} data={poolTableValues} loading={loading} error={error} loadMore={loadMore} maxWidth={maxWidth} maxHeight={maxHeight} />
 }

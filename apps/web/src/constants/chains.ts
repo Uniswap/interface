@@ -8,7 +8,7 @@ export const CHAIN_IDS_TO_NAMES = {
 const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = []
 
 // TODO: include BASE_GOERLI, OPTIMISM_SEPOLIA, or ARBITRUM_SEPOLIA when routing is implemented
-export type SupportedInterfaceChain = Exclude<SupportedChainsType, ChainId.X1 | ChainId.X1_TESTNET>
+export type SupportedInterfaceChain = SupportedChainsType
 
 export function isSupportedChain(chainId: number | null | undefined | ChainId, featureFlags?: Record<number, boolean>): chainId is SupportedInterfaceChain {
   if (featureFlags && chainId && chainId in featureFlags) {

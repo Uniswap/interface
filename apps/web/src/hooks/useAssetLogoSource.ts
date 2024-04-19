@@ -5,7 +5,6 @@ import uriToHttp from 'lib/utils/uriToHttp'
 import { useCallback, useMemo, useReducer } from 'react'
 import { isAddress } from 'utilities/src/addresses'
 
-
 const BAD_SRCS: { [tokenAddress: string]: true } = {}
 
 // Converts uri's into fetchable urls
@@ -36,15 +35,12 @@ function prioritizeLogoSources(uris: string[]) {
   return coingeckoUrl ? [...preferredUris, coingeckoUrl] : preferredUris
 }
 
-export function getInitialUrl(
-  address?: string | null,
-  chainId?: number | null,
-  isNative?: boolean,
-  backupImg?: string | null
-) {
+export function getInitialUrl(address?: string | null, chainId?: number | null, isNative?: boolean, backupImg?: string | null) {
   if (chainId && isNative) return getNativeLogoURI(chainId)
 
-  const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
+  // FIXME: 暂时先用 ethereum 中的logo， 如果发现有些logo不在仓库中，可以fork uniswap/assets仓库
+  // const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
+  const networkName = 'ethereum'
   const checksummedAddress = isAddress(address)
 
   if (checksummedAddress) {
