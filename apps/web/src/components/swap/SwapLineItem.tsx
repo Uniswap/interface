@@ -71,12 +71,12 @@ export function FOTTooltipContent() {
 function SwapFeeTooltipContent({ hasFee }: { hasFee: boolean }) {
   const message = hasFee ? (
     <Trans>
-      This fee is applied on select token pairs to ensure the best experience with Uniswap. It is paid in the output
+      This fee is applied on select token pairs to ensure the best experience with Jaguarswap. It is paid in the output
       token and has already been factored into the quote.
     </Trans>
   ) : (
     <Trans>
-      This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated
+      This fee is applied on select token pairs to ensure the best experience with Jaguarswap. There is no fee associated
       with this swap.
     </Trans>
   )

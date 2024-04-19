@@ -38,14 +38,14 @@ const LogoContainer = styled.div`
  */
 export default function AssetLogo({
   currency,
-
+  primaryImg,
   chainId = ChainId.X1,
   size = '24px',
   style,
 }: AssetLogoProps) {
   return (
     <LogoContainer style={{ height: size, width: size, ...style }}>
-      <PortfolioLogo currencies={currency ? [currency] : []} size={size} chainId={chainId} />
+      <PortfolioLogo currencies={currency ? [currency] : []} size={size} chainId={chainId} images={[primaryImg]} />
     </LogoContainer>
   )
 }
