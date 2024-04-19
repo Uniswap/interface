@@ -12,7 +12,7 @@ import {
 } from 'tamagui'
 import { DynamicColor } from 'ui/src/hooks/useSporeColors'
 import { IconSizeTokens } from 'ui/src/theme'
-import { withAnimated } from './animated'
+// import { withAnimated } from './animated'
 
 type SvgPropsWithRef = SvgProps & { ref: React.ForwardedRef<Svg>; style?: { color?: string } }
 
@@ -89,14 +89,15 @@ export function createIcon({
 
   IconPlain.displayName = name
 
-  const AnimatedIconPlain = withAnimated(IconPlain)
+  /*const AnimatedIconPlain = withAnimated(IconPlain)
 
   const AnimatedIcon = forwardRef<Svg, IconProps>((props: IconProps, ref) => (
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     <Icon ref={ref} {...props} Component={AnimatedIconPlain as any} />
   ))
 
-  AnimatedIcon.displayName = `Animated${name}`
+  AnimatedIcon.displayName = `Animated${name}`*/
 
-  return [Icon, AnimatedIcon] as const
+  // return [Icon, AnimatedIcon] as const
+  return [Icon, Icon] as const
 }

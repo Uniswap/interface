@@ -25,7 +25,6 @@
     "load.js"
   ],
   "dependencies": {
-    "@jambit/eslint-plugin-typed-redux-saga": "0.4.0",
     "@react-native-community/eslint-config": "3.0.3",
     "@rushstack/eslint-patch": "^1.2.0",
     "@typescript-eslint/eslint-plugin": "6.20.0",

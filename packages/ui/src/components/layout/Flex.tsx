@@ -1,5 +1,4 @@
 import { Insets } from 'react-native'
-import Animated from 'react-native-reanimated'
 import { SizeTokens, Stack, StackProps, styled } from 'tamagui'
 
 export const flexStyles = {
@@ -71,13 +70,3 @@ export const Flex = styled(Stack, {
     },
   } as const,
 })
-
-/**
- * @deprecated  Prefer <Flex animation="" />
- *
- *    See: https://tamagui.dev/docs/core/animations
- *
- * TODO(MOB-1948): Remove this
- */
-export const AnimatedFlex = Animated.createAnimatedComponent(Flex)
-AnimatedFlex.displayName = 'AnimatedFlex'

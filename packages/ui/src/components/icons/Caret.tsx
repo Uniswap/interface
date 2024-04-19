@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { withAnimated } from 'ui/src/components/factories/animated'
+// import { withAnimated } from 'ui/src/components/factories/animated'
 import { IconSizeTokens } from 'ui/src/theme'
 import { ArrowChange } from './ArrowChange'
 
@@ -34,4 +34,4 @@ export function _Caret({ size = '$icon.24', color, direction = 'n' }: Props): JS
 
 export const Caret = memo(_Caret)
 
-export const AnimatedCaretChange = withAnimated(ArrowChange)
+// export const AnimatedCaretChange = withAnimated(ArrowChange)

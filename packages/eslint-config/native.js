@@ -44,7 +44,6 @@ module.exports = {
     'security',
     'spellcheck',
     '@typescript-eslint',
-    '@jambit/typed-redux-saga',
   ],
   rules: {
     ...complexityRules,
@@ -306,15 +305,6 @@ module.exports = {
       files: ['*saga*.ts', '*Saga.ts', 'handleDeepLink.ts'],
       rules: {
         '@typescript-eslint/explicit-function-return-type': 'off',
-      },
-    },
-    // enforce saga imports from typed-redux-saga
-    {
-      files: ['./**/*.ts'],
-      excludedFiles: ['./**/*.test.ts', './**/*.test.tsx'],
-      rules: {
-        '@jambit/typed-redux-saga/use-typed-effects': 'error',
-        '@jambit/typed-redux-saga/delegate-effects': 'error',
       },
     },
     // Allow more depth for testing files
