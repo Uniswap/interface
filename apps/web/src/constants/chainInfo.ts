@@ -67,11 +67,11 @@ const CHAIN_INFO: ChainInfoMap = {
   // FIXME 替换成主网和测试网实际信息
   [ChainId.X1]: {
     networkType: NetworkType.L1,
-    docs: 'https://docs.uniswap.org/',
-    explorer: 'https://etherscan.io/',
-    infoLink: 'https://info.uniswap.org/#/',
-    label: 'Ethereum',
-    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    docs: '',
+    explorer: 'https://www.okx.com/zh-hans/explorer/xlayer',
+    infoLink: '',
+    label: 'X Layer',
+    nativeCurrency: { name: 'OKB', symbol: 'OKB', decimals: 18 },
     color: darkTheme.chain_1,
   },
   [ChainId.X1_TESTNET]: {

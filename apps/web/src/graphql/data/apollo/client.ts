@@ -1,16 +1,19 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
-import { Reference, relayStylePagination } from '@apollo/client/utilities'
 import { createSubscriptionLink } from 'utilities/src/apollo/SubscriptionLink'
 import { splitSubscription } from 'utilities/src/apollo/splitSubscription'
+import { ChainId } from '@jaguarswap/sdk-core'
 
-const API_URL = process.env.REACT_APP_AWS_API_ENDPOINT
-const REALTIME_URL = process.env.REACT_APP_AWS_REALTIME_ENDPOINT
-const REALTIME_TOKEN = process.env.REACT_APP_AWS_REALTIME_TOKEN
-if (!API_URL || !REALTIME_URL || !REALTIME_TOKEN) {
-  throw new Error('AWS CONFIG MISSING FROM ENVIRONMENT')
+const CHAIN_SUBGRAPH_URL: Record<number, string> = {
+  [ChainId.X1]: 'https://main-subgraph.jaguarex.com/subgraphs/name/jaguarswap/uniswap-v3',
+  [ChainId.X1_TESTNET]: 'https://subgraph.jaguarex.com/subgraphs/name/jaguarswap/uniswap-v3',
+}
+const CHAIN_SUBGRAPH_URL_BLOCK: Record<number, string> = {
+  [ChainId.X1]: 'https://main-subgraph.jaguarex.com/subgraphs/name/jaguarswap/x1layer-blocks',
+  [ChainId.X1_TESTNET]: 'https://subgraph.jaguarex.com/subgraphs/name/jaguarswap/x1layer-blocks',
 }
 
-const httpLink = new HttpLink({ uri: API_URL })
+
+const httpLink = new HttpLink({ uri: CHAIN_SUBGRAPH_URL[ChainId.X1] })
 
 export const apolloClient = new ApolloClient({
   connectToDevTools: true,
@@ -37,5 +40,5 @@ export const apolloClient = new ApolloClient({
 })
 
 // This is done after creating the client so that client may be passed to `createSubscriptionLink`.
-const subscriptionLink = createSubscriptionLink({ uri: REALTIME_URL, token: REALTIME_TOKEN }, apolloClient)
+const subscriptionLink = createSubscriptionLink({ uri: CHAIN_SUBGRAPH_URL[ChainId.X1], token: "" }, apolloClient)
 apolloClient.setLink(splitSubscription(subscriptionLink, httpLink))

@@ -1,7 +1,6 @@
 import { ChainId } from '@jaguarswap/sdk-core'
 
 const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
-  // FIXME： 替换成实际浏览器地址
   [ChainId.X1]: 'https://www.oklink.com/xlayer',
   [ChainId.X1_TESTNET]: 'https://www.okx.com/explorer/xlayer-test',
 }

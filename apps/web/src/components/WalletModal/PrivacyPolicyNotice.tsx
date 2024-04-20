@@ -10,14 +10,15 @@ const StyledLink = styled(ExternalLink)`
 export default function PrivacyPolicyNotice() {
   return (
     <ThemedText.BodySmall color="neutral2">
+      {/* FIXME: 替换成实际地址 */}
       <Trans>By connecting a wallet, you agree to Jaguarswap Labs&apos;</Trans>{' '}
-      <StyledLink href="https://uniswap.org/terms-of-service/">
+      {/* <StyledLink href="https://uniswap.org/terms-of-service/"> */}
         <Trans>Terms of Service</Trans>{' '}
-      </StyledLink>
+      {/* </StyledLink> */}
       <Trans>and consent to its</Trans>{' '}
-      <StyledLink href="https://uniswap.org/privacy-policy">
+      {/* <StyledLink href="https://uniswap.org/privacy-policy"> */}
         <Trans>Privacy Policy.</Trans>
-      </StyledLink>
+      {/* </StyledLink> */}
     </ThemedText.BodySmall>
   )
 }

@@ -19,9 +19,11 @@ const CHAIN_DATA_ABI = [
  * Returns the price of 1 gas in WEI for the currently selected network using the chainlink fast gas price oracle
  */
 export default function useGasPrice(skip = false): JSBI | undefined {
-  const { address } = useENSAddress('fast-gas-gwei.data.eth')
-  const contract = useContract(address ?? undefined, CHAIN_DATA_ABI, false)
+  return undefined
+  // FIXME: 实现 X1 layer 上的 gas price查询
+  // const { address } = useENSAddress('fast-gas-gwei.data.eth')
+  // const contract = useContract(address ?? undefined, CHAIN_DATA_ABI, false)
 
-  const resultStr = useSingleCallResult(skip ? undefined : contract, 'latestAnswer').result?.[0]?.toString()
-  return useMemo(() => (typeof resultStr === 'string' ? JSBI.BigInt(resultStr) : undefined), [resultStr])
+  // const resultStr = useSingleCallResult(skip ? undefined : contract, 'latestAnswer').result?.[0]?.toString()
+  // return useMemo(() => (typeof resultStr === 'string' ? JSBI.BigInt(resultStr) : undefined), [resultStr])
 }

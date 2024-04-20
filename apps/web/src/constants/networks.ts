@@ -14,8 +14,8 @@ import type { SupportedInterfaceChain } from 'constants/chains'
 export const PUBLIC_RPC_URLS: Record<SupportedInterfaceChain, string[]> = {
   [ChainId.X1]: [
     // "Safe" URLs
-    'https://x1testrpc.okx.com',
-    'https://testrpc.x1.tech',
+    'https://xlayerrpc.okx.com',
+    'https://rpc.xlayer.tech',
   ],
   [ChainId.X1_TESTNET]: [
     // "Safe" URLs
@@ -29,7 +29,7 @@ export const PUBLIC_RPC_URLS: Record<SupportedInterfaceChain, string[]> = {
  * These are URLs which may only be used by the interface, due to origin policies, &c.
  */
 export const APP_RPC_URLS: Record<SupportedInterfaceChain, string[]> = {
-  [ChainId.X1]: [`https://x1rpc.okx.com`],
+  [ChainId.X1]: ["https://xlayerrpc.okx.com"],
   [ChainId.X1_TESTNET]: ['https://x1testrpc.okx.com'],
 }
 

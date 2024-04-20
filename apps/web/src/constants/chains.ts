@@ -1,6 +1,7 @@
 import { ChainId, SUPPORTED_CHAINS, SupportedChainsType, V2_ROUTER_ADDRESSES } from '@jaguarswap/sdk-core'
 
 export const CHAIN_IDS_TO_NAMES = {
+  [ChainId.X1]: 'x layer',
   [ChainId.X1_TESTNET]: 'x1-testnet',
 } as const
 
@@ -25,20 +26,20 @@ export function asSupportedChain(chainId: number | null | undefined | ChainId, f
   return isSupportedChain(chainId) ? chainId : undefined
 }
 
-export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [ChainId.X1_TESTNET] as const
+export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = [ChainId.X1, ChainId.X1_TESTNET] as const
 
 /**
  * @deprecated when v2 pools are enabled on chains supported through sdk-core
  */
-export const SUPPORTED_V2POOL_CHAIN_IDS_DEPRECATED = [ChainId.X1, ChainId.GOERLI] as const
+export const SUPPORTED_V2POOL_CHAIN_IDS_DEPRECATED = [] as const
 export const SUPPORTED_V2POOL_CHAIN_IDS = Object.keys(V2_ROUTER_ADDRESSES).map((chainId) => parseInt(chainId))
 
-export const TESTNET_CHAIN_IDS = [] as const
+export const TESTNET_CHAIN_IDS = [ChainId.X1_TESTNET] as const
 
 /**
  * All the chain IDs that are running the Ethereum protocol.
  */
-export const L1_CHAIN_IDS = [ChainId.X1_TESTNET] as const
+export const L1_CHAIN_IDS = [ChainId.X1,ChainId.X1_TESTNET] as const
 
 export type SupportedL1ChainId = (typeof L1_CHAIN_IDS)[number]
 
@@ -57,7 +58,7 @@ export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]
  */
 export function getChainPriority(chainId: ChainId): number {
   switch (chainId) {
-    // case ChainId.X1:
+    case ChainId.X1:
     case ChainId.X1_TESTNET:
       return 0
     default:
