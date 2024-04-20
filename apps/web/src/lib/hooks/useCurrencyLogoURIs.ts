@@ -4,16 +4,18 @@ import { useMemo } from 'react'
 import { isAddress } from 'utilities/src/addresses'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
-import { NATIVE_CHAIN_ID, isCelo, nativeOnChain } from '../../constants/tokens'
+import { NATIVE_CHAIN_ID } from '../../constants/tokens'
 
-type Network = 'ethereum' | 'arbitrum' | 'optimism' | 'polygon' | 'smartchain' | 'celo' | 'avalanchec' | 'base'
+type Network = 'X Layer' | 'X Layer Testnet'
 
 export function chainIdToNetworkName(networkId: ChainId): Network {
   switch (networkId) {
     case ChainId.X1:
-      return 'ethereum'
+      return 'X Layer'
+    case ChainId.X1_TESTNET:
+      return 'X Layer Testnet'
     default:
-      return 'ethereum'
+      return 'X Layer'
   }
 }
 
@@ -26,14 +28,11 @@ export function getNativeLogoURI(chainId: ChainId = ChainId.X1): string {
 
 function getTokenLogoURI(address: string, chainId: ChainId = ChainId.X1): string | void {
   const networkName = chainIdToNetworkName(chainId)
-  // FIXME: 实现 token URI 逻辑
-  // const networksWithUrls = [
+  const networksWithUrls = [ChainId.X1, ChainId.X1_TESTNET]
 
-  // ]
-
-  // if (networksWithUrls.includes(chainId)) {
-  //   return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
-  // }
+  if (networksWithUrls.includes(chainId)) {
+    return `https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/${networkName}/assets/${address}/logo.png`
+  }
 }
 
 export default function useCurrencyLogoURIs(

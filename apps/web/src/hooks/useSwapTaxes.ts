@@ -31,8 +31,7 @@ function useFeeOnTransferDetectorContract(): FeeOnTransferDetector | null {
 }
 
 // TODO(WEB-2787): add tax-fetching for other chains
-// FIXME: 临时写死确认地址之后替换
-const WETH_ADDRESS = "0x75231f58b43240c9718dd58b4967c5114342a86c"
+const WETH_ADDRESS = "0xe538905cf8410324e03A5A23C1c177a474D59b2b"
 const AMOUNT_TO_BORROW = 10000 // smallest amount that has full precision over bps
 
 const FEE_CACHE: { [address in string]?: { sellTax?: Percent; buyTax?: Percent } } = {}

@@ -160,15 +160,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
           <TabBar data-testid="explore-navbar">
             {Pages.map(({ title, loggingElementName, key }, index) => {
               return (
-                <TraceEvent
-                  events={[BrowserEvent.onClick]}
-                  name={SharedEventName.NAVBAR_CLICKED}
-                  element={loggingElementName}
-                  key={index}
-                >
-                  <StyledInternalLink
-                    to={`/explore/${key}` + (chain !== Chain.Ethereum ? `/${chain.toLowerCase()}` : '')}
-                  >
+                <TraceEvent events={[BrowserEvent.onClick]} name={SharedEventName.NAVBAR_CLICKED} element={loggingElementName} key={index}>
+                  <StyledInternalLink to={'/explore'}>
                     <TabItem onClick={() => setCurrentTab(index)} active={currentTab === index} key={key}>
                       {title}
                     </TabItem>
@@ -178,7 +171,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
             })}
           </TabBar>
           <FiltersContainer>
-            <NetworkFilter />
+            {/* <NetworkFilter /> */}
             {currentKey === ExploreTab.Tokens && <TimeSelector />}
             {currentKey !== ExploreTab.Transactions && <SearchBar tab={currentKey} />}
           </FiltersContainer>

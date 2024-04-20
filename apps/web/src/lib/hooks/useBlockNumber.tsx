@@ -98,10 +98,9 @@ export function BlockNumberProvider({ children }: { children: ReactNode }) {
   // Poll once for the mainnet block number using the network provider.
   const networkProviders = useNetworkProviders();
   useEffect(() => {
-    // FIXME：替换成主网
-    networkProviders[ChainId.X1_TESTNET]
+    networkProviders[ChainId.X1]
       .getBlockNumber()
-      .then((block) => onChainBlock(ChainId.X1_TESTNET, block))
+      .then((block) => onChainBlock(ChainId.X1, block))
       // swallow errors - it's ok if this fails, as we'll try again if we activate mainnet
       .catch(() => undefined);
   }, [networkProviders, onChainBlock]);

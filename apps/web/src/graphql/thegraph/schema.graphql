@@ -5300,6 +5300,12 @@ enum TickHourData_orderBy {
   feesUSD
 }
 
+"""
+A string representation of microseconds UNIX timestamp (16 digits)
+
+"""
+scalar Timestamp
+
 type Token {
   id: ID!
   symbol: String!

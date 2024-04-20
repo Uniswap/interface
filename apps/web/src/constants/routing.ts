@@ -1,7 +1,7 @@
 // a list of tokens by chain
 import { ChainId, Currency, Token, WETH9 } from '@jaguarswap/sdk-core'
 
-import { USDC, USDT, WOKB_X1_TestNet, USDC_X1_TestNet, USDT_X1_TestNet, DAI_X1_TestNet, DAI, WBTC, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from './tokens'
+import { USDC, USDT, WOKB_X1_TestNet, USDC_X1_TestNet, USDT_X1_TestNet, DAI_X1_TestNet, DAI, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from './tokens'
 
 type ChainTokenList = {
   readonly [chainId: number]: Token[]
@@ -20,16 +20,15 @@ const WRAPPED_NATIVE_CURRENCIES_ONLY: ChainTokenList = Object.fromEntries(
 /**
  * Shows up in the currency select for swap and add liquidity
  */
-// FIXME： 默认代币列表
 export const COMMON_BASES: ChainCurrencyList = {
-  [ChainId.X1]: [nativeOnChain(ChainId.X1), DAI, USDC, USDT, WBTC, WRAPPED_NATIVE_CURRENCY[ChainId.X1] as Token],
+  [ChainId.X1]: [nativeOnChain(ChainId.X1), DAI, USDC, USDT, WRAPPED_NATIVE_CURRENCY[ChainId.X1] as Token],
   [ChainId.X1_TESTNET]: [nativeOnChain(ChainId.X1_TESTNET), WOKB_X1_TestNet, DAI_X1_TestNet, USDC_X1_TestNet, USDT_X1_TestNet],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
 export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
   ...WRAPPED_NATIVE_CURRENCIES_ONLY,
-  [ChainId.X1]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.X1], DAI, USDC, USDT, WBTC],
+  [ChainId.X1]: [...WRAPPED_NATIVE_CURRENCIES_ONLY[ChainId.X1], DAI, USDC, USDT],
 }
 export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {
   [ChainId.X1]: [

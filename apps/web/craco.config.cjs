@@ -11,7 +11,6 @@ const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 const isProduction = process.env.NODE_ENV === 'production'
-console.log("🚀 ~ isProduction:", isProduction)
 
 process.env.REACT_APP_GIT_COMMIT_HASH = commitHash
 
@@ -93,7 +92,11 @@ module.exports = {
       }),
     ],
     configure: (webpackConfig) => {
-      webpackConfig.devtool = false;
+      if (!isProduction) {
+        webpackConfig.devtool = false
+      }
+      // NOTE: 用于调试本地依赖库的代码
+      // webpackConfig.cache = !isProduction
       // Configure webpack plugins:
       webpackConfig.plugins = webpackConfig.plugins
         .map((plugin) => {
@@ -133,7 +136,7 @@ module.exports = {
           // This is necessary because create-react-app guards against external imports.
           // See https://sandroroth.com/blog/vanilla-extract-cra#production-build.
           // if (plugin instanceof ModuleScopePlugin) {
-            plugin.allowedPaths.push(path.join(__dirname, '..', '..', 'node_modules/@vanilla-extract/webpack-plugin'))
+          plugin.allowedPaths.push(path.join(__dirname, '..', '..', 'node_modules/@vanilla-extract/webpack-plugin'))
           // }
 
           return plugin
@@ -193,11 +196,11 @@ module.exports = {
         resolve: {
           fullySpecified: false,
           fallback: {
-            "http": require.resolve("https-browserify"),
-            "https": require.resolve("https-browserify"),
-            "stream": require.resolve("stream-browserify"),
-            "fs": require.resolve("browserify-fs"),
-          }
+            http: require.resolve('https-browserify'),
+            https: require.resolve('https-browserify'),
+            stream: require.resolve('stream-browserify'),
+            fs: require.resolve('browserify-fs'),
+          },
         },
       })
 

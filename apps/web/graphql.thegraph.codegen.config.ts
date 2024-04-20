@@ -6,7 +6,7 @@ import type { CodegenConfig } from '@graphql-codegen/cli'
 // To learn more: https://www.apollographql.com/docs/react/development-testing/static-typing/#setting-up-your-project
 const config: CodegenConfig = {
   overwrite: true,
-  schema: './src/graphql/thegraph/schema.graphql',
+  schema: ['./src/graphql/thegraph/schema.graphql', './src/graphql/thegraph/schema_blocks.graphql'],
   documents: ['./src/graphql/thegraph/**', '!./src/graphql/thegraph/__generated__/**'],
   generates: {
     'src/graphql/thegraph/__generated__/types-and-hooks.ts': {
