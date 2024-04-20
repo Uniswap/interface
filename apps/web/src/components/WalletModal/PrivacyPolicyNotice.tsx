@@ -10,7 +10,7 @@ const StyledLink = styled(ExternalLink)`
 export default function PrivacyPolicyNotice() {
   return (
     <ThemedText.BodySmall color="neutral2">
-      <Trans>By connecting a wallet, you agree to Jaguarswap Labs&apos;</Trans>{' '}
+      <Trans>By connecting a wallet, you agree to Jaguarswap&apos;</Trans>{' '}
       <StyledLink href="https://uniswap.org/terms-of-service/">
         <Trans>Terms of Service</Trans>{' '}
       </StyledLink>
