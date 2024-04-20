@@ -10,6 +10,7 @@ import { DefaultTheme } from 'styled-components'
 import { ThemeColors } from 'theme/colors'
 import { Chain, ContractInput, HistoryDuration, PriceSource, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
+import dayjs from 'dayjs'
 
 export enum PollingInterval {
   Slow = ms(`5m`),
@@ -61,16 +62,15 @@ export function isPricePoint(p: PricePoint | undefined): p is PricePoint {
 
 export const GQL_MAINNET_CHAINS_MUTABLE = [Chain.X1, Chain.X1Testnet]
 
-const GQL_MAINNET_CHAINS = [Chain.X1] as const
+const GQL_MAINNET_CHAINS = [Chain.Ethereum] as const
 
-const GQL_TESTNET_CHAINS = [Chain.X1Testnet] as const
+const GQL_TESTNET_CHAINS = [Chain.Ethereum] as const
 
 const UX_SUPPORTED_GQL_CHAINS = [...GQL_MAINNET_CHAINS, ...GQL_TESTNET_CHAINS] as const
 type InterfaceGqlChain = (typeof UX_SUPPORTED_GQL_CHAINS)[number]
 
 export const CHAIN_ID_TO_BACKEND_NAME: { [key: number]: InterfaceGqlChain } = {
-  [ChainId.X1]: Chain.X1,
-  [ChainId.X1_TESTNET]: Chain.X1Testnet,
+  [ChainId.X1]: Chain.Ethereum,
 }
 
 export function chainIdToBackendName(chainId: number | undefined) {
@@ -89,17 +89,18 @@ export function toContractInput(currency: Currency): ContractInput {
   return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
 }
 
-export function gqlToCurrency(token: { address?: string; chain: Chain; standard?: TokenStandard; decimals?: number; name?: string; symbol?: string }): Currency | undefined {
-  const chainId = supportedChainIdFromGQLChain(token.chain)
+export function gqlToCurrency(
+  token: { address?: string; chain: Chain; standard?: TokenStandard; decimals?: number; name?: string; symbol?: string },
+  chainId: ChainId = ChainId.X1
+): Currency | undefined {
   if (!chainId) return undefined
   if (token.standard === TokenStandard.Native || token.address === NATIVE_CHAIN_ID || !token.address) return nativeOnChain(chainId)
   else return new Token(chainId, token.address, token.decimals ?? 18, token.symbol ?? undefined, token.name ?? undefined)
 }
 
 const URL_CHAIN_PARAM_TO_BACKEND: { [key: string]: InterfaceGqlChain } = {
-
-  x1: Chain.X1,
-  x1Testnet: Chain.X1Testnet,
+  x1: Chain.Ethereum,
+  x1Testnet: Chain.Ethereum,
 }
 
 /**
@@ -127,12 +128,12 @@ export function getValidUrlChainId(chainName: string | undefined): ChainId | und
 export function validateUrlChainParam(chainName: string | undefined) {
   const isValidChainName = chainName && URL_CHAIN_PARAM_TO_BACKEND[chainName]
   const isValidBackEndChain = isValidChainName && (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(isValidChainName)
-  return isValidBackEndChain ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.X1
+  return isValidBackEndChain ? URL_CHAIN_PARAM_TO_BACKEND[chainName] : Chain.Ethereum
 }
 
 const CHAIN_NAME_TO_CHAIN_ID: { [key in InterfaceGqlChain]: ChainId } = {
-  [Chain.X1]: ChainId.X1,
-  [Chain.X1Testnet]: ChainId.X1_TESTNET,
+  [Chain.Ethereum]: ChainId.X1,
+  // [Chain.X1Testnet]: ChainId.X1_TESTNET,
 }
 
 export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
@@ -155,7 +156,7 @@ export function logSentryErrorForUnsupportedChain({ extras, errorMessage }: { ex
   })
 }
 
-export const BACKEND_SUPPORTED_CHAINS = [Chain.X1, Chain.X1_TESTNET] as const
+export const BACKEND_SUPPORTED_CHAINS = [Chain.Ethereum] as const
 export const BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS = [] as const
 
 export function isBackendSupportedChain(chain: Chain): chain is InterfaceGqlChain {
@@ -219,4 +220,22 @@ export function getProtocolName(priceSource: PriceSource): string {
 export enum OrderDirection {
   Asc = 'asc',
   Desc = 'desc',
+}
+export function useDeltaTimestamps(): [number, number, number] {
+  const utcCurrentTime = dayjs()
+  const t1 = utcCurrentTime.subtract(1, 'day').startOf('minute').unix()
+  const t2 = utcCurrentTime.subtract(2, 'day').startOf('minute').unix()
+  const tWeek = utcCurrentTime.subtract(1, 'week').startOf('minute').unix()
+  return [t1, t2, tWeek]
+}
+
+export const get2DayChange = (valueNow: string, value24HoursAgo: string, value48HoursAgo: string): [number, number] => {
+  // get volume info for both 24 hour periods
+  const currentChange = Number.parseFloat(valueNow) - Number.parseFloat(value24HoursAgo)
+  const previousChange = Number.parseFloat(value24HoursAgo) - Number.parseFloat(value48HoursAgo)
+  const adjustedPercentChange = ((currentChange - previousChange) / previousChange) * 100
+  if (Number.isNaN(adjustedPercentChange) || !Number.isFinite(adjustedPercentChange)) {
+    return [currentChange, 0]
+  }
+  return [currentChange, adjustedPercentChange]
 }

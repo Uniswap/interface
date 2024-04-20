@@ -1,10 +1,5 @@
 query AllV3Ticks($poolAddress: String, $skip: Int!) {
-  ticks(
-    first: 1000
-    skip: $skip
-    where: { poolAddress: $poolAddress }
-    orderBy: tickIdx
-  ) {
+  ticks(first: 1000, skip: $skip, where: { poolAddress: $poolAddress }, orderBy: tickIdx) {
     tick: tickIdx
     liquidityNet
     price0
@@ -18,22 +13,97 @@ query FeeTierDistribution($token0: String!, $token1: String!) {
       number
     }
   }
-  asToken0: pools(
-    orderBy: totalValueLockedToken0
-    orderDirection: desc
-    where: { token0: $token0, token1: $token1 }
-  ) {
+  asToken0: pools(orderBy: totalValueLockedToken0, orderDirection: desc, where: { token0: $token0, token1: $token1 }) {
     feeTier
     totalValueLockedToken0
     totalValueLockedToken1
   }
-  asToken1: pools(
-    orderBy: totalValueLockedToken0
-    orderDirection: desc
-    where: { token0: $token1, token1: $token0 }
-  ) {
+  asToken1: pools(orderBy: totalValueLockedToken0, orderDirection: desc, where: { token0: $token1, token1: $token0 }) {
     feeTier
     totalValueLockedToken0
     totalValueLockedToken1
+  }
+}
+
+# 为了 Exploare 页面支持 v3 subgraph, 需要对页面中的字段单独设计 Query
+# 获取所有token Id，用于分页展示
+query AllTokens {
+  tokens {
+    id
+  }
+}
+# 通过token id 获取token详细信息,用在 id 分页后，获取每个token的详细信息
+query TokensBulk($ids: [ID!], $block: Block_height) {
+  tokens(where: { id_in: $ids }, block: $block, orderBy: totalValueLockedUSD, orderDirection: desc, subgraphError: allow) {
+    id
+    symbol
+    name
+    derivedETH
+    volumeUSD
+    volume
+    txCount
+    totalValueLocked
+    feesUSD
+    totalValueLockedUSD
+  }
+}
+
+# 获取 block 信息
+query BlocksFromTimestamp($timestamp: BigInt, $timestampEnd: BigInt) {
+  blocks(first: 1, orderBy: timestamp, orderDirection: desc, where: { timestamp_gt: $timestamp, timestamp_lt: $timestampEnd }) {
+    number
+    __typename
+  }
+}
+
+# 获取 ETH 价格
+query EthPriceUSD($block24: Int = 1, $block48: Int = 1, $blockWeek: Int = 1) {
+  current: bundles(first: 1, subgraphError: allow) {
+    ethPriceUSD
+  }
+  oneDay: bundles(first: 1, block: { number: $block24 }, subgraphError: allow) {
+    ethPriceUSD
+  }
+  twoDay: bundles(first: 1, block: { number: $block48 }, subgraphError: allow) {
+    ethPriceUSD
+  }
+  oneWeek: bundles(first: 1, block: { number: $blockWeek }, subgraphError: allow) {
+    ethPriceUSD
+  }
+}
+# 获取所有token Id，用于分页展示
+query AllV3Pools {
+  pools {
+    id
+  }
+}
+query PoolsBulk($ids: [ID!], $block: Block_height) {
+  pools(where: { id_in: $ids }, block: $block, orderBy: totalValueLockedUSD, orderDirection: desc) {
+    id
+    feeTier
+    liquidity
+    sqrtPrice
+    tick
+    token0 {
+      id
+      symbol
+      name
+      decimals
+      derivedETH
+    }
+    token1 {
+      id
+      symbol
+      name
+      decimals
+      derivedETH
+    }
+    token0Price
+    token1Price
+    volumeUSD
+    txCount
+    totalValueLockedToken0
+    totalValueLockedToken1
+    totalValueLockedUSD
   }
 }

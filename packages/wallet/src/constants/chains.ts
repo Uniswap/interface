@@ -2,17 +2,7 @@
 
 import { ImageSourcePropType } from 'react-native'
 import { GeneratedIcon, Logos } from 'ui/src'
-import {
-  ARBITRUM_LOGO,
-  BASE_LOGO,
-  BLAST_LOGO,
-  BNB_LOGO,
-  ETHEREUM_LOGO,
-  GOERLI_LOGO,
-  MUMBAI_LOGO,
-  OPTIMISM_LOGO,
-  POLYGON_LOGO,
-} from 'ui/src/assets'
+import { ARBITRUM_LOGO, BASE_LOGO, BLAST_LOGO, BNB_LOGO, ETHEREUM_LOGO, GOERLI_LOGO, MUMBAI_LOGO, OPTIMISM_LOGO, POLYGON_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
 
 /** Address that represents native currencies on ETH, Arbitrum, etc. */
@@ -26,48 +16,24 @@ export enum RPCType {
 
 // Renamed from SupportedChainId in web app
 export enum ChainId {
-  Mainnet = 1,
-  Goerli = 5,
-
-  ArbitrumOne = 42161,
-  Base = 8453,
-  Optimism = 10,
-  Polygon = 137,
-  PolygonMumbai = 80001,
-  Blast = 81457,
-  Bnb = 56,
+  X1 = 195,
+  X1Testnet = 196,
 }
 
 export const ALL_SUPPORTED_CHAINS: string[] = Object.values(ChainId).map((c) => c.toString())
 
 // DON'T CHANGE - order here determines ordering of networks in app
 // TODO: [MOB-250] Add back in testnets once our endpoints support them
-export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [
-  ChainId.Mainnet,
-  ChainId.Polygon,
-  ChainId.ArbitrumOne,
-  ChainId.Optimism,
-  ChainId.Base,
-  ChainId.Bnb,
-  ChainId.Blast,
-]
+export const ALL_SUPPORTED_CHAIN_IDS: ChainId[] = [ChainId.X1, ChainId.X1Testnet]
 
-export const TESTNET_CHAIN_IDS = [ChainId.Goerli, ChainId.PolygonMumbai]
+export const TESTNET_CHAIN_IDS = [ChainId.X1Testnet]
 
-export const ETHEREUM_CHAIN_IDS = [ChainId.Mainnet, ChainId.Goerli] as const
+export const ETHEREUM_CHAIN_IDS = [ChainId.X1, ChainId.X1Testnet] as const
 
 // Renamed from SupportedL1ChainId in web app
 export type EthereumChainId = (typeof ETHEREUM_CHAIN_IDS)[number]
 
-export const L2_CHAIN_IDS = [
-  ChainId.ArbitrumOne,
-  ChainId.Base,
-  ChainId.Optimism,
-  ChainId.Polygon,
-  ChainId.PolygonMumbai,
-  ChainId.Bnb,
-  ChainId.Blast,
-] as const
+export const L2_CHAIN_IDS = [] as const
 
 // Renamed from SupportedL2ChainId in web app
 export type L2ChainId = (typeof L2_CHAIN_IDS)[number]

@@ -1,14 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { Trans } from '@lingui/macro'
-import {
-  CellContext,
-  ColumnDef,
-  RowData,
-  Table as TanstackTable,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from '@tanstack/react-table'
+import { CellContext, ColumnDef, RowData, Table as TanstackTable, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
 import { TraceEvent, useTrace } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
@@ -37,15 +29,7 @@ import {
   TableRowLink,
 } from './styled'
 
-function TableBody<Data extends RowData>({
-  table,
-  loading,
-  error,
-}: {
-  table: TanstackTable<Data>
-  loading?: boolean
-  error?: ApolloError
-}) {
+function TableBody<Data extends RowData>({ table, loading, error }: { table: TanstackTable<Data>; loading?: boolean; error?: ApolloError }) {
   const analyticsContext = useTrace()
 
   if (loading || error) {
@@ -55,18 +39,11 @@ function TableBody<Data extends RowData>({
         {Array.from({ length: 7 }, (_, rowIndex) => (
           <DataRow key={`skeleton-row-${rowIndex}`}>
             {table.getAllColumns().map((column, columnIndex) => (
-              <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>
-                {flexRender(column.columnDef.cell, {} as CellContext<Data, any>)}
-              </CellContainer>
+              <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>{flexRender(column.columnDef.cell, {} as CellContext<Data, any>)}</CellContainer>
             ))}
           </DataRow>
         ))}
-        {error && (
-          <ErrorModal
-            header={<Trans>Error loading data</Trans>}
-            subtitle={<Trans>Data is unavailable at the moment; we&apos;re working on a fix</Trans>}
-          />
-        )}
+        {error && <ErrorModal header={<Trans>Error loading data</Trans>} subtitle={<Trans>Data is unavailable at the moment; we&apos;re working on a fix</Trans>} />}
       </>
     )
   }
@@ -86,11 +63,7 @@ function TableBody<Data extends RowData>({
     // data found
     <>
       {table.getRowModel().rows.map((row) => {
-        const cells = row
-          .getVisibleCells()
-          .map((cell) => (
-            <CellContainer key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</CellContainer>
-          ))
+        const cells = row.getVisibleCells().map((cell) => <CellContainer key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</CellContainer>)
         const rowOriginal = row.original as any
         const linkState = rowOriginal.linkState // optional data passed to linked page, accessible via useLocation().state
         const rowTestId = rowOriginal.testId
@@ -211,9 +184,7 @@ export function Table<Data extends RowData>({
             <ScrollSyncPane>
               <HeaderRow $dimmed={!!error}>
                 {table.getFlatHeaders().map((header) => (
-                  <CellContainer key={header.id}>
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                  </CellContainer>
+                  <CellContainer key={header.id}>{flexRender(header.column.columnDef.header, header.getContext())}</CellContainer>
                 ))}
               </HeaderRow>
             </ScrollSyncPane>
