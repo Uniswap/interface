@@ -125,12 +125,12 @@ function PrivacyPolicy() {
       <AutoColumn gap="16px">
         <AutoColumn gap="sm" style={{ width: '100%' }}>
           <StyledExternalCard>
-            <ExternalLink href="https://uniswap.org/terms-of-service">
+            <ExternalLink href="https://jaguar-swap.gitbook.io/jaguar-swap-docs/terms-of-use">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />
                   <ThemedText.DeprecatedMain fontSize={14} color="accent1">
-                    <Trans>Uniswap Labs&apos; Terms of Service</Trans>
+                    <Trans>Jaguarswap&apos; Terms of Service</Trans>
                   </ThemedText.DeprecatedMain>
                 </AutoRow>
                 <StyledLinkOut size={20} />
@@ -138,7 +138,7 @@ function PrivacyPolicy() {
             </ExternalLink>
           </StyledExternalCard>
           <StyledExternalCard>
-            <ExternalLink href="https://uniswap.org/privacy-policy/">
+            <ExternalLink href="https://jaguar-swap.gitbook.io/jaguar-swap-docs/privacy-policy">
               <RowBetween>
                 <AutoRow gap="4px">
                   <Info size={20} />

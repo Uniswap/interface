@@ -11,11 +11,11 @@ export default function PrivacyPolicyNotice() {
   return (
     <ThemedText.BodySmall color="neutral2">
       <Trans>By connecting a wallet, you agree to Jaguarswap&apos;</Trans>{' '}
-      <StyledLink href="https://uniswap.org/terms-of-service/">
+      <StyledLink href="https://jaguar-swap.gitbook.io/jaguar-swap-docs/terms-of-use">
         <Trans>Terms of Service</Trans>{' '}
       </StyledLink>
       <Trans>and consent to its</Trans>{' '}
-      <StyledLink href="https://uniswap.org/privacy-policy">
+      <StyledLink href="https://jaguar-swap.gitbook.io/jaguar-swap-docs/privacy-policy">
         <Trans>Privacy Policy.</Trans>
       </StyledLink>
     </ThemedText.BodySmall>
