@@ -10,7 +10,7 @@ export function AnalyticsToggle() {
   return (
     <SettingsToggle
       title={t`Allow analytics`}
-      description={t`We use anonymized data to enhance your experience with Jaguarswap Labs products.`}
+      description={t`We use anonymized data to enhance your experience with Jaguarswap products.`}
       isActive={allowAnalytics}
       toggle={() => void updateAllowAnalytics((value) => !value)}
     />

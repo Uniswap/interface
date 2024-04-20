@@ -44,9 +44,9 @@ export function MaxSlippageTooltip({ trade, allowedSlippage }: { trade: Interfac
       <Separator />
       <div>
         {isExactIn ? <ExactInMessage amount={displayAmount} /> : <ExactOutMessage amount={displayAmount} />}{' '}
-        <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-">
+        {/* <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8643879653261-What-is-Price-Slippage-">
           Learn more
-        </ExternalLink>
+        </ExternalLink> */}
       </div>
     </Column>
   )
