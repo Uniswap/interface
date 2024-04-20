@@ -94,12 +94,6 @@ jest.mock('@sentry/react-native', () => ({
   ReactNativeTracing: jest.fn(),
 }))
 
-jest.mock('react-native-appsflyer', () => {
-  return {
-    initSdk: jest.fn(),
-  }
-})
-
 // NetInfo mock does not export typescript types
 const NetInfoStateType = {
   unknown: 'unknown',

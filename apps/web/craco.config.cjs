@@ -67,7 +67,7 @@ module.exports = {
         moduleNameMapper: {
           'd3-array': 'd3-array/dist/d3-array.min.js',
           '^react-native$': 'react-native-web',
-          'react-native-gesture-handler': require.resolve('react-native-gesture-handler'),
+          //'react-native-gesture-handler': require.resolve('react-native-gesture-handler'),
         },
       })
     },
@@ -124,7 +124,7 @@ module.exports = {
       webpackConfig.resolve = Object.assign(webpackConfig.resolve, {
         alias: {
           ...webpackConfig.resolve.alias,
-          'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
+          //'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
           'react-native-svg$': require.resolve('@tamagui/react-native-svg'),
           'react-native$': 'react-native-web',
         },

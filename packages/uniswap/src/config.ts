@@ -1,6 +1,4 @@
 import {
-  APPSFLYER_API_KEY,
-  APPSFLYER_APP_ID,
   FIAT_ON_RAMP_API_URL,
   FIREBASE_APP_CHECK_DEBUG_TOKEN,
   INFURA_PROJECT_ID,
@@ -24,8 +22,6 @@ import {
 import { isNonJestDev } from 'utilities/src/environment'
 
 export interface Config {
-  appsflyerApiKey: string
-  appsflyerAppId: string
   fiatOnRampApiUrl: string
   moonpayApiKey: string
   moonpayApiUrl: string
@@ -48,8 +44,6 @@ export interface Config {
 }
 
 const _config: Config = {
-  appsflyerApiKey: process.env.APPSFLYER_API_KEY || APPSFLYER_API_KEY,
-  appsflyerAppId: process.env.APPSFLYER_APP_ID || APPSFLYER_APP_ID,
   fiatOnRampApiUrl: process.env.FIAT_ON_RAMP_API_URL || FIAT_ON_RAMP_API_URL,
   moonpayApiKey:
     process.env.REACT_APP_MOONPAY_PUBLISHABLE_KEY || process.env.MOONPAY_API_KEY || MOONPAY_API_KEY,

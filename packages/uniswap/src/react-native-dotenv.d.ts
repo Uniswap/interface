@@ -1,8 +1,6 @@
 // Adds typings for env vars
 // Keep in sync with .env files
 declare module 'react-native-dotenv' {
-  export const APPSFLYER_API_KEY: string
-  export const APPSFLYER_APP_ID: string
   export const FIAT_ON_RAMP_API_URL: string
   export const MOONPAY_API_KEY: string
   export const MOONPAY_API_URL: string
