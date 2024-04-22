@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmRTQkA8KswGiGLBonZxttz4C9fJSnbD9QnKis37qVEJ2j`
-- CIDv1: `bafybeibojzlcvbuydj5zkb562ipm3tcaa74sn4ub72dnwtse4diqma6gca`
+- CIDv0: `QmaZ2DyycDgi2Md5z6NFpdaBCPYkExFJRRz5FDG47zU4Yt`
+- CIDv1: `bafybeifvo6feafgzml423kyegp43hr7fss4il43hmdzxzlmdaapjcxr3nu`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,48 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeibojzlcvbuydj5zkb562ipm3tcaa74sn4ub72dnwtse4diqma6gca.ipfs.dweb.link/
-- https://bafybeibojzlcvbuydj5zkb562ipm3tcaa74sn4ub72dnwtse4diqma6gca.ipfs.cf-ipfs.com/
-- [ipfs://QmRTQkA8KswGiGLBonZxttz4C9fJSnbD9QnKis37qVEJ2j/](ipfs://QmRTQkA8KswGiGLBonZxttz4C9fJSnbD9QnKis37qVEJ2j/)
+- https://bafybeifvo6feafgzml423kyegp43hr7fss4il43hmdzxzlmdaapjcxr3nu.ipfs.dweb.link/
+- https://bafybeifvo6feafgzml423kyegp43hr7fss4il43hmdzxzlmdaapjcxr3nu.ipfs.cf-ipfs.com/
+- [ipfs://QmaZ2DyycDgi2Md5z6NFpdaBCPYkExFJRRz5FDG47zU4Yt/](ipfs://QmaZ2DyycDgi2Md5z6NFpdaBCPYkExFJRRz5FDG47zU4Yt/)
 
-## 5.25.0 (2024-04-22)
-
-
-### Features
-
-* **web:** add check:bundle-size script and ci check for bundle size not growing (#7655) 0a4bce7
-* **web:** Add feature flag for v2 data on Explore (#7705) 1679530
-* **web:** combine all DoubleCurrencyLogo implementations (#7369) cda9384
-* **web:** fix unicon v2 and remove jazzicons (#7586) 27caec6
-* **web:** multiple routing preference (#7585) c6bfd6c
-* **web:** multiple routing preferences styling (#7627) 58a55de
-* **web:** remove all token-lists except avax fallbacks (#7422) 377fe4b
-* **web:** remove remaining usage of token lists (#7446) 9895aa7
-* **web:** subscription-based activity feed (#7266) 327da33
-* **web:** update transactions from subscription (#7471) 49484c8
+### 5.25.1 (2024-04-22)
 
 
 ### Bug Fixes
 
-* **web:** add new chains to richlinkpreviews chainlogo (#7521) a21f010
-* **web:** allow TrustWallet nodes in CSP (#7513) aed2bd4
-* **web:** deflake some cypress tests (#7575) 4a7daef
-* **web:** disable breaking tests and rename cypress passing test to be clearer in github branch protection rules (#7496) 0f88608
-* **web:** Don't try to parse non-numbers (#7587) 5da785f
-* **web:** fix token cacheing in explore tabs, navbar search (#7543) aaaaaa1
-* **web:** fix token safety test on TDP (#7506) 4635506
-* **web:** fix uk disclaimer e2e test (#7507) 1a8dbef
-* **web:** fix uniswapx e2e tests (#7505) 880c131
-* **web:** fix unitag e2e test (#7504) 8a946d5
-* **web:** limits pending cancel state (#7654) 74a8767
-* **web:** parse native MATIC correctly (#7516) a7d7957
-* **web:** pass gas params to provider (#7464) 3ede664
-* **web:** Properly compare natives for L2 PDP Tx Table (#7520) 4a1bb26
-* **web:** remove 'review swap' title from success state (#7346) e16d7f3
-* **web:** remove sentence-casing for rich link previews images (#7344) dff07a9
-* **web:** Send crashing on useENSAvatar while disconnected (#7595) 56ba8b4
-* **web:** switch currency when input equals output (#7570) 1f2fd97
-* **web:** use cached results for common bases (#7649) ea1866d
-* **web:** warn user if fee is greater than native balance (#7556) 100fce9
+* **web:** support swapping spam tokens (#7794) 13bd6f5
 
 

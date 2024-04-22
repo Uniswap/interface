@@ -109,7 +109,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
       prefilledInputCurrencyInfo && prefilledOutputCurrencyInfo
         ? [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
             .filter((token: CurrencyInfo) => {
-              return token.currency.isToken && (token.isSpam || token.safetyLevel !== SafetyLevel.Verified)
+              return token.currency.isToken && token.safetyLevel !== SafetyLevel.Verified
             })
             .map((token: CurrencyInfo) => token.currency as Token)
             .filter((token: Token) => {
