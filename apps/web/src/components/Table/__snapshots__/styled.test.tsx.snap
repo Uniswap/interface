@@ -27,12 +27,58 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
   gap: 4px;
 }
 
-.c6 {
+.c7 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c4 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c5 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c6 {
+  background-color: #F9F9F9;
+  border-radius: 2px;
+  width: 6px;
+  height: 6px;
+  left: 60%;
+  position: absolute;
+  top: 60%;
+  outline: 2px solid #FFFFFF;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
 .c3 {
@@ -47,34 +93,6 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c4 {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c5 {
-  position: absolute;
-  border-radius: 4px;
-  left: 65%;
-  top: 65%;
-  outline: 1.5px solid #FFFFFF;
-  width: 40%;
-  height: 40%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
 }
 
 .c0 {
@@ -96,7 +114,7 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
   opacity: 0.4;
 }
 
-.c7 {
+.c8 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -118,12 +136,18 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
           <div
             class="c3"
           >
-            <img
-              class="c4"
-              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-            />
             <div
-              class="c5"
+              class="c4"
+              size="16"
+            >
+              <img
+                class="c5"
+                size="16"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+              />
+            </div>
+            <div
+              class="c6"
             >
               <svg
                 aria-labelledby="titleID"
@@ -158,7 +182,7 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
             </div>
           </div>
           <div
-            class="c6 c7 css-1urox24"
+            class="c7 c8 css-1urox24"
           >
             USDC
           </div>
@@ -196,12 +220,35 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
   gap: 4px;
 }
 
-.c5 {
+.c6 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c4 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c5 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
 }
 
 .c3 {
@@ -216,12 +263,6 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c4 {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
 }
 
 .c0 {
@@ -243,7 +284,7 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
   opacity: 0.4;
 }
 
-.c6 {
+.c7 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -265,13 +306,19 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
           <div
             class="c3"
           >
-            <img
+            <div
               class="c4"
-              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-            />
+              size="16"
+            >
+              <img
+                class="c5"
+                size="16"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+              />
+            </div>
           </div>
           <div
-            class="c5 c6 css-1urox24"
+            class="c6 c7 css-1urox24"
           >
             USDC
           </div>
@@ -309,12 +356,35 @@ exports[`TokenLinkCell renders unknown token 1`] = `
   gap: 4px;
 }
 
-.c5 {
+.c6 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c4 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c5 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
 }
 
 .c3 {
@@ -329,12 +399,6 @@ exports[`TokenLinkCell renders unknown token 1`] = `
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c4 {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
 }
 
 .c0 {
@@ -356,7 +420,7 @@ exports[`TokenLinkCell renders unknown token 1`] = `
   opacity: 0.4;
 }
 
-.c6 {
+.c7 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -378,13 +442,19 @@ exports[`TokenLinkCell renders unknown token 1`] = `
           <div
             class="c3"
           >
-            <img
+            <div
               class="c4"
-              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-            />
+              size="16"
+            >
+              <img
+                class="c5"
+                size="16"
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+              />
+            </div>
           </div>
           <div
-            class="c5 c6 css-1urox24"
+            class="c6 c7 css-1urox24"
           >
             UNKNOWN
           </div>

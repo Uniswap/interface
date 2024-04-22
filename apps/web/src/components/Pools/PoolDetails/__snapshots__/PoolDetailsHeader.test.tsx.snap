@@ -451,6 +451,45 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   background-color: #2222221f;
 }
 
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c4 img {
+  width: 16px;
+  height: 32px;
+  object-fit: cover;
+}
+
+.c4 img:first-child {
+  border-radius: 16px 0 0 16px;
+  object-position: 0 0;
+}
+
+.c4 img:last-child {
+  border-radius: 0 16px 16px 0;
+  object-position: 100% 0;
+}
+
+.c5 {
+  width: 16px;
+  height: 32px;
+  border-radius: 50%;
+}
+
+.c3 {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
 .c0 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -533,45 +572,6 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
 
 .c9:active {
   opacity: 0.4;
-}
-
-.c3 {
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c4 img {
-  width: 16px;
-  height: 32px;
-  object-fit: cover;
-}
-
-.c4 img:first-child {
-  border-radius: 16px 0 0 16px;
-  object-position: 0 0;
-}
-
-.c4 img:last-child {
-  border-radius: 0 16px 16px 0;
-  object-position: 100% 0;
-}
-
-.c5 {
-  width: 16px;
-  height: 32px;
-  border-radius: 50%;
 }
 
 @media screen and (max-width:640px) {

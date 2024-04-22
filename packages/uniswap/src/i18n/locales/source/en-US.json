@@ -270,7 +270,6 @@
       "connected": "Connected",
       "disconnected": "Disconnected",
       "error": "Error",
-      "loading": "Loading",
       "notAvailable": "N/A",
       "unknown": "Unknown"
     }
@@ -508,6 +507,7 @@
       "load": "Couldn’t load tokens to buy",
       "max": "Maximum {{amount}}",
       "min": "Minimum {{amount}}",
+      "unavailable": "This service is unavailable in your region",
       "unsupported": "Not supported in region",
       "usd": "Only available to purchase in USD"
     },
@@ -617,7 +617,7 @@
     },
     "upsell": {
       "receive": {
-        "cta": "Link an account",
+        "cta": "From an account",
         "description": "Fund your wallet by transferring crypto from another wallet or account",
         "title": "Receive crypto"
       }
@@ -789,15 +789,6 @@
         "title": "Pin Uniswap Wallet"
       },
       "title": "You’re all set"
-    },
-    "editName": {
-      "button": {
-        "create": "Create wallet"
-      },
-      "label": "Nickname",
-      "subtitle": "Give your wallet a nickname",
-      "title": "This nickname is only visible to you",
-      "walletAddress": "Your public address will be <highlight>{{walletAddress}}</highlight>"
     },
     "extension": {
       "connectMobile": {
@@ -1582,6 +1573,7 @@
         "title": "Not enough liquidity"
       },
       "networkFee": {
+        "highRelativeToValue": "The network cost exceeds 10% of your total transaction value.",
         "message": "This is the cost to process your transaction on the blockchain. Uniswap does not receive any share of these fees."
       },
       "offline": {

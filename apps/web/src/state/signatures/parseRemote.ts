@@ -5,17 +5,10 @@ import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromG
 import store from 'state'
 import { TransactionType as LocalTransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import {
-  AssetActivityPartsFragment,
-  SwapOrderDetailsPartsFragment,
-  SwapOrderStatus,
-  SwapOrderType,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { SwapOrderStatus, SwapOrderType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { currencyId } from 'utils/currencyId'
 import { addSignature } from './reducer'
-import { SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
-
-export type OrderActivity = AssetActivityPartsFragment & { details: SwapOrderDetailsPartsFragment }
+import { OrderActivity, SignatureDetails, SignatureType, UniswapXOrderDetails } from './types'
 
 const SIGNATURE_TYPE_MAP: { [key in SwapOrderType]: SignatureType } = {
   [SwapOrderType.Limit]: SignatureType.SIGN_LIMIT,
@@ -79,7 +72,10 @@ export function parseRemote({ chain, details, timestamp }: OrderActivity): Signa
   }
 
   if (status === UniswapXOrderStatus.OPEN) {
-    store.dispatch(addSignature(signature))
+    // Update this asynchronously to avoid updating other components during this render cycle.
+    setTimeout(() => {
+      store.dispatch(addSignature(signature))
+    }, 0)
   }
 
   return signature

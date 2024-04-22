@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmbEmY4ebbPrQirzx9PNZGKqyjK7pgUMVce2F2tMtJHbJ5`
-- CIDv1: `bafybeif7uyvbcyhd5ib6xkikxoyvm4voodg4pgagjckny4m52o7qtclpsy`
+- CIDv0: `QmRTQkA8KswGiGLBonZxttz4C9fJSnbD9QnKis37qVEJ2j`
+- CIDv1: `bafybeibojzlcvbuydj5zkb562ipm3tcaa74sn4ub72dnwtse4diqma6gca`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,51 +10,48 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeif7uyvbcyhd5ib6xkikxoyvm4voodg4pgagjckny4m52o7qtclpsy.ipfs.dweb.link/
-- https://bafybeif7uyvbcyhd5ib6xkikxoyvm4voodg4pgagjckny4m52o7qtclpsy.ipfs.cf-ipfs.com/
-- [ipfs://QmbEmY4ebbPrQirzx9PNZGKqyjK7pgUMVce2F2tMtJHbJ5/](ipfs://QmbEmY4ebbPrQirzx9PNZGKqyjK7pgUMVce2F2tMtJHbJ5/)
+- https://bafybeibojzlcvbuydj5zkb562ipm3tcaa74sn4ub72dnwtse4diqma6gca.ipfs.dweb.link/
+- https://bafybeibojzlcvbuydj5zkb562ipm3tcaa74sn4ub72dnwtse4diqma6gca.ipfs.cf-ipfs.com/
+- [ipfs://QmRTQkA8KswGiGLBonZxttz4C9fJSnbD9QnKis37qVEJ2j/](ipfs://QmRTQkA8KswGiGLBonZxttz4C9fJSnbD9QnKis37qVEJ2j/)
 
-## 5.24.0 (2024-04-17)
+## 5.25.0 (2024-04-22)
 
 
 ### Features
 
-* **web:** [wagmi] Add viem to ethers adapters (#7237) 276faae
-* **web:** deprecate token logo lookups (#6921) 0ade412
-* **web:** deprecate+delete token safety lookups (#7132) b4642e9
-* **web:** update signatures from subscription (#7389) f867870
+* **web:** add check:bundle-size script and ci check for bundle size not growing (#7655) 0a4bce7
+* **web:** Add feature flag for v2 data on Explore (#7705) 1679530
+* **web:** combine all DoubleCurrencyLogo implementations (#7369) cda9384
+* **web:** fix unicon v2 and remove jazzicons (#7586) 27caec6
+* **web:** multiple routing preference (#7585) c6bfd6c
+* **web:** multiple routing preferences styling (#7627) 58a55de
+* **web:** remove all token-lists except avax fallbacks (#7422) 377fe4b
+* **web:** remove remaining usage of token lists (#7446) 9895aa7
+* **web:** subscription-based activity feed (#7266) 327da33
+* **web:** update transactions from subscription (#7471) 49484c8
 
 
 ### Bug Fixes
 
-* **web:** allow TrustWallet nodes in CSP (#7515) 0a5b28d
-* **web:** change background color of LP warning banner (#7491) f543ab0
-* **web:** change warning icon color; add learn more link (#7483) 352be3b
-* **web:** checkbox color on open-limits drawer (#7410) 05dfaed
-* **web:** dismiss chart tooltip when clicking outside of chart (#7285) 3d97a14
-* **web:** ellipsis on unitag text in side drawer (#7386) 471661c
-* **web:** fix cypress tests (#7347) e54ceb9
-* **web:** fix icon cutoff  (#7583) a01e106
-* **web:** fix translations with JSX rendering as [object Object] (#7336) 67df76c
-* **web:** fix uniswapx e2e tests (#7458) c6de35e
-* **web:** fix x-chain token logos (#7374) 4367e3a
-* **web:** functions pass-through (#7338) ace3062
-* **web:** make sure SimpleToken hits the cache in all cases (#7488) 1be2954
-* **web:** parse matic correctly from gql response (#7519) 800eae5
-* **web:** remove assets repo fallback for all tokens (#7476) 8e2142c
-* **web:** Send crashing on useENSAvatar while disconnected (#7595) 131c6a3
-* **web:** set usePoolData errorPolicy to all (#7466) 55e3e8a
-* **web:** SimpleTokenDetails fragment to be used in all queries (#7549) 678e624
-* **web:** switch currency when input equals output (staging) 20277d2
-* **web:** TokenBalanceProvider account change (#7432) 516b781
-* **web:** use accent warning soft for outage banner icon wrapper (#7428) cda7ea9
-* **web:** use cache-first policy for TopTokens query (#7484) 25d0950
-
-
-### Code Refactoring
-
-* **web:** isolate the subscription updater (#7387) 6caabbd
-* **web:** split out parseRemote signature (#7388) 223e766
-* **web:** use a single codepath for functions response transform (#7363) 60471a8
+* **web:** add new chains to richlinkpreviews chainlogo (#7521) a21f010
+* **web:** allow TrustWallet nodes in CSP (#7513) aed2bd4
+* **web:** deflake some cypress tests (#7575) 4a7daef
+* **web:** disable breaking tests and rename cypress passing test to be clearer in github branch protection rules (#7496) 0f88608
+* **web:** Don't try to parse non-numbers (#7587) 5da785f
+* **web:** fix token cacheing in explore tabs, navbar search (#7543) aaaaaa1
+* **web:** fix token safety test on TDP (#7506) 4635506
+* **web:** fix uk disclaimer e2e test (#7507) 1a8dbef
+* **web:** fix uniswapx e2e tests (#7505) 880c131
+* **web:** fix unitag e2e test (#7504) 8a946d5
+* **web:** limits pending cancel state (#7654) 74a8767
+* **web:** parse native MATIC correctly (#7516) a7d7957
+* **web:** pass gas params to provider (#7464) 3ede664
+* **web:** Properly compare natives for L2 PDP Tx Table (#7520) 4a1bb26
+* **web:** remove 'review swap' title from success state (#7346) e16d7f3
+* **web:** remove sentence-casing for rich link previews images (#7344) dff07a9
+* **web:** Send crashing on useENSAvatar while disconnected (#7595) 56ba8b4
+* **web:** switch currency when input equals output (#7570) 1f2fd97
+* **web:** use cached results for common bases (#7649) ea1866d
+* **web:** warn user if fee is greater than native balance (#7556) 100fce9
 
 

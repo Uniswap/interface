@@ -1,53 +1,28 @@
-import jazzicon from '@metamask/jazzicon'
+import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
+import { Unicon } from 'components/Unicon'
 import useENSAvatar from 'hooks/useENSAvatar'
-import { useCallback, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import styled from 'styled-components'
+import { Loader } from 'react-feather'
+import { UniconV2 } from 'ui/src/components/UniconV2'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import ENSAvatarIcon from './ENSAvatarIcon'
 
-const StyledIdenticon = styled.div<{ iconSize: number }>`
-  height: ${({ iconSize }) => `${iconSize}px`};
-  width: ${({ iconSize }) => `${iconSize}px`};
-  border-radius: 50%;
-  background-color: ${({ theme }) => theme.surface3};
-  font-size: initial;
-`
+export default function Identicon({ account, size }: { account?: string; size: number }) {
+  const { unitag, loading: unitagLoading } = useUnitagByAddress(account)
+  const { avatar, loading: ensAvatarLoading } = useENSAvatar(account)
+  const uniconV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
 
-const StyledAvatar = styled.img`
-  height: inherit;
-  width: inherit;
-  border-radius: inherit;
-`
+  if (!account) return null
+  if (unitagLoading || ensAvatarLoading) {
+    return <Loader data-testid="IdenticonLoader" size={size + 'px'} />
+  }
 
-export default function Identicon({ account, size }: { account: string; size?: number }) {
-  const { avatar } = useENSAvatar(account)
-  const [fetchable, setFetchable] = useState(true)
-  const iconSize = size ?? 24
-
-  const icon = useMemo(() => account && jazzicon(iconSize, parseInt(account.slice(2, 10), 16)), [account, iconSize])
-  const iconRef = useRef<HTMLDivElement>(null)
-  useLayoutEffect(() => {
-    const current = iconRef.current
-    if (icon) {
-      current?.appendChild(icon)
-      return () => {
-        try {
-          current?.removeChild(icon)
-        } catch (e) {
-          console.error('Avatar icon not found')
-        }
-      }
-    }
-    return
-  }, [icon, iconRef])
-
-  const handleError = useCallback(() => setFetchable(false), [])
-
-  return (
-    <StyledIdenticon iconSize={iconSize}>
-      {avatar && fetchable ? (
-        <StyledAvatar alt="avatar" src={avatar} onError={handleError}></StyledAvatar>
-      ) : (
-        <span ref={iconRef} />
-      )}
-    </StyledIdenticon>
-  )
+  if (unitag?.metadata?.avatar) {
+    return <UniTagProfilePicture account={account} size={size} />
+  } else if (avatar) {
+    return <ENSAvatarIcon account={account} size={size} />
+  } else {
+    return uniconV2Enabled ? <UniconV2 address={account} size={size} /> : <Unicon address={account} size={size} />
+  }
 }

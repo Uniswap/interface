@@ -1,3 +1,4 @@
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -8,14 +9,17 @@ import { ChainId } from 'wallet/src/constants/chains'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { useGasFeeHighRelativeToValue } from 'wallet/src/features/transactions/swap/hooks/useGasFeeHighRelativeToValue'
 import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
 
 export function NetworkFee({
   chainId,
   gasFee,
+  transactionUSDValue,
 }: {
   chainId: ChainId
   gasFee: GasFeeResult
+  transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
 }): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -23,9 +27,11 @@ export function NetworkFee({
   const gasFeeUSD = useUSDValue(chainId, gasFee.value ?? undefined)
   const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatTokenPrice)
 
+  const gasFeeHighRelativeToValue = useGasFeeHighRelativeToValue(gasFeeUSD, transactionUSDValue)
+
   return (
     <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
-      <NetworkFeeWarning>
+      <NetworkFeeWarning gasFeeHighRelativeToValue={gasFeeHighRelativeToValue}>
         <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body3">
           {t('transaction.networkCost.label')}
         </Text>
@@ -39,7 +45,7 @@ export function NetworkFee({
             {t('common.text.notAvailable')}
           </Text>
         ) : (
-          <Text color="$neutral1" variant="body3">
+          <Text color={gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral1'} variant="body3">
             {gasFeeFormatted}
           </Text>
         )}

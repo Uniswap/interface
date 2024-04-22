@@ -59,23 +59,43 @@ exports[`PoolTable renders data filled state 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c13 {
-  display: inline-block;
-  height: inherit;
-}
-
-.c1 {
+.c23 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c23 img {
+  width: 14px;
+  height: 28px;
+  object-fit: cover;
+}
+
+.c23 img:first-child {
+  border-radius: 14px 0 0 14px;
+  object-position: 0 0;
+}
+
+.c23 img:last-child {
+  border-radius: 0 14px 14px 0;
+  object-position: 100% 0;
+}
+
+.c24 {
+  width: 14px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.c22 {
+  position: relative;
+  top: 0;
+  left: 0;
 }
 
 .c30 {
@@ -92,6 +112,25 @@ exports[`PoolTable renders data filled state 1`] = `
 .c31 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c13 {
+  display: inline-block;
+  height: inherit;
 }
 
 .c2 {
@@ -372,45 +411,6 @@ exports[`PoolTable renders data filled state 1`] = `
   text-overflow: ellipsis;
 }
 
-.c22 {
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 img {
-  width: 14px;
-  height: 28px;
-  object-fit: cover;
-}
-
-.c23 img:first-child {
-  border-radius: 14px 0 0 14px;
-  object-position: 0 0;
-}
-
-.c23 img:last-child {
-  border-radius: 0 14px 14px 0;
-  object-position: 100% 0;
-}
-
-.c24 {
-  width: 14px;
-  height: 28px;
-  border-radius: 50%;
-}
-
 .c0 {
   margin: 0 auto;
   max-width: 1200px;
@@ -661,7 +661,7 @@ exports[`PoolTable renders data filled state 1`] = `
                             <img
                               class="c24"
                               size="28"
-                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                              src="ethereum-logo.png"
                             />
                           </div>
                         </div>
@@ -818,40 +818,6 @@ exports[`PoolTable renders error state 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c13 {
-  display: inline-block;
-  height: inherit;
-}
-
-.c1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c20 {
-  border-radius: 12px;
-  border-radius: 12px;
-  height: 24px;
-  width: 50%;
-  width: 50%;
-  -webkit-animation: fAQEyV 1.5s infinite;
-  animation: fAQEyV 1.5s infinite;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
-  will-change: background-position;
-  background-size: 400%;
-}
-
 .c26 {
   height: 16px;
   width: 16px;
@@ -866,6 +832,20 @@ exports[`PoolTable renders error state 1`] = `
 .c27 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c22 {
@@ -896,6 +876,11 @@ exports[`PoolTable renders error state 1`] = `
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   border: 1px #22222212 solid;
   border-radius: 20px;
+}
+
+.c13 {
+  display: inline-block;
+  height: inherit;
 }
 
 .c2 {
@@ -1074,6 +1059,21 @@ exports[`PoolTable renders error state 1`] = `
 
 .c16 {
   color: #222222;
+}
+
+.c20 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
 }
 
 .c9 {
@@ -2098,9 +2098,20 @@ exports[`PoolTable renders loading state 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c13 {
-  display: inline-block;
-  height: inherit;
+.c24 {
+  height: 16px;
+  width: 16px;
+}
+
+.c24 path {
+  stroke: #FC72FF;
+  background: #7D7D7D;
+  fill: none;
+}
+
+.c25 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
 }
 
 .c1 {
@@ -2117,35 +2128,9 @@ exports[`PoolTable renders loading state 1`] = `
   justify-content: flex-start;
 }
 
-.c20 {
-  border-radius: 12px;
-  border-radius: 12px;
-  height: 24px;
-  width: 50%;
-  width: 50%;
-  -webkit-animation: fAQEyV 1.5s infinite;
-  animation: fAQEyV 1.5s infinite;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
-  will-change: background-position;
-  background-size: 400%;
-}
-
-.c24 {
-  height: 16px;
-  width: 16px;
-}
-
-.c24 path {
-  stroke: #FC72FF;
-  background: #7D7D7D;
-  fill: none;
-}
-
-.c25 {
-  -webkit-animation: 2s fvtopB linear infinite;
-  animation: 2s fvtopB linear infinite;
+.c13 {
+  display: inline-block;
+  height: inherit;
 }
 
 .c2 {
@@ -2323,6 +2308,21 @@ exports[`PoolTable renders loading state 1`] = `
 
 .c16 {
   color: #222222;
+}
+
+.c20 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
 }
 
 .c9 {

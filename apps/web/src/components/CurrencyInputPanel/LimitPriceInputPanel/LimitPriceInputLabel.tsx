@@ -39,7 +39,7 @@ export function LimitPriceInputLabel({
         <CurrencySymbolContainer>
           <PrefetchBalancesWrapper>
             <TokenSelectorRow gap="xs" align="center" height="100%" onClick={openCurrencySearchModal}>
-              <CurrencyLogo currency={currency} size="16px" />
+              <CurrencyLogo currency={currency} size={16} />
               <ThemedText.BodyPrimary display="inline">{currency.symbol}</ThemedText.BodyPrimary>
             </TokenSelectorRow>
           </PrefetchBalancesWrapper>

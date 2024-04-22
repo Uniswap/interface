@@ -1,6 +1,7 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { GasFeeResult } from 'hooks/useTransactionGasFee'
 import { useCallback } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { SendTransactionInfo, TransactionType } from 'state/transactions/types'
@@ -13,10 +14,12 @@ export function useSendCallback({
   currencyAmount,
   recipient,
   transactionRequest,
+  gasFee,
 }: {
   currencyAmount?: CurrencyAmount<Currency>
   recipient?: string
   transactionRequest?: TransactionRequest
+  gasFee?: GasFeeResult
 }) {
   const { account, chainId, provider } = useWeb3React()
   const addTransaction = useTransactionAdder()
@@ -35,7 +38,10 @@ export function useSendCallback({
             { name: 'Send transaction', op: 'wallet.send_transaction' },
             async (walletTrace) => {
               try {
-                return await provider.getSigner().sendTransaction(transactionRequest)
+                return await provider.getSigner().sendTransaction({
+                  ...transactionRequest,
+                  ...gasFee?.params,
+                })
               } catch (error) {
                 if (didUserReject(error)) {
                   walletTrace.setStatus('cancelled')
@@ -62,6 +68,6 @@ export function useSendCallback({
           }
         }
       }),
-    [account, addTransaction, chainId, currencyAmount, provider, recipient, transactionRequest]
+    [account, addTransaction, chainId, currencyAmount, provider, recipient, transactionRequest, gasFee]
   )
 }

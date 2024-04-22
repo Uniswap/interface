@@ -1,6 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`LimitPriceInputPanel should render correct subheader with inputCurrency defined, but no price 1`] = `
+.c4 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c14 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c2 {
   box-sizing: border-box;
   margin: 0;
@@ -72,21 +87,6 @@ exports[`LimitPriceInputPanel should render correct subheader with inputCurrency
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 1px;
-}
-
-.c4 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c14 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {
@@ -339,6 +339,21 @@ exports[`LimitPriceInputPanel should render correct subheader with inputCurrency
 `;
 
 exports[`LimitPriceInputPanel should render the component with no currencies selected 1`] = `
+.c4 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c14 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
 .c2 {
   box-sizing: border-box;
   margin: 0;
@@ -410,21 +425,6 @@ exports[`LimitPriceInputPanel should render the component with no currencies sel
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 1px;
-}
-
-.c4 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c14 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
 }
 
 .c7 {

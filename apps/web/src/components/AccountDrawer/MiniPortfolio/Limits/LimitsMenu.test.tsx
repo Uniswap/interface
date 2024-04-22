@@ -60,7 +60,6 @@ describe('LimitsMenu', () => {
     mocked(useOpenLimitOrders).mockReturnValue({
       openLimitOrders: [mockLimitActivity],
       loading: false,
-      refetch: jest.fn(),
     })
 
     const { container } = await act(async () => {
@@ -75,7 +74,6 @@ describe('LimitsMenu', () => {
     mocked(useOpenLimitOrders).mockReturnValue({
       openLimitOrders: [mockLimitActivity, { ...mockLimitActivity, hash: '0x456' }],
       loading: false,
-      refetch: jest.fn(),
     })
     const { container } = await act(async () => {
       return render(<LimitsMenu onClose={jest.fn()} account="0x123" />)
@@ -90,7 +88,6 @@ describe('LimitsMenu', () => {
     mocked(useOpenLimitOrders).mockReturnValue({
       openLimitOrders: [mockLimitActivity],
       loading: false,
-      refetch: jest.fn(),
     })
     await act(async () => {
       render(<LimitsMenu onClose={onClose} account="0x123" />)

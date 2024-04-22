@@ -3,8 +3,8 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumberish, providers } from 'ethers'
 import { call, delay, fork, put, race, select, take } from 'typed-redux-saga'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/statsig/flags'
-import { Statsig } from 'uniswap/src/features/statsig/sdk/statsig'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import i18n from 'uniswap/src/i18n/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -164,21 +164,21 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
 
         const isTransfer =
           updatedTransaction.typeInfo.inputSymbol === updatedTransaction.typeInfo.outputSymbol
-        if (isTransfer && transaction.typeInfo.institution) {
+        if (isTransfer && updatedTransaction.typeInfo.institution) {
           yield* call(
             sendWalletAnalyticsEvent,
             InstitutionTransferEventName.InstitutionTransferTransactionUpdated,
             {
-              externalTransactionId: transaction.id,
-              status: transaction.status,
-              institutionName: transaction.typeInfo.institution,
+              externalTransactionId: updatedTransaction.id,
+              status: updatedTransaction.status,
+              institutionName: updatedTransaction.typeInfo.institution,
             }
           )
-        } else if (transaction.typeInfo.serviceProvider) {
+        } else if (updatedTransaction.typeInfo.serviceProvider) {
           yield* call(sendWalletAnalyticsEvent, FiatOnRampEventName.FiatOnRampTransactionUpdated, {
-            externalTransactionId: transaction.id,
-            status: transaction.status,
-            serviceProvider: transaction.typeInfo.serviceProvider,
+            externalTransactionId: updatedTransaction.id,
+            status: updatedTransaction.status,
+            serviceProvider: updatedTransaction.typeInfo.serviceProvider,
           })
         }
       }

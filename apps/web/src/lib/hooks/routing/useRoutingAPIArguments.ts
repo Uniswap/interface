@@ -1,10 +1,11 @@
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
+import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
-import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
-import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 /**
  * Returns query arguments for the Routing API query or undefined if the
@@ -18,6 +19,7 @@ export function useRoutingAPIArguments({
   amount,
   tradeType,
   routerPreference,
+  protocolPreferences,
 }: {
   account?: string
   tokenIn?: Currency
@@ -25,6 +27,7 @@ export function useRoutingAPIArguments({
   amount?: CurrencyAmount<Currency>
   tradeType: TradeType
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
+  protocolPreferences?: Protocol[]
 }): GetQuoteArgs | SkipToken {
   const uniswapXForceSyntheticQuotes = useFeatureFlag(FeatureFlags.UniswapXSyntheticQuote)
   // Don't enable fee logic if this is a quote for pricing
@@ -46,11 +49,22 @@ export function useRoutingAPIArguments({
             tokenOutDecimals: tokenOut.wrapped.decimals,
             tokenOutSymbol: tokenOut.wrapped.symbol,
             routerPreference,
+            protocolPreferences,
             tradeType,
             needsWrapIfUniswapX: tokenIn.isNative,
             uniswapXForceSyntheticQuotes,
             sendPortionEnabled,
           },
-    [account, amount, routerPreference, tokenIn, tokenOut, tradeType, uniswapXForceSyntheticQuotes, sendPortionEnabled]
+    [
+      tokenIn,
+      tokenOut,
+      amount,
+      account,
+      routerPreference,
+      protocolPreferences,
+      tradeType,
+      uniswapXForceSyntheticQuotes,
+      sendPortionEnabled,
+    ]
   )
 }

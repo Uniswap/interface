@@ -1,10 +1,12 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { ChainId, Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { routingPreferencesAtom } from 'components/Settings/MultipleRoutingOptions'
 import { ZERO_PERCENT } from 'constants/misc'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
+import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
-import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
-import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useGetQuickRouteQuery, useGetQuickRouteQueryState } from './quickRouteSlice'
 import { GetQuickQuoteArgs, PreviewTrade, QuoteState, TradeState } from './types'
 import { currencyAddressForSwapQuote } from './utils'
@@ -28,10 +30,12 @@ function useQuickRouteArguments({
   outputTax: Percent
 }): GetQuickQuoteArgs | typeof skipToken {
   const enabledMainnet = useFeatureFlag(FeatureFlags.QuickRouteMainnet)
+  const multipleRouteOptionsRoutingPreference = useAtomValue(routingPreferencesAtom)
+  const allRoutesEnabled = multipleRouteOptionsRoutingPreference.protocols.length === 3
 
   return useMemo(() => {
     if (!tokenIn || !tokenOut || !amount) return skipToken
-    if (!enabledMainnet || tokenIn.chainId !== ChainId.MAINNET) return skipToken
+    if (!enabledMainnet || tokenIn.chainId !== ChainId.MAINNET || !allRoutesEnabled) return skipToken
 
     return {
       amount: amount.quotient.toString(),
@@ -47,7 +51,7 @@ function useQuickRouteArguments({
       inputTax,
       outputTax,
     }
-  }, [amount, enabledMainnet, inputTax, outputTax, tokenIn, tokenOut, tradeType])
+  }, [allRoutesEnabled, amount, enabledMainnet, inputTax, outputTax, tokenIn, tokenOut, tradeType])
 }
 
 export function usePreviewTrade(

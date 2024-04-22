@@ -14,8 +14,6 @@ import { Screen } from 'src/components/layout/Screen'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { Button, Flex, Icons, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
-import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
 import { isIOS } from 'uniswap/src/utils/platform'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
@@ -42,12 +40,8 @@ export function SettingsWalletEdit({
   const displayName = useDisplayName(address)
   const [nickname, setNickname] = useState(displayName?.name)
   const [showEditButton, setShowEditButton] = useState(true)
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
   const { canClaimUnitag } = useCanAddressClaimUnitag(address)
-  const showUnitagBanner =
-    unitagsFeatureFlagEnabled &&
-    activeAccount?.type === AccountType.SignerMnemonic &&
-    canClaimUnitag
+  const showUnitagBanner = activeAccount?.type === AccountType.SignerMnemonic && canClaimUnitag
 
   const accountNameIsEditable =
     displayName?.type === DisplayNameType.Local || displayName?.type === DisplayNameType.Address

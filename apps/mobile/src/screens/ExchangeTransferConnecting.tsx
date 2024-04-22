@@ -3,20 +3,18 @@ import { useTranslation } from 'react-i18next'
 import { getCountry } from 'react-native-localize'
 import { useAppDispatch } from 'src/app/hooks'
 import { Screen } from 'src/components/layout/Screen'
-import {
-  FiatOnRampConnectingView,
-  SERVICE_PROVIDER_ICON_BORDER_RADIUS,
-  SERVICE_PROVIDER_ICON_SIZE,
-} from 'src/features/fiatOnRamp/FiatOnRampConnecting'
+import { FiatOnRampConnectingView } from 'src/features/fiatOnRamp/FiatOnRampConnecting'
+import { ServiceProviderLogoStyles } from 'src/features/fiatOnRamp/constants'
 import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
+import { Flex, useIsDarkMode } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { isAndroid } from 'uniswap/src/utils/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useFiatOnRampAggregatorTransferWidgetQuery } from 'wallet/src/features/fiatOnRamp/api'
-import { FORTransferInstitution } from 'wallet/src/features/fiatOnRamp/types'
-import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
+import { FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
+import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
+import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -27,14 +25,11 @@ import { openUri } from 'wallet/src/utils/linking'
 // Design decision
 const CONNECTING_TIMEOUT = 2 * ONE_SECOND_MS
 
-const DEFAULT_TRANSFER_AMOUNT = 1
-const DEFAULT_TRANSFER_CURRENCY = 'ETH'
-
 export function ExchangeTransferConnecting({
   serviceProvider,
   onClose,
 }: {
-  serviceProvider: FORTransferInstitution
+  serviceProvider: FORServiceProvider
   onClose: () => void
 }): JSX.Element {
   const { t } = useTranslation()
@@ -43,8 +38,8 @@ export function ExchangeTransferConnecting({
   const [timeoutElapsed, setTimeoutElapsed] = useState(false)
 
   const initialTypeInfo = useMemo(
-    () => ({ institutionLogoUrl: serviceProvider.icon }),
-    [serviceProvider.icon]
+    () => ({ serviceProviderLogo: serviceProvider.logos }),
+    [serviceProvider.logos]
   )
 
   const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
@@ -72,15 +67,11 @@ export function ExchangeTransferConnecting({
     isLoading: widgetLoading,
     error: widgetError,
   } = useFiatOnRampAggregatorTransferWidgetQuery({
-    sourceAmount: DEFAULT_TRANSFER_AMOUNT,
-    sourceCurrencyCode: DEFAULT_TRANSFER_CURRENCY,
     countryCode: getCountry(),
-    institutionId: serviceProvider.id,
+    serviceProvider: serviceProvider.serviceProvider,
     walletAddress: activeAccountAddress,
     externalSessionId: externalTransactionId,
-    redirectURL: `${
-      isAndroid ? uniswapUrls.appUrl : uniswapUrls.appBaseUrl
-    }/?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
+    redirectUrl: `${uniswapUrls.redirectUrlBase}/?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
   })
 
   useEffect(() => {
@@ -113,16 +104,20 @@ export function ExchangeTransferConnecting({
     serviceProvider?.name,
   ])
 
+  const isDarkMode = useIsDarkMode()
+  const logoUrl = getServiceProviderLogo(serviceProvider.logos, isDarkMode)
+
   return (
     <Screen>
       <FiatOnRampConnectingView
         serviceProviderLogo={
-          <RemoteImage
-            borderRadius={SERVICE_PROVIDER_ICON_BORDER_RADIUS}
-            height={SERVICE_PROVIDER_ICON_SIZE}
-            uri={serviceProvider.icon}
-            width={SERVICE_PROVIDER_ICON_SIZE}
-          />
+          <Flex
+            alignItems="center"
+            height={ServiceProviderLogoStyles.icon.height}
+            justifyContent="center"
+            width={ServiceProviderLogoStyles.icon.width}>
+            <ImageUri imageStyle={ServiceProviderLogoStyles.icon} uri={logoUrl} />
+          </Flex>
         }
         serviceProviderName={serviceProvider.name}
       />

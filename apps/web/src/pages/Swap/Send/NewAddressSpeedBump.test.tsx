@@ -3,8 +3,8 @@ import { NewAddressSpeedBumpModal } from 'pages/Swap/Send/NewAddressSpeedBump'
 import { SendContext, SendContextType } from 'state/send/SendContext'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
-import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
-import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const mockSendContext: SendContextType = {
   sendState: {
@@ -25,7 +25,7 @@ const mockSendContext: SendContextType = {
   setSendState: jest.fn(),
 }
 
-jest.mock('uniswap/src/features/statsig/hooks', () => {
+jest.mock('uniswap/src/features/gating/hooks', () => {
   return {
     useFeatureFlag: jest.fn(),
   }

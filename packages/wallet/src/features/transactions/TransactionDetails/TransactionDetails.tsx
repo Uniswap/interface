@@ -1,4 +1,5 @@
 import { SwapEventName } from '@uniswap/analytics-events'
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Icons, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -30,6 +31,7 @@ interface TransactionDetailsProps {
   onShowWarning?: () => void
   isSwap?: boolean
   AccountDetails?: JSX.Element
+  transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
 }
 
 export function TransactionDetails({
@@ -44,6 +46,7 @@ export function TransactionDetails({
   feeOnTransferProps,
   onShowWarning,
   isSwap,
+  transactionUSDValue,
   AccountDetails,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const colors = useSporeColors()
@@ -126,7 +129,7 @@ export function TransactionDetails({
         {showChildren ? <Flex gap="$spacing12">{children}</Flex> : null}
         {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
         {displaySwapFeeInfo && <SwapFee swapFeeInfo={swapFeeInfo} />}
-        <NetworkFee chainId={chainId} gasFee={gasFee} />
+        <NetworkFee chainId={chainId} gasFee={gasFee} transactionUSDValue={transactionUSDValue} />
         {AccountDetails}
       </Flex>
     </Flex>

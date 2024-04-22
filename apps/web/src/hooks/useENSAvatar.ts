@@ -60,9 +60,9 @@ function useAvatarFromNode(node?: string): { avatar?: string; loading: boolean }
   return useMemo(
     () => ({
       avatar: avatar.result?.[0],
-      loading: resolverAddress.loading || avatar.loading,
+      loading: avatar.loading,
     }),
-    [avatar.loading, avatar.result, resolverAddress.loading]
+    [avatar.loading, avatar.result]
   )
 }
 

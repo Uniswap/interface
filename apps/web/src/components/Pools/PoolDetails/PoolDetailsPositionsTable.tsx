@@ -1,7 +1,7 @@
 import { useWeb3React } from '@web3-react/core'
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import Column from 'components/Column'
-import { DoubleCurrencyLogo } from 'components/Pools/PoolDetails/PoolDetailsHeader'
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { ClosedCircle, DoubleArrow } from 'components/Pools/PoolDetails/icons'
 import Row from 'components/Row'
 import { BIPS_BASE } from 'constants/misc'

@@ -1,6 +1,6 @@
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useContext, useEffect } from 'react'
-import { Statsig, StatsigContext } from 'uniswap/src/features/statsig/sdk/statsig'
+import { Statsig, StatsigContext } from 'uniswap/src/features/gating/sdk/statsig'
 
 export function useFeatureFlagURLOverrides() {
   const parsedQs = useParsedQueryString()

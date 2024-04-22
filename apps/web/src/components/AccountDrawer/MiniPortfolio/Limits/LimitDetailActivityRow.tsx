@@ -17,6 +17,7 @@ import { useMemo, useState } from 'react'
 import { ArrowRight } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
+import { UniswapXOrderStatus } from 'types/uniswapx'
 import { useFormatter } from 'utils/formatNumbers'
 
 const StyledPortfolioRow = styled(PortfolioRow)`
@@ -77,12 +78,18 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
   const inputLogo = logos?.[0] ?? inputCurrencyInfo?.logoUrl
   const outputLogo = logos?.[1] ?? outputCurrencyInfo?.logoUrl
 
+  const cancelling = offchainOrderDetails.status === UniswapXOrderStatus.PENDING_CANCELLATION
+
   return (
     <Row onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
       <StyledPortfolioRow
         left={undefined}
         title={
-          offchainOrderDetails?.expiry ? (
+          cancelling ? (
+            <ThemedText.LabelMicro fontWeight={500}>
+              <Trans>Pending cancellation</Trans>
+            </ThemedText.LabelMicro>
+          ) : offchainOrderDetails?.expiry ? (
             <ThemedText.LabelMicro fontWeight={500}>
               <Trans>
                 Expires {{ timestamp: formatTimestamp(offchainOrderDetails.expiry * 1000, true, FormatType.Short) }}
@@ -122,13 +129,15 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
           })
         }}
       />
-      <StyledCheckbox
-        $visible={hovered || selected || isSmallScreen}
-        size={18}
-        hovered={false}
-        checked={selected}
-        onChange={() => onToggleSelect(order)}
-      />
+      {!cancelling && (
+        <StyledCheckbox
+          $visible={hovered || selected || isSmallScreen}
+          size={18}
+          hovered={false}
+          checked={selected}
+          onChange={() => onToggleSelect(order)}
+        />
+      )}
     </Row>
   )
 }

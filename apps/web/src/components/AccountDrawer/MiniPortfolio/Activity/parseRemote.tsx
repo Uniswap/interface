@@ -9,8 +9,8 @@ import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromG
 import { t } from 'i18n'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
-import { OrderActivity, parseRemote as parseRemoteSignature } from 'state/signatures/parseRemote'
-import { UniswapXOrderDetails } from 'state/signatures/types'
+import { parseRemote as parseRemoteSignature } from 'state/signatures/parseRemote'
+import { OrderActivity, UniswapXOrderDetails } from 'state/signatures/types'
 import { TransactionType as LocalTransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import {

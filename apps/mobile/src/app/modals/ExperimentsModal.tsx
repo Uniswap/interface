@@ -21,17 +21,17 @@ import {
   Experiments,
   WALLET_EXPERIMENTS,
   getExperimentDefinition,
-} from 'uniswap/src/features/statsig/experiments'
+} from 'uniswap/src/features/gating/experiments'
 import {
   FeatureFlags,
   WALLET_FEATURE_FLAG_NAMES,
   getFeatureFlagName,
-} from 'uniswap/src/features/statsig/flags'
+} from 'uniswap/src/features/gating/flags'
 import {
   useExperimentValueWithExposureLoggingDisabled,
   useFeatureFlagWithExposureLoggingDisabled,
-} from 'uniswap/src/features/statsig/hooks'
-import { Statsig } from 'uniswap/src/features/statsig/sdk/statsig'
+} from 'uniswap/src/features/gating/hooks'
+import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { Switch } from 'wallet/src/components/buttons/Switch'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'

@@ -8,7 +8,6 @@ import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { ColorTokens, useSporeColors } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { isAndroid } from 'uniswap/src/utils/platform'
 import { logger } from 'utilities/src/logger/logger'
 import { useDebounce } from 'utilities/src/time/timing'
 import {
@@ -194,9 +193,7 @@ export function useMoonpayFiatOnRamp({
           amount: baseCurrencyAmount,
           currencyCode: quoteCurrencyCode,
           baseCurrencyCode,
-          redirectUrl: `${
-            isAndroid ? uniswapUrls.appUrl : uniswapUrls.appBaseUrl
-          }/?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
+          redirectUrl: `${uniswapUrls.redirectUrlBase}/?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
         }
       : skipToken
   )

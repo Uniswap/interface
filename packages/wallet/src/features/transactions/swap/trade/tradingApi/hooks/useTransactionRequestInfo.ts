@@ -1,6 +1,6 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { providers } from 'ethers'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
 import { logger } from 'utilities/src/logger/logger'
@@ -27,7 +27,7 @@ import { WrapType } from 'wallet/src/features/transactions/types'
 import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 
-const UNKNOWN_SIM_ERROR = 'Unknown gas simulation error'
+export const UNKNOWN_SIM_ERROR = 'Unknown gas simulation error'
 
 interface TransactionRequestInfo {
   transactionRequest: providers.TransactionRequest | undefined
@@ -127,7 +127,22 @@ export function useTransactionRequestInfo({
     error: isWrapApplicable ? wrapGasFee.error : gasEstimateError,
   }
 
+  // Only log analytics events once per quote
+  const previousQuoteIdRef = useRef(quote?.quote.quoteId)
+
   useEffect(() => {
+    if (!quote) {
+      return
+    }
+
+    const currentQuoteId = quote.quote.quoteId
+    const isNewQuote = previousQuoteIdRef.current !== currentQuoteId
+    previousQuoteIdRef.current = currentQuoteId
+
+    if (!isNewQuote) {
+      return
+    }
+
     if (gasEstimateError) {
       logger.error(gasEstimateError, {
         tags: { file: 'useTransactionRequestInfo', function: 'useTransactionRequestInfo' },
@@ -142,7 +157,7 @@ export function useTransactionRequestInfo({
         txRequest: data?.swap,
       })
     }
-  }, [gasEstimateError, data?.swap, swapRequestArgs, derivedSwapInfo, formatter, isWrapApplicable])
+  }, [data?.swap, derivedSwapInfo, formatter, gasEstimateError, quote, swapRequestArgs])
 
   return {
     transactionRequest: isWrapApplicable ? wrapTxRequest : data?.swap,

@@ -2,8 +2,8 @@ import { StyleSheet } from 'react-native'
 import Svg, { Defs, RadialGradient as RadialGradientSVG, Rect, Stop } from 'react-native-svg'
 import { ColorTokens, Flex, Icons, Unicon, UniconV2, useUniconColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
-import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
 
 // Determines view only icon size in relation to Account Icon size

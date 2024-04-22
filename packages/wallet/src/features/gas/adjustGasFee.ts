@@ -1,5 +1,4 @@
 import { BigNumber, BigNumberish, providers } from 'ethers'
-import { logger } from 'utilities/src/logger/logger'
 import { FeeType, GasFeeResult } from 'wallet/src/features/gas/types'
 import { BigNumberMax } from 'wallet/src/utils/number'
 
@@ -49,12 +48,7 @@ export function getAdjustedGasFeeDetails(
     }
   }
 
-  const error = determineError(request, currentGasFeeParams)
-  logger.error(error, {
-    tags: { file: 'adjustGasFee.ts', function: 'getAdjustedGasFeeDetails' },
-    extra: { request, currentGasFeeParams },
-  })
-  throw error
+  throw determineError(request, currentGasFeeParams)
 }
 
 function determineError(

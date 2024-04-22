@@ -8,6 +8,7 @@ const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const { IgnorePlugin, ProvidePlugin } = require('webpack')
 const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 const isProduction = process.env.NODE_ENV === 'production'
@@ -92,6 +93,15 @@ module.exports = {
       }),
     ],
     configure: (webpackConfig) => {
+      if (isProduction || process.env.UNISWAP_ANALYZE_BUNDLE_SIZE) {
+        // do bundle analysis
+        webpackConfig.plugins.push(
+          new BundleAnalyzerPlugin({
+            analyzerMode: 'json',
+          })
+        )
+      }
+
       // Configure webpack plugins:
       webpackConfig.plugins = webpackConfig.plugins
         .map((plugin) => {

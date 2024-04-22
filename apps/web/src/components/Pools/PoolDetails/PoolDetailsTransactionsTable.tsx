@@ -4,6 +4,7 @@ import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
 import { FilterHeaderRow, HeaderArrow, HeaderSortText, TimestampCell } from 'components/Table/styled'
+import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import {
   PoolTableTransaction,
   PoolTableTransactionType,
@@ -52,6 +53,14 @@ const PoolTransactionColumnWidth: { [key in PoolTransactionColumn]: number } = {
   [PoolTransactionColumn.FiatValue]: 125,
   [PoolTransactionColumn.InputAmount]: 125,
   [PoolTransactionColumn.OutputAmount]: 125,
+}
+
+function comparePoolTokens(tokenA: PoolTableTransaction['pool']['token0'], tokenB?: Token) {
+  if (tokenB?.address === NATIVE_CHAIN_ID) {
+    const chainId = supportedChainIdFromGQLChain(tokenB.chain)
+    return chainId && tokenA.id.toLowerCase() === WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
+  }
+  return tokenA.id.toLowerCase() === tokenB?.address?.toLowerCase()
 }
 
 export function PoolDetailsTransactionsTable({
@@ -188,62 +197,56 @@ export function PoolDetailsTransactionsTable({
           </Cell>
         ),
       }),
-      columnHelper.accessor(
-        (row) => (row.pool.token0.id.toLowerCase() === token0?.address?.toLowerCase() ? row.amount0 : row.amount1),
-        {
-          id: 'input-amount',
-          header: () => (
-            <Cell
-              loading={showLoadingSkeleton}
-              minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount]}
-              justifyContent="flex-end"
-              grow
-            >
-              <ThemedText.BodySecondary>{token0?.symbol}</ThemedText.BodySecondary>
-            </Cell>
-          ),
-          cell: (inputTokenAmount) => (
-            <Cell
-              loading={showLoadingSkeleton}
-              minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount]}
-              justifyContent="flex-end"
-              grow
-            >
-              <ThemedText.BodyPrimary>
-                {formatNumber({ input: Math.abs(inputTokenAmount.getValue?.() ?? 0), type: NumberType.TokenTx })}
-              </ThemedText.BodyPrimary>
-            </Cell>
-          ),
-        }
-      ),
-      columnHelper.accessor(
-        (row) => (row.pool.token0.id.toLowerCase() === token0?.address?.toLowerCase() ? row.amount1 : row.amount0),
-        {
-          id: 'output-amount',
-          header: () => (
-            <Cell
-              loading={showLoadingSkeleton}
-              minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount]}
-              justifyContent="flex-end"
-              grow
-            >
-              <ThemedText.BodySecondary>{token1?.symbol}</ThemedText.BodySecondary>
-            </Cell>
-          ),
-          cell: (outputTokenAmount) => (
-            <Cell
-              loading={showLoadingSkeleton}
-              minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount]}
-              justifyContent="flex-end"
-              grow
-            >
-              <ThemedText.BodyPrimary>
-                {formatNumber({ input: Math.abs(outputTokenAmount.getValue?.() ?? 0), type: NumberType.TokenTx })}
-              </ThemedText.BodyPrimary>
-            </Cell>
-          ),
-        }
-      ),
+      columnHelper.accessor((row) => (comparePoolTokens(row.pool.token0, token0) ? row.amount0 : row.amount1), {
+        id: 'input-amount',
+        header: () => (
+          <Cell
+            loading={showLoadingSkeleton}
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount]}
+            justifyContent="flex-end"
+            grow
+          >
+            <ThemedText.BodySecondary>{token0?.symbol}</ThemedText.BodySecondary>
+          </Cell>
+        ),
+        cell: (inputTokenAmount) => (
+          <Cell
+            loading={showLoadingSkeleton}
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount]}
+            justifyContent="flex-end"
+            grow
+          >
+            <ThemedText.BodyPrimary>
+              {formatNumber({ input: Math.abs(inputTokenAmount.getValue?.() ?? 0), type: NumberType.TokenTx })}
+            </ThemedText.BodyPrimary>
+          </Cell>
+        ),
+      }),
+      columnHelper.accessor((row) => (comparePoolTokens(row.pool.token0, token0) ? row.amount1 : row.amount0), {
+        id: 'output-amount',
+        header: () => (
+          <Cell
+            loading={showLoadingSkeleton}
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount]}
+            justifyContent="flex-end"
+            grow
+          >
+            <ThemedText.BodySecondary>{token1?.symbol}</ThemedText.BodySecondary>
+          </Cell>
+        ),
+        cell: (outputTokenAmount) => (
+          <Cell
+            loading={showLoadingSkeleton}
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount]}
+            justifyContent="flex-end"
+            grow
+          >
+            <ThemedText.BodyPrimary>
+              {formatNumber({ input: Math.abs(outputTokenAmount.getValue?.() ?? 0), type: NumberType.TokenTx })}
+            </ThemedText.BodyPrimary>
+          </Cell>
+        ),
+      }),
       columnHelper.accessor((row) => row.maker, {
         id: 'maker-address',
         header: () => (
@@ -280,8 +283,7 @@ export function PoolDetailsTransactionsTable({
     formatNumber,
     showLoadingSkeleton,
     sortState.sortBy,
-    token0?.address,
-    token0?.symbol,
+    token0,
     token1?.symbol,
   ])
 

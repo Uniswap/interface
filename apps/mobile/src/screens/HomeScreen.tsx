@@ -67,8 +67,8 @@ import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-home.svg'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
-import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval, useTimeout } from 'utilities/src/time/timing'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
@@ -76,6 +76,7 @@ import {
   selectHasSkippedUnitagPrompt,
   selectHasViewedUniconV2IntroModal,
 } from 'wallet/src/features/behaviorHistory/selectors'
+import { useCexTransferProviders } from 'wallet/src/features/fiatOnRamp/api'
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
@@ -332,6 +333,7 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
 
   const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
   const cexTransferEnabled = useFeatureFlag(FeatureFlags.CexTransfers)
+  const cexTransferProviders = useCexTransferProviders(cexTransferEnabled)
 
   const onPressBuy = useCallback(
     () =>
@@ -351,14 +353,16 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   }, [dispatch])
   const onPressSend = useCallback(() => dispatch(openModal({ name: ModalName.Send })), [dispatch])
   const onPressReceive = useCallback(() => {
-    if (cexTransferEnabled) {
-      dispatch(openModal({ name: ModalName.ReceiveCryptoModal }))
+    if (cexTransferProviders.length > 0) {
+      dispatch(
+        openModal({ name: ModalName.ReceiveCryptoModal, initialState: cexTransferProviders })
+      )
     } else {
       dispatch(
         openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
       )
     }
-  }, [dispatch, cexTransferEnabled])
+  }, [dispatch, cexTransferProviders])
   const onPressViewOnlyLabel = useCallback(
     () => dispatch(openModal({ name: ModalName.ViewOnlyExplainer })),
     [dispatch]

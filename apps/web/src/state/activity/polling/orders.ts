@@ -4,9 +4,10 @@ import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { isFinalizedOrder, usePendingOrders } from 'state/signatures/hooks'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
+import { ExactInputSwapTransactionInfo } from 'state/transactions/types'
 import { OrderQueryResponse, UniswapXBackendOrder, UniswapXOrderStatus } from 'types/uniswapx'
-import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
-import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { OnActivityUpdate } from '../types'
 import { toSerializableReceipt } from '../utils'
 
@@ -75,30 +76,31 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
           const updatedOrder = statuses.find((order) => order.orderHash === pendingOrder.orderHash)
           if (!updatedOrder) return
 
+          const swapInfo = { ...pendingOrder.swapInfo }
           let receipt = undefined
-          let updatedSwapInfo = undefined
-
           if (updatedOrder?.orderStatus === UniswapXOrderStatus.FILLED) {
-            // Updates the order to contain the settled/on-chain output amount
+            // Update the order to contain the settled/on-chain output amount
             if (pendingOrder.swapInfo.tradeType === TradeType.EXACT_INPUT) {
-              updatedSwapInfo = {
-                ...pendingOrder.swapInfo,
-                settledOutputCurrencyAmountRaw: updatedOrder.settledAmounts?.[0]?.amountOut,
-              }
+              const exactInputSwapInfo = swapInfo as ExactInputSwapTransactionInfo
+              exactInputSwapInfo.settledOutputCurrencyAmountRaw = updatedOrder.settledAmounts?.[0]?.amountOut
+            } else if (pendingOrder.swapInfo.tradeType === TradeType.EXACT_OUTPUT) {
+              // TODO(WEB-3962): Handle settled EXACT_OUTPUT amounts
             }
-            // TODO(WEB-3962): Handle settled EXACT_OUTPUT amounts
 
             if (provider) {
               receipt = toSerializableReceipt(await provider?.getTransactionReceipt(updatedOrder.txHash))
             }
           }
+
           onActivityUpdate({
             type: 'signature',
-            updatedStatus: updatedOrder.orderStatus,
-            originalSignature: pendingOrder,
-            receipt,
             chainId: pendingOrder.chainId,
-            updatedSwapInfo,
+            original: pendingOrder,
+            update: {
+              status: updatedOrder.orderStatus,
+              swapInfo,
+            },
+            receipt,
           })
         })
       } catch (e) {

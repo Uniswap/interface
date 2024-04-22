@@ -2,8 +2,8 @@ import { ApolloError } from '@apollo/client'
 import { ChainId } from '@uniswap/sdk-core'
 import { atomWithReset, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
-import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export type ChainOutageData = {
   chainId: ChainId

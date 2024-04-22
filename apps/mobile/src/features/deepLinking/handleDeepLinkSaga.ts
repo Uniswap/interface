@@ -26,8 +26,8 @@ import { WidgetType } from 'src/features/widgets/widgets'
 import { Screens } from 'src/screens/Screens'
 import { Statsig } from 'statsig-react-native'
 import { call, put, takeLatest } from 'typed-redux-saga'
-import { UNISWAP_APP_HOSTNAME } from 'uniswap/src/constants/urls'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/statsig/flags'
+import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import i18n from 'uniswap/src/i18n/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { selectExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/selectors'
@@ -217,7 +217,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
     if (!activeAccount) {
       // For app.uniswap.org links it should open a browser with the link
       // instead of handling it inside the app
-      if (url.hostname === UNISWAP_APP_HOSTNAME) {
+      if (url.hostname === UNISWAP_WEB_HOSTNAME) {
         yield* call(openUri, action.payload.url, /* openExternalBrowser */ true)
       }
       // Skip handling any other deep links
@@ -315,8 +315,8 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       }
     }
 
-    if (url.hostname === UNISWAP_APP_HOSTNAME) {
-      const urlParts = url.href.split(`${UNISWAP_APP_HOSTNAME}/`)
+    if (url.hostname === UNISWAP_WEB_HOSTNAME) {
+      const urlParts = url.href.split(`${UNISWAP_WEB_HOSTNAME}/`)
       const urlPath = urlParts.length >= 1 ? (urlParts[1] as string) : ''
       yield* call(handleUniswapAppDeepLink, urlPath, action.payload.url, LinkSource.Share)
       return

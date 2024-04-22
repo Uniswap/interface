@@ -255,7 +255,7 @@ export const TokenLinkCell = ({ token }: { token: Token }) => {
       <Row gap="4px" maxWidth="68px">
         <PortfolioLogo
           chainId={chainId}
-          size="16px"
+          size={16}
           images={isNative ? undefined : [token.project?.logo?.url]}
           currencies={isNative ? [nativeCurrency] : undefined}
         />

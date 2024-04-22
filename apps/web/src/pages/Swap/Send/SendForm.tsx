@@ -88,7 +88,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
   })
   const { chainId } = useSwapAndLimitContext()
   const { setSendState, derivedSendInfo } = useSendContext()
-  const { inputError, parsedTokenAmount, recipientData, transaction } = derivedSendInfo
+  const { inputError, parsedTokenAmount, recipientData, transaction, gasFee } = derivedSendInfo
 
   const { isSmartContractAddress, loading: loadingSmartContractAddress } = useIsSmartContractAddress(
     recipientData?.address
@@ -107,6 +107,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     currencyAmount: parsedTokenAmount,
     recipient: recipientData?.address,
     transactionRequest: transaction,
+    gasFee,
   })
 
   const handleModalState = useCallback((newState?: SendFormModalState) => {

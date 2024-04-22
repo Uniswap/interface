@@ -2,11 +2,12 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
+import { GeneratedIcon, Icons, isWeb } from 'ui/src'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { selectNftsVisibility } from 'wallet/src/features/favorites/selectors'
 import { toggleNftVisibility } from 'wallet/src/features/favorites/slice'
-import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
+import { getIsNftHidden, getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
@@ -20,6 +21,8 @@ interface NFTMenuParams {
   isSpam?: boolean
 }
 
+type MenuAction = ContextMenuAction & { onPress: () => void; Icon?: GeneratedIcon }
+
 export function useNFTContextMenu({
   contractAddress,
   tokenId,
@@ -27,7 +30,7 @@ export function useNFTContextMenu({
   showNotification = false,
   isSpam,
 }: NFTMenuParams): {
-  menuActions: Array<ContextMenuAction & { onPress: () => void }>
+  menuActions: Array<MenuAction>
   onContextMenuPress: (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => void
   onlyShare: boolean
 } {
@@ -41,8 +44,7 @@ export function useNFTContextMenu({
 
   const nftVisibility = useAppSelector(selectNftsVisibility)
   const nftKey = contractAddress && tokenId ? getNFTAssetKey(contractAddress, tokenId) : undefined
-  const nftVisibilityOverride = !!nftKey && !!nftVisibility[nftKey]?.isVisible
-  const hidden = isSpam && !nftVisibilityOverride
+  const hidden = getIsNftHidden({ contractAddress, tokenId, isSpam, nftVisibility })
 
   const onPressShare = useCallback(async (): Promise<void> => {
     if (!contractAddress || !tokenId) {
@@ -74,17 +76,27 @@ export function useNFTContextMenu({
     () =>
       nftKey
         ? [
-            {
-              title: t('common.button.share'),
-              systemIcon: 'square.and.arrow.up',
-              onPress: onPressShare,
-            },
+            ...(!isWeb
+              ? [
+                  {
+                    title: t('common.button.share'),
+                    systemIcon: 'square.and.arrow.up',
+                    onPress: onPressShare,
+                  },
+                ]
+              : []),
             ...((isLocalAccount && [
               {
                 title: hidden
                   ? t('tokens.nfts.hidden.action.unhide')
                   : t('tokens.nfts.hidden.action.hide'),
-                systemIcon: hidden ? 'eye' : 'eye.slash',
+                ...(isWeb
+                  ? {
+                      Icon: hidden ? Icons.Eye : Icons.EyeOff,
+                    }
+                  : {
+                      systemIcon: hidden ? 'eye' : 'eye.slash',
+                    }),
                 destructive: !hidden,
                 onPress: onPressHiddenStatus,
               },

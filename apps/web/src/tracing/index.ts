@@ -6,7 +6,8 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { initializeAnalytics, OriginApplication } from 'analytics'
 import store from 'state'
 import { setOriginCountry } from 'state/user/reducer'
-import { getEnvName, isDevelopmentEnv, isProductionEnv, isSentryEnabled } from 'utils/env'
+import { isDevEnv, isProdEnv } from 'uniswap/src/utils/env'
+import { getEnvName, isSentryEnabled } from 'utils/env'
 import { v4 as uuidv4 } from 'uuid'
 import { patchFetch } from './request'
 
@@ -49,7 +50,7 @@ initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
   proxyUrl: process.env.REACT_APP_AMPLITUDE_PROXY_URL,
   defaultEventName: SharedEventName.PAGE_VIEWED,
   commitHash: process.env.REACT_APP_GIT_COMMIT_HASH,
-  isProductionEnv: isProductionEnv(),
-  debug: isDevelopmentEnv(),
+  isProductionEnv: isProdEnv(),
+  debug: isDevEnv(),
   reportOriginCountry: (country: string) => store.dispatch(setOriginCountry(country)),
 })

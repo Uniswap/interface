@@ -85,6 +85,29 @@ exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
   grid-row-gap: 8px;
 }
 
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c13 img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c14 {
+  width: 18px;
+  height: 36px;
+  border-radius: 50%;
+}
+
 .c12 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -97,12 +120,6 @@ exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c13 {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
 }
 
 .c11 {
@@ -123,7 +140,7 @@ exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
   margin-right: 8px;
 }
 
-.c14 {
+.c15 {
   cursor: help;
   color: #7D7D7D;
   margin-right: 8px;
@@ -189,10 +206,17 @@ exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
               <div
                 class="c12"
               >
-                <img
+                <div
                   class="c13"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                />
+                  size="36"
+                >
+                   
+                  <img
+                    class="c14"
+                    size="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -210,7 +234,7 @@ exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
                 >
                   <div>
                     <div
-                      class="c8 c14 css-142zc9n"
+                      class="c8 c15 css-142zc9n"
                       cursor="help"
                     >
                       You receive
@@ -241,10 +265,17 @@ exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
               <div
                 class="c12"
               >
-                <img
+                <div
                   class="c13"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                />
+                  size="36"
+                >
+                   
+                  <img
+                    class="c14"
+                    size="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -340,6 +371,29 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 
   grid-row-gap: 8px;
 }
 
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c13 img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c14 {
+  width: 18px;
+  height: 36px;
+  border-radius: 50%;
+}
+
 .c12 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -352,12 +406,6 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c13 {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
 }
 
 .c11 {
@@ -378,7 +426,7 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 
   margin-right: 8px;
 }
 
-.c14 {
+.c15 {
   cursor: help;
   color: #7D7D7D;
   margin-right: 8px;
@@ -444,10 +492,17 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 
               <div
                 class="c12"
               >
-                <img
+                <div
                   class="c13"
-                  src="ethereum-logo.png"
-                />
+                  size="36"
+                >
+                   
+                  <img
+                    class="c14"
+                    size="36"
+                    src="ethereum-logo.png"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -465,7 +520,7 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 
                 >
                   <div>
                     <div
-                      class="c8 c14 css-142zc9n"
+                      class="c8 c15 css-142zc9n"
                       cursor="help"
                     >
                       You receive
@@ -496,10 +551,17 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 
               <div
                 class="c12"
               >
-                <img
+                <div
                   class="c13"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                />
+                  size="36"
+                >
+                   
+                  <img
+                    class="c14"
+                    size="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -595,6 +657,29 @@ exports[`SwapPreview.tsx renders preview trades with loading states 1`] = `
   grid-row-gap: 8px;
 }
 
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c13 img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c14 {
+  width: 18px;
+  height: 36px;
+  border-radius: 50%;
+}
+
 .c12 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -607,12 +692,6 @@ exports[`SwapPreview.tsx renders preview trades with loading states 1`] = `
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c13 {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
 }
 
 .c11 {
@@ -633,7 +712,7 @@ exports[`SwapPreview.tsx renders preview trades with loading states 1`] = `
   margin-right: 8px;
 }
 
-.c14 {
+.c15 {
   cursor: help;
   color: #7D7D7D;
   margin-right: 8px;
@@ -699,10 +778,17 @@ exports[`SwapPreview.tsx renders preview trades with loading states 1`] = `
               <div
                 class="c12"
               >
-                <img
+                <div
                   class="c13"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                />
+                  size="36"
+                >
+                   
+                  <img
+                    class="c14"
+                    size="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -720,7 +806,7 @@ exports[`SwapPreview.tsx renders preview trades with loading states 1`] = `
                 >
                   <div>
                     <div
-                      class="c8 c14 css-142zc9n"
+                      class="c8 c15 css-142zc9n"
                       cursor="help"
                     >
                       You receive
@@ -751,10 +837,17 @@ exports[`SwapPreview.tsx renders preview trades with loading states 1`] = `
               <div
                 class="c12"
               >
-                <img
+                <div
                   class="c13"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                />
+                  size="36"
+                >
+                   
+                  <img
+                    class="c14"
+                    size="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -850,6 +943,29 @@ exports[`SwapPreview.tsx test trade exact output, no recipient 1`] = `
   grid-row-gap: 8px;
 }
 
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c13 img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c14 {
+  width: 18px;
+  height: 36px;
+  border-radius: 50%;
+}
+
 .c12 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -862,12 +978,6 @@ exports[`SwapPreview.tsx test trade exact output, no recipient 1`] = `
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c13 {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
 }
 
 .c11 {
@@ -888,7 +998,7 @@ exports[`SwapPreview.tsx test trade exact output, no recipient 1`] = `
   margin-right: 8px;
 }
 
-.c14 {
+.c15 {
   cursor: help;
   color: #7D7D7D;
   margin-right: 8px;
@@ -954,10 +1064,17 @@ exports[`SwapPreview.tsx test trade exact output, no recipient 1`] = `
               <div
                 class="c12"
               >
-                <img
+                <div
                   class="c13"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                />
+                  size="36"
+                >
+                   
+                  <img
+                    class="c14"
+                    size="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -975,7 +1092,7 @@ exports[`SwapPreview.tsx test trade exact output, no recipient 1`] = `
                 >
                   <div>
                     <div
-                      class="c8 c14 css-142zc9n"
+                      class="c8 c15 css-142zc9n"
                       cursor="help"
                     >
                       You receive
@@ -1006,10 +1123,17 @@ exports[`SwapPreview.tsx test trade exact output, no recipient 1`] = `
               <div
                 class="c12"
               >
-                <img
+                <div
                   class="c13"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
-                />
+                  size="36"
+                >
+                   
+                  <img
+                    class="c14"
+                    size="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
+                  />
+                </div>
               </div>
             </div>
           </div>

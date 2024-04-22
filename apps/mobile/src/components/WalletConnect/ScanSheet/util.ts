@@ -6,8 +6,8 @@ import {
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/constants'
-import { DynamicConfigs } from 'uniswap/src/features/statsig/configs'
-import { useDynamicConfig } from 'uniswap/src/features/statsig/hooks'
+import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
 import { logger } from 'utilities/src/logger/logger'
 import { RPCType } from 'wallet/src/constants/chains'
 import { AssetType } from 'wallet/src/entities/assets'

@@ -1,10 +1,10 @@
-import { DynamicConfigs, getConfigName } from 'uniswap/src/features/statsig/configs'
+import { DynamicConfigs, getConfigName } from 'uniswap/src/features/gating/configs'
 import {
   DEFAULT_EXPERIMENT_ENABLED_VALUE,
   Experiments,
   getExperimentDefinition,
-} from 'uniswap/src/features/statsig/experiments'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/statsig/flags'
+} from 'uniswap/src/features/gating/experiments'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import {
   DynamicConfig,
   useConfig,
@@ -12,7 +12,7 @@ import {
   useExperimentWithExposureLoggingDisabled,
   useGate,
   useGateWithExposureLoggingDisabled,
-} from 'uniswap/src/features/statsig/sdk/statsig'
+} from 'uniswap/src/features/gating/sdk/statsig'
 import { logger } from 'utilities/src/logger/logger'
 
 export function useFeatureFlag(flag: FeatureFlags): boolean {

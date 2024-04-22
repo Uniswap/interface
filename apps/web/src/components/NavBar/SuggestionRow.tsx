@@ -149,7 +149,7 @@ export const SuggestionRow = ({
           <QueryTokenLogo
             token={suggestion}
             symbol={suggestion.symbol}
-            size="36px"
+            size={36}
             primaryImg={suggestion.project?.logoUrl}
           />
         ) : brokenCollectionImage ? (

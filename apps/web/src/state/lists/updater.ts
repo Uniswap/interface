@@ -1,6 +1,5 @@
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
 import { useWeb3React } from '@web3-react/core'
-import { DEFAULT_LIST_OF_LISTS, UNSUPPORTED_LIST_URLS } from 'constants/lists'
 import { useStateRehydrated } from 'hooks/useStateRehydrated'
 import useInterval from 'lib/hooks/useInterval'
 import ms from 'ms'
@@ -8,6 +7,7 @@ import { useCallback, useEffect } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import { useAllLists } from 'state/lists/hooks'
 
+import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
 import { useFetchListCallback } from '../../hooks/useFetchListCallback'
 import useIsWindowVisible from '../../hooks/useIsWindowVisible'
 import { acceptListUpdate } from './actions'
@@ -25,10 +25,8 @@ export default function Updater(): null {
   const fetchList = useFetchListCallback()
   const fetchAllListsCallback = useCallback(() => {
     if (!isWindowVisible) return
-    DEFAULT_LIST_OF_LISTS.forEach((url) => {
-      // Skip validation on unsupported lists
-      const isUnsupportedList = UNSUPPORTED_LIST_URLS.includes(url)
-      fetchList(url, isUnsupportedList).catch((error) => console.debug('interval list fetching error', error))
+    DEFAULT_INACTIVE_LIST_URLS.forEach((url) => {
+      fetchList(url, false).catch((error) => console.debug('interval list fetching error', error))
     })
   }, [fetchList, isWindowVisible])
 
@@ -36,7 +34,7 @@ export default function Updater(): null {
   useInterval(fetchAllListsCallback, provider ? ms(`10m`) : null)
 
   useEffect(() => {
-    if (!rehydrated) return // loaded lists will not be available until state is rehydrated
+    if (!rehydrated || !lists) return // loaded lists will not be available until state is rehydrated
 
     // whenever a list is not loaded and not loading, try again to load it
     Object.keys(lists).forEach((listUrl) => {
@@ -45,7 +43,7 @@ export default function Updater(): null {
         fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
       }
     })
-    UNSUPPORTED_LIST_URLS.forEach((listUrl) => {
+    DEFAULT_INACTIVE_LIST_URLS.forEach((listUrl) => {
       const list = lists[listUrl]
       if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
         fetchList(listUrl, /* isUnsupportedList= */ true).catch((error) =>
@@ -57,6 +55,8 @@ export default function Updater(): null {
 
   // automatically update lists for every version update
   useEffect(() => {
+    if (!rehydrated || !lists) return // loaded lists will not be available until state is rehydrated
+
     Object.keys(lists).forEach((listUrl) => {
       const list = lists[listUrl]
       if (list.current && list.pendingUpdate) {
@@ -71,7 +71,7 @@ export default function Updater(): null {
         }
       }
     })
-  }, [dispatch, lists])
+  }, [dispatch, lists, rehydrated])
 
   return null
 }

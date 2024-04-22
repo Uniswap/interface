@@ -41,7 +41,6 @@ import { BackupScreen } from 'src/screens/Onboarding/BackupScreen'
 import { CloudBackupPasswordConfirmScreen } from 'src/screens/Onboarding/CloudBackupPasswordConfirmScreen'
 import { CloudBackupPasswordCreateScreen } from 'src/screens/Onboarding/CloudBackupPasswordCreateScreen'
 import { CloudBackupProcessingScreen } from 'src/screens/Onboarding/CloudBackupProcessingScreen'
-import { EditNameScreen } from 'src/screens/Onboarding/EditNameScreen'
 import { LandingScreen } from 'src/screens/Onboarding/LandingScreen'
 import { ManualBackupScreen } from 'src/screens/Onboarding/ManualBackupScreen'
 import { NotificationsSetupScreen } from 'src/screens/Onboarding/NotificationsSetupScreen'
@@ -64,8 +63,8 @@ import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
 import { Icons, useDeviceInsets, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
-import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
@@ -249,7 +248,6 @@ export function OnboardingStackNavigator(): JSX.Element {
           name={UnitagScreens.ChooseProfilePicture}
           options={{ ...TransitionPresets.ModalFadeTransition }}
         />
-        <OnboardingStack.Screen component={EditNameScreen} name={OnboardingScreens.EditName} />
         <OnboardingStack.Screen component={BackupScreen} name={OnboardingScreens.Backup} />
         <OnboardingStack.Screen
           component={NotificationsSetupScreen}

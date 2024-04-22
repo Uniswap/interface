@@ -11,7 +11,7 @@ import React from 'react'
 import { Readable } from 'stream'
 import { toBeVisible } from 'test-utils/matchers'
 import { mocked } from 'test-utils/mocked'
-import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TextDecoder, TextEncoder } from 'util'
 
 // Sets origin to the production origin, because some tests depend on this.
@@ -119,7 +119,7 @@ jest.mock('state/routing/quickRouteSlice', () => {
   }
 })
 
-jest.mock('uniswap/src/features/statsig/hooks')
+jest.mock('uniswap/src/features/gating/hooks')
 
 // Mocks are configured to reset between tests (by CRA), so they must be set in a beforeEach.
 beforeEach(() => {

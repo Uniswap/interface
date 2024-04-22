@@ -100,7 +100,7 @@ export function getChainUI(chainId: ChainId, darkMode: boolean): ChainUI | undef
   }
 }
 
-export const getDefaultBorderRadius = (size: number) => size / 2 - 4
+const getDefaultBorderRadius = (size: number) => size / 2 - 4
 
 type ChainLogoProps = {
   chainId: ChainId

@@ -8,8 +8,8 @@ import { ApplicationModal } from 'state/application/reducer'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { Statsig } from 'uniswap/src/features/statsig/sdk/statsig'
-import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
+import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { isBetaEnv, isDevEnv } from 'uniswap/src/utils/env'
 
 const Box = styled.div`
   position: fixed;
@@ -72,8 +72,8 @@ export default function DevFlagsBox() {
       {isOpen ? (
         <RowBetween>
           <ThemedText.SubHeader>
-            {isDevelopmentEnv() && 'Local Overrides'}
-            {isStagingEnv() && 'Staging Overrides'}
+            {isDevEnv() && 'Local Overrides'}
+            {isBetaEnv() && 'Staging Overrides'}
           </ThemedText.SubHeader>
           <MouseoverTooltip
             size={TooltipSize.Small}

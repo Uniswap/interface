@@ -10,7 +10,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { fiatOnRampAggregatorApi, fiatOnRampApi } from 'wallet/src/features/fiatOnRamp/api'
 import { importAccountSagaName } from 'wallet/src/features/wallet/import/importAccountSaga'
 import { createStore } from 'wallet/src/state'
-import { RootReducerNames } from 'wallet/src/state/reducer'
+import { RootReducerNames, sharedPersistedStateWhitelist } from 'wallet/src/state/reducer'
 import { MobileState, ReducerNames, mobileReducer } from './reducer'
 import { mobileSaga } from './saga'
 
@@ -54,21 +54,12 @@ const rtkQueryErrorLogger: Middleware = () => (next) => (action: PayloadAction<u
 }
 
 const whitelist: Array<ReducerNames | RootReducerNames> = [
-  'appearanceSettings',
-  'behaviorHistory',
+  ...sharedPersistedStateWhitelist,
   'biometricSettings',
-  'favorites',
-  'notifications',
   'passwordLockout',
-  'searchHistory',
   'telemetry',
-  'tokens',
-  'transactions',
   'tweaks',
-  'wallet',
   'cloudBackup',
-  'languageSettings',
-  'fiatCurrencySettings',
 ]
 
 export const persistConfig = {

@@ -1,4 +1,5 @@
 import { NftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { NFTKeyToVisibility } from 'wallet/src/features/favorites/slice'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 
 export function formatNftItems(data: NftsTabQuery | undefined): NFTItem[] | undefined {
@@ -36,4 +37,23 @@ export const getNFTAssetKey = (address: Address, token_id: string): string => {
   // Backend returns both checksummed and non-checksummed addresses
   // so we need to lowercase it to be able to compare them
   return `nftItem.${address.toLowerCase()}.${token_id}`
+}
+
+export const getIsNftHidden = ({
+  contractAddress,
+  tokenId,
+  isSpam,
+  nftVisibility,
+}: {
+  contractAddress?: string
+  tokenId?: string
+  isSpam?: boolean
+  nftVisibility: NFTKeyToVisibility
+}): boolean => {
+  if (!contractAddress || !tokenId) {
+    return true
+  }
+  const nftKey = getNFTAssetKey(contractAddress, tokenId)
+  const nftIsVisible = !!nftVisibility[nftKey]?.isVisible
+  return isSpam || !nftIsVisible
 }

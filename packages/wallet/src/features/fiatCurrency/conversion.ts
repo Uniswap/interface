@@ -3,8 +3,8 @@ import {
   Currency,
   useConvertQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
-import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { FiatNumberType } from 'utilities/src/format/types'
 import { PollingInterval } from 'wallet/src/constants/misc'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'

@@ -198,7 +198,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
           <OutputCurrencyContainer>
             <OutputCurrencyButton onClick={() => setCurrencySelectModalField('outputCurrency')}>
               <Row gap="xs" width="unset">
-                <CurrencyLogo currency={quoteCurrency} size="16px" />
+                <CurrencyLogo currency={quoteCurrency} size={16} />
                 <ThemedText.BodyPrimary className="token-symbol-container">
                   {formatCurrencySymbol(quoteCurrency)}
                 </ThemedText.BodyPrimary>

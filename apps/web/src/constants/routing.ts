@@ -1,6 +1,9 @@
 // a list of tokens by chain
 import { ChainId, Currency, Token, WETH9 } from '@uniswap/sdk-core'
 
+import { getNativeLogoURI, getTokenLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import {
   ARB,
   BTC_BSC,
@@ -52,7 +55,7 @@ type ChainTokenList = {
 }
 
 type ChainCurrencyList = {
-  readonly [chainId: number]: Currency[]
+  readonly [chainId: number]: CurrencyInfo[]
 }
 
 const WRAPPED_NATIVE_CURRENCIES_ONLY: ChainTokenList = Object.fromEntries(
@@ -60,6 +63,18 @@ const WRAPPED_NATIVE_CURRENCIES_ONLY: ChainTokenList = Object.fromEntries(
     .map(([key, value]) => [key, [value]])
     .filter(Boolean)
 )
+
+function buildCurrencyInfo(commonBase: Currency): CurrencyInfo {
+  const logoUrl = commonBase.isNative
+    ? getNativeLogoURI(commonBase.chainId)
+    : getTokenLogoURI(commonBase.address, commonBase.chainId)
+  return {
+    currency: commonBase,
+    logoUrl,
+    safetyLevel: SafetyLevel.Verified,
+    isSpam: false,
+  } as CurrencyInfo
+}
 
 /**
  * Shows up in the currency select for swap and add liquidity
@@ -72,10 +87,13 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT,
     WBTC,
     WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET] as Token,
-  ],
-  [ChainId.GOERLI]: [nativeOnChain(ChainId.GOERLI), WRAPPED_NATIVE_CURRENCY[ChainId.GOERLI] as Token],
-  [ChainId.SEPOLIA]: [nativeOnChain(ChainId.SEPOLIA), WRAPPED_NATIVE_CURRENCY[ChainId.SEPOLIA] as Token],
-
+  ].map(buildCurrencyInfo),
+  [ChainId.GOERLI]: [nativeOnChain(ChainId.GOERLI), WRAPPED_NATIVE_CURRENCY[ChainId.GOERLI] as Token].map(
+    buildCurrencyInfo
+  ),
+  [ChainId.SEPOLIA]: [nativeOnChain(ChainId.SEPOLIA), WRAPPED_NATIVE_CURRENCY[ChainId.SEPOLIA] as Token].map(
+    buildCurrencyInfo
+  ),
   [ChainId.ARBITRUM_ONE]: [
     nativeOnChain(ChainId.ARBITRUM_ONE),
     ARB,
@@ -84,12 +102,12 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_ARBITRUM_ONE,
     WBTC_ARBITRUM_ONE,
     WRAPPED_NATIVE_CURRENCY[ChainId.ARBITRUM_ONE] as Token,
-  ],
+  ].map(buildCurrencyInfo),
   [ChainId.ARBITRUM_GOERLI]: [
     nativeOnChain(ChainId.ARBITRUM_GOERLI),
     WRAPPED_NATIVE_CURRENCY[ChainId.ARBITRUM_GOERLI] as Token,
     USDC_ARBITRUM_GOERLI,
-  ],
+  ].map(buildCurrencyInfo),
 
   [ChainId.OPTIMISM]: [
     nativeOnChain(ChainId.OPTIMISM),
@@ -99,11 +117,15 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_OPTIMISM,
     WBTC_OPTIMISM,
     WETH9[ChainId.OPTIMISM],
-  ],
-  [ChainId.OPTIMISM_GOERLI]: [nativeOnChain(ChainId.OPTIMISM_GOERLI), USDC_OPTIMISM_GOERLI],
+  ].map(buildCurrencyInfo),
+  [ChainId.OPTIMISM_GOERLI]: [nativeOnChain(ChainId.OPTIMISM_GOERLI), USDC_OPTIMISM_GOERLI].map(buildCurrencyInfo),
 
-  [ChainId.BASE]: [nativeOnChain(ChainId.BASE), WRAPPED_NATIVE_CURRENCY[ChainId.BASE] as Token, USDC_BASE],
-  [ChainId.BLAST]: [nativeOnChain(ChainId.BLAST), WRAPPED_NATIVE_CURRENCY[ChainId.BLAST] as Token],
+  [ChainId.BASE]: [nativeOnChain(ChainId.BASE), WRAPPED_NATIVE_CURRENCY[ChainId.BASE] as Token, USDC_BASE].map(
+    buildCurrencyInfo
+  ),
+  [ChainId.BLAST]: [nativeOnChain(ChainId.BLAST), WRAPPED_NATIVE_CURRENCY[ChainId.BLAST] as Token].map(
+    buildCurrencyInfo
+  ),
 
   [ChainId.POLYGON]: [
     nativeOnChain(ChainId.POLYGON),
@@ -112,18 +134,25 @@ export const COMMON_BASES: ChainCurrencyList = {
     DAI_POLYGON,
     USDT_POLYGON,
     WBTC_POLYGON,
-  ],
+  ].map(buildCurrencyInfo),
   [ChainId.POLYGON_MUMBAI]: [
     nativeOnChain(ChainId.POLYGON_MUMBAI),
     WRAPPED_NATIVE_CURRENCY[ChainId.POLYGON_MUMBAI] as Token,
     USDC_POLYGON_MUMBAI,
     WETH_POLYGON_MUMBAI,
-  ],
+  ].map(buildCurrencyInfo),
 
-  [ChainId.CELO]: [nativeOnChain(ChainId.CELO), CEUR_CELO, CUSD_CELO, PORTAL_ETH_CELO, USDC_CELO, WBTC_CELO],
-  [ChainId.CELO_ALFAJORES]: [nativeOnChain(ChainId.CELO_ALFAJORES), CUSD_CELO_ALFAJORES, CEUR_CELO_ALFAJORES],
+  [ChainId.CELO]: [nativeOnChain(ChainId.CELO), CEUR_CELO, CUSD_CELO, PORTAL_ETH_CELO, USDC_CELO, WBTC_CELO].map(
+    buildCurrencyInfo
+  ),
 
-  [ChainId.BNB]: [nativeOnChain(ChainId.BNB), DAI_BSC, USDC_BSC, USDT_BSC, ETH_BSC, BTC_BSC, BUSD_BSC],
+  [ChainId.CELO_ALFAJORES]: [nativeOnChain(ChainId.CELO_ALFAJORES), CUSD_CELO_ALFAJORES, CEUR_CELO_ALFAJORES].map(
+    buildCurrencyInfo
+  ),
+
+  [ChainId.BNB]: [nativeOnChain(ChainId.BNB), DAI_BSC, USDC_BSC, USDT_BSC, ETH_BSC, BTC_BSC, BUSD_BSC].map(
+    buildCurrencyInfo
+  ),
 
   [ChainId.AVALANCHE]: [
     nativeOnChain(ChainId.AVALANCHE),
@@ -131,7 +160,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDC_AVALANCHE,
     USDT_AVALANCHE,
     WETH_AVALANCHE,
-  ],
+  ].map(buildCurrencyInfo),
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -155,6 +184,7 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     WETH_AVALANCHE,
   ],
 }
+
 export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {
   [ChainId.MAINNET]: [
     [

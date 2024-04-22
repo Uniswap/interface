@@ -34,13 +34,11 @@ import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
-import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { Switch } from 'wallet/src/components/buttons/Switch'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useENS } from 'wallet/src/features/ens/useENS'
-import { useUnitagByAddress } from 'wallet/src/features/unitags/hooks'
 import {
   EditAccountAction,
   editAccountActions,
@@ -74,9 +72,8 @@ export function SettingsWallet({
   const [notificationSwitchEnabled, setNotificationSwitchEnabled] = useState<boolean>(
     notificationsEnabledOnFirebase
   )
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
 
-  const showEditProfile = unitagsFeatureFlagEnabled && !readonly
+  const showEditProfile = !readonly
 
   useEffect(() => {
     // If the user deletes the account while on this screen, go back

@@ -4,9 +4,8 @@ import { SupportArticleURL } from 'constants/supportArticles'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
+import { Text } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
-import { Text } from 'ui/src/components/text/Text'
-import { iconSizes } from 'ui/src/theme'
 
 const Container = styled.div`
   height: 100%;
@@ -33,7 +32,7 @@ export function OutOfSyncWarning() {
       <Row gap="md" height="100%">
         <StyledColumn>
           <IconContainer>
-            <AlertTriangle color="$statusCritical" size={iconSizes.icon20} />
+            <AlertTriangle color="$statusCritical" size="$icon.20" />
           </IconContainer>
         </StyledColumn>
         <StyledColumn gap="xs">

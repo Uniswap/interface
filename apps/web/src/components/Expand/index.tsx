@@ -22,22 +22,28 @@ const Content = styled(Column)`
   padding-top: ${({ theme }) => theme.grids.md};
 `
 
+const Wrapper = styled(Column)<{ $padding?: string }>`
+  padding: ${({ $padding }) => $padding};
+`
+
 export default function Expand({
   header,
   button,
   children,
   testId,
   isOpen,
+  padding,
   onToggle,
 }: PropsWithChildren<{
   header: ReactElement
   button: ReactElement
   testId?: string
   isOpen: boolean
+  padding?: string
   onToggle: () => void
 }>) {
   return (
-    <Column>
+    <Wrapper $padding={padding}>
       <RowBetween>
         {header}
         <ButtonContainer data-testid={testId} onClick={onToggle} aria-expanded={isOpen}>
@@ -48,6 +54,6 @@ export default function Expand({
       <AnimatedDropdown open={isOpen}>
         <Content gap="md">{children}</Content>
       </AnimatedDropdown>
-    </Column>
+    </Wrapper>
   )
 }

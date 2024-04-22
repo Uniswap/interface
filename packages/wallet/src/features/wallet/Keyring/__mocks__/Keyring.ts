@@ -9,6 +9,10 @@ const privateKeys: { [id: string]: string } = {}
 const password = faker.word.noun()
 
 class MockKeyring implements IKeyring {
+  isUnlocked(): Promise<boolean> {
+    return Promise.resolve(false)
+  }
+
   unlock(p: string): Promise<boolean> {
     return Promise.resolve(password === p)
   }

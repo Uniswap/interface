@@ -1,5 +1,6 @@
+import { OrderActivity } from 'state/signatures/types'
 import { MockExpiredUniswapXOrder, MockFilledUniswapXOrder, MockOpenUniswapXOrder } from './fixtures'
-import { OrderActivity, parseRemote } from './parseRemote'
+import { parseRemote } from './parseRemote'
 
 describe('parseRemote', () => {
   it('should parse open UniswapX order', () => {

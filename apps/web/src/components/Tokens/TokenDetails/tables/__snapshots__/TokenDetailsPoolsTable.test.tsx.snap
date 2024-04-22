@@ -43,11 +43,6 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   gap: 8px;
 }
 
-.c12 {
-  display: inline-block;
-  height: inherit;
-}
-
 .c9 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
@@ -64,18 +59,43 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c0 {
+.c22 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c22 img {
+  width: 14px;
+  height: 28px;
+  object-fit: cover;
+}
+
+.c22 img:first-child {
+  border-radius: 14px 0 0 14px;
+  object-position: 0 0;
+}
+
+.c22 img:last-child {
+  border-radius: 0 14px 14px 0;
+  object-position: 100% 0;
+}
+
+.c23 {
+  width: 14px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.c21 {
+  position: relative;
+  top: 0;
+  left: 0;
 }
 
 .c29 {
@@ -92,6 +112,25 @@ exports[`TDPPoolTable renders data filled state 1`] = `
 .c30 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c12 {
+  display: inline-block;
+  height: inherit;
 }
 
 .c1 {
@@ -367,45 +406,6 @@ exports[`TDPPoolTable renders data filled state 1`] = `
   text-overflow: ellipsis;
 }
 
-.c21 {
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c22 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c22 img {
-  width: 14px;
-  height: 28px;
-  object-fit: cover;
-}
-
-.c22 img:first-child {
-  border-radius: 14px 0 0 14px;
-  object-position: 0 0;
-}
-
-.c22 img:last-child {
-  border-radius: 0 14px 14px 0;
-  object-position: 100% 0;
-}
-
-.c23 {
-  width: 14px;
-  height: 28px;
-  border-radius: 50%;
-}
-
 .c26 {
   padding: 2px 6px;
   background: #F9F9F9;
@@ -627,7 +627,7 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                             <img
                               class="c23"
                               size="28"
-                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                              src="ethereum-logo.png"
                             />
                           </div>
                         </div>
@@ -755,11 +755,6 @@ exports[`TDPPoolTable renders error state 1`] = `
   justify-content: flex-start;
 }
 
-.c12 {
-  display: inline-block;
-  height: inherit;
-}
-
 .c9 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
@@ -776,35 +771,6 @@ exports[`TDPPoolTable renders error state 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c19 {
-  border-radius: 12px;
-  border-radius: 12px;
-  height: 24px;
-  width: 50%;
-  width: 50%;
-  -webkit-animation: fAQEyV 1.5s infinite;
-  animation: fAQEyV 1.5s infinite;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
-  will-change: background-position;
-  background-size: 400%;
-}
-
 .c25 {
   height: 16px;
   width: 16px;
@@ -819,6 +785,20 @@ exports[`TDPPoolTable renders error state 1`] = `
 .c26 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c21 {
@@ -849,6 +829,11 @@ exports[`TDPPoolTable renders error state 1`] = `
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   border: 1px #22222212 solid;
   border-radius: 20px;
+}
+
+.c12 {
+  display: inline-block;
+  height: inherit;
 }
 
 .c1 {
@@ -1022,6 +1007,21 @@ exports[`TDPPoolTable renders error state 1`] = `
 
 .c15 {
   color: #222222;
+}
+
+.c19 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
 }
 
 .c8 {
@@ -1925,46 +1925,12 @@ exports[`TDPPoolTable renders loading state 1`] = `
   justify-content: flex-start;
 }
 
-.c12 {
-  display: inline-block;
-  height: inherit;
-}
-
 .c9 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c19 {
-  border-radius: 12px;
-  border-radius: 12px;
-  height: 24px;
-  width: 50%;
-  width: 50%;
-  -webkit-animation: fAQEyV 1.5s infinite;
-  animation: fAQEyV 1.5s infinite;
-  -webkit-animation-fill-mode: both;
-  animation-fill-mode: both;
-  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
-  will-change: background-position;
-  background-size: 400%;
 }
 
 .c23 {
@@ -1981,6 +1947,25 @@ exports[`TDPPoolTable renders loading state 1`] = `
 .c24 {
   -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c12 {
+  display: inline-block;
+  height: inherit;
 }
 
 .c1 {
@@ -2153,6 +2138,21 @@ exports[`TDPPoolTable renders loading state 1`] = `
 
 .c15 {
   color: #222222;
+}
+
+.c19 {
+  border-radius: 12px;
+  border-radius: 12px;
+  height: 24px;
+  width: 50%;
+  width: 50%;
+  -webkit-animation: fAQEyV 1.5s infinite;
+  animation: fAQEyV 1.5s infinite;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
+  will-change: background-position;
+  background-size: 400%;
 }
 
 .c8 {

@@ -9,17 +9,21 @@ import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/t
 import { ModalName } from 'wallet/src/telemetry/constants'
 
 export function NetworkFeeWarning({
+  gasFeeHighRelativeToValue,
   children,
   tooltipTrigger,
   placement = 'top',
 }: PropsWithChildren<{
+  gasFeeHighRelativeToValue?: boolean
   tooltipTrigger?: WarningTooltipProps['trigger']
   placement?: WarningTooltipProps['placement']
 }>): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
-  const caption = t('swap.warning.networkFee.message')
+  const text = gasFeeHighRelativeToValue
+    ? t('swap.warning.networkFee.highRelativeToValue')
+    : t('swap.warning.networkFee.message')
 
   return (
     <WarningInfo
@@ -31,14 +35,25 @@ export function NetworkFeeWarning({
       }
       modalProps={{
         backgroundIconColor: colors.surface2.get(),
-        caption,
+        caption: text,
         closeText: t('common.button.close'),
-        icon: <Icons.Gas color="$neutral2" size="$icon.24" />,
+        icon: (
+          <Icons.Gas
+            color={gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral2'}
+            size="$icon.24"
+          />
+        ),
         modalName: ModalName.NetworkFeeInfo,
         severity: WarningSeverity.None,
         title: t('transaction.networkCost.label'),
       }}
-      tooltipProps={{ text: caption, placement }}
+      tooltipProps={{
+        text,
+        placement,
+        icon: gasFeeHighRelativeToValue ? (
+          <Icons.Gas color="$statusCritical" size="$icon.16" />
+        ) : null,
+      }}
       trigger={tooltipTrigger}>
       {children}
     </WarningInfo>

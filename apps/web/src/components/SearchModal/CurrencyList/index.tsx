@@ -187,7 +187,7 @@ export function CurrencyRow({
           <Column>
             <CurrencyLogo
               currency={currency}
-              size="36px"
+              size={36}
               style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}
             />
           </Column>

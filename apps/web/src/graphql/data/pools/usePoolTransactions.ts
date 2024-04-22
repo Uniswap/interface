@@ -10,6 +10,8 @@ import {
   useV2PairTransactionsQuery,
   useV3PoolTransactionsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export enum PoolTableTransactionType {
   BUY = 'Buy',
@@ -54,6 +56,7 @@ export function usePoolTransactions(
   protocolVersion: ProtocolVersion = ProtocolVersion.V3,
   first = PoolTransactionDefaultQuerySize
 ) {
+  const v2ExploreEnabled = useFeatureFlag(FeatureFlags.V2Explore)
   const {
     loading: loadingV3,
     error: errorV3,
@@ -69,8 +72,8 @@ export function usePoolTransactions(
     data: dataV2,
     fetchMore: fetchMoreV2,
   } = useV2PairTransactionsQuery({
-    variables: { first, address },
-    skip: protocolVersion !== ProtocolVersion.V2 || chainId !== ChainId.MAINNET,
+    variables: { first, chain: chainIdToBackendName(chainId), address },
+    skip: protocolVersion !== ProtocolVersion.V2 || (chainId !== ChainId.MAINNET && !v2ExploreEnabled),
   })
   const loadingMore = useRef(false)
   const { transactions, loading, fetchMore, error } =

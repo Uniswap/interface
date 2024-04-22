@@ -8,14 +8,12 @@ export enum FeatureFlags {
   // Shared
   CurrencyConversion,
   UniconsV2,
-  Unitags,
 
   // Wallet
   ExtensionOnboarding,
   FeedTab,
   ForAggregator,
   CexTransfers,
-  GatewayDNSUpdateMobile,
   LanguageSelection,
   MevBlocker,
   PortionFields,
@@ -36,6 +34,7 @@ export enum FeatureFlags {
   LimitsEnabled,
   LimitsFees,
   MultichainUX,
+  MultipleRoutingOptions,
   QuickRouteMainnet,
   Realtime,
   SendEnabled,
@@ -43,6 +42,7 @@ export enum FeatureFlags {
   UniswapXSyntheticQuote,
   UniswapXv2,
   V2Everywhere,
+  V2Explore,
   // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
   OutageBannerArbitrum,
   OutageBannerOptimism,
@@ -62,6 +62,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.LimitsEnabled, 'limits_enabled'],
   [FeatureFlags.LimitsFees, 'limits_fees'],
   [FeatureFlags.MultichainUX, 'multichain_ux'],
+  [FeatureFlags.MultipleRoutingOptions, 'multiple_routing_options'],
   [FeatureFlags.QuickRouteMainnet, 'enable_quick_route_mainnet'],
   [FeatureFlags.Realtime, 'realtime'],
   [FeatureFlags.SendEnabled, 'swap_send'],
@@ -69,6 +70,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.UniswapXSyntheticQuote, 'uniswapx_synthetic_quote'],
   [FeatureFlags.UniswapXv2, 'uniswapx_v2'],
   [FeatureFlags.V2Everywhere, 'v2_everywhere'],
+  [FeatureFlags.V2Explore, 'v2_explore'],
   // TODO(WEB-3625): Remove these once we have a generalized system for outage banners.
   [FeatureFlags.OutageBannerArbitrum, 'outage_banner_feb_2024_arbitrum'],
   [FeatureFlags.OutageBannerOptimism, 'outage_banner_feb_2024_optimism'],
@@ -79,13 +81,11 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   // Shared
   [FeatureFlags.CurrencyConversion, 'currency_conversion'],
   [FeatureFlags.UniconsV2, 'unicons-v2'],
-  [FeatureFlags.Unitags, 'unitags'],
   // Wallet Specific
   [FeatureFlags.ExtensionOnboarding, 'extension-onboarding'],
   [FeatureFlags.FeedTab, 'feed-tab'],
   [FeatureFlags.ForAggregator, 'for-aggregator'],
   [FeatureFlags.CexTransfers, 'cex-transfers'],
-  [FeatureFlags.GatewayDNSUpdateMobile, 'cloudflare-gateway'],
   [FeatureFlags.LanguageSelection, 'language-selection'],
   [FeatureFlags.MevBlocker, 'mev-blocker'],
   [FeatureFlags.PortionFields, 'portion-fields'],

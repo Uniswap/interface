@@ -19,13 +19,13 @@ import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
-import { Text } from 'ui/src/components/text/Text'
+import { Text } from 'ui/src'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ButtonGray } from '../Button'
-import DoubleCurrencyLogo from '../DoubleLogo'
 import { RowBetween, RowFixed } from '../Row'
 import CurrencySearchModal from '../SearchModal/CurrencySearchModal'
 import { FiatValue } from './FiatValue'
@@ -347,10 +347,10 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                     <RowFixed>
                       {pair ? (
                         <span style={{ marginRight: '0.5rem' }}>
-                          <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+                          <DoubleCurrencyLogo currencies={[pair.token0, pair.token1]} size={24} />
                         </span>
                       ) : currency ? (
-                        <CurrencyLogo style={{ marginRight: '2px' }} currency={currency} size="24px" />
+                        <CurrencyLogo style={{ marginRight: '2px' }} currency={currency} size={24} />
                       ) : null}
                       {pair ? (
                         <StyledTokenName className="pair-name-container">

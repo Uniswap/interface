@@ -11,8 +11,8 @@ import {
   useUniconColors,
 } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
-import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import QRCode from 'wallet/src/components/QRCodeScanner/custom-qr-code-generator'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'

@@ -28,7 +28,7 @@ export default function Tokens() {
   const hideSpam = useAtomValue(hideSpamAtom)
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
-  const { data } = useTokenBalancesQuery({ skip: !accountDrawerOpen })
+  const { data } = useTokenBalancesQuery({ cacheOnly: !accountDrawerOpen })
 
   const tokenBalances = data?.portfolios?.[0]?.tokenBalances
 
@@ -105,7 +105,7 @@ function TokenRow({
       properties={{ chain_id: currency.chainId, token_name: token?.name, address: token?.address }}
     >
       <PortfolioRow
-        left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size="40px" />}
+        left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size={40} />}
         title={<TokenNameText>{token?.name}</TokenNameText>}
         descriptor={
           <TokenBalanceText>

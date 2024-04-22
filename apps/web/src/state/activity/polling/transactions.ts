@@ -9,8 +9,8 @@ import { useAppDispatch } from 'state/hooks'
 import { isPendingTx, useMultichainTransactions, useTransactionRemover } from 'state/transactions/hooks'
 import { checkedTransaction } from 'state/transactions/reducer'
 import { TransactionDetails } from 'state/transactions/types'
-import { FeatureFlags } from 'uniswap/src/features/statsig/flags'
-import { useFeatureFlag } from 'uniswap/src/features/statsig/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 import { OnActivityUpdate } from '../types'
 import { CanceledError, RetryOptions, RetryableError, retry } from './retry'
@@ -120,9 +120,9 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
             fastForwardBlockNumber(receipt.blockNumber)
             onActivityUpdate({
               type: 'transaction',
-              originalTransaction: tx,
-              receipt,
               chainId,
+              original: tx,
+              receipt,
             })
           })
           .catch((error) => {

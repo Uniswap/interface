@@ -1,5 +1,5 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { URADutchOrderQuoteResponse } from 'state/routing/types'
+import { URAQuoteResponse } from 'state/routing/types'
 import { USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
@@ -120,7 +120,7 @@ describe('Swap with fees', () => {
     it('displays UniswapX fee in UI', () => {
       cy.visit('/swap')
 
-      cy.fixture('uniswapx/feeQuote.json').then((fixture: URADutchOrderQuoteResponse) => {
+      cy.fixture('uniswapx/feeQuote.json').then((fixture: URAQuoteResponse) => {
         // Intercept the trade quote
         cy.intercept({ url: 'https://interface.gateway.uniswap.org/v2/quote' }, (req) => {
           // Avoid intercepting stablecoin pricing fetches

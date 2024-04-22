@@ -1,59 +1,16 @@
+import 'test-utils/tokens/mocks'
+
 import { BigNumber } from '@ethersproject/bignumber'
 import { CallState } from '@uniswap/redux-multicall'
 import { renderHook } from 'test-utils/render'
 import { PositionDetails } from 'types/position'
 
-import { ChainId, Token, WETH9 } from '@uniswap/sdk-core'
-import { DAI } from 'constants/tokens'
-import { useDefaultActiveTokens } from 'hooks/Tokens'
 import { mocked } from 'test-utils/mocked'
 import { useFilterPossiblyMaliciousPositions } from './useFilterPossiblyMaliciousPositions'
 import { useTokenContractsConstant } from './useTokenContractsConstant'
 
 jest.mock('./useTokenContractsConstant')
-jest.mock('hooks/Tokens')
 
-const mockUseTokenContractsConstant = useTokenContractsConstant as jest.MockedFunction<typeof useTokenContractsConstant>
-
-beforeEach(() => {
-  mockUseTokenContractsConstant.mockReturnValue([])
-  mocked(useDefaultActiveTokens).mockImplementation(() => ({
-    '0x4200000000000000000000000000000000000006': {
-      chainId: 10,
-      address: '0x4200000000000000000000000000000000000006',
-      name: 'Wrapped Ether',
-      symbol: 'WETH',
-      decimals: 18,
-      logoURI: 'https://ethereum-optimism.github.io/data/WETH/logo.png',
-      extensions: {},
-      isNative: false,
-      isToken: true,
-      equals(other) {
-        return !other.isNative && other?.address?.toLowerCase() === this.address.toLowerCase()
-      },
-      wrapped: WETH9[ChainId.MAINNET],
-      sortsBefore: (other) => other.address < WETH9[ChainId.MAINNET].address,
-    } as Token,
-    '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1': {
-      chainId: 10,
-      address: '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1',
-      name: 'Dai Stablecoin',
-      symbol: 'DAI',
-      decimals: 18,
-      logoURI: 'https://ethereum-optimism.github.io/data/DAI/logo.svg',
-      extensions: {
-        optimismBridgeAddress: '0x467194771dAe2967Aef3ECbEDD3Bf9a310C76C65',
-      },
-      isNative: false,
-      isToken: true,
-      equals(other) {
-        return !other.isNative && other?.address?.toLowerCase() === this.address.toLowerCase()
-      },
-      wrapped: DAI as Token,
-      sortsBefore: (other) => other.address < DAI.address,
-    } as Token,
-  }))
-})
 const positions: PositionDetails[] = [
   {
     tokenId: BigNumber.from('0x02'),
@@ -120,22 +77,16 @@ const unsafeReturnValue: CallState[] = [
 ]
 
 describe('useFilterPossiblyMaliciousPositions', () => {
+  beforeEach(() => {
+    mocked(useTokenContractsConstant).mockReturnValue([])
+  })
   it('filters out unsafe positions', async () => {
-    mockUseTokenContractsConstant.mockReturnValue(unsafeReturnValue)
+    mocked(useTokenContractsConstant).mockReturnValue(unsafeReturnValue)
 
     const { result } = renderHook(() => useFilterPossiblyMaliciousPositions(positions))
 
     expect(result.current.some((position) => position.token1 === '0xB85C51F89788C1B3Bd4568f773e8FfB40cA587Bb')).toEqual(
       false
-    )
-  })
-  it('checks the chain for addresses not on the token list', async () => {
-    mockUseTokenContractsConstant.mockReturnValue(unsafeReturnValue)
-    renderHook(() => useFilterPossiblyMaliciousPositions(positions))
-
-    expect(mockUseTokenContractsConstant).toHaveBeenCalledWith(
-      ['0x75E5509029c85fE08e4934B1275c5575aA5538bE', '0xB85C51F89788C1B3Bd4568f773e8FfB40cA587Bb'],
-      'symbol'
     )
   })
 })

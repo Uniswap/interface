@@ -154,7 +154,7 @@ export const TokenDetailsHeader = () => {
   return (
     <>
       <TokenNameCell>
-        <PortfolioLogo currencies={[currency]} chainId={currency.chainId} size="32px" />
+        <PortfolioLogo currencies={[currency]} chainId={currency.chainId} size={32} />
         <TokenTitle>
           <TokenName>{currency.name ?? <Trans>Name not found</Trans>}</TokenName>
           <TokenSymbol>{tokenSymbolName}</TokenSymbol>

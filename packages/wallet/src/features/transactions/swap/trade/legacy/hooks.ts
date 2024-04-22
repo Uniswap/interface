@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { MaxUint256 } from '@ethersproject/constants'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
@@ -5,7 +6,7 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { FlatFeeOptions, UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { FeeOptions } from '@uniswap/v3-sdk'
 import { providers } from 'ethers'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20 } from 'uniswap/src/abis/types'
 import { logger } from 'utilities/src/logger/logger'
@@ -22,6 +23,7 @@ import { selectTransactions } from 'wallet/src/features/transactions/selectors'
 import { getBaseTradeAnalyticsPropertiesFromSwapInfo } from 'wallet/src/features/transactions/swap/analytics'
 import { NO_QUOTE_DATA } from 'wallet/src/features/transactions/swap/trade/legacy/api'
 import { useSimulatedGasLimit } from 'wallet/src/features/transactions/swap/trade/legacy/hooks/useSimulatedGasLimit'
+import { UNKNOWN_SIM_ERROR } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTransactionRequestInfo'
 import {
   ApprovalAction,
   TokenApprovalInfo,
@@ -40,6 +42,7 @@ import {
   TransactionType,
   WrapType,
 } from 'wallet/src/features/transactions/types'
+import { QuoteType } from 'wallet/src/features/transactions/utils'
 import { useContractManager, useProvider } from 'wallet/src/features/wallet/context'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
@@ -246,7 +249,11 @@ function useSwapTransactionRequest(
     tokenApprovalInfo?.action === ApprovalAction.Approve ||
     tokenApprovalInfo?.action === ApprovalAction.Permit2Approve
 
-  const { loading: simulatedGasLimitLoading, simulatedGasLimit } = simulatedGasEstimationInfo
+  const {
+    loading: simulatedGasLimitLoading,
+    simulatedGasLimit,
+    error: simulatedGasEstimationInfoError,
+  } = simulatedGasEstimationInfo
 
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   return useMemo(() => {
@@ -263,7 +270,11 @@ function useSwapTransactionRequest(
 
     // if the swap transaction does not require a Tenderly gas limit simulation, submit "undefined" here
     // so that ethers can calculate the gasLimit later using .estimateGas(tx) instead
-    const gasLimit = shouldFetchSimulatedGasLimit ? simulatedGasLimit : undefined
+    const gasLimit =
+      shouldFetchSimulatedGasLimit && !simulatedGasEstimationInfoError
+        ? simulatedGasLimit
+        : undefined
+
     const { calldata, value } = getSwapMethodParameters({
       permit2Signature,
       trade,
@@ -288,6 +299,7 @@ function useSwapTransactionRequest(
     permit2InfoLoading,
     permit2Signature,
     shouldFetchSimulatedGasLimit,
+    simulatedGasEstimationInfoError,
     simulatedGasLimit,
     simulatedGasLimitLoading,
     tokenApprovalInfo,
@@ -310,7 +322,8 @@ export function useSwapTxAndGasInfoLegacy({
   skipGasFeeQuery: boolean
 }): SwapTxAndGasInfo {
   const formatter = useLocalizationContext()
-  const { chainId, wrapType, currencyAmounts, currencies, exactCurrencyField } = derivedSwapInfo
+  const { chainId, wrapType, currencyAmounts, currencies, exactCurrencyField, trade } =
+    derivedSwapInfo
 
   const tokenApprovalInfo = useTokenApprovalInfo(
     chainId,
@@ -355,50 +368,70 @@ export function useSwapTxAndGasInfoLegacy({
 
   const swapGasFee = useTransactionGasFee(transactionRequest, GasSpeed.Urgent, skipGasFeeQuery)
 
+  const quote =
+    trade.trade?.quoteData?.quoteType === QuoteType.RoutingApi
+      ? trade.trade.quoteData.quote
+      : undefined
+
+  // Only log analytics events once per quote
+  const previousQuoteIdRef = useRef(quote?.quoteId)
+
   useEffect(() => {
+    if (!quote) {
+      return
+    }
+
     const {
       error: simulatedGasEstimateError,
       quoteId: simulatedGasEstimateQuoteId,
       requestId: simulatedGasEstimateRequestId,
     } = simulatedGasEstimationInfo
 
-    if (swapGasFee.error && simulatedGasEstimateError) {
-      if (shouldFetchSimulatedGasLimit) {
-        const simulationError =
-          typeof simulatedGasEstimateError === 'boolean'
-            ? new Error('Unknown gas simulation error')
-            : simulatedGasEstimateError
+    const currentQuoteId = quote.quoteId
+    const isNewQuote = previousQuoteIdRef.current !== currentQuoteId
 
-        const isNoQuoteDataError =
-          'message' in simulationError && simulationError.message === NO_QUOTE_DATA
+    if (!isNewQuote) {
+      return
+    }
 
-        // We do not want to log to Sentry if it's a liquidity error.
-        if (!isNoQuoteDataError) {
-          logger.error(simulationError, {
-            tags: { file: 'swap/hooks', function: 'useSwapTxAndGasInfo' },
-            extra: {
-              requestId: simulatedGasEstimateRequestId,
-              quoteId: simulatedGasEstimateQuoteId,
-            },
-          })
-        }
+    if (simulatedGasEstimateError && shouldFetchSimulatedGasLimit) {
+      previousQuoteIdRef.current = currentQuoteId
 
-        sendWalletAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
-          ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
-          error: simulationError.toString(),
-          txRequest: transactionRequest,
-        })
-      } else {
-        logger.error(swapGasFee.error, {
-          tags: { file: 'swap/hooks', function: 'useSwapTxAndGasInfo' },
-        })
+      const simulationError =
+        typeof simulatedGasEstimateError === 'boolean'
+          ? new Error(UNKNOWN_SIM_ERROR)
+          : simulatedGasEstimateError
 
-        sendWalletAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
-          ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
-          error: swapGasFee.error.toString(),
-          txRequest: transactionRequest,
-        })
+      sendWalletAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+        ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
+        error: simulationError.toString(),
+        txRequest: transactionRequest,
+      })
+
+      if ('message' in simulationError && simulationError.message === NO_QUOTE_DATA) {
+        // We do not want to log to Sentry if it's a liquidity error
+        return
       }
+
+      logger.error(simulationError, {
+        tags: { file: 'swap/hooks', function: 'useSwapTxAndGasInfo' },
+        extra: {
+          requestId: simulatedGasEstimateRequestId,
+          quoteId: simulatedGasEstimateQuoteId,
+        },
+      })
+    } else if (swapGasFee.error) {
+      previousQuoteIdRef.current = currentQuoteId
+
+      logger.error(swapGasFee.error, {
+        tags: { file: 'swap/hooks', function: 'useSwapTxAndGasInfo' },
+      })
+
+      sendWalletAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+        ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
+        error: swapGasFee.error.toString(),
+        txRequest: transactionRequest,
+      })
     }
   }, [
     derivedSwapInfo,
@@ -407,6 +440,7 @@ export function useSwapTxAndGasInfoLegacy({
     simulatedGasEstimationInfo,
     swapGasFee.error,
     formatter,
+    quote,
   ])
 
   const txRequestWithGasSettings = useMemo((): providers.TransactionRequest | undefined => {

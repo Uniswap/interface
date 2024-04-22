@@ -1,12 +1,15 @@
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { routingPreferencesAtom } from 'components/Settings/MultipleRoutingOptions'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { ClassicTrade, InterfaceTrade, QuoteMethod, RouterPreference, TradeState } from 'state/routing/types'
 import { usePreviewTrade } from 'state/routing/usePreviewTrade'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRouterPreference } from 'state/user/hooks'
-
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import useAutoRouterSupported from './useAutoRouterSupported'
 import useDebounce from './useDebounce'
 
@@ -85,6 +88,9 @@ export function useDebouncedTrade(
   }, [amountSpecified, chainId, otherCurrency])
 
   const [routerPreference] = useRouterPreference()
+  const multipleRouteOptionsEnabled = useFeatureFlag(FeatureFlags.MultipleRoutingOptions)
+  const multipleRouteOptionsRoutingPreference = useAtomValue(routingPreferencesAtom)
+  const routingPreference = multipleRouteOptionsEnabled ? multipleRouteOptionsRoutingPreference : undefined
 
   const skipBothFetches = !autoRouterSupported || isWrap
   const skipRoutingFetch = skipBothFetches || isDebouncing
@@ -104,8 +110,9 @@ export function useDebouncedTrade(
     tradeType,
     amountSpecified,
     otherCurrency,
-    routerPreferenceOverride ?? routerPreference,
+    routerPreferenceOverride ?? routingPreference?.router ?? routerPreference,
     account,
+    routingPreference?.protocols,
     inputTax,
     outputTax
   )

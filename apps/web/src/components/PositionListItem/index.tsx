@@ -2,7 +2,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Percent, Price, Token } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
 import Loader from 'components/Icons/LoadingSpinner'
 import { RowBetween } from 'components/Row'
@@ -19,6 +18,7 @@ import { HideSmall, SmallOnly, ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
 const LinkRow = styled(Link)`
@@ -210,7 +210,7 @@ export default function PositionListItem({
     <LinkRow to={positionSummaryLink}>
       <RowBetween>
         <PrimaryPositionIdData>
-          <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={18} margin />
+          <DoubleCurrencyLogo currencies={[currencyBase, currencyQuote]} size={18} />
           <ThemedText.SubHeader>
             &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
           </ThemedText.SubHeader>

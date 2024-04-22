@@ -1,13 +1,16 @@
-import { config } from 'uniswap/src/config'
-import { isAndroid } from 'uniswap/src/utils/platform'
+import { isDevEnv } from 'uniswap/src/utils/env'
+import { isAndroid, isExtension, isInterface, isMobileApp } from 'uniswap/src/utils/platform'
+import { isJestRun } from 'utilities/src/environment'
 
-export const UNISWAP_APP_HOSTNAME = 'app.uniswap.org'
+export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
 
-const TRADING_API_BASE_PATH = '/v1'
+export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
+export const UNISWAP_APP_URL = 'https://uniswap.org/app'
 
 const helpUrl = 'https://support.uniswap.org'
 
 export const uniswapUrls = {
+  // Help and web articles/items
   helpUrl,
   helpRequestUrl: `${helpUrl}/hc/en-us/requests/new`,
   helpArticleUrls: {
@@ -24,80 +27,73 @@ export const uniswapUrls = {
     unitagClaimPeriod: `${helpUrl}/hc/en-us/articles/24009960408589`,
     walletHelp: `${helpUrl}/hc/en-us/categories/11301970439565-Uniswap-Wallet`,
   },
-  apiBaseUrl: getUniswapApiBaseUrl(),
-  apiBaseExtensionUrl: getExtensionApiBaseUrl(),
-  apiBaseUrlCloudflare: getCloudflareApiBaseUrl(),
-  appBaseUrl: 'https://uniswap.org/app',
-  gasServicePath: getUniswapGasServicePath(),
-  routingApiUrl: getUniswapRoutingApiUrl(),
-  graphQLUrl: getUniswapGraphQLUrl(),
-  trmPath: getUniswapTrmPath(),
-  amplitudeProxyUrl: getUniswapAmplitudeProxyUrl(),
-  statsigProxyUrl: getUniswapStatsigProxyUrl(),
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
-  appUrl: `https://${UNISWAP_APP_HOSTNAME}`,
-  interfaceUrl: `https://${UNISWAP_APP_HOSTNAME}/#/swap`,
+  // TODO(EXT-668): Remove this after beta launch
   extensionFeedbackFormUrl:
-    'https://docs.google.com/forms/d/e/1FAIpQLSeL1l34nsuTfymPn5LVpovY7W57oc0oj53GNnpt0QG1qRAzqw/viewform', // TODO(EXT-668): Remove this after beta launch
-  interfaceTokensUrl: `https://${UNISWAP_APP_HOSTNAME}/explore/tokens`,
-  interfaceNftItemUrl: `https://${UNISWAP_APP_HOSTNAME}/nfts/asset`,
-  unitagsApiUrl: getUnitagsApiUrl(),
+    'https://docs.google.com/forms/d/e/1FAIpQLSeL1l34nsuTfymPn5LVpovY7W57oc0oj53GNnpt0QG1qRAzqw/viewform',
+
+  // Core API Urls
+  apiOrigin: 'https://api.uniswap.org',
+  apiBaseUrl: getCloudflareApiBaseUrl(),
+  graphQLUrl: `${getCloudflareApiBaseUrl()}/v1/graphql`,
+
+  // Proxies
+  amplitudeProxyUrl: `${getCloudflareApiBaseUrl()}/v1/amplitude-proxy`,
+  statsigProxyUrl: `${getCloudflareApiBaseUrl()}/v1/statsig-proxy`,
+
+  // Feature service URL's
+  unitagsApiUrl: `${getCloudflareApiBaseUrl()}/v2/unitags`,
+  scantasticApiUrl: `${getCloudflareApiBaseUrl()}/v2/scantastic`,
+  fiatOnRampApiUrl: `${getCloudflareApiBaseUrl(true)}/v2/fiat-on-ramp`,
+  tradingApiUrl: `https://trade-api-public.gateway.uniswap.org`,
+
+  // API Paths
+  trmPath: '/v1/screen',
+  gasServicePath: '/v1/gas-fee',
   tradingApiPaths: {
-    quote: getTradingApiQuotePath(),
-    approval: getTradingApiApprovalPath(),
-    swap: getTradingApiSwapPath(),
+    quote: '/v1/quote',
+    approval: '/v1/check_approval',
+    swap: '/v1/swap',
   },
+
+  // App and Redirect URL's
+  appBaseUrl: UNISWAP_APP_URL,
+  redirectUrlBase: isAndroid ? UNISWAP_WEB_URL : UNISWAP_APP_URL,
+  requestOriginUrl: UNISWAP_WEB_URL,
+
+  // Web Interface Urls
+  webInterfaceSwapUrl: `${UNISWAP_WEB_URL}/#/swap`,
+  webInterfaceTokensUrl: `${UNISWAP_WEB_URL}/explore/tokens`,
+  webInterfaceAddressUrl: `${UNISWAP_WEB_URL}/address`,
+  webInterfaceNftItemUrl: `${UNISWAP_WEB_URL}/nfts/asset`,
+  webInterfaceNftCollectionUrl: `${UNISWAP_WEB_URL}/nfts/collection`,
 }
 
-function getCloudflareApiBaseUrl(): string {
-  return `https://${isAndroid ? 'android' : 'ios'}.wallet.gateway.uniswap.org`
+function getCloudflarePrefix(useBeta?: boolean): string {
+  if (isDevEnv() && useBeta) {
+    return `beta`
+  }
+
+  if (isMobileApp) {
+    return `${isAndroid ? 'android' : 'ios'}.wallet`
+  }
+
+  if (isExtension) {
+    return 'extension'
+  }
+
+  if (isInterface) {
+    return 'interface'
+  }
+
+  if (isJestRun) {
+    return 'wallet'
+  }
+
+  throw new Error('Could not determine app to generate Cloudflare prefix')
 }
 
-function getUniswapApiBaseUrl(): string {
-  return config.uniswapApiBaseUrl
-}
-
-function getExtensionApiBaseUrl(): string {
-  return 'https://gateway.uniswap.org/v2'
-}
-
-function getUniswapRoutingApiUrl(): string {
-  return `${config.uniswapApiBaseUrl}/v1`
-}
-
-function getUniswapGasServicePath(): string {
-  return '/v1/gas-fee'
-}
-
-function getUniswapGraphQLUrl(): string {
-  return `${config.uniswapApiBaseUrl}/v1/graphql`
-}
-
-function getUniswapTrmPath(): string {
-  return '/v1/screen'
-}
-
-function getUniswapAmplitudeProxyUrl(): string {
-  return `${config.uniswapApiBaseUrl}/v1/amplitude-proxy`
-}
-
-function getUniswapStatsigProxyUrl(): string {
-  return `${config.uniswapApiBaseUrl}/v1/statsig-proxy`
-}
-
-function getUnitagsApiUrl(): string {
-  return config.unitagsApiUrl
-}
-
-function getTradingApiQuotePath(): string {
-  return `${TRADING_API_BASE_PATH}/quote`
-}
-
-function getTradingApiApprovalPath(): string {
-  return `${TRADING_API_BASE_PATH}/check_approval`
-}
-
-function getTradingApiSwapPath(): string {
-  return `${TRADING_API_BASE_PATH}/swap`
+function getCloudflareApiBaseUrl(useBeta?: boolean): string {
+  return `https://${getCloudflarePrefix(useBeta)}.gateway.uniswap.org`
 }

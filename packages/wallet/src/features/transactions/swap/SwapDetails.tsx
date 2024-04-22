@@ -140,6 +140,7 @@ export function SwapDetails({
       showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeRequiresAcceptance}
       swapFeeInfo={swapFeeInfo}
+      transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
       warning={warning}
       onShowWarning={onShowWarning}>
       <Flex row alignItems="center" justifyContent="space-between">
