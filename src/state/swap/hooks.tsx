@@ -13,7 +13,7 @@ import {
   Trade as V3Trade,
 } from '@uniswap/v3-sdk'
 import { KROMATIKA_ROUTER_ADDRESSES } from 'constants/addresses'
-import { ChainName } from 'constants/chains'
+import { ChainName, SupportedChainId } from 'constants/chains'
 import { KROM } from 'constants/tokens'
 import { useBestV3Trade } from 'hooks/useBestV3Trade'
 import useParsedQueryString from 'hooks/useParsedQueryString'
@@ -474,6 +474,20 @@ function useExisitingPool(
   return undefined
 }
 
+// async function getDexScreenerPairAddress(aToken: Token | Currency, bToken: Token | Currency) {
+//   const queryParameters =
+//     'https://api.dexscreener.io/latest/dex/search?q=' +
+//     aToken?.symbol?.toLocaleUpperCase() +
+//     '%20' +
+//     bToken?.symbol?.toLocaleUpperCase()
+
+//   console.log('queryParameters: ', queryParameters)
+//   try {
+//     const response = await fetchBaseQuery({ baseUrl: queryParameters })
+//     console.log('response: ', await response)
+//   } catch (exception) {}
+// }
+
 export function usePoolAddress(
   aToken: Token | Currency | undefined | null,
   bToken: Token | Currency | undefined | null,
@@ -505,7 +519,7 @@ export function usePoolAddress(
     let networkName = ''
     let addressV2 = ''
     let address = ''
-    if (aToken && bToken) {
+    if (aToken && bToken && chainId !== SupportedChainId.BASE) {
       bToken && bToken.isNative ? (bToken = bToken.wrapped) : ''
       aToken && aToken.isNative ? (aToken = aToken.wrapped) : ''
 
@@ -527,6 +541,19 @@ export function usePoolAddress(
     // if one of the tokens does not exist; set aToken
     else if (aToken && !aToken.isNative && aToken.name != 'Ether' && aToken.name != 'Wrapped Ether') {
       address = aToken.address
+    }
+
+    // when chain is Base, Pool.getAddress does not yield correct pool addresses.
+    if ((poolAddress == '' || poolAddress == undefined || poolAddress == null) && chainId === SupportedChainId.BASE) {
+      if (bToken) {
+        poolAddress = bToken?.wrapped.address
+      }
+
+      if (aToken && bToken == undefined) {
+        poolAddress = aToken?.wrapped.address
+      }
+
+      if (aToken === undefined && bToken === undefined) poolAddress = '0x4200000000000000000000000000000000000006'
     }
 
     // no address; set default
