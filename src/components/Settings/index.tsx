@@ -128,61 +128,21 @@ export default function SettingsTab({ placeholderSlippage }: { placeholderSlippa
   const [gaslessMode, toggleGaslessMode] = useGaslessModeManager()
 
   // FIXME enable for Polygon first
-  const isGaslessEnabledForNetwork = chainId !== SupportedChainId.MAINNET && chainId !== SupportedChainId.OPTIMISM
-
-  // show confirmation view before turning on
-  const [showConfirmation, setShowConfirmation] = useState(false)
+  const isGaslessEnabledForNetwork =
+    chainId !== SupportedChainId.OPTIMISM && chainId !== SupportedChainId.BASE && chainId !== SupportedChainId.MAINNET
 
   useOnClickOutside(node, open ? toggle : undefined)
-
-  const handleGaslessConfirm = () => setShowConfirmation(false)
-
-  const handleGaslessDismiss = () => {
-    toggleGaslessMode()
-    setShowConfirmation(false)
-  }
 
   const handleGaslessToggle = () => {
     if (gaslessMode) {
       toggleGaslessMode()
-      setShowConfirmation(false)
     } else {
       toggleGaslessMode()
-      setShowConfirmation(true)
     }
   }
 
   return (
     <StyledMenu ref={node as any}>
-      <Modal isOpen={showConfirmation} onDismiss={handleGaslessDismiss} maxHeight={100}>
-        <ModalContentWrapper>
-          <AutoColumn gap="lg">
-            <RowBetween style={{ padding: '0 2rem' }}>
-              <div />
-              <Text fontWeight={400} fontSize={16}>
-                <Trans>Are you sure?</Trans>
-              </Text>
-              <StyledCloseIcon onClick={handleGaslessDismiss} />
-            </RowBetween>
-            <Break />
-            <AutoColumn gap="lg" style={{ padding: '0 2rem' }}>
-              <Text fontWeight={400} fontSize={16}>
-                <Trans>
-                  Gasless mode enables users to send blockchain transactions without paying network gas fees.
-                </Trans>
-              </Text>
-              <Text fontWeight={600} fontSize={20}>
-                <Trans>BETA FEATURE. Use at own risk.</Trans>
-              </Text>
-              <ButtonError padding={'12px'} onClick={handleGaslessConfirm}>
-                <Text fontSize={16} fontWeight={500} id="confirm-expert-mode">
-                  <Trans>Turn On Gasless Mode</Trans>
-                </Text>
-              </ButtonError>
-            </AutoColumn>
-          </AutoColumn>
-        </ModalContentWrapper>
-      </Modal>
       <StyledMenuButton onClick={toggle} id="open-settings-dialog-button" aria-label={t`Transaction Settings`}>
         <StyledMenuIcon />
         {gaslessMode ? (

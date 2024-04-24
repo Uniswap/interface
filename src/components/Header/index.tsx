@@ -220,6 +220,7 @@ export default function Header() {
       'https://info.uniswap.org/#/arbitrum/pools/0x54651ca452ad2d7e35babcff40760b7af0404213',
     [SupportedChainId.OPTIMISM]: 'https://info.uniswap.org/#/optimism/pools/0xe62bd99a9501ca33d98913105fc2bec5bae6e5dd',
     [SupportedChainId.POLYGON]: ' https://info.uniswap.org/#/polygon/pools/0xba589ba3af52975a12acc6de69c9ab3ac1ae7804',
+    [SupportedChainId.BASE]: 'https://info.uniswap.org/#/pools/0x6ae0cdc5d2b89a8dcb99ad6b3435b3e7f7290077', // todo*: add krom pool on base when deployed
   }
 
   return (

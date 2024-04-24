@@ -4,9 +4,14 @@ import { useAppDispatch } from 'state/hooks'
 
 import { ApplicationModal, setOpenModal } from '../../state/application/reducer'
 
-// Redirects to swap but only replace the pathname
+// Redirects to limit order but only replace the pathname
 export function RedirectPathToLimitOrderOnly({ location }: RouteComponentProps) {
   return <Redirect to={{ ...location, pathname: '/limitorder' }} />
+}
+
+// Redirects to swap but only replace the pathname
+export function RedirectPathToSwapOnly({ location }: RouteComponentProps) {
+  return <Redirect to={{ ...location, pathname: '/swap' }} />
 }
 
 // Redirects from the /swap/:outputCurrency path to the /swap?outputCurrency=:outputCurrency format

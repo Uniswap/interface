@@ -4,6 +4,7 @@ import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/CurrencyLogo'
 import QuestionHelper from 'components/QuestionHelper'
 import { AutoRow } from 'components/Row'
+import { SupportedChainId } from 'constants/chains'
 import { COMMON_BASES } from 'constants/routing'
 import { KROM } from 'constants/tokens'
 import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
@@ -46,7 +47,7 @@ export default function CommonBases({
 }) {
   const bases = typeof chainId !== 'undefined' ? COMMON_BASES[chainId] ?? [] : []
 
-  chainId && bases[0] != KROM[chainId] && bases.unshift(KROM[chainId])
+  chainId && chainId !== SupportedChainId.BASE && bases[0] != KROM[chainId] && bases.unshift(KROM[chainId])
 
   return bases.length > 0 ? (
     <MobileWrapper gap="md">

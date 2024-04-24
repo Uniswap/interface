@@ -1,5 +1,7 @@
 import ToastContainer, { setToast } from 'components/Toast'
+import { SupportedChainId } from 'constants/chains'
 import ApeModeQueryParamReader from 'hooks/useApeModeQueryParamReader'
+import { useActiveWeb3React } from 'hooks/web3'
 import { Route, Switch, useLocation } from 'react-router-dom'
 import styled from 'styled-components/macro'
 
@@ -15,7 +17,7 @@ import { ApplicationModal } from '../state/application/reducer'
 import DarkModeQueryParamReader from '../theme/DarkModeQueryParamReader'
 import { RedirectDuplicateTokenIds } from './AddLiquidity/redirects'
 import LimitOrder from './LimitOrder'
-import { RedirectPathToLimitOrderOnly } from './LimitOrder/redirects'
+import { RedirectPathToLimitOrderOnly, RedirectPathToSwapOnly } from './LimitOrder/redirects'
 import Market from './Market'
 import { PositionPage } from './Pool/PositionPage'
 import SwapWidget from './SwapWidget'
@@ -76,6 +78,7 @@ export default function App() {
   const { pathname } = useLocation()
   const showFallbackRoute =
     !pathname.includes('swap') && !pathname.includes('limitorder') && !pathname.includes('balance')
+  const { chainId } = useActiveWeb3React()
 
   return (
     <ErrorBoundary>
@@ -101,10 +104,18 @@ export default function App() {
                 path="/balance/:action/:currencyIdA?/:currencyIdB?/:feeAmount?"
                 component={RedirectDuplicateTokenIds}
               />
-              <Route exact path="/limitorder" component={LimitOrder} />
+              <Route
+                exact
+                path="/limitorder"
+                component={chainId !== SupportedChainId.BASE ? LimitOrder : RedirectPathToSwapOnly}
+              />
               <Route exact strict path="/limitorder/:tokenId" component={PositionPage} />
               <Route exact path="/swap" component={Market} />
-              {showFallbackRoute && <Route component={RedirectPathToLimitOrderOnly} />}
+              {showFallbackRoute && (
+                <Route
+                  component={chainId !== SupportedChainId.BASE ? RedirectPathToLimitOrderOnly : RedirectPathToSwapOnly}
+                />
+              )}
             </BodyWrapper>
           </AppWrapper>
         </Switch>
