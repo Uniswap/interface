@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmaZ2DyycDgi2Md5z6NFpdaBCPYkExFJRRz5FDG47zU4Yt`
-- CIDv1: `bafybeifvo6feafgzml423kyegp43hr7fss4il43hmdzxzlmdaapjcxr3nu`
+- CIDv0: `QmfVmJpbRuGLnvBgrae9nRPdC7gtevKWf6aLQDa3f4tmGt`
+- CIDv1: `bafybeih65ro3f4a4of2il6pomh5hgoquoskx7lgdqogfo4tmsmloplufwe`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeifvo6feafgzml423kyegp43hr7fss4il43hmdzxzlmdaapjcxr3nu.ipfs.dweb.link/
-- https://bafybeifvo6feafgzml423kyegp43hr7fss4il43hmdzxzlmdaapjcxr3nu.ipfs.cf-ipfs.com/
-- [ipfs://QmaZ2DyycDgi2Md5z6NFpdaBCPYkExFJRRz5FDG47zU4Yt/](ipfs://QmaZ2DyycDgi2Md5z6NFpdaBCPYkExFJRRz5FDG47zU4Yt/)
+- https://bafybeih65ro3f4a4of2il6pomh5hgoquoskx7lgdqogfo4tmsmloplufwe.ipfs.dweb.link/
+- https://bafybeih65ro3f4a4of2il6pomh5hgoquoskx7lgdqogfo4tmsmloplufwe.ipfs.cf-ipfs.com/
+- [ipfs://QmfVmJpbRuGLnvBgrae9nRPdC7gtevKWf6aLQDa3f4tmGt/](ipfs://QmfVmJpbRuGLnvBgrae9nRPdC7gtevKWf6aLQDa3f4tmGt/)
 
-### 5.25.1 (2024-04-22)
+### 5.25.2 (2024-04-25)
 
 
 ### Bug Fixes
 
-* **web:** support swapping spam tokens (#7794) 13bd6f5
+* **web:** Flip logic for Sells/Buys (prod) (#7881) bcc2955
 
 
