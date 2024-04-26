@@ -17,7 +17,7 @@
       },
       "error": {
         "backup": {
-          "message": "Échec de l'importation des sauvegardes à cause d'un manque d'autorisations, d'une interruption de l'autorisation ou d'une erreur cloud",
+          "message": "Échec de l'importation des sauvegardes en raison d'un manque d'autorisations, d'une interruption de l'autorisation ou d'une erreur cloud",
           "title": "Erreur lors de l'importation des sauvegardes"
         },
         "password": {
@@ -58,9 +58,9 @@
     },
     "recoveryPhrase": {
       "education": {
-        "part1": "Une phrase de récupération est un <highlight>ensemble de mots</highlight> requis pour accéder à votre wallet, <highlight>comme un mot de passe.</highlight>",
-        "part2": "Vous pouvez <highlight>entrer</highlight> votre phrase de récupération sur un nouvel appareil <highlight>pour restaurer votre wallet</highlight> et son contenu.",
-        "part3": "Mais si vous <highlight>perdez votre phrase de récupération</highlight> , vous <highlight>perdrez l'accès</highlight> à votre wallet.",
+        "part1": "Une phrase de récupération est un <highlight>ensemble de mots</highlight> requis pour accéder à votre portefeuille, <highlight>comme un mot de passe.</highlight>",
+        "part2": "Vous pouvez <highlight>entrer</highlight> votre phrase de récupération sur un nouvel appareil <highlight>pour restaurer votre portefeuille</highlight> et son contenu.",
+        "part3": "Mais si vous <highlight>perdez votre phrase de récupération</highlight> , vous <highlight>perdrez l'accès</highlight> à votre portefeuille.",
         "part4": "Au lieu de mémoriser votre phrase de récupération, vous pouvez <highlight>la sauvegarder sur {{cloudProviderName}}</highlight> et protégez-le avec un mot de passe.",
         "part5": "Vous pouvez également sauvegarder manuellement votre phrase de récupération en <highlight>l'écrivant</highlight> et le conserver dans un endroit sécurisé.",
         "part6": "Nous recommandons d'utiliser <highlight>les deux méthodes de sauvegarde</highlight>, car si vous perdez votre phrase de récupération, vous ne pourrez pas restaurer votre portefeuille."
@@ -82,14 +82,14 @@
           "title": "Vous supprimez votre <highlight>phrase de récupération</highlight>"
         },
         "import": {
-          "description": "Vous ne pouvez stocker qu'une seule phrase de récupération. Pour continuer à en importer une nouvelle, vous devrez supprimer votre phrase de récupération actuelle et tous les wallets associés dans cet appareil."
+          "description": "Vous ne pouvez stocker qu'une seule phrase de récupération. Pour continuer à en importer une nouvelle, vous devrez supprimer votre phrase de récupération actuelle et tous les portefeuilles associés dans cet appareil."
         },
         "initial": {
-          "description": "Cela supprimera votre wallet de cet appareil ainsi que votre phrase de récupération.",
+          "description": "Cela supprimera votre portefeuille de cet appareil ainsi que votre phrase de récupération.",
           "title": "Vous supprimez <highlight>{{walletName}}</highlight>"
         },
         "mnemonic": {
-          "description": "Il partage la même phrase de récupération que {{walletName}} . Votre phrase de récupération restera stockée jusqu'à ce que vous supprimiez tous les wallets restants."
+          "description": "Il partage la même phrase de récupération que {{walletName}} . Votre phrase de récupération restera stockée jusqu'à ce que vous supprimiez tous les portefeuilles restants."
         }
       },
       "subtitle": {
@@ -103,23 +103,23 @@
     },
     "wallet": {
       "action": {
-        "copy": "Copiez l'adresse du wallet",
+        "copy": "Copier l'adresse du portefeuille",
         "report": "Profil de rapport",
-        "settings": "Paramètres du wallet",
-        "viewExplorer": "Voyez sur {{blockExplorerName}}"
+        "settings": "Paramètres du portefeuille",
+        "viewExplorer": "Voir sur {{blockExplorerName}}"
       },
       "button": {
-        "add": "Ajouter un wallet",
-        "addViewOnly": "Ajouter un wallet en \"lecture seule\"",
-        "create": "Créer un nouveau wallet",
-        "import": "Importer un nouveau wallet",
-        "manage": "Gérer le wallet",
-        "remove": "Supprimer le wallet",
-        "restore": "Restaurer le wallet",
-        "watch": "Surveiller un wallet"
+        "add": "Ajouter un portefeuille",
+        "addViewOnly": "Ajouter un portefeuille en \"lecture seule\"",
+        "create": "Créer un nouveau portefeuille",
+        "import": "Importer un nouveau portefeuille",
+        "manage": "Gérer le portefeuille",
+        "remove": "Supprimer le portefeuille",
+        "restore": "Restaurer le portefeuille",
+        "watch": "Surveiller un portefeuille"
       },
       "create": {
-        "placeholder": "Wallet {{index}}"
+        "placeholder": "Portefeuille {{index}}"
       },
       "edit": {
         "label": {
@@ -135,24 +135,24 @@
           },
           "title": "Modifier l'étiquette"
         },
-        "other": "Vos autres wallets",
-        "viewOnly": "Les wallets \"lecture seule\""
+        "other": "Vos autres portefeuilles",
+        "viewOnly": "Les portefeuilles \"lecture seule\""
       },
       "menu": {
         "copy": {
-          "title": "Copiez l'adresse du wallet"
+          "title": "Copier l'adresse du portefeuille"
         },
         "edit": {
           "title": "Modifier l'étiquette"
         },
         "remove": {
-          "title": "Supprimer le wallet"
+          "title": "Supprimer le portefeuille"
         }
       },
       "remove": {
         "check": "J'ai sauvegardé ma phrase de récupération et je comprends qu'Uniswap Labs ne peut pas m'aider à récupérer mes portefeuilles si je ne parviens pas à le faire.",
         "title": "Supprimer {{name}}",
-        "viewOnly": "Vous pouvez toujours rajouter des wallets en \"lecture seule\" en saisissant l'adresse du wallet."
+        "viewOnly": "Vous pouvez toujours ajouter des portefeuilles en \"lecture seule\" en saisissant l'adresse du portefeuille."
       },
       "restore": {
         "description": "Étant donné que vous utilisez un nouvel appareil, vous devrez restaurer votre phrase de récupération. Cela vous permettra d'échanger et d'envoyer des tokens."
@@ -160,16 +160,16 @@
       "select": {
         "error": "Impossible de charger les adresses",
         "loading": {
-          "subtitle": "Vos wallets apparaîtront ci-dessous.",
-          "title": "Recherche de wallets"
+          "subtitle": "Vos portefeuilles apparaîtront ci-dessous.",
+          "title": "Recherche de portefeuilles"
         },
-        "title_one_one": "Un wallet trouvé",
-        "title_one_other": "Sélectionnez les wallets à importer"
+        "title_one_one": "Un portefeuille trouvé",
+        "title_one_other": "Sélectionnez les portefeuilles à importer"
       },
       "viewOnly": {
-        "button": "Importer un wallet",
+        "button": "Importer un portefeuille",
         "description": "Pour échanger, acheter, envoyer et recevoir des jetons, vous devez importer la phrase de récupération de ce portefeuille.",
-        "title": "Ce wallet est en \"lecture seule\""
+        "title": "Ce portefeuille est en \"lecture seule\""
       },
       "watch": {
         "error": {
@@ -179,7 +179,7 @@
         },
         "message": "L'ajout d'un portefeuille en lecture seule vous permet d'essayer l'application ou de suivre un portefeuille. Vous ne pourrez ni échanger ni envoyer de fonds.",
         "placeholder": "ENS ou adresse",
-        "title": "Entrer une adresse de wallet"
+        "title": "Entrer une adresse de portefeuille"
       }
     }
   },
@@ -191,10 +191,10 @@
       "cancel": "Annuler",
       "close": "Fermer",
       "confirm": "Confirmer",
-      "connect": "Connectez",
+      "connect": "Connecter",
       "continue": "Continuer",
       "copied": "Copié",
-      "copy": "Copiez",
+      "copy": "Copier",
       "create": "Créer",
       "delete": "Supprimer",
       "disconnect": "Déconnecter",
@@ -221,7 +221,7 @@
       "setup": "Installation",
       "share": "Partager",
       "show": "Révéler",
-      "sign": "Signe",
+      "sign": "Signer",
       "skip": "Passer",
       "swap": "Échanger",
       "tryAgain": "Réessayer",
@@ -263,12 +263,12 @@
     },
     "navigation": {
       "settings": "Paramètres",
-      "systemSettings": "Paramètres"
+      "systemSettings": "Paramètres système"
     },
     "text": {
       "error": "Erreur",
       "loading": "Chargement",
-      "notAvailable": "N / A",
+      "notAvailable": "Non disponible",
       "unknown": "Inconnu"
     }
   },
@@ -277,7 +277,7 @@
     "brl": "Réal brésilien",
     "cad": "Dollar canadien",
     "cny": "Le yuan chinois",
-    "eur": "euro",
+    "eur": "Euro",
     "gbp": "Livre sterling",
     "hkd": "Dollar de Hong Kong",
     "idr": "Rupiah indonésienne",
@@ -288,7 +288,7 @@
     "rub": "Rouble russe",
     "sgd": "Dollar de Singapour",
     "thb": "Baht thaïlandais",
-    "try": "Lire turque",
+    "try": "Livre turque",
     "uah": "Hryvnia ukrainienne",
     "usd": "Dollar américain",
     "vnd": "Dong vietnamien"
@@ -331,7 +331,7 @@
       },
       "permit2": {
         "description": "Permit2 gère les approbations de jetons sur plusieurs dapps.",
-        "header": "Signer le permis2",
+        "header": "Signer le Permit2",
         "price": "Aucun"
       },
       "signature": {
@@ -368,7 +368,7 @@
     "search": {
       "action": {
         "clear": "Tout effacer",
-        "viewEtherscan": "Voyez sur {{blockExplorerName}}"
+        "viewEtherscan": "Voir {{blockExplorerName}}"
       },
       "empty": {
         "full": "Aucun résultat trouvé pour <highlight>\"{{searchQuery}}\"</highlight>"
@@ -377,15 +377,15 @@
       "label": {
         "ownedBy": "Propriété de {{ownerAddress}}"
       },
-      "placeholder": "Rechercher des tokens et des wallets",
+      "placeholder": "Rechercher des tokens et des portefeuilles",
       "section": {
         "nft": "Collections NFT",
         "popularNFT": "Collections NFT populaires",
         "popularTokens": "Tokens populaires",
         "recent": "Recherches récentes",
-        "suggestedWallets": "Wallets suggérés",
+        "suggestedWallets": "Portefeuilles suggérés",
         "tokens": "Tokens",
-        "wallets": "Wallets"
+        "wallets": "Portefeuilles"
       }
     },
     "tokens": {
@@ -429,13 +429,13 @@
     "wallets": {
       "favorite": {
         "action": {
-          "add": "Wallet favori",
+          "add": "Portefeuille favori",
           "edit": "Modifier les favoris",
           "remove": "Supprimer le favori"
         },
         "title": {
-          "default": "Wallets favoris",
-          "edit": "Modifier les wallets favoris"
+          "default": "Portefeuilles favoris",
+          "edit": "Modifier les portefeuilles favoris"
         }
       }
     }
@@ -527,7 +527,7 @@
   "forceUpgrade": {
     "action": {
       "confirm": "Mise à jour de l'application",
-      "recoveryPhrase": "Voyez la phrase de récupération"
+      "recoveryPhrase": "Voir la phrase de récupération"
     },
     "description": "La version d'Uniswap Wallet que vous utilisez est obsolète et ne dispose pas de mises à niveau critiques. Si vous ne mettez pas à jour l'application ou si votre phrase de récupération n'est pas écrite, vous ne pourrez pas accéder à vos actifs.",
     "label": {
@@ -538,10 +538,10 @@
   "home": {
     "activity": {
       "empty": {
-        "button": "Recevoir des tokens ou des NFTs",
+        "button": "Recevoir des tokens ou des NFT",
         "description": {
           "default": "Lorsque vous transférez ou échangez des tokens ou des NFT, vos transactions apparaîtront ici.",
-          "external": "Lorsque ce wallet effectue des transactions, elles apparaîtront ici."
+          "external": "Lorsque ce portefeuille effectue des transactions, elles apparaîtront ici."
         },
         "title": "Aucune activité pour le moment"
       },
@@ -563,7 +563,7 @@
     },
     "feed": {
       "empty": {
-        "description": "Lorsque vos wallets favoris effectuent des transactions, elles apparaissent ici.",
+        "description": "Lorsque vos portefeuilles favoris effectuent des transactions, elles apparaissent ici.",
         "title": "Aucune activité pour le moment"
       },
       "error": "Impossible de charger l'activité",
@@ -595,15 +595,15 @@
             "title": "Acheter des cryptos"
           },
           "import": {
-            "description": "Entrez la phrase de récupération de ce wallet pour commencer à échanger et envoyer.",
-            "title": "Importer un wallet"
+            "description": "Entrez la phrase de récupération de ce portefeuille pour commencer à échanger et envoyer.",
+            "title": "Importer un portefeuille"
           },
           "receive": {
-            "description": "Transférez des tokens depuis un autre wallet ou un autre échange de crypto.",
+            "description": "Transférez des tokens depuis un autre portefeuille ou un autre échange de crypto.",
             "title": "Recevoir des fonds"
           }
         },
-        "description": "Lorsque ce wallet achète ou reçoit des tokens, ils apparaîtront ici.",
+        "description": "Lorsque ce portefeuille achète ou reçoit des tokens, ils apparaîtront ici.",
         "title": "Aucun token pour le moment"
       },
       "error": {
@@ -615,12 +615,12 @@
     "upsell": {
       "receive": {
         "cta": "Lier un compte",
-        "description": "Créditer votre portefeuille en transférant des cryptomonnaies depuis un autre portefeuille ou un autre compte",
+        "description": "Créditez votre portefeuille en transférant des cryptomonnaies depuis un autre portefeuille ou un autre compte",
         "title": "Recevoir des cryptos"
       }
     },
     "warning": {
-      "viewOnly": "Ceci est un wallet en \"lecture seule\""
+      "viewOnly": "Ceci est un portefeuille en \"lecture seule\""
     }
   },
   "language": {
@@ -629,7 +629,7 @@
     "dutch": "Néerlandais",
     "english": "Anglais",
     "french": "Français",
-    "hindi": "hindi",
+    "hindi": "Hindi",
     "indonesian": "Indonésien",
     "japanese": "Japonais",
     "malay": "Malais",
@@ -638,7 +638,7 @@
     "spanishLatam": "Espagnol (Amérique latine)",
     "spanishSpain": "Espagnol (Espagne)",
     "spanishUs": "Espagnol (États-Unis)",
-    "thai": "thaïlandais",
+    "thai": "Thaïlandais",
     "turkish": "Turc",
     "ukrainian": "Ukrainien",
     "urdu": "Ourdou",
@@ -661,7 +661,7 @@
     },
     "countryChange": "Passé à {{countryName}}",
     "restore": {
-      "success": "Wallet restauré !"
+      "success": "Portefeuille restauré !"
     },
     "swap": {
       "network": "Échange sur {{network}}",
@@ -715,11 +715,11 @@
     "walletConnect": {
       "confirmed": "Transaction confirmée avec {{dappName}}",
       "connected": "Connecté",
-      "disconnected": "Déconnectée",
+      "disconnected": "Déconnecté",
       "failed": "La transaction avec {{dappName}} a échoué",
       "networkChanged": {
         "full": "Passé à {{networkName}}",
-        "short": "Réseaux changés"
+        "short": "Réseau changé"
       }
     }
   },
@@ -750,9 +750,9 @@
           "title": "Sauvegarde manuelle"
         }
       },
-      "subtitle": "Les sauvegardes vous permettent de restaurer votre wallet si vous supprimez l'application ou perdez votre appareil",
+      "subtitle": "Les sauvegardes vous permettent de restaurer votre portefeuille si vous supprimez l'application ou perdez votre appareil",
       "title": {
-        "existing": "Sauvegardez votre wallet",
+        "existing": "Sauvegardez votre portefeuille",
         "new": "Choisissez une méthode de sauvegarde"
       },
       "view": {
@@ -789,10 +789,10 @@
     },
     "editName": {
       "button": {
-        "create": "Créer un wallet"
+        "create": "Créer un portefeuille"
       },
       "label": "Pseudo",
-      "subtitle": "Donnez un pseudo à votre wallet",
+      "subtitle": "Donnez un pseudo à votre portefeuille",
       "title": "Ce pseudo est uniquement visible par vous",
       "walletAddress": "Votre adresse publique sera <highlight>{{walletAddress}}</highlight>"
     },
@@ -809,26 +809,26 @@
         "subtitle": "Vous en aurez besoin pour déverrouiller votre portefeuille et accéder à votre phrase de récupération",
         "title": {
           "default": "Créer un mot de passe",
-          "reset": "réinitialisez votre mot de passe"
+          "reset": "Réinitialisez votre mot de passe"
         }
       }
     },
     "import": {
       "error": {
-        "invalidWords_one": "1 mot n'est pas valide ou est mal orthographié",
+        "invalidWords_one": "1 mot est invalide ou mal orthographié",
         "invalidWords_other": "{{count}}  mots sont invalides ou mal orthographiés"
       },
       "method": {
         "import": {
-          "message": "Entrez votre phrase de récupération d'un autre wallet de crypto",
-          "title": "Importer un wallet"
+          "message": "Entrez votre phrase de récupération d'un autre portefeuille de crypto",
+          "title": "Importer un portefeuille"
         },
         "restore": {
           "message": {
-            "android": "Ajoutez les wallets que vous avez sauvegardés à votre compte Google Drive",
-            "ios": "Ajoutez les wallets que vous avez sauvegardés à votre compte iCloud"
+            "android": "Ajoutez les portefeuilles que vous avez sauvegardés à votre compte Google Drive",
+            "ios": "Ajoutez les portefeuilles que vous avez sauvegardés à votre compte iCloud"
           },
-          "title": "Restaurer un wallet"
+          "title": "Restaurer un portefeuille"
         }
       },
       "title": "Choisissez comment vous souhaitez ajouter votre portefeuille"
@@ -846,11 +846,11 @@
     },
     "intro": {
       "alreadyComplete": {
-        "subtitle": "Pour créer plus de wallets, ouvrez le sélecteur de compte dans la fenêtre contextuelle de l'extension ou réinstallez l'extension pour recommencer.",
+        "subtitle": "Pour créer plus de portefeuilles, ouvrez le sélecteur de compte dans la fenêtre contextuelle de l'extension ou réinstallez l'extension pour recommencer.",
         "title": "Vous avez déjà terminé l'intégration"
       },
       "button": {
-        "alreadyHave": "J'ai déjà un wallet"
+        "alreadyHave": "J'ai déjà un portefeuille"
       },
       "title": "Bienvenue sur \nPortefeuille Uniswap"
     },
@@ -869,8 +869,8 @@
     },
     "landing": {
       "button": {
-        "add": "Ajouter un wallet existant",
-        "create": "Créer un nouveau wallet"
+        "add": "Ajouter un portefeuille existant",
+        "create": "Créer un nouveau portefeuille"
       }
     },
     "notification": {
@@ -900,7 +900,7 @@
           "title": "Faites cette étape dans un lieu privé"
         },
         "screenshot": {
-          "message": "N'importe qui ayant accès à vos photos peut accéder à votre wallet. Nous vous recommandons plutôt d’écrire vos mots.",
+          "message": "N'importe qui ayant accès à vos photos peut accéder à votre portefeuille. Nous vous recommandons plutôt d’écrire vos mots.",
           "title": "Les captures d'écran ne sont pas sécurisées"
         }
       }
@@ -948,13 +948,13 @@
         "android": "Ajoutez une couche de sécurité supplémentaire en exigeant la biométrie pour envoyer des transactions.",
         "ios": "Ajoutez une couche de sécurité supplémentaire en exigeant {{biometricsMethod}} pour envoyer des transactions."
       },
-      "title": "Protégez votre wallet"
+      "title": "Protégez votre portefeuille"
     },
     "selectWallets": {
       "error": "Impossible de charger les adresses",
       "title": {
         "default": "Choisissez les portefeuilles à importer",
-        "error": "Erreur lors de l'importation des wallets"
+        "error": "Erreur lors de l'importation des portefeuilles"
       }
     },
     "termsOfService": "En continuant, j'accepte les<highlightTerms> Conditions d'utilisation </highlightTerms>et j'accepte la<highlightPrivacy> Politique de confidentialité</highlightPrivacy>",
@@ -965,13 +965,13 @@
     },
     "wallet": {
       "continue": "Gardons-le en sécurité",
-      "defaultName": "Wallet {{number}}",
+      "defaultName": "Portefeuille {{number}}",
       "description": {
-        "existing": "Gérer vos tokens et NFT, suivez les wallets, et restez informé en déplacement.",
+        "existing": "Gérer vos tokens et NFT, suivez les portefeuilles, et restez informé en déplacement.",
         "full": "Il s'agit de votre espace personnel pour les jetons, les NFT et toutes vos transactions. Terminez sa configuration pour protéger vos fonds.",
         "new": "Votre espace personnel pour les tokens, les NFT et tous vos échanges."
       },
-      "title": "Bienvenue sur votre nouveau wallet"
+      "title": "Bienvenue sur votre nouveau portefeuille"
     }
   },
   "qrScanner": {
@@ -1078,7 +1078,7 @@
     },
     "gas": {
       "error": {
-        "title": "N / A"
+        "title": "Non disponible"
       },
       "networkCost": {
         "title": "Frais de réseau"
@@ -1095,11 +1095,11 @@
       "previous_one": "1 transfert précédent",
       "previous_other": "{{count}} transferts précédents",
       "section": {
-        "favorite": "Wallets favoris",
+        "favorite": "Portefeuilles favoris",
         "recent": "Récent",
         "search": "Résultats de recherche",
         "viewOnly": "Portefeuilles en lecture seule",
-        "yours": "Vos wallets"
+        "yours": "Vos portefeuilles"
       },
       "warning": {
         "viewOnly": {
@@ -1160,12 +1160,12 @@
     "title": "Envoyer",
     "warning": {
       "blocked": {
-        "default": "Ce wallet est bloqué",
+        "default": "Ce portefeuille est bloqué",
         "modal": {
           "message": "Cette adresse est bloquée sur Uniswap Wallet car elle est associée avec une ou plusieurs activités bloquées. Si vous pensez qu'il s'agit d'une erreur, veuillez envoyer un e-mail à Compliance@uniswap.org.",
           "title": "Adresse bloquée"
         },
-        "recipient": "Le wallet du destinataire est bloqué"
+        "recipient": "Le portefeuille du destinataire est bloqué"
       },
       "erc20": {
         "message": "Vous essayez d'envoyer des fonds à une adresse symbolique. L’envoi de crypto à ce type d’adresse peut entraîner une perte permanente de fonds.",
@@ -1188,14 +1188,14 @@
         "message": "Vous n'avez jamais effectué de transaction avec cette adresse. Veuillez confirmer que l'adresse est correcte avant de continuer.",
         "title": "Nouvelle adresse"
       },
-      "restore": "Restaurez votre wallet pour envoyer",
+      "restore": "Restaurez votre portefeuille pour envoyer",
       "smartContract": {
         "message": "Vous êtes sur le point d'envoyer des tokens à un type d'adresse spécial : un contrat intelligent. Vérifiez bien que c'est l'adresse à laquelle vous avez l'intention d'envoyer. Si elle est incorrecte, vos tokens pourraient être perdus pour toujours.",
-        "title": "Est-ce une adresse de wallet ?"
+        "title": "Est-ce une adresse de portefeuille ?"
       },
       "viewOnly": {
-        "message": "Vous devez importer ce wallet avec une phrase de récupération pour envoyer des actifs.",
-        "title": "Ce wallet est en \"lecture seule\""
+        "message": "Vous devez importer ce portefeuille avec une phrase de récupération pour envoyer des actifs.",
+        "title": "Ce portefeuille est en \"lecture seule\""
       }
     }
   },
@@ -1227,7 +1227,7 @@
       "view": {
         "error": "Mot de passe erroné, réessayez",
         "warning": {
-          "message1": "N'importe qui ayant accès à votre phrase de récupération peut accéder à votre wallet et à vos fonds",
+          "message1": "N'importe qui ayant accès à votre phrase de récupération peut accéder à votre portefeuille et à vos fonds",
           "message2": "Voir ceci en privé",
           "message3": "Ne partagez ceci avec personne",
           "message4": "Ne l'entrez jamais sur des sites Web ou des applications",
@@ -1236,11 +1236,11 @@
       },
       "warning": {
         "screenshot": {
-          "message": "N'importe qui ayant accès à vos photos peut accéder à votre wallet. Nous vous recommandons plutôt d’écrire vos mots.",
+          "message": "N'importe qui ayant accès à vos photos peut accéder à votre portefeuille. Nous vous recommandons plutôt d’écrire vos mots.",
           "title": "Les captures d'écran ne sont pas sécurisées"
         },
         "view": {
-          "message": "N'importe qui ayant accès à votre phrase de récupération peut accéder à votre wallet et à vos fonds.",
+          "message": "N'importe qui ayant accès à votre phrase de récupération peut accéder à votre portefeuille et à vos fonds.",
           "title": "Lisez ceci dans un lieu privé"
         }
       }
@@ -1267,9 +1267,9 @@
       "support": "Soutien",
       "wallet": {
         "action": {
-          "hide": "Masquer les wallets",
+          "hide": "Masquer les portefeuilles",
           "showAll_one": "Afficher un portefeuille",
-          "showAll_other": "Afficher tous les {{count}} wallets"
+          "showAll_other": "Afficher les {{count}} portefeuilles"
         },
         "button": {
           "viewAll": "Tout voir",
@@ -1278,7 +1278,7 @@
         "label": {
           "viewOnly": "Lecture seule"
         },
-        "title": "Paramètres du wallet"
+        "title": "Paramètres du portefeuille"
       }
     },
     "setting": {
@@ -1310,7 +1310,7 @@
             "message": "Étant donné que ces portefeuilles partagent une phrase de récupération, les sauvegardes de ces portefeuilles ci-dessous seront également supprimées.",
             "title": "Êtes-vous sûr ?"
           },
-          "warning": "Si vous supprimez votre sauvegarde {{cloudProviderName}}, vous ne pourrez récupérer votre wallet qu'avec une sauvegarde manuelle de votre phrase de récupération. Uniswap Labs ne peut pas récupérer vos actifs si vous perdez votre phrase de récupération."
+          "warning": "Si vous supprimez votre sauvegarde {{cloudProviderName}}, vous ne pourrez récupérer votre portefeuille qu'avec une sauvegarde manuelle de votre phrase de récupération. Uniswap Labs ne peut pas récupérer vos actifs si vous perdez votre phrase de récupération."
         },
         "error": {
           "message": {
@@ -1320,7 +1320,7 @@
           "title": "{{cloudProviderName}} erreur"
         },
         "modal": {
-          "description": "Vous n'avez pas déjà sauvegardé votre phrase de récupération sur {{cloudProviderName}}. Ce faisant, vous pouvez récupérer votre wallet simplement en étant connecté à {{cloudProviderName}} sur n'importe quel appareil.",
+          "description": "Vous n'avez pas déjà sauvegardé votre phrase de récupération sur {{cloudProviderName}}. Ce faisant, vous pouvez récupérer votre portefeuille simplement en étant connecté à {{cloudProviderName}} sur n'importe quel appareil.",
           "title": "Sauvegarder la phrase de récupération sur {{cloudProviderName}} ?"
         },
         "password": {
@@ -1331,7 +1331,7 @@
           },
           "medium": "Ceci est un mot de passe moyen",
           "placeholder": {
-            "confirm": "Confirmez le mot de passe",
+            "confirm": "Confirmer le mot de passe",
             "create": "Créer un mot de passe"
           },
           "strong": "Ceci est un mot de passe fort",
@@ -1346,7 +1346,7 @@
             "delete": "Supprimer la sauvegarde"
           },
           "complete": "Sauvegarde sur {{cloudProviderName}}",
-          "description": "En sauvegardant votre phrase de récupération sur {{cloudProviderName}}, vous pouvez récupérer votre wallet avec votre {{cloudProviderName}} sur n'importe quel appareil.",
+          "description": "En sauvegardant votre phrase de récupération sur {{cloudProviderName}}, vous pouvez récupérer votre portefeuille avec votre {{cloudProviderName}} sur n'importe quel appareil.",
           "inProgress": "Sauvegarde vers {{cloudProviderName}}...",
           "recoveryPhrase": {
             "backed": "Sauvegardé"
@@ -1432,7 +1432,7 @@
       "recoveryPhrase": {
         "remove": "Supprimer la phrase de récupération",
         "title": "Phrase de récupération",
-        "view": "Voyez la phrase de récupération"
+        "view": "Voir la phrase de récupération"
       },
       "smallBalances": {
         "title": "Masquer les petits soldes"
@@ -1447,7 +1447,7 @@
         "action": {
           "editLabel": "Modifier l'étiquette",
           "editProfile": "Editer le profil",
-          "remove": "Supprimer le wallet"
+          "remove": "Supprimer le portefeuille"
         },
         "connections": {
           "title": "Gérer les connexions"
@@ -1463,7 +1463,7 @@
           "title": "Notifications"
         },
         "preferences": {
-          "title": "Préférences de wallet"
+          "title": "Préférences de portefeuille"
         }
       }
     },
@@ -1475,8 +1475,8 @@
       "max": "Max.",
       "review": "Vérification",
       "swap": "Échanger",
-      "unwrap": "Déballez",
-      "view": "Voyez la transaction",
+      "unwrap": "Déballer",
+      "view": "Voir la transaction",
       "wrap": "Envelopper"
     },
     "details": {
@@ -1498,7 +1498,7 @@
       "header": "Échanger",
       "slippage": "{{slippageTolerancePercent}} glissement",
       "warning": {
-        "restore": "Restaurez votre wallet pour échanger"
+        "restore": "Restaurez votre portefeuille pour échanger"
       }
     },
     "header": {
@@ -1610,7 +1610,7 @@
         "title": "Frais d'échange"
       },
       "viewOnly": {
-        "message": "Vous devez importer ce wallet avec une phrase de récupération pour échanger des tokens."
+        "message": "Vous devez importer ce portefeuille avec une phrase de récupération pour échanger des tokens."
       }
     }
   },
@@ -1680,7 +1680,7 @@
   "tokens": {
     "action": {
       "hide": "Masquer le token",
-      "unhide": "Démasquez token"
+      "unhide": "Démasquer le token"
     },
     "hidden": {
       "label": "Masqués ({{numHidden}})"
@@ -1695,7 +1695,7 @@
         "label": {
           "items": "Articles",
           "owners": "Les propriétaires",
-          "priceFloor": "Sol",
+          "priceFloor": "Prix plancher",
           "swapVolume": "Volume"
         }
       },
@@ -1711,7 +1711,7 @@
         "traits": "Attributs"
       },
       "empty": {
-        "description": "Aucun NFTs trouvé"
+        "description": "Aucun NFT trouvé"
       },
       "error": {
         "unavailable": "Contenu indisponible"
@@ -1719,7 +1719,7 @@
       "hidden": {
         "action": {
           "hide": "Masquer le NFT",
-          "unhide": "Démasquez NFT"
+          "unhide": "Démasquer le NFT"
         },
         "label": "Masqués ({{numHidden}})"
       },
@@ -1729,14 +1729,14 @@
       "list": {
         "error": {
           "load": {
-            "title": "Impossible de charger les NFTs"
+            "title": "Impossible de charger les NFT"
           }
         },
         "none": {
-          "button": "Recevoir des NFTs",
+          "button": "Recevoir des NFT",
           "description": {
-            "default": "Transférez des NFTs d'un autre wallet pour commencer.",
-            "external": "Lorsque ce wallet achète ou reçoit des NFT, ils apparaîtront ici."
+            "default": "Transférez des NFT d'un autre portefeuille pour commencer.",
+            "external": "Lorsque ce portefeuille achète ou reçoit des NFT, ils apparaîtront ici."
           },
           "title": "Aucun NFT pour le moment"
         }
@@ -1753,7 +1753,7 @@
           "title": "Acheter des cryptos"
         },
         "receive": {
-          "message": "Transférez des tokens d'un échange centralisé ou un autre wallet pour envoyer des tokens.",
+          "message": "Transférez des tokens d'un échange centralisé ou un autre portefeuille pour envoyer des tokens.",
           "title": "Recevoir des tokens"
         },
         "title": "Aucun token pour le moment"
@@ -1785,8 +1785,8 @@
       "copy": "Copiez l'ID de transaction",
       "copyMoonPay": "Copiez l'ID de transaction MoonPay",
       "view": "Voir {{tokenSymbol}}",
-      "viewEtherscan": "Voyez sur {{blockExplorerName}}",
-      "viewMoonPay": "Voyez sur MoonPay"
+      "viewEtherscan": "Voir {{blockExplorerName}}",
+      "viewMoonPay": "Voir MoonPay"
     },
     "amount": {
       "unlimited": "Illimité"
@@ -1812,7 +1812,7 @@
     },
     "status": {
       "approve": {
-        "canceled": "Annulé approuver",
+        "canceled": "Approbation annulée",
         "canceling": "Annuler l'approbation",
         "failed": "Échec de l'approbation",
         "pending": "En cours d'approbation",
@@ -1829,7 +1829,7 @@
       },
       "confirm": {
         "canceled": "Confirmation annulée",
-        "canceling": "Confirmation d'annulation",
+        "canceling": "Annulation de la confirmation",
         "failed": "Échec de la confirmation",
         "pending": "Transaction en cours",
         "success": "Transaction confirmée",
@@ -1861,7 +1861,7 @@
       },
       "revoke": {
         "canceled": "Révocation annulée",
-        "canceling": "Annuler la révocation",
+        "canceling": "Annulation de la révocation",
         "failed": "Échec de la révocation",
         "pending": "Révocation en cours",
         "success": "Révoqué",
@@ -2106,21 +2106,21 @@
       },
       "switchAccount": "Changer de compte",
       "switchNetwork": "Changer de réseau",
-      "title": "{{dappName}} veut se connecter à votre wallet"
+      "title": "{{dappName}} veut se connecter à votre portefeuille"
     },
     "permissions": {
       "networks": "Réseaux",
       "option": {
-        "transferAssets": "Transférez vos actifs sans consentement",
-        "viewTokenBalances": "Voyez vos soldes de tokens",
-        "viewWalletAddress": "Voyez l'adresse de votre wallet"
+        "transferAssets": "Transférer vos actifs sans consentement",
+        "viewTokenBalances": "Voir vos soldes de tokens",
+        "viewWalletAddress": "Voir l'adresse de votre portefeuille"
       },
       "title": "Autorisations de l'application"
     },
     "request": {
       "button": {
         "scrollDown": "Faites défiler vers le bas pour signer",
-        "sign": "Signe"
+        "sign": "Signer"
       },
       "details": {
         "label": {
@@ -2141,8 +2141,8 @@
           "message": "Attention : ce message peut transférer des actifs",
           "transaction": "Attention : cette transaction peut transférer des actifs"
         },
-        "message": "Pour signer des messages ou des transactions, vous devrez importer la phrase de récupération du wallet.",
-        "title": "Ce wallet est en mode \"lecture seule\""
+        "message": "Pour signer des messages ou des transactions, vous devrez importer la phrase de récupération du portefeuille.",
+        "title": "Ce portefeuille est en mode \"lecture seule\""
       }
     }
   }
