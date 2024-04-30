@@ -1,7 +1,9 @@
+// eslint-disable-next-line no-restricted-imports
 import { Statsig, StatsigContext } from 'statsig-react-native'
 const statsig = Statsig
 const statsigContext = StatsigContext
 
+// eslint-disable-next-line no-restricted-imports
 export {
   DynamicConfig,
   useConfig,

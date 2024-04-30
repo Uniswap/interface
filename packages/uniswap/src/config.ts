@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import {
   APPSFLYER_API_KEY,
   APPSFLYER_APP_ID,
