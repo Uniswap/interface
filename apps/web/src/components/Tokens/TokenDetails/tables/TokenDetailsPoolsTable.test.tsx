@@ -1,5 +1,3 @@
-import 'test-utils/tokens/mocks'
-
 import { ApolloError } from '@apollo/client'
 import { ChainId, Percent, Token } from '@uniswap/sdk-core'
 import { TokenDetailsPoolsTable } from 'components/Tokens/TokenDetails/tables/TokenDetailsPoolsTable'

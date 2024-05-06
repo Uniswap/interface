@@ -47,11 +47,6 @@ module.exports = {
                 message: 'Import cached/subscription-based balance hooks from `TokenBalancesProvider.tsx` instead.',
               },
               {
-                name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
-                importNames: ['useActivityWebQuery'],
-                message: 'Import cached/subscription-based activity hooks from `AssetActivityProvider` instead.',
-              },
-              {
                 name: '@uniswap/smart-order-router',
                 message: 'Only import types, unless you are in the client-side SOR, to preserve lazy-loading.',
                 allowTypeImports: true,

@@ -8,12 +8,6 @@ jest.mock('wallet/src/features/gas/hooks', () => {
   }
 })
 
-jest.mock('wallet/src/features/transactions/swap/hooks/useGasFeeHighRelativeToValue', () => {
-  return {
-    useGasFeeHighRelativeToValue: jest.fn(() => false),
-  }
-})
-
 describe(NetworkFee, () => {
   it('renders a NetworkFee normally', () => {
     const tree = render(

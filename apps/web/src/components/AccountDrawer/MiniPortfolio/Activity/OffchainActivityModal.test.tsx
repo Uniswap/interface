@@ -1,21 +1,30 @@
-import 'test-utils/tokens/mocks'
-
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
-import { DAI } from 'constants/tokens'
+import { DAI, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { useCurrency } from 'hooks/Tokens'
 import { SignatureType } from 'state/signatures/types'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
-
 import { UniswapXOrderStatus } from 'types/uniswapx'
+
 import { OrderContent } from './OffchainActivityModal'
 
+jest.mock('hooks/Tokens', () => ({
+  useCurrency: jest.fn(),
+}))
 jest.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => ({
   formatTimestamp: jest.fn(),
 }))
 
 describe('OrderContent', () => {
   beforeEach(() => {
+    mocked(useCurrency).mockImplementation((currencyId: Maybe<string>) => {
+      if (currencyId === WETH9[ChainId.MAINNET].address) {
+        return WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET]
+      } else {
+        return DAI
+      }
+    })
     mocked(formatTimestamp).mockImplementation(() => {
       return 'Mock Date' // This ensures consistent test behavior across local and CI
     })
@@ -36,7 +45,7 @@ describe('OrderContent', () => {
             isUniswapXOrder: true,
             type: 1,
             tradeType: 0,
-            inputCurrencyId: DAI.address,
+            inputCurrencyId: '0x6b175474e89094c44da98b954eedeac495271d0f',
             outputCurrencyId: WETH9[ChainId.MAINNET].address,
             inputCurrencyAmountRaw: '252074033564766400000',
             expectedOutputCurrencyAmountRaw: '106841079134757921',

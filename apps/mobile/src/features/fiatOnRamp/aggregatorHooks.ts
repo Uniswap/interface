@@ -15,7 +15,7 @@ import {
   useFiatOnRampAggregatorCryptoQuoteQuery,
   useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
 } from 'wallet/src/features/fiatOnRamp/api'
-import { FORQuote, FORSupportedFiatCurrency } from 'wallet/src/features/fiatOnRamp/types'
+import { FORQuote } from 'wallet/src/features/fiatOnRamp/types'
 import {
   isFiatOnRampApiError,
   isInvalidRequestAmountTooHigh,
@@ -27,7 +27,6 @@ import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 export function useMeldFiatCurrencySupportInfo(countryCode: string): {
   appFiatCurrencySupportedInMeld: boolean
   meldSupportedFiatCurrency: FiatCurrencyInfo
-  supportedFiatCurrencies: FORSupportedFiatCurrency[] | undefined
 } {
   // Not all the currencies are supported by Meld, so we need to fallback to USD if the currency is not supported
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
@@ -50,7 +49,6 @@ export function useMeldFiatCurrencySupportInfo(countryCode: string): {
   return {
     appFiatCurrencySupportedInMeld: appFiatCurrencySupported,
     meldSupportedFiatCurrency,
-    supportedFiatCurrencies: supportedFiatCurrencies?.fiatCurrencies,
   }
 }
 

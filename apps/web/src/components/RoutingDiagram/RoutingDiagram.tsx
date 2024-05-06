@@ -2,9 +2,11 @@ import { Protocol } from '@uniswap/router-sdk'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row, { AutoRow } from 'components/Row'
 import { BIPS_BASE } from 'constants/misc'
+import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { Trans } from 'i18n'
 import { Box } from 'rebass'
 import styled from 'styled-components'
@@ -12,7 +14,6 @@ import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { RoutingDiagramEntry } from 'utils/getRoutingDiagramEntries'
 
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { ReactComponent as DotLine } from '../../assets/svg/dot_line.svg'
 import { MouseoverTooltip, TooltipSize } from '../Tooltip'
 
@@ -82,23 +83,6 @@ const BadgeText = styled(ThemedText.LabelMicro)`
   word-break: normal;
 `
 
-function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; currency1: Currency; feeAmount: FeeAmount }) {
-  // TODO - link pool icon to info.uniswap.org via query params
-  return (
-    <MouseoverTooltip
-      text={<Trans>{{ pct: currency0?.symbol + '/' + currency1?.symbol + ' ' + feeAmount / 10000 }}% pool</Trans>}
-      size={TooltipSize.ExtraSmall}
-    >
-      <PoolBadge>
-        <Box margin="0 4px 0 12px">
-          <DoubleCurrencyLogo currencies={[currency0, currency1]} size={20} />
-        </Box>
-        <BadgeText>{feeAmount / BIPS_BASE}%</BadgeText>
-      </PoolBadge>
-    </MouseoverTooltip>
-  )
-}
-
 export default function RoutingDiagram({
   currencyIn,
   currencyOut,
@@ -108,13 +92,16 @@ export default function RoutingDiagram({
   currencyOut: Currency
   routes: RoutingDiagramEntry[]
 }) {
+  const tokenIn = useTokenInfoFromActiveList(currencyIn)
+  const tokenOut = useTokenInfoFromActiveList(currencyOut)
+
   return (
     <Wrapper>
       {routes.map((entry, index) => (
         <RouteContainerRow key={index}>
-          <CurrencyLogo currency={currencyIn} size={20} />
+          <CurrencyLogo currency={tokenIn} size="20px" />
           <Route entry={entry} />
-          <CurrencyLogo currency={currencyOut} size={20} />
+          <CurrencyLogo currency={tokenOut} size="20px" />
         </RouteContainerRow>
       ))}
     </Wrapper>
@@ -145,5 +132,25 @@ function Route({ entry: { percent, path, protocol } }: { entry: RoutingDiagramEn
         ))}
       </AutoRow>
     </RouteRow>
+  )
+}
+
+function Pool({ currency0, currency1, feeAmount }: { currency0: Currency; currency1: Currency; feeAmount: FeeAmount }) {
+  const tokenInfo0 = useTokenInfoFromActiveList(currency0)
+  const tokenInfo1 = useTokenInfoFromActiveList(currency1)
+
+  // TODO - link pool icon to info.uniswap.org via query params
+  return (
+    <MouseoverTooltip
+      text={<Trans>{{ pct: tokenInfo0?.symbol + '/' + tokenInfo1?.symbol + ' ' + feeAmount / 10000 }}% pool</Trans>}
+      size={TooltipSize.ExtraSmall}
+    >
+      <PoolBadge>
+        <Box margin="0 4px 0 12px">
+          <DoubleCurrencyLogo currency0={tokenInfo1} currency1={tokenInfo0} size={20} />
+        </Box>
+        <BadgeText>{feeAmount / BIPS_BASE}%</BadgeText>
+      </PoolBadge>
+    </MouseoverTooltip>
   )
 }

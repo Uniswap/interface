@@ -64,12 +64,7 @@ export default function TokenWarningModal({
 
   return (
     <BottomSheetModal name={ModalName.TokenWarningModal} onClose={onClose}>
-      <Flex
-        centered
-        gap="$spacing16"
-        pb={isWeb ? '$none' : '$spacing12'}
-        pt="$spacing12"
-        px={isWeb ? '$none' : '$spacing24'}>
+      <Flex centered gap="$spacing16" pb={isWeb ? '$none' : '$spacing12'} pt="$spacing12">
         {showWarningIcon ? (
           <Flex centered gap="$spacing16">
             <Flex

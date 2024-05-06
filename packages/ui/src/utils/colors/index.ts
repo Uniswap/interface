@@ -10,7 +10,7 @@ import { hex } from 'wcag-contrast'
 /** The contrast threshold for token colors is currently lower than the WCAG AA standard of 3.0 because a slightly lower threshold leads to better results right now due to imitations of the color extraction library. */
 const MIN_TOKEN_COLOR_CONTRAST_THRESHOLD = 1.95
 
-export const SPECIAL_CASE_TOKEN_COLORS: { [key: string]: string } = {
+const specialCaseTokenColors: { [key: string]: string } = {
   // old WBTC
   'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png':
     '#F09241',
@@ -117,11 +117,11 @@ function getSpecialCaseTokenColor(imageUrl: Maybe<string>, isDarkMode: boolean):
     return isDarkMode ? '#FFFFFF' : '#000000'
   }
 
-  if (!imageUrl || !SPECIAL_CASE_TOKEN_COLORS[imageUrl]) {
+  if (!imageUrl || !specialCaseTokenColors[imageUrl]) {
     return null
   }
 
-  return SPECIAL_CASE_TOKEN_COLORS[imageUrl] ?? null
+  return specialCaseTokenColors[imageUrl] ?? null
 }
 /**
  * Picks a contrast-passing color from a given token image URL and background color.

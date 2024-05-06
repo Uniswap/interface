@@ -11,7 +11,7 @@ import Apollo
 public class Network {
   public static let shared = Network()
   
-  private let UNISWAP_API_URL = "https://ios.wallet.gateway.uniswap.org/v1/graphql"
+  private let UNISWAP_API_URL = Env.UNISWAP_API_BASE_URL + "/v1/graphql"
   
   public lazy var apollo: ApolloClient = {
     let cache = InMemoryNormalizedCache()

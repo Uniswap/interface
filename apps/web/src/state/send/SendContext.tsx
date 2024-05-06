@@ -59,7 +59,6 @@ export const SendContext = createContext<SendContextType>({
     recipientData: undefined,
     transaction: undefined,
     gasFeeCurrencyAmount: undefined,
-    gasFee: undefined,
     inputError: undefined,
   },
 })

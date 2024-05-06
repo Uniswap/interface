@@ -36,29 +36,6 @@ exports[`CommonBases renders without crashing 1`] = `
   margin: 4px !important;
 }
 
-.c6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c6 img {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-}
-
-.c7 {
-  width: 12px;
-  height: 24px;
-  border-radius: 50%;
-}
-
 .c5 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -71,6 +48,12 @@ exports[`CommonBases renders without crashing 1`] = `
   position: relative;
   top: 0;
   left: 0;
+}
+
+.c6 {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
 }
 
 .c4 {
@@ -126,17 +109,10 @@ exports[`CommonBases renders without crashing 1`] = `
             <div
               class="c5"
             >
-              <div
+              <img
                 class="c6"
-                size="24"
-              >
-                 
-                <img
-                  class="c7"
-                  size="24"
-                  src="ethereum-logo.png"
-                />
-              </div>
+                src="ethereum-logo.png"
+              />
             </div>
           </div>
           <div
@@ -157,17 +133,10 @@ exports[`CommonBases renders without crashing 1`] = `
             <div
               class="c5"
             >
-              <div
+              <img
                 class="c6"
-                size="24"
-              >
-                 
-                <img
-                  class="c7"
-                  size="24"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                />
-              </div>
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+              />
             </div>
           </div>
           <div
@@ -188,17 +157,10 @@ exports[`CommonBases renders without crashing 1`] = `
             <div
               class="c5"
             >
-              <div
+              <img
                 class="c6"
-                size="24"
-              >
-                 
-                <img
-                  class="c7"
-                  size="24"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                />
-              </div>
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+              />
             </div>
           </div>
           <div
@@ -219,17 +181,10 @@ exports[`CommonBases renders without crashing 1`] = `
             <div
               class="c5"
             >
-              <div
+              <img
                 class="c6"
-                size="24"
-              >
-                 
-                <img
-                  class="c7"
-                  size="24"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"
-                />
-              </div>
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"
+              />
             </div>
           </div>
           <div
@@ -250,17 +205,10 @@ exports[`CommonBases renders without crashing 1`] = `
             <div
               class="c5"
             >
-              <div
+              <img
                 class="c6"
-                size="24"
-              >
-                 
-                <img
-                  class="c7"
-                  size="24"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png"
-                />
-              </div>
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png"
+              />
             </div>
           </div>
           <div
@@ -281,17 +229,10 @@ exports[`CommonBases renders without crashing 1`] = `
             <div
               class="c5"
             >
-              <div
+              <img
                 class="c6"
-                size="24"
-              >
-                 
-                <img
-                  class="c7"
-                  size="24"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                />
-              </div>
+                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+              />
             </div>
           </div>
           <div

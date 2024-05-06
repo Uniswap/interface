@@ -142,15 +142,15 @@ export function getNftCollectionUrl(contractAddress: Maybe<string>): string | un
   if (!contractAddress) {
     return undefined
   }
-  return `${uniswapUrls.webInterfaceNftCollectionUrl}/${contractAddress}`
+  return `${uniswapUrls.appUrl}/nfts/collection/${contractAddress}`
 }
 
 export function getNftUrl(contractAddress: string, tokenId: string): string {
-  return `${uniswapUrls.webInterfaceNftItemUrl}/${contractAddress}/${tokenId}`
+  return `${uniswapUrls.appUrl}/nfts/asset/${contractAddress}/${tokenId}`
 }
 
 export function getProfileUrl(walletAddress: string): string {
-  return `${uniswapUrls.webInterfaceAddressUrl}/${walletAddress}`
+  return `${uniswapUrls.appUrl}/address/${walletAddress}`
 }
 
 export function getTokenUrl(currencyId: string): string | undefined {
@@ -166,7 +166,7 @@ export function getTokenUrl(currencyId: string): string | undefined {
       // this is how web app handles native tokens
       tokenAddress = UNISWAP_APP_NATIVE_TOKEN
     }
-    return `${uniswapUrls.webInterfaceTokensUrl}/${network}/${tokenAddress}`
+    return `${uniswapUrls.interfaceTokensUrl}/${network}/${tokenAddress}`
   } catch (_) {
     return
   }

@@ -7,7 +7,7 @@ import {
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
 import {
-  INITIAL_TRANSACTION_STATE,
+  initialState,
   selectCurrency,
   switchCurrencySides,
   transactionStateReducer,
@@ -33,7 +33,7 @@ const testInitialState: Readonly<TransactionState> = {
 }
 
 test('should return the initial state', () => {
-  expect(transactionStateReducer(undefined, {} as AnyAction)).toEqual(INITIAL_TRANSACTION_STATE)
+  expect(transactionStateReducer(undefined, {} as AnyAction)).toEqual(initialState)
 })
 
 describe(selectCurrency, () => {

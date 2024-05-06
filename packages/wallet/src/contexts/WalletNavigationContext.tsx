@@ -6,9 +6,8 @@ import {
   CurrencyField,
   TransactionState,
 } from 'wallet/src/features/transactions/transactionState/types'
-import { getSendPrefilledState } from 'wallet/src/features/transactions/transfer/getSendPrefilledState'
 
-type NavigateToTransactionFlowTransactionState = {
+type NavigateToSwapFlowTransactionState = {
   initialState: TransactionState
 }
 
@@ -18,27 +17,14 @@ type NavigateToSwapFlowPartialState = {
   currencyChainId: ChainId
 }
 
-type NavigateToSendFlowPartialState = {
-  chainId: ChainId
-  currencyAddress?: Address
-}
-
 export type NavigateToSwapFlowArgs =
   // Depending on how much control you need, you can either pass a complete `TransactionState` object or just the currency, address and chain.
-  NavigateToTransactionFlowTransactionState | NavigateToSwapFlowPartialState | undefined
+  NavigateToSwapFlowTransactionState | NavigateToSwapFlowPartialState | undefined
 
-// Same as above, but for send flow
-export type NavigateToSendFlowArgs =
-  | NavigateToTransactionFlowTransactionState
-  | NavigateToSendFlowPartialState
-  | undefined
-
-function isNavigateToTransactionFlowArgsInitialState(
-  args: NavigateToSwapFlowArgs | NavigateToSendFlowArgs
-): args is NavigateToTransactionFlowTransactionState {
-  return Boolean(
-    args && (args as NavigateToTransactionFlowTransactionState).initialState !== undefined
-  )
+function isNavigateToSwapFlowArgsInitialState(
+  args: NavigateToSwapFlowArgs
+): args is NavigateToSwapFlowTransactionState {
+  return Boolean(args && (args as NavigateToSwapFlowTransactionState).initialState !== undefined)
 }
 
 function isNavigateToSwapFlowArgsPartialState(
@@ -47,29 +33,13 @@ function isNavigateToSwapFlowArgsPartialState(
   return Boolean(args && (args as NavigateToSwapFlowPartialState).currencyAddress !== undefined)
 }
 
-function isNavigateToSendFlowArgsPartialState(
-  args: NavigateToSendFlowArgs
-): args is NavigateToSendFlowPartialState {
-  return Boolean(args && (args as NavigateToSendFlowPartialState).chainId !== undefined)
-}
-
 export function getNavigateToSwapFlowArgsInitialState(
   args: NavigateToSwapFlowArgs
 ): TransactionState | undefined {
-  return isNavigateToTransactionFlowArgsInitialState(args)
+  return isNavigateToSwapFlowArgsInitialState(args)
     ? args.initialState
     : isNavigateToSwapFlowArgsPartialState(args)
     ? getSwapPrefilledState(args)
-    : undefined
-}
-
-export function getNavigateToSendFlowArgsInitialState(
-  args: NavigateToSendFlowArgs
-): TransactionState | undefined {
-  return isNavigateToTransactionFlowArgsInitialState(args)
-    ? args.initialState
-    : isNavigateToSendFlowArgsPartialState(args)
-    ? getSendPrefilledState(args)
     : undefined
 }
 
@@ -80,6 +50,13 @@ export type NavigateToNftItemArgs = {
   isSpam?: boolean
   fallbackData?: NFTItem
 }
+
+export type NavigateToSendArgs =
+  | {
+      chainId: ChainId
+      currencyAddress: Address
+    }
+  | undefined
 
 export type ShareTokenArgs = {
   currencyId: string
@@ -99,7 +76,7 @@ export type WalletNavigationContextState = {
   navigateToSwapFlow: (args: NavigateToSwapFlowArgs) => void
   navigateToTokenDetails: (currencyId: string) => void
   navigateToReceive: () => void
-  navigateToSend: (args: NavigateToSendFlowArgs) => void
+  navigateToSend: (args: NavigateToSendArgs) => void
   handleShareNft: (args: ShareNftArgs) => void
   handleShareToken: (args: ShareTokenArgs) => void
 }

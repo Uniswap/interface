@@ -34,7 +34,7 @@ interface DappLogoWithTxStatusProps {
   event: WalletConnectEvent
   size: number
   chainId: ChainId | null
-  dappImageUrl: Maybe<string>
+  dappImageUrl: string | null
   dappName: string
 }
 
@@ -242,7 +242,7 @@ export function DappLogoWithWCBadge({
   size,
   chainId,
 }: {
-  dappImageUrl: Maybe<string>
+  dappImageUrl: string | null
   dappName: string
   size: number
   chainId: ChainId | null

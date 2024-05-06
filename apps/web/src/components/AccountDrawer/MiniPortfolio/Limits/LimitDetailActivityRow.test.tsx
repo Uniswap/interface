@@ -1,5 +1,3 @@
-import 'test-utils/tokens/mocks'
-
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { LimitDetailActivityRow } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitDetailActivityRow'
@@ -13,6 +11,20 @@ jest.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => {
   return {
     ...jest.requireActual('components/AccountDrawer/MiniPortfolio/formatTimestamp'),
     formatTimestamp: () => 'Expires January 1, 1970 at 12:00 AM',
+  }
+})
+
+jest.mock('hooks/Tokens', () => {
+  return {
+    useCurrency: (address?: string) => {
+      if (address?.toLowerCase() === DAI.address.toLowerCase()) {
+        return DAI
+      }
+      if (address?.toLowerCase() === WETH9[ChainId.MAINNET].address.toLowerCase()) {
+        return WETH9[ChainId.MAINNET]
+      }
+      return undefined
+    },
   }
 })
 
@@ -48,7 +60,6 @@ const mockOrder: Activity = {
   title: 'Limit pending',
   from: '0x456',
   offchainOrderDetails: mockOrderDetails,
-  currencies: [DAI, WETH9[ChainId.MAINNET]],
 }
 
 describe('LimitDetailActivityRow', () => {

@@ -4,7 +4,6 @@ import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWallet
 import { ExchangeTransferModalState } from 'src/features/fiatOnRamp/ExchangeTransferModalState'
 import { ExtensionWaitlistModalState } from 'src/features/scantastic/ExtensionWaitlistModalState'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
-import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { Screens } from 'src/screens/Screens'
 import { getKeys } from 'utilities/src/primitives/objects'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
@@ -48,7 +47,7 @@ type FiatOnRampAggregatorModalParams = {
 
 type ReceiveCryptoModalParams = {
   name: typeof ModalName.ReceiveCryptoModal
-  initialState: ReceiveCryptoModalState
+  initialState?: undefined
 }
 
 type LanguageSelectorModalParams = {
@@ -124,7 +123,7 @@ export const initialModalsState: ModalsState = {
   },
   [ModalName.ReceiveCryptoModal]: {
     isOpen: false,
-    initialState: [],
+    initialState: undefined,
   },
   [ModalName.WalletConnectScan]: {
     isOpen: false,

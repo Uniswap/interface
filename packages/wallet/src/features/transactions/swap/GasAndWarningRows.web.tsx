@@ -15,10 +15,8 @@ import { BuyNativeTokenCtaRow } from 'wallet/src/features/transactions/swap/BuyN
 import { GasAndWarningRowsProps } from 'wallet/src/features/transactions/swap/GasAndWarningRowsProps'
 import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRatio'
 import { SwapWarningModal } from 'wallet/src/features/transactions/swap/SwapWarningModal'
-import { useGasFeeHighRelativeToValue } from 'wallet/src/features/transactions/swap/hooks/useGasFeeHighRelativeToValue'
 import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
 import { PriceImpactWarning } from 'wallet/src/features/transactions/swap/modals/PriceImpactWarning'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
@@ -31,8 +29,7 @@ export function GasAndWarningRows({
   const { gasFee } = useSwapTxContext()
   const { derivedSwapInfo } = useSwapFormContext()
 
-  const { chainId, trade, currencyAmountsUSDValue } = derivedSwapInfo
-  const outputUSDValue = currencyAmountsUSDValue[CurrencyField.OUTPUT]
+  const { chainId, trade } = derivedSwapInfo
   const priceImpact = trade.trade ? normalizePriceImpact(trade.trade?.priceImpact) : undefined
 
   const [showWarningModal, setShowWarningModal] = useState(false)
@@ -57,8 +54,6 @@ export function GasAndWarningRows({
     Keyboard.dismiss()
     setShowWarningModal(true)
   }, [formScreenWarning?.warning.message])
-
-  const gasFeeHighRelativeToSwapValue = useGasFeeHighRelativeToValue(gasFeeUSD, outputUSDValue)
 
   return (
     <>
@@ -97,19 +92,13 @@ export function GasAndWarningRows({
               </Flex>
               {showGasFee && (
                 <NetworkFeeWarning
-                  gasFeeHighRelativeToValue={gasFeeHighRelativeToSwapValue}
                   placement="bottom"
                   tooltipTrigger={
                     <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
-                      <Icons.Gas
-                        color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'}
-                        size="$icon.16"
-                      />
-                      <Text
-                        color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'}
-                        variant="body4">
+                      <Text color="$neutral2" variant="body4">
                         {gasFeeFormatted}
                       </Text>
+                      <Icons.Gas color="$neutral2" size="$icon.16" />
                     </AnimatedFlex>
                   }
                 />

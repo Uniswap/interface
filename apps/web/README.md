@@ -13,6 +13,12 @@ yarn
 yarn web start
 ```
 
+## Unsupported tokens
+
+Check out `useUnsupportedTokenList()` in [src/state/lists/hooks.ts](./src/state/lists/hooks.ts) for blocking tokens in your instance of the interface.
+
+You can block an entire list of tokens by passing in a tokenlist like [here](./src/constants/lists.ts)
+
 ## Accessing Uniswap V2
 
 The Uniswap Interface supports swapping, adding liquidity, removing liquidity and migrating liquidity for Uniswap protocol V2.

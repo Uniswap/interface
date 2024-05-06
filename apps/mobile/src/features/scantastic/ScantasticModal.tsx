@@ -121,7 +121,7 @@ export function ScantasticModal(): JSX.Element | null {
 
     try {
       // submit encrypted blob
-      const response = await fetch(`${uniswapUrls.scantasticApiUrl}/blob`, {
+      const response = await fetch(`${uniswapUrls.apiBaseExtensionUrl}/scantastic/blob`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -176,13 +176,16 @@ export function ScantasticModal(): JSX.Element | null {
       return
     }
     try {
-      const response = await fetch(`${uniswapUrls.scantasticApiUrl}/otp-state/${uuid}`, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          Origin: 'https://uniswap.org',
-        },
-      })
+      const response = await fetch(
+        `${uniswapUrls.apiBaseExtensionUrl}/scantastic/otp-state/${uuid}`,
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            Origin: 'https://uniswap.org',
+          },
+        }
+      )
       if (!response.ok) {
         throw new Error(`Failed to check OTP state: ${await response.text()}`)
       }

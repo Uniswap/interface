@@ -1,15 +1,14 @@
 import { ApolloClient, from } from '@apollo/client'
 import { RestLink } from 'apollo-link-rest'
 import { config } from 'uniswap/src/config'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { createNewInMemoryCache } from 'uniswap/src/data/cache'
 
 const restLink = new RestLink({
-  uri: uniswapUrls.tradingApiUrl,
+  uri: config.tradingApiUrl,
   headers: {
     'Content-Type': 'application/json',
     'X-API-KEY': config.tradingApiKey,
-    Origin: uniswapUrls.requestOriginUrl,
+    Origin: config.uniswapAppUrl,
   },
 })
 

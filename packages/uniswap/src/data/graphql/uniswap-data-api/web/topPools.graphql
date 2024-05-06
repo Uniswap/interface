@@ -8,10 +8,10 @@ query TopV3Pools($chain: Chain!, $first: Int!, $cursor: Float, $tokenAddress: St
     }
     feeTier
     token0 {
-      ...SimpleTokenDetails
+      ...PoolToken
     }
     token1 {
-      ...SimpleTokenDetails
+      ...PoolToken
     }
     txCount
     volume24h: cumulativeVolume(duration: DAY) {
@@ -23,8 +23,8 @@ query TopV3Pools($chain: Chain!, $first: Int!, $cursor: Float, $tokenAddress: St
   }
 }
 
-query TopV2Pairs($chain: Chain!, $first: Int!, $cursor: Float, $tokenAddress: String) {
-  topV2Pairs(first: $first, chain: $chain, tokenFilter: $tokenAddress, tvlCursor: $cursor) {
+query TopV2Pairs($first: Int!, $cursor: Float, $tokenAddress: String) {
+  topV2Pairs(first: $first, chain: ETHEREUM, tokenFilter: $tokenAddress, tvlCursor: $cursor) {
     id
     protocolVersion
     address
@@ -32,10 +32,10 @@ query TopV2Pairs($chain: Chain!, $first: Int!, $cursor: Float, $tokenAddress: St
       value
     }
     token0 {
-      ...SimpleTokenDetails
+      ...PoolToken
     }
     token1 {
-      ...SimpleTokenDetails
+      ...PoolToken
     }
     txCount
     volume24h: cumulativeVolume(duration: DAY) {

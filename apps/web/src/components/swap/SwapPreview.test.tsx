@@ -1,5 +1,3 @@
-import 'test-utils/tokens/mocks'
-
 import {
   ETH_MAINNET,
   PREVIEW_EXACT_IN_TRADE,

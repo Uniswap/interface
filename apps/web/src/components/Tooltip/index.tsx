@@ -1,4 +1,3 @@
-import { Placement } from '@popperjs/core'
 import { transparentize } from 'polished'
 import { PropsWithChildren, ReactNode, useEffect, useState } from 'react'
 import styled from 'styled-components'
@@ -51,7 +50,6 @@ type TooltipProps = Omit<PopoverProps, 'content'> & {
   size?: TooltipSize
   disabled?: boolean
   timeout?: number
-  placement?: Placement
 }
 
 // TODO(WEB-2024)

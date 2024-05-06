@@ -22,7 +22,7 @@ export const MissingImageLogo = styled.div<{ $size?: string; $textColor: string;
 export type AssetLogoBaseProps = {
   symbol?: string | null
   primaryImg?: string | null
-  size?: number
+  size?: string
   style?: React.CSSProperties
   currency?: Currency | null
 }
@@ -36,7 +36,13 @@ const LogoContainer = styled.div`
 /**
  * Renders an image by prioritizing a list of sources, and then eventually a fallback triangle alert
  */
-export default function AssetLogo({ currency, chainId = ChainId.MAINNET, size = 24, style }: AssetLogoProps) {
+export default function AssetLogo({
+  currency,
+
+  chainId = ChainId.MAINNET,
+  size = '24px',
+  style,
+}: AssetLogoProps) {
   return (
     <LogoContainer style={{ height: size, width: size, ...style }}>
       <PortfolioLogo currencies={currency ? [currency] : []} size={size} chainId={chainId} />

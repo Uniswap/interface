@@ -1,5 +1,6 @@
 import { ChainId, Token } from '@uniswap/sdk-core'
 import { Pool, Position } from '@uniswap/v3-sdk'
+import { useAllTokensMultichain } from 'hooks/Tokens'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import ms from 'ms'
@@ -104,6 +105,7 @@ function useTokenCache() {
 
 type TokenGetterFn = (addresses: string[], chainId: ChainId) => Promise<{ [key: string]: Token | undefined }>
 export function useGetCachedTokens(chains: ChainId[]): TokenGetterFn {
+  const allTokens = useAllTokensMultichain()
   const multicallContracts = useInterfaceMulticallContracts(chains)
   const tokenCache = useTokenCache()
 
@@ -123,14 +125,14 @@ export function useGetCachedTokens(chains: ChainId[]): TokenGetterFn {
       const local: { [address: string]: Token | undefined } = {}
       const missing = new Set<string>()
       addresses.forEach((address) => {
-        const cached = tokenCache.get(chainId, address)
+        const cached = tokenCache.get(chainId, address) ?? allTokens[chainId]?.[address]
         cached ? (local[address] = cached) : missing.add(address)
       })
 
       const fetched = await fetchRemoteTokens([...missing], chainId)
       return { ...local, ...fetched }
     },
-    [fetchRemoteTokens, tokenCache]
+    [allTokens, fetchRemoteTokens, tokenCache]
   )
 
   return getTokens

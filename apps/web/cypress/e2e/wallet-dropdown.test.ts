@@ -1,4 +1,4 @@
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
 import { getTestSelector } from '../utils'
 
 describe('Wallet Dropdown', () => {

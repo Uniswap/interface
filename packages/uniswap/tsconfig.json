@@ -5,7 +5,7 @@
     "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.json"
-  ],
+ ],
   "references": [
     {
       "path": "../ui"
@@ -16,7 +16,6 @@
   ],
   "compilerOptions": {
     "types": [
-      "chrome",
       "jest"
     ]
   }

@@ -4,7 +4,7 @@ import TokenDetails from 'components/Tokens/TokenDetails'
 import { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
 import InvalidTokenDetails from 'components/Tokens/TokenDetails/InvalidTokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
-import { useTokenWarning } from 'constants/tokenSafety'
+import { checkWarning } from 'constants/tokenSafety'
 import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL, nativeOnChain } from 'constants/tokens'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { gqlToCurrency, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
@@ -96,7 +96,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
 
   const { currency, currencyWasFetchedOnChain } = useTDPCurrency(tokenQuery, tokenAddress, currencyChainId, isNative)
 
-  const warning = useTokenWarning(tokenAddress, currencyChainId)
+  const warning = checkWarning(tokenAddress, currencyChainId)
 
   // Extract color for page usage
   const theme = useTheme()

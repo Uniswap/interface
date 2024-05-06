@@ -2,10 +2,6 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, ImageBackground, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import {
-  SERVICE_PROVIDER_ICON_BORDER_RADIUS,
-  ServiceProviderLogoStyles,
-} from 'src/features/fiatOnRamp/constants'
 import { AnimatedFlex, Flex, Text, useDeviceInsets, useIsDarkMode } from 'ui/src'
 import {
   FOR_CONNECTING_BACKGROUND_DARK,
@@ -13,6 +9,9 @@ import {
   UNISWAP_LOGO_LARGE,
 } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
+
+export const SERVICE_PROVIDER_ICON_SIZE = 90
+export const SERVICE_PROVIDER_ICON_BORDER_RADIUS = 20
 
 export function FiatOnRampConnectingView({
   amount,
@@ -76,7 +75,7 @@ const styles = StyleSheet.create({
   uniswapLogoWrapper: {
     backgroundColor: '#FFEFF8', // #FFD8EF with 40% opacity on a white background
     borderRadius: SERVICE_PROVIDER_ICON_BORDER_RADIUS,
-    height: ServiceProviderLogoStyles.icon.height,
-    width: ServiceProviderLogoStyles.icon.width,
+    height: SERVICE_PROVIDER_ICON_SIZE,
+    width: SERVICE_PROVIDER_ICON_SIZE,
   },
 })

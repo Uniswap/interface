@@ -3,8 +3,8 @@ import configureMockStore from 'redux-mock-store'
 import { Screens } from 'src/screens/Screens'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { fireEvent, render } from 'src/test/test-utils'
-import * as unitagHooks from 'uniswap/src/features/unitags/hooks'
 import * as ensHooks from 'wallet/src/features/ens/api'
+import * as unitagHooks from 'wallet/src/features/unitags/hooks'
 import {
   ON_PRESS_EVENT_PAYLOAD,
   SAMPLE_SEED_ADDRESS_1,

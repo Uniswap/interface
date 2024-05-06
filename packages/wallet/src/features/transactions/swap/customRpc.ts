@@ -1,5 +1,5 @@
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'

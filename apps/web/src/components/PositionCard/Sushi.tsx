@@ -6,15 +6,15 @@ import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { FixedHeightRow } from '.'
 import { useColor } from '../../hooks/useColor'
 import { unwrappedToken } from '../../utils/unwrappedToken'
 import { ButtonEmpty } from '../Button'
 import { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
-import { AutoRow, RowFixed } from '../Row'
+import DoubleCurrencyLogo from '../DoubleLogo'
 import { CardNoise } from '../earn/styled'
+import { AutoRow, RowFixed } from '../Row'
 import { Dots } from '../swap/styled'
 
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
@@ -44,7 +44,7 @@ export default function SushiPositionCard({ tokenA, tokenB, liquidityToken, bord
       <AutoColumn gap="md">
         <FixedHeightRow>
           <AutoRow gap="8px">
-            <DoubleCurrencyLogo currencies={[currency0, currency1]} size={20} />
+            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
             <Text fontWeight={535} fontSize={20}>
               {!currency0 || !currency1 ? (
                 <Dots>

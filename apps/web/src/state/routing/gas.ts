@@ -38,7 +38,7 @@ export async function getApproveInfo(
   let approveGasUseEstimate
   try {
     const allowance = await tokenContract.callStatic.allowance(account, PERMIT2_ADDRESS)
-    if (allowance.gte(amount)) return { needsApprove: false }
+    if (!allowance.lt(amount)) return { needsApprove: false }
   } catch (_) {
     // If contract lookup fails (eg if Infura goes down), then don't show gas info for approving the token
     return { needsApprove: false }

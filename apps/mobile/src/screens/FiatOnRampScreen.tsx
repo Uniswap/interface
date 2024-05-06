@@ -33,11 +33,7 @@ import {
   useFiatOnRampAggregatorTransactionsQuery,
 } from 'wallet/src/features/fiatOnRamp/api'
 import { FORQuote, FORServiceProvider, FORTransaction } from 'wallet/src/features/fiatOnRamp/types'
-import {
-  getServiceProviderLogo,
-  isFiatOnRampApiError,
-  isNoQuotesError,
-} from 'wallet/src/features/fiatOnRamp/utils'
+import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
@@ -120,7 +116,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
     useShouldShowNativeKeyboard()
 
-  const { appFiatCurrencySupportedInMeld, meldSupportedFiatCurrency, supportedFiatCurrencies } =
+  const { appFiatCurrencySupportedInMeld, meldSupportedFiatCurrency } =
     useMeldFiatCurrencySupportInfo(countryCode)
 
   const debouncedAmount = useDebounce(amount, DEFAULT_DELAY * 2)
@@ -167,6 +163,11 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const { currentData: transactionsResponse } = useFiatOnRampAggregatorTransactionsQuery({
     limit: 1,
   })
+
+  const { errorText, errorColor } = useParseFiatOnRampError(
+    quotesError || serviceProvidersError,
+    meldSupportedFiatCurrency.code
+  )
 
   const prevQuotes = usePrevious(quotes)
   useEffect(() => {
@@ -284,16 +285,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     meldSupportedFiatCurrency.code.toLowerCase()
   )
 
-  const notAvailableInThisRegion =
-    supportedFiatCurrencies?.length === 0 ||
-    (isFiatOnRampApiError(quotesError) && isNoQuotesError(quotesError)) ||
-    quotes?.length === 0
-
-  const { errorText, errorColor } = useParseFiatOnRampError(
-    !notAvailableInThisRegion && (quotesError || serviceProvidersError),
-    meldSupportedFiatCurrency.code
-  )
-
   return (
     <Screen edges={['top']}>
       <HandleBar backgroundColor="none" />
@@ -321,7 +312,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               errorText={errorText}
               fiatCurrencyInfo={meldSupportedFiatCurrency}
               inputRef={inputRef}
-              notAvailableInThisRegion={notAvailableInThisRegion}
               predefinedAmountsSupported={predefinedAmountsSupported}
               quoteAmount={selectedQuote?.destinationAmount ?? 0}
               quoteCurrencyAmountReady={Boolean(amount && selectedQuote)}
@@ -351,7 +341,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               {!showNativeKeyboard && (
                 <DecimalPadLegacy
                   hasCurrencyPrefix
-                  disabled={notAvailableInThisRegion}
                   resetSelection={resetSelection}
                   selection={selection}
                   setValue={onChangeValue('textInput')}

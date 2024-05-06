@@ -4,11 +4,11 @@ import { AutoColumn } from 'components/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import TokenSafetyLabel from 'components/TokenSafety/TokenSafetyLabel'
 import {
+  checkWarning,
   displayWarningLabel,
   getWarningCopy,
-  StrongWarning,
+  NotFoundWarning,
   TOKEN_SAFETY_ARTICLE,
-  useTokenWarning,
   Warning,
 } from 'constants/tokenSafety'
 import { useToken } from 'hooks/Tokens'
@@ -215,21 +215,21 @@ export default function TokenSafety({
   const logos = []
   const urls = []
 
+  const token1Warning = tokenAddress ? checkWarning(tokenAddress) : undefined
   const token1 = useToken(tokenAddress)
-  const token1Warning = useTokenWarning(tokenAddress, token1?.chainId)
+  const token2Warning = secondTokenAddress ? checkWarning(secondTokenAddress) : undefined
   const token2 = useToken(secondTokenAddress)
-  const token2Warning = useTokenWarning(secondTokenAddress, token2?.chainId)
 
   const token1Unsupported = !token1Warning?.canProceed
   const token2Unsupported = !token2Warning?.canProceed
 
   // Logic for only showing the 'unsupported' warning if one is supported and other isn't
   if (token1 && token1Warning && (token1Unsupported || !(token2Warning && token2Unsupported))) {
-    logos.push(<CurrencyLogo key={token1.address} currency={token1} size={48} />)
+    logos.push(<CurrencyLogo key={token1.address} currency={token1} size="48px" />)
     urls.push(<ExplorerView token={token1} />)
   }
   if (token2 && token2Warning && (token2Unsupported || !(token1Warning && token1Unsupported))) {
-    logos.push(<CurrencyLogo key={token2.address} currency={token2} size={48} />)
+    logos.push(<CurrencyLogo key={token2.address} currency={token2} size="48px" />)
     urls.push(<ExplorerView token={token2} />)
   }
 
@@ -289,14 +289,14 @@ export default function TokenSafety({
     <Wrapper>
       <Container>
         <ShortColumn>
-          <SafetyLabel warning={StrongWarning} />
+          <SafetyLabel warning={NotFoundWarning} />
         </ShortColumn>
         <ShortColumn>
           <InfoText>
             {heading} {description} {learnMoreUrl}
           </InfoText>
         </ShortColumn>
-        <Buttons warning={StrongWarning} onCancel={onCancel} showCancel={true} />
+        <Buttons warning={NotFoundWarning} onCancel={onCancel} showCancel={true} />
       </Container>
     </Wrapper>
   )

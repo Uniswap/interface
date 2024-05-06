@@ -17,10 +17,6 @@ export enum EthMethod {
   PersonalSign = 'personal_sign',
 }
 
-export enum UwULinkMethod {
-  Erc20Send = 'erc20_send',
-}
-
 export enum EthEvent {
   AccountsChanged = 'accountsChanged',
   ChainChanged = 'chainChanged',
@@ -48,35 +44,18 @@ export type EthSignMethod =
   | EthMethod.SignTypedDataV4
 
 interface UwULinkRequestDappInfo {
-  name?: string
-  url?: string
-  icon?: string
+  name: string
+  url: string
+  icon: string
 }
 
-interface UwULinkBaseRequest {
-  method: EthMethod.EthSendTransaction | UwULinkMethod.Erc20Send
-  chainId: number
-  dapp?: UwULinkRequestDappInfo
-  webhook?: string
-}
-
-interface UwULinkGenericTransactionRequest extends UwULinkBaseRequest {
+export interface UwULinkRequest {
   method: EthMethod.EthSendTransaction
   value: EthTransaction
+  chainId: number
+  dapp: UwULinkRequestDappInfo
+  webhook?: string
 }
-
-export interface UwULinkErc20SendRequest extends UwULinkBaseRequest {
-  method: UwULinkMethod.Erc20Send
-  recipient: string
-  tokenAddress: string
-  amount: string
-
-  // TODO: the wallet should determine stablecoin status
-  isStablecoin: false
-}
-
-export type UwULinkRequest = UwULinkGenericTransactionRequest | UwULinkErc20SendRequest
-
 export interface DappInfoWC {
   source: 'walletconnect'
   name: string
@@ -88,7 +67,7 @@ export interface DappInfoUwULink {
   source: 'uwulink'
   name: string
   url: string
-  icon?: string
+  icon: string
   chain_id: number
   webhook?: string
 }

@@ -123,19 +123,19 @@ export function useTokenContextMenu({
         onPress: navigateToReceive,
         ...(isWeb
           ? {
-              Icon: Icons.ReceiveAlt,
+              Icon: Icons.QrCode,
             }
           : { systemIcon: 'qrcode' }),
       },
-      ...(!isWeb
-        ? [
-            {
-              title: t('common.button.share'),
-              onPress: onPressShare,
-              systemIcon: 'square.and.arrow.up',
-            },
-          ]
-        : []),
+      {
+        title: t('common.button.share'),
+        onPress: onPressShare,
+        ...(isWeb
+          ? {
+              Icon: Icons.Share,
+            }
+          : { systemIcon: 'square.and.arrow.up' }),
+      },
       ...(activeAccountHoldsToken
         ? [
             {

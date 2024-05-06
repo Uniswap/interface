@@ -2,7 +2,7 @@ import { combineReducers } from '@reduxjs/toolkit'
 import multicall from 'lib/state/multicall'
 import localForage from 'localforage'
 import { PersistConfig, persistReducer } from 'redux-persist'
-import { isDevEnv } from 'uniswap/src/utils/env'
+import { isDevelopmentEnv } from 'utils/env'
 
 import application from './application/reducer'
 import burn from './burn/reducer'
@@ -44,7 +44,7 @@ export type AppState = ReturnType<typeof appReducer>
 
 const persistConfig: PersistConfig<AppState> = {
   key: 'interface',
-  version: 9, // see migrations.ts for more details about this version
+  version: 8, // see migrations.ts for more details about this version
   storage: localForage.createInstance({
     name: 'redux',
   }),
@@ -56,7 +56,7 @@ const persistConfig: PersistConfig<AppState> = {
   // We need unserialized storage for inspectable db entries for debugging.
   // @ts-ignore
   deserialize: false,
-  debug: isDevEnv(),
+  debug: isDevelopmentEnv(),
 }
 
 const persistedReducer = persistReducer(persistConfig, appReducer)

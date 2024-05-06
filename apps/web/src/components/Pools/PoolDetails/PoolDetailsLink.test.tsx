@@ -1,5 +1,3 @@
-import 'test-utils/tokens/mocks'
-
 import { ChainId } from '@uniswap/sdk-core'
 import { USDC_MAINNET } from 'constants/tokens'
 import store from 'state'

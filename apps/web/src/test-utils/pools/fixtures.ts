@@ -21,14 +21,6 @@ export const validBEPoolToken0 = {
   address: validPoolToken0.id,
   chain: 'ETHEREUM',
   decimals: 6,
-  project: {
-    id: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-    tokens: [],
-    logo: {
-      id: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-      url: 'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png',
-    },
-  },
 } as BEToken
 
 export const validUSDCCurrency = {
@@ -59,14 +51,6 @@ export const validBEPoolToken1 = {
   address: validPoolToken1.id,
   chain: 'ETHEREUM',
   decimals: 18,
-  project: {
-    id: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    tokens: [],
-    logo: {
-      id: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-      url: 'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png',
-    },
-  },
 } as BEToken
 
 export const owner = '0xf5b6bb25f5beaea03dd014c6ef9fa9f3926bf36c'

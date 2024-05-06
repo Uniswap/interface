@@ -24,14 +24,9 @@ The `Button` element is used consistently to ensure action buttons maintain simi
 
 #### Icons and Logos
 
-Icons and Logos are made available off a single import as `Icons.*` and `Logos.*`. These files are generated from placing the file in `packages/ui/src/assets/icons` or `packages/ui/src/assets/logos/svg` and running the generate command(s):
+Icons and Logos are made available off a single import as `Icons.*` and `Logos.*`. These files are generated from placing the file in `packages/ui/src/assets/icons` or `packages/ui/src/assets/logos/svg` and running the generate command:
 
-```bash
-# Generate all icons
-yarn ui build:icons
-# Generate any icons that do not yet have an existing TS file
-yarn ui build:icons:missing
-```
+`yarn ui:build:icons`
 
 When adding an SVG, please ensure you replace color references as needed with `currentColor` to ensure the asset respects the color property when used.
 

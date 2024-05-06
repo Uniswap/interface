@@ -6,11 +6,7 @@ import { currencyId } from 'utils/currencyId'
 // TODO(WEB-3839): replace all usage of Currency in the web app with CurrencyInfo
 
 // TODO: remove this function once we have it in the shared package
-export function gqlTokenToCurrencyInfo(token?: GqlToken): CurrencyInfo | undefined {
-  if (!token) {
-    return undefined
-  }
-
+export function gqlTokenToCurrencyInfo(token: GqlToken): CurrencyInfo | undefined {
   const currency = gqlToCurrency(token)
 
   if (!currency) {
@@ -20,7 +16,7 @@ export function gqlTokenToCurrencyInfo(token?: GqlToken): CurrencyInfo | undefin
   const currencyInfo: CurrencyInfo = {
     currency,
     currencyId: currencyId(currency),
-    logoUrl: token.project?.logo?.url ?? token.project?.logoUrl,
+    logoUrl: token.project?.logo?.url,
     safetyLevel: token.project?.safetyLevel ?? SafetyLevel.StrongWarning,
     isSpam: token.project?.isSpam ?? false,
   }

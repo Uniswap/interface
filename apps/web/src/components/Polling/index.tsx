@@ -14,11 +14,9 @@ import { Trans } from 'i18n'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
-import { ExternalLink } from 'theme/components'
+import { ExternalLink, ThemedText } from 'theme/components'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-import { styled as tamaguiStyled } from '@tamagui/core'
-import { Text } from 'ui/src'
 import { MouseoverTooltip } from '../Tooltip'
 import { ChainConnectivityWarning } from './ChainConnectivityWarning'
 
@@ -44,40 +42,26 @@ const StyledPolling = styled.div`
     display: flex;
   }
 `
+const StyledPollingBlockNumber = styled(ThemedText.DeprecatedSmall)<{
+  breathe: boolean
+  hovering: boolean
+  warning: boolean
+}>`
+  color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.success)};
+  transition: opacity 0.25s ease;
+  opacity: ${({ breathe, hovering }) => (hovering ? 0.7 : breathe ? 1 : 0.5)};
+  :hover {
+    opacity: 1;
+  }
 
-const StyledPollingBlockNumber = tamaguiStyled(Text, {
-  fontSize: 11,
-  color: '$statusSuccess',
-  opacity: 0.5,
-  hoverStyle: {
-    opacity: 1,
-  },
-
-  '$platform-web': {
-    transition: 'opacity 0.25s ease',
-  },
-
-  variants: {
-    warning: {
-      true: {
-        color: '$yellow600',
-      },
-    },
-
-    breathe: {
-      true: {
-        opacity: 1,
-      },
-    },
-
-    hovering: {
-      true: {
-        opacity: 0.7,
-      },
-    },
-  } as const,
-})
-
+  a {
+    color: unset;
+  }
+  a:hover {
+    text-decoration: none;
+    color: unset;
+  }
+`
 const StyledPollingDot = styled.div<{ warning: boolean }>`
   width: 8px;
   height: 8px;

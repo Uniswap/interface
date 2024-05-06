@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useUnitagByName } from 'uniswap/src/features/unitags/hooks'
+import { useUnitagByNameWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import { ChainId } from 'wallet/src/constants/chains'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
@@ -37,7 +37,7 @@ function useValidatedSearchedAddress(searchTerm: string | null): {
     name: ensName,
   } = useENS(ChainId.Mainnet, searchTerm, false)
 
-  const { loading: unitagLoading, unitag } = useUnitagByName(searchTerm ?? undefined)
+  const { loading: unitagLoading, unitag } = useUnitagByNameWithoutFlag(searchTerm ?? undefined)
 
   return useMemo(() => {
     // Check for a valid unitag, ENS address, or literal address

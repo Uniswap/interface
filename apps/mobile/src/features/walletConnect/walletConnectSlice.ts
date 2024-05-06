@@ -6,7 +6,6 @@ import {
   EthMethod,
   EthSignMethod,
   EthTransaction,
-  UwULinkMethod,
 } from 'wallet/src/features/walletConnect/types'
 
 export type WalletConnectPendingSession = {
@@ -46,24 +45,11 @@ export interface TransactionRequest extends BaseRequest {
   transaction: EthTransaction
 }
 
-export interface UwuLinkErc20Request extends BaseRequest {
-  type: UwULinkMethod.Erc20Send
-  recipient: {
-    address: string
-    name: string
-  }
-  tokenAddress: string
-  amount: string
-  isStablecoin: boolean
-  transaction: EthTransaction // the formatted transaction, prepared by the wallet
-}
-
-export type WalletConnectRequest = SignRequest | TransactionRequest | UwuLinkErc20Request
+export type WalletConnectRequest = SignRequest | TransactionRequest
 
 export const isTransactionRequest = (
   request: WalletConnectRequest
-): request is TransactionRequest =>
-  request.type === EthMethod.EthSendTransaction || request.type === UwULinkMethod.Erc20Send
+): request is TransactionRequest => request.type === EthMethod.EthSendTransaction
 
 export interface WalletConnectState {
   byAccount: {

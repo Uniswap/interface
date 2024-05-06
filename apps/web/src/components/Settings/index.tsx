@@ -4,7 +4,6 @@ import { Scrim } from 'components/AccountDrawer'
 import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column, { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
-import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'
 import { isSupportedChain, isUniswapXSupportedChain, L2_CHAIN_IDS } from 'constants/chains'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -20,8 +19,6 @@ import { isUniswapXTrade } from 'state/routing/utils'
 import styled from 'styled-components'
 import { Divider, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 import MaxSlippageSettings from './MaxSlippageSettings'
 import MenuButton from './MenuButton'
@@ -63,7 +60,7 @@ const MenuFlyout = styled(AutoColumn)`
 `
 
 const ExpandColumn = styled(AutoColumn)<{ $padTop: boolean }>`
-  gap: 8px;
+  gap: 16px;
   padding-top: ${({ $padTop }) => ($padTop ? '16px' : '0')};
 `
 
@@ -100,10 +97,6 @@ const MobileMenuHeader = styled(Row)`
   margin-bottom: 16px;
 `
 
-const StyledDivider = styled(Divider)`
-  margin: 16px 0px;
-`
-
 export default function SettingsTab({
   autoSlippage,
   chainId,
@@ -133,9 +126,8 @@ export default function SettingsTab({
   useOnClickOutside(node, isOpenDesktop ? closeMenu : undefined)
   useDisableScrolling(isOpen)
 
-  const multipleRoutingOptionsEnabled = useFeatureFlag(FeatureFlags.MultipleRoutingOptions)
   const uniswapXEnabled = chainId && isUniswapXSupportedChain(chainId)
-  const showRoutingSettings = Boolean(uniswapXEnabled && !hideRoutingSettings && !multipleRoutingOptionsEnabled)
+  const showRoutingSettings = Boolean(uniswapXEnabled && !hideRoutingSettings)
 
   const isChainSupported = isSupportedChain(chainId)
   const Settings = useMemo(
@@ -150,18 +142,17 @@ export default function SettingsTab({
           <ExpandColumn $padTop={showRoutingSettings}>
             {showRoutingSettings && <Divider />}
             <MaxSlippageSettings autoSlippage={autoSlippage} />
-            {showDeadlineSettings && <TransactionDeadlineSettings />}
+            {showDeadlineSettings && (
+              <>
+                <Divider />
+                <TransactionDeadlineSettings />
+              </>
+            )}
           </ExpandColumn>
         </AnimatedDropdown>
-        {multipleRoutingOptionsEnabled && (
-          <>
-            {!isUniswapXTrade(trade) && <StyledDivider />}
-            <MultipleRoutingOptions />
-          </>
-        )}
       </>
     ),
-    [autoSlippage, multipleRoutingOptionsEnabled, showDeadlineSettings, showRoutingSettings, trade]
+    [autoSlippage, showDeadlineSettings, showRoutingSettings, trade]
   )
 
   return (

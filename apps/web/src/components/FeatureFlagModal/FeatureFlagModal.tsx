@@ -6,13 +6,13 @@ import { PropsWithChildren, ReactNode } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
+import { Statsig } from 'statsig-react'
 import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { DynamicConfigs, getConfigName } from 'uniswap/src/features/gating/configs'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { DynamicConfigs, getConfigName } from 'uniswap/src/features/experiments/configs'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/experiments/hooks'
 
 const StyledModal = styled.div`
   position: fixed;
@@ -235,9 +235,8 @@ export default function FeatureFlagModal() {
         <FeatureFlagOption flag={FeatureFlags.UniconsV2} label="Unicon V2" />
         <FeatureFlagOption flag={FeatureFlags.ExitAnimation} label="Landing page exit animation" />
         <FeatureFlagOption flag={FeatureFlags.V2Everywhere} label="Enable V2 Everywhere" />
-        <FeatureFlagOption flag={FeatureFlags.V2Explore} label="Enable V2 Explore Data" />
         <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
-        <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
+        <FeatureFlagOption flag={FeatureFlags.GqlTokenLists} label="Enable GQL Token Lists" />
         <FeatureFlagGroup name="Quick routes">
           <FeatureFlagOption flag={FeatureFlags.QuickRouteMainnet} label="Enable quick routes for Mainnet" />
           <DynamicConfigDropdown

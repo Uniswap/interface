@@ -58,11 +58,13 @@ describe('Uni tags support', () => {
         cy.contains(haydenUnitag).should('be.visible')
         cy.contains('0x50EC...79C3').should('be.visible')
       })
-      cy.get(getTestSelector('secondary-identifiers')).trigger('mouseover').click()
-      cy.get(getTestSelector('secondary-identifiers-dropdown')).within(() => {
-        cy.contains(haydenENS)
-        cy.contains('0x50EC...79C3')
-      })
+      cy.get(getTestSelector('secondary-identifiers'))
+        .trigger('mouseover')
+        .click()
+        .within(() => {
+          cy.contains(haydenENS).should('be.visible')
+          cy.contains('0x50EC...79C3').should('be.visible')
+        })
     })
   })
 })

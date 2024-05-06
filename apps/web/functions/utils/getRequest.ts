@@ -1,4 +1,22 @@
+import { MetaTagInjector } from '../components/metaTagInjector'
 import Cache, { Data } from './cache'
+
+export async function getMetadataRequest(
+  res: Promise<Response>,
+  request: Request,
+  getData: () => Promise<Data | undefined>
+) {
+  try {
+    const cachedData = await getRequest(request.url, getData, (data): data is Data => true)
+    if (cachedData) {
+      return new HTMLRewriter().on('head', new MetaTagInjector(cachedData, request)).transform(await res)
+    } else {
+      return res
+    }
+  } catch (e) {
+    return res
+  }
+}
 
 export async function getRequest<T extends Data>(
   url: string,

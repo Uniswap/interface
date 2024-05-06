@@ -3,7 +3,7 @@ import React from 'react'
 import { Trans } from 'react-i18next'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { Text } from 'ui/src'
-import { EthMethod, UwULinkMethod } from 'wallet/src/features/walletConnect/types'
+import { EthMethod } from 'wallet/src/features/walletConnect/types'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 export function HeaderText({
@@ -54,17 +54,13 @@ export function HeaderText({
     )
   }
 
-  const getReadableMethodName = (
-    ethMethod: EthMethod | UwULinkMethod,
-    dappNameOrUrl: string
-  ): JSX.Element => {
+  const getReadableMethodName = (ethMethod: EthMethod, dappNameOrUrl: string): JSX.Element => {
     switch (ethMethod) {
       case EthMethod.PersonalSign:
       case EthMethod.EthSign:
       case EthMethod.SignTypedData:
         return <Trans i18nKey="qrScanner.request.method.signature" values={{ dappNameOrUrl }} />
       case EthMethod.EthSendTransaction:
-      case UwULinkMethod.Erc20Send:
         return <Trans i18nKey="qrScanner.request.method.transaction" values={{ dappNameOrUrl }} />
     }
 

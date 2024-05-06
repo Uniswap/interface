@@ -475,19 +475,6 @@ export const v62Schema = {
   },
 }
 
-const v63SchemaIntermediate = {
-  ...v62Schema,
-  wallet: {
-    ...v62Schema.wallet,
-    isUnlocked: undefined,
-  },
-}
-
-// We will no longer keep track of this in the redux state.
-delete v63SchemaIntermediate.wallet.isUnlocked
-
-export const v63Schema = v63SchemaIntermediate
-
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v63Schema => v63Schema
+export const getSchema = (): typeof v62Schema => v62Schema

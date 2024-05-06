@@ -1,12 +1,5 @@
-import { SupportedInterfaceChain } from 'constants/chains'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import {
-  AssetActivityPartsFragment,
-  SwapOrderDetailsPartsFragment,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ExactInputSwapTransactionInfo, ExactOutputSwapTransactionInfo } from '../transactions/types'
-
-export type OrderActivity = AssetActivityPartsFragment & { details: SwapOrderDetailsPartsFragment }
 
 export enum SignatureType {
   SIGN_UNISWAPX_ORDER = 'signUniswapXOrder',
@@ -18,7 +11,7 @@ interface BaseSignatureFields {
   type?: SignatureType
   id: string
   addedTime: number
-  chainId: SupportedInterfaceChain
+  chainId: number
   expiry?: number
   offerer: string
 }

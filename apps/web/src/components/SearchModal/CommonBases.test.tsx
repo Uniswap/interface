@@ -1,5 +1,3 @@
-import 'test-utils/tokens/mocks'
-
 import { ChainId } from '@uniswap/sdk-core'
 import { render } from 'test-utils/render'
 

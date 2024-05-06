@@ -2,18 +2,6 @@
 
 exports[`useScreenSize returns the right initial value based on breakpoints 1`] = `
 Object {
-  "all": Array [
-    Object {
-      "lg": false,
-      "md": true,
-      "navSearchInputVisible": false,
-      "sm": true,
-      "xl": false,
-      "xs": true,
-      "xxl": false,
-      "xxxl": false,
-    },
-  ],
   "current": Object {
     "lg": false,
     "md": true,
@@ -24,6 +12,5 @@ Object {
     "xxl": false,
     "xxxl": false,
   },
-  "error": undefined,
 }
 `;

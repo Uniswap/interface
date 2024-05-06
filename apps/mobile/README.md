@@ -111,7 +111,6 @@ Add the following to your .rc file
 Install [Android Studio](https://developer.android.com/studio)
 
 Add the following to your .rc file
-
 ```
 export ANDROID_HOME=$HOME/Library/Android/sdk
 export PATH=$PATH:$ANDROID_HOME/emulator
@@ -176,7 +175,7 @@ These are some tools you might want to familiarize yourself with to understand t
 
 ## Migrations
 
-We use `redux-persist` to persist Redux state between user sessions. When the Redux state schema is altered, a migration may be needed to transfer the existing persisted state to the new Redux schema. Failing to define a migration results in the app defaulting to the persisted schema, which will very likely cause `undefined` errors because the code has references to Redux state properties that were dropped in favor the persisted schema.
+We use `redux-persist` to persist Redux state between user sessions. When the Redux state schema is altered, a migration may be needed to transfer the existing persisted state to the new Redux schema. Failing to define a migration results in the app defaulting to the persisted schema, which will very likely cause `undefined` errors because the code has references to Redux state properties that were dropped in favor the the persisted schema.
 
 ### When to define a migration
 

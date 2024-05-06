@@ -24,7 +24,7 @@ import { useAppDispatch } from 'state/hooks'
 import { setRecentConnectionDisconnected } from 'state/user/reducer'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { useUnitagByAddressWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import { isPathBlocked } from 'utils/blockedPaths'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from '../../state/application/hooks'
@@ -65,7 +65,6 @@ const UNIButton = styled(WalletButton)`
 
 const IconContainer = styled.div`
   display: flex;
-  flex: 0 0 auto;
   align-items: center;
   & > a,
   & > button {
@@ -156,14 +155,14 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
     error || (!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) || fiatOnrampAvailabilityLoading
   )
 
-  const { data: portfolioBalances } = useTokenBalancesQuery({ cacheOnly: !accountDrawerOpen })
+  const { data: portfolioBalances } = useTokenBalancesQuery({ skip: !accountDrawerOpen })
   const portfolio = portfolioBalances?.portfolios?.[0]
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
   const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
 
-  const { unitag } = useUnitagByAddress(account)
+  const { unitag } = useUnitagByAddressWithoutFlag(account, Boolean(account))
   const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' } ?? '-')
 
   return (

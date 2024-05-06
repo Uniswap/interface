@@ -32,6 +32,7 @@ describe(walletReducer, () => {
     store = createStore(walletReducer, {
       accounts: {},
       activeAccountAddress: null,
+      isUnlocked: false,
       settings: {
         swapProtection: SwapProtectionSetting.On,
         hideSmallBalances: true,

@@ -14,14 +14,10 @@ const { RNEthersRS } = NativeModules
  * Simple wrapper around RNEthersRS
  */
 class NativeKeyring implements IKeyring {
-  isUnlocked(): Promise<boolean> {
-    throw new NotImplementedError('isUnlocked')
-  }
-
   removeMnemonic(_mnemonicId: string): Promise<boolean> {
     // On mobile we don't currently handle this cleanup because it lives
     // in secure enclave and is hard to handle when app is uninstalled
-    throw new NotImplementedError('removeMnemonic')
+    throw new Error('Method not implemented.')
   }
 
   removePrivateKey(_address: string): Promise<boolean> {
@@ -34,7 +30,7 @@ class NativeKeyring implements IKeyring {
 
   removePassword(): Promise<boolean> {
     // n/a on mobile
-    throw new NotImplementedError('removePassword')
+    throw new Error('Method not implemented.')
   }
 
   unlock(): Promise<boolean> {

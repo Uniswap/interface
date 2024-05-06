@@ -1,20 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SendCurrencyInputform should render correctly with no verified recipient 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
 .c2 {
   box-sizing: border-box;
   margin: 0;
@@ -49,6 +35,20 @@ exports[`SendCurrencyInputform should render correctly with no verified recipien
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   -webkit-box-pack: start;
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
@@ -107,7 +107,6 @@ exports[`SendCurrencyInputform should render correctly with no verified recipien
     >
       <span
         class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
-        data-disable-theme="true"
       >
         To
       </span>
@@ -136,36 +135,6 @@ exports[`SendCurrencyInputform should render correctly with no verified recipien
 `;
 
 exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c8 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c9 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c2 {
   box-sizing: border-box;
   margin: 0;
@@ -207,7 +176,7 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
   gap: 12px;
 }
 
-.c7 {
+.c8 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -223,6 +192,44 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
+}
+
+.c9 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c10 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c7 {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  background-color: #22222212;
+  font-size: initial;
 }
 
 .c4 {
@@ -249,7 +256,7 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
   opacity: 0.4;
 }
 
-.c10 {
+.c11 {
   color: #CECECE;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -258,11 +265,11 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
   transition-duration: 125ms;
 }
 
-.c10:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c11:active {
   opacity: 0.4;
 }
 
@@ -291,75 +298,55 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
         <div
           class="c2 c5 c6"
         >
-          <svg
-            data-testid="IdenticonLoader"
-            fill="none"
-            height="36px"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="36px"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="c7"
           >
-            <line
-              x1="12"
-              x2="12"
-              y1="2"
-              y2="6"
-            />
-            <line
-              x1="12"
-              x2="12"
-              y1="18"
-              y2="22"
-            />
-            <line
-              x1="4.93"
-              x2="7.76"
-              y1="4.93"
-              y2="7.76"
-            />
-            <line
-              x1="16.24"
-              x2="19.07"
-              y1="16.24"
-              y2="19.07"
-            />
-            <line
-              x1="2"
-              x2="6"
-              y1="12"
-              y2="12"
-            />
-            <line
-              x1="18"
-              x2="22"
-              y1="12"
-              y2="12"
-            />
-            <line
-              x1="4.93"
-              x2="7.76"
-              y1="19.07"
-              y2="16.24"
-            />
-            <line
-              x1="16.24"
-              x2="19.07"
-              y1="7.76"
-              y2="4.93"
-            />
-          </svg>
+            <span>
+              <div
+                style="border-radius: 50px; overflow: hidden; padding: 0px; margin: 0px; width: 36px; height: 36px; display: inline-block; background: rgb(200, 20, 83);"
+              >
+                <svg
+                  height="36"
+                  width="36"
+                  x="0"
+                  y="0"
+                >
+                  <rect
+                    fill="#F29602"
+                    height="36"
+                    transform="translate(-1.3639893162257823 0.27350588462642744) rotate(171.3 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                  <rect
+                    fill="#FA6C00"
+                    height="36"
+                    transform="translate(7.665150362825969 -12.44820359430869) rotate(394.5 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                  <rect
+                    fill="#FB1868"
+                    height="36"
+                    transform="translate(23.55150004628138 -6.949396678861342) rotate(445.6 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                </svg>
+              </div>
+            </span>
+          </div>
           <div
             class="c0"
           >
             <div
-              class="c2 c7"
+              class="c2 c8"
             >
               <div
-                class="c8 css-n8z49y"
+                class="c9 css-n8z49y"
               >
                 hayden
               </div>
@@ -384,14 +371,14 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
               </span>
             </div>
             <div
-              class="c9 css-obwv3p"
+              class="c10 css-obwv3p"
             >
               0x9984...9103
             </div>
           </div>
         </div>
         <svg
-          class="c10"
+          class="c11"
           fill="none"
           height="20"
           stroke="currentColor"
@@ -422,36 +409,6 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
 `;
 
 exports[`SendCurrencyInputform should render correctly with verified recipient 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c8 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c9 {
-  color: #7D7D7D;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c2 {
   box-sizing: border-box;
   margin: 0;
@@ -493,7 +450,7 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
   gap: 12px;
 }
 
-.c7 {
+.c8 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -509,6 +466,44 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
+}
+
+.c9 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c10 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c7 {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  background-color: #22222212;
+  font-size: initial;
 }
 
 .c4 {
@@ -535,7 +530,7 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
   opacity: 0.4;
 }
 
-.c10 {
+.c11 {
   color: #CECECE;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -544,11 +539,11 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
   transition-duration: 125ms;
 }
 
-.c10:hover {
+.c11:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c11:active {
   opacity: 0.4;
 }
 
@@ -577,88 +572,68 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
         <div
           class="c2 c5 c6"
         >
-          <svg
-            data-testid="IdenticonLoader"
-            fill="none"
-            height="36px"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="36px"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="c7"
           >
-            <line
-              x1="12"
-              x2="12"
-              y1="2"
-              y2="6"
-            />
-            <line
-              x1="12"
-              x2="12"
-              y1="18"
-              y2="22"
-            />
-            <line
-              x1="4.93"
-              x2="7.76"
-              y1="4.93"
-              y2="7.76"
-            />
-            <line
-              x1="16.24"
-              x2="19.07"
-              y1="16.24"
-              y2="19.07"
-            />
-            <line
-              x1="2"
-              x2="6"
-              y1="12"
-              y2="12"
-            />
-            <line
-              x1="18"
-              x2="22"
-              y1="12"
-              y2="12"
-            />
-            <line
-              x1="4.93"
-              x2="7.76"
-              y1="19.07"
-              y2="16.24"
-            />
-            <line
-              x1="16.24"
-              x2="19.07"
-              y1="7.76"
-              y2="4.93"
-            />
-          </svg>
+            <span>
+              <div
+                style="border-radius: 50px; overflow: hidden; padding: 0px; margin: 0px; width: 36px; height: 36px; display: inline-block; background: rgb(200, 20, 83);"
+              >
+                <svg
+                  height="36"
+                  width="36"
+                  x="0"
+                  y="0"
+                >
+                  <rect
+                    fill="#F29602"
+                    height="36"
+                    transform="translate(-1.3639893162257823 0.27350588462642744) rotate(171.3 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                  <rect
+                    fill="#FA6C00"
+                    height="36"
+                    transform="translate(7.665150362825969 -12.44820359430869) rotate(394.5 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                  <rect
+                    fill="#FB1868"
+                    height="36"
+                    transform="translate(23.55150004628138 -6.949396678861342) rotate(445.6 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                </svg>
+              </div>
+            </span>
+          </div>
           <div
             class="c0"
           >
             <div
-              class="c2 c7"
+              class="c2 c8"
             >
               <div
-                class="c8 css-n8z49y"
+                class="c9 css-n8z49y"
               >
                 hayden.eth
               </div>
             </div>
             <div
-              class="c9 css-obwv3p"
+              class="c10 css-obwv3p"
             >
               0x9984...9103
             </div>
           </div>
         </div>
         <svg
-          class="c10"
+          class="c11"
           fill="none"
           height="20"
           stroke="currentColor"
@@ -689,20 +664,6 @@ exports[`SendCurrencyInputform should render correctly with verified recipient 1
 `;
 
 exports[`SendCurrencyInputform should render placeholder values 1`] = `
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
 .c2 {
   box-sizing: border-box;
   margin: 0;
@@ -737,6 +698,20 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   -webkit-box-pack: start;
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
@@ -795,7 +770,6 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
     >
       <span
         class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
-        data-disable-theme="true"
       >
         To
       </span>

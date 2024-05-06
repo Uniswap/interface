@@ -8,8 +8,8 @@ import { useActivationState } from 'connection/activate'
 import { Connection } from 'connection/types'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
-import { Text } from 'ui/src'
 import { Mobile, QrCode } from 'ui/src/components/icons'
+import { Text } from 'ui/src/components/text/Text'
 import { useEIP6963Connections } from './useOrderedConnections'
 
 const OptionContainer = styled(Row)`

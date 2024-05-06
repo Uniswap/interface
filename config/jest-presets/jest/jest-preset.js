@@ -8,7 +8,6 @@ module.exports = {
   testEnvironment: 'jsdom',
   transform: {
     '\\.svg$': 'jest-transformer-svg',
-    '^.+\\.jsx?$': 'babel-jest',
   },
   // coverageDirectory: '<rootDir>/coverage',
   // coverageReporters: ['json','lcov','html'],

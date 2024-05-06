@@ -1,6 +1,5 @@
 query TrendingTokens($chain: Chain!) {
   topTokens(pageSize: 4, page: 1, chain: $chain, orderBy: VOLUME) {
-    ...SimpleTokenDetails
     id
     decimals
     name
@@ -35,7 +34,6 @@ query TrendingTokens($chain: Chain!) {
 
 query SearchTokensWeb($searchQuery: String!, $chains: [Chain!]) {
   searchTokens(searchQuery: $searchQuery, chains: $chains) {
-    ...SimpleTokenDetails
     id
     decimals
     name
@@ -62,13 +60,8 @@ query SearchTokensWeb($searchQuery: String!, $chains: [Chain!]) {
     }
     project {
       id
-      name
-      logo {
-        id
-        url
-      }
-      safetyLevel
       logoUrl
+      safetyLevel
       isSpam
     }
   }
@@ -76,26 +69,12 @@ query SearchTokensWeb($searchQuery: String!, $chains: [Chain!]) {
 
 query TopTokens100($duration: HistoryDuration!, $chain: Chain!) {
   topTokens(pageSize: 100, page: 1, chain: $chain, orderBy: VOLUME) {
-    ...SimpleTokenDetails
-    project {
-      id
-      name
-      logo {
-        id
-        url
-      }
-      safetyLevel
-      logoUrl
-      isSpam
-      markets(currencies: [USD]) {
-        id
-        fullyDilutedValuation {
-          id
-          value
-          currency
-        }
-      }
-    }
+    id
+    name
+    chain
+    address
+    symbol
+    standard
     market(currency: USD) {
       id
       totalValueLocked {
@@ -129,13 +108,27 @@ query TopTokens100($duration: HistoryDuration!, $chain: Chain!) {
         currency
       }
     }
+    project {
+      id
+      logoUrl
+      markets(currencies: [USD]) {
+        id
+        fullyDilutedValuation {
+          id
+          value
+          currency
+        }
+      }
+    }
   }
 }
 
 # We separately query sparkline data so that the large download time does not block Token Explore rendering
 query TopTokensSparkline($duration: HistoryDuration!, $chain: Chain!) {
   topTokens(pageSize: 100, page: 1, chain: $chain, orderBy: VOLUME) {
-    ...SimpleTokenDetails
+    id
+    address
+    chain
     market(currency: USD) {
       id
       priceHistory(duration: $duration) {

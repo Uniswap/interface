@@ -1,8 +1,9 @@
 import { createReducer } from '@reduxjs/toolkit'
 import { getVersionUpgrade, VersionUpgrade } from '@uniswap/token-lists'
+import tokenSafetyLookup from 'constants/tokenSafetyLookup'
 
-import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
 import { ListsState } from 'state/lists/types'
+import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
 import { updateVersion } from '../global/actions'
 import { acceptListUpdate, addList, fetchTokenList, removeList } from './actions'
 
@@ -18,9 +19,9 @@ const NEW_LIST_STATE: ListState = {
 type Mutable<T> = { -readonly [P in keyof T]: T[P] extends ReadonlyArray<infer U> ? U[] : T[P] }
 
 export const initialState: ListsState = {
-  lastInitializedDefaultListOfLists: DEFAULT_INACTIVE_LIST_URLS,
+  lastInitializedDefaultListOfLists: DEFAULT_LIST_OF_LISTS,
   byUrl: {
-    ...DEFAULT_INACTIVE_LIST_URLS.reduce<Mutable<ListsState['byUrl']>>((memo, listUrl) => {
+    ...DEFAULT_LIST_OF_LISTS.reduce<Mutable<ListsState['byUrl']>>((memo, listUrl) => {
       memo[listUrl] = NEW_LIST_STATE
       return memo
     }, {}),
@@ -64,6 +65,7 @@ export default createReducer(initialState, (builder) =>
           loadingRequestId: null,
           error: null,
         }
+        tokenSafetyLookup.update(state)
       }
     })
     .addCase(fetchTokenList.rejected, (state, { payload: { url, requestId, errorMessage } }) => {
@@ -108,9 +110,9 @@ export default createReducer(initialState, (builder) =>
           (s, l) => s.add(l),
           new Set()
         )
-        const newListOfListsSet = DEFAULT_INACTIVE_LIST_URLS.reduce<Set<string>>((s, l) => s.add(l), new Set())
+        const newListOfListsSet = DEFAULT_LIST_OF_LISTS.reduce<Set<string>>((s, l) => s.add(l), new Set())
 
-        DEFAULT_INACTIVE_LIST_URLS.forEach((listUrl) => {
+        DEFAULT_LIST_OF_LISTS.forEach((listUrl) => {
           if (!lastInitializedSet.has(listUrl)) {
             state.byUrl[listUrl] = NEW_LIST_STATE
           }
@@ -123,6 +125,6 @@ export default createReducer(initialState, (builder) =>
         })
       }
 
-      state.lastInitializedDefaultListOfLists = DEFAULT_INACTIVE_LIST_URLS
+      state.lastInitializedDefaultListOfLists = DEFAULT_LIST_OF_LISTS
     })
 )

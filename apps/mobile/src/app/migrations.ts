@@ -875,11 +875,4 @@ export const migrations = {
 
     return newState
   },
-
-  63: function removeWalletIsUnlockedState(state: any) {
-    const newState = { ...state }
-    delete newState.wallet.isUnlocked
-
-    return newState
-  },
 }

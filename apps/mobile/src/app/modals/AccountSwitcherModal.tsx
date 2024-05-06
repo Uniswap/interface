@@ -22,6 +22,8 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { ActionSheetModal, MenuItemProp } from 'wallet/src/components/modals/ActionSheetModal'
@@ -74,6 +76,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const dispatch = useAppDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
   const modalState = useAppSelector(selectModalState(ModalName.AccountSwitcher))
+  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
   const onCompleteOnboarding = useCompleteOnboardingCallback({
     entryPoint: OnboardingEntryPoint.Sidebar,
     importType: hasImportedSeedPhrase ? ImportType.CreateAdditional : ImportType.CreateNew,
@@ -129,15 +132,25 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       dispatch(pendingAccountActions.trigger(PendingAccountActions.ActivateOneAndDelete))
       dispatch(createAccountActions.trigger())
 
-      if (hasImportedSeedPhrase) {
-        setCreatedAdditionalAccount(true)
+      if (unitagsFeatureFlagEnabled) {
+        if (hasImportedSeedPhrase) {
+          setCreatedAdditionalAccount(true)
+        } else {
+          // create pending account and place into welcome flow
+          navigate(Screens.OnboardingStack, {
+            screen: OnboardingScreens.WelcomeWallet,
+            params: {
+              importType: ImportType.CreateNew,
+              entryPoint: OnboardingEntryPoint.Sidebar,
+            },
+          })
+        }
       } else {
-        // create pending account and place into welcome flow
         navigate(Screens.OnboardingStack, {
-          screen: OnboardingScreens.WelcomeWallet,
+          screen: OnboardingScreens.EditName,
           params: {
-            importType: ImportType.CreateNew,
             entryPoint: OnboardingEntryPoint.Sidebar,
+            importType: hasImportedSeedPhrase ? ImportType.CreateAdditional : ImportType.CreateNew,
           },
         })
       }
@@ -254,7 +267,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
     }
 
     return options
-  }, [activeAccountAddress, dispatch, hasImportedSeedPhrase, onClose, t])
+  }, [activeAccountAddress, dispatch, hasImportedSeedPhrase, onClose, t, unitagsFeatureFlagEnabled])
 
   const accountsWithoutActive = accounts.filter((a) => a.address !== activeAccountAddress)
 

@@ -5,8 +5,10 @@ import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch, useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { FiatOnRampCtaButton } from 'src/components/fiatOnRamp/CtaButton'
 import { FiatOnRampAmountSection } from 'src/features/fiatOnRamp/FiatOnRampAmountSection'
-import { FiatOnRampConnectingView } from 'src/features/fiatOnRamp/FiatOnRampConnecting'
-import { ServiceProviderLogoStyles } from 'src/features/fiatOnRamp/constants'
+import {
+  FiatOnRampConnectingView,
+  SERVICE_PROVIDER_ICON_SIZE,
+} from 'src/features/fiatOnRamp/FiatOnRampConnecting'
 import { useMoonpayFiatOnRamp, useMoonpaySupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { FiatOnRampCurrency } from 'src/features/fiatOnRamp/types'
 import { closeModal } from 'src/features/modals/modalSlice'
@@ -290,14 +292,11 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
             <Flex
               alignItems="center"
               borderRadius="$rounded20"
-              height={ServiceProviderLogoStyles.icon.height}
+              height={SERVICE_PROVIDER_ICON_SIZE}
               justifyContent="center"
               style={styles.moonpayLogoWrapper}
-              width={ServiceProviderLogoStyles.icon.width}>
-              <MoonpayLogo
-                height={ServiceProviderLogoStyles.icon.height}
-                width={ServiceProviderLogoStyles.icon.width}
-              />
+              width={SERVICE_PROVIDER_ICON_SIZE}>
+              <MoonpayLogo height={SERVICE_PROVIDER_ICON_SIZE} width={SERVICE_PROVIDER_ICON_SIZE} />
             </Flex>
           }
           serviceProviderName="MoonPay"

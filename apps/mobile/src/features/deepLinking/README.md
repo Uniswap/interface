@@ -1,6 +1,6 @@
 # Universal Links
 
-Universal links allow 3rd parties to prompt the app to open to specific screens when it is installed on their device. If the app isn't installed it will open that page in Safari (a 404 on uniswap.org in this case). All universal links must use the prefix `https://uniswap.org/app`.
+Universal links allow 3rd parties to prompt the app to open to specific screens when it is installed on their device. If the app isn't installed it will open that page in Safari (a 404 on uniswap.org in this case). All universal links must use the the prefix `https://uniswap.org/app`.
 
 ## Supported Screens
 

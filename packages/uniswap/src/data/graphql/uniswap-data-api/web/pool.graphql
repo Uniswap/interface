@@ -1,3 +1,19 @@
+fragment PoolToken on Token {
+  id
+  address
+  name
+  symbol
+  chain
+  decimals
+  project {
+    id
+    logo {
+      id
+      url
+    }
+  }
+}
+
 query V3Pool($chain: Chain!, $address: String!) {
   v3Pool(chain: $chain, address: $address) {
     id
@@ -5,25 +21,25 @@ query V3Pool($chain: Chain!, $address: String!) {
     address
     feeTier
     token0 {
-      ...SimpleTokenDetails
+      ...PoolToken
       project {
+    id
+    markets(currencies: [USD]) {
+      id
+      price {
         id
-        markets(currencies: [USD]) {
-          id
-          price {
-            id
-            value
-          }
-        }
-        logo {
-          id
-          url
-        }
+        value
       }
+    }
+    logo {
+      id
+      url
+    }
+  }
     }
     token0Supply
     token1 {
-      ...SimpleTokenDetails
+      ...PoolToken
       project {
         id
         markets(currencies: [USD]) {
@@ -67,7 +83,7 @@ query PoolPriceHistory($chain: Chain!, $address: String!, $duration: HistoryDura
       timestamp
     }
   }
-  v2Pair(chain: $chain, address: $address) @skip(if: $isV3) {
+  v2Pair(chain: ETHEREUM, address: $address) @skip(if: $isV3) {
     id
     priceHistory(duration: $duration) {
       id
@@ -87,7 +103,7 @@ query PoolVolumeHistory($chain: Chain!, $address: String!, $duration: HistoryDur
       timestamp
     }
   }
-  v2Pair(chain: $chain, address: $address) @skip(if: $isV3) {
+  v2Pair(chain: ETHEREUM, address: $address) @skip(if: $isV3) {
     id
     historicalVolume(duration: $duration) {
       id
@@ -97,13 +113,13 @@ query PoolVolumeHistory($chain: Chain!, $address: String!, $duration: HistoryDur
   }
 }
 
-query V2Pair($chain: Chain!, $address: String!) {
-  v2Pair(chain: $chain, address: $address) {
+query V2Pair($address: String!) {
+  v2Pair(chain: ETHEREUM, address: $address) {
     id
     protocolVersion
     address
     token0 {
-      ...SimpleTokenDetails
+      ...PoolToken
       project {
         id
         markets(currencies: [USD]) {
@@ -121,7 +137,7 @@ query V2Pair($chain: Chain!, $address: String!) {
     }
     token0Supply
     token1 {
-      ...SimpleTokenDetails
+      ...PoolToken
       project {
     id
     markets(currencies: [USD]) {

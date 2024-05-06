@@ -5,10 +5,10 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoRow } from 'components/Row'
 import { COMMON_BASES } from 'constants/routing'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useTokenInfoFromActiveList } from 'hooks/useTokenInfoFromActiveList'
 import { getTokenAddress } from 'lib/utils/analytics'
 import { Text } from 'rebass'
 import styled from 'styled-components'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { currencyId } from 'utils/currencyId'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
@@ -68,8 +68,7 @@ export default function CommonBases({
 
   return bases.length > 0 ? (
     <AutoRow gap="4px">
-      {bases.map((currencyInfo: CurrencyInfo) => {
-        const currency = currencyInfo.currency
+      {bases.map((currency: Currency) => {
         const isSelected = selectedCurrency?.equals(currency)
 
         return (
@@ -88,7 +87,7 @@ export default function CommonBases({
               key={currencyId(currency)}
               data-testid={`common-base-${currency.symbol}`}
             >
-              <CurrencyLogo currency={currency} style={{ marginRight: 8 }} />
+              <CurrencyLogoFromList currency={currency} />
               <Text fontWeight={535} fontSize={16} lineHeight="16px">
                 {currency.symbol}
               </Text>
@@ -98,4 +97,11 @@ export default function CommonBases({
       })}
     </AutoRow>
   ) : null
+}
+
+/** helper component to retrieve a base currency from the active token lists */
+function CurrencyLogoFromList({ currency }: { currency: Currency }) {
+  const token = useTokenInfoFromActiveList(currency)
+
+  return <CurrencyLogo currency={token} style={{ marginRight: 8 }} />
 }

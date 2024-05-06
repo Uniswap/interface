@@ -9,7 +9,6 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { ClientDetails, PermitInfo } from 'src/components/WalletConnect/RequestModal/ClientDetails'
 import { RequestDetails } from 'src/components/WalletConnect/RequestModal/RequestDetails'
 import {
-  SignRequest,
   TransactionRequest,
   WalletConnectRequest,
   isTransactionRequest,
@@ -53,9 +52,7 @@ const getPermitInfo = (request: WalletConnectRequest): PermitInfo | undefined =>
 
     return { currencyId, amount }
   } catch (error) {
-    logger.error(error, {
-      tags: { file: 'WalletConnectRequestModal', function: 'getPermitInfo' },
-    })
+    logger.error(error, { tags: { file: 'WalletConnectRequestModal', function: 'getPermitInfo' } })
     return undefined
   }
 }
@@ -63,7 +60,7 @@ const getPermitInfo = (request: WalletConnectRequest): PermitInfo | undefined =>
 type WalletConnectRequestModalContentProps = {
   gasFee: GasFeeResult
   hasSufficientFunds: boolean
-  request: SignRequest | TransactionRequest
+  request: WalletConnectRequest
   isBlocked: boolean
 }
 

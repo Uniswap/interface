@@ -1,18 +1,18 @@
 /* eslint-disable import/no-unused-modules */
+import { getMetadataRequest } from '../../utils/getRequest'
 import getToken from '../../utils/getToken'
-import { transformResponse } from '../../utils/transformResponse'
 
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
-  const response = next()
+  const res = next()
   try {
     const { index } = params
     const networkName = index[0]?.toString()
     const tokenAddress = index[1]?.toString()
     if (!tokenAddress) {
-      return response
+      return res
     }
-    return transformResponse(request, await response, () => getToken(networkName, tokenAddress, request.url))
+    return getMetadataRequest(res, request, () => getToken(networkName, tokenAddress, request.url))
   } catch (e) {
-    return response
+    return res
   }
 }

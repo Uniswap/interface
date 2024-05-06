@@ -6,7 +6,7 @@ import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { concatStrings } from 'utilities/src/primitives/string'
 import { FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
-import { getOptionalServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
+import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 
 function LogoLoader(): JSX.Element {
@@ -24,7 +24,7 @@ export function FORQuoteItem({
 }): JSX.Element | null {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
-  const logoUrl = getOptionalServiceProviderLogo(serviceProvider?.logos, isDarkMode)
+  const logoUrl = getServiceProviderLogo(serviceProvider?.logos, isDarkMode)
 
   if (!serviceProvider) {
     return null

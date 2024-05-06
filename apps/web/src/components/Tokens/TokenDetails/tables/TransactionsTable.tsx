@@ -96,7 +96,7 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: ChainI
           amount: parseFloat(transaction.token1Quantity),
           token: transaction.token1,
         }
-        const token0IsBeingSold = parseFloat(transaction.token0Quantity) > 0
+        const token0IsBeingSold = parseFloat(transaction.token0Quantity) < 0
         return {
           hash: transaction.hash,
           timestamp: transaction.timestamp,

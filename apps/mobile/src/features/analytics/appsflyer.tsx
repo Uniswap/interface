@@ -1,13 +1,13 @@
 import appsFlyer from 'react-native-appsflyer'
+import { isBetaBuild, isDevBuild } from 'src/utils/version'
 import { config } from 'uniswap/src/config'
-import { isBetaEnv, isDevEnv } from 'uniswap/src/utils/env'
 import { logger } from 'utilities/src/logger/logger'
 
 export function initAppsFlyer(): void {
   appsFlyer.initSdk(
     {
       devKey: config.appsflyerApiKey,
-      isDebug: isDevEnv() || isBetaEnv(),
+      isDebug: isDevBuild() || isBetaBuild(),
       appId: config.appsflyerAppId,
       onInstallConversionDataListener: false,
       onDeepLinkListener: false,

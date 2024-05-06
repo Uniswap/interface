@@ -4,7 +4,7 @@ import { CurrencyListRow, CurrencyListSectionTitle } from 'components/SearchModa
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import { chainIdToBackendName } from 'graphql/data/util'
-import { useFallbackListTokens, useToken } from 'hooks/Tokens'
+import { useDefaultActiveTokens, useSearchInactiveTokenLists, useTokenListToken } from 'hooks/Tokens'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import { t } from 'i18next'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
@@ -19,6 +19,8 @@ import {
   useSearchTokensWebQuery,
   useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { isSameAddress } from 'utilities/src/addresses'
 
 interface CurrencySearchParams {
@@ -53,6 +55,8 @@ export function useCurrencySearchResults({
 }: CurrencySearchParams): CurrencySearchResults {
   const { chainId } = useWeb3React()
 
+  const gqlTokenListsEnabled = useFeatureFlag(FeatureFlags.GqlTokenLists)
+
   /**
    * GraphQL queries for tokens and search results
    */
@@ -61,16 +65,16 @@ export function useCurrencySearchResults({
       searchQuery: searchQuery ?? '',
       chains: [chainIdToBackendName(chainId) ?? Chain.Ethereum],
     },
-    skip: !searchQuery,
+    skip: !searchQuery || !gqlTokenListsEnabled,
   })
   const { data: popularTokens, loading: popularTokensLoading } = useTopTokensQuery({
-    fetchPolicy: 'cache-first',
     variables: {
       chain: chainIdToBackendName(chainId) ?? Chain.Ethereum,
       orderBy: TokenSortableField.Popularity,
       page: 1,
       pageSize: 100,
     },
+    skip: !gqlTokenListsEnabled,
   })
   const sortedPopularTokens = useMemo(() => {
     if (!popularTokens?.topTokens) {
@@ -90,8 +94,8 @@ export function useCurrencySearchResults({
    */
 
   // Queries for a single token directly by address, if the query is an address.
-  const searchToken = useToken(searchQuery)
-  const defaultAndUserAddedTokens = useFallbackListTokens(chainId)
+  const searchToken = useTokenListToken(searchQuery)
+  const defaultAndUserAddedTokens = useDefaultActiveTokens(chainId)
   const userAddedTokens = useUserAddedTokens()
 
   const gqlSearchResultsEmpty =
@@ -104,7 +108,11 @@ export function useCurrencySearchResults({
    */
   const { sortedCombinedTokens, portfolioTokens, sortedTokensWithoutPortfolio } = useMemo(() => {
     const fullBaseList = (() => {
-      if ((!isEmpty(searchQuery) && gqlSearchResultsEmpty) || (isEmpty(searchQuery) && gqlPopularTokensEmpty)) {
+      if (
+        !gqlTokenListsEnabled ||
+        (!isEmpty(searchQuery) && gqlSearchResultsEmpty) ||
+        (isEmpty(searchQuery) && gqlPopularTokensEmpty)
+      ) {
         return Object.values(defaultAndUserAddedTokens)
       } else if (!isEmpty(searchQuery)) {
         return [
@@ -126,7 +134,7 @@ export function useCurrencySearchResults({
 
     // If we're using gql token lists and there's a search query, we don't need to
     // filter because the backend already does it for us.
-    if (!isEmpty(searchQuery) && !gqlSearchResultsEmpty) {
+    if (gqlTokenListsEnabled && !isEmpty(searchQuery) && !gqlSearchResultsEmpty) {
       return {
         sortedCombinedTokens: fullBaseList,
         portfolioTokens: [],
@@ -144,10 +152,14 @@ export function useCurrencySearchResults({
     })
 
     if (balancesLoading) {
+      const sortedCombinedTokens =
+        !isEmpty(searchQuery) && !gqlTokenListsEnabled
+          ? filteredListTokens.filter(getTokenFilter(searchQuery))
+          : filteredListTokens
       return {
-        sortedCombinedTokens: filteredListTokens,
+        sortedCombinedTokens,
         portfolioTokens: [],
-        sortedTokensWithoutPortfolio: filteredListTokens,
+        sortedTokensWithoutPortfolio: sortedCombinedTokens,
       }
     }
 
@@ -182,7 +194,9 @@ export function useCurrencySearchResults({
     }
 
     const sortedCombinedTokens =
-      !isEmpty(searchQuery) && gqlSearchResultsEmpty ? mergedTokens.filter(getTokenFilter(searchQuery)) : mergedTokens
+      !isEmpty(searchQuery) && (!gqlTokenListsEnabled || gqlSearchResultsEmpty)
+        ? mergedTokens.filter(getTokenFilter(searchQuery))
+        : mergedTokens
 
     return {
       sortedCombinedTokens: sortedCombinedTokens.filter(currencyFilter),
@@ -190,6 +204,7 @@ export function useCurrencySearchResults({
       portfolioTokens: portfolioTokens.filter(currencyFilter),
     }
   }, [
+    gqlTokenListsEnabled,
     searchQuery,
     gqlSearchResultsEmpty,
     balancesLoading,
@@ -207,13 +222,21 @@ export function useCurrencySearchResults({
     otherSelectedCurrency,
   ])
 
+  // if no results on main list, expand into inactive
+  const filteredInactiveTokens = useSearchInactiveTokenLists(
+    !filters?.onlyShowCurrenciesWithBalance && sortedCombinedTokens.length === 0 ? searchQuery : undefined
+  )
+
   const finalCurrencyList: CurrencyListRow[] = useMemo(() => {
+    // If we're using gql token lists, we don't want to show tokens from token lists.
+    const inactiveTokens = gqlTokenListsEnabled ? [] : filteredInactiveTokens
     if (!isEmpty(searchQuery) || portfolioTokens.length === 0) {
       return [
         new CurrencyListSectionTitle(searchQuery ? t`Search results` : t`Popular tokens`),
         ...sortedCombinedTokens.map(searchQuery ? searchResultsCurrencyListMapper : currencyListRowMapper),
+        ...inactiveTokens.map(currencyListRowMapper),
       ]
-    } else if (sortedTokensWithoutPortfolio.length === 0) {
+    } else if (sortedTokensWithoutPortfolio.length === 0 && inactiveTokens.length === 0) {
       return [new CurrencyListSectionTitle(t`Your tokens`), ...portfolioTokens.map(currencyListRowMapper)]
     } else {
       return [
@@ -221,9 +244,17 @@ export function useCurrencySearchResults({
         ...portfolioTokens.map(currencyListRowMapper),
         new CurrencyListSectionTitle(t`Popular tokens`),
         ...sortedTokensWithoutPortfolio.map(currencyListRowMapper),
+        ...inactiveTokens.map(currencyListRowMapper),
       ]
     }
-  }, [searchQuery, portfolioTokens, sortedTokensWithoutPortfolio, sortedCombinedTokens])
+  }, [
+    gqlTokenListsEnabled,
+    filteredInactiveTokens,
+    searchQuery,
+    portfolioTokens,
+    sortedTokensWithoutPortfolio,
+    sortedCombinedTokens,
+  ])
 
   return {
     loading: searchResultsLoading || popularTokensLoading || balancesLoading,

@@ -26,7 +26,7 @@ import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 const BASE_HEADERS = {
   'x-request-source': REQUEST_SOURCE,
   'x-app-version': getVersionHeader(),
-  Origin: uniswapUrls.apiOrigin,
+  Origin: uniswapUrls.apiBaseUrl,
 }
 
 const generateAxiosHeaders = async (

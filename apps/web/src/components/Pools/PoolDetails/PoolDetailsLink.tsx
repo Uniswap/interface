@@ -17,8 +17,8 @@ import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/t
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { DoubleTokenAndChainLogo } from './PoolDetailsHeader'
 import { DetailBubble, SmallDetailBubble } from './shared'
 
 const TokenName = styled(ThemedText.BodyPrimary)`
@@ -96,7 +96,6 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
   }, [address, setCopied])
 
   const isPool = tokens.length === 2
-  const currencies = isPool && tokens[1] ? [currency, gqlToCurrency(tokens[1])] : [currency]
   const explorerUrl =
     address &&
     chainId &&
@@ -150,9 +149,9 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
         ref={onTextRender}
       >
         {isPool ? (
-          <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={20} />
+          <DoubleTokenAndChainLogo chainId={chainId} tokens={tokens} size={20} />
         ) : (
-          <CurrencyLogo currency={currency} size={20} />
+          <CurrencyLogo currency={currency} size="20px" />
         )}
         <TokenName>{isPool ? <Trans>Pool</Trans> : tokens[0]?.name}</TokenName>
         <SymbolText>

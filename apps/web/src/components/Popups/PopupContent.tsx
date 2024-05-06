@@ -1,9 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { useOpenOffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
-import {
-  useSignatureToActivity,
-  useTransactionToActivity,
-} from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
+import { signatureToActivity, transactionToActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
@@ -11,6 +8,7 @@ import Column, { AutoColumn } from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { AutoRow } from 'components/Row'
 import { getChainInfo } from 'constants/chainInfo'
+import { useAllTokensMultichain } from 'hooks/Tokens'
 import useENSName from 'hooks/useENSName'
 import { Trans } from 'i18n'
 import { X } from 'react-feather'
@@ -19,6 +17,7 @@ import { useTransaction } from 'state/transactions/hooks'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const StyledClose = styled(X)<{ $padding: number }>`
@@ -102,7 +101,7 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
       <StyledClose $padding={16} onClick={onClose} />
       <PortfolioRow
         left={
-          success || !!activity.offchainOrderDetails ? (
+          success ? (
             <Column>
               <PortfolioLogo
                 chainId={activity.chainId}
@@ -138,9 +137,13 @@ export function TransactionPopupContent({
   onClose: () => void
 }) {
   const transaction = useTransaction(hash)
-  const activity = useTransactionToActivity(transaction, chainId)
+  const tokens = useAllTokensMultichain()
+  const { formatNumber } = useFormatter()
+  if (!transaction) return null
 
-  if (!transaction || !activity) return null
+  const activity = transactionToActivity(transaction, chainId, tokens, formatNumber)
+
+  if (!activity) return null
 
   const onClick = () =>
     window.open(getExplorerLink(activity.chainId, activity.hash, ExplorerDataType.TRANSACTION), '_blank')
@@ -150,11 +153,14 @@ export function TransactionPopupContent({
 
 export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: string; onClose: () => void }) {
   const order = useOrder(orderHash)
+  const tokens = useAllTokensMultichain()
   const openOffchainActivityModal = useOpenOffchainActivityModal()
+  const { formatNumber } = useFormatter()
+  if (!order) return null
 
-  const activity = useSignatureToActivity(order)
+  const activity = signatureToActivity(order, tokens, formatNumber)
 
-  if (!activity || !order) return null
+  if (!activity) return null
 
   const onClick = () =>
     openOffchainActivityModal(order, { inputLogo: activity?.logos?.[0], outputLogo: activity?.logos?.[1] })

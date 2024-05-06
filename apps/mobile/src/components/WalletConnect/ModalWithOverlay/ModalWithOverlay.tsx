@@ -29,7 +29,6 @@ type ModalWithOverlayProps = PropsWithChildren<
     scrollDownButtonText?: string
     onReject: () => void
     onConfirm: () => void
-    disableConfirm?: boolean
   }
 >
 
@@ -47,7 +46,6 @@ export function ModalWithOverlay({
   scrollDownButtonText,
   onReject,
   onConfirm,
-  disableConfirm,
   ...bottomSheetModalProps
 }: ModalWithOverlayProps): JSX.Element {
   const scrollViewRef = useRef<ScrollView>(null)
@@ -126,7 +124,7 @@ export function ModalWithOverlay({
 
       <ModalFooter
         confirmationButtonText={confirmationButtonText}
-        confirmationEnabled={!disableConfirm && confirmationEnabled}
+        confirmationEnabled={confirmationEnabled}
         scrollDownButtonText={scrollDownButtonText}
         showScrollDownOverlay={showOverlay}
         onConfirm={onConfirm}

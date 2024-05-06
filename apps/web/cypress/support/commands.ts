@@ -2,7 +2,7 @@ import 'cypress-hardhat/lib/browser'
 
 import { Eip1193Bridge } from '@ethersproject/experimental/lib/eip1193-bridge'
 
-import { FeatureFlagClient, FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { FeatureFlagClient, FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/experiments/flags'
 import { UserState, initialState } from '../../src/state/user/reducer'
 import { CONNECTED_WALLET_USER_STATE, setInitialUserState } from '../utils/user-state'
 
@@ -27,11 +27,6 @@ declare global {
        * @param {string} fixturePath - The path to the fixture to respond with.
        */
       interceptGraphqlOperation(operationName: string, fixturePath: string): Chainable<Subject>
-      /**
-       * Intercepts a quote request and responds with the given fixture.
-       * @param {string} fixturePath - The path to the fixture to respond with.
-       */
-      interceptQuoteRequest(fixturePath: string): Chainable<Subject>
     }
     interface VisitOptions {
       featureFlags?: Array<{ flag: FeatureFlags; value: boolean }>
@@ -128,18 +123,10 @@ Cypress.Commands.add('waitForAmplitudeEvent', (eventName, requiredProperties) =>
 
 Cypress.Commands.add('interceptGraphqlOperation', (operationName, fixturePath) => {
   return cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v1\/graphql/, (req) => {
-    req.headers['origin'] = 'https://app.uniswap.org'
     if (req.body.operationName === operationName) {
       req.reply({ fixture: fixturePath })
     } else {
       req.continue()
     }
-  })
-})
-
-Cypress.Commands.add('interceptQuoteRequest', (fixturePath) => {
-  return cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v2\/quote/, (req) => {
-    req.headers['origin'] = 'https://app.uniswap.org'
-    req.reply({ fixture: fixturePath })
   })
 })

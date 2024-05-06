@@ -1,5 +1,5 @@
-import { FORServiceProvider } from 'wallet/src/features/fiatOnRamp/types'
+import { FORTransferInstitution } from 'wallet/src/features/fiatOnRamp/types'
 
 export interface ExchangeTransferModalState {
-  serviceProvider: FORServiceProvider
+  serviceProvider: FORTransferInstitution
 }

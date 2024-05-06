@@ -3,7 +3,7 @@ import { Position } from '@uniswap/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import RateToggle from 'components/RateToggle'
 import { RowBetween, RowFixed } from 'components/Row'
@@ -14,8 +14,8 @@ import JSBI from 'jsbi'
 import { BlastRebasingAlert } from 'pages/AddLiquidity/blastAlerts'
 import { ReactNode, useCallback, useState } from 'react'
 import { Bound } from 'state/mint/v3/actions'
+import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { Text } from 'ui/src'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -34,6 +34,7 @@ export const PositionPreview = ({
   ticksAtLimit: { [bound: string]: boolean | undefined }
   showBlastAlert?: boolean
 }) => {
+  const theme = useTheme()
   const { formatCurrencyAmount, formatDelta, formatPrice, formatTickPrice } = useFormatter()
 
   const currency0 = unwrappedToken(position.pool.token0)
@@ -68,7 +69,12 @@ export const PositionPreview = ({
     <AutoColumn gap="md" style={{ marginTop: '0.5rem' }}>
       <RowBetween style={{ marginBottom: '0.5rem' }}>
         <RowFixed>
-          <DoubleCurrencyLogo currencies={[currency0, currency1]} size={24} />
+          <DoubleCurrencyLogo
+            currency0={currency0 ?? undefined}
+            currency1={currency1 ?? undefined}
+            size={24}
+            margin={true}
+          />
           <ThemedText.DeprecatedLabel ml="10px" fontSize="24px">
             {currency0?.symbol} / {currency1?.symbol}
           </ThemedText.DeprecatedLabel>
@@ -137,9 +143,9 @@ export const PositionPreview = ({
                   {{ sym: quoteCurrency.symbol }} per {{ symB: baseCurrency.symbol }}
                 </Trans>
               </ThemedText.DeprecatedMain>
-              <Text fontSize={11} textAlign="center" color="$neutral3" mt={4}>
+              <ThemedText.DeprecatedSmall textAlign="center" color={theme.neutral3} style={{ marginTop: '4px' }}>
                 <Trans>Your position will be 100% composed of {{ sym: baseCurrency?.symbol }} at this price</Trans>
-              </Text>
+              </ThemedText.DeprecatedSmall>
             </AutoColumn>
           </LightCard>
 
@@ -160,9 +166,9 @@ export const PositionPreview = ({
                   {{ sym: quoteCurrency.symbol }} per {{ symB: baseCurrency.symbol }}
                 </Trans>
               </ThemedText.DeprecatedMain>
-              <Text fontSize={11} textAlign="center" color="$neutral3" mt={4}>
+              <ThemedText.DeprecatedSmall textAlign="center" color={theme.neutral3} style={{ marginTop: '4px' }}>
                 <Trans>Your position will be 100% composed of {{ sym: quoteCurrency?.symbol }} at this price</Trans>
-              </Text>
+              </ThemedText.DeprecatedSmall>
             </AutoColumn>
           </LightCard>
         </RowBetween>

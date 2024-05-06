@@ -10,15 +10,10 @@ import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__g
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
-import { useWeb3React } from '@web3-react/core'
-import { sendAnalyticsEvent } from 'analytics'
 import { BigNumber, ContractTransaction } from 'ethers/lib/ethers'
 import { useContract } from 'hooks/useContract'
 import { useCallback } from 'react'
-import store from 'state'
-import { updateSignature } from 'state/signatures/reducer'
-import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
-import { UniswapXOrderStatus } from 'types/uniswapx'
+import { SignatureType } from 'state/signatures/types'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { Activity } from './types'
 
@@ -140,36 +135,7 @@ function getCancelMultipleUniswapXOrdersParams(
   return getCancelMultipleParams(nonces)
 }
 
-export function useCancelMultipleOrdersCallback(
-  orders?: Array<UniswapXOrderDetails>
-): () => Promise<ContractTransaction[] | undefined> {
-  const { provider } = useWeb3React()
-  const permit2 = useContract<Permit2>(PERMIT2_ADDRESS, PERMIT2_ABI, true)
-
-  return useCallback(async () => {
-    if (!orders || orders.length === 0) return undefined
-
-    sendAnalyticsEvent('UniswapX Order Cancel Initiated', {
-      orders: orders.map((order) => order.orderHash),
-    })
-
-    return cancelMultipleUniswapXOrders({
-      orders: orders.map((order) => {
-        return { encodedOrder: order.encodedOrder as string, type: order.type as SignatureType }
-      }),
-      permit2,
-      provider,
-      chainId: orders?.[0].chainId,
-    }).then((result) => {
-      orders.forEach((order) => {
-        store.dispatch(updateSignature({ ...order, status: UniswapXOrderStatus.PENDING_CANCELLATION }))
-      })
-      return result
-    })
-  }, [orders, permit2, provider])
-}
-
-async function cancelMultipleUniswapXOrders({
+export async function cancelMultipleUniswapXOrders({
   orders,
   chainId,
   permit2,

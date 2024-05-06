@@ -3,6 +3,7 @@ import ms from 'ms'
 import { darkTheme } from 'theme/colors'
 
 import { SupportedL1ChainId, SupportedL2ChainId } from './chains'
+import { ARBITRUM_LIST, AVALANCHE_LIST, BASE_LIST, CELO_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
 
 export const AVERAGE_L1_BLOCK_TIME = ms(`12s`)
 export const DEFAULT_MS_BEFORE_WARNING = ms(`10m`)
@@ -67,6 +68,7 @@ export interface L2ChainInfo extends BaseChainInfo {
   readonly networkType: NetworkType.L2
   readonly bridge: string
   readonly statusPage?: string
+  readonly defaultListUrl: string
 }
 
 type ChainInfoMap = { readonly [chainId: number]: L1ChainInfo | L2ChainInfo } & {
@@ -105,6 +107,7 @@ const CHAIN_INFO: ChainInfoMap = {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms(`25m`),
     bridge: 'https://app.optimism.io/bridge',
+    defaultListUrl: OPTIMISM_LIST,
     docs: 'https://optimism.io/',
     explorer: 'https://optimistic.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism/',
@@ -119,6 +122,7 @@ const CHAIN_INFO: ChainInfoMap = {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms(`25m`),
     bridge: 'https://app.optimism.io/bridge',
+    defaultListUrl: OPTIMISM_LIST,
     docs: 'https://optimism.io/',
     explorer: 'https://goerli-optimism.etherscan.io/',
     infoLink: 'https://info.uniswap.org/#/optimism/',
@@ -136,6 +140,7 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://arbiscan.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum',
     label: 'Arbitrum',
+    defaultListUrl: ARBITRUM_LIST,
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_42,
@@ -149,6 +154,7 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://goerli.arbiscan.io/',
     infoLink: 'https://info.uniswap.org/#/arbitrum/',
     label: 'Arbitrum Goerli',
+    defaultListUrl: ARBITRUM_LIST, // TODO: use arbitrum goerli token list
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     nativeCurrency: { name: 'Goerli Arbitrum Ether', symbol: 'goerliArbETH', decimals: 18 },
     color: darkTheme.chain_421613,
@@ -184,6 +190,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/celo/',
     label: 'Celo',
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
+    defaultListUrl: CELO_LIST,
   },
   [ChainId.CELO_ALFAJORES]: {
     networkType: NetworkType.L1,
@@ -194,6 +201,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/celo/',
     label: 'Celo Alfajores',
     nativeCurrency: { name: 'Celo', symbol: 'CELO', decimals: 18 },
+    defaultListUrl: CELO_LIST,
   },
   [ChainId.BNB]: {
     networkType: NetworkType.L1,
@@ -204,6 +212,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/bnb/',
     label: 'BNB Chain',
     nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 },
+    defaultListUrl: PLASMA_BNB_LIST,
     color: darkTheme.chain_56,
     backgroundColor: darkTheme.chain_56_background,
   },
@@ -216,6 +225,7 @@ const CHAIN_INFO: ChainInfoMap = {
     infoLink: 'https://info.uniswap.org/#/avax/', // TODO(WEB-2336): Add avax support to info site
     label: 'Avalanche',
     nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18 },
+    defaultListUrl: AVALANCHE_LIST,
     color: darkTheme.chain_43114,
     backgroundColor: darkTheme.chain_43114_background,
   },
@@ -223,6 +233,7 @@ const CHAIN_INFO: ChainInfoMap = {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms(`25m`),
     bridge: 'https://bridge.base.org/deposit',
+    defaultListUrl: BASE_LIST,
     docs: 'https://docs.base.org',
     explorer: 'https://basescan.org/',
     infoLink: 'https://info.uniswap.org/#/base/',
@@ -234,6 +245,7 @@ const CHAIN_INFO: ChainInfoMap = {
   [ChainId.BLAST]: {
     networkType: NetworkType.L2,
     bridge: 'https://blast.io/bridge',
+    defaultListUrl: '',
     docs: 'https://docs.blast.io',
     explorer: 'https://blastscan.io/',
     infoLink: 'https://info.uniswap.org/#/blast/',

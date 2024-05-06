@@ -1,7 +1,9 @@
+import tokenSafetyLookup from 'constants/tokenSafetyLookup'
 import { createStore, Store } from 'redux'
 import { updateVersion } from 'state/global/actions'
 
 import { ListsState } from 'state/lists/types'
+import { DEFAULT_LIST_OF_LISTS } from '../../constants/lists'
 import { acceptListUpdate, addList, fetchTokenList, removeList } from './actions'
 import reducer from './reducer'
 
@@ -79,10 +81,15 @@ describe('list reducer', () => {
     })
 
     describe('fulfilled', () => {
+      beforeEach(() => {
+        jest.spyOn(tokenSafetyLookup, 'update').mockReturnValue(undefined)
+      })
+
       it('saves the list', () => {
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
         )
+        expect(tokenSafetyLookup.update).toHaveBeenCalled()
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -100,9 +107,11 @@ describe('list reducer', () => {
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
         )
+        expect(tokenSafetyLookup.update).toHaveBeenCalled()
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
         )
+        expect(tokenSafetyLookup.update).toHaveBeenCalledTimes(1) // should not be called again
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -120,9 +129,11 @@ describe('list reducer', () => {
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
         )
+        expect(tokenSafetyLookup.update).toHaveBeenCalled()
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: PATCHED_STUB_LIST, requestId: 'request-id', url: 'fake-url' })
         )
+        expect(tokenSafetyLookup.update).toHaveBeenCalledTimes(1) // should not be called again
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -139,9 +150,11 @@ describe('list reducer', () => {
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
         )
+        expect(tokenSafetyLookup.update).toHaveBeenCalled()
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: MINOR_UPDATED_STUB_LIST, requestId: 'request-id', url: 'fake-url' })
         )
+        expect(tokenSafetyLookup.update).toHaveBeenCalledTimes(1) // should not be called again
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -158,9 +171,11 @@ describe('list reducer', () => {
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: STUB_TOKEN_LIST, requestId: 'request-id', url: 'fake-url' })
         )
+        expect(tokenSafetyLookup.update).toHaveBeenCalled()
         store.dispatch(
           fetchTokenList.fulfilled({ tokenList: MAJOR_UPDATED_STUB_LIST, requestId: 'request-id', url: 'fake-url' })
         )
+        expect(tokenSafetyLookup.update).toHaveBeenCalledTimes(1) // should not be called again
         expect(store.getState()).toEqual({
           byUrl: {
             'fake-url': {
@@ -327,6 +342,9 @@ describe('list reducer', () => {
         expect(store.getState().byUrl['https://unpkg.com/@uniswap/default-token-list@latest']).toBeUndefined()
       })
 
+      it('puts in all the new lists', () => {
+        expect(Object.keys(store.getState().byUrl)).toEqual(DEFAULT_LIST_OF_LISTS)
+      })
       it('all lists are empty', () => {
         const s = store.getState()
         Object.keys(s.byUrl).forEach((url) => {
@@ -337,6 +355,9 @@ describe('list reducer', () => {
             pendingUpdate: null,
           })
         })
+      })
+      it('sets initialized lists', () => {
+        expect(store.getState().lastInitializedDefaultListOfLists).toEqual(DEFAULT_LIST_OF_LISTS)
       })
     })
     describe('initialized with a different set of lists', () => {
@@ -390,6 +411,10 @@ describe('list reducer', () => {
               pendingUpdate: null,
             })
           })
+      })
+
+      it('sets initialized lists', () => {
+        expect(store.getState().lastInitializedDefaultListOfLists).toEqual(DEFAULT_LIST_OF_LISTS)
       })
     })
   })

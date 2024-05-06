@@ -5,8 +5,8 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { setUserProperty } from 'src/features/telemetry'
 import { UserPropertyName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
+import { isDevBuild } from 'src/utils/version'
 import { Flex, HapticFeedback, Icons, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
-import { isDevEnv } from 'uniswap/src/utils/env'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -87,7 +87,7 @@ export function AccountHeader(): JSX.Element {
               hitSlop={20}
               testID={ElementName.Manage}
               onLongPress={async (): Promise<void> => {
-                if (isDevEnv()) {
+                if (isDevBuild()) {
                   await HapticFeedback.selection()
                   dispatch(openModal({ name: ModalName.Experiments }))
                 }

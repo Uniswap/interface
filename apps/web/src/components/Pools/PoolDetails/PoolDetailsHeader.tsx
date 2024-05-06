@@ -1,10 +1,12 @@
 import { ChainId, Percent } from '@uniswap/sdk-core'
+import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import Column from 'components/Column'
 import { DropdownSelector } from 'components/DropdownSelector'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import { ReverseArrow } from 'components/Icons/ReverseArrow'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
@@ -14,10 +16,11 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { BIPS_BASE } from 'constants/misc'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { chainIdToBackendName, getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
+import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { Trans, t } from 'i18n'
-import React, { useMemo, useReducer, useRef } from 'react'
+import React, { useReducer, useRef } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Link } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
@@ -25,10 +28,8 @@ import { ClickableStyle, EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { shortenAddress } from 'utilities/src/addresses'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
-
-import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
 import { useFormatter } from 'utils/formatNumbers'
+import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 import { DetailBubble } from './shared'
 
 const HeaderContainer = styled.div`
@@ -175,7 +176,6 @@ const ContractsDropdownRow = ({
   const theme = useTheme()
   const currency = tokens[0] && gqlToCurrency(tokens[0])
   const isPool = tokens.length === 2
-  const currencies = isPool && tokens[1] ? [currency, gqlToCurrency(tokens[1])] : [currency]
   const isNative = address === NATIVE_CHAIN_ID
   const explorerUrl =
     chainId &&
@@ -199,9 +199,9 @@ const ContractsDropdownRow = ({
       <ContractsDropdownRowContainer>
         <Row gap="sm">
           {isPool ? (
-            <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={24} />
+            <DoubleTokenAndChainLogo chainId={chainId} tokens={tokens} size={24} />
           ) : (
-            <CurrencyLogo currency={currency} size={24} />
+            <CurrencyLogo currency={currency} size="24px" />
           )}
           <ThemedText.BodyPrimary>{isPool ? <Trans>Pool</Trans> : tokens[0]?.symbol}</ThemedText.BodyPrimary>
           <ThemedText.BodySecondary>{shortenAddress(address)}</ThemedText.BodySecondary>
@@ -299,10 +299,7 @@ export function PoolDetailsHeader({
   const screenSize = useScreenSize()
   const shouldColumnBreak = !screenSize['sm']
   const poolName = `${token0?.symbol} / ${token1?.symbol}`
-  const currencies = useMemo(
-    () => (token0 && token1 ? [gqlToCurrency(token0), gqlToCurrency(token1)] : []),
-    [token0, token1]
-  )
+  const tokens = [token0, token1]
 
   if (loading) {
     return (
@@ -326,9 +323,7 @@ export function PoolDetailsHeader({
       {shouldColumnBreak ? (
         <Column gap="sm" style={{ width: '100%' }}>
           <Row gap="md" justify="space-between">
-            {chainId && (
-              <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
-            )}
+            {chainId && <DoubleTokenAndChainLogo data-testid="double-token-logo" chainId={chainId} tokens={tokens} />}
             <PoolDetailsHeaderActions
               chainId={chainId}
               poolAddress={poolAddress}
@@ -349,9 +344,7 @@ export function PoolDetailsHeader({
       ) : (
         <>
           <Row gap="md">
-            {chainId && (
-              <DoubleCurrencyAndChainLogo data-testid="double-token-logo" chainId={chainId} currencies={currencies} />
-            )}
+            {chainId && <DoubleTokenAndChainLogo data-testid="double-token-logo" chainId={chainId} tokens={tokens} />}
             <PoolDetailsTitle
               token0={token0}
               token1={token1}
@@ -371,5 +364,124 @@ export function PoolDetailsHeader({
         </>
       )}
     </HeaderContainer>
+  )
+}
+
+const StyledLogoParentContainer = styled.div`
+  position: relative;
+  top: 0;
+  left: 0;
+`
+export function DoubleTokenAndChainLogo({
+  chainId,
+  tokens,
+  size = 32,
+}: {
+  chainId: number
+  tokens: Array<Token | undefined>
+  size?: number
+}) {
+  return (
+    <StyledLogoParentContainer>
+      <DoubleTokenLogo chainId={chainId} tokens={tokens} size={size} />
+      <SquareL2Logo chainId={chainId} size={size} />
+    </StyledLogoParentContainer>
+  )
+}
+
+const L2_LOGO_SIZE_FACTOR = 3 / 8
+
+const L2LogoContainer = styled.div<{ size: number }>`
+  background-color: ${({ theme }) => theme.surface2};
+  border-radius: 2px;
+  width: ${({ size }) => size * L2_LOGO_SIZE_FACTOR}px;
+  height: ${({ size }) => size * L2_LOGO_SIZE_FACTOR}px;
+  left: 60%;
+  position: absolute;
+  top: 60%;
+  outline: 2px solid ${({ theme }) => theme.surface1};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+function SquareL2Logo({ chainId, size }: { chainId: ChainId; size: number }) {
+  if (chainId === ChainId.MAINNET) return null
+
+  return (
+    <L2LogoContainer size={size}>
+      <ChainLogo chainId={chainId} size={size * L2_LOGO_SIZE_FACTOR} />
+    </L2LogoContainer>
+  )
+}
+
+export function DoubleTokenLogo({
+  chainId,
+  tokens,
+  size = 32,
+}: {
+  chainId: number
+  tokens: Array<Token | undefined>
+  size?: number
+}) {
+  const token0IsNative = tokens?.[0]?.address === NATIVE_CHAIN_ID
+  const token1IsNative = tokens?.[1]?.address === NATIVE_CHAIN_ID
+  const [src, nextSrc] = useTokenLogoSource({
+    address: tokens?.[0]?.address,
+    chainId,
+    primaryImg: token0IsNative ? undefined : tokens?.[0]?.project?.logo?.url,
+    isNative: token0IsNative,
+  })
+  const [src2, nextSrc2] = useTokenLogoSource({
+    address: tokens?.[1]?.address,
+    chainId,
+    primaryImg: token1IsNative ? undefined : tokens?.[1]?.project?.logo?.url,
+    isNative: token1IsNative,
+  })
+
+  return <DoubleLogo logo1={src} onError1={nextSrc} logo2={src2} onError2={nextSrc2} size={size} />
+}
+
+const DoubleLogoContainer = styled.div<{ size: number }>`
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+  img {
+    width: ${({ size }) => size / 2}px;
+    height: ${({ size }) => size}px;
+    object-fit: cover;
+  }
+  img:first-child {
+    border-radius: ${({ size }) => `${size / 2}px 0 0 ${size / 2}px`};
+    object-position: 0 0;
+  }
+  img:last-child {
+    border-radius: ${({ size }) => `0 ${size / 2}px ${size / 2}px 0`};
+    object-position: 100% 0;
+  }
+`
+
+const CircleLogoImage = styled.img<{ size: number }>`
+  width: ${({ size }) => size / 2}px;
+  height: ${({ size }) => size}px;
+  border-radius: 50%;
+`
+
+interface DoubleLogoProps {
+  logo1?: string
+  logo2?: string
+  onError1?: () => void
+  onError2?: () => void
+  size: number
+}
+
+function DoubleLogo({ logo1, onError1, logo2, onError2, size }: DoubleLogoProps) {
+  return (
+    <DoubleLogoContainer size={size}>
+      <CircleLogoImage src={logo1 ?? blankTokenUrl} onError={onError1} size={size} />
+      <CircleLogoImage src={logo2 ?? blankTokenUrl} onError={onError2} size={size} />
+    </DoubleLogoContainer>
   )
 }

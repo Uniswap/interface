@@ -21,7 +21,7 @@ const mockLimitActivity = {
 
 describe('OpenLimitOrdersButton', () => {
   it('should not render if there are no open limit orders', () => {
-    mocked(useOpenLimitOrders).mockReturnValue({ openLimitOrders: [], loading: false })
+    mocked(useOpenLimitOrders).mockReturnValue({ openLimitOrders: [], loading: false, refetch: jest.fn() })
     const { container } = render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={jest.fn()} />)
     expect(container.firstChild?.firstChild?.firstChild).toBeNull()
   })
@@ -29,6 +29,7 @@ describe('OpenLimitOrdersButton', () => {
     mocked(useOpenLimitOrders).mockReturnValue({
       openLimitOrders: [mockLimitActivity],
       loading: false,
+      refetch: jest.fn(),
     })
     const { container } = render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={jest.fn()} />)
     expect(container).toMatchSnapshot()
@@ -38,6 +39,7 @@ describe('OpenLimitOrdersButton', () => {
     mocked(useOpenLimitOrders).mockReturnValue({
       openLimitOrders: [mockLimitActivity],
       loading: false,
+      refetch: jest.fn(),
     })
     const clickCallback = jest.fn()
     const { container } = render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={clickCallback} />)
@@ -50,6 +52,7 @@ describe('OpenLimitOrdersButton', () => {
     mocked(useOpenLimitOrders).mockReturnValue({
       openLimitOrders: Array(100).fill(mockLimitActivity),
       loading: false,
+      refetch: jest.fn(),
     })
     render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={jest.fn()} />)
     expect(screen.getByText('Cancel limits to proceed')).toBeInTheDocument()
@@ -59,6 +62,7 @@ describe('OpenLimitOrdersButton', () => {
     mocked(useOpenLimitOrders).mockReturnValue({
       openLimitOrders: Array(90).fill(mockLimitActivity),
       loading: false,
+      refetch: jest.fn(),
     })
     render(<OpenLimitOrdersButton account="0x123" openLimitsMenu={jest.fn()} />)
     expect(screen.getByText('Approaching 100 limit maximum')).toBeInTheDocument()

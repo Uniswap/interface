@@ -58,7 +58,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c20 {
+.c21 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -146,7 +146,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   cursor: pointer;
 }
 
-.c21 {
+.c22 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -161,8 +161,8 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   line-height: 1;
 }
 
-.c23 {
-  border-color: #CECECE;
+.c24 {
+  border-color: #22222212;
   display: inline-block;
   margin-right: 1px;
   border-radius: 4px;
@@ -178,15 +178,15 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   transition-duration: 125ms;
 }
 
-.c23:hover {
+.c24:hover {
   opacity: 0.6;
 }
 
-.c23:active {
+.c24:active {
   opacity: 0.4;
 }
 
-.c24 {
+.c25 {
   position: absolute;
   top: -24px;
   -webkit-clip: rect(0 0 0 0);
@@ -200,7 +200,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   width: 1px;
 }
 
-.c25 {
+.c26 {
   display: none;
   height: 18px;
   width: 18px;
@@ -217,7 +217,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   text-overflow: ellipsis;
 }
 
-.c22 {
+.c23 {
   opacity: 0;
 }
 
@@ -226,6 +226,12 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.c20 {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
 }
 
 .c1 {
@@ -404,6 +410,9 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                   <div
                     class="c13 c18 c19"
                   >
+                    <img
+                      class="c20"
+                    />
                     <div
                       class="c5 css-n8z49y"
                     >
@@ -432,6 +441,9 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                         points="12 5 19 12 12 19"
                       />
                     </svg>
+                    <img
+                      class="c20"
+                    />
                     <div
                       class="c5 css-n8z49y"
                     >
@@ -441,7 +453,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                     </div>
                   </div>
                   <div
-                    class="c20 css-142zc9n"
+                    class="c21 css-142zc9n"
                   >
                     when 0.00042 WETH/DAI
                   </div>
@@ -449,20 +461,20 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
               </div>
             </div>
             <label
-              class="c21 c22"
+              class="c22 c23"
             >
               <span
                 aria-hidden="true"
-                class="c23"
+                class="c24"
                 size="18"
               />
               <input
-                class="c24"
+                class="c25"
                 size="18"
                 type="checkbox"
               />
               <svg
-                class="c25"
+                class="c26"
                 fill="none"
                 height="16"
                 size="18"
@@ -502,6 +514,9 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                   <div
                     class="c13 c18 c19"
                   >
+                    <img
+                      class="c20"
+                    />
                     <div
                       class="c5 css-n8z49y"
                     >
@@ -530,6 +545,9 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                         points="12 5 19 12 12 19"
                       />
                     </svg>
+                    <img
+                      class="c20"
+                    />
                     <div
                       class="c5 css-n8z49y"
                     >
@@ -539,7 +557,7 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
                     </div>
                   </div>
                   <div
-                    class="c20 css-142zc9n"
+                    class="c21 css-142zc9n"
                   >
                     when 0.00042 WETH/DAI
                   </div>
@@ -547,20 +565,20 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
               </div>
             </div>
             <label
-              class="c21 c22"
+              class="c22 c23"
             >
               <span
                 aria-hidden="true"
-                class="c23"
+                class="c24"
                 size="18"
               />
               <input
-                class="c24"
+                class="c25"
                 size="18"
                 type="checkbox"
               />
               <svg
-                class="c25"
+                class="c26"
                 fill="none"
                 height="16"
                 size="18"
@@ -645,7 +663,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c20 {
+.c21 {
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
@@ -733,7 +751,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   cursor: pointer;
 }
 
-.c21 {
+.c22 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -748,8 +766,8 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   line-height: 1;
 }
 
-.c23 {
-  border-color: #CECECE;
+.c24 {
+  border-color: #22222212;
   display: inline-block;
   margin-right: 1px;
   border-radius: 4px;
@@ -765,15 +783,15 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   transition-duration: 125ms;
 }
 
-.c23:hover {
+.c24:hover {
   opacity: 0.6;
 }
 
-.c23:active {
+.c24:active {
   opacity: 0.4;
 }
 
-.c24 {
+.c25 {
   position: absolute;
   top: -24px;
   -webkit-clip: rect(0 0 0 0);
@@ -787,7 +805,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   width: 1px;
 }
 
-.c25 {
+.c26 {
   display: none;
   height: 18px;
   width: 18px;
@@ -804,7 +822,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   text-overflow: ellipsis;
 }
 
-.c22 {
+.c23 {
   opacity: 0;
 }
 
@@ -813,6 +831,12 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.c20 {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
 }
 
 .c1 {
@@ -991,6 +1015,9 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
                   <div
                     class="c13 c18 c19"
                   >
+                    <img
+                      class="c20"
+                    />
                     <div
                       class="c5 css-n8z49y"
                     >
@@ -1019,6 +1046,9 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
                         points="12 5 19 12 12 19"
                       />
                     </svg>
+                    <img
+                      class="c20"
+                    />
                     <div
                       class="c5 css-n8z49y"
                     >
@@ -1028,7 +1058,7 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
                     </div>
                   </div>
                   <div
-                    class="c20 css-142zc9n"
+                    class="c21 css-142zc9n"
                   >
                     when 0.00042 WETH/DAI
                   </div>
@@ -1036,20 +1066,20 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
               </div>
             </div>
             <label
-              class="c21 c22"
+              class="c22 c23"
             >
               <span
                 aria-hidden="true"
-                class="c23"
+                class="c24"
                 size="18"
               />
               <input
-                class="c24"
+                class="c25"
                 size="18"
                 type="checkbox"
               />
               <svg
-                class="c25"
+                class="c26"
                 fill="none"
                 height="16"
                 size="18"

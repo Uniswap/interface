@@ -18,6 +18,8 @@ import { FixedSizeList } from 'react-window'
 import { Text } from 'rebass'
 import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { isAddress } from 'utilities/src/addresses'
 import Column from '../Column'
 import Row, { RowBetween } from '../Row'
@@ -77,6 +79,8 @@ export function CurrencySearch({
   const { chainId } = useWeb3React()
   const theme = useTheme()
 
+  const [tokenLoaderTimerElapsed, setTokenLoaderTimerElapsed] = useState(false)
+
   // refs for fixed size lists
   const fixedList = useRef<FixedSizeList>()
 
@@ -96,6 +100,11 @@ export function CurrencySearch({
   })
 
   const { balanceMap } = useTokenBalances()
+
+  const gqlTokenListsEnabled = useFeatureFlag(FeatureFlags.GqlTokenLists)
+  const isLoading = Boolean(
+    gqlTokenListsEnabled ? currencySearchResultsLoading : currencySearchResultsLoading && !tokenLoaderTimerElapsed
+  )
 
   const native = useNativeCurrency(chainId)
 
@@ -155,6 +164,19 @@ export function CurrencySearch({
   const [open, toggle] = useToggle(false)
   const node = useRef<HTMLDivElement>()
   useOnClickOutside(node, open ? toggle : undefined)
+
+  // Timeout token loader after 3 seconds to avoid hanging in a loading state.
+  useEffect(() => {
+    const tokenLoaderTimer = setTimeout(() => {
+      setTokenLoaderTimerElapsed(true)
+    }, 3000)
+    return () => clearTimeout(tokenLoaderTimer)
+  }, [])
+
+  useEffect(() => {
+    // Reset token loading timer when search query changes, since new search terms fire new backend requests.
+    setTokenLoaderTimerElapsed(false)
+  }, [searchQuery])
 
   return (
     <ContentWrapper>
@@ -224,7 +246,7 @@ export function CurrencySearch({
               }
             />
           </Column>
-        ) : allCurrencyRows.some((currencyRow) => !!currencyRow.currency) || currencySearchResultsLoading ? (
+        ) : allCurrencyRows.some((currencyRow) => !!currencyRow.currency) || isLoading ? (
           <div style={{ flex: '1' }}>
             <AutoSizer disableWidth>
               {({ height }: { height: number }) => (
@@ -236,7 +258,7 @@ export function CurrencySearch({
                   selectedCurrency={selectedCurrency}
                   fixedListRef={fixedList}
                   showCurrencyAmount={showCurrencyAmount}
-                  isLoading={currencySearchResultsLoading}
+                  isLoading={isLoading}
                   searchQuery={searchQuery}
                   isAddressSearch={isAddressSearch}
                   balances={balanceMap}

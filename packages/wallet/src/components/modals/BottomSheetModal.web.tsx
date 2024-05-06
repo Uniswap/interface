@@ -121,12 +121,10 @@ function WebBottomSheetModal({
               alignment === 'center' ? 'center' : alignment === 'top' ? 'flex-start' : 'flex-end'
             }
             maxWidth={maxWidth}
-            p="$spacing12"
-            pointerEvents="none">
+            p="$spacing12">
             <Flex
               borderRadius="$rounded24"
               p="$spacing12"
-              pointerEvents="auto"
               style={{ backgroundColor: backgroundColor ?? colors.surface1.val }}
               width="100%">
               {/* To keep this consistent with how the `BottomSheetModal` works on native mobile, we only mount the children when the modal is open. */}

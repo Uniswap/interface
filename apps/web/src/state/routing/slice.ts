@@ -33,12 +33,13 @@ const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
 
 // routing API quote query params: https://github.com/Uniswap/routing-api/blob/main/lib/handlers/quote/schema/quote-schema.ts
 const DEFAULT_QUERY_PARAMS = {
+  protocols,
   // this should be removed once BE fixes issue where enableUniversalRouter is required for fees to work
   enableUniversalRouter: true,
 }
 
 function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
-  const { account, tokenInChainId, uniswapXForceSyntheticQuotes, routerPreference, protocolPreferences } = args
+  const { account, tokenInChainId, uniswapXForceSyntheticQuotes, routerPreference } = args
 
   const uniswapx = {
     useSyntheticQuotes: uniswapXForceSyntheticQuotes,
@@ -51,7 +52,6 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
 
   const classic = {
     ...DEFAULT_QUERY_PARAMS,
-    protocols: protocolPreferences && protocolPreferences.length > 0 ? protocolPreferences : protocols,
     routingType: URAQuoteType.CLASSIC,
     recipient: account,
     enableFeeOnTransferFeeFetching: true,

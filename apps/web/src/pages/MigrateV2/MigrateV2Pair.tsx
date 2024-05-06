@@ -8,6 +8,7 @@ import { sendAnalyticsEvent, useTrace } from 'analytics'
 import Badge from 'components/Badge'
 import { ButtonConfirmed } from 'components/Button'
 import { BlueCard, DarkGrayCard, LightCard, YellowCard } from 'components/Card'
+import DoubleCurrencyLogo from 'components/DoubleLogo'
 import FeeSelector from 'components/FeeSelector'
 import RangeSelector from 'components/RangeSelector'
 import RateToggle from 'components/RateToggle'
@@ -35,7 +36,6 @@ import { useTheme } from 'styled-components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { isAddress } from 'utilities/src/addresses'
 import { MigrateHeader } from '.'
 import { AutoColumn } from '../../components/Column'
@@ -81,7 +81,7 @@ function LiquidityInfo({
     <AutoColumn gap="sm">
       <RowBetween>
         <RowFixed>
-          <CurrencyLogo size={20} style={{ marginRight: '8px' }} currency={currency0} />
+          <CurrencyLogo size="20px" style={{ marginRight: '8px' }} currency={currency0} />
           <Text fontSize={16} fontWeight={535}>
             {currency0.symbol}
           </Text>
@@ -92,7 +92,7 @@ function LiquidityInfo({
       </RowBetween>
       <RowBetween>
         <RowFixed>
-          <CurrencyLogo size={20} style={{ marginRight: '8px' }} currency={currency1} />
+          <CurrencyLogo size="20px" style={{ marginRight: '8px' }} currency={currency1} />
           <Text fontSize={16} fontWeight={535}>
             {currency1.symbol}
           </Text>
@@ -408,7 +408,7 @@ function V2PairMigration({
         <AutoColumn gap="lg">
           <RowBetween>
             <RowFixed style={{ marginLeft: '8px' }}>
-              <DoubleCurrencyLogo currencies={[currency0, currency1]} size={20} />
+              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={false} size={20} />
               <ThemedText.DeprecatedMediumHeader style={{ marginLeft: '8px' }}>
                 <Trans>
                   {{ symA: currency0.symbol }}/{{ symB: currency1.symbol }} LP Tokens
@@ -429,7 +429,7 @@ function V2PairMigration({
         <AutoColumn gap="lg">
           <RowBetween>
             <RowFixed style={{ marginLeft: '8px' }}>
-              <DoubleCurrencyLogo currencies={[currency0, currency1]} size={20} />
+              <DoubleCurrencyLogo currency0={currency0} currency1={currency1} margin={false} size={20} />
               <ThemedText.DeprecatedMediumHeader style={{ marginLeft: '8px' }}>
                 <Trans>
                   {{ symA: currency0.symbol }}/{{ symB: currency1.symbol }} LP NFT

@@ -157,9 +157,10 @@ export const headingFont = createFont({
     large: fonts.heading1.fontSize,
   },
   weight: {
-    book: '400',
+    small: '500',
     medium: '500',
-    true: fonts.heading1.fontWeight,
+    true: '500',
+    large: '500',
   },
   lineHeight: {
     small: fonts.heading3.lineHeight,
@@ -178,9 +179,10 @@ export const subHeadingFont = createFont({
     true: fonts.subheading1.fontSize,
   },
   weight: {
-    book: '400',
+    small: '500',
     medium: '500',
-    true: fonts.subheading1.fontWeight,
+    large: '500',
+    true: '500',
   },
   lineHeight: {
     small: fonts.subheading2.lineHeight,
@@ -203,9 +205,11 @@ export const bodyFont = createFont({
     true: fonts.body2.fontSize,
   },
   weight: {
-    book: '400',
-    medium: '500',
-    true: fonts.body1.fontWeight,
+    micro: fonts.body3.fontWeight,
+    small: fonts.body2.fontWeight,
+    medium: fonts.body2.fontWeight,
+    large: fonts.body1.fontWeight,
+    true: fonts.body2.fontWeight,
   },
   lineHeight: {
     micro: fonts.body3.lineHeight,
@@ -226,9 +230,11 @@ export const buttonFont = createFont({
     true: fonts.buttonLabel2.fontSize,
   },
   weight: {
-    book: '400',
-    medium: '500',
-    true: fonts.buttonLabel1.fontWeight,
+    micro: fonts.buttonLabel4.fontWeight,
+    small: fonts.buttonLabel3.fontWeight,
+    medium: fonts.buttonLabel2.fontWeight,
+    large: fonts.buttonLabel1.fontWeight,
+    true: fonts.buttonLabel2.fontWeight,
   },
   lineHeight: {
     micro: fonts.buttonLabel4.lineHeight,

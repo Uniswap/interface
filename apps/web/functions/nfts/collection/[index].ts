@@ -1,14 +1,14 @@
 /* eslint-disable import/no-unused-modules */
 import getCollection from '../../utils/getCollection'
-import { transformResponse } from '../../utils/transformResponse'
+import { getMetadataRequest } from '../../utils/getRequest'
 
 export const onRequest: PagesFunction = async ({ params, request, next }) => {
-  const response = next()
+  const res = next()
   try {
     const { index } = params
     const collectionAddress = index?.toString()
-    return transformResponse(request, await response, () => getCollection(collectionAddress, request.url))
+    return getMetadataRequest(res, request, () => getCollection(collectionAddress, request.url))
   } catch (e) {
-    return response
+    return res
   }
 }

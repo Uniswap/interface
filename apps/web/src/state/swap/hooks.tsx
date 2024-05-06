@@ -14,9 +14,8 @@ import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routi
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { isAddress } from 'utilities/src/addresses'
 
-import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { TOKEN_SHORTHANDS } from '../../constants/tokens'
-import { useCurrencyBalance, useCurrencyBalances } from '../connection/hooks'
+import { useCurrencyBalances } from '../connection/hooks'
 import {
   CurrencyState,
   SerializedCurrencyState,
@@ -47,9 +46,8 @@ export function useSwapActionHandlers(): {
     (field: Field, currency: Currency) => {
       const [currentCurrencyKey, otherCurrencyKey]: (keyof CurrencyState)[] =
         field === Field.INPUT ? ['inputCurrency', 'outputCurrency'] : ['outputCurrency', 'inputCurrency']
-      const otherCurrency = currencyState[otherCurrencyKey]
       // the case where we have to swap the order
-      if (otherCurrency && currency.equals(otherCurrency)) {
+      if (currency === currencyState[otherCurrencyKey]) {
         setCurrencyState({
           [currentCurrencyKey]: currency,
           [otherCurrencyKey]: currencyState[currentCurrencyKey],
@@ -119,9 +117,7 @@ export function useSwapActionHandlers(): {
 
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(state: SwapState): SwapInfo {
-  const { account, chainId } = useWeb3React()
-  const nativeCurrency = useNativeCurrency(chainId)
-  const balance = useCurrencyBalance(account ?? undefined, nativeCurrency)
+  const { account } = useWeb3React()
 
   const {
     currencyState: { inputCurrency, outputCurrency },
@@ -151,8 +147,6 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     undefined,
     account
   )
-
-  const { data: nativeCurrencyBalanceUSD } = useUSDPrice(balance, nativeCurrency)
 
   const { data: outputFeeFiatValue } = useUSDPrice(
     isSubmittableTrade(trade.trade) && trade.trade.swapFee
@@ -190,10 +184,6 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   // slippage amount used to submit the trade
   const allowedSlippage = uniswapXAutoSlippage ?? classicAllowedSlippage
 
-  // totalGasUseEstimateUSD is greater than native token balance
-  const insufficientGas =
-    isClassicTrade(trade.trade) && (nativeCurrencyBalanceUSD ?? 0) < (trade.trade.totalGasUseEstimateUSDWithBuffer ?? 0)
-
   const connectionReady = useConnectionReady()
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
@@ -210,10 +200,6 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
       inputError = inputError ?? <Trans>Enter an amount</Trans>
     }
 
-    if (insufficientGas) {
-      inputError = <Trans>Insufficient {{ symbol: nativeCurrency.symbol }} balance</Trans>
-    }
-
     // compare input balance to max input based on version
     const [balanceIn, maxAmountIn] = [currencyBalances[Field.INPUT], trade?.trade?.maximumAmountIn(allowedSlippage)]
 
@@ -222,17 +208,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     }
 
     return inputError
-  }, [
-    account,
-    currencies,
-    parsedAmount,
-    currencyBalances,
-    trade?.trade,
-    allowedSlippage,
-    connectionReady,
-    insufficientGas,
-    nativeCurrency.symbol,
-  ])
+  }, [account, currencies, parsedAmount, currencyBalances, trade?.trade, allowedSlippage, connectionReady])
 
   return useMemo(
     () => ({

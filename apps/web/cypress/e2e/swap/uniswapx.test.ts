@@ -383,17 +383,13 @@ describe('UniswapX activity history', () => {
     cy.get('#swap-currency-input .token-amount-input').type('300')
 
     const gqlSpy = cy.spy().as('gqlSpy')
-    cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v1\/graphql/, (req) => {
-      if (req.body.operationName === 'PortfolioBalancesWeb') {
-        // Spy on request frequency
-        req.on('response', gqlSpy)
-        // Reply with a fixture to speed up test
-        req.reply({
-          fixture: 'mini-portfolio/tokens.json',
-        })
-      } else {
-        req.continue()
-      }
+    cy.intercept(/graphql/, (req) => {
+      // Spy on request frequency
+      req.on('response', gqlSpy)
+      // Reply with a fixture to speed up test
+      req.reply({
+        fixture: 'mini-portfolio/tokens.json',
+      })
     })
 
     // Expect balances to fetch upon opening mini portfolio
@@ -404,10 +400,13 @@ describe('UniswapX activity history', () => {
     cy.get('#swap-button').click()
     cy.contains('Confirm swap').click()
 
+    // Expect balances to refetch after approval
+    cy.get('@gqlSpy').should('have.been.calledTwice')
+
     // Return filled order status from uniswapx api
     cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' })
 
     // Expect balances to refetch after swap
-    cy.get('@gqlSpy').should('have.been.calledTwice')
+    cy.get('@gqlSpy').should('have.been.calledThrice')
   })
 })

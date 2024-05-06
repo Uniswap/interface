@@ -9,13 +9,8 @@ import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
 
-import { chainIdToBackendName, gqlToCurrency } from 'graphql/data/util'
+import { useDefaultActiveTokens } from 'hooks/Tokens'
 import { deserializeToken, serializeToken } from 'state/user/utils'
-import {
-  Chain,
-  TokenSortableField,
-  useTopTokensQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
 import {
   addSerializedPair,
@@ -198,16 +193,7 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useWeb3React()
-
-  // TODO(WEB-4001): use an "all tokens" query for better LP detection
-  const { data: popularTokens } = useTopTokensQuery({
-    variables: {
-      chain: chainIdToBackendName(chainId) ?? Chain.Ethereum,
-      orderBy: TokenSortableField.Popularity,
-      page: 1,
-      pageSize: 100,
-    },
-  })
+  const tokens = useDefaultActiveTokens(chainId)
 
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
@@ -215,17 +201,16 @@ export function useTrackedTokenPairs(): [Token, Token][] {
   // pairs for every token against every base
   const generatedPairs: [Token, Token][] = useMemo(
     () =>
-      chainId && popularTokens?.topTokens
-        ? popularTokens.topTokens.flatMap((gqlToken) => {
-            if (!gqlToken) return []
-            const token = gqlToCurrency(gqlToken)
+      chainId
+        ? Object.keys(tokens).flatMap((tokenAddress) => {
+            const token = tokens[tokenAddress]
             // for each token on the current chain,
             return (
               // loop though all bases on the current chain
               (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
                 // to construct pairs of the given token with each base
                 .map((base) => {
-                  if (!token?.isNative && base.address === token?.address) {
+                  if (base.address === token.address) {
                     return null
                   } else {
                     return [base, token]
@@ -235,7 +220,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
             )
           })
         : [],
-    [popularTokens, chainId]
+    [tokens, chainId]
   )
 
   // pairs saved by users
@@ -253,7 +238,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
 
   const combinedList = useMemo(
     () => userPairs.concat(generatedPairs).concat(pinnedPairs),
-    [pinnedPairs, userPairs, generatedPairs]
+    [generatedPairs, pinnedPairs, userPairs]
   )
 
   return useMemo(() => {

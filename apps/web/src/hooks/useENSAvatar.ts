@@ -31,7 +31,7 @@ export default function useENSAvatar(
   const nameAvatar = useAvatarFromNode(ENSName === null ? undefined : safeNamehash(ENSName))
   let avatar = addressAvatar.avatar || nameAvatar.avatar
 
-  const nftAvatar = useAvatarFromNFT(avatar, enforceOwnership, address)
+  const nftAvatar = useAvatarFromNFT(avatar, enforceOwnership)
   avatar = nftAvatar.avatar || avatar
 
   const http = avatar && uriToHttp(avatar)[0]
@@ -60,17 +60,13 @@ function useAvatarFromNode(node?: string): { avatar?: string; loading: boolean }
   return useMemo(
     () => ({
       avatar: avatar.result?.[0],
-      loading: avatar.loading,
+      loading: resolverAddress.loading || avatar.loading,
     }),
-    [avatar.loading, avatar.result]
+    [avatar.loading, avatar.result, resolverAddress.loading]
   )
 }
 
-function useAvatarFromNFT(
-  nftUri = '',
-  enforceOwnership: boolean,
-  address?: string
-): { avatar?: string; loading: boolean } {
+function useAvatarFromNFT(nftUri = '', enforceOwnership: boolean): { avatar?: string; loading: boolean } {
   const parts = nftUri.toLowerCase().split(':')
   const protocol = parts[0]
   // ignore the chain from eip155
@@ -80,12 +76,7 @@ function useAvatarFromNFT(
   const isERC721 = protocol === 'eip155' && erc === 'erc721'
   const isERC1155 = protocol === 'eip155' && erc === 'erc1155'
   const erc721 = useERC721Uri(isERC721 ? contractAddress : undefined, isERC721 ? id : undefined, enforceOwnership)
-  const erc1155 = useERC1155Uri(
-    isERC1155 ? contractAddress : undefined,
-    address,
-    isERC1155 ? id : undefined,
-    enforceOwnership
-  )
+  const erc1155 = useERC1155Uri(isERC1155 ? contractAddress : undefined, isERC1155 ? id : undefined, enforceOwnership)
   const uri = erc721.uri || erc1155.uri
   const http = uri && uriToHttp(uri)[0]
 
@@ -134,12 +125,12 @@ function useERC721Uri(
 
 function useERC1155Uri(
   contractAddress: string | undefined,
-  ownerAddress: string | undefined,
   id: string | undefined,
   enforceOwnership: boolean
 ): { uri?: string; loading: boolean } {
+  const { account } = useWeb3React()
   const idArgument = useMemo(() => [id], [id])
-  const accountArgument = useMemo(() => [ownerAddress, id], [ownerAddress, id])
+  const accountArgument = useMemo(() => [account || '', id], [account, id])
   const contract = useERC1155Contract(contractAddress)
   const balance = useMainnetSingleCallResult(contract, 'balanceOf', accountArgument, NEVER_RELOAD)
   const uri = useMainnetSingleCallResult(contract, 'uri', idArgument, NEVER_RELOAD)

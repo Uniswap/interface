@@ -272,6 +272,26 @@ export type FORSupportedFiatCurrenciesResponse = {
   fiatCurrencies: FORSupportedFiatCurrency[]
 }
 
+// /transfer-institutions
+
+export type FORTransferInstitutionsRequest = {
+  countryCode: string
+}
+
+export type FORTransferInstitution = {
+  domain: string
+  id: string
+  icon: string
+  key: string
+  name: string
+  rank: number
+  subName: string
+}
+
+export type FORTransferInstitutionsResponse = {
+  institutions: FORTransferInstitution[]
+}
+
 // /widget-url
 
 export type FORWidgetUrlRequest = {
@@ -293,11 +313,13 @@ export type FORWidgetUrlResponse = {
 // /transfer-widget-url
 
 export type FORTransferWidgetUrlRequest = {
+  sourceAmount: number
+  sourceCurrencyCode: string
   countryCode: string
-  serviceProvider: string
+  institutionId: string
   walletAddress: string
   externalSessionId: string
-  redirectUrl: string
+  redirectURL: string
 }
 
 // /transactions

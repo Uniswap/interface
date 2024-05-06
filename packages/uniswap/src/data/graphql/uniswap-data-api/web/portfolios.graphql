@@ -7,25 +7,13 @@ fragment PortfolioTokenBalanceParts on TokenBalance {
     value
   }
   token {
-    ...SimpleTokenDetails
     id
-    address
     chain
-    symbol
+    address
     name
-    decimals
+    symbol
     standard
-    project {
-      id
-      name
-      logo {
-        id
-        url
-      }
-      safetyLevel
-      logoUrl
-      isSpam
-    }
+    decimals
   }
   tokenProjectMarket {
     id

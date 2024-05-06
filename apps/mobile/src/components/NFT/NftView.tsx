@@ -1,4 +1,5 @@
 import ContextMenu from 'react-native-context-menu-view'
+import { useNFTMenu } from 'src/features/nfts/hooks'
 import { Flex, ImpactFeedbackStyle, TouchableArea } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
 import noop from 'utilities/src/react/noop'
@@ -8,7 +9,6 @@ import {
   MAX_NFT_IMAGE_SIZE,
 } from 'wallet/src/features/nfts/constants'
 import { NFTItem } from 'wallet/src/features/nfts/types'
-import { useNFTContextMenu } from 'wallet/src/features/nfts/useNftContextMenu'
 
 export function NftView({
   owner,
@@ -19,7 +19,7 @@ export function NftView({
   item: NFTItem
   onPress: () => void
 }): JSX.Element {
-  const { menuActions, onContextMenuPress } = useNFTContextMenu({
+  const { menuActions, onContextMenuPress } = useNFTMenu({
     contractAddress: item.contractAddress,
     tokenId: item.tokenId,
     owner,

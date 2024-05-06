@@ -1,5 +1,4 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { URAQuoteResponse } from 'state/routing/types'
 import { USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
@@ -120,26 +119,24 @@ describe('Swap with fees', () => {
     it('displays UniswapX fee in UI', () => {
       cy.visit('/swap')
 
-      cy.fixture('uniswapx/feeQuote.json').then((fixture: URAQuoteResponse) => {
-        // Intercept the trade quote
-        cy.intercept({ url: 'https://interface.gateway.uniswap.org/v2/quote' }, (req) => {
-          // Avoid intercepting stablecoin pricing fetches
-          if (JSON.parse(req.body).intent !== 'pricing') {
-            req.reply(fixture)
-          }
-        })
-
-        // Setup swap
-        cy.get('#swap-currency-input .open-currency-select-button').click()
-        cy.contains('USDC').click()
-        cy.get('#swap-currency-output .open-currency-select-button').click()
-        cy.contains('ETH').click()
-        cy.get('#swap-currency-input .token-amount-input').type('200')
-
-        // Verify fee UI is displayed
-        cy.get(getTestSelector('swap-details-header-row')).click()
-        cy.contains(`Fee (${(fixture.quote.portionBips ?? 0) / 100}%)`)
+      // Intercept the trade quote
+      cy.intercept({ url: 'https://interface.gateway.uniswap.org/v2/quote' }, (req) => {
+        // Avoid intercepting stablecoin pricing fetches
+        if (JSON.parse(req.body).intent !== 'pricing') {
+          req.reply({ fixture: 'uniswapx/feeQuote.json' })
+        }
       })
+
+      // Setup swap
+      cy.get('#swap-currency-input .open-currency-select-button').click()
+      cy.contains('USDC').click()
+      cy.get('#swap-currency-output .open-currency-select-button').click()
+      cy.contains('ETH').click()
+      cy.get('#swap-currency-input .token-amount-input').type('200')
+
+      // Verify fee UI is displayed
+      cy.get(getTestSelector('swap-details-header-row')).click()
+      cy.contains('Fee (0.15%)')
     })
   })
 })

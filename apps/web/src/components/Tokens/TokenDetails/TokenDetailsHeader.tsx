@@ -139,7 +139,7 @@ export const TokenDetailsHeader = () => {
     currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN
   )
 
-  const { homepageUrl, twitterName } = tokenQuery.data?.token?.project ?? {}
+  const { homepageUrl, twitterName, logoUrl } = tokenQuery.data?.token?.project ?? {}
   const twitterUrl = twitterName && `https://x.com/${twitterName}`
 
   const currentLocation = window.location.href
@@ -154,7 +154,7 @@ export const TokenDetailsHeader = () => {
   return (
     <>
       <TokenNameCell>
-        <PortfolioLogo currencies={[currency]} chainId={currency.chainId} size={32} />
+        <PortfolioLogo currencies={[currency]} images={[logoUrl]} chainId={currency.chainId} size="32px" />
         <TokenTitle>
           <TokenName>{currency.name ?? <Trans>Name not found</Trans>}</TokenName>
           <TokenSymbol>{tokenSymbolName}</TokenSymbol>

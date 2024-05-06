@@ -31,18 +31,5 @@ export const sharedReducers = {
 // used to type RootState
 export const sharedRootReducer = combineReducers(sharedReducers)
 
-export const sharedPersistedStateWhitelist: Array<RootReducerNames> = [
-  'appearanceSettings',
-  'behaviorHistory',
-  'favorites',
-  'notifications',
-  'searchHistory',
-  'tokens',
-  'transactions',
-  'wallet',
-  'languageSettings',
-  'fiatCurrencySettings',
-]
-
 export type SharedState = ReturnType<typeof sharedRootReducer>
 export type RootReducerNames = keyof typeof sharedReducers

@@ -1,6 +1,5 @@
 import { BigNumber, providers } from 'ethers'
 import { useMemo } from 'react'
-import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'wallet/src/constants/transactions'
 import { FeeDetails, getAdjustedGasFeeDetails } from 'wallet/src/features/gas/adjustGasFee'
@@ -80,20 +79,11 @@ export function useCancelationGasFeeInfo(
       return
     }
 
-    let adjustedFeeDetails: FeeDetails | undefined
-    try {
-      adjustedFeeDetails = getAdjustedGasFeeDetails(
-        transaction.options.request,
-        baseTxGasFee.params,
-        TRANSACTION_CANCELLATION_GAS_FACTOR
-      )
-    } catch (error) {
-      logger.error(error, {
-        tags: { file: 'features/gas/hooks.ts', function: 'getAdjustedGasFeeDetails' },
-        extra: { request: transaction.options.request, currentGasFeeParams: baseTxGasFee.params },
-      })
-      return
-    }
+    const adjustedFeeDetails = getAdjustedGasFeeDetails(
+      transaction.options.request,
+      baseTxGasFee.params,
+      TRANSACTION_CANCELLATION_GAS_FACTOR
+    )
 
     const cancelRequest = {
       ...cancelationRequest,

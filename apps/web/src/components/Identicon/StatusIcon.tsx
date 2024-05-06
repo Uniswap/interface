@@ -1,13 +1,19 @@
 import { useWeb3React } from '@web3-react/core'
-import Identicon from 'components/Identicon'
+import { Unicon } from 'components/Unicon'
 import { Connection } from 'connection/types'
+import useENSAvatar from 'hooks/useENSAvatar'
 import { navSearchInputVisibleSize } from 'hooks/useScreenSize'
-import { useHasSocks } from 'hooks/useSocksBalance'
 import styled from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { flexColumnNoWrap } from 'theme/styles'
+import { UniconV2 } from 'ui/src/components/UniconV2'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { useUnitagByAddressWithoutFlag } from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import { getWalletMeta } from 'utils/walletMeta'
 import sockImg from '../../assets/svg/socks.svg'
+import { useHasSocks } from '../../hooks/useSocksBalance'
+import Identicon from '../Identicon'
 
 export const IconWrapper = styled.div<{ size?: number }>`
   position: relative;
@@ -46,6 +52,21 @@ const MiniIconContainer = styled.div<{ side: 'left' | 'right' }>`
   }
 `
 
+const UnigramContainer = styled.div<{ $iconSize: number }>`
+  height: ${({ $iconSize: iconSize }) => `${iconSize}px`};
+  width: ${({ $iconSize: iconSize }) => `${iconSize}px`};
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.surface3};
+  font-size: initial;
+`
+
+const Unigram = styled.img`
+  height: inherit;
+  width: inherit;
+  border-radius: inherit;
+  object-fit: cover;
+`
+
 const MiniImg = styled.img`
   width: 16px;
   height: 16px;
@@ -75,13 +96,38 @@ const MiniWalletIcon = ({ connection, side }: { connection: Connection; side: 'l
   )
 }
 
+const MainWalletIcon = ({ account, connection, size }: { account: string; connection: Connection; size: number }) => {
+  const { unitag } = useUnitagByAddressWithoutFlag(account, Boolean(account))
+  const { avatar } = useENSAvatar(account ?? undefined)
+  const uniconV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
+
+  if (!account) return null
+
+  if (unitag && unitag.metadata?.avatar) {
+    return (
+      <UnigramContainer $iconSize={size}>
+        <Unigram alt={unitag.username} src={unitag.metadata.avatar} />
+      </UnigramContainer>
+    )
+  }
+
+  const hasIdenticon = avatar || connection.getProviderInfo().name === 'MetaMask'
+  return hasIdenticon ? (
+    <Identicon account={account} size={size} />
+  ) : uniconV2Enabled ? (
+    <UniconV2 address={account} size={size} />
+  ) : (
+    <Unicon address={account} size={size} />
+  )
+}
+
 export default function StatusIcon({
   account,
   connection,
   size = 16,
   showMiniIcons = true,
 }: {
-  account?: string
+  account: string
   connection: Connection
   size?: number
   showMiniIcons?: boolean
@@ -90,7 +136,7 @@ export default function StatusIcon({
 
   return (
     <IconWrapper size={size} data-testid="StatusIconRoot">
-      <Identicon account={account} size={size} />
+      <MainWalletIcon account={account} connection={connection} size={size} />
       {showMiniIcons && <MiniWalletIcon connection={connection} side="right" />}
       {hasSocks && showMiniIcons && <Socks />}
     </IconWrapper>

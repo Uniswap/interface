@@ -2,7 +2,7 @@ import { ApolloError } from '@apollo/client'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { ChainId, Percent } from '@uniswap/sdk-core'
-import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
+import { DoubleTokenAndChainLogo } from 'components/Pools/PoolDetails/PoolDetailsHeader'
 import Row from 'components/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
@@ -17,7 +17,6 @@ import { PoolSortFields, TablePool, useTopPools } from 'graphql/data/pools/useTo
 import {
   OrderDirection,
   chainIdToBackendName,
-  gqlToCurrency,
   supportedChainIdFromGQLChain,
   unwrapToken,
   validateUrlChainParam,
@@ -90,10 +89,10 @@ function PoolDescription({
   chainId: ChainId
   protocolVersion: ProtocolVersion
 }) {
-  const currencies = [gqlToCurrency(token0), gqlToCurrency(token1)]
+  const tokens = [token0, token1]
   return (
     <Row gap="sm">
-      <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={28} />
+      <DoubleTokenAndChainLogo chainId={chainId} tokens={tokens} size={28} />
       <NameText>
         {token0.symbol}/{token1.symbol}
       </NameText>

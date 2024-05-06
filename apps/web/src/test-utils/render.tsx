@@ -1,7 +1,6 @@
 import { MockedProvider } from '@apollo/client/testing'
 import { queries } from '@testing-library/dom'
-import { render, RenderOptions } from '@testing-library/react'
-import { renderHook, RenderHookOptions, WrapperComponent } from '@testing-library/react-hooks'
+import { render, renderHook, RenderHookOptions, RenderOptions } from '@testing-library/react'
 import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
 import { TokenBalancesProvider } from 'graphql/data/apollo/TokenBalancesProvider'
 import { BlockNumberContext } from 'lib/hooks/useBlockNumber'
@@ -62,7 +61,7 @@ const customRenderHook = <Result, Props>(
   hook: (initialProps: Props) => Result,
   options?: CustomRenderHookOptions<Props>
 ) => {
-  return renderHook(hook, { ...options, wrapper: WithProviders as WrapperComponent<Props> })
+  return renderHook(hook, { ...options, wrapper: WithProviders })
 }
 
 // Testing utils may export *.

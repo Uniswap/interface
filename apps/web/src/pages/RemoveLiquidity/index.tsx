@@ -4,7 +4,7 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
+import { sendAnalyticsEvent, TraceEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { isSupportedChain } from 'constants/chains'
@@ -19,18 +19,18 @@ import { Text } from 'rebass'
 import { useTheme } from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import CurrencyInputPanel from '../../components/CurrencyInputPanel'
+import DoubleCurrencyLogo from '../../components/DoubleLogo'
 import CurrencyLogo from '../../components/Logo/CurrencyLogo'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row, { RowBetween, RowFixed } from '../../components/Row'
 import Slider from '../../components/Slider'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { Dots } from '../../components/swap/styled'
+import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
 import { WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
@@ -317,7 +317,7 @@ function RemoveLiquidity() {
             {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
-            <CurrencyLogo currency={currencyA} size={24} />
+            <CurrencyLogo currency={currencyA} size="24px" />
             <Text fontSize={24} fontWeight={535} style={{ marginLeft: '10px' }}>
               {currencyA?.symbol}
             </Text>
@@ -331,7 +331,7 @@ function RemoveLiquidity() {
             {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
-            <CurrencyLogo currency={currencyB} size={24} />
+            <CurrencyLogo currency={currencyB} size="24px" />
             <Text fontSize={24} fontWeight={535} style={{ marginLeft: '10px' }}>
               {currencyB?.symbol}
             </Text>
@@ -358,7 +358,7 @@ function RemoveLiquidity() {
             </Trans>
           </Text>
           <RowFixed>
-            <DoubleCurrencyLogo currencies={[currencyA, currencyB]} />
+            <DoubleCurrencyLogo currency0={currencyA} currency1={currencyB} margin={true} />
             <Text fontWeight={535} fontSize={16}>
               {parsedAmounts[Field.LIQUIDITY]?.toSignificant(6)}
             </Text>

@@ -81,7 +81,7 @@ export function SwapModalHeaderAmount({
           </ThemedText.BodySmall>
         </Column>
       </Column>
-      <CurrencyLogo currency={currency} size={36} />
+      <CurrencyLogo currency={currency} size="36px" />
     </Row>
   )
 }

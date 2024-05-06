@@ -5,13 +5,16 @@ import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
 import useENSAddress from 'hooks/useENSAddress'
 import useENSName from 'hooks/useENSName'
-import { GasFeeResult, GasSpeed, useTransactionGasFee } from 'hooks/useTransactionGasFee'
+import { GasSpeed, useTransactionGasFee } from 'hooks/useTransactionGasFee'
 import { useUSDTokenUpdater } from 'hooks/useUSDTokenUpdater'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
 import { SendState } from 'state/send/SendContext'
-import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
+import {
+  useUnitagByAddressWithoutFlag,
+  useUnitagByNameWithoutFlag,
+} from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import { isAddress } from 'utilities/src/addresses'
 import { useCreateTransferTransaction } from 'utils/transfer'
 
@@ -32,7 +35,6 @@ export type SendInfo = {
   exactAmountOut?: string
   recipientData?: RecipientData
   transaction?: TransactionRequest
-  gasFee?: GasFeeResult
   gasFeeCurrencyAmount?: CurrencyAmount<Currency>
   inputError?: SendInputError
 }
@@ -41,7 +43,10 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
   const { account, chainId, provider } = useWeb3React()
   const { exactAmountToken, exactAmountFiat, inputInFiat, inputCurrency, recipient, validatedRecipientData } = state
 
-  const { unitag: recipientInputUnitag } = useUnitagByName(validatedRecipientData ? undefined : recipient)
+  const { unitag: recipientInputUnitag } = useUnitagByNameWithoutFlag(
+    validatedRecipientData ? undefined : recipient,
+    Boolean(recipient)
+  )
   const recipientInputUnitagUsername = validatedRecipientData?.unitag ?? recipientInputUnitag?.username
   const recipientInputUnitagAddress = recipientInputUnitag?.address?.address
   const { address: recipientInputEnsAddress } = useENSAddress(validatedRecipientData ? undefined : recipient)
@@ -54,7 +59,10 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
     )
   }, [recipient, recipientInputEnsAddress, recipientInputUnitagAddress, validatedRecipientData])
 
-  const { unitag } = useUnitagByAddress(recipientInputUnitagUsername ? undefined : validatedRecipientAddress)
+  const { unitag } = useUnitagByAddressWithoutFlag(
+    recipientInputUnitagUsername ? undefined : validatedRecipientAddress,
+    Boolean(validatedRecipientAddress)
+  )
   const { ENSName } = useENSName(validatedRecipientData?.ensName ? undefined : validatedRecipientAddress)
   const recipientData = useMemo(() => {
     if (validatedRecipientAddress) {
@@ -136,13 +144,11 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
       recipientData,
       transaction: transferTransaction,
       gasFeeCurrencyAmount,
-      gasFee,
       inputError,
     }),
     [
       exactAmountOut,
       gasFeeCurrencyAmount,
-      gasFee,
       inputCurrencyBalance,
       inputError,
       parsedTokenAmount,

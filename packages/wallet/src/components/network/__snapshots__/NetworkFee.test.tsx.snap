@@ -48,7 +48,7 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
       }
     >
       <Text
-        allowFontScaling={false}
+        allowFontScaling={true}
         maxFontSizeMultiplier={1.4}
         numberOfLines={3}
         style={
@@ -302,7 +302,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
       }
     >
       <Text
-        allowFontScaling={false}
+        allowFontScaling={true}
         maxFontSizeMultiplier={1.4}
         numberOfLines={3}
         style={
@@ -412,7 +412,7 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
       />
     </View>
     <Text
-      allowFontScaling={false}
+      allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
       style={
         {
@@ -478,7 +478,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
       }
     >
       <Text
-        allowFontScaling={false}
+        allowFontScaling={true}
         maxFontSizeMultiplier={1.4}
         numberOfLines={3}
         style={
@@ -588,7 +588,7 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
       />
     </View>
     <Text
-      allowFontScaling={false}
+      allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
       style={
         {

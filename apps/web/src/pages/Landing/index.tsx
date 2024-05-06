@@ -10,8 +10,8 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
 import { setRecentConnectionDisconnected } from 'state/user/reducer'
 import { TRANSITION_DURATIONS } from 'theme/styles'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import LandingV2 from './LandingV2'
 
 export default function Landing() {

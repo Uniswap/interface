@@ -1,5 +1,3 @@
-import 'test-utils/tokens/mocks'
-
 import { Percent } from '@uniswap/sdk-core'
 import { InterfaceTrade } from 'state/routing/types'
 import {

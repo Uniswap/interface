@@ -72,7 +72,7 @@ describe('Landing Page', () => {
   })
 
   it('renders uk compliance banner in uk', () => {
-    cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v1\/amplitude-proxy/, (req) => {
+    cy.intercept('https://interface.gateway.uniswap.org/v1/amplitude-proxy', (req) => {
       const requestBody = JSON.stringify(req.body)
       const byteSize = new Blob([requestBody]).size
       req.alias = 'amplitude'
@@ -89,8 +89,7 @@ describe('Landing Page', () => {
       )
     })
     cy.visit('/swap')
-    cy.contains('Read more').click()
-    cy.contains('Disclaimer for UK residents')
+    cy.contains('UK disclaimer')
   })
 
   it('shows a nav button to download the app when feature is enabled', () => {

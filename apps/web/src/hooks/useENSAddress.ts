@@ -13,20 +13,19 @@ export default function useENSAddress(ensName?: string | null): { loading: boole
   const debouncedName = useDebounce(ensName, 200)
   const ensNodeArgument = useMemo(() => [debouncedName ? safeNamehash(debouncedName) : undefined], [debouncedName])
   const registrarContract = useENSRegistrarContract()
-  const resolverAddressCall = useMainnetSingleCallResult(registrarContract, 'resolver', ensNodeArgument, NEVER_RELOAD)
-  const resolverAddress = resolverAddressCall.result?.[0]
+  const resolverAddress = useMainnetSingleCallResult(registrarContract, 'resolver', ensNodeArgument, NEVER_RELOAD)
+  const resolverAddressResult = resolverAddress.result?.[0]
   const resolverContract = useENSResolverContract(
-    resolverAddress && !isZero(resolverAddress) ? resolverAddress : undefined
+    resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined
   )
-  const addressCall = useMainnetSingleCallResult(resolverContract, 'addr', ensNodeArgument, NEVER_RELOAD)
-  const address = addressCall.result?.[0]
+  const addr = useMainnetSingleCallResult(resolverContract, 'addr', ensNodeArgument, NEVER_RELOAD)
 
   const changed = debouncedName !== ensName
   return useMemo(
     () => ({
-      address: changed ? null : address ?? null,
-      loading: changed || resolverAddressCall.loading || addressCall.loading,
+      address: changed ? null : addr.result?.[0] ?? null,
+      loading: changed || resolverAddress.loading || addr.loading,
     }),
-    [addressCall.loading, address, changed, resolverAddressCall.loading]
+    [addr.loading, addr.result, changed, resolverAddress.loading]
   )
 }

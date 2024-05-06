@@ -7,7 +7,7 @@ import { ChevronDown } from 'react-feather'
 import styled, { css, keyframes } from 'styled-components'
 
 import { BREAKPOINTS } from 'theme'
-import { Text } from 'ui/src'
+import { Text } from 'ui/src/components/text/Text'
 import { heightBreakpoints } from 'ui/src/theme'
 import { Box, H1 } from '../components/Generics'
 import { TokenCloud } from '../components/TokenCloud/index'

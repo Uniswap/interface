@@ -4,7 +4,6 @@ export enum UniswapXOrderStatus {
   EXPIRED = 'expired',
   ERROR = 'error',
   CANCELLED = 'cancelled',
-  PENDING_CANCELLATION = 'pending-cancellation',
   INSUFFICIENT_FUNDS = 'insufficient-funds',
 }
 

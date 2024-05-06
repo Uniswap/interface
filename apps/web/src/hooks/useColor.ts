@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { useCurrencyInfo } from 'hooks/Tokens'
+import useTokenLogoSource from 'hooks/useAssetLogoSource'
 import { useMemo } from 'react'
 import { useTheme } from 'styled-components'
 import { useExtractedTokenColor } from 'ui/src/utils/colors'
@@ -8,8 +8,11 @@ type ContrastSettings = { backgroundColor: string; darkMode: boolean }
 
 export function useColor(currency?: Currency, contrastSettings?: ContrastSettings) {
   const theme = useTheme()
-  const currencyInfo = useCurrencyInfo(currency)
-  const src = currencyInfo?.logoUrl ?? undefined
+  const [src] = useTokenLogoSource({
+    address: currency?.wrapped.address,
+    chainId: currency?.chainId,
+    isNative: currency?.isNative,
+  })
 
   return useSrcColor(src, currency?.name, contrastSettings?.backgroundColor).tokenColor ?? theme.accent1
 }

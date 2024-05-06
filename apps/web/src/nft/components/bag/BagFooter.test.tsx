@@ -3,7 +3,9 @@ import { parseEther } from '@ethersproject/units'
 import { ChainId, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
+import { nativeOnChain } from 'constants/tokens'
 import { getURAddress, useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
+import { useCurrency } from 'hooks/Tokens'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { useBag, useWalletBalance } from 'nft/hooks'
@@ -25,6 +27,7 @@ jest.mock('nft/hooks/useWalletBalance')
 jest.mock('nft/hooks/useBag')
 jest.mock('nft/hooks/useTokenInput')
 jest.mock('lib/hooks/useCurrencyBalance')
+jest.mock('hooks/Tokens')
 jest.mock('nft/hooks/usePayWithAnyTokenSwap')
 jest.mock('nft/hooks/useDerivedPayWithAnyTokenSwapInfo')
 jest.mock('graphql/data/nft/NftUniversalRouterAddress', () => {
@@ -84,6 +87,7 @@ describe('BagFooter.tsx', () => {
       allowedSlippage: new Percent(10, 100),
     })
     mocked(usePayWithAnyTokenSwap).mockReturnValue()
+    mocked(useCurrency).mockReturnValue(nativeOnChain(ChainId.MAINNET))
     mocked(useTokenInput).mockReturnValue({
       inputCurrency: undefined,
       setInputCurrency: () => undefined,

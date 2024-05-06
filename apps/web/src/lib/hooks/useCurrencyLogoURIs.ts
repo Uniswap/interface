@@ -1,14 +1,14 @@
 import { ChainId } from '@uniswap/sdk-core'
 import useHttpLocations from 'hooks/useHttpLocations'
 import { useMemo } from 'react'
-import { isAddress, isSameAddress } from 'utilities/src/addresses'
+import { isAddress } from 'utilities/src/addresses'
 
 import EthereumLogo from '../../assets/images/ethereum-logo.png'
 import AvaxLogo from '../../assets/svg/avax_logo.svg'
 import BnbLogo from '../../assets/svg/bnb-logo.svg'
 import CeloLogo from '../../assets/svg/celo_logo.svg'
 import MaticLogo from '../../assets/svg/matic-token-icon.svg'
-import { NATIVE_CHAIN_ID, PORTAL_ETH_CELO, isCelo, nativeOnChain } from '../../constants/tokens'
+import { NATIVE_CHAIN_ID, isCelo, nativeOnChain } from '../../constants/tokens'
 
 type Network =
   | 'ethereum'
@@ -63,7 +63,7 @@ export function getNativeLogoURI(chainId: ChainId = ChainId.MAINNET): string {
   }
 }
 
-export function getTokenLogoURI(address: string, chainId: ChainId = ChainId.MAINNET): string | void {
+function getTokenLogoURI(address: string, chainId: ChainId = ChainId.MAINNET): string | void {
   const networkName = chainIdToNetworkName(chainId)
   const networksWithUrls = [
     ChainId.ARBITRUM_ONE,
@@ -72,15 +72,9 @@ export function getTokenLogoURI(address: string, chainId: ChainId = ChainId.MAIN
     ChainId.BNB,
     ChainId.AVALANCHE,
     ChainId.BASE,
-    ChainId.BLAST,
-    ChainId.POLYGON,
-    ChainId.CELO,
   ]
-  if (isCelo(chainId) && isSameAddress(address, nativeOnChain(chainId).wrapped.address)) {
+  if (isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {
     return CeloLogo
-  }
-  if (isCelo(chainId) && isSameAddress(address, PORTAL_ETH_CELO.address)) {
-    return EthereumLogo
   }
 
   if (networksWithUrls.includes(chainId)) {

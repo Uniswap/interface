@@ -19,9 +19,7 @@ import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/Swap
 import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { GasAndWarningRowsProps } from 'wallet/src/features/transactions/swap/GasAndWarningRowsProps'
 import { SwapWarningModal } from 'wallet/src/features/transactions/swap/SwapWarningModal'
-import { useGasFeeHighRelativeToValue } from 'wallet/src/features/transactions/swap/hooks/useGasFeeHighRelativeToValue'
 import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
@@ -33,8 +31,7 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
   const { gasFee } = useSwapTxContext()
   const { derivedSwapInfo } = useSwapFormContext()
 
-  const { chainId, currencyAmountsUSDValue } = derivedSwapInfo
-  const outputUSDValue = currencyAmountsUSDValue[CurrencyField.OUTPUT]
+  const { chainId } = derivedSwapInfo
 
   const [showWarningModal, setShowWarningModal] = useState(false)
 
@@ -58,9 +55,6 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
     Keyboard.dismiss()
     setShowWarningModal(true)
   }, [formScreenWarning?.warning.message])
-
-  const gasFeeHighRelativeToValue = useGasFeeHighRelativeToValue(gasFeeUSD, outputUSDValue)
-  const gasColor = gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral2'
 
   return (
     <>
@@ -93,14 +87,12 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
 
         <Flex centered row>
           {showGasFee && (
-            <NetworkFeeWarning
-              gasFeeHighRelativeToValue={gasFeeHighRelativeToValue}
-              tooltipTrigger={<></>}>
+            <NetworkFeeWarning tooltipTrigger={<></>}>
               <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
-                <Icons.Gas color={gasColor} size="$icon.16" />
-                <Text color={gasColor} variant="body3">
+                <Text color="$neutral2" variant="body3">
                   {gasFeeFormatted}
                 </Text>
+                <Icons.Gas color="$neutral2" size="$icon.16" />
               </AnimatedFlex>
             </NetworkFeeWarning>
           )}

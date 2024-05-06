@@ -4,7 +4,7 @@ import { useIsDarkMode } from 'ui/src'
 import { NumberType } from 'utilities/src/format/types'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'wallet/src/entities/assets'
-import { getOptionalServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
+import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import {
@@ -46,6 +46,12 @@ export function FiatPurchaseSummaryItem({
       : undefined
   )
 
+  const fiatPurchaseAmount = formatNumberOrString({
+    value: inputCurrencyAmount && inputCurrencyAmount > 0 ? inputCurrencyAmount : undefined,
+    type: NumberType.FiatTokenPrice,
+    currencyCode: inputSymbol ?? inputCurrency?.code ?? 'usd',
+  })
+
   const cryptoSymbol =
     outputSymbol ??
     getSymbolDisplayText(outputCurrencyInfo?.currency.symbol) ??
@@ -55,15 +61,7 @@ export function FiatPurchaseSummaryItem({
     formatNumberOrString({ value: outputCurrencyAmount }) + ' ' + cryptoSymbol
 
   const isDarkMode = useIsDarkMode()
-  const serviceProviderLogoUrl = getOptionalServiceProviderLogo(serviceProviderLogo, isDarkMode)
-
-  const formatFiatTokenPrice = (): string => {
-    return formatNumberOrString({
-      value: inputCurrencyAmount && inputCurrencyAmount > 0 ? inputCurrencyAmount : undefined,
-      type: NumberType.FiatTokenPrice,
-      currencyCode: inputSymbol ?? inputCurrency?.code ?? 'usd',
-    })
-  }
+  const serviceProviderLogoUrl = getServiceProviderLogo(serviceProviderLogo, isDarkMode)
 
   const isTransfer = inputSymbol && inputSymbol === outputSymbol
 
@@ -73,9 +71,9 @@ export function FiatPurchaseSummaryItem({
         ? cryptoPurchaseAmount
         : t('fiatOnRamp.summary.total', {
             cryptoAmount: cryptoPurchaseAmount,
-            fiatAmount: formatFiatTokenPrice(),
+            fiatAmount: fiatPurchaseAmount,
           })
-      : formatFiatTokenPrice()
+      : fiatPurchaseAmount
 
   return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {
     caption,

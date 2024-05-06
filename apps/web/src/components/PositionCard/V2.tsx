@@ -10,7 +10,6 @@ import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import styled from 'styled-components'
 
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { FixedHeightRow } from '.'
 import { BIG_INT_ZERO } from '../../constants/misc'
 import { useColor } from '../../hooks/useColor'
@@ -21,9 +20,10 @@ import { unwrappedToken } from '../../utils/unwrappedToken'
 import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from '../Button'
 import { LightCard } from '../Card'
 import { AutoColumn } from '../Column'
+import DoubleCurrencyLogo from '../DoubleLogo'
+import { CardNoise } from '../earn/styled'
 import CurrencyLogo from '../Logo/CurrencyLogo'
 import { AutoRow, RowBetween, RowFixed } from '../Row'
-import { CardNoise } from '../earn/styled'
 import { Dots } from '../swap/styled'
 
 const StyledPositionCard = styled(LightCard)<{ bgColor: any }>`
@@ -82,7 +82,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
       <AutoColumn gap="md">
         <FixedHeightRow>
           <AutoRow gap="8px">
-            <DoubleCurrencyLogo currencies={[currency0, currency1]} size={20} />
+            <DoubleCurrencyLogo currency0={currency0} currency1={currency1} size={20} />
             <Text fontWeight={535} fontSize={20}>
               {!currency0 || !currency1 ? (
                 <Dots>
@@ -146,7 +146,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
                   <Text fontSize={16} fontWeight={535} marginLeft="6px">
                     {token0Deposited?.toSignificant(6)}
                   </Text>
-                  <CurrencyLogo size={20} style={{ marginLeft: '8px' }} currency={currency0} />
+                  <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency0} />
                 </RowFixed>
               ) : (
                 '-'
@@ -164,7 +164,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
                   <Text fontSize={16} fontWeight={535} marginLeft="6px">
                     {token1Deposited?.toSignificant(6)}
                   </Text>
-                  <CurrencyLogo size={20} style={{ marginLeft: '8px' }} currency={currency1} />
+                  <CurrencyLogo size="20px" style={{ marginLeft: '8px' }} currency={currency1} />
                 </RowFixed>
               ) : (
                 '-'

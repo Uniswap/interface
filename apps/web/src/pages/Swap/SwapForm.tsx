@@ -27,6 +27,7 @@ import { useConnectionReady } from 'connection/eagerlyConnect'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { TOKEN_SHORTHANDS } from 'constants/tokens'
+import { useCurrency, useDefaultActiveTokens } from 'hooks/Tokens'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import useParsedQueryString from 'hooks/useParsedQueryString'
@@ -57,15 +58,13 @@ import { ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { isEmptyObject } from 'utils/isEmpty'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { largerPercentValue } from 'utils/percent'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
-import { useCurrencyInfo } from 'hooks/Tokens'
 import { CurrencyState } from 'state/swap/types'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { getIsReviewableQuote } from '.'
 import { OutputTaxTooltipBody } from './TaxTooltipBody'
 
@@ -92,26 +91,37 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const prefilledCurrencies = useMemo(() => {
     return queryParametersToCurrencyState(parsedQs)
   }, [parsedQs])
+  const prefilledInputCurrency = useCurrency(prefilledCurrencies?.inputCurrencyId, chainId)
+  const prefilledOutputCurrency = useCurrency(prefilledCurrencies?.outputCurrencyId, chainId)
 
-  const prefilledInputCurrencyInfo = useCurrencyInfo(prefilledCurrencies?.inputCurrencyId, chainId)
-  const prefilledOutputCurrencyInfo = useCurrencyInfo(prefilledCurrencies?.outputCurrencyId, chainId)
+  const [loadedInputCurrency, setLoadedInputCurrency] = useState(prefilledInputCurrency)
+  const [loadedOutputCurrency, setLoadedOutputCurrency] = useState(prefilledOutputCurrency)
+
+  useEffect(() => {
+    setLoadedInputCurrency(prefilledInputCurrency)
+    setLoadedOutputCurrency(prefilledOutputCurrency)
+  }, [prefilledInputCurrency, prefilledOutputCurrency])
 
   const [dismissTokenWarning, setDismissTokenWarning] = useState<boolean>(false)
   const [showPriceImpactModal, setShowPriceImpactModal] = useState<boolean>(false)
 
+  const urlLoadedTokens: Token[] = useMemo(
+    () => [loadedInputCurrency, loadedOutputCurrency]?.filter((c): c is Token => c?.isToken ?? false) ?? [],
+    [loadedInputCurrency, loadedOutputCurrency]
+  )
   const handleConfirmTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
   }, [])
 
   // dismiss warning if all imported tokens are in active lists
+  const defaultTokens = useDefaultActiveTokens(chainId)
   const urlTokensNotInDefault = useMemo(
     () =>
-      prefilledInputCurrencyInfo && prefilledOutputCurrencyInfo
-        ? [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
-            .filter((token: CurrencyInfo) => {
-              return token.currency.isToken && token.safetyLevel !== SafetyLevel.Verified
+      urlLoadedTokens && !isEmptyObject(defaultTokens)
+        ? urlLoadedTokens
+            .filter((token: Token) => {
+              return !(token.address in defaultTokens)
             })
-            .map((token: CurrencyInfo) => token.currency as Token)
             .filter((token: Token) => {
               // Any token addresses that are loaded from the shorthands map do not need to show the import URL
               const supported = asSupportedChain(chainId)
@@ -122,7 +132,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               })
             })
         : [],
-    [chainId, prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
+    [chainId, defaultTokens, urlLoadedTokens]
   )
 
   const theme = useTheme()

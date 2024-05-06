@@ -15,7 +15,7 @@ import TransactionCompleteModal from 'nft/components/collection/TransactionCompl
 import { GetTheAppModal } from 'pages/Landing/components/DownloadApp/GetTheAppModal'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { isBetaEnv, isDevEnv } from 'uniswap/src/utils/env'
+import { isDevelopmentEnv, isStagingEnv } from 'utils/env'
 
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
@@ -24,7 +24,7 @@ export default function TopLevelModals() {
   const { account } = useWeb3React()
   useAccountRiskCheck(account)
   const accountBlocked = Boolean(blockedAccountModalOpen && account)
-  const shouldShowDevFlags = isDevEnv() || isBetaEnv()
+  const shouldShowDevFlags = isDevelopmentEnv() || isStagingEnv()
 
   return (
     <>

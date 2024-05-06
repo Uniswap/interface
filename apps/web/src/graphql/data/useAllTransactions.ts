@@ -6,8 +6,6 @@ import {
   useV2TransactionsQuery,
   useV3TransactionsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export enum TransactionType {
   SWAP = 'Swap',
@@ -27,7 +25,6 @@ export function useAllTransactions(
   chain: Chain,
   filter: TransactionType[] = [TransactionType.SWAP, TransactionType.MINT, TransactionType.BURN]
 ) {
-  const v2ExploreEnabled = useFeatureFlag(FeatureFlags.V2Explore)
   const {
     data: dataV3,
     loading: loadingV3,
@@ -42,8 +39,8 @@ export function useAllTransactions(
     error: errorV2,
     fetchMore: fetchMoreV2,
   } = useV2TransactionsQuery({
-    variables: { chain, first: ALL_TX_DEFAULT_QUERY_SIZE },
-    skip: chain !== Chain.Ethereum && !v2ExploreEnabled,
+    variables: { first: ALL_TX_DEFAULT_QUERY_SIZE },
+    skip: chain !== Chain.Ethereum,
   })
 
   const loadingMoreV3 = useRef(false)
@@ -51,7 +48,7 @@ export function useAllTransactions(
   const querySizeRef = useRef(ALL_TX_DEFAULT_QUERY_SIZE)
   const loadMore = useCallback(
     ({ onComplete }: { onComplete?: () => void }) => {
-      if (loadingMoreV3.current || (loadingMoreV2.current && (chain === Chain.Ethereum || v2ExploreEnabled))) {
+      if (loadingMoreV3.current || (loadingMoreV2.current && chain === Chain.Ethereum)) {
         return
       }
       loadingMoreV3.current = true
@@ -63,7 +60,7 @@ export function useAllTransactions(
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev
-          if (!loadingMoreV2.current || (chain !== Chain.Ethereum && !v2ExploreEnabled)) onComplete?.()
+          if (!loadingMoreV2.current || chain !== Chain.Ethereum) onComplete?.()
           const mergedData = {
             v3Transactions: [...(prev.v3Transactions ?? []), ...(fetchMoreResult.v3Transactions ?? [])],
           }
@@ -71,7 +68,7 @@ export function useAllTransactions(
           return mergedData
         },
       })
-      if (chain === Chain.Ethereum || v2ExploreEnabled) {
+      chain === Chain.Ethereum &&
         fetchMoreV2({
           variables: {
             cursor: dataV2?.v2Transactions?.[dataV2.v2Transactions.length - 1]?.timestamp,
@@ -86,9 +83,8 @@ export function useAllTransactions(
             return mergedData
           },
         })
-      }
     },
-    [chain, dataV2?.v2Transactions, dataV3?.v3Transactions, fetchMoreV2, fetchMoreV3, v2ExploreEnabled]
+    [chain, dataV2?.v2Transactions, dataV3?.v3Transactions, fetchMoreV2, fetchMoreV3]
   )
 
   const transactions: PoolTransaction[] = useMemo(() => {

@@ -480,7 +480,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
                       }
                     }}
                   >
-                    <CurrencyLogo currency={activeCurrency} size={24} />
+                    <CurrencyLogo currency={activeCurrency} size="24px" />
                     <ThemedText.HeadlineSmall fontWeight={535} lineHeight="24px">
                       {activeCurrency?.symbol}
                     </ThemedText.HeadlineSmall>

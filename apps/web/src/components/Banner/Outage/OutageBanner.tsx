@@ -16,8 +16,7 @@ const IconContainer = styled.div`
 `
 
 const IconBackground = styled.div`
-  display: flex;
-  background-color: ${({ theme }) => theme.deprecated_accentWarningSoft};
+  background-color: #1f1e02;
   padding: 10px;
   border-radius: 12px;
 `

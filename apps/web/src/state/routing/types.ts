@@ -26,9 +26,6 @@ export enum QuoteMethod {
 // internally for token -> USDC trades to get a USD value.
 export const INTERNAL_ROUTER_PREFERENCE_PRICE = 'price' as const
 
-// Buffer to add to the gas estimate to account for potential underestimation
-const GAS_ESTIMATE_BUFFER = 1.15
-
 export enum RouterPreference {
   X = 'uniswapx',
   API = 'api',
@@ -52,7 +49,6 @@ export interface GetQuoteArgs {
   amount: string
   account?: string
   routerPreference: RouterPreference | typeof INTERNAL_ROUTER_PREFERENCE_PRICE
-  protocolPreferences?: Protocol[]
   tradeType: TradeType
   needsWrapIfUniswapX: boolean
   uniswapXForceSyntheticQuotes: boolean
@@ -277,10 +273,6 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     }
 
     return this.gasUseEstimateUSD
-  }
-
-  public get totalGasUseEstimateUSDWithBuffer(): number {
-    return this.totalGasUseEstimateUSD ? this.totalGasUseEstimateUSD * GAS_ESTIMATE_BUFFER : 0
   }
 }
 

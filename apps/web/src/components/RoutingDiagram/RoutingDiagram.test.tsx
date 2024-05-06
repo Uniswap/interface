@@ -34,7 +34,18 @@ jest.mock(
       `CurrencyLogo currency=${currency.symbol}`
 )
 
+jest.mock(
+  'components/DoubleLogo',
+  () =>
+    ({ currency0, currency1 }: { currency0: Currency; currency1: Currency }) =>
+      `DoubleCurrencyLogo currency0=${currency0.symbol} currency1=${currency1.symbol}`
+)
+
 jest.mock('../Popover', () => () => 'Popover')
+
+jest.mock('hooks/useTokenInfoFromActiveList', () => ({
+  useTokenInfoFromActiveList: (currency: Currency) => currency,
+}))
 
 it('renders when no routes are provided', () => {
   const { asFragment } = render(<RoutingDiagram currencyIn={DAI} currencyOut={USDC_MAINNET} routes={[]} />)

@@ -124,7 +124,7 @@ const CustomButtonText = styled(Text, {
     size: {
       micro: {
         fontSize: '$micro',
-        fontWeight: '$medium',
+        fontWeight: '$micro',
         lineHeight: '$micro',
       },
       medium: {
@@ -134,12 +134,12 @@ const CustomButtonText = styled(Text, {
       },
       small: {
         fontSize: '$small',
-        fontWeight: '$medium',
+        fontWeight: '$small',
         lineHeight: '$small',
       },
       large: {
         fontSize: '$large',
-        fontWeight: '$medium',
+        fontWeight: '$large',
         lineHeight: '$large',
       },
     },

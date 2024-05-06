@@ -4,9 +4,6 @@ import { NotImplementedError } from 'utilities/src/errors'
  * Provides the generation, storage, and signing logic for mnemonics and private keys.
  */
 export interface IKeyring {
-  /** @returns true if the extension is unlocked (encryption key kept in session storage can unencrypt the mnemonic) */
-  isUnlocked(): Promise<boolean>
-
   /** @returns true if password can successfully decrypt mnemonics stored in storage. */
   unlock(password: string): Promise<boolean>
 
@@ -98,10 +95,6 @@ export interface IKeyring {
 
 /** Dummy Keyring implementation.  */
 class NullKeyring implements IKeyring {
-  isUnlocked(): Promise<boolean> {
-    throw new NotImplementedError('isUnlocked')
-  }
-
   unlock(): Promise<boolean> {
     return Promise.resolve(true)
   }
@@ -136,7 +129,7 @@ class NullKeyring implements IKeyring {
   }
 
   retrieveMnemonicUnlocked(_address: string): Promise<string | undefined> {
-    throw new NotImplementedError('retrieveMnemonicUnlocked')
+    throw new Error('Method not implemented.')
   }
 
   // returns the mnemonicId (derived address at index 0) of the stored mnemonic

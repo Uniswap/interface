@@ -1,20 +1,26 @@
+import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
+import { useWeb3React } from '@web3-react/core'
+import { sendAnalyticsEvent } from 'analytics'
 import {
   CancelLimitsDialog,
   CancellationState,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/CancelLimitsDialog'
 import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
-import { useCancelMultipleOrdersCallback } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+import { cancelMultipleUniswapXOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import { LimitDetailActivityRow } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitDetailActivityRow'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
+import { ContractTransaction } from 'ethers/lib/ethers'
+import { useContract } from 'hooks/useContract'
 import { Plural, Trans, t } from 'i18n'
-import { useMemo, useState } from 'react'
-import { UniswapXOrderDetails } from 'state/signatures/types'
+import { useCallback, useMemo, useState } from 'react'
+import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import styled from 'styled-components'
-import { UniswapXOrderStatus } from 'types/uniswapx'
+import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
+import { Permit2 } from 'uniswap/src/abis/types/Permit2'
 
 const Container = styled(Column)`
   height: 100%;
@@ -31,6 +37,27 @@ const StyledLimitsDisclaimer = styled(LimitDisclaimer)`
   margin-bottom: 24px;
 `
 
+function useCancelMultipleOrders(orders?: UniswapXOrderDetails[]): () => Promise<ContractTransaction[] | undefined> {
+  const { provider } = useWeb3React()
+  const permit2 = useContract<Permit2>(PERMIT2_ADDRESS, PERMIT2_ABI, true)
+  return useCallback(async () => {
+    if (!orders || orders.length === 0) return undefined
+
+    sendAnalyticsEvent('UniswapX Order Cancel Initiated', {
+      orders: orders.map((order) => order.orderHash),
+    })
+
+    return cancelMultipleUniswapXOrders({
+      orders: orders.map((order) => {
+        return { encodedOrder: order.encodedOrder as string, type: order.type as SignatureType }
+      }),
+      permit2,
+      provider,
+      chainId: orders?.[0].chainId,
+    })
+  }, [orders, permit2, provider])
+}
+
 export function LimitsMenu({ onClose, account }: { account: string; onClose: () => void }) {
   const { openLimitOrders } = useOpenLimitOrders(account)
   const [selectedOrdersByHash, setSelectedOrdersByHash] = useState<Record<string, UniswapXOrderDetails>>({})
@@ -41,7 +68,7 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
     return Object.values(selectedOrdersByHash)
   }, [selectedOrdersByHash])
 
-  const cancelOrders = useCancelMultipleOrdersCallback(selectedOrders)
+  const cancelOrders = useCancelMultipleOrders(selectedOrders)
 
   const toggleOrderSelection = (order: Activity) => {
     const newSelectedOrders = { ...selectedOrdersByHash }
@@ -65,7 +92,7 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
             onToggleSelect={toggleOrderSelection}
           />
         ))}
-        {Boolean(selectedOrders.filter((order) => order.status === UniswapXOrderStatus.OPEN).length) && (
+        {Boolean(Object.keys(selectedOrdersByHash).length) && (
           <StyledCancelButton
             emphasis={ButtonEmphasis.medium}
             onClick={() => setCancelState(CancellationState.REVIEWING_CANCELLATION)}

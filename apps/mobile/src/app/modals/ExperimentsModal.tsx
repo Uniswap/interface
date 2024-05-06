@@ -7,6 +7,11 @@ import { closeModal } from 'src/features/modals/modalSlice'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { setCustomEndpoint } from 'src/features/tweaks/slice'
 import {
+  ConfigResult,
+  Statsig,
+  useExperimentWithExposureLoggingDisabled,
+} from 'statsig-react-native'
+import {
   Accordion,
   Button,
   Flex,
@@ -18,20 +23,15 @@ import {
 } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import {
-  Experiments,
-  WALLET_EXPERIMENTS,
-  getExperimentDefinition,
-} from 'uniswap/src/features/gating/experiments'
+  EXPERIMENT_VALUES_BY_EXPERIMENT,
+  ExperimentsWallet,
+} from 'uniswap/src/features/experiments/constants'
 import {
   FeatureFlags,
   WALLET_FEATURE_FLAG_NAMES,
   getFeatureFlagName,
-} from 'uniswap/src/features/gating/flags'
-import {
-  useExperimentValueWithExposureLoggingDisabled,
-  useFeatureFlagWithExposureLoggingDisabled,
-} from 'uniswap/src/features/gating/hooks'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+} from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/experiments/hooks'
 import { Switch } from 'wallet/src/components/buttons/Switch'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
@@ -65,14 +65,9 @@ export function ExperimentsModal(): JSX.Element {
     }
   }
 
-  const featureFlagRows: JSX.Element[] = []
+  const featureFlagRows = []
   for (const [flag, flagName] of WALLET_FEATURE_FLAG_NAMES.entries()) {
     featureFlagRows.push(<FeatureFlagRow key={flagName} flag={flag} />)
-  }
-
-  const experimentRows: JSX.Element[] = []
-  for (const [experiment, experimentDef] of WALLET_EXPERIMENTS.entries()) {
-    experimentRows.push(<ExperimentRow key={experimentDef.name} experiment={experiment} />)
   }
 
   return (
@@ -155,7 +150,9 @@ export function ExperimentsModal(): JSX.Element {
               </Text>
 
               <Flex gap="$spacing24" mt="$spacing12">
-                {experimentRows}
+                {Object.values(ExperimentsWallet).map((experiment) => {
+                  return <ExperimentRow key={experiment} name={experiment} />
+                })}
               </Flex>
             </Accordion.Content>
           </Accordion.Item>
@@ -199,52 +196,75 @@ function FeatureFlagRow({ flag }: { flag: FeatureFlags }): JSX.Element {
   )
 }
 
-function ExperimentRow({ experiment }: { experiment: Experiments }): JSX.Element {
-  const experimentDef = getExperimentDefinition(experiment)
+function ExperimentRow({ name }: { name: string }): JSX.Element {
+  const experiment = useExperimentWithExposureLoggingDisabled(name)
+
+  const params = Object.entries(experiment.config.value).map(([key, value]) => (
+    <Flex
+      key={key}
+      row
+      alignItems="center"
+      gap="$spacing16"
+      justifyContent="space-between"
+      paddingStart="$spacing16">
+      <Text variant="body2">{key}</Text>
+      <ExperimentValueSwitch
+        configValueContent={value}
+        configValueName={key}
+        experiment={experiment}
+      />
+    </Flex>
+  ))
 
   return (
     <>
       <Separator />
       <Flex>
-        <Text variant="body1">{experimentDef.name}</Text>
-        <Flex gap="$spacing4">
-          <Flex
-            key={experimentDef.name}
-            row
-            alignItems="center"
-            gap="$spacing16"
-            justifyContent="space-between"
-            paddingStart="$spacing16">
-            <Text variant="body2" />
-            <ExperimentValueSwitch experiment={experiment} />
-          </Flex>
-        </Flex>
+        <Text variant="body1">{name}</Text>
+        <Flex gap="$spacing4">{params}</Flex>
       </Flex>
     </>
   )
 }
 
-function ExperimentValueSwitch({ experiment }: { experiment: Experiments }): JSX.Element {
+function ExperimentValueSwitch({
+  experiment,
+  configValueContent,
+  configValueName,
+}: {
+  experiment: ConfigResult
+  configValueContent: unknown
+  configValueName: string
+}): JSX.Element {
   const colors = useSporeColors()
-  const experimentDef = getExperimentDefinition(experiment)
-  const currentValue = useExperimentValueWithExposureLoggingDisabled(experiment)
+  const experimentName = experiment.config.getName()
 
-  return (
-    <Flex gap="$spacing8">
-      {experimentDef.values.map((value) => (
-        <Flex
-          key={value}
-          gap="$spacing4"
-          onPressOut={() => {
-            Statsig.overrideConfig(experimentDef.name, {
-              [experimentDef.key]: value,
-            })
-          }}>
-          <Text color={value === currentValue ? colors.accent1.val : colors.neutral1.val}>
-            {value}
-          </Text>
-        </Flex>
-      ))}
-    </Flex>
-  )
+  const onValueChange = (newValue: boolean | string): void => {
+    Statsig.overrideConfig(experimentName, {
+      ...experiment.config.value,
+      [configValueName]: newValue,
+    })
+  }
+
+  if (typeof configValueContent === 'boolean') {
+    return <Switch value={configValueContent} onValueChange={onValueChange} />
+  }
+
+  const variants = EXPERIMENT_VALUES_BY_EXPERIMENT[experimentName]?.[configValueName]
+
+  if (variants && typeof configValueContent === 'string') {
+    return (
+      <Flex gap="$spacing8">
+        {Object.entries(variants).map(([_, value]) => (
+          <Flex key={value} gap="$spacing4" onPressOut={(): void => onValueChange(value)}>
+            <Text color={value === configValueContent ? colors.accent1.val : colors.neutral1.val}>
+              {value}
+            </Text>
+          </Flex>
+        ))}
+      </Flex>
+    )
+  }
+
+  return <Text variant="body3">Unknown Variants</Text>
 }

@@ -1,8 +1,7 @@
-import 'test-utils/tokens/mocks'
-
 import { ChainId, TradeType as MockTradeType, Token } from '@uniswap/sdk-core'
 import { PERMIT2_ADDRESS } from '@uniswap/universal-router-sdk'
 import { DAI as MockDAI, USDC_MAINNET as MockUSDC_MAINNET, USDT as MockUSDT, nativeOnChain } from 'constants/tokens'
+import { ChainTokenMap } from 'hooks/Tokens'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
 import {
   ExactInputSwapTransactionInfo,
@@ -11,14 +10,11 @@ import {
   TransactionDetails,
   TransactionInfo,
 } from 'state/transactions/types'
-import { act, renderHook } from 'test-utils/render'
+import { renderHook } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus as MockTxStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useFormatter } from 'utils/formatNumbers'
 import { signatureToActivity, transactionToActivity, useLocalActivities } from './parseLocal'
-
-import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
-import { mocked } from 'test-utils/mocked'
 
 function mockSwapInfo(
   type: MockTradeType,
@@ -97,6 +93,18 @@ function mockMultiStatus(info: TransactionInfo, id: string): [TransactionDetails
     ],
   ]
 }
+
+const mockTokenAddressMap: ChainTokenMap = {
+  [mockChainId]: {
+    [MockDAI.address]: MockDAI,
+    [MockUSDC_MAINNET.address]: MockUSDC_MAINNET,
+    [MockUSDT.address]: MockUSDT,
+  },
+}
+
+jest.mock('../../../../hooks/Tokens', () => ({
+  useAllTokensMultichain: () => mockTokenAddressMap,
+}))
 
 jest.mock('../../../../state/transactions/hooks', () => {
   return {
@@ -229,7 +237,7 @@ jest.mock('../../../../state/transactions/hooks', () => {
 })
 
 describe('parseLocalActivity', () => {
-  it('returns swap activity fields with known tokens, exact input', async () => {
+  it('returns swap activity fields with known tokens, exact input', () => {
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     const details = {
@@ -246,8 +254,7 @@ describe('parseLocalActivity', () => {
       },
     } as TransactionDetails
     const chainId = ChainId.MAINNET
-    const result = await transactionToActivity(details, chainId, formatNumber)
-    expect(result).toEqual({
+    expect(transactionToActivity(details, chainId, mockTokenAddressMap, formatNumber)).toEqual({
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
       descriptor: '1.00 USDC for 1.00 DAI',
@@ -259,7 +266,7 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('returns swap activity fields with known tokens, exact output', async () => {
+  it('returns swap activity fields with known tokens, exact output', () => {
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     const details = {
@@ -276,8 +283,7 @@ describe('parseLocalActivity', () => {
       },
     } as TransactionDetails
     const chainId = ChainId.MAINNET
-    const result = await transactionToActivity(details, chainId, formatNumber)
-    expect(result).toMatchObject({
+    expect(transactionToActivity(details, chainId, mockTokenAddressMap, formatNumber)).toMatchObject({
       chainId: 1,
       currencies: [MockUSDC_MAINNET, MockDAI],
       descriptor: '1.00 USDC for 1.00 DAI',
@@ -286,9 +292,7 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('returns swap activity fields with unknown tokens', async () => {
-    mocked(getCurrency).mockImplementation(async () => undefined)
-
+  it('returns swap activity fields with unknown tokens', () => {
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     const details = {
@@ -305,8 +309,8 @@ describe('parseLocalActivity', () => {
       },
     } as TransactionDetails
     const chainId = ChainId.MAINNET
-    const result = await transactionToActivity(details, chainId, formatNumber)
-    expect(result).toMatchObject({
+    const tokens = {} as ChainTokenMap
+    expect(transactionToActivity(details, chainId, tokens, formatNumber)).toMatchObject({
       chainId: 1,
       currencies: [undefined, undefined],
       descriptor: 'Unknown for Unknown',
@@ -315,41 +319,27 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('only returns activity for the current account', async () => {
-    const { result: result1, waitFor } = renderHook(() => useLocalActivities(mockAccount1))
-    const { result: result2 } = renderHook(() => useLocalActivities(mockAccount2))
+  it('only returns activity for the current account', () => {
+    const account1Activites = renderHook(() => useLocalActivities(mockAccount1)).result.current
+    const account2Activites = renderHook(() => useLocalActivities(mockAccount2)).result.current
 
-    await waitFor(() => {
-      expect(Object.values(result1.current)).toHaveLength(1)
-      expect(Object.values(result2.current)).toHaveLength(33)
-    })
+    expect(Object.values(account1Activites)).toHaveLength(1)
+    expect(Object.values(account2Activites)).toHaveLength(33)
   })
 
-  it('Properly uses correct tense of activity title based on tx status', async () => {
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
+  it('Properly uses correct tense of activity title based on tx status', () => {
+    const activities = renderHook(() => useLocalActivities(mockAccount2)).result.current
 
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[mockHash('0xswap_exact_input')]).toBeDefined()
-      })
-    })
-
-    expect(result.current[mockHash('0xswap_exact_input', MockTxStatus.Pending)]?.title).toEqual('Swapping')
-    expect(result.current[mockHash('0xswap_exact_input', MockTxStatus.Confirmed)]?.title).toEqual('Swapped')
-    expect(result.current[mockHash('0xswap_exact_input', MockTxStatus.Failed)]?.title).toEqual('Swap failed')
+    expect(activities[mockHash('0xswap_exact_input', MockTxStatus.Pending)]?.title).toEqual('Swapping')
+    expect(activities[mockHash('0xswap_exact_input', MockTxStatus.Confirmed)]?.title).toEqual('Swapped')
+    expect(activities[mockHash('0xswap_exact_input', MockTxStatus.Failed)]?.title).toEqual('Swap failed')
   })
 
-  it('Adapts Swap exact input to Activity type', async () => {
+  it('Adapts Swap exact input to Activity type', () => {
     const hash = mockHash('0xswap_exact_input')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
+    const activity = renderHook(() => useLocalActivities(mockAccount2)).result.current[hash]
 
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
+    expect(activity).toMatchObject({
       chainId: mockChainId,
       currencies: [MockUSDC_MAINNET, MockDAI],
       title: 'Swapped',
@@ -360,17 +350,11 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('Adapts Swap exact output to Activity type', async () => {
+  it('Adapts Swap exact output to Activity type', () => {
     const hash = mockHash('0xswap_exact_output')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
+    const activity = renderHook(() => useLocalActivities(mockAccount2)).result.current[hash]
 
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
+    expect(activity).toMatchObject({
       chainId: mockChainId,
       currencies: [MockUSDC_MAINNET, MockDAI],
       title: 'Swapped',
@@ -381,17 +365,11 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('Adapts Approval to Activity type', async () => {
+  it('Adapts Approval to Activity type', () => {
     const hash = mockHash('0xapproval')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
+    const activity = renderHook(() => useLocalActivities(mockAccount2)).result.current[hash]
 
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
+    expect(activity).toMatchObject({
       chainId: mockChainId,
       currencies: [MockDAI],
       title: 'Approved',
@@ -402,17 +380,10 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('Adapts Revoke Approval to Activity type', async () => {
+  it('Adapts Revoke Approval to Activity type', () => {
     const hash = mockHash('0xrevoke_approval')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
-
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
+    const activity = renderHook(() => useLocalActivities(mockAccount2)).result.current[hash]
+    expect(activity).toMatchObject({
       chainId: mockChainId,
       currencies: [MockUSDT],
       title: 'Revoked approval',
@@ -422,19 +393,13 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('Adapts Wrap to Activity type', async () => {
+  it('Adapts Wrap to Activity type', () => {
     const hash = mockHash('0xwrap')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
+    const activity = renderHook(() => useLocalActivities(mockAccount2)).result.current[hash]
 
     const native = nativeOnChain(mockChainId)
 
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
+    expect(activity).toMatchObject({
       chainId: mockChainId,
       currencies: [native, native.wrapped],
       title: 'Wrapped',
@@ -445,19 +410,13 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('Adapts Unwrap to Activity type', async () => {
+  it('Adapts Unwrap to Activity type', () => {
     const hash = mockHash('0xunwrap')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
+    const activity = renderHook(() => useLocalActivities(mockAccount2)).result.current[hash]
 
     const native = nativeOnChain(mockChainId)
 
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
+    expect(activity).toMatchObject({
       chainId: mockChainId,
       currencies: [native.wrapped, native],
       title: 'Unwrapped',
@@ -468,17 +427,11 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('Adapts AddLiquidityV3 to Activity type', async () => {
+  it('Adapts AddLiquidityV3 to Activity type', () => {
     const hash = mockHash('0xadd_liquidity_v3')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
+    const activity = renderHook(() => useLocalActivities(mockAccount2)).result.current[hash]
 
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
+    expect(activity).toMatchObject({
       chainId: mockChainId,
       currencies: [MockUSDC_MAINNET, MockDAI],
       title: 'Added liquidity',
@@ -489,17 +442,11 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('Adapts RemoveLiquidityV3 to Activity type', async () => {
+  it('Adapts RemoveLiquidityV3 to Activity type', () => {
     const hash = mockHash('0xremove_liquidity_v3')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
+    const activity = renderHook(() => useLocalActivities(mockAccount2)).result.current[hash]
 
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
+    expect(activity).toMatchObject({
       chainId: mockChainId,
       currencies: [MockUSDC_MAINNET, MockDAI],
       title: 'Removed liquidity',
@@ -510,17 +457,11 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('Adapts RemoveLiquidityV2 to Activity type', async () => {
+  it('Adapts RemoveLiquidityV2 to Activity type', () => {
     const hash = mockHash('0xadd_liquidity_v2')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
+    const activity = renderHook(() => useLocalActivities(mockAccount2)).result.current[hash]
 
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
+    expect(activity).toMatchObject({
       chainId: mockChainId,
       currencies: [MockUSDC_MAINNET, MockDAI],
       title: 'Added V2 liquidity',
@@ -531,17 +472,11 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('Adapts CollectFees to Activity type', async () => {
+  it('Adapts CollectFees to Activity type', () => {
     const hash = mockHash('0xcollect_fees')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
+    const activity = renderHook(() => useLocalActivities(mockAccount2)).result.current[hash]
 
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
+    expect(activity).toMatchObject({
       chainId: mockChainId,
       currencies: [MockUSDC_MAINNET, MockDAI],
       title: 'Collected fees',
@@ -552,17 +487,11 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('Adapts MigrateLiquidityV3 to Activity type', async () => {
+  it('Adapts MigrateLiquidityV3 to Activity type', () => {
     const hash = mockHash('0xmigrate_v3_liquidity')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
+    const activity = renderHook(() => useLocalActivities(mockAccount2)).result.current[hash]
 
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
+    expect(activity).toMatchObject({
       chainId: mockChainId,
       currencies: [MockUSDC_MAINNET, MockDAI],
       title: 'Migrated liquidity',
@@ -573,25 +502,26 @@ describe('parseLocalActivity', () => {
     })
   })
 
-  it('Signature to activity - returns undefined if is filled onchain order', async () => {
+  it('Signature to activity - returns undefined if is filled onchain order', () => {
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     expect(
-      await signatureToActivity(
+      signatureToActivity(
         {
           type: SignatureType.SIGN_UNISWAPX_ORDER,
           status: UniswapXOrderStatus.FILLED,
         } as SignatureDetails,
+        {},
         formatNumber
       )
     ).toBeUndefined()
   })
 
-  it('Signature to activity - returns activity if is cancelled onchain order', async () => {
+  it('Signature to activity - returns activity if is cancelled onchain order', () => {
     const { formatNumber } = renderHook(() => useFormatter()).result.current
 
     expect(
-      await signatureToActivity(
+      signatureToActivity(
         {
           type: SignatureType.SIGN_UNISWAPX_ORDER,
           status: UniswapXOrderStatus.CANCELLED,
@@ -604,6 +534,12 @@ describe('parseLocalActivity', () => {
             mockCurrencyAmountRaw
           ),
         } as SignatureDetails,
+        {
+          [ChainId.MAINNET]: {
+            [MockUSDC_MAINNET.address]: MockUSDC_MAINNET,
+            [MockDAI.address]: MockDAI,
+          },
+        },
         formatNumber
       )
     ).toEqual({
@@ -616,7 +552,6 @@ describe('parseLocalActivity', () => {
         addedTime: undefined,
         chainId: 1,
         encodedOrder: undefined,
-        expiry: undefined,
         id: undefined,
         offerer: undefined,
         orderHash: undefined,
@@ -637,7 +572,7 @@ describe('parseLocalActivity', () => {
       prefixIconSrc: undefined,
       status: 'FAILED',
       statusMessage: undefined,
-      timestamp: undefined,
+      timestamp: NaN,
       title: 'Swap cancelled',
     })
   })

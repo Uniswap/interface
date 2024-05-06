@@ -1,7 +1,7 @@
 import { useEIP6963Connections } from 'components/WalletModal/useOrderedConnections'
 import { Connection } from 'connection/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 
 export function useUniswapWalletOptions() {
   const isBetaLive = useFeatureFlag(FeatureFlags.ExtensionBetaLaunch)

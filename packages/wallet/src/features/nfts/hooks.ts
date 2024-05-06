@@ -12,7 +12,7 @@ import {
   HIDDEN_NFTS_ROW_RIGHT_ITEM,
 } from 'wallet/src/features/nfts/constants'
 import { NFTItem } from 'wallet/src/features/nfts/types'
-import { getIsNftHidden } from 'wallet/src/features/nfts/utils'
+import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { useAppSelector } from 'wallet/src/state'
 
 export type GQLNftAsset = NonNullable<
@@ -60,13 +60,15 @@ export function useGroupNftsByVisibility(
       hidden: NFTItem[]
     }>(
       (acc, item) => {
-        const isNftHidden = getIsNftHidden({
-          contractAddress: item.contractAddress,
-          tokenId: item.tokenId,
-          isSpam: item.isSpam,
-          nftVisibility,
-        })
-        if (isNftHidden) {
+        const { contractAddress, tokenId, isSpam } = item
+        if (!contractAddress || !tokenId) {
+          acc.hidden.push(item)
+          return acc
+        }
+
+        const nftKey = getNFTAssetKey(contractAddress, tokenId)
+        const nftVisibilityOverride = !!nftVisibility[nftKey]?.isVisible
+        if (isSpam && !nftVisibilityOverride) {
           acc.hidden.push(item)
         } else {
           acc.shown.push(item)

@@ -1,7 +1,7 @@
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 import { Image } from 'react-native'
 import { Flex, Text, useIsDarkMode, useSporeColors } from 'ui/src'
-import { iconSizes, spacing, validColor } from 'ui/src/theme'
+import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { useLogolessColorScheme } from 'ui/src/utils/colors'
 import { isSVGUri, uriToHttp } from 'utilities/src/format/urls'
 import { STATUS_RATIO } from 'wallet/src/components/CurrencyLogo/CurrencyLogo'
@@ -75,6 +75,11 @@ export const TokenLogo = memo(function _TokenLogo({
     ? logolessColorScheme.dark
     : logolessColorScheme.light
 
+  const textStyle = useMemo(
+    () => ({ color: foreground, fontFamily: fonts.buttonLabel3.family, fontWeight: '500' }),
+    [foreground]
+  )
+
   return (
     <Flex alignItems="center" height={size} justifyContent="center" width={size}>
       {httpUri ? (
@@ -90,14 +95,11 @@ export const TokenLogo = memo(function _TokenLogo({
           width={size}>
           <Text
             adjustsFontSizeToFit
-            allowFontScaling={false}
-            color={validColor(foreground)}
-            fontFamily="$button"
-            fontSize={17}
-            fontWeight="500"
-            lineHeight={14}
+            lineHeight={size * 0.5}
             minimumFontScale={0.5}
-            numberOfLines={1}>
+            numberOfLines={1}
+            style={textStyle}
+            textAlign="center">
             {symbol?.slice(0, 3)}
           </Text>
         </Flex>

@@ -27,7 +27,7 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
   }
 >
   <Text
-    allowFontScaling={false}
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       {
@@ -72,7 +72,7 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
   }
 >
   <Text
-    allowFontScaling={false}
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.4}
     style={
       {
@@ -117,7 +117,7 @@ exports[`NetworkPill renders an InlineNetworkPill 1`] = `
   }
 >
   <Text
-    allowFontScaling={false}
+    allowFontScaling={true}
     maxFontSizeMultiplier={1.2}
     style={
       {

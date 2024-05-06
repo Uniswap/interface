@@ -1,4 +1,5 @@
 import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { useWeb3React } from '@web3-react/core'
 import {
   CancelLimitsDialog,
   CancellationState,
@@ -25,10 +26,15 @@ import { Divider, ThemedText } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
+import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { sendAnalyticsEvent } from 'analytics'
-import { useCancelMultipleOrdersCallback } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
+import { cancelMultipleUniswapXOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
+import { ContractTransaction } from 'ethers/lib/ethers'
+import { useContract } from 'hooks/useContract'
+import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
+import { Permit2 } from 'uniswap/src/abis/types/Permit2'
 import { PortfolioLogo } from '../PortfolioLogo'
 import { OffchainOrderLineItem, OffchainOrderLineItemProps, OffchainOrderLineItemType } from './OffchainOrderLineItem'
 
@@ -95,7 +101,7 @@ const InsufficientFundsCopyContainer = styled(Row)`
 const AlertIconContainer = styled.div`
   display: flex;
   flex-shrink: 0;
-  background-color: ${({ theme }) => theme.deprecated_accentWarningSoft};
+  background-color: #1f1e02;
   width: 40px;
   height: 40px;
   justify-content: center;
@@ -144,8 +150,6 @@ function getOrderTitle(order: UniswapXOrderDetails): ReactNode {
       return isLimit ? <Trans>Limit pending</Trans> : <Trans>Order pending</Trans>
     case UniswapXOrderStatus.EXPIRED:
       return isLimit ? <Trans>Limit expired</Trans> : <Trans>Order expired</Trans>
-    case UniswapXOrderStatus.PENDING_CANCELLATION:
-      return <Trans>Pending cancellation</Trans>
     case UniswapXOrderStatus.INSUFFICIENT_FUNDS:
     case UniswapXOrderStatus.CANCELLED:
       return isLimit ? <Trans>Limit cancelled</Trans> : <Trans>Order cancelled</Trans>
@@ -154,6 +158,20 @@ function getOrderTitle(order: UniswapXOrderDetails): ReactNode {
     default:
       return null
   }
+}
+
+function useCancelOrder(order?: UniswapXOrderDetails): () => Promise<ContractTransaction[] | undefined> {
+  const { provider } = useWeb3React()
+  const permit2 = useContract<Permit2>(PERMIT2_ADDRESS, PERMIT2_ABI, true)
+  return useCallback(async () => {
+    if (!order) return undefined
+    return await cancelMultipleUniswapXOrders({
+      orders: [{ encodedOrder: order.encodedOrder as string, type: order.type as SignatureType }],
+      chainId: order.chainId,
+      provider,
+      permit2,
+    })
+  }, [order, permit2, provider])
 }
 
 export function OrderContent({
@@ -317,9 +335,7 @@ export function OffchainActivityModal() {
     setSelectedOrder((order) => order && { ...order, modalOpen: false })
   }, [setSelectedOrder])
 
-  const cancelOrder = useCancelMultipleOrdersCallback(
-    useMemo(() => [syncedSelectedOrder].filter(Boolean) as Array<UniswapXOrderDetails>, [syncedSelectedOrder])
-  )
+  const cancelOrder = useCancelOrder(syncedSelectedOrder)
 
   return (
     <>

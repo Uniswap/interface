@@ -54,9 +54,6 @@ export function CancelConfirmationView({
     }
   }, [onCancelConfirm, authTrigger])
 
-  const disableConfirmationButton =
-    !cancelationGasFeeInfo?.cancelRequest || transactionDetails.status !== TransactionStatus.Pending
-
   return (
     <Flex
       centered
@@ -110,7 +107,7 @@ export function CancelConfirmationView({
         </Button>
         <Button
           fill
-          disabled={disableConfirmationButton}
+          disabled={transactionDetails.status !== TransactionStatus.Pending}
           testID={ElementName.Cancel}
           theme="detrimental"
           onPress={onPressCancel}>

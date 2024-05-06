@@ -10,8 +10,6 @@ type MetaTagInjectorInput = {
  * to inject meta tags into the <head> of an HTML document.
  */
 export class MetaTagInjector implements HTMLRewriterElementContentHandlers {
-  static SELECTOR = 'head'
-
   constructor(private input: MetaTagInjectorInput, private request: Request) {}
 
   append(element: Element, property: string, content: string) {
