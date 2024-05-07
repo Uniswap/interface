@@ -1,5 +1,5 @@
-import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { SupportedInterfaceChain } from 'constants/chains'
 import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'state/hooks'
@@ -44,7 +44,7 @@ export function useAddOrder() {
     (
       offerer: string,
       orderHash: string,
-      chainId: ChainId,
+      chainId: SupportedInterfaceChain,
       expiry: number,
       swapInfo: UniswapXOrderDetails['swapInfo'],
       encodedOrder: string,
@@ -70,7 +70,7 @@ export function useAddOrder() {
 }
 
 export function isFinalizedOrder(orderStatus: UniswapXOrderStatus) {
-  return orderStatus !== UniswapXOrderStatus.OPEN
+  return orderStatus !== UniswapXOrderStatus.OPEN && orderStatus !== UniswapXOrderStatus.PENDING_CANCELLATION
 }
 
 export function isOnChainOrder(orderStatus: UniswapXOrderStatus) {
@@ -82,6 +82,6 @@ function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrder
     (signature.type === SignatureType.SIGN_UNISWAPX_ORDER ||
       signature.type === SignatureType.SIGN_UNISWAPX_V2_ORDER ||
       signature.type === SignatureType.SIGN_LIMIT) &&
-    signature.status === UniswapXOrderStatus.OPEN
+    [UniswapXOrderStatus.OPEN, UniswapXOrderStatus.PENDING_CANCELLATION].includes(signature.status)
   )
 }

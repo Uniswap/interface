@@ -178,7 +178,7 @@ function getNativeTransferRequest(params: TransferCurrencyParams): providers.Tra
   }
 }
 
-async function getTokenTransferRequest(
+export async function getTokenTransferRequest(
   params: TransferCurrencyParams,
   provider: providers.Provider,
   contractManager: ContractManager

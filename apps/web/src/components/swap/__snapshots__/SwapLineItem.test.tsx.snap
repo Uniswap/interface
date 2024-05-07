@@ -569,7 +569,7 @@ exports[`SwapLineItem.tsx dutch order eth input 1`] = `
               <div
                 class="c10 css-obwv3p"
               >
-                This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
                 <a
                   class="c16"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -743,7 +743,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   min-width: 0;
 }
 
-.c35 {
+.c36 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -803,7 +803,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   gap: 8px;
 }
 
-.c36 {
+.c37 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -828,14 +828,14 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   justify-content: space-between;
 }
 
-.c37 {
+.c38 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c37 > * {
+.c38 > * {
   margin: 1px !important;
 }
 
@@ -1007,7 +1007,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c42 {
+.c41 {
   max-width: 200px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -1073,7 +1073,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   fill: #CECECE;
 }
 
-.c31 {
+.c32 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -1094,6 +1094,56 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   font-weight: 535;
 }
 
+.c27 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c27 img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c40 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c40 img {
+  width: 10px;
+  height: 20px;
+  object-fit: cover;
+}
+
+.c40 img:first-child {
+  border-radius: 10px 0 0 10px;
+  object-position: 0 0;
+}
+
+.c40 img:last-child {
+  border-radius: 0 10px 10px 0;
+  object-position: 100% 0;
+}
+
+.c28 {
+  width: 10px;
+  height: 20px;
+  border-radius: 50%;
+}
+
 .c26 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1108,38 +1158,12 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   left: 0;
 }
 
-.c27 {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
 .c25 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-}
-
-.c39 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-}
-
-.c40 {
-  z-index: 1;
-}
-
-.c41 {
-  position: absolute;
-  left: -10px !important;
 }
 
 .c23 {
@@ -1155,7 +1179,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c28 {
+.c29 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -1172,7 +1196,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   position: relative;
 }
 
-.c38 {
+.c39 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1180,7 +1204,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   padding: 4px 4px;
 }
 
-.c29 {
+.c30 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1195,11 +1219,11 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   opacity: 0.5;
 }
 
-.c30 path {
+.c31 path {
   stroke: #22222212;
 }
 
-.c32 {
+.c33 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -1213,7 +1237,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   z-index: 1020;
 }
 
-.c33 {
+.c34 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -1222,7 +1246,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   z-index: 1021;
 }
 
-.c34 {
+.c35 {
   word-break: normal;
 }
 
@@ -1525,7 +1549,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -1635,45 +1659,52 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                         <div
                           class="c26"
                         >
-                          <img
+                          <div
                             class="c27"
-                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                          />
+                            size="20"
+                          >
+                             
+                            <img
+                              class="c28"
+                              size="20"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                            />
+                          </div>
                         </div>
                       </div>
                       <div
-                        class="c0 c1 c28"
+                        class="c0 c1 c29"
                       >
                         <div
-                          class="c29"
+                          class="c30"
                         >
                           <svg
-                            class="c30"
+                            class="c31"
                           >
                             dot_line.svg
                           </svg>
                         </div>
                         <div
-                          class="c31 c32"
+                          class="c32 c33"
                         >
                           <div
-                            class="c31 c33"
+                            class="c32 c34"
                           >
                             <div
-                              class="c3 c34 css-1m65e73"
+                              class="c3 c35 css-1m65e73"
                             >
                               V3
                             </div>
                           </div>
                           <div
-                            class="c11 c34 css-1m65e73"
+                            class="c11 c35 css-1m65e73"
                             style="min-width: auto;"
                           >
                             100%
                           </div>
                         </div>
                         <div
-                          class="c35 c36 c37"
+                          class="c36 c37 c38"
                           style="justify-content: space-evenly; z-index: 2;"
                           width="100%"
                         >
@@ -1682,52 +1713,29 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                           >
                             <div>
                               <div
-                                class="c31 c38"
+                                class="c32 c39"
                               >
                                 <div
                                   class="css-mbnpt3"
                                 >
                                   <div
-                                    class="c39"
+                                    class="c40"
+                                    size="20"
                                   >
-                                    <div
-                                      class="c40"
-                                    >
-                                      <div
-                                        class="c25"
-                                        style="height: 20px; width: 20px;"
-                                      >
-                                        <div
-                                          class="c26"
-                                        >
-                                          <img
-                                            class="c27"
-                                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div
-                                      class="c41"
-                                    >
-                                      <div
-                                        class="c25"
-                                        style="height: 20px; width: 20px;"
-                                      >
-                                        <div
-                                          class="c26"
-                                        >
-                                          <img
-                                            class="c27"
-                                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
+                                    <img
+                                      class="c28"
+                                      size="20"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                                    />
+                                    <img
+                                      class="c28"
+                                      size="20"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                                    />
                                   </div>
                                 </div>
                                 <div
-                                  class="c11 c34 css-1m65e73"
+                                  class="c11 c35 css-1m65e73"
                                 >
                                   1%
                                 </div>
@@ -1739,7 +1747,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                             style="position: fixed; left: 0px; top: 0px;"
                           >
                             <div
-                              class="c42"
+                              class="c41"
                             >
                               ABC/DEF 1% pool
                             </div>
@@ -1757,10 +1765,17 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                         <div
                           class="c26"
                         >
-                          <img
+                          <div
                             class="c27"
-                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                          />
+                            size="20"
+                          >
+                             
+                            <img
+                              class="c28"
+                              size="20"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -1793,7 +1808,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   min-width: 0;
 }
 
-.c35 {
+.c36 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -1853,7 +1868,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   gap: 8px;
 }
 
-.c36 {
+.c37 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1878,14 +1893,14 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   justify-content: space-between;
 }
 
-.c37 {
+.c38 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c37 > * {
+.c38 > * {
   margin: 1px !important;
 }
 
@@ -2057,7 +2072,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c42 {
+.c41 {
   max-width: 200px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -2123,7 +2138,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   fill: #CECECE;
 }
 
-.c31 {
+.c32 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -2144,6 +2159,56 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   font-weight: 535;
 }
 
+.c27 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c27 img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c40 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c40 img {
+  width: 10px;
+  height: 20px;
+  object-fit: cover;
+}
+
+.c40 img:first-child {
+  border-radius: 10px 0 0 10px;
+  object-position: 0 0;
+}
+
+.c40 img:last-child {
+  border-radius: 0 10px 10px 0;
+  object-position: 100% 0;
+}
+
+.c28 {
+  width: 10px;
+  height: 20px;
+  border-radius: 50%;
+}
+
 .c26 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -2158,38 +2223,12 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   left: 0;
 }
 
-.c27 {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
 .c25 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-}
-
-.c39 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-}
-
-.c40 {
-  z-index: 1;
-}
-
-.c41 {
-  position: absolute;
-  left: -10px !important;
 }
 
 .c23 {
@@ -2205,7 +2244,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c28 {
+.c29 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -2222,7 +2261,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   position: relative;
 }
 
-.c38 {
+.c39 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2230,7 +2269,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   padding: 4px 4px;
 }
 
-.c29 {
+.c30 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2245,11 +2284,11 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   opacity: 0.5;
 }
 
-.c30 path {
+.c31 path {
   stroke: #22222212;
 }
 
-.c32 {
+.c33 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -2263,7 +2302,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   z-index: 1020;
 }
 
-.c33 {
+.c34 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -2272,7 +2311,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   z-index: 1021;
 }
 
-.c34 {
+.c35 {
   word-break: normal;
 }
 
@@ -2575,7 +2614,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -2685,45 +2724,52 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                         <div
                           class="c26"
                         >
-                          <img
+                          <div
                             class="c27"
-                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                          />
+                            size="20"
+                          >
+                             
+                            <img
+                              class="c28"
+                              size="20"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                            />
+                          </div>
                         </div>
                       </div>
                       <div
-                        class="c0 c1 c28"
+                        class="c0 c1 c29"
                       >
                         <div
-                          class="c29"
+                          class="c30"
                         >
                           <svg
-                            class="c30"
+                            class="c31"
                           >
                             dot_line.svg
                           </svg>
                         </div>
                         <div
-                          class="c31 c32"
+                          class="c32 c33"
                         >
                           <div
-                            class="c31 c33"
+                            class="c32 c34"
                           >
                             <div
-                              class="c3 c34 css-1m65e73"
+                              class="c3 c35 css-1m65e73"
                             >
                               V3
                             </div>
                           </div>
                           <div
-                            class="c11 c34 css-1m65e73"
+                            class="c11 c35 css-1m65e73"
                             style="min-width: auto;"
                           >
                             100%
                           </div>
                         </div>
                         <div
-                          class="c35 c36 c37"
+                          class="c36 c37 c38"
                           style="justify-content: space-evenly; z-index: 2;"
                           width="100%"
                         >
@@ -2732,52 +2778,29 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                           >
                             <div>
                               <div
-                                class="c31 c38"
+                                class="c32 c39"
                               >
                                 <div
                                   class="css-mbnpt3"
                                 >
                                   <div
-                                    class="c39"
+                                    class="c40"
+                                    size="20"
                                   >
-                                    <div
-                                      class="c40"
-                                    >
-                                      <div
-                                        class="c25"
-                                        style="height: 20px; width: 20px;"
-                                      >
-                                        <div
-                                          class="c26"
-                                        >
-                                          <img
-                                            class="c27"
-                                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div
-                                      class="c41"
-                                    >
-                                      <div
-                                        class="c25"
-                                        style="height: 20px; width: 20px;"
-                                      >
-                                        <div
-                                          class="c26"
-                                        >
-                                          <img
-                                            class="c27"
-                                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
+                                    <img
+                                      class="c28"
+                                      size="20"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                                    />
+                                    <img
+                                      class="c28"
+                                      size="20"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                                    />
                                   </div>
                                 </div>
                                 <div
-                                  class="c11 c34 css-1m65e73"
+                                  class="c11 c35 css-1m65e73"
                                 >
                                   1%
                                 </div>
@@ -2789,7 +2812,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                             style="position: fixed; left: 0px; top: 0px;"
                           >
                             <div
-                              class="c42"
+                              class="c41"
                             >
                               ABC/DEF 1% pool
                             </div>
@@ -2807,10 +2830,17 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                         <div
                           class="c26"
                         >
-                          <img
+                          <div
                             class="c27"
-                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                          />
+                            size="20"
+                          >
+                             
+                            <img
+                              class="c28"
+                              size="20"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -2843,7 +2873,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   min-width: 0;
 }
 
-.c35 {
+.c36 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -2903,7 +2933,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   gap: 8px;
 }
 
-.c36 {
+.c37 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -2928,14 +2958,14 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   justify-content: space-between;
 }
 
-.c37 {
+.c38 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c37 > * {
+.c38 > * {
   margin: 1px !important;
 }
 
@@ -3107,7 +3137,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c42 {
+.c41 {
   max-width: 200px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -3173,7 +3203,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   fill: #CECECE;
 }
 
-.c31 {
+.c32 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -3194,6 +3224,56 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   font-weight: 535;
 }
 
+.c27 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c27 img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c40 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c40 img {
+  width: 10px;
+  height: 20px;
+  object-fit: cover;
+}
+
+.c40 img:first-child {
+  border-radius: 10px 0 0 10px;
+  object-position: 0 0;
+}
+
+.c40 img:last-child {
+  border-radius: 0 10px 10px 0;
+  object-position: 100% 0;
+}
+
+.c28 {
+  width: 10px;
+  height: 20px;
+  border-radius: 50%;
+}
+
 .c26 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -3208,38 +3288,12 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   left: 0;
 }
 
-.c27 {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
 .c25 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-}
-
-.c39 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-}
-
-.c40 {
-  z-index: 1;
-}
-
-.c41 {
-  position: absolute;
-  left: -10px !important;
 }
 
 .c23 {
@@ -3255,7 +3309,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c28 {
+.c29 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -3272,7 +3326,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   position: relative;
 }
 
-.c38 {
+.c39 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -3280,7 +3334,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   padding: 4px 4px;
 }
 
-.c29 {
+.c30 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -3295,11 +3349,11 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   opacity: 0.5;
 }
 
-.c30 path {
+.c31 path {
   stroke: #22222212;
 }
 
-.c32 {
+.c33 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -3313,7 +3367,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   z-index: 1020;
 }
 
-.c33 {
+.c34 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -3322,7 +3376,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   z-index: 1021;
 }
 
-.c34 {
+.c35 {
   word-break: normal;
 }
 
@@ -3625,7 +3679,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -3735,45 +3789,52 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                         <div
                           class="c26"
                         >
-                          <img
+                          <div
                             class="c27"
-                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                          />
+                            size="20"
+                          >
+                             
+                            <img
+                              class="c28"
+                              size="20"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                            />
+                          </div>
                         </div>
                       </div>
                       <div
-                        class="c0 c1 c28"
+                        class="c0 c1 c29"
                       >
                         <div
-                          class="c29"
+                          class="c30"
                         >
                           <svg
-                            class="c30"
+                            class="c31"
                           >
                             dot_line.svg
                           </svg>
                         </div>
                         <div
-                          class="c31 c32"
+                          class="c32 c33"
                         >
                           <div
-                            class="c31 c33"
+                            class="c32 c34"
                           >
                             <div
-                              class="c3 c34 css-1m65e73"
+                              class="c3 c35 css-1m65e73"
                             >
                               V3
                             </div>
                           </div>
                           <div
-                            class="c11 c34 css-1m65e73"
+                            class="c11 c35 css-1m65e73"
                             style="min-width: auto;"
                           >
                             100%
                           </div>
                         </div>
                         <div
-                          class="c35 c36 c37"
+                          class="c36 c37 c38"
                           style="justify-content: space-evenly; z-index: 2;"
                           width="100%"
                         >
@@ -3782,52 +3843,29 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                           >
                             <div>
                               <div
-                                class="c31 c38"
+                                class="c32 c39"
                               >
                                 <div
                                   class="css-mbnpt3"
                                 >
                                   <div
-                                    class="c39"
+                                    class="c40"
+                                    size="20"
                                   >
-                                    <div
-                                      class="c40"
-                                    >
-                                      <div
-                                        class="c25"
-                                        style="height: 20px; width: 20px;"
-                                      >
-                                        <div
-                                          class="c26"
-                                        >
-                                          <img
-                                            class="c27"
-                                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div
-                                      class="c41"
-                                    >
-                                      <div
-                                        class="c25"
-                                        style="height: 20px; width: 20px;"
-                                      >
-                                        <div
-                                          class="c26"
-                                        >
-                                          <img
-                                            class="c27"
-                                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
+                                    <img
+                                      class="c28"
+                                      size="20"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                                    />
+                                    <img
+                                      class="c28"
+                                      size="20"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
+                                    />
                                   </div>
                                 </div>
                                 <div
-                                  class="c11 c34 css-1m65e73"
+                                  class="c11 c35 css-1m65e73"
                                 >
                                   0.3%
                                 </div>
@@ -3839,7 +3877,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                             style="position: fixed; left: 0px; top: 0px;"
                           >
                             <div
-                              class="c42"
+                              class="c41"
                             >
                               ABC/GHI 0.3% pool
                             </div>
@@ -3857,10 +3895,17 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                         <div
                           class="c26"
                         >
-                          <img
+                          <div
                             class="c27"
-                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
-                          />
+                            size="20"
+                          >
+                             
+                            <img
+                              class="c28"
+                              size="20"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -3893,7 +3938,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   min-width: 0;
 }
 
-.c35 {
+.c36 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -3953,7 +3998,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   gap: 8px;
 }
 
-.c36 {
+.c37 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -3978,14 +4023,14 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   justify-content: space-between;
 }
 
-.c37 {
+.c38 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c37 > * {
+.c38 > * {
   margin: 1px !important;
 }
 
@@ -4157,7 +4202,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c42 {
+.c41 {
   max-width: 200px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -4223,7 +4268,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   fill: #CECECE;
 }
 
-.c31 {
+.c32 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -4244,6 +4289,56 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   font-weight: 535;
 }
 
+.c27 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c27 img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c40 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c40 img {
+  width: 10px;
+  height: 20px;
+  object-fit: cover;
+}
+
+.c40 img:first-child {
+  border-radius: 10px 0 0 10px;
+  object-position: 0 0;
+}
+
+.c40 img:last-child {
+  border-radius: 0 10px 10px 0;
+  object-position: 100% 0;
+}
+
+.c28 {
+  width: 10px;
+  height: 20px;
+  border-radius: 50%;
+}
+
 .c26 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -4258,38 +4353,12 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   left: 0;
 }
 
-.c27 {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
 .c25 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-}
-
-.c39 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-}
-
-.c40 {
-  z-index: 1;
-}
-
-.c41 {
-  position: absolute;
-  left: -10px !important;
 }
 
 .c23 {
@@ -4305,7 +4374,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c28 {
+.c29 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -4322,7 +4391,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   position: relative;
 }
 
-.c38 {
+.c39 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4330,7 +4399,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   padding: 4px 4px;
 }
 
-.c29 {
+.c30 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -4345,11 +4414,11 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   opacity: 0.5;
 }
 
-.c30 path {
+.c31 path {
   stroke: #22222212;
 }
 
-.c32 {
+.c33 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -4363,7 +4432,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   z-index: 1020;
 }
 
-.c33 {
+.c34 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -4372,7 +4441,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   z-index: 1021;
 }
 
-.c34 {
+.c35 {
   word-break: normal;
 }
 
@@ -4728,7 +4797,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -4838,45 +4907,52 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                         <div
                           class="c26"
                         >
-                          <img
+                          <div
                             class="c27"
-                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                          />
+                            size="20"
+                          >
+                             
+                            <img
+                              class="c28"
+                              size="20"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                            />
+                          </div>
                         </div>
                       </div>
                       <div
-                        class="c0 c1 c28"
+                        class="c0 c1 c29"
                       >
                         <div
-                          class="c29"
+                          class="c30"
                         >
                           <svg
-                            class="c30"
+                            class="c31"
                           >
                             dot_line.svg
                           </svg>
                         </div>
                         <div
-                          class="c31 c32"
+                          class="c32 c33"
                         >
                           <div
-                            class="c31 c33"
+                            class="c32 c34"
                           >
                             <div
-                              class="c3 c34 css-1m65e73"
+                              class="c3 c35 css-1m65e73"
                             >
                               V3
                             </div>
                           </div>
                           <div
-                            class="c11 c34 css-1m65e73"
+                            class="c11 c35 css-1m65e73"
                             style="min-width: auto;"
                           >
                             100%
                           </div>
                         </div>
                         <div
-                          class="c35 c36 c37"
+                          class="c36 c37 c38"
                           style="justify-content: space-evenly; z-index: 2;"
                           width="100%"
                         >
@@ -4885,52 +4961,29 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                           >
                             <div>
                               <div
-                                class="c31 c38"
+                                class="c32 c39"
                               >
                                 <div
                                   class="css-mbnpt3"
                                 >
                                   <div
-                                    class="c39"
+                                    class="c40"
+                                    size="20"
                                   >
-                                    <div
-                                      class="c40"
-                                    >
-                                      <div
-                                        class="c25"
-                                        style="height: 20px; width: 20px;"
-                                      >
-                                        <div
-                                          class="c26"
-                                        >
-                                          <img
-                                            class="c27"
-                                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div
-                                      class="c41"
-                                    >
-                                      <div
-                                        class="c25"
-                                        style="height: 20px; width: 20px;"
-                                      >
-                                        <div
-                                          class="c26"
-                                        >
-                                          <img
-                                            class="c27"
-                                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
+                                    <img
+                                      class="c28"
+                                      size="20"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                                    />
+                                    <img
+                                      class="c28"
+                                      size="20"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                                    />
                                   </div>
                                 </div>
                                 <div
-                                  class="c11 c34 css-1m65e73"
+                                  class="c11 c35 css-1m65e73"
                                 >
                                   1%
                                 </div>
@@ -4942,7 +4995,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                             style="position: fixed; left: 0px; top: 0px;"
                           >
                             <div
-                              class="c42"
+                              class="c41"
                             >
                               ABC/DEF 1% pool
                             </div>
@@ -4960,10 +5013,17 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                         <div
                           class="c26"
                         >
-                          <img
+                          <div
                             class="c27"
-                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                          />
+                            size="20"
+                          >
+                             
+                            <img
+                              class="c28"
+                              size="20"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -4996,7 +5056,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   min-width: 0;
 }
 
-.c35 {
+.c36 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -5056,7 +5116,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   gap: 8px;
 }
 
-.c36 {
+.c37 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -5081,14 +5141,14 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   justify-content: space-between;
 }
 
-.c37 {
+.c38 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin: -1px;
 }
 
-.c37 > * {
+.c38 > * {
   margin: 1px !important;
 }
 
@@ -5260,7 +5320,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c42 {
+.c41 {
   max-width: 200px;
   width: calc(100vw - 16px);
   cursor: default;
@@ -5326,7 +5386,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   fill: #CECECE;
 }
 
-.c31 {
+.c32 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -5347,6 +5407,56 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   font-weight: 535;
 }
 
+.c27 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c27 img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c40 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c40 img {
+  width: 10px;
+  height: 20px;
+  object-fit: cover;
+}
+
+.c40 img:first-child {
+  border-radius: 10px 0 0 10px;
+  object-position: 0 0;
+}
+
+.c40 img:last-child {
+  border-radius: 0 10px 10px 0;
+  object-position: 100% 0;
+}
+
+.c28 {
+  width: 10px;
+  height: 20px;
+  border-radius: 50%;
+}
+
 .c26 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -5361,38 +5471,12 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   left: 0;
 }
 
-.c27 {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
 .c25 {
   position: relative;
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-}
-
-.c39 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-}
-
-.c40 {
-  z-index: 1;
-}
-
-.c41 {
-  position: absolute;
-  left: -10px !important;
 }
 
 .c23 {
@@ -5408,7 +5492,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   grid-template-columns: 24px 1fr 24px;
 }
 
-.c28 {
+.c29 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -5425,7 +5509,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   position: relative;
 }
 
-.c38 {
+.c39 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -5433,7 +5517,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   padding: 4px 4px;
 }
 
-.c29 {
+.c30 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -5448,11 +5532,11 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   opacity: 0.5;
 }
 
-.c30 path {
+.c31 path {
   stroke: #22222212;
 }
 
-.c32 {
+.c33 {
   background-color: #F9F9F9;
   border-radius: 8px;
   display: grid;
@@ -5466,7 +5550,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   z-index: 1020;
 }
 
-.c33 {
+.c34 {
   background-color: #F9F9F9;
   border-radius: 4px;
   color: #7D7D7D;
@@ -5475,7 +5559,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   z-index: 1021;
 }
 
-.c34 {
+.c35 {
   word-break: normal;
 }
 
@@ -5831,7 +5915,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
               <div
                 class="c11 css-obwv3p"
               >
-                This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated with this swap. 
+                Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap. 
                 <a
                   class="c15"
                   href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
@@ -5941,45 +6025,52 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                         <div
                           class="c26"
                         >
-                          <img
+                          <div
                             class="c27"
-                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                          />
+                            size="20"
+                          >
+                             
+                            <img
+                              class="c28"
+                              size="20"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                            />
+                          </div>
                         </div>
                       </div>
                       <div
-                        class="c0 c1 c28"
+                        class="c0 c1 c29"
                       >
                         <div
-                          class="c29"
+                          class="c30"
                         >
                           <svg
-                            class="c30"
+                            class="c31"
                           >
                             dot_line.svg
                           </svg>
                         </div>
                         <div
-                          class="c31 c32"
+                          class="c32 c33"
                         >
                           <div
-                            class="c31 c33"
+                            class="c32 c34"
                           >
                             <div
-                              class="c3 c34 css-1m65e73"
+                              class="c3 c35 css-1m65e73"
                             >
                               V3
                             </div>
                           </div>
                           <div
-                            class="c11 c34 css-1m65e73"
+                            class="c11 c35 css-1m65e73"
                             style="min-width: auto;"
                           >
                             100%
                           </div>
                         </div>
                         <div
-                          class="c35 c36 c37"
+                          class="c36 c37 c38"
                           style="justify-content: space-evenly; z-index: 2;"
                           width="100%"
                         >
@@ -5988,52 +6079,29 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                           >
                             <div>
                               <div
-                                class="c31 c38"
+                                class="c32 c39"
                               >
                                 <div
                                   class="css-mbnpt3"
                                 >
                                   <div
-                                    class="c39"
+                                    class="c40"
+                                    size="20"
                                   >
-                                    <div
-                                      class="c40"
-                                    >
-                                      <div
-                                        class="c25"
-                                        style="height: 20px; width: 20px;"
-                                      >
-                                        <div
-                                          class="c26"
-                                        >
-                                          <img
-                                            class="c27"
-                                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div
-                                      class="c41"
-                                    >
-                                      <div
-                                        class="c25"
-                                        style="height: 20px; width: 20px;"
-                                      >
-                                        <div
-                                          class="c26"
-                                        >
-                                          <img
-                                            class="c27"
-                                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                          />
-                                        </div>
-                                      </div>
-                                    </div>
+                                    <img
+                                      class="c28"
+                                      size="20"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                                    />
+                                    <img
+                                      class="c28"
+                                      size="20"
+                                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                                    />
                                   </div>
                                 </div>
                                 <div
-                                  class="c11 c34 css-1m65e73"
+                                  class="c11 c35 css-1m65e73"
                                 >
                                   1%
                                 </div>
@@ -6045,7 +6113,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                             style="position: fixed; left: 0px; top: 0px;"
                           >
                             <div
-                              class="c42"
+                              class="c41"
                             >
                               ABC/DEF 1% pool
                             </div>
@@ -6063,10 +6131,17 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                         <div
                           class="c26"
                         >
-                          <img
+                          <div
                             class="c27"
-                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                          />
+                            size="20"
+                          >
+                             
+                            <img
+                              class="c28"
+                              size="20"
+                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>

@@ -25,7 +25,6 @@ import ENS_PUBLIC_RESOLVER_ABI from 'uniswap/src/abis/ens-public-resolver.json'
 import ENS_ABI from 'uniswap/src/abis/ens-registrar.json'
 import ERC1155_ABI from 'uniswap/src/abis/erc1155.json'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
-import ERC20_BYTES32_ABI from 'uniswap/src/abis/erc20_bytes32.json'
 import ERC721_ABI from 'uniswap/src/abis/erc721.json'
 import {
   ArgentWalletDetector,
@@ -123,10 +122,6 @@ export function useENSRegistrarContract() {
 
 export function useENSResolverContract(address: string | undefined) {
   return useMainnetContract<EnsPublicResolver>(address, ENS_PUBLIC_RESOLVER_ABI)
-}
-
-export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
-  return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible)
 }
 
 export function useEIP2612Contract(tokenAddress?: string): Contract | null {

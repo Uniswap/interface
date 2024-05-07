@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next'
-import { TransferInstitutionSelector } from 'src/features/fiatOnRamp/FiatOnRampTransferInstitutionSelector'
-import { FOR_MODAL_SNAP_POINTS } from 'src/features/fiatOnRamp/constants'
+import { useAppSelector } from 'src/app/hooks'
+import { ServiceProviderSelector } from 'src/features/fiatOnRamp/ExchangeTransferServiceProviderSelector'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
+import { selectModalState } from 'src/features/modals/selectModalState'
 import {
   Flex,
   HapticFeedback,
@@ -106,6 +107,7 @@ export function ReceiveCryptoModal(): JSX.Element {
   const colors = useSporeColors()
   const dispatch = useAppDispatch()
   const { t } = useTranslation()
+  const { initialState } = useAppSelector(selectModalState(ModalName.ReceiveCryptoModal))
 
   const onClose = (): void => {
     dispatch(closeModal({ name: ModalName.ReceiveCryptoModal }))
@@ -114,14 +116,12 @@ export function ReceiveCryptoModal(): JSX.Element {
   return (
     <BottomSheetModal
       extendOnKeyboardVisible
-      fullScreen
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
       backgroundColor={colors.surface1.get()}
       name={ModalName.ReceiveCryptoModal}
-      snapPoints={FOR_MODAL_SNAP_POINTS}
       onClose={onClose}>
-      <Flex grow gap="$spacing12" px="$spacing16">
+      <Flex grow gap="$spacing12" mb="$spacing16" px="$spacing16">
         <Flex gap="$spacing4" p="$spacing8">
           <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">
             {t('home.upsell.receive.title')}
@@ -138,7 +138,7 @@ export function ReceiveCryptoModal(): JSX.Element {
           </Text>
           <Separator />
         </Flex>
-        <TransferInstitutionSelector onClose={onClose} />
+        <ServiceProviderSelector serviceProviders={initialState || []} onClose={onClose} />
       </Flex>
     </BottomSheetModal>
   )

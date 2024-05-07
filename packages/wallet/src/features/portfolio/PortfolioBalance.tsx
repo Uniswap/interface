@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import { Flex, Shine, Text, isWeb } from 'ui/src'
 import { NumberType } from 'utilities/src/format/types'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
@@ -15,7 +16,9 @@ interface PortfolioBalanceProps {
   owner: Address
 }
 
-export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element {
+export const PortfolioBalance = memo(function _PortfolioBalance({
+  owner,
+}: PortfolioBalanceProps): JSX.Element {
   const { data, loading, networkStatus } = usePortfolioTotalValue({
     address: owner,
     // TransactionHistoryUpdater will refetch this query on new transaction.
@@ -69,4 +72,4 @@ export function PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element 
       </Shine>
     </Flex>
   )
-}
+})

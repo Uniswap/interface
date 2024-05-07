@@ -10,6 +10,8 @@ import {
   useTopV2PairsQuery,
   useTopV3PoolsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
   return pools.sort((a, b) => {
@@ -105,6 +107,7 @@ function useFilteredPools(pools: TablePool[]) {
 }
 
 export function useTopPools(sortState: PoolTableSortState, chainId?: ChainId) {
+  const v2ExploreEnabled = useFeatureFlag(FeatureFlags.V2Explore)
   const {
     loading: loadingV3,
     error: errorV3,
@@ -117,8 +120,8 @@ export function useTopPools(sortState: PoolTableSortState, chainId?: ChainId) {
     error: errorV2,
     data: dataV2,
   } = useTopV2PairsQuery({
-    variables: { first: 100 },
-    skip: chainId !== ChainId.MAINNET,
+    variables: { first: 100, chain: chainIdToBackendName(chainId) },
+    skip: chainId !== ChainId.MAINNET && !v2ExploreEnabled,
   })
   const loading = loadingV3 || loadingV2
 

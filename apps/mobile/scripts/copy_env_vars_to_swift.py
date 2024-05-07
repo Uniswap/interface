@@ -3,7 +3,7 @@ import os
 ENV_DEFAULTS_FILE = '../../.env.defaults'
 ENV_DEFAULTS_LOCAL_FILE = '../../.env.defaults.local'
 SWIFT_FILE_PATH = 'ios/WidgetsCore/Env.swift'
-SWIFT_ENV_VARIABLES = ['UNISWAP_API_BASE_URL','UNISWAP_API_KEY']
+SWIFT_ENV_VARIABLES = ['UNISWAP_API_KEY']
 
 def to_swift_constant_line(key, value):
   return f'  static let {key.upper()} = "{value}"'

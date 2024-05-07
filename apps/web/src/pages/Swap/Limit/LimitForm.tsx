@@ -37,7 +37,10 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
-import { useCurrentPriceAdjustment } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
+import {
+  LimitPriceErrorType,
+  useCurrentPriceAdjustment,
+} from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import Row from 'components/Row'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { useAtom } from 'jotai'
@@ -346,8 +349,9 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         hasInsufficientFunds={hasInsufficientFunds}
         limitPriceError={priceError}
       />
-      {priceError && inputCurrency && outputCurrency && limitOrderTrade && (
+      {!!priceError && inputCurrency && outputCurrency && limitOrderTrade && (
         <LimitPriceError
+          priceError={priceError}
           priceAdjustmentPercentage={currentPriceAdjustment}
           inputCurrency={inputCurrency}
           outputCurrency={outputCurrency}
@@ -413,7 +417,7 @@ function SubmitOrderButton({
   handleContinueToReview: () => void
   inputCurrency?: Currency
   hasInsufficientFunds: boolean
-  limitPriceError?: boolean
+  limitPriceError?: LimitPriceErrorType
 }) {
   const toggleWalletDrawer = useToggleAccountDrawer()
   const { account } = useWeb3React()
@@ -446,7 +450,7 @@ function SubmitOrderButton({
         onClick={handleContinueToReview}
         id="submit-order-button"
         data-testid="submit-order-button"
-        disabled={!trade || limitPriceError}
+        disabled={!trade || !!limitPriceError}
       >
         <Text fontSize={20}>Confirm</Text>
       </ButtonError>

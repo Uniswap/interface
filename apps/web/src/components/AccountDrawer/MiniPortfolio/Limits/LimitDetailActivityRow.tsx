@@ -9,7 +9,7 @@ import { FormatType, formatTimestamp } from 'components/AccountDrawer/MiniPortfo
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { parseUnits } from 'ethers/lib/utils'
-import useTokenLogoSource from 'hooks/useAssetLogoSource'
+import { useCurrencyInfo } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { Trans } from 'i18n'
 import { Checkbox } from 'nft/components/layout/Checkbox'
@@ -17,6 +17,7 @@ import { useMemo, useState } from 'react'
 import { ArrowRight } from 'react-feather'
 import styled, { useTheme } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
+import { UniswapXOrderStatus } from 'types/uniswapx'
 import { useFormatter } from 'utils/formatNumbers'
 
 const StyledPortfolioRow = styled(PortfolioRow)`
@@ -50,7 +51,9 @@ const CircleLogoImage = styled.img<{ size: string }>`
 
 export function LimitDetailActivityRow({ order, onToggleSelect, selected }: LimitDetailActivityRowProps) {
   const theme = useTheme()
-  const { chainId, logos, currencies, offchainOrderDetails } = order
+  const { logos, currencies, offchainOrderDetails } = order
+  const inputCurrencyInfo = useCurrencyInfo(currencies?.[0])
+  const outputCurrencyInfo = useCurrencyInfo(currencies?.[1])
   const openOffchainActivityModal = useOpenOffchainActivityModal()
   const { formatReviewSwapCurrencyAmount } = useFormatter()
   const [hovered, setHovered] = useState(false)
@@ -70,25 +73,23 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
     )
   }, [amounts?.inputAmount, amounts?.outputAmount, amountsDefined])
 
-  const [inputLogoSrc, nextInputLogoSrc] = useTokenLogoSource({
-    address: currencies?.[0]?.wrapped.address,
-    chainId,
-    isNative: currencies?.[0]?.isNative,
-  })
-  const [outputLogoSrc, nextOutputLogoSrc2] = useTokenLogoSource({
-    address: currencies?.[1]?.wrapped.address,
-    chainId,
-    isNative: currencies?.[1]?.isNative,
-  })
-
   if (!offchainOrderDetails || !amountsDefined) return null
+
+  const inputLogo = logos?.[0] ?? inputCurrencyInfo?.logoUrl
+  const outputLogo = logos?.[1] ?? outputCurrencyInfo?.logoUrl
+
+  const cancelling = offchainOrderDetails.status === UniswapXOrderStatus.PENDING_CANCELLATION
 
   return (
     <Row onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
       <StyledPortfolioRow
         left={undefined}
         title={
-          offchainOrderDetails?.expiry ? (
+          cancelling ? (
+            <ThemedText.LabelMicro fontWeight={500}>
+              <Trans>Pending cancellation</Trans>
+            </ThemedText.LabelMicro>
+          ) : offchainOrderDetails?.expiry ? (
             <ThemedText.LabelMicro fontWeight={500}>
               <Trans>
                 Expires {{ timestamp: formatTimestamp(offchainOrderDetails.expiry * 1000, true, FormatType.Short) }}
@@ -99,12 +100,12 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
         descriptor={
           <Column>
             <TradeSummaryContainer gap="xs" align="center">
-              <CircleLogoImage src={logos?.[0] ?? inputLogoSrc} size="16px" onError={nextInputLogoSrc} />
+              {inputLogo && <CircleLogoImage src={inputLogo} size="16px" />}
               <ThemedText.SubHeader color="neutral1">
                 {formatReviewSwapCurrencyAmount(amounts.inputAmount)} {amounts.inputAmount.currency.symbol}
               </ThemedText.SubHeader>
               <ArrowRight color={theme.neutral1} size="12px" />
-              <CircleLogoImage src={logos?.[1] ?? outputLogoSrc} size="16px" onError={nextOutputLogoSrc2} />
+              {outputLogo && <CircleLogoImage src={outputLogo} size="16px" />}
               <ThemedText.SubHeader color="neutral1">
                 {formatReviewSwapCurrencyAmount(amounts.outputAmount)} {amounts.outputAmount.currency.symbol}
               </ThemedText.SubHeader>
@@ -128,13 +129,15 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
           })
         }}
       />
-      <StyledCheckbox
-        $visible={hovered || selected || isSmallScreen}
-        size={18}
-        hovered={false}
-        checked={selected}
-        onChange={() => onToggleSelect(order)}
-      />
+      {!cancelling && (
+        <StyledCheckbox
+          $visible={hovered || selected || isSmallScreen}
+          size={18}
+          hovered={false}
+          checked={selected}
+          onChange={() => onToggleSelect(order)}
+        />
+      )}
     </Row>
   )
 }

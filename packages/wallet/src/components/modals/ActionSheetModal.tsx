@@ -22,7 +22,7 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps): JS
   const { t } = useTranslation()
   const { fullHeight } = useDeviceDimensions()
 
-  const { header, closeButtonLabel = t('common.button.cancel'), options, onClose } = props
+  const { header, closeButtonLabel = t('common.button.close'), options, onClose } = props
 
   return (
     <Flex gap="$spacing12" justifyContent="flex-end">

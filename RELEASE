@@ -1,10 +1,9 @@
-We are back with some new new updates! Here’s the latest:
+Excited to share some new updates! Here’s what’s new:
 
-Support for Blast: We now support the Blast Network! You can now send, receive, swap and more on it. 
+Expanded Fiat On-ramp Providers — We’ve added more provider options to on-ramp to crypto from your wallet, dependent on your geography.
 
-Extension Beta Waitlist: If you’ve claimed a Username, you’re automatically added to the waitlist of our newest product, the Uniswap Extension (Beta). If you’re off the waitlist, you’ll receive a notification as such, which will allow you access to try out the product. 
+Other changes:
 
-Other changes: 
-
-- Polish around fiat onramp
+- Polish around QR codes
+- Improved error reporting
 - Various bug fixes and performance improvements

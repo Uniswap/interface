@@ -103,6 +103,7 @@ export const ModalName = {
   UnitagsIntro: 'unitags-intro-modal',
   UniconsV2: 'unicons-v2-intro-modal',
   UniconsDevModal: 'unicons-dev-modal',
+  UwULinkErc20SendModal: 'uwulink-erc20-send-modal',
   ViewSeedPhraseWarning: 'view-seed-phrase-warning',
   ViewOnlyExplainer: 'view-only-explainer-modal',
   WalletConnectScan: 'wallet-connect-scan-modal',

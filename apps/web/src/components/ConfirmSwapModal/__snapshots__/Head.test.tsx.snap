@@ -112,19 +112,6 @@ exports[`ConfirmSwapModal/Head should render correctly for a Limit order 1`] = `
   opacity: 0.4;
 }
 
-.c4 {
-  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
-  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
-  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
-  -webkit-animation: iCPeaJ 250ms ease-in-out forwards;
-  animation: iCPeaJ 250ms ease-in-out forwards;
-}
-
-.c4.exiting {
-  -webkit-animation: bbnGid 250ms ease-in-out;
-  animation: bbnGid 250ms ease-in-out;
-}
-
 .c8 {
   width: -webkit-fit-content;
   width: -moz-fit-content;
@@ -147,6 +134,19 @@ exports[`ConfirmSwapModal/Head should render correctly for a Limit order 1`] = `
 
 .c8:hover path {
   fill: #222222;
+}
+
+.c4 {
+  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  -webkit-animation: iCPeaJ 250ms ease-in-out forwards;
+  animation: iCPeaJ 250ms ease-in-out forwards;
+}
+
+.c4.exiting {
+  -webkit-animation: bbnGid 250ms ease-in-out;
+  animation: bbnGid 250ms ease-in-out;
 }
 
 .c10 {
@@ -362,19 +362,6 @@ exports[`ConfirmSwapModal/Head should render correctly for a classic swap 1`] = 
   opacity: 0.4;
 }
 
-.c4 {
-  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
-  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
-  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
-  -webkit-animation: iCPeaJ 250ms ease-in-out forwards;
-  animation: iCPeaJ 250ms ease-in-out forwards;
-}
-
-.c4.exiting {
-  -webkit-animation: bbnGid 250ms ease-in-out;
-  animation: bbnGid 250ms ease-in-out;
-}
-
 .c8 {
   width: -webkit-fit-content;
   width: -moz-fit-content;
@@ -397,6 +384,19 @@ exports[`ConfirmSwapModal/Head should render correctly for a classic swap 1`] = 
 
 .c8:hover path {
   fill: #222222;
+}
+
+.c4 {
+  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  -webkit-animation: iCPeaJ 250ms ease-in-out forwards;
+  animation: iCPeaJ 250ms ease-in-out forwards;
+}
+
+.c4.exiting {
+  -webkit-animation: bbnGid 250ms ease-in-out;
+  animation: bbnGid 250ms ease-in-out;
 }
 
 .c10 {

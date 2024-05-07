@@ -2,6 +2,7 @@ import { formatTickMarks } from 'components/Charts/utils'
 import Row from 'components/Row'
 import { MissingDataBars } from 'components/Table/icons'
 import { useActiveLocale } from 'hooks/useActiveLocale'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { Trans } from 'i18n'
 import { useUpdateAtom } from 'jotai/utils'
@@ -278,6 +279,8 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
       setRefitChartContent(undefined)
     }
   }, [setRefitChartContent])
+
+  useOnClickOutside({ current: chartDivElement } as React.RefObject<HTMLDivElement>, () => setCrosshairData(undefined))
 
   return (
     <ChartDiv

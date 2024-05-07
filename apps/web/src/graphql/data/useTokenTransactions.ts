@@ -8,6 +8,8 @@ import {
   useV2TokenTransactionsQuery,
   useV3TokenTransactionsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export enum TokenTransactionType {
   BUY = 'Buy',
@@ -21,6 +23,7 @@ export function useTokenTransactions(
   chainId: ChainId,
   filter: TokenTransactionType[] = [TokenTransactionType.BUY, TokenTransactionType.SELL]
 ) {
+  const v2ExploreEnabled = useFeatureFlag(FeatureFlags.V2Explore)
   const {
     data: dataV3,
     loading: loadingV3,
@@ -42,15 +45,16 @@ export function useTokenTransactions(
     variables: {
       address: address.toLowerCase(),
       first: TokenTransactionDefaultQuerySize,
+      chain: chainIdToBackendName(chainId),
     },
-    skip: chainId !== ChainId.MAINNET,
+    skip: chainId !== ChainId.MAINNET && !v2ExploreEnabled,
   })
   const loadingMoreV3 = useRef(false)
   const loadingMoreV2 = useRef(false)
   const querySizeRef = useRef(TokenTransactionDefaultQuerySize)
   const loadMore = useCallback(
     ({ onComplete }: { onComplete?: () => void }) => {
-      if (loadingMoreV3.current || (loadingMoreV2.current && chainId === ChainId.MAINNET)) {
+      if (loadingMoreV3.current || (loadingMoreV2.current && (chainId === ChainId.MAINNET || v2ExploreEnabled))) {
         return
       }
       loadingMoreV3.current = true
@@ -64,7 +68,7 @@ export function useTokenTransactions(
           if (!fetchMoreResult) {
             return prev
           }
-          if (!loadingMoreV2.current || chainId !== ChainId.MAINNET) onComplete?.()
+          if (!loadingMoreV2.current || (chainId !== ChainId.MAINNET && !v2ExploreEnabled)) onComplete?.()
           const mergedData = {
             token: {
               ...prev.token,
@@ -77,7 +81,7 @@ export function useTokenTransactions(
           return mergedData
         },
       })
-      chainId == ChainId.MAINNET &&
+      if (chainId === ChainId.MAINNET || v2ExploreEnabled) {
         fetchMoreV2({
           variables: {
             cursor: dataV2?.token?.v2Transactions?.[dataV2.token?.v2Transactions.length - 1]?.timestamp,
@@ -100,8 +104,9 @@ export function useTokenTransactions(
             return mergedData
           },
         })
+      }
     },
-    [chainId, dataV2?.token?.v2Transactions, dataV3?.token?.v3Transactions, fetchMoreV2, fetchMoreV3]
+    [chainId, dataV2?.token?.v2Transactions, dataV3?.token?.v3Transactions, fetchMoreV2, fetchMoreV3, v2ExploreEnabled]
   )
 
   const transactions = useMemo(

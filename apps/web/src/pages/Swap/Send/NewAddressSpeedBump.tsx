@@ -8,8 +8,8 @@ import { useSendContext } from 'state/send/SendContext'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { UniconV2 } from 'ui/src/components/UniconV2'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const StyledUserIcon = styled(UserIcon)`
   width: 28px;

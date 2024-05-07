@@ -1,8 +1,9 @@
 import { ReactNode, useCallback, useState } from 'react'
-import { HelpCircle } from 'react-feather'
 import styled from 'styled-components'
 
-import Tooltip from '../Tooltip'
+import { Placement } from '@popperjs/core'
+import { InfoCircleFilled } from 'ui/src/components/icons'
+import { MouseoverTooltip } from '../Tooltip'
 
 const QuestionWrapper = styled.div`
   display: flex;
@@ -33,20 +34,28 @@ const QuestionMark = styled.span`
   margin-top: 2.5px;
 `
 
-export default function QuestionHelper({ text }: { text: ReactNode; size?: number }) {
+export default function QuestionHelper({
+  text,
+  size = 16,
+  placement,
+}: {
+  text: ReactNode
+  size?: number
+  placement?: Placement
+}) {
   const [show, setShow] = useState<boolean>(false)
 
   const open = useCallback(() => setShow(true), [setShow])
   const close = useCallback(() => setShow(false), [setShow])
   return (
     <span style={{ marginLeft: 4, display: 'flex', alignItems: 'center' }}>
-      <Tooltip text={text} show={show}>
+      <MouseoverTooltip text={text} forceShow={show} placement={placement}>
         <QuestionWrapper onClick={open} onMouseEnter={open} onMouseLeave={close}>
           <QuestionMark>
-            <HelpCircle size={16} />
+            <InfoCircleFilled size={size} color="$neutral3" />
           </QuestionMark>
         </QuestionWrapper>
-      </Tooltip>
+      </MouseoverTooltip>
     </span>
   )
 }

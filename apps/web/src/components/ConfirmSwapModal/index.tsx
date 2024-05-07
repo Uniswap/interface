@@ -184,7 +184,11 @@ export function ConfirmSwapModal({
       <SwapModal confirmModalState={confirmModalState} onDismiss={onModalDismiss}>
         {/* Head section displays title, help button, close icon */}
         <Container $height="24px" $padding="6px 12px 4px 12px">
-          <SwapHead onDismiss={onModalDismiss} isLimitTrade={isLimitTrade(trade)} />
+          <SwapHead
+            onDismiss={onModalDismiss}
+            isLimitTrade={isLimitTrade(trade)}
+            confirmModalState={confirmModalState}
+          />
         </Container>
         {/* Preview section displays input / output currency amounts */}
         {showPreview && (

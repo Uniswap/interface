@@ -1,9 +1,9 @@
-import { WARNING_LEVEL } from 'constants/tokenSafety'
 import { useTokenWarningColor, useTokenWarningTextColor } from 'hooks/useTokenWarningColor'
 import { ReactNode } from 'react'
 import { AlertTriangle, Slash } from 'react-feather'
 import { Text } from 'rebass'
 import styled from 'styled-components'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 const Label = styled.div<{ color: string; backgroundColor: string }>`
   padding: 4px 4px;
@@ -22,7 +22,7 @@ const Title = styled(Text)`
 `
 
 type TokenWarningLabelProps = {
-  level: WARNING_LEVEL
+  level: SafetyLevel
   canProceed: boolean
   children: ReactNode
 }

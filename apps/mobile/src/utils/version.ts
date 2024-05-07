@@ -1,4 +1,5 @@
 import DeviceInfo from 'react-native-device-info'
+import { isBetaEnv, isDevEnv } from 'uniswap/src/utils/env'
 import { StatsigEnvironmentTier } from 'wallet/src/version'
 
 /**
@@ -24,44 +25,37 @@ export enum BuildVariant {
 }
 
 export function getBuildVariant(): BuildVariant {
-  if (isDevBuild()) {
+  if (isDevEnv()) {
     return BuildVariant.Development
-  } else if (isBetaBuild()) {
+  } else if (isBetaEnv()) {
     return BuildVariant.Beta
   } else {
     return BuildVariant.Production
   }
 }
 
-export function isDevBuild(): boolean {
-  return DeviceInfo.getBundleId().endsWith('.dev')
-}
-
-export function isBetaBuild(): boolean {
-  return DeviceInfo.getBundleId().endsWith('.beta')
-}
 export function getStatsigEnvironmentTier(): StatsigEnvironmentTier {
-  if (isDevBuild()) {
+  if (isDevEnv()) {
     return StatsigEnvironmentTier.DEV
   }
-  if (isBetaBuild()) {
+  if (isBetaEnv()) {
     return StatsigEnvironmentTier.BETA
   }
   return StatsigEnvironmentTier.PROD
 }
 
 export function getSentryEnvironment(): SentryEnvironment {
-  if (isDevBuild()) {
+  if (isDevEnv()) {
     return SentryEnvironment.DEV
   }
-  if (isBetaBuild()) {
+  if (isBetaEnv()) {
     return SentryEnvironment.BETA
   }
   return SentryEnvironment.PROD
 }
 
 export function getSentryTracesSamplingRate(): number {
-  if (isDevBuild() || isBetaBuild()) {
+  if (isDevEnv() || isBetaEnv()) {
     return 1
   }
   return 0.2

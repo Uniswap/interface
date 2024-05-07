@@ -209,6 +209,7 @@
       "notNow": "Not now",
       "ok": "OK",
       "paste": "Paste",
+      "pay": "Pay",
       "receive": "Receive",
       "remove": "Remove",
       "restore": "Restore",
@@ -266,8 +267,9 @@
       "systemSettings": "Settings"
     },
     "text": {
+      "connected": "Connected",
+      "disconnected": "Disconnected",
       "error": "Error",
-      "loading": "Loading",
       "notAvailable": "N/A",
       "unknown": "Unknown"
     }
@@ -505,6 +507,7 @@
       "load": "Couldn’t load tokens to buy",
       "max": "Maximum {{amount}}",
       "min": "Minimum {{amount}}",
+      "unavailable": "This service is unavailable in your region",
       "unsupported": "Not supported in region",
       "usd": "Only available to purchase in USD"
     },
@@ -591,16 +594,16 @@
       "empty": {
         "action": {
           "buy": {
-            "description": "You’ll need ETH to get started. Buy with a card or bank.",
-            "title": "Buy crypto"
+            "description": "Purchase crypto with a debit card or a bank account.",
+            "title": "Buy crypto with card"
           },
           "import": {
             "description": "Enter this wallet’s recovery phrase to begin swapping and sending.",
             "title": "Import wallet"
           },
           "receive": {
-            "description": "Transfer tokens from another wallet or crypto exchange.",
-            "title": "Receive funds"
+            "description": "Fund your wallet by transferring crypto from another wallet or account.",
+            "title": "Receive crypto"
           }
         },
         "description": "When this wallet buys or receives tokens, they’ll appear here.",
@@ -614,7 +617,7 @@
     },
     "upsell": {
       "receive": {
-        "cta": "Link an account",
+        "cta": "From an account",
         "description": "Fund your wallet by transferring crypto from another wallet or account",
         "title": "Receive crypto"
       }
@@ -786,15 +789,6 @@
         "title": "Pin Uniswap Wallet"
       },
       "title": "You’re all set"
-    },
-    "editName": {
-      "button": {
-        "create": "Create wallet"
-      },
-      "label": "Nickname",
-      "subtitle": "Give your wallet a nickname",
-      "title": "This nickname is only visible to you",
-      "walletAddress": "Your public address will be <highlight>{{walletAddress}}</highlight>"
     },
     "extension": {
       "connectMobile": {
@@ -1266,11 +1260,6 @@
       "security": "Security",
       "support": "Support",
       "wallet": {
-        "action": {
-          "hide": "Hide wallets",
-          "showAll_one": "Show one wallet",
-          "showAll_other": "Show all {{count}} wallets"
-        },
         "button": {
           "viewAll": "View all",
           "viewLess": "View less"
@@ -1454,9 +1443,7 @@
         },
         "editLabel": {
           "description": "Labels are not public. They are stored locally and only visible to you.",
-          "disclaimer": "This nickname is only visible to you.",
-          "save": "Save changes",
-          "title": "Edit nickname"
+          "save": "Save changes"
         },
         "label": "Nickname",
         "notifications": {
@@ -1584,6 +1571,7 @@
         "title": "Not enough liquidity"
       },
       "networkFee": {
+        "highRelativeToValue": "The network cost exceeds 10% of your total transaction value.",
         "message": "This is the cost to process your transaction on the blockchain. Uniswap does not receive any share of these fees."
       },
       "offline": {
@@ -1604,8 +1592,8 @@
       },
       "uniswapFee": {
         "message": {
-          "default": "Fees are applied on a few select tokens to ensure the best experience with Uniswap. There is no fee associated with this swap.",
-          "included": "Fees are applied on a few select tokens to ensure the best experience with Uniswap, and have already been factored into this quote."
+          "default": "Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap.",
+          "included": "Fees are applied to ensure the best experience with Uniswap, and have already been factored into this quote."
         },
         "title": "Swap fee"
       },
@@ -2057,6 +2045,11 @@
         "min": "Usernames must be at least {{number}} characters",
         "uppercase": "Usernames can only contain lowercase letters and numbers"
       }
+    }
+  },
+  "uwulink": {
+    "error": {
+      "insufficientTokens": "Not enough {{tokenSymbol}} on {{chain}}"
     }
   },
   "walletConnect": {

@@ -209,6 +209,7 @@
       "notNow": "稍后再说",
       "ok": "好的",
       "paste": "粘贴",
+      "pay": "支付",
       "receive": "接收",
       "remove": "删除",
       "restore": "恢复",
@@ -266,8 +267,9 @@
       "systemSettings": "设置"
     },
     "text": {
+      "connected": "已连接",
+      "disconnected": "已断开连接",
       "error": "错误",
-      "loading": "加载中",
       "notAvailable": "不适用",
       "unknown": "未知"
     }
@@ -320,7 +322,7 @@
           "label": "数据"
         },
         "function": {
-          "label": "功能"
+          "label": "函数"
         },
         "recipient": {
           "label": "接受者"
@@ -403,7 +405,7 @@
       },
       "metadata": {
         "marketCap": "{{number}} MCap",
-        "totalValueLocked": "{{number}} TVL",
+        "totalValueLocked": "{{number}} 总锁仓量",
         "volume": "{{number}} 卷"
       },
       "sort": {
@@ -411,7 +413,7 @@
           "marketCap": "市值",
           "priceDecrease": "价格下降",
           "priceIncrease": "价格上涨",
-          "totalValueLocked": "总锁定价值",
+          "totalValueLocked": "总锁仓量",
           "volume": "交易量"
         },
         "option": {
@@ -505,6 +507,7 @@
       "load": "无法加载要买入的代币",
       "max": "最大 {{amount}}",
       "min": "最低 {{amount}}",
+      "unavailable": "您所在的地区无法使用此项服务",
       "unsupported": "不支持你的地区",
       "usd": "只能以美元买入"
     },
@@ -591,16 +594,16 @@
       "empty": {
         "action": {
           "buy": {
-            "description": "你需要 ETH 才能开始。用卡或银行买入。",
-            "title": "买入加密货币"
+            "description": "使用借记卡或银行账户购买加密货币。",
+            "title": "使用卡购买加密货币"
           },
           "import": {
             "description": "开始兑换和发送之前请输入这个钱包的恢复短语",
             "title": "导入钱包"
           },
           "receive": {
-            "description": "从另一个钱包或加密货币交易所转移代币。",
-            "title": "接收资金"
+            "description": "通过从另一个钱包或帐户转移加密来为你的钱包添加资金.",
+            "title": "接收加密货币"
           }
         },
         "description": "当此钱包买入或接收代币时，它们会出现在此处。",
@@ -614,7 +617,7 @@
     },
     "upsell": {
       "receive": {
-        "cta": "链接一个帐户",
+        "cta": "来自帐户",
         "description": "通过从另一个钱包或帐户转移加密来为你的钱包添加资金",
         "title": "接收加密货币"
       }
@@ -786,15 +789,6 @@
         "title": "固定 Uniswap 钱包"
       },
       "title": "一切就绪"
-    },
-    "editName": {
-      "button": {
-        "create": "创建钱包"
-      },
-      "label": "昵称",
-      "subtitle": "给你的钱包起个昵称",
-      "title": "此昵称只有你自己可见",
-      "walletAddress": "您的公共地址将是<highlight>{{walletAddress}}</highlight>"
     },
     "extension": {
       "connectMobile": {
@@ -1266,11 +1260,6 @@
       "security": "安全",
       "support": "客服",
       "wallet": {
-        "action": {
-          "hide": "隐藏钱包",
-          "showAll_one": "显示一个钱包",
-          "showAll_other": "显示全部 {{count}} 钱包"
-        },
         "button": {
           "viewAll": "显示全部",
           "viewLess": "显示更少"
@@ -1454,9 +1443,7 @@
         },
         "editLabel": {
           "description": "标签不公开。它们存储在本地并且只有您可见。",
-          "disclaimer": "此昵称只有你自己可见",
-          "save": "保存更改",
-          "title": "编辑昵称"
+          "save": "保存更改"
         },
         "label": "昵称",
         "notifications": {
@@ -1584,6 +1571,7 @@
         "title": "流动性不足"
       },
       "networkFee": {
+        "highRelativeToValue": "网络费用超过您交易总价值的10％。",
         "message": "这是在区块链上处理交易的成本。 Uniswap 不会收取这些费用。"
       },
       "offline": {
@@ -1604,8 +1592,8 @@
       },
       "uniswapFee": {
         "message": {
-          "default": "为了确保 Uniswap 的最佳体验，我们对个别代币收取费用。此兑换不收取任何费用。",
-          "included": "为了确保 Uniswap 的最佳体验，我们对个别代币收取费用，并且已包含在此报价中。"
+          "default": "收取费用是为了确保获得最佳的 Uniswap 体验。此交换不收取任何费用。",
+          "included": "收取费用是为了确保获得 Uniswap 的最佳体验，并且已计入此报价中。"
         },
         "title": "兑换费用"
       },
@@ -2059,6 +2047,11 @@
       }
     }
   },
+  "uwulink": {
+    "error": {
+      "insufficientTokens": "{{chain}}上的 {{tokenSymbol}} 不够"
+    }
+  },
   "walletConnect": {
     "dapps": {
       "connection": "<highlight>连接到 </highlight>{{dappNameOrUrl}}",
@@ -2124,7 +2117,7 @@
       },
       "details": {
         "label": {
-          "function": "功能： ",
+          "function": "函数： ",
           "recipient": "到： ",
           "sending": "发送: "
         }

@@ -209,6 +209,7 @@
       "notNow": "Şimdi değil",
       "ok": "TAMAM",
       "paste": "Yapıştırmak",
+      "pay": "Ödemek",
       "receive": "Almak",
       "remove": "Kaldırmak",
       "restore": "Eski haline getirmek",
@@ -266,8 +267,9 @@
       "systemSettings": "Ayarlar"
     },
     "text": {
+      "connected": "Bağlı",
+      "disconnected": "Bağlantı kesildi",
       "error": "Hata",
-      "loading": "Yükleniyor",
       "notAvailable": "Yok",
       "unknown": "Bilinmeyen"
     }
@@ -505,6 +507,7 @@
       "load": "Satın alınacak jetonlar yüklenemedi",
       "max": "Maksimum {{amount}}",
       "min": "Minimum {{amount}}",
+      "unavailable": "Bu hizmet bölgenizde kullanılamıyor",
       "unsupported": "Bölgede desteklenmiyor",
       "usd": "Yalnızca USD cinsinden satın alınabilir"
     },
@@ -591,16 +594,16 @@
       "empty": {
         "action": {
           "buy": {
-            "description": "Başlamak için ETH'ye ihtiyacınız olacak. Kart veya banka ile satın alın.",
-            "title": "Kripto satın al"
+            "description": "Banka kartı veya banka hesabıyla kripto satın alın.",
+            "title": "Kartla kripto satın alın"
           },
           "import": {
             "description": "Değiştirmeye ve göndermeye başlamak için bu cüzdanın kurtarma ifadesini girin.",
             "title": "Cüzdanı içe aktar"
           },
           "receive": {
-            "description": "Tokenları başka bir cüzdandan veya kripto borsasından aktarın.",
-            "title": "Gelen kaynaklar"
+            "description": "Başka bir cüzdan veya hesaptan kripto aktararak cüzdanınıza para yatırın.",
+            "title": "Kripto al"
           }
         },
         "description": "Bu cüzdan token satın aldığında veya aldığında burada görünecekler.",
@@ -614,7 +617,7 @@
     },
     "upsell": {
       "receive": {
-        "cta": "Hesap bağlama",
+        "cta": "Bir hesaptan",
         "description": "Başka bir cüzdan veya hesaptan kripto aktararak cüzdanınıza para yatırın",
         "title": "Kripto al"
       }
@@ -786,15 +789,6 @@
         "title": "Uniswap Cüzdanını Pinle"
       },
       "title": "Hazırsınız"
-    },
-    "editName": {
-      "button": {
-        "create": "Cüzdan oluştur"
-      },
-      "label": "Takma ad",
-      "subtitle": "Cüzdanınıza bir takma ad verin",
-      "title": "Bu takma adı yalnızca siz görebilirsiniz",
-      "walletAddress": "Genel adresiniz <highlight>{{walletAddress}}</highlight>olacaktır"
     },
     "extension": {
       "connectMobile": {
@@ -1266,11 +1260,6 @@
       "security": "Güvenlik",
       "support": "Destek",
       "wallet": {
-        "action": {
-          "hide": "Cüzdanları gizle",
-          "showAll_one": "Bir cüzdan göster",
-          "showAll_other": "{{count}} cüzdanın tümünü göster"
-        },
         "button": {
           "viewAll": "Hepsini gör",
           "viewLess": "Daha az görüntüle"
@@ -1454,9 +1443,7 @@
         },
         "editLabel": {
           "description": "Etiketler herkese açık değildir. Yerel olarak depolanırlar ve yalnızca sizin tarafınızdan görülebilirler.",
-          "disclaimer": "Bu takma adı yalnızca siz görebilirsiniz.",
-          "save": "Değişiklikleri Kaydet",
-          "title": "Takma adı düzenle"
+          "save": "Değişiklikleri Kaydet"
         },
         "label": "Takma ad",
         "notifications": {
@@ -1584,6 +1571,7 @@
         "title": "Yeterli likidite yok"
       },
       "networkFee": {
+        "highRelativeToValue": "Ağ maliyeti toplam işlem değerinizin %10'unu aşıyor.",
         "message": "Bu, işleminizin blockchain üzerinde işlenmesinin maliyetidir. Uniswap bu ücretlerden herhangi bir pay almamaktadır."
       },
       "offline": {
@@ -1604,8 +1592,8 @@
       },
       "uniswapFee": {
         "message": {
-          "default": "Uniswap ile en iyi deneyimi sağlamak için seçilen birkaç tokena ücretler uygulanır. Bu takasla ilgili herhangi bir ücret yoktur.",
-          "included": "Uniswap ile en iyi deneyimi sağlamak için seçilen birkaç tokena ücretler uygulanıyor ve bu fiyat teklifine zaten dahil edilmiş durumda."
+          "default": "Uniswap ile en iyi deneyimi sağlamak için ücretler uygulanır. Bu takasla ilgili herhangi bir ücret yoktur.",
+          "included": "Uniswap ile en iyi deneyimi sağlamak için ücretler uygulanır ve bu fiyat teklifine zaten dahil edilmiştir."
         },
         "title": "Takas ücreti"
       },
@@ -2057,6 +2045,11 @@
         "min": "Kullanıcı adları en az {{number}} karakterden oluşmalıdır",
         "uppercase": "Kullanıcı adları yalnızca küçük harf ve rakamlardan oluşabilir"
       }
+    }
+  },
+  "uwulink": {
+    "error": {
+      "insufficientTokens": "{{chain}}üzerinde {{tokenSymbol}} yeterli değil"
     }
   },
   "walletConnect": {

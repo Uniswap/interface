@@ -364,7 +364,7 @@ export default function SendCurrencyInputForm({
           <Row width="100%" gap="md">
             <CurrencySelectorRow width="100%" gap="md" onClick={() => setTokenSelectorOpen(true)}>
               {inputCurrency && (
-                <PortfolioLogo currencies={[inputCurrency]} size="36px" chainId={chainId ?? ChainId.MAINNET} />
+                <PortfolioLogo currencies={[inputCurrency]} size={36} chainId={chainId ?? ChainId.MAINNET} />
               )}
               <Row width="100%">
                 <Column>

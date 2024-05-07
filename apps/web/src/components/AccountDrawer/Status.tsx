@@ -2,31 +2,37 @@ import Column from 'components/Column'
 import { ENS } from 'components/Icons/ENS'
 import { EthMini } from 'components/Icons/EthMini'
 import StatusIcon from 'components/Identicon/StatusIcon'
+import Popover from 'components/Popover'
 import Row from 'components/Row'
 import { Connection } from 'connection/types'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef, useState } from 'react'
 import { MoreHorizontal } from 'react-feather'
 import styled from 'styled-components'
-import { ClickableStyle, CopyHelper, ThemedText } from 'theme/components'
+import { ClickableStyle, CopyHelper, EllipsisStyle, ThemedText } from 'theme/components'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { shortenAddress } from 'utilities/src/addresses'
 
 const Container = styled.div`
-  display: inline-block;
-  width: 70%;
-  max-width: 70%;
+  display: flex;
   padding-right: 8px;
-  display: inline-flex;
 `
 const Identifiers = styled.div`
   white-space: nowrap;
   display: flex;
-  width: 100%;
   flex-direction: column;
   justify-content: center;
   margin-left: 8px;
   user-select: none;
+  overflow: hidden;
+  flex: 1 1 auto;
+`
+const IdentifierText = styled.span`
+  ${EllipsisStyle}
+  max-width: 120px;
+  @media screen and (min-width: 1440px) {
+    max-width: 180px;
+  }
 `
 const SecondaryIdentifiersContainer = styled(Row)`
   position: relative;
@@ -35,18 +41,15 @@ const SecondaryIdentifiersContainer = styled(Row)`
     display: inline-block;
   }
 `
-const MoreIcon = styled(MoreHorizontal)<{ $isActive: boolean }>`
+const MoreIcon = styled(MoreHorizontal)`
   height: 16px;
   width: 16px;
   color: ${({ theme }) => theme.neutral2};
   cursor: pointer;
-  display: ${({ $isActive }) => !$isActive && 'none'};
   ${ClickableStyle}
 `
 const Dropdown = styled(Column)`
   width: 240px;
-  position: absolute;
-  top: 20px;
   gap: 2px;
   padding: 8px;
   border-radius: 20px;
@@ -97,14 +100,19 @@ function SecondaryIdentifiers({
       <SecondaryIdentifiersContainer data-testid="secondary-identifiers" ref={ref}>
         <Row onClick={() => setIsDropdownOpen(!isDropdownOpen)} gap="8px">
           <ThemedText.BodySmall color="neutral2">{shortenAddress(account)}</ThemedText.BodySmall>
-          <MoreIcon id="more-identifiers-icon" $isActive={isDropdownOpen} />
+          <Popover
+            show={isDropdownOpen}
+            placement="bottom"
+            content={
+              <Dropdown data-testid="secondary-identifiers-dropdown">
+                <SecondaryIdentifier Icon={EnsIcon} displayValue={ensUsername} copyValue={ensUsername} />
+                <SecondaryIdentifier Icon={EthMini} displayValue={shortenAddress(account)} copyValue={account} />
+              </Dropdown>
+            }
+          >
+            <MoreIcon id="more-identifiers-icon" />
+          </Popover>
         </Row>
-        {isDropdownOpen && (
-          <Dropdown>
-            <SecondaryIdentifier Icon={EnsIcon} displayValue={ensUsername} copyValue={ensUsername} />
-            <SecondaryIdentifier Icon={EthMini} displayValue={shortenAddress(account)} copyValue={account} />
-          </Dropdown>
-        )}
       </SecondaryIdentifiersContainer>
     )
   }
@@ -141,7 +149,7 @@ export function Status({
             toCopy={uniswapUsername ? uniswapUsername + '.uni.eth' : ensUsername ? ensUsername : account}
           >
             <Row gap="2px">
-              {uniswapUsername ?? ensUsername ?? shortenAddress(account)}
+              <IdentifierText>{uniswapUsername ?? ensUsername ?? shortenAddress(account)}</IdentifierText>
               {uniswapUsername && <Unitag size={18} />}
             </Row>
           </CopyHelper>

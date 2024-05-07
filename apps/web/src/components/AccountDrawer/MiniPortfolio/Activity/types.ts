@@ -16,6 +16,7 @@ export type Activity = {
   title: string
   descriptor?: string
   logos?: Array<string | undefined>
+  // TODO(WEB-3839): replace Currency with CurrencyInfo
   currencies?: Array<Currency | undefined>
   otherAccount?: string
   from: string

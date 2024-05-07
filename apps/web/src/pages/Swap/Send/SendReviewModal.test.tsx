@@ -1,3 +1,5 @@
+import 'test-utils/tokens/mocks'
+
 import { SwapTab } from 'components/swap/constants'
 import { DAI } from 'constants/tokens'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'

@@ -6,29 +6,55 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
   gap: 2px;
   position: relative;
   top: 0;
   left: 0;
 }
 
-.c1 img:nth-child(n) {
-  width: 19px;
+.c1 img {
+  width: 20px;
   height: 40px;
   object-fit: cover;
 }
 
-.c1 img:nth-child(1) {
+.c1 img:first-child {
   border-radius: 20px 0 0 20px;
   object-position: 0 0;
 }
 
-.c1 img:nth-child(2) {
+.c1 img:last-child {
   border-radius: 0 20px 20px 0;
   object-position: 100% 0;
+}
+
+.c2 {
+  width: 20px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.c3 {
+  background-color: #F9F9F9;
+  border-radius: 2px;
+  width: 15px;
+  height: 15px;
+  left: 60%;
+  position: absolute;
+  top: 60%;
+  outline: 2px solid #FFFFFF;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 
 .c0 {
@@ -45,34 +71,6 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
   left: 0;
 }
 
-.c2 {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.c3 {
-  position: absolute;
-  border-radius: 4px;
-  left: 65%;
-  top: 65%;
-  outline: 1.5px solid #FFFFFF;
-  width: 40%;
-  height: 40%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-}
-
 <div>
   <span
     class=" _dsp_contents"
@@ -85,13 +83,16 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
       >
         <div
           class="c1"
+          size="40"
         >
           <img
             class="c2"
+            size="40"
             src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1/logo.png"
           />
           <img
             class="c2"
+            size="40"
             src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xaf88d065e77c8cC2239327C5EDb3A432268e5831/logo.png"
           />
         </div>
@@ -141,29 +142,32 @@ exports[`PortfolioLogo renders without L2 icon 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
   gap: 2px;
   position: relative;
   top: 0;
   left: 0;
 }
 
-.c1 img:nth-child(n) {
-  width: 19px;
+.c1 img {
+  width: 20px;
   height: 40px;
   object-fit: cover;
 }
 
-.c1 img:nth-child(1) {
+.c1 img:first-child {
   border-radius: 20px 0 0 20px;
   object-position: 0 0;
 }
 
-.c1 img:nth-child(2) {
+.c1 img:last-child {
   border-radius: 0 20px 20px 0;
   object-position: 100% 0;
+}
+
+.c2 {
+  width: 20px;
+  height: 40px;
+  border-radius: 50%;
 }
 
 .c0 {
@@ -180,12 +184,6 @@ exports[`PortfolioLogo renders without L2 icon 1`] = `
   left: 0;
 }
 
-.c2 {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
 <div>
   <span
     class="t_light is_inversed _dsp_contents"
@@ -198,13 +196,16 @@ exports[`PortfolioLogo renders without L2 icon 1`] = `
       >
         <div
           class="c1"
+          size="40"
         >
           <img
             class="c2"
+            size="40"
             src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
           />
           <img
             class="c2"
+            size="40"
             src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
           />
         </div>

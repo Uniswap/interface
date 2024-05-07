@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ColorTokens, Flex, Separator, Text } from 'ui/src'
+import { ColorTokens, Flex, Separator, Text, isWeb } from 'ui/src'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import {
   ActionSheetModalContent,
@@ -208,7 +208,8 @@ export default function TransactionActionsModal({
       hideHandlebar
       backgroundColor="statusCritical"
       name={ModalName.TransactionActions}
-      onClose={handleClose}>
+      onClose={handleClose}
+      {...(isWeb && { alignment: 'top' })}>
       <Flex px="$spacing12">
         <ActionSheetModalContent
           header={

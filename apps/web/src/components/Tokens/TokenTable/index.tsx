@@ -72,7 +72,7 @@ interface TokenTableValue {
 function TokenDescription({ token }: { token: TopToken }) {
   return (
     <Row gap="sm">
-      <QueryTokenLogo token={token} size="28px" />
+      <QueryTokenLogo token={token} size={28} />
       <NameText data-testid="token-name">{token?.name}</NameText>
       <ThemedText.BodySecondary style={{ minWidth: 'fit-content' }}>{token?.symbol}</ThemedText.BodySecondary>
     </Row>

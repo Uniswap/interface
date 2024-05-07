@@ -46,7 +46,6 @@ const accounts: Record<Address, Account> = {
 const walletSlice = {
   accounts,
   activeAccountAddress: null,
-  isUnlocked: false,
   settings: {
     swapProtection: SwapProtectionSetting.On,
     hideSmallBalances: true,

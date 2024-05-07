@@ -12,8 +12,8 @@ import { LimitOrderTrade, RouterPreference, SubmittableTrade, SwapFeeInfo, WrapI
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getUSDCostPerGas, isClassicTrade } from 'state/routing/utils'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { expiryToDeadlineSeconds } from './expiryToDeadlineSeconds'
 
 export type LimitInfo = {

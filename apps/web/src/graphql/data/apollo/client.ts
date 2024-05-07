@@ -30,7 +30,7 @@ export const apolloClient = new ApolloClient({
             // Tokens should be cached by their chain/address, *not* by the ID returned by the server.
             // This is because the ID may change depending on fields requested.
             read(_, { args, toReference }): Reference | undefined {
-              return toReference({ __typename: 'Token', chain: args?.chain, address: args?.address })
+              return toReference({ __typename: 'Token', chain: args?.chain, address: args?.address?.toLowerCase() })
             },
           },
         },

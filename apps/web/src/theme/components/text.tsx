@@ -133,7 +133,4 @@ export const ThemedText = {
   DeprecatedItalic(props: TextProps) {
     return <TextWrapper fontWeight={485} fontSize={12} fontStyle="italic" color="neutral2" {...props} />
   },
-  DeprecatedError({ error, ...props }: { error: boolean } & TextProps) {
-    return <TextWrapper fontWeight={485} color={error ? 'critical' : 'neutral2'} {...props} />
-  },
 }

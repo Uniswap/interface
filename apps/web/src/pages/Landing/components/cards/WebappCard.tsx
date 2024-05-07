@@ -216,7 +216,7 @@ function Token({ chainId, address }: { chainId: ChainId; address: string }) {
   )
   return (
     <TokenRow onClick={handleClick}>
-      <PortfolioLogo currencies={[currency]} chainId={chainId} size={screenIsSmall ? '32px' : '24px'} />
+      <PortfolioLogo currencies={[currency]} chainId={chainId} size={screenIsSmall ? 32 : 24} />
       <Box justify="space-between" gap="16px">
         <Box width="auto" gap="8px" align="center" overflow="hidden">
           <TokenName>{currency?.name}</TokenName>

@@ -2,16 +2,16 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import { MoonpayEventName } from '@uniswap/analytics-events'
 import dayjs from 'dayjs'
 import { config } from 'uniswap/src/config'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { createSignedRequestParams, objectToQueryString } from 'wallet/src/data/utils'
-import { walletContextValue } from 'wallet/src/features/wallet/context'
-
-import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
 import {
   FORGetCountryResponse,
   FORQuoteRequest,
   FORQuoteResponse,
+  FORServiceProvider,
   FORServiceProvidersRequest,
   FORServiceProvidersResponse,
   FORSupportedCountriesResponse,
@@ -21,8 +21,6 @@ import {
   FORSupportedTokensResponse,
   FORTransactionsRequest,
   FORTransactionsResponse,
-  FORTransferInstitutionsRequest,
-  FORTransferInstitutionsResponse,
   FORTransferWidgetUrlRequest,
   FORWidgetUrlRequest,
   FORWidgetUrlResponse,
@@ -41,6 +39,7 @@ import { extractMoonpayTransactionDetails } from 'wallet/src/features/transactio
 import { serializeQueryParams } from 'wallet/src/features/transactions/swap/utils'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { walletContextValue } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { RootState } from 'wallet/src/state'
@@ -56,7 +55,7 @@ const FOR_API_HEADERS = {
   'X-API-KEY': config.uniswapApiKey,
   'x-request-source': REQUEST_SOURCE,
   'x-app-version': getVersionHeader(),
-  Origin: config.uniswapAppUrl,
+  Origin: uniswapUrls.requestOriginUrl,
 }
 
 // List of currency codes that our Moonpay account supports
@@ -231,7 +230,7 @@ export const {
 export const fiatOnRampAggregatorApi = createApi({
   reducerPath: 'fiatOnRampAggregatorApi',
   baseQuery: fetchBaseQuery({
-    baseUrl: config.fiatOnRampApiUrl,
+    baseUrl: uniswapUrls.fiatOnRampApiUrl,
     headers: FOR_API_HEADERS,
   }),
   endpoints: (builder) => ({
@@ -261,6 +260,10 @@ export const fiatOnRampAggregatorApi = createApi({
         })),
       }),
     }),
+    fiatOnRampAggregatorTransferServiceProviders: builder.query<FORServiceProvidersResponse, void>({
+      query: () => '/transfer-service-providers',
+      keepUnusedDataFor: 60 * 60, // 1 hour
+    }),
     fiatOnRampAggregatorSupportedTokens: builder.query<
       FORSupportedTokensResponse,
       FORSupportedTokensRequest
@@ -272,12 +275,6 @@ export const fiatOnRampAggregatorApi = createApi({
       FORSupportedFiatCurrenciesRequest
     >({
       query: (request) => `/supported-fiat-currencies?${new URLSearchParams(request).toString()}`,
-    }),
-    fiatOnRampAggregatorTransferInstitutions: builder.query<
-      FORTransferInstitutionsResponse,
-      FORTransferInstitutionsRequest
-    >({
-      query: (request) => `/transfer-institutions?${new URLSearchParams(request).toString()}`,
     }),
     fiatOnRampAggregatorWidget: builder.query<FORWidgetUrlResponse, FORWidgetUrlRequest>({
       query: (request) => ({
@@ -336,9 +333,9 @@ export const {
   useFiatOnRampAggregatorCountryListQuery,
   useFiatOnRampAggregatorCryptoQuoteQuery,
   useFiatOnRampAggregatorServiceProvidersQuery,
+  useFiatOnRampAggregatorTransferServiceProvidersQuery,
   useFiatOnRampAggregatorSupportedTokensQuery,
   useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
-  useFiatOnRampAggregatorTransferInstitutionsQuery,
   useFiatOnRampAggregatorWidgetQuery,
   useFiatOnRampAggregatorTransferWidgetQuery,
   useFiatOnRampAggregatorTransactionsQuery,
@@ -415,7 +412,7 @@ export async function fetchFiatOnRampTransaction(
     signerManager
   )
   const res = await fetch(
-    `${config.fiatOnRampApiUrl}/transactions?${objectToQueryString(requestParams)}`,
+    `${uniswapUrls.fiatOnRampApiUrl}/transactions?${objectToQueryString(requestParams)}`,
     {
       headers: {
         'x-uni-sig': signature,
@@ -461,4 +458,16 @@ export async function fetchFiatOnRampTransaction(
   }
 
   return extractFiatOnRampTransactionDetails(transaction)
+}
+
+export function useCexTransferProviders(isEnabled: boolean): FORServiceProvider[] {
+  const { data, isLoading } = useFiatOnRampAggregatorTransferServiceProvidersQuery(undefined, {
+    skip: !isEnabled,
+  })
+
+  if (isLoading || !data) {
+    return []
+  }
+
+  return data.serviceProviders
 }

@@ -6,7 +6,7 @@ import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { useTheme } from 'styled-components'
 
-import { Text } from 'ui/src/components/text/Text'
+import { Text } from 'ui/src'
 import { Wiggle } from '../animations'
 
 const StyledButton = styled.button`

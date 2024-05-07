@@ -9,7 +9,7 @@ import Row from 'components/Row'
 import { SwapWrapperOuter } from 'components/swap/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
-import { checkWarning, getPriorityWarning, NotFoundWarning } from 'constants/tokenSafety'
+import { getPriorityWarning, StrongWarning, useTokenWarning } from 'constants/tokenSafety'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { chainIdToBackendName, gqlToCurrency } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/useScreenSize'
@@ -201,8 +201,8 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
   const isScreenSize = useScreenSize()
   const screenSizeLargerThanTablet = isScreenSize['lg']
   const isMobile = !isScreenSize['sm']
-  const token0Warning = token0?.address ? checkWarning(token0?.address) : undefined
-  const token1Warning = token1?.address ? checkWarning(token1?.address) : undefined
+  const token0Warning = useTokenWarning(token0?.address, chainId)
+  const token1Warning = useTokenWarning(token1?.address, chainId)
   const priorityWarning = getPriorityWarning(token0Warning, token1Warning)
 
   if (loading || !currency0 || !currency1)
@@ -282,7 +282,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
         {Boolean(priorityWarning) && (
           <TokenSafetyMessage
             tokenAddress={(priorityWarning === token0Warning ? token0?.address : token1?.address) ?? ''}
-            warning={priorityWarning ?? NotFoundWarning}
+            warning={priorityWarning ?? StrongWarning}
             plural={Boolean(token0Warning && token1Warning)}
             tokenSymbol={priorityWarning === token0Warning ? token0?.symbol : token1?.symbol}
           />

@@ -1,19 +1,10 @@
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
 import { Trans } from 'i18n'
 import { useMemo } from 'react'
-import styled from 'styled-components'
-import { StyledInternalLink, ThemedText } from 'theme/components'
-
+import { StyledInternalLink } from 'theme/components'
+import { Text } from 'ui/src'
 import { DEFAULT_LOCALE, LOCALE_LABEL, SupportedLocale } from '../../constants/locales'
 import { navigatorLocale, useActiveLocale } from '../../hooks/useActiveLocale'
-
-const Container = styled(ThemedText.DeprecatedSmall)`
-  opacity: ${({ theme }) => theme.opacity.hover};
-  :hover {
-    opacity: 1;
-  }
-  margin-top: 1rem !important;
-`
 
 const useTargetLocale = (activeLocale: SupportedLocale) => {
   const browserLocale = useMemo(() => navigatorLocale(), [])
@@ -37,11 +28,11 @@ export function SwitchLocaleLink() {
   if (!targetLocale || !to) return null
 
   return (
-    <Container>
+    <Text fontSize={11} opacity={0.6} hoverStyle={{ opacity: 1 }} mt="1rem">
       <Trans>Uniswap available in: </Trans>
       <StyledInternalLink onClick={onClick} to={to}>
         {LOCALE_LABEL[targetLocale]}
       </StyledInternalLink>
-    </Container>
+    </Text>
   )
 }

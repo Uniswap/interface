@@ -6,25 +6,21 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { Screens } from 'src/screens/Screens'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { logger } from 'utilities/src/logger/logger'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
   NavigateToNftItemArgs,
-  NavigateToSendArgs,
+  NavigateToSendFlowArgs,
   NavigateToSwapFlowArgs,
   ShareNftArgs,
   ShareTokenArgs,
   WalletNavigationProvider,
+  getNavigateToSendFlowArgsInitialState,
   getNavigateToSwapFlowArgsInitialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
-import { AssetType } from 'wallet/src/entities/assets'
 import { useFiatOnRampIpAddressQuery } from 'wallet/src/features/fiatOnRamp/api'
-import {
-  CurrencyField,
-  TransactionState,
-} from 'wallet/src/features/transactions/transactionState/types'
 import { sendWalletAnalyticsEvent } from 'wallet/src/telemetry'
 import { ModalName, ShareableEntity, WalletEventName } from 'wallet/src/telemetry/constants'
 import { getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
@@ -122,24 +118,12 @@ function useNavigateToReceive(): () => void {
   }, [dispatch])
 }
 
-function useNavigateToSend(): (args: NavigateToSendArgs) => void {
+function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
   const dispatch = useAppDispatch()
 
   return useCallback(
-    (args: NavigateToSendArgs) => {
-      const initialSendState: TransactionState = {
-        exactCurrencyField: CurrencyField.INPUT,
-        exactAmountToken: '',
-        [CurrencyField.INPUT]: args
-          ? {
-              address: args.currencyAddress,
-              chainId: args.chainId,
-              type: AssetType.Currency,
-            }
-          : null,
-        [CurrencyField.OUTPUT]: null,
-        showRecipientSelector: true,
-      }
+    (args: NavigateToSendFlowArgs) => {
+      const initialSendState = getNavigateToSendFlowArgsInitialState(args)
       dispatch(openModal({ name: ModalName.Send, initialState: initialSendState }))
     },
     [dispatch]

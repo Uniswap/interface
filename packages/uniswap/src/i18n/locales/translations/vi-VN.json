@@ -209,6 +209,7 @@
       "notNow": "Không phải bây giờ",
       "ok": "ĐƯỢC RỒI",
       "paste": "Dán",
+      "pay": "Chi trả",
       "receive": "Nhận được",
       "remove": "Di dời",
       "restore": "Khôi phục",
@@ -266,8 +267,9 @@
       "systemSettings": "Cài đặt"
     },
     "text": {
+      "connected": "Đã kết nối",
+      "disconnected": "Đã ngắt kết nối",
       "error": "Lỗi",
-      "loading": "Đang tải",
       "notAvailable": "không áp dụng",
       "unknown": "không xác định"
     }
@@ -505,6 +507,7 @@
       "load": "Không thể tải token để mua",
       "max": "Tối đa {{amount}}",
       "min": "Tối thiểu {{amount}}",
+      "unavailable": "Dịch vụ này không khả dụng ở khu vực của bạn",
       "unsupported": "Không được hỗ trợ trong khu vực",
       "usd": "Chỉ có thể mua bằng USD"
     },
@@ -591,16 +594,16 @@
       "empty": {
         "action": {
           "buy": {
-            "description": "Bạn sẽ cần ETH để bắt đầu. Mua bằng thẻ hoặc ngân hàng.",
-            "title": "Mua tiền điện tử"
+            "description": "Mua tiền điện tử bằng thẻ ghi nợ hoặc tài khoản ngân hàng.",
+            "title": "Mua tiền điện tử bằng thẻ"
           },
           "import": {
             "description": "Nhập cụm từ khôi phục của ví này để bắt đầu trao đổi và gửi.",
             "title": "Nhập ví"
           },
           "receive": {
-            "description": "Chuyển mã thông báo từ ví khác hoặc sàn giao dịch tiền điện tử.",
-            "title": "Nhận tiền"
+            "description": "Nạp tiền vào ví của bạn bằng cách chuyển tiền điện tử từ ví hoặc tài khoản khác.",
+            "title": "Nhận tiền điện tử"
           }
         },
         "description": "Khi ví này mua hoặc nhận token, chúng sẽ xuất hiện ở đây.",
@@ -614,7 +617,7 @@
     },
     "upsell": {
       "receive": {
-        "cta": "Liên kết một tài khoản",
+        "cta": "Từ một tài khoản",
         "description": "Nạp tiền vào ví của bạn bằng cách chuyển tiền điện tử từ ví hoặc tài khoản khác",
         "title": "Nhận tiền điện tử"
       }
@@ -786,15 +789,6 @@
         "title": "Ghim ví Uniswap"
       },
       "title": "Bạn đã sẵn sàng"
-    },
-    "editName": {
-      "button": {
-        "create": "Tạo ví"
-      },
-      "label": "Tên nick",
-      "subtitle": "Đặt biệt danh cho ví của bạn",
-      "title": "Biệt hiệu này chỉ hiển thị với bạn",
-      "walletAddress": "Địa chỉ công khai của bạn sẽ là <highlight>{{walletAddress}}</highlight>"
     },
     "extension": {
       "connectMobile": {
@@ -1266,11 +1260,6 @@
       "security": "Bảo vệ",
       "support": "Ủng hộ",
       "wallet": {
-        "action": {
-          "hide": "Ẩn ví",
-          "showAll_one": "Hiển thị một ví",
-          "showAll_other": "Hiển thị tất cả {{count}} ví"
-        },
         "button": {
           "viewAll": "Xem tất cả",
           "viewLess": "Xem ít hơn"
@@ -1454,9 +1443,7 @@
         },
         "editLabel": {
           "description": "Nhãn không được công khai. Chúng được lưu trữ cục bộ và chỉ hiển thị với bạn.",
-          "disclaimer": "Biệt hiệu này chỉ hiển thị với bạn.",
-          "save": "Lưu thay đổi",
-          "title": "Chỉnh sửa biệt hiệu"
+          "save": "Lưu thay đổi"
         },
         "label": "Tên nick",
         "notifications": {
@@ -1584,6 +1571,7 @@
         "title": "Thanh khoản không đủ"
       },
       "networkFee": {
+        "highRelativeToValue": "Chi phí mạng vượt quá 10% tổng giá trị giao dịch của bạn.",
         "message": "Đây là chi phí để xử lý giao dịch của bạn trên blockchain. Uniswap không nhận được bất kỳ phần chia sẻ nào trong số phí này."
       },
       "offline": {
@@ -1604,8 +1592,8 @@
       },
       "uniswapFee": {
         "message": {
-          "default": "Phí được áp dụng trên một số token chọn lọc để đảm bảo trải nghiệm tốt nhất với Uniswap. Không có phí liên quan đến việc trao đổi này.",
-          "included": "Phí được áp dụng trên một số token chọn lọc để đảm bảo trải nghiệm tốt nhất với Uniswap và đã được tính vào báo giá này."
+          "default": "Phí được áp dụng để đảm bảo trải nghiệm tốt nhất với Uniswap. Không có phí liên quan đến việc trao đổi này.",
+          "included": "Phí được áp dụng để đảm bảo trải nghiệm tốt nhất với Uniswap và đã được tính vào báo giá này."
         },
         "title": "Phí hoán đổi"
       },
@@ -2057,6 +2045,11 @@
         "min": "Tên người dùng phải có ít nhất {{number}} ký tự",
         "uppercase": "Tên người dùng chỉ có thể chứa chữ thường và số"
       }
+    }
+  },
+  "uwulink": {
+    "error": {
+      "insufficientTokens": "Không đủ {{tokenSymbol}} trên {{chain}}"
     }
   },
   "walletConnect": {

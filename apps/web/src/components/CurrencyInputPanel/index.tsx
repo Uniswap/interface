@@ -14,12 +14,12 @@ import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
 import { useCurrencyBalance } from '../../state/connection/hooks'
 import { ButtonGray } from '../Button'
-import DoubleCurrencyLogo from '../DoubleLogo'
 import CurrencyLogo from '../Logo/CurrencyLogo'
 import { Input as NumericalInput } from '../NumericalInput'
 import { RowBetween, RowFixed } from '../Row'
@@ -260,10 +260,10 @@ export default function CurrencyInputPanel({
                     <RowFixed>
                       {pair ? (
                         <span style={{ marginRight: '0.5rem' }}>
-                          <DoubleCurrencyLogo currency0={pair.token0} currency1={pair.token1} size={24} margin={true} />
+                          <DoubleCurrencyLogo currencies={[pair.token0, pair.token1]} size={24} />
                         </span>
                       ) : (
-                        currency && <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currency} size="24px" />
+                        currency && <CurrencyLogo style={{ marginRight: '0.5rem' }} currency={currency} size={24} />
                       )}
                       {pair ? (
                         <StyledTokenName className="pair-name-container">

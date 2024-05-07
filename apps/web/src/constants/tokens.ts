@@ -519,4 +519,3 @@ export function isStablecoin(currency?: Currency): boolean {
 }
 
 export const UNKNOWN_TOKEN_SYMBOL = 'UNKNOWN'
-export const UNKNOWN_TOKEN_NAME = 'Unknown Token'

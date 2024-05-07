@@ -48,6 +48,16 @@ const PREDEFINED_AMOUNTS = [100, 300, 1000]
 
 type OnChangeAmount = (amount: string) => void
 
+function OnRampError({ errorText, color }: { errorText: string; color: ColorTokens }): JSX.Element {
+  return (
+    <Flex centered>
+      <Text color={color} variant="body3">
+        {errorText}
+      </Text>
+    </Flex>
+  )
+}
+
 interface Props {
   showNativeKeyboard: boolean
   onInputPanelLayout: (event: LayoutChangeEvent) => void
@@ -67,6 +77,7 @@ interface Props {
   onTokenSelectorPress: () => void
   predefinedAmountsSupported: boolean
   appFiatCurrencySupported: boolean
+  notAvailableInThisRegion?: boolean
   fiatCurrencyInfo: FiatCurrencyInfo
 }
 
@@ -89,6 +100,7 @@ export function FiatOnRampAmountSection({
   onTokenSelectorPress,
   predefinedAmountsSupported,
   appFiatCurrencySupported,
+  notAvailableInThisRegion,
   fiatCurrencyInfo,
 }: Props): JSX.Element {
   const { t } = useTranslation()
@@ -186,7 +198,8 @@ export function FiatOnRampAmountSection({
         {currency.currencyInfo && (
           <SelectTokenButton
             amount={quoteAmount}
-            disabled={!quoteCurrencyAmountReady}
+            amountReady={quoteCurrencyAmountReady}
+            disabled={notAvailableInThisRegion}
             loading={selectTokenLoading}
             selectedCurrencyInfo={currency.currencyInfo}
             onPress={onTokenSelectorPress}
@@ -199,18 +212,17 @@ export function FiatOnRampAmountSection({
                 key={amount}
                 amount={amount}
                 currentAmount={value}
+                disabled={notAvailableInThisRegion}
                 fiatCurrencyInfo={fiatCurrencyInfo}
                 onPress={onChoosePredifendAmount}
               />
             ))}
           </Flex>
         ) : null}
-        {!appFiatCurrencySupported ? (
-          <Flex centered>
-            <Text color="$neutral3" variant="body3">
-              {t('fiatOnRamp.error.usd')}
-            </Text>
-          </Flex>
+        {notAvailableInThisRegion ? (
+          <OnRampError color="$neutral2" errorText={t('fiatOnRamp.error.unavailable')} />
+        ) : !appFiatCurrencySupported ? (
+          <OnRampError color="$neutral3" errorText={t('fiatOnRamp.error.usd')} />
         ) : null}
       </Flex>
     </Flex>
@@ -221,6 +233,7 @@ interface SelectTokenButtonProps {
   onPress: () => void
   selectedCurrencyInfo: CurrencyInfo
   amount: number
+  amountReady?: boolean
   disabled?: boolean
   loading?: boolean
 }
@@ -229,6 +242,7 @@ function SelectTokenButton({
   selectedCurrencyInfo,
   onPress,
   amount,
+  amountReady,
   disabled,
   loading,
 }: SelectTokenButtonProps): JSX.Element {
@@ -236,12 +250,13 @@ function SelectTokenButton({
     amount.toString(),
     selectedCurrencyInfo.currency
   )
-  const textColor = disabled || loading ? '$neutral3' : '$neutral2'
+  const textColor = !amountReady || disabled || loading ? '$neutral3' : '$neutral2'
 
   return (
     <TouchableArea
       hapticFeedback
       borderRadius="$roundedFull"
+      disabled={disabled}
       testID={ElementName.TokenSelectorToggle}
       onPress={onPress}>
       <Flex centered row flexDirection="row" gap="$none" p="$spacing4">
@@ -272,11 +287,13 @@ function PredefinedAmount({
   onPress,
   currentAmount,
   fiatCurrencyInfo,
+  disabled,
 }: {
   amount: number
   currentAmount: string
   onPress: (amount: string) => void
   fiatCurrencyInfo: FiatCurrencyInfo
+  disabled?: boolean
 }): JSX.Element {
   const colors = useSporeColors()
   const { addFiatSymbolToNumber } = useLocalizationContext()
@@ -290,14 +307,15 @@ function PredefinedAmount({
 
   return (
     <TouchableOpacity
+      disabled={disabled}
       onPress={async (): Promise<void> => {
         await HapticFeedback.impact()
         onPress(amount.toString())
       }}>
       <Pill
-        backgroundColor={highlighted ? '$surface2' : '$surface1'}
-        customBorderColor={colors.surface3.val}
-        foregroundColor={colors[highlighted ? 'neutral1' : 'neutral2'].val}
+        backgroundColor={!disabled && highlighted ? '$surface2' : '$surface1'}
+        customBorderColor={disabled ? colors.surface2.val : colors.surface3.val}
+        foregroundColor={colors[disabled ? 'neutral3' : highlighted ? 'neutral1' : 'neutral2'].val}
         label={formattedAmount}
         px="$spacing16"
         textVariant="buttonLabel3"

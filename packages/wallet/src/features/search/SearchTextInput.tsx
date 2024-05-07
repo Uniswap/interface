@@ -86,6 +86,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     )
 
     const onPressCancel = (): void => {
+      inputRef.current?.clear()
       setIsFocus(false)
       setShowClearButton(false)
       Keyboard.dismiss()

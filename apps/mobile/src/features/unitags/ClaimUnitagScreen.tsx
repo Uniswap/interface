@@ -297,7 +297,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
                   borderWidth={0}
                   fontFamily="$heading"
                   fontSize={fontSize}
-                  fontWeight="$large"
+                  fontWeight="$medium"
                   numberOfLines={1}
                   p="$none"
                   placeholder={inputPlaceholder}

@@ -15,7 +15,7 @@ import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
 import { Screens } from 'src/screens/Screens'
-import { UNISWAP_APP_HOSTNAME } from 'uniswap/src/constants/urls'
+import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { ModalName } from 'wallet/src/telemetry/constants'
 import {
@@ -164,8 +164,8 @@ describe(handleDeepLink, () => {
 
   it('Handles Share NFT Item Universal Link', async () => {
     const path = `nfts/asset/${SAMPLE_SEED_ADDRESS_1}/123`
-    const pathUrl = `https://${UNISWAP_APP_HOSTNAME}/${path}`
-    const hashedUrl = `https://${UNISWAP_APP_HOSTNAME}/#/${path}`
+    const pathUrl = `${UNISWAP_WEB_URL}/${path}`
+    const hashedUrl = `${UNISWAP_WEB_URL}/#/${path}`
     const expectedModal: OpenModalParams = {
       name: ModalName.Explore,
       initialState: {
@@ -207,8 +207,8 @@ describe(handleDeepLink, () => {
 
   it('Handles Share NFT Collection Universal Link', async () => {
     const path = `nfts/collection/${SAMPLE_SEED_ADDRESS_1}`
-    const pathUrl = `https://${UNISWAP_APP_HOSTNAME}/${path}`
-    const hashedUrl = `https://${UNISWAP_APP_HOSTNAME}/#/${path}`
+    const pathUrl = `${UNISWAP_WEB_URL}/${path}`
+    const hashedUrl = `${UNISWAP_WEB_URL}/#/${path}`
     const expectedModal: OpenModalParams = {
       name: ModalName.Explore,
       initialState: {
@@ -248,8 +248,8 @@ describe(handleDeepLink, () => {
 
   it('Handles Share Token Item Universal Link', async () => {
     const path = `tokens/ethereum/${SAMPLE_SEED_ADDRESS_1}`
-    const pathUrl = `https://${UNISWAP_APP_HOSTNAME}/${path}`
-    const hashedUrl = `https://${UNISWAP_APP_HOSTNAME}/#/${path}`
+    const pathUrl = `${UNISWAP_WEB_URL}/${path}`
+    const hashedUrl = `${UNISWAP_WEB_URL}/#/${path}`
     const expectedModal: OpenModalParams = {
       name: ModalName.Explore,
       initialState: {
@@ -289,7 +289,7 @@ describe(handleDeepLink, () => {
 
   it('Handles Share currently active Account Address Universal Link', () => {
     const hash = `#/address/${account.address}`
-    const url = `https://${UNISWAP_APP_HOSTNAME}/${hash}`
+    const url = `${UNISWAP_WEB_URL}/${hash}`
     return expectSaga(handleDeepLink, {
       payload: {
         url,
@@ -305,7 +305,7 @@ describe(handleDeepLink, () => {
 
   it('Handles Share already added Account Address Universal Link', () => {
     const hash = `#/address/${SAMPLE_SEED_ADDRESS_2}`
-    const url = `https://${UNISWAP_APP_HOSTNAME}/${hash}`
+    const url = `${UNISWAP_WEB_URL}/${hash}`
     return expectSaga(handleDeepLink, {
       payload: {
         url,
@@ -330,8 +330,8 @@ describe(handleDeepLink, () => {
 
   it('Handles Share external Account Address Universal Link', async () => {
     const path = `address/${SAMPLE_SEED_ADDRESS_2}`
-    const pathUrl = `https://${UNISWAP_APP_HOSTNAME}/${path}`
-    const hashedUrl = `https://${UNISWAP_APP_HOSTNAME}/#/${path}`
+    const pathUrl = `${UNISWAP_WEB_URL}/${path}`
+    const hashedUrl = `${UNISWAP_WEB_URL}/#/${path}`
     const expectedModal: OpenModalParams = {
       name: ModalName.Explore,
       initialState: {

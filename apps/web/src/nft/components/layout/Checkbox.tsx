@@ -12,7 +12,7 @@ const CheckboxLabel = styled.label`
   line-height: 1;
 `
 const CheckContainer = styled.span<{ checked?: boolean; hovered?: boolean; size?: number }>`
-  border-color: ${({ checked, hovered, theme }) => (checked || hovered ? theme.accent1 : theme.surface3)};
+  border-color: ${({ checked, hovered, theme }) => (checked || hovered ? theme.accent1 : theme.neutral3)};
   background: ${({ checked, theme }) => (checked ? theme.accent1 : undefined)};
   display: inline-block;
   margin-right: 1px;

@@ -9,7 +9,6 @@ import Badge from 'components/Badge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
-import DoubleCurrencyLogo from 'components/DoubleLogo'
 import { LoadingFullscreen } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { RowBetween, RowFixed } from 'components/Row'
@@ -40,6 +39,8 @@ import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import { Text } from 'ui/src'
 import RangeBadge from '../../components/Badge/RangeBadge'
 import { SmallButtonPrimary } from '../../components/Button/index'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
@@ -232,7 +233,7 @@ function LinkedCurrency({ chainId, currency }: { chainId: number; currency?: Cur
   return (
     <Link chainId={chainId} address={address}>
       <RowFixed>
-        <CurrencyLogo currency={currency} size="20px" style={{ marginRight: '0.5rem' }} />
+        <CurrencyLogo currency={currency} size={20} style={{ marginRight: '0.5rem' }} />
         <ThemedText.DeprecatedMain>{currency?.symbol} ↗</ThemedText.DeprecatedMain>
       </RowFixed>
     </Link>
@@ -607,7 +608,7 @@ function PositionPageContent() {
           <AutoColumn gap="md">
             <RowBetween>
               <RowFixed>
-                <CurrencyLogo currency={feeValueUpper?.currency} size="20px" style={{ marginRight: '0.5rem' }} />
+                <CurrencyLogo currency={feeValueUpper?.currency} size={20} style={{ marginRight: '0.5rem' }} />
                 <ThemedText.DeprecatedMain>
                   {feeValueUpper ? formatCurrencyAmount({ amount: feeValueUpper }) : '-'}
                 </ThemedText.DeprecatedMain>
@@ -616,7 +617,7 @@ function PositionPageContent() {
             </RowBetween>
             <RowBetween>
               <RowFixed>
-                <CurrencyLogo currency={feeValueLower?.currency} size="20px" style={{ marginRight: '0.5rem' }} />
+                <CurrencyLogo currency={feeValueLower?.currency} size={20} style={{ marginRight: '0.5rem' }} />
                 <ThemedText.DeprecatedMain>
                   {feeValueLower ? formatCurrencyAmount({ amount: feeValueLower }) : '-'}
                 </ThemedText.DeprecatedMain>
@@ -702,7 +703,7 @@ function PositionPageContent() {
               </Link>
               <ResponsiveRow>
                 <PositionLabelRow>
-                  <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={24} margin={true} />
+                  <DoubleCurrencyLogo currencies={[currencyBase, currencyQuote]} size={24} />
                   <StyledPoolLink to={poolAddress ? getPoolDetailsURL(poolAddress, chainIdToBackendName(chainId)) : ''}>
                     <PairHeader>
                       &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
@@ -895,7 +896,7 @@ function PositionPageContent() {
                           <RowFixed>
                             <CurrencyLogo
                               currency={feeValueUpper?.currency}
-                              size="20px"
+                              size={20}
                               style={{ marginRight: '0.5rem' }}
                             />
                             <ThemedText.DeprecatedMain>{feeValueUpper?.currency?.symbol}</ThemedText.DeprecatedMain>
@@ -910,7 +911,7 @@ function PositionPageContent() {
                           <RowFixed>
                             <CurrencyLogo
                               currency={feeValueLower?.currency}
-                              size="20px"
+                              size={20}
                               style={{ marginRight: '0.5rem' }}
                             />
                             <ThemedText.DeprecatedMain>{feeValueLower?.currency?.symbol}</ThemedText.DeprecatedMain>
@@ -988,9 +989,9 @@ function PositionPageContent() {
                       </ExtentsText>
 
                       {inRange && (
-                        <ThemedText.DeprecatedSmall color={theme.neutral3}>
+                        <Text fontSize={11} color="$neutral3">
                           <Trans>Your position will be 100% {{ symbol: currencyBase?.symbol }} at this price.</Trans>
-                        </ThemedText.DeprecatedSmall>
+                        </Text>
                       )}
                     </AutoColumn>
                   </LightCard>
@@ -1017,9 +1018,9 @@ function PositionPageContent() {
                       </ExtentsText>
 
                       {inRange && (
-                        <ThemedText.DeprecatedSmall color={theme.neutral3}>
+                        <Text fontSize={11} color="$neutral3">
                           <Trans>Your position will be 100% {{ symbol: currencyQuote?.symbol }} at this price.</Trans>
-                        </ThemedText.DeprecatedSmall>
+                        </Text>
                       )}
                     </AutoColumn>
                   </LightCard>

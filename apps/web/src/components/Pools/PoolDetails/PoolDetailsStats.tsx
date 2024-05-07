@@ -133,7 +133,7 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
   const currency = isNative && chainId ? nativeOnChain(chainId) : token.currency
   return (
     <PoolBalanceTokenNamesContainer>
-      {!screenIsNotLarge && <CurrencyLogo currency={currency} size="20px" style={{ marginRight: '8px' }} />}
+      {!screenIsNotLarge && <CurrencyLogo currency={currency} size={20} style={{ marginRight: '8px' }} />}
       {formatNumber({
         input: token.tvl,
         type: NumberType.TokenQuantityStats,
@@ -146,7 +146,7 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
         })}
       >
         {screenIsNotLarge && (
-          <CurrencyLogo currency={currency} size="16px" style={{ marginRight: '4px', marginLeft: '4px' }} />
+          <CurrencyLogo currency={currency} size={16} style={{ marginRight: '4px', marginLeft: '4px' }} />
         )}
         {unwrappedToken.symbol}
       </StyledLink>

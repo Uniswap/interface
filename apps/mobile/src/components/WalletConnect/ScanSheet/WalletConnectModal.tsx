@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import 'react-native-reanimated'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppDispatch } from 'src/app/hooks'
 import { useEagerExternalProfileRootNavigation } from 'src/app/navigation/hooks'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import Trace from 'src/components/Trace/Trace'
@@ -10,8 +10,10 @@ import { ConnectedDappsList } from 'src/components/WalletConnect/ConnectedDapps/
 import {
   URIType,
   UWULINK_PREFIX,
+  findAllowedTokenRecipient,
   getSupportedURI,
   isAllowedUwuLinkRequest,
+  toTokenTransferRequest,
   useUwuLinkContractAllowlist,
 } from 'src/components/WalletConnect/ScanSheet/util'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
@@ -23,14 +25,15 @@ import { Flex, HapticFeedback, Text, TouchableArea, useIsDarkMode, useSporeColor
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { logger } from 'utilities/src/logger/logger'
 import { WalletQRCode } from 'wallet/src/components/QRCodeScanner/WalletQRCode'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
-import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
-import { EthMethod, UwULinkRequest } from 'wallet/src/features/walletConnect/types'
+import { useContractManager, useProviderManager } from 'wallet/src/features/wallet/context'
+import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { EthMethod, UwULinkMethod, UwULinkRequest } from 'wallet/src/features/walletConnect/types'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
 
 type Props = {
@@ -45,8 +48,8 @@ export function WalletConnectModal({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
-  const activeAddress = useAppSelector(selectActiveAccountAddress)
-  const { sessions, hasPendingSessionError } = useWalletConnect(activeAddress)
+  const activeAccount = useActiveAccount()
+  const { sessions, hasPendingSessionError } = useWalletConnect(activeAccount?.address)
   const [currentScreenState, setCurrentScreenState] =
     useState<ScannerModalState>(initialScreenState)
   const [shouldFreezeCamera, setShouldFreezeCamera] = useState(false)
@@ -56,6 +59,9 @@ export function WalletConnectModal({
   const isScantasticEnabled = useFeatureFlag(FeatureFlags.Scantastic)
 
   const uwuLinkContractAllowlist = useUwuLinkContractAllowlist()
+
+  const providerManager = useProviderManager()
+  const contractManager = useContractManager()
 
   // Update QR scanner states when pending session error alert is shown from WCv2 saga event channel
   useEffect(() => {
@@ -68,7 +74,7 @@ export function WalletConnectModal({
   const onScanCode = useCallback(
     async (uri: string) => {
       // don't scan any QR codes if there is an error popup open or camera is frozen
-      if (!activeAddress || hasPendingSessionError || shouldFreezeCamera) {
+      if (!activeAccount || hasPendingSessionError || shouldFreezeCamera) {
         return
       }
       await HapticFeedback.selection()
@@ -149,7 +155,6 @@ export function WalletConnectModal({
         try {
           const parsedUwulinkRequest: UwULinkRequest = JSON.parse(supportedURI.value)
           const isAllowed = isAllowedUwuLinkRequest(parsedUwulinkRequest, uwuLinkContractAllowlist)
-
           if (!isAllowed) {
             Alert.alert(
               t('walletConnect.error.uwu.title'),
@@ -166,25 +171,62 @@ export function WalletConnectModal({
             return
           }
 
-          dispatch(
-            addRequest({
-              account: activeAddress,
-              request: {
-                type: EthMethod.EthSendTransaction,
-                transaction: { from: activeAddress, ...parsedUwulinkRequest.value },
-                sessionId: UWULINK_PREFIX, // session/internalId is WalletConnect specific, but not needed here
-                internalId: UWULINK_PREFIX,
-                account: activeAddress,
-                dapp: {
-                  ...parsedUwulinkRequest.dapp,
-                  source: UWULINK_PREFIX,
-                  chain_id: parsedUwulinkRequest.chainId,
-                  webhook: parsedUwulinkRequest.webhook,
+          const newRequest = {
+            sessionId: UWULINK_PREFIX, // session/internalId is WalletConnect specific, but not needed here
+            internalId: UWULINK_PREFIX,
+            account: activeAccount?.address,
+            dapp: {
+              name: '',
+              url: '',
+              ...parsedUwulinkRequest.dapp,
+              source: UWULINK_PREFIX,
+              chain_id: parsedUwulinkRequest.chainId,
+              webhook: parsedUwulinkRequest.webhook,
+            },
+            chainId: parsedUwulinkRequest.chainId,
+          }
+
+          if (parsedUwulinkRequest.method === UwULinkMethod.Erc20Send) {
+            const preparedTransaction = await toTokenTransferRequest(
+              parsedUwulinkRequest,
+              activeAccount,
+              providerManager,
+              contractManager
+            )
+            const tokenRecipient = findAllowedTokenRecipient(
+              parsedUwulinkRequest,
+              uwuLinkContractAllowlist
+            )
+
+            dispatch(
+              addRequest({
+                account: activeAccount.address,
+                request: {
+                  ...newRequest,
+                  type: UwULinkMethod.Erc20Send,
+                  recipient: {
+                    address: parsedUwulinkRequest.recipient,
+                    name: tokenRecipient?.name ?? '',
+                  },
+                  amount: parsedUwulinkRequest.amount,
+                  tokenAddress: parsedUwulinkRequest.tokenAddress,
+                  isStablecoin: parsedUwulinkRequest.isStablecoin,
+                  transaction: { from: activeAccount.address, ...preparedTransaction },
                 },
-                chainId: parsedUwulinkRequest.chainId,
-              },
-            })
-          )
+              })
+            )
+          } else {
+            dispatch(
+              addRequest({
+                account: activeAccount.address,
+                request: {
+                  ...newRequest,
+                  type: EthMethod.EthSendTransaction,
+                  transaction: { from: activeAccount.address, ...parsedUwulinkRequest.value },
+                },
+              })
+            )
+          }
           onClose()
         } catch (_) {
           setShouldFreezeCamera(false)
@@ -206,7 +248,7 @@ export function WalletConnectModal({
       }
     },
     [
-      activeAddress,
+      activeAccount,
       hasPendingSessionError,
       shouldFreezeCamera,
       isUwULinkEnabled,
@@ -217,6 +259,8 @@ export function WalletConnectModal({
       onClose,
       dispatch,
       uwuLinkContractAllowlist,
+      providerManager,
+      contractManager,
     ]
   )
 
@@ -236,7 +280,7 @@ export function WalletConnectModal({
     setCurrentScreenState(ScannerModalState.ScanQr)
   }
 
-  if (!activeAddress) {
+  if (!activeAccount) {
     return null
   }
 
@@ -269,7 +313,7 @@ export function WalletConnectModal({
         )}
         {currentScreenState === ScannerModalState.WalletQr && (
           <Trace logImpression element={ElementName.WalletQRCode}>
-            <WalletQRCode address={activeAddress} />
+            <WalletQRCode address={activeAccount.address} />
           </Trace>
         )}
         <Flex centered mb="$spacing12" mt="$spacing16" mx="$spacing16">
