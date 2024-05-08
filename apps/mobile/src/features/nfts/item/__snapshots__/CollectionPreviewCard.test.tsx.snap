@@ -1,0 +1,253 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders collection preview card 1`] = `
+<View
+  cancelable={true}
+  disabled={false}
+  focusable={true}
+  hitSlop={[Function]}
+  minPressDuration={0}
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+  onPress={[Function]}
+  onPressIn={[Function]}
+  onPressOut={[Function]}
+  style={
+    {
+      "flexDirection": "column",
+      "opacity": 1,
+      "transform": [
+        {
+          "scale": 1,
+        },
+      ],
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#2222220D",
+        "borderBottomLeftRadius": 16,
+        "borderBottomRightRadius": 16,
+        "borderTopLeftRadius": 16,
+        "borderTopRightRadius": 16,
+        "flexDirection": "row",
+        "gap": 8,
+        "justifyContent": "space-between",
+        "paddingBottom": 12,
+        "paddingLeft": 12,
+        "paddingRight": 12,
+        "paddingTop": 12,
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "flexShrink": 1,
+          "gap": 12,
+          "overflow": "hidden",
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "flexDirection": "column",
+            "height": 40,
+            "overflow": "hidden",
+            "width": 40,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "aspectRatio": 1,
+              "backgroundColor": "#F9F9F9",
+              "flexDirection": "column",
+              "justifyContent": "center",
+              "maxHeight": 60,
+              "width": "100%",
+            }
+          }
+        >
+          <Text
+            allowFontScaling={true}
+            maxFontSizeMultiplier={1.4}
+            style={
+              {
+                "color": "#7D7D7D",
+                "flex": 0,
+                "fontFamily": "Basel-Book",
+                "fontSize": 17,
+                "lineHeight": 24,
+              }
+            }
+            suppressHighlighting={true}
+          >
+            Content not available
+          </Text>
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+            "flexShrink": 1,
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "flexDirection": "row",
+              "flexGrow": 1,
+              "gap": 8,
+            }
+          }
+        >
+          <View
+            style={
+              {
+                "flexDirection": "column",
+                "flexShrink": 1,
+              }
+            }
+          >
+            <Text
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.4}
+              numberOfLines={1}
+              style={
+                {
+                  "color": "#222222",
+                  "fontFamily": "Basel-Book",
+                  "fontSize": 19,
+                  "lineHeight": 24,
+                }
+              }
+              suppressHighlighting={true}
+            >
+              Test NFT 1
+            </Text>
+          </View>
+          <svg
+            color="#FC72FF"
+            data-file-name="SvgVerified"
+            height={16}
+            width={16}
+          />
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "borderBottomLeftRadius": 999999,
+          "borderBottomRightRadius": 999999,
+          "borderTopLeftRadius": 999999,
+          "borderTopRightRadius": 999999,
+          "flexDirection": "column",
+          "justifyContent": "center",
+          "transform": [
+            {
+              "rotate": "180deg",
+            },
+          ],
+        }
+      }
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight="24"
+        bbWidth="24"
+        fill="none"
+        focusable={false}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        stroke="currentColor"
+        strokeWidth={8}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "color": "#222222",
+              "height": 24,
+              "width": 24,
+            },
+            {
+              "flex": 0,
+              "height": 24,
+              "width": 24,
+            },
+          ]
+        }
+        tintColor="#222222"
+        vbHeight={24}
+        vbWidth={24}
+      >
+        <RNSVGGroup
+          fill={null}
+          propList={
+            [
+              "fill",
+              "stroke",
+              "strokeWidth",
+            ]
+          }
+          stroke={
+            {
+              "type": 2,
+            }
+          }
+          strokeWidth="8"
+        >
+          <RNSVGPath
+            d="M15 6L9 12L15 18"
+            fill={
+              {
+                "payload": 4278190080,
+                "type": 0,
+              }
+            }
+            propList={
+              [
+                "stroke",
+                "strokeWidth",
+                "strokeLinecap",
+                "strokeLinejoin",
+              ]
+            }
+            stroke={
+              {
+                "type": 2,
+              }
+            }
+            strokeLinecap={1}
+            strokeLinejoin={1}
+            strokeWidth="3"
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
+  </View>
+</View>
+`;

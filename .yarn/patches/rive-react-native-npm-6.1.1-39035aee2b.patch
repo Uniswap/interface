@@ -1,0 +1,18 @@
+diff --git a/android/build.gradle b/android/build.gradle
+index 83a10e5c57ba7c8d82db28f8e868a93327790457..dbda4fa4b0391a210f902c8ab17375a29594d22d 100644
+--- a/android/build.gradle
++++ b/android/build.gradle
+@@ -50,6 +50,13 @@ android {
+     sourceCompatibility JavaVersion.VERSION_1_8
+     targetCompatibility JavaVersion.VERSION_1_8
+   }
++  // Resolves library merge issues during detox e2e build
++  packagingOptions {
++    pickFirst 'lib/x86/libc++_shared.so'
++    pickFirst 'lib/x86_64/libc++_shared.so'
++    pickFirst 'lib/armeabi-v7a/libc++_shared.so'
++    pickFirst 'lib/arm64-v8a/libc++_shared.so'
++  }
+ }
+ 
+ repositories {

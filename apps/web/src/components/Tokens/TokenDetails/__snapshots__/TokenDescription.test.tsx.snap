@@ -1,0 +1,871 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TokenDescription no description or social buttons shown when not available 1`] = `
+<DocumentFragment>
+  .c4 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c8 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c12 {
+  color: #CECECE;
+  font-weight: 485;
+  font-size: 16px;
+}
+
+.c1 {
+  gap: 16px;
+  width: 100%;
+}
+
+.c6 {
+  gap: 8px;
+  width: 100%;
+}
+
+.c7 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.c9 {
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  color: #222222;
+  background-color: #F9F9F9;
+  font-size: 14px;
+  font-weight: 535;
+  line-height: 16px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c9:hover {
+  opacity: 0.6;
+}
+
+.c9:active {
+  opacity: 0.4;
+}
+
+.c11 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 24px;
+  white-space: pre-wrap;
+}
+
+@media screen and (max-width:1024px) {
+  .c1 {
+    gap: 24px;
+  }
+}
+
+@media screen and (max-width:1024px) {
+  .c3 {
+    font-size: 28px !important;
+    line-height: 36px !important;
+  }
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1"
+        data-testid="token-details-info-section"
+      >
+        <div
+          class="c2 c3 css-1jyz67g"
+        >
+          Info
+        </div>
+        <div
+          class="c4 c5 c6 c7"
+          data-testid="token-details-info-links"
+        >
+          <div
+            class="c8"
+          >
+            <div
+              class="c4 c5 c9"
+            >
+              <svg
+                fill="none"
+                height="18px"
+                stroke="#7D7D7D"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="18px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  height="13"
+                  rx="2"
+                  ry="2"
+                  width="13"
+                  x="9"
+                  y="9"
+                />
+                <path
+                  d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                />
+              </svg>
+              0xA0b8...eB48
+            </div>
+          </div>
+          <a
+            class="c10"
+            href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <div
+              class="c4 c5 c9"
+            >
+              <svg
+                fill="#7D7D7D"
+                height="18px"
+                stroke="transparent"
+                viewBox="0 0 18 18"
+                width="18px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M5.08042 8.66148C5.08043 8.58693 5.09517 8.51313 5.12378 8.44429C5.1524 8.37546 5.19432 8.31297 5.24716 8.26038C5.30001 8.2078 5.3627 8.16617 5.43167 8.13788C5.50064 8.1096 5.57452 8.09522 5.64907 8.09557L6.59187 8.09865C6.74218 8.09865 6.88635 8.15836 6.99263 8.26465C7.09893 8.37094 7.15865 8.5151 7.15865 8.66543V12.2303C7.26478 12.1988 7.4011 12.1652 7.55026 12.1301C7.65387 12.1058 7.74621 12.0471 7.8123 11.9637C7.87839 11.8803 7.91434 11.777 7.91432 11.6705V7.24848C7.91432 7.09814 7.97403 6.95397 8.08032 6.84766C8.1866 6.74135 8.33077 6.68162 8.4811 6.68158H9.42577C9.57609 6.68162 9.72026 6.74135 9.82655 6.84766C9.93284 6.95397 9.99255 7.09814 9.99255 7.24848V11.3526C9.99255 11.3526 10.2291 11.2569 10.4595 11.1596C10.545 11.1234 10.6181 11.0629 10.6694 10.9854C10.7208 10.908 10.7482 10.8172 10.7483 10.7242V5.83152C10.7483 5.68122 10.808 5.53707 10.9143 5.43078C11.0206 5.32449 11.1647 5.26478 11.315 5.26474H12.2597C12.41 5.26474 12.5542 5.32445 12.6604 5.43075C12.7667 5.53704 12.8265 5.6812 12.8265 5.83152V9.86056C13.6455 9.267 14.4754 8.55315 15.1341 7.69474C15.2297 7.57015 15.2929 7.42383 15.3181 7.26887C15.3434 7.1139 15.3299 6.95509 15.2788 6.8066C14.9739 5.9294 14.4894 5.12551 13.856 4.44636C13.2226 3.76722 12.4544 3.22777 11.6005 2.86256C10.7467 2.49734 9.82602 2.31439 8.89742 2.32542C7.96882 2.33645 7.05275 2.54121 6.20783 2.9266C5.36291 3.31199 4.60774 3.86952 3.99066 4.56352C3.37358 5.25751 2.90817 6.07269 2.62422 6.95689C2.34027 7.84107 2.24403 8.7748 2.34166 9.69832C2.43929 10.6218 2.72863 11.5148 3.19118 12.3201C3.27176 12.459 3.39031 12.572 3.53289 12.6459C3.67548 12.7198 3.83618 12.7514 3.99614 12.7372C4.17482 12.7215 4.3973 12.6992 4.66181 12.6681C4.77695 12.655 4.88326 12.6001 4.96048 12.5137C5.0377 12.4273 5.08043 12.3155 5.08053 12.1996L5.08042 8.66148Z"
+                  fill="#7D7D7D"
+                />
+                <path
+                  d="M5.05957 14.3792C6.05531 15.1036 7.23206 15.5384 8.45961 15.6356C9.68716 15.7326 10.9176 15.4883 12.0149 14.9294C13.1122 14.3705 14.0334 13.519 14.6768 12.4691C15.3201 11.4191 15.6605 10.2116 15.6601 8.98024C15.6601 8.82658 15.653 8.67457 15.6428 8.52344C13.2041 12.1605 8.70139 13.8609 5.05978 14.3786"
+                  fill="#7D7D7D"
+                />
+              </svg>
+              Etherscan
+            </div>
+          </a>
+        </div>
+        <div
+          class="c2 c11 css-1urox24"
+        >
+          <p
+            class="c12"
+          >
+            No token information available
+          </p>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TokenDescription renders token information correctly with defaults 1`] = `
+<DocumentFragment>
+  .c4 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c8 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c14 {
+  color: #7D7D7D;
+  font-weight: 485;
+  font-size: 0.85em;
+  padding-top: 0.5em;
+}
+
+.c14:hover,
+.c14:focus {
+  color: #636363;
+  cursor: pointer;
+}
+
+.c1 {
+  gap: 16px;
+  width: 100%;
+}
+
+.c6 {
+  gap: 8px;
+  width: 100%;
+}
+
+.c7 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.c9 {
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  color: #222222;
+  background-color: #F9F9F9;
+  font-size: 14px;
+  font-weight: 535;
+  line-height: 16px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c9:hover {
+  opacity: 0.6;
+}
+
+.c9:active {
+  opacity: 0.4;
+}
+
+.c11 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 24px;
+  white-space: pre-wrap;
+}
+
+.c12 {
+  display: none;
+}
+
+.c13 {
+  display: inline;
+}
+
+@media screen and (max-width:1024px) {
+  .c1 {
+    gap: 24px;
+  }
+}
+
+@media screen and (max-width:1024px) {
+  .c3 {
+    font-size: 28px !important;
+    line-height: 36px !important;
+  }
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1"
+        data-testid="token-details-info-section"
+      >
+        <div
+          class="c2 c3 css-1jyz67g"
+        >
+          Info
+        </div>
+        <div
+          class="c4 c5 c6 c7"
+          data-testid="token-details-info-links"
+        >
+          <div
+            class="c8"
+          >
+            <div
+              class="c4 c5 c9"
+            >
+              <svg
+                fill="none"
+                height="18px"
+                stroke="#7D7D7D"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="18px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  height="13"
+                  rx="2"
+                  ry="2"
+                  width="13"
+                  x="9"
+                  y="9"
+                />
+                <path
+                  d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                />
+              </svg>
+              0xA0b8...eB48
+            </div>
+          </div>
+          <a
+            class="c10"
+            href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <div
+              class="c4 c5 c9"
+            >
+              <svg
+                fill="#7D7D7D"
+                height="18px"
+                stroke="transparent"
+                viewBox="0 0 18 18"
+                width="18px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M5.08042 8.66148C5.08043 8.58693 5.09517 8.51313 5.12378 8.44429C5.1524 8.37546 5.19432 8.31297 5.24716 8.26038C5.30001 8.2078 5.3627 8.16617 5.43167 8.13788C5.50064 8.1096 5.57452 8.09522 5.64907 8.09557L6.59187 8.09865C6.74218 8.09865 6.88635 8.15836 6.99263 8.26465C7.09893 8.37094 7.15865 8.5151 7.15865 8.66543V12.2303C7.26478 12.1988 7.4011 12.1652 7.55026 12.1301C7.65387 12.1058 7.74621 12.0471 7.8123 11.9637C7.87839 11.8803 7.91434 11.777 7.91432 11.6705V7.24848C7.91432 7.09814 7.97403 6.95397 8.08032 6.84766C8.1866 6.74135 8.33077 6.68162 8.4811 6.68158H9.42577C9.57609 6.68162 9.72026 6.74135 9.82655 6.84766C9.93284 6.95397 9.99255 7.09814 9.99255 7.24848V11.3526C9.99255 11.3526 10.2291 11.2569 10.4595 11.1596C10.545 11.1234 10.6181 11.0629 10.6694 10.9854C10.7208 10.908 10.7482 10.8172 10.7483 10.7242V5.83152C10.7483 5.68122 10.808 5.53707 10.9143 5.43078C11.0206 5.32449 11.1647 5.26478 11.315 5.26474H12.2597C12.41 5.26474 12.5542 5.32445 12.6604 5.43075C12.7667 5.53704 12.8265 5.6812 12.8265 5.83152V9.86056C13.6455 9.267 14.4754 8.55315 15.1341 7.69474C15.2297 7.57015 15.2929 7.42383 15.3181 7.26887C15.3434 7.1139 15.3299 6.95509 15.2788 6.8066C14.9739 5.9294 14.4894 5.12551 13.856 4.44636C13.2226 3.76722 12.4544 3.22777 11.6005 2.86256C10.7467 2.49734 9.82602 2.31439 8.89742 2.32542C7.96882 2.33645 7.05275 2.54121 6.20783 2.9266C5.36291 3.31199 4.60774 3.86952 3.99066 4.56352C3.37358 5.25751 2.90817 6.07269 2.62422 6.95689C2.34027 7.84107 2.24403 8.7748 2.34166 9.69832C2.43929 10.6218 2.72863 11.5148 3.19118 12.3201C3.27176 12.459 3.39031 12.572 3.53289 12.6459C3.67548 12.7198 3.83618 12.7514 3.99614 12.7372C4.17482 12.7215 4.3973 12.6992 4.66181 12.6681C4.77695 12.655 4.88326 12.6001 4.96048 12.5137C5.0377 12.4273 5.08043 12.3155 5.08053 12.1996L5.08042 8.66148Z"
+                  fill="#7D7D7D"
+                />
+                <path
+                  d="M5.05957 14.3792C6.05531 15.1036 7.23206 15.5384 8.45961 15.6356C9.68716 15.7326 10.9176 15.4883 12.0149 14.9294C13.1122 14.3705 14.0334 13.519 14.6768 12.4691C15.3201 11.4191 15.6605 10.2116 15.6601 8.98024C15.6601 8.82658 15.653 8.67457 15.6428 8.52344C13.2041 12.1605 8.70139 13.8609 5.05978 14.3786"
+                  fill="#7D7D7D"
+                />
+              </svg>
+              Etherscan
+            </div>
+          </a>
+          <a
+            class="c10"
+            href="https://www.circle.com/en/usdc"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <div
+              class="c4 c5 c9"
+            >
+              <svg
+                fill="#7D7D7D"
+                height="18px"
+                stroke="transparent"
+                viewBox="0 0 18 18"
+                width="18px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M5.12245 9.5625C5.23495 11.8725 6.01495 14.2275 7.37245 16.32C4.19245 15.615 1.76996 12.8925 1.52246 9.5625H5.12245ZM7.37245 1.67999C4.19245 2.38499 1.76996 5.1075 1.52246 8.4375H5.12245C5.23495 6.1275 6.01495 3.77249 7.37245 1.67999ZM9.14997 1.5H8.84995L8.62496 1.82249C7.19996 3.84749 6.36745 6.1725 6.24745 8.4375H11.7525C11.6325 6.1725 10.8 3.84749 9.37496 1.82249L9.14997 1.5ZM6.24745 9.5625C6.36745 11.8275 7.19996 14.1525 8.62496 16.1775L8.84995 16.5H9.14997L9.37496 16.1775C10.8 14.1525 11.6325 11.8275 11.7525 9.5625H6.24745ZM12.8775 9.5625C12.765 11.8725 11.985 14.2275 10.6275 16.32C13.8075 15.615 16.23 12.8925 16.4775 9.5625H12.8775ZM16.4775 8.4375C16.23 5.1075 13.8075 2.38499 10.6275 1.67999C11.985 3.77249 12.765 6.1275 12.8775 8.4375H16.4775Z"
+                  fill="#7D7D7D"
+                />
+              </svg>
+              Website
+            </div>
+          </a>
+          <a
+            class="c10"
+            href="https://x.com/circle"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <div
+              class="c4 c5 c9"
+            >
+              <svg
+                fill="#7D7D7D"
+                height="18px"
+                stroke="transparent"
+                viewBox="0 0 18 18"
+                width="18px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12.8761 3H14.9451L10.4251 8.16609L15.7425 15.196H11.579L8.31797 10.9324L4.58662 15.196H2.51644L7.35104 9.67026L2.25 3H6.51922L9.46689 6.89708L12.8761 3ZM12.15 13.9576H13.2964L5.89628 4.17332H4.66605L12.15 13.9576Z"
+                  fill="#7D7D7D"
+                />
+              </svg>
+              Twitter
+            </div>
+          </a>
+        </div>
+        <div
+          class="c2 c11 css-1urox24"
+        >
+          <p
+            class="c12"
+            data-testid="token-description-full"
+          >
+            USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value between people, businesses and financial institutions just like email between mail services and texts between SMS providers. We believe by removing artificial economic borders, we can create a more inclusive global economy.
+          </p>
+          <p
+            class="c13"
+            data-testid="token-description-truncated"
+          >
+            USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value...
+          </p>
+          <div
+            class="c14"
+            data-testid="token-description-show-more-button"
+          >
+            Show more
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`TokenDescription truncates description and shows more 1`] = `
+<DocumentFragment>
+  .c4 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c10 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c10:hover {
+  opacity: 0.6;
+}
+
+.c10:active {
+  opacity: 0.4;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c8 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c14 {
+  color: #7D7D7D;
+  font-weight: 485;
+  font-size: 0.85em;
+  padding-top: 0.5em;
+}
+
+.c14:hover,
+.c14:focus {
+  color: #636363;
+  cursor: pointer;
+}
+
+.c1 {
+  gap: 16px;
+  width: 100%;
+}
+
+.c6 {
+  gap: 8px;
+  width: 100%;
+}
+
+.c7 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.c9 {
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  color: #222222;
+  background-color: #F9F9F9;
+  font-size: 14px;
+  font-weight: 535;
+  line-height: 16px;
+  width: -webkit-max-content;
+  width: -moz-max-content;
+  width: max-content;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c9:hover {
+  opacity: 0.6;
+}
+
+.c9:active {
+  opacity: 0.4;
+}
+
+.c11 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 24px;
+  white-space: pre-wrap;
+}
+
+.c12 {
+  display: none;
+}
+
+.c13 {
+  display: inline;
+}
+
+@media screen and (max-width:1024px) {
+  .c1 {
+    gap: 24px;
+  }
+}
+
+@media screen and (max-width:1024px) {
+  .c3 {
+    font-size: 28px !important;
+    line-height: 36px !important;
+  }
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1"
+        data-testid="token-details-info-section"
+      >
+        <div
+          class="c2 c3 css-1jyz67g"
+        >
+          Info
+        </div>
+        <div
+          class="c4 c5 c6 c7"
+          data-testid="token-details-info-links"
+        >
+          <div
+            class="c8"
+          >
+            <div
+              class="c4 c5 c9"
+            >
+              <svg
+                fill="none"
+                height="18px"
+                stroke="#7D7D7D"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+                width="18px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <rect
+                  height="13"
+                  rx="2"
+                  ry="2"
+                  width="13"
+                  x="9"
+                  y="9"
+                />
+                <path
+                  d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
+                />
+              </svg>
+              0xA0b8...eB48
+            </div>
+          </div>
+          <a
+            class="c10"
+            href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <div
+              class="c4 c5 c9"
+            >
+              <svg
+                fill="#7D7D7D"
+                height="18px"
+                stroke="transparent"
+                viewBox="0 0 18 18"
+                width="18px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M5.08042 8.66148C5.08043 8.58693 5.09517 8.51313 5.12378 8.44429C5.1524 8.37546 5.19432 8.31297 5.24716 8.26038C5.30001 8.2078 5.3627 8.16617 5.43167 8.13788C5.50064 8.1096 5.57452 8.09522 5.64907 8.09557L6.59187 8.09865C6.74218 8.09865 6.88635 8.15836 6.99263 8.26465C7.09893 8.37094 7.15865 8.5151 7.15865 8.66543V12.2303C7.26478 12.1988 7.4011 12.1652 7.55026 12.1301C7.65387 12.1058 7.74621 12.0471 7.8123 11.9637C7.87839 11.8803 7.91434 11.777 7.91432 11.6705V7.24848C7.91432 7.09814 7.97403 6.95397 8.08032 6.84766C8.1866 6.74135 8.33077 6.68162 8.4811 6.68158H9.42577C9.57609 6.68162 9.72026 6.74135 9.82655 6.84766C9.93284 6.95397 9.99255 7.09814 9.99255 7.24848V11.3526C9.99255 11.3526 10.2291 11.2569 10.4595 11.1596C10.545 11.1234 10.6181 11.0629 10.6694 10.9854C10.7208 10.908 10.7482 10.8172 10.7483 10.7242V5.83152C10.7483 5.68122 10.808 5.53707 10.9143 5.43078C11.0206 5.32449 11.1647 5.26478 11.315 5.26474H12.2597C12.41 5.26474 12.5542 5.32445 12.6604 5.43075C12.7667 5.53704 12.8265 5.6812 12.8265 5.83152V9.86056C13.6455 9.267 14.4754 8.55315 15.1341 7.69474C15.2297 7.57015 15.2929 7.42383 15.3181 7.26887C15.3434 7.1139 15.3299 6.95509 15.2788 6.8066C14.9739 5.9294 14.4894 5.12551 13.856 4.44636C13.2226 3.76722 12.4544 3.22777 11.6005 2.86256C10.7467 2.49734 9.82602 2.31439 8.89742 2.32542C7.96882 2.33645 7.05275 2.54121 6.20783 2.9266C5.36291 3.31199 4.60774 3.86952 3.99066 4.56352C3.37358 5.25751 2.90817 6.07269 2.62422 6.95689C2.34027 7.84107 2.24403 8.7748 2.34166 9.69832C2.43929 10.6218 2.72863 11.5148 3.19118 12.3201C3.27176 12.459 3.39031 12.572 3.53289 12.6459C3.67548 12.7198 3.83618 12.7514 3.99614 12.7372C4.17482 12.7215 4.3973 12.6992 4.66181 12.6681C4.77695 12.655 4.88326 12.6001 4.96048 12.5137C5.0377 12.4273 5.08043 12.3155 5.08053 12.1996L5.08042 8.66148Z"
+                  fill="#7D7D7D"
+                />
+                <path
+                  d="M5.05957 14.3792C6.05531 15.1036 7.23206 15.5384 8.45961 15.6356C9.68716 15.7326 10.9176 15.4883 12.0149 14.9294C13.1122 14.3705 14.0334 13.519 14.6768 12.4691C15.3201 11.4191 15.6605 10.2116 15.6601 8.98024C15.6601 8.82658 15.653 8.67457 15.6428 8.52344C13.2041 12.1605 8.70139 13.8609 5.05978 14.3786"
+                  fill="#7D7D7D"
+                />
+              </svg>
+              Etherscan
+            </div>
+          </a>
+          <a
+            class="c10"
+            href="https://www.circle.com/en/usdc"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <div
+              class="c4 c5 c9"
+            >
+              <svg
+                fill="#7D7D7D"
+                height="18px"
+                stroke="transparent"
+                viewBox="0 0 18 18"
+                width="18px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M5.12245 9.5625C5.23495 11.8725 6.01495 14.2275 7.37245 16.32C4.19245 15.615 1.76996 12.8925 1.52246 9.5625H5.12245ZM7.37245 1.67999C4.19245 2.38499 1.76996 5.1075 1.52246 8.4375H5.12245C5.23495 6.1275 6.01495 3.77249 7.37245 1.67999ZM9.14997 1.5H8.84995L8.62496 1.82249C7.19996 3.84749 6.36745 6.1725 6.24745 8.4375H11.7525C11.6325 6.1725 10.8 3.84749 9.37496 1.82249L9.14997 1.5ZM6.24745 9.5625C6.36745 11.8275 7.19996 14.1525 8.62496 16.1775L8.84995 16.5H9.14997L9.37496 16.1775C10.8 14.1525 11.6325 11.8275 11.7525 9.5625H6.24745ZM12.8775 9.5625C12.765 11.8725 11.985 14.2275 10.6275 16.32C13.8075 15.615 16.23 12.8925 16.4775 9.5625H12.8775ZM16.4775 8.4375C16.23 5.1075 13.8075 2.38499 10.6275 1.67999C11.985 3.77249 12.765 6.1275 12.8775 8.4375H16.4775Z"
+                  fill="#7D7D7D"
+                />
+              </svg>
+              Website
+            </div>
+          </a>
+          <a
+            class="c10"
+            href="https://x.com/circle"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <div
+              class="c4 c5 c9"
+            >
+              <svg
+                fill="#7D7D7D"
+                height="18px"
+                stroke="transparent"
+                viewBox="0 0 18 18"
+                width="18px"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12.8761 3H14.9451L10.4251 8.16609L15.7425 15.196H11.579L8.31797 10.9324L4.58662 15.196H2.51644L7.35104 9.67026L2.25 3H6.51922L9.46689 6.89708L12.8761 3ZM12.15 13.9576H13.2964L5.89628 4.17332H4.66605L12.15 13.9576Z"
+                  fill="#7D7D7D"
+                />
+              </svg>
+              Twitter
+            </div>
+          </a>
+        </div>
+        <div
+          class="c2 c11 css-1urox24"
+        >
+          <p
+            class="c12"
+            data-testid="token-description-full"
+          >
+            USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value between people, businesses and financial institutions just like email between mail services and texts between SMS providers. We believe by removing artificial economic borders, we can create a more inclusive global economy.
+          </p>
+          <p
+            class="c13"
+            data-testid="token-description-truncated"
+          >
+            USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value...
+          </p>
+          <div
+            class="c14"
+            data-testid="token-description-show-more-button"
+          >
+            Show more
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;

@@ -1,0 +1,84 @@
+# changes from here: https://docs.expo.dev/bare/installing-expo-modules/
+require File.join(File.dirname(`node --print "require.resolve('expo/package.json')"`), "scripts/autolinking")
+require_relative '../../../node_modules/react-native/scripts/react_native_pods'
+require_relative '../../../node_modules/@react-native-community/cli-platform-ios/native_modules'
+
+platform :ios, '15.0'
+prepare_react_native_project!
+
+$FirebaseSDKVersion = '10.15.0'
+$RNFirebaseAnalyticsWithoutAdIdSupport=true
+
+target 'Uniswap' do
+  use_expo_modules!
+  post_integrate do |installer|
+    begin
+      expo_patch_react_imports!(installer)
+    rescue => e
+      Pod::UI.warn e
+    end
+  end
+  use_expo_modules!(exclude: ['expo-constants','expo-file-system', 'expo-font', 'expo-keep-awake', 'expo-error-recovery'])
+  config = use_native_modules!
+
+  flipper_config = ENV['USE_FLIPPER'] ? FlipperConfiguration.enabled : FlipperConfiguration.disabled
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # to enable hermes on iOS, change `false` to `true` and then install pods
+    :hermes_enabled => true,
+    :flipper_configuration => flipper_config
+  )
+
+  target 'UniswapTests' do
+    inherit! :complete
+    # Pods for testing
+  end
+
+  pod 'EthersRS', :path =>  '../../../node_modules/@uniswap/ethers-rs-mobile'
+  pod 'Argon2Swift', '1.0.3'
+
+  permissions_path = '../../../node_modules/react-native-permissions/ios'
+  pod 'Permission-FaceID', :path => "#{permissions_path}/FaceID"
+  pod 'Permission-Notifications', :path => "#{permissions_path}/Notifications"
+  pod 'FirebaseCore', $FirebaseSDKVersion, :modular_headers => true
+  pod 'GoogleUtilities', '7.11.5', :modular_headers => true
+
+  post_install do |installer|
+    react_native_post_install(installer, "../../../node_modules/react-native")
+    __apply_Xcode_12_5_M1_post_install_workaround(installer)
+
+    installer.pods_project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+        config.build_settings['APPLICATION_EXTENSION_API_ONLY'] = 'No'
+      end
+     end
+  end
+end
+
+target 'OneSignalNotificationServiceExtension' do
+  pod 'OneSignalXCFramework', '3.12.6'
+end
+
+def widget_pods
+  pod 'Apollo', '1.2.1'
+  pod 'UIImageColors', '2.1.0'
+end
+
+target 'Widgets' do
+  widget_pods
+  # Pods for widgets
+end
+target 'WidgetsCore' do
+  widget_pods
+  # Pods for widgets core
+end
+target 'WidgetsCoreTests' do
+  widget_pods
+  # Pods for widgets core test
+end
+target 'WidgetIntentExtension' do
+  widget_pods
+  # Pods for intent extension
+end

@@ -1,0 +1,538 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders multi route 1`] = `
+<DocumentFragment>
+  .c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c13 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c14 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 1px;
+}
+
+.c15 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: -1px;
+}
+
+.c15 > * {
+  margin: 1px !important;
+}
+
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c12 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c7 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #F9F9F9;
+  border: unset;
+  border-radius: 0.5rem;
+  color: #7D7D7D;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  padding: 4px 6px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: 535;
+}
+
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+}
+
+.c3 {
+  display: grid;
+  grid-template-columns: 24px 1fr 24px;
+}
+
+.c4 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding: 0.1rem 0.5rem;
+  position: relative;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: absolute;
+  width: calc(100%);
+  z-index: 1;
+  opacity: 0.5;
+}
+
+.c6 path {
+  stroke: #22222212;
+}
+
+.c8 {
+  background-color: #F9F9F9;
+  border-radius: 8px;
+  display: grid;
+  grid-gap: 4px;
+  grid-auto-flow: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: start;
+  -ms-flex-pack: start;
+  justify-content: start;
+  padding: 4px 6px;
+  z-index: 1020;
+}
+
+.c9 {
+  background-color: #F9F9F9;
+  border-radius: 4px;
+  color: #7D7D7D;
+  font-size: 10px;
+  padding: 2px 4px;
+  z-index: 1021;
+}
+
+.c11 {
+  word-break: normal;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 css-vurnku"
+      >
+        <div
+          class="c1 c2 c3"
+        >
+          CurrencyLogo currency=USDC
+          <div
+            class="c1 c2 c4"
+          >
+            <div
+              class="c5"
+            >
+              <svg
+                class="c6"
+              >
+                dot_line.svg
+              </svg>
+            </div>
+            <div
+              class="c7 c8"
+            >
+              <div
+                class="c7 c9"
+              >
+                <div
+                  class="c10 c11 css-1m65e73"
+                >
+                  V2
+                </div>
+              </div>
+              <div
+                class="c12 c11 css-1m65e73"
+                style="min-width: auto;"
+              >
+                75%
+              </div>
+            </div>
+            <div
+              class="c13 c14 c15"
+              style="justify-content: space-evenly; z-index: 2;"
+              width="100%"
+            >
+              Popover
+            </div>
+          </div>
+          CurrencyLogo currency=DAI
+        </div>
+        <div
+          class="c1 c2 c3"
+        >
+          CurrencyLogo currency=USDC
+          <div
+            class="c1 c2 c4"
+          >
+            <div
+              class="c5"
+            >
+              <svg
+                class="c6"
+              >
+                dot_line.svg
+              </svg>
+            </div>
+            <div
+              class="c7 c8"
+            >
+              <div
+                class="c7 c9"
+              >
+                <div
+                  class="c10 c11 css-1m65e73"
+                >
+                  V3
+                </div>
+              </div>
+              <div
+                class="c12 c11 css-1m65e73"
+                style="min-width: auto;"
+              >
+                25%
+              </div>
+            </div>
+            <div
+              class="c13 c14 c15"
+              style="justify-content: space-evenly; z-index: 2;"
+              width="100%"
+            >
+              PopoverPopover
+            </div>
+          </div>
+          CurrencyLogo currency=DAI
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`renders single route 1`] = `
+<DocumentFragment>
+  .c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c13 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c14 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 1px;
+}
+
+.c15 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin: -1px;
+}
+
+.c15 > * {
+  margin: 1px !important;
+}
+
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c12 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c7 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background: #F9F9F9;
+  border: unset;
+  border-radius: 0.5rem;
+  color: #7D7D7D;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  padding: 4px 6px;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-weight: 535;
+}
+
+.c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+}
+
+.c3 {
+  display: grid;
+  grid-template-columns: 24px 1fr 24px;
+}
+
+.c4 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding: 0.1rem 0.5rem;
+  position: relative;
+}
+
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: absolute;
+  width: calc(100%);
+  z-index: 1;
+  opacity: 0.5;
+}
+
+.c6 path {
+  stroke: #22222212;
+}
+
+.c8 {
+  background-color: #F9F9F9;
+  border-radius: 8px;
+  display: grid;
+  grid-gap: 4px;
+  grid-auto-flow: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: start;
+  -ms-flex-pack: start;
+  justify-content: start;
+  padding: 4px 6px;
+  z-index: 1020;
+}
+
+.c9 {
+  background-color: #F9F9F9;
+  border-radius: 4px;
+  color: #7D7D7D;
+  font-size: 10px;
+  padding: 2px 4px;
+  z-index: 1021;
+}
+
+.c11 {
+  word-break: normal;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 css-vurnku"
+      >
+        <div
+          class="c1 c2 c3"
+        >
+          CurrencyLogo currency=USDC
+          <div
+            class="c1 c2 c4"
+          >
+            <div
+              class="c5"
+            >
+              <svg
+                class="c6"
+              >
+                dot_line.svg
+              </svg>
+            </div>
+            <div
+              class="c7 c8"
+            >
+              <div
+                class="c7 c9"
+              >
+                <div
+                  class="c10 c11 css-1m65e73"
+                >
+                  V3
+                </div>
+              </div>
+              <div
+                class="c12 c11 css-1m65e73"
+                style="min-width: auto;"
+              >
+                100%
+              </div>
+            </div>
+            <div
+              class="c13 c14 c15"
+              style="justify-content: space-evenly; z-index: 2;"
+              width="100%"
+            >
+              Popover
+            </div>
+          </div>
+          CurrencyLogo currency=DAI
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`renders when no routes are provided 1`] = `
+<DocumentFragment>
+  .c0 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 css-vurnku"
+      />
+    </span>
+  </span>
+</DocumentFragment>
+`;

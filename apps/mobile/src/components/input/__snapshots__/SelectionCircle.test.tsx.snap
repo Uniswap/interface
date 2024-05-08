@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders selection circle 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "borderBottomColor": "#FC72FF",
+      "borderBottomLeftRadius": 999999,
+      "borderBottomRightRadius": 999999,
+      "borderBottomWidth": 1,
+      "borderLeftColor": "#FC72FF",
+      "borderLeftWidth": 1,
+      "borderRightColor": "#FC72FF",
+      "borderRightWidth": 1,
+      "borderStyle": "solid",
+      "borderTopColor": "#FC72FF",
+      "borderTopLeftRadius": 999999,
+      "borderTopRightRadius": 999999,
+      "borderTopWidth": 1,
+      "flexDirection": "column",
+      "height": 20,
+      "justifyContent": "center",
+      "width": 20,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "#FC72FF",
+        "borderBottomLeftRadius": 999999,
+        "borderBottomRightRadius": 999999,
+        "borderTopLeftRadius": 999999,
+        "borderTopRightRadius": 999999,
+        "flexDirection": "column",
+        "height": 10,
+        "opacity": 1,
+        "width": 10,
+      }
+    }
+  />
+</View>
+`;

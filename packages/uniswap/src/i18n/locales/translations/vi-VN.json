@@ -1,0 +1,2149 @@
+{
+  "account": {
+    "cloud": {
+      "backup": {
+        "subtitle": "Có nhiều cụm từ khôi phục được sao lưu vào {{cloudProviderName}}của bạn.",
+        "title": "Chọn bản sao lưu để khôi phục"
+      },
+      "button": {
+        "restore": {
+          "android": "Khôi phục từ Google Drive",
+          "ios": "Khôi phục từ iCloud"
+        }
+      },
+      "empty": {
+        "description": "Có vẻ như bạn chưa sao lưu bất kỳ cụm từ khôi phục nào của mình vào {{cloudProviderName}}.",
+        "title": "0 bản sao lưu được tìm thấy"
+      },
+      "error": {
+        "backup": {
+          "message": "Không thể nhập bản sao lưu do thiếu quyền, gián đoạn ủy quyền hoặc do lỗi đám mây",
+          "title": "Lỗi khi nhập bản sao lưu"
+        },
+        "password": {
+          "title": "Mật khẩu không hợp lệ. Vui lòng thử lại."
+        },
+        "unavailable": {
+          "button": {
+            "cancel": "Không phải bây giờ",
+            "settings": "Đi tới cài đặt"
+          },
+          "message": {
+            "android": "Vui lòng xác minh rằng bạn đã đăng nhập vào tài khoản Google có bật Google Drive trên thiết bị này và thử lại.",
+            "ios": "Vui lòng xác minh rằng bạn đã đăng nhập vào ID Apple và bật iCloud Drive trên thiết bị này và thử lại."
+          },
+          "title": {
+            "android": "Google Drive không khả dụng",
+            "ios": "iCloud Drive không khả dụng"
+          }
+        }
+      },
+      "loading": {
+        "title": "Đang tìm kiếm bản sao lưu..."
+      },
+      "lockout": {
+        "time": {
+          "hours_one": "Quá nhiều nỗ lực. Hãy thử lại sau 1 giờ nữa.",
+          "hours_other": "Quá nhiều nỗ lực. Hãy thử lại sau {{count}} giờ.",
+          "minutes_one": "Quá nhiều nỗ lực. Hãy thử lại sau 1 phút.",
+          "minutes_other": "Quá nhiều nỗ lực. Hãy thử lại sau {{count}} phút."
+        }
+      },
+      "password": {
+        "input": "Nhập mật khẩu",
+        "recoveryPhrase": "Thay vào đó, hãy nhập cụm từ khôi phục của bạn",
+        "subtitle": "Mật khẩu này là bắt buộc để khôi phục bản sao lưu cụm từ khôi phục của bạn từ {{cloudProviderName}}.",
+        "title": "Nhập mật khẩu dự phòng"
+      }
+    },
+    "recoveryPhrase": {
+      "education": {
+        "part1": "Cụm từ khôi phục (hoặc cụm từ hạt giống) là một tập hợp <highlight>các từ</highlight> cần thiết để truy cập vào ví của bạn, <highlight>giống như mật khẩu.</highlight>",
+        "part2": "Bạn có thể <highlight>nhập</highlight> cụm từ khôi phục của bạn trên thiết bị mới <highlight>để khôi phục ví</highlight> và nội dung của nó.",
+        "part3": "Tuy nhiên, nếu bạn <highlight>mất cụm từ khôi phục</highlight>, bạn sẽ <highlight>mất quyền truy cập</highlight> vào ví của mình.",
+        "part4": "Thay vì ghi nhớ cụm từ khôi phục, bạn có thể <highlight>sao lưu nó vào {{cloudProviderName}}</highlight> và bảo vệ nó bằng mật khẩu.",
+        "part5": "Bạn cũng có thể sao lưu cụm từ khôi phục của mình theo cách thủ công bằng cách <highlight>viết nó ra</highlight> và lưu trữ ở nơi an toàn.",
+        "part6": "Chúng tôi khuyên bạn nên sử dụng <highlight>cả hai loại bản sao lưu</highlight>, vì nếu mất cụm từ khôi phục, bạn sẽ không thể khôi phục ví của mình."
+      },
+      "error": {
+        "invalid": "Cụm từ không hợp lệ",
+        "invalidWord": "Từ không hợp lệ: {{word}}",
+        "phraseLength": "Cụm từ khôi phục phải dài 12-24 từ",
+        "wrong": "Cụm từ khôi phục sai"
+      },
+      "helpText": {
+        "import": "Làm cách nào để tìm thấy cụm từ khôi phục của tôi?",
+        "restoring": "Hãy thử tìm kiếm lại"
+      },
+      "input": "Nhập cụm từ khôi phục của bạn",
+      "remove": {
+        "final": {
+          "description": "Đảm bảo bạn đã viết ra cụm từ khôi phục của mình hoặc sao lưu vào {{cloudProviderName}}. <highlight>Nếu không, bạn sẽ không thể truy cập vào tiền của mình.</highlight>",
+          "title": "Bạn đang xóa cụm từ khôi phục <highlight>của mình</highlight>"
+        },
+        "import": {
+          "description": "Bạn chỉ có thể lưu trữ một cụm từ khôi phục tại một thời điểm. Để tiếp tục nhập ví mới, bạn cần xóa cụm từ khôi phục hiện tại và mọi ví được liên kết khỏi thiết bị này."
+        },
+        "initial": {
+          "description": "Thao tác này sẽ xóa ví của bạn khỏi thiết bị này cùng với cụm từ khôi phục của bạn.",
+          "title": "Bạn đang xóa <highlight>{{walletName}}</highlight>"
+        },
+        "mnemonic": {
+          "description": "Nó có chung cụm từ khôi phục như {{walletName}}. Cụm từ khôi phục của bạn sẽ vẫn được lưu trữ cho đến khi bạn xóa tất cả các ví còn lại."
+        }
+      },
+      "subtitle": {
+        "import": "Cụm từ khôi phục của bạn sẽ chỉ được lưu trữ cục bộ trên thiết bị của bạn.",
+        "restoring": "Nhập cụm từ khôi phục của bạn bên dưới hoặc thử tìm kiếm lại bản sao lưu."
+      },
+      "title": {
+        "import": "Nhập cụm từ khôi phục của bạn",
+        "restoring": "Không tìm thấy bản sao lưu nào"
+      }
+    },
+    "wallet": {
+      "action": {
+        "copy": "Sao chép địa chỉ ví",
+        "report": "Hồ sơ báo cáo",
+        "settings": "Cài đặt ví",
+        "viewExplorer": "Xem trên {{blockExplorerName}}"
+      },
+      "button": {
+        "add": "Thêm ví",
+        "addViewOnly": "Thêm ví chỉ xem",
+        "create": "Tạo một ví mới",
+        "import": "Nhập ví mới",
+        "manage": "Quản lý ví",
+        "remove": "Xóa ví",
+        "restore": "Khôi phục ví",
+        "watch": "Xem một chiếc ví"
+      },
+      "create": {
+        "placeholder": "Ví {{index}}"
+      },
+      "edit": {
+        "label": {
+          "input": {
+            "placeholder": "Nhãn ví"
+          }
+        }
+      },
+      "header": {
+        "button": {
+          "disabled": {
+            "title": "Chỉnh sửa hồ sơ"
+          },
+          "title": "Chỉnh sửa nhãn"
+        },
+        "other": "Các ví khác của bạn",
+        "viewOnly": "Chỉ xem ví"
+      },
+      "menu": {
+        "copy": {
+          "title": "Sao chép địa chỉ ví"
+        },
+        "edit": {
+          "title": "Chỉnh sửa nhãn"
+        },
+        "remove": {
+          "title": "Xóa ví"
+        }
+      },
+      "remove": {
+        "check": "Tôi đã sao lưu cụm từ khôi phục của mình và hiểu rằng Uniswap Labs không thể giúp tôi khôi phục ví của mình nếu tôi không làm như vậy.",
+        "title": "Xóa {{name}}",
+        "viewOnly": "Bạn luôn có thể thêm ví chỉ xem lại bằng cách nhập địa chỉ của ví."
+      },
+      "restore": {
+        "description": "Vì bạn đang sử dụng thiết bị mới nên bạn cần khôi phục cụm từ khôi phục của mình. Điều này sẽ cho phép bạn trao đổi và gửi mã thông báo."
+      },
+      "select": {
+        "error": "Không thể tải địa chỉ",
+        "loading": {
+          "subtitle": "Ví của bạn sẽ xuất hiện bên dưới.",
+          "title": "Tìm kiếm ví"
+        },
+        "title_one_one": "Đã tìm thấy một chiếc ví",
+        "title_one_other": "Chọn ví để nhập"
+      },
+      "viewOnly": {
+        "button": "Nhập ví",
+        "description": "Để trao đổi, mua, gửi và nhận mã thông báo, bạn cần nhập cụm từ khôi phục của ví này.",
+        "title": "Ví này ở chế độ chỉ xem"
+      },
+      "watch": {
+        "error": {
+          "alreadyImported": "Địa chỉ này đã được nhập",
+          "notFound": "Không tìm thấy địa chỉ",
+          "smartContract": "Địa chỉ là một hợp đồng thông minh"
+        },
+        "message": "Việc thêm ví chỉ xem cho phép bạn dùng thử ứng dụng hoặc theo dõi ví. Bạn sẽ không thể trao đổi hoặc gửi tiền.",
+        "placeholder": "ENS hoặc địa chỉ",
+        "title": "Nhập địa chỉ ví"
+      }
+    }
+  },
+  "common": {
+    "button": {
+      "accept": "Chấp nhận",
+      "back": "Mặt sau",
+      "buy": "Mua",
+      "cancel": "Hủy bỏ",
+      "close": "Đóng",
+      "confirm": "Xác nhận",
+      "connect": "Kết nối",
+      "continue": "Tiếp tục",
+      "copied": "Đã sao chép",
+      "copy": "Sao chép",
+      "create": "Tạo nên",
+      "delete": "Xóa bỏ",
+      "disconnect": "Ngắt kết nối",
+      "dismiss": "Miễn nhiệm",
+      "done": "Xong",
+      "enable": "Cho phép",
+      "goBack": "Quay lại",
+      "hide": "Trốn",
+      "later": "Có lẽ sau này",
+      "learn": "Tìm hiểu thêm",
+      "next": "Kế tiếp",
+      "notNow": "Không phải bây giờ",
+      "ok": "ĐƯỢC RỒI",
+      "paste": "Dán",
+      "receive": "Nhận được",
+      "remove": "Di dời",
+      "restore": "Khôi phục",
+      "retry": "Thử lại",
+      "review": "Ôn tập",
+      "save": "Cứu",
+      "scrollDown": "Cuộn xuống",
+      "sell": "Bán",
+      "send": "Gửi",
+      "setup": "Cài đặt",
+      "share": "Chia sẻ",
+      "show": "Trình diễn",
+      "sign": "Dấu hiệu",
+      "skip": "Nhảy",
+      "swap": "Tráo đổi",
+      "tryAgain": "Thử lại",
+      "understand": "Tôi hiểu",
+      "view": "Xem"
+    },
+    "card": {
+      "error": {
+        "description": "Đã xảy ra lỗi",
+        "title": "Ối! Đã xảy ra lỗi."
+      }
+    },
+    "endAdornment": "Và",
+    "error": {
+      "general": "Đã xảy ra lỗi."
+    },
+    "input": {
+      "password": {
+        "confirm": "Xác nhận mật khẩu",
+        "error": {
+          "mismatch": "Mật khẩu không khớp",
+          "weak": "Mật khẩu này quá yếu"
+        },
+        "new": "Mật khẩu mới",
+        "placeholder": "Mật khẩu",
+        "strength": {
+          "medium": "Trung bình",
+          "strong": "Mạnh",
+          "weak": "Yếu đuối"
+        }
+      },
+      "search": "Tìm kiếm"
+    },
+    "longText": {
+      "button": {
+        "less": "Đọc ít hơn",
+        "more": "Đọc thêm"
+      }
+    },
+    "navigation": {
+      "settings": "Cài đặt",
+      "systemSettings": "Cài đặt"
+    },
+    "text": {
+      "error": "Lỗi",
+      "loading": "Đang tải",
+      "notAvailable": "không áp dụng",
+      "unknown": "không xác định"
+    }
+  },
+  "currency": {
+    "aud": "Đô la Úc",
+    "brl": "Real Brazil",
+    "cad": "Đô la Canada",
+    "cny": "Nhân dân tệ của Trung Quốc",
+    "eur": "Euro",
+    "gbp": "Đồng bảng anh",
+    "hkd": "Đôla Hong Kong",
+    "idr": "Rupiah Indonesia",
+    "inr": "Rupee Ấn Độ",
+    "jpy": "Yen Nhật",
+    "ngn": "Naira Nigeria",
+    "pkr": "Rupee Pakistan",
+    "rub": "Đồng Rúp Nga",
+    "sgd": "Đô la Singapore",
+    "thb": "Baht Thái",
+    "try": "Lira Thổ Nhĩ Kỳ",
+    "uah": "Hryvnia Ucraina",
+    "usd": "Đô la Mĩ",
+    "vnd": "đồng Việt Nam"
+  },
+  "dapp": {
+    "request": {
+      "approve": {
+        "action": "Chấp thuận",
+        "fallbackTitle": "Phê duyệt mã thông báo chi tiêu",
+        "helptext": "Cho phép trang web này truy cập và chi tiêu mã thông báo này từ ví của bạn.",
+        "label": "Cái ví",
+        "title": "Phê duyệt chi tiêu {{tokenSymbol}}"
+      },
+      "base": {
+        "title": "Xác nhận giao dịch"
+      },
+      "changeChain": {
+        "title": "Chuyển mạng sang {{network}}"
+      },
+      "connect": {
+        "helptext": "Cho phép trang web này xem địa chỉ ví, số dư của bạn và yêu cầu phê duyệt các giao dịch.",
+        "title": "Kết nối với trang web"
+      },
+      "error": {
+        "none": "Không có phê duyệt nào đang chờ xử lý"
+      },
+      "fallback": {
+        "calldata": {
+          "label": "dữ liệu"
+        },
+        "function": {
+          "label": "chức năng"
+        },
+        "recipient": {
+          "label": "đẾN"
+        },
+        "sending": {
+          "label": "gửi"
+        }
+      },
+      "permit2": {
+        "description": "Permit2 quản lý việc phê duyệt mã thông báo trên nhiều dapp.",
+        "header": "Ký giấy phép2",
+        "price": "Không có"
+      },
+      "signature": {
+        "containsUnrenderableCharacters": "Tin nhắn này chứa các ký tự không thể hiển thị. Hãy chắc chắn rằng bạn tin tưởng trang web này.",
+        "error": {
+          "712-spec-compliance": "SignTypedDataRequestContent đã nhận được dữ liệu để ký không tuân thủ thông số EIP-712."
+        },
+        "header": "Yêu cầu chữ ký",
+        "toggleDataView": {
+          "raw": "Xem dữ liệu thô",
+          "readable": "Xem dữ liệu gốc"
+        }
+      },
+      "warning": {
+        "notActive": {
+          "message": "Hãy chắc chắn rằng đó là cái đúng",
+          "title": "Đây không phải là ví đang hoạt động của bạn"
+        }
+      }
+    }
+  },
+  "emptyTokenCard": {
+    "description": "Mua hoặc chuyển token vào ví này để bắt đầu",
+    "title": "Chưa có token nào"
+  },
+  "errors": {
+    "crash": {
+      "message": "Có cái gì đó bị rơi.",
+      "restart": "Khởi động lại ứng dụng",
+      "title": "Ờ ồ!"
+    }
+  },
+  "explore": {
+    "search": {
+      "action": {
+        "clear": "Làm sạch tất cả",
+        "viewEtherscan": "Xem trên {{blockExplorerName}}"
+      },
+      "empty": {
+        "full": "Không tìm thấy kết quả nào cho <highlight>\"{{searchQuery}}\"</highlight>"
+      },
+      "error": "Không thể tải kết quả tìm kiếm",
+      "label": {
+        "ownedBy": "Sở hữu bởi {{ownerAddress}}"
+      },
+      "placeholder": "Tìm kiếm token và ví",
+      "section": {
+        "nft": "Bộ sưu tập NFT",
+        "popularNFT": "Bộ sưu tập NFT phổ biến",
+        "popularTokens": "Token phổ biến",
+        "recent": "Tìm kiếm gần đây",
+        "suggestedWallets": "Ví được đề xuất",
+        "tokens": "Mã thông báo",
+        "wallets": "Ví"
+      }
+    },
+    "tokens": {
+      "error": "Không thể tải mã thông báo",
+      "favorite": {
+        "action": {
+          "add": "Mã thông báo yêu thích",
+          "edit": "Chỉnh sửa mục yêu thích",
+          "remove": "Xóa mục ưa thích"
+        },
+        "title": {
+          "default": "Mã thông báo yêu thích",
+          "edit": "Chỉnh sửa mã thông báo yêu thích"
+        }
+      },
+      "metadata": {
+        "marketCap": "{{number}} MCap",
+        "totalValueLocked": "{{number}} TVL",
+        "volume": "{{number}} Tập"
+      },
+      "sort": {
+        "label": {
+          "marketCap": "Vốn hóa thị trường",
+          "priceDecrease": "Giảm giá",
+          "priceIncrease": "Tăng giá",
+          "totalValueLocked": "TVL",
+          "volume": "Âm lượng"
+        },
+        "option": {
+          "marketCap": "Vốn hóa thị trường",
+          "priceDecrease": "Giảm giá (24H)",
+          "priceIncrease": "Tăng giá (24H)",
+          "totalValueLocked": "Uniswap TVL",
+          "volume": "Khối lượng Uniswap (24H)"
+        }
+      },
+      "top": {
+        "title": "Token hàng đầu"
+      }
+    },
+    "wallets": {
+      "favorite": {
+        "action": {
+          "add": "Ví yêu thích",
+          "edit": "Chỉnh sửa mục yêu thích",
+          "remove": "Xóa mục ưa thích"
+        },
+        "title": {
+          "default": "Ví yêu thích",
+          "edit": "Chỉnh sửa ví yêu thích"
+        }
+      }
+    }
+  },
+  "extension": {
+    "connection": {
+      "popup": "Ví của bạn không được kết nối với trang web này. Tìm nút “Kết nối ví” hoặc “Đăng nhập”.",
+      "popupWithButton": "Ví của bạn không được kết nối với trang web này.",
+      "titleConnected": "Đã kết nối",
+      "titleNotConnected": "Không kết nối"
+    },
+    "lock": {
+      "button": {
+        "forgot": "Quên mật khẩu?",
+        "help": "Được giúp đỡ",
+        "recoveryPhrase": "Nhập cụm từ khôi phục",
+        "submit": "Mở khóa"
+      },
+      "password": {
+        "error": "Sai mật khẩu. Thử lại",
+        "reset": {
+          "description": {
+            "default": "Để đặt lại mật khẩu của bạn, hãy nhập cụm từ khôi phục ví của bạn. Uniswap không thể giúp khôi phục mật khẩu của bạn.",
+            "inProgress": "Làm theo hướng dẫn trên trang web của trình duyệt để đặt lại mật khẩu của bạn"
+          },
+          "title": "Quên mật khẩu?"
+        }
+      },
+      "subtitle": "Nhập mật khẩu của bạn để mở khóa",
+      "title": "Chào mừng trở lại"
+    },
+    "settings": {
+      "password": {
+        "enter": {
+          "title": "Nhập mật khẩu hiện tại của bạn"
+        },
+        "error": {
+          "wrong": "Sai mật khẩu"
+        },
+        "placeholder": "Mật khẩu hiện tại"
+      }
+    },
+    "warning": {
+      "storage": {
+        "button": "Hỗ trợ",
+        "message": "Đảm bảo sao lưu cụm từ khôi phục của bạn để tránh mất quyền truy cập vào ví và tiền của bạn.",
+        "title": "Trình duyệt của bạn sắp hết dung lượng"
+      }
+    }
+  },
+  "fiatOnRamp": {
+    "button": {
+      "chooseToken": "Chọn mã thông báo",
+      "continueCheckout": "Tiếp tục thanh toán"
+    },
+    "checkout": {
+      "button": "Thủ tục thanh toán",
+      "title": "Hãy kiểm tra với"
+    },
+    "connection": {
+      "message": "Kết nối bạn với {{serviceProvider}}",
+      "quote": "Mua {{amount}} trị giá {{currencySymbol}}",
+      "terms": "Bằng cách tiếp tục, bạn xác nhận rằng bạn sẽ tuân theo Điều khoản dịch vụ và Chính sách quyền riêng tư với {{serviceProvider}}, nếu có."
+    },
+    "error": {
+      "default": "Đã xảy ra lỗi.",
+      "load": "Không thể tải token để mua",
+      "max": "Tối đa {{amount}}",
+      "min": "Tối thiểu {{amount}}",
+      "unsupported": "Không được hỗ trợ trong khu vực",
+      "usd": "Chỉ có thể mua bằng USD"
+    },
+    "quote": {
+      "advice": "Bạn sẽ tiếp tục đến cổng thông tin của nhà cung cấp để xem các khoản phí liên quan đến giao dịch của mình.",
+      "others": "người khác",
+      "type": {
+        "other": "Sự lựa chọn khác",
+        "recent": "Được sử dụng gần đây"
+      }
+    },
+    "region": {
+      "placeholder": "Tìm kiếm theo quốc gia hoặc khu vực",
+      "title": "Chọn vùng của bạn"
+    },
+    "summary": {
+      "total": "{{cryptoAmount}} cho {{fiatAmount}}"
+    }
+  },
+  "forceUpgrade": {
+    "action": {
+      "confirm": "Cập nhật ứng dụng",
+      "recoveryPhrase": "Xem cụm từ khôi phục"
+    },
+    "description": "Phiên bản Ví Uniswap bạn đang sử dụng đã lỗi thời và thiếu các bản nâng cấp quan trọng. Nếu bạn không cập nhật ứng dụng hoặc không ghi lại cụm từ khôi phục, bạn sẽ không thể truy cập vào tài sản của mình.",
+    "label": {
+      "recoveryPhrase": "Cụm từ khôi phục"
+    },
+    "title": "Cập nhật ứng dụng để tiếp tục"
+  },
+  "home": {
+    "activity": {
+      "empty": {
+        "button": "Nhận token hoặc NFT",
+        "description": {
+          "default": "Khi bạn phê duyệt, giao dịch hoặc chuyển mã thông báo hoặc NFT, giao dịch của bạn sẽ xuất hiện ở đây.",
+          "external": "Khi ví này thực hiện giao dịch, chúng sẽ xuất hiện ở đây."
+        },
+        "title": "Chưa có hoạt động nào"
+      },
+      "error": {
+        "load": "Không thể tải hoạt động"
+      },
+      "title": "Hoạt động"
+    },
+    "banner": {
+      "extension": {
+        "confirm": "Tham gia Beta",
+        "message": "Hãy là người đầu tiên dùng thử Tiện ích mở rộng Uniswap trên trình duyệt web của bạn",
+        "title": "Tiện ích mở rộng Uniswap có tại đây"
+      },
+      "offline": "Bạn đang ở chế độ ngoại tuyến"
+    },
+    "extension": {
+      "error": "Lỗi tải tài khoản"
+    },
+    "feed": {
+      "empty": {
+        "description": "Khi ví yêu thích của bạn thực hiện giao dịch, chúng sẽ xuất hiện ở đây.",
+        "title": "Chưa có hoạt động nào"
+      },
+      "error": "Không thể tải hoạt động",
+      "title": "Cho ăn"
+    },
+    "label": {
+      "buy": "Mua",
+      "receive": "Nhận được",
+      "scan": "Quét",
+      "send": "Gửi",
+      "swap": "Tráo đổi"
+    },
+    "modal": {
+      "getExtension": {
+        "step1": "1. Truy cập <highlight>uniswap.org/ext</highlight> trên máy tính của bạn",
+        "step2": "2. Thêm Tiện ích mở rộng Uniswap trên trình duyệt Chrome của bạn",
+        "step3": "3. Nhập tên người dùng của bạn để có quyền truy cập",
+        "title": "Tham gia bản Beta tiện ích mở rộng Uniswap"
+      }
+    },
+    "nfts": {
+      "title": "NFT"
+    },
+    "tokens": {
+      "empty": {
+        "action": {
+          "buy": {
+            "description": "Bạn sẽ cần ETH để bắt đầu. Mua bằng thẻ hoặc ngân hàng.",
+            "title": "Mua tiền điện tử"
+          },
+          "import": {
+            "description": "Nhập cụm từ khôi phục của ví này để bắt đầu trao đổi và gửi.",
+            "title": "Nhập ví"
+          },
+          "receive": {
+            "description": "Chuyển mã thông báo từ ví khác hoặc sàn giao dịch tiền điện tử.",
+            "title": "Nhận tiền"
+          }
+        },
+        "description": "Khi ví này mua hoặc nhận token, chúng sẽ xuất hiện ở đây.",
+        "title": "Chưa có token nào"
+      },
+      "error": {
+        "fetch": "Không thể tìm nạp số dư mã thông báo",
+        "load": "Không thể tải số dư mã thông báo"
+      },
+      "title": "Mã thông báo"
+    },
+    "upsell": {
+      "receive": {
+        "cta": "Liên kết một tài khoản",
+        "description": "Nạp tiền vào ví của bạn bằng cách chuyển tiền điện tử từ ví hoặc tài khoản khác",
+        "title": "Nhận tiền điện tử"
+      }
+    },
+    "warning": {
+      "viewOnly": "Đây là ví chỉ xem"
+    }
+  },
+  "language": {
+    "chineseSimplified": "Tiếng Trung, giản thể",
+    "chineseTraditional": "Truyền thống Trung Hoa",
+    "dutch": "tiếng Hà Lan",
+    "english": "Tiếng Anh",
+    "french": "người Pháp",
+    "hindi": "Tiếng Hindi",
+    "indonesian": "Tiếng Indonesia",
+    "japanese": "tiếng Nhật",
+    "malay": "Mã Lai",
+    "portuguese": "tiếng Bồ Đào Nha",
+    "russian": "tiếng Nga",
+    "spanishLatam": "Tiếng Tây Ban Nha (Châu Mỹ Latinh)",
+    "spanishSpain": "Tiếng Tây Ban Nha (Tây Ban Nha)",
+    "spanishUs": "Tiếng Tây Ban Nha (Mỹ)",
+    "thai": "tiếng Thái",
+    "turkish": "tiếng Thổ Nhĩ Kỳ",
+    "ukrainian": "tiếng Ukraina",
+    "urdu": "tiếng Urdu",
+    "vietnamese": "Tiếng Việt"
+  },
+  "notification": {
+    "assetVisibility": {
+      "hidden": "{{assetName}} ẩn",
+      "unhidden": "{{assetName}} được hiển thị"
+    },
+    "copied": {
+      "address": "Đã sao chép địa chỉ",
+      "calldata": "Đã sao chép dữ liệu cuộc gọi",
+      "contractAddress": "Đã sao chép địa chỉ hợp đồng",
+      "failed": "Không sao chép được vào bảng nhớ tạm",
+      "image": "Đã sao chép hình ảnh",
+      "nftUrl": "Đã sao chép URL NFT",
+      "tokenUrl": "Đã sao chép URL mã thông báo",
+      "transactionId": "Đã sao chép ID giao dịch"
+    },
+    "countryChange": "Đã chuyển sang {{countryName}}",
+    "restore": {
+      "success": "Đã khôi phục ví!"
+    },
+    "swap": {
+      "network": "Đang chuyển đổi {{network}}",
+      "pending": {
+        "swap": "Hoán đổi đang chờ xử lý",
+        "unwrap": "Đang chờ giải nén",
+        "wrap": "Gói đang chờ xử lý"
+      }
+    },
+    "transaction": {
+      "approve": {
+        "canceled": "Đã hủy {{currencySymbol}} phê duyệt.",
+        "fail": "Không thể phê duyệt {{currencySymbol}} để sử dụng với {{address}}.",
+        "success": "Được phê duyệt {{currencySymbol}} để sử dụng với {{address}}."
+      },
+      "swap": {
+        "canceled": "Đã hủy {{inputCurrencySymbol}}-{{outputCurrencySymbol}} trao đổi.",
+        "fail": "Không thể đổi {{inputCurrencyAmountWithSymbol}} lấy {{outputCurrencyAmountWithSymbol}}.",
+        "success": "Hoán đổi {{inputCurrencyAmountWithSymbol}} lấy {{outputCurrencyAmountWithSymbol}}."
+      },
+      "transfer": {
+        "canceled": "Đã hủy {{tokenNameOrAddress}} lần gửi.",
+        "fail": "Không thể gửi {{tokenNameOrAddress}} đến {{walletNameOrAddress}}.",
+        "received": "Đã nhận được {{tokenNameOrAddress}} từ {{walletNameOrAddress}}.",
+        "success": "Đã gửi {{tokenNameOrAddress}} đến {{walletNameOrAddress}}."
+      },
+      "unknown": {
+        "fail": {
+          "full": "Không thể giao dịch với {{addressOrEnsName}}",
+          "short": "Không thể giao dịch"
+        },
+        "success": {
+          "full": "Đã giao dịch với {{addressOrEnsName}}",
+          "short": "Đã giao dịch"
+        }
+      },
+      "unwrap": {
+        "canceled": "Đã hủy {{inputCurrencySymbol}} lần mở gói.",
+        "fail": "Không thể mở khóa {{inputCurrencyAmountWithSymbol}}.",
+        "success": "Đã mở gói {{inputCurrencyAmountWithSymbol}} và nhận được {{outputCurrencyAmountWithSymbol}}."
+      },
+      "wrap": {
+        "canceled": "Đã hủy {{inputCurrencySymbol}} gói.",
+        "fail": "Không thể gói {{inputCurrencyAmountWithSymbol}}.",
+        "success": "Gói {{inputCurrencyAmountWithSymbol}} và nhận được {{outputCurrencyAmountWithSymbol}}."
+      }
+    },
+    "transfer": {
+      "pending": "{{currencySymbol}} đang chờ chuyển khoản"
+    },
+    "walletConnect": {
+      "confirmed": "Giao dịch được xác nhận bằng {{dappName}}",
+      "connected": "Đã kết nối",
+      "disconnected": "Đã ngắt kết nối",
+      "failed": "Giao dịch thất bại với {{dappName}}",
+      "networkChanged": {
+        "full": "Đã chuyển sang {{networkName}}",
+        "short": "Mạng chuyển mạch"
+      }
+    }
+  },
+  "notifications": {
+    "scantastic": {
+      "subtitle": "Tiếp tục mở rộng Uniswap",
+      "title": "Thành công!"
+    }
+  },
+  "onboarding": {
+    "backup": {
+      "manual": {
+        "placeholder": "Từ bí mật",
+        "progress": "{{completedStepsCount}}{{totalStepsCount}} hoàn thành",
+        "subtitle_one": "Từ <highlight/>{{count}}st</highlight/> trong cụm từ khôi phục của bạn là gì?",
+        "subtitle_two": "Từ <highlight/>{{count}}nd</highlight/> trong cụm từ khôi phục của bạn là gì?",
+        "subtitle_few": "Từ <highlight/>{{count}}thứ</highlight/> trong cụm từ khôi phục của bạn là gì?",
+        "subtitle_other": "Từ <highlight/>{{count}}thứ</highlight/> trong cụm từ khôi phục của bạn là gì?",
+        "title": "Hãy đảm bảo rằng bạn đã ghi lại chính xác"
+      },
+      "option": {
+        "cloud": {
+          "description": "Mã hóa cụm từ khôi phục của bạn bằng mật khẩu an toàn",
+          "title": "{{cloudProviderName}} dự phòng"
+        },
+        "manual": {
+          "description": "Viết cụm từ khôi phục của bạn xuống và lưu trữ nó ở một vị trí an toàn",
+          "title": "Sao lưu thủ công"
+        }
+      },
+      "subtitle": "Bản sao lưu cho phép bạn khôi phục ví của mình nếu bạn xóa ứng dụng hoặc mất thiết bị",
+      "title": {
+        "existing": "Sao lưu ví của bạn",
+        "new": "Chọn phương pháp sao lưu"
+      },
+      "view": {
+        "disclaimer": "Tôi hiểu rằng nếu tôi làm mất cụm từ khôi phục, Uniswap Labs không thể giúp tôi khôi phục nó",
+        "subtitle": {
+          "write": "Đọc kỹ phần sau trước khi tiếp tục"
+        },
+        "title": "Lưu cụm từ khôi phục của bạn",
+        "warning": {
+          "message1": "Cụm từ khôi phục này cung cấp cho bạn toàn quyền truy cập vào ví và tiền của bạn",
+          "message2": "Viết nó ra và giữ nó ở một nơi an toàn",
+          "message3": "Xem nội dung này ở chế độ riêng tư và <u>không chia sẻ nó với bất kỳ ai</u>"
+        }
+      }
+    },
+    "cloud": {
+      "confirm": {
+        "description": "Bạn sẽ cần nhập mật khẩu này để khôi phục tài khoản của mình. Nó không được lưu trữ ở bất cứ đâu, vì vậy nó không thể được phục hồi bởi bất kỳ ai khác.",
+        "title": "Xác nhận mật khẩu dự phòng của bạn"
+      },
+      "createPassword": {
+        "description": "Bạn sẽ cần nhập mật khẩu này để khôi phục ví của mình.",
+        "title": "Tạo mật khẩu dự phòng của bạn"
+      }
+    },
+    "complete": {
+      "button": "Mở ví Uniswap",
+      "description": "Ví của bạn đã sẵn sàng để trao đổi, gửi và nhận tiền điện tử.",
+      "pin": {
+        "description": "Nhấp vào biểu tượng câu đố trên thanh công cụ của bạn và tìm Ví Uniswap trong danh sách",
+        "title": "Ghim ví Uniswap"
+      },
+      "title": "Bạn đã sẵn sàng"
+    },
+    "editName": {
+      "button": {
+        "create": "Tạo ví"
+      },
+      "label": "Tên nick",
+      "subtitle": "Đặt biệt danh cho ví của bạn",
+      "title": "Biệt hiệu này chỉ hiển thị với bạn",
+      "walletAddress": "Địa chỉ công khai của bạn sẽ là <highlight>{{walletAddress}}</highlight>"
+    },
+    "extension": {
+      "connectMobile": {
+        "button": "Nhập từ điện thoại của bạn",
+        "title": "Bạn có ứng dụng di động Uniswap không?"
+      },
+      "getOnTheBetaWaitlist": {
+        "subtitle": "Tải xuống ứng dụng di động để yêu cầu tên người dùng",
+        "title": "Tham gia danh sách chờ Beta"
+      },
+      "password": {
+        "subtitle": "Bạn sẽ cần thông tin này để mở khóa ví và truy cập cụm từ khôi phục của mình",
+        "title": {
+          "default": "Tạo một mật khẩu",
+          "reset": "Đặt lại mật khẩu của bạn"
+        }
+      }
+    },
+    "import": {
+      "error": {
+        "invalidWords_one": "1 từ không hợp lệ hoặc sai chính tả",
+        "invalidWords_other": "{{count}} từ không hợp lệ hoặc sai chính tả"
+      },
+      "method": {
+        "import": {
+          "message": "Nhập cụm từ khôi phục của bạn từ một ví tiền điện tử khác",
+          "title": "Nhập ví"
+        },
+        "restore": {
+          "message": {
+            "android": "Thêm ví bạn đã sao lưu vào tài khoản Google Drive của mình",
+            "ios": "Thêm ví bạn đã sao lưu vào tài khoản iCloud của mình"
+          },
+          "title": "Khôi phục ví"
+        }
+      },
+      "title": "Chọn cách bạn muốn thêm ví của mình"
+    },
+    "importMnemonic": {
+      "button": {
+        "default": "Cụm từ khôi phục của tôi là 12 từ",
+        "longPhrase": "Cụm từ khôi phục của tôi dài hơn 12 từ"
+      },
+      "error": {
+        "invalidPhrase": "Cụm từ bạn đã nhập không hợp lệ"
+      },
+      "subtitle": "Nhập hoặc dán cụm từ khôi phục 12 từ của bạn",
+      "title": "Nhập cụm từ khôi phục của bạn"
+    },
+    "intro": {
+      "alreadyComplete": {
+        "subtitle": "Để tạo thêm ví, hãy mở trình chuyển đổi tài khoản bên trong cửa sổ bật lên của tiện ích mở rộng hoặc cài đặt lại tiện ích mở rộng để bắt đầu lại",
+        "title": "Bạn đã hoàn tất quá trình giới thiệu"
+      },
+      "button": {
+        "alreadyHave": "Tôi đã có ví rồi"
+      },
+      "title": "Chào mừng bạn đến với \nVí Uniswap"
+    },
+    "introBetaWaitlist": {
+      "button": {
+        "checkEligibility": "Kiểm tra tính đủ điều kiện",
+        "letsGo": "Đi nào"
+      },
+      "checkEligibilityInstructions": "Nhập tên người dùng <highlight>uni.eth</highlight> của bạn bên dưới để kiểm tra xem bạn có đủ điều kiện tham gia bản Beta hay không.",
+      "eligible": {
+        "tagline": "Chào mừng bạn đến với bản Beta — bạn là một trong những người đầu tiên dùng thử Tiện ích mở rộng Uniswap.",
+        "title": "Bạn đã ra khỏi danh sách chờ!"
+      },
+      "ineligibleExplanation": "Bạn vẫn còn trong danh sách chờ. Chúng tôi sẽ thông báo cho bạn trong ứng dụng di động Uniswap khi bạn đủ điều kiện!",
+      "unitagPlaceholder": "tên tài khoản"
+    },
+    "landing": {
+      "button": {
+        "add": "Thêm ví hiện có",
+        "create": "Tạo một ví mới"
+      }
+    },
+    "notification": {
+      "permission": {
+        "message": "Để nhận thông báo, hãy bật thông báo cho Ví Uniswap trong cài đặt thiết bị của bạn.",
+        "title": "Quyền thông báo"
+      },
+      "subtitle": "Nhận thông báo khi quá trình chuyển, hoán đổi và phê duyệt của bạn hoàn tất.",
+      "title": "Bật thông báo đẩy"
+    },
+    "recoveryPhrase": {
+      "confirm": {
+        "subtitle": {
+          "combined": "Xác nhận cụm từ khôi phục của bạn. Chọn các từ còn thiếu theo thứ tự.",
+          "default": "Chọn các từ còn thiếu theo thứ tự."
+        },
+        "title": "Xác nhận cụm từ khôi phục của bạn"
+      },
+      "view": {
+        "subtitle": "Bạn có thể kiểm tra điều này trong cài đặt bất cứ lúc nào.",
+        "title": "Viết cụm từ khôi phục của bạn theo thứ tự"
+      },
+      "warning": {
+        "final": {
+          "button": "tôi đã sẵn sàng",
+          "message": "Cụm từ khôi phục của bạn là thứ cấp cho bạn (và bất kỳ ai có nó) quyền truy cập vào tiền của bạn. Hãy chắc chắn để giữ nó cho riêng mình.",
+          "title": "Thực hiện bước này ở nơi riêng tư"
+        },
+        "screenshot": {
+          "message": "Bất kỳ ai có quyền truy cập vào ảnh của bạn đều có thể truy cập vào ví của bạn. Thay vào đó, chúng tôi khuyên bạn nên viết ra lời nói của mình.",
+          "title": "Ảnh chụp màn hình không an toàn"
+        }
+      }
+    },
+    "resetPassword": {
+      "complete": {
+        "safety": "Tìm hiểu thêm về sự an toàn của ví",
+        "subtitle": "Sử dụng mật khẩu mới để mở khóa ví của bạn.",
+        "title": "Đặt lại mật khẩu"
+      }
+    },
+    "scan": {
+      "button": "Quét bằng ứng dụng Uniswap",
+      "error": "Rất tiếc, chúng tôi không thể tải mã QR ngay bây giờ. Vui lòng thử một phương pháp giới thiệu khác.",
+      "otp": {
+        "error": "Mã bạn gửi không chính xác hoặc đã xảy ra lỗi khi gửi. Vui lòng thử lại.",
+        "failed": "Nỗ lực thất bại: {{number}}",
+        "subtitle": "Kiểm tra ứng dụng di động Uniswap của bạn để tìm mã 6 ký tự",
+        "title": "Nhập mã một lần"
+      },
+      "subtitle": "Quét mã QR bằng ứng dụng di động Uniswap để bắt đầu nhập ví của bạn.",
+      "title": "Nhập ví từ ứng dụng"
+    },
+    "security": {
+      "alert": {
+        "biometrics": {
+          "message": {
+            "android": "Để sử dụng sinh trắc học, trước tiên hãy thiết lập nó trong cài đặt",
+            "ios": "Để sử dụng {{biometricsMethod}}, hãy cho phép truy cập trong cài đặt hệ thống"
+          },
+          "title": {
+            "android": "Sinh trắc học bị vô hiệu hóa",
+            "ios": "{{biometricsMethod}} bị vô hiệu hóa"
+          }
+        }
+      },
+      "button": {
+        "confirm": {
+          "android": "Kích hoạt sinh trắc học",
+          "ios": "Bật {{biometricsMethod}}"
+        },
+        "setup": "Cài đặt"
+      },
+      "subtitle": {
+        "android": "Thêm một lớp bảo mật bổ sung bằng cách yêu cầu sinh trắc học để gửi giao dịch.",
+        "ios": "Thêm một lớp bảo mật bổ sung bằng cách yêu cầu {{biometricsMethod}} để gửi giao dịch."
+      },
+      "title": "Bảo vệ ví của bạn"
+    },
+    "selectWallets": {
+      "error": "Không thể tải địa chỉ",
+      "title": {
+        "default": "Chọn ví để nhập",
+        "error": "Lỗi nhập ví"
+      }
+    },
+    "termsOfService": "Bằng cách tiếp tục, tôi đồng ý với<highlightTerms> Điều khoản dịch vụ </highlightTerms>và đồng ý với<highlightPrivacy> Chính sách quyền riêng tư</highlightPrivacy>",
+    "tooltip": {
+      "recoveryPhrase": {
+        "trigger": "Cụm từ phục hồi là gì?"
+      }
+    },
+    "wallet": {
+      "continue": "Hãy giữ nó an toàn",
+      "defaultName": "Ví {{number}}",
+      "description": {
+        "existing": "Kiểm tra mã thông báo và NFT của bạn, theo dõi ví tiền điện tử và luôn cập nhật khi đang di chuyển.",
+        "full": "Đây là không gian cá nhân dành cho mã thông báo, NFT và tất cả các giao dịch của bạn. Hãy hoàn tất việc thiết lập để giữ tiền của bạn an toàn.",
+        "new": "Không gian cá nhân của bạn dành cho mã thông báo, NFT và tất cả các giao dịch của bạn."
+      },
+      "title": "Chào mừng bạn đến với ví mới của bạn"
+    }
+  },
+  "qrScanner": {
+    "button": {
+      "connections_one": "Đã kết nối 1 ứng dụng",
+      "connections_other": "{{count}} ứng dụng được kết nối"
+    },
+    "error": {
+      "camera": {
+        "message": "Để quét mã, hãy cho phép truy cập vào Máy ảnh trong phần cài đặt hệ thống",
+        "title": "Máy ảnh bị tắt"
+      },
+      "none": "Không tìm thấy mã QR"
+    },
+    "recipient": {
+      "action": {
+        "scan": "Quét mã QR",
+        "show": "Hiển thị mã QR của tôi"
+      },
+      "error": {
+        "message": "Đảm bảo rằng bạn đang quét mã QR địa chỉ Ethereum hợp lệ trước khi thử lại.",
+        "title": "Mã QR không hợp lệ"
+      },
+      "input": {
+        "placeholder": "Tìm kiếm ENS hoặc địa chỉ"
+      },
+      "label": {
+        "send": "Gửi"
+      },
+      "results": {
+        "empty": "không có kết quả nào được tìm thấy",
+        "error": "Địa chỉ bạn nhập không tồn tại hoặc viết sai chính tả."
+      }
+    },
+    "request": {
+      "message": {
+        "unavailable": "Không tìm thấy tin nhắn."
+      },
+      "method": {
+        "default": "Yêu cầu từ {{dappNameOrUrl}}",
+        "signature": "Yêu cầu chữ ký từ {{dappNameOrUrl}}",
+        "transaction": "Yêu cầu giao dịch từ {{dappNameOrUrl}}"
+      },
+      "withAmount": "Cho phép {{dappName}} sử dụng tối đa<highlight> {{amount}} </highlight>{{currencySymbol}}?",
+      "withoutAmount": "Cho phép {{dappName}} sử dụng {{currencySymbol}}của bạn?"
+    },
+    "status": {
+      "connecting": "Đang kết nối...",
+      "loading": "Đang tải..."
+    },
+    "title": "Quét mã QR",
+    "wallet": {
+      "title": "Ví Uniswap hỗ trợ các token trên Ethereum, Polygon, Arbitrum, Optimism, Base, Blast và BNB Chain. Hiện tại, chúng tôi chỉ hỗ trợ NFT trên Ethereum."
+    }
+  },
+  "scantastic": {
+    "code": {
+      "expired": "Hết hạn",
+      "subtitle": "Nhập mã này vào Tiện ích mở rộng Uniswap. Cụm từ khôi phục của bạn sẽ được mã hóa và chuyển đi một cách an toàn.",
+      "timeRemaining": {
+        "shorthand": {
+          "hours": "Mã mới trong {{hours}}h {{minutes}}m {{seconds}}s",
+          "minutes": "Mã mới sau {{minutes}}m {{seconds}}giây",
+          "seconds": "Mã mới sau {{seconds}}giây"
+        }
+      },
+      "title": "Mã một lần Uniswap"
+    },
+    "confirmation": {
+      "button": {
+        "continue": "Vâng, tiếp tục"
+      },
+      "label": {
+        "browser": "Trình duyệt",
+        "device": "Thiết bị"
+      },
+      "subtitle": "Chỉ tiếp tục nếu bạn đang quét mã QR từ Tiện ích mở rộng Uniswap trên một thiết bị đáng tin cậy.",
+      "title": "Bạn đang cố gắng nhập ví của mình?",
+      "warning": "Cảnh giác với các trang web và ứng dụng mạo danh Uniswap. Nếu không ví của bạn có thể bị xâm phạm."
+    },
+    "error": {
+      "encryption": "Không chuẩn bị được cụm từ hạt giống.",
+      "noCode": "Không nhận được OTP. Vui lòng thử lại.",
+      "timeout": {
+        "message": "Quét lại mã QR trên Tiện ích mở rộng Uniswap để tiếp tục đồng bộ hóa ví của bạn.",
+        "title": "Kết nối của bạn đã hết thời gian chờ"
+      }
+    },
+    "modal": {
+      "notOnWaitlist": {
+        "message": "Để đủ điều kiện tham gia Uniswap Extension Beta, hãy tham gia danh sách chờ bằng cách yêu cầu tên người dùng uni.eth",
+        "title": "Bạn không có tên trong danh sách chờ"
+      },
+      "onWaitlist": {
+        "message": "Chúng tôi sẽ thông báo cho bạn trong ứng dụng khi bạn đủ điều kiện tham gia Bản mở rộng Uniswap Beta.",
+        "title": "Bạn vẫn đang trong danh sách chờ"
+      }
+    }
+  },
+  "send": {
+    "button": {
+      "review": "Xem lại chuyển khoản",
+      "send": "Gửi"
+    },
+    "gas": {
+      "error": {
+        "title": "không áp dụng"
+      },
+      "networkCost": {
+        "title": "Chi phí mạng"
+      }
+    },
+    "input": {
+      "token": {
+        "balance": {
+          "title": "Số dư: {{balance}} {{symbol}}"
+        }
+      }
+    },
+    "recipient": {
+      "previous_one": "1 lần chuyển trước đó",
+      "previous_other": "{{count}} lần chuyển tiền trước",
+      "section": {
+        "favorite": "Ví yêu thích",
+        "recent": "Gần đây",
+        "search": "Kết quả tìm kiếm",
+        "viewOnly": "Ví chỉ xem",
+        "yours": "Ví của bạn"
+      },
+      "warning": {
+        "viewOnly": {
+          "message": "Chỉ gửi tiền vào ví này nếu bạn có cụm từ khôi phục hoặc biết chủ sở hữu của ví.",
+          "title": "Bạn có ví này dưới dạng ví chỉ xem"
+        }
+      }
+    },
+    "recipientSelect": {
+      "search": {
+        "empty": {
+          "message": "Khi bạn gửi mã thông báo đến địa chỉ ví, chúng sẽ hiển thị ở đây",
+          "title": "Không có ví nào được lưu"
+        }
+      },
+      "title": "ĐẾN"
+    },
+    "review": {
+      "input": {
+        "tokenAmount": {
+          "title": "{{currencyAmount}} trong số {{currencySymbol}}"
+        }
+      },
+      "modal": {
+        "title": "Bạn đang gửi"
+      },
+      "summary": {
+        "button": {
+          "title": "Xác nhận gửi"
+        },
+        "sending": "Gửi",
+        "to": "ĐẾN"
+      }
+    },
+    "search": {
+      "empty": {
+        "subtitle": "Địa chỉ bạn nhập không tồn tại hoặc viết sai chính tả.",
+        "title": "không có kết quả nào được tìm thấy"
+      },
+      "placeholder": "Tìm kiếm ENS hoặc địa chỉ"
+    },
+    "status": {
+      "fail": {
+        "description": "Hãy nhớ rằng phí mạng vẫn bị tính nếu chuyển khoản không thành công."
+      },
+      "failed": {
+        "title": "Gửi thất bại"
+      },
+      "inProgress": {
+        "description": "Chúng tôi sẽ thông báo cho bạn khi giao dịch của bạn hoàn tất.",
+        "title": "Gửi"
+      },
+      "success": {
+        "description": "Bạn đã gửi {{currencyAmount}}{{tokenName}}{{fiatValue}} đến {{recipient}}.",
+        "title": "Gửi thành công!"
+      }
+    },
+    "title": "Gửi",
+    "warning": {
+      "blocked": {
+        "default": "Ví này đã bị chặn",
+        "modal": {
+          "message": "Địa chỉ này bị chặn trên Ví Uniswap vì nó liên quan đến một hoặc nhiều hoạt động bị chặn. Nếu bạn cho rằng đây là lỗi, vui lòng gửi email tới tuân thủ@uniswap.org.",
+          "title": "Địa chỉ bị chặn"
+        },
+        "recipient": "Ví người nhận bị chặn"
+      },
+      "erc20": {
+        "message": "Bạn đang cố gắng gửi tiền đến một địa chỉ mã thông báo. Gửi tiền điện tử đến loại địa chỉ này có thể dẫn đến mất tiền vĩnh viễn.",
+        "title": "Đây là địa chỉ mã thông báo"
+      },
+      "insufficientFunds": {
+        "message": "Số dư {{currencySymbol}} của bạn đã giảm kể từ khi bạn nhập số tiền bạn muốn gửi",
+        "title": "Không đủ {{currencySymbol}}"
+      },
+      "modal": {
+        "button": {
+          "cta": {
+            "blocking": "ĐƯỢC RỒI",
+            "cancel": "Hủy bỏ",
+            "confirm": "Xác nhận"
+          }
+        }
+      },
+      "newAddress": {
+        "message": "Bạn chưa từng giao dịch với địa chỉ này trước đây. Vui lòng xác nhận rằng địa chỉ là chính xác trước khi tiếp tục.",
+        "title": "Địa chỉ mới"
+      },
+      "restore": "Khôi phục ví của bạn để gửi",
+      "smartContract": {
+        "message": "Bạn sắp gửi mã thông báo đến một loại địa chỉ đặc biệt—hợp đồng thông minh. Hãy kiểm tra kỹ xem đó có phải là địa chỉ bạn định gửi đến không. Nếu sai, token của bạn có thể bị mất vĩnh viễn.",
+        "title": "Đây có phải là địa chỉ ví không?"
+      },
+      "viewOnly": {
+        "message": "Bạn cần nhập ví này thông qua cụm từ khôi phục để gửi tài sản.",
+        "title": "Ví này ở chế độ chỉ xem"
+      }
+    }
+  },
+  "setting": {
+    "recoveryPhrase": {
+      "account": {
+        "show": "Hiển thị cụm từ khôi phục"
+      },
+      "action": {
+        "hide": "Ẩn cụm từ khôi phục"
+      },
+      "remove": {
+        "button": "Xóa cụm từ khôi phục",
+        "confirm": {
+          "subtitle": "Tôi hiểu rằng Uniswap Labs không thể giúp tôi khôi phục ví nếu tôi không làm như vậy",
+          "title": "Tôi đã lưu cụm từ khôi phục của mình"
+        },
+        "initial": {
+          "subtitle": "Đảm bảo bạn đã lưu cụm từ khôi phục của mình. Bạn sẽ mất quyền truy cập vào tiền của mình nếu không",
+          "title": "Trước khi bạn tiếp tục"
+        },
+        "password": {
+          "error": "Sai mật khẩu. Thử lại",
+          "input": "Nhập mật khẩu"
+        },
+        "subtitle": "Nhập mật khẩu của bạn để tiếp tục",
+        "title": "Bạn đang xóa cụm từ khôi phục của mình"
+      },
+      "view": {
+        "error": "Sai mật khẩu, hãy thử lại",
+        "warning": {
+          "message1": "Bất kỳ ai biết cụm từ khôi phục của bạn đều có thể truy cập vào ví và tiền của bạn",
+          "message2": "Xem cái này ở chế độ riêng tư",
+          "message3": "Đừng chia sẻ điều này với bất cứ ai",
+          "message4": "Không bao giờ nhập nó vào bất kỳ trang web hoặc ứng dụng nào",
+          "title": "Trước khi bạn tiếp tục"
+        }
+      },
+      "warning": {
+        "screenshot": {
+          "message": "Bất kỳ ai có quyền truy cập vào ảnh của bạn đều có thể truy cập vào ví của bạn. Thay vào đó, chúng tôi khuyên bạn nên viết ra lời nói của mình.",
+          "title": "Ảnh chụp màn hình không an toàn"
+        },
+        "view": {
+          "message": "Bất kỳ ai biết cụm từ khôi phục của bạn đều có thể truy cập vào ví và tiền của bạn.",
+          "title": "Xem cái này ở một nơi riêng tư"
+        }
+      }
+    }
+  },
+  "settings": {
+    "action": {
+      "feedback": "Chia sẻ phản hồi",
+      "help": "Được giúp đỡ",
+      "lock": "Khóa ví",
+      "privacy": "Chính sách bảo mật",
+      "terms": "Điều khoản dịch vụ"
+    },
+    "footer": "Được tạo ra bằng tình yêu, \nNhóm Uniswap 🦄",
+    "screen": {
+      "appearance": {
+        "title": "Vẻ bề ngoài"
+      }
+    },
+    "section": {
+      "about": "Về",
+      "preferences": "Sở thích",
+      "security": "Bảo vệ",
+      "support": "Ủng hộ",
+      "wallet": {
+        "action": {
+          "hide": "Ẩn ví",
+          "showAll_one": "Hiển thị một ví",
+          "showAll_other": "Hiển thị tất cả {{count}} ví"
+        },
+        "button": {
+          "viewAll": "Xem tất cả",
+          "viewLess": "Xem ít hơn"
+        },
+        "label": {
+          "viewOnly": "Chỉ xem"
+        },
+        "title": "Cài đặt ví"
+      }
+    },
+    "setting": {
+      "appearance": {
+        "option": {
+          "auto": "Tự động",
+          "dark": {
+            "subtitle": "Luôn sử dụng chế độ tối",
+            "title": "Chế độ tối"
+          },
+          "device": {
+            "subtitle": "Mặc định cho giao diện thiết bị của bạn",
+            "title": "Cài đặt thiết bị"
+          },
+          "light": {
+            "subtitle": "Luôn sử dụng chế độ ánh sáng",
+            "title": "Chế độ sáng"
+          }
+        },
+        "title": "Vẻ bề ngoài"
+      },
+      "backup": {
+        "create": {
+          "description": "Đặt mật khẩu sẽ mã hóa bản sao lưu cụm từ khôi phục của bạn, thêm mức bảo vệ bổ sung nếu tài khoản {{cloudProviderName}} của bạn bị xâm phạm.",
+          "title": "Sao lưu vào {{cloudProviderName}}"
+        },
+        "delete": {
+          "confirm": {
+            "message": "Vì các ví này có chung cụm từ khôi phục nên nó cũng sẽ xóa các bản sao lưu cho các ví này bên dưới",
+            "title": "Bạn có chắc không?"
+          },
+          "warning": "Nếu bạn xóa bản sao lưu {{cloudProviderName}} của mình, bạn sẽ chỉ có thể khôi phục ví của mình bằng bản sao lưu thủ công cụm từ khôi phục. Uniswap Labs không thể khôi phục tài sản của bạn nếu bạn mất cụm từ khôi phục."
+        },
+        "error": {
+          "message": {
+            "full": "Không thể sao lưu cụm từ khôi phục vào {{cloudProviderName}}. Hãy đảm bảo rằng bạn đã bật {{cloudProviderName}} với dung lượng lưu trữ còn trống và thử lại.",
+            "short": "Không thể xóa bản sao lưu"
+          },
+          "title": "{{cloudProviderName}} lỗi"
+        },
+        "modal": {
+          "description": "Bạn chưa sao lưu cụm từ khôi phục của mình vào {{cloudProviderName}} . Bằng cách đó, bạn có thể khôi phục ví của mình chỉ bằng cách đăng nhập vào {{cloudProviderName}} trên bất kỳ thiết bị nào.",
+          "title": "Sao lưu cụm từ khôi phục vào {{cloudProviderName}}?"
+        },
+        "password": {
+          "disclaimer": "Uniswap Labs không lưu trữ mật khẩu của bạn và không thể khôi phục mật khẩu đó, vì vậy điều quan trọng là bạn phải nhớ mật khẩu đó.",
+          "error": {
+            "mismatch": "Mật khẩu không phù hợp",
+            "weak": "Mật khẩu yếu"
+          },
+          "medium": "Đây là mật khẩu trung bình",
+          "placeholder": {
+            "confirm": "Xác nhận mật khẩu",
+            "create": "Tạo mật khẩu"
+          },
+          "strong": "Đây là mật khẩu mạnh",
+          "weak": "Đây là mật khẩu yếu"
+        },
+        "recoveryPhrase": {
+          "label": "Cụm từ khôi phục"
+        },
+        "selected": "{{cloudProviderName}} dự phòng",
+        "status": {
+          "action": {
+            "delete": "Xóa bản sao lưu"
+          },
+          "complete": "Đã sao lưu vào {{cloudProviderName}}",
+          "description": "Bằng cách sao lưu cụm từ khôi phục của bạn vào {{cloudProviderName}}, bạn có thể khôi phục ví của mình chỉ bằng cách đăng nhập vào tài khoản {{cloudProviderName}} của mình trên bất kỳ thiết bị nào.",
+          "inProgress": "Đang sao lưu vào {{cloudProviderName}}...",
+          "recoveryPhrase": {
+            "backed": "Hỗ trợ"
+          },
+          "title": "{{cloudProviderName}} dự phòng"
+        }
+      },
+      "beta": {
+        "tooltip": "Sắp ra mắt"
+      },
+      "biometrics": {
+        "appAccess": {
+          "subtitle": {
+            "android": "Yêu cầu sinh trắc học để mở ứng dụng",
+            "ios": "Yêu cầu {{biometricsMethod}} để mở ứng dụng"
+          },
+          "title": "Quyền truy cập ứng dụng"
+        },
+        "auth": "Vui lòng xác thực",
+        "off": {
+          "message": {
+            "android": "Sinh trắc học hiện bị tắt đối với Ví Uniswap—bạn có thể bật tính năng này trong cài đặt hệ thống của mình.",
+            "ios": "{{biometricsMethod}} hiện bị tắt đối với Ví Uniswap—bạn có thể bật tính năng này trong cài đặt hệ thống của mình."
+          },
+          "title": {
+            "android": "Sinh trắc học bị tắt",
+            "ios": "{{biometricsMethod}} bị tắt"
+          }
+        },
+        "title": "Sinh trắc học",
+        "transactions": {
+          "subtitle": {
+            "android": "Yêu cầu sinh trắc học để giao dịch",
+            "ios": "Yêu cầu {{biometricsMethod}} để giao dịch"
+          },
+          "title": "Giao dịch"
+        },
+        "unavailable": {
+          "message": {
+            "android": "Sinh trắc học chưa được thiết lập trên thiết bị của bạn. Để sử dụng sinh trắc học, trước tiên hãy thiết lập sinh trắc học trong Cài đặt.",
+            "ios": "{{biometricsMethod}} chưa được thiết lập trên thiết bị của bạn. Để sử dụng {{biometricsMethod}}, trước tiên hãy thiết lập nó trong Cài đặt."
+          },
+          "title": {
+            "android": "Sinh trắc học chưa được thiết lập",
+            "ios": "{{biometricsMethod}} chưa được thiết lập"
+          }
+        },
+        "warning": {
+          "message": {
+            "android": "Nếu bạn không bật sinh trắc học, bất kỳ ai có quyền truy cập vào thiết bị của bạn đều có thể mở Ví Uniswap và thực hiện giao dịch.",
+            "ios": "Nếu bạn không bật {{biometricsMethod}}, bất kỳ ai có quyền truy cập vào thiết bị của bạn đều có thể mở Ví Uniswap và thực hiện giao dịch."
+          },
+          "title": "Bạn có chắc không?"
+        }
+      },
+      "currency": {
+        "title": "Nội tệ"
+      },
+      "giveFeedback": {
+        "title": "Chia sẻ phản hồi"
+      },
+      "helpCenter": {
+        "title": "Trung tâm trợ giúp"
+      },
+      "language": {
+        "button": {
+          "navigate": "Đi tới cài đặt"
+        },
+        "description": "Uniswap mặc định cài đặt ngôn ngữ trên thiết bị của bạn. Để thay đổi ngôn ngữ ưa thích của bạn, hãy truy cập “Uniswap” trong cài đặt thiết bị của bạn và nhấn vào “Ngôn ngữ”",
+        "exampleTitle": "Tiếng Anh",
+        "title": "Ngôn ngữ"
+      },
+      "password": {
+        "title": "Đổi mật khẩu"
+      },
+      "privacy": {
+        "analytics": {
+          "description": "Chúng tôi sử dụng dữ liệu sử dụng ẩn danh để nâng cao trải nghiệm của bạn trên các sản phẩm Uniswap Labs. Khi bị tắt, chúng tôi chỉ theo dõi lỗi và việc sử dụng thiết yếu.",
+          "title": "Cho phép phân tích"
+        },
+        "title": "Sự riêng tư"
+      },
+      "recoveryPhrase": {
+        "remove": "Xóa cụm từ khôi phục",
+        "title": "Cụm từ khôi phục",
+        "view": "Xem cụm từ khôi phục"
+      },
+      "smallBalances": {
+        "title": "Ẩn số dư nhỏ"
+      },
+      "theme": {
+        "title": "chủ đề"
+      },
+      "unknownTokens": {
+        "title": "Ẩn mã thông báo không xác định"
+      },
+      "wallet": {
+        "action": {
+          "editLabel": "Chỉnh sửa nhãn",
+          "editProfile": "Chỉnh sửa hồ sơ",
+          "remove": "Xóa ví"
+        },
+        "connections": {
+          "title": "Quản lý kết nối"
+        },
+        "editLabel": {
+          "description": "Nhãn không được công khai. Chúng được lưu trữ cục bộ và chỉ hiển thị với bạn.",
+          "disclaimer": "Biệt hiệu này chỉ hiển thị với bạn.",
+          "save": "Lưu thay đổi",
+          "title": "Chỉnh sửa biệt hiệu"
+        },
+        "label": "Tên nick",
+        "notifications": {
+          "title": "Thông báo"
+        },
+        "preferences": {
+          "title": "Tùy chọn ví"
+        }
+      }
+    },
+    "title": "Cài đặt",
+    "version": "Phiên bản {{appVersion}}"
+  },
+  "swap": {
+    "button": {
+      "max": "Tối đa",
+      "review": "Ôn tập",
+      "swap": "Tráo đổi",
+      "unwrap": "Mở gói",
+      "view": "Xem giao dịch",
+      "wrap": "Bọc"
+    },
+    "details": {
+      "action": {
+        "less": "Hiện ít hơn",
+        "more": "Cho xem nhiều hơn"
+      },
+      "feeOnTransfer": "{{tokenSymbol}} phí",
+      "newQuote": {
+        "input": "Đầu vào mới",
+        "output": "Đầu ra mới"
+      },
+      "rate": "Tỷ lệ",
+      "slippage": "Độ trượt tối đa",
+      "uniswapFee": "Phí"
+    },
+    "form": {
+      "balance": "Sự cân bằng",
+      "header": "Tráo đổi",
+      "slippage": "{{slippageTolerancePercent}} trượt",
+      "warning": {
+        "restore": "Khôi phục ví của bạn để trao đổi"
+      }
+    },
+    "header": {
+      "viewOnly": "Chỉ xem"
+    },
+    "hold": {
+      "swap": "Giữ để trao đổi",
+      "tip": "Mẹo: Giữ để trao đổi ngay lập tức",
+      "unwrap": "Giữ để mở gói",
+      "wrap": "Giữ để bọc"
+    },
+    "request": {
+      "title": {
+        "full": "Hoán đổi {{inputCurrencySymbol}} → {{outputCurrencySymbol}}",
+        "short": "Hoán đổi token"
+      }
+    },
+    "review": {
+      "summary": "Bạn đang trao đổi"
+    },
+    "settings": {
+      "protection": {
+        "description": "Khi bật tính năng bảo vệ hoán đổi, các giao dịch Ethereum của bạn sẽ được bảo vệ khỏi các cuộc tấn công sandwich, với khả năng thất bại giảm đi.",
+        "subtitle": {
+          "supported": "{{chainName}} Mạng",
+          "unavailable": "Không có sẵn trên {{chainName}}"
+        },
+        "title": "Bảo vệ Hoán đổi"
+      },
+      "slippage": {
+        "control": {
+          "auto": "Tự động",
+          "title": "Độ trượt tối đa"
+        },
+        "description": "Giao dịch của bạn sẽ hoàn nguyên nếu giá thay đổi nhiều hơn tỷ lệ trượt giá.",
+        "input": {
+          "message": "Nếu giá trượt thêm nữa, giao dịch của bạn sẽ hoàn nguyên. Dưới đây là số tiền tối thiểu bạn được đảm bảo nhận được.",
+          "receive": {
+            "formatted": "<text>Nhận ít nhất </text><highlight>{{amount}} {{tokenSymbol}}</highlight>",
+            "unformatted": "Nhận ít nhất {{amount}} {{tokenSymbol}}"
+          }
+        },
+        "output": {
+          "message": "Nếu giá trượt thêm nữa, giao dịch của bạn sẽ hoàn nguyên. Dưới đây là số tiền tối đa bạn cần chi tiêu.",
+          "spend": {
+            "formatted": "<text>Chi tiêu nhiều nhất </text><highlight>{{amount}} {{tokenSymbol}}</highlight>",
+            "unformatted": "Chi tiêu tối đa {{amount}} {{tokenSymbol}}"
+          }
+        },
+        "warning": {
+          "max": "Nhập giá trị nhỏ hơn {{maxSlippageTolerance}}",
+          "message": "Độ trượt có thể cao hơn mức cần thiết",
+          "min": "Nhập giá trị lớn hơn 0"
+        }
+      },
+      "title": "Cài đặt trao đổi"
+    },
+    "slippage": {
+      "settings": {
+        "title": "Cài đặt trượt giá"
+      }
+    },
+    "warning": {
+      "expectedFailure": "Giao dịch này được cho là sẽ thất bại",
+      "feeOnTransfer": {
+        "message": "Một số mã thông báo sẽ tính phí khi chúng được mua hoặc bán, do nhà phát hành mã thông báo quy định. Uniswap không nhận được bất kỳ phần chia sẻ nào trong số phí này.",
+        "title": "Tại sao có một khoản phí bổ sung?"
+      },
+      "insufficientBalance": {
+        "button": "Không đủ {{currencySymbol}}",
+        "title": "Bạn không có đủ {{currencySymbol}}"
+      },
+      "insufficientGas": {
+        "button": "Không đủ {{currencySymbol}}",
+        "cta": {
+          "button": "Mua {{currencySymbol}}",
+          "message": "Bạn cần thêm <highlight>{{currencySymbol}}</highlight> để trang trải chi phí mạng cho giao dịch này."
+        },
+        "title": "Bạn không có đủ {{currencySymbol}} để trang trải chi phí mạng"
+      },
+      "lowLiquidity": {
+        "message": "Hiện tại không có đủ thanh khoản giữa các token này để thực hiện hoán đổi. Vui lòng thử lại sau hoặc chọn một mã thông báo khác.",
+        "title": "Thanh khoản không đủ"
+      },
+      "networkFee": {
+        "message": "Đây là chi phí để xử lý giao dịch của bạn trên blockchain. Uniswap không nhận được bất kỳ phần chia sẻ nào trong số phí này."
+      },
+      "offline": {
+        "message": "Có thể bạn đã mất kết nối internet hoặc mạng có thể bị hỏng. Vui lòng kiểm tra kết nối internet của bạn và thử lại.",
+        "title": "Bạn đang ngoại tuyến"
+      },
+      "priceImpact": {
+        "message": "Do số lượng {{outputCurrencySymbol}} thanh khoản hiện có sẵn, bạn càng cố gắng hoán đổi nhiều {{inputCurrencySymbol}} thì bạn sẽ nhận được càng ít {{outputCurrencySymbol}} .",
+        "title": "Tác động giá cao ({{priceImpactValue}})"
+      },
+      "rateLimit": {
+        "message": "Vui lòng thử lại trong vài phút.",
+        "title": "Vượt quá giới hạn tốc độ"
+      },
+      "router": {
+        "message": "Có thể bạn đã mất kết nối hoặc mạng có thể bị hỏng. Nếu sự cố vẫn tiếp diễn, vui lòng thử lại sau.",
+        "title": "Giao dịch này không thể hoàn thành ngay bây giờ"
+      },
+      "uniswapFee": {
+        "message": {
+          "default": "Phí được áp dụng trên một số token chọn lọc để đảm bảo trải nghiệm tốt nhất với Uniswap. Không có phí liên quan đến việc trao đổi này.",
+          "included": "Phí được áp dụng trên một số token chọn lọc để đảm bảo trải nghiệm tốt nhất với Uniswap và đã được tính vào báo giá này."
+        },
+        "title": "Phí hoán đổi"
+      },
+      "viewOnly": {
+        "message": "Bạn cần nhập ví này thông qua cụm từ khôi phục để trao đổi mã thông báo."
+      }
+    }
+  },
+  "token": {
+    "balances": {
+      "main": "Số dư của bạn",
+      "other": "Số dư trên các mạng khác",
+      "viewOnly": "số dư {{ownerAddress}}"
+    },
+    "error": {
+      "unknown": "Mã thông báo không xác định"
+    },
+    "links": {
+      "contract": "Hợp đồng",
+      "title": "Liên kết",
+      "twitter": "Twitter",
+      "website": "Trang mạng"
+    },
+    "priceExplorer": {
+      "error": {
+        "description": "Đã xảy ra lỗi.",
+        "title": "Không thể tải biểu đồ giá"
+      },
+      "timeRangeLabel": {
+        "day": "1D",
+        "hour": "1H",
+        "month": "1 triệu",
+        "week": "1W",
+        "year": "1 năm"
+      }
+    },
+    "safetyLevel": {
+      "blocked": {
+        "header": "Không có sẵn",
+        "message": "Bạn không thể giao dịch mã thông báo này bằng Ví Uniswap."
+      },
+      "medium": {
+        "header": "Thận trọng",
+        "message": "Mã thông báo này không được giao dịch trên các sàn giao dịch tập trung hàng đầu của Hoa Kỳ. Luôn tiến hành nghiên cứu của riêng bạn trước khi giao dịch."
+      },
+      "strong": {
+        "header": "Cảnh báo",
+        "message": "Mã thông báo này không được giao dịch trên các sàn giao dịch tập trung hàng đầu của Hoa Kỳ hoặc thường xuyên được hoán đổi trên Uniswap. Luôn tiến hành nghiên cứu của riêng bạn trước khi giao dịch."
+      }
+    },
+    "selector": {
+      "search": {
+        "error": "Không thể tải kết quả tìm kiếm"
+      }
+    },
+    "stats": {
+      "fullyDilutedValuation": "Định giá pha loãng hoàn toàn",
+      "marketCap": "Vốn hóa thị trường",
+      "priceHighYear": "Cao 52W",
+      "priceLowYear": "52W Thấp",
+      "section": {
+        "about": "Khoảng {{token}}"
+      },
+      "title": "Thống kê",
+      "translation": {
+        "original": "Hiển thị nguyên bản",
+        "translate": "Dịch sang {{language}}"
+      },
+      "volume": "Khối lượng 24h"
+    }
+  },
+  "tokens": {
+    "action": {
+      "hide": "Ẩn mã thông báo",
+      "unhide": "Bỏ ẩn mã thông báo"
+    },
+    "hidden": {
+      "label": "Ẩn ({{numHidden}})"
+    },
+    "nfts": {
+      "collection": {
+        "error": {
+          "load": {
+            "title": "Không thể tải bộ sưu tập NFT"
+          }
+        },
+        "label": {
+          "items": "Mặt hàng",
+          "owners": "Những chủ sở hữu",
+          "priceFloor": "Sàn nhà",
+          "swapVolume": "Âm lượng"
+        }
+      },
+      "details": {
+        "error": {
+          "load": {
+            "title": "Không thể tải chi tiết NFT"
+          }
+        },
+        "owner": "Được sở hữu bởi",
+        "price": "Giá hiện tại",
+        "recentPrice": "Giá bán cuối cùng",
+        "traits": "đặc điểm"
+      },
+      "empty": {
+        "description": "Không tìm thấy NFT"
+      },
+      "error": {
+        "unavailable": "Nội dung không khả dụng"
+      },
+      "hidden": {
+        "action": {
+          "hide": "Ẩn NFT",
+          "unhide": "Bỏ ẩn NFT"
+        },
+        "label": "Ẩn ({{numHidden}})"
+      },
+      "link": {
+        "collection": "Trang web sưu tập"
+      },
+      "list": {
+        "error": {
+          "load": {
+            "title": "Không thể tải NFT"
+          }
+        },
+        "none": {
+          "button": "Nhận NFT",
+          "description": {
+            "default": "Chuyển NFT từ ví khác để bắt đầu.",
+            "external": "Khi ví này mua hoặc nhận NFT, chúng sẽ xuất hiện ở đây."
+          },
+          "title": "Chưa có NFT"
+        }
+      }
+    },
+    "selector": {
+      "button": {
+        "choose": "Chọn mã thông báo",
+        "clear": "Làm sạch tất cả"
+      },
+      "empty": {
+        "buy": {
+          "message": "Mua tiền điện tử bằng thẻ hoặc ngân hàng để gửi mã thông báo.",
+          "title": "Mua tiền điện tử"
+        },
+        "receive": {
+          "message": "Chuyển token từ một sàn giao dịch tập trung hoặc ví khác để gửi token.",
+          "title": "Nhận token"
+        },
+        "title": "Chưa có token nào"
+      },
+      "error": {
+        "load": "Không thể tải mã thông báo"
+      },
+      "search": {
+        "empty": "Không tìm thấy kết quả nào cho <highlight>{{searchText}}</highlight>",
+        "placeholder": "Tìm kiếm mã thông báo"
+      },
+      "section": {
+        "favorite": "Yêu thích",
+        "popular": "Token phổ biến",
+        "recent": "Tìm kiếm gần đây",
+        "search": "Kết quả tìm kiếm",
+        "suggested": "được đề xuất",
+        "yours": "Mã thông báo của bạn"
+      }
+    }
+  },
+  "transaction": {
+    "action": {
+      "cancel": {
+        "button": "Hủy giao dịch",
+        "description": "Nếu bạn hủy giao dịch này trước khi nó được mạng xử lý, bạn sẽ phải trả phí mạng mới thay vì phí ban đầu.",
+        "title": "Hủy giao dịch này?"
+      },
+      "copy": "Sao chép ID giao dịch",
+      "copyMoonPay": "Sao chép ID giao dịch MoonPay",
+      "view": "Xem {{tokenSymbol}}",
+      "viewEtherscan": "Xem trên {{blockExplorerName}}",
+      "viewMoonPay": "Xem trên MoonPay"
+    },
+    "amount": {
+      "unlimited": "Vô hạn"
+    },
+    "currency": {
+      "unknown": "mã thông báo không xác định"
+    },
+    "date": "Đã đăng vào {{date}}",
+    "network": {
+      "all": "Tất cả các mạng"
+    },
+    "networkCost": {
+      "label": "Chi phí mạng"
+    },
+    "notification": {
+      "error": {
+        "cancel": "Không thể hủy giao dịch",
+        "replace": "Không thể thay thế giao dịch"
+      }
+    },
+    "priceImpact": {
+      "label": "Tác động giá"
+    },
+    "status": {
+      "approve": {
+        "canceled": "Đã hủy phê duyệt",
+        "canceling": "Hủy phê duyệt",
+        "failed": "Không thể phê duyệt",
+        "pending": "Phê duyệt",
+        "success": "Tán thành",
+        "successDapp": "Được phê duyệt vào {{externalDappName}}"
+      },
+      "buy": {
+        "canceled": "Đã hủy mua",
+        "canceling": "Hủy mua",
+        "failed": "Không mua được",
+        "pending": "Mua hàng",
+        "success": "Mua",
+        "successDapp": "Đã mua vào {{externalDappName}}"
+      },
+      "confirm": {
+        "canceled": "Đã hủy xác nhận",
+        "canceling": "Hủy xác nhận",
+        "failed": "Không thể xác nhận",
+        "pending": "Giao dịch đang diễn ra",
+        "success": "Giao dịch đã được xác nhận",
+        "successDapp": "Giao dịch được xác nhận vào {{externalDappName}}"
+      },
+      "mint": {
+        "canceled": "Đã hủy bỏ bạc hà",
+        "canceling": "Hủy bỏ bạc hà",
+        "failed": "Không đúc được",
+        "pending": "đúc tiền",
+        "success": "đúc",
+        "successDapp": "Được đúc trên {{externalDappName}}"
+      },
+      "purchase": {
+        "canceled": "Đã hủy giao dịch mua",
+        "canceling": "Hủy mua hàng",
+        "failed": "Không mua được",
+        "pending": "Thu mua",
+        "success": "Đã mua",
+        "successDapp": "Đã mua vào {{externalDappName}}"
+      },
+      "receive": {
+        "canceled": "Đã hủy nhận",
+        "canceling": "Hủy nhận",
+        "failed": "Không thể nhận được",
+        "pending": "Đang nhận",
+        "success": "Đã nhận",
+        "successDapp": "Đã nhận vào {{externalDappName}}"
+      },
+      "revoke": {
+        "canceled": "Đã hủy thu hồi",
+        "canceling": "Đang hủy thu hồi",
+        "failed": "Không thể thu hồi",
+        "pending": "Thu hồi",
+        "success": "Đã thu hồi",
+        "successDapp": "Bị thu hồi vào {{externalDappName}}"
+      },
+      "sell": {
+        "canceled": "Đã hủy bán",
+        "canceling": "Hủy bán",
+        "failed": "Không bán được",
+        "pending": "bán hàng",
+        "success": "Đã bán",
+        "successDapp": "Đã bán vào {{externalDappName}}"
+      },
+      "send": {
+        "canceled": "Đã hủy gửi",
+        "canceling": "Đang hủy gửi",
+        "failed": "Gửi thất bại",
+        "pending": "Gửi",
+        "success": "Đã gửi",
+        "successDapp": "Đã gửi vào {{externalDappName}}"
+      },
+      "swap": {
+        "canceled": "Hoán đổi đã hủy",
+        "canceling": "Hủy trao đổi",
+        "failed": "Không thể trao đổi",
+        "pending": "Hoán đổi",
+        "success": "Đã hoán đổi",
+        "successDapp": "Đã hoán đổi {{externalDappName}}"
+      },
+      "unwrap": {
+        "canceled": "Đã hủy gói mở",
+        "canceling": "Đang hủy gói mở",
+        "failed": "Không thể mở gói",
+        "pending": "Mở gói",
+        "success": "Đã mở gói",
+        "successDapp": "Đã mở gói trên {{externalDappName}}"
+      },
+      "wrap": {
+        "canceled": "Đã hủy gói",
+        "canceling": "Hủy gói",
+        "failed": "Không thể bọc được",
+        "pending": "gói",
+        "success": "gói",
+        "successDapp": "Đã kết thúc {{externalDappName}}"
+      }
+    },
+    "summary": {
+      "received": "{{tokenAmountWithSymbol}} đến {{recipientAddress}}",
+      "sent": "{{tokenAmountWithSymbol}} từ {{senderAddress}}"
+    },
+    "watcher": {
+      "error": {
+        "cancel": "Không thể hủy giao dịch",
+        "status": "Lỗi khi kiểm tra trạng thái giao dịch"
+      }
+    }
+  },
+  "unicons": {
+    "banner": {
+      "button": "Hiểu rồi",
+      "subtitle": "Chúng tôi đã làm mới Unicon độc đáo của ví của bạn. Kiểm tra phần còn lại của tài khoản để xem các biểu tượng được nâng cấp của bạn.",
+      "title": "Unicon của bạn có giao diện mới"
+    }
+  },
+  "unitags": {
+    "banner": {
+      "button": {
+        "claim": "Yêu cầu ngay bây giờ"
+      },
+      "subtitle": "Xây dựng hồ sơ web3 được cá nhân hóa và dễ dàng chia sẻ địa chỉ của bạn với bạn bè.",
+      "title": {
+        "compact": "<highlight>Yêu cầu {{unitagDomain}} tên người dùng</highlight> và xây dựng hồ sơ có thể tùy chỉnh của bạn.",
+        "full": "Yêu cầu tên người dùng {{unitagDomain}} của bạn"
+      }
+    },
+    "choosePhoto": {
+      "option": {
+        "cameraRoll": "Chọn từ thư viện ảnh",
+        "nft": "Chọn một NFT",
+        "remove": "Xóa ảnh hồ sơ"
+      }
+    },
+    "claim": {
+      "confirmation": {
+        "customize": "Tùy chỉnh hồ sơ",
+        "description": "{{unitagAddress}} đã sẵn sàng gửi và nhận tiền điện tử. Tiếp tục xây dựng ví của bạn bằng cách tùy chỉnh hồ sơ web3 của bạn.",
+        "success": {
+          "long": "Bạn hiểu rồi!",
+          "short": "hiểu rồi!"
+        }
+      },
+      "error": {
+        "addressLimit": "Bạn đã thực hiện số lần thay đổi tối đa đối với tên người dùng của mình cho địa chỉ này",
+        "appCheck": "Không thể yêu cầu tên người dùng. Vui lòng thử lại vào ngày mai.",
+        "avatar": "Không thể đặt hình đại diện. Thử lại sau.",
+        "default": "Không thể yêu cầu tên người dùng. Thử lại sau.",
+        "deviceLimit": "Bạn đã đạt đến số lượng tên người dùng tối đa có thể hoạt động cho thiết bị này",
+        "ens": "Để xác nhận tên người dùng này, bạn phải sở hữu {{username}}.eth ENS",
+        "ensMismatch": "Tên người dùng này hiện không có sẵn.",
+        "general": "Không thể xác nhận tên người dùng",
+        "unavailable": "Tên người dùng này không có sẵn",
+        "unknown": "Lỗi không rõ"
+      },
+      "username": {
+        "default": "tên của bạn"
+      }
+    },
+    "delete": {
+      "confirm": {
+        "subtitle": "Bạn sắp xóa tên người dùng và chi tiết hồ sơ có thể tùy chỉnh của mình. Bạn sẽ không thể lấy lại được nó.",
+        "title": "Bạn có chắc không?"
+      }
+    },
+    "editProfile": {
+      "placeholder": "tên tài khoản"
+    },
+    "editUsername": {
+      "button": {
+        "confirm": "Lưu thay đổi"
+      },
+      "confirm": {
+        "subtitle": "Bạn sắp thay đổi tên người dùng của mình. Một khi bạn thay đổi nó, bạn không bao giờ có thể yêu cầu nó nữa.",
+        "title": "Bạn có chắc không?"
+      },
+      "title": "Chỉnh sửa tên người dùng",
+      "warning": {
+        "default": "Khi bạn thay đổi tên người dùng của mình, bạn không bao giờ có thể yêu cầu lại tên đó. Bạn chỉ có thể thay đổi nó 2 lần.",
+        "max": "Bạn đã đạt đến số lần thay đổi tên người dùng tối đa là 2."
+      }
+    },
+    "intro": {
+      "features": {
+        "ens": "Được cung cấp bởi tên miền phụ ENS",
+        "free": "Miễn phí yêu cầu",
+        "profile": "Hồ sơ có thể tùy chỉnh"
+      },
+      "subtitle": "Nói lời tạm biệt với địa chỉ 0x. Tên người dùng là tên dễ đọc giúp gửi và nhận tiền điện tử dễ dàng hơn.",
+      "title": "Giới thiệu tên người dùng"
+    },
+    "notification": {
+      "delete": {
+        "error": "Không thể xóa tên người dùng. Thử lại sau.",
+        "title": "Tên người dùng đã bị xóa"
+      },
+      "profile": {
+        "error": "Không thể cập nhật hồ sơ. Thử lại sau.",
+        "title": "Hồ sơ cá nhân đã cập nhật"
+      },
+      "username": {
+        "error": "Không thể thay đổi tên người dùng. Thử lại sau.",
+        "title": "Tên người dùng đã thay đổi"
+      }
+    },
+    "onboarding": {
+      "claim": {
+        "subtitle": "Đây là tên duy nhất của bạn mà bất kỳ ai cũng có thể gửi tiền điện tử tới.",
+        "title": {
+          "choose": "Chọn tên người dùng của bạn",
+          "claim": "Yêu cầu tên người dùng của bạn"
+        }
+      },
+      "claimPeriod": {
+        "description": "Trong thời gian giới hạn, tên người dùng {{username}} được bảo lưu. Nhập ví sở hữu {{username}}.eth ENS để xác nhận tên người dùng này hoặc thử lại sau thời gian xác nhận.",
+        "link": "Tìm hiểu thêm về khoảng thời gian yêu cầu <highlight>của chúng tôi</highlight>.",
+        "title": "Thời gian yêu cầu ENS"
+      },
+      "info": {
+        "description": "Tên người dùng chuyển đổi địa chỉ 0x phức tạp thành tên có thể đọc được. Bằng cách xác nhận tên người dùng {{unitagDomain}} , bạn có thể dễ dàng gửi và nhận tiền điện tử cũng như xây dựng hồ sơ web3 công khai.",
+        "title": "Địa chỉ đơn giản"
+      },
+      "profile": {
+        "subtitle": "Tải lên của riêng bạn hoặc gắn bó với Unicon độc đáo của bạn. Bạn luôn có thể thay đổi điều này sau.",
+        "title": "Chọn ảnh hồ sơ"
+      }
+    },
+    "profile": {
+      "action": {
+        "delete": "Xóa tên người dùng",
+        "edit": "Chỉnh sửa tên người dùng"
+      },
+      "bio": {
+        "label": "Tiểu sử",
+        "placeholder": "Nhập tiểu sử cho hồ sơ của bạn"
+      },
+      "links": {
+        "twitter": "Twitter"
+      }
+    },
+    "username": {
+      "error": {
+        "chars": "Tên người dùng chỉ có thể chứa chữ cái và số",
+        "max": "Tên người dùng không được nhiều hơn {{number}} ký tự",
+        "min": "Tên người dùng phải có ít nhất {{number}} ký tự",
+        "uppercase": "Tên người dùng chỉ có thể chứa chữ thường và số"
+      }
+    }
+  },
+  "walletConnect": {
+    "dapps": {
+      "connection": "<highlight>Đã kết nối với </highlight>{{dappNameOrUrl}}",
+      "empty": {
+        "description": "Kết nối với ứng dụng bằng cách quét mã qua WalletConnect"
+      },
+      "manage": {
+        "empty": {
+          "title": "Không có ứng dụng nào được kết nối"
+        },
+        "title": "Quản lý kết nối"
+      }
+    },
+    "error": {
+      "connection": {
+        "message": "Ví Uniswap hiện hỗ trợ {{chainNames}}. Vui lòng chỉ sử dụng \"{{dappName}}\" trên các chuỗi này",
+        "title": "Lỗi kết nối"
+      },
+      "general": {
+        "message": "Đã xảy ra sự cố với WalletConnect. Vui lòng thử lại",
+        "title": "Lỗi kết nối ví"
+      },
+      "scantastic": {
+        "message": "Đã xảy ra sự cố với mã QR của bạn. Vui lòng thử lại",
+        "title": "Mã QR không hợp lệ"
+      },
+      "unsupported": {
+        "message": "Đảm bảo rằng bạn đang quét mã QR địa chỉ WalletConnect hoặc Ethereum hợp lệ trước khi thử lại.",
+        "title": "Mã QR không hợp lệ"
+      },
+      "unsupportedV1": {
+        "message": "WalletConnect v1 không còn được hỗ trợ. Ứng dụng bạn đang cố gắng kết nối cần nâng cấp lên WalletConnect v2.",
+        "title": "Mã QR không hợp lệ"
+      },
+      "uwu": {
+        "scan": "Đã xảy ra sự cố khi quét mã QR này.",
+        "title": "UwU Link lỗi",
+        "unsupported": "Mã QR này không được hỗ trợ."
+      }
+    },
+    "pending": {
+      "button": {
+        "connect": "Kết nối",
+        "scrollDown": "Cuộn xuống để kết nối"
+      },
+      "switchAccount": "Chuyển tài khoản",
+      "switchNetwork": "Chuyển mạng",
+      "title": "{{dappName}} muốn kết nối với ví của bạn"
+    },
+    "permissions": {
+      "networks": "Mạng",
+      "option": {
+        "transferAssets": "Chuyển tài sản của bạn mà không có sự đồng ý",
+        "viewTokenBalances": "Xem số dư token của bạn",
+        "viewWalletAddress": "Xem địa chỉ ví của bạn"
+      },
+      "title": "Quyền ứng dụng"
+    },
+    "request": {
+      "button": {
+        "scrollDown": "Cuộn xuống để ký",
+        "sign": "Dấu hiệu"
+      },
+      "details": {
+        "label": {
+          "function": "Chức năng: ",
+          "recipient": "ĐẾN: ",
+          "sending": "Gửi: "
+        }
+      },
+      "error": {
+        "insufficientFunds": "Bạn không có đủ {{currencySymbol}} để hoàn tất giao dịch này.",
+        "network": "Lỗi kết nối Internet hoặc mạng"
+      },
+      "label": {
+        "network": "Mạng"
+      },
+      "warning": {
+        "general": {
+          "message": "Hãy cẩn thận: tin nhắn này có thể chuyển tài sản",
+          "transaction": "Hãy cẩn thận: giao dịch này có thể chuyển tài sản"
+        },
+        "message": "Để ký tin nhắn hoặc giao dịch, bạn cần nhập cụm từ khôi phục của ví.",
+        "title": "Ví này ở chế độ chỉ xem"
+      }
+    }
+  }
+}

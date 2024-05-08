@@ -1,0 +1,1 @@
+  - `tsconfig` for specific TypeScript configuration for each package

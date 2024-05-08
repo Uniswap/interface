@@ -1,0 +1,11 @@
+ignores: [
+    # Dependencies that depcheck thinks are unused but are actually used / lock explicit versions
+    "@tamagui/animations-react-native",
+    "@tamagui/font-inter",
+    "@tamagui/theme-base",
+    ## Internal packages / workspaces
+    "ui",
+    "utilities",
+    "tsconfig",
+    "utilities",
+  ]

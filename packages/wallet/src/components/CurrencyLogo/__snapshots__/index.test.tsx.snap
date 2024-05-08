@@ -1,0 +1,98 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders a currency logo with network logo 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "column",
+      "height": 20,
+      "justifyContent": "center",
+      "width": 20,
+    }
+  }
+>
+  <Image
+    source={
+      {
+        "uri": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png",
+      }
+    }
+    style={
+      [
+        {
+          "resizeMode": "contain",
+        },
+        {
+          "backgroundColor": "#2222220D",
+          "borderColor": "#2222220D",
+          "borderRadius": 10,
+          "borderWidth": 0.5,
+          "height": 20,
+          "width": 20,
+        },
+      ]
+    }
+  />
+  <View
+    style={
+      {
+        "borderBottomColor": "#FFFFFF",
+        "borderBottomLeftRadius": 8,
+        "borderBottomRightRadius": 8,
+        "borderBottomWidth": 2,
+        "borderLeftColor": "#FFFFFF",
+        "borderLeftWidth": 2,
+        "borderRightColor": "#FFFFFF",
+        "borderRightWidth": 2,
+        "borderStyle": "solid",
+        "borderTopColor": "#FFFFFF",
+        "borderTopLeftRadius": 8,
+        "borderTopRightRadius": 8,
+        "borderTopWidth": 2,
+        "bottom": -2,
+        "flexDirection": "column",
+        "position": "absolute",
+        "right": -3,
+      }
+    }
+  />
+</View>
+`;
+
+exports[`renders a currency logo without network logo 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "column",
+      "height": 20,
+      "justifyContent": "center",
+      "width": 20,
+    }
+  }
+>
+  <Image
+    source={
+      {
+        "uri": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png",
+      }
+    }
+    style={
+      [
+        {
+          "resizeMode": "contain",
+        },
+        {
+          "backgroundColor": "#2222220D",
+          "borderColor": "#2222220D",
+          "borderRadius": 10,
+          "borderWidth": 0.5,
+          "height": 20,
+          "width": 20,
+        },
+      ]
+    }
+  />
+</View>
+`;

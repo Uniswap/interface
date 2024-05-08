@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LongMarkdownText renders without error 1`] = `
+<View
+  style={
+    {
+      "flexDirection": "column",
+      "gap": 8,
+    }
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      {
+        "flexDirection": "column",
+      }
+    }
+    testID="markdown-wrapper"
+  >
+    <View
+      onLayout={[Function]}
+      pointerEvents="none"
+      style={
+        {
+          "flexDirection": "column",
+          "opacity": 0,
+          "position": "absolute",
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "height": "auto",
+            "overflow": "hidden",
+          }
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "flex-start",
+              "flexDirection": "row",
+              "flexWrap": "wrap",
+              "justifyContent": "flex-start",
+              "marginBottom": 0,
+              "marginTop": 0,
+              "width": "100%",
+            }
+          }
+        >
+          <Text
+            style={{}}
+          >
+            <Text
+              style={
+                [
+                  {
+                    "color": "#222222",
+                    "fontFamily": "Basel-Book",
+                    "fontSize": 17,
+                    "lineHeight": 24,
+                  },
+                  {},
+                ]
+              }
+            >
+              .
+            </Text>
+          </Text>
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        {
+          "height": "auto",
+          "overflow": "hidden",
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "flex-start",
+            "flexDirection": "row",
+            "flexWrap": "wrap",
+            "justifyContent": "flex-start",
+            "marginBottom": 0,
+            "marginTop": 0,
+            "width": "100%",
+          }
+        }
+      >
+        <Text
+          style={{}}
+        >
+          <Text
+            style={
+              [
+                {
+                  "color": "#222222",
+                  "fontFamily": "Basel-Book",
+                  "fontSize": 17,
+                  "lineHeight": 24,
+                },
+                {},
+              ]
+            }
+          >
+            Some very long text
+          </Text>
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;

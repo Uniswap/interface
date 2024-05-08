@@ -1,0 +1,493 @@
+{
+    "routing": "DUTCH_LIMIT",
+    "quote": {
+        "orderInfo": {
+            "chainId": 1,
+            "permit2Address": "0x000000000022d473030f116ddee9f6b43ac78ba3",
+            "reactor": "0x6000da47483062A0D734Ba3dc7576Ce6A0B645C4",
+            "swapper": "0x67d615D6bccAA1562B1cca9786384b4840597ecD",
+            "nonce": "57335948072881703373319552024074512292695687510330025934414357004397546394368",
+            "deadline": 1690902198,
+            "additionalValidationContract": "0x0000000000000000000000000000000000000000",
+            "additionalValidationData": "0x",
+            "decayStartTime": 1690902126,
+            "decayEndTime": 1690902186,
+            "exclusiveFiller": "0x0000000000000000000000000000000000000000",
+            "exclusivityOverrideBps": "0",
+            "input": {
+                "token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                "startAmount": "300000000",
+                "endAmount": "300000000"
+            },
+            "outputs": [
+                {
+                    "token": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+                    "startAmount": "289951120815684452958",
+                    "endAmount": "267060007981523637666",
+                    "recipient": "0x67d615D6bccAA1562B1cca9786384b4840597ecD"
+                }
+            ]
+        },
+        "encodedOrder": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000001200000000000000000000000000000000000000000000000000000000064c91e6e0000000000000000000000000000000000000000000000000000000064c91eaa00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb480000000000000000000000000000000000000000000000000000000011e1a3000000000000000000000000000000000000000000000000000000000011e1a30000000000000000000000000000000000000000000000000000000000000002000000000000000000000000006000da47483062a0d734ba3dc7576ce6a0b645c400000000000000000000000067d615d6bccaa1562b1cca9786384b4840597ecd7ec2ff20796a08922e11fd828e3871a6aa9a80e6495e30cd41be24b7e37953000000000000000000000000000000000000000000000000000000000064c91eb6000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000006b175474e89094c44da98b954eedeac495271d0f00000000000000000000000000000000000000000000000fb7e15027ad3e025e00000000000000000000000000000000000000000000000e7a33be508bb395a200000000000000000000000067d615d6bccaa1562b1cca9786384b4840597ecd",
+        "quoteId": "f9f47cd7-a62c-4622-9ac7-51d0e662245a",
+        "requestId": "2d16f993-6429-4755-ba50-1383789459dc",
+        "auctionPeriodSecs": 60,
+        "startTimeBufferSecs": 30,
+        "deadlineBufferSecs": 12,
+        "slippageTolerance": "0.5",
+        "permitData": {
+            "domain": {
+                "name": "Permit2",
+                "chainId": 1,
+                "verifyingContract": "0x000000000022d473030f116ddee9f6b43ac78ba3"
+            },
+            "types": {
+                "PermitWitnessTransferFrom": [
+                    {
+                        "name": "permitted",
+                        "type": "TokenPermissions"
+                    },
+                    {
+                        "name": "spender",
+                        "type": "address"
+                    },
+                    {
+                        "name": "nonce",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "deadline",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "witness",
+                        "type": "ExclusiveDutchOrder"
+                    }
+                ],
+                "TokenPermissions": [
+                    {
+                        "name": "token",
+                        "type": "address"
+                    },
+                    {
+                        "name": "amount",
+                        "type": "uint256"
+                    }
+                ],
+                "ExclusiveDutchOrder": [
+                    {
+                        "name": "info",
+                        "type": "OrderInfo"
+                    },
+                    {
+                        "name": "decayStartTime",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "decayEndTime",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "exclusiveFiller",
+                        "type": "address"
+                    },
+                    {
+                        "name": "exclusivityOverrideBps",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "inputToken",
+                        "type": "address"
+                    },
+                    {
+                        "name": "inputStartAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "inputEndAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "outputs",
+                        "type": "DutchOutput[]"
+                    }
+                ],
+                "OrderInfo": [
+                    {
+                        "name": "reactor",
+                        "type": "address"
+                    },
+                    {
+                        "name": "swapper",
+                        "type": "address"
+                    },
+                    {
+                        "name": "nonce",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "deadline",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "additionalValidationContract",
+                        "type": "address"
+                    },
+                    {
+                        "name": "additionalValidationData",
+                        "type": "bytes"
+                    }
+                ],
+                "DutchOutput": [
+                    {
+                        "name": "token",
+                        "type": "address"
+                    },
+                    {
+                        "name": "startAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "endAmount",
+                        "type": "uint256"
+                    },
+                    {
+                        "name": "recipient",
+                        "type": "address"
+                    }
+                ]
+            },
+            "values": {
+                "permitted": {
+                    "token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                    "amount": {
+                        "type": "BigNumber",
+                        "hex": "0x11e1a300"
+                    }
+                },
+                "spender": "0x6000da47483062A0D734Ba3dc7576Ce6A0B645C4",
+                "nonce": {
+                    "type": "BigNumber",
+                    "hex": "0x7ec2ff20796a08922e11fd828e3871a6aa9a80e6495e30cd41be24b7e3795300"
+                },
+                "deadline": 1690902198,
+                "witness": {
+                    "info": {
+                        "reactor": "0x6000da47483062A0D734Ba3dc7576Ce6A0B645C4",
+                        "swapper": "0x67d615D6bccAA1562B1cca9786384b4840597ecD",
+                        "nonce": {
+                            "type": "BigNumber",
+                            "hex": "0x7ec2ff20796a08922e11fd828e3871a6aa9a80e6495e30cd41be24b7e3795300"
+                        },
+                        "deadline": 1690902198,
+                        "additionalValidationContract": "0x0000000000000000000000000000000000000000",
+                        "additionalValidationData": "0x"
+                    },
+                    "decayStartTime": 1690902126,
+                    "decayEndTime": 1690902186,
+                    "exclusiveFiller": "0x0000000000000000000000000000000000000000",
+                    "exclusivityOverrideBps": {
+                        "type": "BigNumber",
+                        "hex": "0x00"
+                    },
+                    "inputToken": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                    "inputStartAmount": {
+                        "type": "BigNumber",
+                        "hex": "0x11e1a300"
+                    },
+                    "inputEndAmount": {
+                        "type": "BigNumber",
+                        "hex": "0x11e1a300"
+                    },
+                    "outputs": [
+                        {
+                            "token": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+                            "startAmount": {
+                                "type": "BigNumber",
+                                "hex": "0x0fb7e15027ad3e025e"
+                            },
+                            "endAmount": {
+                                "type": "BigNumber",
+                                "hex": "0x0e7a33be508bb395a2"
+                            },
+                            "recipient": "0x67d615D6bccAA1562B1cca9786384b4840597ecD"
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "requestId": "2d16f993-6429-4755-ba50-1383789459dc",
+    "allQuotes": [
+        {
+            "routing": "DUTCH_LIMIT",
+            "quote": {
+                "orderInfo": {
+                    "chainId": 1,
+                    "permit2Address": "0x000000000022d473030f116ddee9f6b43ac78ba3",
+                    "reactor": "0x6000da47483062A0D734Ba3dc7576Ce6A0B645C4",
+                    "swapper": "0x67d615D6bccAA1562B1cca9786384b4840597ecD",
+                    "nonce": "57335948072881703373319552024074512292695687510330025934414357004397546394368",
+                    "deadline": 1690902198,
+                    "additionalValidationContract": "0x0000000000000000000000000000000000000000",
+                    "additionalValidationData": "0x",
+                    "decayStartTime": 1690902126,
+                    "decayEndTime": 1690902186,
+                    "exclusiveFiller": "0x0000000000000000000000000000000000000000",
+                    "exclusivityOverrideBps": "0",
+                    "input": {
+                        "token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                        "startAmount": "300000000",
+                        "endAmount": "300000000"
+                    },
+                    "outputs": [
+                        {
+                            "token": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+                            "startAmount": "289951120815684452958",
+                            "endAmount": "267060007981523637666",
+                            "recipient": "0x67d615D6bccAA1562B1cca9786384b4840597ecD"
+                        }
+                    ]
+                },
+                "encodedOrder": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000001200000000000000000000000000000000000000000000000000000000064c91e6e0000000000000000000000000000000000000000000000000000000064c91eaa00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb480000000000000000000000000000000000000000000000000000000011e1a3000000000000000000000000000000000000000000000000000000000011e1a30000000000000000000000000000000000000000000000000000000000000002000000000000000000000000006000da47483062a0d734ba3dc7576ce6a0b645c400000000000000000000000067d615d6bccaa1562b1cca9786384b4840597ecd7ec2ff20796a08922e11fd828e3871a6aa9a80e6495e30cd41be24b7e37953000000000000000000000000000000000000000000000000000000000064c91eb6000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010000000000000000000000006b175474e89094c44da98b954eedeac495271d0f00000000000000000000000000000000000000000000000fb7e15027ad3e025e00000000000000000000000000000000000000000000000e7a33be508bb395a200000000000000000000000067d615d6bccaa1562b1cca9786384b4840597ecd",
+                "quoteId": "f9f47cd7-a62c-4622-9ac7-51d0e662245a",
+                "requestId": "2d16f993-6429-4755-ba50-1383789459dc",
+                "auctionPeriodSecs": 60,
+                "startTimeBufferSecs": 30,
+                "deadlineBufferSecs": 12,
+                "slippageTolerance": "0.5",
+                "permitData": {
+                    "domain": {
+                        "name": "Permit2",
+                        "chainId": 1,
+                        "verifyingContract": "0x000000000022d473030f116ddee9f6b43ac78ba3"
+                    },
+                    "types": {
+                        "PermitWitnessTransferFrom": [
+                            {
+                                "name": "permitted",
+                                "type": "TokenPermissions"
+                            },
+                            {
+                                "name": "spender",
+                                "type": "address"
+                            },
+                            {
+                                "name": "nonce",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "deadline",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "witness",
+                                "type": "ExclusiveDutchOrder"
+                            }
+                        ],
+                        "TokenPermissions": [
+                            {
+                                "name": "token",
+                                "type": "address"
+                            },
+                            {
+                                "name": "amount",
+                                "type": "uint256"
+                            }
+                        ],
+                        "ExclusiveDutchOrder": [
+                            {
+                                "name": "info",
+                                "type": "OrderInfo"
+                            },
+                            {
+                                "name": "decayStartTime",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "decayEndTime",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "exclusiveFiller",
+                                "type": "address"
+                            },
+                            {
+                                "name": "exclusivityOverrideBps",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "inputToken",
+                                "type": "address"
+                            },
+                            {
+                                "name": "inputStartAmount",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "inputEndAmount",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "outputs",
+                                "type": "DutchOutput[]"
+                            }
+                        ],
+                        "OrderInfo": [
+                            {
+                                "name": "reactor",
+                                "type": "address"
+                            },
+                            {
+                                "name": "swapper",
+                                "type": "address"
+                            },
+                            {
+                                "name": "nonce",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "deadline",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "additionalValidationContract",
+                                "type": "address"
+                            },
+                            {
+                                "name": "additionalValidationData",
+                                "type": "bytes"
+                            }
+                        ],
+                        "DutchOutput": [
+                            {
+                                "name": "token",
+                                "type": "address"
+                            },
+                            {
+                                "name": "startAmount",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "endAmount",
+                                "type": "uint256"
+                            },
+                            {
+                                "name": "recipient",
+                                "type": "address"
+                            }
+                        ]
+                    },
+                    "values": {
+                        "permitted": {
+                            "token": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                            "amount": {
+                                "type": "BigNumber",
+                                "hex": "0x11e1a300"
+                            }
+                        },
+                        "spender": "0x6000da47483062A0D734Ba3dc7576Ce6A0B645C4",
+                        "nonce": {
+                            "type": "BigNumber",
+                            "hex": "0x7ec2ff20796a08922e11fd828e3871a6aa9a80e6495e30cd41be24b7e3795300"
+                        },
+                        "deadline": 1690902198,
+                        "witness": {
+                            "info": {
+                                "reactor": "0x6000da47483062A0D734Ba3dc7576Ce6A0B645C4",
+                                "swapper": "0x67d615D6bccAA1562B1cca9786384b4840597ecD",
+                                "nonce": {
+                                    "type": "BigNumber",
+                                    "hex": "0x7ec2ff20796a08922e11fd828e3871a6aa9a80e6495e30cd41be24b7e3795300"
+                                },
+                                "deadline": 1690902198,
+                                "additionalValidationContract": "0x0000000000000000000000000000000000000000",
+                                "additionalValidationData": "0x"
+                            },
+                            "decayStartTime": 1690902126,
+                            "decayEndTime": 1690902186,
+                            "exclusiveFiller": "0x0000000000000000000000000000000000000000",
+                            "exclusivityOverrideBps": {
+                                "type": "BigNumber",
+                                "hex": "0x00"
+                            },
+                            "inputToken": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                            "inputStartAmount": {
+                                "type": "BigNumber",
+                                "hex": "0x11e1a300"
+                            },
+                            "inputEndAmount": {
+                                "type": "BigNumber",
+                                "hex": "0x11e1a300"
+                            },
+                            "outputs": [
+                                {
+                                    "token": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+                                    "startAmount": {
+                                        "type": "BigNumber",
+                                        "hex": "0x0fb7e15027ad3e025e"
+                                    },
+                                    "endAmount": {
+                                        "type": "BigNumber",
+                                        "hex": "0x0e7a33be508bb395a2"
+                                    },
+                                    "recipient": "0x67d615D6bccAA1562B1cca9786384b4840597ecD"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            "routing": "CLASSIC",
+            "quote": {
+                "blockNumber": "17820918",
+                "amount": "300000000",
+                "amountDecimals": "300",
+                "quote": "299952256425393549464",
+                "quoteDecimals": "299.952256425393549464",
+                "quoteGasAdjusted": "289922128602824170541",
+                "quoteGasAdjustedDecimals": "289.922128602824170541",
+                "gasUseEstimateQuote": "10030127822569378922",
+                "gasUseEstimateQuoteDecimals": "10.030127822569378922",
+                "gasUseEstimate": "128000",
+                "gasUseEstimateUSD": "10.031724",
+                "simulationStatus": "UNATTEMPTED",
+                "simulationError": false,
+                "gasPriceWei": "42803167855",
+                "route": [
+                    [
+                        {
+                            "type": "v3-pool",
+                            "address": "0x5777d92f208679DB4b9778590Fa3CAB3aC9e2168",
+                            "tokenIn": {
+                                "chainId": 1,
+                                "decimals": "6",
+                                "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+                                "symbol": "USDC"
+                            },
+                            "tokenOut": {
+                                "chainId": 1,
+                                "decimals": "18",
+                                "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+                                "symbol": "DAI"
+                            },
+                            "fee": "100",
+                            "liquidity": "534676532046235168447130",
+                            "sqrtRatioX96": "79230505815006815109584",
+                            "tickCurrent": "-276324",
+                            "amountIn": "300000000",
+                            "amountOut": "299952256425393549464"
+                        }
+                    ]
+                ],
+                "routeString": "[V3] 100.00% = USDC -- 0.01% [0x5777d92f208679DB4b9778590Fa3CAB3aC9e2168] --> DAI",
+                "quoteId": "1dd3bd14-780e-41c6-88e1-30a763f97482",
+                "requestId": "2d16f993-6429-4755-ba50-1383789459dc",
+                "tradeType": "EXACT_INPUT",
+                "slippage": 0.5
+            }
+        }
+    ]
+}

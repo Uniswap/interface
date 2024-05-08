@@ -1,0 +1,132 @@
+diff --git a/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt b/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt
+index 9980dfabbd5179753ba99f50c6ecfadd732cfdb9..589c58e427989181dddaa5ccd4ccf31fcc0e53c7 100644
+--- a/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt
++++ b/android/src/main/java/expo/modules/localauthentication/LocalAuthenticationModule.kt
+@@ -7,6 +7,7 @@ import android.content.Context
+ import android.content.Intent
+ import android.os.Build
+ import android.os.Bundle
++import android.provider.Settings
+ import androidx.biometric.BiometricManager
+ import androidx.biometric.BiometricPrompt
+ import androidx.biometric.BiometricPrompt.PromptInfo
+@@ -89,7 +90,7 @@ class LocalAuthenticationModule(context: Context) : ExportedModule(context), Act
+ 
+   @ExpoMethod
+   fun supportedAuthenticationTypesAsync(promise: Promise) {
+-    val result = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
++    val result = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+     val results: MutableList<Int> = ArrayList()
+     if (result == BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE) {
+       promise.resolve(results)
+@@ -122,13 +123,13 @@ class LocalAuthenticationModule(context: Context) : ExportedModule(context), Act
+ 
+   @ExpoMethod
+   fun hasHardwareAsync(promise: Promise) {
+-    val result = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
++    val result = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+     promise.resolve(result != BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE)
+   }
+ 
+   @ExpoMethod
+   fun isEnrolledAsync(promise: Promise) {
+-    val result = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
++    val result = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+     promise.resolve(result == BiometricManager.BIOMETRIC_SUCCESS)
+   }
+ 
+@@ -138,13 +139,31 @@ class LocalAuthenticationModule(context: Context) : ExportedModule(context), Act
+     if (isDeviceSecure) {
+       level = SECURITY_LEVEL_SECRET
+     }
+-    val result = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK)
++    val result = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG)
+     if (result == BiometricManager.BIOMETRIC_SUCCESS) {
+       level = SECURITY_LEVEL_BIOMETRIC
+     }
+     promise.resolve(level)
+   }
+ 
++  @ExpoMethod
++  fun enrollForAuthentication(promise: Promise) {
++    if (Build.VERSION.SDK_INT >= 30) {
++      val intent = Intent(Settings.ACTION_BIOMETRIC_ENROLL)
++      intent.putExtra(
++        Settings.EXTRA_BIOMETRIC_AUTHENTICATORS_ALLOWED,
++        BiometricManager.Authenticators.BIOMETRIC_STRONG
++      )
++      intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
++      currentActivity!!.startActivity(intent)
++      promise.resolve(true)
++    } else {
++      val intent = Intent(Settings.ACTION_FINGERPRINT_ENROLL)
++      currentActivity!!.startActivity(intent)
++      promise.resolve(true)
++    }
++  }
++
+   @ExpoMethod
+   fun authenticateAsync(options: Map<String?, Any?>, promise: Promise) {
+     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+@@ -220,10 +239,19 @@ class LocalAuthenticationModule(context: Context) : ExportedModule(context), Act
+             promptInfoBuilder.setNegativeButtonText(it)
+           }
+         } else {
+-          promptInfoBuilder.setAllowedAuthenticators(
+-            BiometricManager.Authenticators.BIOMETRIC_WEAK
+-              or BiometricManager.Authenticators.DEVICE_CREDENTIAL
+-          )
++          if (Build.VERSION.SDK_INT >= 30) {
++            promptInfoBuilder.setAllowedAuthenticators(
++              BiometricManager.Authenticators.BIOMETRIC_STRONG
++                or BiometricManager.Authenticators.DEVICE_CREDENTIAL
++            )
++          } else {
++            promptInfoBuilder.setAllowedAuthenticators(
++              BiometricManager.Authenticators.BIOMETRIC_STRONG
++            )
++            cancelLabel?.let {
++              promptInfoBuilder.setNegativeButtonText(it)
++            }
++          }
+         }
+         promptInfoBuilder.setConfirmationRequired(requireConfirmation)
+         val promptInfo = promptInfoBuilder.build()
+diff --git a/src/LocalAuthentication.ts b/src/LocalAuthentication.ts
+index b9f3f0732b61138f790e7c3a33a92d8d726a71f1..b754d8588701c7d74a86a07b8e6c09c2434b9d43 100644
+--- a/src/LocalAuthentication.ts
++++ b/src/LocalAuthentication.ts
+@@ -78,11 +78,16 @@ export async function getEnrolledLevelAsync(): Promise<SecurityLevel> {
+  * @return Returns a promise which fulfils with [`LocalAuthenticationResult`](#localauthenticationresult).
+  */
+ export async function authenticateAsync(
+-  options: LocalAuthenticationOptions = {}
++  options: LocalAuthenticationOptions
+ ): Promise<LocalAuthenticationResult> {
+   if (!ExpoLocalAuthentication.authenticateAsync) {
+     throw new UnavailabilityError('expo-local-authentication', 'authenticateAsync');
+   }
++  
++  invariant(
++    typeof options.cancelLabel === 'string' && options.cancelLabel.length,
++    'LocalAuthentication.authenticateAsync : `options.cancelLabel` must be a non-empty string.'
++  );
+ 
+   if (options.hasOwnProperty('promptMessage')) {
+     invariant(
+diff --git a/src/LocalAuthentication.types.ts b/src/LocalAuthentication.types.ts
+index a65b16d5bc5d18c03cee3ca8e4d223c9b736659b..d1ae18df61714b2bd44f3b9867718568707c1dc6 100644
+--- a/src/LocalAuthentication.types.ts
++++ b/src/LocalAuthentication.types.ts
+@@ -42,9 +42,9 @@ export type LocalAuthenticationOptions = {
+    */
+   promptMessage?: string;
+   /**
+-   * Allows to customize the default `Cancel` label shown.
++   * Allows to customize the default `Cancel` label shown. Required to be non-empty for Android or it might cause crashes.
+    */
+-  cancelLabel?: string;
++  cancelLabel: string;
+   /**
+    * After several failed attempts the system will fallback to the device passcode. This setting
+    * allows you to disable this option and instead handle the fallback yourself. This can be

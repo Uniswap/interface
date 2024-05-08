@@ -1,0 +1,135 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "pipeline": {
+    "prepare": {
+      "inputs": [
+        "package.json",
+        "schema.graphql",
+        "scripts/fetch-schema.js",
+        "src/graphql/**",
+        "src/data/**/*.graphql",
+        "src/data/tradingApi/api.json",
+        "src/i18n/locales/source/en-US.json"
+      ],
+      "outputs": [
+        "src/**/__generated__/**",
+        "src/types/v3/**",
+        "src/locales/**",
+        "src/abis/types/**",
+        "src/constants/tokenLists/**",
+        "src/i18n/locales/@types/resources.d.ts"
+      ],
+      "dependsOn": [
+        "graphql:generate"
+      ]
+    },
+    "graphql:schema": {
+      "env": [
+        "THE_GRAPH_SCHEMA_ENDPOINT",
+        "REACT_APP_AWS_API_ENDPOINT"
+      ],
+      "inputs": [
+        "scripts/fetch-schema.js",
+        ".env.production",
+        "graphql.*.ts"
+      ],
+      "outputs": [
+        "schema.graphql"
+      ],
+      "dependsOn": []
+    },
+    "graphql:generate": {
+      "inputs": [
+        "schema.graphql",
+        "scripts/fetch-schema.js",
+        "src/graphql/**",
+        "src/data/**/*.graphql"
+      ],
+      "outputs": [
+        "types-and-hooks.ts",
+        "data/__generated__/*",
+        "graphql/__generated__/*"
+      ],
+      "dependsOn": []
+    },
+    "typecheck": {
+      "inputs": [
+        "src/**.ts",
+        "src/**.tsx"
+      ],
+      "outputs": [],
+      "dependsOn": [
+        "prepare",
+        "^prepare"
+      ]
+    },
+    "check:circular": {},
+    "check:deps:usage": {},
+    "lint": {
+      "dependsOn": [
+        "typecheck"
+      ]
+    },
+    "lint:fix": {
+      "dependsOn": [
+        "typecheck"
+      ]
+    },
+    "test": {
+      "dependsOn": [
+        "prepare"
+      ]
+    },
+    "start": {
+      "dependsOn": [
+        "prepare"
+      ]
+    },
+    "snapshots": {
+      "dependsOn": [
+        "typecheck",
+        "lint"
+      ]
+    },
+    "build:production": {
+      "inputs": [
+        "yarn.lock",
+        "**/package.json",
+        "{packages,apps}/src/**/*"
+      ],
+      "outputs": [
+        "**/build/**"
+      ],
+      "dependsOn": [
+        "prepare",
+        "build"
+      ]
+    },
+    "build": {
+      "inputs": [
+        "yarn.lock",
+        "**/package.json",
+        "{packages,apps}/src/**.ts",
+        "{packages,apps}/src/**.tsx"
+      ],
+      "outputs": [
+        "**/dist/**",
+        "./apps/next/.next/**"
+      ],
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "storybook#build": {
+      "dependsOn": [
+        "ui#build"
+      ],
+      "inputs": [
+        "packages/ui/**"
+      ],
+      "outputs": [
+        "apps/storybook/dist/**"
+      ]
+    }
+  }
+}

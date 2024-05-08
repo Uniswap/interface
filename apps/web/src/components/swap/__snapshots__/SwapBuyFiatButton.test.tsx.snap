@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
+<DocumentFragment>
+  .c1 {
+  outline: none;
+  border: none;
+  font-size: inherit;
+  padding: 0;
+  margin: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  -webkit-transition-timing-function: ease-in-out;
+  transition-timing-function: ease-in-out;
+  -webkit-transition-property: opacity,color,background-color;
+  transition-property: opacity,color,background-color;
+}
+
+.c1:hover {
+  opacity: 0.6;
+}
+
+.c1:focus {
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+}
+
+.c0 {
+  display: inline-block;
+  height: inherit;
+}
+
+.c2 {
+  color: #7D7D7D;
+  padding: 8px 16px;
+  border-radius: 20px;
+  gap: 4px;
+  font-weight: 485;
+}
+
+.c2:focus {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c2:active {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+      >
+        <div>
+          <button
+            class="c1 c2"
+            data-testid="buy-fiat-button"
+          >
+            Buy
+          </button>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;

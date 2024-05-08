@@ -1,0 +1,70 @@
+diff --git a/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java b/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java
+index 4b5b90b7b478668fdff3fd12d5e028d423ada057..af30dc6f700b3b3cfde5c149bf1f865786df3e27 100644
+--- a/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java
++++ b/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java
+@@ -67,6 +67,14 @@ public class ContextMenuView extends ReactViewGroup implements PopupMenu.OnMenuI
+                     contextMenu.show();
+                 }
+             }
++            
++            @Override
++            public boolean onDoubleTap(MotionEvent e) {
++              if (dropdownMenuMode) {
++                contextMenu.show();
++              }
++              return super.onSingleTapConfirmed(e);
++            }
+         });
+     }
+ 
+diff --git a/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuManager.java b/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuManager.java
+index 81f7b4b58c946d1b2e14301f9b52ecffa1cd0643..403dac6450be24a8c4d26ffb8293b51a1485f6a8 100644
+--- a/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuManager.java
++++ b/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuManager.java
+@@ -45,6 +45,11 @@ public class ContextMenuManager extends ViewGroupManager<ContextMenuView> {
+         view.setDropdownMenuMode(enabled);
+     }
+ 
++    @ReactProp(name = "disabled")
++    public void setDisabled(ContextMenuView view, @Nullable boolean disabled) {
++        view.setDisabled(disabled);
++    }
++
+     @androidx.annotation.Nullable
+     @Override
+     public Map<String, Object> getExportedCustomDirectEventTypeConstants() {
+diff --git a/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java b/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java
+index af30dc6f700b3b3cfde5c149bf1f865786df3e27..aa04fe6d9458601fdcb9bb44f89e16bbc1ad9d39 100644
+--- a/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java
++++ b/android/src/main/java/com/mpiannucci/reactnativecontextmenu/ContextMenuView.java
+@@ -43,6 +43,8 @@ public class ContextMenuView extends ReactViewGroup implements PopupMenu.OnMenuI
+ 
+     boolean cancelled = true;
+ 
++    private boolean disabled = false;
++
+     protected boolean dropdownMenuMode = false;
+ 
+     public ContextMenuView(final Context context) {
+@@ -87,13 +89,18 @@ public class ContextMenuView extends ReactViewGroup implements PopupMenu.OnMenuI
+ 
+     @Override
+     public boolean onInterceptTouchEvent(MotionEvent ev) {
+-        return true;
++        return disabled ? false : true;
+     }
+ 
+     @Override
+     public boolean onTouchEvent(MotionEvent ev) {
+-        gestureDetector.onTouchEvent(ev);
+-        return true;
++      if (disabled) return false;
++      gestureDetector.onTouchEvent(ev);
++      return true;
++    }
++
++    public void setDisabled(boolean disabled) {
++      this.disabled = disabled;
+     }
+ 
+     public void setActions(@Nullable ReadableArray actions) {

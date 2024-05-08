@@ -1,0 +1,1443 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SendCurrencyInputform should render input in fiat correctly 1`] = `
+.c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+  padding: 8px 12px 4px;
+}
+
+.c5 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c24 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.c25 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+}
+
+.c27 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 8px 12px 4px;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: left;
+  -webkit-justify-content: left;
+  -ms-flex-pack: left;
+  justify-content: left;
+}
+
+.c8 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: right;
+  -webkit-justify-content: right;
+  -ms-flex-pack: right;
+  justify-content: right;
+  gap: 10px;
+}
+
+.c11 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c17 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c26 {
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c7 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c19 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c12 {
+  color: #222222;
+  cursor: pointer;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c12:hover {
+  opacity: 0.6;
+}
+
+.c12:active {
+  opacity: 0.4;
+}
+
+.c9 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c9:hover {
+  opacity: 0.6;
+}
+
+.c9:active {
+  opacity: 0.4;
+}
+
+.c23 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c20 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c21 {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c28 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c28:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c28 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c28 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c29 {
+  background-color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+  padding: 16px;
+  color: #FFFFFF;
+}
+
+.c29:focus {
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
+}
+
+.c29:hover {
+  background-color: #fb58ff;
+}
+
+.c29:active {
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
+}
+
+.c29:disabled {
+  background-color: #22222212;
+  color: #7D7D7D;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.c10 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  border-radius: 16px;
+  padding: 4px 6px;
+  font-size: 14px;
+  font-weight: 485;
+  line-height: 20px;
+  background: #F9F9F9;
+  color: #7D7D7D;
+  stroke: none;
+}
+
+.c10:hover {
+  background: #22222212;
+  color: #222222;
+  opacity: unset;
+}
+
+.c10:hover path {
+  fill: #222222;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c16 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c18 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c1 {
+  width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c22 {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  background-color: #22222212;
+  font-size: initial;
+}
+
+.c2 {
+  background-color: #FFFFFF;
+  border-radius: 20px;
+  outline: 1px solid #22222212;
+  width: 100%;
+  padding: 8px;
+}
+
+.c13 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c13:hover {
+  opacity: 0.6;
+}
+
+.c13:active {
+  opacity: 0.4;
+}
+
+.c15 {
+  width: 100%;
+  padding: 12px 16px;
+  gap: 16px;
+}
+
+@media screen and (max-width:640px) {
+
+}
+
+@media screen and (max-width:768px) {
+
+}
+
+@media screen and (max-width:640px) {
+
+}
+
+<div
+  class="c0 c1 c2"
+  data-testid="send-review-modal"
+>
+  <div
+    class="c3 c4"
+    width="100%"
+  >
+    <div
+      class="c5 c6"
+    >
+      <div
+        class="c7 css-n8z49y"
+      >
+        Review send
+      </div>
+    </div>
+    <div
+      class="c5 c8"
+    >
+      <a
+        class="c9 c10"
+        href="https://support.uniswap.org/hc/en-us"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <div
+          class="c5 c11"
+        >
+          <svg
+            fill="none"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
+              fill="#9B9B9B"
+            />
+          </svg>
+          Get help
+        </div>
+      </a>
+      <svg
+        class="c12 c13"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <line
+          x1="18"
+          x2="6"
+          y1="6"
+          y2="18"
+        />
+        <line
+          x1="6"
+          x2="18"
+          y1="6"
+          y2="18"
+        />
+      </svg>
+    </div>
+  </div>
+  <div
+    class="c14 c15"
+  >
+    <div
+      class="c16"
+    >
+      <div
+        class="c5 c17"
+      >
+        <div
+          class="c18"
+        >
+          <div
+            class="c19 css-1a4qi6e"
+          >
+            You're sending
+          </div>
+          <div
+            class="c7 css-15popx1"
+          >
+            $1,000.00
+          </div>
+          <div
+            class="c19 css-1a4qi6e"
+          >
+            100.00 DAI
+          </div>
+        </div>
+        <div
+          style="height: 36px;"
+        >
+          <div
+            class="c20"
+          >
+            <img
+              class="c21"
+              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="c5 c17"
+      >
+        <div
+          class="c18"
+        >
+          <div
+            class="c19 css-1a4qi6e"
+          >
+            To
+          </div>
+          <div
+            class="c7 css-15popx1"
+          >
+            <div
+              class="c5 c11"
+            >
+              <div
+                class="c7 css-15popx1"
+              >
+                hayden.eth
+              </div>
+            </div>
+          </div>
+          <div
+            class="c19 css-1a4qi6e"
+          >
+            0x9984...9103
+          </div>
+        </div>
+        <div
+          style="height: 36px;"
+        >
+          <div
+            class="c22"
+          >
+            <span>
+              <div
+                style="border-radius: 50px; overflow: hidden; padding: 0px; margin: 0px; width: 36px; height: 36px; display: inline-block; background: rgb(200, 20, 83);"
+              >
+                <svg
+                  height="36"
+                  width="36"
+                  x="0"
+                  y="0"
+                >
+                  <rect
+                    fill="#F29602"
+                    height="36"
+                    transform="translate(-1.3639893162257823 0.27350588462642744) rotate(171.3 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                  <rect
+                    fill="#FA6C00"
+                    height="36"
+                    transform="translate(7.665150362825969 -12.44820359430869) rotate(394.5 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                  <rect
+                    fill="#FB1868"
+                    height="36"
+                    transform="translate(23.55150004628138 -6.949396678861342) rotate(445.6 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                </svg>
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c23"
+    />
+    <div
+      class="c24 c17"
+      width="100%"
+    >
+      <div
+        class="c19 css-1a4qi6e"
+      >
+        Network cost
+      </div>
+      <div
+        class="c25 c26"
+        width="min-content"
+      >
+        <svg
+          aria-labelledby="titleID"
+          height="16"
+          style="width: 16px; height: 16px;"
+          width="16"
+        >
+          <title
+            id="titleID"
+          >
+            Ethereum logo
+          </title>
+          <rect
+            fill="#F9F9F9"
+            height="16"
+            rx="4"
+            width="16"
+          />
+          <rect
+            fill="#6B8AFF33"
+            height="16"
+            rx="4"
+            width="16"
+          />
+          <svg
+            height="16"
+            width="16"
+          >
+            ethereum.svg
+          </svg>
+        </svg>
+        <div
+          class="c7 css-142zc9n"
+        >
+          -
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    class="c27 c28 c29"
+  >
+    Confirm send
+  </button>
+</div>
+`;
+
+exports[`SendCurrencyInputform should render input in token amount correctly 1`] = `
+.c3 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+  padding: 8px 12px 4px;
+}
+
+.c5 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c24 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
+}
+
+.c25 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+}
+
+.c27 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  text-align: center;
+  line-height: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  font-size: inherit;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: white;
+  background-color: primary;
+  border: 0;
+  border-radius: 4px;
+}
+
+.c4 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 8px 12px 4px;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: left;
+  -webkit-justify-content: left;
+  -ms-flex-pack: left;
+  justify-content: left;
+}
+
+.c8 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: right;
+  -webkit-justify-content: right;
+  -ms-flex-pack: right;
+  justify-content: right;
+  gap: 10px;
+}
+
+.c11 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c17 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c26 {
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c7 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c19 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c12 {
+  color: #222222;
+  cursor: pointer;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c12:hover {
+  opacity: 0.6;
+}
+
+.c12:active {
+  opacity: 0.4;
+}
+
+.c9 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c9:hover {
+  opacity: 0.6;
+}
+
+.c9:active {
+  opacity: 0.4;
+}
+
+.c23 {
+  width: 100%;
+  height: 1px;
+  background-color: #22222212;
+}
+
+.c20 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c21 {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c28 {
+  padding: 16px;
+  width: 100%;
+  line-height: 24px;
+  font-weight: 535;
+  text-align: center;
+  border-radius: 16px;
+  outline: none;
+  border: 1px solid transparent;
+  color: #222222;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+  -webkit-transition: -webkit-transform 450ms ease;
+  -webkit-transition: transform 450ms ease;
+  transition: transform 450ms ease;
+  -webkit-transform: perspective(1px) translateZ(0);
+  -ms-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+}
+
+.c28:disabled {
+  opacity: 50%;
+  cursor: auto;
+  pointer-events: none;
+}
+
+.c28 > * {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c28 > a {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.c29 {
+  background-color: #FC72FF;
+  font-size: 20px;
+  font-weight: 535;
+  padding: 16px;
+  color: #FFFFFF;
+}
+
+.c29:focus {
+  box-shadow: 0 0 0 1pt #fb58ff;
+  background-color: #fb58ff;
+}
+
+.c29:hover {
+  background-color: #fb58ff;
+}
+
+.c29:active {
+  box-shadow: 0 0 0 1pt #fb3fff;
+  background-color: #fb3fff;
+}
+
+.c29:disabled {
+  background-color: #22222212;
+  color: #7D7D7D;
+  cursor: auto;
+  box-shadow: none;
+  border: 1px solid transparent;
+  outline: none;
+}
+
+.c10 {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  border-radius: 16px;
+  padding: 4px 6px;
+  font-size: 14px;
+  font-weight: 485;
+  line-height: 20px;
+  background: #F9F9F9;
+  color: #7D7D7D;
+  stroke: none;
+}
+
+.c10:hover {
+  background: #22222212;
+  color: #222222;
+  opacity: unset;
+}
+
+.c10:hover path {
+  fill: #222222;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c16 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c18 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c1 {
+  width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c22 {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  background-color: #22222212;
+  font-size: initial;
+}
+
+.c2 {
+  background-color: #FFFFFF;
+  border-radius: 20px;
+  outline: 1px solid #22222212;
+  width: 100%;
+  padding: 8px;
+}
+
+.c13 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c13:hover {
+  opacity: 0.6;
+}
+
+.c13:active {
+  opacity: 0.4;
+}
+
+.c15 {
+  width: 100%;
+  padding: 12px 16px;
+  gap: 16px;
+}
+
+@media screen and (max-width:640px) {
+
+}
+
+@media screen and (max-width:768px) {
+
+}
+
+@media screen and (max-width:640px) {
+
+}
+
+<div
+  class="c0 c1 c2"
+  data-testid="send-review-modal"
+>
+  <div
+    class="c3 c4"
+    width="100%"
+  >
+    <div
+      class="c5 c6"
+    >
+      <div
+        class="c7 css-n8z49y"
+      >
+        Review send
+      </div>
+    </div>
+    <div
+      class="c5 c8"
+    >
+      <a
+        class="c9 c10"
+        href="https://support.uniswap.org/hc/en-us"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        <div
+          class="c5 c11"
+        >
+          <svg
+            fill="none"
+            height="16"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
+              fill="#9B9B9B"
+            />
+          </svg>
+          Get help
+        </div>
+      </a>
+      <svg
+        class="c12 c13"
+        fill="none"
+        height="24"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <line
+          x1="18"
+          x2="6"
+          y1="6"
+          y2="18"
+        />
+        <line
+          x1="6"
+          x2="18"
+          y1="6"
+          y2="18"
+        />
+      </svg>
+    </div>
+  </div>
+  <div
+    class="c14 c15"
+  >
+    <div
+      class="c16"
+    >
+      <div
+        class="c5 c17"
+      >
+        <div
+          class="c18"
+        >
+          <div
+            class="c19 css-1a4qi6e"
+          >
+            You're sending
+          </div>
+          <div
+            class="c7 css-15popx1"
+          >
+            1.00 DAI
+          </div>
+          <div
+            class="c19 css-1a4qi6e"
+          >
+            $100.00
+          </div>
+        </div>
+        <div
+          style="height: 36px;"
+        >
+          <div
+            class="c20"
+          >
+            <img
+              class="c21"
+              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="c5 c17"
+      >
+        <div
+          class="c18"
+        >
+          <div
+            class="c19 css-1a4qi6e"
+          >
+            To
+          </div>
+          <div
+            class="c7 css-15popx1"
+          >
+            <div
+              class="c5 c11"
+            >
+              <div
+                class="c7 css-15popx1"
+              >
+                hayden.eth
+              </div>
+            </div>
+          </div>
+          <div
+            class="c19 css-1a4qi6e"
+          >
+            0x9984...9103
+          </div>
+        </div>
+        <div
+          style="height: 36px;"
+        >
+          <div
+            class="c22"
+          >
+            <span>
+              <div
+                style="border-radius: 50px; overflow: hidden; padding: 0px; margin: 0px; width: 36px; height: 36px; display: inline-block; background: rgb(200, 20, 83);"
+              >
+                <svg
+                  height="36"
+                  width="36"
+                  x="0"
+                  y="0"
+                >
+                  <rect
+                    fill="#F29602"
+                    height="36"
+                    transform="translate(-1.3639893162257823 0.27350588462642744) rotate(171.3 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                  <rect
+                    fill="#FA6C00"
+                    height="36"
+                    transform="translate(7.665150362825969 -12.44820359430869) rotate(394.5 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                  <rect
+                    fill="#FB1868"
+                    height="36"
+                    transform="translate(23.55150004628138 -6.949396678861342) rotate(445.6 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                </svg>
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="c23"
+    />
+    <div
+      class="c24 c17"
+      width="100%"
+    >
+      <div
+        class="c19 css-1a4qi6e"
+      >
+        Network cost
+      </div>
+      <div
+        class="c25 c26"
+        width="min-content"
+      >
+        <svg
+          aria-labelledby="titleID"
+          height="16"
+          style="width: 16px; height: 16px;"
+          width="16"
+        >
+          <title
+            id="titleID"
+          >
+            Ethereum logo
+          </title>
+          <rect
+            fill="#F9F9F9"
+            height="16"
+            rx="4"
+            width="16"
+          />
+          <rect
+            fill="#6B8AFF33"
+            height="16"
+            rx="4"
+            width="16"
+          />
+          <svg
+            height="16"
+            width="16"
+          >
+            ethereum.svg
+          </svg>
+        </svg>
+        <div
+          class="c7 css-142zc9n"
+        >
+          -
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    class="c27 c28 c29"
+  >
+    Confirm send
+  </button>
+</div>
+`;

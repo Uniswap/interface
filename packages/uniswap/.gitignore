@@ -1,0 +1,10 @@
+node_modules/
+.DS_Store
+THUMBS_DB
+tsconfig.tsbuildinfo
+
+# Generated contract types
+src/abis/types
+
+# generated graphql files
+src/**/__generated__

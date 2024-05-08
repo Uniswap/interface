@@ -1,0 +1,34 @@
+diff --git a/jest/setup.js b/jest/setup.js
+index 3738bd2c61e516fa431f61fda47f2474f72dba42..2b3266007b3c9412d99e7ceee205ee52e3008077 100644
+--- a/jest/setup.js
++++ b/jest/setup.js
+@@ -17,12 +17,12 @@ jest.requireActual('@react-native/polyfills/error-guard');
+ 
+ global.__DEV__ = true;
+ 
+-global.performance = {
++if (!global.performance) global.performance = {
+   now: jest.fn(Date.now),
+ };
+ 
+ global.regeneratorRuntime = jest.requireActual('regenerator-runtime/runtime');
+-global.window = global;
++if (!global.window) global.window = global;
+ 
+ global.requestAnimationFrame = function (callback) {
+   return setTimeout(callback, 0);
+diff --git a/third-party-podspecs/boost.podspec b/third-party-podspecs/boost.podspec
+index 3d9331c95d1217682a0b820a0d9440fdff074ae0..8276eb1a5854f945462363fe8db917e8270b3b6a 100644
+--- a/third-party-podspecs/boost.podspec
++++ b/third-party-podspecs/boost.podspec
+@@ -10,8 +10,8 @@ Pod::Spec.new do |spec|
+   spec.homepage = 'http://www.boost.org'
+   spec.summary = 'Boost provides free peer-reviewed portable C++ source libraries.'
+   spec.authors = 'Rene Rivera'
+-  spec.source = { :http => 'https://boostorg.jfrog.io/artifactory/main/release/1.76.0/source/boost_1_76_0.tar.bz2',
+-                  :sha256 => 'f0397ba6e982c4450f27bf32a2a83292aba035b827a5623a14636ea583318c41' }
++  spec.source = { :http => 'https://sourceforge.net/projects/boost/files/boost/1.83.0/boost_1_83_0.tar.bz2',
++                  :sha256 => '6478edfe2f3305127cffe8caf73ea0176c53769f4bf1585be237eb30798c3b8e' }
+ 
+   # Pinning to the same version as React.podspec.
+   spec.platforms = { :ios => '11.0' }

@@ -1,0 +1,172 @@
+fragment PoolToken on Token {
+  id
+  address
+  name
+  symbol
+  chain
+  decimals
+  project {
+    id
+    logo {
+      id
+      url
+    }
+  }
+}
+
+query V3Pool($chain: Chain!, $address: String!) {
+  v3Pool(chain: $chain, address: $address) {
+    id
+    protocolVersion
+    address
+    feeTier
+    token0 {
+      ...PoolToken
+      project {
+    id
+    markets(currencies: [USD]) {
+      id
+      price {
+        id
+        value
+      }
+    }
+    logo {
+      id
+      url
+    }
+  }
+    }
+    token0Supply
+    token1 {
+      ...PoolToken
+      project {
+        id
+        markets(currencies: [USD]) {
+          id
+          price {
+            id
+            value
+          }
+        }
+        logo {
+          id
+          url
+        }
+      }
+    }
+    token1Supply
+    txCount
+    volume24h: cumulativeVolume(duration: DAY) {
+      value
+    }
+    historicalVolume(duration: WEEK) {
+      value
+      timestamp
+    }
+    totalLiquidity {
+      value
+    }
+    totalLiquidityPercentChange24h {
+      value
+    }
+  }
+}
+
+query PoolPriceHistory($chain: Chain!, $address: String!, $duration: HistoryDuration!, $isV3: Boolean!) {
+  v3Pool(chain: $chain, address: $address) @include(if: $isV3) {
+    id
+    priceHistory(duration: $duration) {
+      id
+      token0Price
+      token1Price
+      timestamp
+    }
+  }
+  v2Pair(chain: ETHEREUM, address: $address) @skip(if: $isV3) {
+    id
+    priceHistory(duration: $duration) {
+      id
+      token0Price
+      token1Price
+      timestamp
+    }
+  }
+}
+
+query PoolVolumeHistory($chain: Chain!, $address: String!, $duration: HistoryDuration!, $isV3: Boolean!) {
+  v3Pool(chain: $chain, address: $address) @include(if: $isV3) {
+    id
+    historicalVolume(duration: $duration) {
+      id
+      value
+      timestamp
+    }
+  }
+  v2Pair(chain: ETHEREUM, address: $address) @skip(if: $isV3) {
+    id
+    historicalVolume(duration: $duration) {
+      id
+      value
+      timestamp
+    }
+  }
+}
+
+query V2Pair($address: String!) {
+  v2Pair(chain: ETHEREUM, address: $address) {
+    id
+    protocolVersion
+    address
+    token0 {
+      ...PoolToken
+      project {
+        id
+        markets(currencies: [USD]) {
+          id
+          price {
+            id
+            value
+          }
+        }
+        logo {
+          id
+          url
+        }
+      }
+    }
+    token0Supply
+    token1 {
+      ...PoolToken
+      project {
+    id
+    markets(currencies: [USD]) {
+      id
+      price {
+        id
+        value
+      }
+    }
+    logo {
+      id
+      url
+    }
+  }
+    }
+    token1Supply
+    txCount
+    volume24h: cumulativeVolume(duration: DAY) {
+      value
+    }
+    historicalVolume(duration: WEEK) {
+      value
+      timestamp
+    }
+    totalLiquidity {
+      value
+    }
+    totalLiquidityPercentChange24h {
+      value
+    }
+  }
+}

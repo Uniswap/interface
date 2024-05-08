@@ -1,0 +1,22 @@
+# *
+User-agent: *
+
+# Analytics
+Disallow: https://statsigapi.net
+Disallow: https://api.uniswap.org/v1/statsig-proxy
+Disallow: https://api.uniswap.org/v1/amplitude-proxy
+Disallow: https://sentry.io
+
+# Token Lists
+Disallow: https://cloudflare-ipfs.com
+Disallow: https://static.optimism.io
+Disallow: https://raw.githubusercontent.com/plasmadlt/plasma-finance-token-list/master/bnb.json
+Disallow: https://raw.githubusercontent.com/ethereum-optimism/ethereum-optimism.github.io/master/optimism.tokenlist.json
+Disallow: https://tokenlist.arbitrum.io
+Disallow: https://raw.githubusercontent.com/compound-finance/token-list/master/compound.tokenlist.json
+Disallow: https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/token_list.json
+Disallow: https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/set.tokenlist.json
+Disallow: https://celo-org.github.io
+
+# Sitemaps
+Sitemap: https://app.uniswap.org/sitemap.xml

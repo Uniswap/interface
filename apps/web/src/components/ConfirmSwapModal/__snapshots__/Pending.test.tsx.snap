@@ -1,0 +1,2156 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Pending - classic trade titles renders classic trade correctly, with approvalPending= false , revocationPending= false, wrapTxHash= undefined 1`] = `
+<DocumentFragment>
+  .c4 {
+  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  -webkit-animation: dDLNFg 250ms ease-in-out forwards;
+  animation: dDLNFg 250ms ease-in-out forwards;
+}
+
+.c4.exiting {
+  -webkit-animation: hNFZXE 250ms ease-in-out;
+  animation: hNFZXE 250ms ease-in-out;
+}
+
+.c3 {
+  height: 64px;
+  width: 64px;
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: visible;
+}
+
+.c5 {
+  height: 64px;
+  width: 64px;
+}
+
+.c12 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c17 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  margin-top: 32px;
+  min-height: 24px;
+}
+
+.c13 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.c18 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c11 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c19 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c19:hover {
+  opacity: 0.6;
+}
+
+.c19:active {
+  opacity: 0.4;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c1 {
+  width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c16 {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c2 {
+  margin: 48px 0 8px;
+}
+
+.c7 {
+  opacity: 0.5;
+  padding: 0 32px;
+  overflow: visible;
+}
+
+.c8 {
+  position: relative;
+  width: 100%;
+  min-height: 72px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.c9 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-transition: display 250ms ease-in-out;
+  transition: display 250ms ease-in-out;
+}
+
+.c9.exiting {
+  -webkit-animation: ifZjLM 250ms ease-in-out;
+  animation: ifZjLM 250ms ease-in-out;
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1 c2"
+      >
+        <div
+          class="c3"
+        >
+          <div
+            class="c4"
+          >
+            <svg
+              class="c5"
+              data-testid="submitted-icon"
+              fill="none"
+              height="54"
+              viewBox="0 0 54 54"
+              width="54"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M26.9997 0.333496C12.2717 0.333496 0.333008 12.2722 0.333008 27.0002C0.333008 41.7282 12.2717 53.6668 26.9997 53.6668C41.7277 53.6668 53.6663 41.7282 53.6663 27.0002C53.6663 12.2722 41.7277 0.333496 26.9997 0.333496ZM36.4131 25.7469C36.0238 26.1362 35.5117 26.3335 34.9997 26.3335C34.4877 26.3335 33.9756 26.1389 33.5863 25.7469L28.9997 21.1603V37.6668C28.9997 38.7708 28.1037 39.6668 26.9997 39.6668C25.8957 39.6668 24.9997 38.7708 24.9997 37.6668V21.1629L20.4131 25.7495C19.6318 26.5308 18.365 26.5308 17.5837 25.7495C16.8023 24.9682 16.8023 23.7014 17.5837 22.9201L25.5837 14.9201C25.7677 14.7361 25.9887 14.5898 26.2341 14.4884C26.722 14.2858 27.274 14.2858 27.762 14.4884C28.0074 14.5898 28.2291 14.7361 28.4131 14.9201L36.4131 22.9201C37.1944 23.7014 37.1944 24.9656 36.4131 25.7469Z"
+                fill="#FC72FF"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="c6 c1 c7"
+        >
+          <div
+            class="c8"
+          >
+            <div
+              class="c6 c9"
+            >
+              <div
+                class="c10 css-16qljo6"
+                data-testid="pending-modal-content-title"
+              >
+                Swap submitted
+              </div>
+              <div
+                class="c11 css-wjxizv"
+              >
+                <div
+                  class="c12 c13"
+                >
+                  <div
+                    class="c14"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c15"
+                    >
+                      <img
+                        class="c16"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c10 css-142zc9n"
+                  >
+                    &lt;0.00001 ABC
+                  </div>
+                  <svg
+                    fill="none"
+                    height="12px"
+                    stroke="#222222"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="12px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="5"
+                      x2="19"
+                      y1="12"
+                      y2="12"
+                    />
+                    <polyline
+                      points="12 5 19 12 12 19"
+                    />
+                  </svg>
+                  <div
+                    class="c14"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c15"
+                    >
+                      <img
+                        class="c16"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c10 css-142zc9n"
+                  >
+                    &lt;0.00001 DEF
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c17 c18"
+          >
+            <div
+              class="c11 css-142zc9n"
+            >
+              <a
+                class="c19"
+                color="neutral2"
+                href="https://etherscan.io/tx/0x123"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                View on Explorer
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`Pending - classic trade titles renders classic trade correctly, with approvalPending= false , revocationPending= false, wrapTxHash= undefined 2`] = `
+<DocumentFragment>
+  .c4 {
+  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  -webkit-animation: dDLNFg 250ms ease-in-out forwards;
+  animation: dDLNFg 250ms ease-in-out forwards;
+}
+
+.c4.exiting {
+  -webkit-animation: hNFZXE 250ms ease-in-out;
+  animation: hNFZXE 250ms ease-in-out;
+}
+
+.c3 {
+  height: 64px;
+  width: 64px;
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: visible;
+}
+
+.c5 {
+  height: 64px;
+  width: 64px;
+}
+
+.c12 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c17 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  margin-top: 32px;
+  min-height: 24px;
+}
+
+.c13 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.c18 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c11 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c19 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c19:hover {
+  opacity: 0.6;
+}
+
+.c19:active {
+  opacity: 0.4;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c1 {
+  width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c16 {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c2 {
+  margin: 48px 0 8px;
+}
+
+.c7 {
+  padding: 0 32px;
+  overflow: visible;
+}
+
+.c8 {
+  position: relative;
+  width: 100%;
+  min-height: 72px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.c9 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-transition: display 250ms ease-in-out;
+  transition: display 250ms ease-in-out;
+}
+
+.c9.exiting {
+  -webkit-animation: ifZjLM 250ms ease-in-out;
+  animation: ifZjLM 250ms ease-in-out;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1 c2"
+      >
+        <div
+          class="c3"
+        >
+          <div
+            class="c4"
+          >
+            <svg
+              class="c5"
+              data-testid="confirmed-icon"
+              fill="none"
+              height="54"
+              viewBox="0 0 54 54"
+              width="54"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M27 0.333008C12.28 0.333008 0.333313 12.2797 0.333313 26.9997C0.333313 41.7197 12.28 53.6663 27 53.6663C41.72 53.6663 53.6666 41.7197 53.6666 26.9997C53.6666 12.2797 41.72 0.333008 27 0.333008ZM37.7466 22.1997L25.2933 34.6263C24.9199 35.0263 24.4133 35.2131 23.8799 35.2131C23.3733 35.2131 22.8666 35.0263 22.4666 34.6263L16.2533 28.4131C15.48 27.6398 15.48 26.3596 16.2533 25.5863C17.0266 24.8129 18.3066 24.8129 19.08 25.5863L23.8799 30.3864L34.92 19.373C35.6933 18.573 36.9733 18.573 37.7466 19.373C38.52 20.1464 38.52 21.3997 37.7466 22.1997Z"
+                fill="#40B66B"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="c6 c1 c7"
+        >
+          <div
+            class="c8"
+          >
+            <div
+              class="c6 c9"
+            >
+              <div
+                class="c10 css-16qljo6"
+                data-testid="pending-modal-content-title"
+              >
+                Swap success!
+              </div>
+              <div
+                class="c11 css-wjxizv"
+              >
+                <div
+                  class="c12 c13"
+                >
+                  <div
+                    class="c14"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c15"
+                    >
+                      <img
+                        class="c16"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c10 css-142zc9n"
+                  >
+                    &lt;0.00001 ABC
+                  </div>
+                  <svg
+                    fill="none"
+                    height="12px"
+                    stroke="#222222"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="12px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="5"
+                      x2="19"
+                      y1="12"
+                      y2="12"
+                    />
+                    <polyline
+                      points="12 5 19 12 12 19"
+                    />
+                  </svg>
+                  <div
+                    class="c14"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c15"
+                    >
+                      <img
+                        class="c16"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c10 css-142zc9n"
+                  >
+                    &lt;0.00001 DEF
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c17 c18"
+          >
+            <div
+              class="c11 css-142zc9n"
+            >
+              <a
+                class="c19"
+                color="neutral2"
+                href="https://etherscan.io/tx/0x123"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                View on Explorer
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`Pending - classic trade titles renders classic trade correctly, with approvalPending= false , revocationPending= false, wrapTxHash= undefined 3`] = `
+<DocumentFragment>
+  .c5 {
+  height: 16px;
+  width: 16px;
+}
+
+.c5 path {
+  stroke: #CECECE;
+  background: #7D7D7D;
+  fill: #CECECE;
+}
+
+.c6 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
+}
+
+.c4 {
+  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  -webkit-animation: iCPeaJ 250ms ease-in-out forwards;
+  animation: iCPeaJ 250ms ease-in-out forwards;
+}
+
+.c4.exiting {
+  -webkit-animation: bbnGid 250ms ease-in-out;
+  animation: bbnGid 250ms ease-in-out;
+}
+
+.c3 {
+  height: 64px;
+  width: 64px;
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: visible;
+}
+
+.c7 {
+  stroke: #CECECE;
+  fill: #CECECE;
+  width: calc(100% + 8px);
+  height: calc(100% + 8px);
+  top: -4px;
+  left: -4px;
+  position: absolute;
+}
+
+.c14 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c19 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  margin-top: 32px;
+  min-height: 24px;
+}
+
+.c15 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.c20 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c12 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c13 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c8 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c1 {
+  width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c17 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c18 {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c16 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c2 {
+  margin: 48px 0 8px;
+}
+
+.c9 {
+  padding: 0 32px;
+  overflow: visible;
+}
+
+.c10 {
+  position: relative;
+  width: 100%;
+  min-height: 72px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.c11 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-transition: display 250ms ease-in-out;
+  transition: display 250ms ease-in-out;
+}
+
+.c11.exiting {
+  -webkit-animation: ifZjLM 250ms ease-in-out;
+  animation: ifZjLM 250ms ease-in-out;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1 c2"
+      >
+        <div
+          class="c3"
+        >
+          <div
+            class="c4"
+          >
+            <svg
+              class="c5 c6 c7"
+              fill="#CECECE"
+              stroke="#CECECE"
+              viewBox="0 0 54 54"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M53.6666 26.9999C53.6666 41.7275 41.7276 53.6666 27 53.6666C12.2724 53.6666 0.333313 41.7275 0.333313 26.9999C0.333313 12.2723 12.2724 0.333252 27 0.333252C41.7276 0.333252 53.6666 12.2723 53.6666 26.9999ZM8.33331 26.9999C8.33331 37.3092 16.6907 45.6666 27 45.6666C37.3093 45.6666 45.6666 37.3092 45.6666 26.9999C45.6666 16.6906 37.3093 8.33325 27 8.33325C16.6907 8.33325 8.33331 16.6906 8.33331 26.9999Z"
+                fill="#CECECE"
+                opacity="0.1"
+              />
+              <path
+                d="M49.6666 26.9999C51.8758 26.9999 53.6973 25.1992 53.3672 23.0149C53.0452 20.884 52.4652 18.7951 51.6368 16.795C50.2966 13.5597 48.3324 10.62 45.8562 8.14374C43.3799 5.66751 40.4402 3.70326 37.2049 2.36313C35.2048 1.53466 33.1159 0.954747 30.985 0.632693C28.8007 0.30256 27 2.12411 27 4.33325C27 6.54239 28.8108 8.29042 30.9695 8.76019C32.0523 8.99585 33.1146 9.32804 34.1434 9.75417C36.4081 10.6923 38.4659 12.0672 40.1993 13.8006C41.9327 15.534 43.3076 17.5918 44.2457 19.8565C44.6719 20.8853 45.004 21.9476 45.2397 23.0304C45.7095 25.1891 47.4575 26.9999 49.6666 26.9999Z"
+                fill="#CECECE"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="c8 c1 c9"
+        >
+          <div
+            class="c10"
+          >
+            <div
+              class="c8 c11"
+            >
+              <div
+                class="c12 css-16qljo6"
+                data-testid="pending-modal-content-title"
+              >
+                Confirm swap
+              </div>
+              <div
+                class="c13 css-wjxizv"
+              >
+                <div
+                  class="c14 c15"
+                >
+                  <div
+                    class="c16"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <img
+                        class="c18"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c12 css-142zc9n"
+                  >
+                    &lt;0.00001 ABC
+                  </div>
+                  <svg
+                    fill="none"
+                    height="12px"
+                    stroke="#222222"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="12px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="5"
+                      x2="19"
+                      y1="12"
+                      y2="12"
+                    />
+                    <polyline
+                      points="12 5 19 12 12 19"
+                    />
+                  </svg>
+                  <div
+                    class="c16"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <img
+                        class="c18"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c12 css-142zc9n"
+                  >
+                    &lt;0.00001 DEF
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c19 c20"
+          >
+            <div
+              class="c13 css-142zc9n"
+            >
+              Proceed in your wallet
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`Pending - uniswapX trade titles renders limit order correctly, with approvalPending= false , revocationPending= false, wrapTxHash= undefined 1`] = `
+<DocumentFragment>
+  .c4 {
+  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  -webkit-animation: dDLNFg 250ms ease-in-out forwards;
+  animation: dDLNFg 250ms ease-in-out forwards;
+}
+
+.c4.exiting {
+  -webkit-animation: hNFZXE 250ms ease-in-out;
+  animation: hNFZXE 250ms ease-in-out;
+}
+
+.c3 {
+  height: 64px;
+  width: 64px;
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: visible;
+}
+
+.c5 {
+  height: 64px;
+  width: 64px;
+}
+
+.c12 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c13 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c11 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c1 {
+  width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c16 {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c2 {
+  margin: 48px 0 8px;
+}
+
+.c7 {
+  opacity: 0.5;
+  padding: 0 32px;
+  overflow: visible;
+}
+
+.c8 {
+  position: relative;
+  width: 100%;
+  min-height: 72px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.c9 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-transition: display 250ms ease-in-out;
+  transition: display 250ms ease-in-out;
+}
+
+.c9.exiting {
+  -webkit-animation: ifZjLM 250ms ease-in-out;
+  animation: ifZjLM 250ms ease-in-out;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1 c2"
+      >
+        <div
+          class="c3"
+        >
+          <div
+            class="c4"
+          >
+            <svg
+              class="c5"
+              data-testid="submitted-icon"
+              fill="none"
+              height="54"
+              viewBox="0 0 54 54"
+              width="54"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M26.9997 0.333496C12.2717 0.333496 0.333008 12.2722 0.333008 27.0002C0.333008 41.7282 12.2717 53.6668 26.9997 53.6668C41.7277 53.6668 53.6663 41.7282 53.6663 27.0002C53.6663 12.2722 41.7277 0.333496 26.9997 0.333496ZM36.4131 25.7469C36.0238 26.1362 35.5117 26.3335 34.9997 26.3335C34.4877 26.3335 33.9756 26.1389 33.5863 25.7469L28.9997 21.1603V37.6668C28.9997 38.7708 28.1037 39.6668 26.9997 39.6668C25.8957 39.6668 24.9997 38.7708 24.9997 37.6668V21.1629L20.4131 25.7495C19.6318 26.5308 18.365 26.5308 17.5837 25.7495C16.8023 24.9682 16.8023 23.7014 17.5837 22.9201L25.5837 14.9201C25.7677 14.7361 25.9887 14.5898 26.2341 14.4884C26.722 14.2858 27.274 14.2858 27.762 14.4884C28.0074 14.5898 28.2291 14.7361 28.4131 14.9201L36.4131 22.9201C37.1944 23.7014 37.1944 24.9656 36.4131 25.7469Z"
+                fill="#FC72FF"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="c6 c1 c7"
+        >
+          <div
+            class="c8"
+          >
+            <div
+              class="c6 c9"
+            >
+              <div
+                class="c10 css-16qljo6"
+                data-testid="pending-modal-content-title"
+              >
+                Limit submitted
+              </div>
+              <div
+                class="c11 css-wjxizv"
+              >
+                <div
+                  class="c12 c13"
+                >
+                  <div
+                    class="c14"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c15"
+                    >
+                      <img
+                        class="c16"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c10 css-142zc9n"
+                  >
+                    &lt;0.00001 DAI
+                  </div>
+                  <svg
+                    fill="none"
+                    height="12px"
+                    stroke="#222222"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="12px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="5"
+                      x2="19"
+                      y1="12"
+                      y2="12"
+                    />
+                    <polyline
+                      points="12 5 19 12 12 19"
+                    />
+                  </svg>
+                  <div
+                    class="c14"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c15"
+                    >
+                      <img
+                        class="c16"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c10 css-142zc9n"
+                  >
+                    0.0001 USDC
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`Pending - uniswapX trade titles renders limit order correctly, with approvalPending= false , revocationPending= false, wrapTxHash= undefined 2`] = `
+<DocumentFragment>
+  .c4 {
+  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  -webkit-animation: dDLNFg 250ms ease-in-out forwards;
+  animation: dDLNFg 250ms ease-in-out forwards;
+}
+
+.c4.exiting {
+  -webkit-animation: hNFZXE 250ms ease-in-out;
+  animation: hNFZXE 250ms ease-in-out;
+}
+
+.c3 {
+  height: 64px;
+  width: 64px;
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: visible;
+}
+
+.c5 {
+  height: 64px;
+  width: 64px;
+}
+
+.c12 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c17 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  margin-top: 32px;
+  min-height: 24px;
+}
+
+.c13 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.c18 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c11 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c19 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c19:hover {
+  opacity: 0.6;
+}
+
+.c19:active {
+  opacity: 0.4;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c1 {
+  width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c16 {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c14 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c2 {
+  margin: 48px 0 8px;
+}
+
+.c7 {
+  padding: 0 32px;
+  overflow: visible;
+}
+
+.c8 {
+  position: relative;
+  width: 100%;
+  min-height: 72px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.c9 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-transition: display 250ms ease-in-out;
+  transition: display 250ms ease-in-out;
+}
+
+.c9.exiting {
+  -webkit-animation: ifZjLM 250ms ease-in-out;
+  animation: ifZjLM 250ms ease-in-out;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1 c2"
+      >
+        <div
+          class="c3"
+        >
+          <div
+            class="c4"
+          >
+            <svg
+              class="c5"
+              data-testid="confirmed-icon"
+              fill="none"
+              height="54"
+              viewBox="0 0 54 54"
+              width="54"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M27 0.333008C12.28 0.333008 0.333313 12.2797 0.333313 26.9997C0.333313 41.7197 12.28 53.6663 27 53.6663C41.72 53.6663 53.6666 41.7197 53.6666 26.9997C53.6666 12.2797 41.72 0.333008 27 0.333008ZM37.7466 22.1997L25.2933 34.6263C24.9199 35.0263 24.4133 35.2131 23.8799 35.2131C23.3733 35.2131 22.8666 35.0263 22.4666 34.6263L16.2533 28.4131C15.48 27.6398 15.48 26.3596 16.2533 25.5863C17.0266 24.8129 18.3066 24.8129 19.08 25.5863L23.8799 30.3864L34.92 19.373C35.6933 18.573 36.9733 18.573 37.7466 19.373C38.52 20.1464 38.52 21.3997 37.7466 22.1997Z"
+                fill="#40B66B"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="c6 c1 c7"
+        >
+          <div
+            class="c8"
+          >
+            <div
+              class="c6 c9"
+            >
+              <div
+                class="c10 css-16qljo6"
+                data-testid="pending-modal-content-title"
+              >
+                Limit filled!
+              </div>
+              <div
+                class="c11 css-wjxizv"
+              >
+                <div
+                  class="c12 c13"
+                >
+                  <div
+                    class="c14"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c15"
+                    >
+                      <img
+                        class="c16"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c10 css-142zc9n"
+                  >
+                    &lt;0.00001 DAI
+                  </div>
+                  <svg
+                    fill="none"
+                    height="12px"
+                    stroke="#222222"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="12px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="5"
+                      x2="19"
+                      y1="12"
+                      y2="12"
+                    />
+                    <polyline
+                      points="12 5 19 12 12 19"
+                    />
+                  </svg>
+                  <div
+                    class="c14"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c15"
+                    >
+                      <img
+                        class="c16"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c10 css-142zc9n"
+                  >
+                    0.0001 USDC
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c17 c18"
+          >
+            <div
+              class="c11 css-142zc9n"
+            >
+              <a
+                class="c19"
+                color="neutral2"
+                href="https://etherscan.io/tx/0x1234"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                View on Explorer
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`Pending - uniswapX trade titles renders limit order correctly, with approvalPending= false , revocationPending= false, wrapTxHash= undefined 3`] = `
+<DocumentFragment>
+  .c5 {
+  height: 16px;
+  width: 16px;
+}
+
+.c5 path {
+  stroke: #CECECE;
+  background: #7D7D7D;
+  fill: #CECECE;
+}
+
+.c6 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
+}
+
+.c4 {
+  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  -webkit-animation: iCPeaJ 250ms ease-in-out forwards;
+  animation: iCPeaJ 250ms ease-in-out forwards;
+}
+
+.c4.exiting {
+  -webkit-animation: bbnGid 250ms ease-in-out;
+  animation: bbnGid 250ms ease-in-out;
+}
+
+.c3 {
+  height: 64px;
+  width: 64px;
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: visible;
+}
+
+.c7 {
+  stroke: #CECECE;
+  fill: #CECECE;
+  width: calc(100% + 8px);
+  height: calc(100% + 8px);
+  top: -4px;
+  left: -4px;
+  position: absolute;
+}
+
+.c14 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c19 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  margin-top: 32px;
+  min-height: 24px;
+}
+
+.c15 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.c20 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c12 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c13 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.c8 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c1 {
+  width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c17 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c18 {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c16 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c2 {
+  margin: 48px 0 8px;
+}
+
+.c9 {
+  padding: 0 32px;
+  overflow: visible;
+}
+
+.c10 {
+  position: relative;
+  width: 100%;
+  min-height: 72px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.c11 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-transition: display 250ms ease-in-out;
+  transition: display 250ms ease-in-out;
+}
+
+.c11.exiting {
+  -webkit-animation: ifZjLM 250ms ease-in-out;
+  animation: ifZjLM 250ms ease-in-out;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1 c2"
+      >
+        <div
+          class="c3"
+        >
+          <div
+            class="c4"
+          >
+            <svg
+              class="c5 c6 c7"
+              fill="#CECECE"
+              stroke="#CECECE"
+              viewBox="0 0 54 54"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M53.6666 26.9999C53.6666 41.7275 41.7276 53.6666 27 53.6666C12.2724 53.6666 0.333313 41.7275 0.333313 26.9999C0.333313 12.2723 12.2724 0.333252 27 0.333252C41.7276 0.333252 53.6666 12.2723 53.6666 26.9999ZM8.33331 26.9999C8.33331 37.3092 16.6907 45.6666 27 45.6666C37.3093 45.6666 45.6666 37.3092 45.6666 26.9999C45.6666 16.6906 37.3093 8.33325 27 8.33325C16.6907 8.33325 8.33331 16.6906 8.33331 26.9999Z"
+                fill="#CECECE"
+                opacity="0.1"
+              />
+              <path
+                d="M49.6666 26.9999C51.8758 26.9999 53.6973 25.1992 53.3672 23.0149C53.0452 20.884 52.4652 18.7951 51.6368 16.795C50.2966 13.5597 48.3324 10.62 45.8562 8.14374C43.3799 5.66751 40.4402 3.70326 37.2049 2.36313C35.2048 1.53466 33.1159 0.954747 30.985 0.632693C28.8007 0.30256 27 2.12411 27 4.33325C27 6.54239 28.8108 8.29042 30.9695 8.76019C32.0523 8.99585 33.1146 9.32804 34.1434 9.75417C36.4081 10.6923 38.4659 12.0672 40.1993 13.8006C41.9327 15.534 43.3076 17.5918 44.2457 19.8565C44.6719 20.8853 45.004 21.9476 45.2397 23.0304C45.7095 25.1891 47.4575 26.9999 49.6666 26.9999Z"
+                fill="#CECECE"
+              />
+            </svg>
+          </div>
+        </div>
+        <div
+          class="c8 c1 c9"
+        >
+          <div
+            class="c10"
+          >
+            <div
+              class="c8 c11"
+            >
+              <div
+                class="c12 css-16qljo6"
+                data-testid="pending-modal-content-title"
+              >
+                Confirm limit
+              </div>
+              <div
+                class="c13 css-wjxizv"
+              >
+                <div
+                  class="c14 c15"
+                >
+                  <div
+                    class="c16"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <img
+                        class="c18"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c12 css-142zc9n"
+                  >
+                    &lt;0.00001 DAI
+                  </div>
+                  <svg
+                    fill="none"
+                    height="12px"
+                    stroke="#222222"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="12px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="5"
+                      x2="19"
+                      y1="12"
+                      y2="12"
+                    />
+                    <polyline
+                      points="12 5 19 12 12 19"
+                    />
+                  </svg>
+                  <div
+                    class="c16"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <img
+                        class="c18"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c12 css-142zc9n"
+                  >
+                    0.0001 USDC
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c19 c20"
+          >
+            <div
+              class="c13 css-142zc9n"
+            >
+              Proceed in your wallet
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;

@@ -1,0 +1,92 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UniswapXRouterLabel matches snapshot 1`] = `
+<DocumentFragment>
+  .c0 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: auto;
+}
+
+.c1 {
+  width: auto;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c2 {
+  color: #4673fa;
+}
+
+@supports (-webkit-background-clip:text) and (-webkit-text-fill-color:transparent) {
+  .c2 {
+    background-image: linear-gradient(91.39deg,#4673fa -101.76%,#9646fa 101.76%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1"
+        style="display: inline-flex;"
+        width="auto"
+      >
+        <svg
+          fill="none"
+          height="14"
+          viewBox="0 0 10 14"
+          width="10"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <lineargradient
+              gradientUnits="userSpaceOnUse"
+              id="AutoRouterIconGradienttest-id"
+              x1="-10.1807"
+              x2="10.6573"
+              y1="-12.0006"
+              y2="-11.6017"
+            >
+              <stop
+                stop-color="#4673FA"
+              />
+              <stop
+                offset="1"
+                stop-color="#9646FA"
+              />
+            </lineargradient>
+          </defs>
+          <path
+            d="M9.97131 6.19803C9.91798 6.07737 9.79866 6.00003 9.66666 6.00003H6.66666V1.00003C6.66666 0.862034 6.58201 0.738037 6.45267 0.688704C6.32267 0.638704 6.17799 0.674696 6.08532 0.776696L0.0853237 7.44336C-0.00267631 7.54136 -0.0253169 7.68137 0.0286831 7.80204C0.0820164 7.9227 0.20133 8.00003 0.33333 8.00003H3.33333V13C3.33333 13.138 3.41799 13.262 3.54732 13.3114C3.58665 13.326 3.62666 13.3334 3.66666 13.3334C3.75933 13.3334 3.85 13.2947 3.91467 13.2227L9.91467 6.55603C10.0027 6.4587 10.0246 6.31803 9.97131 6.19803Z"
+            fill="url(#AutoRouterIconGradienttest-id)"
+          />
+        </svg>
+        <div
+          class="c2"
+        >
+          test router label
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;

@@ -1,0 +1,2149 @@
+{
+  "account": {
+    "cloud": {
+      "backup": {
+        "subtitle": "Existem várias frases de recuperação armazenadas em backup no seu {{cloudProviderName}}.",
+        "title": "Selecione um backup para restaurar"
+      },
+      "button": {
+        "restore": {
+          "android": "Restaurar do Google Drive",
+          "ios": "Restaurar do iCloud"
+        }
+      },
+      "empty": {
+        "description": "Parece que você não fez backup de nenhuma das suas frases de recuperação no {{cloudProviderName}}.",
+        "title": "0 backups encontrados"
+      },
+      "error": {
+        "backup": {
+          "message": "Falha ao importar backups devido à falta de permissões, interrupção da autorização ou devido a um erro na nuvem",
+          "title": "Erro ao importar backups"
+        },
+        "password": {
+          "title": "Senha inválida. Por favor, tente novamente."
+        },
+        "unavailable": {
+          "button": {
+            "cancel": "Agora não",
+            "settings": "Ir para as configurações"
+          },
+          "message": {
+            "android": "Verifique se você está conectado a uma conta do Google com o Google Drive ativado neste dispositivo e tente novamente.",
+            "ios": "Verifique se você está conectado a um ID Apple com o iCloud Drive ativado neste dispositivo e tente novamente."
+          },
+          "title": {
+            "android": "Google Drive não disponível",
+            "ios": "iCloud Drive não disponível"
+          }
+        }
+      },
+      "loading": {
+        "title": "Procurando backups..."
+      },
+      "lockout": {
+        "time": {
+          "hours_one": "Muitas tentativas. Tente novamente em 1 hora.",
+          "hours_other": "Muitas tentativas. Tente novamente em {{count}} horas.",
+          "minutes_one": "Muitas tentativas. Tente novamente em 1 minuto.",
+          "minutes_other": "Muitas tentativas. Tente novamente em {{count}} minutos."
+        }
+      },
+      "password": {
+        "input": "Digite a senha",
+        "recoveryPhrase": "Digite sua frase de recuperação",
+        "subtitle": "Esta senha é necessária para recuperar o backup da frase de recuperação do {{cloudProviderName}}.",
+        "title": "Digite a senha de backup"
+      }
+    },
+    "recoveryPhrase": {
+      "education": {
+        "part1": "Uma frase de recuperação (ou frase-semente) é um <highlight>conjunto de palavras</highlight> necessário para acessar sua carteira, <highlight>como uma senha.</highlight>",
+        "part2": "Você pode <highlight>entrar</highlight> sua frase de recuperação em um novo dispositivo <highlight>para restaurar sua carteira</highlight> e seu conteúdo.",
+        "part3": "Mas, se você <highlight>perder sua frase de recuperação</highlight>, você <highlight>perderá o acesso</highlight> à sua carteira.",
+        "part4": "Ao invés de memorizar sua frase de recuperação, você pode <highlight>fazer backup dela no {{cloudProviderName}}</highlight> e protege-la com uma senha.",
+        "part5": "Você também pode fazer backup manualmente da sua frase de recuperação <highlight>anotando-a</highlight> e armazenando-a em um local seguro.",
+        "part6": "Recomendamos usar <highlight>ambos os tipos de backup</highlight>, porque se você perder sua frase de recuperação, não poderá restaurar sua carteira."
+      },
+      "error": {
+        "invalid": "Frase inválida",
+        "invalidWord": "Palavra inválida: {{word}}",
+        "phraseLength": "A frase de recuperação deve ter de 12 a 24 palavras",
+        "wrong": "Frase de recuperação errada"
+      },
+      "helpText": {
+        "import": "Como encontro minha frase de recuperação?",
+        "restoring": "Tente pesquisar novamente"
+      },
+      "input": "Digite sua frase de recuperação",
+      "remove": {
+        "final": {
+          "description": "Certifique-se de anotar sua frase de recuperação ou fazer backup dela no {{cloudProviderName}}. <highlight>Caso contrário, você não poderá acessar seus fundos.</highlight>",
+          "title": "Você está removendo sua <highlight>frase de recuperação</highlight>"
+        },
+        "import": {
+          "description": "Você só pode armazenar uma frase de recuperação por vez. Para continuar importando uma nova, você precisará remover sua frase de recuperação atual e quaisquer carteiras associadas a ela deste dispositivo."
+        },
+        "initial": {
+          "description": "Isso removerá sua carteira deste dispositivo junto com sua frase de recuperação.",
+          "title": "Você está removendo <highlight>{{walletName}}</highlight>"
+        },
+        "mnemonic": {
+          "description": "Ele compartilha a mesma frase de recuperação que {{walletName}}. Sua frase de recuperação permanecerá armazenada até você excluir todas as carteiras restantes."
+        }
+      },
+      "subtitle": {
+        "import": "Sua frase de recuperação será armazenada apenas localmente no seu dispositivo.",
+        "restoring": "Digite sua frase de recuperação abaixo ou tente pesquisar backups novamente."
+      },
+      "title": {
+        "import": "Digite sua frase de recuperação",
+        "restoring": "Nenhum backup encontrado"
+      }
+    },
+    "wallet": {
+      "action": {
+        "copy": "Copiar endereço da carteira",
+        "report": "Reportar o perfil",
+        "settings": "Configurações da carteira",
+        "viewExplorer": "Ver em {{blockExplorerName}}"
+      },
+      "button": {
+        "add": "Adicionar carteira",
+        "addViewOnly": "Adicionar uma carteira somente para visualização",
+        "create": "Criar uma nova carteira",
+        "import": "Importar uma nova carteira",
+        "manage": "Gerenciar carteira",
+        "remove": "Remover carteira",
+        "restore": "Restaurar carteira",
+        "watch": "Observar uma carteira"
+      },
+      "create": {
+        "placeholder": "Carteira {{index}}"
+      },
+      "edit": {
+        "label": {
+          "input": {
+            "placeholder": "Etiqueta da carteira"
+          }
+        }
+      },
+      "header": {
+        "button": {
+          "disabled": {
+            "title": "Editar Perfil"
+          },
+          "title": "Editar rótulo"
+        },
+        "other": "Suas outras carteiras",
+        "viewOnly": "Carteiras somente para visualização"
+      },
+      "menu": {
+        "copy": {
+          "title": "Copiar endereço da carteira"
+        },
+        "edit": {
+          "title": "Editar rótulo"
+        },
+        "remove": {
+          "title": "Remover carteira"
+        }
+      },
+      "remove": {
+        "check": "Fiz backup da minha frase de recuperação e entendo que a Uniswap Labs não poderá me ajudar a recuperar minhas carteiras se eu não conseguir.",
+        "title": "Remover {{name}}",
+        "viewOnly": "Você sempre pode adicionar carteiras somente para visualização inserindo o endereço da carteira."
+      },
+      "restore": {
+        "description": "Como você está em um dispositivo novo, será necessário restaurar sua frase de recuperação. Isso permitirá que você negocie e envie tokens."
+      },
+      "select": {
+        "error": "Não foi possível carregar endereços",
+        "loading": {
+          "subtitle": "As suas carteiras aparecerão abaixo.",
+          "title": "Procurando carteiras"
+        },
+        "title_one_one": "Uma carteira encontrada",
+        "title_one_other": "Selecione carteiras para importar"
+      },
+      "viewOnly": {
+        "button": "Importar carteira",
+        "description": "Para trocar, comprar, enviar e receber tokens, você precisa importar a frase de recuperação desta carteira.",
+        "title": "Esta carteira é somente para visualização"
+      },
+      "watch": {
+        "error": {
+          "alreadyImported": "Este endereço já foi importado",
+          "notFound": "Endereço não encontrado",
+          "smartContract": "Endereço é um contrato inteligente"
+        },
+        "message": "Adicionar uma carteira somente para visualização permite que você experimente o aplicativo ou rastreie uma carteira. Você não poderá trocar ou enviar fundos.",
+        "placeholder": "ENS ou endereço",
+        "title": "Insira um endereço de carteira"
+      }
+    }
+  },
+  "common": {
+    "button": {
+      "accept": "Aceitar",
+      "back": "Voltar",
+      "buy": "Comprar",
+      "cancel": "Cancelar",
+      "close": "Fechar",
+      "confirm": "Confirmar",
+      "connect": "Conectar",
+      "continue": "Continuar",
+      "copied": "Copiado",
+      "copy": "Copiar",
+      "create": "Criar",
+      "delete": "Excluir",
+      "disconnect": "Desconectar",
+      "dismiss": "Dispensar",
+      "done": "Feito",
+      "enable": "Habilitar",
+      "goBack": "Volte",
+      "hide": "Ocultar",
+      "later": "Talvez mais tarde",
+      "learn": "Saiba mais",
+      "next": "Próximo",
+      "notNow": "Agora não",
+      "ok": "OK",
+      "paste": "Colar",
+      "receive": "Receber",
+      "remove": "Remover",
+      "restore": "Restaurar",
+      "retry": "Tentar novamente",
+      "review": "Revisar",
+      "save": "Salvar",
+      "scrollDown": "Rolar para baixo",
+      "sell": "Vender",
+      "send": "Enviar",
+      "setup": "Configurar",
+      "share": "Compartilhar",
+      "show": "Mostrar",
+      "sign": "Assinar",
+      "skip": "Pular",
+      "swap": "Trocar",
+      "tryAgain": "Tente novamente",
+      "understand": "Eu entendo",
+      "view": "Visualizar"
+    },
+    "card": {
+      "error": {
+        "description": "Algo deu errado",
+        "title": "Ops! Algo deu errado."
+      }
+    },
+    "endAdornment": "e",
+    "error": {
+      "general": "Algo deu errado."
+    },
+    "input": {
+      "password": {
+        "confirm": "Confirme sua senha",
+        "error": {
+          "mismatch": "As palavras-passe não coincidem",
+          "weak": "Esta senha é muito fraca"
+        },
+        "new": "Nova Senha",
+        "placeholder": "Senha",
+        "strength": {
+          "medium": "Média",
+          "strong": "Forte",
+          "weak": "Fraco"
+        }
+      },
+      "search": "Pesquisar"
+    },
+    "longText": {
+      "button": {
+        "less": "Ler menos",
+        "more": "Ler mais"
+      }
+    },
+    "navigation": {
+      "settings": "Configurações",
+      "systemSettings": "Configurações"
+    },
+    "text": {
+      "error": "Erro",
+      "loading": "Carregando",
+      "notAvailable": "N / D",
+      "unknown": "Desconhecido"
+    }
+  },
+  "currency": {
+    "aud": "Dólar Australiano",
+    "brl": "Real Brasileiro",
+    "cad": "Dólar Canadense",
+    "cny": "Yuan Chinês",
+    "eur": "Euro",
+    "gbp": "Libra Britânica",
+    "hkd": "Dólar de Hong Kong",
+    "idr": "Rupia Indonésia",
+    "inr": "Rupia Indiana",
+    "jpy": "Yen Japonês",
+    "ngn": "Naira Nigeriana",
+    "pkr": "Rupia Paquistanesa",
+    "rub": "Rublo Russo",
+    "sgd": "Dólar de Singapura",
+    "thb": "Baht Tailandês",
+    "try": "Lira Turca",
+    "uah": "Hryvnia Ucraniana",
+    "usd": "Dólar dos Estados Unidos",
+    "vnd": "Dong vietnamita"
+  },
+  "dapp": {
+    "request": {
+      "approve": {
+        "action": "Aprovar",
+        "fallbackTitle": "Aprovar tokens de gastos",
+        "helptext": "Permita que este site acesse e gaste este token de sua carteira.",
+        "label": "Carteira",
+        "title": "Aprovar gastos {{tokenSymbol}}"
+      },
+      "base": {
+        "title": "Confirmar transação"
+      },
+      "changeChain": {
+        "title": "Mude a rede para {{network}}"
+      },
+      "connect": {
+        "helptext": "Permita que este site visualize o endereço e o saldo da sua carteira e solicite aprovações para transações.",
+        "title": "Conectar ao site"
+      },
+      "error": {
+        "none": "Nenhuma aprovação pendente"
+      },
+      "fallback": {
+        "calldata": {
+          "label": "dados"
+        },
+        "function": {
+          "label": "função"
+        },
+        "recipient": {
+          "label": "para"
+        },
+        "sending": {
+          "label": "enviando"
+        }
+      },
+      "permit2": {
+        "description": "Permit2 gerencia aprovações de tokens em vários dapps.",
+        "header": "Assinar Permissão2",
+        "price": "Nenhum"
+      },
+      "signature": {
+        "containsUnrenderableCharacters": "Esta mensagem contém caracteres não renderizáveis. Certifique-se de confiar neste site.",
+        "error": {
+          "712-spec-compliance": "SignTypedDataRequestContent recebeu dados para assinatura que não estão em conformidade com a especificação EIP-712."
+        },
+        "header": "Solicitação de assinatura",
+        "toggleDataView": {
+          "raw": "Ver dados brutos",
+          "readable": "Ver dados originais"
+        }
+      },
+      "warning": {
+        "notActive": {
+          "message": "Certifique-se de que é o caminho certo",
+          "title": "Esta não é sua carteira ativa"
+        }
+      }
+    }
+  },
+  "emptyTokenCard": {
+    "description": "Compre ou transfira tokens para esta carteira para começar",
+    "title": "Ainda não há tokens"
+  },
+  "errors": {
+    "crash": {
+      "message": "Algo quebrou.",
+      "restart": "Reiniciar o aplicativo",
+      "title": "Ah, ah!"
+    }
+  },
+  "explore": {
+    "search": {
+      "action": {
+        "clear": "Limpar tudo",
+        "viewEtherscan": "Ver em {{blockExplorerName}}"
+      },
+      "empty": {
+        "full": "Nenhum resultado encontrado para <highlight>\"{{searchQuery}}\"</highlight>"
+      },
+      "error": "Não foi possível carregar os resultados da pesquisa",
+      "label": {
+        "ownedBy": "Propriedade de {{ownerAddress}}"
+      },
+      "placeholder": "Pesquise tokens e carteiras",
+      "section": {
+        "nft": "Coleções de NFT",
+        "popularNFT": "Coleções de NFT populares",
+        "popularTokens": "Tokens populares",
+        "recent": "Pesquisas recentes",
+        "suggestedWallets": "Carteiras sugeridas",
+        "tokens": "Tokens",
+        "wallets": "Carteiras"
+      }
+    },
+    "tokens": {
+      "error": "Não foi possível carregar tokens",
+      "favorite": {
+        "action": {
+          "add": "Token favorito",
+          "edit": "Editar favoritos",
+          "remove": "Remover favorito"
+        },
+        "title": {
+          "default": "Tokens favoritos",
+          "edit": "Editar tokens favoritos"
+        }
+      },
+      "metadata": {
+        "marketCap": "{{number}} MCap",
+        "totalValueLocked": "{{number}} TVL",
+        "volume": "{{number}} Volume"
+      },
+      "sort": {
+        "label": {
+          "marketCap": "Valor de mercado",
+          "priceDecrease": "Redução de preço",
+          "priceIncrease": "Aumento de preço",
+          "totalValueLocked": "televisão",
+          "volume": "Volume"
+        },
+        "option": {
+          "marketCap": "Valor de mercado",
+          "priceDecrease": "Redução de preço (24H)",
+          "priceIncrease": "Aumento de preço (24H)",
+          "totalValueLocked": "TVL na Uniswap",
+          "volume": "Volume na Uniswap (24H)"
+        }
+      },
+      "top": {
+        "title": "Principais tokens"
+      }
+    },
+    "wallets": {
+      "favorite": {
+        "action": {
+          "add": "Carteira favorita",
+          "edit": "Editar favoritos",
+          "remove": "Remover favorito"
+        },
+        "title": {
+          "default": "Carteiras favoritas",
+          "edit": "Edite carteiras favoritas"
+        }
+      }
+    }
+  },
+  "extension": {
+    "connection": {
+      "popup": "Sua carteira não está conectada a este site. Procure o botão “Conectar carteira” ou “Login”.",
+      "popupWithButton": "Sua carteira não está conectada a este site.",
+      "titleConnected": "Conectado",
+      "titleNotConnected": "Não conectado"
+    },
+    "lock": {
+      "button": {
+        "forgot": "Esqueceu sua senha?",
+        "help": "Obter ajuda",
+        "recoveryPhrase": "Insira a frase de recuperação",
+        "submit": "Desbloquear"
+      },
+      "password": {
+        "error": "Senha incorreta. Tente novamente",
+        "reset": {
+          "description": {
+            "default": "Para redefinir sua senha, digite a frase de recuperação da sua carteira. A Uniswap não pode ajudar a recuperar sua senha.",
+            "inProgress": "Siga as instruções na página do navegador para redefinir sua senha"
+          },
+          "title": "Esqueceu sua senha?"
+        }
+      },
+      "subtitle": "Digite sua senha para desbloquear",
+      "title": "bem vindo de volta"
+    },
+    "settings": {
+      "password": {
+        "enter": {
+          "title": "Digite sua senha atual"
+        },
+        "error": {
+          "wrong": "Senha incorreta"
+        },
+        "placeholder": "Senha atual"
+      }
+    },
+    "warning": {
+      "storage": {
+        "button": "Cópia de segurança",
+        "message": "Certifique-se de fazer backup de sua frase de recuperação para evitar a perda de acesso à sua carteira e aos seus fundos.",
+        "title": "Seu navegador está ficando sem armazenamento"
+      }
+    }
+  },
+  "fiatOnRamp": {
+    "button": {
+      "chooseToken": "Escolha um token",
+      "continueCheckout": "Continuar compra"
+    },
+    "checkout": {
+      "button": "Finalizar compra",
+      "title": "Finalizar compra com"
+    },
+    "connection": {
+      "message": "Conectando você a {{serviceProvider}}",
+      "quote": "Comprando {{amount}} de {{currencySymbol}}",
+      "terms": "Ao continuar, você reconhece que estará sujeito aos Termos de Serviço e à Política de Privacidade de {{serviceProvider}}, conforme aplicável."
+    },
+    "error": {
+      "default": "Algo deu errado.",
+      "load": "Não foi possível carregar tokens para comprar",
+      "max": "Máximo {{amount}}",
+      "min": "Mínimo {{amount}}",
+      "unsupported": "Não suportado na região",
+      "usd": "Disponível apenas para compra em dólares americanos"
+    },
+    "quote": {
+      "advice": "Você continuará no portal do provedor para ver as taxas associadas à sua transação.",
+      "others": "outros",
+      "type": {
+        "other": "Outras opções",
+        "recent": "Usado recentemente"
+      }
+    },
+    "region": {
+      "placeholder": "Pesquise por país ou região",
+      "title": "Selecione a sua região"
+    },
+    "summary": {
+      "total": "{{cryptoAmount}} por {{fiatAmount}}"
+    }
+  },
+  "forceUpgrade": {
+    "action": {
+      "confirm": "Atualizar aplicativo",
+      "recoveryPhrase": "Ver frase de recuperação"
+    },
+    "description": "A versão da Carteira Uniswap que você está usando está desatualizada e sem atualizações críticas. Se você não atualizar o aplicativo ou não tiver sua frase de recuperação anotada, você não conseguirá acessar seus ativos.",
+    "label": {
+      "recoveryPhrase": "Frase de recuperação"
+    },
+    "title": "Atualize o aplicativo para continuar"
+  },
+  "home": {
+    "activity": {
+      "empty": {
+        "button": "Receber tokens ou NFTs",
+        "description": {
+          "default": "Quando aprova, negocia ou transfere tokens, ou NFTs, as suas transações aparecerão aqui.",
+          "external": "Quando esta carteira fizer transações, elas aparecerão aqui."
+        },
+        "title": "Nenhuma atividade ainda"
+      },
+      "error": {
+        "load": "Não foi possível carregar a atividade"
+      },
+      "title": "Atividade"
+    },
+    "banner": {
+      "extension": {
+        "confirm": "Junte-se à versão beta",
+        "message": "Seja o primeiro a experimentar a extensão Uniswap em seu navegador",
+        "title": "A extensão Uniswap está aqui"
+      },
+      "offline": "Você está em modo offline"
+    },
+    "extension": {
+      "error": "Erro ao carregar contas"
+    },
+    "feed": {
+      "empty": {
+        "description": "Quando suas carteiras favoritas fizerem transações, elas aparecerão aqui.",
+        "title": "Nenhuma atividade ainda"
+      },
+      "error": "Não foi possível carregar a atividade",
+      "title": "Alimentar"
+    },
+    "label": {
+      "buy": "Comprar",
+      "receive": "Receber",
+      "scan": "Escanear",
+      "send": "Enviar",
+      "swap": "Trocar"
+    },
+    "modal": {
+      "getExtension": {
+        "step1": "1. Visite <highlight>uniswap.org/ext</highlight> no seu computador",
+        "step2": "2. Adicione a extensão Uniswap em seu navegador Chrome",
+        "step3": "3. Digite seu nome de usuário para obter acesso",
+        "title": "Junte-se à extensão beta do Uniswap"
+      }
+    },
+    "nfts": {
+      "title": "NFTs"
+    },
+    "tokens": {
+      "empty": {
+        "action": {
+          "buy": {
+            "description": "Você precisará de ETH para começar. Compre com cartão ou banco.",
+            "title": "Comprar cripto"
+          },
+          "import": {
+            "description": "Digite a frase de recuperação desta carteira para começar a trocar e enviar.",
+            "title": "Importar carteira"
+          },
+          "receive": {
+            "description": "Transfira tokens de outra carteira ou exchange de cripto.",
+            "title": "Receber fundos"
+          }
+        },
+        "description": "Quando esta carteira comprar ou receber tokens, eles aparecerão aqui.",
+        "title": "Ainda não há tokens"
+      },
+      "error": {
+        "fetch": "Falha ao buscar saldos de tokens",
+        "load": "Não foi possível carregar saldos de tokens"
+      },
+      "title": "Tokens"
+    },
+    "upsell": {
+      "receive": {
+        "cta": "Vincular uma conta",
+        "description": "Financie sua carteira transferindo cripto de outra carteira ou conta",
+        "title": "Receba criptografia"
+      }
+    },
+    "warning": {
+      "viewOnly": "Esta é uma carteira somente para visualização"
+    }
+  },
+  "language": {
+    "chineseSimplified": "Chinês simplificado",
+    "chineseTraditional": "Chinês tradicional",
+    "dutch": "Holandês",
+    "english": "Inglês",
+    "french": "Francês",
+    "hindi": "hindi",
+    "indonesian": "indonésio",
+    "japanese": "Japonês",
+    "malay": "Malaio",
+    "portuguese": "Português",
+    "russian": "russo",
+    "spanishLatam": "Espanhol (América Latina)",
+    "spanishSpain": "Espanhol (Espanha)",
+    "spanishUs": "Espanhol (EUA)",
+    "thai": "tailandês",
+    "turkish": "turco",
+    "ukrainian": "ucraniano",
+    "urdu": "urdu",
+    "vietnamese": "Vietnamita"
+  },
+  "notification": {
+    "assetVisibility": {
+      "hidden": "{{assetName}} ocultado",
+      "unhidden": "{{assetName}} reexibido"
+    },
+    "copied": {
+      "address": "Endereço copiado",
+      "calldata": "Dados de chamada copiados",
+      "contractAddress": "Endereço do contrato copiado",
+      "failed": "Falha ao copiar para área de transferência",
+      "image": "Imagem copiada",
+      "nftUrl": "URL NFT copiado",
+      "tokenUrl": "URL do token copiado",
+      "transactionId": "ID da transação copiado"
+    },
+    "countryChange": "Trocado para {{countryName}}",
+    "restore": {
+      "success": "Carteira restaurada!"
+    },
+    "swap": {
+      "network": "Trocando em {{network}}",
+      "pending": {
+        "swap": "Troca pendente",
+        "unwrap": "Desembrulhar pendente",
+        "wrap": "Embrulhamento pendente"
+      }
+    },
+    "transaction": {
+      "approve": {
+        "canceled": "Aprovação de {{currencySymbol}} cancelada.",
+        "fail": "Falha ao aprovar {{currencySymbol}} para uso com {{address}}.",
+        "success": "Aprovado {{currencySymbol}} para uso com {{address}}."
+      },
+      "swap": {
+        "canceled": "Troca {{inputCurrencySymbol}}-{{outputCurrencySymbol}} cancelada.",
+        "fail": "Falha ao trocar {{inputCurrencyAmountWithSymbol}} por {{outputCurrencyAmountWithSymbol}}.",
+        "success": "Trocado {{inputCurrencyAmountWithSymbol}} por {{outputCurrencyAmountWithSymbol}}."
+      },
+      "transfer": {
+        "canceled": "Envio de {{tokenNameOrAddress}} cancelado.",
+        "fail": "Falha ao enviar {{tokenNameOrAddress}} para {{walletNameOrAddress}}.",
+        "received": "Recebido {{tokenNameOrAddress}} de {{walletNameOrAddress}}.",
+        "success": "Enviado {{tokenNameOrAddress}} a {{walletNameOrAddress}}."
+      },
+      "unknown": {
+        "fail": {
+          "full": "Falha ao transacionar com {{addressOrEnsName}}",
+          "short": "Falha ao realizar a transação"
+        },
+        "success": {
+          "full": "Transacionado com {{addressOrEnsName}}",
+          "short": "Transacionado"
+        }
+      },
+      "unwrap": {
+        "canceled": "Desembrulhamento de {{inputCurrencySymbol}} cancelado.",
+        "fail": "Falha ao desembrulhar {{inputCurrencyAmountWithSymbol}}.",
+        "success": "Desembrulhado {{inputCurrencyAmountWithSymbol}} e recebido {{outputCurrencyAmountWithSymbol}}."
+      },
+      "wrap": {
+        "canceled": "Embrulhamento de {{inputCurrencySymbol}} cancelado.",
+        "fail": "Falha ao embrulhar {{inputCurrencyAmountWithSymbol}}.",
+        "success": "Embrulhado {{inputCurrencyAmountWithSymbol}} e recebido {{outputCurrencyAmountWithSymbol}}."
+      }
+    },
+    "transfer": {
+      "pending": "{{currencySymbol}} transferência pendente"
+    },
+    "walletConnect": {
+      "confirmed": "Transação confirmada com {{dappName}}",
+      "connected": "Conectado",
+      "disconnected": "Desconectado",
+      "failed": "A transação falhou com {{dappName}}",
+      "networkChanged": {
+        "full": "Trocado para {{networkName}}",
+        "short": "Rede trocada"
+      }
+    }
+  },
+  "notifications": {
+    "scantastic": {
+      "subtitle": "Continue na extensão Uniswap",
+      "title": "Sucesso!"
+    }
+  },
+  "onboarding": {
+    "backup": {
+      "manual": {
+        "placeholder": "Palavra secreta",
+        "progress": "{{completedStepsCount}}{{totalStepsCount}}",
+        "subtitle_one": "Qual é a palavra <highlight/>{{count}}ª</highlight/> palavra na sua frase de recuperação?",
+        "subtitle_two": "Qual é a palavra <highlight/>{{count}}ª</highlight/> palavra na sua frase de recuperação?",
+        "subtitle_few": "Qual é a palavra <highlight/>{{count}}ª</highlight/> palavra na sua frase de recuperação?",
+        "subtitle_other": "Qual é a palavra <highlight/>{{count}}ª</highlight/> palavra na sua frase de recuperação?",
+        "title": "Vamos ter certeza de que você gravou corretamente"
+      },
+      "option": {
+        "cloud": {
+          "description": "Criptografe sua frase de recuperação com uma senha segura",
+          "title": "{{cloudProviderName}} cópia de segurança"
+        },
+        "manual": {
+          "description": "Escreva sua frase de recuperação e guarde-a em um local seguro",
+          "title": "Backup manual"
+        }
+      },
+      "subtitle": "Os backups permitem restaurar sua carteira caso você exclua o aplicativo ou perca seu dispositivo",
+      "title": {
+        "existing": "Faça backup de sua carteira",
+        "new": "Escolha um método de backup"
+      },
+      "view": {
+        "disclaimer": "Entendo que se eu perder minha frase de recuperação, Uniswap Labs não poderá me ajudar a restaurá-la",
+        "subtitle": {
+          "write": "Leia atentamente o seguinte antes de continuar"
+        },
+        "title": "Salve sua frase de recuperação",
+        "warning": {
+          "message1": "Esta frase de recuperação dá acesso total à sua carteira e fundos",
+          "message2": "Anote e guarde em um lugar seguro",
+          "message3": "Veja isso em privado e <u>não compartilhe com ninguém</u>"
+        }
+      }
+    },
+    "cloud": {
+      "confirm": {
+        "description": "Você precisará inserir essa senha para recuperar sua conta. Ela não está armazenada em lugar nenhum, portanto não pode ser recuperada por mais ninguém.",
+        "title": "Confirme sua senha de backup"
+      },
+      "createPassword": {
+        "description": "Você precisará inserir esta senha para recuperar sua carteira.",
+        "title": "Crie sua senha de backup"
+      }
+    },
+    "complete": {
+      "button": "Abra a carteira Uniswap",
+      "description": "Sua carteira está pronta para trocar, enviar e receber criptografia.",
+      "pin": {
+        "description": "Clique no ícone do quebra-cabeça na barra de ferramentas e encontre a Carteira Uniswap na lista",
+        "title": "Fixar carteira Uniswap"
+      },
+      "title": "Você está pronto"
+    },
+    "editName": {
+      "button": {
+        "create": "Criar carteira"
+      },
+      "label": "Apelido",
+      "subtitle": "Dê um apelido à sua carteira",
+      "title": "Este apelido só é visível para você",
+      "walletAddress": "Seu endereço público será <highlight>{{walletAddress}}</highlight>"
+    },
+    "extension": {
+      "connectMobile": {
+        "button": "Importe do seu telefone",
+        "title": "Possui o aplicativo móvel Uniswap?"
+      },
+      "getOnTheBetaWaitlist": {
+        "subtitle": "Baixe o aplicativo móvel para reivindicar um nome de usuário",
+        "title": "Entre na lista de espera do Beta"
+      },
+      "password": {
+        "subtitle": "Você precisará disso para desbloquear sua carteira e acessar sua frase de recuperação",
+        "title": {
+          "default": "Criar uma senha",
+          "reset": "Redefinir sua senha"
+        }
+      }
+    },
+    "import": {
+      "error": {
+        "invalidWords_one": "1 palavra é inválida ou escrita incorretamente",
+        "invalidWords_other": "{{count}} palavras são inválidas ou escritas incorretamente"
+      },
+      "method": {
+        "import": {
+          "message": "Digite sua frase de recuperação de outra carteira de cripto",
+          "title": "Importar uma carteira"
+        },
+        "restore": {
+          "message": {
+            "android": "Adicione carteiras das quais você fez backup à sua conta do Google Drive",
+            "ios": "Adicione carteiras das quais você fez backup à sua conta iCloud"
+          },
+          "title": "Restaurar uma carteira"
+        }
+      },
+      "title": "Escolha como deseja adicionar sua carteira"
+    },
+    "importMnemonic": {
+      "button": {
+        "default": "Minha frase de recuperação tem 12 palavras",
+        "longPhrase": "Minha frase de recuperação tem mais de 12 palavras"
+      },
+      "error": {
+        "invalidPhrase": "A frase que você digitou é inválida"
+      },
+      "subtitle": "Digite ou cole sua frase de recuperação de 12 palavras",
+      "title": "Digite sua frase de recuperação"
+    },
+    "intro": {
+      "alreadyComplete": {
+        "subtitle": "Para criar mais carteiras, abra o alternador de contas dentro do pop-up da extensão ou reinstale a extensão para começar de novo",
+        "title": "Você já concluiu a integração"
+      },
+      "button": {
+        "alreadyHave": "Eu já tenho uma carteira"
+      },
+      "title": "Bem-vindo à \nCarteira Uniswap"
+    },
+    "introBetaWaitlist": {
+      "button": {
+        "checkEligibility": "Verifique a elegibilidade",
+        "letsGo": "Vamos"
+      },
+      "checkEligibilityInstructions": "Digite seu nome de usuário <highlight>uni.eth</highlight> abaixo para verificar se você é elegível para o Beta.",
+      "eligible": {
+        "tagline": "Bem-vindo ao Beta – você é um dos primeiros a experimentar a extensão Uniswap.",
+        "title": "Você saiu da lista de espera!"
+      },
+      "ineligibleExplanation": "Você ainda está na lista de espera. Iremos notificá-lo no aplicativo móvel Uniswap quando você se tornar elegível!",
+      "unitagPlaceholder": "nome de usuário"
+    },
+    "landing": {
+      "button": {
+        "add": "Adicionar uma carteira existente",
+        "create": "Criar uma nova carteira"
+      }
+    },
+    "notification": {
+      "permission": {
+        "message": "Para receber notificações, ative as notificações da Carteira Uniswap nas configurações do seu dispositivo.",
+        "title": "Permissão de notificações"
+      },
+      "subtitle": "Seja notificado quando suas transferências, trocas e aprovações forem concluídas.",
+      "title": "Ative notificações push"
+    },
+    "recoveryPhrase": {
+      "confirm": {
+        "subtitle": {
+          "combined": "Confirme sua frase de recuperação. Selecione as palavras que faltam em ordem.",
+          "default": "Selecione as palavras que faltam em ordem."
+        },
+        "title": "Confirme sua frase de recuperação"
+      },
+      "view": {
+        "subtitle": "Você pode verificar isso nas configurações a qualquer momento.",
+        "title": "Escreva sua frase de recuperação em ordem"
+      },
+      "warning": {
+        "final": {
+          "button": "Estou pronto",
+          "message": "Sua frase de recuperação é o que concede a você (e a qualquer pessoa que a possua) acesso aos seus fundos. Certifique-se de mantê-la em segredo.",
+          "title": "Faça esta etapa em um local privado"
+        },
+        "screenshot": {
+          "message": "Qualquer pessoa que tenha acesso às suas fotos pode acessar sua carteira. Recomendamos que ao invés você escreva suas palavras.",
+          "title": "Capturas de tela não são seguras"
+        }
+      }
+    },
+    "resetPassword": {
+      "complete": {
+        "safety": "Saiba mais sobre segurança de carteira",
+        "subtitle": "Use sua nova senha para desbloquear sua carteira.",
+        "title": "Redefinição de senha"
+      }
+    },
+    "scan": {
+      "button": "Digitalize com o aplicativo Uniswap",
+      "error": "Desculpe, não é possível carregar o código QR no momento. Tente outro método de integração.",
+      "otp": {
+        "error": "O código que você enviou está incorreto ou ocorreu um erro ao enviar. Por favor, tente novamente.",
+        "failed": "Tentativas falhadas: {{number}}",
+        "subtitle": "Verifique seu aplicativo móvel Uniswap para obter o código de 6 caracteres",
+        "title": "Insira o código único"
+      },
+      "subtitle": "Digitalize o código QR com o aplicativo móvel Uniswap para começar a importar sua carteira.",
+      "title": "Importe carteira do aplicativo"
+    },
+    "security": {
+      "alert": {
+        "biometrics": {
+          "message": {
+            "android": "Para usar a biometria, configure-a primeiro nas configurações",
+            "ios": "Para usar {{biometricsMethod}}, permita o acesso nas configurações do sistema"
+          },
+          "title": {
+            "android": "A biometria está desativada",
+            "ios": "{{biometricsMethod}} está desabilitado"
+          }
+        }
+      },
+      "button": {
+        "confirm": {
+          "android": "Habilitar biometria",
+          "ios": "Ativar {{biometricsMethod}}"
+        },
+        "setup": "Configurar"
+      },
+      "subtitle": {
+        "android": "Adicione uma camada extra de segurança exigindo biometria para enviar transações.",
+        "ios": "Adicione uma camada extra de segurança exigindo {{biometricsMethod}} para enviar transações."
+      },
+      "title": "Proteja sua carteira"
+    },
+    "selectWallets": {
+      "error": "Não foi possível carregar endereços",
+      "title": {
+        "default": "Escolha carteiras para importar",
+        "error": "Erro ao importar carteiras"
+      }
+    },
+    "termsOfService": "Ao continuar, concordo com os<highlightTerms> Termos de Serviço </highlightTerms>e concordo com a<highlightPrivacy> Política de Privacidade</highlightPrivacy>",
+    "tooltip": {
+      "recoveryPhrase": {
+        "trigger": "O que é uma frase de recuperação?"
+      }
+    },
+    "wallet": {
+      "continue": "Vamos mantê-la segura",
+      "defaultName": "Carteira {{number}}",
+      "description": {
+        "existing": "Confira seus tokens e NFTs, siga outras carteiras e mantenha-se atualizado em qualquer lugar.",
+        "full": "Este é o seu espaço pessoal para tokens, NFTs e todas as suas negociações. Termine de configurá-lo para manter seus fundos seguros.",
+        "new": "Seu espaço pessoal para tokens, NFTs, e todas as suas negociações."
+      },
+      "title": "Bem-vindo à sua nova carteira"
+    }
+  },
+  "qrScanner": {
+    "button": {
+      "connections_one": "1 aplicativo conectado",
+      "connections_other": "{{count}} aplicativos conectados"
+    },
+    "error": {
+      "camera": {
+        "message": "Para escanear um código, permita o acesso à câmera nas configurações do sistema",
+        "title": "A câmera está desativada"
+      },
+      "none": "Nenhum código QR encontrado"
+    },
+    "recipient": {
+      "action": {
+        "scan": "Escanear um código QR",
+        "show": "Mostrar meu código QR"
+      },
+      "error": {
+        "message": "Certifique-se de estar lendo um código QR de endereço Ethereum válido antes de tentar novamente.",
+        "title": "Código QR inválido"
+      },
+      "input": {
+        "placeholder": "Pesquise ENS ou endereço"
+      },
+      "label": {
+        "send": "Enviar"
+      },
+      "results": {
+        "empty": "Nenhum resultado encontrado",
+        "error": "O endereço que você digitou não existe ou está escrito incorretamente."
+      }
+    },
+    "request": {
+      "message": {
+        "unavailable": "Nenhuma mensagem encontrada."
+      },
+      "method": {
+        "default": "Solicitação de {{dappNameOrUrl}}",
+        "signature": "Solicitação de assinatura de {{dappNameOrUrl}}",
+        "transaction": "Solicitação de transação de {{dappNameOrUrl}}"
+      },
+      "withAmount": "Permitir que {{dappName}} use até<highlight> {{amount}} </highlight>{{currencySymbol}}?",
+      "withoutAmount": "Permitir que {{dappName}} use seu {{currencySymbol}}?"
+    },
+    "status": {
+      "connecting": "Conectando...",
+      "loading": "Carregando..."
+    },
+    "title": "Escanear um código QR",
+    "wallet": {
+      "title": "A Carteira Uniswap oferece suporte a tokens em Ethereum, Polygon, Arbitrum, Optimism, Base, Blast e BNB Chain. No momento, oferecemos suporte apenas a NFTs no Ethereum."
+    }
+  },
+  "scantastic": {
+    "code": {
+      "expired": "Expirado",
+      "subtitle": "Insira este código na extensão Uniswap. Sua frase de recuperação será criptografada e transferida com segurança.",
+      "timeRemaining": {
+        "shorthand": {
+          "hours": "Novo código em {{hours}}h {{minutes}}m {{seconds}}s",
+          "minutes": "Novo código em {{minutes}}m {{seconds}}s",
+          "seconds": "Novo código em {{seconds}}s"
+        }
+      },
+      "title": "Código único Uniswap"
+    },
+    "confirmation": {
+      "button": {
+        "continue": "Sim, continuar"
+      },
+      "label": {
+        "browser": "Navegador",
+        "device": "Dispositivo"
+      },
+      "subtitle": "Continue apenas se estiver digitalizando um código QR da extensão Uniswap em um dispositivo confiável.",
+      "title": "Você está tentando importar sua carteira?",
+      "warning": "Cuidado com sites e aplicativos que se fazem passar pelo Uniswap. Caso contrário, sua carteira poderá ficar comprometida."
+    },
+    "error": {
+      "encryption": "Falha ao preparar a frase-semente.",
+      "noCode": "Nenhuma OTP recebida. Por favor, tente novamente.",
+      "timeout": {
+        "message": "Digitalize o código QR na extensão Uniswap novamente para continuar sincronizando sua carteira.",
+        "title": "Sua conexão expirou"
+      }
+    },
+    "modal": {
+      "notOnWaitlist": {
+        "message": "Para se tornar elegível para a extensão Uniswap Beta, entre na lista de espera reivindicando um nome de usuário uni.eth",
+        "title": "Você não está na lista de espera"
+      },
+      "onWaitlist": {
+        "message": "Notificaremos você no aplicativo quando você se tornar elegível para ingressar na extensão beta do Uniswap.",
+        "title": "Você ainda está na lista de espera"
+      }
+    }
+  },
+  "send": {
+    "button": {
+      "review": "Revisar transferência",
+      "send": "Enviar"
+    },
+    "gas": {
+      "error": {
+        "title": "N / D"
+      },
+      "networkCost": {
+        "title": "Custo da rede"
+      }
+    },
+    "input": {
+      "token": {
+        "balance": {
+          "title": "Saldo: {{balance}} {{symbol}}"
+        }
+      }
+    },
+    "recipient": {
+      "previous_one": "1 transferência anterior",
+      "previous_other": "{{count}} transferências anteriores",
+      "section": {
+        "favorite": "Carteiras favoritas",
+        "recent": "Recente",
+        "search": "Resultados da pesquisa",
+        "viewOnly": "Carteiras somente para visualização",
+        "yours": "Suas carteiras"
+      },
+      "warning": {
+        "viewOnly": {
+          "message": "Envie fundos para esta carteira apenas se você tiver a frase de recuperação ou conhecer o dono da carteira.",
+          "title": "Você tem isso como uma carteira somente para visualização"
+        }
+      }
+    },
+    "recipientSelect": {
+      "search": {
+        "empty": {
+          "message": "Quando você envia tokens para um endereço de carteira, eles aparecerão aqui",
+          "title": "Nenhuma carteira salva"
+        }
+      },
+      "title": "Para"
+    },
+    "review": {
+      "input": {
+        "tokenAmount": {
+          "title": "{{currencyAmount}} de {{currencySymbol}}"
+        }
+      },
+      "modal": {
+        "title": "Você está enviando"
+      },
+      "summary": {
+        "button": {
+          "title": "Confirmar envio"
+        },
+        "sending": "Enviando",
+        "to": "Para"
+      }
+    },
+    "search": {
+      "empty": {
+        "subtitle": "O endereço que você digitou não existe ou está escrito incorretamente.",
+        "title": "Nenhum resultado encontrado"
+      },
+      "placeholder": "Pesquise ENS ou endereço"
+    },
+    "status": {
+      "fail": {
+        "description": "Tenha em mente que a taxa de rede ainda é cobrada por transferências malsucedidas."
+      },
+      "failed": {
+        "title": "O envio falhou"
+      },
+      "inProgress": {
+        "description": "Iremos notificá-lo assim que sua transação for concluída.",
+        "title": "Enviando"
+      },
+      "success": {
+        "description": "Você enviou {{currencyAmount}}{{tokenName}}{{fiatValue}} para {{recipient}}.",
+        "title": "Enviado com sucesso!"
+      }
+    },
+    "title": "Enviar",
+    "warning": {
+      "blocked": {
+        "default": "Esta carteira está bloqueada",
+        "modal": {
+          "message": "Este endereço está bloqueado na Carteira Uniswap porque está associado a uma ou mais atividades bloqueadas. Se você acredita que isso é um erro, envie um e-mail para compliance@uniswap.org.",
+          "title": "Endereço bloqueado"
+        },
+        "recipient": "A carteira do destinatário está bloqueada"
+      },
+      "erc20": {
+        "message": "Você está tentando enviar fundos para um endereço token. O envio de criptografia para este tipo de endereço pode resultar em perda permanente de fundos.",
+        "title": "Este é um endereço de token"
+      },
+      "insufficientFunds": {
+        "message": "Seu saldo de {{currencySymbol}} diminuiu desde que você inseriu o valor que gostaria de enviar",
+        "title": "Não é suficiente {{currencySymbol}}"
+      },
+      "modal": {
+        "button": {
+          "cta": {
+            "blocking": "OK",
+            "cancel": "Cancelar",
+            "confirm": "Confirmar"
+          }
+        }
+      },
+      "newAddress": {
+        "message": "Você nunca fez transações com este endereço antes. Por favor, confirme se o endereço está correto antes de continuar.",
+        "title": "Novo endereço"
+      },
+      "restore": "Restaure sua carteira para enviar",
+      "smartContract": {
+        "message": "Você está prestes a enviar tokens para um tipo especial de endereço – um contrato inteligente. Verifique novamente se é o endereço para o qual você pretende enviar. Se estiver errado, seus tokens poderão ser perdidos para sempre.",
+        "title": "Este é um endereço de carteira?"
+      },
+      "viewOnly": {
+        "message": "Você precisa importar esta carteira usando a frase de recuperação para enviar ativos.",
+        "title": "Esta carteira é somente para visualização"
+      }
+    }
+  },
+  "setting": {
+    "recoveryPhrase": {
+      "account": {
+        "show": "Mostrar frase de recuperação"
+      },
+      "action": {
+        "hide": "Ocultar frase de recuperação"
+      },
+      "remove": {
+        "button": "Remover frase de recuperação",
+        "confirm": {
+          "subtitle": "Entendo que o Uniswap Labs não poderá me ajudar a recuperar minha carteira se eu não conseguir fazê-lo",
+          "title": "Salvei minha frase de recuperação"
+        },
+        "initial": {
+          "subtitle": "Certifique-se de salvar sua frase de recuperação. Caso contrário, você perderá o acesso aos seus fundos",
+          "title": "Antes de continuar"
+        },
+        "password": {
+          "error": "Senha incorreta. Tente novamente",
+          "input": "Digite a senha"
+        },
+        "subtitle": "Digite sua senha para continuar",
+        "title": "Você está removendo sua frase de recuperação"
+      },
+      "view": {
+        "error": "Senha errada, tente novamente",
+        "warning": {
+          "message1": "Qualquer pessoa que saiba sua frase de recuperação poderá acessar sua carteira e seus fundos",
+          "message2": "Veja isso em particular",
+          "message3": "Não compartilhe isso com ninguém",
+          "message4": "Nunca entrar para nenhum site ou app",
+          "title": "Antes de continuar"
+        }
+      },
+      "warning": {
+        "screenshot": {
+          "message": "Qualquer pessoa que tenha acesso às suas fotos pode acessar sua carteira. Recomendamos que ao invés você escreva suas palavras.",
+          "title": "Capturas de tela não são seguras"
+        },
+        "view": {
+          "message": "Qualquer pessoa que saiba sua frase de recuperação poderá acessar sua carteira e seus fundos.",
+          "title": "Veja isso em um lugar privado"
+        }
+      }
+    }
+  },
+  "settings": {
+    "action": {
+      "feedback": "Compartilhe comentários",
+      "help": "Obter ajuda",
+      "lock": "Carteira de bloqueio",
+      "privacy": "Política de Privacidade",
+      "terms": "Termos de Serviço"
+    },
+    "footer": "Feito com amor, \nEquipe Uniswap 🦄",
+    "screen": {
+      "appearance": {
+        "title": "Aparência"
+      }
+    },
+    "section": {
+      "about": "Sobre",
+      "preferences": "Preferências",
+      "security": "Segurança",
+      "support": "Suporte",
+      "wallet": {
+        "action": {
+          "hide": "Ocultar carteiras",
+          "showAll_one": "Mostrar uma carteira",
+          "showAll_other": "Mostrar todas as {{count}} carteiras"
+        },
+        "button": {
+          "viewAll": "Ver tudo",
+          "viewLess": "Ver menos"
+        },
+        "label": {
+          "viewOnly": "Somente visualização"
+        },
+        "title": "Configurações da carteira"
+      }
+    },
+    "setting": {
+      "appearance": {
+        "option": {
+          "auto": "Auto",
+          "dark": {
+            "subtitle": "Sempre usar o modo escuro",
+            "title": "Modo escuro"
+          },
+          "device": {
+            "subtitle": "Usar a aparência do seu dispositivo",
+            "title": "Configuração do dispositivo"
+          },
+          "light": {
+            "subtitle": "Sempre usar o modo claro",
+            "title": "Modo claro"
+          }
+        },
+        "title": "Aparência"
+      },
+      "backup": {
+        "create": {
+          "description": "Definir uma senha irá criptografar o backup da sua frase de recuperação, adicionando um nível extra de proteção caso sua conta {{cloudProviderName}} seja comprometida.",
+          "title": "Faça backup em {{cloudProviderName}}"
+        },
+        "delete": {
+          "confirm": {
+            "message": "Como essas carteiras compartilham uma frase de recuperação, os backups das carteiras abaixo também serão excluídos",
+            "title": "Tem certeza?"
+          },
+          "warning": "Se você excluir o backup do {{cloudProviderName}}, só poderá recuperar sua carteira com um backup manual da sua frase de recuperação. A Uniswap Labs não poderá recuperar seus ativos se você perder sua frase de recuperação."
+        },
+        "error": {
+          "message": {
+            "full": "Não foi possível fazer backup da frase de recuperação no {{cloudProviderName}}. Certifique-se de ter o {{cloudProviderName}} habilitado com espaço de armazenamento disponível e tente novamente.",
+            "short": "Não foi possível excluir o backup"
+          },
+          "title": "{{cloudProviderName}} erro"
+        },
+        "modal": {
+          "description": "Você ainda não fez backup da sua frase de recuperação no {{cloudProviderName}}. Ao fazer isso, você poderá recuperar sua carteira simplesmente ao fazer login no {{cloudProviderName}} em qualquer dispositivo.",
+          "title": "Faça backup da frase de recuperação para {{cloudProviderName}}?"
+        },
+        "password": {
+          "disclaimer": "O Uniswap Labs não armazena sua senha e não pode recuperá-la, por isso é crucial que você se lembre dela.",
+          "error": {
+            "mismatch": "As senhas não coincidem",
+            "weak": "Senha fraca"
+          },
+          "medium": "Esta é uma senha média",
+          "placeholder": {
+            "confirm": "Confirme sua senha",
+            "create": "Criar senha"
+          },
+          "strong": "Esta é uma senha forte",
+          "weak": "Esta é uma senha fraca"
+        },
+        "recoveryPhrase": {
+          "label": "Frase de recuperação"
+        },
+        "selected": "{{cloudProviderName}} cópia de segurança",
+        "status": {
+          "action": {
+            "delete": "Excluir backup"
+          },
+          "complete": "Backup em {{cloudProviderName}}",
+          "description": "Ao fazer backup de sua frase de recuperação no {{cloudProviderName}}, você poderá recuperar sua carteira apenas fazendo login no {{cloudProviderName}} em qualquer dispositivo.",
+          "inProgress": "Fazendo backup em {{cloudProviderName}}...",
+          "recoveryPhrase": {
+            "backed": "Backup feito"
+          },
+          "title": "{{cloudProviderName}} cópia de segurança"
+        }
+      },
+      "beta": {
+        "tooltip": "Em breve"
+      },
+      "biometrics": {
+        "appAccess": {
+          "subtitle": {
+            "android": "Exigir biometria para abrir o aplicativo",
+            "ios": "Exigir {{biometricsMethod}} para abrir o aplicativo"
+          },
+          "title": "Acesso ao aplicativo"
+        },
+        "auth": "Por favor, autentique",
+        "off": {
+          "message": {
+            "android": "A biometria está atualmente desativada para a Carteira Uniswap – você pode ativá-la nas configurações do sistema.",
+            "ios": "{{biometricsMethod}} está atualmente desativado para a Carteira Uniswap – você pode ativá-lo nas configurações do sistema."
+          },
+          "title": {
+            "android": "A biometria está desativada",
+            "ios": "{{biometricsMethod}} está desligado"
+          }
+        },
+        "title": "Biometria",
+        "transactions": {
+          "subtitle": {
+            "android": "Exigir biometria para transações",
+            "ios": "Exigir {{biometricsMethod}} para transacionar"
+          },
+          "title": "Transações"
+        },
+        "unavailable": {
+          "message": {
+            "android": "A biometria não está configurada no seu dispositivo. Para usar a biometria, configure-a primeiro em Configurações.",
+            "ios": "{{biometricsMethod}} não está configurado no seu dispositivo. Para usar {{biometricsMethod}}, configure-o primeiro em Configurações."
+          },
+          "title": {
+            "android": "A biometria não está configurada",
+            "ios": "{{biometricsMethod}} não está configurado"
+          }
+        },
+        "warning": {
+          "message": {
+            "android": "Se você não ativar a biometria, qualquer pessoa que tenha acesso ao seu dispositivo poderá abrir a Carteira Uniswap e fazer transações.",
+            "ios": "Se você não ativar {{biometricsMethod}}, qualquer pessoa que tenha acesso ao seu dispositivo poderá abrir a Carteira Uniswap e fazer transações."
+          },
+          "title": "Tem certeza?"
+        }
+      },
+      "currency": {
+        "title": "Moeda local"
+      },
+      "giveFeedback": {
+        "title": "Compartilhe comentários"
+      },
+      "helpCenter": {
+        "title": "Centro de ajuda"
+      },
+      "language": {
+        "button": {
+          "navigate": "Ir para as configurações"
+        },
+        "description": "Uniswap usa o idioma do seu dispositivo como padrão. Para alterar seu idioma preferido, vá em “Uniswap” nas configurações do seu dispositivo e toque em “Idioma”",
+        "exampleTitle": "Inglês",
+        "title": "Linguagem"
+      },
+      "password": {
+        "title": "Alterar a senha"
+      },
+      "privacy": {
+        "analytics": {
+          "description": "Usamos dados de uso anônimos para aprimorar sua experiência nos produtos Uniswap Labs. Quando desativado, rastreamos apenas erros e usos essenciais.",
+          "title": "Permitir analytics"
+        },
+        "title": "Privacidade"
+      },
+      "recoveryPhrase": {
+        "remove": "Remover frase de recuperação",
+        "title": "Frase de recuperação",
+        "view": "Ver frase de recuperação"
+      },
+      "smallBalances": {
+        "title": "Ocultar saldos pequenos"
+      },
+      "theme": {
+        "title": "Tema"
+      },
+      "unknownTokens": {
+        "title": "Ocultar tokens desconhecidos"
+      },
+      "wallet": {
+        "action": {
+          "editLabel": "Editar rótulo",
+          "editProfile": "Editar Perfil",
+          "remove": "Remover carteira"
+        },
+        "connections": {
+          "title": "Gerenciar conexões"
+        },
+        "editLabel": {
+          "description": "Os rótulos não são públicos. Eles são armazenados localmente e visíveis apenas para você.",
+          "disclaimer": "Este apelido só é visível para você.",
+          "save": "Salvar alterações",
+          "title": "Editar apelido"
+        },
+        "label": "Apelido",
+        "notifications": {
+          "title": "Notificações"
+        },
+        "preferences": {
+          "title": "Preferências da carteira"
+        }
+      }
+    },
+    "title": "Configurações",
+    "version": "Versão {{appVersion}}"
+  },
+  "swap": {
+    "button": {
+      "max": "Máx.",
+      "review": "Revisar",
+      "swap": "Trocar",
+      "unwrap": "Desembrulhar",
+      "view": "Ver transação",
+      "wrap": "Embrulhar"
+    },
+    "details": {
+      "action": {
+        "less": "Mostrar menos",
+        "more": "Mostrar mais"
+      },
+      "feeOnTransfer": "Tarifa {{tokenSymbol}}",
+      "newQuote": {
+        "input": "Nova entrada",
+        "output": "Nova saída"
+      },
+      "rate": "Preço",
+      "slippage": "Deslizamento máximo",
+      "uniswapFee": "Tarifa"
+    },
+    "form": {
+      "balance": "Saldo",
+      "header": "Trocar",
+      "slippage": "{{slippageTolerancePercent}} deslizamento",
+      "warning": {
+        "restore": "Restaure sua carteira para trocar"
+      }
+    },
+    "header": {
+      "viewOnly": "Somente visualização"
+    },
+    "hold": {
+      "swap": "Segure para trocar",
+      "tip": "Dica: segure para troca instantânea",
+      "unwrap": "Segure para desembrulhar",
+      "wrap": "Segure para embrulhar"
+    },
+    "request": {
+      "title": {
+        "full": "Trocar {{inputCurrencySymbol}} → {{outputCurrencySymbol}}",
+        "short": "Trocar tokens"
+      }
+    },
+    "review": {
+      "summary": "Você está trocando"
+    },
+    "settings": {
+      "protection": {
+        "description": "Com a proteção de troca ativada, suas transações Ethereum estarão protegidas contra ataques sanduíche, com chances reduzidas de falha.",
+        "subtitle": {
+          "supported": "Rede {{chainName}}",
+          "unavailable": "Não disponível em {{chainName}}"
+        },
+        "title": "Proteção de Troca"
+      },
+      "slippage": {
+        "control": {
+          "auto": "Auto",
+          "title": "Deslizamento máximo"
+        },
+        "description": "Sua transação será revertida se o preço mudar mais do que a porcentagem de deslizamento.",
+        "input": {
+          "message": "Se o preço cair ainda mais, sua transação será revertida. Abaixo está o valor mínimo que você tem garantia de receber.",
+          "receive": {
+            "formatted": "<text>Receba pelo menos </text><highlight>{{amount}} {{tokenSymbol}}</highlight>",
+            "unformatted": "Receba pelo menos {{amount}} {{tokenSymbol}}"
+          }
+        },
+        "output": {
+          "message": "Se o preço cair ainda mais, sua transação será revertida. Abaixo está o valor máximo que você precisará gastar.",
+          "spend": {
+            "formatted": "<text>Gaste no máximo </text><highlight>{{amount}} {{tokenSymbol}}</highlight>",
+            "unformatted": "Gaste no máximo {{amount}} {{tokenSymbol}}"
+          }
+        },
+        "warning": {
+          "max": "Insira um valor menor que {{maxSlippageTolerance}}",
+          "message": "O deslizamento pode ser maior que o necessário",
+          "min": "Insira um valor maior que 0"
+        }
+      },
+      "title": "Trocar configurações"
+    },
+    "slippage": {
+      "settings": {
+        "title": "Configurações de deslizamento"
+      }
+    },
+    "warning": {
+      "expectedFailure": "É esperado que esta transação falhe",
+      "feeOnTransfer": {
+        "message": "Alguns tokens cobram uma tarifa quando são comprados ou vendidos, que é definida pelo emissor do token. A Uniswap não recebe nenhuma parcela dessas tarifas.",
+        "title": "Por que há uma taxa adicional?"
+      },
+      "insufficientBalance": {
+        "button": "Não é suficiente {{currencySymbol}}",
+        "title": "Você não tem {{currencySymbol}} suficiente"
+      },
+      "insufficientGas": {
+        "button": "Não é suficiente {{currencySymbol}}",
+        "cta": {
+          "button": "Comprar {{currencySymbol}}",
+          "message": "Você precisa de mais <highlight>{{currencySymbol}}</highlight> para cobrir o custo de rede para esta transação."
+        },
+        "title": "Você não tem {{currencySymbol}} suficiente para cobrir o custo da rede"
+      },
+      "lowLiquidity": {
+        "message": "Atualmente não há liquidez suficiente disponível entre esses tokens para realizar uma troca. Tente novamente mais tarde ou selecione outro token.",
+        "title": "Liquidez insuficiente"
+      },
+      "networkFee": {
+        "message": "Este é o custo para processar sua transação na blockchain. A Uniswap não recebe nenhuma parcela dessas taxas."
+      },
+      "offline": {
+        "message": "Você pode ter perdido a conexão com a Internet ou a rede pode estar inoperante. Por favor verifique sua conexão com a internet e tente novamente.",
+        "title": "Você está offline"
+      },
+      "priceImpact": {
+        "message": "Devido ao valor de liquidez de {{outputCurrencySymbol}} disponível atualmente, quanto mais {{inputCurrencySymbol}} você tentar trocar, menos {{outputCurrencySymbol}} receberá.",
+        "title": "Impacto de alto preço ({{priceImpactValue}})"
+      },
+      "rateLimit": {
+        "message": "Por favor, tente novamente em alguns minutos.",
+        "title": "Limite de taxa excedido"
+      },
+      "router": {
+        "message": "Você pode ter perdido a conexão ou a rede pode estar inoperante. Se o problema persistir, tente novamente mais tarde.",
+        "title": "Esta negociação não pode ser concluída agora"
+      },
+      "uniswapFee": {
+        "message": {
+          "default": "As tarifas são aplicadas a alguns tokens selecionados para garantir a melhor experiência com a Uniswap. Não há tarifa associada a esta troca.",
+          "included": "As tarifas são aplicadas a alguns tokens selecionados para garantir a melhor experiência com a Uniswap e já foram consideradas nesta cotação."
+        },
+        "title": "Taxa de troca"
+      },
+      "viewOnly": {
+        "message": "Você precisa importar esta carteira usando a frase de recuperação para trocar tokens."
+      }
+    }
+  },
+  "token": {
+    "balances": {
+      "main": "Seu saldo",
+      "other": "Saldos em outras redes",
+      "viewOnly": "Saldo de {{ownerAddress}}"
+    },
+    "error": {
+      "unknown": "Token desconhecido"
+    },
+    "links": {
+      "contract": "Contrato",
+      "title": "Ligações",
+      "twitter": "Twitter",
+      "website": "Local na rede Internet"
+    },
+    "priceExplorer": {
+      "error": {
+        "description": "Algo deu errado.",
+        "title": "Não foi possível carregar o gráfico de preços"
+      },
+      "timeRangeLabel": {
+        "day": "1D",
+        "hour": "1H",
+        "month": "1 milhão",
+        "week": "1S",
+        "year": "1A"
+      }
+    },
+    "safetyLevel": {
+      "blocked": {
+        "header": "Não disponível",
+        "message": "Você não pode negociar este token usando a Carteira Uniswap."
+      },
+      "medium": {
+        "header": "Cuidado",
+        "message": "Este token não é negociado nas principais bolsas centralizadas dos EUA. Sempre conduza sua própria pesquisa antes de negociar."
+      },
+      "strong": {
+        "header": "Aviso",
+        "message": "Este token não é negociado nas principais bolsas centralizadas dos EUA ou frequentemente trocado na Uniswap. Sempre conduza sua própria pesquisa antes de negociar."
+      }
+    },
+    "selector": {
+      "search": {
+        "error": "Não foi possível carregar os resultados da pesquisa"
+      }
+    },
+    "stats": {
+      "fullyDilutedValuation": "Valor Total Diluído",
+      "marketCap": "Valor de mercado",
+      "priceHighYear": "Max 52S",
+      "priceLowYear": "Min 52S",
+      "section": {
+        "about": "Sobre {{token}}"
+      },
+      "title": "Estatísticas",
+      "translation": {
+        "original": "Mostrar original",
+        "translate": "Traduzir para {{language}}"
+      },
+      "volume": "Volume 24h"
+    }
+  },
+  "tokens": {
+    "action": {
+      "hide": "Ocultar Token",
+      "unhide": "Mostrar Token"
+    },
+    "hidden": {
+      "label": "Ocultos ({{numHidden}})"
+    },
+    "nfts": {
+      "collection": {
+        "error": {
+          "load": {
+            "title": "Não foi possível carregar a coleção NFT"
+          }
+        },
+        "label": {
+          "items": "Itens",
+          "owners": "Donos",
+          "priceFloor": "Mínimo",
+          "swapVolume": "Volume"
+        }
+      },
+      "details": {
+        "error": {
+          "load": {
+            "title": "Não foi possível carregar os detalhes do NFT"
+          }
+        },
+        "owner": "Propriedade de",
+        "price": "Preço atual",
+        "recentPrice": "Último preço de venda",
+        "traits": "Características"
+      },
+      "empty": {
+        "description": "Nenhum NFT encontrado"
+      },
+      "error": {
+        "unavailable": "Conteúdo não disponível"
+      },
+      "hidden": {
+        "action": {
+          "hide": "Ocultar NFT",
+          "unhide": "Mostrar NFT"
+        },
+        "label": "Ocultos ({{numHidden}})"
+      },
+      "link": {
+        "collection": "Site da coleção"
+      },
+      "list": {
+        "error": {
+          "load": {
+            "title": "Não foi possível carregar NFTs"
+          }
+        },
+        "none": {
+          "button": "Receber NFTs",
+          "description": {
+            "default": "Transfira NFTs de outra carteira para começar.",
+            "external": "Quando esta carteira comprar ou receber NFTs, eles aparecerão aqui."
+          },
+          "title": "Ainda não há NFT"
+        }
+      }
+    },
+    "selector": {
+      "button": {
+        "choose": "Selecione o token",
+        "clear": "Limpar tudo"
+      },
+      "empty": {
+        "buy": {
+          "message": "Compre cripto com cartão ou banco para enviar tokens.",
+          "title": "Comprar cripto"
+        },
+        "receive": {
+          "message": "Transfira tokens de uma exchange centralizada ou de outra carteira para enviar tokens.",
+          "title": "Receber tokens"
+        },
+        "title": "Ainda não há tokens"
+      },
+      "error": {
+        "load": "Não foi possível carregar tokens"
+      },
+      "search": {
+        "empty": "Nenhum resultado encontrado para <highlight>{{searchText}}</highlight>",
+        "placeholder": "Pesquisar tokens"
+      },
+      "section": {
+        "favorite": "Favoritos",
+        "popular": "Tokens populares",
+        "recent": "Pesquisas recentes",
+        "search": "Resultados da pesquisa",
+        "suggested": "Sugerido",
+        "yours": "Seus tokens"
+      }
+    }
+  },
+  "transaction": {
+    "action": {
+      "cancel": {
+        "button": "Cancelar transações",
+        "description": "Se você cancelar esta transação antes de ela ser processada pela rede, você pagará uma nova taxa de rede ao invés da original.",
+        "title": "Cancelar esta transação?"
+      },
+      "copy": "Copiar ID da transação",
+      "copyMoonPay": "Copiar ID da transação MoonPay",
+      "view": "Ver {{tokenSymbol}}",
+      "viewEtherscan": "Ver em {{blockExplorerName}}",
+      "viewMoonPay": "Ver no MoonPay"
+    },
+    "amount": {
+      "unlimited": "Ilimitado"
+    },
+    "currency": {
+      "unknown": "token desconhecido"
+    },
+    "date": "Enviado em {{date}}",
+    "network": {
+      "all": "Todas as redes"
+    },
+    "networkCost": {
+      "label": "Custo da rede"
+    },
+    "notification": {
+      "error": {
+        "cancel": "Não foi possível cancelar a transação",
+        "replace": "Não foi possível substituir a transação"
+      }
+    },
+    "priceImpact": {
+      "label": "Impacto no preço"
+    },
+    "status": {
+      "approve": {
+        "canceled": "Aprovação cancelada",
+        "canceling": "Cancelando aprovação",
+        "failed": "Falha ao aprovar",
+        "pending": "Aprovando",
+        "success": "Aprovado",
+        "successDapp": "Aprovado em {{externalDappName}}"
+      },
+      "buy": {
+        "canceled": "Compra cancelada",
+        "canceling": "Cancelando compra",
+        "failed": "Falha ao comprar",
+        "pending": "Comprando",
+        "success": "Comprado",
+        "successDapp": "Comprei em {{externalDappName}}"
+      },
+      "confirm": {
+        "canceled": "Cancelado confirmar",
+        "canceling": "Confirmação de cancelamento",
+        "failed": "Falha ao confirmar",
+        "pending": "Transação em andamento",
+        "success": "Transação confirmada",
+        "successDapp": "Transação confirmada em {{externalDappName}}"
+      },
+      "mint": {
+        "canceled": "Cunhagem cancelada",
+        "canceling": "Cancelando cunhada",
+        "failed": "Falha ao cunhar",
+        "pending": "Cunhagem",
+        "success": "Cunhado",
+        "successDapp": "Cunhado em {{externalDappName}}"
+      },
+      "purchase": {
+        "canceled": "Compra cancelada",
+        "canceling": "Cancelando compra",
+        "failed": "Falha ao comprar",
+        "pending": "Comprando",
+        "success": "Comprado",
+        "successDapp": "Comprado em {{externalDappName}}"
+      },
+      "receive": {
+        "canceled": "Recebimento cancelado",
+        "canceling": "Cancelando recebimento",
+        "failed": "Falha ao receber",
+        "pending": "Recebimento",
+        "success": "Recebido",
+        "successDapp": "Recebido em {{externalDappName}}"
+      },
+      "revoke": {
+        "canceled": "Revogação cancelada",
+        "canceling": "Cancelando revogação",
+        "failed": "Falha ao revogar",
+        "pending": "Revogando",
+        "success": "Revogado",
+        "successDapp": "Revogado em {{externalDappName}}"
+      },
+      "sell": {
+        "canceled": "Venda cancelada",
+        "canceling": "Cancelando venda",
+        "failed": "Não foi possível vender",
+        "pending": "Vendendo",
+        "success": "Vendido",
+        "successDapp": "Vendido em {{externalDappName}}"
+      },
+      "send": {
+        "canceled": "Envio cancelado",
+        "canceling": "Cancelando envio",
+        "failed": "Falha ao enviar",
+        "pending": "Enviando",
+        "success": "Enviado",
+        "successDapp": "Enviado em {{externalDappName}}"
+      },
+      "swap": {
+        "canceled": "Troca cancelada",
+        "canceling": "Cancelando troca",
+        "failed": "Falha ao trocar",
+        "pending": "Trocando",
+        "success": "Trocado",
+        "successDapp": "Trocado em {{externalDappName}}"
+      },
+      "unwrap": {
+        "canceled": "Desembrulhar cancelado",
+        "canceling": "Desembrulho cancelado",
+        "failed": "Falha ao desembrulhar",
+        "pending": "Desembrulhando",
+        "success": "Desembrulhado",
+        "successDapp": "Desembrulhado em {{externalDappName}}"
+      },
+      "wrap": {
+        "canceled": "Embrulho cancelado",
+        "canceling": "Cancelando embrulho",
+        "failed": "Falha ao embrulhar",
+        "pending": "Embrulhando",
+        "success": "Embrulhado",
+        "successDapp": "Embrulhado em {{externalDappName}}"
+      }
+    },
+    "summary": {
+      "received": "{{tokenAmountWithSymbol}} a {{recipientAddress}}",
+      "sent": "{{tokenAmountWithSymbol}} de {{senderAddress}}"
+    },
+    "watcher": {
+      "error": {
+        "cancel": "Não foi possível cancelar a transação",
+        "status": "Erro ao verificar o status da transação"
+      }
+    }
+  },
+  "unicons": {
+    "banner": {
+      "button": "Entendi",
+      "subtitle": "Renovamos o Unicon exclusivo da sua carteira. Confira o restante de suas contas para ver os ícones atualizados.",
+      "title": "Seu Unicon ganhou um novo visual"
+    }
+  },
+  "unitags": {
+    "banner": {
+      "button": {
+        "claim": "Reivindique agora"
+      },
+      "subtitle": "Crie um perfil personalizado da web3 e compartilhe seu endereço facilmente com seus amigos.",
+      "title": {
+        "compact": "<highlight>Reivindique seu {{unitagDomain}} nome de usuário</highlight> e crie seu perfil personalizável.",
+        "full": "Solicitar seu nome de usuário {{unitagDomain}}"
+      }
+    },
+    "choosePhoto": {
+      "option": {
+        "cameraRoll": "Escolha no rolo da câmera",
+        "nft": "Escolha um NFT",
+        "remove": "Remover foto do perfil"
+      }
+    },
+    "claim": {
+      "confirmation": {
+        "customize": "Personalizar perfil",
+        "description": "{{unitagAddress}} está pronto para enviar e receber cripto. Continue a construir sua carteira personalizando seu perfil da web3.",
+        "success": {
+          "long": "Você entendeu!",
+          "short": "entendi!"
+        }
+      },
+      "error": {
+        "addressLimit": "Você já fez o número máximo de alterações no seu nome de usuário para este endereço",
+        "appCheck": "Não foi possível resgatar o usuário. Tente novamente amanhã.",
+        "avatar": "Não foi possível definir o avatar. Tente mais tarde.",
+        "default": "Não foi possível reivindicar o nome de usuário. Tente mais tarde.",
+        "deviceLimit": "Você atingiu o número máximo de nomes de usuário que podem estar ativos neste dispositivo",
+        "ens": "Para reivindicar este nome de usuário, você deve possuir o {{username}}.eth ENS",
+        "ensMismatch": "Este nome de usuário não está disponível no momento.",
+        "general": "Não foi possível reivindicar o nome de usuário",
+        "unavailable": "Esse nome de usuário não está disponível",
+        "unknown": "Erro desconhecido"
+      },
+      "username": {
+        "default": "seu nome"
+      }
+    },
+    "delete": {
+      "confirm": {
+        "subtitle": "Você está prestes a excluir seu nome de usuário e detalhes personalizáveis do perfil. Você não poderá recuperá-lo.",
+        "title": "Tem certeza?"
+      }
+    },
+    "editProfile": {
+      "placeholder": "nome de usuário"
+    },
+    "editUsername": {
+      "button": {
+        "confirm": "Salvar alterações"
+      },
+      "confirm": {
+        "subtitle": "Você está prestes a alterar seu nome de usuário. Depois de alterá-lo, você nunca mais poderá reivindicá-lo.",
+        "title": "Tem certeza?"
+      },
+      "title": "Editar nome de usuário",
+      "warning": {
+        "default": "Depois de alterar seu nome de usuário, você nunca mais poderá reivindicá-lo. Você só pode alterá-lo 2 vezes.",
+        "max": "Você atingiu o número máximo de 2 alterações de nome de usuário."
+      }
+    },
+    "intro": {
+      "features": {
+        "ens": "Desenvolvido por subdomínios ENS",
+        "free": "Livre para reivindicar",
+        "profile": "Perfis personalizáveis"
+      },
+      "subtitle": "Diga adeus aos endereços de 0x. Nomes de usuário são nomes legíveis que tornam mais fácil enviar e receber cripto.",
+      "title": "Apresentando nomes de usuário"
+    },
+    "notification": {
+      "delete": {
+        "error": "Não foi possível excluir o nome de usuário. Tente mais tarde.",
+        "title": "Nome de usuário excluído"
+      },
+      "profile": {
+        "error": "Não foi possível atualizar o perfil. Tente mais tarde.",
+        "title": "perfil atualizado"
+      },
+      "username": {
+        "error": "Não foi possível alterar o nome de usuário. Tente mais tarde.",
+        "title": "Nome de usuário alterado"
+      }
+    },
+    "onboarding": {
+      "claim": {
+        "subtitle": "Este é seu nome único que qualquer um pode enviar cripto.",
+        "title": {
+          "choose": "Escolha o seu nome de usuário",
+          "claim": "Reivindique seu nome de usuário"
+        }
+      },
+      "claimPeriod": {
+        "description": "Por tempo limitado, o nome de usuário {{username}} está reservado. Importe a carteira que possui {{username}}.eth ENS para reivindicar este nome de usuário ou tente novamente após o período de reivindicação.",
+        "link": "Saiba mais sobre nosso <highlight>período de reivindicação</highlight>.",
+        "title": "Período de reclamação ENS"
+      },
+      "info": {
+        "description": "Nomes de usuário transformam endereços complexos 0x em nomes legíveis. Ao reivindicar um nome de usuário {{unitagDomain}} , você pode enviar e receber cripto facilmente e construir um perfil web público da web3.",
+        "title": "Um endereço simplificado"
+      },
+      "profile": {
+        "subtitle": "Faça upload do seu próprio ou fique com o seu Unicon exclusivo. Você sempre pode mudar isso mais tarde.",
+        "title": "Escolha uma foto de perfil"
+      }
+    },
+    "profile": {
+      "action": {
+        "delete": "Excluir nome de usuário",
+        "edit": "Editar nome de usuário"
+      },
+      "bio": {
+        "label": "Biografia",
+        "placeholder": "Digite uma biografia para o seu perfil"
+      },
+      "links": {
+        "twitter": "Twitter"
+      }
+    },
+    "username": {
+      "error": {
+        "chars": "Os nomes de usuário só podem conter letras e números",
+        "max": "Os nomes de usuário não podem ter mais do que {{number}} caracteres",
+        "min": "Os nomes de usuário devem ter pelo menos {{number}} caracteres",
+        "uppercase": "Os nomes de usuário só podem conter letras minúsculas e números"
+      }
+    }
+  },
+  "walletConnect": {
+    "dapps": {
+      "connection": "<highlight>Conectado a </highlight>{{dappNameOrUrl}}",
+      "empty": {
+        "description": "Conecte-se a um aplicativo escaneando um código via WalletConnect"
+      },
+      "manage": {
+        "empty": {
+          "title": "Nenhum aplicativo conectado"
+        },
+        "title": "Gerenciar conexões"
+      }
+    },
+    "error": {
+      "connection": {
+        "message": "A Carteira Uniswap atualmente suporta {{chainNames}}. Por favor, use \"{{dappName}}\" apenas nessas redes",
+        "title": "Erro de conexão"
+      },
+      "general": {
+        "message": "Houve um problema com o WalletConnect. Por favor, tente novamente",
+        "title": "Erro em WalletConnect"
+      },
+      "scantastic": {
+        "message": "Houve um problema com seu código QR. Por favor, tente novamente",
+        "title": "Código QR inválido"
+      },
+      "unsupported": {
+        "message": "Certifique-se de estar lendo um código QR válido de WalletConnect ou endereço Ethereum antes de tentar novamente.",
+        "title": "Código QR inválido"
+      },
+      "unsupportedV1": {
+        "message": "WalletConnect v1 não é mais compatível. O aplicativo ao qual você está tentando se conectar precisa ser atualizado para WalletConnect v2.",
+        "title": "Código QR inválido"
+      },
+      "uwu": {
+        "scan": "Ocorreu um problema ao ler este código QR.",
+        "title": "Erro de link UwU",
+        "unsupported": "Este código QR não é compatível."
+      }
+    },
+    "pending": {
+      "button": {
+        "connect": "Conectar",
+        "scrollDown": "Role para baixo para conectar"
+      },
+      "switchAccount": "Mudar de conta",
+      "switchNetwork": "Mudar de rede",
+      "title": "{{dappName}} deseja se conectar à sua carteira"
+    },
+    "permissions": {
+      "networks": "Redes",
+      "option": {
+        "transferAssets": "Transferir seus ativos sem consentimento",
+        "viewTokenBalances": "Ver seus saldos de tokens",
+        "viewWalletAddress": "Ver o endereço da sua carteira"
+      },
+      "title": "Permissões do aplicativo"
+    },
+    "request": {
+      "button": {
+        "scrollDown": "Role para baixo para assinar",
+        "sign": "Assinar"
+      },
+      "details": {
+        "label": {
+          "function": "Função: ",
+          "recipient": "Para: ",
+          "sending": "Enviando: "
+        }
+      },
+      "error": {
+        "insufficientFunds": "Você não tem {{currencySymbol}} suficiente para concluir esta transação.",
+        "network": "Erro de conexão com a Internet ou rede"
+      },
+      "label": {
+        "network": "Rede"
+      },
+      "warning": {
+        "general": {
+          "message": "Cuidado: esta mensagem pode transferir ativos",
+          "transaction": "Cuidado: esta transação pode transferir ativos"
+        },
+        "message": "Para assinar mensagens ou transações, você precisará importar a frase de recuperação da carteira.",
+        "title": "Esta carteira está no modo somente visualização"
+      }
+    }
+  }
+}

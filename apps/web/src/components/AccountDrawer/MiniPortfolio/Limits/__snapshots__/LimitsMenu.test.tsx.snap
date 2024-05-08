@@ -1,0 +1,1107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LimitsMenu should render when there are two open orders 1`] = `
+.c13 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c14 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c18 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c5 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c9 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c21 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c11 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c11:hover {
+  opacity: 0.6;
+}
+
+.c11:active {
+  opacity: 0.4;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c17 {
+  display: grid;
+  grid-auto-rows: auto;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.c7 {
+  background-color: #F9F9F9;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 12px;
+}
+
+.c10 {
+  line-height: 16px;
+}
+
+.c15 {
+  gap: 12px;
+  height: 68px;
+  padding: 0 16px;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  cursor: pointer;
+}
+
+.c15:hover {
+  cursor: pointer;
+}
+
+.c22 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.c24 {
+  border-color: #22222212;
+  display: inline-block;
+  margin-right: 1px;
+  border-radius: 4px;
+  height: 18px;
+  width: 18px;
+  border-style: solid;
+  border-width: 1.5px;
+  position: relative;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c24:hover {
+  opacity: 0.6;
+}
+
+.c24:active {
+  opacity: 0.4;
+}
+
+.c25 {
+  position: absolute;
+  top: -24px;
+  -webkit-clip: rect(0 0 0 0);
+  clip: rect(0 0 0 0);
+  -webkit-clip-path: inset(50%);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.c26 {
+  display: none;
+  height: 18px;
+  width: 18px;
+  color: white;
+  position: absolute;
+  right: 1px;
+}
+
+.c16 {
+  padding: 8px 0;
+  height: unset;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c23 {
+  opacity: 0;
+}
+
+.c19 * {
+  max-width: 40%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c20 {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c1 {
+  width: 100%;
+  overflow: auto;
+  margin-top: 4px;
+  padding: 14px 16px 16px;
+  -webkit-scrollbar-width: thin;
+  -moz-scrollbar-width: thin;
+  -ms-scrollbar-width: thin;
+  scrollbar-width: thin;
+  -webkit-scrollbar-color: #22222212 transparent;
+  -moz-scrollbar-color: #22222212 transparent;
+  -ms-scrollbar-color: #22222212 transparent;
+  scrollbar-color: #22222212 transparent;
+  height: 100%;
+}
+
+.c1::-webkit-scrollbar {
+  background: transparent;
+  width: 4px;
+  overflow-y: scroll;
+}
+
+.c1::-webkit-scrollbar-thumb {
+  background: #22222212;
+  border-radius: 8px;
+}
+
+.c1::-webkit-scrollbar-track {
+  margin-top: 40px;
+}
+
+.c4 {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+}
+
+.c3 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c3:hover {
+  opacity: 0.6;
+}
+
+.c3:active {
+  opacity: 0.4;
+}
+
+.c2 {
+  color: #222222;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.c12 {
+  height: 100%;
+  position: relative;
+}
+
+.c8 {
+  margin-bottom: 24px;
+}
+
+<div>
+  <span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1"
+      >
+        <div
+          class="c2"
+        >
+          <svg
+            class="c3"
+            data-testid="wallet-back"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line
+              x1="19"
+              x2="5"
+              y1="12"
+              y2="12"
+            />
+            <polyline
+              points="12 19 5 12 12 5"
+            />
+          </svg>
+          <span
+            class="c4"
+          >
+            <div
+              class="c5 css-n8z49y"
+            >
+              Open limits
+            </div>
+          </span>
+        </div>
+        <div
+          class="c6 c7 c8"
+        >
+          <div
+            class="c9 c10 css-1m65e73"
+          >
+            Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.
+          </div>
+          <div
+            class="c9 c10 css-1m65e73"
+          >
+            Canceling a limit has a network cost.
+          </div>
+          <div
+            class="c9 c10 css-1m65e73"
+          >
+            <a
+              class="c11"
+              href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c0 c12"
+          data-testid="LimitsMenuContainer"
+        >
+          <div
+            class="c13 c14"
+          >
+            <div
+              class="c13 c14 c15 c16"
+            >
+              <div
+                class="c17"
+              >
+                <div
+                  class="c9 css-15li2d9"
+                >
+                  Expires January 26, 2024 at 1:52PM
+                </div>
+                <div
+                  class="c0"
+                >
+                  <div
+                    class="c13 c18 c19"
+                  >
+                    <img
+                      class="c20"
+                    />
+                    <div
+                      class="c5 css-n8z49y"
+                    >
+                      252.074
+                       
+                      DAI
+                    </div>
+                    <svg
+                      fill="none"
+                      height="12px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="12px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <line
+                        x1="5"
+                        x2="19"
+                        y1="12"
+                        y2="12"
+                      />
+                      <polyline
+                        points="12 5 19 12 12 19"
+                      />
+                    </svg>
+                    <img
+                      class="c20"
+                    />
+                    <div
+                      class="c5 css-n8z49y"
+                    >
+                      0.10684
+                       
+                      WETH
+                    </div>
+                  </div>
+                  <div
+                    class="c21 css-142zc9n"
+                  >
+                    when 0.00042 WETH/DAI
+                  </div>
+                </div>
+              </div>
+            </div>
+            <label
+              class="c22 c23"
+            >
+              <span
+                aria-hidden="true"
+                class="c24"
+                size="18"
+              />
+              <input
+                class="c25"
+                size="18"
+                type="checkbox"
+              />
+              <svg
+                class="c26"
+                fill="none"
+                height="16"
+                size="18"
+                viewBox="0 0 16 16"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g
+                  id="Icon"
+                >
+                  <path
+                    d="M5.99993 11.3333C5.99927 11.3333 5.9986 11.3333 5.99727 11.3333C5.81927 11.3326 5.64993 11.2613 5.52526 11.1346L2.8586 8.42664C2.59993 8.16397 2.60327 7.74197 2.86594 7.48397C3.1286 7.22597 3.54993 7.22863 3.8086 7.4913L6.00393 9.72063L12.1959 3.5293C12.4566 3.26863 12.8779 3.26863 13.1386 3.5293C13.3993 3.7893 13.3993 4.21197 13.1386 4.47197L6.47193 11.1386C6.34659 11.2633 6.1766 11.3333 5.99993 11.3333Z"
+                    fill="white"
+                    id="Vector"
+                  />
+                </g>
+              </svg>
+            </label>
+          </div>
+          <div
+            class="c13 c14"
+          >
+            <div
+              class="c13 c14 c15 c16"
+            >
+              <div
+                class="c17"
+              >
+                <div
+                  class="c9 css-15li2d9"
+                >
+                  Expires January 26, 2024 at 1:52PM
+                </div>
+                <div
+                  class="c0"
+                >
+                  <div
+                    class="c13 c18 c19"
+                  >
+                    <img
+                      class="c20"
+                    />
+                    <div
+                      class="c5 css-n8z49y"
+                    >
+                      252.074
+                       
+                      DAI
+                    </div>
+                    <svg
+                      fill="none"
+                      height="12px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="12px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <line
+                        x1="5"
+                        x2="19"
+                        y1="12"
+                        y2="12"
+                      />
+                      <polyline
+                        points="12 5 19 12 12 19"
+                      />
+                    </svg>
+                    <img
+                      class="c20"
+                    />
+                    <div
+                      class="c5 css-n8z49y"
+                    >
+                      0.10684
+                       
+                      WETH
+                    </div>
+                  </div>
+                  <div
+                    class="c21 css-142zc9n"
+                  >
+                    when 0.00042 WETH/DAI
+                  </div>
+                </div>
+              </div>
+            </div>
+            <label
+              class="c22 c23"
+            >
+              <span
+                aria-hidden="true"
+                class="c24"
+                size="18"
+              />
+              <input
+                class="c25"
+                size="18"
+                type="checkbox"
+              />
+              <svg
+                class="c26"
+                fill="none"
+                height="16"
+                size="18"
+                viewBox="0 0 16 16"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g
+                  id="Icon"
+                >
+                  <path
+                    d="M5.99993 11.3333C5.99927 11.3333 5.9986 11.3333 5.99727 11.3333C5.81927 11.3326 5.64993 11.2613 5.52526 11.1346L2.8586 8.42664C2.59993 8.16397 2.60327 7.74197 2.86594 7.48397C3.1286 7.22597 3.54993 7.22863 3.8086 7.4913L6.00393 9.72063L12.1959 3.5293C12.4566 3.26863 12.8779 3.26863 13.1386 3.5293C13.3993 3.7893 13.3993 4.21197 13.1386 4.47197L6.47193 11.1386C6.34659 11.2633 6.1766 11.3333 5.99993 11.3333Z"
+                    fill="white"
+                    id="Vector"
+                  />
+                </g>
+              </svg>
+            </label>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</div>
+`;
+
+exports[`LimitsMenu should render when there is one open order 1`] = `
+.c13 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c14 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c18 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c5 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c9 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c21 {
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c11 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c11:hover {
+  opacity: 0.6;
+}
+
+.c11:active {
+  opacity: 0.4;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.c17 {
+  display: grid;
+  grid-auto-rows: auto;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.c7 {
+  background-color: #F9F9F9;
+  border-radius: 12px;
+  padding: 12px;
+  margin-top: 12px;
+}
+
+.c10 {
+  line-height: 16px;
+}
+
+.c15 {
+  gap: 12px;
+  height: 68px;
+  padding: 0 16px;
+  -webkit-transition: 250ms ease background-color;
+  transition: 250ms ease background-color;
+  cursor: pointer;
+}
+
+.c15:hover {
+  cursor: pointer;
+}
+
+.c22 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.c24 {
+  border-color: #22222212;
+  display: inline-block;
+  margin-right: 1px;
+  border-radius: 4px;
+  height: 18px;
+  width: 18px;
+  border-style: solid;
+  border-width: 1.5px;
+  position: relative;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c24:hover {
+  opacity: 0.6;
+}
+
+.c24:active {
+  opacity: 0.4;
+}
+
+.c25 {
+  position: absolute;
+  top: -24px;
+  -webkit-clip: rect(0 0 0 0);
+  clip: rect(0 0 0 0);
+  -webkit-clip-path: inset(50%);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.c26 {
+  display: none;
+  height: 18px;
+  width: 18px;
+  color: white;
+  position: absolute;
+  right: 1px;
+}
+
+.c16 {
+  padding: 8px 0;
+  height: unset;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c23 {
+  opacity: 0;
+}
+
+.c19 * {
+  max-width: 40%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.c20 {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c1 {
+  width: 100%;
+  overflow: auto;
+  margin-top: 4px;
+  padding: 14px 16px 16px;
+  -webkit-scrollbar-width: thin;
+  -moz-scrollbar-width: thin;
+  -ms-scrollbar-width: thin;
+  scrollbar-width: thin;
+  -webkit-scrollbar-color: #22222212 transparent;
+  -moz-scrollbar-color: #22222212 transparent;
+  -ms-scrollbar-color: #22222212 transparent;
+  scrollbar-color: #22222212 transparent;
+  height: 100%;
+}
+
+.c1::-webkit-scrollbar {
+  background: transparent;
+  width: 4px;
+  overflow-y: scroll;
+}
+
+.c1::-webkit-scrollbar-thumb {
+  background: #22222212;
+  border-radius: 8px;
+}
+
+.c1::-webkit-scrollbar-track {
+  margin-top: 40px;
+}
+
+.c4 {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+}
+
+.c3 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c3:hover {
+  opacity: 0.6;
+}
+
+.c3:active {
+  opacity: 0.4;
+}
+
+.c2 {
+  color: #222222;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.c12 {
+  height: 100%;
+  position: relative;
+}
+
+.c8 {
+  margin-bottom: 24px;
+}
+
+<div>
+  <span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0 c1"
+      >
+        <div
+          class="c2"
+        >
+          <svg
+            class="c3"
+            data-testid="wallet-back"
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line
+              x1="19"
+              x2="5"
+              y1="12"
+              y2="12"
+            />
+            <polyline
+              points="12 19 5 12 12 5"
+            />
+          </svg>
+          <span
+            class="c4"
+          >
+            <div
+              class="c5 css-n8z49y"
+            >
+              Open limits
+            </div>
+          </span>
+        </div>
+        <div
+          class="c6 c7 c8"
+        >
+          <div
+            class="c9 c10 css-1m65e73"
+          >
+            Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.
+          </div>
+          <div
+            class="c9 c10 css-1m65e73"
+          >
+            Canceling a limit has a network cost.
+          </div>
+          <div
+            class="c9 c10 css-1m65e73"
+          >
+            <a
+              class="c11"
+              href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Learn more
+            </a>
+          </div>
+        </div>
+        <div
+          class="c0 c12"
+          data-testid="LimitsMenuContainer"
+        >
+          <div
+            class="c13 c14"
+          >
+            <div
+              class="c13 c14 c15 c16"
+            >
+              <div
+                class="c17"
+              >
+                <div
+                  class="c9 css-15li2d9"
+                >
+                  Expires January 26, 2024 at 1:52PM
+                </div>
+                <div
+                  class="c0"
+                >
+                  <div
+                    class="c13 c18 c19"
+                  >
+                    <img
+                      class="c20"
+                    />
+                    <div
+                      class="c5 css-n8z49y"
+                    >
+                      252.074
+                       
+                      DAI
+                    </div>
+                    <svg
+                      fill="none"
+                      height="12px"
+                      stroke="#222222"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      viewBox="0 0 24 24"
+                      width="12px"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <line
+                        x1="5"
+                        x2="19"
+                        y1="12"
+                        y2="12"
+                      />
+                      <polyline
+                        points="12 5 19 12 12 19"
+                      />
+                    </svg>
+                    <img
+                      class="c20"
+                    />
+                    <div
+                      class="c5 css-n8z49y"
+                    >
+                      0.10684
+                       
+                      WETH
+                    </div>
+                  </div>
+                  <div
+                    class="c21 css-142zc9n"
+                  >
+                    when 0.00042 WETH/DAI
+                  </div>
+                </div>
+              </div>
+            </div>
+            <label
+              class="c22 c23"
+            >
+              <span
+                aria-hidden="true"
+                class="c24"
+                size="18"
+              />
+              <input
+                class="c25"
+                size="18"
+                type="checkbox"
+              />
+              <svg
+                class="c26"
+                fill="none"
+                height="16"
+                size="18"
+                viewBox="0 0 16 16"
+                width="16"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g
+                  id="Icon"
+                >
+                  <path
+                    d="M5.99993 11.3333C5.99927 11.3333 5.9986 11.3333 5.99727 11.3333C5.81927 11.3326 5.64993 11.2613 5.52526 11.1346L2.8586 8.42664C2.59993 8.16397 2.60327 7.74197 2.86594 7.48397C3.1286 7.22597 3.54993 7.22863 3.8086 7.4913L6.00393 9.72063L12.1959 3.5293C12.4566 3.26863 12.8779 3.26863 13.1386 3.5293C13.3993 3.7893 13.3993 4.21197 13.1386 4.47197L6.47193 11.1386C6.34659 11.2633 6.1766 11.3333 5.99993 11.3333Z"
+                    fill="white"
+                    id="Vector"
+                  />
+                </g>
+              </svg>
+            </label>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</div>
+`;

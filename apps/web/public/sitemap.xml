@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://app.uniswap.org/app-sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://app.uniswap.org/tokens-sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://app.uniswap.org/pools-sitemap.xml</loc>
+  </sitemap>  
+  <sitemap>
+    <loc>https://app.uniswap.org/nfts-sitemap.xml</loc>
+  </sitemap>  
+</sitemapindex>

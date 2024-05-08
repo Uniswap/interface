@@ -1,0 +1,13 @@
+rootProject.name = 'Uniswap'
+apply from: file("../../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle")
+applyNativeModulesSettingsGradle(settings)
+includeBuild('../../../node_modules/react-native-gradle-plugin')
+include ':app'
+
+apply from: new File(["node", "--print", "require.resolve('../../../node_modules/expo/package.json')"].execute(null, rootDir).text.trim(), "../scripts/autolinking.gradle")
+useExpoModules()
+
+include ':@sentry_react-native'
+project(':@sentry_react-native').projectDir = new File('../../../node_modules/@sentry/react-native/android')
+include ':detox'
+project(':detox').projectDir = new File('../../../node_modules/detox/android/detox')

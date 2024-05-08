@@ -1,0 +1,7 @@
+query ConvertWeb($toCurrency: Currency!) {
+  convert(fromAmount: { currency: USD, value: 1.0 }, toCurrency: $toCurrency) {
+    id
+    value
+    currency
+  }
+}

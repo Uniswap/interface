@@ -1,0 +1,11 @@
+{
+  "extends": "tsconfig/ui.json",
+  "include": [
+    "src"
+  ],
+  "references": [
+    {
+      "path": "../utilities"
+    },
+  ],
+}

@@ -1,0 +1,798 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SendCurrencyInputform should render correctly with no verified recipient 1`] = `
+.c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c1 {
+  position: relative;
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  padding: 12px 16px;
+  gap: 4px;
+  opacity: 1;
+  pointer-events: initial;
+}
+
+.c4 {
+  color: #7D7D7D;
+}
+
+.c6 {
+  background: none;
+  width: 100%;
+  color: #222222;
+  outline: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.c6::-webkit-input-placeholder {
+  color: #CECECE;
+}
+
+.c6::-moz-placeholder {
+  color: #CECECE;
+}
+
+.c6:-ms-input-placeholder {
+  color: #CECECE;
+}
+
+.c6::placeholder {
+  color: #CECECE;
+}
+
+<span
+  class=" _dsp_contents"
+>
+  <span
+    class=" t_light _dsp_contents is_Theme"
+  >
+    <div
+      class="c0 c1"
+    >
+      <span
+        class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
+      >
+        To
+      </span>
+      <div
+        class="c2 c3 c4"
+      >
+        <div
+          class="c2 c5"
+        >
+          <input
+            autocapitalize="off"
+            autocomplete="off"
+            autocorrect="off"
+            class="c6"
+            pattern="^(0x[a-fA-F0-9]{40})$"
+            placeholder="Wallet address or ENS name"
+            spellcheck="false"
+            type="text"
+            value="hayden.eth"
+          />
+        </div>
+      </div>
+    </div>
+  </span>
+</span>
+`;
+
+exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
+.c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c8 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c9 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c10 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c7 {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  background-color: #22222212;
+  font-size: initial;
+}
+
+.c4 {
+  padding: 6px 0px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c6 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c6:hover {
+  opacity: 0.6;
+}
+
+.c6:active {
+  opacity: 0.4;
+}
+
+.c11 {
+  color: #CECECE;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c11:hover {
+  opacity: 0.6;
+}
+
+.c11:active {
+  opacity: 0.4;
+}
+
+.c1 {
+  position: relative;
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  padding: 12px 16px;
+  gap: 4px;
+  opacity: 1;
+  pointer-events: initial;
+}
+
+<span
+  class=" _dsp_contents"
+>
+  <span
+    class=" t_light _dsp_contents is_Theme"
+  >
+    <div
+      class="c0 c1"
+    >
+      <div
+        class="c2 c3 c4"
+      >
+        <div
+          class="c2 c5 c6"
+        >
+          <div
+            class="c7"
+          >
+            <span>
+              <div
+                style="border-radius: 50px; overflow: hidden; padding: 0px; margin: 0px; width: 36px; height: 36px; display: inline-block; background: rgb(200, 20, 83);"
+              >
+                <svg
+                  height="36"
+                  width="36"
+                  x="0"
+                  y="0"
+                >
+                  <rect
+                    fill="#F29602"
+                    height="36"
+                    transform="translate(-1.3639893162257823 0.27350588462642744) rotate(171.3 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                  <rect
+                    fill="#FA6C00"
+                    height="36"
+                    transform="translate(7.665150362825969 -12.44820359430869) rotate(394.5 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                  <rect
+                    fill="#FB1868"
+                    height="36"
+                    transform="translate(23.55150004628138 -6.949396678861342) rotate(445.6 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                </svg>
+              </div>
+            </span>
+          </div>
+          <div
+            class="c0"
+          >
+            <div
+              class="c2 c8"
+            >
+              <div
+                class="c9 css-n8z49y"
+              >
+                hayden
+              </div>
+              <span
+                class="_dsp_contents"
+              >
+                <div
+                  class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010 is_Image "
+                  style="height: 18px; width: 18px;"
+                >
+                  <div
+                    class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
+                    style="background-image: url(unitag-light.png);"
+                  />
+                  <img
+                    alt=""
+                    class="css-accessibilityImage-9pa8cd"
+                    draggable="false"
+                    src="unitag-light.png"
+                  />
+                </div>
+              </span>
+            </div>
+            <div
+              class="c10 css-obwv3p"
+            >
+              0x9984...9103
+            </div>
+          </div>
+        </div>
+        <svg
+          class="c11"
+          fill="none"
+          height="20"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <line
+            x1="18"
+            x2="6"
+            y1="6"
+            y2="18"
+          />
+          <line
+            x1="6"
+            x2="18"
+            y1="6"
+            y2="18"
+          />
+        </svg>
+      </div>
+    </div>
+  </span>
+</span>
+`;
+
+exports[`SendCurrencyInputform should render correctly with verified recipient 1`] = `
+.c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c8 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c9 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c10 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c7 {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  background-color: #22222212;
+  font-size: initial;
+}
+
+.c4 {
+  padding: 6px 0px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c6 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c6:hover {
+  opacity: 0.6;
+}
+
+.c6:active {
+  opacity: 0.4;
+}
+
+.c11 {
+  color: #CECECE;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c11:hover {
+  opacity: 0.6;
+}
+
+.c11:active {
+  opacity: 0.4;
+}
+
+.c1 {
+  position: relative;
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  padding: 12px 16px;
+  gap: 4px;
+  opacity: 1;
+  pointer-events: initial;
+}
+
+<span
+  class=" _dsp_contents"
+>
+  <span
+    class=" t_light _dsp_contents is_Theme"
+  >
+    <div
+      class="c0 c1"
+    >
+      <div
+        class="c2 c3 c4"
+      >
+        <div
+          class="c2 c5 c6"
+        >
+          <div
+            class="c7"
+          >
+            <span>
+              <div
+                style="border-radius: 50px; overflow: hidden; padding: 0px; margin: 0px; width: 36px; height: 36px; display: inline-block; background: rgb(200, 20, 83);"
+              >
+                <svg
+                  height="36"
+                  width="36"
+                  x="0"
+                  y="0"
+                >
+                  <rect
+                    fill="#F29602"
+                    height="36"
+                    transform="translate(-1.3639893162257823 0.27350588462642744) rotate(171.3 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                  <rect
+                    fill="#FA6C00"
+                    height="36"
+                    transform="translate(7.665150362825969 -12.44820359430869) rotate(394.5 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                  <rect
+                    fill="#FB1868"
+                    height="36"
+                    transform="translate(23.55150004628138 -6.949396678861342) rotate(445.6 18 18)"
+                    width="36"
+                    x="0"
+                    y="0"
+                  />
+                </svg>
+              </div>
+            </span>
+          </div>
+          <div
+            class="c0"
+          >
+            <div
+              class="c2 c8"
+            >
+              <div
+                class="c9 css-n8z49y"
+              >
+                hayden.eth
+              </div>
+            </div>
+            <div
+              class="c10 css-obwv3p"
+            >
+              0x9984...9103
+            </div>
+          </div>
+        </div>
+        <svg
+          class="c11"
+          fill="none"
+          height="20"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          viewBox="0 0 24 24"
+          width="20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <line
+            x1="18"
+            x2="6"
+            y1="6"
+            y2="18"
+          />
+          <line
+            x1="6"
+            x2="18"
+            y1="6"
+            y2="18"
+          />
+        </svg>
+      </div>
+    </div>
+  </span>
+</span>
+`;
+
+exports[`SendCurrencyInputform should render placeholder values 1`] = `
+.c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c1 {
+  position: relative;
+  background-color: #F9F9F9;
+  border-radius: 16px;
+  padding: 12px 16px;
+  gap: 4px;
+  opacity: 1;
+  pointer-events: initial;
+}
+
+.c4 {
+  color: #7D7D7D;
+}
+
+.c6 {
+  background: none;
+  width: 100%;
+  color: #222222;
+  outline: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.c6::-webkit-input-placeholder {
+  color: #CECECE;
+}
+
+.c6::-moz-placeholder {
+  color: #CECECE;
+}
+
+.c6:-ms-input-placeholder {
+  color: #CECECE;
+}
+
+.c6::placeholder {
+  color: #CECECE;
+}
+
+<span
+  class="t_light is_inversed _dsp_contents"
+>
+  <span
+    class=" t_light _dsp_contents is_Theme"
+  >
+    <div
+      class="c0 c1"
+    >
+      <span
+        class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
+      >
+        To
+      </span>
+      <div
+        class="c2 c3 c4"
+      >
+        <div
+          class="c2 c5"
+        >
+          <input
+            autocapitalize="off"
+            autocomplete="off"
+            autocorrect="off"
+            class="c6"
+            pattern="^(0x[a-fA-F0-9]{40})$"
+            placeholder="Wallet address or ENS name"
+            spellcheck="false"
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </span>
+</span>
+`;

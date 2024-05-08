@@ -1,0 +1,146 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OpenLimitOrdersButton should render if there are open limit orders 1`] = `
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c5 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c0 {
+  border-radius: 16px;
+  border: none;
+  background: #F9F9F9;
+  padding: 12px 16px;
+  margin-top: 12px;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c0:hover {
+  opacity: 0.6;
+}
+
+.c0:active {
+  opacity: 0.4;
+}
+
+<div>
+  <span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <button
+        class="c0"
+      >
+        <div
+          class="c1 c2"
+        >
+          <div
+            class="c1 c3"
+          >
+            <svg
+              fill="none"
+              height="20"
+              viewBox="0 0 20 20"
+              width="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10.8333 6.66669V9.65497L12.2558 11.0775C12.5817 11.4033 12.5817 11.93 12.2558 12.2559C12.0933 12.4184 11.88 12.5 11.6667 12.5C11.4533 12.5 11.24 12.4184 11.0775 12.2559L9.4108 10.5892C9.25413 10.4325 9.16666 10.2209 9.16666 10V6.66669C9.16666 6.20669 9.53916 5.83335 9.99999 5.83335C10.4608 5.83335 10.8333 6.20669 10.8333 6.66669ZM12.5 5.83335C12.5 6.29335 12.8725 6.66669 13.3333 6.66669H16.6667C17.1275 6.66669 17.5 6.29335 17.5 5.83335V2.50002C17.5 2.04002 17.1275 1.66669 16.6667 1.66669C16.2058 1.66669 15.8333 2.04002 15.8333 2.50002V4.1083C14.2917 2.56496 12.2034 1.66669 9.97842 1.66669C5.39592 1.66669 1.66666 5.40502 1.66666 10C1.66666 14.595 5.39592 18.3334 9.97842 18.3334C13.1643 18.3334 16.0141 16.5583 17.4149 13.7C17.6174 13.2866 17.4474 12.7876 17.0341 12.5851C16.6208 12.3826 16.1208 12.5534 15.9192 12.9667C14.8 15.2492 12.5243 16.6667 9.97842 16.6667C6.31509 16.6667 3.33332 13.6759 3.33332 10C3.33332 6.32419 6.31426 3.33335 9.97842 3.33335C11.6176 3.33335 13.1683 3.93919 14.3658 5.00002H13.3333C12.8725 5.00002 12.5 5.37335 12.5 5.83335Z"
+                fill="#222222"
+              />
+            </svg>
+            <div
+              class="c4"
+            >
+              <div
+                class="c5 css-8gwze7"
+              >
+                1 open limit
+              </div>
+            </div>
+          </div>
+          <svg
+            fill="none"
+            height="24"
+            stroke="#222222"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <polyline
+              points="9 18 15 12 9 6"
+            />
+          </svg>
+        </div>
+      </button>
+    </span>
+  </span>
+</div>
+`;

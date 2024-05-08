@@ -1,0 +1,362 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders text with few matches 1`] = `
+<View
+  style={
+    {
+      "flexDirection": "row",
+      "gap": 16,
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#222222",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    A
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#222222",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+     
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    t
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    e
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#222222",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    x
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#222222",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    t
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#222222",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+     
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#222222",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    w
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#222222",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    i
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    t
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    h
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    o
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    u
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    t
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+     
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    m
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    a
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    t
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    c
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    h
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    e
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#CECECE",
+        "fontFamily": "Basel-Book",
+        "fontSize": 19,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    s
+  </Text>
+</View>
+`;
+
+exports[`renders text without matches 1`] = `
+<Text
+  allowFontScaling={true}
+  maxFontSizeMultiplier={1.4}
+  numberOfLines={1}
+  style={
+    {
+      "color": "#222222",
+      "fontFamily": "Basel-Book",
+      "fontSize": 19,
+      "lineHeight": 24,
+    }
+  }
+  suppressHighlighting={true}
+>
+  A text without matches
+</Text>
+`;

@@ -1,0 +1,117 @@
+# OSX
+#
+.DS_Store
+
+.tamagui
+
+# Xcode
+#
+build/
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+*.xccheckout
+*.moved-aside
+DerivedData
+*.hmap
+*.ipa
+*.xcuserstate
+ios/.xcode.env.local
+ios/GoogleService-Info.plist
+
+# Android/IntelliJ
+#
+build/
+.idea
+.gradle
+local.properties
+*.iml
+*.hprof
+*.jks
+keystore.properties
+*.aab
+
+# node.js
+#
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# BUCK
+buck-out/
+\.buckd/
+*.keystore
+!debug.keystore
+
+# Yarn
+.yarn/cache
+.yarn/versions
+.yarn/install-state.gz
+
+# fastlane
+#
+# It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
+# screenshots whenever they are needed.
+# For more information about the recommended setup visit:
+# https://docs.fastlane.tools/best-practices/source-control/
+
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/.env
+fastlane/.env.*
+fastlane/builds
+
+# firebase
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Bundle artifact
+*.jsbundle
+*.jsbundle.map
+
+# Detox artifacts
+artifacts/
+
+# CocoaPods
+/ios/Pods/
+
+# ccache
+.ccache
+
+# hardhat network fork
+/cache/
+
+# Storybook
+build-storybook.log
+storybook-static/*
+
+# Private keys
+.env.local
+
+# Built Items
+ios/assets/
+./lib/
+
+# Jest
+coverage/
+
+# Swift GraphQL codegen
+# Ignores everything inside the schema folder except the README.md
+!ios/WidgetsCore/MobileSchema/
+ios/WidgetsCore/MobileSchema/*
+!ios/WidgetsCore/MobileSchema/README.md
+
+# Swift env
+ios/WidgetsCore/Env.swift
+
+# Sentry
+ios/sentry.properties
+android/sentry.properties

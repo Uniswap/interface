@@ -1,0 +1,5 @@
+<resources>
+  <color name="splashscreen_background">#000000</color>
+  <color name="item_background">#303030</color>
+  <color name="text_primary">#ffffff</color>
+</resources>

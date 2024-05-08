@@ -1,0 +1,39 @@
+query AllV3Ticks($poolAddress: String, $skip: Int!) {
+  ticks(
+    first: 1000
+    skip: $skip
+    where: { poolAddress: $poolAddress }
+    orderBy: tickIdx
+  ) {
+    tick: tickIdx
+    liquidityNet
+    price0
+    price1
+  }
+}
+
+query FeeTierDistribution($token0: String!, $token1: String!) {
+  _meta {
+    block {
+      number
+    }
+  }
+  asToken0: pools(
+    orderBy: totalValueLockedToken0
+    orderDirection: desc
+    where: { token0: $token0, token1: $token1 }
+  ) {
+    feeTier
+    totalValueLockedToken0
+    totalValueLockedToken1
+  }
+  asToken1: pools(
+    orderBy: totalValueLockedToken0
+    orderDirection: desc
+    where: { token0: $token1, token1: $token0 }
+  ) {
+    feeTier
+    totalValueLockedToken0
+    totalValueLockedToken1
+  }
+}

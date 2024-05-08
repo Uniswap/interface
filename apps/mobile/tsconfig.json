@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Mobile App",
+  "extends": "tsconfig/expo.json",
+  "references": [
+    {
+      "path": "../../packages/ui"
+    },
+    {
+      "path": "../../packages/utilities"
+    },
+    {
+      "path": "../../packages/wallet"
+    },
+    {
+      "path": "../../packages/uniswap"
+    }
+  ],
+  "compilerOptions": {
+    "baseUrl": "./",
+  }
+}

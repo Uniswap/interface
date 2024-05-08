@@ -1,0 +1,2149 @@
+{
+  "account": {
+    "cloud": {
+      "backup": {
+        "subtitle": "Terdapat berbilang frasa pemulihan disandarkan ke {{cloudProviderName}}anda.",
+        "title": "Pilih sandaran untuk dipulihkan"
+      },
+      "button": {
+        "restore": {
+          "android": "Pulihkan daripada Google Drive",
+          "ios": "Pulihkan daripada iCloud"
+        }
+      },
+      "empty": {
+        "description": "Nampaknya anda belum menyandarkan mana-mana frasa pemulihan anda ke {{cloudProviderName}}.",
+        "title": "0 sandaran ditemui"
+      },
+      "error": {
+        "backup": {
+          "message": "Gagal mengimport sandaran kerana kekurangan kebenaran, gangguan keizinan atau disebabkan ralat awan",
+          "title": "Ralat semasa mengimport sandaran"
+        },
+        "password": {
+          "title": "Kata laluan tidak sah. Sila cuba lagi."
+        },
+        "unavailable": {
+          "button": {
+            "cancel": "Bukan sekarang",
+            "settings": "Pergi ke tetapan"
+          },
+          "message": {
+            "android": "Sila sahkan bahawa anda telah log masuk ke akaun Google dengan Google Drive didayakan pada peranti ini dan cuba lagi.",
+            "ios": "Sila sahkan bahawa anda telah log masuk ke Apple ID dengan iCloud Drive didayakan pada peranti ini dan cuba lagi."
+          },
+          "title": {
+            "android": "Google Drive tidak tersedia",
+            "ios": "iCloud Drive tidak tersedia"
+          }
+        }
+      },
+      "loading": {
+        "title": "Mencari sandaran..."
+      },
+      "lockout": {
+        "time": {
+          "hours_one": "Terlalu banyak percubaan. Cuba lagi dalam masa 1 jam.",
+          "hours_other": "Terlalu banyak percubaan. Cuba lagi dalam {{count}} jam.",
+          "minutes_one": "Terlalu banyak percubaan. Cuba lagi dalam 1 minit.",
+          "minutes_other": "Terlalu banyak percubaan. Cuba lagi dalam {{count}} minit."
+        }
+      },
+      "password": {
+        "input": "Masukkan kata laluan",
+        "recoveryPhrase": "Masukkan frasa pemulihan anda sebaliknya",
+        "subtitle": "Kata laluan ini diperlukan untuk memulihkan sandaran frasa pemulihan anda daripada {{cloudProviderName}}.",
+        "title": "Masukkan kata laluan sandaran"
+      }
+    },
+    "recoveryPhrase": {
+      "education": {
+        "part1": "Frasa pemulihan (atau frasa benih) ialah <highlight>set perkataan</highlight> yang diperlukan untuk mengakses dompet anda, <highlight>seperti kata laluan.</highlight>",
+        "part2": "Anda boleh <highlight>masukkan</highlight> frasa pemulihan anda pada peranti baharu <highlight>untuk memulihkan dompet anda</highlight> dan kandungannya.",
+        "part3": "Tetapi, jika anda <highlight>kehilangan frasa pemulihan anda</highlight>, anda akan <highlight>kehilangan akses</highlight> ke dompet anda.",
+        "part4": "Daripada menghafal frasa pemulihan anda, anda boleh <highlight>menyandarkannya kepada {{cloudProviderName}}</highlight> dan melindunginya dengan kata laluan.",
+        "part5": "Anda juga boleh menyandarkan frasa pemulihan anda secara manual dengan <highlight>menuliskannya</highlight> dan menyimpannya di tempat yang selamat.",
+        "part6": "Kami mengesyorkan menggunakan <highlight>kedua-dua jenis sandaran</highlight>, kerana jika anda kehilangan frasa pemulihan anda, anda tidak akan dapat memulihkan dompet anda."
+      },
+      "error": {
+        "invalid": "Frasa tidak sah",
+        "invalidWord": "Perkataan tidak sah: {{word}}",
+        "phraseLength": "Frasa pemulihan mestilah 12-24 patah perkataan",
+        "wrong": "Frasa pemulihan yang salah"
+      },
+      "helpText": {
+        "import": "Bagaimanakah saya mencari frasa pemulihan saya?",
+        "restoring": "Cuba cari lagi"
+      },
+      "input": "Taip frasa pemulihan anda",
+      "remove": {
+        "final": {
+          "description": "Pastikan anda telah menulis frasa pemulihan anda atau menyandarkannya pada {{cloudProviderName}}. <highlight>Anda tidak akan dapat mengakses dana anda jika tidak.</highlight>",
+          "title": "Anda sedang mengalih keluar <highlight>frasa pemulihan</highlight>"
+        },
+        "import": {
+          "description": "Anda hanya boleh menyimpan satu frasa pemulihan pada satu masa. Untuk terus mengimport yang baharu, anda perlu mengalih keluar frasa pemulihan semasa anda dan sebarang dompet yang berkaitan daripada peranti ini."
+        },
+        "initial": {
+          "description": "Ini akan mengalih keluar dompet anda daripada peranti ini bersama-sama dengan frasa pemulihan anda.",
+          "title": "Anda sedang mengalih keluar <highlight>{{walletName}}</highlight>"
+        },
+        "mnemonic": {
+          "description": "Ia berkongsi frasa pemulihan yang sama seperti {{walletName}}. Frasa pemulihan anda akan kekal disimpan sehingga anda memadamkan semua dompet yang tinggal."
+        }
+      },
+      "subtitle": {
+        "import": "Frasa pemulihan anda hanya akan disimpan secara setempat pada peranti anda.",
+        "restoring": "Masukkan frasa pemulihan anda di bawah atau cuba cari sandaran sekali lagi."
+      },
+      "title": {
+        "import": "Masukkan frasa pemulihan anda",
+        "restoring": "Tiada sandaran ditemui"
+      }
+    },
+    "wallet": {
+      "action": {
+        "copy": "Salin alamat dompet",
+        "report": "Laporkan profil",
+        "settings": "Tetapan dompet",
+        "viewExplorer": "Lihat pada {{blockExplorerName}}"
+      },
+      "button": {
+        "add": "Tambah dompet",
+        "addViewOnly": "Tambahkan dompet lihat sahaja",
+        "create": "Buat dompet baharu",
+        "import": "Import dompet baharu",
+        "manage": "Urus dompet",
+        "remove": "Keluarkan dompet",
+        "restore": "Pulihkan dompet",
+        "watch": "Tonton dompet"
+      },
+      "create": {
+        "placeholder": "Dompet {{index}}"
+      },
+      "edit": {
+        "label": {
+          "input": {
+            "placeholder": "Label dompet"
+          }
+        }
+      },
+      "header": {
+        "button": {
+          "disabled": {
+            "title": "Sunting profil"
+          },
+          "title": "Edit label"
+        },
+        "other": "Dompet anda yang lain",
+        "viewOnly": "Lihat dompet sahaja"
+      },
+      "menu": {
+        "copy": {
+          "title": "Salin alamat dompet"
+        },
+        "edit": {
+          "title": "Edit label"
+        },
+        "remove": {
+          "title": "Keluarkan dompet"
+        }
+      },
+      "remove": {
+        "check": "Saya menyandarkan frasa pemulihan saya dan memahami bahawa Uniswap Labs tidak dapat membantu saya memulihkan dompet saya jika saya gagal berbuat demikian.",
+        "title": "Alih keluar {{name}}",
+        "viewOnly": "Anda sentiasa boleh menambah kembali dompet lihat sahaja dengan memasukkan alamat dompet."
+      },
+      "restore": {
+        "description": "Oleh kerana anda menggunakan peranti baharu, anda perlu memulihkan frasa pemulihan anda. Ini akan membolehkan anda menukar dan menghantar token."
+      },
+      "select": {
+        "error": "Tidak dapat memuatkan alamat",
+        "loading": {
+          "subtitle": "Dompet anda akan dipaparkan di bawah.",
+          "title": "Mencari dompet"
+        },
+        "title_one_one": "Satu dompet ditemui",
+        "title_one_other": "Pilih dompet untuk diimport"
+      },
+      "viewOnly": {
+        "button": "Import dompet",
+        "description": "Untuk menukar, membeli, menghantar dan menerima token, anda perlu mengimport frasa pemulihan dompet ini.",
+        "title": "Dompet ini adalah lihat sahaja"
+      },
+      "watch": {
+        "error": {
+          "alreadyImported": "Alamat ini sudah diimport",
+          "notFound": "Alamat tidak ditemui",
+          "smartContract": "Alamat ialah kontrak pintar"
+        },
+        "message": "Menambah dompet lihat sahaja membolehkan anda mencuba apl atau menjejaki dompet. Anda tidak akan dapat menukar atau menghantar dana.",
+        "placeholder": "ENS atau alamat",
+        "title": "Masukkan alamat dompet"
+      }
+    }
+  },
+  "common": {
+    "button": {
+      "accept": "Terima",
+      "back": "belakang",
+      "buy": "Beli",
+      "cancel": "Batal",
+      "close": "tutup",
+      "confirm": "sahkan",
+      "connect": "Sambung",
+      "continue": "teruskan",
+      "copied": "disalin",
+      "copy": "Salinan",
+      "create": "Buat",
+      "delete": "Padam",
+      "disconnect": "Putuskan sambungan",
+      "dismiss": "Tolak",
+      "done": "Selesai",
+      "enable": "Dayakan",
+      "goBack": "Pergi balik",
+      "hide": "Sembunyi",
+      "later": "Mungkin kemudian",
+      "learn": "Ketahui lebih lanjut",
+      "next": "Seterusnya",
+      "notNow": "Bukan sekarang",
+      "ok": "okey",
+      "paste": "tampal",
+      "receive": "terima",
+      "remove": "Alih keluar",
+      "restore": "Pulihkan",
+      "retry": "Cuba semula",
+      "review": "Semakan",
+      "save": "Jimat",
+      "scrollDown": "Tatal ke bawah",
+      "sell": "Jual",
+      "send": "Hantar",
+      "setup": "Sediakan",
+      "share": "Kongsi",
+      "show": "Tunjukkan",
+      "sign": "Tanda",
+      "skip": "Langkau",
+      "swap": "Tukar",
+      "tryAgain": "Cuba lagi",
+      "understand": "saya faham",
+      "view": "Lihat"
+    },
+    "card": {
+      "error": {
+        "description": "Sesuatu telah berlaku",
+        "title": "Aduh! Sesuatu telah berlaku."
+      }
+    },
+    "endAdornment": "dan",
+    "error": {
+      "general": "Sesuatu telah berlaku."
+    },
+    "input": {
+      "password": {
+        "confirm": "Sahkan kata laluan",
+        "error": {
+          "mismatch": "Kata laluan tidak sepadan",
+          "weak": "Kata laluan ini terlalu lemah"
+        },
+        "new": "Kata laluan baharu",
+        "placeholder": "Kata laluan",
+        "strength": {
+          "medium": "Sederhana",
+          "strong": "kuat",
+          "weak": "Lemah"
+        }
+      },
+      "search": "Cari"
+    },
+    "longText": {
+      "button": {
+        "less": "Kurangkan membaca",
+        "more": "Baca lagi"
+      }
+    },
+    "navigation": {
+      "settings": "tetapan",
+      "systemSettings": "tetapan"
+    },
+    "text": {
+      "error": "ralat",
+      "loading": "Memuatkan",
+      "notAvailable": "T/A",
+      "unknown": "Tidak diketahui"
+    }
+  },
+  "currency": {
+    "aud": "Dolar Australia",
+    "brl": "Real Brazil",
+    "cad": "Dolar Kanada",
+    "cny": "Yuan Cina",
+    "eur": "Euro",
+    "gbp": "Paun British",
+    "hkd": "Dolar Hong Kong",
+    "idr": "Rupiah Indonesia",
+    "inr": "Rupee India",
+    "jpy": "Yen Jepun",
+    "ngn": "Naira Nigeria",
+    "pkr": "Rupee Pakistan",
+    "rub": "Ruble Rusia",
+    "sgd": "Dolar Singapura",
+    "thb": "Baht Thai",
+    "try": "Lira Turki",
+    "uah": "Hryvnia Ukraine",
+    "usd": "Dolar Amerika Syarikat",
+    "vnd": "Dong Vietnam"
+  },
+  "dapp": {
+    "request": {
+      "approve": {
+        "action": "Terima",
+        "fallbackTitle": "Luluskan token perbelanjaan",
+        "helptext": "Benarkan tapak ini mengakses dan membelanjakan token ini daripada dompet anda.",
+        "label": "Dompet",
+        "title": "Luluskan perbelanjaan {{tokenSymbol}}"
+      },
+      "base": {
+        "title": "Sahkan transaksi"
+      },
+      "changeChain": {
+        "title": "Tukar rangkaian kepada {{network}}"
+      },
+      "connect": {
+        "helptext": "Benarkan tapak ini melihat alamat dompet anda, baki dan meminta kelulusan untuk transaksi.",
+        "title": "Sambung ke tapak"
+      },
+      "error": {
+        "none": "Tiada kelulusan belum selesai"
+      },
+      "fallback": {
+        "calldata": {
+          "label": "data"
+        },
+        "function": {
+          "label": "fungsi"
+        },
+        "recipient": {
+          "label": "kepada"
+        },
+        "sending": {
+          "label": "menghantar"
+        }
+      },
+      "permit2": {
+        "description": "Permit2 mengurus kelulusan token merentas berbilang dapps.",
+        "header": "Tandatangan Permit2",
+        "price": "tiada"
+      },
+      "signature": {
+        "containsUnrenderableCharacters": "Mesej ini mengandungi aksara yang tidak boleh dipaparkan. Pastikan anda mempercayai tapak ini.",
+        "error": {
+          "712-spec-compliance": "SignTypedDataRequestContent menerima data untuk menandatangani yang tidak mematuhi spesifikasi EIP-712."
+        },
+        "header": "Permintaan tandatangan",
+        "toggleDataView": {
+          "raw": "Lihat data mentah",
+          "readable": "Lihat data asal"
+        }
+      },
+      "warning": {
+        "notActive": {
+          "message": "Pastikan ia betul",
+          "title": "Ini bukan dompet aktif anda"
+        }
+      }
+    }
+  },
+  "emptyTokenCard": {
+    "description": "Beli atau pindahkan token ke dompet ini untuk bermula",
+    "title": "Tiada token lagi"
+  },
+  "errors": {
+    "crash": {
+      "message": "Sesuatu terhempas.",
+      "restart": "Mulakan semula apl",
+      "title": "Eh oh!"
+    }
+  },
+  "explore": {
+    "search": {
+      "action": {
+        "clear": "Kosongkan semua",
+        "viewEtherscan": "Lihat pada {{blockExplorerName}}"
+      },
+      "empty": {
+        "full": "Tiada hasil ditemui untuk <highlight>\"{{searchQuery}}\"</highlight>"
+      },
+      "error": "Tidak dapat memuatkan hasil carian",
+      "label": {
+        "ownedBy": "Dimiliki oleh {{ownerAddress}}"
+      },
+      "placeholder": "Cari token dan dompet",
+      "section": {
+        "nft": "Koleksi NFT",
+        "popularNFT": "Koleksi NFT popular",
+        "popularTokens": "Token popular",
+        "recent": "Carian terkini",
+        "suggestedWallets": "Dompet yang dicadangkan",
+        "tokens": "Token",
+        "wallets": "Dompet"
+      }
+    },
+    "tokens": {
+      "error": "Tidak dapat memuatkan token",
+      "favorite": {
+        "action": {
+          "add": "Token kegemaran",
+          "edit": "Edit kegemaran",
+          "remove": "Alih keluar kegemaran"
+        },
+        "title": {
+          "default": "Token kegemaran",
+          "edit": "Edit token kegemaran"
+        }
+      },
+      "metadata": {
+        "marketCap": "{{number}} MCap",
+        "totalValueLocked": "{{number}} TVL",
+        "volume": "{{number}} Jld"
+      },
+      "sort": {
+        "label": {
+          "marketCap": "Modal pasaran",
+          "priceDecrease": "Penurunan harga",
+          "priceIncrease": "Kenaikan harga",
+          "totalValueLocked": "TVL",
+          "volume": "Kelantangan"
+        },
+        "option": {
+          "marketCap": "Modal pasaran",
+          "priceDecrease": "Penurunan harga (24J)",
+          "priceIncrease": "Kenaikan harga (24J)",
+          "totalValueLocked": "Uniswap TVL",
+          "volume": "Kelantangan uniswap (24J)"
+        }
+      },
+      "top": {
+        "title": "Token teratas"
+      }
+    },
+    "wallets": {
+      "favorite": {
+        "action": {
+          "add": "Dompet kegemaran",
+          "edit": "Edit kegemaran",
+          "remove": "Alih keluar kegemaran"
+        },
+        "title": {
+          "default": "Dompet kegemaran",
+          "edit": "Edit dompet kegemaran"
+        }
+      }
+    }
+  },
+  "extension": {
+    "connection": {
+      "popup": "Dompet anda tidak disambungkan ke tapak ini. Cari butang \"Sambung Dompet\" atau \"Log masuk\".",
+      "popupWithButton": "Dompet anda tidak disambungkan ke tapak ini.",
+      "titleConnected": "Bersambung",
+      "titleNotConnected": "Tidak bersambung"
+    },
+    "lock": {
+      "button": {
+        "forgot": "lupa kata laluan?",
+        "help": "Dapatkan bantuan",
+        "recoveryPhrase": "Masukkan frasa pemulihan",
+        "submit": "Buka kunci"
+      },
+      "password": {
+        "error": "Salah kata laluan. Cuba lagi",
+        "reset": {
+          "description": {
+            "default": "Untuk menetapkan semula kata laluan anda, masukkan frasa pemulihan dompet anda. Uniswap tidak dapat membantu memulihkan kata laluan anda.",
+            "inProgress": "Ikut arahan pada halaman web penyemak imbas untuk menetapkan semula kata laluan anda"
+          },
+          "title": "lupa kata laluan?"
+        }
+      },
+      "subtitle": "Masukkan kata laluan anda untuk membuka kunci",
+      "title": "Selamat kembali"
+    },
+    "settings": {
+      "password": {
+        "enter": {
+          "title": "Masukkan kata laluan semasa anda"
+        },
+        "error": {
+          "wrong": "Salah kata laluan"
+        },
+        "placeholder": "Kata laluan semasa"
+      }
+    },
+    "warning": {
+      "storage": {
+        "button": "sandarkan",
+        "message": "Pastikan anda menyandarkan frasa pemulihan anda untuk mengelakkan kehilangan akses kepada dompet dan dana anda.",
+        "title": "Penyemak imbas anda kehabisan storan"
+      }
+    }
+  },
+  "fiatOnRamp": {
+    "button": {
+      "chooseToken": "Pilih token",
+      "continueCheckout": "Teruskan untuk checkout"
+    },
+    "checkout": {
+      "button": "Checkout",
+      "title": "Daftar keluar dengan"
+    },
+    "connection": {
+      "message": "Menghubungkan anda ke {{serviceProvider}}",
+      "quote": "Membeli {{amount}} bernilai {{currencySymbol}}",
+      "terms": "Dengan meneruskan, anda mengakui bahawa anda akan tertakluk pada Syarat Perkhidmatan dan Dasar Privasi dengan {{serviceProvider}}, mengikut mana yang berkenaan."
+    },
+    "error": {
+      "default": "Sesuatu telah berlaku.",
+      "load": "Tidak dapat memuatkan token untuk dibeli",
+      "max": "Maksimum {{amount}}",
+      "min": "Minimum {{amount}}",
+      "unsupported": "Tidak disokong di wilayah",
+      "usd": "Hanya tersedia untuk pembelian dalam USD"
+    },
+    "quote": {
+      "advice": "Anda akan terus ke portal penyedia untuk melihat yuran yang berkaitan dengan transaksi anda.",
+      "others": "yang lain",
+      "type": {
+        "other": "Pilihan lain",
+        "recent": "Baru-baru ini digunakan"
+      }
+    },
+    "region": {
+      "placeholder": "Cari mengikut negara atau wilayah",
+      "title": "Pilih wilayah anda"
+    },
+    "summary": {
+      "total": "{{cryptoAmount}} untuk {{fiatAmount}}"
+    }
+  },
+  "forceUpgrade": {
+    "action": {
+      "confirm": "Kemas kini apl",
+      "recoveryPhrase": "Lihat frasa pemulihan"
+    },
+    "description": "Versi Uniswap Wallet yang anda gunakan sudah lapuk dan tiada peningkatan kritikal. Jika anda tidak mengemas kini apl atau anda tidak menulis frasa pemulihan anda, anda tidak akan dapat mengakses aset anda.",
+    "label": {
+      "recoveryPhrase": "Frasa pemulihan"
+    },
+    "title": "Kemas kini apl untuk meneruskan"
+  },
+  "home": {
+    "activity": {
+      "empty": {
+        "button": "Terima token atau NFT",
+        "description": {
+          "default": "Apabila anda meluluskan, berdagang atau memindahkan token atau NFT, transaksi anda akan dipaparkan di sini.",
+          "external": "Apabila dompet ini membuat transaksi, ia akan dipaparkan di sini."
+        },
+        "title": "Tiada aktiviti lagi"
+      },
+      "error": {
+        "load": "Tidak dapat memuatkan aktiviti"
+      },
+      "title": "Aktiviti"
+    },
+    "banner": {
+      "extension": {
+        "confirm": "Sertai Beta",
+        "message": "Jadilah yang pertama mencuba Sambungan Uniswap pada penyemak imbas web anda",
+        "title": "Sambungan Uniswap ada di sini"
+      },
+      "offline": "Anda berada dalam mod luar talian"
+    },
+    "extension": {
+      "error": "Ralat memuatkan akaun"
+    },
+    "feed": {
+      "empty": {
+        "description": "Apabila dompet kegemaran anda membuat transaksi, ia akan dipaparkan di sini.",
+        "title": "Tiada aktiviti lagi"
+      },
+      "error": "Tidak dapat memuatkan aktiviti",
+      "title": "suapan"
+    },
+    "label": {
+      "buy": "Beli",
+      "receive": "terima",
+      "scan": "Imbas",
+      "send": "Hantar",
+      "swap": "Tukar"
+    },
+    "modal": {
+      "getExtension": {
+        "step1": "1. Lawati <highlight>uniswap.org/ext</highlight> pada komputer anda",
+        "step2": "2. Tambahkan Sambungan Uniswap pada penyemak imbas Chrome anda",
+        "step3": "3. Masukkan nama pengguna anda untuk mendapatkan akses",
+        "title": "Sertai Uniswap Extension Beta"
+      }
+    },
+    "nfts": {
+      "title": "NFT"
+    },
+    "tokens": {
+      "empty": {
+        "action": {
+          "buy": {
+            "description": "Anda memerlukan ETH untuk bermula. Beli dengan kad atau bank.",
+            "title": "Beli kripto"
+          },
+          "import": {
+            "description": "Masukkan frasa pemulihan dompet ini untuk mula bertukar dan menghantar.",
+            "title": "Import dompet"
+          },
+          "receive": {
+            "description": "Pindahkan token dari dompet atau pertukaran crypto lain.",
+            "title": "Terima dana"
+          }
+        },
+        "description": "Apabila dompet ini membeli atau menerima token, ia akan dipaparkan di sini.",
+        "title": "Tiada token lagi"
+      },
+      "error": {
+        "fetch": "Gagal mengambil baki token",
+        "load": "Tidak dapat memuatkan baki token"
+      },
+      "title": "Token"
+    },
+    "upsell": {
+      "receive": {
+        "cta": "Pautkan akaun",
+        "description": "Membiayai dompet anda dengan memindahkan kripto daripada dompet atau akaun lain",
+        "title": "Terima crypto"
+      }
+    },
+    "warning": {
+      "viewOnly": "Ini ialah dompet lihat sahaja"
+    }
+  },
+  "language": {
+    "chineseSimplified": "Cina Ringkas",
+    "chineseTraditional": "Cina, Tradisional",
+    "dutch": "Belanda",
+    "english": "Bahasa Inggeris",
+    "french": "Perancis",
+    "hindi": "Hindi",
+    "indonesian": "Bahasa Indonesia",
+    "japanese": "Jepun",
+    "malay": "Bahasa Melayu",
+    "portuguese": "Portugis",
+    "russian": "bahasa Rusia",
+    "spanishLatam": "Sepanyol (Amerika Latin)",
+    "spanishSpain": "Sepanyol (Sepanyol)",
+    "spanishUs": "Sepanyol (AS)",
+    "thai": "Thai",
+    "turkish": "Turki",
+    "ukrainian": "Ukraine",
+    "urdu": "bahasa Urdu",
+    "vietnamese": "Vietnam"
+  },
+  "notification": {
+    "assetVisibility": {
+      "hidden": "{{assetName}} tersembunyi",
+      "unhidden": "{{assetName}} tidak tersembunyi"
+    },
+    "copied": {
+      "address": "Alamat disalin",
+      "calldata": "Data panggilan disalin",
+      "contractAddress": "Alamat kontrak disalin",
+      "failed": "Gagal menyalin ke papan keratan",
+      "image": "Imej disalin",
+      "nftUrl": "URL NFT disalin",
+      "tokenUrl": "URL Token disalin",
+      "transactionId": "ID Transaksi disalin"
+    },
+    "countryChange": "Bertukar kepada {{countryName}}",
+    "restore": {
+      "success": "Dompet dipulihkan!"
+    },
+    "swap": {
+      "network": "Bertukar pada {{network}}",
+      "pending": {
+        "swap": "Swap belum selesai",
+        "unwrap": "Buka bungkus belum selesai",
+        "wrap": "Bungkus belum selesai"
+      }
+    },
+    "transaction": {
+      "approve": {
+        "canceled": "Dibatalkan {{currencySymbol}} meluluskan.",
+        "fail": "Gagal meluluskan {{currencySymbol}} untuk digunakan dengan {{address}}.",
+        "success": "Diluluskan {{currencySymbol}} untuk digunakan dengan {{address}}."
+      },
+      "swap": {
+        "canceled": "Dibatalkan {{inputCurrencySymbol}}-{{outputCurrencySymbol}} pertukaran.",
+        "fail": "Gagal menukar {{inputCurrencyAmountWithSymbol}} dengan {{outputCurrencyAmountWithSymbol}}.",
+        "success": "Bertukar {{inputCurrencyAmountWithSymbol}} dengan {{outputCurrencyAmountWithSymbol}}."
+      },
+      "transfer": {
+        "canceled": "Dibatalkan {{tokenNameOrAddress}} penghantaran.",
+        "fail": "Gagal menghantar {{tokenNameOrAddress}} hingga {{walletNameOrAddress}}.",
+        "received": "Menerima {{tokenNameOrAddress}} daripada {{walletNameOrAddress}}.",
+        "success": "Dihantar {{tokenNameOrAddress}} hingga {{walletNameOrAddress}}."
+      },
+      "unknown": {
+        "fail": {
+          "full": "Gagal berurus niaga dengan {{addressOrEnsName}}",
+          "short": "Gagal berurus niaga"
+        },
+        "success": {
+          "full": "Berurus niaga dengan {{addressOrEnsName}}",
+          "short": "Berurus niaga"
+        }
+      },
+      "unwrap": {
+        "canceled": "Dibatalkan {{inputCurrencySymbol}} buka bungkus.",
+        "fail": "Gagal membuka bungkus {{inputCurrencyAmountWithSymbol}}.",
+        "success": "Membuka bungkus {{inputCurrencyAmountWithSymbol}} dan menerima {{outputCurrencyAmountWithSymbol}}."
+      },
+      "wrap": {
+        "canceled": "Dibatalkan {{inputCurrencySymbol}} bungkus.",
+        "fail": "Gagal membalut {{inputCurrencyAmountWithSymbol}}.",
+        "success": "Dibungkus {{inputCurrencyAmountWithSymbol}} dan diterima {{outputCurrencyAmountWithSymbol}}."
+      }
+    },
+    "transfer": {
+      "pending": "{{currencySymbol}} pemindahan belum selesai"
+    },
+    "walletConnect": {
+      "confirmed": "Transaksi disahkan dengan {{dappName}}",
+      "connected": "Bersambung",
+      "disconnected": "Terputus sambungan",
+      "failed": "Transaksi gagal dengan {{dappName}}",
+      "networkChanged": {
+        "full": "Bertukar kepada {{networkName}}",
+        "short": "Rangkaian bertukar"
+      }
+    }
+  },
+  "notifications": {
+    "scantastic": {
+      "subtitle": "Teruskan pada Sambungan Uniswap",
+      "title": "Kejayaan!"
+    }
+  },
+  "onboarding": {
+    "backup": {
+      "manual": {
+        "placeholder": "Perkataan rahsia",
+        "progress": "{{completedStepsCount}}{{totalStepsCount}}",
+        "subtitle_one": "Apakah perkataan <highlight/>{{count}}st</highlight/> dalam frasa pemulihan anda?",
+        "subtitle_two": "Apakah perkataan <highlight/>{{count}}dan</highlight/> dalam frasa pemulihan anda?",
+        "subtitle_few": "Apakah perkataan <highlight/>{{count}}rd</highlight/> dalam frasa pemulihan anda?",
+        "subtitle_other": "Apakah perkataan <highlight/>{{count}}ke</highlight/> dalam frasa pemulihan anda?",
+        "title": "Mari pastikan anda telah merakamnya dengan betul"
+      },
+      "option": {
+        "cloud": {
+          "description": "Sulitkan frasa pemulihan anda dengan kata laluan selamat",
+          "title": "{{cloudProviderName}} sandaran"
+        },
+        "manual": {
+          "description": "Tulis frasa pemulihan anda dan simpan di lokasi yang selamat",
+          "title": "Sandaran manual"
+        }
+      },
+      "subtitle": "Sandaran membolehkan anda memulihkan dompet anda jika anda memadamkan apl atau kehilangan peranti anda",
+      "title": {
+        "existing": "Sandarkan dompet anda",
+        "new": "Pilih kaedah sandaran"
+      },
+      "view": {
+        "disclaimer": "Saya faham bahawa jika saya kehilangan frasa pemulihan saya, Uniswap Labs tidak dapat membantu saya memulihkannya",
+        "subtitle": {
+          "write": "Baca perkara berikut dengan teliti sebelum meneruskan"
+        },
+        "title": "Simpan frasa pemulihan anda",
+        "warning": {
+          "message1": "Frasa pemulihan ini memberi anda akses penuh kepada dompet dan dana anda",
+          "message2": "Tulis dan simpan di tempat yang selamat",
+          "message3": "Lihat ini secara tertutup dan <u>jangan kongsikannya dengan sesiapa pun</u>"
+        }
+      }
+    },
+    "cloud": {
+      "confirm": {
+        "description": "Anda perlu memasukkan kata laluan ini untuk memulihkan akaun anda. Ia tidak disimpan di mana-mana, jadi ia tidak boleh dipulihkan oleh orang lain.",
+        "title": "Sahkan kata laluan sandaran anda"
+      },
+      "createPassword": {
+        "description": "Anda perlu memasukkan kata laluan ini untuk memulihkan dompet anda.",
+        "title": "Cipta kata laluan sandaran anda"
+      }
+    },
+    "complete": {
+      "button": "Buka Uniswap Wallet",
+      "description": "Dompet anda sedia untuk menukar, menghantar dan menerima kripto.",
+      "pin": {
+        "description": "Klik pada ikon teka-teki dalam bar alat anda dan cari Uniswap Wallet dalam senarai",
+        "title": "Sematkan Uniswap Wallet"
+      },
+      "title": "Anda telah siap sedia"
+    },
+    "editName": {
+      "button": {
+        "create": "Buat dompet"
+      },
+      "label": "nama samaran",
+      "subtitle": "Beri nama panggilan pada dompet anda",
+      "title": "Nama panggilan ini hanya kelihatan kepada anda",
+      "walletAddress": "Alamat awam anda ialah <highlight>{{walletAddress}}</highlight>"
+    },
+    "extension": {
+      "connectMobile": {
+        "button": "Import dari telefon anda",
+        "title": "Mempunyai apl mudah alih Uniswap?"
+      },
+      "getOnTheBetaWaitlist": {
+        "subtitle": "Muat turun apl mudah alih untuk menuntut nama pengguna",
+        "title": "Dapatkan senarai tunggu Beta"
+      },
+      "password": {
+        "subtitle": "Anda memerlukan ini untuk membuka kunci dompet anda dan mengakses frasa pemulihan anda",
+        "title": {
+          "default": "Buat kata laluan",
+          "reset": "Menetapkan semula kata laluan anda"
+        }
+      }
+    },
+    "import": {
+      "error": {
+        "invalidWords_one": "1 perkataan tidak sah atau salah ejaan",
+        "invalidWords_other": "{{count}} perkataan tidak sah atau salah ejaan"
+      },
+      "method": {
+        "import": {
+          "message": "Masukkan frasa pemulihan anda daripada dompet crypto lain",
+          "title": "Import dompet"
+        },
+        "restore": {
+          "message": {
+            "android": "Tambahkan dompet yang telah anda sandarkan ke akaun Google Drive anda",
+            "ios": "Tambahkan dompet yang telah anda sandarkan ke akaun iCloud anda"
+          },
+          "title": "Pulihkan dompet"
+        }
+      },
+      "title": "Pilih cara anda mahu menambah dompet anda"
+    },
+    "importMnemonic": {
+      "button": {
+        "default": "Frasa pemulihan saya ialah 12 patah perkataan",
+        "longPhrase": "Frasa pemulihan saya lebih panjang daripada 12 patah perkataan"
+      },
+      "error": {
+        "invalidPhrase": "Frasa yang anda masukkan tidak sah"
+      },
+      "subtitle": "Taip atau tampal frasa pemulihan 12 perkataan anda",
+      "title": "Masukkan frasa pemulihan anda"
+    },
+    "intro": {
+      "alreadyComplete": {
+        "subtitle": "Untuk membuat lebih banyak dompet, buka penukar akaun dalam pop timbul sambungan atau pasang semula sambungan untuk memulakan semula",
+        "title": "Anda telah pun melengkapkan orientasi"
+      },
+      "button": {
+        "alreadyHave": "Saya sudah mempunyai dompet"
+      },
+      "title": "Selamat datang ke \nUniswap Wallet"
+    },
+    "introBetaWaitlist": {
+      "button": {
+        "checkEligibility": "Semak kelayakan",
+        "letsGo": "Mari pergi"
+      },
+      "checkEligibilityInstructions": "Masukkan <highlight>uni.eth</highlight> nama pengguna anda di bawah untuk menyemak sama ada anda layak untuk Beta.",
+      "eligible": {
+        "tagline": "Selamat datang ke Beta — anda salah seorang yang pertama mencuba Sambungan Uniswap.",
+        "title": "Anda tiada dalam senarai menunggu!"
+      },
+      "ineligibleExplanation": "Anda masih dalam senarai menunggu. Kami akan memberitahu anda dalam apl mudah alih Uniswap apabila anda layak!",
+      "unitagPlaceholder": "nama pengguna"
+    },
+    "landing": {
+      "button": {
+        "add": "Tambah dompet sedia ada",
+        "create": "Buat dompet baharu"
+      }
+    },
+    "notification": {
+      "permission": {
+        "message": "Untuk menerima pemberitahuan, hidupkan pemberitahuan untuk Uniswap Wallet dalam tetapan peranti anda.",
+        "title": "Kebenaran pemberitahuan"
+      },
+      "subtitle": "Dapatkan pemberitahuan apabila pemindahan, pertukaran dan kelulusan anda selesai.",
+      "title": "Hidupkan pemberitahuan tolak"
+    },
+    "recoveryPhrase": {
+      "confirm": {
+        "subtitle": {
+          "combined": "Sahkan frasa pemulihan anda. Pilih perkataan yang hilang mengikut urutan.",
+          "default": "Pilih perkataan yang hilang mengikut urutan."
+        },
+        "title": "Sahkan frasa pemulihan anda"
+      },
+      "view": {
+        "subtitle": "Anda boleh menyemak ini dalam tetapan pada bila-bila masa.",
+        "title": "Tulis frasa pemulihan anda mengikut urutan"
+      },
+      "warning": {
+        "final": {
+          "button": "saya dah bersedia",
+          "message": "Frasa pemulihan anda ialah yang memberi anda (dan sesiapa sahaja yang memilikinya) akses kepada dana anda. Pastikan untuk menyimpannya untuk diri sendiri.",
+          "title": "Lakukan langkah ini di tempat peribadi"
+        },
+        "screenshot": {
+          "message": "Sesiapa sahaja yang mendapat akses kepada foto anda boleh mengakses dompet anda. Kami mengesyorkan anda menulis perkataan anda sebaliknya.",
+          "title": "Tangkapan skrin tidak selamat"
+        }
+      }
+    },
+    "resetPassword": {
+      "complete": {
+        "safety": "Ketahui lebih lanjut tentang keselamatan dompet",
+        "subtitle": "Gunakan kata laluan baharu anda untuk membuka kunci dompet anda.",
+        "title": "Memadam kata laluan"
+      }
+    },
+    "scan": {
+      "button": "Imbas dengan apl Uniswap",
+      "error": "Maaf, kami tidak dapat memuatkan kod QR sekarang. Sila cuba kaedah sedia ada yang lain.",
+      "otp": {
+        "error": "Kod yang anda serahkan adalah salah, atau terdapat ralat semasa menyerahkan. Sila cuba lagi.",
+        "failed": "Percubaan gagal: {{number}}",
+        "subtitle": "Semak apl mudah alih Uniswap anda untuk kod 6 aksara",
+        "title": "Masukkan kod sekali sahaja"
+      },
+      "subtitle": "Imbas kod QR dengan apl mudah alih Uniswap untuk mula mengimport dompet anda.",
+      "title": "Import dompet daripada apl"
+    },
+    "security": {
+      "alert": {
+        "biometrics": {
+          "message": {
+            "android": "Untuk menggunakan biometrik, sediakannya dahulu dalam tetapan",
+            "ios": "Untuk menggunakan {{biometricsMethod}}, benarkan akses dalam tetapan sistem"
+          },
+          "title": {
+            "android": "Biometrik dilumpuhkan",
+            "ios": "{{biometricsMethod}} dilumpuhkan"
+          }
+        }
+      },
+      "button": {
+        "confirm": {
+          "android": "Dayakan biometrik",
+          "ios": "Dayakan {{biometricsMethod}}"
+        },
+        "setup": "Sediakan"
+      },
+      "subtitle": {
+        "android": "Tambahkan lapisan keselamatan tambahan dengan memerlukan biometrik untuk menghantar transaksi.",
+        "ios": "Tambahkan lapisan keselamatan tambahan dengan memerlukan {{biometricsMethod}} untuk menghantar transaksi."
+      },
+      "title": "Lindungi dompet anda"
+    },
+    "selectWallets": {
+      "error": "Tidak dapat memuatkan alamat",
+      "title": {
+        "default": "Pilih dompet untuk diimport",
+        "error": "Ralat mengimport dompet"
+      }
+    },
+    "termsOfService": "Dengan meneruskan, saya bersetuju menerima<highlightTerms> Syarat Perkhidmatan </highlightTerms>dan bersetuju dengan<highlightPrivacy> Dasar Privasi</highlightPrivacy>",
+    "tooltip": {
+      "recoveryPhrase": {
+        "trigger": "Apakah frasa pemulihan?"
+      }
+    },
+    "wallet": {
+      "continue": "Mari kita pastikan ia selamat",
+      "defaultName": "Dompet {{number}}",
+      "description": {
+        "existing": "Semak token dan NFT anda, ikuti dompet kripto, dan dapatkan maklumat terkini semasa dalam perjalanan.",
+        "full": "Ini ialah ruang peribadi anda untuk token, NFT dan semua dagangan anda. Selesaikan menyediakannya untuk memastikan dana anda selamat.",
+        "new": "Ruang peribadi anda untuk token, NFT dan semua dagangan anda."
+      },
+      "title": "Selamat datang ke dompet baharu anda"
+    }
+  },
+  "qrScanner": {
+    "button": {
+      "connections_one": "1 apl disambungkan",
+      "connections_other": "{{count}} apl disambungkan"
+    },
+    "error": {
+      "camera": {
+        "message": "Untuk mengimbas kod, benarkan akses Kamera dalam tetapan sistem",
+        "title": "Kamera dilumpuhkan"
+      },
+      "none": "Tiada kod QR ditemui"
+    },
+    "recipient": {
+      "action": {
+        "scan": "Imbas kod QR",
+        "show": "Tunjukkan kod QR saya"
+      },
+      "error": {
+        "message": "Pastikan anda mengimbas kod QR alamat Ethereum yang sah sebelum mencuba lagi.",
+        "title": "Kod QR tidak sah"
+      },
+      "input": {
+        "placeholder": "Cari ENS atau alamat"
+      },
+      "label": {
+        "send": "Hantar"
+      },
+      "results": {
+        "empty": "Tiada keputusan dijumpai",
+        "error": "Alamat yang anda taip sama ada tidak wujud atau dieja dengan salah."
+      }
+    },
+    "request": {
+      "message": {
+        "unavailable": "Tiada mesej ditemui."
+      },
+      "method": {
+        "default": "Permintaan daripada {{dappNameOrUrl}}",
+        "signature": "Permintaan tandatangan daripada {{dappNameOrUrl}}",
+        "transaction": "Permintaan transaksi daripada {{dappNameOrUrl}}"
+      },
+      "withAmount": "Benarkan {{dappName}} menggunakan sehingga<highlight> {{amount}} </highlight>{{currencySymbol}}?",
+      "withoutAmount": "Benarkan {{dappName}} menggunakan {{currencySymbol}}anda?"
+    },
+    "status": {
+      "connecting": "Menyambung...",
+      "loading": "Memuatkan..."
+    },
+    "title": "Imbas kod QR",
+    "wallet": {
+      "title": "Uniswap Wallet menyokong token pada Ethereum, Poligon, Arbitrum, Optimisme, Base, Blast dan Rantaian BNB. Pada masa ini, kami hanya menyokong NFT pada Ethereum."
+    }
+  },
+  "scantastic": {
+    "code": {
+      "expired": "Tamat tempoh",
+      "subtitle": "Masukkan kod ini dalam Sambungan Uniswap. Frasa pemulihan anda akan disulitkan dan dipindahkan dengan selamat.",
+      "timeRemaining": {
+        "shorthand": {
+          "hours": "Kod baharu dalam {{hours}}h {{minutes}}m {{seconds}}s",
+          "minutes": "Kod baharu dalam {{minutes}}m {{seconds}}s",
+          "seconds": "Kod baharu dalam {{seconds}}s"
+        }
+      },
+      "title": "Uniswap kod sekali"
+    },
+    "confirmation": {
+      "button": {
+        "continue": "Ya, teruskan"
+      },
+      "label": {
+        "browser": "pelayar",
+        "device": "Peranti"
+      },
+      "subtitle": "Hanya teruskan jika anda mengimbas kod QR daripada Sambungan Uniswap pada peranti yang dipercayai.",
+      "title": "Adakah anda cuba mengimport dompet anda?",
+      "warning": "Berhati-hati dengan tapak dan apl yang menyamar sebagai Uniswap. Jika tidak, dompet anda mungkin terjejas."
+    },
+    "error": {
+      "encryption": "Gagal menyediakan frasa benih.",
+      "noCode": "Tiada OTP diterima. Sila cuba lagi.",
+      "timeout": {
+        "message": "Imbas kod QR pada Sambungan Uniswap sekali lagi untuk meneruskan penyegerakan dompet anda.",
+        "title": "Sambungan anda tamat masa"
+      }
+    },
+    "modal": {
+      "notOnWaitlist": {
+        "message": "Untuk menjadi layak untuk Uniswap Extension Beta, sertai senarai tunggu dengan menuntut nama pengguna uni.eth",
+        "title": "Anda tiada dalam senarai menunggu"
+      },
+      "onWaitlist": {
+        "message": "Kami akan memberitahu anda dalam apl apabila anda layak untuk menyertai Uniswap Extension Beta.",
+        "title": "Anda masih dalam senarai menunggu"
+      }
+    }
+  },
+  "send": {
+    "button": {
+      "review": "Semak semula pemindahan",
+      "send": "Hantar"
+    },
+    "gas": {
+      "error": {
+        "title": "T/A"
+      },
+      "networkCost": {
+        "title": "Kos rangkaian"
+      }
+    },
+    "input": {
+      "token": {
+        "balance": {
+          "title": "Baki: {{balance}} {{symbol}}"
+        }
+      }
+    },
+    "recipient": {
+      "previous_one": "1 pemindahan sebelumnya",
+      "previous_other": "{{count}} pemindahan sebelumnya",
+      "section": {
+        "favorite": "Dompet kegemaran",
+        "recent": "Baru-baru ini",
+        "search": "Keputusan Carian",
+        "viewOnly": "Dompet lihat sahaja",
+        "yours": "dompet anda"
+      },
+      "warning": {
+        "viewOnly": {
+          "message": "Hanya hantar dana ke dompet ini jika anda mempunyai frasa pemulihan atau mengenali pemilik dompet itu.",
+          "title": "Anda mempunyai ini sebagai dompet lihat sahaja"
+        }
+      }
+    },
+    "recipientSelect": {
+      "search": {
+        "empty": {
+          "message": "Apabila anda menghantar token ke alamat dompet, token tersebut akan dipaparkan di sini",
+          "title": "Tiada dompet disimpan"
+        }
+      },
+      "title": "Kepada"
+    },
+    "review": {
+      "input": {
+        "tokenAmount": {
+          "title": "{{currencyAmount}} daripada {{currencySymbol}}"
+        }
+      },
+      "modal": {
+        "title": "Anda menghantar"
+      },
+      "summary": {
+        "button": {
+          "title": "Sahkan hantar"
+        },
+        "sending": "Menghantar",
+        "to": "Kepada"
+      }
+    },
+    "search": {
+      "empty": {
+        "subtitle": "Alamat yang anda taip sama ada tidak wujud atau dieja dengan salah.",
+        "title": "Tiada keputusan dijumpai"
+      },
+      "placeholder": "Cari ENS atau alamat"
+    },
+    "status": {
+      "fail": {
+        "description": "Perlu diingat bahawa yuran rangkaian masih dikenakan untuk pemindahan yang gagal."
+      },
+      "failed": {
+        "title": "Hantar gagal"
+      },
+      "inProgress": {
+        "description": "Kami akan memberitahu anda setelah transaksi anda selesai.",
+        "title": "Menghantar"
+      },
+      "success": {
+        "description": "Anda menghantar {{currencyAmount}}{{tokenName}}{{fiatValue}} kepada {{recipient}}.",
+        "title": "Hantar berjaya!"
+      }
+    },
+    "title": "Hantar",
+    "warning": {
+      "blocked": {
+        "default": "Dompet ini disekat",
+        "modal": {
+          "message": "Alamat ini disekat pada Uniswap Wallet kerana ia dikaitkan dengan satu atau lebih aktiviti yang disekat. Jika anda percaya ini adalah satu ralat, sila e-mel compliance@uniswap.org.",
+          "title": "Alamat disekat"
+        },
+        "recipient": "Dompet penerima disekat"
+      },
+      "erc20": {
+        "message": "Anda cuba menghantar dana ke alamat token. Menghantar crypto ke alamat jenis ini boleh mengakibatkan kehilangan dana kekal.",
+        "title": "Ini adalah alamat token"
+      },
+      "insufficientFunds": {
+        "message": "Baki {{currencySymbol}} anda telah berkurangan sejak anda memasukkan jumlah yang anda ingin hantar",
+        "title": "Tidak cukup {{currencySymbol}}"
+      },
+      "modal": {
+        "button": {
+          "cta": {
+            "blocking": "okey",
+            "cancel": "Batal",
+            "confirm": "sahkan"
+          }
+        }
+      },
+      "newAddress": {
+        "message": "Anda tidak pernah berurusan dengan alamat ini sebelum ini. Sila sahkan bahawa alamat adalah betul sebelum meneruskan.",
+        "title": "Alamat baru"
+      },
+      "restore": "Pulihkan dompet anda untuk dihantar",
+      "smartContract": {
+        "message": "Anda akan menghantar token ke jenis alamat khas—kontrak pintar. Semak semula alamat yang ingin anda hantar. Jika salah, token anda boleh hilang selama-lamanya.",
+        "title": "Adakah ini alamat dompet?"
+      },
+      "viewOnly": {
+        "message": "Anda perlu mengimport dompet ini melalui frasa pemulihan untuk menghantar aset.",
+        "title": "Dompet ini adalah lihat sahaja"
+      }
+    }
+  },
+  "setting": {
+    "recoveryPhrase": {
+      "account": {
+        "show": "Tunjukkan frasa pemulihan"
+      },
+      "action": {
+        "hide": "Sembunyikan frasa pemulihan"
+      },
+      "remove": {
+        "button": "Alih keluar frasa pemulihan",
+        "confirm": {
+          "subtitle": "Saya faham bahawa Uniswap Labs tidak dapat membantu saya mendapatkan semula dompet saya jika saya gagal berbuat demikian",
+          "title": "Saya menyimpan frasa pemulihan saya"
+        },
+        "initial": {
+          "subtitle": "Pastikan anda telah menyimpan frasa pemulihan anda. Anda akan kehilangan akses kepada dana anda jika tidak",
+          "title": "Sebelum anda meneruskan"
+        },
+        "password": {
+          "error": "Salah kata laluan. Cuba lagi",
+          "input": "Masukkan kata laluan"
+        },
+        "subtitle": "Masukkan kata laluan anda untuk meneruskan",
+        "title": "Anda sedang mengalih keluar frasa pemulihan anda"
+      },
+      "view": {
+        "error": "Kata laluan salah, cuba lagi",
+        "warning": {
+          "message1": "Sesiapa sahaja yang mengetahui frasa pemulihan anda boleh mengakses dompet dan dana anda",
+          "message2": "Lihat ini secara peribadi",
+          "message3": "Jangan kongsi ini dengan sesiapa",
+          "message4": "Jangan sekali-kali memasukkannya ke mana-mana tapak web atau apl",
+          "title": "Sebelum anda meneruskan"
+        }
+      },
+      "warning": {
+        "screenshot": {
+          "message": "Sesiapa sahaja yang mendapat akses kepada foto anda boleh mengakses dompet anda. Kami mengesyorkan anda menulis perkataan anda sebaliknya.",
+          "title": "Tangkapan skrin tidak selamat"
+        },
+        "view": {
+          "message": "Sesiapa sahaja yang mengetahui frasa pemulihan anda boleh mengakses dompet dan dana anda.",
+          "title": "Lihat ini di tempat peribadi"
+        }
+      }
+    }
+  },
+  "settings": {
+    "action": {
+      "feedback": "Kongsi maklum balas",
+      "help": "Dapatkan bantuan",
+      "lock": "Kunci dompet",
+      "privacy": "Dasar privasi",
+      "terms": "Syarat perkhidmatan"
+    },
+    "footer": "Dibuat dengan penuh kasih sayang, \nPasukan Uniswap 🦄",
+    "screen": {
+      "appearance": {
+        "title": "Penampilan"
+      }
+    },
+    "section": {
+      "about": "Tentang",
+      "preferences": "Keutamaan",
+      "security": "Keselamatan",
+      "support": "Sokongan",
+      "wallet": {
+        "action": {
+          "hide": "Sembunyikan dompet",
+          "showAll_one": "Tunjukkan satu dompet",
+          "showAll_other": "Tunjukkan semua {{count}} dompet"
+        },
+        "button": {
+          "viewAll": "Lihat semua",
+          "viewLess": "Lihat kurang"
+        },
+        "label": {
+          "viewOnly": "Lihat sahaja"
+        },
+        "title": "Tetapan dompet"
+      }
+    },
+    "setting": {
+      "appearance": {
+        "option": {
+          "auto": "Auto",
+          "dark": {
+            "subtitle": "Sentiasa gunakan mod gelap",
+            "title": "Mod gelap"
+          },
+          "device": {
+            "subtitle": "Lalai kepada penampilan peranti anda",
+            "title": "Tetapan peranti"
+          },
+          "light": {
+            "subtitle": "Sentiasa gunakan mod cahaya",
+            "title": "Mod cahaya"
+          }
+        },
+        "title": "Penampilan"
+      },
+      "backup": {
+        "create": {
+          "description": "Menetapkan kata laluan akan menyulitkan sandaran frasa pemulihan anda, menambahkan tahap perlindungan tambahan jika akaun {{cloudProviderName}} anda pernah terjejas.",
+          "title": "Sandarkan kepada {{cloudProviderName}}"
+        },
+        "delete": {
+          "confirm": {
+            "message": "Oleh kerana dompet ini berkongsi frasa pemulihan, ia juga akan memadamkan sandaran untuk dompet ini di bawah",
+            "title": "Adakah anda pasti?"
+          },
+          "warning": "Jika anda memadamkan sandaran {{cloudProviderName}} anda, anda hanya akan dapat memulihkan dompet anda dengan sandaran manual frasa pemulihan anda. Uniswap Labs tidak dapat memulihkan aset anda jika anda kehilangan frasa pemulihan anda."
+        },
+        "error": {
+          "message": {
+            "full": "Tidak dapat menyandarkan frasa pemulihan kepada {{cloudProviderName}}. Sila pastikan anda telah mendayakan {{cloudProviderName}} dengan ruang storan yang tersedia dan cuba lagi.",
+            "short": "Tidak dapat memadamkan sandaran"
+          },
+          "title": "{{cloudProviderName}} ralat"
+        },
+        "modal": {
+          "description": "Anda belum menyandarkan frasa pemulihan anda ke {{cloudProviderName}} lagi. Dengan berbuat demikian, anda boleh memulihkan dompet anda hanya dengan log masuk ke {{cloudProviderName}} pada mana-mana peranti.",
+          "title": "Sandarkan frasa pemulihan ke {{cloudProviderName}}?"
+        },
+        "password": {
+          "disclaimer": "Uniswap Labs tidak menyimpan kata laluan anda dan tidak dapat memulihkannya, jadi penting untuk anda mengingatinya.",
+          "error": {
+            "mismatch": "Kata laluan tidak sepadan",
+            "weak": "Kata laluan yang lemah"
+          },
+          "medium": "Ini adalah kata laluan sederhana",
+          "placeholder": {
+            "confirm": "Sahkan kata laluan",
+            "create": "Bina kata laluan"
+          },
+          "strong": "Ini adalah kata laluan yang kuat",
+          "weak": "Ini adalah kata laluan yang lemah"
+        },
+        "recoveryPhrase": {
+          "label": "Frasa pemulihan"
+        },
+        "selected": "{{cloudProviderName}} sandaran",
+        "status": {
+          "action": {
+            "delete": "Padamkan sandaran"
+          },
+          "complete": "Disandarkan kepada {{cloudProviderName}}",
+          "description": "Dengan membuat sandaran frasa pemulihan anda kepada {{cloudProviderName}}, anda boleh memulihkan dompet anda hanya dengan log masuk ke akaun {{cloudProviderName}} anda pada mana-mana peranti.",
+          "inProgress": "Membuat sandaran kepada {{cloudProviderName}}...",
+          "recoveryPhrase": {
+            "backed": "Disokong"
+          },
+          "title": "{{cloudProviderName}} sandaran"
+        }
+      },
+      "beta": {
+        "tooltip": "Akan datang"
+      },
+      "biometrics": {
+        "appAccess": {
+          "subtitle": {
+            "android": "Memerlukan biometrik untuk membuka apl",
+            "ios": "Memerlukan {{biometricsMethod}} untuk membuka apl"
+          },
+          "title": "Akses apl"
+        },
+        "auth": "Sila sahkan",
+        "off": {
+          "message": {
+            "android": "Biometrik pada masa ini dimatikan untuk Uniswap Wallet—anda boleh menghidupkannya dalam tetapan sistem anda.",
+            "ios": "{{biometricsMethod}} sedang dimatikan untuk Uniswap Wallet—anda boleh menghidupkannya dalam tetapan sistem anda."
+          },
+          "title": {
+            "android": "Biometrik dimatikan",
+            "ios": "{{biometricsMethod}} dimatikan"
+          }
+        },
+        "title": "Biometrik",
+        "transactions": {
+          "subtitle": {
+            "android": "Memerlukan biometrik untuk berurus niaga",
+            "ios": "Memerlukan {{biometricsMethod}} untuk berurus niaga"
+          },
+          "title": "Transaksi"
+        },
+        "unavailable": {
+          "message": {
+            "android": "Biometrik tidak disediakan pada peranti anda. Untuk menggunakan biometrik, sediakannya dahulu dalam Tetapan.",
+            "ios": "{{biometricsMethod}} tidak disediakan pada peranti anda. Untuk menggunakan {{biometricsMethod}}, sediakannya dahulu dalam Tetapan."
+          },
+          "title": {
+            "android": "Biometrik tidak disediakan",
+            "ios": "{{biometricsMethod}} bukan persediaan"
+          }
+        },
+        "warning": {
+          "message": {
+            "android": "Jika anda tidak menghidupkan biometrik, sesiapa sahaja yang mendapat akses kepada peranti anda boleh membuka Uniswap Wallet dan membuat transaksi.",
+            "ios": "Jika anda tidak menghidupkan {{biometricsMethod}}, sesiapa sahaja yang mendapat akses kepada peranti anda boleh membuka Uniswap Wallet dan membuat transaksi."
+          },
+          "title": "Adakah anda pasti?"
+        }
+      },
+      "currency": {
+        "title": "Mata wang tempatan"
+      },
+      "giveFeedback": {
+        "title": "Kongsi maklum balas"
+      },
+      "helpCenter": {
+        "title": "Pusat bantuan"
+      },
+      "language": {
+        "button": {
+          "navigate": "Pergi ke tetapan"
+        },
+        "description": "Uniswap lalai kepada tetapan bahasa peranti anda. Untuk menukar bahasa pilihan anda, pergi ke \"Uniswap\" dalam tetapan peranti anda dan ketik pada \"Bahasa\"",
+        "exampleTitle": "Bahasa Inggeris",
+        "title": "Bahasa"
+      },
+      "password": {
+        "title": "Tukar kata laluan"
+      },
+      "privacy": {
+        "analytics": {
+          "description": "Kami menggunakan data penggunaan tanpa nama untuk meningkatkan pengalaman anda merentas produk Uniswap Labs. Apabila dilumpuhkan, kami hanya menjejaki ralat dan penggunaan penting.",
+          "title": "Benarkan analisis"
+        },
+        "title": "Privasi"
+      },
+      "recoveryPhrase": {
+        "remove": "Alih keluar frasa pemulihan",
+        "title": "Frasa pemulihan",
+        "view": "Lihat frasa pemulihan"
+      },
+      "smallBalances": {
+        "title": "Sembunyikan baki kecil"
+      },
+      "theme": {
+        "title": "Tema"
+      },
+      "unknownTokens": {
+        "title": "Sembunyikan token yang tidak diketahui"
+      },
+      "wallet": {
+        "action": {
+          "editLabel": "Edit label",
+          "editProfile": "Sunting profil",
+          "remove": "Keluarkan dompet"
+        },
+        "connections": {
+          "title": "Urus sambungan"
+        },
+        "editLabel": {
+          "description": "Label bukan umum. Ia disimpan secara tempatan dan hanya kelihatan kepada anda.",
+          "disclaimer": "Nama panggilan ini hanya kelihatan kepada anda.",
+          "save": "Simpan perubahan",
+          "title": "Edit nama panggilan"
+        },
+        "label": "nama samaran",
+        "notifications": {
+          "title": "Pemberitahuan"
+        },
+        "preferences": {
+          "title": "Keutamaan dompet"
+        }
+      }
+    },
+    "title": "tetapan",
+    "version": "Versi {{appVersion}}"
+  },
+  "swap": {
+    "button": {
+      "max": "Maks",
+      "review": "Semakan",
+      "swap": "Tukar",
+      "unwrap": "Buka bungkus",
+      "view": "Lihat transaksi",
+      "wrap": "Bungkus"
+    },
+    "details": {
+      "action": {
+        "less": "Tunjukkan lebih sedikit",
+        "more": "Tunjukkan lagi"
+      },
+      "feeOnTransfer": "{{tokenSymbol}} yuran",
+      "newQuote": {
+        "input": "Input baharu",
+        "output": "Keluaran baharu"
+      },
+      "rate": "Kadar",
+      "slippage": "Kegelinciran maksimum",
+      "uniswapFee": "Bayaran"
+    },
+    "form": {
+      "balance": "Seimbang",
+      "header": "Tukar",
+      "slippage": "{{slippageTolerancePercent}} gelinciran",
+      "warning": {
+        "restore": "Pulihkan dompet anda untuk bertukar"
+      }
+    },
+    "header": {
+      "viewOnly": "Lihat sahaja"
+    },
+    "hold": {
+      "swap": "Tahan untuk bertukar",
+      "tip": "Petua: Tahan untuk pertukaran segera",
+      "unwrap": "Tahan untuk membuka balutan",
+      "wrap": "Tahan untuk membalut"
+    },
+    "request": {
+      "title": {
+        "full": "Tukar {{inputCurrencySymbol}} → {{outputCurrencySymbol}}",
+        "short": "Tukar Token"
+      }
+    },
+    "review": {
+      "summary": "Anda bertukar-tukar"
+    },
+    "settings": {
+      "protection": {
+        "description": "Dengan perlindungan swap dihidupkan, urus niaga Ethereum anda akan dilindungi daripada serangan sandwic, dengan mengurangkan kemungkinan kegagalan.",
+        "subtitle": {
+          "supported": "{{chainName}} Rangkaian",
+          "unavailable": "Tidak tersedia pada {{chainName}}"
+        },
+        "title": "Perlindungan Pertukaran"
+      },
+      "slippage": {
+        "control": {
+          "auto": "Auto",
+          "title": "Kegelinciran maksimum"
+        },
+        "description": "Urus niaga anda akan kembali jika harga berubah lebih daripada peratusan gelinciran.",
+        "input": {
+          "message": "Jika harga turun lagi, transaksi anda akan kembali. Di bawah ialah jumlah minimum yang dijamin anda akan terima.",
+          "receive": {
+            "formatted": "<text>Terima sekurang-kurangnya </text><highlight>{{amount}} {{tokenSymbol}}</highlight>",
+            "unformatted": "Terima sekurang-kurangnya {{amount}} {{tokenSymbol}}"
+          }
+        },
+        "output": {
+          "message": "Jika harga turun lagi, transaksi anda akan kembali. Di bawah ialah jumlah maksimum yang anda perlu belanjakan.",
+          "spend": {
+            "formatted": "<text>Belanja paling banyak </text><highlight>{{amount}} {{tokenSymbol}}</highlight>",
+            "unformatted": "Belanja paling banyak {{amount}} {{tokenSymbol}}"
+          }
+        },
+        "warning": {
+          "max": "Masukkan nilai kurang daripada {{maxSlippageTolerance}}",
+          "message": "Gelinciran mungkin lebih tinggi daripada yang diperlukan",
+          "min": "Masukkan nilai yang lebih besar daripada 0"
+        }
+      },
+      "title": "Tukar tetapan"
+    },
+    "slippage": {
+      "settings": {
+        "title": "Tetapan gelinciran"
+      }
+    },
+    "warning": {
+      "expectedFailure": "Urus niaga ini dijangka gagal",
+      "feeOnTransfer": {
+        "message": "Sesetengah token mengambil bayaran apabila ia dibeli atau dijual, yang ditetapkan oleh pengeluar token. Uniswap tidak menerima sebarang bahagian daripada yuran ini.",
+        "title": "Kenapa ada bayaran tambahan?"
+      },
+      "insufficientBalance": {
+        "button": "Tidak cukup {{currencySymbol}}",
+        "title": "Anda tidak mempunyai {{currencySymbol}}"
+      },
+      "insufficientGas": {
+        "button": "Tidak cukup {{currencySymbol}}",
+        "cta": {
+          "button": "Beli {{currencySymbol}}",
+          "message": "Anda memerlukan lebih banyak <highlight>{{currencySymbol}}</highlight> untuk menampung kos rangkaian untuk transaksi ini."
+        },
+        "title": "Anda tidak mempunyai cukup {{currencySymbol}} untuk menampung kos rangkaian"
+      },
+      "lowLiquidity": {
+        "message": "Pada masa ini tiada kecairan yang mencukupi antara token ini untuk melakukan pertukaran. Sila cuba lagi kemudian atau pilih token lain.",
+        "title": "Kecairan tidak mencukupi"
+      },
+      "networkFee": {
+        "message": "Ini ialah kos untuk memproses transaksi anda pada blockchain. Uniswap tidak menerima sebarang bahagian daripada yuran ini."
+      },
+      "offline": {
+        "message": "Anda mungkin terputus sambungan internet atau rangkaian mungkin terputus. Sila semak sambungan internet anda dan cuba lagi.",
+        "title": "Anda di luar talian"
+      },
+      "priceImpact": {
+        "message": "Disebabkan oleh jumlah {{outputCurrencySymbol}} kecairan yang tersedia pada masa ini, semakin banyak {{inputCurrencySymbol}} anda cuba menukar, semakin kurang {{outputCurrencySymbol}} anda akan terima.",
+        "title": "Kesan harga yang tinggi ({{priceImpactValue}})"
+      },
+      "rateLimit": {
+        "message": "Sila cuba sebentar lagi.",
+        "title": "Had kadar melebihi"
+      },
+      "router": {
+        "message": "Anda mungkin terputus sambungan atau rangkaian mungkin terputus. Jika masalah berterusan, sila cuba lagi kemudian.",
+        "title": "Perdagangan ini tidak dapat diselesaikan sekarang"
+      },
+      "uniswapFee": {
+        "message": {
+          "default": "Yuran dikenakan pada beberapa token terpilih untuk memastikan pengalaman terbaik dengan Uniswap. Tiada bayaran yang berkaitan dengan pertukaran ini.",
+          "included": "Yuran dikenakan pada beberapa token terpilih untuk memastikan pengalaman terbaik dengan Uniswap, dan telah diambil kira dalam sebut harga ini."
+        },
+        "title": "Yuran pertukaran"
+      },
+      "viewOnly": {
+        "message": "Anda perlu mengimport dompet ini melalui frasa pemulihan untuk menukar token."
+      }
+    }
+  },
+  "token": {
+    "balances": {
+      "main": "Baki anda",
+      "other": "Baki pada rangkaian lain",
+      "viewOnly": "baki {{ownerAddress}}"
+    },
+    "error": {
+      "unknown": "Token tidak diketahui"
+    },
+    "links": {
+      "contract": "Kontrak",
+      "title": "Pautan",
+      "twitter": "Twitter",
+      "website": "laman web"
+    },
+    "priceExplorer": {
+      "error": {
+        "description": "Sesuatu telah berlaku.",
+        "title": "Tidak dapat memuatkan carta harga"
+      },
+      "timeRangeLabel": {
+        "day": "1D",
+        "hour": "1H",
+        "month": "1M",
+        "week": "1W",
+        "year": "1Y"
+      }
+    },
+    "safetyLevel": {
+      "blocked": {
+        "header": "Tidak tersedia",
+        "message": "Anda tidak boleh menukar token ini menggunakan Uniswap Wallet."
+      },
+      "medium": {
+        "header": "Berhati-hati",
+        "message": "Token ini tidak didagangkan pada bursa terpusat AS yang terkemuka. Sentiasa menjalankan penyelidikan anda sendiri sebelum berdagang."
+      },
+      "strong": {
+        "header": "Amaran",
+        "message": "Token ini tidak didagangkan di bursa terpusat AS terkemuka atau sering ditukar di Uniswap. Sentiasa menjalankan penyelidikan anda sendiri sebelum berdagang."
+      }
+    },
+    "selector": {
+      "search": {
+        "error": "Tidak dapat memuatkan hasil carian"
+      }
+    },
+    "stats": {
+      "fullyDilutedValuation": "Penilaian Dicairkan Sepenuhnya",
+      "marketCap": "Modal Pasaran",
+      "priceHighYear": "Tinggi 52W",
+      "priceLowYear": "52W Rendah",
+      "section": {
+        "about": "Mengenai {{token}}"
+      },
+      "title": "Statistik",
+      "translation": {
+        "original": "Paparkan yang asli",
+        "translate": "Terjemah ke {{language}}"
+      },
+      "volume": "Kelantangan 24j"
+    }
+  },
+  "tokens": {
+    "action": {
+      "hide": "Sembunyikan Token",
+      "unhide": "Nyahsembunyikan Token"
+    },
+    "hidden": {
+      "label": "Tersembunyi ({{numHidden}})"
+    },
+    "nfts": {
+      "collection": {
+        "error": {
+          "load": {
+            "title": "Tidak dapat memuatkan koleksi NFT"
+          }
+        },
+        "label": {
+          "items": "barang",
+          "owners": "Pemilik",
+          "priceFloor": "Lantai",
+          "swapVolume": "Kelantangan"
+        }
+      },
+      "details": {
+        "error": {
+          "load": {
+            "title": "Tidak dapat memuatkan butiran NFT"
+          }
+        },
+        "owner": "Dimiliki oleh",
+        "price": "Harga semasa",
+        "recentPrice": "Harga jualan terakhir",
+        "traits": "sifat"
+      },
+      "empty": {
+        "description": "Tiada NFT ditemui"
+      },
+      "error": {
+        "unavailable": "Kandungan tidak tersedia"
+      },
+      "hidden": {
+        "action": {
+          "hide": "Sembunyikan NFT",
+          "unhide": "Nyahsembunyikan NFT"
+        },
+        "label": "Tersembunyi ({{numHidden}})"
+      },
+      "link": {
+        "collection": "Laman web koleksi"
+      },
+      "list": {
+        "error": {
+          "load": {
+            "title": "Tidak dapat memuatkan NFT"
+          }
+        },
+        "none": {
+          "button": "Terima NFT",
+          "description": {
+            "default": "Pindahkan NFT daripada dompet lain untuk bermula.",
+            "external": "Apabila dompet ini membeli atau menerima NFT, ia akan dipaparkan di sini."
+          },
+          "title": "Belum ada NFT"
+        }
+      }
+    },
+    "selector": {
+      "button": {
+        "choose": "Pilih token",
+        "clear": "Kosongkan semua"
+      },
+      "empty": {
+        "buy": {
+          "message": "Beli crypto dengan kad atau bank untuk menghantar token.",
+          "title": "Beli kripto"
+        },
+        "receive": {
+          "message": "Pindahkan token dari bursa berpusat atau dompet lain untuk menghantar token.",
+          "title": "Terima token"
+        },
+        "title": "Tiada token lagi"
+      },
+      "error": {
+        "load": "Tidak dapat memuatkan token"
+      },
+      "search": {
+        "empty": "Tiada hasil ditemui untuk <highlight>{{searchText}}</highlight>",
+        "placeholder": "Cari token"
+      },
+      "section": {
+        "favorite": "Kegemaran",
+        "popular": "Token popular",
+        "recent": "Carian terkini",
+        "search": "Keputusan Carian",
+        "suggested": "Dicadangkan",
+        "yours": "Token anda"
+      }
+    }
+  },
+  "transaction": {
+    "action": {
+      "cancel": {
+        "button": "Batalkan transaksi",
+        "description": "Jika anda membatalkan urus niaga ini sebelum ia diproses oleh rangkaian, anda akan membayar yuran rangkaian baharu dan bukannya yang asal.",
+        "title": "Batalkan transaksi ini?"
+      },
+      "copy": "Salin ID transaksi",
+      "copyMoonPay": "Salin ID transaksi MoonPay",
+      "view": "Lihat {{tokenSymbol}}",
+      "viewEtherscan": "Lihat di {{blockExplorerName}}",
+      "viewMoonPay": "Lihat di MoonPay"
+    },
+    "amount": {
+      "unlimited": "Tidak terhad"
+    },
+    "currency": {
+      "unknown": "token yang tidak diketahui"
+    },
+    "date": "Diserahkan pada {{date}}",
+    "network": {
+      "all": "Semua rangkaian"
+    },
+    "networkCost": {
+      "label": "Kos rangkaian"
+    },
+    "notification": {
+      "error": {
+        "cancel": "Tidak dapat membatalkan transaksi",
+        "replace": "Tidak dapat menggantikan transaksi"
+      }
+    },
+    "priceImpact": {
+      "label": "Kesan harga"
+    },
+    "status": {
+      "approve": {
+        "canceled": "Dibatalkan meluluskan",
+        "canceling": "Membatalkan meluluskan",
+        "failed": "Gagal meluluskan",
+        "pending": "Meluluskan",
+        "success": "Diluluskan",
+        "successDapp": "Diluluskan pada {{externalDappName}}"
+      },
+      "buy": {
+        "canceled": "Pembelian dibatalkan",
+        "canceling": "Membatalkan pembelian",
+        "failed": "Gagal membeli",
+        "pending": "Membeli",
+        "success": "Dibeli",
+        "successDapp": "Dibeli pada {{externalDappName}}"
+      },
+      "confirm": {
+        "canceled": "Pengesahan dibatalkan",
+        "canceling": "Membatalkan pengesahan",
+        "failed": "Gagal mengesahkan",
+        "pending": "Urus niaga sedang berjalan",
+        "success": "Transaksi disahkan",
+        "successDapp": "Transaksi disahkan pada {{externalDappName}}"
+      },
+      "mint": {
+        "canceled": "pudina dibatalkan",
+        "canceling": "Membatalkan pudina",
+        "failed": "Gagal mencetak",
+        "pending": "Mencetak",
+        "success": "Dicetak",
+        "successDapp": "Dicetak pada {{externalDappName}}"
+      },
+      "purchase": {
+        "canceled": "Pembelian dibatalkan",
+        "canceling": "Membatalkan pembelian",
+        "failed": "Gagal membeli",
+        "pending": "Membeli",
+        "success": "Dibeli",
+        "successDapp": "Dibeli pada {{externalDappName}}"
+      },
+      "receive": {
+        "canceled": "Batal menerima",
+        "canceling": "Membatalkan penerimaan",
+        "failed": "Gagal terima",
+        "pending": "Menerima",
+        "success": "Menerima",
+        "successDapp": "Diterima pada {{externalDappName}}"
+      },
+      "revoke": {
+        "canceled": "Pembatalan dibatalkan",
+        "canceling": "Membatalkan pembatalan",
+        "failed": "Gagal membatalkan",
+        "pending": "Membatalkan",
+        "success": "Dibatalkan",
+        "successDapp": "Dibatalkan pada {{externalDappName}}"
+      },
+      "sell": {
+        "canceled": "Jualan dibatalkan",
+        "canceling": "Membatalkan penjualan",
+        "failed": "Gagal menjual",
+        "pending": "Menjual",
+        "success": "terjual",
+        "successDapp": "Dijual pada {{externalDappName}}"
+      },
+      "send": {
+        "canceled": "Batal hantar",
+        "canceling": "Membatalkan penghantaran",
+        "failed": "gagal untuk dihantar",
+        "pending": "Menghantar",
+        "success": "Dihantar",
+        "successDapp": "Dihantar pada {{externalDappName}}"
+      },
+      "swap": {
+        "canceled": "Pertukaran dibatalkan",
+        "canceling": "Membatalkan pertukaran",
+        "failed": "Gagal bertukar",
+        "pending": "Bertukar-tukar",
+        "success": "Ditukar",
+        "successDapp": "Bertukar pada {{externalDappName}}"
+      },
+      "unwrap": {
+        "canceled": "Pembatalan dibatalkan",
+        "canceling": "Membatalkan buka bungkus",
+        "failed": "Gagal membuka balutan",
+        "pending": "Membuka balutan",
+        "success": "Dibuka",
+        "successDapp": "Dibuka pada {{externalDappName}}"
+      },
+      "wrap": {
+        "canceled": "Pembalut dibatalkan",
+        "canceling": "Membatalkan bungkus",
+        "failed": "Gagal membalut",
+        "pending": "Membungkus",
+        "success": "berbalut",
+        "successDapp": "Dibalut pada {{externalDappName}}"
+      }
+    },
+    "summary": {
+      "received": "{{tokenAmountWithSymbol}} hingga {{recipientAddress}}",
+      "sent": "{{tokenAmountWithSymbol}} daripada {{senderAddress}}"
+    },
+    "watcher": {
+      "error": {
+        "cancel": "Tidak dapat membatalkan transaksi",
+        "status": "Ralat semasa menyemak status transaksi"
+      }
+    }
+  },
+  "unicons": {
+    "banner": {
+      "button": "Faham",
+      "subtitle": "Kami mengubah Unicon unik dompet anda. Semak akaun anda yang lain untuk melihat ikon anda yang dinaik taraf.",
+      "title": "Unicon anda berwajah baharu"
+    }
+  },
+  "unitags": {
+    "banner": {
+      "button": {
+        "claim": "Tuntut sekarang"
+      },
+      "subtitle": "Bina profil web3 yang diperibadikan dan kongsi alamat anda dengan rakan dengan mudah.",
+      "title": {
+        "compact": "<highlight>Tuntut {{unitagDomain}} nama pengguna anda</highlight> dan bina profil anda yang boleh disesuaikan.",
+        "full": "Tuntut nama pengguna {{unitagDomain}} anda"
+      }
+    },
+    "choosePhoto": {
+      "option": {
+        "cameraRoll": "Pilih daripada gulungan kamera",
+        "nft": "Pilih NFT",
+        "remove": "Alih keluar gambar profil"
+      }
+    },
+    "claim": {
+      "confirmation": {
+        "customize": "Sesuaikan profil",
+        "description": "{{unitagAddress}} sedia untuk menghantar dan menerima crypto. Teruskan membina dompet anda dengan menyesuaikan profil web3 anda.",
+        "success": {
+          "long": "Anda mendapatnya!",
+          "short": "faham!"
+        }
+      },
+      "error": {
+        "addressLimit": "Anda telah membuat jumlah maksimum perubahan pada nama pengguna anda untuk alamat ini",
+        "appCheck": "Tidak dapat menuntut nama pengguna. Sila cuba lagi esok.",
+        "avatar": "Tidak dapat menetapkan avatar. Cuba lagi nanti.",
+        "default": "Tidak dapat menuntut nama pengguna. Cuba lagi nanti.",
+        "deviceLimit": "Anda telah mencapai bilangan maksimum nama pengguna yang boleh aktif untuk peranti ini",
+        "ens": "Untuk menuntut nama pengguna ini, anda mesti memiliki {{username}}.eth ENS",
+        "ensMismatch": "Nama pengguna ini tidak tersedia pada masa ini.",
+        "general": "Tidak dapat menuntut nama pengguna",
+        "unavailable": "Nama pengguna ini tidak tersedia",
+        "unknown": "Ralat tidak diketahui"
+      },
+      "username": {
+        "default": "nama awak"
+      }
+    },
+    "delete": {
+      "confirm": {
+        "subtitle": "Anda akan memadamkan nama pengguna dan butiran profil anda yang boleh disesuaikan. Anda tidak akan dapat menuntutnya semula.",
+        "title": "Adakah anda pasti?"
+      }
+    },
+    "editProfile": {
+      "placeholder": "nama pengguna"
+    },
+    "editUsername": {
+      "button": {
+        "confirm": "Simpan perubahan"
+      },
+      "confirm": {
+        "subtitle": "Anda akan menukar nama pengguna anda. Sebaik sahaja anda menukarnya, anda tidak boleh menuntutnya lagi.",
+        "title": "Adakah anda pasti?"
+      },
+      "title": "Edit nama pengguna",
+      "warning": {
+        "default": "Sebaik sahaja anda menukar nama pengguna anda, anda tidak boleh menuntutnya lagi. Anda hanya boleh menukarnya 2 kali.",
+        "max": "Anda telah mencapai bilangan maksimum 2 perubahan nama pengguna."
+      }
+    },
+    "intro": {
+      "features": {
+        "ens": "Dikuasakan oleh subdomain ENS",
+        "free": "Percuma untuk menuntut",
+        "profile": "Profil boleh disesuaikan"
+      },
+      "subtitle": "Ucapkan selamat tinggal kepada 0x alamat. Nama pengguna ialah nama yang boleh dibaca yang memudahkan penghantaran dan penerimaan crypto.",
+      "title": "Memperkenalkan nama pengguna"
+    },
+    "notification": {
+      "delete": {
+        "error": "Tidak dapat memadam nama pengguna. Cuba lagi nanti.",
+        "title": "Nama pengguna dipadamkan"
+      },
+      "profile": {
+        "error": "Tidak dapat mengemas kini profil. Cuba lagi nanti.",
+        "title": "Profil dikemaskini"
+      },
+      "username": {
+        "error": "Tidak dapat menukar nama pengguna. Cuba lagi nanti.",
+        "title": "Nama pengguna ditukar"
+      }
+    },
+    "onboarding": {
+      "claim": {
+        "subtitle": "Ini adalah nama unik anda yang boleh dihantar oleh sesiapa sahaja.",
+        "title": {
+          "choose": "Pilih nama pengguna anda",
+          "claim": "Tuntut nama pengguna anda"
+        }
+      },
+      "claimPeriod": {
+        "description": "Untuk masa yang terhad, nama pengguna {{username}} dikhaskan. Import dompet yang memiliki {{username}}.eth ENS untuk menuntut nama pengguna ini atau cuba lagi selepas tempoh tuntutan.",
+        "link": "Ketahui lebih lanjut tentang <highlight>tempoh tuntutan kami</highlight>.",
+        "title": "tempoh tuntutan ENS"
+      },
+      "info": {
+        "description": "Nama pengguna mengubah alamat 0x kompleks kepada nama yang boleh dibaca. Dengan menuntut nama pengguna {{unitagDomain}} , anda boleh menghantar dan menerima crypto dengan mudah dan membina profil web3 awam.",
+        "title": "Alamat yang dipermudahkan"
+      },
+      "profile": {
+        "subtitle": "Muat naik sendiri atau kekalkan dengan Unicon unik anda. Anda sentiasa boleh menukar ini kemudian.",
+        "title": "Pilih foto profil"
+      }
+    },
+    "profile": {
+      "action": {
+        "delete": "Padam nama pengguna",
+        "edit": "Edit nama pengguna"
+      },
+      "bio": {
+        "label": "Bio",
+        "placeholder": "Taip bio untuk profil anda"
+      },
+      "links": {
+        "twitter": "Twitter"
+      }
+    },
+    "username": {
+      "error": {
+        "chars": "Nama pengguna hanya boleh mengandungi huruf dan nombor",
+        "max": "Nama pengguna tidak boleh lebih daripada {{number}} aksara",
+        "min": "Nama pengguna mestilah sekurang-kurangnya {{number}} aksara",
+        "uppercase": "Nama pengguna hanya boleh mengandungi huruf kecil dan nombor"
+      }
+    }
+  },
+  "walletConnect": {
+    "dapps": {
+      "connection": "<highlight>Disambungkan ke </highlight>{{dappNameOrUrl}}",
+      "empty": {
+        "description": "Sambung ke apl dengan mengimbas kod melalui WalletConnect"
+      },
+      "manage": {
+        "empty": {
+          "title": "Tiada apl disambungkan"
+        },
+        "title": "Urus sambungan"
+      }
+    },
+    "error": {
+      "connection": {
+        "message": "Uniswap Wallet kini menyokong {{chainNames}}. Sila gunakan hanya \"{{dappName}}\" pada rantai ini",
+        "title": "Ralat Sambungan"
+      },
+      "general": {
+        "message": "Terdapat masalah dengan WalletConnect. Sila cuba lagi",
+        "title": "Ralat WalletConnect"
+      },
+      "scantastic": {
+        "message": "Terdapat masalah dengan kod QR anda. Sila cuba lagi",
+        "title": "Kod QR tidak sah"
+      },
+      "unsupported": {
+        "message": "Pastikan anda mengimbas kod QR alamat WalletConnect atau Ethereum yang sah sebelum mencuba lagi.",
+        "title": "Kod QR tidak sah"
+      },
+      "unsupportedV1": {
+        "message": "WalletConnect v1 tidak lagi disokong. Aplikasi yang anda cuba sambungkan perlu meningkatkan kepada WalletConnect v2.",
+        "title": "Kod QR tidak sah"
+      },
+      "uwu": {
+        "scan": "Terdapat masalah mengimbas kod QR ini.",
+        "title": "Ralat Pautan UwU",
+        "unsupported": "Kod QR ini tidak disokong."
+      }
+    },
+    "pending": {
+      "button": {
+        "connect": "Sambung",
+        "scrollDown": "Tatal ke bawah untuk menyambung"
+      },
+      "switchAccount": "Tukar akaun",
+      "switchNetwork": "Tukar Rangkaian",
+      "title": "{{dappName}} mahu menyambung ke dompet anda"
+    },
+    "permissions": {
+      "networks": "Rangkaian",
+      "option": {
+        "transferAssets": "Pindahkan aset anda tanpa kebenaran",
+        "viewTokenBalances": "Lihat baki token anda",
+        "viewWalletAddress": "Lihat alamat dompet anda"
+      },
+      "title": "Kebenaran apl"
+    },
+    "request": {
+      "button": {
+        "scrollDown": "Tatal ke bawah untuk menandatangani",
+        "sign": "Tanda"
+      },
+      "details": {
+        "label": {
+          "function": "Fungsi: ",
+          "recipient": "Kepada: ",
+          "sending": "Menghantar: "
+        }
+      },
+      "error": {
+        "insufficientFunds": "Anda tidak mempunyai cukup {{currencySymbol}} untuk melengkapkan transaksi ini.",
+        "network": "Ralat sambungan Internet atau rangkaian"
+      },
+      "label": {
+        "network": "Rangkaian"
+      },
+      "warning": {
+        "general": {
+          "message": "Berhati-hati: mesej ini mungkin memindahkan aset",
+          "transaction": "Berhati-hati: transaksi ini mungkin memindahkan aset"
+        },
+        "message": "Untuk menandatangani mesej atau transaksi, anda perlu mengimport frasa pemulihan dompet.",
+        "title": "Dompet ini dalam mod lihat sahaja"
+      }
+    }
+  }
+}

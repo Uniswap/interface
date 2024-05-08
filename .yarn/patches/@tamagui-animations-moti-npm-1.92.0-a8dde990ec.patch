@@ -1,0 +1,13 @@
+diff --git a/dist/cjs/createAnimations.native.js b/dist/cjs/createAnimations.native.js
+index 8ef9a4b03e660025bd16f4d15ec9e82ead963be0..023de8bf1955d83f0483917f4d6e0a5205d6fb17 100644
+--- a/dist/cjs/createAnimations.native.js
++++ b/dist/cjs/createAnimations.native.js
+@@ -163,7 +163,7 @@ function createAnimations(animations) {
+       else {
+         var animateOnly = props.animateOnly;
+         for (var key in style)
+-          !import_web.stylePropsAll[key] || neverAnimate[key] || animateOnly && !animateOnly.includes(key) ? dontAnimate[key] = style[key] : animate[key] = style[key];
++          !import_web.stylePropsAll[key] || neverAnimate[key] || style[key] === 'auto' || animateOnly && !animateOnly.includes(key) ? dontAnimate[key] = style[key] : animate[key] = style[key];
+       }
+       var animateStr = JSON.stringify(animate), styles = (0, import_react.useMemo)(function() {
+         return JSON.parse(animateStr);

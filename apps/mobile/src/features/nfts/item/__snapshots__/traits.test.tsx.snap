@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders trait card 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#2222220D",
+      "borderBottomLeftRadius": 16,
+      "borderBottomRightRadius": 16,
+      "borderTopLeftRadius": 16,
+      "borderTopRightRadius": 16,
+      "flexDirection": "column",
+      "gap": 4,
+      "paddingBottom": 12,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 12,
+    }
+  }
+>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.2}
+    style={
+      {
+        "color": "#7D7D7D",
+        "fontFamily": "Basel-Medium",
+        "fontSize": 15,
+        "fontWeight": "500",
+        "lineHeight": 16,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    traitName
+  </Text>
+  <Text
+    allowFontScaling={true}
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#222222",
+        "fontFamily": "Basel-Book",
+        "fontSize": 17,
+        "lineHeight": 24,
+      }
+    }
+    suppressHighlighting={true}
+  >
+    traitValue
+  </Text>
+</View>
+`;

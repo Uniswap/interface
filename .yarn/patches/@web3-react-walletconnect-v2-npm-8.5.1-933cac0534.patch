@@ -1,0 +1,28 @@
+diff --git a/dist/index.js b/dist/index.js
+index 1a36d14c5d7c9ee55b2eccd11216c8adb6839daf..908b8c57a2d8cd565030e34e15c56caf7d182cfd 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -84,7 +84,7 @@ class WalletConnect extends types_1.Connector {
+         return __awaiter(this, void 0, void 0, function* () {
+             const rpcMap = this.rpcMap ? (0, utils_1.getBestUrlMap)(this.rpcMap, this.timeout) : undefined;
+             const chainProps = this.getChainProps(this.chains, this.optionalChains, desiredChainId);
+-            const ethProviderModule = yield Promise.resolve().then(() => __importStar(require('@walletconnect/ethereum-provider')));
++            const ethProviderModule = yield Promise.resolve().then(async () => __importStar(await import('@walletconnect/ethereum-provider')));
+             this.provider = yield ethProviderModule.default.init(Object.assign(Object.assign(Object.assign({}, this.options), chainProps), { rpcMap: yield rpcMap }));
+             return this.provider
+                 .on('disconnect', this.disconnectListener)
+diff --git a/dist/utils.js b/dist/utils.js
+index 17539b6f910e65aeaebcc116395dce56ae4ce193..9ea637118844ebbdc55db71009b44849992603d2 100644
+--- a/dist/utils.js
++++ b/dist/utils.js
+@@ -62,8 +62,8 @@ function getBestUrl(urls, timeout) {
+         if (urls.length === 1)
+             return urls[0];
+         const [HttpConnection, JsonRpcProvider] = yield Promise.all([
+-            Promise.resolve().then(() => __importStar(require('@walletconnect/jsonrpc-http-connection'))).then(({ HttpConnection }) => HttpConnection),
+-            Promise.resolve().then(() => __importStar(require('@walletconnect/jsonrpc-provider'))).then(({ JsonRpcProvider }) => JsonRpcProvider),
++            Promise.resolve().then(async () => __importStar(await import('@walletconnect/jsonrpc-http-connection'))).then(({ HttpConnection }) => HttpConnection),
++            Promise.resolve().then(async () => __importStar(await import('@walletconnect/jsonrpc-provider'))).then(({ JsonRpcProvider }) => JsonRpcProvider),
+         ]);
+         // the below returns the first url for which there's been a successful call, prioritized by index
+         return new Promise((resolve) => {

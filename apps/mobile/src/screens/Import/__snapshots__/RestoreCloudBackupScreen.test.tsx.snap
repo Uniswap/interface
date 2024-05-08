@@ -1,0 +1,143 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RestoreCloudBackupScreen renders correctly 1`] = `
+<View
+  sentry-label="Screen"
+  style={
+    {
+      "backgroundColor": "#FFFFFF",
+      "flex": 1,
+      "flexDirection": "column",
+      "paddingLeft": undefined,
+      "paddingRight": undefined,
+      "paddingTop": 200,
+    }
+  }
+>
+  <View
+    onLayout={[Function]}
+    style={
+      [
+        [
+          {
+            "flex": 1,
+            "justifyContent": "flex-end",
+          },
+          {
+            "marginBottom": undefined,
+          },
+        ],
+        {
+          "paddingBottom": 0,
+        },
+      ]
+    }
+  >
+    <View
+      animatedStyle={
+        {
+          "value": {},
+        }
+      }
+      collapsable={false}
+      entering={[Function]}
+      exiting={[Function]}
+      style={
+        {
+          "flexDirection": "column",
+          "flexGrow": 1,
+          "gap": 16,
+          "paddingBottom": 16,
+          "paddingLeft": 16,
+          "paddingRight": 16,
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "gap": 12,
+            "justifyContent": "center",
+            "marginBottom": 12,
+            "marginLeft": 12,
+            "marginRight": 12,
+            "marginTop": 12,
+          }
+        }
+      >
+        <Text
+          allowFontScaling={false}
+          maxFontSizeMultiplier={1.2}
+          style={
+            {
+              "color": "#222222",
+              "fontFamily": "Basel-Book",
+              "fontSize": 25,
+              "lineHeight": 32,
+              "paddingTop": 0,
+              "textAlign": "center",
+            }
+          }
+          suppressHighlighting={true}
+        >
+          Select a backup to restore
+        </Text>
+        <Text
+          allowFontScaling={true}
+          maxFontSizeMultiplier={1.4}
+          style={
+            {
+              "color": "#7D7D7D",
+              "fontFamily": "Basel-Book",
+              "fontSize": 17,
+              "lineHeight": 24,
+              "textAlign": "center",
+            }
+          }
+          suppressHighlighting={true}
+        >
+          There are multiple recovery phrases backed up to your iCloud.
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "flex": 1,
+            "flexDirection": "column",
+            "flexGrow": 1,
+            "justifyContent": "space-between",
+          }
+        }
+      >
+        <RCTScrollView
+          collapsable={false}
+          handlerTag={1}
+          handlerType="NativeViewGestureHandler"
+          onGestureHandlerEvent={[Function]}
+          onGestureHandlerStateChange={[Function]}
+          waitFor={
+            [
+              {
+                "current": null,
+              },
+            ]
+          }
+        >
+          <View>
+            <View
+              style={
+                {
+                  "flexDirection": "column",
+                  "gap": 8,
+                }
+              }
+            />
+          </View>
+        </RCTScrollView>
+      </View>
+    </View>
+  </View>
+</View>
+`;

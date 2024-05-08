@@ -1,0 +1,2149 @@
+{
+  "account": {
+    "cloud": {
+      "backup": {
+        "subtitle": "你的 {{cloudProviderName}} 上已备份多个恢复短语。",
+        "title": "选择要恢复的备份"
+      },
+      "button": {
+        "restore": {
+          "android": "从 Google Drive 恢复",
+          "ios": "从 iCloud 恢复"
+        }
+      },
+      "empty": {
+        "description": "你似乎尚未将任何助记词备份到 {{cloudProviderName}}。",
+        "title": "没找到备份"
+      },
+      "error": {
+        "backup": {
+          "message": "导入备份失败",
+          "title": "导入备份时出错"
+        },
+        "password": {
+          "title": "无效的密码。请再试一次。"
+        },
+        "unavailable": {
+          "button": {
+            "cancel": "稍后再说",
+            "settings": "前往设置"
+          },
+          "message": {
+            "android": "请验证你登录的 Google 帐户是否已在此设备上启用了 Google Drive，然后重试。",
+            "ios": "请验证你登录的 Apple ID 是否已在此设备上启用了 iCloud Drive，然后重试。"
+          },
+          "title": {
+            "android": "Google Drive 不可用",
+            "ios": "iCloud 云盘不可用"
+          }
+        }
+      },
+      "loading": {
+        "title": "正在搜索备份..."
+      },
+      "lockout": {
+        "time": {
+          "hours_one": "尝试次数过多。请在 1 小时后重试。",
+          "hours_other": "尝试太多次。在 {{count}} 小时后重试。",
+          "minutes_one": "尝试次数过多。请在1分钟后重试。",
+          "minutes_other": "尝试太多次了。 请在 {{count}} 分钟后重试。"
+        }
+      },
+      "password": {
+        "input": "输入密码",
+        "recoveryPhrase": "请输入你的恢复短语",
+        "subtitle": "从 {{cloudProviderName}} 恢复恢复短语备份需要此密码。",
+        "title": "输入备份密码"
+      }
+    },
+    "recoveryPhrase": {
+      "education": {
+        "part1": "恢复短语 (或种子短语) 是访问你钱包所需的 <highlight>一组单词</highlight>，类似<highlight>密码</highlight>",
+        "part2": "你可以在新设备上<highlight>输入</highlight>你的恢复短语来<highlight>恢复你的钱包</highlight>",
+        "part3": "但是如果你<highlight>丢失了恢复短语</highlight>，你将<highlight>失去权限</highlight>访问你的钱包",
+        "part4": "你可以把恢复短语用密码<highlight>备份到 {{cloudProviderName}}</highlight> ，而不用手动备份你的恢复短语。",
+        "part5": "你还可以通过记下恢复短语来<highlight>手动备份</highlight>它，并且存放在安全的地方。",
+        "part6": "我们建议使用<highlight>两种类型的备份</highlight>，因为如果你丢失了恢复短语，你将无法恢复你的钱包。"
+      },
+      "error": {
+        "invalid": "短语无效",
+        "invalidWord": "无效词： {{word}}",
+        "phraseLength": "恢复短语必须为 12-24 个单词",
+        "wrong": "恢复短语错误"
+      },
+      "helpText": {
+        "import": "如何找到我的恢复短语？",
+        "restoring": "尝试再次搜索"
+      },
+      "input": "输入您的恢复短语",
+      "remove": {
+        "final": {
+          "description": "确保你已记下恢复短语或将其备份到 {{cloudProviderName}} 上。 <highlight>否则你将无法使用你的钱包。</highlight>",
+          "title": "你正在删除<highlight>恢复短语</highlight>"
+        },
+        "import": {
+          "description": "你一次只能存储一个恢复短语。要继续导入新的钱包，你需要从此设备中删除当前的恢复短语和任何关联的钱包。"
+        },
+        "initial": {
+          "description": "这将从该设备中删除你的钱包以及恢复短语。",
+          "title": "你正在删除 <highlight>{{walletName}}</highlight>"
+        },
+        "mnemonic": {
+          "description": "它与 {{walletName}} 共享相同的恢复短语。在删除所有剩余的钱包之前，你的恢复短语会被存储在你设备里。"
+        }
+      },
+      "subtitle": {
+        "import": "你的恢复短语只会存储在你的本地设备上。",
+        "restoring": "在下面输入你的恢复短语，或尝试再次搜索备份。"
+      },
+      "title": {
+        "import": "输入你的恢复短语",
+        "restoring": "未找到备份"
+      }
+    },
+    "wallet": {
+      "action": {
+        "copy": "复制钱包地址",
+        "report": "报告简介",
+        "settings": "钱包设定",
+        "viewExplorer": "查看 {{blockExplorerName}}"
+      },
+      "button": {
+        "add": "添加钱包",
+        "addViewOnly": "添加仅查看的钱包",
+        "create": "创建一个新钱包",
+        "import": "导入新钱包",
+        "manage": "管理钱包",
+        "remove": "删除钱包",
+        "restore": "恢复钱包",
+        "watch": "添加仅查看钱包"
+      },
+      "create": {
+        "placeholder": "钱包 {{index}}"
+      },
+      "edit": {
+        "label": {
+          "input": {
+            "placeholder": "钱包标签"
+          }
+        }
+      },
+      "header": {
+        "button": {
+          "disabled": {
+            "title": "编辑个人资料"
+          },
+          "title": "编辑标签"
+        },
+        "other": "你的其他钱包",
+        "viewOnly": "仅查看钱包"
+      },
+      "menu": {
+        "copy": {
+          "title": "复制钱包地址"
+        },
+        "edit": {
+          "title": "编辑标签"
+        },
+        "remove": {
+          "title": "删除钱包"
+        }
+      },
+      "remove": {
+        "check": "我备份了我的恢复短语，并了解如果我未能这样做，Uniswap Labs 无法帮助我恢复钱包。",
+        "title": "删除 {{name}}",
+        "viewOnly": "你始终可以通过输入钱包地址来添加仅返回查看的钱包。"
+      },
+      "restore": {
+        "description": "因为你使用的是新设备，你需要重新导入恢复短语。"
+      },
+      "select": {
+        "error": "无法加载地址",
+        "loading": {
+          "subtitle": "你的钱包将显示在下面。",
+          "title": "寻找钱包"
+        },
+        "title_one_one": "找到一个钱包",
+        "title_one_other": "选择要导入的钱包"
+      },
+      "viewOnly": {
+        "button": "导入钱包",
+        "description": "要交换、购买、发送和接收代币，您需要导入此钱包的恢复短语。",
+        "title": "这是一个仅查看钱包"
+      },
+      "watch": {
+        "error": {
+          "alreadyImported": "该地址已导入",
+          "notFound": "找不到地址",
+          "smartContract": "这地址是个智能合约"
+        },
+        "message": "添加仅供查看的钱包可让您试用该应用程序或跟踪钱包。您将无法交换或发送资金。",
+        "placeholder": "ENS 或地址",
+        "title": "输入钱包地址"
+      }
+    }
+  },
+  "common": {
+    "button": {
+      "accept": "接受",
+      "back": "返回",
+      "buy": "买入",
+      "cancel": "取消",
+      "close": "关闭",
+      "confirm": "确认",
+      "connect": "连接",
+      "continue": "继续",
+      "copied": "已复制",
+      "copy": "复制",
+      "create": "创造",
+      "delete": "删除",
+      "disconnect": "断开",
+      "dismiss": "关闭",
+      "done": "完成",
+      "enable": "开启",
+      "goBack": "回去",
+      "hide": "隐藏",
+      "later": "稍后再说",
+      "learn": "了解更多",
+      "next": "下一个",
+      "notNow": "稍后再说",
+      "ok": "好的",
+      "paste": "粘贴",
+      "receive": "接收",
+      "remove": "删除",
+      "restore": "恢复",
+      "retry": "重试",
+      "review": "预览",
+      "save": "保存",
+      "scrollDown": "向下滚动",
+      "sell": "卖出",
+      "send": "发送",
+      "setup": "设置",
+      "share": "分享",
+      "show": "展示",
+      "sign": "签名",
+      "skip": "跳过",
+      "swap": "兑换",
+      "tryAgain": "再试一次",
+      "understand": "我明白",
+      "view": "显示"
+    },
+    "card": {
+      "error": {
+        "description": "出了些问题",
+        "title": "哎呀！出了些问题。"
+      }
+    },
+    "endAdornment": "和",
+    "error": {
+      "general": "出了些问题。"
+    },
+    "input": {
+      "password": {
+        "confirm": "确认密码",
+        "error": {
+          "mismatch": "密码不匹配",
+          "weak": "这个密码太弱了"
+        },
+        "new": "新密码",
+        "placeholder": "密码",
+        "strength": {
+          "medium": "中",
+          "strong": "强度",
+          "weak": "虚弱的"
+        }
+      },
+      "search": "搜索"
+    },
+    "longText": {
+      "button": {
+        "less": "显示更少",
+        "more": "显示更多"
+      }
+    },
+    "navigation": {
+      "settings": "设置",
+      "systemSettings": "设置"
+    },
+    "text": {
+      "error": "错误",
+      "loading": "加载中",
+      "notAvailable": "不适用",
+      "unknown": "未知"
+    }
+  },
+  "currency": {
+    "aud": "澳元",
+    "brl": "巴西雷亚尔",
+    "cad": "加拿大元",
+    "cny": "人民币",
+    "eur": "欧元",
+    "gbp": "英镑",
+    "hkd": "港元",
+    "idr": "印尼盾",
+    "inr": "印度卢比",
+    "jpy": "日圆",
+    "ngn": "尼日利亚奈拉",
+    "pkr": "巴基斯坦卢比",
+    "rub": "俄罗斯卢布",
+    "sgd": "新加坡元",
+    "thb": "泰铢",
+    "try": "土耳其里拉",
+    "uah": "乌克兰格里夫纳",
+    "usd": "美国美元",
+    "vnd": "越南盾"
+  },
+  "dapp": {
+    "request": {
+      "approve": {
+        "action": "批准",
+        "fallbackTitle": "批准支出代币",
+        "helptext": "允许该网站访问并使用您钱包中的此代币。",
+        "label": "钱包",
+        "title": "批准支出 {{tokenSymbol}}"
+      },
+      "base": {
+        "title": "确认交易"
+      },
+      "changeChain": {
+        "title": "将网络切换至 {{network}}"
+      },
+      "connect": {
+        "helptext": "允许该网站查看您的钱包地址、余额并请求交易批准。",
+        "title": "连接到站点"
+      },
+      "error": {
+        "none": "没有等待批准的情况"
+      },
+      "fallback": {
+        "calldata": {
+          "label": "数据"
+        },
+        "function": {
+          "label": "功能"
+        },
+        "recipient": {
+          "label": "接受者"
+        },
+        "sending": {
+          "label": "发送"
+        }
+      },
+      "permit2": {
+        "description": "Permit2 管理多个 dapp 的代币审批。",
+        "header": "签署许可证2",
+        "price": "没有任何"
+      },
+      "signature": {
+        "containsUnrenderableCharacters": "此邮件包含无法呈现的字符。请确保您信任此网站。",
+        "error": {
+          "712-spec-compliance": "SignTypedDataRequestContent 收到的签名数据不符合 EIP-712 规范。"
+        },
+        "header": "签名请求",
+        "toggleDataView": {
+          "raw": "查看原始数据",
+          "readable": "查看原始数据"
+        }
+      },
+      "warning": {
+        "notActive": {
+          "message": "确保它是正确的",
+          "title": "这不是您的活跃钱包"
+        }
+      }
+    }
+  },
+  "emptyTokenCard": {
+    "description": "购买或将代币转移到此钱包即可开始使用",
+    "title": "暂时还没有代币"
+  },
+  "errors": {
+    "crash": {
+      "message": "出了些问题",
+      "restart": "重新启动APP",
+      "title": "呃哦！"
+    }
+  },
+  "explore": {
+    "search": {
+      "action": {
+        "clear": "全部清除",
+        "viewEtherscan": "查看 {{blockExplorerName}}"
+      },
+      "empty": {
+        "full": "未找到 <highlight>“{{searchQuery}}”的结果</highlight>"
+      },
+      "error": "无法加载搜索结果",
+      "label": {
+        "ownedBy": "拥有者 {{ownerAddress}}"
+      },
+      "placeholder": "搜索代币和钱包",
+      "section": {
+        "nft": "NFT 合集",
+        "popularNFT": "热门 NFT 合集",
+        "popularTokens": "热门代币",
+        "recent": "最近的搜索",
+        "suggestedWallets": "推荐钱包",
+        "tokens": "代币",
+        "wallets": "钱包"
+      }
+    },
+    "tokens": {
+      "error": "无法加载代币",
+      "favorite": {
+        "action": {
+          "add": "收藏代币",
+          "edit": "编辑收藏",
+          "remove": "去掉收藏"
+        },
+        "title": {
+          "default": "收藏代币",
+          "edit": "编辑代币收藏"
+        }
+      },
+      "metadata": {
+        "marketCap": "{{number}} MCap",
+        "totalValueLocked": "{{number}} TVL",
+        "volume": "{{number}} 卷"
+      },
+      "sort": {
+        "label": {
+          "marketCap": "市值",
+          "priceDecrease": "价格下降",
+          "priceIncrease": "价格上涨",
+          "totalValueLocked": "总锁定价值",
+          "volume": "交易量"
+        },
+        "option": {
+          "marketCap": "市值",
+          "priceDecrease": "价格下降（24小时）",
+          "priceIncrease": "价格上涨（24小时）",
+          "totalValueLocked": "Uniswap TVL",
+          "volume": "Uniswap 交易量（24小时）"
+        }
+      },
+      "top": {
+        "title": "热门代币"
+      }
+    },
+    "wallets": {
+      "favorite": {
+        "action": {
+          "add": "收藏钱包",
+          "edit": "编辑收藏",
+          "remove": "去掉收藏"
+        },
+        "title": {
+          "default": "收藏钱包",
+          "edit": "编辑钱包收藏"
+        }
+      }
+    }
+  },
+  "extension": {
+    "connection": {
+      "popup": "您的钱包未连接到此网站。寻找“连接钱包”或“登录”按钮。",
+      "popupWithButton": "您的钱包未连接到此网站。",
+      "titleConnected": "已连接",
+      "titleNotConnected": "未连接"
+    },
+    "lock": {
+      "button": {
+        "forgot": "忘记密码？",
+        "help": "得到帮助",
+        "recoveryPhrase": "输入恢复短语",
+        "submit": "开锁"
+      },
+      "password": {
+        "error": "密码错误。再试一次",
+        "reset": {
+          "description": {
+            "default": "要重置密码，请输入钱包的恢复短语。 Uniswap 无法帮助恢复您的密码。",
+            "inProgress": "按照浏览器网页上的说明重置您的密码"
+          },
+          "title": "忘记密码？"
+        }
+      },
+      "subtitle": "输入您的密码以解锁",
+      "title": "欢迎回来"
+    },
+    "settings": {
+      "password": {
+        "enter": {
+          "title": "输入当前密码"
+        },
+        "error": {
+          "wrong": "密码错误"
+        },
+        "placeholder": "当前密码"
+      }
+    },
+    "warning": {
+      "storage": {
+        "button": "备份",
+        "message": "确保备份您的恢复短语，以防止无法访问您的钱包和资金。",
+        "title": "您的浏览器存储空间不足"
+      }
+    }
+  },
+  "fiatOnRamp": {
+    "button": {
+      "chooseToken": "选择代币",
+      "continueCheckout": "继续结帐"
+    },
+    "checkout": {
+      "button": "去结账",
+      "title": "结账时使用"
+    },
+    "connection": {
+      "message": "将您连接至 {{serviceProvider}}",
+      "quote": "买入 {{amount}} 价值 {{currencySymbol}}",
+      "terms": "继续操作即表示您承认您将遵守 {{serviceProvider}}的服务条款和隐私政策（如果适用）。"
+    },
+    "error": {
+      "default": "出了些问题。",
+      "load": "无法加载要买入的代币",
+      "max": "最大 {{amount}}",
+      "min": "最低 {{amount}}",
+      "unsupported": "不支持你的地区",
+      "usd": "只能以美元买入"
+    },
+    "quote": {
+      "advice": "您将继续访问提供商的门户以查看与您的交易相关的费用。",
+      "others": "其他的",
+      "type": {
+        "other": "其他选项",
+        "recent": "最近使用过"
+      }
+    },
+    "region": {
+      "placeholder": "按国家或地区搜索",
+      "title": "选择您的地区"
+    },
+    "summary": {
+      "total": "{{cryptoAmount}} 兑换 {{fiatAmount}}"
+    }
+  },
+  "forceUpgrade": {
+    "action": {
+      "confirm": "更新APP",
+      "recoveryPhrase": "查看恢复短语"
+    },
+    "description": "你使用的 Uniswap 钱包版本已过时，并且缺少关键升级。如果你不更新APP或没有写下恢复短语，你将无法访问你的资产。",
+    "label": {
+      "recoveryPhrase": "恢复短语"
+    },
+    "title": "更新APP以继续"
+  },
+  "home": {
+    "activity": {
+      "empty": {
+        "button": "接收代币或 NFT",
+        "description": {
+          "default": "当你授权、交易或转让代币或 NFT 时，你的交易将显示在此处。",
+          "external": "当这个钱包进行交易时，它们会出现在这里。"
+        },
+        "title": "暂时没有动态"
+      },
+      "error": {
+        "load": "无法加载动态"
+      },
+      "title": "动态"
+    },
+    "banner": {
+      "extension": {
+        "confirm": "加入测试版",
+        "message": "成为第一个在网络浏览器上试用 Uniswap 扩展的人",
+        "title": "Uniswap 扩展在这里"
+      },
+      "offline": "你处于离线模式"
+    },
+    "extension": {
+      "error": "加载帐户时出错"
+    },
+    "feed": {
+      "empty": {
+        "description": "当你收藏的钱包进行交易时，它们会出现在此处。",
+        "title": "暂时没有动态"
+      },
+      "error": "无法加载动态",
+      "title": "关注"
+    },
+    "label": {
+      "buy": "买入",
+      "receive": "接收",
+      "scan": "扫码",
+      "send": "发送",
+      "swap": "兑换"
+    },
+    "modal": {
+      "getExtension": {
+        "step1": "1. 在电脑上访问 <highlight>uniswap.org/ext</highlight>",
+        "step2": "2. 在 Chrome 浏览器上添加 Uniswap 扩展程序",
+        "step3": "3. 输入您的用户名进行访问",
+        "title": "加入 Uniswap 扩展测试版"
+      }
+    },
+    "nfts": {
+      "title": "NFT"
+    },
+    "tokens": {
+      "empty": {
+        "action": {
+          "buy": {
+            "description": "你需要 ETH 才能开始。用卡或银行买入。",
+            "title": "买入加密货币"
+          },
+          "import": {
+            "description": "开始兑换和发送之前请输入这个钱包的恢复短语",
+            "title": "导入钱包"
+          },
+          "receive": {
+            "description": "从另一个钱包或加密货币交易所转移代币。",
+            "title": "接收资金"
+          }
+        },
+        "description": "当此钱包买入或接收代币时，它们会出现在此处。",
+        "title": "暂时还没有代币"
+      },
+      "error": {
+        "fetch": "无法获取代币余额",
+        "load": "无法加载代币余额"
+      },
+      "title": "代币"
+    },
+    "upsell": {
+      "receive": {
+        "cta": "链接一个帐户",
+        "description": "通过从另一个钱包或帐户转移加密来为你的钱包添加资金",
+        "title": "接收加密货币"
+      }
+    },
+    "warning": {
+      "viewOnly": "这是一个仅查看的钱包"
+    }
+  },
+  "language": {
+    "chineseSimplified": "简体中文",
+    "chineseTraditional": "繁体中文",
+    "dutch": "荷兰语",
+    "english": "英语",
+    "french": "法语",
+    "hindi": "印地语",
+    "indonesian": "印尼语",
+    "japanese": "日语",
+    "malay": "马来语",
+    "portuguese": "葡萄牙语",
+    "russian": "俄语",
+    "spanishLatam": "西班牙语（拉丁美洲）",
+    "spanishSpain": "西班牙语（西班牙）",
+    "spanishUs": "西班牙语（美国）",
+    "thai": "泰语",
+    "turkish": "土耳其语",
+    "ukrainian": "乌克兰语",
+    "urdu": "乌尔都语",
+    "vietnamese": "越南语"
+  },
+  "notification": {
+    "assetVisibility": {
+      "hidden": "{{assetName}} 隐藏",
+      "unhidden": "{{assetName}} 显示"
+    },
+    "copied": {
+      "address": "地址已复制",
+      "calldata": "通话数据已复制",
+      "contractAddress": "复制合约地址",
+      "failed": "复制到剪贴板失败",
+      "image": "图像已复制",
+      "nftUrl": "已复制 NFT URL",
+      "tokenUrl": "令牌 URL 已复制",
+      "transactionId": "交易 ID 已复制"
+    },
+    "countryChange": "切换到 {{countryName}}",
+    "restore": {
+      "success": "钱包已恢复了"
+    },
+    "swap": {
+      "network": "{{network}} 上兑换",
+      "pending": {
+        "swap": "兑换待定",
+        "unwrap": "待拆封",
+        "wrap": "待封装"
+      }
+    },
+    "transaction": {
+      "approve": {
+        "canceled": "已取消 {{currencySymbol}} 授权。",
+        "fail": "失败授权 {{currencySymbol}} 与 {{address}} 一起使用",
+        "success": "授权 {{currencySymbol}} 与 {{address}} 一起使用。"
+      },
+      "swap": {
+        "canceled": "已取消兑换 {{inputCurrencySymbol}}-{{outputCurrencySymbol}}。",
+        "fail": "兑换 {{inputCurrencyAmountWithSymbol}} 为 {{outputCurrencyAmountWithSymbol}} 失败",
+        "success": "{{inputCurrencyAmountWithSymbol}} 已兑换成 {{outputCurrencyAmountWithSymbol}}"
+      },
+      "transfer": {
+        "canceled": "已取消发送 {{tokenNameOrAddress}} 。",
+        "fail": "失败发送 {{tokenNameOrAddress}} 到 {{walletNameOrAddress}}",
+        "received": "从 {{walletNameOrAddress}}接收 {{tokenNameOrAddress}}。",
+        "success": "发送 {{tokenNameOrAddress}} 到 {{walletNameOrAddress}}。"
+      },
+      "unknown": {
+        "fail": {
+          "full": "与 {{addressOrEnsName}}交易失败",
+          "short": "交易失败"
+        },
+        "success": {
+          "full": "已与 {{addressOrEnsName}}进行交易",
+          "short": "已成交"
+        }
+      },
+      "unwrap": {
+        "canceled": "已取消 {{inputCurrencySymbol}} 次拆封。",
+        "fail": "拆封 {{inputCurrencyAmountWithSymbol}} 失败",
+        "success": "拆封 {{inputCurrencyAmountWithSymbol}} 并接收 {{outputCurrencyAmountWithSymbol}}。"
+      },
+      "wrap": {
+        "canceled": "已取消 {{inputCurrencySymbol}} 封装。",
+        "fail": "封装 {{inputCurrencyAmountWithSymbol}} 失败",
+        "success": "封装 {{inputCurrencyAmountWithSymbol}} 并接收 {{outputCurrencyAmountWithSymbol}}。"
+      }
+    },
+    "transfer": {
+      "pending": "{{currencySymbol}} 转账待处理"
+    },
+    "walletConnect": {
+      "confirmed": "{{dappName}} 上确认交易",
+      "connected": "已连接",
+      "disconnected": "已断开连接",
+      "failed": "与 {{dappName}} 交易失败",
+      "networkChanged": {
+        "full": "切换到 {{networkName}}",
+        "short": "切换网络"
+      }
+    }
+  },
+  "notifications": {
+    "scantastic": {
+      "subtitle": "继续使用 Uniswap 扩展",
+      "title": "成功!"
+    }
+  },
+  "onboarding": {
+    "backup": {
+      "manual": {
+        "placeholder": "悄悄话",
+        "progress": "{{completedStepsCount}}/{{totalStepsCount}} 已完成",
+        "subtitle_one": "您的恢复短语中的 <highlight/>{{count}}</highlight/> 单词是什么？",
+        "subtitle_two": "您的恢复短语中的 <highlight/>{{count}}</highlight/> 单词是什么？",
+        "subtitle_few": "您的恢复短语中的 <highlight/>{{count}}</highlight/> 单词是什么？",
+        "subtitle_other": "您的恢复短语中的 <highlight/>{{count}}</highlight/> 单词是什么？",
+        "title": "让我们确保您已正确记录"
+      },
+      "option": {
+        "cloud": {
+          "description": "使用安全密码加密你的恢复短语",
+          "title": "{{cloudProviderName}} 备份"
+        },
+        "manual": {
+          "description": "写下您的恢复短语并将其存储在安全的位置",
+          "title": "手动备份"
+        }
+      },
+      "subtitle": "如果你删除 APP 或丢失手机，备份可以用来恢复你的钱包",
+      "title": {
+        "existing": "备份你的钱包",
+        "new": "选择备份方法"
+      },
+      "view": {
+        "disclaimer": "我了解如果我丢失了恢复短语，Uniswap Labs 无法帮助我恢复它",
+        "subtitle": {
+          "write": "在继续之前请仔细阅读以下内容"
+        },
+        "title": "保存您的恢复短语",
+        "warning": {
+          "message1": "此恢复短语可让您完全访问您的钱包和资金",
+          "message2": "写下来并将其保存在安全的地方",
+          "message3": "私下查看此内容，<u>请勿与任何人分享</u>"
+        }
+      }
+    },
+    "cloud": {
+      "confirm": {
+        "description": "这密码能帮助恢复你的钱包。请务必保管好它。",
+        "title": "确认你的备份密码"
+      },
+      "createPassword": {
+        "description": "您需要输入此密码才能恢复您的钱包。",
+        "title": "创建你的备份密码"
+      }
+    },
+    "complete": {
+      "button": "打开Uniswap钱包",
+      "description": "您的钱包已准备好交换、发送和接收加密货币。",
+      "pin": {
+        "description": "单击工具栏中的拼图图标，然后在列表中找到 Uniswap 钱包",
+        "title": "固定 Uniswap 钱包"
+      },
+      "title": "一切就绪"
+    },
+    "editName": {
+      "button": {
+        "create": "创建钱包"
+      },
+      "label": "昵称",
+      "subtitle": "给你的钱包起个昵称",
+      "title": "此昵称只有你自己可见",
+      "walletAddress": "您的公共地址将是<highlight>{{walletAddress}}</highlight>"
+    },
+    "extension": {
+      "connectMobile": {
+        "button": "从您的手机导入",
+        "title": "有 Uniswap 应用程序吗？"
+      },
+      "getOnTheBetaWaitlist": {
+        "subtitle": "下载移动应用程序以获取用户名",
+        "title": "进入测试版候补名单"
+      },
+      "password": {
+        "subtitle": "您需要它来解锁您的钱包并访问您的恢复短语",
+        "title": {
+          "default": "创建密码",
+          "reset": "重置你的密码"
+        }
+      }
+    },
+    "import": {
+      "error": {
+        "invalidWords_one": "1 个单词无效或拼写错误",
+        "invalidWords_other": "{{count}} 单词无效或拼写错误"
+      },
+      "method": {
+        "import": {
+          "message": "输入另一个加密钱包中的恢复短语",
+          "title": "导入钱包"
+        },
+        "restore": {
+          "message": {
+            "android": "把备份的钱包添加到你的 Google Drive 账户",
+            "ios": "把备份的钱包添加到你的 iCloud 账户"
+          },
+          "title": "恢复钱包"
+        }
+      },
+      "title": "选择您想要添加钱包的方式"
+    },
+    "importMnemonic": {
+      "button": {
+        "default": "我的恢复短语是 12 个单词",
+        "longPhrase": "我的恢复短语超过 12 个单词"
+      },
+      "error": {
+        "invalidPhrase": "您输入的短语无效"
+      },
+      "subtitle": "输入或粘贴 12 或 字的恢复短语",
+      "title": "输入你的恢复短语"
+    },
+    "intro": {
+      "alreadyComplete": {
+        "subtitle": "要创建更多钱包，请在扩展程序弹出窗口中打开帐户切换器，或重新安装扩展程序以重新开始",
+        "title": "你已经完成入职"
+      },
+      "button": {
+        "alreadyHave": "我已经有钱包了"
+      },
+      "title": "欢迎来到<></> Uniswap 钱包"
+    },
+    "introBetaWaitlist": {
+      "button": {
+        "checkEligibility": "检查资格",
+        "letsGo": "我们走吧"
+      },
+      "checkEligibilityInstructions": "在下面输入您的 <highlight>uni.eth</highlight> 用户名，检查您是否有资格参加测试版。",
+      "eligible": {
+        "tagline": "欢迎使用 Beta 版 — — 您是首批试用 Uniswap 扩展程序的用户之一。",
+        "title": "您已退出候补名单！"
+      },
+      "ineligibleExplanation": "您仍在候补名单上。当您符合资格时，我们将在 Uniswap 移动应用程序中通知您！",
+      "unitagPlaceholder": "用户名"
+    },
+    "landing": {
+      "button": {
+        "add": "添加已有钱包",
+        "create": "创建一个新钱包"
+      }
+    },
+    "notification": {
+      "permission": {
+        "message": "要接收通知，请在设备设置中开启 Uniswap 钱包的通知。",
+        "title": "通知权限"
+      },
+      "subtitle": "当你的兑换和授发送完成时收到实时通知。",
+      "title": "开启推送通知"
+    },
+    "recoveryPhrase": {
+      "confirm": {
+        "subtitle": {
+          "combined": "确认您的恢复短语。按顺序选择缺少的单词。",
+          "default": "按顺序选择缺少的单词。"
+        },
+        "title": "确认你的恢复短语"
+      },
+      "view": {
+        "subtitle": "您可以随时在设置中检查这一点。",
+        "title": "按顺序写下你的恢复短语"
+      },
+      "warning": {
+        "final": {
+          "button": "我准备好了",
+          "message": "您的恢复短语可以让您（以及拥有它的任何人）访问您的资金。请务必保守秘密。",
+          "title": "在私密的地方操作这一步"
+        },
+        "screenshot": {
+          "message": "任何有权访问你照片的人都可以访问你的钱包。我们建议写下你的恢复短语。",
+          "title": "屏幕截图不安全"
+        }
+      }
+    },
+    "resetPassword": {
+      "complete": {
+        "safety": "了解有关钱包安全的更多信息",
+        "subtitle": "使用您的新密码解锁您的钱包。",
+        "title": "重设密码"
+      }
+    },
+    "scan": {
+      "button": "使用 Uniswap 应用程序扫描",
+      "error": "抱歉，我们现在无法加载二维码。请尝试其他入职方法。",
+      "otp": {
+        "error": "您提交的代码不正确，或者提交时出错。请再试一次。",
+        "failed": "失败尝试： {{number}}",
+        "subtitle": "检查您的 Uniswap 移动应用程序中的 6 字符代码",
+        "title": "输入一次性代码"
+      },
+      "subtitle": "使用 Uniswap 移动应用程序扫描二维码，开始导入您的钱包。",
+      "title": "从应用程序导入钱包"
+    },
+    "security": {
+      "alert": {
+        "biometrics": {
+          "message": {
+            "android": "要使用生物识别，请先在设置中进行设置",
+            "ios": "要使用 {{biometricsMethod}}，请在系统设置中允许访问"
+          },
+          "title": {
+            "android": "生物识别已禁用",
+            "ios": "{{biometricsMethod}} 已禁用"
+          }
+        }
+      },
+      "button": {
+        "confirm": {
+          "android": "启用生物识别技术",
+          "ios": "启用 {{biometricsMethod}}"
+        },
+        "setup": "设置"
+      },
+      "subtitle": {
+        "android": "通过要求生物识别技术发送交易来添加额外的安全层。",
+        "ios": "{{biometricsMethod}} 让你的交易更加安全"
+      },
+      "title": "保护你的钱包"
+    },
+    "selectWallets": {
+      "error": "无法加载地址",
+      "title": {
+        "default": "选择要导入的钱包",
+        "error": "导入钱包时出错"
+      }
+    },
+    "termsOfService": "继续，即表示我同意<highlightTerms> 服务条款 </highlightTerms>并同意<highlightPrivacy> 隐私政策</highlightPrivacy>",
+    "tooltip": {
+      "recoveryPhrase": {
+        "trigger": "什么是恢复短语？"
+      }
+    },
+    "wallet": {
+      "continue": "保护你的钱包",
+      "defaultName": "钱包 {{number}}",
+      "description": {
+        "existing": "查看代币和NFT，关注钱包，随时获取最新通知",
+        "full": "这是您的代币、NFT 和所有交易的个人空间。完成设置以确保您的资金安全。",
+        "new": "你的代币、NFT 和所有交易的个人空间。"
+      },
+      "title": "欢迎使用你的新钱包"
+    }
+  },
+  "qrScanner": {
+    "button": {
+      "connections_one": "已连接 1 个APP",
+      "connections_other": "已连接 {{count}} 个APP"
+    },
+    "error": {
+      "camera": {
+        "message": "请在系统设置中允许相机访问",
+        "title": "相机已禁用"
+      },
+      "none": "未找到二维码"
+    },
+    "recipient": {
+      "action": {
+        "scan": "扫二维码",
+        "show": "显示我的二维码"
+      },
+      "error": {
+        "message": "请确认你扫的是以太坊地址二维码之后再重试。",
+        "title": "二维码无效"
+      },
+      "input": {
+        "placeholder": "搜索 ENS 或地址"
+      },
+      "label": {
+        "send": "发送"
+      },
+      "results": {
+        "empty": "未找到结果",
+        "error": "你输入的地址不存在或拼写错误。"
+      }
+    },
+    "request": {
+      "message": {
+        "unavailable": "没有找到消息。"
+      },
+      "method": {
+        "default": "来自 {{dappNameOrUrl}}的请求",
+        "signature": "来自 {{dappNameOrUrl}} 的签名请求",
+        "transaction": "来自 {{dappNameOrUrl}}的交易请求"
+      },
+      "withAmount": "允许 {{dappName}} 使用最多<highlight> {{amount}} </highlight>{{currencySymbol}}？",
+      "withoutAmount": "允许 {{dappName}} 使用您的 {{currencySymbol}}吗？"
+    },
+    "status": {
+      "connecting": "正在连接...",
+      "loading": "加载中..."
+    },
+    "title": "扫二维码",
+    "wallet": {
+      "title": "Uniswap 钱包支持以太坊、Polygon、Arbitrum、Optimism、Base、Blast 和 BNB Chain 上的代币。目前，我们仅支持以太坊上的 NFT。"
+    }
+  },
+  "scantastic": {
+    "code": {
+      "expired": "已过期",
+      "subtitle": "在 Uniswap 扩展中输入此代码。您的恢复短语将被安全加密和传输。",
+      "timeRemaining": {
+        "shorthand": {
+          "hours": "{{hours}}h {{minutes}}m {{seconds}}s 中的新代码",
+          "minutes": "{{minutes}}m {{seconds}}s 中的新代码",
+          "seconds": "{{seconds}}中的新代码"
+        }
+      },
+      "title": "Uniswap 一次性代码"
+    },
+    "confirmation": {
+      "button": {
+        "continue": "是的，继续"
+      },
+      "label": {
+        "browser": "浏览器",
+        "device": "设备"
+      },
+      "subtitle": "仅当您在受信任的设备上扫描来自 Uniswap Extension 的二维码时才可以继续。",
+      "title": "您想导入您的钱包吗？",
+      "warning": "警惕冒充 Uniswap 的网站和应用程序。否则您的钱包可能会受到损害。"
+    },
+    "error": {
+      "encryption": "无法准备助记词。",
+      "noCode": "未收到 OTP。请再试一次。",
+      "timeout": {
+        "message": "再次扫描 Uniswap Extension 上的二维码以继续同步您的钱包。",
+        "title": "您的连接超时"
+      }
+    },
+    "modal": {
+      "notOnWaitlist": {
+        "message": "为了获得 Uniswap Extension Beta 的资格，请通过申请 uni.eth 用户名加入候补名单",
+        "title": "您不在候补名单上"
+      },
+      "onWaitlist": {
+        "message": "当您有资格加入 Uniswap Extension Beta 时，我们会在应用程序中通知您。",
+        "title": "您仍在候补名单上"
+      }
+    }
+  },
+  "send": {
+    "button": {
+      "review": "预览",
+      "send": "发送"
+    },
+    "gas": {
+      "error": {
+        "title": "不适用"
+      },
+      "networkCost": {
+        "title": "网络费用"
+      }
+    },
+    "input": {
+      "token": {
+        "balance": {
+          "title": "余额： {{balance}} {{symbol}}"
+        }
+      }
+    },
+    "recipient": {
+      "previous_one": "1 次先前转账",
+      "previous_other": "之前 {{count}} 次发送",
+      "section": {
+        "favorite": "收藏钱包",
+        "recent": "最近",
+        "search": "搜索结果",
+        "viewOnly": "仅查看钱包",
+        "yours": "你的钱包"
+      },
+      "warning": {
+        "viewOnly": {
+          "message": "仅当您有恢复短语或知道钱包所有者时才将资金发送至此钱包。",
+          "title": "您将其作为仅供查看的钱包"
+        }
+      }
+    },
+    "recipientSelect": {
+      "search": {
+        "empty": {
+          "message": "当您将代币发送到钱包地址时，它们会显示在此处",
+          "title": "没有保存钱包"
+        }
+      },
+      "title": "接受者"
+    },
+    "review": {
+      "input": {
+        "tokenAmount": {
+          "title": "{{currencyAmount}}{{currencySymbol}}"
+        }
+      },
+      "modal": {
+        "title": "你正在发送"
+      },
+      "summary": {
+        "button": {
+          "title": "确认发送"
+        },
+        "sending": "发送",
+        "to": "接受者"
+      }
+    },
+    "search": {
+      "empty": {
+        "subtitle": "你输入的地址不存在或拼写错误。",
+        "title": "未找到结果"
+      },
+      "placeholder": "搜索 ENS 或地址"
+    },
+    "status": {
+      "fail": {
+        "description": "请记住，如果发送失败，仍然会收取网络费用。"
+      },
+      "failed": {
+        "title": "发送失败"
+      },
+      "inProgress": {
+        "description": "交易完成后我们会通知你。",
+        "title": "发送"
+      },
+      "success": {
+        "description": "你发送了 {{currencyAmount}}{{tokenName}}{{fiatValue}} 至 {{recipient}}。",
+        "title": "发送成功"
+      }
+    },
+    "title": "发送",
+    "warning": {
+      "blocked": {
+        "default": "该钱包已被屏蔽",
+        "modal": {
+          "message": "该地址在 Uniswap 钱包上被屏蔽，因为它与一项或多项被屏蔽的活动相关。 如果你认为这是一个错误，请发送电子邮件至compliance@uniswap.org。",
+          "title": "被屏蔽的地址"
+        },
+        "recipient": "收件人钱包被屏蔽"
+      },
+      "erc20": {
+        "message": "您正在尝试将资金发送到代币地址。将加密货币发送到此类地址可能会导致资金永久丢失。",
+        "title": "这是一个代币地址"
+      },
+      "insufficientFunds": {
+        "message": "自从你输入要发送的金额以来，你的余额已减少 {{currencySymbol}}",
+        "title": "不够 {{currencySymbol}}"
+      },
+      "modal": {
+        "button": {
+          "cta": {
+            "blocking": "好的",
+            "cancel": "取消",
+            "confirm": "确认"
+          }
+        }
+      },
+      "newAddress": {
+        "message": "你以前没有与这地址交易过。请确认地址是否正确。",
+        "title": "新地址"
+      },
+      "restore": "恢复钱包即可发送",
+      "smartContract": {
+        "message": "你即将将代币发送到一种特殊类型的地址——智能合约。仔细检查它是否是你打算发送到的地址。如果错误，你的代币可能会永远丢失。",
+        "title": "这是钱包地址吗？"
+      },
+      "viewOnly": {
+        "message": "你需要通过恢复短语导入此钱包才能发送资产。",
+        "title": "这是一个仅查看钱包"
+      }
+    }
+  },
+  "setting": {
+    "recoveryPhrase": {
+      "account": {
+        "show": "显示恢复短语"
+      },
+      "action": {
+        "hide": "隐藏恢复短语"
+      },
+      "remove": {
+        "button": "删除恢复短语",
+        "confirm": {
+          "subtitle": "我了解如果我未能这样做，Uniswap Labs 无法帮助我找回钱包",
+          "title": "我保存了恢复短语"
+        },
+        "initial": {
+          "subtitle": "确保您已保存恢复短语。否则您将无法使用您的资金",
+          "title": "在继续之前"
+        },
+        "password": {
+          "error": "密码错误。再试一次",
+          "input": "输入密码"
+        },
+        "subtitle": "输入您的密码以继续",
+        "title": "您正在删除恢复短语"
+      },
+      "view": {
+        "error": "密码错误，请重试",
+        "warning": {
+          "message1": "任何知道您的恢复短语的人都可以访问您的钱包和资金",
+          "message2": "私下查看此内容",
+          "message3": "不要与任何人分享此内容",
+          "message4": "永远不要输入任何网站或应用",
+          "title": "在继续之前"
+        }
+      },
+      "warning": {
+        "screenshot": {
+          "message": "任何有权访问你照片的人都可以访问你的钱包。我们建议写下你的恢复短语。",
+          "title": "屏幕截图不安全"
+        },
+        "view": {
+          "message": "任何知道你的恢复短语的人都可以访问你的钱包和资金。",
+          "title": "在私密的地方查看"
+        }
+      }
+    }
+  },
+  "settings": {
+    "action": {
+      "feedback": "分享反馈",
+      "help": "得到帮助",
+      "lock": "锁定钱包",
+      "privacy": "隐私政策",
+      "terms": "服务条款"
+    },
+    "footer": "用爱打造， \nUniswap 团队🦄",
+    "screen": {
+      "appearance": {
+        "title": "显示"
+      }
+    },
+    "section": {
+      "about": "其他",
+      "preferences": "优先",
+      "security": "安全",
+      "support": "客服",
+      "wallet": {
+        "action": {
+          "hide": "隐藏钱包",
+          "showAll_one": "显示一个钱包",
+          "showAll_other": "显示全部 {{count}} 钱包"
+        },
+        "button": {
+          "viewAll": "显示全部",
+          "viewLess": "显示更少"
+        },
+        "label": {
+          "viewOnly": "仅查看"
+        },
+        "title": "钱包设定"
+      }
+    },
+    "setting": {
+      "appearance": {
+        "option": {
+          "auto": "自动",
+          "dark": {
+            "subtitle": "一直使用深色主题",
+            "title": "深色主题"
+          },
+          "device": {
+            "subtitle": "默认为你设备的显示设置",
+            "title": "设备设置"
+          },
+          "light": {
+            "subtitle": "一直使用浅色主题",
+            "title": "浅色主题"
+          }
+        },
+        "title": "显示"
+      },
+      "backup": {
+        "create": {
+          "description": "设置密码会加密你的恢复短语备份。万一{{cloudProviderName}} 账号被泄漏，你的恢复短语任然得到保护",
+          "title": "备份到 {{cloudProviderName}}"
+        },
+        "delete": {
+          "confirm": {
+            "message": "因为这些钱包共享一个恢复短语，所以它也会删除下面这些钱包的备份",
+            "title": "你确定吗？"
+          },
+          "warning": "如果你删除 {{cloudProviderName}} 备份，你只能通过手动备份恢复短语来恢复钱包。如果你丢失恢复短语，Uniswap Labs 无法恢复你的钱包。"
+        },
+        "error": {
+          "message": {
+            "full": "无法将恢复短语备份到 {{cloudProviderName}}。请确保你已启用 {{cloudProviderName}} 并具有可用存储空间，然后重试。",
+            "short": "无法删除备份"
+          },
+          "title": "{{cloudProviderName}} 错误"
+        },
+        "modal": {
+          "description": "你尚未将恢复短语备份到 {{cloudProviderName}}。这样，你只需在任何设备上登录 {{cloudProviderName}} 即可恢复你的钱包。",
+          "title": "将恢复短语备份到 {{cloudProviderName}}？"
+        },
+        "password": {
+          "disclaimer": "Uniswap Labs 不会存储您的密码，也无法恢复它，因此记住它至关重要。",
+          "error": {
+            "mismatch": "密码不匹配",
+            "weak": "密码弱"
+          },
+          "medium": "这是一个中等密码",
+          "placeholder": {
+            "confirm": "确认密码",
+            "create": "创建密码"
+          },
+          "strong": "这是一个强密码",
+          "weak": "这是一个弱密码"
+        },
+        "recoveryPhrase": {
+          "label": "恢复短语"
+        },
+        "selected": "{{cloudProviderName}} 备份",
+        "status": {
+          "action": {
+            "delete": "删除备份"
+          },
+          "complete": "备份到 {{cloudProviderName}}",
+          "description": "如果将恢复短语备份至 {{cloudProviderName}}，随时能通过 {{cloudProviderName}} 账号恢复你的钱包。",
+          "inProgress": "正在备份到 {{cloudProviderName}}...",
+          "recoveryPhrase": {
+            "backed": "已备份"
+          },
+          "title": "{{cloudProviderName}} 备份"
+        }
+      },
+      "beta": {
+        "tooltip": "即将推出"
+      },
+      "biometrics": {
+        "appAccess": {
+          "subtitle": {
+            "android": "需要生物识别才能打开应用程序",
+            "ios": "要求 {{biometricsMethod}} 打开APP"
+          },
+          "title": "APP 访问"
+        },
+        "auth": "请验证",
+        "off": {
+          "message": {
+            "android": "生物识别目前处于关闭状态，你可以在系统设置中将其打开。",
+            "ios": "{{biometricsMethod}} 目前处于关闭状态，你可以在系统设置中将其打开。"
+          },
+          "title": {
+            "android": "生物识别已关闭",
+            "ios": "未设置 {{biometricsMethod}}"
+          }
+        },
+        "title": "生物识别",
+        "transactions": {
+          "subtitle": {
+            "android": "需要生物识别才能进行交易",
+            "ios": "要求 {{biometricsMethod}} 提交交易"
+          },
+          "title": "交易"
+        },
+        "unavailable": {
+          "message": {
+            "android": "你的设备上未设置生物识别。要使用生物识别，请先在设置中开启。",
+            "ios": "你的设备上未设置 {{biometricsMethod}}。要使用 {{biometricsMethod}}，请先在设置中开启。"
+          },
+          "title": {
+            "android": "生物识别未设置",
+            "ios": "{{biometricsMethod}} 未设置"
+          }
+        },
+        "warning": {
+          "message": {
+            "android": "如果你不开启生物识别，任何有权访问你设备的人都可以打开 Uniswap 钱包并进行交易。",
+            "ios": "如果你不开启 {{biometricsMethod}}，任何有权访问你设备的人都可以打开 Uniswap 钱包并进行交易。"
+          },
+          "title": "你确定吗？"
+        }
+      },
+      "currency": {
+        "title": "当地货币"
+      },
+      "giveFeedback": {
+        "title": "分享反馈"
+      },
+      "helpCenter": {
+        "title": "帮助中心"
+      },
+      "language": {
+        "button": {
+          "navigate": "前往设置"
+        },
+        "description": "Uniswap 默认为您设备的语言设置。要更改您的首选语言，请转到设备设置中的“Uniswap”，然后点击“语言”",
+        "exampleTitle": "英语",
+        "title": "语言"
+      },
+      "password": {
+        "title": "更改密码"
+      },
+      "privacy": {
+        "analytics": {
+          "description": "我们使用匿名使用数据来增强您对 Uniswap Labs 产品的体验。禁用后，我们仅跟踪错误和基本用法。",
+          "title": "允许分析"
+        },
+        "title": "隐私"
+      },
+      "recoveryPhrase": {
+        "remove": "删除恢复短语",
+        "title": "恢复短语",
+        "view": "查看恢复短语"
+      },
+      "smallBalances": {
+        "title": "隐藏小额余额"
+      },
+      "theme": {
+        "title": "主题"
+      },
+      "unknownTokens": {
+        "title": "隐藏未知代币"
+      },
+      "wallet": {
+        "action": {
+          "editLabel": "编辑标签",
+          "editProfile": "编辑个人资料",
+          "remove": "删除钱包"
+        },
+        "connections": {
+          "title": "管理连接"
+        },
+        "editLabel": {
+          "description": "标签不公开。它们存储在本地并且只有您可见。",
+          "disclaimer": "此昵称只有你自己可见",
+          "save": "保存更改",
+          "title": "编辑昵称"
+        },
+        "label": "昵称",
+        "notifications": {
+          "title": "通知"
+        },
+        "preferences": {
+          "title": "钱包設定"
+        }
+      }
+    },
+    "title": "设置",
+    "version": "版本 {{appVersion}}"
+  },
+  "swap": {
+    "button": {
+      "max": "总余额",
+      "review": "预览",
+      "swap": "兑换",
+      "unwrap": "拆封",
+      "view": "查看交易",
+      "wrap": "封装"
+    },
+    "details": {
+      "action": {
+        "less": "显示更少",
+        "more": "显示更多"
+      },
+      "feeOnTransfer": "{{tokenSymbol}} 费",
+      "newQuote": {
+        "input": "新输入价格",
+        "output": "新输出价格"
+      },
+      "rate": "汇率",
+      "slippage": "滑点上限",
+      "uniswapFee": "费用"
+    },
+    "form": {
+      "balance": "余额",
+      "header": "兑换",
+      "slippage": "{{slippageTolerancePercent}} 滑点",
+      "warning": {
+        "restore": "恢复钱包以即可兑换"
+      }
+    },
+    "header": {
+      "viewOnly": "仅查看"
+    },
+    "hold": {
+      "swap": "长按可迅速兑换",
+      "tip": "提示：按住即可即时交换",
+      "unwrap": "长按可迅速拆封",
+      "wrap": "长按可迅速封装"
+    },
+    "request": {
+      "title": {
+        "full": "兑换 {{inputCurrencySymbol}} → {{outputCurrencySymbol}}",
+        "short": "交换代币"
+      }
+    },
+    "review": {
+      "summary": "预览兑换"
+    },
+    "settings": {
+      "protection": {
+        "description": "启用兑换保护后，你的以太坊交易将受到保护，减少被夹击攻击的风险。",
+        "subtitle": {
+          "supported": "{{chainName}} 网络",
+          "unavailable": "{{chainName}}上不可用"
+        },
+        "title": "兑换保护"
+      },
+      "slippage": {
+        "control": {
+          "auto": "自动",
+          "title": "滑点上限"
+        },
+        "description": "如果价格变化超过滑点，你的交易会被取消。",
+        "input": {
+          "message": "如果价格进一步下降，你的交易会被取消。",
+          "receive": {
+            "formatted": "<text>至少接收</text> <highlight>{{amount}} {{tokenSymbol}}</highlight>",
+            "unformatted": "至少接收 {{amount}} {{tokenSymbol}}"
+          }
+        },
+        "output": {
+          "message": "如果价格进一步下降，你的交易会被取消。",
+          "spend": {
+            "formatted": "<text>最多消费</text> <highlight>{{amount}} {{tokenSymbol}}</highlight>",
+            "unformatted": "最多消费 {{amount}} {{tokenSymbol}}"
+          }
+        },
+        "warning": {
+          "max": "输入一个小于 {{maxSlippageTolerance}} 的值",
+          "message": "滑点可能过于高",
+          "min": "输入大于 0 的值"
+        }
+      },
+      "title": "交换设置"
+    },
+    "slippage": {
+      "settings": {
+        "title": "滑点设置"
+      }
+    },
+    "warning": {
+      "expectedFailure": "这笔交易预计会失败",
+      "feeOnTransfer": {
+        "message": "有些代币在买入或出售时会收取费用，该费用由代币发行者设定。 Uniswap 不会收取这些费用。",
+        "title": "为什么有额外费用？"
+      },
+      "insufficientBalance": {
+        "button": "不够 {{currencySymbol}}",
+        "title": "你的 {{currencySymbol}} 余额不足"
+      },
+      "insufficientGas": {
+        "button": "不够 {{currencySymbol}}",
+        "cta": {
+          "button": "购买 {{currencySymbol}}",
+          "message": "你需要更多<highlight>{{currencySymbol}}</highlight>以支付本次交易的网络成本。"
+        },
+        "title": "你没有足够的 {{currencySymbol}} 来支付网络费用"
+      },
+      "lowLiquidity": {
+        "message": "目前这些代币之间没有足够的流动性来执行兑换。请稍后重试或选择其他代币。",
+        "title": "流动性不足"
+      },
+      "networkFee": {
+        "message": "这是在区块链上处理交易的成本。 Uniswap 不会收取这些费用。"
+      },
+      "offline": {
+        "message": "你可能已失去了互联网连接或网络可能出现了问题。请检查你的互联网连接。",
+        "title": "你离线了"
+      },
+      "priceImpact": {
+        "message": "由于目前可用的 {{outputCurrencySymbol}} 流动性量，你尝试兑换的 {{inputCurrencySymbol}} 数量越多，你将获得的 {{outputCurrencySymbol}} 就越少。",
+        "title": "高价格影响 ({{priceImpactValue}})"
+      },
+      "rateLimit": {
+        "message": "请在几分钟后再试一次。",
+        "title": "超过限速"
+      },
+      "router": {
+        "message": "你可能已失去连接或网络可能已关闭。如果问题仍然存在，请稍后重试。",
+        "title": "此交易目前无法完成"
+      },
+      "uniswapFee": {
+        "message": {
+          "default": "为了确保 Uniswap 的最佳体验，我们对个别代币收取费用。此兑换不收取任何费用。",
+          "included": "为了确保 Uniswap 的最佳体验，我们对个别代币收取费用，并且已包含在此报价中。"
+        },
+        "title": "兑换费用"
+      },
+      "viewOnly": {
+        "message": "你需要导入钱包的恢复短语才能开始兑换代币。"
+      }
+    }
+  },
+  "token": {
+    "balances": {
+      "main": "你的余额",
+      "other": "其他网络上的余额",
+      "viewOnly": "{{ownerAddress}}的余额"
+    },
+    "error": {
+      "unknown": "未知代币"
+    },
+    "links": {
+      "contract": "合同",
+      "title": "链接",
+      "twitter": "推特",
+      "website": "网站"
+    },
+    "priceExplorer": {
+      "error": {
+        "description": "出了些问题。",
+        "title": "无法加载价格图表"
+      },
+      "timeRangeLabel": {
+        "day": "1天",
+        "hour": "1小时",
+        "month": "1个月",
+        "week": "1周",
+        "year": "1年"
+      }
+    },
+    "safetyLevel": {
+      "blocked": {
+        "header": "无法使用",
+        "message": "你无法使用 Uniswap 钱包交易该代币。"
+      },
+      "medium": {
+        "header": "警告",
+        "message": "该代币不在美国领先的中心化交易所进行交易。交易前务必进行自己的研究。"
+      },
+      "strong": {
+        "header": "警告",
+        "message": "该代币不在美国领先的中心化交易所进行交易，也不在 Uniswap 上频繁兑换。交易前务必进行自己的研究。"
+      }
+    },
+    "selector": {
+      "search": {
+        "error": "无法加载搜索结果"
+      }
+    },
+    "stats": {
+      "fullyDilutedValuation": "完全摊薄估值",
+      "marketCap": "市值",
+      "priceHighYear": "52W高",
+      "priceLowYear": "52W 低",
+      "section": {
+        "about": "{{token}} 简介"
+      },
+      "title": "统计数据",
+      "translation": {
+        "original": "显示原文",
+        "translate": "翻译成 {{language}}"
+      },
+      "volume": "24小时交易量"
+    }
+  },
+  "tokens": {
+    "action": {
+      "hide": "隐藏代币",
+      "unhide": "取消隐藏代币"
+    },
+    "hidden": {
+      "label": "隐藏 ({{numHidden}})"
+    },
+    "nfts": {
+      "collection": {
+        "error": {
+          "load": {
+            "title": "无法加载 NFT 合集"
+          }
+        },
+        "label": {
+          "items": "作品",
+          "owners": "拥有者",
+          "priceFloor": "底价",
+          "swapVolume": "交易量"
+        }
+      },
+      "details": {
+        "error": {
+          "load": {
+            "title": "无法加载 NFT 详细信息"
+          }
+        },
+        "owner": "拥有者",
+        "price": "现价",
+        "recentPrice": "最后销售价",
+        "traits": "特征"
+      },
+      "empty": {
+        "description": "未找到 NFT"
+      },
+      "error": {
+        "unavailable": "无法加载"
+      },
+      "hidden": {
+        "action": {
+          "hide": "隐藏 NFT",
+          "unhide": "显示 NFT"
+        },
+        "label": "隐藏 ({{numHidden}})"
+      },
+      "link": {
+        "collection": "合集网站"
+      },
+      "list": {
+        "error": {
+          "load": {
+            "title": "无法加载 NFT"
+          }
+        },
+        "none": {
+          "button": "接收 NFT",
+          "description": {
+            "default": "从另一个钱包转移 NFT 即可开始。",
+            "external": "当该钱包买入或接收 NFT 时，它们会出现在此处。"
+          },
+          "title": "暂时还没有 NFT"
+        }
+      }
+    },
+    "selector": {
+      "button": {
+        "choose": "选择代币",
+        "clear": "全部清除"
+      },
+      "empty": {
+        "buy": {
+          "message": "使用银行卡或银行账号买入加密货币。",
+          "title": "买入加密货币"
+        },
+        "receive": {
+          "message": "从中心化交易所或其他钱包转移代币以发送代币。",
+          "title": "接收代币"
+        },
+        "title": "暂时还没有代币"
+      },
+      "error": {
+        "load": "无法加载代币"
+      },
+      "search": {
+        "empty": "未找到 <highlight>“{{searchText}}”的结果</highlight>",
+        "placeholder": "搜索代币"
+      },
+      "section": {
+        "favorite": "收藏",
+        "popular": "热门代币",
+        "recent": "最近的搜索",
+        "search": "搜索结果",
+        "suggested": "推荐",
+        "yours": "你的代币"
+      }
+    }
+  },
+  "transaction": {
+    "action": {
+      "cancel": {
+        "button": "取消交易",
+        "description": "如果你在网络处理交易之前取消该交易，你将支付新的网络费用，而不是原来的费用。",
+        "title": "取消这笔交易？"
+      },
+      "copy": "复制交易ID",
+      "copyMoonPay": "复制 MoonPay 交易 ID",
+      "view": "显示 {{tokenSymbol}}",
+      "viewEtherscan": "查看 {{blockExplorerName}}",
+      "viewMoonPay": "在MoonPay上查看"
+    },
+    "amount": {
+      "unlimited": "无限"
+    },
+    "currency": {
+      "unknown": "未知代币"
+    },
+    "date": "提交于 {{date}}",
+    "network": {
+      "all": "所有网络"
+    },
+    "networkCost": {
+      "label": "网络费用"
+    },
+    "notification": {
+      "error": {
+        "cancel": "无法取消交易",
+        "replace": "无法替换交易"
+      }
+    },
+    "priceImpact": {
+      "label": "价格影响"
+    },
+    "status": {
+      "approve": {
+        "canceled": "已取消授权",
+        "canceling": "取消授权",
+        "failed": "授权失败",
+        "pending": "授权",
+        "success": "已授权",
+        "successDapp": "{{externalDappName}} 上已授权"
+      },
+      "buy": {
+        "canceled": "取消购买",
+        "canceling": "取消购买",
+        "failed": "购买失败",
+        "pending": "买入",
+        "success": "已买入",
+        "successDapp": "买于 {{externalDappName}}"
+      },
+      "confirm": {
+        "canceled": "已取消确认",
+        "canceling": "取消确认",
+        "failed": "确认失败",
+        "pending": "交易进行中",
+        "success": "交易确认",
+        "successDapp": "交易已确认 {{externalDappName}}"
+      },
+      "mint": {
+        "canceled": "已取消铸造",
+        "canceling": "取消铸造",
+        "failed": "铸造失败",
+        "pending": "铸造中",
+        "success": "已铸造",
+        "successDapp": "{{externalDappName}} 上已铸造"
+      },
+      "purchase": {
+        "canceled": "取消购买",
+        "canceling": "取消购买",
+        "failed": "购买失败",
+        "pending": "买入",
+        "success": "已买入",
+        "successDapp": "购买于 {{externalDappName}}"
+      },
+      "receive": {
+        "canceled": "取消接收",
+        "canceling": "取消接收",
+        "failed": "接收失败",
+        "pending": "接收中",
+        "success": "已接收",
+        "successDapp": "收到 {{externalDappName}}"
+      },
+      "revoke": {
+        "canceled": "已取消撤销授权",
+        "canceling": "取消撤销授权",
+        "failed": "取消撤销授权失败",
+        "pending": "撤销",
+        "success": "已撤销授权",
+        "successDapp": "{{externalDappName}} 上已撤销授权"
+      },
+      "sell": {
+        "canceled": "取消出售",
+        "canceling": "取消出售",
+        "failed": "出售失败",
+        "pending": "卖出中",
+        "success": "已卖去",
+        "successDapp": "已售出 {{externalDappName}}"
+      },
+      "send": {
+        "canceled": "取消发送",
+        "canceling": "取消发送",
+        "failed": "发送失败",
+        "pending": "发送",
+        "success": "已发送",
+        "successDapp": "发送于 {{externalDappName}}"
+      },
+      "swap": {
+        "canceled": "已取消兑换",
+        "canceling": "取消兑换",
+        "failed": "兑换失败",
+        "pending": "兑换中",
+        "success": "已兑换",
+        "successDapp": "{{externalDappName}} 上已兑换"
+      },
+      "unwrap": {
+        "canceled": "已取消拆封",
+        "canceling": "取消拆封",
+        "failed": "拆封失败",
+        "pending": "拆封中",
+        "success": "已拆封",
+        "successDapp": "{{externalDappName}} 上已拆封"
+      },
+      "wrap": {
+        "canceled": "已取消封装",
+        "canceling": "取消封装",
+        "failed": "封装失败",
+        "pending": "封装中",
+        "success": "已封装",
+        "successDapp": "{{externalDappName}} 上已封装"
+      }
+    },
+    "summary": {
+      "received": "{{tokenAmountWithSymbol}} 到 {{recipientAddress}}",
+      "sent": "来自 {{senderAddress}} 的 {{tokenAmountWithSymbol}}"
+    },
+    "watcher": {
+      "error": {
+        "cancel": "无法取消交易",
+        "status": "检查交易状态时出错"
+      }
+    }
+  },
+  "unicons": {
+    "banner": {
+      "button": "知道了",
+      "subtitle": "我们对您钱包独特的 Unicon 进行了改造。查看您的其余帐户以查看升级后的图标。",
+      "title": "你的 Unicon 焕然一新"
+    }
+  },
+  "unitags": {
+    "banner": {
+      "button": {
+        "claim": "立即领取"
+      },
+      "subtitle": "定制你的个人web3页面并与朋友分享你的钱包地址。",
+      "title": {
+        "compact": "<highlight>领取您的 {{unitagDomain}} 用户名</highlight> 并构建您的可自定义个人资料。",
+        "full": "领取你的 {{unitagDomain}} 用户名"
+      }
+    },
+    "choosePhoto": {
+      "option": {
+        "cameraRoll": "从相机胶卷中选择",
+        "nft": "选择 NFT",
+        "remove": "删除个人资料图片"
+      }
+    },
+    "claim": {
+      "confirmation": {
+        "customize": "定制个人资料",
+        "description": "{{unitagAddress}} 已经可以发送和接收加密货币。你可以继续定制你的个人web3页面来完善你的钱包。",
+        "success": {
+          "long": "你说对了！",
+          "short": "知道了！"
+        }
+      },
+      "error": {
+        "addressLimit": "您对此地址的用户名进行的更改次数已达到上限",
+        "appCheck": "无法认领用户名。请明天再试。",
+        "avatar": "无法设置头像。稍后再试。",
+        "default": "无法领取用户名。请稍后再试。",
+        "deviceLimit": "你无法领取更多用户名",
+        "ens": "要声明此用户名，您必须拥有 {{username}}.eth ENS",
+        "ensMismatch": "该用户名当前不可用。",
+        "general": "无法索取用户名",
+        "unavailable": "此用户名不可用",
+        "unknown": "未知错误"
+      },
+      "username": {
+        "default": "您的姓名"
+      }
+    },
+    "delete": {
+      "confirm": {
+        "subtitle": "您即将删除您的用户名和可自定义的个人资料详细信息。您将无法收回它。",
+        "title": "你确定吗？"
+      }
+    },
+    "editProfile": {
+      "placeholder": "用户名"
+    },
+    "editUsername": {
+      "button": {
+        "confirm": "保存更改"
+      },
+      "confirm": {
+        "subtitle": "您即将更改您的用户名。一旦更改，您将无法再次领取。",
+        "title": "你确定吗？"
+      },
+      "title": "编辑用户名",
+      "warning": {
+        "default": "一旦更改了用户名，你将无法再次认领它。你只有 2 次更改的机会。",
+        "max": "你无法再更改你的用户名"
+      }
+    },
+    "intro": {
+      "features": {
+        "ens": "由 ENS 子域提供支持",
+        "free": "免费领取",
+        "profile": "可定制的配置文件"
+      },
+      "subtitle": "告别复杂的 0x 地址吧！快来创建你的用户名，让你更加轻松地接收和发送加密货币。",
+      "title": "定制专属于你的用户名"
+    },
+    "notification": {
+      "delete": {
+        "error": "无法删除用户名。稍后再试。",
+        "title": "用户名已删除"
+      },
+      "profile": {
+        "error": "无法更新个人资料。稍后再试。",
+        "title": "个人资料已更新"
+      },
+      "username": {
+        "error": "无法更改用户名。稍后再试。",
+        "title": "用户名已更改"
+      }
+    },
+    "onboarding": {
+      "claim": {
+        "subtitle": "这是专属于你的用户名，任何人都可以向其发送加密货币。",
+        "title": {
+          "choose": "选择你的用户名",
+          "claim": "创建你的用户名"
+        }
+      },
+      "claimPeriod": {
+        "description": "在有限时间内，用户名 {{username}} 被保留。导入拥有 {{username}}.eth ENS 的钱包以认领此用户名，或在认领期后重试。",
+        "link": "详细了解我们的 <highlight>索赔期</highlight>。",
+        "title": "ENS 索赔期限"
+      },
+      "info": {
+        "description": "用户名将复杂的 0x 地址转换为可读的名称。通过领取 {{unitagDomain}} 用户名你可以轻松的发送和接收加密货币并定制你的个人web3页面。",
+        "title": "更加简洁的钱包地址"
+      },
+      "profile": {
+        "subtitle": "上传您自己的或坚持使用您独特的 Unicon。您以后可以随时更改此设置。",
+        "title": "选择个人资料照片"
+      }
+    },
+    "profile": {
+      "action": {
+        "delete": "删除用户名",
+        "edit": "编辑用户名"
+      },
+      "bio": {
+        "label": "简介",
+        "placeholder": "为您的个人资料输入简介"
+      },
+      "links": {
+        "twitter": "推特"
+      }
+    },
+    "username": {
+      "error": {
+        "chars": "用户名只能包含字母和数字",
+        "max": "用户名不能超过 {{number}} 个字符",
+        "min": "用户名必须至少包含 {{number}} 个字符",
+        "uppercase": "用户名只能包含小写字母和数字"
+      }
+    }
+  },
+  "walletConnect": {
+    "dapps": {
+      "connection": "<highlight>连接到 </highlight>{{dappNameOrUrl}}",
+      "empty": {
+        "description": "用 WalletConnect 扫码连接APP"
+      },
+      "manage": {
+        "empty": {
+          "title": "没有连接任何APP"
+        },
+        "title": "管理连接"
+      }
+    },
+    "error": {
+      "connection": {
+        "message": "Uniswap 钱包目前只支持 {{chainNames}}。请只在这些链上使用“{{dappName}}”",
+        "title": "连接错误"
+      },
+      "general": {
+        "message": "WalletConnect 出现问题。请再试一次",
+        "title": "钱包连接错误"
+      },
+      "scantastic": {
+        "message": "您的二维码有问题。请再试一次",
+        "title": "二维码无效"
+      },
+      "unsupported": {
+        "message": "请确认你扫的是有效的 WalletConnect 或以太坊地址二维码之后再重试。",
+        "title": "二维码无效"
+      },
+      "unsupportedV1": {
+        "message": "你尝试连接的APP需要升级到 WalletConnect v2。",
+        "title": "二维码无效"
+      },
+      "uwu": {
+        "scan": "扫描此二维码时出现问题。",
+        "title": "UwU 链接错误",
+        "unsupported": "不支持此二维码。"
+      }
+    },
+    "pending": {
+      "button": {
+        "connect": "连接",
+        "scrollDown": "向下滚动以连接"
+      },
+      "switchAccount": "切换账户",
+      "switchNetwork": "切换网络",
+      "title": "{{dappName}} 想连接你的钱包"
+    },
+    "permissions": {
+      "networks": "网络",
+      "option": {
+        "transferAssets": "未经同意转移资产",
+        "viewTokenBalances": "查看你的代币余额",
+        "viewWalletAddress": "查看你的钱包地址"
+      },
+      "title": "APP 权限"
+    },
+    "request": {
+      "button": {
+        "scrollDown": "向下滚动以进行签名",
+        "sign": "签名"
+      },
+      "details": {
+        "label": {
+          "function": "功能： ",
+          "recipient": "到： ",
+          "sending": "发送: "
+        }
+      },
+      "error": {
+        "insufficientFunds": "你没有足够的 {{currencySymbol}} 来完成此交易。",
+        "network": "互联网或网络连接错误"
+      },
+      "label": {
+        "network": "网络"
+      },
+      "warning": {
+        "general": {
+          "message": "注意：此消息可能会转移资产",
+          "transaction": "注意：本次交易可能会发生资产转移"
+        },
+        "message": "为了签署消息或交易，你需要导入钱包的恢复短语。",
+        "title": "这是一个仅查看钱包"
+      }
+    }
+  }
+}
