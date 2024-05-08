@@ -86,6 +86,7 @@
     "@testing-library/jest-native": "5.4.2",
     "@testing-library/react-hooks": "7.0.2",
     "@testing-library/react-native": "11.5.0",
+    "@types/chrome": "0.0.266",
     "@types/react": "^18.0.15",
     "@types/react-window": "1.8.2",
     "@types/zxcvbn": "4.4.2",
