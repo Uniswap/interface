@@ -53,7 +53,7 @@ jobs:
       # UniswapV3
       ########
       - name: UniswapV3 - Install dependencies
-        run: yarn
+        run: yarn install
       - name: UniswapV3 - Lint
         run: yarn g:lint
       - name: UniswapV3 - Web Unit Test
