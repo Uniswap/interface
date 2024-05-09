@@ -2,13 +2,11 @@ import { ChainId } from '@uniswap/sdk-core'
 import { Trans } from 'i18n'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
 import styled from 'styled-components'
-import { isIFramed } from 'utils/isIFramed'
 
 import { sendAnalyticsEvent } from 'analytics'
 import { useCallback, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { isIFramed } from 'utils/isIFramed'
 import { RowBetween, RowFixed } from '../Row'
 import SettingsTab from '../Settings'
 import SwapBuyFiatButton from './SwapBuyFiatButton'
@@ -36,8 +34,6 @@ const PathnameToTab: { [key: string]: SwapTab } = {
 }
 
 export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean; syncTabToUrl: boolean }) {
-  const limitsEnabled = useFeatureFlag(FeatureFlags.LimitsEnabled)
-  const sendEnabled = useFeatureFlag(FeatureFlags.SendEnabled) && !isIFramed()
   const { chainId, currentTab, setCurrentTab } = useSwapAndLimitContext()
   const {
     derivedSwapInfo: { trade, autoSlippage },
@@ -46,20 +42,16 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
   const navigate = useNavigate()
 
   useEffect(() => {
-    if (PathnameToTab[pathname] === SwapTab.Limit && (!limitsEnabled || chainId !== ChainId.MAINNET)) {
+    // Limits is only available on mainnet for now
+    if (PathnameToTab[pathname] === SwapTab.Limit && chainId !== ChainId.MAINNET) {
       navigate(`/${SwapTab.Swap}`, { replace: true })
       return
     }
 
     setCurrentTab(PathnameToTab[pathname] ?? SwapTab.Swap)
-  }, [chainId, limitsEnabled, navigate, pathname, setCurrentTab])
+  }, [chainId, navigate, pathname, setCurrentTab])
 
-  // Limits is only available on mainnet for now
-  if (chainId !== ChainId.MAINNET && currentTab === SwapTab.Limit) {
-    setCurrentTab(SwapTab.Swap)
-  }
-
-  const onTab = useCallback(
+  const onTabClick = useCallback(
     (tab: SwapTab) => {
       sendAnalyticsEvent('Swap Tab Clicked', { tab })
       if (syncTabToUrl) {
@@ -80,26 +72,26 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
           tabIndex={0}
           $isActive={currentTab === SwapTab.Swap}
           onClick={() => {
-            onTab(SwapTab.Swap)
+            onTabClick(SwapTab.Swap)
           }}
         >
           <Trans>Swap</Trans>
         </SwapHeaderTabButton>
-        {limitsEnabled && chainId === ChainId.MAINNET && (
+        {chainId === ChainId.MAINNET && (
           <SwapHeaderTabButton
             $isActive={currentTab === SwapTab.Limit}
             onClick={() => {
-              onTab(SwapTab.Limit)
+              onTabClick(SwapTab.Limit)
             }}
           >
             <Trans>Limit</Trans>
           </SwapHeaderTabButton>
         )}
-        {sendEnabled && (
+        {!isIFramed() && (
           <SwapHeaderTabButton
             $isActive={currentTab === SwapTab.Send}
             onClick={() => {
-              onTab(SwapTab.Send)
+              onTabClick(SwapTab.Send)
             }}
           >
             <Trans>Send</Trans>

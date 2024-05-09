@@ -1,11 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
 import { RowFixed } from 'components/Row'
-import {
-  AVERAGE_L1_BLOCK_TIME,
-  DEFAULT_MS_BEFORE_WARNING,
-  getBlocksPerMainnetEpochForChainId,
-  getChainInfo,
-} from 'constants/chainInfo'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -18,6 +12,7 @@ import { ExternalLink } from 'theme/components'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { styled as tamaguiStyled } from '@tamagui/core'
+import { AVERAGE_L1_BLOCK_TIME, CHAIN_INFO, DEFAULT_MS_BEFORE_WARNING, useIsSupportedChainId } from 'constants/chains'
 import { Text } from 'ui/src'
 import { MouseoverTooltip } from '../Tooltip'
 import { ChainConnectivityWarning } from './ChainConnectivityWarning'
@@ -119,6 +114,7 @@ const Spinner = styled.div<{ warning: boolean }>`
 
 export default function Polling() {
   const { chainId } = useWeb3React()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   const blockNumber = useBlockNumber()
   const [isMounting, setIsMounting] = useState(false)
   const [isHover, setIsHover] = useState(false)
@@ -126,12 +122,18 @@ export default function Polling() {
   const isLandingPage = useIsLandingPage()
 
   const waitMsBeforeWarning = useMemo(
-    () => (chainId ? getChainInfo(chainId)?.blockWaitMsBeforeWarning : undefined) ?? DEFAULT_MS_BEFORE_WARNING,
-    [chainId]
+    () => (isSupportedChain ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : undefined) ?? DEFAULT_MS_BEFORE_WARNING,
+    [chainId, isSupportedChain]
   )
   const machineTime = useMachineTimeMs(AVERAGE_L1_BLOCK_TIME)
   const blockTime = useCurrentBlockTimestamp(
-    useMemo(() => ({ blocksPerFetch: /* 5m / 12s = */ 25 * getBlocksPerMainnetEpochForChainId(chainId) }), [chainId])
+    useMemo(
+      () => ({
+        blocksPerFetch:
+          /* 5m / 12s = */ 25 * (isSupportedChain ? CHAIN_INFO[chainId].blockPerMainnetEpochForChainId : 1),
+      }),
+      [chainId, isSupportedChain]
+    )
   )
   const warning = Boolean(!!blockTime && machineTime - blockTime.mul(1000).toNumber() > waitMsBeforeWarning)
 

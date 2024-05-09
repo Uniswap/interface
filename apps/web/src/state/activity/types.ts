@@ -1,10 +1,10 @@
-import { SupportedInterfaceChain } from 'constants/chains'
+import { SupportedInterfaceChainId } from 'constants/chains'
 import { SignatureDetails } from 'state/signatures/types'
 import { SerializableTransactionReceipt, TransactionDetails } from '../transactions/types'
 
 interface BaseUpdate<T> {
   type: string
-  chainId: SupportedInterfaceChain
+  chainId: SupportedInterfaceChainId
   original: T
   update?: Partial<T>
   receipt?: SerializableTransactionReceipt

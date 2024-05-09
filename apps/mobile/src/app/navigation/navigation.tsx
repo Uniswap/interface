@@ -61,7 +61,8 @@ import { SettingsWalletEdit } from 'src/screens/SettingsWalletEdit'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
-import { Icons, useDeviceInsets, useSporeColors } from 'ui/src'
+import { useDeviceInsets, useSporeColors } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -211,7 +212,7 @@ export function FiatOnRampStackNavigator(): JSX.Element {
 }
 
 const renderHeaderBackImage = (): JSX.Element => (
-  <Icons.RotatableChevron color="$neutral2" height={28} width={28} />
+  <RotatableChevron color="$neutral2" height={28} width={28} />
 )
 
 export function OnboardingStackNavigator(): JSX.Element {

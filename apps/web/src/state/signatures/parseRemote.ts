@@ -1,5 +1,4 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { asSupportedChain } from 'constants/chains'
 import { parseUnits } from 'ethers/lib/utils'
 import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import store from 'state'
@@ -26,8 +25,8 @@ const ORDER_STATUS_MAP: { [key in SwapOrderStatus]: UniswapXOrderStatus } = {
 }
 
 export function parseRemote({ chain, details, timestamp }: OrderActivity): SignatureDetails {
-  const supportedChain = asSupportedChain(supportedChainIdFromGQLChain(chain))
-  if (!supportedChain) {
+  const chainId = supportedChainIdFromGQLChain(chain)
+  if (!chainId) {
     const error = new Error('Invalid activity from unsupported chain received from GQL')
     logSentryErrorForUnsupportedChain({ extras: { details }, errorMessage: error.message })
     throw error
@@ -48,7 +47,7 @@ export function parseRemote({ chain, details, timestamp }: OrderActivity): Signa
     id: details.id,
     type: SIGNATURE_TYPE_MAP[details.swapOrderType],
     offerer: details.offerer,
-    chainId: supportedChain,
+    chainId,
     orderHash: details.hash,
     expiry: details.expiry,
     encodedOrder: details.encodedOrder,

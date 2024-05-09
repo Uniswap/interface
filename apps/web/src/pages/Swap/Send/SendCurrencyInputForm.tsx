@@ -8,10 +8,9 @@ import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { Input as NumericalInput } from 'components/NumericalInput'
 import Row, { RowBetween } from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
-import { SupportedInterfaceChain, asSupportedChain } from 'constants/chains'
+import { getChainInfo, useSupportedChainId } from 'constants/chains'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useActiveLocalCurrency, useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
-import { STABLECOIN_AMOUNT_OUT } from 'hooks/useStablecoinPrice'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { Trans } from 'i18n'
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react'
@@ -228,6 +227,7 @@ export default function SendCurrencyInputForm({
   onCurrencyChange?: (selected: CurrencyState) => void
 }) {
   const { chainId } = useSwapAndLimitContext()
+  const supportedChain = useSupportedChainId(chainId)
   const { account } = useWeb3React()
   const { formatCurrencyAmount } = useFormatter()
   const { symbol: fiatSymbol } = useActiveLocalCurrencyComponents()
@@ -241,8 +241,8 @@ export default function SendCurrencyInputForm({
 
   const [tokenSelectorOpen, setTokenSelectorOpen] = useState(false)
   const fiatCurrency = useMemo(
-    () => STABLECOIN_AMOUNT_OUT[asSupportedChain(chainId) ?? (ChainId.MAINNET as SupportedInterfaceChain)].currency,
-    [chainId]
+    () => getChainInfo({ chainId: supportedChain, withFallback: true }).spotPriceStablecoinAmount.currency,
+    [supportedChain]
   )
   const fiatCurrencyEqualsTransferCurrency = !!inputCurrency && fiatCurrency.equals(inputCurrency)
 

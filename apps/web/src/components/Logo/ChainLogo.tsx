@@ -1,6 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { getChainInfo } from 'constants/chainInfo'
-import { isSupportedChain, SupportedInterfaceChain } from 'constants/chains'
+import { SupportedInterfaceChainId, getChainInfo, useIsSupportedChainId } from 'constants/chains'
 import { CSSProperties, FunctionComponent } from 'react'
 import { useTheme } from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -20,7 +19,7 @@ import { ReactComponent as polygon } from './ChainSymbols/polygon.svg'
 type SVG = FunctionComponent<React.SVGProps<SVGSVGElement>>
 type ChainUI = { Symbol: SVG; bgColor: string; textColor: string }
 
-export function getChainUI(chainId: SupportedInterfaceChain, darkMode: boolean): ChainUI
+export function getChainUI(chainId: SupportedInterfaceChainId, darkMode: boolean): ChainUI
 export function getChainUI(chainId: ChainId, darkMode: boolean): ChainUI | undefined {
   switch (chainId) {
     case ChainId.MAINNET:
@@ -122,9 +121,10 @@ export function ChainLogo({
 }: ChainLogoProps) {
   const darkMode = useIsDarkMode()
   const { surface2 } = useTheme()
+  const isSupportedChain = useIsSupportedChainId(chainId)
 
-  if (!isSupportedChain(chainId)) return null
-  const { label } = getChainInfo(chainId)
+  if (!isSupportedChain) return null
+  const { label } = getChainInfo({ chainId })
 
   const { Symbol, bgColor } = getChainUI(chainId, darkMode)
   const iconSize = fillContainer ? '100%' : size

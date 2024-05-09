@@ -2,7 +2,8 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
-import { AnimatedFlex, Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Flex, Text, TouchableArea } from 'ui/src'
+import { Gas } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { NumberType } from 'utilities/src/format/types'
@@ -101,7 +102,7 @@ export function GasAndWarningRows({
                   placement="bottom"
                   tooltipTrigger={
                     <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
-                      <Icons.Gas
+                      <Gas
                         color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'}
                         size="$icon.16"
                       />

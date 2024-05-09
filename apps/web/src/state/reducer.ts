@@ -9,7 +9,7 @@ import burn from './burn/reducer'
 import burnV3 from './burn/v3/reducer'
 import lists from './lists/reducer'
 import logs from './logs/slice'
-import { customCreateMigrate, migrations } from './migrations'
+import { INDEXED_DB_REDUX_TABLE_NAME, customCreateMigrate, migrations } from './migrations'
 import mint from './mint/reducer'
 import mintV3 from './mint/v3/reducer'
 import { quickRouteApi } from './routing/quickRouteSlice'
@@ -46,7 +46,8 @@ const persistConfig: PersistConfig<AppState> = {
   key: 'interface',
   version: 9, // see migrations.ts for more details about this version
   storage: localForage.createInstance({
-    name: 'redux',
+    name: INDEXED_DB_REDUX_TABLE_NAME,
+    driver: localForage.LOCALSTORAGE,
   }),
   migrate: customCreateMigrate(migrations, { debug: false }),
   whitelist: Object.keys(persistedReducers),

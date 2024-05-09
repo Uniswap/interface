@@ -2,7 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { useAppSelector } from 'src/app/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { Button, Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { AlertTriangle, DocumentList } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { useAppDispatch } from 'wallet/src/state'
@@ -32,9 +33,9 @@ export function ExtensionWaitlistModal(): JSX.Element {
             p="$spacing12"
             width="$spacing48">
             {isUserOnWaitlist ? (
-              <Icons.DocumentList color="$neutral2" size="$icon.28" />
+              <DocumentList color="$neutral2" size="$icon.28" />
             ) : (
-              <Icons.AlertTriangle color="$neutral2" size="$icon.28" />
+              <AlertTriangle color="$neutral2" size="$icon.28" />
             )}
           </Flex>
           <Flex alignItems="center" gap="$spacing8">

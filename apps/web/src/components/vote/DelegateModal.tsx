@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
+import { Text } from 'ui/src'
 import { UNI } from '../../constants/tokens'
 import useENS from '../../hooks/useENS'
 import { useTokenBalance } from '../../state/connection/hooks'
@@ -111,9 +112,9 @@ export default function DelegateModal({ isOpen, onDismiss, title }: VoteModalPro
               </ThemedText.DeprecatedMediumHeader>
             </ButtonPrimary>
             <TextButton onClick={() => setUsingDelegate(!usingDelegate)}>
-              <ThemedText.DeprecatedBlue>
+              <Text color="$accent1">
                 {usingDelegate ? <Trans>Remove delegate</Trans> : <Trans>Add delegate +</Trans>}
-              </ThemedText.DeprecatedBlue>
+              </Text>
             </TextButton>
           </AutoColumn>
         </ContentWrapper>

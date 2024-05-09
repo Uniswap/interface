@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native'
@@ -17,7 +16,6 @@ import { Screens, UnitagScreens } from 'src/screens/Screens'
 import {
   Button,
   Flex,
-  Icons,
   LinearGradient,
   ScrollView,
   Text,
@@ -26,6 +24,7 @@ import {
   useSporeColors,
   useUniconColors,
 } from 'ui/src'
+import { Pen, TripleDots } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { useExtractedColors } from 'ui/src/utils/colors'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -297,7 +296,7 @@ export function EditUnitagProfileScreen({
                   }
                 }}>
                 <Flex pr="$spacing8">
-                  <Icons.TripleDots color="$neutral2" size={iconSizes.icon24} />
+                  <TripleDots color="$neutral2" size={iconSizes.icon24} />
                 </Flex>
               </ContextMenu>
             ) : undefined
@@ -366,10 +365,7 @@ export function EditUnitagProfileScreen({
                       backgroundColor={isDarkMode ? '$neutral3' : '$neutral2'}
                       borderRadius="$roundedFull"
                       p={6}>
-                      <Icons.Pen
-                        color={isDarkMode ? '$neutral1' : '$surface1'}
-                        size={iconSizes.icon16}
-                      />
+                      <Pen color={isDarkMode ? '$neutral1' : '$surface1'} size={iconSizes.icon16} />
                     </Flex>
                   </Flex>
                 </Flex>

@@ -1,4 +1,4 @@
-import { SupportedInterfaceChain } from 'constants/chains'
+import { SupportedInterfaceChainId } from 'constants/chains'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import {
   AssetActivityPartsFragment,
@@ -18,7 +18,7 @@ interface BaseSignatureFields {
   type?: SignatureType
   id: string
   addedTime: number
-  chainId: SupportedInterfaceChain
+  chainId: SupportedInterfaceChainId
   expiry?: number
   offerer: string
 }

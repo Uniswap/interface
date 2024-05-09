@@ -8,6 +8,7 @@ import 'connection/eagerlyConnect'
 /* eslint-enable prettier/prettier */
 
 import { ApolloProvider } from '@apollo/client'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useWeb3React } from '@web3-react/core'
 import { getDeviceId } from 'analytics'
 import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
@@ -18,7 +19,6 @@ import { MulticallUpdater } from 'lib/state/multicall'
 import { PropsWithChildren, StrictMode, useMemo } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Helmet, HelmetProvider } from 'react-helmet-async/lib/index'
-import { QueryClient, QueryClientProvider } from 'react-query'
 import { Provider } from 'react-redux'
 import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
 import { ActivityStateUpdater } from 'state/activity/updater'
@@ -99,7 +99,13 @@ function StatsigProvider({ children }: PropsWithChildren) {
   )
 }
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 20, // 20 seconds
+    },
+  },
+})
 
 const container = document.getElementById('root') as HTMLElement
 

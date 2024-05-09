@@ -7,7 +7,7 @@ import { useWeb3React } from '@web3-react/core'
 import { TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { V2Unsupported } from 'components/V2Unsupported'
-import { isSupportedChain } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
 import { Trans } from 'i18n'
@@ -15,11 +15,11 @@ import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDown, Plus } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Text } from 'rebass'
 import { useTheme } from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import { Text } from 'ui/src'
 import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from '../../components/Button'
 import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
@@ -52,9 +52,10 @@ const DEFAULT_REMOVE_LIQUIDITY_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 
 export default function RemoveLiquidityWrapper() {
   const { chainId } = useWeb3React()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
   const [currencyA, currencyB] = [useCurrency(currencyIdA) ?? undefined, useCurrency(currencyIdB) ?? undefined]
-  if (isSupportedChain(chainId) && currencyA !== currencyB) {
+  if (isSupportedChain && currencyA !== currencyB) {
     return <RemoveLiquidity />
   } else {
     return <PositionPageUnsupportedContent />
@@ -313,12 +314,12 @@ function RemoveLiquidity() {
     return (
       <AutoColumn gap="md" style={{ marginTop: '20px' }}>
         <RowBetween align="flex-end">
-          <Text fontSize={24} fontWeight={535}>
+          <Text fontSize={24} fontWeight="$medium">
             {parsedAmounts[Field.CURRENCY_A]?.toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
             <CurrencyLogo currency={currencyA} size={24} />
-            <Text fontSize={24} fontWeight={535} style={{ marginLeft: '10px' }}>
+            <Text fontSize={24} fontWeight="$medium" ml={10}>
               {currencyA?.symbol}
             </Text>
           </RowFixed>
@@ -327,23 +328,23 @@ function RemoveLiquidity() {
           <Plus size="16" color={theme.neutral2} />
         </RowFixed>
         <RowBetween align="flex-end">
-          <Text fontSize={24} fontWeight={535}>
+          <Text fontSize={24} fontWeight="$medium">
             {parsedAmounts[Field.CURRENCY_B]?.toSignificant(6)}
           </Text>
           <RowFixed gap="4px">
             <CurrencyLogo currency={currencyB} size={24} />
-            <Text fontSize={24} fontWeight={535} style={{ marginLeft: '10px' }}>
+            <Text fontSize={24} fontWeight="$medium" ml={10}>
               {currencyB?.symbol}
             </Text>
           </RowFixed>
         </RowBetween>
 
-        <ThemedText.DeprecatedItalic fontSize={12} color={theme.neutral2} textAlign="left" padding="12px 0 0 0">
+        <Text fontSize={12} fontStyle="italic" color="neutral2" textAlign="left" pt={12}>
           <Trans>
             Output is estimated. If the price changes by more than {{ allowed: allowedSlippage.toSignificant(4) }}% your
             transaction will revert.
           </Trans>
-        </ThemedText.DeprecatedItalic>
+        </Text>
       </AutoColumn>
     )
   }
@@ -352,14 +353,14 @@ function RemoveLiquidity() {
     return (
       <>
         <RowBetween>
-          <Text color={theme.neutral2} fontWeight={535} fontSize={16}>
+          <Text color="$neutral2" fontWeight="$medium" fontSize={16}>
             <Trans>
               UNI {{ a: currencyA?.symbol }}/{{ b: currencyB?.symbol }} Burned
             </Trans>
           </Text>
           <RowFixed>
             <DoubleCurrencyLogo currencies={[currencyA, currencyB]} />
-            <Text fontWeight={535} fontSize={16}>
+            <Text fontWeight="$medium" fontSize={16}>
               {parsedAmounts[Field.LIQUIDITY]?.toSignificant(6)}
             </Text>
           </RowFixed>
@@ -367,23 +368,23 @@ function RemoveLiquidity() {
         {pair && (
           <>
             <RowBetween>
-              <Text color={theme.neutral2} fontWeight={535} fontSize={16}>
+              <Text color="$neutral2" fontWeight="$medium" fontSize={16}>
                 <Trans>Price</Trans>
               </Text>
-              <Text fontWeight={535} fontSize={16} color={theme.neutral1}>
+              <Text fontWeight="$medium" fontSize={16} color="$neutral1">
                 1 {currencyA?.symbol} = {tokenA ? pair.priceOf(tokenA).toSignificant(6) : '-'} {currencyB?.symbol}
               </Text>
             </RowBetween>
             <RowBetween>
               <div />
-              <Text fontWeight={535} fontSize={16} color={theme.neutral1}>
+              <Text fontWeight="$medium" fontSize={16} color="$neutral1">
                 1 {currencyB?.symbol} = {tokenB ? pair.priceOf(tokenB).toSignificant(6) : '-'} {currencyA?.symbol}
               </Text>
             </RowBetween>
           </>
         )}
         <ButtonPrimary disabled={!(approval === ApprovalState.APPROVED || signatureData !== null)} onClick={onRemove}>
-          <Text fontWeight={535} fontSize={20}>
+          <Text fontWeight="$medium" fontSize={20}>
             <Trans>Confirm</Trans>
           </Text>
         </ButtonPrimary>
@@ -485,7 +486,7 @@ function RemoveLiquidity() {
             <LightCard>
               <AutoColumn gap="20px">
                 <RowBetween>
-                  <Text fontWeight={535}>
+                  <Text fontWeight="$medium">
                     <Trans>Remove amount</Trans>
                   </Text>
                   <ClickableText
@@ -498,7 +499,7 @@ function RemoveLiquidity() {
                   </ClickableText>
                 </RowBetween>
                 <Row style={{ alignItems: 'flex-end' }}>
-                  <Text fontSize={72} fontWeight={535}>
+                  <Text fontSize={72} fontWeight="$medium">
                     {formattedAmounts[Field.LIQUIDITY_PERCENT]}%
                   </Text>
                 </Row>
@@ -531,23 +532,23 @@ function RemoveLiquidity() {
                 <LightCard>
                   <AutoColumn gap="10px">
                     <RowBetween>
-                      <Text fontSize={24} fontWeight={535}>
+                      <Text fontSize={24} fontWeight="$medium">
                         {formattedAmounts[Field.CURRENCY_A] || '-'}
                       </Text>
                       <RowFixed>
                         <CurrencyLogo currency={currencyA} style={{ marginRight: '12px' }} />
-                        <Text fontSize={24} fontWeight={535} id="remove-liquidity-tokena-symbol">
+                        <Text fontSize={24} fontWeight="$medium" id="remove-liquidity-tokena-symbol">
                           {currencyA?.symbol}
                         </Text>
                       </RowFixed>
                     </RowBetween>
                     <RowBetween>
-                      <Text fontSize={24} fontWeight={535}>
+                      <Text fontSize={24} fontWeight="$medium">
                         {formattedAmounts[Field.CURRENCY_B] || '-'}
                       </Text>
                       <RowFixed>
                         <CurrencyLogo currency={currencyB} style={{ marginRight: '12px' }} />
-                        <Text fontSize={24} fontWeight={535} id="remove-liquidity-tokenb-symbol">
+                        <Text fontSize={24} fontWeight="$medium" id="remove-liquidity-tokenb-symbol">
                           {currencyB?.symbol}
                         </Text>
                       </RowFixed>
@@ -684,7 +685,7 @@ function RemoveLiquidity() {
                     disabled={!isValid || (signatureData === null && approval !== ApprovalState.APPROVED)}
                     error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
                   >
-                    <Text fontSize={16} fontWeight={535}>
+                    <Text fontSize={16} fontWeight="$medium">
                       {error || <Trans>Remove</Trans>}
                     </Text>
                   </ButtonError>

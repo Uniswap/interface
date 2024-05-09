@@ -5,7 +5,8 @@ import type {
   ContextMenuAction,
   ContextMenuOnPressNativeEvent,
 } from 'react-native-context-menu-view'
-import { GeneratedIcon, Icons, isWeb } from 'ui/src'
+import { GeneratedIcon, isWeb } from 'ui/src'
+import { CoinConvert, Eye, EyeOff, ReceiveAlt, SendAction } from 'ui/src/components/icons'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -103,7 +104,7 @@ export function useTokenContextMenu({
         onPress: () => onPressSwap(CurrencyField.INPUT),
         ...(isWeb
           ? {
-              Icon: Icons.CoinConvert,
+              Icon: CoinConvert,
             }
           : {
               systemIcon: 'rectangle.2.swap',
@@ -114,7 +115,7 @@ export function useTokenContextMenu({
         onPress: onPressSend,
         ...(isWeb
           ? {
-              Icon: Icons.SendAction,
+              Icon: SendAction,
             }
           : { systemIcon: 'paperplane' }),
       },
@@ -123,7 +124,7 @@ export function useTokenContextMenu({
         onPress: navigateToReceive,
         ...(isWeb
           ? {
-              Icon: Icons.ReceiveAlt,
+              Icon: ReceiveAlt,
             }
           : { systemIcon: 'qrcode' }),
       },
@@ -144,7 +145,7 @@ export function useTokenContextMenu({
               onPress: onPressHiddenStatus,
               ...(isWeb
                 ? {
-                    Icon: isHidden ? Icons.Eye : Icons.EyeOff,
+                    Icon: isHidden ? Eye : EyeOff,
                   }
                 : { systemIcon: isHidden ? 'eye' : 'eye.slash' }),
             },

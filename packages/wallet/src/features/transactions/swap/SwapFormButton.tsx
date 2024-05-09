@@ -2,7 +2,8 @@
 import { TFunction } from 'i18next'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Icons, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { Button, Flex, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { GraduationCap } from 'ui/src/components/icons'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
 import {
   selectHasSubmittedHoldToSwap,
@@ -162,7 +163,7 @@ function HoldToInstantSwapRow(): JSX.Element {
 
   return (
     <Flex centered row gap="$spacing4">
-      <Icons.GraduationCap color="$neutral3" size="$icon.16" />
+      <GraduationCap color="$neutral3" size="$icon.16" />
       <Text color="$neutral3" variant={isShortMobileDevice ? 'body4' : 'body3'}>
         {t('swap.hold.tip')}
       </Text>

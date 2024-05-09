@@ -13,7 +13,7 @@ import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/Toke
 import { LoadingBubble } from 'components/Tokens/loading'
 import { BIPS_BASE } from 'constants/misc'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { chainIdToBackendName, getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
+import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { Trans, t } from 'i18n'
@@ -28,6 +28,7 @@ import { shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { useFormatter } from 'utils/formatNumbers'
 import { DetailBubble } from './shared'
 
@@ -58,7 +59,7 @@ const IconBubble = styled(LoadingBubble)`
 `
 
 interface PoolDetailsBreadcrumbProps {
-  chainId?: number
+  chainId?: SupportedInterfaceChainId
   poolAddress?: string
   token0?: Token
   token1?: Token
@@ -66,7 +67,7 @@ interface PoolDetailsBreadcrumbProps {
 }
 
 export function PoolDetailsBreadcrumb({ chainId, poolAddress, token0, token1, loading }: PoolDetailsBreadcrumbProps) {
-  const chainName = chainIdToBackendName(chainId)
+  const chainName = chainIdToBackendChain({ chainId, withFallback: true })
   const exploreOrigin = `/explore/${chainName.toLowerCase()}`
   const poolsOrigin = `/explore/pools/${chainName.toLowerCase()}`
 
@@ -114,7 +115,7 @@ const PoolDetailsTitle = ({
 }: {
   token0?: Token
   token1?: Token
-  chainId?: number
+  chainId?: SupportedInterfaceChainId
   feeTier?: number
   protocolVersion?: ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
@@ -128,7 +129,7 @@ const PoolDetailsTitle = ({
           <StyledLink
             to={getTokenDetailsURL({
               address: token0?.address,
-              chain: chainIdToBackendName(chainId),
+              chain: chainIdToBackendChain({ chainId, withFallback: true }),
             })}
           >
             {token0?.symbol}
@@ -137,7 +138,7 @@ const PoolDetailsTitle = ({
           <StyledLink
             to={getTokenDetailsURL({
               address: token1?.address,
-              chain: chainIdToBackendName(chainId),
+              chain: chainIdToBackendChain({ chainId, withFallback: true }),
             })}
           >
             {token1?.symbol}

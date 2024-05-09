@@ -25,7 +25,6 @@ import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowDown } from 'react-feather'
 import { Navigate, useParams } from 'react-router-dom'
-import { Text } from 'rebass'
 import { useAppDispatch } from 'state/hooks'
 import { Bound, resetMintState } from 'state/mint/v3/actions'
 import { useRangeHopCallbacks, useV3DerivedMintInfo, useV3MintActionHandlers } from 'state/mint/v3/hooks'
@@ -36,6 +35,7 @@ import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import { Text } from 'ui/src'
 import { isAddress } from 'utilities/src/addresses'
 import { MigrateHeader } from '.'
 import { AutoColumn } from '../../components/Column'
@@ -82,23 +82,23 @@ function LiquidityInfo({
       <RowBetween>
         <RowFixed>
           <CurrencyLogo size={20} style={{ marginRight: '8px' }} currency={currency0} />
-          <Text fontSize={16} fontWeight={535}>
+          <Text fontSize={16} fontWeight="$medium">
             {currency0.symbol}
           </Text>
         </RowFixed>
-        <Text fontSize={16} fontWeight={535}>
+        <Text fontSize={16} fontWeight="$medium">
           <FormattedCurrencyAmount currencyAmount={token0Amount} />
         </Text>
       </RowBetween>
       <RowBetween>
         <RowFixed>
           <CurrencyLogo size={20} style={{ marginRight: '8px' }} currency={currency1} />
-          <Text fontSize={16} fontWeight={535}>
+          <Text fontSize={16} fontWeight="$medium">
             {currency1.symbol}
           </Text>
         </RowFixed>
 
-        <Text fontSize={16} fontWeight={535}>
+        <Text fontSize={16} fontWeight="$medium">
           <FormattedCurrencyAmount currencyAmount={token1Amount} />
         </Text>
       </RowBetween>
@@ -396,9 +396,9 @@ function V2PairMigration({
         </Trans>{' '}
         {chainId && migrator && (
           <ExternalLink href={getExplorerLink(chainId, migrator.address, ExplorerDataType.ADDRESS)}>
-            <ThemedText.DeprecatedBlue display="inline">
+            <Text color="$accent1" display="inline">
               <Trans>Uniswap migration contract</Trans> ↗
-            </ThemedText.DeprecatedBlue>
+            </Text>
           </ExternalLink>
         )}
         .
@@ -455,7 +455,7 @@ function V2PairMigration({
               </ThemedText.DeprecatedBody>
 
               <ThemedText.DeprecatedBody
-                fontWeight={535}
+                fontWeight="$medium"
                 textAlign="center"
                 fontSize={14}
                 style={{ marginTop: '8px', opacity: 0.8 }}
@@ -573,11 +573,11 @@ function V2PairMigration({
             <YellowCard padding="8px 12px" $borderRadius="12px">
               <RowBetween>
                 <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
-                <ThemedText.DeprecatedYellow ml="12px" fontSize="12px">
+                <Text color="$yellow600" ml={12} fontSize={12}>
                   <Trans>
                     Your position will not earn fees or be used in trades until the market price moves into your range.
                   </Trans>
-                </ThemedText.DeprecatedYellow>
+                </Text>
               </RowBetween>
             </YellowCard>
           ) : null}
@@ -586,9 +586,9 @@ function V2PairMigration({
             <YellowCard padding="8px 12px" $borderRadius="12px">
               <RowBetween>
                 <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
-                <ThemedText.DeprecatedYellow ml="12px" fontSize="12px">
+                <Text color="$" ml={12} fontSize={12}>
                   <Trans>Invalid range selected. The min price must be lower than the max price.</Trans>
-                </ThemedText.DeprecatedYellow>
+                </Text>
               </RowBetween>
             </YellowCard>
           ) : null}

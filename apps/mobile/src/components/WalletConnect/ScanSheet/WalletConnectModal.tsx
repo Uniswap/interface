@@ -186,7 +186,21 @@ export function WalletConnectModal({
             chainId: parsedUwulinkRequest.chainId,
           }
 
-          if (parsedUwulinkRequest.method === UwULinkMethod.Erc20Send) {
+          if (parsedUwulinkRequest.method === EthMethod.PersonalSign) {
+            dispatch(
+              addRequest({
+                account: activeAccount.address,
+                request: {
+                  ...newRequest,
+                  type: EthMethod.PersonalSign,
+                  message: parsedUwulinkRequest.message,
+                  // rawMessage should be the hex version of `message`, but our wallet will only use
+                  // `message` if it exists. so this is mostly to appease Typescript
+                  rawMessage: parsedUwulinkRequest.message,
+                },
+              })
+            )
+          } else if (parsedUwulinkRequest.method === UwULinkMethod.Erc20Send) {
             const preparedTransaction = await toTokenTransferRequest(
               parsedUwulinkRequest,
               activeAccount,

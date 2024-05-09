@@ -340,17 +340,17 @@ export const CHAIN_INFO: ChainInfo = {
       logoLight: Logos.EtherscanLogoLight,
       logoDark: Logos.EtherscanLogoDark,
     },
-    infoLink: 'https://info.uniswap.org/#/blast', // Not live yet
+    infoLink: 'https://app.uniswap.org/explore/tokens/blast?chain=blast',
     label: 'Blast',
     logo: BLAST_LOGO,
     nativeCurrency: {
-      name: 'Blast ETH', // Is this right?
+      name: 'Blast ETH',
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
     },
     wrappedNativeCurrency: {
-      name: 'Wrapped Ether', // Is this right?
+      name: 'Wrapped Ether',
       symbol: 'WETH',
       decimals: 18,
       address: '0x4300000000000000000000000000000000000004',

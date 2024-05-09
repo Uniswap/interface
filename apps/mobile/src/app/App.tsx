@@ -169,12 +169,10 @@ function App(): JSX.Element | null {
 
 function SentryTags({ children }: PropsWithChildren): JSX.Element {
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const [_, flagKey] of WALLET_FEATURE_FLAG_NAMES.entries()) {
       Sentry.setTag(`featureFlag.${flagKey}`, Statsig.checkGateWithExposureLoggingDisabled(flagKey))
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const [_, experimentDef] of WALLET_EXPERIMENTS.entries()) {
       Sentry.setTag(
         `experiment.${experimentDef.name}`,

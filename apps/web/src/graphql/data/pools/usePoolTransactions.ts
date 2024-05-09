@@ -1,5 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { chainIdToBackendName } from 'graphql/data/util'
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { useCallback, useMemo, useRef } from 'react'
 import {
   PoolTransactionType,
@@ -44,7 +44,7 @@ const PoolTransactionDefaultQuerySize = 25
 
 export function usePoolTransactions(
   address: string,
-  chainId?: ChainId,
+  chainId?: SupportedInterfaceChainId,
   // sortState: PoolTxTableSortState, TODO(WEB-3706): Implement sorting when BE supports
   filter: PoolTableTransactionType[] = [
     PoolTableTransactionType.BUY,
@@ -63,7 +63,7 @@ export function usePoolTransactions(
     data: dataV3,
     fetchMore: fetchMoreV3,
   } = useV3PoolTransactionsQuery({
-    variables: { first, chain: chainIdToBackendName(chainId), address },
+    variables: { first, chain: chainIdToBackendChain({ chainId, withFallback: true }), address },
     skip: protocolVersion !== ProtocolVersion.V3,
   })
   const {
@@ -72,8 +72,8 @@ export function usePoolTransactions(
     data: dataV2,
     fetchMore: fetchMoreV2,
   } = useV2PairTransactionsQuery({
-    variables: { first, chain: chainIdToBackendName(chainId), address },
-    skip: protocolVersion !== ProtocolVersion.V2 || (chainId !== ChainId.MAINNET && !v2ExploreEnabled),
+    variables: { first, chain: chainIdToBackendChain({ chainId, withFallback: true }), address },
+    skip: !chainId || protocolVersion !== ProtocolVersion.V2 || (chainId !== ChainId.MAINNET && !v2ExploreEnabled),
   })
   const loadingMore = useRef(false)
   const { transactions, loading, fetchMore, error } =

@@ -12,7 +12,7 @@ import Row from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { isSupportedChain } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import { getURAddress, useNftUniversalRouterAddress } from 'graphql/data/nft/NftUniversalRouterAddress'
 import { useCurrency } from 'hooks/Tokens'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
@@ -278,6 +278,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   const toggleWalletDrawer = useToggleAccountDrawer()
   const theme = useTheme()
   const { account, chainId, connector } = useWeb3React()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   const connected = Boolean(account && chainId)
   const totalEthPrice = useBagTotalEthPrice()
   const { inputCurrency } = useTokenInput(({ inputCurrency }) => ({ inputCurrency }))
@@ -318,7 +319,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
   } = useDerivedPayWithAnyTokenSwapInfo(usingPayWithAnyToken ? inputCurrency : undefined, parsedOutputAmount)
   const allowance = usePermit2Allowance(
     maximumAmountIn,
-    getURAddress(chainId, universalRouterAddress),
+    getURAddress(isSupportedChain ? chainId : undefined, universalRouterAddress),
     TradeFillType.Classic
   )
   const loadingAllowance = allowance.state === AllowanceState.LOADING || universalRouterAddressIsLoading
@@ -467,7 +468,7 @@ export const BagFooter = ({ setModalIsOpen, eventProperties }: BagFooterProps) =
         <FooterHeader gap="xs">
           <CurrencyRow>
             <Column gap="xs">
-              {isSupportedChain(chainId) && (
+              {isSupportedChain && (
                 <>
                   <ThemedText.SubHeaderSmall>
                     <Trans>Pay with</Trans>

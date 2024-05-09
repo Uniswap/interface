@@ -1,5 +1,5 @@
 /* eslint-disable import/no-unused-modules */
-import getAsset from '../../utils/getAsset'
+import getAsset from 'utils/getAsset'
 import { transformResponse } from '../../utils/transformResponse'
 
 export const onRequest: PagesFunction = async ({ params, request, next }) => {

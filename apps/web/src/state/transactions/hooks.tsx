@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
-import { ChainId, SUPPORTED_CHAINS, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { getTransactionStatus } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { SwapResult } from 'hooks/useSwapCallback'
@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { TradeFillType } from 'state/routing/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
+import { SUPPORTED_INTERFACE_CHAIN_IDS, SupportedInterfaceChainId } from 'constants/chains'
 import { addTransaction, cancelTransaction, removeTransaction } from './reducer'
 import { TransactionDetails, TransactionInfo, TransactionType } from './types'
 
@@ -62,10 +63,12 @@ export function useTransactionCanceller() {
   )
 }
 
-export function useMultichainTransactions(): [TransactionDetails, ChainId][] {
+export function useMultichainTransactions(): [TransactionDetails, SupportedInterfaceChainId][] {
   const state = useAppSelector((state) => state.transactions)
-  return SUPPORTED_CHAINS.flatMap((chainId) =>
-    state[chainId] ? Object.values(state[chainId]).map((tx): [TransactionDetails, ChainId] => [tx, chainId]) : []
+  return SUPPORTED_INTERFACE_CHAIN_IDS.flatMap((chainId) =>
+    state[chainId]
+      ? Object.values(state[chainId]).map((tx): [TransactionDetails, SupportedInterfaceChainId] => [tx, chainId])
+      : []
   )
 }
 

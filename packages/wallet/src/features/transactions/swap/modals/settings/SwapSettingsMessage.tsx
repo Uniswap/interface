@@ -1,6 +1,7 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
-import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
+import { AlertTriangle } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -29,7 +30,7 @@ export function SwapSettingsMessage({
   if (inputWarning) {
     return (
       <Flex centered row gap="$spacing8" height={fonts.body2.lineHeight * 2 + spacing.spacing8}>
-        <Icons.AlertTriangle color="$DEP_accentWarning" size="$icon.16" />
+        <AlertTriangle color="$DEP_accentWarning" size="$icon.16" />
         <Text color="$DEP_accentWarning" textAlign="center" variant="body2">
           {inputWarning}
         </Text>
@@ -58,7 +59,7 @@ export function SwapSettingsMessage({
       </Text>
       {showSlippageWarning ? (
         <Flex centered row gap="$spacing8">
-          <Icons.AlertTriangle color={colors.DEP_accentWarning.val} size="$icon.16" />
+          <AlertTriangle color={colors.DEP_accentWarning.val} size="$icon.16" />
           <Text color="$DEP_accentWarning" variant="body2">
             {t('swap.settings.slippage.warning.message')}
           </Text>

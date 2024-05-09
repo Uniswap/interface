@@ -419,6 +419,5 @@ describe('BagFooter.tsx', () => {
     expect(getURAddress(ChainId.MAINNET)).toBe(UNIVERSAL_ROUTER_ADDRESS(ChainId.MAINNET))
     expect(getURAddress(ChainId.MAINNET, 'test_nft_ur_address')).toBe('test_nft_ur_address')
     expect(getURAddress(ChainId.OPTIMISM)).toBe(UNIVERSAL_ROUTER_ADDRESS(ChainId.OPTIMISM))
-    expect(getURAddress(10101010)).toBe(undefined)
   })
 })

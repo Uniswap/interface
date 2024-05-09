@@ -23,7 +23,7 @@ import { flexRowNoWrap } from 'theme/styles'
 import { shortenAddress } from 'utilities/src/addresses'
 
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
-import { Unitag } from 'ui/src/components/icons/Unitag'
+import { Unitag } from 'ui/src/components/icons'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { ButtonSecondary } from '../Button'
 import { RowBetween } from '../Row'

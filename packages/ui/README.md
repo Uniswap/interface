@@ -35,7 +35,7 @@ yarn ui build:icons:missing
 
 When adding an SVG, please ensure you replace color references as needed with `currentColor` to ensure the asset respects the color property when used.
 
-Custom icons that take props can be added by adding the file in `packages/ui/src/components/icons/allIcons.tsx`.
+Custom icons that take props can be added by adding the file in `packages/ui/src/components/icons/index.ts`.
 
 ### Theming
 

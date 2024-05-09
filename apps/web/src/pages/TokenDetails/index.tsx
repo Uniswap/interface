@@ -4,15 +4,18 @@ import TokenDetails from 'components/Tokens/TokenDetails'
 import { useCreateTDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
 import InvalidTokenDetails from 'components/Tokens/TokenDetails/InvalidTokenDetails'
 import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
+import { useChainFromUrlParam } from 'constants/chains'
 import { useTokenWarning } from 'constants/tokenSafety'
 import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL, nativeOnChain } from 'constants/tokens'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
-import { gqlToCurrency, supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
+import { getSupportedGraphQlChain, gqlToCurrency } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useSrcColor } from 'hooks/useColor'
+import { useMetatags } from 'pages/metatags'
 import { useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useLocation, useParams } from 'react-router-dom'
+import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
 import { useTheme } from 'styled-components'
 import { ThemeProvider } from 'theme'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -77,26 +80,30 @@ function useMultiChainMap(tokenQuery: ReturnType<typeof useTokenWebQuery>) {
 }
 
 function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
-  const { tokenAddress, chainName } = useParams<{ tokenAddress: string; chainName?: string }>()
+  const { tokenAddress } = useParams<{ tokenAddress: string }>()
   if (!tokenAddress) throw new Error('Invalid token details route: token address URL param is undefined')
-  const currencyChain = validateUrlChainParam(chainName)
-  const currencyChainId = supportedChainIdFromGQLChain(currencyChain)
+  const currencyChainInfo = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
 
   const isNative = tokenAddress === NATIVE_CHAIN_ID
 
-  const tokenDBAddress = isNative ? getNativeTokenDBAddress(currencyChain) : tokenAddress
+  const tokenDBAddress = isNative ? getNativeTokenDBAddress(currencyChainInfo.backendChain.chain) : tokenAddress
 
   const tokenQuery = useTokenWebQuery({
-    variables: { address: tokenDBAddress, chain: currencyChain },
+    variables: { address: tokenDBAddress, chain: currencyChainInfo.backendChain.chain },
     errorPolicy: 'all',
   })
-  const chartState = useCreateTDPChartState(tokenDBAddress, currencyChain)
+  const chartState = useCreateTDPChartState(tokenDBAddress, currencyChainInfo.backendChain.chain)
 
   const multiChainMap = useMultiChainMap(tokenQuery)
 
-  const { currency, currencyWasFetchedOnChain } = useTDPCurrency(tokenQuery, tokenAddress, currencyChainId, isNative)
+  const { currency, currencyWasFetchedOnChain } = useTDPCurrency(
+    tokenQuery,
+    tokenAddress,
+    currencyChainInfo.id,
+    isNative
+  )
 
-  const warning = useTokenWarning(tokenAddress, currencyChainId)
+  const warning = useTokenWarning(tokenAddress, currencyChainInfo.id)
 
   // Extract color for page usage
   const theme = useTheme()
@@ -108,8 +115,8 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   return useMemo(() => {
     return {
       currency,
-      currencyChain,
-      currencyChainId,
+      currencyChain: currencyChainInfo.backendChain.chain,
+      currencyChainId: currencyChainInfo.id,
       // `currency.address` is checksummed, whereas the `tokenAddress` url param may not be
       address: (currency?.isNative ? NATIVE_CHAIN_ID : currency?.address) ?? tokenAddress,
       currencyWasFetchedOnChain,
@@ -121,29 +128,48 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     }
   }, [
     currency,
-    currencyChain,
-    currencyChainId,
-    currencyWasFetchedOnChain,
-    tokenColor,
-    multiChainMap,
-    warning,
+    currencyChainInfo.backendChain.chain,
+    currencyChainInfo.id,
     tokenAddress,
+    currencyWasFetchedOnChain,
     tokenQuery,
     chartState,
+    warning,
+    multiChainMap,
+    tokenColor,
   ])
 }
 
 export default function TokenDetailsPage() {
   const pageChainId = useWeb3React().chainId ?? ChainId.MAINNET
   const contextValue = useCreateTDPContext()
+  const { tokenColor, address, currency, currencyChain, tokenQuery } = contextValue
+
+  const tokenQueryData = tokenQuery.data?.token
+  const metatags = useMemo(() => {
+    return {
+      title: formatTokenMetatagTitleName(tokenQueryData?.symbol, tokenQueryData?.name),
+      image:
+        window.location.origin +
+        '/api/image/tokens/' +
+        currencyChain.toLowerCase() +
+        '/' +
+        (currency?.isNative ? getNativeTokenDBAddress(currencyChain) : address),
+      url: window.location.href,
+    }
+  }, [address, currency?.isNative, currencyChain, tokenQueryData?.name, tokenQueryData?.symbol])
+  const metaTagProperties = useMetatags(metatags)
 
   return (
-    <ThemeProvider accent1={contextValue.tokenColor ?? undefined}>
+    <ThemeProvider accent1={tokenColor ?? undefined}>
       <Helmet>
-        <title>{getTokenPageTitle(contextValue?.currency)}</title>
+        <title>{getTokenPageTitle(currency)}</title>
+        {metaTagProperties.map((tag) => (
+          <meta key={tag.property} {...tag} />
+        ))}
       </Helmet>
       {(() => {
-        if (contextValue.currency) {
+        if (currency) {
           return (
             <TDPProvider contextValue={contextValue}>
               <TokenDetails />
@@ -151,10 +177,10 @@ export default function TokenDetailsPage() {
           )
         }
 
-        if (contextValue.tokenQuery.loading) {
+        if (tokenQuery.loading) {
           return <TokenDetailsPageSkeleton />
         } else {
-          return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!isAddress(contextValue.address)} />
+          return <InvalidTokenDetails pageChainId={pageChainId} isInvalidAddress={!isAddress(address)} />
         }
       })()}
     </ThemeProvider>

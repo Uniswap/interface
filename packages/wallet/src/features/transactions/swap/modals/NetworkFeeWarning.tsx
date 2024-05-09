@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Icons, isWeb, useSporeColors } from 'ui/src'
+import { isWeb, useSporeColors } from 'ui/src'
+import { Gas } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { WarningInfo } from 'wallet/src/components/modals/WarningModal/WarningInfo'
 import { WarningTooltipProps } from 'wallet/src/components/modals/WarningModal/WarningTooltipProps'
@@ -38,7 +39,7 @@ export function NetworkFeeWarning({
         caption: text,
         closeText: t('common.button.close'),
         icon: (
-          <Icons.Gas
+          <Gas
             color={gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral2'}
             size="$icon.24"
           />
@@ -50,9 +51,7 @@ export function NetworkFeeWarning({
       tooltipProps={{
         text,
         placement,
-        icon: gasFeeHighRelativeToValue ? (
-          <Icons.Gas color="$statusCritical" size="$icon.16" />
-        ) : null,
+        icon: gasFeeHighRelativeToValue ? <Gas color="$statusCritical" size="$icon.16" /> : null,
       }}
       trigger={tooltipTrigger}>
       {children}

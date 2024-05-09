@@ -9,7 +9,8 @@ import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Flex, Icons, Text, TouchableArea, Unicon, UniconV2, useIsDarkMode } from 'ui/src'
+import { Flex, Text, TouchableArea, Unicon, UniconV2, useIsDarkMode } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -85,7 +86,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                       </Text>
                     </Flex>
                   </Flex>
-                  <Icons.RotatableChevron
+                  <RotatableChevron
                     color="$neutral2"
                     direction="end"
                     height={iconSizes.icon20}

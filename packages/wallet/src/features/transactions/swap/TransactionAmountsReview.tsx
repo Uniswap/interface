@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Icons, Text, isWeb, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, isWeb, useSporeColors } from 'ui/src'
+import { ArrowDown, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { NumberType } from 'utilities/src/format/types'
@@ -100,7 +101,7 @@ export function TransactionAmountsReview({
           <Button
             backgroundColor="$transparent"
             color="$neutral2"
-            icon={<Icons.X size="$icon.20" />}
+            icon={<X size="$icon.20" />}
             p="$none"
             theme="secondary"
             onClick={onClose}
@@ -115,7 +116,7 @@ export function TransactionAmountsReview({
         shouldDim={shouldDimInput}
       />
 
-      <Icons.ArrowDown color={colors.neutral3.get()} size={20} />
+      <ArrowDown color={colors.neutral3.get()} size={20} />
 
       <CurrencyValueWithIcon
         currencyInfo={currencyOutInfo}

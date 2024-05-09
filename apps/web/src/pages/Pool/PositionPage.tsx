@@ -15,8 +15,13 @@ import { RowBetween, RowFixed } from 'components/Row'
 import { Dots } from 'components/swap/styled'
 import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
-import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
-import { chainIdToBackendName, getPoolDetailsURL, getTokenDetailsURL, isGqlSupportedChain } from 'graphql/data/util'
+import {
+  chainIdToBackendChain,
+  SupportedInterfaceChainId,
+  useIsSupportedChainId,
+  useSupportedChainId,
+} from 'constants/chains'
+import { getPoolDetailsURL, getTokenDetailsURL, isGqlSupportedChain } from 'graphql/data/util'
 import { useToken } from 'hooks/Tokens'
 import { useV3NFTPositionManagerContract } from 'hooks/useContract'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
@@ -217,8 +222,8 @@ const TokenLink = ({
   children,
   chainId,
   address,
-}: PropsWithChildren<{ chainId: keyof typeof CHAIN_IDS_TO_NAMES; address: string }>) => {
-  const tokenLink = getTokenDetailsURL({ address, chain: chainIdToBackendName(chainId) })
+}: PropsWithChildren<{ chainId: SupportedInterfaceChainId; address: string }>) => {
+  const tokenLink = getTokenDetailsURL({ address, chain: chainIdToBackendChain({ chainId }) })
   return <StyledRouterLink to={tokenLink}>{children}</StyledRouterLink>
 }
 
@@ -228,8 +233,9 @@ const ExternalTokenLink = ({ children, chainId, address }: PropsWithChildren<{ c
 
 function LinkedCurrency({ chainId, currency }: { chainId: number; currency?: Currency }) {
   const address = (currency as Token)?.address
+  const supportedChain = useSupportedChainId(chainId)
 
-  const Link = isGqlSupportedChain(chainId) ? TokenLink : ExternalTokenLink
+  const Link = isGqlSupportedChain(supportedChain) ? TokenLink : ExternalTokenLink
   return (
     <Link chainId={chainId} address={address}>
       <RowFixed>
@@ -373,7 +379,8 @@ export function PositionPageUnsupportedContent() {
 
 export default function PositionPage() {
   const { chainId } = useWeb3React()
-  if (isSupportedChain(chainId)) {
+  const isSupportedChain = useIsSupportedChainId(chainId)
+  if (isSupportedChain) {
     return <PositionPageContent />
   } else {
     return <PositionPageUnsupportedContent />
@@ -397,6 +404,7 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
 function PositionPageContent() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
   const { chainId, account, provider } = useWeb3React()
+  const supportedChain = useSupportedChainId(chainId)
   const theme = useTheme()
   const { formatCurrencyAmount, formatDelta, formatTickPrice } = useFormatter()
 
@@ -626,9 +634,9 @@ function PositionPageContent() {
             </RowBetween>
           </AutoColumn>
         </LightCard>
-        <ThemedText.DeprecatedItalic>
+        <Text fontSize={12} fontStyle="italic" color="$neutral2">
           <Trans>Collecting fees will withdraw currently available fees for you.</Trans>
-        </ThemedText.DeprecatedItalic>
+        </Text>
         <ButtonPrimary data-testid="modal-collect-fees-button" onClick={collect}>
           <Trans>Collect</Trans>
         </ButtonPrimary>
@@ -704,7 +712,16 @@ function PositionPageContent() {
               <ResponsiveRow>
                 <PositionLabelRow>
                   <DoubleCurrencyLogo currencies={[currencyBase, currencyQuote]} size={24} />
-                  <StyledPoolLink to={poolAddress ? getPoolDetailsURL(poolAddress, chainIdToBackendName(chainId)) : ''}>
+                  <StyledPoolLink
+                    to={
+                      poolAddress
+                        ? getPoolDetailsURL(
+                            poolAddress,
+                            chainIdToBackendChain({ chainId: supportedChain, withFallback: true })
+                          )
+                        : ''
+                    }
+                  >
                     <PairHeader>
                       &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
                     </PairHeader>

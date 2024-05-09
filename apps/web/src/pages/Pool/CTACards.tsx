@@ -1,9 +1,10 @@
+import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { AutoColumn } from 'components/Column'
-import { getChainInfoOrDefault } from 'constants/chainInfo'
+import { CHAIN_INFO, useSupportedChainId } from 'constants/chains'
 import { Trans } from 'i18n'
-import styled from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme/components'
+import styled, { css } from 'styled-components'
+import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
 
 const CTASection = styled.section`
   display: grid;
@@ -17,12 +18,13 @@ const CTASection = styled.section`
   `};
 `
 
-const CTA = styled(ExternalLink)`
+const CTAStyle = css`
   padding: 16px;
   border-radius: 20px;
   position: relative;
   overflow: hidden;
   border: 1px solid ${({ theme }) => theme.surface3};
+  text-decoration: none;
 
   * {
     color: ${({ theme }) => theme.neutral1};
@@ -32,11 +34,17 @@ const CTA = styled(ExternalLink)`
   :hover {
     border: 1px solid ${({ theme }) => theme.surface3};
 
-    text-decoration: none;
     * {
       text-decoration: none !important;
     }
   }
+`
+
+const CTAExternalLink = styled(ExternalLink)`
+  ${CTAStyle}
+`
+const CTALink = styled(StyledInternalLink)`
+  ${CTAStyle}
 `
 
 const HeaderText = styled(ThemedText.DeprecatedLabel)`
@@ -62,11 +70,11 @@ const ResponsiveColumn = styled(AutoColumn)`
 
 export default function CTACards() {
   const { chainId } = useWeb3React()
-  const { infoLink } = getChainInfoOrDefault(chainId)
+  const chain = CHAIN_INFO[useSupportedChainId(chainId) ?? ChainId.MAINNET]
 
   return (
     <CTASection>
-      <CTA href="https://support.uniswap.org/hc/en-us/categories/8122334631437-Providing-Liquidity-">
+      <CTAExternalLink href="https://support.uniswap.org/hc/en-us/categories/8122334631437-Providing-Liquidity-">
         <ResponsiveColumn>
           <HeaderText>
             <Trans>Learn about providing liquidity</Trans> ↗
@@ -75,8 +83,8 @@ export default function CTACards() {
             <Trans>Check out our v3 LP walkthrough and migration guides.</Trans>
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
-      </CTA>
-      <CTA data-testid="cta-infolink" href={infoLink + 'pools'}>
+      </CTAExternalLink>
+      <CTALink data-testid="cta-poolslink" to={`/explore/pools/${chain.urlParam}`}>
         <ResponsiveColumn>
           <HeaderText style={{ alignSelf: 'flex-start' }}>
             <Trans>Top pools</Trans> ↗
@@ -85,7 +93,7 @@ export default function CTACards() {
             <Trans>Explore Uniswap Analytics.</Trans>
           </ThemedText.DeprecatedBody>
         </ResponsiveColumn>
-      </CTA>
+      </CTALink>
     </CTASection>
   )
 }

@@ -18,7 +18,8 @@ import { BagCloseIcon } from 'nft/components/icons'
 import { useBag, useCollectionFilters, useFiltersExpanded, useIsMobile } from 'nft/hooks'
 import * as styles from 'nft/pages/collection/index.css'
 import { blocklistedCollections } from 'nft/utils'
-import { Suspense, useEffect } from 'react'
+import { useMetatags } from 'pages/metatags'
+import { Suspense, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { animated, easings, useSpring } from 'react-spring'
@@ -155,6 +156,15 @@ const Collection = () => {
     },
   })
 
+  const metaTags = useMemo(() => {
+    return {
+      title: collectionStats.name + ' on Uniswap',
+      image: window.location.origin + '/api/image/nfts/collection/' + contractAddress,
+      url: window.location.href,
+    }
+  }, [collectionStats.name, contractAddress])
+  const metaTagProperties = useMetatags(metaTags)
+
   useEffect(() => {
     const marketCount: Record<string, number> = {}
     collectionStats?.marketplaceCount?.forEach(({ marketplace, count }) => {
@@ -189,6 +199,9 @@ const Collection = () => {
             name: collectionStats.name,
           })}
         </title>
+        {metaTagProperties.map((tag) => (
+          <meta key={tag.property} {...tag} />
+        ))}
       </Helmet>
       <Trace
         page={InterfacePageName.NFT_COLLECTION_PAGE}

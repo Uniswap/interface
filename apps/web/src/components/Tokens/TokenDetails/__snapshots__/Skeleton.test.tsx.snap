@@ -472,7 +472,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
           >
             <a
               class="c3"
-              href="/explore/undefined"
+              href="/explore/ethereum"
             >
               Explore 
               <svg
@@ -493,7 +493,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
             </a>
             <a
               class="c3"
-              href="/explore/tokens/undefined"
+              href="/explore/tokens/ethereum"
             >
               Tokens 
               <svg

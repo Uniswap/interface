@@ -1,6 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { V2_BIPS } from 'graphql/data/pools/useTopPools'
-import { chainIdToBackendName } from 'graphql/data/util'
 import ms from 'ms'
 import { useMemo } from 'react'
 import {
@@ -70,7 +70,7 @@ function calc24HVolChange(historicalVolume?: (VolumeChange | undefined)[]) {
  */
 export function usePoolData(
   poolAddress: string,
-  chainId?: ChainId
+  chainId?: SupportedInterfaceChainId
 ): {
   loading: boolean
   error: boolean
@@ -82,7 +82,7 @@ export function usePoolData(
     error: errorV3,
     data: dataV3,
   } = useV3PoolQuery({
-    variables: { chain: chainIdToBackendName(chainId), address: poolAddress },
+    variables: { chain: chainIdToBackendChain({ chainId, withFallback: true }), address: poolAddress },
     errorPolicy: 'all',
   })
   const {
@@ -90,8 +90,8 @@ export function usePoolData(
     error: errorV2,
     data: dataV2,
   } = useV2PairQuery({
-    variables: { chain: chainIdToBackendName(chainId), address: poolAddress },
-    skip: chainId !== ChainId.MAINNET && !v2ExploreEnabled,
+    variables: { chain: chainIdToBackendChain({ chainId, withFallback: true }), address: poolAddress },
+    skip: !chainId || (chainId !== ChainId.MAINNET && !v2ExploreEnabled),
     errorPolicy: 'all',
   })
 

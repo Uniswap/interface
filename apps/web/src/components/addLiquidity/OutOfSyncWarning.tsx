@@ -5,7 +5,7 @@ import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
 import { Text } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
+import { AlertTriangle } from 'ui/src/components/icons'
 
 const Container = styled.div`
   height: 100%;

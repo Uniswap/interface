@@ -1,13 +1,13 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { ButtonPrimary } from 'components/Button'
-import { getChainInfo } from 'constants/chainInfo'
 import useSelectChain from 'hooks/useSelectChain'
 import { Trans } from 'i18n'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 
+import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import { ReactComponent as EyeIcon } from '../../../assets/svg/eye.svg'
 
 const InvalidDetailsContainer = styled.div`
@@ -47,13 +47,15 @@ export default function InvalidTokenDetails({
   isInvalidAddress?: boolean
 }) {
   const { chainId } = useWeb3React()
+  const isSupportedChain = useIsSupportedChainId(chainId)
+  const pageChainIsSupported = useIsSupportedChainId(pageChainId)
   const navigate = useNavigate()
   const selectChain = useSelectChain()
 
   // if the token's address is valid and the chains match, it's a non-existant token
   const isNonExistentToken = !isInvalidAddress && pageChainId === chainId
 
-  const connectedChainLabel = chainId ? getChainInfo(chainId)?.label : undefined
+  const connectedChainLabel = isSupportedChain ? CHAIN_INFO[chainId].label : undefined
 
   return (
     <InvalidDetailsContainer>
@@ -78,7 +80,7 @@ export default function InvalidTokenDetails({
           )}
           <TokenExploreButton onClick={() => selectChain(pageChainId)}>
             <ThemedText.SubHeader>
-              <Trans>Switch to {{ label: getChainInfo(pageChainId).label }}</Trans>
+              <Trans>Switch to {{ label: pageChainIsSupported ? CHAIN_INFO[pageChainId].label : '' }}</Trans>
             </ThemedText.SubHeader>
           </TokenExploreButton>
         </>

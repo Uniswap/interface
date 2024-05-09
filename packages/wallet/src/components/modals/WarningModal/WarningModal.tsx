@@ -1,6 +1,7 @@
 import { PropsWithChildren, ReactNode } from 'react'
 import { ColorValue } from 'react-native'
-import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { AlertTriangle } from 'ui/src/components/icons'
 import { opacify } from 'ui/src/theme'
 import { isWeb } from 'uniswap/src/utils/platform'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
@@ -72,7 +73,7 @@ export function WarningModal({
             style={{
               backgroundColor: backgroundIconColor ?? opacify(12, colors[alertColorValue].val),
             }}>
-            {icon ?? <Icons.AlertTriangle color={alertColor.text} size="$icon.24" />}
+            {icon ?? <AlertTriangle color={alertColor.text} size="$icon.24" />}
           </Flex>
         )}
         <Text textAlign="center" variant={isWeb ? 'subheading2' : 'body1'}>

@@ -28,7 +28,7 @@
     "target": "ESNext",
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo/build", // avoid clobbering the cypress tsbuildinfo
     "types": ["jest", "chrome"],
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": false,
   },
   "include": ["src/**/*", "src/**/*.json"],
   "references": [

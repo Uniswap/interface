@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Icons, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 
 export function HiddenTokensRow({
@@ -50,7 +51,7 @@ export function HiddenTokensRow({
               variant="buttonLabel3">
               {isExpanded ? t('common.button.hide') : t('common.button.show')}
             </Text>
-            <Icons.RotatableChevron
+            <RotatableChevron
               animation="semiBouncy"
               color="$neutral2"
               direction={isExpanded ? 'up' : 'down'}

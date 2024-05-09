@@ -7,7 +7,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import SwapHeader from 'components/swap/SwapHeader'
 import { SwapTab } from 'components/swap/constants'
 import { PageWrapper, SwapWrapper } from 'components/swap/styled'
-import { asSupportedChain } from 'constants/chains'
+import { useSupportedChainId } from 'constants/chains'
 import { useCurrency } from 'hooks/Tokens'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useScreenSize } from 'hooks/useScreenSize'
@@ -39,7 +39,7 @@ export default function SwapPage({ className }: { className?: string }) {
   const location = useLocation()
 
   const { chainId: connectedChainId } = useWeb3React()
-  const supportedChainId = asSupportedChain(connectedChainId)
+  const supportedChainId = useSupportedChainId(connectedChainId)
   const chainId = supportedChainId || ChainId.MAINNET
 
   const parsedQs = useParsedQueryString()

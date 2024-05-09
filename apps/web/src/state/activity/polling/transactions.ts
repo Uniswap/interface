@@ -1,10 +1,11 @@
 import { NEVER_RELOAD } from '@uniswap/redux-multicall'
-import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
+import { SupportedInterfaceChainId, getChainInfo, useSupportedChainId } from 'constants/chains'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
+import { toSerializableReceipt } from 'state/activity/utils'
 import { useAppDispatch } from 'state/hooks'
 import { isPendingTx, useMultichainTransactions, useTransactionRemover } from 'state/transactions/hooks'
 import { checkedTransaction } from 'state/transactions/reducer'
@@ -39,17 +40,9 @@ export function shouldCheck(lastBlockNumber: number, tx: Transaction): boolean {
   }
 }
 
-const RETRY_OPTIONS_BY_CHAIN_ID: { [chainId: number]: RetryOptions } = {
-  [ChainId.ARBITRUM_ONE]: { n: 10, minWait: 250, maxWait: 1000 },
-  [ChainId.ARBITRUM_GOERLI]: { n: 10, minWait: 250, maxWait: 1000 },
-  [ChainId.OPTIMISM]: { n: 10, minWait: 250, maxWait: 1000 },
-  [ChainId.OPTIMISM_GOERLI]: { n: 10, minWait: 250, maxWait: 1000 },
-  [ChainId.BASE]: { n: 10, minWait: 250, maxWait: 1000 },
-  [ChainId.BLAST]: { n: 10, minWait: 250, maxWait: 1000 },
-}
 const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 1, minWait: 0, maxWait: 0 }
 
-function usePendingTransactions(chainId?: ChainId) {
+function usePendingTransactions(chainId?: SupportedInterfaceChainId) {
   const multichainTransactions = useMultichainTransactions()
   return useMemo(() => {
     if (!chainId) return []
@@ -71,6 +64,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
     // We can skip polling when the app's current chain is supported by the subscription service.
     realtimeEnabled && chainId && SUBSCRIPTION_CHAINIDS.includes(chainId) ? undefined : chainId
   )
+  const supportedChain = useSupportedChainId(chainId)
   const hasPending = pendingTransactions.length > 0
   const blockTimestamp = useCurrentBlockTimestamp(hasPending ? undefined : NEVER_RELOAD)
 
@@ -81,8 +75,9 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
 
   const getReceipt = useCallback(
     (tx: TransactionDetails) => {
-      if (!provider || !chainId) throw new Error('No provider or chainId')
-      const retryOptions = RETRY_OPTIONS_BY_CHAIN_ID[chainId] ?? DEFAULT_RETRY_OPTIONS
+      if (!provider || !supportedChain) throw new Error('No provider or chainId')
+      const retryOptions =
+        getChainInfo({ chainId: supportedChain })?.pendingTransactionsRetryOptions ?? DEFAULT_RETRY_OPTIONS
       return retry(
         () =>
           provider.getTransactionReceipt(tx.hash).then(async (receipt) => {
@@ -100,12 +95,12 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
               }
               throw new RetryableError()
             }
-            return receipt
+            return toSerializableReceipt(receipt)
           }),
         retryOptions
       )
     },
-    [account, blockTimestamp, chainId, provider, removeTransaction]
+    [account, blockTimestamp, provider, removeTransaction, supportedChain]
   )
 
   useEffect(() => {

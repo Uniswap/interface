@@ -1,3 +1,4 @@
+import { BACKEND_SUPPORTED_CHAINS, SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { ARB, NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useMemo } from 'react'
 import invariant from 'tiny-invariant'
@@ -7,7 +8,6 @@ import {
   Token,
   useSearchTokensWebQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { BACKEND_SUPPORTED_CHAINS, chainIdToBackendName } from './util'
 
 const ARB_ADDRESS = ARB.address.toLowerCase()
 
@@ -52,7 +52,7 @@ function searchTokenSortFunction(
   else return (b.market?.volume24H?.value ?? 0) - (a.market?.volume24H?.value ?? 0)
 }
 
-export function useSearchTokens(searchQuery: string | undefined, chainId: number) {
+export function useSearchTokens(searchQuery: string | undefined, chainId: SupportedInterfaceChainId) {
   const { data, loading, error } = useSearchTokensWebQuery({
     variables: {
       searchQuery: searchQuery ?? '',
@@ -61,7 +61,7 @@ export function useSearchTokens(searchQuery: string | undefined, chainId: number
   })
 
   const sortedTokens = useMemo(() => {
-    const searchChain = chainIdToBackendName(chainId)
+    const searchChain = chainIdToBackendChain({ chainId, withFallback: true })
     // Stores results, allowing overwriting cross-chain tokens w/ more 'relevant token'
     const selectionMap: { [projectId: string]: SearchToken } = {}
     const filteredTokens = data?.searchTokens?.filter(

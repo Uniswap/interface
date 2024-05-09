@@ -1,4 +1,5 @@
-import { Flex, Icons, TouchableArea } from 'ui/src'
+import { Flex, TouchableArea } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { SearchTextInput, SearchTextInputProps } from 'wallet/src/features/search/SearchTextInput'
 import { ElementName } from 'wallet/src/telemetry/constants'
@@ -13,11 +14,7 @@ export function SearchBar({ onBack, ...rest }: SearchBarProps): JSX.Element {
     <Flex centered row gap="$spacing12">
       {onBack && (
         <TouchableArea testID={ElementName.Back} onPress={onBack}>
-          <Icons.RotatableChevron
-            color="$neutral2"
-            height={iconSizes.icon24}
-            width={iconSizes.icon24}
-          />
+          <RotatableChevron color="$neutral2" height={iconSizes.icon24} width={iconSizes.icon24} />
         </TouchableArea>
       )}
       <SearchTextInput {...rest} />

@@ -1,0 +1,12 @@
+{
+  "scriptSrc": [
+    "https://vercel.live/"
+  ],
+  "styleSrc": [
+    "https://vercel.live/"
+  ],
+  "frameSrc": [
+    "https://vercel.live/",
+    "https://vercel.com"
+  ]
+}

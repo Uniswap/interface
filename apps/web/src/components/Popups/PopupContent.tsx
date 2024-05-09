@@ -1,8 +1,9 @@
+import { useQuery } from '@tanstack/react-query'
 import { ChainId } from '@uniswap/sdk-core'
 import { useOpenOffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import {
-  useSignatureToActivity,
-  useTransactionToActivity,
+  getSignatureToActivityQueryOptions,
+  getTransactionToActivityQueryOptions,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
@@ -10,7 +11,7 @@ import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import Column, { AutoColumn } from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { AutoRow } from 'components/Row'
-import { getChainInfo } from 'constants/chainInfo'
+import { CHAIN_INFO, SupportedInterfaceChainId, useIsSupportedChainId } from 'constants/chains'
 import useENSName from 'hooks/useENSName'
 import { Trans } from 'i18n'
 import { X } from 'react-feather'
@@ -19,6 +20,7 @@ import { useTransaction } from 'state/transactions/hooks'
 import styled from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const StyledClose = styled(X)<{ $padding: number }>`
@@ -67,7 +69,12 @@ const PopupAlertTriangle = styled(AlertTriangleFilled)`
 `
 
 export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: ChainId; onClose: () => void }) {
-  const chainInfo = getChainInfo(chainId)
+  const isSupportedChain = useIsSupportedChainId(chainId)
+  const chainInfo = isSupportedChain ? CHAIN_INFO[chainId] : undefined
+
+  if (!chainInfo) {
+    return null
+  }
 
   return (
     <PopupContainer padded>
@@ -133,12 +140,13 @@ export function TransactionPopupContent({
   hash,
   onClose,
 }: {
-  chainId: ChainId
+  chainId: SupportedInterfaceChainId
   hash: string
   onClose: () => void
 }) {
   const transaction = useTransaction(hash)
-  const activity = useTransactionToActivity(transaction, chainId)
+  const { formatNumber } = useFormatter()
+  const { data: activity } = useQuery(getTransactionToActivityQueryOptions(transaction, chainId, formatNumber))
 
   if (!transaction || !activity) return null
 
@@ -152,7 +160,8 @@ export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: s
   const order = useOrder(orderHash)
   const openOffchainActivityModal = useOpenOffchainActivityModal()
 
-  const activity = useSignatureToActivity(order)
+  const { formatNumber } = useFormatter()
+  const { data: activity } = useQuery(getSignatureToActivityQueryOptions(order, formatNumber))
 
   if (!activity || !order) return null
 

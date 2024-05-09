@@ -75,7 +75,7 @@ function useHandleShareNft(): (args: ShareNftArgs) => Promise<void> {
 
 function useHandleShareToken(): (args: ShareTokenArgs) => Promise<void> {
   return useCallback(async ({ currencyId }: ShareTokenArgs): Promise<void> => {
-    const url = getTokenUrl(currencyId)
+    const url = getTokenUrl(currencyId, true)
 
     if (!url) {
       logger.error(new Error('Failed to get token URL'), {

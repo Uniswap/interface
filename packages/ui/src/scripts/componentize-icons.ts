@@ -73,8 +73,8 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): 
 
   // Format and write index file
   console.log('Writing index file...')
-  const formattedIndex = await eslintFormat(indexFile, 'index.ts')
-  writeFileSync(join(dirs.output, 'index.ts'), formattedIndex, 'utf-8')
+  const formattedIndex = await eslintFormat(indexFile, 'exported.ts')
+  writeFileSync(join(dirs.output, 'exported.ts'), formattedIndex, 'utf-8')
 }
 
 async function generateSVGComponent(svg: string, fileName: string): Promise<string | undefined> {

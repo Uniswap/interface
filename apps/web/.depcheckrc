@@ -60,6 +60,7 @@ ignores: [
     "pages",
     "polyfills",
     "rpc",
+    "shared-cloud",
     "state",
     "test-utils",
     "theme",

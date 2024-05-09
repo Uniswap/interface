@@ -35,6 +35,7 @@ export function getSendPrefilledState({
     // If specified currency address populate the currency, otherwise default to native token on chain
     [CurrencyField.INPUT]: chosenToken ?? nativeToken,
     [CurrencyField.OUTPUT]: null,
+    showRecipientSelector: true,
   }
 
   return transactionState

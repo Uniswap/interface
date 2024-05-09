@@ -4,7 +4,8 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { closeAllModals } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { Button, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AlertTriangle, Faceid, Laptop, LinkBrokenHorizontal } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { logger } from 'utilities/src/logger/logger'
@@ -211,7 +212,7 @@ export function ScantasticModal(): JSX.Element | null {
     }
   }, [OTP, uuid])
 
-  useInterval(checkOTPState, 6000, true)
+  useInterval(checkOTPState, ONE_SECOND_MS, true)
 
   if (expired) {
     return (
@@ -221,7 +222,7 @@ export function ScantasticModal(): JSX.Element | null {
         onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
-            <Icons.LinkBrokenHorizontal color="$neutral2" size={iconSizes.icon24} />
+            <LinkBrokenHorizontal color="$neutral2" size={iconSizes.icon24} />
           </Flex>
           <Text variant="subheading1">{t('scantastic.error.timeout.title')}</Text>
           <Text color="$neutral2" mb="$spacing12" textAlign="center" variant="body3">
@@ -243,7 +244,7 @@ export function ScantasticModal(): JSX.Element | null {
         onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
-            <Icons.Laptop color="$accent1" size={iconSizes.icon24} />
+            <Laptop color="$accent1" size={iconSizes.icon24} />
           </Flex>
           <Text variant="subheading1">{t('scantastic.code.title')}</Text>
           <Text color="$neutral2" textAlign="center" variant="body3">
@@ -269,7 +270,7 @@ export function ScantasticModal(): JSX.Element | null {
         onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
-            <Icons.AlertTriangle color="$statusCritical" size={iconSizes.icon24} />
+            <AlertTriangle color="$statusCritical" size={iconSizes.icon24} />
           </Flex>
           <Text variant="subheading1">{t('common.text.error')}</Text>
           <Text color="$neutral2" textAlign="center" variant="body3">
@@ -294,7 +295,7 @@ export function ScantasticModal(): JSX.Element | null {
       onClose={onClose}>
       <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
         <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
-          <Icons.Laptop color="$accent1" size={iconSizes.icon24} />
+          <Laptop color="$accent1" size={iconSizes.icon24} />
         </Flex>
         <Text variant="subheading1">{t('scantastic.confirmation.title')}</Text>
         <Text color="$neutral2" textAlign="center" variant="body3">
@@ -334,14 +335,14 @@ export function ScantasticModal(): JSX.Element | null {
           gap="$spacing8"
           p="$spacing16"
           width="100%">
-          <Icons.AlertTriangle color="$neutral2" size="$icon.20" />
+          <AlertTriangle color="$neutral2" size="$icon.20" />
           <Text color="$neutral2" variant="body4">
             {t('scantastic.confirmation.warning')}
           </Text>
         </Flex>
         <Flex flexDirection="column" gap="$spacing4" width="100%">
           <Button
-            icon={requiresBiometricAuth ? <Icons.Faceid size={iconSizes.icon16} /> : undefined}
+            icon={requiresBiometricAuth ? <Faceid size={iconSizes.icon16} /> : undefined}
             mb="$spacing4"
             theme="primary"
             onPress={onConfirmSync}>

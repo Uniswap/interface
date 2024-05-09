@@ -1,6 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { PoolTableSortState, TablePool, V2_BIPS, calculateOneDayApr, sortPools } from 'graphql/data/pools/useTopPools'
-import { chainIdToBackendName } from 'graphql/data/util'
 import { useCallback, useMemo, useRef } from 'react'
 import {
   useTopV2PairsQuery,
@@ -11,7 +11,11 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const DEFAULT_QUERY_SIZE = 20
 
-export function usePoolsFromTokenAddress(tokenAddress: string, sortState: PoolTableSortState, chainId?: ChainId) {
+export function usePoolsFromTokenAddress(
+  tokenAddress: string,
+  sortState: PoolTableSortState,
+  chainId?: SupportedInterfaceChainId
+) {
   const v2ExploreEnabled = useFeatureFlag(FeatureFlags.V2Explore)
   const {
     loading: loadingV3,
@@ -22,7 +26,7 @@ export function usePoolsFromTokenAddress(tokenAddress: string, sortState: PoolTa
     variables: {
       first: DEFAULT_QUERY_SIZE,
       tokenAddress,
-      chain: chainIdToBackendName(chainId),
+      chain: chainIdToBackendChain({ chainId, withFallback: true }),
     },
   })
 
@@ -35,9 +39,9 @@ export function usePoolsFromTokenAddress(tokenAddress: string, sortState: PoolTa
     variables: {
       first: DEFAULT_QUERY_SIZE,
       tokenAddress,
-      chain: chainIdToBackendName(chainId),
+      chain: chainIdToBackendChain({ chainId, withFallback: true }),
     },
-    skip: chainId !== ChainId.MAINNET && !v2ExploreEnabled,
+    skip: !chainId || (chainId !== ChainId.MAINNET && !v2ExploreEnabled),
   })
   const loading = loadingV3 || loadingV2
 

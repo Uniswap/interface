@@ -2,7 +2,11 @@
 
 ## Purpose
 
-These functions utilize Cloudflare Functions to dynamically inject meta tags server side for richer link sharing capabilities.
+These functions utilize Cloudflare Functions to dynamically inject meta tags server-side for richer link sharing capabilities.
+
+Search engines and social media platforms' crawlers read the initial HTML of a page to index and understand its content. These crawlers often do not execute JavaScript, meaning dynamically added client-side content, including metatags, may not be indexed or recognized. This is why we render our metatags on server-side.
+
+However, these server-side injected metatags do not automatically update during client-side navigation managed by react-router. To address this, we implement additional client-side logic - see `src/pages/metatags.ts`. This client-side metatag management is particularly important for compatibility with features like Safari's native share, which relies on metatags like `og:url` to represent the shared page.
 
 ## Functions
 

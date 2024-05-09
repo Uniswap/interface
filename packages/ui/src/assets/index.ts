@@ -56,6 +56,9 @@ export const ONBOARDING_NOTIFICATIONS_LIGHT = {
 export const FOR_CONNECTING_BACKGROUND_DARK = require('./backgrounds/for-connecting-dark.png')
 export const FOR_CONNECTING_BACKGROUND_LIGHT = require('./backgrounds/for-connecting-light.png')
 
+export const CRYPTO_PURCHASE_BACKGROUND_LIGHT = require('./backgrounds/coins-background-light.png')
+export const CRYPTO_PURCHASE_BACKGROUND_DARK = require('./backgrounds/coins-background-dark.png')
+
 export const SECURITY_SCREEN_BACKGROUND_DARK = {
   ios: require(`./backgrounds/ios/security-background-dark.png`),
   android: require(`./backgrounds/android/security-background-dark.png`),

@@ -6,13 +6,13 @@ import { selectModalState } from 'src/features/modals/selectModalState'
 import {
   Flex,
   HapticFeedback,
-  Icons,
   ImpactFeedbackStyle,
   Separator,
   Text,
   TouchableArea,
   useSporeColors,
 } from 'ui/src'
+import { CopySheets, QrCode } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -84,7 +84,7 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
                 borderRadius={ICON_BORDER_RADIUS}
                 height={ICON_SIZE}
                 width={ICON_SIZE}>
-                <Icons.CopySheets color="$neutral2" size={iconSizes.icon16} />
+                <CopySheets color="$neutral2" size={iconSizes.icon16} />
               </Flex>
             </TouchableArea>
             <Flex
@@ -94,7 +94,7 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
               borderRadius={ICON_BORDER_RADIUS}
               height={ICON_SIZE}
               width={ICON_SIZE}>
-              <Icons.QrCode color="$neutral2" size={iconSizes.icon16} />
+              <QrCode color="$neutral2" size={iconSizes.icon16} />
             </Flex>
           </Flex>
         </Flex>

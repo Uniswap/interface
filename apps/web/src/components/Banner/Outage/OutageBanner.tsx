@@ -1,7 +1,7 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { Container, PopupContainer, StyledXButton, TextContainer } from 'components/Banner/shared/styled'
+import { chainIdToBackendChain } from 'constants/chains'
 import { ChainOutageData } from 'featureFlags/flags/outageBanner'
-import { chainIdToBackendName } from 'graphql/data/util'
 import { Trans } from 'i18n'
 import { useState } from 'react'
 import { Globe } from 'react-feather'
@@ -43,7 +43,7 @@ export function OutageBanner({ chainId, version }: ChainOutageData) {
   const [hidden, setHidden] = useState(false)
   const theme = useTheme()
   const versionName = version ? version.toString().toLowerCase() + ' data' : 'Data'
-  const chainName = capitalize(chainIdToBackendName(chainId).toLowerCase())
+  const chainName = capitalize(chainIdToBackendChain({ chainId, withFallback: true }).toLowerCase())
   const versionDescription = version ? ' ' + version.toString().toLowerCase() : ''
 
   return (

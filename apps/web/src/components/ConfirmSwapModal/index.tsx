@@ -55,6 +55,7 @@ export function ConfirmSwapModal({
   fiatValueOutput,
   swapResult,
   swapError,
+  priceImpact,
   clearSwapState,
   onAcceptChanges,
   onConfirm,
@@ -70,6 +71,7 @@ export function ConfirmSwapModal({
   fiatValueOutput: { data?: number; isLoading: boolean }
   swapResult?: SwapResult
   swapError?: Error
+  priceImpact?: Percent
   clearSwapState: () => void
   onAcceptChanges?: () => void
   onConfirm: () => void
@@ -219,6 +221,7 @@ export function ConfirmSwapModal({
                   showAcceptChanges={Boolean(showAcceptChanges)}
                   onAcceptChanges={onAcceptChanges}
                   swapErrorMessage={swapFailed ? swapError?.message : undefined}
+                  priceImpact={priceImpact}
                 />
               </AutoColumn>
             </FadePresence>

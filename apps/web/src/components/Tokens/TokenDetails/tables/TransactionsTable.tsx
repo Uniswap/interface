@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
@@ -13,6 +13,7 @@ import {
   TimestampCell,
   TokenLinkCell,
 } from 'components/Table/styled'
+import { SupportedInterfaceChainId } from 'constants/chains'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { TokenTransactionType, useTokenTransactions } from 'graphql/data/useTokenTransactions'
 import { unwrapToken } from 'graphql/data/util'
@@ -57,7 +58,13 @@ type TokenTxTableSortState = {
   sortDirection: OrderDirection
 }
 
-export function TransactionsTable({ chainId, referenceToken }: { chainId: ChainId; referenceToken: Token }) {
+export function TransactionsTable({
+  chainId,
+  referenceToken,
+}: {
+  chainId: SupportedInterfaceChainId
+  referenceToken: Token
+}) {
   const activeLocalCurrency = useActiveLocalCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)

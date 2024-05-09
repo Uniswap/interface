@@ -115,22 +115,10 @@ export const ThemedText = {
   DeprecatedSubHeader(props: TextProps) {
     return <TextWrapper fontWeight={485} fontSize={14} {...props} />
   },
-  DeprecatedSmall(props: TextProps) {
-    return <TextWrapper fontWeight={485} fontSize={11} {...props} />
-  },
-  DeprecatedBlue(props: TextProps) {
-    return <TextWrapper fontWeight={485} color="accent1" {...props} />
-  },
-  DeprecatedYellow(props: TextProps) {
-    return <TextWrapper fontWeight={485} color="deprecated_yellow3" {...props} />
-  },
   DeprecatedDarkGray(props: TextProps) {
     return <TextWrapper fontWeight={485} color="neutral2" {...props} />
   },
   DeprecatedGray(props: TextProps) {
     return <TextWrapper fontWeight={485} color="surface2" {...props} />
-  },
-  DeprecatedItalic(props: TextProps) {
-    return <TextWrapper fontWeight={485} fontSize={12} fontStyle="italic" color="neutral2" {...props} />
   },
 }

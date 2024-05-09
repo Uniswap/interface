@@ -82,7 +82,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
           Accept: 'application/json',
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ method: 'eth_sendTransaction', response: signature, chainId }),
+        body: JSON.stringify({ method: params.method, response: signature, chainId }),
         // TODO: consider adding analytics to track UwuLink usage
       }).catch((error) =>
         logger.error(error, {

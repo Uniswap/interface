@@ -11,22 +11,15 @@ import { NameText } from 'components/Tokens/TokenTable'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { SupportedInterfaceChainId, chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
 import { BIPS_BASE } from 'constants/misc'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { PoolSortFields, TablePool, useTopPools } from 'graphql/data/pools/useTopPools'
-import {
-  OrderDirection,
-  chainIdToBackendName,
-  gqlToCurrency,
-  supportedChainIdFromGQLChain,
-  unwrapToken,
-  validateUrlChainParam,
-} from 'graphql/data/util'
+import { OrderDirection, getSupportedGraphQlChain, gqlToCurrency, unwrapToken } from 'graphql/data/util'
 import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { ReactElement, ReactNode, useCallback, useEffect, useMemo } from 'react'
-import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -151,8 +144,7 @@ function PoolTableHeader({
 }
 
 export function TopPoolTable() {
-  const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
-  const chainId = supportedChainIdFromGQLChain(chainName)
+  const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
 
@@ -165,14 +157,14 @@ export function TopPoolTable() {
 
   const { topPools, loading, errorV3, errorV2 } = useTopPools(
     { sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc },
-    chainId
+    chain.id
   )
   const combinedError =
     errorV2 && errorV3
-      ? new ApolloError({ errorMessage: `Could not retrieve V2 and V3 Top Pools on chain: ${chainId}` })
+      ? new ApolloError({ errorMessage: `Could not retrieve V2 and V3 Top Pools on chain: ${chain.id}` })
       : undefined
   const allDataStillLoading = loading && !topPools.length
-  useUpdateManualOutage({ chainId, errorV3, errorV2 })
+  useUpdateManualOutage({ chainId: chain.id, errorV3, errorV2 })
 
   return (
     <TableWrapper data-testid="top-pools-explore-table">
@@ -180,7 +172,7 @@ export function TopPoolTable() {
         pools={topPools}
         loading={allDataStillLoading}
         error={combinedError}
-        chainId={chainId}
+        chainId={chain.id}
         maxWidth={1200}
       />
     </TableWrapper>
@@ -201,7 +193,7 @@ export function PoolsTable({
   loading: boolean
   error?: ApolloError
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
-  chainId: ChainId
+  chainId: SupportedInterfaceChainId
   maxWidth?: number
   maxHeight?: number
   hiddenColumns?: PoolTableColumns[]
@@ -233,7 +225,7 @@ export function PoolsTable({
           volume24h: pool.volume24h,
           volumeWeek: pool.volumeWeek,
           oneDayApr: pool.oneDayApr,
-          link: `/explore/pools/${chainIdToBackendName(chainId).toLowerCase()}/${pool.hash}`,
+          link: `/explore/pools/${chainIdToBackendChain({ chainId, withFallback: true }).toLowerCase()}/${pool.hash}`,
           analytics: {
             elementName: InterfaceElementName.POOLS_TABLE_ROW,
             properties: {

@@ -1,6 +1,7 @@
 import { ApolloError } from '@apollo/client'
-import { ChainId, Token } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { PoolTableColumns, PoolsTable, sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
+import { SupportedInterfaceChainId } from 'constants/chains'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { usePoolsFromTokenAddress } from 'graphql/data/pools/usePoolsFromTokenAddress'
 import { OrderDirection } from 'graphql/data/util'
@@ -9,7 +10,13 @@ import { useEffect, useMemo } from 'react'
 
 const HIDDEN_COLUMNS = [PoolTableColumns.Transactions]
 
-export function TokenDetailsPoolsTable({ chainId, referenceToken }: { chainId: ChainId; referenceToken: Token }) {
+export function TokenDetailsPoolsTable({
+  chainId,
+  referenceToken,
+}: {
+  chainId: SupportedInterfaceChainId
+  referenceToken: Token
+}) {
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
   const sortState = useMemo(

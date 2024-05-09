@@ -7,7 +7,8 @@ import {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import { AnimatedFlex, ColorTokens, Icons } from 'ui/src'
+import { AnimatedFlex, ColorTokens } from 'ui/src'
+import { CircleSpinner, EmptySpinner } from 'ui/src/components/icons'
 
 export function SpinningLoader({
   size = 20,
@@ -42,12 +43,12 @@ export function SpinningLoader({
   }, [rotation])
 
   if (disabled) {
-    return <Icons.EmptySpinner color="$neutral3" size={size} />
+    return <EmptySpinner color="$neutral3" size={size} />
   }
 
   return (
     <AnimatedFlex sentry-label="SpinningLoader" style={[animatedStyles]}>
-      <Icons.CircleSpinner color={color ?? '$neutral2'} size={size} />
+      <CircleSpinner color={color ?? '$neutral2'} size={size} />
     </AnimatedFlex>
   )
 }

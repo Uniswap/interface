@@ -1,4 +1,5 @@
-import { ColorTokens, Flex, Icons, Text } from 'ui/src'
+import { ColorTokens, Flex, Text } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { shortenAddress } from 'wallet/src/utils/addresses'
 
@@ -32,7 +33,7 @@ export function AccountDetails({
           {shortenAddress(address)}
         </Text>
         {chevron && (
-          <Icons.RotatableChevron
+          <RotatableChevron
             color={chevronColor}
             direction="end"
             height={iconSize}

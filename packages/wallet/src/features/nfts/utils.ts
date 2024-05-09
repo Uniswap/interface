@@ -54,6 +54,6 @@ export const getIsNftHidden = ({
     return true
   }
   const nftKey = getNFTAssetKey(contractAddress, tokenId)
-  const nftIsVisible = !!nftVisibility[nftKey]?.isVisible
+  const nftIsVisible = nftVisibility[nftKey]?.isVisible ?? isSpam === false
   return isSpam || !nftIsVisible
 }

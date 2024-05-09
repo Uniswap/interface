@@ -1,4 +1,5 @@
-import { Flex, FlexProps, Icons, Text, TextProps } from 'ui/src'
+import { Flex, FlexProps, Text, TextProps } from 'ui/src'
+import { Unitag } from 'ui/src/components/icons'
 import { IconSizeTokens } from 'ui/src/theme'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
@@ -32,7 +33,7 @@ export function DisplayNameText({
       </Text>
       {isUnitag ? (
         <Flex>
-          <Icons.Unitag size={unitagIconSize} />
+          <Unitag size={unitagIconSize} />
         </Flex>
       ) : null}
     </Flex>

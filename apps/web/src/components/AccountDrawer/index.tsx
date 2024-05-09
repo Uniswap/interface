@@ -103,6 +103,7 @@ const AccountDrawerWrapper = styled.div<{ open: boolean }>`
     height: calc(100% - ${DRAWER_TOP_MARGIN_MOBILE_WEB});
 
     width: 100%;
+    max-width: 100%;
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
     box-shadow: unset;

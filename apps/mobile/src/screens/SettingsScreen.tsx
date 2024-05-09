@@ -30,7 +30,6 @@ import {
   Button,
   Flex,
   IconProps,
-  Icons,
   Text,
   TouchableArea,
   useDeviceInsets,
@@ -45,6 +44,17 @@ import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import MessageQuestion from 'ui/src/assets/icons/message-question.svg'
 import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
+import {
+  Chart,
+  Coins,
+  Feedback,
+  Key,
+  Language,
+  LineChartDots,
+  OSDynamicCloudIcon,
+  RotatableChevron,
+  ShieldQuestion,
+} from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -152,7 +162,7 @@ export function SettingsScreen(): JSX.Element {
                   modal: ModalName.FiatCurrencySelector,
                   text: t('settings.setting.currency.title'),
                   currentSetting: currentFiatCurrencyInfo.code,
-                  icon: <Icons.Coins {...iconProps} />,
+                  icon: <Coins {...iconProps} />,
                 },
               ] as SettingsSectionItem[])
             : []),
@@ -160,22 +170,22 @@ export function SettingsScreen(): JSX.Element {
             modal: ModalName.LanguageSelector,
             text: t('settings.setting.language.title'),
             currentSetting: currentLanguage,
-            icon: <Icons.Language {...iconProps} />,
+            icon: <Language {...iconProps} />,
           },
           {
             screen: Screens.SettingsPrivacy,
             text: t('settings.setting.privacy.title'),
-            icon: <Icons.LineChartDots {...iconProps} />,
+            icon: <LineChartDots {...iconProps} />,
           },
           {
             text: t('settings.setting.smallBalances.title'),
-            icon: <Icons.Chart {...iconProps} />,
+            icon: <Chart {...iconProps} />,
             isToggleEnabled: hideSmallBalances,
             onToggle: onToggleHideSmallBalances,
           },
           {
             text: t('settings.setting.unknownTokens.title'),
-            icon: <Icons.ShieldQuestion {...iconProps} />,
+            icon: <ShieldQuestion {...iconProps} />,
             isToggleEnabled: hideSpamTokens,
             onToggle: onToggleHideSpamTokens,
           },
@@ -203,7 +213,7 @@ export function SettingsScreen(): JSX.Element {
           {
             screen: Screens.SettingsViewSeedPhrase,
             text: t('settings.setting.recoveryPhrase.title'),
-            icon: <Icons.Key {...iconProps} />,
+            icon: <Key {...iconProps} />,
             screenProps: { address: signerAccount?.address ?? '', walletNeedsRestore },
             isHidden: noSignerAccountImported,
           },
@@ -225,7 +235,7 @@ export function SettingsScreen(): JSX.Element {
             text: t('settings.setting.backup.selected', {
               cloudProviderName: getCloudProviderName(),
             }),
-            icon: <Icons.OSDynamicCloudIcon color="$neutral2" size="$icon.24" />,
+            icon: <OSDynamicCloudIcon color="$neutral2" size="$icon.24" />,
             isHidden: noSignerAccountImported,
           },
         ],
@@ -240,7 +250,7 @@ export function SettingsScreen(): JSX.Element {
               headerTitle: t('settings.action.feedback'),
             },
             text: t('settings.action.feedback'),
-            icon: <Icons.Feedback color="$neutral2" size="$icon.24" />,
+            icon: <Feedback color="$neutral2" size="$icon.24" />,
           },
           {
             screen: Screens.WebView,
@@ -374,7 +384,7 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
             Onboarding
           </Text>
         </Flex>
-        <Icons.RotatableChevron
+        <RotatableChevron
           color="$neutral3"
           direction="end"
           height={iconSizes.icon24}
@@ -444,7 +454,7 @@ function WalletSettings(): JSX.Element {
                   size={iconSizes.icon40}
                   variant="body1"
                 />
-                <Icons.RotatableChevron
+                <RotatableChevron
                   color="$neutral3"
                   direction="end"
                   height={iconSizes.icon24}

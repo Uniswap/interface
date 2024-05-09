@@ -54,10 +54,16 @@ interface UwULinkRequestDappInfo {
 }
 
 interface UwULinkBaseRequest {
-  method: EthMethod.EthSendTransaction | UwULinkMethod.Erc20Send
+  method: EthMethod.EthSendTransaction | EthMethod.PersonalSign | UwULinkMethod.Erc20Send
   chainId: number
   dapp?: UwULinkRequestDappInfo
   webhook?: string
+}
+
+interface UwULinkPersonalSignRequest extends UwULinkBaseRequest {
+  method: EthMethod.PersonalSign
+  message: string
+  webhook: string
 }
 
 interface UwULinkGenericTransactionRequest extends UwULinkBaseRequest {
@@ -75,7 +81,10 @@ export interface UwULinkErc20SendRequest extends UwULinkBaseRequest {
   isStablecoin: false
 }
 
-export type UwULinkRequest = UwULinkGenericTransactionRequest | UwULinkErc20SendRequest
+export type UwULinkRequest =
+  | UwULinkGenericTransactionRequest
+  | UwULinkErc20SendRequest
+  | UwULinkPersonalSignRequest
 
 export interface DappInfoWC {
   source: 'walletconnect'

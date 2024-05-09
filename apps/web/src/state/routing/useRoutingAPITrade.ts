@@ -1,12 +1,12 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
-import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms'
 import { useMemo } from 'react'
 
+import { AVERAGE_L1_BLOCK_TIME } from 'constants/chains'
 import { useGetQuoteQuery, useGetQuoteQueryState } from './slice'
 import {
   ClassicTrade,

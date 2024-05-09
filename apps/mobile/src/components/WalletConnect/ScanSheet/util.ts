@@ -18,6 +18,7 @@ import { getTokenTransferRequest } from 'wallet/src/features/transactions/transf
 import { TransferCurrencyParams } from 'wallet/src/features/transactions/transfer/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import {
+  EthMethod,
   EthTransaction,
   UwULinkErc20SendRequest,
   UwULinkMethod,
@@ -186,6 +187,10 @@ export function isAllowedUwuLinkRequest(
   // token sends
   if (request.method === UwULinkMethod.Erc20Send) {
     return Boolean(findAllowedTokenRecipient(request, allowlist))
+  }
+
+  if (request.method === EthMethod.PersonalSign) {
+    return true
   }
 
   // generic transactions

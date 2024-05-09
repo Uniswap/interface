@@ -9,7 +9,8 @@ import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Button, Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ImportType } from 'wallet/src/features/onboarding/types'
 import { useNonPendingSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -149,7 +150,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
               flexDirection="row"
               gap="$spacing8"
               onPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}>
-              <Icons.QuestionInCircleFilled color="$surface1" size="$icon.20" />
+              <QuestionInCircleFilled color="$surface1" size="$icon.20" />
               <Text $short={{ variant: 'body3' }} color="$neutral3" variant="body2">
                 {isRestoringMnemonic
                   ? t('account.recoveryPhrase.helpText.restoring')

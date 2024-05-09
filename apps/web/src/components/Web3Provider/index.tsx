@@ -3,7 +3,7 @@ import { Web3ReactHooks, Web3ReactProvider, useWeb3React } from '@web3-react/cor
 import { Connector } from '@web3-react/types'
 import { sendAnalyticsEvent, useTrace, user } from 'analytics'
 import { connections, getConnection } from 'connection'
-import { isSupportedChain } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import usePrevious from 'hooks/usePrevious'
 import { ReactNode, useEffect } from 'react'
@@ -28,10 +28,11 @@ export default function Web3Provider({ children }: { children: ReactNode }) {
 /** A component to run hooks under the Web3ReactProvider context. */
 function Updater() {
   const { account, chainId, connector, provider } = useWeb3React()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
   const analyticsContext = useTrace()
-  const networkProvider = isSupportedChain(chainId) ? RPC_PROVIDERS[chainId] : undefined
+  const networkProvider = isSupportedChain ? RPC_PROVIDERS[chainId] : undefined
 
   // Trace RPC calls (for debugging).
   const shouldTrace = useFeatureFlag(FeatureFlags.TraceJsonRpc)

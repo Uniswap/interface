@@ -1,6 +1,6 @@
 import { createElement, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Icons } from 'ui/src'
+import { Unitag } from 'ui/src/components/icons'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -113,6 +113,6 @@ export function TransferTokenSummaryItem({
     caption,
     icon,
     transaction,
-    postCaptionElement: unitag?.username ? <Icons.Unitag size="$icon.24" /> : undefined,
+    postCaptionElement: unitag?.username ? <Unitag size="$icon.24" /> : undefined,
   })
 }

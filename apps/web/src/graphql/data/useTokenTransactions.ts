@@ -1,5 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { chainIdToBackendName } from 'graphql/data/util'
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { useCallback, useMemo, useRef } from 'react'
 import {
   Chain,
@@ -20,7 +20,7 @@ const TokenTransactionDefaultQuerySize = 25
 
 export function useTokenTransactions(
   address: string,
-  chainId: ChainId,
+  chainId: SupportedInterfaceChainId,
   filter: TokenTransactionType[] = [TokenTransactionType.BUY, TokenTransactionType.SELL]
 ) {
   const v2ExploreEnabled = useFeatureFlag(FeatureFlags.V2Explore)
@@ -32,7 +32,7 @@ export function useTokenTransactions(
   } = useV3TokenTransactionsQuery({
     variables: {
       address: address.toLowerCase(),
-      chain: chainIdToBackendName(chainId),
+      chain: chainIdToBackendChain({ chainId, withFallback: true }),
       first: TokenTransactionDefaultQuerySize,
     },
   })
@@ -45,7 +45,7 @@ export function useTokenTransactions(
     variables: {
       address: address.toLowerCase(),
       first: TokenTransactionDefaultQuerySize,
-      chain: chainIdToBackendName(chainId),
+      chain: chainIdToBackendChain({ chainId }),
     },
     skip: chainId !== ChainId.MAINNET && !v2ExploreEnabled,
   })

@@ -224,12 +224,10 @@ export default function FeatureFlagModal() {
         </CloseButton>
       </Header>
       <FlagsColumn>
-        <FeatureFlagOption flag={FeatureFlags.SendEnabled} label="Send on swap component" />
         <FeatureFlagOption
           flag={FeatureFlags.Eip6936Enabled}
           label="Enable EIP-6963: Multi Injected Provider Discovery"
         />
-        <FeatureFlagOption flag={FeatureFlags.LimitsEnabled} label="Enable Limits" />
         <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
         <FeatureFlagOption flag={FeatureFlags.CurrencyConversion} label="Enable currency conversion" />
         <FeatureFlagOption flag={FeatureFlags.UniconsV2} label="Unicon V2" />
@@ -238,6 +236,7 @@ export default function FeatureFlagModal() {
         <FeatureFlagOption flag={FeatureFlags.V2Explore} label="Enable V2 Explore Data" />
         <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
         <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
+        <FeatureFlagOption flag={FeatureFlags.MultichainUX} label="Enable Multichain Swap/Send UX" />
         <FeatureFlagGroup name="Quick routes">
           <FeatureFlagOption flag={FeatureFlags.QuickRouteMainnet} label="Enable quick routes for Mainnet" />
           <DynamicConfigDropdown

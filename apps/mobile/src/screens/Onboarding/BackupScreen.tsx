@@ -16,8 +16,9 @@ import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorage
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
 import { OnboardingScreens, Screens } from 'src/screens/Screens'
-import { Button, Flex, Icons, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import PaperIcon from 'ui/src/assets/icons/paper-stack.svg'
+import { OSDynamicCloudIcon, QuestionInCircleFilled } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { isAndroid } from 'uniswap/src/utils/platform'
@@ -132,7 +133,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
       blurb={t('onboarding.backup.option.cloud.description')}
       disabled={hasCloudBackup}
       elementName={ElementName.AddCloudBackup}
-      icon={<Icons.OSDynamicCloudIcon color="$accent1" size="$icon.16" />}
+      icon={<OSDynamicCloudIcon color="$accent1" size="$icon.16" />}
       title={t('onboarding.backup.option.cloud.title', {
         cloudProviderName: getCloudProviderName(),
       })}
@@ -199,7 +200,7 @@ function RecoveryPhraseTooltip({
       gap="$spacing8"
       py="$spacing8"
       onPress={onPressEducationButton}>
-      <Icons.QuestionInCircleFilled color="$surface1" size="$icon.20" />
+      <QuestionInCircleFilled color="$surface1" size="$icon.20" />
       <Text color="$neutral3" variant="body2">
         {t('onboarding.tooltip.recoveryPhrase.trigger')}
       </Text>

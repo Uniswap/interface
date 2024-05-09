@@ -2,7 +2,14 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { LongText } from 'src/components/text/LongText'
-import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import {
+  ChartBar,
+  ChartPie,
+  Language as LanguageIcon,
+  TrendDown,
+  TrendUp,
+} from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType } from 'utilities/src/format/types'
@@ -58,45 +65,35 @@ export function TokenDetailsMarketData({
     <Flex gap="$spacing8">
       <StatsRow
         label={t('token.stats.marketCap')}
-        statsIcon={
-          <Icons.ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />
-        }>
+        statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}>
         <Text loading={isLoading} variant="body2">
           {convertFiatAmountFormatted(marketCap, NumberType.FiatTokenStats)}
         </Text>
       </StatsRow>
       <StatsRow
         label={t('token.stats.fullyDilutedValuation')}
-        statsIcon={
-          <Icons.ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />
-        }>
+        statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}>
         <Text loading={isLoading} variant="body2">
           {convertFiatAmountFormatted(fullyDilutedValuation, NumberType.FiatTokenStats)}
         </Text>
       </StatsRow>
       <StatsRow
         label={t('token.stats.volume')}
-        statsIcon={
-          <Icons.ChartBar color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />
-        }>
+        statsIcon={<ChartBar color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}>
         <Text loading={isLoading} variant="body2">
           {convertFiatAmountFormatted(volume, NumberType.FiatTokenStats)}
         </Text>
       </StatsRow>
       <StatsRow
         label={t('token.stats.priceHighYear')}
-        statsIcon={
-          <Icons.TrendUp color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />
-        }>
+        statsIcon={<TrendUp color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}>
         <Text loading={isLoading} variant="body2">
           {convertFiatAmountFormatted(priceHight52W, NumberType.FiatTokenDetails)}
         </Text>
       </StatsRow>
       <StatsRow
         label={t('token.stats.priceLowYear')}
-        statsIcon={
-          <Icons.TrendDown color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />
-        }>
+        statsIcon={<TrendDown color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}>
         <Text loading={isLoading} variant="body2">
           {convertFiatAmountFormatted(priceLow52W, NumberType.FiatTokenDetails)}
         </Text>
@@ -171,7 +168,7 @@ export function TokenDetailsStats({
                 {showTranslation ? (
                   <Flex row alignItems="center" gap="$spacing12" width="100%">
                     <Flex fill row alignItems="center" gap="$spacing12">
-                      <Icons.Language color="$neutral2" size="$icon.20" />
+                      <LanguageIcon color="$neutral2" size="$icon.20" />
                       <Text color="$neutral2" variant="body3">
                         {currentLanguageInfo.displayName}
                       </Text>
@@ -183,7 +180,7 @@ export function TokenDetailsStats({
                 ) : (
                   <Animated.View entering={FadeIn.duration(100)} exiting={FadeOut.duration(100)}>
                     <Flex row alignItems="center" gap="$spacing12">
-                      <Icons.Language color="$neutral2" size="$icon.20" />
+                      <LanguageIcon color="$neutral2" size="$icon.20" />
                       <Text color="$neutral2" variant="body3">
                         {t('token.stats.translation.translate', {
                           language: currentLanguageInfo.displayName,

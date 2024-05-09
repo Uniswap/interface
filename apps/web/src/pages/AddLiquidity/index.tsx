@@ -8,7 +8,7 @@ import { TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import OwnershipWarning from 'components/addLiquidity/OwnershipWarning'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { isSupportedChain } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import usePrevious from 'hooks/usePrevious'
 import { Trans } from 'i18n'
 import { useSingleCallResult } from 'lib/hooks/multicall'
@@ -17,7 +17,6 @@ import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { Text } from 'rebass'
 import {
   useRangeHopCallbacks,
   useV3DerivedMintInfo,
@@ -26,6 +25,7 @@ import {
 } from 'state/mint/v3/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { Text } from 'ui/src'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { WrongChainError } from 'utils/errors'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -88,7 +88,8 @@ const BLAST_REBASING_TOKENS = [
 
 export default function AddLiquidityWrapper() {
   const { chainId } = useWeb3React()
-  if (isSupportedChain(chainId)) {
+  const isSupportedChain = useIsSupportedChainId(chainId)
+  if (isSupportedChain) {
     return <AddLiquidity />
   } else {
     return <PositionPageUnsupportedContent />
@@ -557,7 +558,7 @@ function AddLiquidity() {
           }
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
         >
-          <Text fontWeight={535}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
+          <Text fontWeight="$medium">{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
         </ButtonError>
       </AutoColumn>
     )
@@ -621,7 +622,7 @@ function AddLiquidity() {
               )}
               bottomContent={() => (
                 <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
-                  <Text fontWeight={535} fontSize={20}>
+                  <Text fontWeight="$medium" fontSize={20}>
                     <Trans>Add</Trans>
                   </Text>
                 </ButtonPrimary>
@@ -641,9 +642,9 @@ function AddLiquidity() {
               <Row justify="flex-end" style={{ width: 'fit-content', minWidth: 'fit-content' }}>
                 <MediumOnly>
                   <ButtonText onClick={clearAll}>
-                    <ThemedText.DeprecatedBlue fontSize="12px">
+                    <Text color="$accent1" fontSize="12px">
                       <Trans>Clear all</Trans>
-                    </ThemedText.DeprecatedBlue>
+                    </Text>
                   </ButtonText>
                 </MediumOnly>
               </Row>
@@ -768,12 +769,12 @@ function AddLiquidity() {
                       <YellowCard padding="8px 12px" $borderRadius="12px">
                         <RowBetween>
                           <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
-                          <ThemedText.DeprecatedYellow ml="12px" fontSize="12px">
+                          <Text color="$yellow600" ml="12px" fontSize="12px">
                             <Trans>
                               Your position will not earn fees or be used in trades until the market price moves into
                               your range.
                             </Trans>
-                          </ThemedText.DeprecatedYellow>
+                          </Text>
                         </RowBetween>
                       </YellowCard>
                     )}
@@ -782,9 +783,9 @@ function AddLiquidity() {
                       <YellowCard padding="8px 12px" $borderRadius="12px">
                         <RowBetween>
                           <AlertTriangle stroke={theme.deprecated_yellow3} size="16px" />
-                          <ThemedText.DeprecatedYellow ml="12px" fontSize="12px">
+                          <Text color="$yellow600" ml="12px" fontSize="12px">
                             <Trans>Invalid range selected. The min price must be lower than the max price.</Trans>
-                          </ThemedText.DeprecatedYellow>
+                          </Text>
                         </RowBetween>
                       </YellowCard>
                     )}

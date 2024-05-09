@@ -1,4 +1,5 @@
-import { Flex, Icons, Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
+import { Unitag } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 
 export function UnitagName({
@@ -37,7 +38,7 @@ export function UnitagName({
         position="absolute"
         right={-spacing.spacing4}
         top={-spacing.spacing4}>
-        <Icons.Unitag size="$icon.24" />
+        <Unitag size="$icon.24" />
       </Flex>
     </Flex>
   )

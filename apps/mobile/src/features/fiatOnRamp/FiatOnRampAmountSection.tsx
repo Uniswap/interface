@@ -16,11 +16,11 @@ import {
   ColorTokens,
   Flex,
   HapticFeedback,
-  Icons,
   Text,
   TouchableArea,
   useSporeColors,
 } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { NumberType } from 'utilities/src/format/types'
@@ -275,7 +275,7 @@ function SelectTokenButton({
         <Text color={textColor} pl="$spacing1" variant="body1">
           {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
         </Text>
-        <Icons.RotatableChevron color={textColor} direction="end" height={iconSizes.icon16} />
+        <RotatableChevron color={textColor} direction="end" height={iconSizes.icon16} />
       </Flex>
     </TouchableArea>
   )

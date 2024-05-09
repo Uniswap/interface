@@ -2,9 +2,10 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Icons, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import AnglesMaximize from 'ui/src/assets/icons/angles-maximize.svg'
 import AnglesMinimize from 'ui/src/assets/icons/angles-minimize.svg'
+import { AlertTriangle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { getAlertColor } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
@@ -76,7 +77,7 @@ export function TransactionDetails({
             gap="$spacing8"
             px="$spacing16"
             py="$spacing8">
-            <Icons.AlertTriangle color={warningColor?.text} size="$icon.16" />
+            <AlertTriangle color={warningColor?.text} size="$icon.16" />
             <Flex fill py="$spacing2">
               <Text color={warningColor.text} variant="body3">
                 {warning.title}

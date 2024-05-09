@@ -1,5 +1,5 @@
 import { ChainId, TradeType } from '@uniswap/sdk-core'
-import { SupportedInterfaceChain, asSupportedChain } from 'constants/chains'
+import { SupportedInterfaceChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { useAssetActivitySubscription } from 'graphql/data/apollo/AssetActivityProvider'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
@@ -43,12 +43,12 @@ export function useOnAssetActivity(onActivityUpdate: OnActivityUpdate) {
   useEffect(() => onActivity(activity), [activity, onActivity])
 }
 
-async function getReceipt(chainId: SupportedInterfaceChain, hash: string): Promise<SerializableTransactionReceipt>
+async function getReceipt(chainId: SupportedInterfaceChainId, hash: string): Promise<SerializableTransactionReceipt>
 async function getReceipt(
-  chainId: SupportedInterfaceChain,
+  chainId: SupportedInterfaceChainId,
   hash?: string
 ): Promise<SerializableTransactionReceipt | undefined>
-async function getReceipt(chainId: SupportedInterfaceChain, hash?: string) {
+async function getReceipt(chainId: SupportedInterfaceChainId, hash?: string) {
   if (!hash) return undefined
   return toSerializableReceipt(await RPC_PROVIDERS[chainId].getTransactionReceipt(hash))
 }
@@ -81,7 +81,7 @@ function useOnTransactionActivity(onActivityUpdate: OnActivityUpdate) {
 
   return useCallback(
     async (activity: TransactionActivity) => {
-      const chainId = asSupportedChain(supportedChainIdFromGQLChain(activity.chain))
+      const chainId = supportedChainIdFromGQLChain(activity.chain)
       if (activity.details.status !== TransactionStatus.Confirmed || !chainId) return
 
       const pendingTransaction = pendingTransactions.current?.find(

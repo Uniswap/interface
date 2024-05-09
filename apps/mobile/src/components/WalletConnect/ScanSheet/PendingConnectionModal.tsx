@@ -20,7 +20,8 @@ import {
   addSession,
   removePendingSession,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Check, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
@@ -76,7 +77,7 @@ const SitePermissions = (): JSX.Element => {
       </Flex>
       <Flex gap="$spacing8" pt="$spacing12">
         <Flex centered row gap="$spacing4">
-          <Icons.Check color="$statusSuccess" size={iconSizes.icon16} />
+          <Check color="$statusSuccess" size={iconSizes.icon16} />
           <Text
             $short={{ variant: infoTextSize }}
             allowFontScaling={false}
@@ -87,7 +88,7 @@ const SitePermissions = (): JSX.Element => {
           </Text>
         </Flex>
         <Flex centered row gap="$spacing4">
-          <Icons.Check color="$statusSuccess" size={iconSizes.icon16} />
+          <Check color="$statusSuccess" size={iconSizes.icon16} />
           <Text
             $short={{ variant: infoTextSize }}
             allowFontScaling={false}
@@ -98,7 +99,7 @@ const SitePermissions = (): JSX.Element => {
           </Text>
         </Flex>
         <Flex centered row gap="$spacing4">
-          <Icons.X color="$statusCritical" size={iconSizes.icon16} />
+          <X color="$statusCritical" size={iconSizes.icon16} />
           <Text
             $short={{ variant: infoTextSize }}
             allowFontScaling={false}

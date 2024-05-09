@@ -7,16 +7,9 @@ import { Alert, LayoutChangeEvent, LayoutRectangle, StyleSheet } from 'react-nat
 import { launchImageLibrary } from 'react-native-image-picker'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
-import {
-  AnimatedFlex,
-  Button,
-  Flex,
-  Icons,
-  Text,
-  useDeviceDimensions,
-  useSporeColors,
-} from 'ui/src'
+import { AnimatedFlex, Button, Flex, Text, useDeviceDimensions, useSporeColors } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
+import { Global, Photo } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { Sentry } from 'utilities/src/logger/Sentry'
 import { DevelopmentOnly } from 'wallet/src/components/DevelopmentOnly/DevelopmentOnly'
@@ -264,14 +257,14 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
               {isReadingImageFile ? (
                 <SpinningLoader size={iconSizes.icon28} />
               ) : (
-                <Icons.Photo color="$neutral1" size={iconSizes.icon28} />
+                <Photo color="$neutral1" size={iconSizes.icon28} />
               )}
             </Flex>
 
             {isWalletConnectModal && props.numConnections > 0 && (
               <Button
                 fontFamily="$body"
-                icon={<Icons.Global color="$neutral2" />}
+                icon={<Global color="$neutral2" />}
                 theme="secondary"
                 onPress={props.onPressConnections}>
                 {t('qrScanner.button.connections', { count: props.numConnections })}

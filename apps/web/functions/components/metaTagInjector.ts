@@ -1,9 +1,4 @@
-type MetaTagInjectorInput = {
-  title: string
-  image?: string
-  url: string
-  description?: string
-}
+import { MetaTagInjectorInput } from 'shared-cloud/metatags'
 
 /**
  * Listener class for Cloudflare's HTMLRewriter {@link https://developers.cloudflare.com/workers/runtime-apis/html-rewriter}
@@ -15,7 +10,8 @@ export class MetaTagInjector implements HTMLRewriterElementContentHandlers {
   constructor(private input: MetaTagInjectorInput, private request: Request) {}
 
   append(element: Element, property: string, content: string) {
-    element.append(`<meta property="${property}" content="${content}"/>`, { html: true })
+    // without adding data-rh="true", react-helmet-async doesn't overwrite existing metatags
+    element.append(`<meta property="${property}" content="${content}" data-rh="true">`, { html: true })
   }
 
   element(element: Element) {

@@ -1,5 +1,6 @@
 import { createElement, useMemo } from 'react'
-import { Icons, useSporeColors } from 'ui/src'
+import { useSporeColors } from 'ui/src'
+import { ContractInteraction } from 'ui/src/components/icons'
 import {
   SummaryItemProps,
   TransactionSummaryLayoutProps,
@@ -23,9 +24,7 @@ export function UnknownSummaryItem({
 
   return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {
     caption,
-    icon: (
-      <Icons.ContractInteraction color="$neutral2" fill={colors.surface1.get()} size="$icon.40" />
-    ),
+    icon: <ContractInteraction color="$neutral2" fill={colors.surface1.get()} size="$icon.40" />,
     transaction,
   })
 }

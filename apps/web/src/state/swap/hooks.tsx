@@ -15,7 +15,6 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { isAddress } from 'utilities/src/addresses'
 
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { TOKEN_SHORTHANDS } from '../../constants/tokens'
 import { useCurrencyBalance, useCurrencyBalances } from '../connection/hooks'
 import {
   CurrencyState,
@@ -268,7 +267,6 @@ function parseCurrencyFromURLParameter(urlParam: ParsedQs[string]): string {
     if (valid) return valid
     const upper = urlParam.toUpperCase()
     if (upper === 'ETH') return 'ETH'
-    if (upper in TOKEN_SHORTHANDS) return upper
   }
   return ''
 }

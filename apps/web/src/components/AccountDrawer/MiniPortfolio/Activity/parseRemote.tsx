@@ -1,7 +1,6 @@
 import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, TradeType, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
-import { asSupportedChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
@@ -272,7 +271,7 @@ export function offchainOrderDetailsFromGraphQLTransactionActivity(
   changes: TransactionChanges,
   formatNumberOrString: FormatNumberOrStringFunctionType
 ): UniswapXOrderDetails | undefined {
-  const chainId = asSupportedChain(supportedChainIdFromGQLChain(activity.chain))
+  const chainId = supportedChainIdFromGQLChain(activity.chain)
   if (!activity || !activity.details || !chainId) return undefined
   if (changes.TokenTransfer.length < 2) return undefined
 

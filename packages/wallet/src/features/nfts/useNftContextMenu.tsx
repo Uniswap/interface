@@ -2,7 +2,8 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
-import { GeneratedIcon, Icons, isWeb } from 'ui/src'
+import { GeneratedIcon, isWeb } from 'ui/src'
+import { Eye, EyeOff } from 'ui/src/components/icons'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { selectNftsVisibility } from 'wallet/src/features/favorites/selectors'
@@ -92,7 +93,7 @@ export function useNFTContextMenu({
                   : t('tokens.nfts.hidden.action.hide'),
                 ...(isWeb
                   ? {
-                      Icon: hidden ? Icons.Eye : Icons.EyeOff,
+                      Icon: hidden ? Eye : EyeOff,
                     }
                   : {
                       systemIcon: hidden ? 'eye' : 'eye.slash',

@@ -17,10 +17,9 @@ import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceIn
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
-import { asSupportedChain, isSupportedChain } from 'constants/chains'
+import { getChainInfo, useIsSupportedChainId } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
-import { STABLECOIN_AMOUNT_OUT } from 'hooks/useStablecoinPrice'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { Trans } from 'i18n'
@@ -88,6 +87,7 @@ type LimitFormProps = {
 
 function LimitForm({ onCurrencyChange }: LimitFormProps) {
   const { chainId, account } = useWeb3React()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   const {
     currencyState: { inputCurrency, outputCurrency },
     setCurrencyState,
@@ -191,20 +191,18 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   )
 
   useEffect(() => {
-    const supportedChainId = asSupportedChain(chainId)
-    if (!outputCurrency && supportedChainId) {
-      onSelectCurrency('outputCurrency', STABLECOIN_AMOUNT_OUT[supportedChainId].currency)
+    if (!outputCurrency && isSupportedChain) {
+      onSelectCurrency('outputCurrency', getChainInfo({ chainId }).spotPriceStablecoinAmount.currency)
     }
-  }, [chainId, onSelectCurrency, outputCurrency])
+  }, [chainId, onSelectCurrency, outputCurrency, isSupportedChain])
 
   useEffect(() => {
-    const supportedChainId = asSupportedChain(chainId)
-    if (supportedChainId && inputCurrency && outputCurrency && (inputCurrency.isNative || outputCurrency.isNative)) {
+    if (isSupportedChain && inputCurrency && outputCurrency && (inputCurrency.isNative || outputCurrency.isNative)) {
       const [nativeCurrency, nonNativeCurrency] = inputCurrency.isNative
         ? [inputCurrency, outputCurrency]
         : [outputCurrency, inputCurrency]
       if (nativeCurrency.wrapped.equals(nonNativeCurrency)) {
-        onSelectCurrency('outputCurrency', STABLECOIN_AMOUNT_OUT[supportedChainId].currency)
+        onSelectCurrency('outputCurrency', getChainInfo({ chainId }).spotPriceStablecoinAmount.currency)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -225,7 +223,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   const allowance = usePermit2Allowance(
     parsedAmounts.INPUT?.currency?.isNative ? undefined : (parsedAmounts.INPUT as CurrencyAmount<Token>),
-    isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
+    isSupportedChain ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
     TradeFillType.UniswapX
   )
 
@@ -313,7 +311,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           />
         </Trace>
       </SwapSection>
-      <ShortArrowWrapper clickable={isSupportedChain(chainId)}>
+      <ShortArrowWrapper clickable={isSupportedChain}>
         <TraceEvent
           events={[BrowserEvent.onClick]}
           name={SwapEventName.SWAP_TOKENS_REVERSED}

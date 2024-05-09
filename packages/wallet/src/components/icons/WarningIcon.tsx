@@ -1,4 +1,5 @@
-import { IconProps, Icons, useSporeColors } from 'ui/src'
+import { IconProps, useSporeColors } from 'ui/src'
+import { AlertTriangle, XOctagon } from 'ui/src/components/icons'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useTokenSafetyLevelColors } from 'wallet/src/features/tokens/safetyHooks'
 
@@ -18,7 +19,7 @@ export default function WarningIcon({
   const color = colors[strokeColorOverride ?? colorKey].val
 
   if (safetyLevel === SafetyLevel.Blocked) {
-    return <Icons.XOctagon color={color} {...rest} />
+    return <XOctagon color={color} {...rest} />
   }
-  return <Icons.AlertTriangle color={color} {...rest} />
+  return <AlertTriangle color={color} {...rest} />
 }

@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native'
 import Svg, { Defs, RadialGradient as RadialGradientSVG, Rect, Stop } from 'react-native-svg'
-import { ColorTokens, Flex, Icons, Unicon, UniconV2, useUniconColors } from 'ui/src'
+import { ColorTokens, Flex, Unicon, UniconV2, useUniconColors } from 'ui/src'
+import { Eye } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -90,7 +91,7 @@ export function AccountIcon({
           position="absolute"
           right={-4}
           testID="account-icon/view-only-badge">
-          <Icons.Eye color="$neutral2" size={eyeIconSize} />
+          <Eye color="$neutral2" size={eyeIconSize} />
         </Flex>
       )}
     </Flex>

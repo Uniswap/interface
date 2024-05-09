@@ -1,7 +1,7 @@
 import { Percent, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { Pair, computePairAddress } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { L2_CHAIN_IDS } from 'constants/chains'
+import { L2_CHAIN_IDS, chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import JSBI from 'jsbi'
@@ -9,7 +9,7 @@ import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
 
-import { chainIdToBackendName, gqlToCurrency } from 'graphql/data/util'
+import { gqlToCurrency } from 'graphql/data/util'
 import { deserializeToken, serializeToken } from 'state/user/utils'
 import {
   Chain,
@@ -198,11 +198,12 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useWeb3React()
+  const supportedChainId = useSupportedChainId(chainId)
 
   // TODO(WEB-4001): use an "all tokens" query for better LP detection
   const { data: popularTokens } = useTopTokensQuery({
     variables: {
-      chain: chainIdToBackendName(chainId) ?? Chain.Ethereum,
+      chain: supportedChainId ? chainIdToBackendChain({ chainId: supportedChainId }) : Chain.Ethereum,
       orderBy: TokenSortableField.Popularity,
       page: 1,
       pageSize: 100,

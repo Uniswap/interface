@@ -5,8 +5,13 @@ import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getConnection } from 'connection'
 import { ConnectionType } from 'connection/types'
 import { WalletConnectV2 } from 'connection/WalletConnectV2'
-import { getChainInfo } from 'constants/chainInfo'
-import { getChainPriority, L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 'constants/chains'
+import {
+  getChainPriority,
+  L1_CHAIN_IDS,
+  L2_CHAIN_IDS,
+  TESTNET_CHAIN_IDS,
+  useIsSupportedChainId,
+} from 'constants/chains'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { t } from 'i18n'
@@ -54,6 +59,7 @@ function useWalletSupportedChains(): ChainId[] {
 
 export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
   const { chainId } = useWeb3React()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const theme = useTheme()
@@ -80,8 +86,6 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
     return [supported, unsupported]
   }, [showTestnets, walletSupportsChain])
 
-  const info = getChainInfo(chainId)
-
   const selectChain = useSelectChain()
   useSyncChainQuery()
 
@@ -101,8 +105,6 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
     return null
   }
 
-  const isSupported = !!info
-
   const styledMenuCss = css`
     ${leftAlign ? 'left: 0;' : 'right: 0;'}
     ${styledMobileMenuCss};
@@ -113,13 +115,13 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
       isOpen={isOpen}
       toggleOpen={() => setIsOpen(!isOpen)}
       menuLabel={
-        !isSupported ? (
+        !isSupportedChain ? (
           <AlertTriangle size={20} color={theme.neutral2} />
         ) : (
           <ChainLogo chainId={chainId} size={20} testId="chain-selector-logo" />
         )
       }
-      tooltipText={isSupported ? undefined : t`Your wallet's current network is unsupported.`}
+      tooltipText={isSupportedChain ? undefined : t`Your wallet's current network is unsupported.`}
       dataTestId="chain-selector"
       optionsContainerTestId="chain-selector-options"
       internalMenuItems={

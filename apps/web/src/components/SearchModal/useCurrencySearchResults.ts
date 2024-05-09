@@ -2,8 +2,8 @@ import { Currency } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { CurrencyListRow, CurrencyListSectionTitle } from 'components/SearchModal/CurrencyList'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
+import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
-import { chainIdToBackendName } from 'graphql/data/util'
 import { useFallbackListTokens, useToken } from 'hooks/Tokens'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import { t } from 'i18next'
@@ -52,6 +52,7 @@ export function useCurrencySearchResults({
   otherSelectedCurrency,
 }: CurrencySearchParams): CurrencySearchResults {
   const { chainId } = useWeb3React()
+  const supportedChain = useSupportedChainId(chainId)
 
   /**
    * GraphQL queries for tokens and search results
@@ -59,14 +60,14 @@ export function useCurrencySearchResults({
   const { data: searchResults, loading: searchResultsLoading } = useSearchTokensWebQuery({
     variables: {
       searchQuery: searchQuery ?? '',
-      chains: [chainIdToBackendName(chainId) ?? Chain.Ethereum],
+      chains: [chainIdToBackendChain({ chainId: supportedChain, withFallback: true }) ?? Chain.Ethereum],
     },
     skip: !searchQuery,
   })
   const { data: popularTokens, loading: popularTokensLoading } = useTopTokensQuery({
     fetchPolicy: 'cache-first',
     variables: {
-      chain: chainIdToBackendName(chainId) ?? Chain.Ethereum,
+      chain: chainIdToBackendChain({ chainId: supportedChain, withFallback: true }) ?? Chain.Ethereum,
       orderBy: TokenSortableField.Popularity,
       page: 1,
       pageSize: 100,

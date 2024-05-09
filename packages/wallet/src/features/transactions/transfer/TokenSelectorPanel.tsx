@@ -1,6 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
-import { Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { NumberType } from 'utilities/src/format/types'
@@ -88,7 +89,7 @@ export function TokenSelectorPanel({
               onSetMax={onSetMax}
             />
           )}
-          <Icons.RotatableChevron
+          <RotatableChevron
             color="$neutral3"
             direction="down"
             height={iconSizes.icon20}

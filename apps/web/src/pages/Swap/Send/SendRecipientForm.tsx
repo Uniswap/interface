@@ -16,7 +16,7 @@ import styled, { css, keyframes } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
 import { Text } from 'ui/src'
-import { Unitag } from 'ui/src/components/icons/Unitag'
+import { Unitag } from 'ui/src/components/icons'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 

@@ -2,6 +2,18 @@ import { isDevEnv } from 'uniswap/src/utils/env'
 import { isAndroid, isExtension, isInterface, isMobileApp } from 'uniswap/src/utils/platform'
 import { isJestRun } from 'utilities/src/environment'
 
+enum TrafficFlows {
+  GraphQL = 'graphql',
+  Metrics = 'metrics',
+  Gating = 'gating',
+  TradingApi = 'trading-api-labs',
+  Unitags = 'unitags',
+  FOR = 'for',
+  Scantastic = 'scantastic',
+}
+
+const FLOWS_USING_BETA = [TrafficFlows.FOR]
+
 export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
 
 export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
@@ -36,17 +48,17 @@ export const uniswapUrls = {
   // Core API Urls
   apiOrigin: 'https://api.uniswap.org',
   apiBaseUrl: getCloudflareApiBaseUrl(),
-  graphQLUrl: `${getCloudflareApiBaseUrl()}/v1/graphql`,
+  graphQLUrl: `${getCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
 
   // Proxies
-  amplitudeProxyUrl: `${getCloudflareApiBaseUrl()}/v1/amplitude-proxy`,
-  statsigProxyUrl: `${getCloudflareApiBaseUrl()}/v1/statsig-proxy`,
+  amplitudeProxyUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Metrics)}/v1/amplitude-proxy`,
+  statsigProxyUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Gating)}/v1/statsig-proxy`,
 
   // Feature service URL's
-  unitagsApiUrl: `${getCloudflareApiBaseUrl()}/v2/unitags`,
-  scantasticApiUrl: `${getCloudflareApiBaseUrl()}/v2/scantastic`,
-  fiatOnRampApiUrl: `${getCloudflareApiBaseUrl(true)}/v2/fiat-on-ramp`,
-  tradingApiUrl: `https://trade-api-public.gateway.uniswap.org`,
+  unitagsApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Unitags)}/v2/unitags`,
+  scantasticApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Scantastic)}/v2/scantastic`,
+  fiatOnRampApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/fiat-on-ramp`,
+  tradingApiUrl: getCloudflareApiBaseUrl(TrafficFlows.TradingApi),
 
   // API Paths
   trmPath: '/v1/screen',
@@ -70,8 +82,8 @@ export const uniswapUrls = {
   webInterfaceNftCollectionUrl: `${UNISWAP_WEB_URL}/nfts/collection`,
 }
 
-function getCloudflarePrefix(useBeta?: boolean): string {
-  if (isDevEnv() && useBeta) {
+function getCloudflarePrefix(flow?: TrafficFlows): string {
+  if (flow && isDevEnv() && FLOWS_USING_BETA.includes(flow)) {
     return `beta`
   }
 
@@ -94,6 +106,14 @@ function getCloudflarePrefix(useBeta?: boolean): string {
   throw new Error('Could not determine app to generate Cloudflare prefix')
 }
 
-function getCloudflareApiBaseUrl(useBeta?: boolean): string {
-  return `https://${getCloudflarePrefix(useBeta)}.gateway.uniswap.org`
+function getServicePrefix(flow?: TrafficFlows): string {
+  if (flow && !(isDevEnv() && FLOWS_USING_BETA.includes(flow))) {
+    return flow + '.'
+  } else {
+    return ''
+  }
+}
+
+function getCloudflareApiBaseUrl(flow?: TrafficFlows): string {
+  return `https://${getServicePrefix(flow)}${getCloudflarePrefix(flow)}.gateway.uniswap.org`
 }

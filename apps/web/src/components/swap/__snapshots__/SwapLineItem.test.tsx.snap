@@ -1402,51 +1402,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
             class="c3 c4 css-142zc9n"
             data-testid="swap-li-label"
           >
-            Price impact
-          </div>
-          <div
-            class="c5"
-          >
-            <div>
-              <div
-                class="c3 c6 css-142zc9n"
-              >
-                <span
-                  class=""
-                >
-                  ~-105566.373%
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c13"
-            style="position: fixed; left: 0px; top: 0px;"
-          >
-            <div
-              class="c14"
-            >
-              <div
-                class="c11 css-obwv3p"
-              >
-                The impact your trade has on the market price of this pool.
-              </div>
-            </div>
-            <div
-              class="c16 arrow-"
-              style="position: absolute;"
-            />
-          </div>
-        </div>
-      </div>
-      <div>
-        <div
-          class="c0 c1 c2"
-        >
-          <div
-            class="c3 c4 css-142zc9n"
-            data-testid="swap-li-label"
-          >
             Max. slippage
           </div>
           <div
@@ -2467,51 +2422,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
             class="c3 c4 css-142zc9n"
             data-testid="swap-li-label"
           >
-            Price impact
-          </div>
-          <div
-            class="c5"
-          >
-            <div>
-              <div
-                class="c3 c6 css-142zc9n"
-              >
-                <span
-                  class=""
-                >
-                  ~-105566.373%
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c13"
-            style="position: fixed; left: 0px; top: 0px;"
-          >
-            <div
-              class="c14"
-            >
-              <div
-                class="c11 css-obwv3p"
-              >
-                The impact your trade has on the market price of this pool.
-              </div>
-            </div>
-            <div
-              class="c16 arrow-"
-              style="position: absolute;"
-            />
-          </div>
-        </div>
-      </div>
-      <div>
-        <div
-          class="c0 c1 c2"
-        >
-          <div
-            class="c3 c4 css-142zc9n"
-            data-testid="swap-li-label"
-          >
             Max. slippage
           </div>
           <div
@@ -3515,51 +3425,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                     Learn more
                   </a>
                 </div>
-              </div>
-            </div>
-            <div
-              class="c16 arrow-"
-              style="position: absolute;"
-            />
-          </div>
-        </div>
-      </div>
-      <div>
-        <div
-          class="c0 c1 c2"
-        >
-          <div
-            class="c3 c4 css-142zc9n"
-            data-testid="swap-li-label"
-          >
-            Price impact
-          </div>
-          <div
-            class="c5"
-          >
-            <div>
-              <div
-                class="c3 c6 css-142zc9n"
-              >
-                <span
-                  class=""
-                >
-                  ~-105566.373%
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c13"
-            style="position: fixed; left: 0px; top: 0px;"
-          >
-            <div
-              class="c14"
-            >
-              <div
-                class="c11 css-obwv3p"
-              >
-                The impact your trade has on the market price of this pool.
               </div>
             </div>
             <div
@@ -4650,51 +4515,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
             class="c3 c4 css-142zc9n"
             data-testid="swap-li-label"
           >
-            Price impact
-          </div>
-          <div
-            class="c5"
-          >
-            <div>
-              <div
-                class="c3 c6 css-142zc9n"
-              >
-                <span
-                  class=""
-                >
-                  ~-108834.406%
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c13"
-            style="position: fixed; left: 0px; top: 0px;"
-          >
-            <div
-              class="c14"
-            >
-              <div
-                class="c11 css-obwv3p"
-              >
-                The impact your trade has on the market price of this pool.
-              </div>
-            </div>
-            <div
-              class="c16 arrow-"
-              style="position: absolute;"
-            />
-          </div>
-        </div>
-      </div>
-      <div>
-        <div
-          class="c0 c1 c2"
-        >
-          <div
-            class="c3 c4 css-142zc9n"
-            data-testid="swap-li-label"
-          >
             Max. slippage
           </div>
           <div
@@ -5768,51 +5588,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
             class="c3 c4 css-142zc9n"
             data-testid="swap-li-label"
           >
-            Price impact
-          </div>
-          <div
-            class="c5"
-          >
-            <div>
-              <div
-                class="c3 c6 css-142zc9n"
-              >
-                <span
-                  class=""
-                >
-                  ~-108834.406%
-                </span>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c13"
-            style="position: fixed; left: 0px; top: 0px;"
-          >
-            <div
-              class="c14"
-            >
-              <div
-                class="c11 css-obwv3p"
-              >
-                The impact your trade has on the market price of this pool.
-              </div>
-            </div>
-            <div
-              class="c16 arrow-"
-              style="position: absolute;"
-            />
-          </div>
-        </div>
-      </div>
-      <div>
-        <div
-          class="c0 c1 c2"
-        >
-          <div
-            class="c3 c4 css-142zc9n"
-            data-testid="swap-li-label"
-          >
             Max. slippage
           </div>
           <div
@@ -6480,52 +6255,6 @@ exports[`SwapLineItem.tsx preview exact in 1`] = `
             class="c3 c4 css-142zc9n"
             data-testid="swap-li-label"
           >
-            Price impact
-          </div>
-          <div
-            class="c5"
-          >
-            <div>
-              <div
-                class="c3 c6 css-142zc9n"
-              >
-                <div
-                  class="c7"
-                  data-testid="loading-row"
-                  height="15"
-                  width="50"
-                />
-              </div>
-            </div>
-          </div>
-          <div
-            class="c8"
-            style="position: fixed; left: 0px; top: 0px;"
-          >
-            <div
-              class="c9"
-            >
-              <div
-                class="c10 css-obwv3p"
-              >
-                The impact your trade has on the market price of this pool.
-              </div>
-            </div>
-            <div
-              class="c12 arrow-"
-              style="position: absolute;"
-            />
-          </div>
-        </div>
-      </div>
-      <div>
-        <div
-          class="c0 c1 c2"
-        >
-          <div
-            class="c3 c4 css-142zc9n"
-            data-testid="swap-li-label"
-          >
             Max. slippage
           </div>
           <div
@@ -6778,24 +6507,6 @@ exports[`SwapLineItem.tsx syncing 1`] = `
             data-testid="swap-li-label"
           >
             Network cost
-          </div>
-          <div
-            class="c5"
-            data-testid="loading-row"
-            height="15"
-            width="50"
-          />
-        </div>
-      </div>
-      <div>
-        <div
-          class="c0 c1 c2"
-        >
-          <div
-            class="c3 c4 css-142zc9n"
-            data-testid="swap-li-label"
-          >
-            Price impact
           </div>
           <div
             class="c5"

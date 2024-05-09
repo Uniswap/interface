@@ -8,7 +8,7 @@ import { LoadingOpacityContainer } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
 import Tooltip from 'components/Tooltip'
-import { isSupportedChain } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import { Trans } from 'i18n'
 import ms from 'ms'
 import { darken } from 'polished'
@@ -269,6 +269,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
   ) => {
     const [modalOpen, setModalOpen] = useState(false)
     const { account, chainId } = useWeb3React()
+    const chainAllowed = useIsSupportedChainId(chainId)
     const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
     const theme = useTheme()
     const { formatCurrencyAmount } = useFormatter()
@@ -285,8 +286,6 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
         numericalInputSettings.onDisabledClick?.()
       }
     }, [tooltipVisible, numericalInputSettings])
-
-    const chainAllowed = isSupportedChain(chainId)
 
     // reset tooltip state when currency changes
     useEffect(() => setTooltipVisible(false), [currency])

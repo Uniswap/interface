@@ -14,13 +14,13 @@ import { useSagaStatus } from 'src/utils/useSagaStatus'
 import {
   Button,
   Flex,
-  Icons,
   Text,
   TouchableArea,
   useDeviceDimensions,
   useDeviceInsets,
   useSporeColors,
 } from 'ui/src'
+import { Plus } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -298,7 +298,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       <TouchableArea hapticFeedback mt="$spacing16" onPress={onPressAddWallet}>
         <Flex row alignItems="center" gap="$spacing16" ml="$spacing24">
           <Flex borderColor="$surface3" borderRadius="$roundedFull" borderWidth={1} p="$spacing8">
-            <Icons.Plus color="$neutral2" size="$icon.12" strokeWidth={2} />
+            <Plus color="$neutral2" size="$icon.12" strokeWidth={2} />
           </Flex>
           <Text color="$neutral2" variant="buttonLabel3">
             {t('account.wallet.button.add')}

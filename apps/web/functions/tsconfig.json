@@ -5,8 +5,11 @@
     "composite": false,
     "incremental": true,
     "isolatedModules": false,
+    "paths": {
+      "shared-cloud/*": ["../src/shared-cloud/*"]
+    },
     "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/functions", // avoid clobbering the build tsbuildinfo
-    "types": ["jest", "node", "@cloudflare/workers-types"]
+    "types": ["jest", "node", "@cloudflare/workers-types"],
   },
   "include": ["**/*.ts", "**/*.tsx"],
 }

@@ -1,5 +1,5 @@
+import { getChainInfo, isSupportedChainId } from 'constants/chains'
 import { isCelo, nativeOnChain } from 'constants/tokens'
-import { chainIdToNetworkName, getNativeLogoURI } from 'lib/hooks/useCurrencyLogoURIs'
 import { isAddress } from 'utilities/src/addresses'
 import celoLogo from '../assets/svg/celo_logo.svg'
 
@@ -9,9 +9,9 @@ export function getInitialLogoUrl(
   isNative?: boolean,
   backupImg?: string | null
 ) {
-  if (chainId && isNative) return getNativeLogoURI(chainId)
-
-  const networkName = chainId ? chainIdToNetworkName(chainId) : 'ethereum'
+  const networkName = isSupportedChainId(chainId)
+    ? getChainInfo({ chainId }).assetRepoNetworkName ?? 'ethereum'
+    : 'ethereum'
   const checksummedAddress = isAddress(address)
 
   if (chainId && isCelo(chainId) && address === nativeOnChain(chainId).wrapped.address) {

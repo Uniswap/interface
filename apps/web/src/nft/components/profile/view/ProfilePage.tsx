@@ -17,14 +17,14 @@ import {
   useWalletCollections,
 } from 'nft/hooks'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
-import { OSCollectionsFetcher } from 'nft/queries/openSea'
 import { WalletCollection } from 'nft/types'
 import { Dispatch, SetStateAction, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { useInfiniteQuery } from 'react-query'
 import { easings, useSpring } from 'react-spring'
 import styled from 'styled-components'
 
+import { useInfiniteQuery } from '@tanstack/react-query'
+import { getOSCollectionsInfiniteQueryOptions } from 'nft/queries/openSea/OSCollectionsFetcher'
 import { EmptyWalletModule } from './EmptyWalletContent'
 import * as styles from './ProfilePage.css'
 import { ProfileBodyLoadingSkeleton } from './ProfilePageLoadingSkeleton'
@@ -70,33 +70,13 @@ export const ProfilePage = () => {
   const [isFiltersExpanded, setFiltersExpanded] = useFiltersExpanded()
   const isMobile = useIsMobile()
 
-  const getOwnerCollections = async ({ pageParam = 0 }) => {
-    const res = await OSCollectionsFetcher({
-      params: {
-        asset_owner: address,
-        offset: `${pageParam * WALLET_COLLECTIONS_PAGINATION_LIMIT}`,
-        limit: `${WALLET_COLLECTIONS_PAGINATION_LIMIT}`,
-      },
-    })
-    return {
-      data: res,
-      nextPage: pageParam + 1,
-    }
-  }
-
   const {
     data: ownerCollectionsData,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
     isSuccess,
-  } = useInfiniteQuery(['ownerCollections', { address }], getOwnerCollections, {
-    getNextPageParam: (lastGroup) => (lastGroup.data.length === 0 ? undefined : lastGroup.nextPage),
-    refetchInterval: 15000,
-    refetchIntervalInBackground: false,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-  })
+  } = useInfiniteQuery(getOSCollectionsInfiniteQueryOptions(address))
 
   const ownerCollections = useMemo(
     () => (isSuccess ? ownerCollectionsData?.pages.map((page) => page.data).flat() : null),

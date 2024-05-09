@@ -4,7 +4,7 @@ import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/styled'
-import { isSupportedChain } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import { Trans } from 'i18n'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
@@ -215,6 +215,7 @@ export default function CurrencyInputPanel({
 }: CurrencyInputPanelProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const { account, chainId } = useWeb3React()
+  const chainAllowed = useIsSupportedChainId(chainId)
   const selectedCurrencyBalance = useCurrencyBalance(account ?? undefined, currency ?? undefined)
   const theme = useTheme()
   const { formatCurrencyAmount } = useFormatter()
@@ -222,8 +223,6 @@ export default function CurrencyInputPanel({
   const handleDismissSearch = useCallback(() => {
     setModalOpen(false)
   }, [setModalOpen])
-
-  const chainAllowed = isSupportedChain(chainId)
 
   return (
     <InputPanel id={id} hideInput={hideInput} {...rest}>

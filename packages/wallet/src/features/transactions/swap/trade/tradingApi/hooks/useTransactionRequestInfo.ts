@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
 import { logger } from 'utilities/src/logger/logger'
-import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import {
   CreateSwapRequest,
   CreateSwapResponse,
@@ -20,6 +20,10 @@ import {
   getClassicQuoteFromResponse,
   isClassicQuote,
 } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
+import {
+  ApprovalAction,
+  TokenApprovalInfo,
+} from 'wallet/src/features/transactions/swap/trade/types'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { usePermit2SignatureWithData } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -36,9 +40,11 @@ interface TransactionRequestInfo {
 
 export function useTransactionRequestInfo({
   derivedSwapInfo,
+  tokenApprovalInfo,
   skip,
 }: {
   derivedSwapInfo: DerivedSwapInfo
+  tokenApprovalInfo: TokenApprovalInfo | undefined
   skip: boolean
 }): TransactionRequestInfo {
   const formatter = useLocalizationContext()
@@ -57,6 +63,11 @@ export function useTransactionRequestInfo({
     quote?.permitData,
     /**skip=*/ !requiresPermit2Sig || skip
   )
+
+  /**
+   * Simulate transactions to ensure they will not fail on-chain. Do not simulate for txs that need an approval as those require Tenderly to simulate and it is not currently integrated into the gas servic
+   */
+  const shouldSimulateTxn = tokenApprovalInfo?.action === ApprovalAction.None
 
   // Format request args
   const swapRequestArgs: CreateSwapRequest | undefined = useMemo(() => {
@@ -83,8 +94,16 @@ export function useTransactionRequestInfo({
       quote: quote.quote,
       permitData: quote.permitData ?? undefined,
       signature: signatureInfo.signature,
+      simulateTransaction: shouldSimulateTxn,
+      refreshGasPrice: true,
     }
-  }, [quote, requiresPermit2Sig, signatureInfo.signature, tradeWithStatus.trade?.slippageTolerance])
+  }, [
+    quote,
+    requiresPermit2Sig,
+    shouldSimulateTxn,
+    signatureInfo.signature,
+    tradeWithStatus.trade?.slippageTolerance,
+  ])
 
   // Wrap transaction request
   const isWrapApplicable = derivedSwapInfo.wrapType !== WrapType.NotApplicable
@@ -101,7 +120,9 @@ export function useTransactionRequestInfo({
     swapRequestArgs ?? {},
     ['swap', 'gasFee', 'requestId', 'txFailureReasons'],
     {
-      ttlMs: ONE_MINUTE_MS,
+      // Poll often to ensure swap quote is never expected to fail
+      pollInterval: PollingInterval.UltraFast,
+      ttlMs: PollingInterval.UltraFast,
       skip: skipTransactionRequest,
     },
     'POST',

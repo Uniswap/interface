@@ -424,7 +424,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   transition: opacity 250ms ease-in-out;
 }
 
-.c19 {
+.c20 {
   display: inline-block;
   height: inherit;
 }
@@ -820,7 +820,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   text-decoration: none;
 }
 
-.c20 {
+.c19 {
   color: #7D7D7D;
   padding: 8px 16px;
   border-radius: 20px;
@@ -828,12 +828,12 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   font-weight: 485;
 }
 
-.c20:focus {
+.c19:focus {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c20:active {
+.c19:active {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
@@ -1113,12 +1113,22 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                   >
                     Swap
                   </button>
+                  <button
+                    class="c16 c17 c19"
+                  >
+                    Limit
+                  </button>
+                  <button
+                    class="c16 c17 c19"
+                  >
+                    Send
+                  </button>
                   <div
-                    class="c19"
+                    class="c20"
                   >
                     <div>
                       <button
-                        class="c16 c17 c20"
+                        class="c16 c17 c19"
                         data-testid="buy-fiat-button"
                       >
                         Buy
@@ -1201,7 +1211,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                         </div>
                         <div>
                           <div
-                            class="c19"
+                            class="c20"
                           >
                             <button
                               class="c31 c32 c33 c34 c35 open-currency-select-button"
@@ -1338,7 +1348,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                           </div>
                           <div>
                             <div
-                              class="c19"
+                              class="c20"
                             >
                               <button
                                 class="c31 c32 c33 c34 c35 open-currency-select-button"

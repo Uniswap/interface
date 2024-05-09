@@ -209,6 +209,7 @@
       "notNow": "Agora não",
       "ok": "OK",
       "paste": "Colar",
+      "pay": "Pagar",
       "receive": "Receber",
       "remove": "Remover",
       "restore": "Restaurar",
@@ -266,8 +267,9 @@
       "systemSettings": "Configurações"
     },
     "text": {
+      "connected": "Conectado",
+      "disconnected": "Desconectado",
       "error": "Erro",
-      "loading": "Carregando",
       "notAvailable": "N / D",
       "unknown": "Desconhecido"
     }
@@ -505,6 +507,7 @@
       "load": "Não foi possível carregar tokens para comprar",
       "max": "Máximo {{amount}}",
       "min": "Mínimo {{amount}}",
+      "unavailable": "Este serviço não está disponível na sua região",
       "unsupported": "Não suportado na região",
       "usd": "Disponível apenas para compra em dólares americanos"
     },
@@ -614,7 +617,7 @@
     },
     "upsell": {
       "receive": {
-        "cta": "Vincular uma conta",
+        "cta": "De uma conta",
         "description": "Financie sua carteira transferindo cripto de outra carteira ou conta",
         "title": "Receba criptografia"
       }
@@ -786,15 +789,6 @@
         "title": "Fixar carteira Uniswap"
       },
       "title": "Você está pronto"
-    },
-    "editName": {
-      "button": {
-        "create": "Criar carteira"
-      },
-      "label": "Apelido",
-      "subtitle": "Dê um apelido à sua carteira",
-      "title": "Este apelido só é visível para você",
-      "walletAddress": "Seu endereço público será <highlight>{{walletAddress}}</highlight>"
     },
     "extension": {
       "connectMobile": {
@@ -1266,11 +1260,6 @@
       "security": "Segurança",
       "support": "Suporte",
       "wallet": {
-        "action": {
-          "hide": "Ocultar carteiras",
-          "showAll_one": "Mostrar uma carteira",
-          "showAll_other": "Mostrar todas as {{count}} carteiras"
-        },
         "button": {
           "viewAll": "Ver tudo",
           "viewLess": "Ver menos"
@@ -1454,9 +1443,7 @@
         },
         "editLabel": {
           "description": "Os rótulos não são públicos. Eles são armazenados localmente e visíveis apenas para você.",
-          "disclaimer": "Este apelido só é visível para você.",
-          "save": "Salvar alterações",
-          "title": "Editar apelido"
+          "save": "Salvar alterações"
         },
         "label": "Apelido",
         "notifications": {
@@ -1584,6 +1571,7 @@
         "title": "Liquidez insuficiente"
       },
       "networkFee": {
+        "highRelativeToValue": "O custo da rede excede 10% do valor total da transação.",
         "message": "Este é o custo para processar sua transação na blockchain. A Uniswap não recebe nenhuma parcela dessas taxas."
       },
       "offline": {
@@ -1604,8 +1592,8 @@
       },
       "uniswapFee": {
         "message": {
-          "default": "As tarifas são aplicadas a alguns tokens selecionados para garantir a melhor experiência com a Uniswap. Não há tarifa associada a esta troca.",
-          "included": "As tarifas são aplicadas a alguns tokens selecionados para garantir a melhor experiência com a Uniswap e já foram consideradas nesta cotação."
+          "default": "As taxas são aplicadas para garantir a melhor experiência com o Uniswap. Não há taxa associada a esta troca.",
+          "included": "As taxas são aplicadas para garantir a melhor experiência com o Uniswap e já foram consideradas nesta cotação."
         },
         "title": "Taxa de troca"
       },
@@ -2057,6 +2045,11 @@
         "min": "Os nomes de usuário devem ter pelo menos {{number}} caracteres",
         "uppercase": "Os nomes de usuário só podem conter letras minúsculas e números"
       }
+    }
+  },
+  "uwulink": {
+    "error": {
+      "insufficientTokens": "Não é suficiente {{tokenSymbol}} em {{chain}}"
     }
   },
   "walletConnect": {

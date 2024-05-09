@@ -2,7 +2,7 @@ import { ChainId } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { LDO, NATIVE_CHAIN_ID, UNI, USDC_BASE } from 'constants/tokens'
-import { chainIdToBackendName, getTokenDetailsURL } from 'graphql/data/util'
+import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { t } from 'i18n'
@@ -11,6 +11,7 @@ import styled from 'styled-components'
 import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { useCallback } from 'react'
 import { Box } from '../Generics'
 import { Computer } from '../Icons'
@@ -170,7 +171,7 @@ type WebappCardProps = {
 
 const primary = '#2ABDFF'
 
-const tokens = [
+const tokens: { chainId: SupportedInterfaceChainId; address: string }[] = [
   {
     chainId: ChainId.MAINNET,
     address: 'ETH',
@@ -189,7 +190,7 @@ const tokens = [
   },
 ]
 
-function Token({ chainId, address }: { chainId: ChainId; address: string }) {
+function Token({ chainId, address }: { chainId: SupportedInterfaceChainId; address: string }) {
   const screenIsSmall = useScreenSize()['sm']
   const navigate = useNavigate()
   const { formatFiatPrice, formatDelta } = useFormatter()
@@ -197,7 +198,7 @@ function Token({ chainId, address }: { chainId: ChainId; address: string }) {
   const tokenPromoQuery = useTokenPromoQuery({
     variables: {
       address: currency?.wrapped.address,
-      chain: chainIdToBackendName(chainId),
+      chain: chainIdToBackendChain({ chainId }),
     },
   })
   const price = tokenPromoQuery.data?.token?.market?.price?.value ?? 0
@@ -208,7 +209,7 @@ function Token({ chainId, address }: { chainId: ChainId; address: string }) {
       navigate(
         getTokenDetailsURL({
           address: address === 'ETH' ? NATIVE_CHAIN_ID : address,
-          chain: chainIdToBackendName(chainId),
+          chain: chainIdToBackendChain({ chainId }),
         })
       )
     },

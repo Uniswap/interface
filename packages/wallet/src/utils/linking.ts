@@ -153,7 +153,12 @@ export function getProfileUrl(walletAddress: string): string {
   return `${uniswapUrls.webInterfaceAddressUrl}/${walletAddress}`
 }
 
-export function getTokenUrl(currencyId: string): string | undefined {
+const UTM_TAGS_MOBILE = 'utm_medium=mobile&utm_source=share-tdp'
+
+export function getTokenUrl(
+  currencyId: string,
+  addMobileUTMTags: boolean = false
+): string | undefined {
   const chainId = currencyIdToChain(currencyId)
   if (!chainId) {
     return
@@ -166,7 +171,8 @@ export function getTokenUrl(currencyId: string): string | undefined {
       // this is how web app handles native tokens
       tokenAddress = UNISWAP_APP_NATIVE_TOKEN
     }
-    return `${uniswapUrls.webInterfaceTokensUrl}/${network}/${tokenAddress}`
+    const tokenUrl = `${uniswapUrls.webInterfaceTokensUrl}/${network}/${tokenAddress}`
+    return addMobileUTMTags ? tokenUrl + `?${UTM_TAGS_MOBILE}` : tokenUrl
   } catch (_) {
     return
   }

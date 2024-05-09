@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "scripts": {
     "build": "tsc -b",
-    "prepare": "yarn contracts && yarn i18n:generate && yarn graphql:generate",
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
     "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/abis/types/v3 \"../../node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json\"",
     "contracts": "yarn contracts:compile:abi && yarn contracts:compile:v3",
@@ -35,7 +34,7 @@
     "@graphql-codegen/typescript-resolvers": "^3.2.1",
     "@types/chrome": "0.0.254",
     "@uniswap/eslint-config": "workspace:^",
-    "@uniswap/sdk-core": "4.2.1-beta.1",
+    "@uniswap/sdk-core": "4.2.1",
     "depcheck": "1.4.7",
     "eslint": "8.44.0",
     "get-graphql-schema": "^2.1.2",

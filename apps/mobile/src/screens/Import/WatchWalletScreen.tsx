@@ -12,7 +12,8 @@ import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { OnboardingScreens } from 'src/screens/Screens'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
-import { Button, Flex, Icons, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
+import { GraduationCap } from 'ui/src/components/icons'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { ChainId } from 'wallet/src/constants/chains'
 import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
@@ -191,7 +192,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           borderRadius="$rounded16"
           gap="$spacing16"
           p="$spacing16">
-          <Icons.GraduationCap color="$neutral2" size="$icon.20" />
+          <GraduationCap color="$neutral2" size="$icon.20" />
           <Text color="$neutral2" flexShrink={1} variant="body3">
             {t('account.wallet.watch.message')}
           </Text>

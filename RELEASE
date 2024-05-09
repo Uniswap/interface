@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmQcU3yDYBfnzcB31iYwTcW41JwYaQabvdaaM28WCXf8Ws`
-- CIDv1: `bafybeibbyso4k2bvdabn3u3s3ubzaxmszuwtjlhppj5zjjfeex2g4rhoga`
+- CIDv0: `QmZCHeoJuPsFdadwYDZ1gxfLvYaaRxv5pGxTRcmSGXqSgP`
+- CIDv1: `bafybeifbjqm3qbn3nu6diizot5gr24pw2dai5r6l5iafo5y4t5nufursoa`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,39 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeibbyso4k2bvdabn3u3s3ubzaxmszuwtjlhppj5zjjfeex2g4rhoga.ipfs.dweb.link/
-- https://bafybeibbyso4k2bvdabn3u3s3ubzaxmszuwtjlhppj5zjjfeex2g4rhoga.ipfs.cf-ipfs.com/
-- [ipfs://QmQcU3yDYBfnzcB31iYwTcW41JwYaQabvdaaM28WCXf8Ws/](ipfs://QmQcU3yDYBfnzcB31iYwTcW41JwYaQabvdaaM28WCXf8Ws/)
+- https://bafybeifbjqm3qbn3nu6diizot5gr24pw2dai5r6l5iafo5y4t5nufursoa.ipfs.dweb.link/
+- https://bafybeifbjqm3qbn3nu6diizot5gr24pw2dai5r6l5iafo5y4t5nufursoa.ipfs.cf-ipfs.com/
+- [ipfs://QmZCHeoJuPsFdadwYDZ1gxfLvYaaRxv5pGxTRcmSGXqSgP/](ipfs://QmZCHeoJuPsFdadwYDZ1gxfLvYaaRxv5pGxTRcmSGXqSgP/)
 
-### 5.25.7 (2024-05-09)
+## 5.26.0 (2024-05-09)
+
+
+### Features
+
+* **web:** add dynamic metatag updating w/ react-helmet-async (#7732) 4afd49c
+* **web:** add multichain ux flag (#7796) 870f18f
+* **web:** automate sitemap generation during prod deploy (#7846) 6010986
+* **web:** migrate user state back to localStorage (#7452) b8ff545
 
 
 ### Bug Fixes
 
-* **web:** hotfix warning modified extensions (#8042) ac4781d
+* **web:** add "Safe" RPC URLs to CSP (#7844) 7880af0
+* **web:** align price impact in details and warning (#7734) 65303d4
+* **web:** convert useQuery to use QueryOptions (#7729) da4104c
+* **web:** disable flaky tests in merge queue runs (#7771) c5fc13b
+* **web:** fix token lookups from network for backend-unsupported chains (#7894) 2bcd438
+* **web:** fix tokens lookups for avax (#7893) f4deeb6
+* **web:** Flip logic for Sells/Buys (#7880) cffd9ec
+* **web:** hotfix warning modified extensions (#8073) deeeb4f
+* **web:** infinite loop when connecting to unsupported chain (#7891) 4df2b6a
+* **web:** pool page stuck in rerender loop (#7892) 45541af
+* **web:** reduce gap in AdvancedSwapDetails component (#7733) 278f948
+* **web:** refactor chain URL param handling (#7807) a33bc3d
+* **web:** remove limits+send feature flags & fix broken /limit page refresh (#7870) 6c5eaa9
+* **web:** serialize polling tx receipts (#7908) 3c44924
+* **web:** support swapping spam tokens (#7793) 020a1e4
+* **web:** update the CTAs on pools page to link to explore/pools page (#7808) cb625d8
+* **web:** width of account bottom sheet on mobile (#7886) 03ebbd0
 
 

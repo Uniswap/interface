@@ -12,16 +12,8 @@ import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { InitialQuoteSelection } from 'src/features/fiatOnRamp/types'
 import { getServiceProviderForQuote } from 'src/features/fiatOnRamp/utils'
 import { FiatOnRampScreens } from 'src/screens/Screens'
-import {
-  AnimatedFlex,
-  ColorTokens,
-  Flex,
-  GeneratedIcon,
-  Icons,
-  Inset,
-  Separator,
-  Text,
-} from 'ui/src'
+import { AnimatedFlex, ColorTokens, Flex, GeneratedIcon, Inset, Separator, Text } from 'ui/src'
+import { TimePast } from 'ui/src/components/icons'
 import { HandleBar } from 'wallet/src/components/modals/HandleBar'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
 import { FORQuote } from 'wallet/src/features/fiatOnRamp/types'
@@ -94,7 +86,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
     <Flex px="$spacing12">
       {type === InitialQuoteSelection.Best ? null : type === InitialQuoteSelection.MostRecent ? (
         <SectionHeader
-          Icon={Icons.TimePast}
+          Icon={TimePast}
           iconColor="$neutral3"
           title={t('fiatOnRamp.quote.type.recent')}
         />

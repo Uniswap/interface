@@ -9,7 +9,8 @@ import {
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, Icons, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { TokenSortableField } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { logger } from 'utilities/src/logger/logger'
@@ -86,7 +87,7 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
           <Text ellipse color="$neutral2" flexShrink={1} numberOfLines={1} variant="buttonLabel3">
             {getTokensOrderBySelectedLabel(orderBy, t)}
           </Text>
-          <Icons.RotatableChevron
+          <RotatableChevron
             color="$neutral2"
             direction="down"
             height={iconSizes.icon20}

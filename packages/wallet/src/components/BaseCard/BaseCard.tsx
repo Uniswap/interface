@@ -4,12 +4,12 @@ import {
   ColorTokens,
   Flex,
   FlexProps,
-  Icons,
   Text,
   TouchableArea,
   useIsDarkMode,
   useSporeColors,
 } from 'ui/src'
+import { AlertTriangle, RotatableChevron } from 'ui/src/components/icons'
 import { opacify } from 'ui/src/theme'
 
 export const SHADOW_OFFSET_SMALL = { width: 0, height: 2 } as const
@@ -76,7 +76,7 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
             )
           ) : null}
         </Flex>
-        <Icons.RotatableChevron color="$neutral2" direction="end" height={20} />
+        <RotatableChevron color="$neutral2" direction="end" height={20} />
       </Flex>
     </TouchableArea>
   )
@@ -196,7 +196,7 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
     title = t('common.card.error.title'),
     onRetry: retry,
     retryButtonLabel = t('common.button.retry'),
-    icon = <Icons.AlertTriangle color="$neutral3" size="$icon.16" testID="error-icon" />,
+    icon = <AlertTriangle color="$neutral3" size="$icon.16" testID="error-icon" />,
   } = props
 
   return (

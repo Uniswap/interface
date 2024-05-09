@@ -7,6 +7,7 @@ import { UK_BANNER_HEIGHT, UK_BANNER_HEIGHT_MD, UK_BANNER_HEIGHT_SM, UkBanner } 
 import { useFeatureFlagURLOverrides } from 'featureFlags'
 import { useAtom } from 'jotai'
 import { useBag } from 'nft/hooks/useBag'
+import { useMetatags } from 'pages/metatags'
 import { lazy, memo, Suspense, useEffect, useLayoutEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, Route, Routes, useLocation, useSearchParams } from 'react-router-dom'
@@ -112,6 +113,8 @@ export default function App() {
 
   useFeatureFlagURLOverrides()
 
+  const metaTagProperties = useMetatags()
+
   // redirect address to landing pages until implemented
   const shouldRedirectToAppInstall = pathname?.startsWith('/address/')
   useLayoutEffect(() => {
@@ -139,6 +142,9 @@ export default function App() {
         */}
         <Helmet>
           <title>{findRouteByPath(pathname)?.getTitle(pathname) ?? 'Uniswap Interface'}</title>
+          {metaTagProperties.map((tag) => (
+            <meta key={tag.property} {...tag} />
+          ))}
         </Helmet>
         <UserPropertyUpdater />
         {renderUkBanner && <UkBanner />}

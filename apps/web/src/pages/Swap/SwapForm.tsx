@@ -24,9 +24,7 @@ import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWith
 import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, OutputSwapSection, SwapSection } from 'components/swap/styled'
 import { useConnectionReady } from 'connection/eagerlyConnect'
-import { getChainInfo } from 'constants/chainInfo'
-import { asSupportedChain, isSupportedChain } from 'constants/chains'
-import { TOKEN_SHORTHANDS } from 'constants/tokens'
+import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import useParsedQueryString from 'hooks/useParsedQueryString'
@@ -86,6 +84,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const trace = useTrace()
 
   const { chainId, prefilledState, currencyState } = useSwapAndLimitContext()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   const { swapState, setSwapState, derivedSwapInfo } = useSwapContext()
   const { typedValue, independentField } = swapState
 
@@ -114,17 +113,8 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               return token.currency.isToken && token.safetyLevel !== SafetyLevel.Verified
             })
             .map((token: CurrencyInfo) => token.currency as Token)
-            .filter((token: Token) => {
-              // Any token addresses that are loaded from the shorthands map do not need to show the import URL
-              const supported = asSupportedChain(chainId)
-              if (!supported) return true
-              return !Object.keys(TOKEN_SHORTHANDS).some((shorthand) => {
-                const shorthandTokenAddress = TOKEN_SHORTHANDS[shorthand][supported]
-                return shorthandTokenAddress && shorthandTokenAddress === token.address
-              })
-            })
         : [],
-    [chainId, prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
+    [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
   )
 
   const theme = useTheme()
@@ -313,7 +303,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
       (parsedAmounts[Field.INPUT]?.currency.isToken
         ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
         : undefined),
-    isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
+    isSupportedChain ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
     trade?.fillType
   )
 
@@ -474,6 +464,8 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const inputCurrency = currencies[Field.INPUT] ?? undefined
   const switchChain = useSwitchChain()
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
+  const targetChain = switchingChain ? switchingChain : undefined
+  const switchingChainIsSupported = useIsSupportedChainId(targetChain)
   // @ts-ignore
   const isUsingBlockedExtension = window.ethereum?.['isPocketUniverseZ']
 
@@ -490,6 +482,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
       {trade && showConfirm && (
         <ConfirmSwapModal
           trade={trade}
+          priceImpact={largerPriceImpact}
           inputCurrency={inputCurrency}
           originalTrade={tradeToConfirm}
           onAcceptChanges={handleAcceptChanges}
@@ -536,7 +529,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
             />
           </Trace>
         </SwapSection>
-        <ArrowWrapper clickable={isSupportedChain(chainId)}>
+        <ArrowWrapper clickable={isSupportedChain}>
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SwapEventName.SWAP_TOKENS_REVERSED}
@@ -604,7 +597,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
             </ButtonPrimary>
           ) : switchingChain ? (
             <ButtonPrimary $borderRadius="16px" disabled={true}>
-              <Trans>Connecting to {{ label: getChainInfo(switchingChain)?.label }}</Trans>
+              <Trans>Connecting to {{ label: switchingChainIsSupported ? CHAIN_INFO[targetChain]?.label : '' }}</Trans>
             </ButtonPrimary>
           ) : connectionReady && !account ? (
             <TraceEvent
@@ -633,7 +626,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 }
               }}
             >
-              Connect to {getChainInfo(chainId)?.label}
+              Connect to {isSupportedChain ? CHAIN_INFO[chainId].label : ''}
             </ButtonPrimary>
           ) : showWrap ? (
             <ButtonPrimary
@@ -692,6 +685,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               syncing={routeIsSyncing}
               loading={routeIsLoading}
               allowedSlippage={allowedSlippage}
+              priceImpact={largerPriceImpact}
             />
           )}
           {isUsingBlockedExtension && <SwapNotice />}

@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Icons, isWeb, useSporeColors } from 'ui/src'
+import { isWeb, useSporeColors } from 'ui/src'
+import { MoneyBillSend } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { WarningInfo } from 'wallet/src/components/modals/WarningModal/WarningInfo'
@@ -27,7 +28,7 @@ export function FeeOnTransferWarning({ children }: PropsWithChildren): JSX.Eleme
         caption,
         closeText: t('common.button.close'),
         icon: (
-          <Icons.MoneyBillSend
+          <MoneyBillSend
             color="$magentaVibrant"
             // @ts-expect-error TODO(MOB-1571): this token is the only one that doesn't use same width/height, overriding type here as it will pass through and work
             height={iconSizes.icon20}

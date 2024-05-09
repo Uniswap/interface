@@ -17,13 +17,13 @@ import {
   AnimatedFlex,
   Button,
   Flex,
-  Icons,
   Image,
   Text,
   TouchableArea,
   useSporeColors,
 } from 'ui/src'
 import { ENS_LOGO } from 'ui/src/assets'
+import { InfoCircleFilled, LinkHorizontalAlt } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { logger } from 'utilities/src/logger/logger'
@@ -338,7 +338,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
               Keyboard.dismiss()
               setShowInfoModal(true)
             }}>
-            <Icons.InfoCircleFilled color={colors.neutral3.get()} size="$icon.20" />
+            <InfoCircleFilled color={colors.neutral3.get()} size="$icon.20" />
           </TouchableArea>
         </AnimatedFlex>
         {canClaimUnitagNameError && unitagToCheck === unitagInputValue && (
@@ -436,7 +436,7 @@ const InfoModal = ({
             width={FIXED_INFO_PILL_WIDTH}
           />
           <Flex p="$spacing2" shadowColor="$accent1" shadowOpacity={1} shadowRadius="$spacing16">
-            <Icons.LinkHorizontalAlt color={colors.neutral3.get()} size={iconSizes.icon24} />
+            <LinkHorizontalAlt color={colors.neutral3.get()} size={iconSizes.icon24} />
           </Flex>
           <Pill
             customBackgroundColor={colors.surface1.val}

@@ -1,7 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { UniIcon } from 'components/Logo/UniIcon'
 import Web3Status from 'components/Web3Status'
-import { chainIdToBackendName } from 'graphql/data/util'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -17,6 +16,7 @@ import { NavLink, NavLinkProps, useLocation, useNavigate } from 'react-router-do
 import styled from 'styled-components'
 
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { Z_INDEX } from 'theme/zIndex'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useIsNavSearchInputVisible } from '../../nft/hooks/useIsNavSearchInputVisible'
@@ -59,7 +59,8 @@ const MenuItem = ({ href, dataTestId, id, isActive, children }: MenuItemProps) =
 export const PageTabs = () => {
   const { pathname } = useLocation()
   const { chainId: connectedChainId } = useWeb3React()
-  const chainName = chainIdToBackendName(connectedChainId)
+  const supportedChain = useSupportedChainId(connectedChainId)
+  const chainName = chainIdToBackendChain({ chainId: supportedChain, withFallback: true })
 
   const isPoolActive = useIsPoolsPage()
   const isNftPage = useIsNftPage()

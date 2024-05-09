@@ -10,7 +10,7 @@ import { useRef, useState } from 'react'
 import { MoreHorizontal } from 'react-feather'
 import styled from 'styled-components'
 import { ClickableStyle, CopyHelper, EllipsisStyle, ThemedText } from 'theme/components'
-import { Unitag } from 'ui/src/components/icons/Unitag'
+import { Unitag } from 'ui/src/components/icons'
 import { shortenAddress } from 'utilities/src/addresses'
 
 const Container = styled.div`

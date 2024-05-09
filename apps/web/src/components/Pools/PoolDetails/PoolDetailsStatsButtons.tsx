@@ -9,9 +9,10 @@ import Row from 'components/Row'
 import { SwapWrapperOuter } from 'components/swap/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
+import { chainIdToBackendChain, SupportedInterfaceChainId } from 'constants/chains'
 import { getPriorityWarning, StrongWarning, useTokenWarning } from 'constants/tokenSafety'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
-import { chainIdToBackendName, gqlToCurrency } from 'graphql/data/util'
+import { gqlToCurrency } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { Trans } from 'i18n'
@@ -132,7 +133,7 @@ const MobileBalance = styled(Column)`
 `
 
 interface PoolDetailsStatsButtonsProps {
-  chainId?: number
+  chainId?: SupportedInterfaceChainId
   token0?: Token
   token1?: Token
   feeTier?: number
@@ -165,7 +166,7 @@ export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, load
   const { data: balanceQuery } = useTokenBalancesQuery()
   const { balance0, balance1, balance0Fiat, balance1Fiat } = useMemo(() => {
     const filteredBalances = balanceQuery?.portfolios?.[0]?.tokenBalances?.filter(
-      (tokenBalance) => tokenBalance?.token?.chain === chainIdToBackendName(chainId)
+      (tokenBalance) => tokenBalance?.token?.chain === chainIdToBackendChain({ chainId, withFallback: true })
     )
     const tokenBalance0 = filteredBalances?.find((tokenBalance) => tokenBalance?.token?.address === token0?.address)
     const tokenBalance1 = filteredBalances?.find((tokenBalance) => tokenBalance?.token?.address === token1?.address)

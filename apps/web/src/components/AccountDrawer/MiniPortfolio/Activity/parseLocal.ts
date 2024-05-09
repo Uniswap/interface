@@ -3,7 +3,6 @@ import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import { nativeOnChain } from 'constants/tokens'
 import { t } from 'i18n'
-import { useCallback } from 'react'
 import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
@@ -26,9 +25,10 @@ import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__g
 import { isAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { queryOptions, useQuery } from '@tanstack/react-query'
 import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
-import { useQuery } from 'react-query'
-import { CancelledTransactionTitleTable, getActivityTitle, LimitOrderTextTable, OrderTextTable } from '../constants'
+import { SupportedInterfaceChainId } from 'constants/chains'
+import { CancelledTransactionTitleTable, LimitOrderTextTable, OrderTextTable, getActivityTitle } from '../constants'
 import { Activity, ActivityMap } from './types'
 
 type FormatNumberFunctionType = ReturnType<typeof useFormatter>['formatNumber']
@@ -60,7 +60,7 @@ function buildCurrencyDescriptor(
 
 async function parseSwap(
   swap: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo,
-  chainId: ChainId,
+  chainId: SupportedInterfaceChainId,
   formatNumber: FormatNumberFunctionType
 ): Promise<Partial<Activity>> {
   const [tokenIn, tokenOut] = await Promise.all([
@@ -104,7 +104,7 @@ function parseWrap(
 
 async function parseApproval(
   approval: ApproveTransactionInfo,
-  chainId: ChainId,
+  chainId: SupportedInterfaceChainId,
   status: TransactionStatus
 ): Promise<Partial<Activity>> {
   const currency = await getCurrency(approval.tokenAddress, chainId)
@@ -126,7 +126,7 @@ type GenericLPInfo = Omit<
 >
 async function parseLP(
   lp: GenericLPInfo,
-  chainId: ChainId,
+  chainId: SupportedInterfaceChainId,
   formatNumber: FormatNumberFunctionType
 ): Promise<Partial<Activity>> {
   const [baseCurrency, quoteCurrency] = await Promise.all([
@@ -141,7 +141,7 @@ async function parseLP(
 
 async function parseCollectFees(
   collect: CollectFeesTransactionInfo,
-  chainId: ChainId,
+  chainId: SupportedInterfaceChainId,
   formatNumber: FormatNumberFunctionType
 ): Promise<Partial<Activity>> {
   // Adapts CollectFeesTransactionInfo to generic LP type
@@ -160,7 +160,7 @@ async function parseCollectFees(
 
 async function parseMigrateCreateV3(
   lp: MigrateV2LiquidityToV3TransactionInfo | CreateV3PoolTransactionInfo,
-  chainId: ChainId
+  chainId: SupportedInterfaceChainId
 ): Promise<Partial<Activity>> {
   const [baseCurrency, quoteCurrency] = await Promise.all([
     getCurrency(lp.baseCurrencyId, chainId),
@@ -175,7 +175,7 @@ async function parseMigrateCreateV3(
 
 async function parseSend(
   send: SendTransactionInfo,
-  chainId: ChainId,
+  chainId: SupportedInterfaceChainId,
   formatNumber: FormatNumberFunctionType
 ): Promise<Partial<Activity>> {
   const { currencyId, amount, recipient } = send
@@ -202,22 +202,9 @@ export function getTransactionStatus(details: TransactionDetails): TransactionSt
     : TransactionStatus.Failed
 }
 
-// useQuery wrapper for transactionToActivity, for async fetching
-export function useTransactionToActivity(transaction: TransactionDetails | undefined, chainId: ChainId) {
-  const { formatNumber } = useFormatter()
-  const activityFetcher = useCallback(
-    async () => transactionToActivity(transaction, chainId, formatNumber),
-    [chainId, formatNumber, transaction]
-  )
-  const { data: activity } = useQuery(`transactionToActivity-${transaction?.hash}-${chainId}`, activityFetcher, {
-    enabled: !!transaction,
-  })
-  return activity
-}
-
 export async function transactionToActivity(
   details: TransactionDetails | undefined,
-  chainId: ChainId,
+  chainId: SupportedInterfaceChainId,
   formatNumber: FormatNumberFunctionType
 ): Promise<Activity | undefined> {
   if (!details) return undefined
@@ -271,13 +258,25 @@ export async function transactionToActivity(
   }
 }
 
-export function useSignatureToActivity(signature: SignatureDetails | undefined) {
-  const { formatNumber } = useFormatter()
-
-  const { data: activity } = useQuery(`signatureToActivity-${signature?.orderHash}`, async () => {
-    return await signatureToActivity(signature, formatNumber)
+export function getTransactionToActivityQueryOptions(
+  transaction: TransactionDetails | undefined,
+  chainId: SupportedInterfaceChainId,
+  formatNumber: FormatNumberFunctionType
+) {
+  return queryOptions({
+    queryKey: ['transactionToActivity', transaction, chainId],
+    queryFn: async () => transactionToActivity(transaction, chainId, formatNumber),
   })
-  return activity
+}
+
+export function getSignatureToActivityQueryOptions(
+  signature: SignatureDetails | undefined,
+  formatNumber: FormatNumberFunctionType
+) {
+  return queryOptions({
+    queryKey: ['signatureToActivity', signature],
+    queryFn: async () => signatureToActivity(signature, formatNumber),
+  })
 }
 
 function convertToSecTimestamp(timestamp: number) {
@@ -342,24 +341,22 @@ export function useLocalActivities(account: string): ActivityMap {
   const allSignatures = useAllSignatures()
   const { formatNumber } = useFormatter()
 
-  const activityParser = useCallback(async () => {
-    const transactions = Object.values(allTransactions)
-      .filter(([transaction]) => transaction.from === account)
-      .map(([transaction, chainId]) => transactionToActivity(transaction, chainId, formatNumber))
-    const signatures = Object.values(allSignatures)
-      .filter((signature) => signature.offerer === account)
-      .map((signature) => signatureToActivity(signature, formatNumber))
+  const { data } = useQuery({
+    queryKey: ['localActivities', account],
+    queryFn: async () => {
+      const transactions = Object.values(allTransactions)
+        .filter(([transaction]) => transaction.from === account)
+        .map(([transaction, chainId]) => transactionToActivity(transaction, chainId, formatNumber))
+      const signatures = Object.values(allSignatures)
+        .filter((signature) => signature.offerer === account)
+        .map((signature) => signatureToActivity(signature, formatNumber))
 
-    return (await Promise.all([...transactions, ...signatures])).reduce((acc, activity) => {
-      if (activity) acc[activity.hash] = activity
-      return acc
-    }, {} as ActivityMap)
-  }, [account, allSignatures, allTransactions, formatNumber])
-
-  const { data } = useQuery(
-    `localActivities-${account}-${allSignatures.length}-${allTransactions.length}`,
-    activityParser
-  )
+      return (await Promise.all([...transactions, ...signatures])).reduce((acc, activity) => {
+        if (activity) acc[activity.hash] = activity
+        return acc
+      }, {} as ActivityMap)
+    },
+  })
 
   return data ?? {}
 }

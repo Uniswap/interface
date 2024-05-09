@@ -1,5 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
-import { SupportedInterfaceChain } from 'constants/chains'
+import { SupportedInterfaceChainId } from 'constants/chains'
 import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'state/hooks'
@@ -44,7 +44,7 @@ export function useAddOrder() {
     (
       offerer: string,
       orderHash: string,
-      chainId: SupportedInterfaceChain,
+      chainId: SupportedInterfaceChainId,
       expiry: number,
       swapInfo: UniswapXOrderDetails['swapInfo'],
       encodedOrder: string,

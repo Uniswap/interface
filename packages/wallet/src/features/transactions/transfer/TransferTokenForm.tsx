@@ -9,7 +9,6 @@ import {
   AnimatedFlex,
   Button,
   Flex,
-  Icons,
   Text,
   TouchableArea,
   isWeb,
@@ -17,6 +16,7 @@ import {
   useSporeColors,
 } from 'ui/src'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
+import { AlertCircle } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { TransferArrowButton } from 'wallet/src/components/buttons/TransferArrowButton'
@@ -229,7 +229,7 @@ export function TransferTokenForm({
   const TRANSFER_DIRECTION_BUTTON_SIZE = iconSizes.icon20
   const TRANSFER_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing12
   const TRANSFER_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
-  const SendWarningIcon = transferWarning?.icon ?? Icons.AlertCircle
+  const SendWarningIcon = transferWarning?.icon ?? AlertCircle
 
   return (
     <>

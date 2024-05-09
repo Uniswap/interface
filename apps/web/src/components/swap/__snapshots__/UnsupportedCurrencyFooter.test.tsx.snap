@@ -26,14 +26,6 @@ exports[`UnsupportedCurrencyFooter.tsx with unsupported tokens renders 1`] = `
   padding: 0;
 }
 
-.c5 {
-  color: #FC72FF;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
 .c2 {
   padding: 0;
   width: 100%;
@@ -168,11 +160,12 @@ exports[`UnsupportedCurrencyFooter.tsx with unsupported tokens renders 1`] = `
           class="c1 c2 c3 c4"
           data-testid="read-more-button"
         >
-          <div
-            class="c5 css-1aulwug"
+          <span
+            class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-1380577629 _fontSize-16px _lineHeight-24px _fontWeight-400"
+            data-disable-theme="true"
           >
             Read more about unsupported assets
-          </div>
+          </span>
         </button>
       </div>
     </span>

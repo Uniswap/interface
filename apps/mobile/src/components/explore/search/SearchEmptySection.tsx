@@ -7,14 +7,15 @@ import { SearchPopularNFTCollections } from 'src/components/explore/search/Searc
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { renderSearchItem } from 'src/components/explore/search/SearchResultsSection'
 import { SectionHeaderText } from 'src/components/explore/search/SearchSectionHeader'
-import { AnimatedFlex, Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedFlex, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ClockIcon from 'ui/src/assets/icons/clock.svg'
+import { TrendUp } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { clearSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 import { SearchResultType, WalletSearchResult } from 'wallet/src/features/search/SearchResult'
 import { selectSearchHistory } from 'wallet/src/features/search/selectSearchHistory'
 
-const TrendUpIcon = <Icons.TrendUp color="$neutral2" size="$icon.24" />
+const TrendUpIcon = <TrendUp color="$neutral2" size="$icon.24" />
 
 export const SUGGESTED_WALLETS: WalletSearchResult[] = [
   {

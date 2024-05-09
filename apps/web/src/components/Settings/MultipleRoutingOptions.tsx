@@ -196,7 +196,12 @@ export default function MultipleRoutingOptions() {
       <RoutePreferenceToggle
         preference={RoutePreferenceOption.Optimal}
         isActive={routePreferenceOptions[RoutePreferenceOption.Optimal]}
-        text={<Trans>The Uniswap client selects the cheapest trade option factoring price and network costs.</Trans>}
+        text={
+          <Trans>
+            The Uniswap client selects the cheapest trade option factoring price and network costs factoring price and
+            network costs.
+          </Trans>
+        }
         subheading={
           routePreferenceOptions[RoutePreferenceOption.Optimal] &&
           uniswapXSupportedChain && (

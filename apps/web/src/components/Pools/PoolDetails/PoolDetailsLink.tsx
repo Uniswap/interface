@@ -4,7 +4,7 @@ import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import Tooltip, { TooltipSize } from 'components/Tooltip'
-import { chainIdToBackendName, getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
+import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { Trans, t } from 'i18n'
 import { useCallback, useState } from 'react'
@@ -18,6 +18,7 @@ import { isAddress, shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { DetailBubble, SmallDetailBubble } from './shared'
 
@@ -80,7 +81,7 @@ const ButtonsRow = styled(Row)`
 
 interface PoolDetailsLinkProps {
   address?: string
-  chainId?: number
+  chainId?: SupportedInterfaceChainId
   tokens: (Token | undefined)[]
   loading?: boolean
 }
@@ -107,7 +108,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
     )
 
   const navigate = useNavigate()
-  const chainName = chainIdToBackendName(chainId)
+  const chainName = chainIdToBackendChain({ chainId, withFallback: true })
   const handleTokenTextClick = useCallback(() => {
     if (!isPool) {
       navigate(getTokenDetailsURL({ address: tokens[0]?.address, chain: chainName }))

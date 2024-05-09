@@ -5,7 +5,7 @@ import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column, { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
 import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'
-import { isSupportedChain, isUniswapXSupportedChain, L2_CHAIN_IDS } from 'constants/chains'
+import { isUniswapXSupportedChain, L2_CHAIN_IDS, useIsSupportedChainId } from 'constants/chains'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Trans } from 'i18n'
@@ -137,7 +137,7 @@ export default function SettingsTab({
   const uniswapXEnabled = chainId && isUniswapXSupportedChain(chainId)
   const showRoutingSettings = Boolean(uniswapXEnabled && !hideRoutingSettings && !multipleRoutingOptionsEnabled)
 
-  const isChainSupported = isSupportedChain(chainId)
+  const isChainSupported = useIsSupportedChainId(chainId)
   const Settings = useMemo(
     () => (
       <>

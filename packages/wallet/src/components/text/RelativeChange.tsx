@@ -1,4 +1,5 @@
-import { ColorTokens, Flex, Icons, Text } from 'ui/src'
+import { ColorTokens, Flex, Text } from 'ui/src'
+import { Caret } from 'ui/src/components/icons'
 import { IconSizeTokens, fonts } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
@@ -51,7 +52,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
       justifyContent={alignRight ? 'flex-end' : 'flex-start'}
       testID="relative-change">
       {change !== undefined && (
-        <Icons.Caret color={arrowColor} direction={isPositiveChange ? 'n' : 's'} size={arrowSize} />
+        <Caret color={arrowColor} direction={isPositiveChange ? 'n' : 's'} size={arrowSize} />
       )}
       <Flex>
         <Text

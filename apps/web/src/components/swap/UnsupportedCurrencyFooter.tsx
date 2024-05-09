@@ -13,6 +13,7 @@ import { CloseIcon, ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { useCurrencyInfo } from 'hooks/Tokens'
+import { Text } from 'ui/src'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ExplorerDataType, getExplorerLink } from '../../utils/getExplorerLink'
 
@@ -39,7 +40,8 @@ const StyledButtonEmpty = styled(ButtonEmpty)`
   text-decoration: none;
 `
 
-const AddressText = styled(ThemedText.DeprecatedBlue)`
+const AddressText = styled(Text)`
+  color: ${({ theme }) => theme.accent1};
   font-size: 12px;
 
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
@@ -92,9 +94,9 @@ export default function UnsupportedCurrencyFooter({
         </Card>
       </Modal>
       <StyledButtonEmpty padding="0" onClick={() => setShowDetails(true)} data-testid="read-more-button">
-        <ThemedText.DeprecatedBlue>
+        <Text color="$accent1">
           <Trans>Read more about unsupported assets</Trans>
-        </ThemedText.DeprecatedBlue>
+        </Text>
       </StyledButtonEmpty>
     </DetailsFooter>
   )
