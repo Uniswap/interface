@@ -1,6 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { useWeb3React } from '@web3-react/core'
-import { L2_CHAIN_IDS } from 'constants/chains'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import { useCallback, useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
@@ -29,8 +28,7 @@ export function useGetTransactionDeadline(): () => Promise<BigNumber | undefined
   }, [chainId, multicall, ttl])
 }
 
-function timestampToDeadline(chainId?: number, blockTimestamp?: BigNumber, ttl?: number) {
-  if (blockTimestamp && chainId && L2_CHAIN_IDS.includes(chainId)) return blockTimestamp.add(L2_DEADLINE_FROM_NOW)
+function timestampToDeadline(_chainId?: number, blockTimestamp?: BigNumber, ttl?: number) {
   if (blockTimestamp && ttl) return blockTimestamp.add(ttl)
   return undefined
 }

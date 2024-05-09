@@ -5,7 +5,7 @@ import AnimatedDropdown from 'components/AnimatedDropdown'
 import Column, { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
 import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'
-import { isSupportedChain, isUniswapXSupportedChain, L2_CHAIN_IDS } from 'constants/chains'
+import { isSupportedChain, isUniswapXSupportedChain } from 'constants/chains'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Trans } from 'i18n'
@@ -118,7 +118,7 @@ export default function SettingsTab({
   hideRoutingSettings?: boolean
 }) {
   const { chainId: connectedChainId } = useWeb3React()
-  const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
+  const showDeadlineSettings = Boolean(chainId)
   const node = useRef<HTMLDivElement | null>(null)
   const isOpen = useModalIsOpen(ApplicationModal.SETTINGS)
 
