@@ -594,16 +594,16 @@
       "empty": {
         "action": {
           "buy": {
-            "description": "Purchase crypto with a debit card or a bank account.",
-            "title": "Buy crypto with card"
+            "description": "You’ll need ETH to get started. Buy with a card or bank.",
+            "title": "Buy crypto"
           },
           "import": {
             "description": "Enter this wallet’s recovery phrase to begin swapping and sending.",
             "title": "Import wallet"
           },
           "receive": {
-            "description": "Fund your wallet by transferring crypto from another wallet or account.",
-            "title": "Receive crypto"
+            "description": "Transfer tokens from another wallet or crypto exchange.",
+            "title": "Receive funds"
           }
         },
         "description": "When this wallet buys or receives tokens, they’ll appear here.",
@@ -1443,7 +1443,9 @@
         },
         "editLabel": {
           "description": "Labels are not public. They are stored locally and only visible to you.",
-          "save": "Save changes"
+          "disclaimer": "This nickname is only visible to you.",
+          "save": "Save changes",
+          "title": "Edit nickname"
         },
         "label": "Nickname",
         "notifications": {

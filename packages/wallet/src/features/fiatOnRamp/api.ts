@@ -262,7 +262,6 @@ export const fiatOnRampAggregatorApi = createApi({
     }),
     fiatOnRampAggregatorTransferServiceProviders: builder.query<FORServiceProvidersResponse, void>({
       query: () => '/transfer-service-providers',
-      keepUnusedDataFor: 60 * 60, // 1 hour
     }),
     fiatOnRampAggregatorSupportedTokens: builder.query<
       FORSupportedTokensResponse,

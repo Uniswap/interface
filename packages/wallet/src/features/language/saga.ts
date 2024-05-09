@@ -35,8 +35,6 @@ function* appLanguageSaga(action: ReturnType<typeof updateLanguage>) {
 
   const languageToSet = !preferredLanguage ? yield* call(getDeviceLanguage) : preferredLanguage
   const localeToSet = getLocale(languageToSet)
-
-  // Syncs language with Firestore every app start to make sure language is up to date
   yield* put(setCurrentLanguage(languageToSet))
 
   if (currentAppLanguage === languageToSet && localeToSet === i18n.language) {

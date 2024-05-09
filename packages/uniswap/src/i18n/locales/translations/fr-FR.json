@@ -209,7 +209,6 @@
       "notNow": "Pas maintenant",
       "ok": "D'ACCORD",
       "paste": "Coller",
-      "pay": "Payer",
       "receive": "Recevoir",
       "remove": "Supprimer",
       "restore": "Restaurer",
@@ -267,9 +266,8 @@
       "systemSettings": "Paramètres"
     },
     "text": {
-      "connected": "Connecté",
-      "disconnected": "Déconnectée",
       "error": "Erreur",
+      "loading": "Chargement",
       "notAvailable": "N / A",
       "unknown": "Inconnu"
     }
@@ -507,7 +505,6 @@
       "load": "Impossible de charger les tokens à acheter",
       "max": "Maximum {{amount}}",
       "min": "Minimum {{amount}}",
-      "unavailable": "Ce service n'est pas disponible dans votre région",
       "unsupported": "Non disponible dans votre région",
       "usd": "Uniquement disponible à l'achat en USD"
     },
@@ -594,16 +591,16 @@
       "empty": {
         "action": {
           "buy": {
-            "description": "Achetez des cryptos avec une carte de débit ou un compte bancaire.",
-            "title": "Acheter des cryptos avec une carte"
+            "description": "Vous aurez besoin d'ETH pour commencer. Achetez avec une carte bancaire ou un virement bancaire.",
+            "title": "Acheter des cryptos"
           },
           "import": {
             "description": "Entrez la phrase de récupération de ce wallet pour commencer à échanger et envoyer.",
             "title": "Importer un wallet"
           },
           "receive": {
-            "description": "Créditer votre portefeuille en transférant des cryptomonnaies depuis un autre portefeuille ou un autre compte.",
-            "title": "Recevoir des cryptos"
+            "description": "Transférez des tokens depuis un autre wallet ou un autre échange de crypto.",
+            "title": "Recevoir des fonds"
           }
         },
         "description": "Lorsque ce wallet achète ou reçoit des tokens, ils apparaîtront ici.",
@@ -617,7 +614,7 @@
     },
     "upsell": {
       "receive": {
-        "cta": "Depuis un compte",
+        "cta": "Lier un compte",
         "description": "Créditer votre portefeuille en transférant des cryptomonnaies depuis un autre portefeuille ou un autre compte",
         "title": "Recevoir des cryptos"
       }
@@ -789,6 +786,15 @@
         "title": "Portefeuille Uniswap à épingles"
       },
       "title": "Vous êtes prêt"
+    },
+    "editName": {
+      "button": {
+        "create": "Créer un wallet"
+      },
+      "label": "Pseudo",
+      "subtitle": "Donnez un pseudo à votre wallet",
+      "title": "Ce pseudo est uniquement visible par vous",
+      "walletAddress": "Votre adresse publique sera <highlight>{{walletAddress}}</highlight>"
     },
     "extension": {
       "connectMobile": {
@@ -1260,6 +1266,11 @@
       "security": "Sécurité",
       "support": "Soutien",
       "wallet": {
+        "action": {
+          "hide": "Masquer les wallets",
+          "showAll_one": "Afficher un portefeuille",
+          "showAll_other": "Afficher tous les {{count}} wallets"
+        },
         "button": {
           "viewAll": "Tout voir",
           "viewLess": "Voir moins"
@@ -1443,7 +1454,9 @@
         },
         "editLabel": {
           "description": "Les étiquettes ne sont pas publiques. Ils sont stockés localement et visibles uniquement par vous.",
-          "save": "Sauvegarder les modifications"
+          "disclaimer": "Ce pseudo est uniquement visible par vous.",
+          "save": "Sauvegarder les modifications",
+          "title": "Modifier le pseudo"
         },
         "label": "Pseudo",
         "notifications": {
@@ -1571,7 +1584,6 @@
         "title": "Pas assez de liquidité"
       },
       "networkFee": {
-        "highRelativeToValue": "Le coût du réseau dépasse 10 % de la valeur totale de votre transaction.",
         "message": "Ceci est le coût pour traiter votre transaction sur la blockchain. Uniswap ne reçoit aucune part de ces frais."
       },
       "offline": {
@@ -1592,8 +1604,8 @@
       },
       "uniswapFee": {
         "message": {
-          "default": "Des frais sont appliqués pour garantir la meilleure expérience avec Uniswap. Il n'y a aucun frais associé à cet échange.",
-          "included": "Des frais sont appliqués pour garantir la meilleure expérience avec Uniswap et ont déjà été pris en compte dans ce devis."
+          "default": "Des frais sont appliqués sur quelques tokens pour garantir la meilleure expérience avec Uniswap. Il n'y a aucun frais associé à cet échange.",
+          "included": "Des frais sont appliqués sur quelques tokens pour garantir la meilleure expérience avec Uniswap et ont déjà été pris en compte dans ce devis."
         },
         "title": "Frais d'échange"
       },
@@ -2045,11 +2057,6 @@
         "min": "Les noms d'utilisateur doivent contenir au moins {{number}} caractères",
         "uppercase": "Les noms d'utilisateur ne peuvent contenir que des lettres minuscules et des chiffres"
       }
-    }
-  },
-  "uwulink": {
-    "error": {
-      "insufficientTokens": "Pas assez de {{tokenSymbol}} sur {{chain}}"
     }
   },
   "walletConnect": {

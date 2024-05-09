@@ -13,7 +13,6 @@ import { logger } from 'utilities/src/logger/logger'
 import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
 import { useAsyncData, usePrevious } from 'utilities/src/react/hooks'
 import { ChainId } from 'wallet/src/constants/chains'
-import { PollingInterval } from 'wallet/src/constants/misc'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult, GasSpeed, SimulatedGasEstimationInfo } from 'wallet/src/features/gas/types'
@@ -367,13 +366,7 @@ export function useSwapTxAndGasInfoLegacy({
     skipGasFeeQuery
   )
 
-  const swapGasFee = useTransactionGasFee(
-    transactionRequest,
-    GasSpeed.Urgent,
-    skipGasFeeQuery,
-    // Poll often to ensure swap txn request is never expected to fail
-    PollingInterval.UltraFast
-  )
+  const swapGasFee = useTransactionGasFee(transactionRequest, GasSpeed.Urgent, skipGasFeeQuery)
 
   const quote =
     trade.trade?.quoteData?.quoteType === QuoteType.RoutingApi

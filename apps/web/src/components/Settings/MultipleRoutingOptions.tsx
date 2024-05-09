@@ -93,7 +93,7 @@ function UniswapXPreferenceLabel() {
 }
 
 const ROUTE_PREFERENCE_TO_LABEL: Record<RoutePreferenceOption, ReactNode> = {
-  [RoutePreferenceOption.Optimal]: t`Optimal price`,
+  [RoutePreferenceOption.Optimal]: t`Default trade options`,
   [RoutePreferenceOption.UniswapX]: <UniswapXPreferenceLabel />,
   [RoutePreferenceOption.v3]: t`v3 pools`,
   [RoutePreferenceOption.v2]: t`v2 pools`,
@@ -196,7 +196,7 @@ export default function MultipleRoutingOptions() {
       <RoutePreferenceToggle
         preference={RoutePreferenceOption.Optimal}
         isActive={routePreferenceOptions[RoutePreferenceOption.Optimal]}
-        text={<Trans>The Uniswap client selects the best route factoring price and network costs.</Trans>}
+        text={<Trans>The Uniswap client selects the cheapest trade option factoring price and network costs.</Trans>}
         subheading={
           routePreferenceOptions[RoutePreferenceOption.Optimal] &&
           uniswapXSupportedChain && (

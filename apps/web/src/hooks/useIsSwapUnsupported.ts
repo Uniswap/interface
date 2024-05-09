@@ -12,8 +12,6 @@ export function useIsSwapUnsupported(currencyIn?: Currency, currencyOut?: Curren
   const currencyInInfo = useCurrencyInfo(currencyIn)
   const currencyOutInfo = useCurrencyInfo(currencyOut)
   return useMemo(() => {
-    const currencyInUnsupported = currencyInInfo?.isSpam || currencyInInfo?.safetyLevel === SafetyLevel.Blocked
-    const currencyOutUnsupported = currencyOutInfo?.isSpam || currencyOutInfo?.safetyLevel === SafetyLevel.Blocked
-    return currencyInUnsupported || currencyOutUnsupported
-  }, [currencyInInfo?.isSpam, currencyInInfo?.safetyLevel, currencyOutInfo?.isSpam, currencyOutInfo?.safetyLevel])
+    return currencyInInfo?.safetyLevel === SafetyLevel.Blocked || currencyOutInfo?.safetyLevel === SafetyLevel.Blocked
+  }, [currencyInInfo?.safetyLevel, currencyOutInfo?.safetyLevel])
 }

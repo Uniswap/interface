@@ -1,11 +1,6 @@
 import { motion } from 'framer-motion'
 import styled, { css, keyframes } from 'styled-components'
 
-type RiseInProps = {
-  delay?: number
-  children?: React.ReactNode
-}
-
 const riseInAnimation = keyframes`
   0% {
     opacity: 0;
@@ -41,24 +36,20 @@ export const RiseIn = styled.span<{ delay?: number }>`
   ${RiseInStyles}
 `
 
-export const Hover = (props: RiseInProps) => {
-  return (
-    <motion.div
-      animate={{
-        y: ['-4px', '4px', '-4px'],
-        opacity: [0.5, 1, 0.5],
-      }}
-      transition={{
-        duration: 2,
-        repeat: Infinity, // repeat animation forever
-        ease: 'easeInOut',
-      }}
-      style={{ display: 'inline-block', position: 'relative' }}
-    >
-      {props.children}
-    </motion.div>
-  )
-}
+const hoverAnimation = keyframes`
+ 0% { transform: translateY(-4px); opacity: 0.5; }
+ 50% { transform: translateY(4px); opacity: 1; }
+ 100% { transform: translateY(-4px); opacity: 0.5; }
+`
+
+export const Hover = styled.div`
+  position: relative;
+  display: inline-block;
+  animation-name: ${hoverAnimation};
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+`
 
 export function Wiggle({ ...props }) {
   const variants = {

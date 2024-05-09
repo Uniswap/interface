@@ -13,7 +13,7 @@ import { Trace, TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
 import { GrayCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
+import Column, { AutoColumn } from 'components/Column'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
@@ -53,7 +53,7 @@ import {
   useSwapContext,
 } from 'state/swap/hooks'
 import { useTheme } from 'styled-components'
-import { ThemedText } from 'theme/components'
+import { ExternalLink, ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -62,6 +62,8 @@ import { largerPercentValue } from 'utils/percent'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
+import Error from 'components/Icons/Error'
+import Row from 'components/Row'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { CurrencyState } from 'state/swap/types'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -109,7 +111,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
       prefilledInputCurrencyInfo && prefilledOutputCurrencyInfo
         ? [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
             .filter((token: CurrencyInfo) => {
-              return token.currency.isToken && (token.isSpam || token.safetyLevel !== SafetyLevel.Verified)
+              return token.currency.isToken && token.safetyLevel !== SafetyLevel.Verified
             })
             .map((token: CurrencyInfo) => token.currency as Token)
             .filter((token: Token) => {
@@ -472,6 +474,8 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const inputCurrency = currencies[Field.INPUT] ?? undefined
   const switchChain = useSwitchChain()
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
+  // @ts-ignore
+  const isUsingBlockedExtension = window.ethereum?.['isPocketUniverseZ']
 
   return (
     <>
@@ -665,7 +669,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 }}
                 id="swap-button"
                 data-testid="swap-button"
-                disabled={!getIsReviewableQuote(trade, tradeState, swapInputError)}
+                disabled={isUsingBlockedExtension || !getIsReviewableQuote(trade, tradeState, swapInputError)}
                 error={!swapInputError && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
               >
                 <Text fontSize={20}>
@@ -690,8 +694,39 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               allowedSlippage={allowedSlippage}
             />
           )}
+          {isUsingBlockedExtension && <SwapNotice />}
         </div>
       </AutoColumn>
     </>
+  )
+}
+
+function SwapNotice() {
+  const theme = useTheme()
+  return (
+    <Row
+      align="flex-start"
+      gap="md"
+      backgroundColor={theme.surface2}
+      marginTop="12px"
+      borderRadius="12px"
+      padding="16px"
+    >
+      <Row width="auto" borderRadius="16px" backgroundColor={theme.critical2} padding="8px">
+        <Error />
+      </Row>
+
+      <Column flex="10" gap="sm">
+        <ThemedText.SubHeader>Blocked Extension</ThemedText.SubHeader>
+        <ThemedText.BodySecondary lineHeight="22px">
+          <Trans>
+            The Pocket Universe extension violates our{' '}
+            <ExternalLink href="https://uniswap.org/terms-of-service">Terms&nbsp;of&nbsp;Service</ExternalLink> by
+            modifying our product in a way that is misleading and could harm users. Please disable the extension and
+            reload&nbsp;the&nbsp;page.
+          </Trans>
+        </ThemedText.BodySecondary>
+      </Column>
+    </Row>
   )
 }

@@ -209,7 +209,6 @@
       "notNow": "稍後再說",
       "ok": "好的",
       "paste": "粘貼",
-      "pay": "支付",
       "receive": "接收",
       "remove": "刪除",
       "restore": "恢復",
@@ -267,9 +266,8 @@
       "systemSettings": "設定"
     },
     "text": {
-      "connected": "已連接",
-      "disconnected": "已斷開連接",
       "error": "錯誤",
+      "loading": "載入中",
       "notAvailable": "不適用",
       "unknown": "未知"
     }
@@ -405,7 +403,7 @@
       },
       "metadata": {
         "marketCap": "{{number}} MCap",
-        "totalValueLocked": "{{number}} 總鎖倉量",
+        "totalValueLocked": "{{number}} TVL",
         "volume": "{{number}} 卷"
       },
       "sort": {
@@ -413,7 +411,7 @@
           "marketCap": "市值",
           "priceDecrease": "價格下降",
           "priceIncrease": "價格上漲",
-          "totalValueLocked": "總鎖倉量",
+          "totalValueLocked": "TVL",
           "volume": "交易量"
         },
         "option": {
@@ -507,7 +505,6 @@
       "load": "無法加載要買入的代幣",
       "max": "最大 {{amount}}",
       "min": "最低 {{amount}}",
-      "unavailable": "您所在的地區無法使用此服務",
       "unsupported": "不支持你的地區",
       "usd": "只能以美元買入"
     },
@@ -594,16 +591,16 @@
       "empty": {
         "action": {
           "buy": {
-            "description": "使用金融卡或銀行帳戶購買加密貨幣。",
-            "title": "用卡片購買加密貨幣"
+            "description": "你需要 ETH 才能開始。用卡片或銀行買入。",
+            "title": "買入加密貨幣"
           },
           "import": {
             "description": "開始兌換和發送之前請輸入這個錢包的恢復短語",
             "title": "導入錢包"
           },
           "receive": {
-            "description": "透過從另一個錢包或帳戶轉移加密貨幣來為您的錢包充值.",
-            "title": "接收加密貨幣"
+            "description": "從另一個錢包或加密貨幣交易所轉移代幣。",
+            "title": "接收資金"
           }
         },
         "description": "當此錢包買入或接收代幣時，它們會出現在此。",
@@ -617,7 +614,7 @@
     },
     "upsell": {
       "receive": {
-        "cta": "來自帳戶",
+        "cta": "關聯帳戶",
         "description": "透過從另一個錢包或帳戶轉移加密貨幣來為您的錢包充值",
         "title": "接收加密貨幣"
       }
@@ -789,6 +786,15 @@
         "title": "Pin Uniswap 錢包"
       },
       "title": "你已經準備好了"
+    },
+    "editName": {
+      "button": {
+        "create": "創建錢包"
+      },
+      "label": "暱稱",
+      "subtitle": "給你的錢包個暱稱",
+      "title": "此暱稱只有你自己可見",
+      "walletAddress": "您的公共地址將是<highlight>{{walletAddress}}</highlight>"
     },
     "extension": {
       "connectMobile": {
@@ -1260,6 +1266,11 @@
       "security": "安全",
       "support": "客服",
       "wallet": {
+        "action": {
+          "hide": "隱藏錢包",
+          "showAll_one": "顯示一個錢包",
+          "showAll_other": "顯示全部 {{count}} 錢包"
+        },
         "button": {
           "viewAll": "顯示全部",
           "viewLess": "顯示更少"
@@ -1443,7 +1454,9 @@
         },
         "editLabel": {
           "description": "標籤不公開。它們儲存在本地並且只有您可見。",
-          "save": "儲存變更"
+          "disclaimer": "此暱稱只有你自己可見",
+          "save": "儲存變更",
+          "title": "編輯暱稱"
         },
         "label": "暱稱",
         "notifications": {
@@ -1571,7 +1584,6 @@
         "title": "流動性不足"
       },
       "networkFee": {
-        "highRelativeToValue": "網路成本超過您總交易價值的10%。",
         "message": "這是在區塊鏈上處理交易的成本。 Uniswap 不會收取這些費用。"
       },
       "offline": {
@@ -1592,8 +1604,8 @@
       },
       "uniswapFee": {
         "message": {
-          "default": "收費是為了確保 Uniswap 的最佳體驗。此交換不收取任何費用。",
-          "included": "收取費用是為了確保 Uniswap 的最佳體驗，並且已計入此報價中。"
+          "default": "為了確保 Uniswap 的最佳體驗，我們對個別代幣收取費用。此兌換不收取任何費用。",
+          "included": "為了確保 Uniswap 的最佳體驗，我們對個別代幣收取費用，並且已包含在此報價中。"
         },
         "title": "兌換費用"
       },
@@ -2045,11 +2057,6 @@
         "min": "使用者名稱必須至少 {{number}} 個字符",
         "uppercase": "使用者名稱只能包含小寫字母和數字"
       }
-    }
-  },
-  "uwulink": {
-    "error": {
-      "insufficientTokens": "還不夠 {{tokenSymbol}} 就 {{chain}}"
     }
   },
   "walletConnect": {

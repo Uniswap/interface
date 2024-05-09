@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import DeviceInfo from 'react-native-device-info'
 
 const BUNDLE_ID = DeviceInfo.getBundleId()

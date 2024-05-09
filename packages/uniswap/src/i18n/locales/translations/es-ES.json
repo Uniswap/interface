@@ -209,7 +209,6 @@
       "notNow": "Ahora no",
       "ok": "Aceptar",
       "paste": "Pegar",
-      "pay": "Pagar",
       "receive": "Recibir",
       "remove": "Eliminar",
       "restore": "Restaurar",
@@ -267,9 +266,8 @@
       "systemSettings": "Ajustes"
     },
     "text": {
-      "connected": "Conectado",
-      "disconnected": "Desconectado",
       "error": "Error",
+      "loading": "Cargando",
       "notAvailable": "N/D",
       "unknown": "Desconocido"
     }
@@ -507,7 +505,6 @@
       "load": "No se pudieron cargar tokens para comprar",
       "max": "Máximo {{amount}}",
       "min": "Mínimo {{amount}}",
-      "unavailable": "Este servicio no está disponible en su región",
       "unsupported": "No compatible en la región",
       "usd": "Sólo disponible para comprar en USD"
     },
@@ -594,16 +591,16 @@
       "empty": {
         "action": {
           "buy": {
-            "description": "Compre criptomonedas con una tarjeta de débito o una cuenta bancaria.",
-            "title": "Comprar criptomonedas con tarjeta"
+            "description": "Necesitarás ETH para comenzar. Compra con tarjeta o cuenta bancaria.",
+            "title": "Comprar cripto"
           },
           "import": {
             "description": "Ingresa la frase de recuperación de esta wallet para comenzar a intercambiar y enviar.",
             "title": "Importar wallet"
           },
           "receive": {
-            "description": "Financia tu cartera transfiriendo criptomonedas desde otra cartera o cuenta.",
-            "title": "Recibir criptografía"
+            "description": "Transfiere tokens desde otra wallet o exchange de criptomonedas.",
+            "title": "Recibir fondos"
           }
         },
         "description": "Cuando esta wallet compre o reciba tokens, aparecerán aquí.",
@@ -617,7 +614,7 @@
     },
     "upsell": {
       "receive": {
-        "cta": "De una cuenta",
+        "cta": "Vincular una cuenta",
         "description": "Financia tu cartera transfiriendo criptomonedas desde otra cartera o cuenta",
         "title": "Recibir criptografía"
       }
@@ -789,6 +786,15 @@
         "title": "Pin Uniswap Monedero"
       },
       "title": "Estás todo listo"
+    },
+    "editName": {
+      "button": {
+        "create": "Crear wallet"
+      },
+      "label": "Apodo",
+      "subtitle": "Ponle un nombre a tu wallet",
+      "title": "Este nombre sólo es visible para ti",
+      "walletAddress": "Su dirección pública será <highlight>{{walletAddress}}</highlight>"
     },
     "extension": {
       "connectMobile": {
@@ -1260,6 +1266,11 @@
       "security": "Seguridad",
       "support": "Ayuda",
       "wallet": {
+        "action": {
+          "hide": "Ocultar wallets",
+          "showAll_one": "Mostrar una wallet",
+          "showAll_other": "Ver todas las {{count}} wallets"
+        },
         "button": {
           "viewAll": "Ver todo",
           "viewLess": "Ver menos"
@@ -1443,7 +1454,9 @@
         },
         "editLabel": {
           "description": "Las etiquetas no son públicas. Se almacenan localmente y sólo usted puede verlos.",
-          "save": "Guardar cambios"
+          "disclaimer": "Este apodo sólo es visible para ti.",
+          "save": "Guardar cambios",
+          "title": "Editar nombre"
         },
         "label": "Apodo",
         "notifications": {
@@ -1571,7 +1584,6 @@
         "title": "No hay suficiente liquidez"
       },
       "networkFee": {
-        "highRelativeToValue": "El costo de la red excede el 10% del valor total de su transacción.",
         "message": "Éste es el costo de procesar tu transacción en el blockchain. Uniswap no recibe ninguna parte de estas tarifas."
       },
       "offline": {
@@ -1592,8 +1604,8 @@
       },
       "uniswapFee": {
         "message": {
-          "default": "Se aplican tarifas para garantizar la mejor experiencia con Uniswap. No hay ninguna tarifa asociada con este intercambio.",
-          "included": "Se aplican tarifas para garantizar la mejor experiencia con Uniswap y ya se han incluido en esta cotización."
+          "default": "Se aplican tarifas a algunos tokens seleccionados para garantizar la mejor experiencia con Uniswap. No hay ninguna tarifa asociada con este intercambio.",
+          "included": "Se aplican tarifas a algunos tokens seleccionados para garantizar la mejor experiencia con Uniswap y ya se han incluido en esta cotización."
         },
         "title": "Tarifa de intercambio"
       },
@@ -2045,11 +2057,6 @@
         "min": "Los nombres de usuario deben tener al menos {{number}} caracteres",
         "uppercase": "Los nombres de usuario solo pueden contener letras minúsculas y números."
       }
-    }
-  },
-  "uwulink": {
-    "error": {
-      "insufficientTokens": "No es suficiente {{tokenSymbol}} en {{chain}}"
     }
   },
   "walletConnect": {

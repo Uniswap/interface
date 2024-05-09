@@ -353,13 +353,15 @@ export function HomeScreen(props?: AppStackScreenProp<Screens.Home>): JSX.Elemen
   }, [dispatch])
   const onPressSend = useCallback(() => dispatch(openModal({ name: ModalName.Send })), [dispatch])
   const onPressReceive = useCallback(() => {
-    dispatch(
-      openModal(
-        cexTransferProviders.length > 0
-          ? { name: ModalName.ReceiveCryptoModal, initialState: cexTransferProviders }
-          : { name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }
+    if (cexTransferProviders.length > 0) {
+      dispatch(
+        openModal({ name: ModalName.ReceiveCryptoModal, initialState: cexTransferProviders })
       )
-    )
+    } else {
+      dispatch(
+        openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+      )
+    }
   }, [dispatch, cexTransferProviders])
   const onPressViewOnlyLabel = useCallback(
     () => dispatch(openModal({ name: ModalName.ViewOnlyExplainer })),

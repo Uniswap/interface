@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-restricted-imports
 import { Platform } from 'react-native'
 
 // Platform

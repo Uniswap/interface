@@ -209,7 +209,6 @@
       "notNow": "Bukan sekarang",
       "ok": "okey",
       "paste": "tampal",
-      "pay": "bayar",
       "receive": "terima",
       "remove": "Alih keluar",
       "restore": "Pulihkan",
@@ -267,9 +266,8 @@
       "systemSettings": "tetapan"
     },
     "text": {
-      "connected": "Bersambung",
-      "disconnected": "Terputus sambungan",
       "error": "ralat",
+      "loading": "Memuatkan",
       "notAvailable": "T/A",
       "unknown": "Tidak diketahui"
     }
@@ -507,7 +505,6 @@
       "load": "Tidak dapat memuatkan token untuk dibeli",
       "max": "Maksimum {{amount}}",
       "min": "Minimum {{amount}}",
-      "unavailable": "Perkhidmatan ini tidak tersedia di rantau anda",
       "unsupported": "Tidak disokong di wilayah",
       "usd": "Hanya tersedia untuk pembelian dalam USD"
     },
@@ -594,16 +591,16 @@
       "empty": {
         "action": {
           "buy": {
-            "description": "Beli crypto dengan kad debit atau akaun bank.",
-            "title": "Beli crypto dengan kad"
+            "description": "Anda memerlukan ETH untuk bermula. Beli dengan kad atau bank.",
+            "title": "Beli kripto"
           },
           "import": {
             "description": "Masukkan frasa pemulihan dompet ini untuk mula bertukar dan menghantar.",
             "title": "Import dompet"
           },
           "receive": {
-            "description": "Membiayai dompet anda dengan memindahkan kripto daripada dompet atau akaun lain.",
-            "title": "Terima crypto"
+            "description": "Pindahkan token dari dompet atau pertukaran crypto lain.",
+            "title": "Terima dana"
           }
         },
         "description": "Apabila dompet ini membeli atau menerima token, ia akan dipaparkan di sini.",
@@ -617,7 +614,7 @@
     },
     "upsell": {
       "receive": {
-        "cta": "Daripada akaun",
+        "cta": "Pautkan akaun",
         "description": "Membiayai dompet anda dengan memindahkan kripto daripada dompet atau akaun lain",
         "title": "Terima crypto"
       }
@@ -789,6 +786,15 @@
         "title": "Sematkan Uniswap Wallet"
       },
       "title": "Anda telah siap sedia"
+    },
+    "editName": {
+      "button": {
+        "create": "Buat dompet"
+      },
+      "label": "nama samaran",
+      "subtitle": "Beri nama panggilan pada dompet anda",
+      "title": "Nama panggilan ini hanya kelihatan kepada anda",
+      "walletAddress": "Alamat awam anda ialah <highlight>{{walletAddress}}</highlight>"
     },
     "extension": {
       "connectMobile": {
@@ -1260,6 +1266,11 @@
       "security": "Keselamatan",
       "support": "Sokongan",
       "wallet": {
+        "action": {
+          "hide": "Sembunyikan dompet",
+          "showAll_one": "Tunjukkan satu dompet",
+          "showAll_other": "Tunjukkan semua {{count}} dompet"
+        },
         "button": {
           "viewAll": "Lihat semua",
           "viewLess": "Lihat kurang"
@@ -1443,7 +1454,9 @@
         },
         "editLabel": {
           "description": "Label bukan umum. Ia disimpan secara tempatan dan hanya kelihatan kepada anda.",
-          "save": "Simpan perubahan"
+          "disclaimer": "Nama panggilan ini hanya kelihatan kepada anda.",
+          "save": "Simpan perubahan",
+          "title": "Edit nama panggilan"
         },
         "label": "nama samaran",
         "notifications": {
@@ -1571,7 +1584,6 @@
         "title": "Kecairan tidak mencukupi"
       },
       "networkFee": {
-        "highRelativeToValue": "Kos rangkaian melebihi 10% daripada jumlah nilai transaksi anda.",
         "message": "Ini ialah kos untuk memproses transaksi anda pada blockchain. Uniswap tidak menerima sebarang bahagian daripada yuran ini."
       },
       "offline": {
@@ -1592,8 +1604,8 @@
       },
       "uniswapFee": {
         "message": {
-          "default": "Yuran dikenakan untuk memastikan pengalaman terbaik dengan Uniswap. Tiada bayaran yang berkaitan dengan pertukaran ini.",
-          "included": "Yuran dikenakan untuk memastikan pengalaman terbaik dengan Uniswap, dan telah pun diambil kira dalam sebut harga ini."
+          "default": "Yuran dikenakan pada beberapa token terpilih untuk memastikan pengalaman terbaik dengan Uniswap. Tiada bayaran yang berkaitan dengan pertukaran ini.",
+          "included": "Yuran dikenakan pada beberapa token terpilih untuk memastikan pengalaman terbaik dengan Uniswap, dan telah diambil kira dalam sebut harga ini."
         },
         "title": "Yuran pertukaran"
       },
@@ -2045,11 +2057,6 @@
         "min": "Nama pengguna mestilah sekurang-kurangnya {{number}} aksara",
         "uppercase": "Nama pengguna hanya boleh mengandungi huruf kecil dan nombor"
       }
-    }
-  },
-  "uwulink": {
-    "error": {
-      "insufficientTokens": "Tidak cukup {{tokenSymbol}} pada {{chain}}"
     }
   },
   "walletConnect": {
