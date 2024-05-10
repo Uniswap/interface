@@ -466,8 +466,30 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const targetChain = switchingChain ? switchingChain : undefined
   const switchingChainIsSupported = useIsSupportedChainId(targetChain)
-  // @ts-ignore
-  const isUsingBlockedExtension = window.ethereum?.['isPocketUniverseZ']
+
+  const [showBannedExtension, setShowBannedExtension] = useState<boolean>(false)
+  useEffect(() => {
+    const isBannedExtension = async () => {
+      let blocked = false
+      const webAccessibleResources = [
+        'chrome-extension://gacgndbocaddlemdiaadajmlggabdeod/ccip.08a1ffae.js', // pocket universe extension
+      ]
+      for (let i = 0; i < webAccessibleResources.length; i++) {
+        if (blocked) {
+          break
+        }
+        try {
+          await fetch(webAccessibleResources[i])
+          // if anything comes back, then the extension is active
+          blocked = true
+        } catch (error) {
+          console.error(error)
+        }
+      }
+      setShowBannedExtension(blocked)
+    }
+    if (window.chrome) isBannedExtension().catch(console.error)
+  }, [])
 
   return (
     <>
@@ -662,7 +684,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 }}
                 id="swap-button"
                 data-testid="swap-button"
-                disabled={isUsingBlockedExtension || !getIsReviewableQuote(trade, tradeState, swapInputError)}
+                disabled={showBannedExtension || !getIsReviewableQuote(trade, tradeState, swapInputError)}
                 error={!swapInputError && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
               >
                 <Text fontSize={20}>
@@ -688,7 +710,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               priceImpact={largerPriceImpact}
             />
           )}
-          {isUsingBlockedExtension && <SwapNotice />}
+          {showBannedExtension && <SwapNotice />}
         </div>
       </AutoColumn>
     </>
