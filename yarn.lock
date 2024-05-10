@@ -11374,6 +11374,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ubeswap/default-token-list@npm:4.1.62":
+  version: 4.1.62
+  resolution: "@ubeswap/default-token-list@npm:4.1.62"
+  checksum: 6d3233e7681dcfaec68f31c79e00fe2836254c84334a07ad76bfb1b800e54f6627d41dba9ecc7b7e857a01955cd68d8aae425ef0d4803f001d5dab3ce6ae9e14
+  languageName: node
+  linkType: hard
+
 "@ungap/structured-clone@npm:^1.2.0":
   version: 1.2.0
   resolution: "@ungap/structured-clone@npm:1.2.0"
@@ -11396,13 +11403,6 @@ __metadata:
     react: ^18.2.0
     react-dom: ^18.2.0
   checksum: b591c67323b849210a86c62978c686207160176a47ebe91b48ba22f38ce9b9f91cc275aa5103b4ab6528ed4d71d97ecff7cfbd1671c0aebeb850ebadc2acaf1b
-  languageName: node
-  linkType: hard
-
-"@uniswap/default-token-list@npm:11.16.0":
-  version: 11.16.0
-  resolution: "@uniswap/default-token-list@npm:11.16.0"
-  checksum: dd2debaf556ddb846debecb938b1550d59aef7dc4bc0957a4437fdfa2c21592a99133e59464bf1e76064571d364821bdd83633547558c5984843e1322f993aa7
   languageName: node
   linkType: hard
 
@@ -11526,9 +11526,9 @@ __metadata:
     "@types/uuid": 9.0.1
     "@types/wcag-contrast": 3.0.0
     "@types/xml2js": 0.4.14
+    "@ubeswap/default-token-list": 4.1.62
     "@uniswap/analytics": 1.7.0
     "@uniswap/analytics-events": 2.32.0
-    "@uniswap/default-token-list": 11.16.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/governance": 1.0.2
     "@uniswap/liquidity-staker": 1.0.2

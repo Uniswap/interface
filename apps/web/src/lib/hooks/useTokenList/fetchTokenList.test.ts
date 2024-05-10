@@ -1,4 +1,4 @@
-import defaultTokenList from '@uniswap/default-token-list'
+import defaultTokenList from '@ubeswap/default-token-list'
 import { UNI_LIST } from 'constants/lists'
 import fetch from 'jest-fetch-mock'
 

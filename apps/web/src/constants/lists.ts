@@ -1,5 +1,6 @@
-export const UNI_LIST = 'https://cloudflare-ipfs.com/ipns/tokens.uniswap.org'
-export const UNI_EXTENDED_LIST = 'https://cloudflare-ipfs.com/ipns/extendedtokens.uniswap.org'
+export const UNI_LIST = 'https://unpkg.com/@ubeswap/default-token-list@latest/ubeswap.token-list.json'
+export const UNI_EXTENDED_LIST =
+  'https://unpkg.com/@ubeswap/default-token-list@latest/ubeswap-experimental.token-list.json'
 const UNI_UNSUPPORTED_LIST = 'https://cloudflare-ipfs.com/ipns/unsupportedtokens.uniswap.org'
 const AAVE_LIST = 'tokenlist.aave.eth'
 const BA_LIST = 'https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json'
