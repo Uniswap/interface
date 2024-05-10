@@ -3,19 +3,19 @@
   <head>
     <meta charset="utf-8" />
 
-    <title>Uniswap Interface</title>
+    <title>Trinity</title>
 
     <!--
       %PUBLIC_URL% will be replaced with the URL of the `public` folder during build.
       Only files inside the `public` folder can be referenced from the HTML.
     -->
-    <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/favicon.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/images/192x192_App_Icon.png" />
-    <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/images/512x512_App_Icon.png" />
+    <link rel="shortcut icon" type="image/png" href="%PUBLIC_URL%/uniswap-static/favicon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="%PUBLIC_URL%/uniswap-static/images/Trinity192.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="%PUBLIC_URL%/uniswap-static/images/Trinity512.png" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#fff" />
-    <% const cspConfig = require('./csp.json'); %>
+    <% const cspConfig = require('./uniswap-static/csp.json'); %>
     <meta
       http-equiv="Content-Security-Policy" 
       content="default-src <%= cspConfig.defaultSrc.join(' ') %>; script-src <%= cspConfig.scriptSrc.join(' ') %>; style-src <%= cspConfig.styleSrc.join(' ') %>; img-src <%= cspConfig.imgSrc.join(' ') %>; frame-src <%= cspConfig.frameSrc.join(' ') %>; connect-src <%= cspConfig.connectSrc.join(' ') %>; worker-src <%= cspConfig.workerSrc.join(' ') %>;"
@@ -31,20 +31,19 @@
       manifest.json provides metadata used when the app is installed as a PWA.
       See https://developers.google.com/web/fundamentals/web-app-manifest/
     -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="manifest" href="%PUBLIC_URL%/uniswap-static/manifest.json" />
 
     <link rel="preconnect" href="https://interface.gateway.uniswap.org/" crossorigin/>
     <link rel="preconnect" href="https://mainnet.infura.io/" crossorigin/>
 
-    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
-
-    <!-- Include <link rel="preload"> for js assets so that they are loaded with high priority. -->
-    <%= htmlWebpackPlugin.files.js.map((href) => `<link rel="preload" href="${href}" as="script" />`).join('\n    ') %>
+    <link rel="preload" href="%PUBLIC_URL%/uniswap-static/fonts/Basel-Grotesk-Book.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="%PUBLIC_URL%/uniswap-static/fonts/Basel-Grotesk-Book.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="%PUBLIC_URL%/uniswap-static/fonts/Basel-Grotesk-Medium.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="%PUBLIC_URL%/uniswap-static/fonts/Basel-Grotesk-Medium.woff2" as="font" type="font/woff2" crossorigin />
    
     <style>
       * {
-        font-family: 'Basel', sans-serif;
+        font-family: 'Courier New', 'Basel', sans-serif;
         box-sizing: border-box;
       }
 
@@ -57,8 +56,8 @@
         font-style: normal;
         font-display: block;
         src: 
-          url('%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
-          url('%PUBLIC_URL%/fonts/Basel-Grotesk-Medium.woff') format('woff');
+          url('%PUBLIC_URL%/uniswap-static/fonts/Basel-Grotesk-Medium.woff2') format('woff2'),
+          url('%PUBLIC_URL%/uniswap-static/fonts/Basel-Grotesk-Medium.woff') format('woff');
       }
 
       @font-face {
@@ -67,13 +66,13 @@
         font-style: normal;
         font-display: block;
         src: 
-          url('%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
-          url('%PUBLIC_URL%/fonts/Basel-Grotesk-Book.woff') format('woff');
+          url('%PUBLIC_URL%/uniswap-static/fonts/Basel-Grotesk-Book.woff2') format('woff2'),
+          url('%PUBLIC_URL%/uniswap-static/fonts/Basel-Grotesk-Book.woff') format('woff');
       }
 
       @supports (font-variation-settings: normal) {
         * {
-          font-family: 'Basel', sans-serif;
+          font-family: 'Courier New', 'Basel', sans-serif;
         }
       }
 
@@ -134,7 +133,11 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
 
-    <div id="root"></div>
+    <div id="root">
+      <!-- Triggers the font to load immediately and then is replaced by the app -->
+      <div>&emsp;</div>
+    </div>
+
     <div id="background-radial-gradient"></div>
   </body>
 </html>

@@ -1,22 +1,26 @@
-import { ColorTokens, Flex, Icons, Text } from 'ui/src'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { shortenAddress } from 'wallet/src/utils/addresses'
+import { Flex, Icons, Text } from 'ui/src';
+import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay';
+import { shortenAddress } from 'wallet/src/utils/addresses';
 
 export function AccountDetails({
   address,
   allowFontScaling = true,
   iconSize = 20,
   chevron = false,
-  chevronColor = '$neutral2',
 }: {
-  address: string
-  allowFontScaling?: boolean
-  iconSize?: number
-  chevron?: boolean
-  chevronColor?: ColorTokens | undefined
+  address: string;
+  allowFontScaling?: boolean;
+  iconSize?: number;
+  chevron?: boolean;
 }): JSX.Element {
   return (
-    <Flex row shrink alignItems="center" gap="$spacing16" justifyContent="space-between">
+    <Flex
+      row
+      shrink
+      alignItems="center"
+      gap="$spacing16"
+      justifyContent="space-between"
+    >
       <Flex fill row shrink>
         <AddressDisplay
           hideAddressInSubtitle
@@ -27,8 +31,19 @@ export function AccountDetails({
           variant="body3"
         />
       </Flex>
-      <Flex fill row shrink alignItems="center" gap="$spacing4" justifyContent="flex-end">
-        <Text allowFontScaling={allowFontScaling} color="$neutral2" variant="body3">
+      <Flex
+        fill
+        row
+        shrink
+        alignItems="center"
+        gap="$spacing4"
+        justifyContent="flex-end"
+      >
+        <Text
+          allowFontScaling={allowFontScaling}
+          color="$neutral2"
+          variant="body3"
+        >
           {shortenAddress(address)}
         </Text>
         {chevron && (
@@ -41,5 +56,5 @@ export function AccountDetails({
         )}
       </Flex>
     </Flex>
-  )
+  );
 }

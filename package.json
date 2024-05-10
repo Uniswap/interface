@@ -49,6 +49,7 @@
     "multicodec": "3.0.1",
     "multihashes": "4.0.2",
     "@ethersproject/hash": "5.7.0",
+    "jpeg-js": "0.4.4",
     "json5": "2.2.2",
     "is-core-module": "2.13.0",
     "qs": "6.11.0",
@@ -110,19 +111,21 @@
     "lfg": "yarn g:prepare && yarn mobile env:local:download && yarn stretch env:local:download && yarn g:build && yarn mobile pod && yarn mobile ios",
     "mobile": "yarn workspace @uniswap/mobile",
     "local:check": "./scripts/local-version-check.sh",
-    "postinstall": "husky install && yarn g:prepare",
+    "postinstall": "yarn g:prepare",
     "stretch": "yarn workspace @uniswap/stretch",
     "ui:build:icons": "yarn workspace ui build:icons",
     "upgrade:tamagui": "yarn up '*tamagui*' '@tamagui/*'",
     "upgrade:tamagui:canary": "yarn up '*tamagui*'@canary '@tamagui/*'@canary",
     "wallet": "yarn workspace wallet",
     "web": "yarn workspace @uniswap/interface",
-    "uniswap": "yarn workspace uniswap",
     "utilities": "yarn workspace utilities"
   },
   "workspaces": [
     "apps/*",
     "packages/*",
     "config/*"
-  ]
+  ],
+  "devDependencies": {
+    "@types/ua-parser-js": "0.7.39"
+  }
 }

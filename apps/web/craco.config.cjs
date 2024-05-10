@@ -9,10 +9,12 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const { IgnorePlugin, ProvidePlugin } = require('webpack')
 const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 
-const commitHash = execSync('git rev-parse HEAD').toString().trim()
+// const commitHash = execSync('git rev-parse HEAD').toString().trim()
 const isProduction = process.env.NODE_ENV === 'production'
 
-process.env.REACT_APP_GIT_COMMIT_HASH = commitHash
+// When building the Docker image from `build/uniswapv3.Dockerfile',
+// because there's no `.git` directory, the `git rev-parse HEAD` command fails.
+// process.env.REACT_APP_GIT_COMMIT_HASH = commitHash
 
 // Linting and type checking are only necessary as part of development and testing.
 // Omit them from production builds, as they slow down the feedback loop.
@@ -26,7 +28,68 @@ function getCacheDirectory(cacheName) {
   return `${path.join(__dirname, 'node_modules/.cache/', cacheName)}/`
 }
 
+const config = {
+  webpack: {
+    configure: (webpackConfig, { env, paths }) => {
+      return getMultiEntryWebpackConfig(
+        {
+          main: './src/index.tsx',
+          anotherEntry: './src/another-entry.tsx',
+        },
+        webpackConfig,
+        { env, paths }
+      );
+    },
+  },
+};
+
+const getMultiEntryWebpackConfig = (
+  entries,//: { main: string; [name: string]: string },
+  config,//: WebpackConfiguration,
+  { env }//: WebpackContext
+// ): WebpackConfiguration => {
+) => {
+  const defaultHTMLPlugin = config.plugins.find((plugin) => {
+    return plugin?.constructor.name === 'HtmlWebpackPlugin';
+  });
+
+  if(!defaultHTMLPlugin) {
+    throw new Error('HtmlWebpackPlugin not found!');
+  }
+
+  const plugins = config.plugins.filter(plugin => plugin !== defaultHTMLPlugin);
+
+  plugins.push(...Object.entries(entries).map(([entryName, entry]) => {
+    const filename = `${entryName === 'main' ? 'index' : entryName}.html`
+    // @ts-ignore
+    return new defaultHTMLPlugin.constructor(
+      // @ts-ignore
+      Object.assign({}, defaultHTMLPlugin.userOptions, {
+        filename,
+        // @ts-ignore
+        template: defaultHTMLPlugin.userOptions.template,
+        chunks: [entryName],
+      })
+    )
+  }));
+  
+  config.entry = entries;
+  config.plugins = plugins;
+
+  if (env === 'development') {
+    config.output = {
+        ...config.output,
+        filename: 'static/js/[name].bundle.js',
+    };
+  }
+
+  return config;
+};
+
 module.exports = {
+  devServer: {
+    port: 3002
+  },
   eslint: {
     enable: shouldLintOrTypeCheck,
     pluginOptions(eslintConfig) {
@@ -92,6 +155,10 @@ module.exports = {
       }),
     ],
     configure: (webpackConfig) => {
+      webpackConfig.entry = {
+        main: './src/index.tsx',
+      };
+      
       // Configure webpack plugins:
       webpackConfig.plugins = webpackConfig.plugins
         .map((plugin) => {
@@ -125,8 +192,6 @@ module.exports = {
         alias: {
           ...webpackConfig.resolve.alias,
           'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
-          'react-native-svg$': require.resolve('@tamagui/react-native-svg'),
-          'react-native$': 'react-native-web',
         },
         plugins: webpackConfig.resolve.plugins.map((plugin) => {
           // Allow vanilla-extract in production builds.
@@ -207,15 +272,22 @@ module.exports = {
       })
 
       // Configure webpack optimization:
-      webpackConfig.optimization = Object.assign(
-        webpackConfig.optimization,
-        isProduction
-          ? {
-              // Optimize over all chunks, instead of async chunks (the default), so that initial chunks are also included.
-              splitChunks: { chunks: 'all' },
-            }
-          : {}
-      )
+      // webpackConfig.optimization = Object.assign(
+      //   webpackConfig.optimization,
+      //   isProduction
+      //     ? {
+      //         splitChunks: {
+      //           // Cap the chunk size to 5MB.
+      //           // react-scripts suggests a chunk size under 1MB after gzip, but we can only measure maxSize before gzip.
+      //           // react-scripts also caps cacheable chunks at 5MB, which gzips to below 1MB, so we cap chunk size there.
+      //           // See https://github.com/facebook/create-react-app/blob/d960b9e/packages/react-scripts/config/webpack.config.js#L713-L716.
+      //           maxSize: 5 * 1024 * 1024,
+      //           // Optimize over all chunks, instead of async chunks (the default), so that initial chunks are also optimized.
+      //           chunks: 'all',
+      //         },
+      //       }
+      //     : {}
+      // )
 
       // Configure webpack resolution. webpackConfig.cache is unused with swc-loader, but the resolver can still cache:
       webpackConfig.resolve = Object.assign(webpackConfig.resolve, { unsafeCache: true })

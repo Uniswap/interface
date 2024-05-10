@@ -1,32 +1,33 @@
-import '@testing-library/jest-dom' // jest custom assertions
-import '@vanilla-extract/css/disableRuntimeStyles' // https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles
-import 'jest-styled-components' // adds style diffs to snapshot tests
-import 'polyfills' // add polyfills
+import '@testing-library/jest-dom'; // jest custom assertions
+import '@vanilla-extract/css/disableRuntimeStyles'; // https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles
+import 'jest-styled-components'; // adds style diffs to snapshot tests
+import 'polyfills'; // add polyfills
 
-import type { createPopper } from '@popperjs/core'
-import { useWeb3React } from '@web3-react/core'
-import failOnConsole from 'jest-fail-on-console'
-import { disableNetConnect, restore as restoreNetConnect } from 'nock'
-import React from 'react'
-import { Readable } from 'stream'
-import { toBeVisible } from 'test-utils/matchers'
-import { mocked } from 'test-utils/mocked'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
-import { TextDecoder, TextEncoder } from 'util'
+import type { createPopper } from '@popperjs/core';
+import { useWeb3React } from '@web3-react/core';
+import failOnConsole from 'jest-fail-on-console';
+import { disableNetConnect, restore as restoreNetConnect } from 'nock';
+import React from 'react';
+import { Readable } from 'stream';
+import { toBeVisible } from 'test-utils/matchers';
+import { mocked } from 'test-utils/mocked';
+import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks';
+import { TextDecoder, TextEncoder } from 'util';
 
 // Sets origin to the production origin, because some tests depend on this.
 // This prevents each test file from needing to set this manually.
-globalThis.origin = 'https://app.uniswap.org'
+globalThis.origin = 'https://app.uniswap.org';
 
 // Polyfill browser APIs (jest is a node.js environment):
 {
-  window.open = jest.fn()
-  window.getComputedStyle = jest.fn()
+  window.open = jest.fn();
+  window.getComputedStyle = jest.fn();
 
   if (typeof globalThis.TextEncoder === 'undefined') {
-    globalThis.ReadableStream = Readable as unknown as typeof globalThis.ReadableStream
-    globalThis.TextEncoder = TextEncoder
-    globalThis.TextDecoder = TextDecoder as typeof globalThis.TextDecoder
+    globalThis.ReadableStream =
+      Readable as unknown as typeof globalThis.ReadableStream;
+    globalThis.TextEncoder = TextEncoder;
+    globalThis.TextDecoder = TextDecoder as typeof globalThis.TextDecoder;
   }
 
   globalThis.matchMedia =
@@ -37,21 +38,20 @@ globalThis.origin = 'https://app.uniswap.org'
         addListener: jest.fn(),
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),
-      }
-    })
+      };
+    });
 
-  globalThis.performance.measure = jest.fn()
-  globalThis.performance.mark = jest.fn()
+  globalThis.performance.measure = jest.fn();
 
-  globalThis.React = React
+  globalThis.React = React;
 }
 
 jest.mock('@popperjs/core', () => {
-  const core = jest.requireActual('@popperjs/core')
+  const core = jest.requireActual('@popperjs/core');
   return {
     ...core,
     createPopper: (...args: Parameters<typeof createPopper>) => {
-      const [referenceElement, popperElement, options = {}] = args
+      const [referenceElement, popperElement, options = {}] = args;
 
       // Prevent popper from making state updates asynchronously.
       // This is necessary to avoid warnings during tests, as popper will asynchronously update state outside of test setup.
@@ -61,38 +61,39 @@ jest.mock('@popperjs/core', () => {
         phase: 'beforeMain',
         effect: (state) => {
           state.instance.update = () => {
-            state.instance.forceUpdate()
-            return Promise.resolve(state.instance.state)
-          }
+            state.instance.forceUpdate();
+            return Promise.resolve(state.instance.state);
+          };
         },
-      })
+      });
 
-      return core.createPopper(referenceElement, popperElement, options)
+      return core.createPopper(referenceElement, popperElement, options);
     },
-  }
-})
+  };
+});
 
 jest.mock('@web3-react/core', () => {
-  const web3React = jest.requireActual('@web3-react/core')
-  const { Empty } = jest.requireActual('@web3-react/empty')
+  const web3React = jest.requireActual('@web3-react/core');
+  const { Empty } = jest.requireActual('@web3-react/empty');
   return {
     ...web3React,
     initializeConnector: () =>
       web3React.initializeConnector(
-        (actions: Parameters<typeof web3React.initializeConnector>[0]) => new Empty(actions)
+        (actions: Parameters<typeof web3React.initializeConnector>[0]) =>
+          new Empty(actions)
       ),
     useWeb3React: jest.fn(),
-  }
-})
+  };
+});
 
 jest.mock('connection/eagerlyConnect', () => {
   return {
     useConnectionReady: () => true,
-  }
-})
+  };
+});
 
 jest.mock('state/routing/slice', () => {
-  const routingSlice = jest.requireActual('state/routing/slice')
+  const routingSlice = jest.requireActual('state/routing/slice');
   return {
     ...routingSlice,
     // Prevents unit tests from logging errors from failed getQuote queries
@@ -102,11 +103,11 @@ jest.mock('state/routing/slice', () => {
       error: undefined,
       currentData: undefined,
     }),
-  }
-})
+  };
+});
 
 jest.mock('state/routing/quickRouteSlice', () => {
-  const quickRouteSlice = jest.requireActual('state/routing/quickRouteSlice')
+  const quickRouteSlice = jest.requireActual('state/routing/quickRouteSlice');
   return {
     ...quickRouteSlice,
     // Prevents unit tests from logging errors from failed getQuote queries
@@ -116,32 +117,36 @@ jest.mock('state/routing/quickRouteSlice', () => {
       error: undefined,
       currentData: undefined,
     }),
-  }
-})
+  };
+});
 
-jest.mock('uniswap/src/features/experiments/hooks')
+jest.mock('uniswap/src/features/experiments/hooks');
 
 // Mocks are configured to reset between tests (by CRA), so they must be set in a beforeEach.
 beforeEach(() => {
   // Mock window.getComputedStyle, because it is otherwise too computationally expensive to unit test.
   // Not mocking this results in multi-second tests when using popper.js.
-  mocked(window.getComputedStyle).mockImplementation(() => new CSSStyleDeclaration())
+  mocked(window.getComputedStyle).mockImplementation(
+    () => new CSSStyleDeclaration()
+  );
 
   // Mock useWeb3React to return a chainId of 1 by default.
-  mocked(useWeb3React).mockReturnValue({ chainId: 1 } as ReturnType<typeof useWeb3React>)
+  mocked(useWeb3React).mockReturnValue({ chainId: 1 } as ReturnType<
+    typeof useWeb3React
+  >);
 
   // Disable network connections by default.
-  disableNetConnect()
+  disableNetConnect();
 
   // Mock feature flags
-  mocked(useFeatureFlag).mockReturnValue(false)
-})
+  mocked(useFeatureFlag).mockReturnValue(false);
+});
 
 afterEach(() => {
   // Without this, nock causes a memory leak and the tests will fail on CI.
   // https://github.com/nock/nock/issues/1817
-  restoreNetConnect()
-})
+  restoreNetConnect();
+});
 
 /**
  * Fail tests if anything is logged to the console. This keeps the console clean and ensures test output stays readable.
@@ -160,8 +165,8 @@ failOnConsole({
   shouldFailOnInfo: true,
   shouldFailOnLog: true,
   shouldFailOnWarn: true,
-})
+});
 
 expect.extend({
   toBeVisible,
-})
+});

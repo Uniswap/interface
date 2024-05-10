@@ -41,7 +41,7 @@ const nftTopCollectionsQuery = `
   }
 `
 
-fs.readFile('./public/tokens-sitemap.xml', 'utf8', async (err, data) => {
+fs.readFile('./public/uniswap-static/tokens-sitemap.xml', 'utf8', async (err, data) => {
   const tokenURLs = {}
   try {
     const sitemap = await parseStringPromise(data)
@@ -81,7 +81,7 @@ fs.readFile('./public/tokens-sitemap.xml', 'utf8', async (err, data) => {
 
     const builder = new Builder()
     const xml = builder.buildObject(sitemap)
-    const path = './public/tokens-sitemap.xml'
+    const path = './public/uniswap-static/tokens-sitemap.xml'
     fs.writeFile(path, xml, (error) => {
       if (error) throw error
       const stats = fs.statSync(path)
@@ -98,7 +98,7 @@ fs.readFile('./public/tokens-sitemap.xml', 'utf8', async (err, data) => {
   }
 })
 
-fs.readFile('./public/nfts-sitemap.xml', 'utf8', async (err, data) => {
+fs.readFile('./public/uniswap-static/nfts-sitemap.xml', 'utf8', async (err, data) => {
   const collectionURLs = {}
   try {
     const sitemap = await parseStringPromise(data)
@@ -135,7 +135,7 @@ fs.readFile('./public/nfts-sitemap.xml', 'utf8', async (err, data) => {
 
     const builder = new Builder()
     const xml = builder.buildObject(sitemap)
-    const path = './public/nfts-sitemap.xml'
+    const path = './public/uniswap-static/nfts-sitemap.xml'
     fs.writeFile(path, xml, (error) => {
       if (error) throw error
       const stats = fs.statSync(path)
@@ -152,7 +152,7 @@ fs.readFile('./public/nfts-sitemap.xml', 'utf8', async (err, data) => {
   }
 })
 
-fs.readFile('./public/pools-sitemap.xml', 'utf8', async (err, data) => {
+fs.readFile('./public/uniswap-static/pools-sitemap.xml', 'utf8', async (err, data) => {
   const poolURLs = {}
   try {
     const sitemap = await parseStringPromise(data)
@@ -194,7 +194,7 @@ fs.readFile('./public/pools-sitemap.xml', 'utf8', async (err, data) => {
 
     const builder = new Builder()
     const xml = builder.buildObject(sitemap)
-    const path = './public/pools-sitemap.xml'
+    const path = './public/uniswap-static/pools-sitemap.xml'
     fs.writeFile(path, xml, (error) => {
       if (error) throw error
       const stats = fs.statSync(path)
