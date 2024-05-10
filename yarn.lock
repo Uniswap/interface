@@ -384,7 +384,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/eslint-parser@npm:^7.16.3, @babel/eslint-parser@npm:^7.18.2":
+"@babel/eslint-parser@npm:^7.16.3":
   version: 7.24.1
   resolution: "@babel/eslint-parser@npm:7.24.1"
   dependencies:
@@ -398,6 +398,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/eslint-parser@npm:^7.18.2":
+  version: 7.24.5
+  resolution: "@babel/eslint-parser@npm:7.24.5"
+  dependencies:
+    "@nicolo-ribaudo/eslint-scope-5-internals": 5.1.1-v1
+    eslint-visitor-keys: ^2.1.0
+    semver: ^6.3.1
+  peerDependencies:
+    "@babel/core": ^7.11.0
+    eslint: ^7.5.0 || ^8.0.0 || ^9.0.0
+  checksum: b9df1d0158ddca3d1f040b545e7d8ac529e17bd1c7a16f1382a4d6c24df4acd8942700249c5b7b4c0ea3c28dba8bdefc64124c4074c6db88d65480cd135a9e9c
+  languageName: node
+  linkType: hard
+
 "@babel/generator@npm:^7.14.0, @babel/generator@npm:^7.18.13, @babel/generator@npm:^7.20.0, @babel/generator@npm:^7.24.1, @babel/generator@npm:^7.24.4, @babel/generator@npm:^7.7.2":
   version: 7.24.4
   resolution: "@babel/generator@npm:7.24.4"
@@ -407,6 +421,18 @@ __metadata:
     "@jridgewell/trace-mapping": ^0.3.25
     jsesc: ^2.5.1
   checksum: 1b6146c31386c9df3eb594a2c36b5c98da4f67f7c06edb3d68a442b92516b21bb5ba3ad7dbe0058fe76625ed24d66923e15c95b0df75ef1907d4068921a699b8
+  languageName: node
+  linkType: hard
+
+"@babel/generator@npm:^7.24.5":
+  version: 7.24.5
+  resolution: "@babel/generator@npm:7.24.5"
+  dependencies:
+    "@babel/types": ^7.24.5
+    "@jridgewell/gen-mapping": ^0.3.5
+    "@jridgewell/trace-mapping": ^0.3.25
+    jsesc: ^2.5.1
+  checksum: a08c0ab900b36e1a17863e18e3216153322ea993246fd7a358ba38a31cfb15bab2af1dc178b2adafe4cb8a9f3ab0e0ceafd3fe6e8ca870dffb435b53b2b2a803
   languageName: node
   linkType: hard
 
@@ -646,7 +672,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/helper-string-parser@npm:^7.23.4":
+"@babel/helper-split-export-declaration@npm:^7.24.5":
+  version: 7.24.5
+  resolution: "@babel/helper-split-export-declaration@npm:7.24.5"
+  dependencies:
+    "@babel/types": ^7.24.5
+  checksum: f23ab6942568084a57789462ce55dc9631aef1d2142ffa2ee28fc411ab55ed3ca65adf109e48655aa349bf8df7ca6dd81fd91c8c229fee1dc77e283189dc83c2
+  languageName: node
+  linkType: hard
+
+"@babel/helper-string-parser@npm:^7.23.4, @babel/helper-string-parser@npm:^7.24.1":
   version: 7.24.1
   resolution: "@babel/helper-string-parser@npm:7.24.1"
   checksum: 8404e865b06013979a12406aab4c0e8d2e377199deec09dfe9f57b833b0c9ce7b6e8c1c553f2da8d0bcd240c5005bd7a269f4fef0d628aeb7d5fe035c436fb67
@@ -657,6 +692,13 @@ __metadata:
   version: 7.22.20
   resolution: "@babel/helper-validator-identifier@npm:7.22.20"
   checksum: 136412784d9428266bcdd4d91c32bcf9ff0e8d25534a9d94b044f77fe76bc50f941a90319b05aafd1ec04f7d127cd57a179a3716009ff7f3412ef835ada95bdc
+  languageName: node
+  linkType: hard
+
+"@babel/helper-validator-identifier@npm:^7.24.5":
+  version: 7.24.5
+  resolution: "@babel/helper-validator-identifier@npm:7.24.5"
+  checksum: 75d6f9f475c08f3be87bae4953e9b8d8c72983e16ed2860870b328d048cb20dccb4fcbf85eacbdd817ea1efbb38552a6db9046e2e37bfe13bdec44ac8939024c
   languageName: node
   linkType: hard
 
@@ -707,6 +749,15 @@ __metadata:
   bin:
     parser: ./bin/babel-parser.js
   checksum: 94c9e3e592894cd6fc57c519f4e06b65463df9be5f01739bb0d0bfce7ffcf99b3c2fdadd44dc59cc858ba2739ce6e469813a941c2f2dfacf333a3b2c9c5c8465
+  languageName: node
+  linkType: hard
+
+"@babel/parser@npm:^7.24.5":
+  version: 7.24.5
+  resolution: "@babel/parser@npm:7.24.5"
+  bin:
+    parser: ./bin/babel-parser.js
+  checksum: a251ea41bf8b5f61048beb320d43017aff68af5a3506bd2ef392180f5fa32c1061513171d582bb3d46ea48e3659dece8b3ba52511a2566066e58abee300ce2a0
   languageName: node
   linkType: hard
 
@@ -2063,7 +2114,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/traverse@npm:^7.14.0, @babel/traverse@npm:^7.16.8, @babel/traverse@npm:^7.20.0, @babel/traverse@npm:^7.23.2, @babel/traverse@npm:^7.24.1, @babel/traverse@npm:^7.4.5, @babel/traverse@npm:^7.7.2, @babel/traverse@npm:^7.7.4":
+"@babel/traverse@npm:^7.14.0, @babel/traverse@npm:^7.16.8, @babel/traverse@npm:^7.20.0, @babel/traverse@npm:^7.23.2, @babel/traverse@npm:^7.24.1, @babel/traverse@npm:^7.4.5, @babel/traverse@npm:^7.7.2":
   version: 7.24.1
   resolution: "@babel/traverse@npm:7.24.1"
   dependencies:
@@ -2081,6 +2132,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/traverse@npm:^7.7.4":
+  version: 7.24.5
+  resolution: "@babel/traverse@npm:7.24.5"
+  dependencies:
+    "@babel/code-frame": ^7.24.2
+    "@babel/generator": ^7.24.5
+    "@babel/helper-environment-visitor": ^7.22.20
+    "@babel/helper-function-name": ^7.23.0
+    "@babel/helper-hoist-variables": ^7.22.5
+    "@babel/helper-split-export-declaration": ^7.24.5
+    "@babel/parser": ^7.24.5
+    "@babel/types": ^7.24.5
+    debug: ^4.3.1
+    globals: ^11.1.0
+  checksum: a313fbf4a06946cc4b74b06e9846d7393a9ca1e8b6df6da60c669cff0a9426d6198c21a478041c60807b62b48f980473d4afbd3768764b0d9741ac80f5dfa04f
+  languageName: node
+  linkType: hard
+
 "@babel/types@npm:^7.0.0, @babel/types@npm:^7.12.6, @babel/types@npm:^7.16.8, @babel/types@npm:^7.18.13, @babel/types@npm:^7.20.0, @babel/types@npm:^7.20.7, @babel/types@npm:^7.22.15, @babel/types@npm:^7.22.19, @babel/types@npm:^7.22.5, @babel/types@npm:^7.23.0, @babel/types@npm:^7.23.4, @babel/types@npm:^7.24.0, @babel/types@npm:^7.3.3, @babel/types@npm:^7.4.4, @babel/types@npm:^7.8.3":
   version: 7.24.0
   resolution: "@babel/types@npm:7.24.0"
@@ -2089,6 +2158,17 @@ __metadata:
     "@babel/helper-validator-identifier": ^7.22.20
     to-fast-properties: ^2.0.0
   checksum: 4b574a37d490f621470ff36a5afaac6deca5546edcb9b5e316d39acbb20998e9c2be42f3fc0bf2b55906fc49ff2a5a6a097e8f5a726ee3f708a0b0ca93aed807
+  languageName: node
+  linkType: hard
+
+"@babel/types@npm:^7.24.5":
+  version: 7.24.5
+  resolution: "@babel/types@npm:7.24.5"
+  dependencies:
+    "@babel/helper-string-parser": ^7.24.1
+    "@babel/helper-validator-identifier": ^7.24.5
+    to-fast-properties: ^2.0.0
+  checksum: 8eeeacd996593b176e649ee49d8dc3f26f9bb6aa1e3b592030e61a0e58ea010fb018dccc51e5314c8139409ea6cbab02e29b33e674e1f6962d8e24c52da6375b
   languageName: node
   linkType: hard
 
@@ -11381,41 +11461,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@ungap/structured-clone@npm:^1.2.0":
-  version: 1.2.0
-  resolution: "@ungap/structured-clone@npm:1.2.0"
-  checksum: 4f656b7b4672f2ce6e272f2427d8b0824ed11546a601d8d5412b9d7704e83db38a8d9f402ecdf2b9063fc164af842ad0ec4a55819f621ed7e7ea4d1efcc74524
-  languageName: node
-  linkType: hard
-
-"@uniswap/analytics-events@npm:2.32.0":
-  version: 2.32.0
-  resolution: "@uniswap/analytics-events@npm:2.32.0"
-  checksum: 7341bb14025bcd72e7367dcc29a1833ad18f316b9310875432d4bbe62da8a2d2f2db473d6e0a10c12a02ff8d1815db0ef66fbb169ad98d80317f2c3fe91bcde2
-  languageName: node
-  linkType: hard
-
-"@uniswap/analytics@npm:1.7.0":
-  version: 1.7.0
-  resolution: "@uniswap/analytics@npm:1.7.0"
-  dependencies:
-    "@amplitude/analytics-browser": ^1.5.8
-    react: ^18.2.0
-    react-dom: ^18.2.0
-  checksum: b591c67323b849210a86c62978c686207160176a47ebe91b48ba22f38ce9b9f91cc275aa5103b4ab6528ed4d71d97ecff7cfbd1671c0aebeb850ebadc2acaf1b
-  languageName: node
-  linkType: hard
-
-"@uniswap/default-token-list@npm:^11.2.0":
-  version: 11.17.0
-  resolution: "@uniswap/default-token-list@npm:11.17.0"
-  checksum: 53d8e62a6a8c5cf231c09f3c93da231146596219bcf09d90e56cb541988574bf7de8b9eaf9f295bfde9ebf07dadd4f5f6a9a0ddbae4cdcfae2291772dacf525e
-  languageName: node
-  linkType: hard
-
-"@uniswap/eslint-config@workspace:^, @uniswap/eslint-config@workspace:packages/eslint-config":
+"@ubeswap/eslint-config@workspace:^, @ubeswap/eslint-config@workspace:packages/eslint-config":
   version: 0.0.0-use.local
-  resolution: "@uniswap/eslint-config@workspace:packages/eslint-config"
+  resolution: "@ubeswap/eslint-config@workspace:packages/eslint-config"
   dependencies:
     "@babel/core": ^7.20.5
     "@babel/preset-env": 7.23.3
@@ -11455,6 +11503,38 @@ __metadata:
     eslint: ^8.0.0
   languageName: unknown
   linkType: soft
+
+"@ungap/structured-clone@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "@ungap/structured-clone@npm:1.2.0"
+  checksum: 4f656b7b4672f2ce6e272f2427d8b0824ed11546a601d8d5412b9d7704e83db38a8d9f402ecdf2b9063fc164af842ad0ec4a55819f621ed7e7ea4d1efcc74524
+  languageName: node
+  linkType: hard
+
+"@uniswap/analytics-events@npm:2.32.0":
+  version: 2.32.0
+  resolution: "@uniswap/analytics-events@npm:2.32.0"
+  checksum: 7341bb14025bcd72e7367dcc29a1833ad18f316b9310875432d4bbe62da8a2d2f2db473d6e0a10c12a02ff8d1815db0ef66fbb169ad98d80317f2c3fe91bcde2
+  languageName: node
+  linkType: hard
+
+"@uniswap/analytics@npm:1.7.0":
+  version: 1.7.0
+  resolution: "@uniswap/analytics@npm:1.7.0"
+  dependencies:
+    "@amplitude/analytics-browser": ^1.5.8
+    react: ^18.2.0
+    react-dom: ^18.2.0
+  checksum: b591c67323b849210a86c62978c686207160176a47ebe91b48ba22f38ce9b9f91cc275aa5103b4ab6528ed4d71d97ecff7cfbd1671c0aebeb850ebadc2acaf1b
+  languageName: node
+  linkType: hard
+
+"@uniswap/default-token-list@npm:^11.2.0":
+  version: 11.17.0
+  resolution: "@uniswap/default-token-list@npm:11.17.0"
+  checksum: 53d8e62a6a8c5cf231c09f3c93da231146596219bcf09d90e56cb541988574bf7de8b9eaf9f295bfde9ebf07dadd4f5f6a9a0ddbae4cdcfae2291772dacf525e
+  languageName: node
+  linkType: hard
 
 "@uniswap/governance@npm:1.0.2":
   version: 1.0.2
@@ -11527,9 +11607,9 @@ __metadata:
     "@types/wcag-contrast": 3.0.0
     "@types/xml2js": 0.4.14
     "@ubeswap/default-token-list": 4.1.62
+    "@ubeswap/eslint-config": "workspace:^"
     "@uniswap/analytics": 1.7.0
     "@uniswap/analytics-events": 2.32.0
-    "@uniswap/eslint-config": "workspace:^"
     "@uniswap/governance": 1.0.2
     "@uniswap/liquidity-staker": 1.0.2
     "@uniswap/merkle-distributor": 1.0.1
@@ -11586,7 +11666,6 @@ __metadata:
     dotenv-cli: ^7.0.0
     eslint: 8.44.0
     eslint-plugin-import: 2.27.5
-    eslint-plugin-rulesdir: 0.2.2
     ethers: 5.7.2
     fancy-canvas: 2.1.0
     focus-visible: 5.2.0
@@ -19674,7 +19753,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-react-hooks@npm:^4.2.0, eslint-plugin-react-hooks@npm:^4.3.0, eslint-plugin-react-hooks@npm:^4.6.0":
+"eslint-plugin-react-hooks@npm:^4.2.0":
+  version: 4.6.2
+  resolution: "eslint-plugin-react-hooks@npm:4.6.2"
+  peerDependencies:
+    eslint: ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0-0
+  checksum: 395c433610f59577cfcf3f2e42bcb130436c8a0b3777ac64f441d88c5275f4fcfc89094cedab270f2822daf29af1079151a7a6579a8e9ea8cee66540ba0384c4
+  languageName: node
+  linkType: hard
+
+"eslint-plugin-react-hooks@npm:^4.3.0, eslint-plugin-react-hooks@npm:^4.6.0":
   version: 4.6.0
   resolution: "eslint-plugin-react-hooks@npm:4.6.0"
   peerDependencies:
@@ -19727,13 +19815,6 @@ __metadata:
   peerDependencies:
     eslint: ^3 || ^4 || ^5 || ^6 || ^7 || ^8
   checksum: 82f391c5a093235c3bc2f664c54e009c49460778ee7d1b86c1536df9ac4d2a80d1dedc9241ac797df4a9dced936e955d9c89042fb3ac8d017b5359d1320d3c0f
-  languageName: node
-  linkType: hard
-
-"eslint-plugin-rulesdir@npm:0.2.2":
-  version: 0.2.2
-  resolution: "eslint-plugin-rulesdir@npm:0.2.2"
-  checksum: 1d8c2583dccca7e167b0eaf1adb1ae0bca4ea65b3eb3e0124fc0e21382a29ca3988306419d3b34f7f984f53c2ecb16b0c6956e676e23d165c2bd629023d10704
   languageName: node
   linkType: hard
 
@@ -37193,7 +37274,7 @@ __metadata:
     "@tamagui/helpers-icon": 1.94.3
     "@tamagui/react-native-media-driver": 1.94.3
     "@tamagui/theme-base": 1.94.3
-    "@uniswap/eslint-config": "workspace:^"
+    "@ubeswap/eslint-config": "workspace:^"
     camelcase: ^6.0.0
     cheerio: ^1.0.0-rc.5
     eslint: 8.44.0
@@ -37490,7 +37571,7 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": ^3.3.7
     "@graphql-codegen/typescript-resolvers": ^3.2.1
     "@typechain/ethers-v5": 7.2.0
-    "@uniswap/eslint-config": "workspace:^"
+    "@ubeswap/eslint-config": "workspace:^"
     "@uniswap/sdk-core": 4.2.0
     apollo-link-rest: 0.9.0
     depcheck: 1.4.7
@@ -37925,9 +38006,9 @@ __metadata:
     "@testing-library/react": 13.4.0
     "@testing-library/react-hooks": 7.0.2
     "@types/react": ^18.0.15
+    "@ubeswap/eslint-config": "workspace:^"
     "@uniswap/analytics": 1.7.0
     "@uniswap/analytics-events": 2.32.0
-    "@uniswap/eslint-config": "workspace:^"
     "@uniswap/sdk-core": 4.2.0
     aws-appsync-auth-link: 3.0.7
     aws-appsync-subscription-link: 3.1.3

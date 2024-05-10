@@ -1,10 +1,7 @@
 {
-  "name": "@uniswap/eslint-config",
+  "name": "@ubeswap/eslint-config",
   "version": "0.0.1",
-  "description": "Uniswap ESLint config",
-  "repository": "https://github.com/Uniswap/eslint-config",
-  "homepage": "https://github.com/Uniswap/eslint-config#readme",
-  "bugs": "https://github.com/Uniswap/eslint-config/issues",
+  "description": "Ubeswap ESLint config",
   "license": "MIT",
   "scripts": {
     "lint": "eslint .",
@@ -15,7 +12,7 @@
     "config",
     "eslint",
     "eslintconfig",
-    "uniswap"
+    "ubeswap"
   ],
   "main": "node.js",
   "files": [

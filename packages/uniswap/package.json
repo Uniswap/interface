@@ -32,7 +32,7 @@
     "@graphql-codegen/typescript-operations": "^3.0.2",
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@graphql-codegen/typescript-resolvers": "^3.2.1",
-    "@uniswap/eslint-config": "workspace:^",
+    "@ubeswap/eslint-config": "workspace:^",
     "@uniswap/sdk-core": "4.2.0",
     "depcheck": "1.4.7",
     "eslint": "8.44.0",

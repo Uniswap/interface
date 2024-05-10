@@ -1,6 +1,7 @@
-# @uniswap/eslint-config
+# @ubeswap/eslint-config
 
-Uniswap ESLint config to enforce coding standards and best practices.
+Ubeswap ESLint config to enforce coding standards and best practices.
+This is forked from `@uniswap/eslint-config`
 
 - TypeScript and Jest support
 - Seamless Prettier integration
@@ -11,7 +12,7 @@ Uniswap ESLint config to enforce coding standards and best practices.
 It's already in the monorepo, just add to package.json devDependencies:
 
 ```
-  "@uniswap/eslint-config": "workspace:^"
+  "@ubeswap/eslint-config": "workspace:^"
 ```
 
 ## Usage
@@ -20,29 +21,29 @@ For react-native based apps and packages:
 
 ```js
 module.exports = {
-  extends: ['@uniswap/eslint-config/native'],
+  extends: ['@ubeswap/eslint-config/native'],
 }
 ```
 
 For web-only apps:
 
-Make sure to include `require('@uniswap/eslint-config/load')` at the top of your ESLint config. This loads a `@rushstack/eslint-patch/modern-module-resolution` patch so that ESLint loads any plugins installed by this package. 
+Make sure to include `require('@ubeswap/eslint-config/load')` at the top of your ESLint config. This loads a `@rushstack/eslint-patch/modern-module-resolution` patch so that ESLint loads any plugins installed by this package. 
 
 ```js
-require('@uniswap/eslint-config/load')
+require('@ubeswap/eslint-config/load')
 
 module.exports = {
-  extends: '@uniswap/eslint-config/node'
+  extends: '@ubeswap/eslint-config/node'
 }
 ```
 
 or:
 
 ```js
-require('@uniswap/eslint-config/load')
+require('@ubeswap/eslint-config/load')
 
 module.exports = {
-  extends: '@uniswap/eslint-config/react'
+  extends: '@ubeswap/eslint-config/react'
 }
 ```
 

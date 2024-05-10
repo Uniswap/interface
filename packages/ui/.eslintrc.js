@@ -1,10 +1,10 @@
-const eslintConfig = require('@uniswap/eslint-config/native')
+const eslintConfig = require('@ubeswap/eslint-config/native')
 
 const noRestrictedImportsPaths = eslintConfig.rules['no-restricted-imports']?.[1]?.paths ?? []
 
 module.exports = {
   root: true,
-  extends: ['@uniswap/eslint-config/native'],
+  extends: ['@ubeswap/eslint-config/native'],
   ignorePatterns: [
     'node_modules',
     '.turbo',
