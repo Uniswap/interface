@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Analytics",
+  "extends": "./base.json",
+  "compilerOptions": {
+    "isolatedModules": false,
+    "esModuleInterop": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "noEmit": false,
+    "jsx": "react-jsx",
+    "target": "es2019",
+    "lib": ["es2022", "dom"],
+    "checkJs": true
+  }
+}

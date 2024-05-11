@@ -1,4 +1,4 @@
-import { SwapEventName } from '@uniswap/analytics-events'
+import { SwapEventName } from '@ubeswap/analytics-events'
 
 import { USDC_MAINNET } from '../../../src/constants/tokens'
 import { getTestSelector } from '../../utils'

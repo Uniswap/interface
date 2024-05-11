@@ -8,7 +8,7 @@ import { useEffect, useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { isL2ChainId } from 'utils/chains'
 
-import { InterfaceEventName } from '@uniswap/analytics-events'
+import { InterfaceEventName } from '@ubeswap/analytics-events'
 import { sendAnalyticsEvent } from 'analytics'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID, TOKEN_SHORTHANDS, UNKNOWN_TOKEN_NAME, UNKNOWN_TOKEN_SYMBOL } from 'constants/tokens'

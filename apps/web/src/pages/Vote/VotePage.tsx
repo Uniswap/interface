@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { InterfacePageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@ubeswap/analytics-events'
 import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'

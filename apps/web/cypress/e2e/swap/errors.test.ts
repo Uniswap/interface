@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { InterfaceSectionName } from '@uniswap/analytics-events'
+import { InterfaceSectionName } from '@ubeswap/analytics-events'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 
 import { DEFAULT_DEADLINE_FROM_NOW } from '../../../src/constants/misc'

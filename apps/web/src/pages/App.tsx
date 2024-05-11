@@ -1,4 +1,4 @@
-import { CustomUserProperties, getBrowser, SharedEventName } from '@uniswap/analytics-events'
+import { CustomUserProperties, getBrowser, SharedEventName } from '@ubeswap/analytics-events'
 import { sendAnalyticsEvent, sendInitializationEvent, Trace, user } from 'analytics'
 import ErrorBoundary from 'components/ErrorBoundary'
 import Loader from 'components/Icons/LoadingSpinner'

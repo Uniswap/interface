@@ -1,4 +1,4 @@
-import { SwapEventName } from '@uniswap/analytics-events'
+import { SwapEventName } from '@ubeswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
 
 import { UNI, USDC_MAINNET } from '../../../src/constants/tokens'

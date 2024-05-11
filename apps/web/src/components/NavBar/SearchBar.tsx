@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-restricted-imports
-import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@ubeswap/analytics-events'
 import { useWeb3React } from '@web3-react/core'
 import { Trace, TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import clsx from 'clsx'

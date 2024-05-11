@@ -21,7 +21,7 @@ import { EllipsisStyle, ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { ApolloError } from '@apollo/client'
-import { InterfaceElementName } from '@uniswap/analytics-events'
+import { InterfaceElementName } from '@ubeswap/analytics-events'
 import SparklineChart from 'components/Charts/SparklineChart'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Table/styled'
 import {

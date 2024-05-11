@@ -1,4 +1,4 @@
-import { BrowserEvent, InterfaceElementName, SharedEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, SharedEventName } from '@ubeswap/analytics-events'
 import { TraceEvent } from 'analytics'
 import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
 import Row from 'components/Row'

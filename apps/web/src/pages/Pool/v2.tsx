@@ -1,4 +1,4 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@ubeswap/analytics-events'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'

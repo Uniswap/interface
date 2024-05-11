@@ -1,4 +1,4 @@
-import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SharedEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfaceSectionName, SharedEventName } from '@ubeswap/analytics-events'
 import { Trace, TraceEvent } from 'analytics'
 import Column from 'components/Column'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'

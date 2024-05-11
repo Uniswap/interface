@@ -1,4 +1,4 @@
-import { BrowserEvent, InterfaceElementName, NFTEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, NFTEventName } from '@ubeswap/analytics-events'
 import { TraceEvent } from 'analytics'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'

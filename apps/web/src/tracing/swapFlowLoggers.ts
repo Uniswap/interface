@@ -1,4 +1,4 @@
-import { SwapEventName } from '@uniswap/analytics-events'
+import { SwapEventName } from '@ubeswap/analytics-events'
 import { ITraceContext, sendAnalyticsEvent } from 'analytics'
 import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 

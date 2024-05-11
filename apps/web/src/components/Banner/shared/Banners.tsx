@@ -1,4 +1,4 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@ubeswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
 import { OutageBanner, getOutageBannerSessionStorageKey } from 'components/Banner/Outage/OutageBanner'
 import { manualChainOutageAtom, useOutageBanners } from 'featureFlags/flags/outageBanner'

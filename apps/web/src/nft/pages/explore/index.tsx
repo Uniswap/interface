@@ -1,4 +1,4 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@ubeswap/analytics-events'
 import { Trace } from 'analytics'
 import Banner from 'nft/components/explore/Banner'
 import TrendingCollections from 'nft/components/explore/TrendingCollections'

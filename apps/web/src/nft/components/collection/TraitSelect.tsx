@@ -1,4 +1,4 @@
-import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
+import { NFTEventName, NFTFilterTypes } from '@ubeswap/analytics-events'
 import { sendAnalyticsEvent } from 'analytics'
 import useDebounce from 'hooks/useDebounce'
 import { Box } from 'nft/components/Box'

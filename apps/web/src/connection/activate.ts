@@ -1,4 +1,4 @@
-import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
+import { InterfaceEventName, WalletConnectionResult } from '@ubeswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
 import { sendAnalyticsEvent } from 'analytics'
 import { Connection } from 'connection/types'

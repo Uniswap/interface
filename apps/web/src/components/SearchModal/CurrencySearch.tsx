@@ -1,4 +1,4 @@
-import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
+import { InterfaceEventName, InterfaceModalName } from '@ubeswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'

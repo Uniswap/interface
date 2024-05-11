@@ -1,4 +1,4 @@
-import { InterfaceModalName } from '@uniswap/analytics-events'
+import { InterfaceModalName } from '@ubeswap/analytics-events'
 import { Trace } from 'analytics'
 import { AutoColumn } from 'components/Column'
 import { ConfirmModalState } from 'components/ConfirmSwapModal'

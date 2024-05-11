@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import * as Sentry from '@sentry/react'
-import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
+import { CustomUserProperties, SwapEventName } from '@ubeswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
 import { useWeb3React } from '@web3-react/core'

@@ -1,4 +1,4 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
+import { InterfacePageName } from '@ubeswap/analytics-events'
 import { Trace } from 'analytics'
 import { SmallButtonPrimary } from 'components/Button'
 import { Trans } from 'i18n'

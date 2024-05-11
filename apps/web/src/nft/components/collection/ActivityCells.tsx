@@ -1,4 +1,4 @@
-import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
+import { InterfacePageName, NFTEventName } from '@ubeswap/analytics-events'
 import { ChainId } from '@uniswap/sdk-core'
 import { sendAnalyticsEvent, useTrace } from 'analytics'
 import { MouseoverTooltip } from 'components/Tooltip'

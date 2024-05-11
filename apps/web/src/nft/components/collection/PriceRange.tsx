@@ -1,6 +1,6 @@
 import 'rc-slider/assets/index.css'
 
-import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
+import { NFTEventName, NFTFilterTypes } from '@ubeswap/analytics-events'
 import { sendAnalyticsEvent } from 'analytics'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'

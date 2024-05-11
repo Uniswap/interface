@@ -1,5 +1,5 @@
 import { Contract } from '@ethersproject/contracts'
-import { InterfaceEventName } from '@uniswap/analytics-events'
+import { InterfaceEventName } from '@ubeswap/analytics-events'
 import {
   ARGENT_WALLET_DETECTOR_ADDRESS,
   ChainId,

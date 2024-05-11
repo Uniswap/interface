@@ -1,4 +1,4 @@
-import { SwapEventName, SwapPriceUpdateUserResponse } from '@uniswap/analytics-events'
+import { SwapEventName, SwapPriceUpdateUserResponse } from '@ubeswap/analytics-events'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { sendAnalyticsEvent } from 'analytics'
 import { AutoColumn } from 'components/Column'

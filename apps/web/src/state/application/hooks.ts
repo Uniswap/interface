@@ -1,4 +1,4 @@
-import { MoonpayEventName } from '@uniswap/analytics-events'
+import { MoonpayEventName } from '@ubeswap/analytics-events'
 import { sendAnalyticsEvent } from 'analytics'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useEffect, useMemo, useState } from 'react'

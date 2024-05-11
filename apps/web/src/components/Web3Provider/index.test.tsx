@@ -1,5 +1,5 @@
 import { act, render } from '@testing-library/react'
-import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
+import { InterfaceEventName, WalletConnectionResult } from '@ubeswap/analytics-events'
 import { MockEIP1193Provider } from '@web3-react/core'
 import { Provider as EIP1193Provider } from '@web3-react/types'
 import { sendAnalyticsEvent, user } from 'analytics'

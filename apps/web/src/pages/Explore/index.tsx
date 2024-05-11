@@ -1,4 +1,4 @@
-import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
+import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@ubeswap/analytics-events'
 import { Trace, TraceEvent } from 'analytics'
 import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { AutoRow } from 'components/Row'

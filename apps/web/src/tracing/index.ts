@@ -2,7 +2,7 @@ import 'zone.js'
 
 import { BrowserTracing } from '@sentry/browser'
 import * as Sentry from '@sentry/react'
-import { SharedEventName } from '@uniswap/analytics-events'
+import { SharedEventName } from '@ubeswap/analytics-events'
 import { initializeAnalytics, OriginApplication } from 'analytics'
 import store from 'state'
 import { setOriginCountry } from 'state/user/reducer'
