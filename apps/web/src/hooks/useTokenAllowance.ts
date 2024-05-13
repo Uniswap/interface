@@ -1,6 +1,6 @@
 import { ContractTransaction } from '@ethersproject/contracts'
 import { InterfaceEventName } from '@ubeswap/analytics-events'
-import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, MaxUint256, Token } from '@ubeswap/sdk-core'
 import { sendAnalyticsEvent, useTrace as useAnalyticsTrace } from 'analytics'
 import { useTokenContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'

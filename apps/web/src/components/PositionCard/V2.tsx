@@ -1,4 +1,4 @@
-import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Percent, Token } from '@ubeswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { Trans } from 'i18n'

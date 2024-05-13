@@ -1,5 +1,5 @@
 import { InterfaceSectionName, NavBarSearchTypes } from '@ubeswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { useTrace } from 'analytics'
 import clsx from 'clsx'

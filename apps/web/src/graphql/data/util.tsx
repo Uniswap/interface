@@ -1,7 +1,7 @@
 import { OperationVariables, QueryResult } from '@apollo/client'
 import { DeepPartial } from '@apollo/client/utilities'
 import * as Sentry from '@sentry/react'
-import { ChainId, Currency, Token } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token } from '@ubeswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from 'constants/chainInfo'
 import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'constants/tokens'
 import ms from 'ms'

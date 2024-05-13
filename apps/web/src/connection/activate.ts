@@ -1,5 +1,5 @@
 import { InterfaceEventName, WalletConnectionResult } from '@ubeswap/analytics-events'
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@ubeswap/sdk-core'
 import { sendAnalyticsEvent } from 'analytics'
 import { Connection } from 'connection/types'
 import { atom } from 'jotai'

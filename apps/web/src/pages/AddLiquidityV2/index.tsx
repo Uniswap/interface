@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@ubeswap/analytics-events'
-import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'

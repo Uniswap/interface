@@ -1,4 +1,4 @@
-import { ChainId, SUPPORTED_CHAINS } from '@uniswap/sdk-core'
+import { ChainId, SUPPORTED_CHAINS } from '@ubeswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { Trans } from 'i18n'
 import type { ReactNode } from 'react'

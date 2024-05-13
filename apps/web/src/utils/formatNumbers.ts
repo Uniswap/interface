@@ -1,5 +1,5 @@
 import { formatEther as ethersFormatEther } from '@ethersproject/units'
-import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, Token } from '@ubeswap/sdk-core'
 import {
   DEFAULT_LOCAL_CURRENCY,
   LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE,

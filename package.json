@@ -38,7 +38,6 @@
     "immer": "9.0.21",
     "@uniswap/v2-sdk": "4.3.0",
     "@apollo/client": "3.9.6",
-    "@uniswap/sdk-core": "4.2.0",
     "@sideway/formula": "3.0.1",
     "@walletconnect/ethereum-provider": "2.10.1",
     "@xmldom/xmldom": "0.7.7",

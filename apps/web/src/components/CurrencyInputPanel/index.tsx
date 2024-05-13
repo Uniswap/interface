@@ -1,5 +1,5 @@
 import { BrowserEvent, InterfaceElementName, SwapEventName } from '@ubeswap/analytics-events'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@ubeswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'

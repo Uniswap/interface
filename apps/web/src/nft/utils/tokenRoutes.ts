@@ -1,5 +1,5 @@
+import { Currency, CurrencyAmount } from '@ubeswap/sdk-core'
 import { IRoute, Protocol } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool } from '@uniswap/v3-sdk'
 import { ClassicTrade } from 'state/routing/types'

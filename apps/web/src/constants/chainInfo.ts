@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@ubeswap/sdk-core'
 import ms from 'ms'
 import { darkTheme } from 'theme/colors'
 

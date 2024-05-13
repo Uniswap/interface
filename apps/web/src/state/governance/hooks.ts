@@ -5,8 +5,6 @@ import { Contract } from '@ethersproject/contracts'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { toUtf8String, Utf8ErrorFuncs, Utf8ErrorReason } from '@ethersproject/strings'
 // eslint-disable-next-line no-restricted-imports
-import GovernorAlphaJSON from '@uniswap/governance/build/GovernorAlpha.json'
-import UniJSON from '@uniswap/governance/build/Uni.json'
 import {
   ChainId,
   CurrencyAmount,
@@ -14,7 +12,9 @@ import {
   GOVERNANCE_ALPHA_V1_ADDRESSES,
   GOVERNANCE_BRAVO_ADDRESSES,
   Token,
-} from '@uniswap/sdk-core'
+} from '@ubeswap/sdk-core'
+import GovernorAlphaJSON from '@uniswap/governance/build/GovernorAlpha.json'
+import UniJSON from '@uniswap/governance/build/Uni.json'
 import { useWeb3React } from '@web3-react/core'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { POLYGON_PROPOSAL_TITLE } from 'constants/proposals/polygon_proposal_title'

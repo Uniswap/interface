@@ -1,5 +1,5 @@
+import { Currency } from '@ubeswap/sdk-core'
 import { Protocol } from '@uniswap/router-sdk'
-import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import Badge from 'components/Badge'
 import DoubleCurrencyLogo from 'components/DoubleLogo'

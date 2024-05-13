@@ -1,4 +1,4 @@
-import { ChainId } from '@uniswap/sdk-core'
+import { ChainId } from '@ubeswap/sdk-core'
 import { PoolTableSortState, TablePool, V2_BIPS, calculateOneDayApr, sortPools } from 'graphql/data/pools/useTopPools'
 import { chainIdToBackendName } from 'graphql/data/util'
 import { useCallback, useMemo, useRef } from 'react'

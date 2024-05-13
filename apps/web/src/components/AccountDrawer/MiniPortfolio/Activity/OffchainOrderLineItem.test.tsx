@@ -1,4 +1,4 @@
-import { ChainId, CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, CurrencyAmount, WETH9 } from '@ubeswap/sdk-core'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { SignatureType } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'

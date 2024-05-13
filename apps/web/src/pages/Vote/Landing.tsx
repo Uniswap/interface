@@ -1,5 +1,5 @@
 import { InterfacePageName } from '@ubeswap/analytics-events'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { ButtonPrimary } from 'components/Button'

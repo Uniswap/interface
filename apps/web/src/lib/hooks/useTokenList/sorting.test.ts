@@ -1,4 +1,4 @@
-import { ChainId, Token as InterfaceToken } from '@uniswap/sdk-core'
+import { ChainId, Token as InterfaceToken } from '@ubeswap/sdk-core'
 import { DAI, USDC_MAINNET, USDT, WBTC, nativeOnChain } from 'constants/tokens'
 import {
   Chain,

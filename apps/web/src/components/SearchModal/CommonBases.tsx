@@ -1,5 +1,5 @@
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@ubeswap/analytics-events'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@ubeswap/sdk-core'
 import { TraceEvent } from 'analytics'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AutoRow } from 'components/Row'

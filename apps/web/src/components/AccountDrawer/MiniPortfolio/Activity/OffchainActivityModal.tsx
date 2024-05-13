@@ -1,4 +1,4 @@
-import { ChainId, Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, TradeType } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import {
   CancelLimitsDialog,

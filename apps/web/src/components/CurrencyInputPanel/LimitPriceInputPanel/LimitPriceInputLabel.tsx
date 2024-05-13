@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@ubeswap/sdk-core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'

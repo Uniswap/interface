@@ -1,5 +1,5 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'

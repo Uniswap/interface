@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { InterfacePageName } from '@ubeswap/analytics-events'
-import { CurrencyAmount, Fraction, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Fraction, Token } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import ExecuteModal from 'components/vote/ExecuteModal'

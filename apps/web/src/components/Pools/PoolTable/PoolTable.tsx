@@ -1,7 +1,7 @@
 import { ApolloError } from '@apollo/client'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { InterfaceElementName } from '@ubeswap/analytics-events'
-import { ChainId, Percent } from '@uniswap/sdk-core'
+import { ChainId, Percent } from '@ubeswap/sdk-core'
 import { DoubleTokenAndChainLogo } from 'components/Pools/PoolDetails/PoolDetailsHeader'
 import Row from 'components/Row'
 import { Table } from 'components/Table'

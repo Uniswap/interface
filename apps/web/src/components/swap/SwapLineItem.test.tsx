@@ -1,4 +1,4 @@
-import { Percent } from '@uniswap/sdk-core'
+import { Percent } from '@ubeswap/sdk-core'
 import { InterfaceTrade } from 'state/routing/types'
 import {
   LIMIT_ORDER_TRADE,

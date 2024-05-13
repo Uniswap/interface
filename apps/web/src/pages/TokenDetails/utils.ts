@@ -1,4 +1,4 @@
-import { Currency } from '@uniswap/sdk-core'
+import { Currency } from '@ubeswap/sdk-core'
 import { t } from 'i18n'
 
 export const getTokenPageTitle = (currency?: Currency) => {

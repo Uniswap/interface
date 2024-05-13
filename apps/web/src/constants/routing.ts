@@ -1,5 +1,5 @@
 // a list of tokens by chain
-import { ChainId, Currency, Token, WETH9 } from '@uniswap/sdk-core'
+import { ChainId, Currency, Token, WETH9 } from '@ubeswap/sdk-core'
 
 import {
   ARB,

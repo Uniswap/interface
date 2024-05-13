@@ -1,4 +1,4 @@
-import { ChainId, Currency, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { ChainId, Currency, Price, Token, V3_CORE_FACTORY_ADDRESSES } from '@ubeswap/sdk-core'
 import { FeeAmount, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TickData, Ticks } from 'graphql/thegraph/AllV3TicksQuery'

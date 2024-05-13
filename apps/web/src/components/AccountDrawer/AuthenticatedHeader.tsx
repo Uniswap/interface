@@ -1,5 +1,5 @@
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, SharedEventName } from '@ubeswap/analytics-events'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount, Token } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent, sendAnalyticsEvent } from 'analytics'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'

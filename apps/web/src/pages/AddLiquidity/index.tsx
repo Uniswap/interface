@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@ubeswap/analytics-events'
-import { ChainId, Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@uniswap/sdk-core'
+import { ChainId, Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@ubeswap/sdk-core'
 import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
