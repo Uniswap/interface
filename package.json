@@ -7,6 +7,7 @@
     "@crowdin/cli": "3.14.0",
     "@ethersproject/keccak256": "5.7.0",
     "@manypkg/cli": "^0.19.2",
+    "@mendable/search": "0.0.111",
     "danger": "11.2.6",
     "depcheck": "1.4.7",
     "dotenv-cli": "^7.0.0",
