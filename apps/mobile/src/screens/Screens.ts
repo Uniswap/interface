@@ -34,7 +34,6 @@ export enum OnboardingScreens {
   BackupCloudProcessing = 'OnboardingBackupCloudProcessing',
   BackupManual = 'OnboardingBackupManual',
   Landing = 'OnboardingLanding',
-  EditName = 'EditName',
   Notifications = 'OnboardingNotifications',
   WelcomeWallet = 'WelcomeWallet',
   Security = 'OnboardingSecurity',

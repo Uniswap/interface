@@ -14,7 +14,6 @@ export interface WalletState {
   accounts: Record<Address, Account>
   activeAccountAddress: Address | null
   finishedOnboarding?: boolean
-  isUnlocked: boolean
   // Persisted UI configs set by the user through interaction with filters and settings
   settings: {
     nftViewType?: NFTViewType
@@ -36,7 +35,6 @@ export interface WalletState {
 export const initialWalletState: WalletState = {
   accounts: {},
   activeAccountAddress: null,
-  isUnlocked: false,
   settings: {
     swapProtection: SwapProtectionSetting.On,
     hideSmallBalances: true,
@@ -134,12 +132,6 @@ const slice = createSlice({
       }
       state.activeAccountAddress = id
     },
-    unlockWallet: (state) => {
-      state.isUnlocked = true
-    },
-    lockWallet: (state) => {
-      state.isUnlocked = false
-    },
     setFinishedOnboarding: (
       state,
       { payload: { finishedOnboarding } }: PayloadAction<{ finishedOnboarding: boolean }>
@@ -197,8 +189,6 @@ export const {
   setAccountsNonPending,
   editAccount,
   setAccountAsActive,
-  unlockWallet,
-  lockWallet,
   resetWallet,
   setFinishedOnboarding,
   setNFTViewType,

@@ -1,6 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { getChainInfo } from 'constants/chainInfo'
 import { TokenQueryData } from 'graphql/data/Token'
 import { Trans } from 'i18n'
 import { ReactNode } from 'react'
@@ -10,6 +9,7 @@ import { textFadeIn } from 'theme/styles'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 import { HEADER_DESCRIPTIONS } from 'components/Tokens/TokenTable'
+import { CHAIN_INFO, useIsSupportedChainId } from 'constants/chains'
 import { UNSUPPORTED_METADATA_CHAINS } from '../constants'
 import { TokenSortMethod } from '../state'
 
@@ -91,7 +91,8 @@ type StatsSectionProps = {
 }
 export default function StatsSection(props: StatsSectionProps) {
   const { chainId, address, tokenQueryData } = props
-  const { label, infoLink } = getChainInfo(chainId)
+  const isSupportedChain = useIsSupportedChainId(chainId)
+  const { label, infoLink } = isSupportedChain ? CHAIN_INFO[chainId] : { label: undefined, infoLink: undefined }
 
   const tokenMarketInfo = tokenQueryData?.market
   const tokenProjectMarketInfo = tokenQueryData?.project?.markets?.[0] // aggregated market price from CoinGecko

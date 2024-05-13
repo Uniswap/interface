@@ -109,6 +109,7 @@ export function SwapDetails({
   showAcceptChanges,
   onAcceptChanges,
   isLoading,
+  priceImpact,
 }: {
   trade: InterfaceTrade
   allowance?: Allowance
@@ -122,6 +123,7 @@ export function SwapDetails({
   showAcceptChanges: boolean
   onAcceptChanges?: () => void
   isLoading: boolean
+  priceImpact?: Percent
 }) {
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
   const [routerPreference] = useRouterPreference()
@@ -131,7 +133,7 @@ export function SwapDetails({
 
   const analyticsContext = useTrace()
 
-  const lineItemProps = { trade, allowedSlippage, syncing: false }
+  const lineItemProps = { trade, allowedSlippage, syncing: false, priceImpact }
 
   const callToAction: CallToAction = useMemo(() => {
     if (allowance && allowance.state === AllowanceState.REQUIRED && allowance.needsSetupApproval) {
@@ -245,11 +247,13 @@ function SwapLineItems({
   trade,
   allowedSlippage,
   syncing,
+  priceImpact,
 }: {
   showMore: boolean
   trade: InterfaceTrade
   allowedSlippage: Percent
   syncing: boolean
+  priceImpact?: Percent
 }) {
   return (
     <>
@@ -259,7 +263,7 @@ function SwapLineItems({
         syncing={syncing}
         type={SwapLineItemType.EXCHANGE_RATE}
       />
-      <ExpandableLineItems trade={trade} allowedSlippage={allowedSlippage} open={showMore} />
+      <ExpandableLineItems trade={trade} allowedSlippage={allowedSlippage} open={showMore} priceImpact={priceImpact} />
       <SwapLineItem
         trade={trade}
         allowedSlippage={allowedSlippage}
@@ -288,12 +292,17 @@ function SwapLineItems({
   )
 }
 
-function ExpandableLineItems(props: { trade: InterfaceTrade; allowedSlippage: Percent; open: boolean }) {
-  const { open, trade, allowedSlippage } = props
+function ExpandableLineItems(props: {
+  trade: InterfaceTrade
+  allowedSlippage: Percent
+  open: boolean
+  priceImpact?: Percent
+}) {
+  const { open, trade, allowedSlippage, priceImpact } = props
 
   if (!trade) return null
 
-  const lineItemProps = { trade, allowedSlippage, syncing: false, open }
+  const lineItemProps = { trade, allowedSlippage, syncing: false, open, priceImpact }
 
   return (
     <AnimatedDropdown

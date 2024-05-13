@@ -13,6 +13,8 @@ ignores: [
     "process",
     "madge",
     # Dependencies that depcheck thinks are missing but are actually present or never used
+    ## package.json scripts
+    "esbuild-register",
     ## GraphQL
     "@graphql-codegen/*",
     "get-graphql-schema",
@@ -58,6 +60,7 @@ ignores: [
     "pages",
     "polyfills",
     "rpc",
+    "shared-cloud",
     "state",
     "test-utils",
     "theme",

@@ -1,5 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { chainIdToBackendName } from 'graphql/data/util'
+import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
 import { useCallback, useMemo, useRef } from 'react'
 import {
   PoolTransactionType,
@@ -10,6 +10,8 @@ import {
   useV2PairTransactionsQuery,
   useV3PoolTransactionsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export enum PoolTableTransactionType {
   BUY = 'Buy',
@@ -42,7 +44,7 @@ const PoolTransactionDefaultQuerySize = 25
 
 export function usePoolTransactions(
   address: string,
-  chainId?: ChainId,
+  chainId?: SupportedInterfaceChainId,
   // sortState: PoolTxTableSortState, TODO(WEB-3706): Implement sorting when BE supports
   filter: PoolTableTransactionType[] = [
     PoolTableTransactionType.BUY,
@@ -54,13 +56,14 @@ export function usePoolTransactions(
   protocolVersion: ProtocolVersion = ProtocolVersion.V3,
   first = PoolTransactionDefaultQuerySize
 ) {
+  const v2ExploreEnabled = useFeatureFlag(FeatureFlags.V2Explore)
   const {
     loading: loadingV3,
     error: errorV3,
     data: dataV3,
     fetchMore: fetchMoreV3,
   } = useV3PoolTransactionsQuery({
-    variables: { first, chain: chainIdToBackendName(chainId), address },
+    variables: { first, chain: chainIdToBackendChain({ chainId, withFallback: true }), address },
     skip: protocolVersion !== ProtocolVersion.V3,
   })
   const {
@@ -69,8 +72,8 @@ export function usePoolTransactions(
     data: dataV2,
     fetchMore: fetchMoreV2,
   } = useV2PairTransactionsQuery({
-    variables: { first, address },
-    skip: protocolVersion !== ProtocolVersion.V2 || chainId !== ChainId.MAINNET,
+    variables: { first, chain: chainIdToBackendChain({ chainId, withFallback: true }), address },
+    skip: !chainId || protocolVersion !== ProtocolVersion.V2 || (chainId !== ChainId.MAINNET && !v2ExploreEnabled),
   })
   const loadingMore = useRef(false)
   const { transactions, loading, fetchMore, error } =

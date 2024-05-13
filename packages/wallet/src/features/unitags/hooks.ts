@@ -2,16 +2,10 @@ import { TFunction } from 'i18next'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getUniqueId } from 'react-native-device-info'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useUnitagQuery, useWaitlistPositionQuery } from 'uniswap/src/features/unitags/api'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
-import {
-  UseUnitagAddressResponse,
-  UseUnitagNameResponse,
-  useUnitagByAddressWithoutFlag,
-  useUnitagByNameWithoutFlag,
-} from 'uniswap/src/features/unitags/hooksWithoutFlags'
 import {
   UnitagClaim,
   UnitagClaimContext,
@@ -62,24 +56,13 @@ import { areAddressesEqual } from 'wallet/src/utils/addresses'
 const MIN_UNITAG_LENGTH = 3
 const MAX_UNITAG_LENGTH = 20
 
-export const useUnitagByAddress = (address?: Address): UseUnitagAddressResponse => {
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
-  return useUnitagByAddressWithoutFlag(address, unitagsFeatureFlagEnabled)
-}
-
-export const useUnitagByName = (name?: string): UseUnitagNameResponse => {
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
-  return useUnitagByNameWithoutFlag(name, unitagsFeatureFlagEnabled)
-}
-
 export const useCanActiveAddressClaimUnitag = (): {
   canClaimUnitag: boolean
 } => {
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
   const activeAddress = useActiveAccountAddressWithThrow()
   const { data: deviceId } = useAsyncData(getUniqueId)
   const { refetchUnitagsCounter } = useUnitagUpdater()
-  const skip = !unitagsFeatureFlagEnabled || !deviceId
+  const skip = !deviceId
 
   const { loading, data, refetch } = useUnitagClaimEligibilityQuery({
     address: activeAddress,
@@ -106,10 +89,9 @@ export const useCanAddressClaimUnitag = (
   address?: Address,
   isUsernameChange?: boolean
 ): { canClaimUnitag: boolean; errorCode?: UnitagErrorCodes } => {
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
   const { data: deviceId } = useAsyncData(getUniqueId)
   const { refetchUnitagsCounter } = useUnitagUpdater()
-  const skip = !unitagsFeatureFlagEnabled || !deviceId
+  const skip = !deviceId
   const { loading, data, refetch } = useUnitagClaimEligibilityQuery({
     address,
     deviceId: deviceId ?? '', // this is fine since we skip if deviceId is undefined

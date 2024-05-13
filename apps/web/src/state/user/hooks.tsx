@@ -1,7 +1,7 @@
 import { Percent, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { Pair, computePairAddress } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
-import { L2_CHAIN_IDS } from 'constants/chains'
+import { L2_CHAIN_IDS, chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import JSBI from 'jsbi'
@@ -9,8 +9,13 @@ import { useCallback, useMemo } from 'react'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
 
-import { useDefaultActiveTokens } from 'hooks/Tokens'
+import { gqlToCurrency } from 'graphql/data/util'
 import { deserializeToken, serializeToken } from 'state/user/utils'
+import {
+  Chain,
+  TokenSortableField,
+  useTopTokensQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from '../../constants/routing'
 import {
   addSerializedPair,
@@ -193,7 +198,17 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
  */
 export function useTrackedTokenPairs(): [Token, Token][] {
   const { chainId } = useWeb3React()
-  const tokens = useDefaultActiveTokens(chainId)
+  const supportedChainId = useSupportedChainId(chainId)
+
+  // TODO(WEB-4001): use an "all tokens" query for better LP detection
+  const { data: popularTokens } = useTopTokensQuery({
+    variables: {
+      chain: supportedChainId ? chainIdToBackendChain({ chainId: supportedChainId }) : Chain.Ethereum,
+      orderBy: TokenSortableField.Popularity,
+      page: 1,
+      pageSize: 100,
+    },
+  })
 
   // pinned pairs
   const pinnedPairs = useMemo(() => (chainId ? PINNED_PAIRS[chainId] ?? [] : []), [chainId])
@@ -201,16 +216,17 @@ export function useTrackedTokenPairs(): [Token, Token][] {
   // pairs for every token against every base
   const generatedPairs: [Token, Token][] = useMemo(
     () =>
-      chainId
-        ? Object.keys(tokens).flatMap((tokenAddress) => {
-            const token = tokens[tokenAddress]
+      chainId && popularTokens?.topTokens
+        ? popularTokens.topTokens.flatMap((gqlToken) => {
+            if (!gqlToken) return []
+            const token = gqlToCurrency(gqlToken)
             // for each token on the current chain,
             return (
               // loop though all bases on the current chain
               (BASES_TO_TRACK_LIQUIDITY_FOR[chainId] ?? [])
                 // to construct pairs of the given token with each base
                 .map((base) => {
-                  if (base.address === token.address) {
+                  if (!token?.isNative && base.address === token?.address) {
                     return null
                   } else {
                     return [base, token]
@@ -220,7 +236,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
             )
           })
         : [],
-    [tokens, chainId]
+    [popularTokens, chainId]
   )
 
   // pairs saved by users
@@ -238,7 +254,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
 
   const combinedList = useMemo(
     () => userPairs.concat(generatedPairs).concat(pinnedPairs),
-    [generatedPairs, pinnedPairs, userPairs]
+    [pinnedPairs, userPairs, generatedPairs]
   )
 
   return useMemo(() => {

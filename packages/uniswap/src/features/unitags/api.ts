@@ -17,7 +17,7 @@ const restLink = new RestLink({
   headers: {
     'x-request-source': REQUEST_SOURCE,
     'x-app-version': getVersionHeader(),
-    Origin: uniswapUrls.apiBaseUrl,
+    Origin: uniswapUrls.apiOrigin,
   },
 })
 
@@ -39,7 +39,7 @@ export function addQueryParamsToEndpoint(
   endpoint: string,
   params: Record<string, string[] | string | number | boolean | undefined>
 ): string {
-  const url = new URL(endpoint, uniswapUrls.appBaseUrl) // dummy base URL, we only need the path with query params
+  const url = new URL(endpoint, uniswapUrls.apiOrigin) // dummy base URL, we only need the path with query params
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined) {
       // only add param if its value is not undefined

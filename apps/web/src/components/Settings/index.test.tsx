@@ -1,5 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
-import { isSupportedChain, isUniswapXSupportedChain } from 'constants/chains'
+import { isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
 import { mocked } from 'test-utils/mocked'
 import { fireEvent, render, screen, waitFor } from 'test-utils/render'
 
@@ -11,7 +11,7 @@ jest.mock('constants/chains')
 describe('Settings Tab', () => {
   describe('showRoutingSettings', () => {
     beforeEach(() => {
-      mocked(isSupportedChain).mockReturnValue(true)
+      mocked(useIsSupportedChainId).mockReturnValue(true)
     })
 
     it('renders routing settings when hideRoutingSettings is false', async () => {

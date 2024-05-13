@@ -1,8 +1,9 @@
+import 'test-utils/tokens/mocks'
+
 import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { USDC_MAINNET } from 'constants/tokens'
-import { useToken } from 'hooks/Tokens'
 import { PoolState, usePool } from 'hooks/usePools'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import * as useV3Positions from 'hooks/useV3Positions'
@@ -13,7 +14,6 @@ import { useFormatter } from 'utils/formatNumbers'
 
 import PositionPage from './PositionPage'
 
-jest.mock('hooks/Tokens')
 jest.mock('utils/unwrappedToken')
 jest.mock('hooks/useV3Positions')
 jest.mock('hooks/useV3PositionFees')
@@ -52,15 +52,6 @@ describe('position page', () => {
   it.skip('correctly collects the correct amount', () => {
     mocked(useV3Positions.useV3PositionFromTokenId).mockImplementation(() => {
       return { loading: false, position: positionDetails }
-    })
-    mocked(useToken).mockImplementation((tokenAddress?: string | undefined) => {
-      if (!tokenAddress) return undefined
-
-      if (tokenAddress === USDC_MAINNET.address) {
-        return USDC_MAINNET
-      } else {
-        return WETH9[1]
-      }
     })
     mocked(usePool).mockImplementation(() => {
       return [PoolState.EXISTS, pool]

@@ -9,7 +9,8 @@ import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { Loader } from 'src/components/loading'
 import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Icons, Text, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
+import { NoTransactions } from 'ui/src/components/icons'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
@@ -86,7 +87,7 @@ export const FeedTab = memo(
       <Flex grow style={containerProps?.emptyContainerStyle}>
         <BaseCard.EmptyState
           description={t('home.feed.empty.description')}
-          icon={<Icons.NoTransactions color="$neutral3" size="$icon.70" />}
+          icon={<NoTransactions color="$neutral3" size="$icon.70" />}
           title={t('home.feed.empty.title')}
           onPress={onPressReceive}
         />

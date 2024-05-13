@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native'
@@ -17,7 +16,6 @@ import { Screens, UnitagScreens } from 'src/screens/Screens'
 import {
   Button,
   Flex,
-  Icons,
   LinearGradient,
   ScrollView,
   Text,
@@ -26,11 +24,13 @@ import {
   useSporeColors,
   useUniconColors,
 } from 'ui/src'
+import { Pen, TripleDots } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { useExtractedColors } from 'ui/src/utils/colors'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
+import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { ProfileMetadata } from 'uniswap/src/features/unitags/types'
 import { isIOS } from 'uniswap/src/utils/platform'
 import { logger } from 'utilities/src/logger/logger'
@@ -43,10 +43,7 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { updateUnitagMetadata } from 'wallet/src/features/unitags/api'
 import { tryUploadAvatar } from 'wallet/src/features/unitags/avatars'
-import {
-  useAvatarUploadCredsWithRefresh,
-  useUnitagByAddress,
-} from 'wallet/src/features/unitags/hooks'
+import { useAvatarUploadCredsWithRefresh } from 'wallet/src/features/unitags/hooks'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
@@ -299,7 +296,7 @@ export function EditUnitagProfileScreen({
                   }
                 }}>
                 <Flex pr="$spacing8">
-                  <Icons.TripleDots color="$neutral2" size={iconSizes.icon24} />
+                  <TripleDots color="$neutral2" size={iconSizes.icon24} />
                 </Flex>
               </ContextMenu>
             ) : undefined
@@ -368,10 +365,7 @@ export function EditUnitagProfileScreen({
                       backgroundColor={isDarkMode ? '$neutral3' : '$neutral2'}
                       borderRadius="$roundedFull"
                       p={6}>
-                      <Icons.Pen
-                        color={isDarkMode ? '$neutral1' : '$surface1'}
-                        size={iconSizes.icon16}
-                      />
+                      <Pen color={isDarkMode ? '$neutral1' : '$surface1'} size={iconSizes.icon16} />
                     </Flex>
                   </Flex>
                 </Flex>

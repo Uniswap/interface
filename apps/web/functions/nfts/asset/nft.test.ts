@@ -23,18 +23,24 @@ test.each(assets)('should inject metadata for valid assets', async (nft) => {
   const url = 'http://127.0.0.1:3000/nfts/asset/' + nft.address + '/' + nft.assetId
   const body = await fetch(new Request(url)).then((res) => res.text())
   expect(body).toMatchSnapshot(nft.collectionName)
-  expect(body).toContain(`<meta property="og:title" content="${nft.collectionName} #${nft.assetId}"/>`)
+  expect(body).toContain(`<meta property="og:title" content="${nft.collectionName} #${nft.assetId}" data-rh="true">`)
   expect(body).not.toContain(`<meta property="og:description"`)
-  expect(body).toContain(`<meta property="og:image" content="${nft.image}"/>`)
-  expect(body).toContain(`<meta property="og:image:width" content="1200"/>`)
-  expect(body).toContain(`<meta property="og:image:height" content="630"/>`)
-  expect(body).toContain(`<meta property="og:type" content="website"/>`)
-  expect(body).toContain(`<meta property="og:url" content="${url}"/>`)
-  expect(body).toContain(`<meta property="og:image:alt" content="${nft.collectionName} #${nft.assetId}"/>`)
-  expect(body).toContain(`<meta property="twitter:card" content="summary_large_image"/>`)
-  expect(body).toContain(`<meta property="twitter:title" content="${nft.collectionName} #${nft.assetId}"/>`)
-  expect(body).toContain(`<meta property="twitter:image" content="${nft.image}"/>`)
-  expect(body).toContain(`<meta property="twitter:image:alt" content="${nft.collectionName} #${nft.assetId}"/>`)
+  expect(body).toContain(`<meta property="og:image" content="${nft.image}" data-rh="true">`)
+  expect(body).toContain(`<meta property="og:image:width" content="1200" data-rh="true">`)
+  expect(body).toContain(`<meta property="og:image:height" content="630" data-rh="true">`)
+  expect(body).toContain(`<meta property="og:type" content="website" data-rh="true">`)
+  expect(body).toContain(`<meta property="og:url" content="${url}" data-rh="true">`)
+  expect(body).toContain(
+    `<meta property="og:image:alt" content="${nft.collectionName} #${nft.assetId}" data-rh="true">`
+  )
+  expect(body).toContain(`<meta property="twitter:card" content="summary_large_image" data-rh="true">`)
+  expect(body).toContain(
+    `<meta property="twitter:title" content="${nft.collectionName} #${nft.assetId}" data-rh="true">`
+  )
+  expect(body).toContain(`<meta property="twitter:image" content="${nft.image}" data-rh="true">`)
+  expect(body).toContain(
+    `<meta property="twitter:image:alt" content="${nft.collectionName} #${nft.assetId}" data-rh="true">`
+  )
 })
 
 const invalidAssets = [

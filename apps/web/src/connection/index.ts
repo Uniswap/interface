@@ -14,12 +14,12 @@ import { t } from 'i18n'
 import { useSyncExternalStore } from 'react'
 import { isMobile, isTouchable, isWebAndroid, isWebIOS } from 'uniswap/src/utils/platform'
 
-import { APP_RPC_URLS } from '../constants/networks'
+import { APP_RPC_URLS } from 'constants/chains'
 import { RPC_PROVIDERS } from '../constants/providers'
+import { UniwalletConnect as UniwalletWCV2Connect, WalletConnectV2 } from './WalletConnectV2'
 import { EIP6963 } from './eip6963'
 import { Connection, ConnectionType, ProviderInfo } from './types'
 import { getDeprecatedInjection, getIsCoinbaseWallet, getIsInjected, getIsMetaMaskWallet } from './utils'
-import { UniwalletConnect as UniwalletWCV2Connect, WalletConnectV2 } from './WalletConnectV2'
 
 function onError(error: Error) {
   console.debug(`web3-react error: ${error}`)

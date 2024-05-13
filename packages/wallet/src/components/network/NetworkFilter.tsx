@@ -1,7 +1,8 @@
 import { useCallback, useMemo, useState } from 'react'
 import { LayoutAnimation, StyleSheet, VirtualizedList } from 'react-native'
-import { Flex, HapticFeedback, Icons } from 'ui/src'
+import { Flex, HapticFeedback } from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { colors, iconSizes } from 'ui/src/theme'
 import {
   SQUARE_BORDER_RADIUS as NETWORK_LOGO_SQUARE_BORDER_RADIUS,
@@ -124,7 +125,7 @@ export function NetworkFilter({
           // show specific network or all
           networks={networks}
         />
-        <Icons.RotatableChevron
+        <RotatableChevron
           color="$neutral3"
           direction="down"
           height={iconSizes.icon20}

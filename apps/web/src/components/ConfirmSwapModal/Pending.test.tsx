@@ -1,3 +1,5 @@
+import 'test-utils/tokens/mocks'
+
 import { ChainId, WETH9 } from '@uniswap/sdk-core'
 import { Pending } from 'components/ConfirmSwapModal/Pending'
 import { BigNumber } from 'ethers/lib/ethers'

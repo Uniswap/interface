@@ -10,10 +10,8 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
 import { OnboardingScreens, UnitagScreens } from 'src/screens/Screens'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { isDevBuild } from 'src/utils/version'
 import { Button, Flex, HapticFeedback, Text, TouchableArea, useIsDarkMode } from 'ui/src'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { isDevEnv } from 'uniswap/src/utils/env'
 import { useTimeout } from 'utilities/src/time/timing'
 import { ImportType, OnboardingEntryPoint } from 'wallet/src/features/onboarding/types'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
@@ -31,33 +29,24 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
 
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
   const { canClaimUnitag } = useCanAddressClaimUnitag()
 
   const onPressCreateWallet = useCallback((): void => {
     dispatch(pendingAccountActions.trigger(PendingAccountActions.Delete))
     dispatch(createAccountActions.trigger())
 
-    if (unitagsFeatureFlagEnabled) {
-      if (canClaimUnitag) {
-        navigation.navigate(UnitagScreens.ClaimUnitag, {
-          entryPoint: OnboardingScreens.Landing,
-        })
-      } else {
-        // If can't claim, go direct to welcome screen
-        navigation.navigate(OnboardingScreens.WelcomeWallet, {
-          importType: ImportType.CreateNew,
-          entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
-        })
-      }
+    if (canClaimUnitag) {
+      navigation.navigate(UnitagScreens.ClaimUnitag, {
+        entryPoint: OnboardingScreens.Landing,
+      })
     } else {
-      // use edit nickname screen still before launch of unitags
-      navigation.navigate(OnboardingScreens.EditName, {
+      // If can't claim, go direct to welcome screen
+      navigation.navigate(OnboardingScreens.WelcomeWallet, {
         importType: ImportType.CreateNew,
         entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
       })
     }
-  }, [canClaimUnitag, dispatch, navigation, unitagsFeatureFlagEnabled])
+  }, [canClaimUnitag, dispatch, navigation])
 
   const onPressImportWallet = (): void => {
     navigation.navigate(OnboardingScreens.ImportMethod, {
@@ -101,7 +90,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                 hitSlop={16}
                 testID={ElementName.ImportAccount}
                 onLongPress={async (): Promise<void> => {
-                  if (isDevBuild()) {
+                  if (isDevEnv()) {
                     await HapticFeedback.selection()
                     dispatch(openModal({ name: ModalName.Experiments }))
                   }

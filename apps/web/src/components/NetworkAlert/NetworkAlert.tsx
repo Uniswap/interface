@@ -1,14 +1,13 @@
 import { useWeb3React } from '@web3-react/core'
 import { getChainUI } from 'components/Logo/ChainLogo'
 import { RowBetween } from 'components/Row'
-import { getChainInfo } from 'constants/chainInfo'
-import { isSupportedChain } from 'constants/chains'
 import { Trans } from 'i18n'
 import { ArrowUpRight } from 'react-feather'
 import styled from 'styled-components'
 import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
+import { getChainInfo, useIsSupportedChainId } from 'constants/chains'
 import Column from '../Column'
 
 const BridgeLink = styled(ExternalLink)<{ bgColor: string }>`
@@ -47,12 +46,13 @@ const SubtitleText = styled(ThemedText.BodySmall)<{ $color: string }>`
 
 export function NetworkAlert() {
   const { chainId } = useWeb3React()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   const darkMode = useIsDarkMode()
 
-  if (!chainId || !isSupportedChain(chainId)) return null
+  if (!isSupportedChain) return null
 
   const { Symbol: ChainSymbol, bgColor, textColor } = getChainUI(chainId, darkMode)
-  const { label, bridge } = getChainInfo(chainId)
+  const { label, bridge } = getChainInfo({ chainId })
 
   return bridge ? (
     <BridgeLink href={bridge} bgColor={bgColor}>

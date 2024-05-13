@@ -9,7 +9,8 @@ import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePictur
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { UnitagName } from 'src/features/unitags/UnitagName'
 import { OnboardingScreens, Screens, UnitagScreens } from 'src/screens/Screens'
-import { Button, Flex, Icons, Text, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Pen } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { UnitagClaimSource } from 'uniswap/src/features/unitags/types'
 import { ChainId } from 'wallet/src/constants/chains'
@@ -133,7 +134,7 @@ export function ChooseProfilePictureScreen({
               backgroundColor={isDarkMode ? '$neutral3' : '$neutral2'}
               borderRadius="$roundedFull"
               p={8}>
-              <Icons.Pen color={isDarkMode ? '$neutral1' : '$surface1'} size={iconSizes.icon16} />
+              <Pen color={isDarkMode ? '$neutral1' : '$surface1'} size={iconSizes.icon16} />
             </Flex>
           </Flex>
         </Flex>

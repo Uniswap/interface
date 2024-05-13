@@ -43,7 +43,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
   gap: 12px;
 }
 
-.c17 {
+.c18 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -60,7 +60,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
   justify-content: flex-start;
 }
 
-.c18 {
+.c19 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
@@ -90,7 +90,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c22 {
+.c23 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -101,11 +101,11 @@ exports[`OrderContent should render without error, filled order 1`] = `
   font-weight: 500;
 }
 
-.c22:hover {
+.c23:hover {
   opacity: 0.6;
 }
 
-.c22:active {
+.c23:active {
   opacity: 0.4;
 }
 
@@ -161,7 +161,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
   gap: 4px;
 }
 
-.c16 {
+.c17 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -176,14 +176,31 @@ exports[`OrderContent should render without error, filled order 1`] = `
   gap: 8px;
 }
 
-.c19 {
+.c20 {
   cursor: auto;
   color: #7D7D7D;
 }
 
-.c20 {
+.c21 {
   text-align: right;
   overflow-wrap: break-word;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c15 img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
 }
 
 .c4 {
@@ -191,29 +208,38 @@ exports[`OrderContent should render without error, filled order 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
   gap: 2px;
   position: relative;
   top: 0;
   left: 0;
 }
 
-.c4 img:nth-child(n) {
-  width: 19px;
+.c4 img {
+  width: 20px;
   height: 40px;
   object-fit: cover;
 }
 
-.c4 img:nth-child(1) {
+.c4 img:first-child {
   border-radius: 20px 0 0 20px;
   object-position: 0 0;
 }
 
-.c4 img:nth-child(2) {
+.c4 img:last-child {
   border-radius: 0 20px 20px 0;
   object-position: 100% 0;
+}
+
+.c5 {
+  width: 20px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.c16 {
+  width: 18px;
+  height: 36px;
+  border-radius: 50%;
 }
 
 .c3 {
@@ -230,18 +256,6 @@ exports[`OrderContent should render without error, filled order 1`] = `
   left: 0;
 }
 
-.c5 {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.c15 {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-}
-
 .c14 {
   position: relative;
   display: -webkit-box;
@@ -250,7 +264,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
   display: flex;
 }
 
-.c21 {
+.c22 {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -304,13 +318,16 @@ exports[`OrderContent should render without error, filled order 1`] = `
           >
             <div
               class="c4"
+              size="40"
             >
               <img
                 class="c5"
+                size="40"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
               />
               <img
                 class="c5"
+                size="40"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
               />
             </div>
@@ -367,10 +384,17 @@ exports[`OrderContent should render without error, filled order 1`] = `
               <div
                 class="c3"
               >
-                <img
+                <div
                   class="c15"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                />
+                  size="36"
+                >
+                   
+                  <img
+                    class="c16"
+                    size="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -426,10 +450,17 @@ exports[`OrderContent should render without error, filled order 1`] = `
               <div
                 class="c3"
               >
-                <img
+                <div
                   class="c15"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                />
+                  size="36"
+                >
+                   
+                  <img
+                    class="c16"
+                    size="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -438,22 +469,22 @@ exports[`OrderContent should render without error, filled order 1`] = `
           class="c8 c9"
         />
         <div
-          class="c16"
+          class="c17"
         >
           <div
-            class="c1 c17 c18"
+            class="c1 c18 c19"
           >
             <div
-              class="c6 c19 css-142zc9n"
+              class="c6 c20 css-142zc9n"
               data-testid="swap-li-label"
             >
               Rate
             </div>
             <div
-              class="c6 c20 css-142zc9n"
+              class="c6 c21 css-142zc9n"
             >
               <button
-                class="c21"
+                class="c22"
                 title="1 WETH = 2,359.34 DAI "
               >
                 <div
@@ -466,16 +497,16 @@ exports[`OrderContent should render without error, filled order 1`] = `
             </div>
           </div>
           <div
-            class="c1 c17 c18"
+            class="c1 c18 c19"
           >
             <div
-              class="c6 c19 css-142zc9n"
+              class="c6 c20 css-142zc9n"
               data-testid="swap-li-label"
             >
               Network cost
             </div>
             <div
-              class="c6 c20 css-142zc9n"
+              class="c6 c21 css-142zc9n"
             >
               <span>
                 $0
@@ -483,19 +514,19 @@ exports[`OrderContent should render without error, filled order 1`] = `
             </div>
           </div>
           <div
-            class="c1 c17 c18"
+            class="c1 c18 c19"
           >
             <div
-              class="c6 c19 css-142zc9n"
+              class="c6 c20 css-142zc9n"
               data-testid="swap-li-label"
             >
               Transaction ID
             </div>
             <div
-              class="c6 c20 css-142zc9n"
+              class="c6 c21 css-142zc9n"
             >
               <a
-                class="c22"
+                class="c23"
                 href="https://etherscan.io/tx/0xad7a8f73f28fd0cc16459111899dd1632164ae139fcf5281a1bced56e1ff6564"
                 rel="noopener noreferrer"
                 target="_blank"
@@ -554,7 +585,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   gap: 12px;
 }
 
-.c17 {
+.c18 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -571,7 +602,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   justify-content: flex-start;
 }
 
-.c18 {
+.c19 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
@@ -601,7 +632,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c28 {
+.c29 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -612,11 +643,11 @@ exports[`OrderContent should render without error, limit order 1`] = `
   font-weight: 500;
 }
 
-.c28:hover {
+.c29:hover {
   opacity: 0.6;
 }
 
-.c28:active {
+.c29:active {
   opacity: 0.4;
 }
 
@@ -672,7 +703,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   gap: 4px;
 }
 
-.c16 {
+.c17 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -687,7 +718,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   gap: 8px;
 }
 
-.c25 {
+.c26 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -701,7 +732,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   width: 100%;
 }
 
-.c22 {
+.c23 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -736,37 +767,54 @@ exports[`OrderContent should render without error, limit order 1`] = `
   user-select: none;
 }
 
-.c22:active .c24 {
+.c23:active .c25 {
   background-color: #B8C0DC3d;
 }
 
-.c22:focus .c24 {
+.c23:focus .c25 {
   background-color: #B8C0DC3d;
 }
 
-.c22:hover .c24 {
+.c23:hover .c25 {
   background-color: #98A1C014;
 }
 
-.c22:disabled {
+.c23:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c22:disabled:active .c24,
-.c22:disabled:focus .c24,
-.c22:disabled:hover .c24 {
+.c23:disabled:active .c25,
+.c23:disabled:focus .c25,
+.c23:disabled:hover .c25 {
   background-color: transparent;
 }
 
-.c19 {
+.c20 {
   cursor: auto;
   color: #7D7D7D;
 }
 
-.c20 {
+.c21 {
   text-align: right;
   overflow-wrap: break-word;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c15 img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
 }
 
 .c4 {
@@ -774,29 +822,38 @@ exports[`OrderContent should render without error, limit order 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
   gap: 2px;
   position: relative;
   top: 0;
   left: 0;
 }
 
-.c4 img:nth-child(n) {
-  width: 19px;
+.c4 img {
+  width: 20px;
   height: 40px;
   object-fit: cover;
 }
 
-.c4 img:nth-child(1) {
+.c4 img:first-child {
   border-radius: 20px 0 0 20px;
   object-position: 0 0;
 }
 
-.c4 img:nth-child(2) {
+.c4 img:last-child {
   border-radius: 0 20px 20px 0;
   object-position: 100% 0;
+}
+
+.c5 {
+  width: 20px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.c16 {
+  width: 18px;
+  height: 36px;
+  border-radius: 50%;
 }
 
 .c3 {
@@ -813,18 +870,6 @@ exports[`OrderContent should render without error, limit order 1`] = `
   left: 0;
 }
 
-.c5 {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.c15 {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-}
-
 .c14 {
   position: relative;
   display: -webkit-box;
@@ -833,18 +878,18 @@ exports[`OrderContent should render without error, limit order 1`] = `
   display: flex;
 }
 
-.c26 {
+.c27 {
   background-color: #F9F9F9;
   border-radius: 12px;
   padding: 12px;
   margin-top: 12px;
 }
 
-.c27 {
+.c28 {
   line-height: 16px;
 }
 
-.c21 {
+.c22 {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -880,7 +925,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
   margin: 28px 0;
 }
 
-.c23 {
+.c24 {
   margin-top: 16px;
   border-radius: 12px;
 }
@@ -903,13 +948,16 @@ exports[`OrderContent should render without error, limit order 1`] = `
           >
             <div
               class="c4"
+              size="40"
             >
               <img
                 class="c5"
+                size="40"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
               />
               <img
                 class="c5"
+                size="40"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
               />
             </div>
@@ -966,10 +1014,17 @@ exports[`OrderContent should render without error, limit order 1`] = `
               <div
                 class="c3"
               >
-                <img
+                <div
                   class="c15"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                />
+                  size="36"
+                >
+                   
+                  <img
+                    class="c16"
+                    size="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -1025,10 +1080,17 @@ exports[`OrderContent should render without error, limit order 1`] = `
               <div
                 class="c3"
               >
-                <img
+                <div
                   class="c15"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                />
+                  size="36"
+                >
+                   
+                  <img
+                    class="c16"
+                    size="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -1037,22 +1099,22 @@ exports[`OrderContent should render without error, limit order 1`] = `
           class="c8 c9"
         />
         <div
-          class="c16"
+          class="c17"
         >
           <div
-            class="c1 c17 c18"
+            class="c1 c18 c19"
           >
             <div
-              class="c6 c19 css-142zc9n"
+              class="c6 c20 css-142zc9n"
               data-testid="swap-li-label"
             >
               Rate
             </div>
             <div
-              class="c6 c20 css-142zc9n"
+              class="c6 c21 css-142zc9n"
             >
               <button
-                class="c21"
+                class="c22"
                 title="1 WETH = 2,359.34 DAI "
               >
                 <div
@@ -1065,31 +1127,31 @@ exports[`OrderContent should render without error, limit order 1`] = `
             </div>
           </div>
           <div
-            class="c1 c17 c18"
+            class="c1 c18 c19"
           >
             <div
-              class="c6 c19 css-142zc9n"
+              class="c6 c20 css-142zc9n"
               data-testid="swap-li-label"
             >
               Expiry
             </div>
             <div
-              class="c6 c20 css-142zc9n"
+              class="c6 c21 css-142zc9n"
             >
               <span />
             </div>
           </div>
           <div
-            class="c1 c17 c18"
+            class="c1 c18 c19"
           >
             <div
-              class="c6 c19 css-142zc9n"
+              class="c6 c20 css-142zc9n"
               data-testid="swap-li-label"
             >
               Network cost
             </div>
             <div
-              class="c6 c20 css-142zc9n"
+              class="c6 c21 css-142zc9n"
             >
               <span>
                 $0
@@ -1098,32 +1160,32 @@ exports[`OrderContent should render without error, limit order 1`] = `
           </div>
         </div>
         <button
-          class="c22 c23"
+          class="c23 c24"
           size="1"
         >
           <div
-            class="c24 c25"
+            class="c25 c26"
           />
           Cancel limit
         </button>
         <div
-          class="c16 c26"
+          class="c17 c27"
         >
           <div
-            class="c7 c27 css-1m65e73"
+            class="c7 c28 css-1m65e73"
           >
             Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.
           </div>
           <div
-            class="c7 c27 css-1m65e73"
+            class="c7 c28 css-1m65e73"
           >
             Canceling a limit has a network cost.
           </div>
           <div
-            class="c7 c27 css-1m65e73"
+            class="c7 c28 css-1m65e73"
           >
             <a
-              class="c28"
+              class="c29"
               href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
               rel="noopener noreferrer"
               target="_blank"
@@ -1181,7 +1243,7 @@ exports[`OrderContent should render without error, open order 1`] = `
   gap: 12px;
 }
 
-.c17 {
+.c18 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1198,7 +1260,7 @@ exports[`OrderContent should render without error, open order 1`] = `
   justify-content: flex-start;
 }
 
-.c18 {
+.c19 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
@@ -1280,7 +1342,7 @@ exports[`OrderContent should render without error, open order 1`] = `
   gap: 4px;
 }
 
-.c16 {
+.c17 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1295,7 +1357,7 @@ exports[`OrderContent should render without error, open order 1`] = `
   gap: 8px;
 }
 
-.c25 {
+.c26 {
   background-color: transparent;
   bottom: 0;
   border-radius: inherit;
@@ -1309,7 +1371,7 @@ exports[`OrderContent should render without error, open order 1`] = `
   width: 100%;
 }
 
-.c22 {
+.c23 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -1344,37 +1406,54 @@ exports[`OrderContent should render without error, open order 1`] = `
   user-select: none;
 }
 
-.c22:active .c24 {
+.c23:active .c25 {
   background-color: #B8C0DC3d;
 }
 
-.c22:focus .c24 {
+.c23:focus .c25 {
   background-color: #B8C0DC3d;
 }
 
-.c22:hover .c24 {
+.c23:hover .c25 {
   background-color: #98A1C014;
 }
 
-.c22:disabled {
+.c23:disabled {
   cursor: default;
   opacity: 0.6;
 }
 
-.c22:disabled:active .c24,
-.c22:disabled:focus .c24,
-.c22:disabled:hover .c24 {
+.c23:disabled:active .c25,
+.c23:disabled:focus .c25,
+.c23:disabled:hover .c25 {
   background-color: transparent;
 }
 
-.c19 {
+.c20 {
   cursor: auto;
   color: #7D7D7D;
 }
 
-.c20 {
+.c21 {
   text-align: right;
   overflow-wrap: break-word;
+}
+
+.c15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c15 img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
 }
 
 .c4 {
@@ -1382,29 +1461,38 @@ exports[`OrderContent should render without error, open order 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
   gap: 2px;
   position: relative;
   top: 0;
   left: 0;
 }
 
-.c4 img:nth-child(n) {
-  width: 19px;
+.c4 img {
+  width: 20px;
   height: 40px;
   object-fit: cover;
 }
 
-.c4 img:nth-child(1) {
+.c4 img:first-child {
   border-radius: 20px 0 0 20px;
   object-position: 0 0;
 }
 
-.c4 img:nth-child(2) {
+.c4 img:last-child {
   border-radius: 0 20px 20px 0;
   object-position: 100% 0;
+}
+
+.c5 {
+  width: 20px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.c16 {
+  width: 18px;
+  height: 36px;
+  border-radius: 50%;
 }
 
 .c3 {
@@ -1421,18 +1509,6 @@ exports[`OrderContent should render without error, open order 1`] = `
   left: 0;
 }
 
-.c5 {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.c15 {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-}
-
 .c14 {
   position: relative;
   display: -webkit-box;
@@ -1441,7 +1517,7 @@ exports[`OrderContent should render without error, open order 1`] = `
   display: flex;
 }
 
-.c21 {
+.c22 {
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -1477,7 +1553,7 @@ exports[`OrderContent should render without error, open order 1`] = `
   margin: 28px 0;
 }
 
-.c23 {
+.c24 {
   margin-top: 16px;
   border-radius: 12px;
 }
@@ -1500,13 +1576,16 @@ exports[`OrderContent should render without error, open order 1`] = `
           >
             <div
               class="c4"
+              size="40"
             >
               <img
                 class="c5"
+                size="40"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
               />
               <img
                 class="c5"
+                size="40"
                 src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
               />
             </div>
@@ -1563,10 +1642,17 @@ exports[`OrderContent should render without error, open order 1`] = `
               <div
                 class="c3"
               >
-                <img
+                <div
                   class="c15"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                />
+                  size="36"
+                >
+                   
+                  <img
+                    class="c16"
+                    size="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -1622,10 +1708,17 @@ exports[`OrderContent should render without error, open order 1`] = `
               <div
                 class="c3"
               >
-                <img
+                <div
                   class="c15"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                />
+                  size="36"
+                >
+                   
+                  <img
+                    class="c16"
+                    size="36"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -1634,22 +1727,22 @@ exports[`OrderContent should render without error, open order 1`] = `
           class="c8 c9"
         />
         <div
-          class="c16"
+          class="c17"
         >
           <div
-            class="c1 c17 c18"
+            class="c1 c18 c19"
           >
             <div
-              class="c6 c19 css-142zc9n"
+              class="c6 c20 css-142zc9n"
               data-testid="swap-li-label"
             >
               Rate
             </div>
             <div
-              class="c6 c20 css-142zc9n"
+              class="c6 c21 css-142zc9n"
             >
               <button
-                class="c21"
+                class="c22"
                 title="1 WETH = 2,359.34 DAI "
               >
                 <div
@@ -1662,31 +1755,31 @@ exports[`OrderContent should render without error, open order 1`] = `
             </div>
           </div>
           <div
-            class="c1 c17 c18"
+            class="c1 c18 c19"
           >
             <div
-              class="c6 c19 css-142zc9n"
+              class="c6 c20 css-142zc9n"
               data-testid="swap-li-label"
             >
               Expiry
             </div>
             <div
-              class="c6 c20 css-142zc9n"
+              class="c6 c21 css-142zc9n"
             >
               <span />
             </div>
           </div>
           <div
-            class="c1 c17 c18"
+            class="c1 c18 c19"
           >
             <div
-              class="c6 c19 css-142zc9n"
+              class="c6 c20 css-142zc9n"
               data-testid="swap-li-label"
             >
               Network cost
             </div>
             <div
-              class="c6 c20 css-142zc9n"
+              class="c6 c21 css-142zc9n"
             >
               <span>
                 $0
@@ -1695,11 +1788,11 @@ exports[`OrderContent should render without error, open order 1`] = `
           </div>
         </div>
         <button
-          class="c22 c23"
+          class="c23 c24"
           size="1"
         >
           <div
-            class="c24 c25"
+            class="c25 c26"
           />
           Cancel order
         </button>

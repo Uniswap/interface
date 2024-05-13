@@ -8,6 +8,7 @@ const TOOLTIP_CLOSE_MS = 100
 export function WarningTooltip({
   title,
   text,
+  icon,
   button,
   trigger,
   triggerPlacement = 'end',
@@ -23,16 +24,19 @@ export function WarningTooltip({
         restMs={TOOLTIP_REST_MS}>
         <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
         <Tooltip.Content maxWidth="100%" mx="$spacing24">
-          <Flex centered gap="$spacing4">
-            {title && (
-              <Text alignSelf="flex-start" variant="body3">
-                {title}
+          <Flex row alignItems="center" gap="$spacing8">
+            <Flex grow>{icon}</Flex>
+            <Flex shrink gap="$spacing4">
+              {title && (
+                <Text alignSelf="flex-start" variant="body3">
+                  {title}
+                </Text>
+              )}
+              <Text color="$neutral2" variant="body3">
+                {text}
               </Text>
-            )}
-            <Text color="$neutral2" variant="body3">
-              {text}
-            </Text>
-            <Flex alignSelf="flex-start">{button}</Flex>
+              <Flex alignSelf="flex-start">{button}</Flex>
+            </Flex>
           </Flex>
           <Tooltip.Arrow />
         </Tooltip.Content>

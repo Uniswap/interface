@@ -1,21 +1,17 @@
 import { Currency } from '@uniswap/sdk-core'
+import { useCurrencyInfo } from 'hooks/Tokens'
 import { useMemo } from 'react'
-
-import { useUnsupportedTokens } from './Tokens'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 /**
  * Returns true if the input currency or output currency cannot be traded in the interface
  * @param currencyIn the input currency to check
  * @param currencyOut the output currency to check
  */
-export function useIsSwapUnsupported(currencyIn?: Currency | null, currencyOut?: Currency | null): boolean {
-  const unsupportedTokens = useUnsupportedTokens()
+export function useIsSwapUnsupported(currencyIn?: Currency, currencyOut?: Currency): boolean {
+  const currencyInInfo = useCurrencyInfo(currencyIn)
+  const currencyOutInfo = useCurrencyInfo(currencyOut)
   return useMemo(() => {
-    if (!unsupportedTokens) {
-      return false
-    }
-    const currencyInUnsupported = Boolean(currencyIn?.isToken && unsupportedTokens[currencyIn.address])
-    const currencyOutUnsupported = Boolean(currencyOut?.isToken && unsupportedTokens[currencyOut.address])
-    return currencyInUnsupported || currencyOutUnsupported
-  }, [currencyIn, currencyOut, unsupportedTokens])
+    return currencyInInfo?.safetyLevel === SafetyLevel.Blocked || currencyOutInfo?.safetyLevel === SafetyLevel.Blocked
+  }, [currencyInInfo?.safetyLevel, currencyOutInfo?.safetyLevel])
 }

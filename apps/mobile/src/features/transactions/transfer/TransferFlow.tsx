@@ -28,7 +28,7 @@ import { useParsedSendWarnings } from 'wallet/src/features/transactions/hooks/us
 import { useTokenSelectorActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenSelectorActionHandlers'
 import { useTransactionGasWarning } from 'wallet/src/features/transactions/hooks/useTransactionGasWarning'
 import {
-  initialState as emptyState,
+  INITIAL_TRANSACTION_STATE,
   transactionStateReducer,
 } from 'wallet/src/features/transactions/transactionState/transactionState'
 import {
@@ -67,7 +67,10 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
   const { fullWidth } = useDeviceDimensions()
   const { isSheetReady } = useBottomSheetContext()
 
-  const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || emptyState)
+  const [state, dispatch] = useReducer(
+    transactionStateReducer,
+    prefilledState || INITIAL_TRANSACTION_STATE
+  )
   const derivedTransferInfo = useDerivedTransferInfo(state)
   const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
   const [step, setStep] = useState<TransactionStep>(TransactionStep.FORM)
@@ -89,9 +92,8 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
   )
 
   const transferTxWithGasSettings = useMemo(
-    (): providers.TransactionRequest | undefined =>
-      gasFee?.params ? { ...txRequest, ...gasFee.params } : txRequest,
-    [gasFee?.params, txRequest]
+    (): providers.TransactionRequest => ({ ...txRequest, ...gasFee.params }),
+    [gasFee.params, txRequest]
   )
 
   const gasWarning = useTransactionGasWarning({

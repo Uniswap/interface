@@ -10,6 +10,7 @@ import { UniswapV3PoolInterface } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { currencyKey } from 'utils/currencyKey'
 
+import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { PositionInfo, useCachedPositions, useGetCachedTokens, usePoolAddressCache } from './cache'
 import { Call, DEFAULT_GAS_LIMIT } from './getTokensAsync'
 import { useInterfaceMulticallContracts, usePoolPriceMap, useV3ManagerContracts } from './hooks'
@@ -39,17 +40,9 @@ type FeeAmounts = [BigNumber, BigNumber]
 
 const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
 
-const DEFAULT_CHAINS = [
-  ChainId.MAINNET,
-  ChainId.ARBITRUM_ONE,
-  ChainId.OPTIMISM,
-  ChainId.POLYGON,
-  ChainId.CELO,
-  ChainId.BNB,
-  ChainId.AVALANCHE,
-  ChainId.BASE,
-  ChainId.BLAST,
-]
+const DEFAULT_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS].filter((chain: number) => {
+  return !TESTNET_CHAIN_IDS.includes(chain)
+})
 
 type UseMultiChainPositionsData = { positions?: PositionInfo[]; loading: boolean }
 

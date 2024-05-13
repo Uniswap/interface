@@ -209,6 +209,7 @@
       "notNow": "後で",
       "ok": "了解",
       "paste": "ペースト",
+      "pay": "支払う",
       "receive": "受取",
       "remove": "削除",
       "restore": "復元",
@@ -266,8 +267,9 @@
       "systemSettings": "設定"
     },
     "text": {
+      "connected": "接続されました",
+      "disconnected": "切断済",
       "error": "エラー",
-      "loading": "読み込み中",
       "notAvailable": "該当なし",
       "unknown": "不明"
     }
@@ -505,6 +507,7 @@
       "load": "トークンを読み込めませんでした",
       "max": "最大 {{amount}}",
       "min": "最小値 {{amount}}",
+      "unavailable": "このサービスはあなたの地域ではご利用いただけません",
       "unsupported": "地域非対応",
       "usd": "米ドルのみで購入"
     },
@@ -614,7 +617,7 @@
     },
     "upsell": {
       "receive": {
-        "cta": "アカウントにリンクする",
+        "cta": "アカウントから",
         "description": "別のウォレットまたはアカウントから暗号化を転送してウォレットに入金する",
         "title": "暗号を受信する"
       }
@@ -786,15 +789,6 @@
         "title": "Uniswapウォレットをピン留めする"
       },
       "title": "準備完了です"
-    },
-    "editName": {
-      "button": {
-        "create": "ウォレットを作成"
-      },
-      "label": "ニックネーム",
-      "subtitle": "ウォレットにニックネームを作成しよう",
-      "title": "このニックネームはあなただけに表示されます",
-      "walletAddress": "あなたの公開アドレスは<highlight>{{walletAddress}}</highlight>になります"
     },
     "extension": {
       "connectMobile": {
@@ -1266,11 +1260,6 @@
       "security": "セキュリティ",
       "support": "サポート",
       "wallet": {
-        "action": {
-          "hide": "ウォレットを非表示",
-          "showAll_one": "財布を1つ見せる",
-          "showAll_other": "{{count}} 個のウォレットをすべて表示"
-        },
         "button": {
           "viewAll": "すべて表示",
           "viewLess": "表示を減らす"
@@ -1454,9 +1443,7 @@
         },
         "editLabel": {
           "description": "ラベルは非公開です。これらはローカルに保存され、あなただけが見ることができます。",
-          "disclaimer": "このニックネームはあなただけに表示されます。",
-          "save": "変更内容を保存",
-          "title": "ニックネームを編集"
+          "save": "変更内容を保存"
         },
         "label": "ニックネーム",
         "notifications": {
@@ -1584,6 +1571,7 @@
         "title": "流動性が足りません"
       },
       "networkFee": {
+        "highRelativeToValue": "ネットワーク コストが合計取引額の 10% を超えています。",
         "message": "これはブロックチェーン上で取引を処理するためのコストです。Uniswapはこの料金の一切受け取りません"
       },
       "offline": {
@@ -1604,8 +1592,8 @@
       },
       "uniswapFee": {
         "message": {
-          "default": "Uniswapで最高の体験を提供するため、セレクトトークンに手数料が含まれています。このスワップには手数料はかかりません。",
-          "included": "Uniswapで最高の体験を提供するため、セレクトトークンに手数料が含まれています。"
+          "default": "Uniswap で最高の体験を提供するために手数料が適用されます。このスワップには手数料はかかりません。",
+          "included": "手数料は Uniswap で最高の体験を保証するために適用され、この見積もりにすでに組み込まれています。"
         },
         "title": "スワップ手数料"
       },
@@ -2057,6 +2045,11 @@
         "min": "ユーザー名は少なくとも {{number}} 文字である必要があります",
         "uppercase": "ユーザー名には小文字と数字のみを含めることができます"
       }
+    }
+  },
+  "uwulink": {
+    "error": {
+      "insufficientTokens": "{{chain}}に {{tokenSymbol}} が足りません"
     }
   },
   "walletConnect": {

@@ -4,7 +4,8 @@ import { Linking } from 'react-native'
 import { Action } from 'redux'
 import { useAppDispatch } from 'src/app/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
-import { Button, Flex, Icons, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
+import { Language } from 'ui/src/components/icons'
 import { isAndroid } from 'uniswap/src/utils/platform'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
@@ -33,7 +34,7 @@ export function SettingsLanguageModal(): JSX.Element {
     <BottomSheetModal name={ModalName.LanguageSelector} onClose={onClose}>
       <Flex centered mt="$spacing16">
         <Flex borderRadius="$rounded12" p="$spacing12" style={{ backgroundColor: LIGHT_BLUE }}>
-          <Icons.Language color="$DEP_blue300" size="$icon.24" strokeWidth={1.5} />
+          <Language color="$DEP_blue300" size="$icon.24" strokeWidth={1.5} />
         </Flex>
       </Flex>
       <Flex gap="$spacing24" pt="$spacing24" px="$spacing24">

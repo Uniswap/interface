@@ -125,12 +125,12 @@ export function useENSRegistrarContract() {
   return useMainnetContract<EnsRegistrar>(ENS_REGISTRAR_ADDRESSES[ChainId.MAINNET], ENS_ABI)
 }
 
-export function useENSResolverContract(address: string | undefined) {
-  return useMainnetContract<EnsPublicResolver>(address, ENS_PUBLIC_RESOLVER_ABI)
-}
-
 export function useBytes32TokenContract(tokenAddress?: string, withSignerIfPossible?: boolean): Contract | null {
   return useContract(tokenAddress, ERC20_BYTES32_ABI, withSignerIfPossible)
+}
+
+export function useENSResolverContract(address: string | undefined) {
+  return useMainnetContract<EnsPublicResolver>(address, ENS_PUBLIC_RESOLVER_ABI)
 }
 
 export function useEIP2612Contract(tokenAddress?: string): Contract | null {

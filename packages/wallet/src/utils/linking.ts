@@ -142,18 +142,23 @@ export function getNftCollectionUrl(contractAddress: Maybe<string>): string | un
   if (!contractAddress) {
     return undefined
   }
-  return `${uniswapUrls.appUrl}/nfts/collection/${contractAddress}`
+  return `${uniswapUrls.webInterfaceNftCollectionUrl}/${contractAddress}`
 }
 
 export function getNftUrl(contractAddress: string, tokenId: string): string {
-  return `${uniswapUrls.appUrl}/nfts/asset/${contractAddress}/${tokenId}`
+  return `${uniswapUrls.webInterfaceNftItemUrl}/${contractAddress}/${tokenId}`
 }
 
 export function getProfileUrl(walletAddress: string): string {
-  return `${uniswapUrls.appUrl}/address/${walletAddress}`
+  return `${uniswapUrls.webInterfaceAddressUrl}/${walletAddress}`
 }
 
-export function getTokenUrl(currencyId: string): string | undefined {
+const UTM_TAGS_MOBILE = 'utm_medium=mobile&utm_source=share-tdp'
+
+export function getTokenUrl(
+  currencyId: string,
+  addMobileUTMTags: boolean = false
+): string | undefined {
   const chainId = currencyIdToChain(currencyId)
   if (!chainId) {
     return
@@ -166,7 +171,8 @@ export function getTokenUrl(currencyId: string): string | undefined {
       // this is how web app handles native tokens
       tokenAddress = UNISWAP_APP_NATIVE_TOKEN
     }
-    return `${uniswapUrls.interfaceTokensUrl}/${network}/${tokenAddress}`
+    const tokenUrl = `${uniswapUrls.webInterfaceTokensUrl}/${network}/${tokenAddress}`
+    return addMobileUTMTags ? tokenUrl + `?${UTM_TAGS_MOBILE}` : tokenUrl
   } catch (_) {
     return
   }

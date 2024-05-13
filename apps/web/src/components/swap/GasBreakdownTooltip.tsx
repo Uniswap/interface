@@ -2,8 +2,8 @@ import { Currency } from '@uniswap/sdk-core'
 import { AutoColumn } from 'components/Column'
 import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
 import Row from 'components/Row'
+import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
-import { chainIdToBackendName } from 'graphql/data/util'
 import { Trans } from 'i18n'
 import { ReactNode } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
@@ -73,7 +73,8 @@ export function GasBreakdownTooltip({ trade }: GasBreakdownTooltipProps) {
 }
 
 function NetworkCostDescription({ native }: { native: Currency }) {
-  const chainName = chainIdToBackendName(native.chainId)
+  const supportedChain = useSupportedChainId(native.chainId)
+  const chainName = chainIdToBackendChain({ chainId: supportedChain, withFallback: true })
 
   return (
     <ThemedText.LabelMicro>

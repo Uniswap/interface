@@ -5,12 +5,12 @@ import {
   ColorTokens,
   Flex,
   HapticFeedback,
-  Icons,
   SpaceTokens,
   Text,
   TextProps,
   TouchableArea,
 } from 'ui/src'
+import { CopySheets } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
@@ -193,9 +193,7 @@ export function AddressDisplay({
               }}
               unitagIconSize={mainSize}
             />
-            {showCopy && !showAddressAsSubtitle && (
-              <Icons.CopySheets color="$neutral1" size={mainSize} />
-            )}
+            {showCopy && !showAddressAsSubtitle && <CopySheets color="$neutral1" size={mainSize} />}
           </Flex>
         </CopyButtonWrapper>
         {showAddressAsSubtitle && (
@@ -249,7 +247,7 @@ const AddressSubtitle = ({
       <Text color={captionTextColor} variant={captionVariant}>
         {sanitizeAddressText(shortenAddress(address))}
       </Text>
-      {showCopy && <Icons.CopySheets color={captionTextColor} size={captionSize} />}
+      {showCopy && <CopySheets color={captionTextColor} size={captionSize} />}
     </Flex>
   </CopyButtonWrapper>
 )

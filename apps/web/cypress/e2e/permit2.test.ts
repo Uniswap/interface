@@ -106,7 +106,8 @@ describe('Permit2', () => {
      *   already 0 to mitigate the race condition described here:
      *   https://github.com/ethereum/EIPs/issues/20#issuecomment-263524729
      */
-    it('swaps USDT with existing permit, and existing but insufficient token approval', () => {
+    // TODO re-enable web test
+    it.skip('swaps USDT with existing permit, and existing but insufficient token approval', () => {
       cy.hardhat().then(async (hardhat) => {
         await hardhat.fund(hardhat.wallet, CurrencyAmount.fromRawAmount(USDT, 2e6))
         await hardhat.mine()

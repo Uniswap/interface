@@ -1,8 +1,8 @@
 import { I18nManager } from 'react-native'
 import RNRestart from 'react-native-restart'
-import { Statsig } from 'statsig-react-native'
 import { call, put, select, takeLatest } from 'typed-redux-saga'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/experiments/flags'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import i18n from 'uniswap/src/i18n/i18n'
 import { getDeviceLocales } from 'utilities/src/device/locales'
 import { logger } from 'utilities/src/logger/logger'
@@ -35,6 +35,8 @@ function* appLanguageSaga(action: ReturnType<typeof updateLanguage>) {
 
   const languageToSet = !preferredLanguage ? yield* call(getDeviceLanguage) : preferredLanguage
   const localeToSet = getLocale(languageToSet)
+
+  // Syncs language with Firestore every app start to make sure language is up to date
   yield* put(setCurrentLanguage(languageToSet))
 
   if (currentAppLanguage === languageToSet && localeToSet === i18n.language) {

@@ -1,7 +1,12 @@
+jest.mock('hooks/Tokens')
+
 import { SwapTab } from 'components/swap/constants'
 import { DAI } from 'constants/tokens'
+import { useCurrencyInfo } from 'hooks/Tokens'
 import { SendContext, SendContextType } from 'state/send/SendContext'
 import { SwapAndLimitContext } from 'state/swap/types'
+import { DAI_INFO } from 'test-utils/constants'
+import { mocked } from 'test-utils/mocked'
 import { render, screen, waitFor } from 'test-utils/render'
 import SendCurrencyInputForm from './SendCurrencyInputForm'
 
@@ -57,6 +62,12 @@ const mockedSendContextTokenInput: SendContextType = {
 }
 
 describe('SendCurrencyInputform', () => {
+  beforeEach(() => {
+    mocked(useCurrencyInfo).mockImplementation(() => {
+      return DAI_INFO
+    })
+  })
+
   it('should render placeholder values', async () => {
     const { container } = render(
       <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>

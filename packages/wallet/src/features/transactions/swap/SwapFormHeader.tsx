@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
-import { Flex, Icons, isWeb, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, isWeb, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Eye, Settings, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
@@ -66,7 +67,7 @@ export function SwapFormHeader(): JSX.Element {
               borderRadius="$roundedFull"
               px="$spacing4"
               py="$spacing4">
-              <Icons.X color={colors.neutral2.get()} size={iconSizes.icon24} />
+              <X color={colors.neutral2.get()} size={iconSizes.icon24} />
             </Flex>
           </TouchableArea>
         )}
@@ -83,7 +84,7 @@ export function SwapFormHeader(): JSX.Element {
               py="$spacing4"
               onPress={onPressViewOnlyModal}>
               <Flex row alignItems="center" gap="$spacing4">
-                <Icons.Eye color={colors.neutral2.get()} size={iconSizes.icon16} />
+                <Eye color={colors.neutral2.get()} size={iconSizes.icon16} />
                 <Text color="$neutral2" variant="buttonLabel3">
                   {t('swap.header.viewOnly')}
                 </Text>
@@ -111,7 +112,7 @@ export function SwapFormHeader(): JSX.Element {
                     })}
                   </Text>
                 ) : null}
-                <Icons.Settings
+                <Settings
                   color={colors.neutral2.get()}
                   size={isWeb ? iconSizes.icon20 : iconSizes.icon24}
                 />

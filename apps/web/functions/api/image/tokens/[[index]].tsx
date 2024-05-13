@@ -27,15 +27,9 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
       return new Response('Token not found.', { status: 404 })
     }
 
-    const [fontData, palette] = await Promise.all([getFont(origin), getRGBColor(data.ogImage)])
+    const [fontData, palette] = await Promise.all([getFont(origin), getRGBColor(data.ogImage, true)])
 
     const networkLogo = getNetworkLogoUrl(networkName.toUpperCase(), origin)
-
-    // Capitalize name such that each word starts with a capital letter
-    let words = data.name.split(' ')
-    words = words.map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    let name = words.join(' ')
-    name = name.trim()
 
     return new ImageResponse(
       (
@@ -50,7 +44,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
           <div
             style={{
               display: 'flex',
-              backgroundColor: `rgba(${palette.red}, ${palette.blue}, ${palette.green})`,
+              backgroundColor: `rgba(${palette.red}, ${palette.green}, ${palette.blue})`,
               alignItems: 'center',
               height: '100%',
               padding: '72px',
@@ -77,7 +71,6 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                         position: 'absolute',
                         right: '2px',
                         bottom: '0px',
-                        borderRadius: '100%',
                       }}
                     />
                   )}
@@ -112,7 +105,6 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                         position: 'absolute',
                         right: '2px',
                         bottom: '0px',
-                        borderRadius: '100%',
                       }}
                     />
                   )}
@@ -127,7 +119,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
                   marginTop: '24px',
                 }}
               >
-                {name}
+                {data.name}
               </div>
               <div
                 style={{

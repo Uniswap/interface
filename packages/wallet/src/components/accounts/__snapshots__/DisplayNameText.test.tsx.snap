@@ -11,7 +11,7 @@ exports[`AccountDetails renders address display name without error 1`] = `
   }
 >
   <Text
-    allowFontScaling={true}
+    allowFontScaling={false}
     maxFontSizeMultiplier={1.4}
     numberOfLines={1}
     style={
@@ -41,7 +41,7 @@ exports[`AccountDetails renders ens display name without error 1`] = `
   }
 >
   <Text
-    allowFontScaling={true}
+    allowFontScaling={false}
     maxFontSizeMultiplier={1.4}
     numberOfLines={1}
     style={
@@ -71,7 +71,7 @@ exports[`AccountDetails renders local display name without error 1`] = `
   }
 >
   <Text
-    allowFontScaling={true}
+    allowFontScaling={false}
     maxFontSizeMultiplier={1.4}
     numberOfLines={1}
     style={
@@ -101,7 +101,7 @@ exports[`AccountDetails renders unitag without error 1`] = `
   }
 >
   <Text
-    allowFontScaling={true}
+    allowFontScaling={false}
     maxFontSizeMultiplier={1.4}
     numberOfLines={1}
     style={

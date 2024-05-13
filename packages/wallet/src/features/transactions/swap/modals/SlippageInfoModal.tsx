@@ -1,7 +1,8 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { Trans, useTranslation } from 'react-i18next'
-import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
+import { Settings } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { NumberType } from 'utilities/src/format/types'
@@ -51,7 +52,7 @@ export function SlippageInfoModal({
       onClose={onClose}>
       <Flex centered gap="$spacing16" px="$spacing24" py="$spacing12">
         <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
-          <Icons.Settings color="$neutral2" size="$icon.28" />
+          <Settings color="$neutral2" size="$icon.28" />
         </Flex>
         <Text textAlign="center" variant="body1">
           {t('swap.settings.slippage.control.title')}

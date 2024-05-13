@@ -12,17 +12,11 @@ import Column from 'components/Column'
 import { RowBetween } from 'components/Row'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { SupportedInterfaceChainId, chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
 import { useDailyProtocolTVL, useHistoricalProtocolVolume } from 'graphql/data/protocolStats'
-import {
-  TimePeriod,
-  chainIdToBackendName,
-  getProtocolColor,
-  supportedChainIdFromGQLChain,
-  validateUrlChainParam,
-} from 'graphql/data/util'
+import { TimePeriod, getProtocolColor, getSupportedGraphQlChain } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { Trans } from 'i18n'
-import { useExploreParams } from 'pages/Explore/redirects'
 import { ReactNode, useMemo, useState } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
@@ -82,7 +76,7 @@ const StyledChart: typeof Chart = styled(Chart)`
   height: ${EXPLORE_CHART_HEIGHT_PX}px;
 `
 
-function VolumeChartSection({ chainId }: { chainId: number }) {
+function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const theme = useTheme()
   const isSmallScreen = !useScreenSize()['sm']
@@ -102,7 +96,7 @@ function VolumeChartSection({ chainId }: { chainId: number }) {
   }
 
   const { entries, loading, dataQuality } = useHistoricalProtocolVolume(
-    chainIdToBackendName(chainId),
+    chainIdToBackendChain({ chainId, withFallback: true }),
     isSmallScreen ? HistoryDuration.Month : timeGranularityToHistoryDuration(timePeriod)
   )
 
@@ -167,10 +161,10 @@ function VolumeChartSection({ chainId }: { chainId: number }) {
   )
 }
 
-function TVLChartSection({ chainId }: { chainId: number }) {
+function TVLChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
   const theme = useTheme()
 
-  const { entries, loading, dataQuality } = useDailyProtocolTVL(chainIdToBackendName(chainId))
+  const { entries, loading, dataQuality } = useDailyProtocolTVL(chainIdToBackendChain({ chainId }))
   const lastEntry = entries[entries.length - 1]
   const params = useMemo(
     () => ({
@@ -233,13 +227,12 @@ function MinimalStatDisplay({ title, value, time }: { title: ReactNode; value: n
 }
 
 export function ExploreChartsSection() {
-  const currentChainName = validateUrlChainParam(useExploreParams().chainName)
-  const chainId = supportedChainIdFromGQLChain(currentChainName)
+  const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
 
   return (
     <ChartsContainer>
-      <TVLChartSection chainId={chainId} />
-      <VolumeChartSection chainId={chainId} />
+      <TVLChartSection chainId={chain.id} />
+      <VolumeChartSection chainId={chain.id} />
     </ChartsContainer>
   )
 }

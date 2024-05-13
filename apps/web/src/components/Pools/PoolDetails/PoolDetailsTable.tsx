@@ -4,14 +4,14 @@ import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools
 import Column from 'components/Column'
 import { PoolDetailsPositionsTable } from 'components/Pools/PoolDetails/PoolDetailsPositionsTable'
 import Row from 'components/Row'
-import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
+import { getSupportedGraphQlChain } from 'graphql/data/util'
 import { Trans } from 'i18n'
 import { useMemo, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
+import { useChainFromUrlParam } from 'constants/chains'
 import { PoolDetailsTransactionsTable } from './PoolDetailsTransactionsTable'
 
 enum PoolDetailsTableTabs {
@@ -37,10 +37,9 @@ export function PoolDetailsTableTab({
   protocolVersion?: ProtocolVersion
 }) {
   const [activeTable, setActiveTable] = useState<PoolDetailsTableTabs>(PoolDetailsTableTabs.TRANSACTIONS)
-  const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
-  const chainId = supportedChainIdFromGQLChain(chainName)
+  const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
   const { account } = useWeb3React()
-  const { positions } = useMultiChainPositions(account ?? '', [chainId])
+  const { positions } = useMultiChainPositions(account ?? '', [chain.id])
   const positionsInThisPool = useMemo(
     () =>
       positions?.filter(

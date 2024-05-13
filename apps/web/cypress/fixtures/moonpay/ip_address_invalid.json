@@ -1,0 +1,13 @@
+{
+  "alpha2": "US",
+  "alpha3": "USA",
+  "country": "United States of America",
+  "ipAddress": "142.154.213.230",
+  "isAllowed": true,
+  "isBuyAllowed": false,
+  "isNftAllowed": true,
+  "isSellAllowed": false,
+  "isBalanceLedgerWithdrawAllowed": true,
+  "isLowLimitEnabled": false,
+  "state": "NY"
+}

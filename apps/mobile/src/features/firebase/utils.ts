@@ -1,7 +1,7 @@
 import type { ReactNativeFirebase } from '@react-native-firebase/app'
 import '@react-native-firebase/auth'
 import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
-import { isBetaBuild, isDevBuild } from 'src/utils/version'
+import { isBetaEnv, isDevEnv } from 'uniswap/src/utils/env'
 
 const ADDRESS_DATA_COLLECTION = 'address_data'
 const DEV_ADDRESS_DATA_COLLECTION = 'dev_address_data'
@@ -39,10 +39,10 @@ export const getFirestoreMetadataRef = (
     .doc('data')
 
 export function getAddressDataCollectionFromBundleId(): string {
-  if (isDevBuild()) {
+  if (isDevEnv()) {
     return DEV_ADDRESS_DATA_COLLECTION
   }
-  if (isBetaBuild()) {
+  if (isBetaEnv()) {
     return BETA_ADDRESS_DATA_COLLECTION
   }
   return ADDRESS_DATA_COLLECTION

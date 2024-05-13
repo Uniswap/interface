@@ -1,6 +1,32 @@
+import { infiniteQueryOptions } from '@tanstack/react-query'
+import { RefetchInterval } from 'constants/query'
+import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from 'nft/components/profile/view/ProfilePage'
 import { WalletCollection } from '../../types'
 
-export const OSCollectionsFetcher = async ({ params }: any): Promise<WalletCollection[]> => {
+export function getOSCollectionsInfiniteQueryOptions(address: string) {
+  return infiniteQueryOptions({
+    queryKey: ['ownerCollections', { address }],
+    queryFn: async ({ pageParam }) => {
+      const params = {
+        asset_owner: address,
+        offset: `${pageParam * WALLET_COLLECTIONS_PAGINATION_LIMIT}`,
+        limit: `${WALLET_COLLECTIONS_PAGINATION_LIMIT}`,
+      }
+
+      const res = await OSCollectionsFetcher(params)
+
+      return {
+        data: res,
+        nextPage: pageParam + 1,
+      }
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastGroup) => (lastGroup.data.length === 0 ? undefined : lastGroup.nextPage),
+    refetchInterval: RefetchInterval.MEDIUM,
+  })
+}
+
+const OSCollectionsFetcher = async ({ params }: any): Promise<WalletCollection[]> => {
   let hasEmptyFields = false
 
   for (const v of Object.values(params)) {

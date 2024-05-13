@@ -66,7 +66,46 @@ Object {
 }
 `;
 
-exports[`parseRemote parseRemoteActivities should parse closed UniswapX order 1`] = `
+exports[`parseRemote parseRemoteActivities should parse eth wrap 1`] = `
+Object {
+  "chainId": 1,
+  "currencies": Array [
+    ExtendedEther {
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": true,
+      "isToken": false,
+      "name": "Ethereum",
+      "symbol": "ETH",
+    },
+    Token {
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "buyFeeBps": undefined,
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "Wrapped Ether",
+      "sellFeeBps": undefined,
+      "symbol": "WETH",
+    },
+  ],
+  "descriptor": "100 ETH for 100 WETH",
+  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
+  "hash": "someHash",
+  "isSpam": false,
+  "logos": Array [
+    "https://token-icons.s3.amazonaws.com/eth.png",
+    "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
+  ],
+  "nonce": 12345,
+  "status": "CONFIRMED",
+  "timestamp": 10000,
+  "title": "Wrapped",
+}
+`;
+
+exports[`parseRemote parseRemoteActivities should parse expired UniswapX order 1`] = `
 Object {
   "chainId": 1,
   "currencies": Array [
@@ -104,10 +143,76 @@ Object {
     "addedTime": 10000,
     "chainId": 1,
     "encodedOrder": undefined,
+    "expiry": undefined,
     "id": "someId",
     "offerer": "someOfferer",
     "orderHash": "someHash",
     "status": "expired",
+    "swapInfo": Object {
+      "expectedOutputCurrencyAmountRaw": "200000000000000000000",
+      "inputCurrencyAmountRaw": "100000000000000000000",
+      "inputCurrencyId": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "isUniswapXOrder": true,
+      "minimumOutputCurrencyAmountRaw": "200000000000000000000",
+      "outputCurrencyId": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "settledOutputCurrencyAmountRaw": undefined,
+      "tradeType": 0,
+      "type": 1,
+    },
+    "txHash": undefined,
+    "type": undefined,
+  },
+  "prefixIconSrc": "bolt.svg",
+  "status": "FAILED",
+  "statusMessage": "Your swap could not be fulfilled at this time. Please try again.",
+  "timestamp": 10000,
+  "title": "Swap expired",
+}
+`;
+
+exports[`parseRemote parseRemoteActivities should parse filledUniswapX order 1`] = `
+Object {
+  "chainId": 1,
+  "currencies": Array [
+    Token {
+      "address": "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+      "buyFeeBps": undefined,
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "DAI",
+      "sellFeeBps": undefined,
+      "symbol": "DAI",
+    },
+    Token {
+      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
+      "buyFeeBps": undefined,
+      "chainId": 1,
+      "decimals": 18,
+      "isNative": false,
+      "isToken": true,
+      "name": "Wrapped Ether",
+      "sellFeeBps": undefined,
+      "symbol": "WETH",
+    },
+  ],
+  "descriptor": "100 DAI for 200 WETH",
+  "from": "someOfferer",
+  "hash": "someHash",
+  "logos": Array [
+    "someUrl",
+    "someUrl",
+  ],
+  "offchainOrderDetails": Object {
+    "addedTime": 10000,
+    "chainId": 1,
+    "encodedOrder": undefined,
+    "expiry": undefined,
+    "id": "someId",
+    "offerer": "someOfferer",
+    "orderHash": "someHash",
+    "status": "filled",
     "swapInfo": Object {
       "expectedOutputCurrencyAmountRaw": "200000000000000000000",
       "inputCurrencyAmountRaw": "100000000000000000000",
@@ -123,49 +228,9 @@ Object {
     "type": undefined,
   },
   "prefixIconSrc": "bolt.svg",
-  "status": "FAILED",
-  "statusMessage": "Your swap could not be fulfilled at this time. Please try again.",
-  "timestamp": 10000,
-  "title": "Swap expired",
-}
-`;
-
-exports[`parseRemote parseRemoteActivities should parse eth wrap 1`] = `
-Object {
-  "chainId": 1,
-  "currencies": Array [
-    ExtendedEther {
-      "chainId": 1,
-      "decimals": 18,
-      "isNative": true,
-      "isToken": false,
-      "name": "Ethereum",
-      "symbol": "ETH",
-    },
-    Token {
-      "address": "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
-      "buyFeeBps": undefined,
-      "chainId": 1,
-      "decimals": 18,
-      "isNative": false,
-      "isToken": true,
-      "name": "Wrapped Ether",
-      "sellFeeBps": undefined,
-      "symbol": "WETH",
-    },
-  ],
-  "descriptor": "100 ETH for 100 WETH",
-  "from": "0x50EC05ADe8280758E2077fcBC08D878D4aef79C3",
-  "hash": "someHash",
-  "isSpam": false,
-  "logos": Array [
-    "https://token-icons.s3.amazonaws.com/eth.png",
-    "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png",
-  ],
-  "nonce": 12345,
   "status": "CONFIRMED",
   "timestamp": 10000,
-  "title": "Wrapped",
+  "title": "Swapped",
 }
 `;
 

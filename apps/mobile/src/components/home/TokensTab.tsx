@@ -9,7 +9,8 @@ import { WalletEmptyState } from 'src/components/home/WalletEmptyState'
 import { TabContentProps, TabProps } from 'src/components/layout/TabHelpers'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Icons } from 'ui/src'
+import { Flex } from 'ui/src'
+import { NoTokens } from 'ui/src/components/icons'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
@@ -71,7 +72,7 @@ export const TokensTab = memo(
         return isExternalProfile ? (
           <BaseCard.EmptyState
             description={t('home.tokens.empty.description')}
-            icon={<Icons.NoTokens color="$neutral3" size="$icon.70" />}
+            icon={<NoTokens color="$neutral3" size="$icon.70" />}
             title={t('home.tokens.empty.title')}
             onPress={onPressAction}
           />

@@ -1,6 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { getChainInfoOrDefault, L2ChainInfo } from 'constants/chainInfo'
+import { L2ChainInfo, getChainInfo, useSupportedChainId } from 'constants/chains'
 import { Trans } from 'i18n'
 import { AlertTriangle } from 'react-feather'
 import styled from 'styled-components'
@@ -52,8 +52,9 @@ const Wrapper = styled.div`
 
 export function ChainConnectivityWarning() {
   const { chainId } = useWeb3React()
-  const info = getChainInfoOrDefault(chainId)
-  const label = info?.label
+  const supportedChain = useSupportedChainId(chainId)
+  const info = getChainInfo({ chainId: supportedChain, withFallback: true })
+  const label = info.label
 
   return (
     <Wrapper>

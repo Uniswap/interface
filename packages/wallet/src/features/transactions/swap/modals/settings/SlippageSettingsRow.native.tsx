@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -34,7 +35,7 @@ export function SlippageSettingsRow({
           <Text color="$neutral2" variant="subheading2">
             {formatPercent(currentSlippage)}
           </Text>
-          <Icons.RotatableChevron
+          <RotatableChevron
             color="$neutral3"
             direction="end"
             height={iconSizes.icon24}

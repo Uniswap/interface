@@ -225,12 +225,6 @@ exports[`TDP Skeleton should render correctly 1`] = `
   font-size: 28px !important;
 }
 
-.c22 {
-  background-color: #22222212;
-  border: none;
-  height: 0.5px;
-}
-
 .c19 {
   color: #7D7D7D;
   font-size: 14px;
@@ -259,6 +253,12 @@ exports[`TDP Skeleton should render correctly 1`] = `
   gap: 16px;
   -webkit-animation: iAjNNh 125ms ease-in;
   animation: iAjNNh 125ms ease-in;
+}
+
+.c22 {
+  background-color: #22222212;
+  border: none;
+  height: 0.5px;
 }
 
 .c0 {
@@ -472,7 +472,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
           >
             <a
               class="c3"
-              href="/explore/undefined"
+              href="/explore/ethereum"
             >
               Explore 
               <svg
@@ -493,7 +493,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
             </a>
             <a
               class="c3"
-              href="/explore/tokens/undefined"
+              href="/explore/tokens/ethereum"
             >
               Tokens 
               <svg

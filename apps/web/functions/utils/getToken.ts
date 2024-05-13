@@ -1,3 +1,4 @@
+import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
 import {
   Chain,
   TokenWebDocument,
@@ -5,16 +6,6 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NATIVE_CHAIN_ID } from '../../src/constants/tokens'
 import client from '../client'
-
-function formatTitleName(symbol: string | undefined, name: string | undefined) {
-  if (symbol) {
-    return 'Get ' + symbol + ' on Uniswap'
-  }
-  if (name) {
-    return 'Get ' + name + ' on Uniswap'
-  }
-  return 'View Token on Uniswap'
-}
 
 const convertTokenAddress = (networkName: string, tokenAddress: string) => {
   if (tokenAddress === NATIVE_CHAIN_ID) {
@@ -47,7 +38,7 @@ export default async function getToken(networkName: string, tokenAddress: string
     return undefined
   }
 
-  const title = formatTitleName(asset.symbol, asset.name)
+  const title = formatTokenMetatagTitleName(asset.symbol, asset.name)
 
   const formattedAsset = {
     title,

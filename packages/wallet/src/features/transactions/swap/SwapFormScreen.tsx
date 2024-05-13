@@ -3,15 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, StyleSheet, TextInput, TextInputProps } from 'react-native'
-import {
-  Flex,
-  Icons,
-  Text,
-  TouchableArea,
-  isWeb,
-  useIsShortMobileDevice,
-  useSporeColors,
-} from 'ui/src'
+import { Flex, Text, TouchableArea, isWeb, useIsShortMobileDevice, useSporeColors } from 'ui/src'
+import { InfoCircleFilled } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
@@ -513,10 +506,7 @@ function SwapFormContent(): JSX.Element {
                       gap="$spacing8"
                       px="$spacing12"
                       py="$spacing12">
-                      <Icons.InfoCircleFilled
-                        color={colors.DEP_accentWarning.val}
-                        size="$icon.20"
-                      />
+                      <InfoCircleFilled color={colors.DEP_accentWarning.val} size="$icon.20" />
                       <Text color="$DEP_accentWarning" variant="subheading2">
                         {t('swap.form.warning.restore')}
                       </Text>

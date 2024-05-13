@@ -76,7 +76,7 @@ export default function FiatOnrampModal() {
   const closeModal = useCloseModal()
   const fiatOnrampModalOpen = useModalIsOpen(ApplicationModal.FIAT_ONRAMP)
 
-  const { network, tokenAddress } = parsePathParts(location.pathname)
+  const { chain, tokenAddress } = parsePathParts(location.pathname)
 
   const [signedIframeUrl, setSignedIframeUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)

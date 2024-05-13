@@ -1,6 +1,7 @@
 import { FunctionComponent, useMemo } from 'react'
 import { SvgProps } from 'react-native-svg'
-import { Icons, isWeb } from 'ui/src'
+import { isWeb } from 'ui/src'
+import { AlertTriangle } from 'ui/src/components/icons'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
 import {
@@ -19,7 +20,7 @@ import {
 type WarningWithStyle = {
   warning: Warning
   color: WarningColor
-  Icon: FunctionComponent<SvgProps> | typeof Icons.AlertTriangle | null
+  Icon: FunctionComponent<SvgProps> | typeof AlertTriangle | null
   displayedInline: boolean
 }
 

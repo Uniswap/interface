@@ -1,7 +1,13 @@
 import { NetworkStatus } from '@apollo/client'
 import { ChainId, Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
+import {
+  SupportedInterfaceChainId,
+  chainIdToBackendChain,
+  useIsSupportedChainId,
+  useSupportedChainId,
+} from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
-import { PollingInterval, chainIdToBackendName, isGqlSupportedChain } from 'graphql/data/util'
+import { PollingInterval } from 'graphql/data/util'
 import { useMemo } from 'react'
 import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
@@ -13,12 +19,8 @@ import useStablecoinPrice from './useStablecoinPrice'
 
 // ETH amounts used when calculating spot price for a given currency.
 // The amount is large enough to filter low liquidity pairs.
-const ETH_AMOUNT_OUT: { [chainId: number]: CurrencyAmount<Currency> } = {
-  [ChainId.MAINNET]: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.MAINNET), 50e18),
-  [ChainId.ARBITRUM_ONE]: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.ARBITRUM_ONE), 10e18),
-  [ChainId.OPTIMISM]: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.OPTIMISM), 10e18),
-  [ChainId.POLYGON]: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.POLYGON), 10_000e18),
-  [ChainId.CELO]: CurrencyAmount.fromRawAmount(nativeOnChain(ChainId.CELO), 10e18),
+function getEthAmountOut(chainId: SupportedInterfaceChainId): CurrencyAmount<Currency> {
+  return CurrencyAmount.fromRawAmount(nativeOnChain(chainId), chainId === ChainId.MAINNET ? 50e18 : 10e18)
 }
 
 function useETHPrice(currency?: Currency): {
@@ -26,9 +28,10 @@ function useETHPrice(currency?: Currency): {
   isLoading: boolean
 } {
   const chainId = currency?.chainId
-  const isSupported = currency && isGqlSupportedChain(chainId)
+  const isSupportedChain = useIsSupportedChainId(chainId)
+  const isSupported = isSupportedChain && currency
 
-  const amountOut = isSupported ? ETH_AMOUNT_OUT[chainId] : undefined
+  const amountOut = isSupported ? getEthAmountOut(chainId) : undefined
   const { trade, state } = useRoutingAPITrade(
     !isSupported /* skip */,
     TradeType.EXACT_OUTPUT,
@@ -72,8 +75,8 @@ export function useUSDPrice(
   isLoading: boolean
 } {
   const currency = currencyAmount?.currency ?? prefetchCurrency
-  const chainId = currency?.chainId
-  const chain = chainId ? chainIdToBackendName(chainId) : undefined
+  const chainId = useSupportedChainId(currency?.chainId)
+  const chain = chainIdToBackendChain({ chainId })
 
   // skip all pricing requests if the window is not focused
   const isWindowVisible = useIsWindowVisible()

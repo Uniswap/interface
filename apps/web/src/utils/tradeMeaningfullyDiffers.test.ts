@@ -1,7 +1,5 @@
 import { Percent, TradeType } from '@uniswap/sdk-core'
-// This is allowed in test files.
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { V3Route } from '@uniswap/smart-order-router'
+import { Route } from '@uniswap/v3-sdk'
 import { ClassicTrade, QuoteMethod } from 'state/routing/types'
 import {
   TEST_POOL_13,
@@ -11,7 +9,6 @@ import {
   TEST_TRADE_EXACT_OUTPUT,
   toCurrencyAmount,
 } from 'test-utils/constants'
-
 import { tradeMeaningfullyDiffers } from './tradeMeaningFullyDiffer'
 
 describe('tradeMeaningfullyDiffers', () => {
@@ -25,7 +22,7 @@ describe('tradeMeaningfullyDiffers', () => {
     const newTrade = new ClassicTrade({
       v3Routes: [
         {
-          routev3: new V3Route([TEST_POOL_13], TEST_TOKEN_3, TEST_TOKEN_1),
+          routev3: new Route([TEST_POOL_13], TEST_TOKEN_3, TEST_TOKEN_1),
           inputAmount: toCurrencyAmount(TEST_TOKEN_3, 1000),
           outputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
         },
@@ -43,7 +40,7 @@ describe('tradeMeaningfullyDiffers', () => {
     const newTrade = new ClassicTrade({
       v3Routes: [
         {
-          routev3: new V3Route([TEST_POOL_13], TEST_TOKEN_1, TEST_TOKEN_3),
+          routev3: new Route([TEST_POOL_13], TEST_TOKEN_1, TEST_TOKEN_3),
           inputAmount: toCurrencyAmount(TEST_TOKEN_1, 1000),
           outputAmount: toCurrencyAmount(TEST_TOKEN_3, 1000),
         },

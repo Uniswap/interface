@@ -1,7 +1,8 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
+import { InfoCircleFilled } from 'ui/src/components/icons'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { NumberType } from 'utilities/src/format/types'
 import { Trace } from 'utilities/src/telemetry/trace/Trace'
@@ -140,6 +141,7 @@ export function SwapDetails({
       showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeRequiresAcceptance}
       swapFeeInfo={swapFeeInfo}
+      transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
       warning={warning}
       onShowWarning={onShowWarning}>
       <Flex row alignItems="center" justifyContent="space-between">
@@ -156,7 +158,7 @@ export function SwapDetails({
             <Text color="$neutral2" numberOfLines={3} variant="body3">
               {t('swap.details.slippage')}
               &nbsp;
-              <Icons.InfoCircleFilled color="$neutral3" size="$icon.16" />
+              <InfoCircleFilled color="$neutral3" size="$icon.16" />
             </Text>
           </Flex>
         </TouchableArea>

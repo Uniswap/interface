@@ -1,6 +1,6 @@
 import { MaxUint256, PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { ChainId, Currency } from '@uniswap/sdk-core'
-import { SupportedInterfaceChain } from 'constants/chains'
+import { SupportedInterfaceChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
@@ -32,13 +32,13 @@ export async function getApproveInfo(
     return { needsApprove: false }
   }
 
-  const provider = RPC_PROVIDERS[currency.chainId as SupportedInterfaceChain]
+  const provider = RPC_PROVIDERS[currency.chainId as SupportedInterfaceChainId]
   const tokenContract = getContract(currency.address, ERC20_ABI, provider) as Erc20
 
   let approveGasUseEstimate
   try {
     const allowance = await tokenContract.callStatic.allowance(account, PERMIT2_ADDRESS)
-    if (!allowance.lt(amount)) return { needsApprove: false }
+    if (allowance.gte(amount)) return { needsApprove: false }
   } catch (_) {
     // If contract lookup fails (eg if Infura goes down), then don't show gas info for approving the token
     return { needsApprove: false }
@@ -58,7 +58,7 @@ export async function getApproveInfo(
 export async function getWrapInfo(
   needsWrap: boolean,
   account: string | undefined,
-  chainId: SupportedInterfaceChain,
+  chainId: SupportedInterfaceChainId,
   amount: string,
   usdCostPerGas?: number
 ): Promise<WrapInfo> {

@@ -8,7 +8,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   min-width: 0;
 }
 
-.c21 {
+.c22 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -48,7 +48,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   justify-content: flex-start;
 }
 
-.c14 {
+.c15 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -66,7 +66,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   gap: 8px;
 }
 
-.c17 {
+.c18 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -91,17 +91,17 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   justify-content: space-between;
 }
 
-.c20 {
+.c21 {
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
 
-.c20 > * {
+.c21 > * {
   margin: !important;
 }
 
-.c18 {
+.c19 {
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -145,7 +145,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   gap: 8px;
 }
 
-.c22 {
+.c23 {
   padding: 16px;
   width: 100%;
   line-height: 24px;
@@ -184,25 +184,25 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   transform: perspective(1px) translateZ(0);
 }
 
-.c22:disabled {
+.c23:disabled {
   opacity: 50%;
   cursor: auto;
   pointer-events: none;
 }
 
-.c22 > * {
+.c23 > * {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
-.c22 > a {
+.c23 > a {
   -webkit-text-decoration: none;
   text-decoration: none;
 }
 
-.c23 {
+.c24 {
   background-color: #FC72FF;
   font-size: 20px;
   font-weight: 535;
@@ -210,21 +210,21 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   color: #FFFFFF;
 }
 
-.c23:focus {
+.c24:focus {
   box-shadow: 0 0 0 1pt #fb58ff;
   background-color: #fb58ff;
 }
 
-.c23:hover {
+.c24:hover {
   background-color: #fb58ff;
 }
 
-.c23:active {
+.c24:active {
   box-shadow: 0 0 0 1pt #fb3fff;
   background-color: #fb3fff;
 }
 
-.c23:disabled {
+.c24:disabled {
   background-color: #22222212;
   color: #7D7D7D;
   cursor: auto;
@@ -233,7 +233,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   outline: none;
 }
 
-.c16 {
+.c17 {
   -webkit-filter: none;
   filter: none;
   opacity: 1;
@@ -256,12 +256,12 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   overflow-wrap: break-word;
 }
 
-.c19 {
+.c20 {
   height: 16px;
   width: 16px;
 }
 
-.c19 > * {
+.c20 > * {
   fill: #CECECE;
 }
 
@@ -297,7 +297,11 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   user-select: text;
 }
 
-.c15 {
+.c14 {
+  color: #EEB317;
+}
+
+.c16 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -313,7 +317,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   align-items: center;
 }
 
-.c15::after {
+.c16::after {
   content: 'Auto';
 }
 
@@ -321,7 +325,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   padding: 0px 12px 8px;
 }
 
-.c24 {
+.c25 {
   height: 56px;
 }
 
@@ -453,9 +457,9 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                         class="c9 c12 css-142zc9n"
                       >
                         <span
-                          class=""
+                          class="c14"
                         >
-                          ~-105566.373%
+                          ~5%
                         </span>
                       </div>
                     </div>
@@ -482,10 +486,10 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                         class="c9 c12 css-142zc9n"
                       >
                         <div
-                          class="c6 c14"
+                          class="c6 c15"
                         >
                           <div
-                            class="c5 c15 css-1lgneq0"
+                            class="c5 c16 css-1lgneq0"
                           />
                            2%
                         </div>
@@ -567,13 +571,13 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                   >
                     <div>
                       <div
-                        class="c16"
+                        class="c17"
                       >
                         <div
-                          class="c6 c17 c18"
+                          class="c6 c18 c19"
                         >
                           <svg
-                            class="c19"
+                            class="c20"
                             fill="none"
                             height="24"
                             viewBox="0 0 24 24"
@@ -591,7 +595,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                             class="c5 css-142zc9n"
                           >
                             <div
-                              class="c6 c14"
+                              class="c6 c15"
                             >
                               <div>
                                 $1.00
@@ -609,10 +613,10 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
         </div>
       </div>
       <div
-        class="c6 c7 c20"
+        class="c6 c7 c21"
       >
         <button
-          class="c21 c22 c23 c24"
+          class="c22 c23 c24 c25"
           data-testid="confirm-swap-button"
           id="confirm-swap-or-send"
         >
@@ -676,7 +680,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   justify-content: flex-start;
 }
 
-.c16 {
+.c15 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -887,7 +891,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   outline: none;
 }
 
-.c15 {
+.c17 {
   -webkit-animation: fAQEyV 1.5s infinite;
   animation: fAQEyV 1.5s infinite;
   -webkit-animation-fill-mode: both;
@@ -952,7 +956,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   user-select: text;
 }
 
-.c17 {
+.c16 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -968,7 +972,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   align-items: center;
 }
 
-.c17::after {
+.c16::after {
   content: 'Auto';
 }
 
@@ -1098,36 +1102,6 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
                     class="c9 c13 css-142zc9n"
                     data-testid="swap-li-label"
                   >
-                    Price impact
-                  </div>
-                  <div
-                    class="c14"
-                  >
-                    <div>
-                      <div
-                        class="c9 c11 css-142zc9n"
-                      >
-                        <div
-                          class="c15"
-                          data-testid="loading-row"
-                          height="15"
-                          width="50"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                style="opacity: 0;"
-              >
-                <div
-                  class="c6 c7 c8"
-                >
-                  <div
-                    class="c9 c13 css-142zc9n"
-                    data-testid="swap-li-label"
-                  >
                     Max. slippage
                   </div>
                   <div
@@ -1138,10 +1112,10 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
                         class="c9 c11 css-142zc9n"
                       >
                         <div
-                          class="c6 c16"
+                          class="c6 c15"
                         >
                           <div
-                            class="c5 c17 css-1lgneq0"
+                            class="c5 c16 css-1lgneq0"
                           />
                            2%
                         </div>
@@ -1192,7 +1166,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
               class="c9 c11 css-142zc9n"
             >
               <div
-                class="c15"
+                class="c17"
                 data-testid="loading-row"
                 height="15"
                 width="50"
@@ -1218,7 +1192,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
                   class="c9 c11 css-142zc9n"
                 >
                   <div
-                    class="c15"
+                    class="c17"
                     data-testid="loading-row"
                     height="15"
                     width="50"

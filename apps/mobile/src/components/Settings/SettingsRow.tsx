@@ -9,7 +9,8 @@ import {
 } from 'src/app/navigation/types'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Screens } from 'src/screens/Screens'
-import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { Switch } from 'wallet/src/components/buttons/Switch'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
@@ -123,7 +124,7 @@ export function SettingsRow({
                 </Text>
               </Flex>
             ) : null}
-            <Icons.RotatableChevron
+            <RotatableChevron
               color="$neutral3"
               direction="end"
               height={iconSizes.icon24}

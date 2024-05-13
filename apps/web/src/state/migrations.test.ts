@@ -14,7 +14,7 @@ const defaultState = {
   user: {},
   _persist: {
     rehydrated: true,
-    version: 8,
+    version: 9,
   },
   application: {
     chainId: null,
@@ -92,7 +92,7 @@ describe('redux migrations', () => {
       ...defaultState,
       // These are migrated values.
       lists: {
-        test: 'lists',
+        byUrl: undefined,
       },
       transactions: {
         1: {

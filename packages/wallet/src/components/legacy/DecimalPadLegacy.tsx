@@ -1,6 +1,7 @@
 import { memo, useMemo } from 'react'
 import { I18nManager, TextInputProps } from 'react-native'
-import { AnimatedFlex, Flex, Icons, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { AnimatedFlex, Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { LeftArrow, RightArrow } from 'ui/src/components/icons'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
 enum KeyAction {
@@ -225,9 +226,9 @@ function KeyButton({
       onPress={onPress}>
       {label === 'backspace' ? (
         I18nManager.isRTL ? (
-          <Icons.RightArrow color={isDisabled ? '$neutral3' : '$neutral1'} size={32} />
+          <RightArrow color={isDisabled ? '$neutral3' : '$neutral1'} size={32} />
         ) : (
-          <Icons.LeftArrow color={isDisabled ? '$neutral3' : '$neutral1'} size={32} />
+          <LeftArrow color={isDisabled ? '$neutral3' : '$neutral1'} size={32} />
         )
       ) : (
         <Text color={isDisabled ? '$neutral3' : '$neutral1'} textAlign="center" variant="heading2">

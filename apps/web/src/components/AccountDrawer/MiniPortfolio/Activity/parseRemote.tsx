@@ -8,9 +8,8 @@ import { gqlToCurrency, logSentryErrorForUnsupportedChain, supportedChainIdFromG
 import { t } from 'i18n'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
-import store from 'state'
-import { addSignature } from 'state/signatures/reducer'
-import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
+import { parseRemote as parseRemoteSignature } from 'state/signatures/parseRemote'
+import { OrderActivity, UniswapXOrderDetails } from 'state/signatures/types'
 import { TransactionType as LocalTransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import {
@@ -19,9 +18,6 @@ import {
   NftApprovalPartsFragment,
   NftApproveForAllPartsFragment,
   NftTransferPartsFragment,
-  SwapOrderDetailsPartsFragment,
-  SwapOrderStatus,
-  SwapOrderType,
   TokenApprovalPartsFragment,
   TokenAssetPartsFragment,
   TokenTransferPartsFragment,
@@ -29,9 +25,8 @@ import {
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
-import { currencyId } from 'utils/currencyId'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { MOONPAY_SENDER_ADDRESSES, OrderStatusTable, OrderTextTable } from '../constants'
+import { MOONPAY_SENDER_ADDRESSES, OrderTextTable } from '../constants'
 import { Activity } from './types'
 
 type TransactionChanges = {
@@ -333,7 +328,6 @@ function parseLPTransfers(changes: TransactionChanges, formatNumberOrString: For
 }
 
 type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
-type OrderActivity = AssetActivityPartsFragment & { details: SwapOrderDetailsPartsFragment }
 
 function parseSendReceive(
   changes: TransactionChanges,
@@ -448,112 +442,31 @@ function getLogoSrcs(changes: TransactionChanges): Array<string | undefined> {
   return Array.from(logoSet)
 }
 
-function swapOrderTypeToSignatureType(swapOrderType: SwapOrderType): SignatureType {
-  switch (swapOrderType) {
-    case SwapOrderType.Limit:
-      return SignatureType.SIGN_LIMIT
-    case SwapOrderType.Dutch:
-      return SignatureType.SIGN_UNISWAPX_ORDER
-    case SwapOrderType.DutchV2:
-      return SignatureType.SIGN_UNISWAPX_V2_ORDER
-  }
-}
+function parseUniswapXOrder(activity: OrderActivity): Activity | undefined {
+  const signature = parseRemoteSignature(activity)
 
-function parseUniswapXOrder({ details, chain, timestamp }: OrderActivity): Activity | undefined {
-  const supportedChain = supportedChainIdFromGQLChain(chain)
-  if (!supportedChain) {
-    logSentryErrorForUnsupportedChain({
-      extras: { details },
-      errorMessage: 'Invalid activity from unsupported chain received from GQL',
-    })
-    return undefined
+  // If the order is open, do not render it.
+  if (signature.status === UniswapXOrderStatus.OPEN) {
+    return
   }
 
-  // If the order is open, maybe add it to our local records (if it was initiated on this device, this will be a no-op).
-  if (details.orderStatus === SwapOrderStatus.Open) {
-    const inputCurrency = gqlToCurrency(details.inputToken)
-    const outputCurrency = gqlToCurrency(details.outputToken)
-
-    const inputTokenQuantity = parseUnits(details.inputTokenQuantity, details.inputToken.decimals).toString()
-    const outputTokenQuantity = parseUnits(details.outputTokenQuantity, details.outputToken.decimals).toString()
-
-    if (inputTokenQuantity === '0' || outputTokenQuantity === '0') {
-      // TODO(WEB-3765): This is a temporary mitigation for a bug where the backend sends "0.000000" for small amounts.
-      throw new Error('Invalid activity received from GQL')
-    }
-
-    store.dispatch(
-      addSignature({
-        type: swapOrderTypeToSignatureType(details.swapOrderType),
-        offerer: details.offerer,
-        id: details.hash,
-        chainId: supportedChain,
-        orderHash: details.hash,
-        expiry: details.expiry,
-        encodedOrder: details.encodedOrder,
-        swapInfo: {
-          type: LocalTransactionType.SWAP,
-          inputCurrencyId: currencyId(inputCurrency),
-          outputCurrencyId: currencyId(outputCurrency),
-          isUniswapXOrder: true,
-          // This doesn't affect the display, but we don't know this value from the remote activity.
-          tradeType: TradeType.EXACT_INPUT,
-          inputCurrencyAmountRaw: inputTokenQuantity,
-          expectedOutputCurrencyAmountRaw: outputTokenQuantity,
-          minimumOutputCurrencyAmountRaw: outputTokenQuantity,
-        },
-        status: UniswapXOrderStatus.OPEN,
-        addedTime: timestamp * 1000,
-      })
-    )
-    return undefined
-  }
-
-  // If the order is not open, render it like any other remote activity.
-  const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity, orderStatus } = details
-  const uniswapXOrderStatus = OrderStatusTable[orderStatus]
-  const { status, statusMessage, title } = OrderTextTable[uniswapXOrderStatus]
-  const descriptor = getSwapDescriptor({
-    tokenIn: inputToken,
-    inputAmount: inputTokenQuantity,
-    tokenOut: outputToken,
-    outputAmount: outputTokenQuantity,
-  })
-
+  const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity } = activity.details
   return {
-    hash: details.hash,
-    chainId: supportedChain,
-    status,
-    statusMessage,
-    offchainOrderDetails: {
-      id: details.id,
-      type: swapOrderTypeToSignatureType(details.swapOrderType),
-      encodedOrder: details.encodedOrder,
-      txHash: details.hash,
-      orderHash: details.hash,
-      offerer: details.offerer,
-      chainId: supportedChain,
-      status: uniswapXOrderStatus,
-      addedTime: timestamp,
-      swapInfo: {
-        isUniswapXOrder: true,
-        type: LocalTransactionType.SWAP,
-        tradeType: TradeType.EXACT_INPUT,
-        inputCurrencyId: inputToken.address ?? '',
-        outputCurrencyId: outputToken.address ?? '',
-        inputCurrencyAmountRaw: parseUnits(inputTokenQuantity, inputToken.decimals).toString(),
-        expectedOutputCurrencyAmountRaw: parseUnits(outputTokenQuantity, outputToken.decimals).toString(),
-        minimumOutputCurrencyAmountRaw: parseUnits(outputTokenQuantity, outputToken.decimals).toString(),
-        settledOutputCurrencyAmountRaw: parseUnits(outputTokenQuantity, outputToken.decimals).toString(),
-      },
-    },
-    timestamp,
+    hash: signature.orderHash,
+    chainId: signature.chainId,
+    offchainOrderDetails: signature,
+    timestamp: activity.timestamp,
     logos: [inputToken.project?.logo?.url, outputToken.project?.logo?.url],
     currencies: [gqlToCurrency(inputToken), gqlToCurrency(outputToken)],
-    title,
-    descriptor,
-    from: details.offerer,
+    descriptor: getSwapDescriptor({
+      tokenIn: inputToken,
+      inputAmount: inputTokenQuantity,
+      tokenOut: outputToken,
+      outputAmount: outputTokenQuantity,
+    }),
+    from: signature.offerer,
     prefixIconSrc: UniswapXBolt,
+    ...OrderTextTable[signature.status],
   }
 }
 

@@ -26,7 +26,7 @@
   ],
   "dependencies": {
     "@jambit/eslint-plugin-typed-redux-saga": "0.4.0",
-    "@react-native-community/eslint-config": "3.0.3",
+    "@react-native-community/eslint-config": "3.2.0",
     "@rushstack/eslint-patch": "^1.2.0",
     "@typescript-eslint/eslint-plugin": "6.20.0",
     "@typescript-eslint/parser": "6.20.0",
@@ -42,7 +42,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.31.11",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-native": "3.11.0",
+    "eslint-plugin-react-native": "4.1.0",
     "eslint-plugin-security": "1.5.0",
     "eslint-plugin-spellcheck": "0.0.20",
     "eslint-plugin-storybook": "^0.6.10",

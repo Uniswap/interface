@@ -1,5 +1,6 @@
 import { PropsWithChildren, ReactNode, useState } from 'react'
-import { Flex, Icons, TouchableArea, isWeb } from 'ui/src'
+import { Flex, TouchableArea, isWeb } from 'ui/src'
+import { InfoCircle } from 'ui/src/components/icons'
 import {
   WarningModal,
   WarningModalProps,
@@ -23,7 +24,7 @@ export function WarningInfo({
   modalProps,
   infoButton,
   children,
-  trigger = <Icons.InfoCircle color="$neutral3" size="$icon.16" />,
+  trigger = <InfoCircle color="$neutral3" size="$icon.16" />,
   triggerPlacement = 'end',
 }: PropsWithChildren<WarningInfoProps>): JSX.Element {
   const [showModal, setShowModal] = useState(false)

@@ -1,6 +1,8 @@
 import { BigNumber, providers } from 'ethers'
 import { useMemo } from 'react'
+import { logger } from 'utilities/src/logger/logger'
 import { ChainId } from 'wallet/src/constants/chains'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'wallet/src/constants/transactions'
 import { FeeDetails, getAdjustedGasFeeDetails } from 'wallet/src/features/gas/adjustGasFee'
 import { useGasFeeQuery } from 'wallet/src/features/gas/api'
@@ -18,9 +20,10 @@ type CancelationGasFeeDetails = {
 export function useTransactionGasFee(
   tx: Maybe<providers.TransactionRequest>,
   speed: GasSpeed = GasSpeed.Urgent,
-  skip?: boolean
+  skip?: boolean,
+  pollingInterval?: PollingInterval
 ): GasFeeResult {
-  const { data, error, loading } = useGasFeeQuery(tx, skip)
+  const { data, error, loading } = useGasFeeQuery(tx, skip, pollingInterval)
 
   return useMemo(() => {
     if (!data) {
@@ -79,11 +82,20 @@ export function useCancelationGasFeeInfo(
       return
     }
 
-    const adjustedFeeDetails = getAdjustedGasFeeDetails(
-      transaction.options.request,
-      baseTxGasFee.params,
-      TRANSACTION_CANCELLATION_GAS_FACTOR
-    )
+    let adjustedFeeDetails: FeeDetails | undefined
+    try {
+      adjustedFeeDetails = getAdjustedGasFeeDetails(
+        transaction.options.request,
+        baseTxGasFee.params,
+        TRANSACTION_CANCELLATION_GAS_FACTOR
+      )
+    } catch (error) {
+      logger.error(error, {
+        tags: { file: 'features/gas/hooks.ts', function: 'getAdjustedGasFeeDetails' },
+        extra: { request: transaction.options.request, currentGasFeeParams: baseTxGasFee.params },
+      })
+      return
+    }
 
     const cancelRequest = {
       ...cancelationRequest,

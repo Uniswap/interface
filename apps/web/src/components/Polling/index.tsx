@@ -1,11 +1,5 @@
 import { useWeb3React } from '@web3-react/core'
 import { RowFixed } from 'components/Row'
-import {
-  AVERAGE_L1_BLOCK_TIME,
-  DEFAULT_MS_BEFORE_WARNING,
-  getBlocksPerMainnetEpochForChainId,
-  getChainInfo,
-} from 'constants/chainInfo'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -14,9 +8,12 @@ import { Trans } from 'i18n'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useEffect, useMemo, useState } from 'react'
 import styled, { keyframes } from 'styled-components'
-import { ExternalLink, ThemedText } from 'theme/components'
+import { ExternalLink } from 'theme/components'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
+import { styled as tamaguiStyled } from '@tamagui/core'
+import { AVERAGE_L1_BLOCK_TIME, CHAIN_INFO, DEFAULT_MS_BEFORE_WARNING, useIsSupportedChainId } from 'constants/chains'
+import { Text } from 'ui/src'
 import { MouseoverTooltip } from '../Tooltip'
 import { ChainConnectivityWarning } from './ChainConnectivityWarning'
 
@@ -42,26 +39,40 @@ const StyledPolling = styled.div`
     display: flex;
   }
 `
-const StyledPollingBlockNumber = styled(ThemedText.DeprecatedSmall)<{
-  breathe: boolean
-  hovering: boolean
-  warning: boolean
-}>`
-  color: ${({ theme, warning }) => (warning ? theme.deprecated_yellow3 : theme.success)};
-  transition: opacity 0.25s ease;
-  opacity: ${({ breathe, hovering }) => (hovering ? 0.7 : breathe ? 1 : 0.5)};
-  :hover {
-    opacity: 1;
-  }
 
-  a {
-    color: unset;
-  }
-  a:hover {
-    text-decoration: none;
-    color: unset;
-  }
-`
+const StyledPollingBlockNumber = tamaguiStyled(Text, {
+  fontSize: 11,
+  color: '$statusSuccess',
+  opacity: 0.5,
+  hoverStyle: {
+    opacity: 1,
+  },
+
+  '$platform-web': {
+    transition: 'opacity 0.25s ease',
+  },
+
+  variants: {
+    warning: {
+      true: {
+        color: '$yellow600',
+      },
+    },
+
+    breathe: {
+      true: {
+        opacity: 1,
+      },
+    },
+
+    hovering: {
+      true: {
+        opacity: 0.7,
+      },
+    },
+  } as const,
+})
+
 const StyledPollingDot = styled.div<{ warning: boolean }>`
   width: 8px;
   height: 8px;
@@ -103,6 +114,7 @@ const Spinner = styled.div<{ warning: boolean }>`
 
 export default function Polling() {
   const { chainId } = useWeb3React()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   const blockNumber = useBlockNumber()
   const [isMounting, setIsMounting] = useState(false)
   const [isHover, setIsHover] = useState(false)
@@ -110,12 +122,18 @@ export default function Polling() {
   const isLandingPage = useIsLandingPage()
 
   const waitMsBeforeWarning = useMemo(
-    () => (chainId ? getChainInfo(chainId)?.blockWaitMsBeforeWarning : undefined) ?? DEFAULT_MS_BEFORE_WARNING,
-    [chainId]
+    () => (isSupportedChain ? CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : undefined) ?? DEFAULT_MS_BEFORE_WARNING,
+    [chainId, isSupportedChain]
   )
   const machineTime = useMachineTimeMs(AVERAGE_L1_BLOCK_TIME)
   const blockTime = useCurrentBlockTimestamp(
-    useMemo(() => ({ blocksPerFetch: /* 5m / 12s = */ 25 * getBlocksPerMainnetEpochForChainId(chainId) }), [chainId])
+    useMemo(
+      () => ({
+        blocksPerFetch:
+          /* 5m / 12s = */ 25 * (isSupportedChain ? CHAIN_INFO[chainId].blockPerMainnetEpochForChainId : 1),
+      }),
+      [chainId, isSupportedChain]
+    )
   )
   const warning = Boolean(!!blockTime && machineTime - blockTime.mul(1000).toNumber() > waitMsBeforeWarning)
 

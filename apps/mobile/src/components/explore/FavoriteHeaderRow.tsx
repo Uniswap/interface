@@ -1,6 +1,7 @@
 import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Icons, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
+import { TripleDots } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 
 export function FavoriteHeaderRow({
@@ -32,7 +33,7 @@ export function FavoriteHeaderRow({
           hitSlop={16}
           testID="favorite-header-row/favorite-button"
           onPress={onPress}>
-          <Icons.TripleDots
+          <TripleDots
             color="$neutral2"
             size={iconSizes.icon20}
             strokeLinecap="round"

@@ -11,7 +11,6 @@ import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
-import { getInitialUrl } from 'hooks/useAssetLogoSource'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useScreenSize } from 'hooks/useScreenSize'
 import { Trans } from 'i18n'
@@ -23,6 +22,7 @@ import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/types'
 import styled from 'styled-components'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
+import { getInitialLogoUrl } from 'utils/getInitialLogoURL'
 import { ActivitySection } from './ActivitySection'
 import BalanceSummary from './BalanceSummary'
 import MobileBalanceSummaryFooter from './MobileBalanceSummaryFooter'
@@ -95,7 +95,7 @@ function TDPSwapComponent() {
 
       if (!newDefaultToken) return
 
-      const preloadedLogoSrc = getInitialUrl(
+      const preloadedLogoSrc = getInitialLogoUrl(
         newDefaultToken.wrapped.address,
         newDefaultToken.chainId,
         newDefaultToken.isNative

@@ -2,8 +2,9 @@ import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Loader } from 'src/components/loading'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
-import { Flex, Icons, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
+import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import {
   Currency,
@@ -94,7 +95,7 @@ export function CollectionPreviewCard({
           </Flex>
         </Flex>
         {isViewableCollection ? (
-          <Icons.RotatableChevron
+          <RotatableChevron
             color="$neutral1"
             direction="end"
             height={iconSizes.icon24}

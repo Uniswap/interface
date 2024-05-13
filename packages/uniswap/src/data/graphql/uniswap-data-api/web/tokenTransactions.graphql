@@ -21,8 +21,8 @@ query V3TokenTransactions($chain: Chain!, $address: String!, $first: Int!, $curs
   }
 }
 
-query V2TokenTransactions($address: String!, $first: Int!, $cursor: Int) {
-  token(chain: ETHEREUM, address: $address) {
+query V2TokenTransactions($chain: Chain!, $address: String!, $first: Int!, $cursor: Int) {
+  token(chain: $chain, address: $address) {
     ...TransactionToken
     v2Transactions(first: $first, timestampCursor: $cursor) {
       timestamp

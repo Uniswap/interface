@@ -4,7 +4,7 @@ import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import { getChainInfo } from 'constants/chainInfo'
+import { getChainInfo, useSupportedChainId } from 'constants/chains'
 import { Trans } from 'i18n'
 import { CheckMarkIcon } from 'nft/components/icons'
 import styled, { useTheme } from 'styled-components'
@@ -65,9 +65,9 @@ interface ChainSelectorRowProps {
 }
 export default function ChainSelectorRow({ disabled, targetChain, onSelectChain, isPending }: ChainSelectorRowProps) {
   const { chainId } = useWeb3React()
+  const supportedChain = useSupportedChainId(targetChain)
   const active = chainId === targetChain
-  const chainInfo = getChainInfo(targetChain)
-  const label = chainInfo?.label
+  const label = getChainInfo({ chainId: supportedChain })?.label
 
   const theme = useTheme()
 

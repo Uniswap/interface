@@ -37,8 +37,8 @@ query V3PoolTransactions($chain: Chain!, $address: String!, $first: Int!, $curso
   }
 }
 
-query V2PairTransactions($address: String!, $first: Int!, $cursor: Int) {
-  v2Pair(chain: ETHEREUM, address: $address) {
+query V2PairTransactions($chain: Chain!, $address: String!, $first: Int!, $cursor: Int) {
+  v2Pair(chain: $chain, address: $address) {
     id
     transactions(first: $first, timestampCursor: $cursor) {
       timestamp

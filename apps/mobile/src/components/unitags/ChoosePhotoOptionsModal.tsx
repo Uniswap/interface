@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { selectPhotoFromLibrary } from 'src/components/unitags/AvatarSelection'
 import { ChooseNftModal } from 'src/components/unitags/ChooseNftModal'
-import { Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
+import { Camera, Photo, Trash } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ElementName, ModalName } from 'wallet/src/telemetry/constants'
@@ -115,13 +116,11 @@ const ChoosePhotoOption = ({ type }: { type: PhotoAction }): JSX.Element => {
       justifyContent="flex-start"
       p="$spacing24">
       {type === PhotoAction.BrowseCameraRoll && (
-        <Icons.Camera color="$neutral1" size={iconSizes.icon24} />
+        <Camera color="$neutral1" size={iconSizes.icon24} />
       )}
-      {type === PhotoAction.BrowseNftsList && (
-        <Icons.Photo color="$neutral1" size={iconSizes.icon24} />
-      )}
+      {type === PhotoAction.BrowseNftsList && <Photo color="$neutral1" size={iconSizes.icon24} />}
       {type === PhotoAction.RemovePhoto && (
-        <Icons.Trash color="$statusCritical" size={iconSizes.icon24} />
+        <Trash color="$statusCritical" size={iconSizes.icon24} />
       )}
       <Flex shrink alignItems="flex-start">
         <Text

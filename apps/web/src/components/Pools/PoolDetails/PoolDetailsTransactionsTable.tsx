@@ -4,17 +4,18 @@ import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
 import { FilterHeaderRow, HeaderArrow, HeaderSortText, TimestampCell } from 'components/Table/styled'
+import { useChainFromUrlParam } from 'constants/chains'
+import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import {
   PoolTableTransaction,
   PoolTableTransactionType,
   usePoolTransactions,
 } from 'graphql/data/pools/usePoolTransactions'
-import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
+import { getSupportedGraphQlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { OrderDirection, Transaction_OrderBy } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { Trans } from 'i18n'
 import { useMemo, useReducer, useState } from 'react'
-import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -54,6 +55,14 @@ const PoolTransactionColumnWidth: { [key in PoolTransactionColumn]: number } = {
   [PoolTransactionColumn.OutputAmount]: 125,
 }
 
+function comparePoolTokens(tokenA: PoolTableTransaction['pool']['token0'], tokenB?: Token) {
+  if (tokenB?.address === NATIVE_CHAIN_ID) {
+    const chainId = supportedChainIdFromGQLChain(tokenB.chain)
+    return chainId && tokenA.id.toLowerCase() === WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
+  }
+  return tokenA.id.toLowerCase() === tokenB?.address?.toLowerCase()
+}
+
 export function PoolDetailsTransactionsTable({
   poolAddress,
   token0,
@@ -65,8 +74,7 @@ export function PoolDetailsTransactionsTable({
   token1?: Token
   protocolVersion?: ProtocolVersion
 }) {
-  const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
-  const chainId = supportedChainIdFromGQLChain(chainName)
+  const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
   const activeLocalCurrency = useActiveLocalCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
@@ -83,7 +91,7 @@ export function PoolDetailsTransactionsTable({
   })
   const { transactions, loading, loadMore, error } = usePoolTransactions(
     poolAddress,
-    chainId,
+    chain.id,
     filter,
     token0,
     protocolVersion
@@ -113,7 +121,7 @@ export function PoolDetailsTransactionsTable({
           >
             <TimestampCell
               timestamp={Number(row.getValue?.().timestamp)}
-              link={getExplorerLink(chainId, row.getValue?.().transaction, ExplorerDataType.TRANSACTION)}
+              link={getExplorerLink(chain.id, row.getValue?.().transaction, ExplorerDataType.TRANSACTION)}
             />
           </Cell>
         ),
@@ -188,62 +196,56 @@ export function PoolDetailsTransactionsTable({
           </Cell>
         ),
       }),
-      columnHelper.accessor(
-        (row) => (row.pool.token0.id.toLowerCase() === token0?.address?.toLowerCase() ? row.amount0 : row.amount1),
-        {
-          id: 'input-amount',
-          header: () => (
-            <Cell
-              loading={showLoadingSkeleton}
-              minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount]}
-              justifyContent="flex-end"
-              grow
-            >
-              <ThemedText.BodySecondary>{token0?.symbol}</ThemedText.BodySecondary>
-            </Cell>
-          ),
-          cell: (inputTokenAmount) => (
-            <Cell
-              loading={showLoadingSkeleton}
-              minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount]}
-              justifyContent="flex-end"
-              grow
-            >
-              <ThemedText.BodyPrimary>
-                {formatNumber({ input: Math.abs(inputTokenAmount.getValue?.() ?? 0), type: NumberType.TokenTx })}
-              </ThemedText.BodyPrimary>
-            </Cell>
-          ),
-        }
-      ),
-      columnHelper.accessor(
-        (row) => (row.pool.token0.id.toLowerCase() === token0?.address?.toLowerCase() ? row.amount1 : row.amount0),
-        {
-          id: 'output-amount',
-          header: () => (
-            <Cell
-              loading={showLoadingSkeleton}
-              minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount]}
-              justifyContent="flex-end"
-              grow
-            >
-              <ThemedText.BodySecondary>{token1?.symbol}</ThemedText.BodySecondary>
-            </Cell>
-          ),
-          cell: (outputTokenAmount) => (
-            <Cell
-              loading={showLoadingSkeleton}
-              minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount]}
-              justifyContent="flex-end"
-              grow
-            >
-              <ThemedText.BodyPrimary>
-                {formatNumber({ input: Math.abs(outputTokenAmount.getValue?.() ?? 0), type: NumberType.TokenTx })}
-              </ThemedText.BodyPrimary>
-            </Cell>
-          ),
-        }
-      ),
+      columnHelper.accessor((row) => (comparePoolTokens(row.pool.token0, token0) ? row.amount0 : row.amount1), {
+        id: 'input-amount',
+        header: () => (
+          <Cell
+            loading={showLoadingSkeleton}
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount]}
+            justifyContent="flex-end"
+            grow
+          >
+            <ThemedText.BodySecondary>{token0?.symbol}</ThemedText.BodySecondary>
+          </Cell>
+        ),
+        cell: (inputTokenAmount) => (
+          <Cell
+            loading={showLoadingSkeleton}
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.InputAmount]}
+            justifyContent="flex-end"
+            grow
+          >
+            <ThemedText.BodyPrimary>
+              {formatNumber({ input: Math.abs(inputTokenAmount.getValue?.() ?? 0), type: NumberType.TokenTx })}
+            </ThemedText.BodyPrimary>
+          </Cell>
+        ),
+      }),
+      columnHelper.accessor((row) => (comparePoolTokens(row.pool.token0, token0) ? row.amount1 : row.amount0), {
+        id: 'output-amount',
+        header: () => (
+          <Cell
+            loading={showLoadingSkeleton}
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount]}
+            justifyContent="flex-end"
+            grow
+          >
+            <ThemedText.BodySecondary>{token1?.symbol}</ThemedText.BodySecondary>
+          </Cell>
+        ),
+        cell: (outputTokenAmount) => (
+          <Cell
+            loading={showLoadingSkeleton}
+            minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.OutputAmount]}
+            justifyContent="flex-end"
+            grow
+          >
+            <ThemedText.BodyPrimary>
+              {formatNumber({ input: Math.abs(outputTokenAmount.getValue?.() ?? 0), type: NumberType.TokenTx })}
+            </ThemedText.BodyPrimary>
+          </Cell>
+        ),
+      }),
       columnHelper.accessor((row) => row.maker, {
         id: 'maker-address',
         header: () => (
@@ -264,7 +266,7 @@ export function PoolDetailsTransactionsTable({
             justifyContent="flex-end"
             grow
           >
-            <StyledExternalLink href={getExplorerLink(chainId, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}>
+            <StyledExternalLink href={getExplorerLink(chain.id, makerAddress.getValue?.(), ExplorerDataType.ADDRESS)}>
               <ThemedText.BodyPrimary>{shortenAddress(makerAddress.getValue?.(), 0)}</ThemedText.BodyPrimary>
             </StyledExternalLink>
           </Cell>
@@ -273,15 +275,14 @@ export function PoolDetailsTransactionsTable({
     ]
   }, [
     activeLocalCurrency,
-    chainId,
+    chain.id,
     filter,
     filterModalIsOpen,
     formatFiatPrice,
     formatNumber,
     showLoadingSkeleton,
     sortState.sortBy,
-    token0?.address,
-    token0?.symbol,
+    token0,
     token1?.symbol,
   ])
 

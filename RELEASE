@@ -1,10 +1,24 @@
-We are back with some new new updates! Here’s the latest:
+IPFS hash of the deployment:
+- CIDv0: `QmTqFxX9jtCD9To3o7DprzKi8GX2Zcfj78Q1bes3iSu7Pk`
+- CIDv1: `bafybeicrt2gyxhucirummgef7lv7pudqbamzmjvycfm2my6fkdybdix3z4`
 
-Support for Blast: We now support the Blast Network! You can now send, receive, swap and more on it. 
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-Extension Beta Waitlist: If you’ve claimed a Username, you’re automatically added to the waitlist of our newest product, the Uniswap Extension (Beta). If you’re off the waitlist, you’ll receive a notification as such, which will allow you access to try out the product. 
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-Other changes: 
+IPFS gateways:
+- https://bafybeicrt2gyxhucirummgef7lv7pudqbamzmjvycfm2my6fkdybdix3z4.ipfs.dweb.link/
+- https://bafybeicrt2gyxhucirummgef7lv7pudqbamzmjvycfm2my6fkdybdix3z4.ipfs.cf-ipfs.com/
+- [ipfs://QmTqFxX9jtCD9To3o7DprzKi8GX2Zcfj78Q1bes3iSu7Pk/](ipfs://QmTqFxX9jtCD9To3o7DprzKi8GX2Zcfj78Q1bes3iSu7Pk/)
 
-- Polish around fiat onramp
-- Various bug fixes and performance improvements
+### 5.26.1 (2024-05-10)
+
+
+### Bug Fixes
+
+* **web:** using web accessible resources to block extension (#8097) 3a5dadd
+
+

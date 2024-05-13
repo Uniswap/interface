@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, EmitterSubscription, Keyboard } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
-import { Button, Flex, Icons, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { AlertTriangle } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
@@ -311,7 +312,7 @@ function ChangeUnitagConfirmModal({
           height="$spacing48"
           mb="$spacing8"
           minWidth="$spacing48">
-          <Icons.AlertTriangle color="$statusCritical" size="$icon.24" />
+          <AlertTriangle color="$statusCritical" size="$icon.24" />
         </Flex>
         <Text textAlign="center" variant="subheading1">
           {t('unitags.editUsername.confirm.title')}

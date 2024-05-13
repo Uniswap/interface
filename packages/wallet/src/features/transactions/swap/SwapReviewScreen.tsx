@@ -10,7 +10,7 @@ import {
   isWeb,
   useIsShortMobileDevice,
 } from 'ui/src'
-import { BackArrow } from 'ui/src/components/icons/BackArrow'
+import { BackArrow } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { SpinningLoader } from 'wallet/src/components/loading/SpinningLoader'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'

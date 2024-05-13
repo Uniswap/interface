@@ -1,14 +1,17 @@
+import { useQuery } from '@tanstack/react-query'
 import { ChainId } from '@uniswap/sdk-core'
 import { useOpenOffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
-import { signatureToActivity, transactionToActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
+import {
+  getSignatureToActivityQueryOptions,
+  getTransactionToActivityQueryOptions,
+} from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import Column, { AutoColumn } from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { AutoRow } from 'components/Row'
-import { getChainInfo } from 'constants/chainInfo'
-import { useAllTokensMultichain } from 'hooks/Tokens'
+import { CHAIN_INFO, SupportedInterfaceChainId, useIsSupportedChainId } from 'constants/chains'
 import useENSName from 'hooks/useENSName'
 import { Trans } from 'i18n'
 import { X } from 'react-feather'
@@ -66,7 +69,12 @@ const PopupAlertTriangle = styled(AlertTriangleFilled)`
 `
 
 export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: ChainId; onClose: () => void }) {
-  const chainInfo = getChainInfo(chainId)
+  const isSupportedChain = useIsSupportedChainId(chainId)
+  const chainInfo = isSupportedChain ? CHAIN_INFO[chainId] : undefined
+
+  if (!chainInfo) {
+    return null
+  }
 
   return (
     <PopupContainer padded>
@@ -101,7 +109,7 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
       <StyledClose $padding={16} onClick={onClose} />
       <PortfolioRow
         left={
-          success ? (
+          success || !!activity.offchainOrderDetails ? (
             <Column>
               <PortfolioLogo
                 chainId={activity.chainId}
@@ -132,18 +140,15 @@ export function TransactionPopupContent({
   hash,
   onClose,
 }: {
-  chainId: ChainId
+  chainId: SupportedInterfaceChainId
   hash: string
   onClose: () => void
 }) {
   const transaction = useTransaction(hash)
-  const tokens = useAllTokensMultichain()
   const { formatNumber } = useFormatter()
-  if (!transaction) return null
+  const { data: activity } = useQuery(getTransactionToActivityQueryOptions(transaction, chainId, formatNumber))
 
-  const activity = transactionToActivity(transaction, chainId, tokens, formatNumber)
-
-  if (!activity) return null
+  if (!transaction || !activity) return null
 
   const onClick = () =>
     window.open(getExplorerLink(activity.chainId, activity.hash, ExplorerDataType.TRANSACTION), '_blank')
@@ -153,14 +158,12 @@ export function TransactionPopupContent({
 
 export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: string; onClose: () => void }) {
   const order = useOrder(orderHash)
-  const tokens = useAllTokensMultichain()
   const openOffchainActivityModal = useOpenOffchainActivityModal()
+
   const { formatNumber } = useFormatter()
-  if (!order) return null
+  const { data: activity } = useQuery(getSignatureToActivityQueryOptions(order, formatNumber))
 
-  const activity = signatureToActivity(order, tokens, formatNumber)
-
-  if (!activity) return null
+  if (!activity || !order) return null
 
   const onClick = () =>
     openOffchainActivityModal(order, { inputLogo: activity?.logos?.[0], outputLogo: activity?.logos?.[1] })

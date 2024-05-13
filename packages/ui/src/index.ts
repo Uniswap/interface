@@ -53,7 +53,6 @@ export * from './components/UniconV2/utils'
 export { Button } from './components/button/Button'
 export { withAnimated } from './components/factories/animated'
 export type { GeneratedIcon, IconProps } from './components/factories/createIcon'
-export * as Icons from './components/icons/allIcons'
 export * from './components/input/CheckBox'
 export * from './components/input/utils'
 export {

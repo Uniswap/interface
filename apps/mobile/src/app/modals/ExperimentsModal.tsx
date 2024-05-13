@@ -6,33 +6,9 @@ import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { setCustomEndpoint } from 'src/features/tweaks/slice'
-import {
-  ConfigResult,
-  Statsig,
-  useExperimentWithExposureLoggingDisabled,
-} from 'statsig-react-native'
-import {
-  Accordion,
-  Button,
-  Flex,
-  Icons,
-  Separator,
-  Text,
-  useDeviceInsets,
-  useSporeColors,
-} from 'ui/src'
+import { Accordion, Button, Flex, Text, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import {
-  EXPERIMENT_VALUES_BY_EXPERIMENT,
-  ExperimentsWallet,
-} from 'uniswap/src/features/experiments/constants'
-import {
-  FeatureFlags,
-  WALLET_FEATURE_FLAG_NAMES,
-  getFeatureFlagName,
-} from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/experiments/hooks'
-import { Switch } from 'wallet/src/components/buttons/Switch'
+import { AccordionHeader, GatingOverrides } from 'wallet/src/components/gating/GatingOverrides'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { BottomSheetModal } from 'wallet/src/components/modals/BottomSheetModal'
 import { ModalName } from 'wallet/src/telemetry/constants'
@@ -63,11 +39,6 @@ export function ExperimentsModal(): JSX.Element {
     } else {
       clearEndpoint()
     }
-  }
-
-  const featureFlagRows = []
-  for (const [flag, flagName] of WALLET_FEATURE_FLAG_NAMES.entries()) {
-    featureFlagRows.push(<FeatureFlagRow key={flagName} flag={flag} />)
   }
 
   return (
@@ -127,144 +98,9 @@ export function ExperimentsModal(): JSX.Element {
             </Accordion.Content>
           </Accordion.Item>
 
-          <Accordion.Item value="feature-flags">
-            <AccordionHeader title="⛳️ Feature Flags" />
-
-            <Accordion.Content>
-              <Text variant="body2">
-                Overridden feature flags are reset when the app is restarted
-              </Text>
-
-              <Flex gap="$spacing12" mt="$spacing12">
-                {featureFlagRows}
-              </Flex>
-            </Accordion.Content>
-          </Accordion.Item>
-
-          <Accordion.Item value="experiments">
-            <AccordionHeader title="🔬 Experiments" />
-
-            <Accordion.Content>
-              <Text variant="body2">
-                Overridden experiments are reset when the app is restarted
-              </Text>
-
-              <Flex gap="$spacing24" mt="$spacing12">
-                {Object.values(ExperimentsWallet).map((experiment) => {
-                  return <ExperimentRow key={experiment} name={experiment} />
-                })}
-              </Flex>
-            </Accordion.Content>
-          </Accordion.Item>
+          <GatingOverrides />
         </Accordion>
       </ScrollView>
     </BottomSheetModal>
   )
-}
-
-function AccordionHeader({ title }: { title: React.ReactNode }): JSX.Element {
-  return (
-    <Accordion.Header mt="$spacing12">
-      <Accordion.Trigger>
-        {({ open }: { open: boolean }): JSX.Element => (
-          <>
-            <Flex row justifyContent="space-between" width="100%">
-              <Text variant="subheading1">{title}</Text>
-              <Icons.RotatableChevron direction={open ? 'up' : 'down'} />
-            </Flex>
-          </>
-        )}
-      </Accordion.Trigger>
-    </Accordion.Header>
-  )
-}
-
-function FeatureFlagRow({ flag }: { flag: FeatureFlags }): JSX.Element {
-  const status = useFeatureFlagWithExposureLoggingDisabled(flag)
-  const name = getFeatureFlagName(flag)
-
-  return (
-    <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between">
-      <Text variant="body1">{name}</Text>
-      <Switch
-        value={status}
-        onValueChange={(newValue: boolean): void => {
-          Statsig.overrideGate(name, newValue)
-        }}
-      />
-    </Flex>
-  )
-}
-
-function ExperimentRow({ name }: { name: string }): JSX.Element {
-  const experiment = useExperimentWithExposureLoggingDisabled(name)
-
-  const params = Object.entries(experiment.config.value).map(([key, value]) => (
-    <Flex
-      key={key}
-      row
-      alignItems="center"
-      gap="$spacing16"
-      justifyContent="space-between"
-      paddingStart="$spacing16">
-      <Text variant="body2">{key}</Text>
-      <ExperimentValueSwitch
-        configValueContent={value}
-        configValueName={key}
-        experiment={experiment}
-      />
-    </Flex>
-  ))
-
-  return (
-    <>
-      <Separator />
-      <Flex>
-        <Text variant="body1">{name}</Text>
-        <Flex gap="$spacing4">{params}</Flex>
-      </Flex>
-    </>
-  )
-}
-
-function ExperimentValueSwitch({
-  experiment,
-  configValueContent,
-  configValueName,
-}: {
-  experiment: ConfigResult
-  configValueContent: unknown
-  configValueName: string
-}): JSX.Element {
-  const colors = useSporeColors()
-  const experimentName = experiment.config.getName()
-
-  const onValueChange = (newValue: boolean | string): void => {
-    Statsig.overrideConfig(experimentName, {
-      ...experiment.config.value,
-      [configValueName]: newValue,
-    })
-  }
-
-  if (typeof configValueContent === 'boolean') {
-    return <Switch value={configValueContent} onValueChange={onValueChange} />
-  }
-
-  const variants = EXPERIMENT_VALUES_BY_EXPERIMENT[experimentName]?.[configValueName]
-
-  if (variants && typeof configValueContent === 'string') {
-    return (
-      <Flex gap="$spacing8">
-        {Object.entries(variants).map(([_, value]) => (
-          <Flex key={value} gap="$spacing4" onPressOut={(): void => onValueChange(value)}>
-            <Text color={value === configValueContent ? colors.accent1.val : colors.neutral1.val}>
-              {value}
-            </Text>
-          </Flex>
-        ))}
-      </Flex>
-    )
-  }
-
-  return <Text variant="body3">Unknown Variants</Text>
 }

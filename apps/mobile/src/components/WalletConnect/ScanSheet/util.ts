@@ -6,12 +6,25 @@ import {
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/constants'
-import { DynamicConfigs } from 'uniswap/src/features/experiments/configs'
-import { useDynamicConfig } from 'uniswap/src/features/experiments/hooks'
+import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
 import { logger } from 'utilities/src/logger/logger'
+import { RPCType } from 'wallet/src/constants/chains'
+import { AssetType } from 'wallet/src/entities/assets'
+import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
+import { ProviderManager } from 'wallet/src/features/providers'
 import { ScantasticParams, ScantasticParamsSchema } from 'wallet/src/features/scantastic/types'
-import { UwULinkRequest } from 'wallet/src/features/walletConnect/types'
-import { getValidAddress } from 'wallet/src/utils/addresses'
+import { getTokenTransferRequest } from 'wallet/src/features/transactions/transfer/hooks/useTransferTransactionRequest'
+import { TransferCurrencyParams } from 'wallet/src/features/transactions/transfer/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
+import {
+  EthMethod,
+  EthTransaction,
+  UwULinkErc20SendRequest,
+  UwULinkMethod,
+  UwULinkRequest,
+} from 'wallet/src/features/walletConnect/types'
+import { areAddressesEqual, getValidAddress } from 'wallet/src/utils/addresses'
 
 export enum URIType {
   WalletConnectURL = 'walletconnect',
@@ -34,19 +47,23 @@ interface EnabledFeatureFlags {
 
 // This type must match the format in statsig dynamic config for uwulink
 // https://console.statsig.com/5HjUux4OvSGzgqWIfKFt8i/dynamic_configs/uwulink_config
-type UwuLinkAllowlistItem = {
+type UwULinkAllowlistItem = {
   chainId: number
-  contractAddress: string
+  address: string
   name: string
   icon?: string
 }
-type UwuLinkAllowlist = UwuLinkAllowlistItem[]
+
+type UwULinkAllowlist = {
+  contracts: UwULinkAllowlistItem[]
+  tokenRecipients: UwULinkAllowlistItem[]
+}
 
 const UWULINK_MAX_TXN_VALUE = '0.001'
 
 const EASTER_EGG_QR_CODE = 'DO_NOT_SCAN_OR_ELSE_YOU_WILL_GO_TO_MOBILE_TEAM_JAIL'
 export const CUSTOM_UNI_QR_CODE_PREFIX = 'hello_uniwallet:'
-export const UWULINK_PREFIX = 'uwulink'
+export const UWULINK_PREFIX = 'uwulink' as const
 
 export const truncateQueryParams = (url: string): string => {
   // In fact, the first element will be always returned below. url is
@@ -102,8 +119,9 @@ export async function getSupportedURI(
     return { type: URIType.EasterEgg, value: uri }
   }
 
-  if (enabledFeatureFlags?.isUwULinkEnabled && isUwULink(uri)) {
-    return { type: URIType.UwULink, value: uri.slice(UWULINK_PREFIX.length) }
+  if (isUwULink(uri)) {
+    // remove escape strings from the stringified JSON before parsing it
+    return { type: URIType.UwULink, value: uri.slice(UWULINK_PREFIX.length).replaceAll('\\', '') }
   }
 }
 
@@ -132,11 +150,24 @@ function isUwULink(uri: string): boolean {
 
 // Gets the UWULink contract allow list from statsig dynamic config.
 // We can safely cast as long as the statsig config format matches our `UwuLinkAllowlist` type.
-export function useUwuLinkContractAllowlist(): UwuLinkAllowlist {
+export function useUwuLinkContractAllowlist(): UwULinkAllowlist {
   const uwuLinkConfig = useDynamicConfig(DynamicConfigs.UwuLink)
-  return uwuLinkConfig.getValue('allowlist') as UwuLinkAllowlist
+  return uwuLinkConfig.getValue('allowlist') as UwULinkAllowlist
 }
 
+export function findAllowedTokenRecipient(
+  request: UwULinkRequest,
+  allowlist: UwULinkAllowlist
+): UwULinkAllowlistItem | undefined {
+  if (request.method !== UwULinkMethod.Erc20Send) {
+    return
+  }
+
+  const { chainId, recipient } = request
+  return allowlist.tokenRecipients.find(
+    (item) => item.chainId === chainId && areAddressesEqual(item.address, recipient)
+  )
+}
 /**
  * Util function to check if a UwULinkRequest is valid.
  *
@@ -144,17 +175,30 @@ export function useUwuLinkContractAllowlist(): UwuLinkAllowlist {
  * 1. The to address is in the UWULINK_CONTRACT_ALLOWLIST
  * 2. The value is less than or equal to UWULINK_MAX_TXN_VALUE
  *
+ * TODO: also check for validity of the entire request object (e.g. all the required fields exist)
+ *
  * @param request parsed UwULinkRequest
  * @returns boolean for whether the UwULinkRequest is allowed
  */
 export function isAllowedUwuLinkRequest(
   request: UwULinkRequest,
-  allowList: UwuLinkAllowlist
+  allowlist: UwULinkAllowlist
 ): boolean {
+  // token sends
+  if (request.method === UwULinkMethod.Erc20Send) {
+    return Boolean(findAllowedTokenRecipient(request, allowlist))
+  }
+
+  if (request.method === EthMethod.PersonalSign) {
+    return true
+  }
+
+  // generic transactions
   const { to, value } = request.value
   const belowMaximumValue =
     value && parseFloat(value) <= parseEther(UWULINK_MAX_TXN_VALUE).toNumber()
-  const isAllowedContractAddress = to && allowList.some((item) => item.contractAddress === to)
+  const isAllowedContractAddress =
+    to && allowlist.contracts.some((item) => areAddressesEqual(item.address, to))
 
   if (!belowMaximumValue || !isAllowedContractAddress) {
     return false
@@ -237,4 +281,23 @@ export function parseScantasticParams(uri: string): ScantasticParams | undefined
       },
     })
   }
+}
+
+export async function toTokenTransferRequest(
+  request: UwULinkErc20SendRequest,
+  account: Account,
+  providerManager: ProviderManager,
+  contractManager: ContractManager
+): Promise<EthTransaction> {
+  const provider = providerManager.getProvider(request.chainId, RPCType.Public)
+  const params: TransferCurrencyParams = {
+    type: AssetType.Currency,
+    account,
+    chainId: request.chainId,
+    toAddress: request.recipient,
+    tokenAddress: request.tokenAddress,
+    amountInWei: request.amount.toString(),
+  }
+  const transaction = await getTokenTransferRequest(params, provider, contractManager)
+  return transaction as EthTransaction
 }

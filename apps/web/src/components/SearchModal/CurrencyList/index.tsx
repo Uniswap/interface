@@ -4,7 +4,6 @@ import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import Loader from 'components/Icons/LoadingSpinner'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
-import { checkWarning } from 'constants/tokenSafety'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { CSSProperties, MutableRefObject, useCallback } from 'react'
@@ -14,6 +13,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import { useTokenWarning } from 'constants/tokenSafety'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useIsUserAddedToken } from '../../../hooks/Tokens'
@@ -158,7 +158,7 @@ export function CurrencyRow({
   const { account } = useWeb3React()
   const key = currencyKey(currency)
   const customAdded = useIsUserAddedToken(currency)
-  const warning = currency.isNative || isSmartPool ? null : checkWarning(currency.address)
+  const warning = useTokenWarning(currency?.isNative || isSmartPool ? undefined : currency?.address, currency.chainId)
   const isBlockedToken = !!warning && !warning.canProceed
   const blockedTokenOpacity = '0.6'
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
@@ -190,7 +190,7 @@ export function CurrencyRow({
           <Column>
             <CurrencyLogo
               currency={currency}
-              size="36px"
+              size={36}
               style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}
             />
           </Column>

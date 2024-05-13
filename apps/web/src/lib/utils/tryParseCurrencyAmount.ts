@@ -19,7 +19,7 @@ export default function tryParseCurrencyAmount<T extends Currency>(
   value?: string,
   currency?: T
 ): CurrencyAmount<T> | undefined {
-  if (!value || !currency) {
+  if (!value || !currency || isNaN(parseFloat(value))) {
     return undefined
   }
   try {

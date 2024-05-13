@@ -8,7 +8,7 @@ import { FlyoutAlignment, Menu } from 'components/Menu'
 import PositionList from 'components/PositionList'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import { isSupportedChain } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useV3Positions } from 'hooks/useV3Positions'
@@ -192,6 +192,7 @@ function WrongNetworkCard() {
 
 export default function Pool() {
   const { account, chainId } = useWeb3React()
+  const isSupportedChain = useIsSupportedChainId(chainId)
   const networkSupportsV2 = useNetworkSupportsV2()
   const toggleWalletDrawer = useToggleAccountDrawer()
 
@@ -217,7 +218,7 @@ export default function Pool() {
 
   const filteredPositions = useFilterPossiblyMaliciousPositions(userSelectedPositionSet)
 
-  if (!isSupportedChain(chainId)) {
+  if (!isSupportedChain) {
     return <WrongNetworkCard />
   }
 

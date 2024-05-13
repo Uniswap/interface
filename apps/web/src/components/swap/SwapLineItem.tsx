@@ -73,13 +73,11 @@ export function FOTTooltipContent() {
 function SwapFeeTooltipContent({ hasFee }: { hasFee: boolean }) {
   const message = hasFee ? (
     <Trans>
-      This fee is applied on select token pairs to ensure the best experience with Uniswap. It is paid in the output
-      token and has already been factored into the quote.
+      Fees are applied to ensure the best experience with Uniswap, and have already been factored into this quote.
     </Trans>
   ) : (
     <Trans>
-      This fee is applied on select token pairs to ensure the best experience with Uniswap. There is no fee associated
-      with this swap.
+      Fees are applied to ensure the best experience with Uniswap. There is no fee associated with this swap.
     </Trans>
   )
   return (
@@ -121,7 +119,7 @@ function FeeRow({ trade: { swapFee, outputAmount } }: { trade: SubmittableTrade 
 }
 
 function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
-  const { trade, syncing, allowedSlippage, type } = props
+  const { trade, syncing, allowedSlippage, type, priceImpact } = props
   const { formatPercent } = useFormatter()
   const isAutoSlippage = useUserSlippageTolerance()[0] === SlippageTolerance.Auto
 
@@ -155,11 +153,11 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       }
     case SwapLineItemType.PRICE_IMPACT:
       // Hides price impact row if the current trade is UniswapX or we're expecting a preview trade to result in UniswapX
-      if (isUniswapX || (isPreview && lastSubmittableFillType === TradeFillType.UniswapX)) return
+      if (isUniswapX || !priceImpact || (isPreview && lastSubmittableFillType === TradeFillType.UniswapX)) return
       return {
         Label: () => <Trans>Price impact</Trans>,
         TooltipBody: () => <Trans>The impact your trade has on the market price of this pool.</Trans>,
-        Value: () => (isPreview ? <Loading /> : <ColoredPercentRow percent={trade.priceImpact} estimate />),
+        Value: () => (isPreview ? <Loading /> : <ColoredPercentRow percent={priceImpact} estimate />),
       }
     case SwapLineItemType.MAX_SLIPPAGE:
       return {
@@ -251,6 +249,7 @@ export interface SwapLineItemProps {
   allowedSlippage?: Percent
   type: SwapLineItemType
   animatedOpacity?: SpringValue<number>
+  priceImpact?: Percent
 }
 
 function SwapLineItem(props: SwapLineItemProps) {

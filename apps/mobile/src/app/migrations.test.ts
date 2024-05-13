@@ -62,6 +62,7 @@ import {
   v5Schema,
   v60Schema,
   v61Schema,
+  v62Schema,
   v6Schema,
   v7Schema,
   v8Schema,
@@ -1389,5 +1390,12 @@ describe('Redux state migrations', () => {
     const v62 = migrations[62](v61Stub)
 
     expect(v62.behaviorHistory.extensionOnboardingState).toBe(ExtensionOnboardingState.Undefined)
+  })
+
+  it('migrates from v62 to 63', () => {
+    const v62Stub = { ...v62Schema }
+    const v63 = migrations[63](v62Stub)
+
+    expect(v63.wallet.isUnlocked).toBe(undefined)
   })
 })

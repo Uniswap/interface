@@ -12,10 +12,9 @@ import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
-import { Button, Flex, Icons, Text } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
+import { PenLine } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
 import { isIOS } from 'uniswap/src/utils/platform'
 import { TextInput } from 'wallet/src/components/input/TextInput'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
@@ -42,12 +41,8 @@ export function SettingsWalletEdit({
   const displayName = useDisplayName(address)
   const [nickname, setNickname] = useState(displayName?.name)
   const [showEditButton, setShowEditButton] = useState(true)
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
   const { canClaimUnitag } = useCanAddressClaimUnitag(address)
-  const showUnitagBanner =
-    unitagsFeatureFlagEnabled &&
-    activeAccount?.type === AccountType.SignerMnemonic &&
-    canClaimUnitag
+  const showUnitagBanner = activeAccount?.type === AccountType.SignerMnemonic && canClaimUnitag
 
   const accountNameIsEditable =
     displayName?.type === DisplayNameType.Local || displayName?.type === DisplayNameType.Address
@@ -128,7 +123,7 @@ export function SettingsWalletEdit({
               {showEditButton && accountNameIsEditable && (
                 <Button
                   backgroundless
-                  icon={<Icons.PenLine color="$neutral3" />}
+                  icon={<PenLine color="$neutral3" />}
                   m="$none"
                   size="medium"
                   onPress={onEditButtonPress}

@@ -1,3 +1,5 @@
+import 'test-utils/tokens/mocks'
+
 import userEvent from '@testing-library/user-event'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import store from 'state'

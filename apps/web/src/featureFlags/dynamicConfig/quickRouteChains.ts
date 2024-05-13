@@ -1,6 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
-import { DynamicConfigs } from 'uniswap/src/features/experiments/configs'
-import { useDynamicConfig } from 'uniswap/src/features/experiments/hooks'
+import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
 
 export const QUICK_ROUTE_CONFIG_KEY = 'quick_route_chains'
 

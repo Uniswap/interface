@@ -20,18 +20,24 @@ test.each([...collections])('should inject metadata for collections', async (col
   const url = 'http://127.0.0.1:3000/nfts/collection/' + collection.address
   const body = await fetch(new Request(url)).then((res) => res.text())
   expect(body).toMatchSnapshot()
-  expect(body).toContain(`<meta property="og:title" content="${collection.collectionName} on Uniswap"/>`)
+  expect(body).toContain(`<meta property="og:title" content="${collection.collectionName} on Uniswap" data-rh="true">`)
   expect(body).not.toContain(`<meta property="og:description"`)
-  expect(body).toContain(`<meta property="og:image" content="${collection.image}"/>`)
-  expect(body).toContain(`<meta property="og:image:width" content="1200"/>`)
-  expect(body).toContain(`<meta property="og:image:height" content="630"/>`)
-  expect(body).toContain(`<meta property="og:type" content="website"/>`)
-  expect(body).toContain(`<meta property="og:url" content="${url}"/>`)
-  expect(body).toContain(`<meta property="og:image:alt" content="${collection.collectionName} on Uniswap"/>`)
-  expect(body).toContain(`<meta property="twitter:card" content="summary_large_image"/>`)
-  expect(body).toContain(`<meta property="twitter:title" content="${collection.collectionName} on Uniswap"/>`)
-  expect(body).toContain(`<meta property="twitter:image" content="${collection.image}"/>`)
-  expect(body).toContain(`<meta property="twitter:image:alt" content="${collection.collectionName} on Uniswap"/>`)
+  expect(body).toContain(`<meta property="og:image" content="${collection.image}" data-rh="true">`)
+  expect(body).toContain(`<meta property="og:image:width" content="1200" data-rh="true">`)
+  expect(body).toContain(`<meta property="og:image:height" content="630" data-rh="true">`)
+  expect(body).toContain(`<meta property="og:type" content="website" data-rh="true">`)
+  expect(body).toContain(`<meta property="og:url" content="${url}" data-rh="true">`)
+  expect(body).toContain(
+    `<meta property="og:image:alt" content="${collection.collectionName} on Uniswap" data-rh="true">`
+  )
+  expect(body).toContain(`<meta property="twitter:card" content="summary_large_image" data-rh="true">`)
+  expect(body).toContain(
+    `<meta property="twitter:title" content="${collection.collectionName} on Uniswap" data-rh="true">`
+  )
+  expect(body).toContain(`<meta property="twitter:image" content="${collection.image}" data-rh="true">`)
+  expect(body).toContain(
+    `<meta property="twitter:image:alt" content="${collection.collectionName} on Uniswap" data-rh="true">`
+  )
 })
 
 const nonexistentCollections = [

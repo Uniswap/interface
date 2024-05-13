@@ -1,6 +1,7 @@
-import { Warning, WARNING_LEVEL } from 'constants/tokenSafety'
+import { Warning } from 'constants/tokenSafety'
 import { AlertTriangle, Slash } from 'react-feather'
 import styled, { css } from 'styled-components'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 const WarningContainer = styled.div`
   margin-left: 4px;
@@ -25,13 +26,13 @@ export const BlockedIcon = styled(Slash)`
 
 export default function TokenSafetyIcon({ warning }: { warning?: Warning }) {
   switch (warning?.level) {
-    case WARNING_LEVEL.BLOCKED:
+    case SafetyLevel.Blocked:
       return (
         <WarningContainer>
           <BlockedIcon data-cy="blocked-icon" strokeWidth={2.5} />
         </WarningContainer>
       )
-    case WARNING_LEVEL.UNKNOWN:
+    case SafetyLevel.StrongWarning:
       return (
         <WarningContainer>
           <WarningIcon />

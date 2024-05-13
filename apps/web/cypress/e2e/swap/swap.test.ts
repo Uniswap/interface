@@ -54,9 +54,12 @@ describe('Swap', () => {
 
     it('swaps ETH for USDC', () => {
       cy.interceptGraphqlOperation('Activity', 'mini-portfolio/empty_activity.json')
+      cy.interceptQuoteRequest('swap_eth_usdc_classic.json')
       cy.visit('/swap')
       cy.hardhat({ automine: false })
       getBalance(USDC_MAINNET).then((initialBalance) => {
+        cy.get(`#swap-currency-input .token-symbol-container`).should('contain.text', 'ETH')
+
         // Select USDC
         cy.get('#swap-currency-output .open-currency-select-button').click()
         cy.get(getTestSelector('token-search-input')).type(USDC_MAINNET.address)

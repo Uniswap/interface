@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
+import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { CHAIN_ID_TO_BACKEND_NAME } from 'graphql/data/util'
 import { Trans } from 'i18n'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import styled from 'styled-components'
@@ -84,6 +84,7 @@ const SwapButton = styled(StyledInternalLink)`
 
 export default function MobileBalanceSummaryFooter() {
   const { currency, multiChainMap, currencyChain } = useTDPContext()
+  const supportedChain = useSupportedChainId(currency.chainId)
   const pageChainBalance = multiChainMap[currencyChain]?.balance
 
   const { account } = useWeb3React()
@@ -97,7 +98,7 @@ export default function MobileBalanceSummaryFooter() {
     input: pageChainBalance?.denominatedValue?.value,
     type: NumberType.PortfolioBalance,
   })
-  const chain = CHAIN_ID_TO_BACKEND_NAME[currency.chainId].toLowerCase()
+  const chain = chainIdToBackendChain({ chainId: supportedChain }) ?? ''
 
   return (
     <Wrapper>

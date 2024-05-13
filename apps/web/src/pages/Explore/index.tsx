@@ -14,11 +14,12 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 
+import { ChainId } from '@uniswap/sdk-core'
+import { CHAIN_INFO, useChainFromUrlParam } from 'constants/chains'
 import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
-import { getTokenExploreURL, isBackendSupportedChain, validateUrlChainParam } from 'graphql/data/util'
+import { getTokenExploreURL, isBackendSupportedChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
 import { useResetAtom } from 'jotai/utils'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useExploreParams } from './redirects'
 import RecentTransactions from './tables/RecentTransactions'
 
@@ -126,9 +127,9 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const [currentTab, setCurrentTab] = useState(initialKey)
 
   // to allow backward navigation between tabs
-  const { tab: tabName, chainName } = useExploreParams()
+  const { tab: tabName } = useExploreParams()
   const tab = tabName ?? ExploreTab.Tokens
-  const chain = validateUrlChainParam(chainName)
+  const chain = useChainFromUrlParam() ?? CHAIN_INFO[ChainId.MAINNET]
   useEffect(() => {
     const tabIndex = Pages.findIndex((page) => page.key === tab)
     if (tabIndex !== -1) {
@@ -153,7 +154,11 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   )
 
   return (
-    <Trace page={InterfacePageName.EXPLORE_PAGE} properties={{ chainName: chain }} shouldLogImpression>
+    <Trace
+      page={InterfacePageName.EXPLORE_PAGE}
+      properties={{ chainName: chain.backendChain.chain }}
+      shouldLogImpression
+    >
       <ExploreContainer>
         <ExploreChartsSection />
         <NavWrapper ref={tabNavRef}>
@@ -167,7 +172,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                   key={index}
                 >
                   <StyledInternalLink
-                    to={`/explore/${key}` + (chain !== Chain.Ethereum ? `/${chain.toLowerCase()}` : '')}
+                    to={`/explore/${key}` + (chain.id !== ChainId.MAINNET ? `/${chain.urlParam}` : '')}
                   >
                     <TabItem onClick={() => setCurrentTab(index)} active={currentTab === index} key={key}>
                       {title}

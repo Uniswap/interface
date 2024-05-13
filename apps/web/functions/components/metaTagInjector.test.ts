@@ -16,26 +16,54 @@ test('should append meta tag to element', () => {
     new Request('http://localhost')
   )
   injector.append(element, property, content)
-  expect(element.append).toHaveBeenCalledWith(`<meta property="${property}" content="${content}"/>`, { html: true })
+  expect(element.append).toHaveBeenCalledWith(`<meta property="${property}" content="${content}" data-rh="true">`, {
+    html: true,
+  })
 
   injector.element(element)
-  expect(element.append).toHaveBeenCalledWith(`<meta property="og:title" content="test"/>`, { html: true })
-  expect(element.append).toHaveBeenCalledWith(`<meta property="og:description" content="testDescription"/>`, {
+  expect(element.append).toHaveBeenCalledWith(`<meta property="og:title" content="test" data-rh="true">`, {
     html: true,
   })
-  expect(element.append).toHaveBeenCalledWith(`<meta property="og:image" content="testImage"/>`, { html: true })
-  expect(element.append).toHaveBeenCalledWith(`<meta property="og:image:width" content="1200"/>`, { html: true })
-  expect(element.append).toHaveBeenCalledWith(`<meta property="og:image:height" content="630"/>`, { html: true })
-  expect(element.append).toHaveBeenCalledWith(`<meta property="og:image:alt" content="test"/>`, { html: true })
-  expect(element.append).toHaveBeenCalledWith(`<meta property="og:type" content="website"/>`, { html: true })
-  expect(element.append).toHaveBeenCalledWith(`<meta property="og:url" content="testUrl"/>`, { html: true })
+  expect(element.append).toHaveBeenCalledWith(
+    `<meta property="og:description" content="testDescription" data-rh="true">`,
+    {
+      html: true,
+    }
+  )
+  expect(element.append).toHaveBeenCalledWith(`<meta property="og:image" content="testImage" data-rh="true">`, {
+    html: true,
+  })
+  expect(element.append).toHaveBeenCalledWith(`<meta property="og:image:width" content="1200" data-rh="true">`, {
+    html: true,
+  })
+  expect(element.append).toHaveBeenCalledWith(`<meta property="og:image:height" content="630" data-rh="true">`, {
+    html: true,
+  })
+  expect(element.append).toHaveBeenCalledWith(`<meta property="og:image:alt" content="test" data-rh="true">`, {
+    html: true,
+  })
+  expect(element.append).toHaveBeenCalledWith(`<meta property="og:type" content="website" data-rh="true">`, {
+    html: true,
+  })
+  expect(element.append).toHaveBeenCalledWith(`<meta property="og:url" content="testUrl" data-rh="true">`, {
+    html: true,
+  })
 
-  expect(element.append).toHaveBeenCalledWith(`<meta property="twitter:card" content="summary_large_image"/>`, {
+  expect(element.append).toHaveBeenCalledWith(
+    `<meta property="twitter:card" content="summary_large_image" data-rh="true">`,
+    {
+      html: true,
+    }
+  )
+  expect(element.append).toHaveBeenCalledWith(`<meta property="twitter:title" content="test" data-rh="true">`, {
     html: true,
   })
-  expect(element.append).toHaveBeenCalledWith(`<meta property="twitter:title" content="test"/>`, { html: true })
-  expect(element.append).toHaveBeenCalledWith(`<meta property="twitter:image" content="testImage"/>`, { html: true })
-  expect(element.append).toHaveBeenCalledWith(`<meta property="twitter:image:alt" content="test"/>`, { html: true })
+  expect(element.append).toHaveBeenCalledWith(`<meta property="twitter:image" content="testImage" data-rh="true">`, {
+    html: true,
+  })
+  expect(element.append).toHaveBeenCalledWith(`<meta property="twitter:image:alt" content="test" data-rh="true">`, {
+    html: true,
+  })
 
   expect(element.append).toHaveBeenCalledTimes(13)
 })
@@ -56,5 +84,7 @@ test('should pass through header blocked paths', () => {
     request
   )
   injector.element(element)
-  expect(element.append).toHaveBeenCalledWith(`<meta property="x:blocked-paths" content="/"/>`, { html: true })
+  expect(element.append).toHaveBeenCalledWith(`<meta property="x:blocked-paths" content="/" data-rh="true">`, {
+    html: true,
+  })
 })

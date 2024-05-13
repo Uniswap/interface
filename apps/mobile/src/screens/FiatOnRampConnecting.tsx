@@ -2,15 +2,12 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet } from 'react-native'
 import { useAppDispatch } from 'src/app/hooks'
 import { FiatOnRampStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
-import {
-  FiatOnRampConnectingView,
-  SERVICE_PROVIDER_ICON_SIZE,
-} from 'src/features/fiatOnRamp/FiatOnRampConnecting'
+import { FiatOnRampConnectingView } from 'src/features/fiatOnRamp/FiatOnRampConnecting'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
+import { ServiceProviderLogoStyles } from 'src/features/fiatOnRamp/constants'
 import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
 import { getServiceProviderForQuote } from 'src/features/fiatOnRamp/utils'
 import { closeModal } from 'src/features/modals/modalSlice'
@@ -18,12 +15,11 @@ import { FiatOnRampScreens } from 'src/screens/Screens'
 import { Flex, Text, useIsDarkMode } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { isAndroid } from 'uniswap/src/utils/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { ChainId } from 'wallet/src/constants/chains'
 import { useFiatOnRampAggregatorWidgetQuery } from 'wallet/src/features/fiatOnRamp/api'
-import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
+import { getOptionalServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -93,9 +89,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
           sourceCurrencyCode: baseCurrencyInfo.code,
           walletAddress: activeAccountAddress,
           externalSessionId: externalTransactionId,
-          redirectUrl: `${
-            isAndroid ? uniswapUrls.appUrl : uniswapUrls.appBaseUrl
-          }/?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
+          redirectUrl: `${uniswapUrls.redirectUrlBase}/?screen=transaction&fiatOnRamp=true&userAddress=${activeAccountAddress}`,
         }
       : skipToken
   )
@@ -154,7 +148,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
   ])
 
   const isDarkMode = useIsDarkMode()
-  const logoUrl = getServiceProviderLogo(serviceProvider?.logos, isDarkMode)
+  const logoUrl = getOptionalServiceProviderLogo(serviceProvider?.logos, isDarkMode)
 
   return (
     <Screen>
@@ -170,9 +164,9 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
             serviceProviderLogo={
               <Flex
                 alignItems="center"
-                height={SERVICE_PROVIDER_ICON_SIZE}
+                height={ServiceProviderLogoStyles.icon.height}
                 justifyContent="center"
-                width={SERVICE_PROVIDER_ICON_SIZE}>
+                width={ServiceProviderLogoStyles.icon.width}>
                 <ImageUri imageStyle={ServiceProviderLogoStyles.icon} uri={logoUrl} />
               </Flex>
             }
@@ -192,10 +186,3 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     </Screen>
   )
 }
-
-const ServiceProviderLogoStyles = StyleSheet.create({
-  icon: {
-    height: SERVICE_PROVIDER_ICON_SIZE,
-    width: SERVICE_PROVIDER_ICON_SIZE,
-  },
-})

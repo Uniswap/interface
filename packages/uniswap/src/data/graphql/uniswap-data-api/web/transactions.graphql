@@ -44,8 +44,8 @@ query V3Transactions($chain: Chain!, $first: Int!, $cursor: Int) {
   }
 }
 
-query V2Transactions($first: Int!, $cursor: Int) {
-  v2Transactions(chain: ETHEREUM, first: $first, timestampCursor: $cursor) {
+query V2Transactions($chain: Chain!, $first: Int!, $cursor: Int) {
+  v2Transactions(chain: $chain, first: $first, timestampCursor: $cursor) {
     id
     chain
     protocolVersion

@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
-import { Flex, Icons, Loader, Text, isWeb } from 'ui/src'
+import { Flex, Loader, Text, isWeb } from 'ui/src'
+import { NoTransactions } from 'ui/src/components/icons'
 import { BaseCard } from 'wallet/src/components/BaseCard/BaseCard'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
@@ -112,7 +113,7 @@ export function useActivityData({
             ? t('home.activity.empty.description.external')
             : t('home.activity.empty.description.default')
         }
-        icon={<Icons.NoTransactions color="$neutral3" size="$icon.100" />}
+        icon={<NoTransactions color="$neutral3" size="$icon.100" />}
         title={t('home.activity.empty.title')}
         onPress={onPressEmptyState}
       />

@@ -16,7 +16,8 @@ import {
   formatTokenSearchResults,
   getSearchResultId,
 } from 'src/components/explore/search/utils'
-import { AnimatedFlex, Flex, Icons, Text } from 'ui/src'
+import { AnimatedFlex, Flex, Text } from 'ui/src'
+import { Coin, Gallery, Person } from 'ui/src/components/icons'
 import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import i18n from 'uniswap/src/i18n/i18n'
 import { logger } from 'utilities/src/logger/logger'
@@ -36,17 +37,17 @@ const ICON_SIZE = '$icon.24'
 const ICON_COLOR = '$neutral2'
 
 const WalletHeaderItem: SearchResultOrHeader = {
-  icon: <Icons.Person color={ICON_COLOR} size={ICON_SIZE} />,
+  icon: <Person color={ICON_COLOR} size={ICON_SIZE} />,
   type: SEARCH_RESULT_HEADER_KEY,
   title: i18n.t('explore.search.section.wallets'),
 }
 const TokenHeaderItem: SearchResultOrHeader = {
-  icon: <Icons.Coin color={ICON_COLOR} size={ICON_SIZE} />,
+  icon: <Coin color={ICON_COLOR} size={ICON_SIZE} />,
   type: SEARCH_RESULT_HEADER_KEY,
   title: i18n.t('explore.search.section.tokens'),
 }
 const NFTHeaderItem: SearchResultOrHeader = {
-  icon: <Icons.Gallery color={ICON_COLOR} size={ICON_SIZE} />,
+  icon: <Gallery color={ICON_COLOR} size={ICON_SIZE} />,
   type: SEARCH_RESULT_HEADER_KEY,
   title: i18n.t('explore.search.section.nft'),
 }

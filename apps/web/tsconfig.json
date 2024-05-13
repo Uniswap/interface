@@ -27,8 +27,19 @@
     "strictNullChecks": true,
     "target": "ESNext",
     "tsBuildInfoFile": "node_modules/.cache/tsbuildinfo/build", // avoid clobbering the cypress tsbuildinfo
-    "types": ["jest"],
-    "useUnknownInCatchVariables": false
+    "types": ["jest", "chrome"],
+    "useUnknownInCatchVariables": false,
   },
   "include": ["src/**/*", "src/**/*.json"],
+  "references": [
+    {
+      "path": "../../packages/ui"
+    },
+    {
+      "path": "../../packages/utilities"
+    },
+    {
+      "path": "../../packages/uniswap"
+    }
+  ]
 }

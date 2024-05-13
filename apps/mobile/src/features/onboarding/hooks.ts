@@ -4,8 +4,8 @@ import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app
 import { sendMobileAnalyticsEvent } from 'src/features/telemetry'
 import { MobileEventName } from 'src/features/telemetry/constants'
 import { Screens } from 'src/screens/Screens'
-import { FeatureFlags } from 'uniswap/src/features/experiments/flags'
-import { useFeatureFlag } from 'uniswap/src/features/experiments/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import {
   setHasSkippedUnitagPrompt,
@@ -43,7 +43,6 @@ export function useCompleteOnboardingCallback({
   const parentTrace = useTrace()
   const navigation = useOnboardingStackNavigation()
 
-  const unitagsFeatureFlagEnabled = useFeatureFlag(FeatureFlags.Unitags)
   const claimUnitag = useClaimUnitag()
 
   const uniconsV2Enabled = useFeatureFlag(FeatureFlags.UniconsV2)
@@ -90,10 +89,8 @@ export function useCompleteOnboardingCallback({
     // Remove pending flag from all new accounts.
     dispatch(pendingAccountActions.trigger(PendingAccountActions.Activate))
 
-    // Dismiss unitags prompt if:
-    // - the feature was enabled
-    // - the onboarding method prompts for unitags (create new)
-    if (unitagsFeatureFlagEnabled && importType === ImportType.CreateNew) {
+    // Dismiss unitags prompt if the onboarding method prompts for unitags (create new)
+    if (importType === ImportType.CreateNew) {
       dispatch(setHasSkippedUnitagPrompt(true))
     }
 

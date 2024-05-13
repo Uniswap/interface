@@ -8,7 +8,7 @@ import type { AddressMap } from '@uniswap/smart-order-router'
 import NFTPositionManagerJSON from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import MulticallJSON from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
 import { useWeb3React } from '@web3-react/core'
-import { isSupportedChain } from 'constants/chains'
+import { useIsSupportedChainIdCallback } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { BaseContract } from 'ethers/lib/ethers'
 import { toContractInput } from 'graphql/data/util'
@@ -32,6 +32,7 @@ export function useContractMultichain<T extends BaseContract>(
   chainIds?: ChainId[]
 ): ContractMap<T> {
   const { chainId: walletChainId, provider: walletProvider } = useWeb3React()
+  const isSupportedChain = useIsSupportedChainIdCallback()
 
   return useMemo(() => {
     const relevantChains =
@@ -52,7 +53,7 @@ export function useContractMultichain<T extends BaseContract>(
       }
       return acc
     }, {})
-  }, [ABI, addressMap, chainIds, walletChainId, walletProvider])
+  }, [ABI, addressMap, chainIds, isSupportedChain, walletChainId, walletProvider])
 }
 
 export function useV3ManagerContracts(chainIds: ChainId[]): ContractMap<NonfungiblePositionManager> {

@@ -1,9 +1,7 @@
 import { ChainId } from '@uniswap/sdk-core'
 import { Connector } from '@web3-react/types'
 import { networkConnection, uniwalletWCV2ConnectConnection, walletConnectV2Connection } from 'connection'
-import { getChainInfo } from 'constants/chainInfo'
-import { CHAIN_IDS_TO_NAMES, isSupportedChain } from 'constants/chains'
-import { PUBLIC_RPC_URLS } from 'constants/networks'
+import { CHAIN_IDS_TO_NAMES, CHAIN_INFO, PUBLIC_RPC_URLS, useIsSupportedChainIdCallback } from 'constants/chains'
 import { useCallback } from 'react'
 import { useAppDispatch } from 'state/hooks'
 import { endSwitchingChain, startSwitchingChain } from 'state/wallets/reducer'
@@ -11,10 +9,12 @@ import { trace } from 'tracing/trace'
 
 export function useSwitchChain() {
   const dispatch = useAppDispatch()
+  const isSupportedChainCallback = useIsSupportedChainIdCallback()
 
   return useCallback(
     (connector: Connector, chainId: ChainId) => {
-      if (!isSupportedChain(chainId)) {
+      const isSupportedChain = isSupportedChainCallback(chainId)
+      if (!isSupportedChain) {
         throw new Error(`Chain ${chainId} not supported for connector (${typeof connector})`)
       } else {
         return trace({ name: 'Switch chain', op: 'wallet.switch_chain' }, async (trace) => {
@@ -29,7 +29,7 @@ export function useSwitchChain() {
             ) {
               await connector.activate(chainId)
             } else {
-              const info = getChainInfo(chainId)
+              const info = CHAIN_INFO[chainId]
               const addChainParameter = {
                 chainId,
                 chainName: info.label,
@@ -42,7 +42,7 @@ export function useSwitchChain() {
               }
               await connector.activate(addChainParameter)
             }
-            if (isSupportedChain(chainId)) {
+            if (isSupportedChain) {
               // Because this is async, react-router-dom's useSearchParam's bugs out, and would cause an add'l navigation.
               // Instead, we modify the window's history directly to append the SearchParams.
               try {
@@ -70,6 +70,6 @@ export function useSwitchChain() {
         })
       }
     },
-    [dispatch]
+    [dispatch, isSupportedChainCallback]
   )
 }

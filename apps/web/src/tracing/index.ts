@@ -6,7 +6,8 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { initializeAnalytics, OriginApplication } from 'analytics'
 import store from 'state'
 import { setOriginCountry } from 'state/user/reducer'
-import { getEnvName, isDevelopmentEnv, isProductionEnv, isSentryEnabled } from 'utils/env'
+import { isDevEnv, isProdEnv } from 'uniswap/src/utils/env'
+import { getEnvName, isSentryEnabled } from 'utils/env'
 import { v4 as uuidv4 } from 'uuid'
 import { patchFetch } from './request'
 
@@ -22,7 +23,6 @@ const SENTRY_USER_ID_KEY = 'sentry-user-id'
 
 // Actual KEYs are set by proxy servers.
 const AMPLITUDE_DUMMY_KEY = '00000000000000000000000000000000'
-export const STATSIG_DUMMY_KEY = 'client-0000000000000000000000000000000000000000000'
 
 Sentry.init({
   dsn: process.env.REACT_APP_SENTRY_DSN,
@@ -50,7 +50,7 @@ initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
   proxyUrl: process.env.REACT_APP_AMPLITUDE_PROXY_URL,
   defaultEventName: SharedEventName.PAGE_VIEWED,
   commitHash: process.env.REACT_APP_GIT_COMMIT_HASH,
-  isProductionEnv: isProductionEnv(),
-  debug: isDevelopmentEnv(),
+  isProductionEnv: isProdEnv(),
+  debug: isDevEnv(),
   reportOriginCountry: (country: string) => store.dispatch(setOriginCountry(country)),
 })

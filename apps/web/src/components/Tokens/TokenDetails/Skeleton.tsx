@@ -2,7 +2,6 @@ import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import Row from 'components/Row'
 import { SwapSkeleton } from 'components/swap/SwapSkeleton'
-import { supportedChainIdFromGQLChain, validateUrlChainParam } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { Trans } from 'i18n'
 import { ReactNode } from 'react'
@@ -17,7 +16,9 @@ import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { ChartType } from 'components/Charts/utils'
+import { useChainFromUrlParam } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { getSupportedGraphQlChain } from 'graphql/data/util'
 import { LoadingBubble } from '../loading'
 import { AboutContainer, AboutHeader } from './About'
 import { TDP_CHART_HEIGHT_PX } from './ChartSection'
@@ -249,17 +250,17 @@ function LoadingStats() {
 
 /* Loading State: row component with loading bubbles */
 function TokenDetailsSkeleton() {
-  const { chainName, tokenAddress } = useParams<{ chainName?: string; tokenAddress?: string }>()
-  const chainId = supportedChainIdFromGQLChain(validateUrlChainParam(chainName))
-  const token = useCurrency(tokenAddress === NATIVE_CHAIN_ID ? 'ETH' : tokenAddress, chainId)
+  const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
+  const { tokenAddress } = useParams<{ tokenAddress?: string }>()
+  const token = useCurrency(tokenAddress === NATIVE_CHAIN_ID ? 'ETH' : tokenAddress, chain.id)
 
   return (
     <LeftPanel>
       <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-        <BreadcrumbNavLink to={`/explore/${chainName}`}>
+        <BreadcrumbNavLink to={`/explore/${chain.urlParam}`}>
           <Trans>Explore</Trans> <ChevronRight size={14} />
         </BreadcrumbNavLink>
-        <BreadcrumbNavLink to={`/explore/tokens/${chainName}`}>
+        <BreadcrumbNavLink to={`/explore/tokens/${chain.urlParam}`}>
           <Trans>Tokens</Trans> <ChevronRight size={14} />
         </BreadcrumbNavLink>
         <NavBubble />
@@ -294,7 +295,7 @@ function TokenDetailsSkeleton() {
       {tokenAddress && (
         <LoadingFooterHeaderContainer gap="xs">
           <Trans>Loading</Trans>
-          <LoadingFooterHeader>{getLoadingTitle(token, tokenAddress, chainId, chainName)}</LoadingFooterHeader>
+          <LoadingFooterHeader>{getLoadingTitle(token, tokenAddress, chain.id, chain.urlParam)}</LoadingFooterHeader>
         </LoadingFooterHeaderContainer>
       )}
     </LeftPanel>

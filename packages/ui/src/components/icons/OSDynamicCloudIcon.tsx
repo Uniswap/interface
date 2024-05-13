@@ -1,13 +1,13 @@
 import { memo } from 'react'
 import { Platform } from 'react-native'
 import { IconProps } from 'ui/src/components/factories/createIcon'
-import * as Icons from 'ui/src/components/icons/allIcons'
+import { Cloud, GoogleDrive } from 'ui/src/components/icons'
 
 function _OSDynamicCloudIcon(iconProps: IconProps): JSX.Element {
   if (Platform.OS === 'ios') {
-    return <Icons.Cloud {...iconProps} />
+    return <Cloud {...iconProps} />
   } else {
-    return <Icons.GoogleDrive {...iconProps} />
+    return <GoogleDrive {...iconProps} />
   }
 }
 
